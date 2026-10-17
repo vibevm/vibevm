@@ -167,6 +167,19 @@ pub fn run(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
+    run_with_capture(ctx, args, embedded_root, root_offline, None).map(|_| ())
+}
+
+/// A trusted embedding may retain the typed prepared proof from install.
+/// Raw CLI flags and serialized report values cannot create this authority.
+pub fn run_with_capture(
+    ctx: &output::Context,
+    args: ReinstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    capture: Option<vibe_install::evolution::PreparedReinstall>,
+) -> Result<Option<vibe_install::evolution::EvolutionReport>> {
+    let configuration_report = capture.as_ref().map(|c| c.report.clone());
     let PreparedReinstall {
         lease,
         user_config,
@@ -174,7 +187,7 @@ pub fn run(
         metadata,
         selection,
         trace,
-    } = prepare::prepare(ctx, &args, root_offline)?;
+    } = prepare::prepare_with_capture(ctx, &args, root_offline, capture.as_ref())?;
     // The boundary's OWNER share: the executed region below consumes its own
     // clones, while this one lives to the end of the command — through the
     // final report and the trace finalisation.
@@ -189,6 +202,7 @@ pub fn run(
             user_config,
             selection,
             metadata,
+            capture,
         },
         trace.recorder(),
     );
@@ -197,11 +211,12 @@ pub fn run(
     let finalized = compile_trace::finalize(trace, exit, &now);
     let rendered = render_finalized(ctx, finalized);
     drop(lease_owner);
-    rendered
+    rendered.map(|()| configuration_report)
 }
 
 /// The prepared inputs the executed region owns.
 struct Execution {
+    capture: Option<vibe_install::evolution::PreparedReinstall>,
     args: ReinstallArgs,
     embedded_root: Option<PathBuf>,
     offline: bool,
@@ -254,6 +269,7 @@ fn run_inner(
     trace: Option<&TraceRun>,
 ) -> Result<ReinstallDraft> {
     let Execution {
+        capture,
         args,
         embedded_root,
         offline,
@@ -275,6 +291,14 @@ fn run_inner(
     let workspace = proven.workspace();
 
     let lockfile = load_lockfile(&workspace.root)?;
+    if let Some(capture) = &capture {
+        capture.validate(&lockfile)?;
+    } else {
+        // Before confirmation, continuations or any slot/boot effect.
+        vibe_install::evolution::require_update_authority(&lockfile).context(
+            "reinstall unavailable: prepared exact captures and current authority required",
+        )?;
+    }
     // The workspace ROOT's manifest, from the tree already in hand.
     let spec_format = crate::commands::install::resolve_spec_format(
         &workspace.root_manifest,
@@ -282,6 +306,24 @@ fn run_inner(
     );
 
     if args.force {
+        if let Some(capture) = capture {
+            return force::run_captured(
+                ctx,
+                force::Forced {
+                    args: &args,
+                    identity: &identity,
+                    workspace,
+                    lockfile: &lockfile,
+                    metadata: &metadata,
+                    spec_format,
+                    trace,
+                    embedded_root: embedded_root.as_deref(),
+                    offline,
+                    lease: &lease,
+                },
+                &capture,
+            );
+        }
         force::run(
             ctx,
             force::Forced {
@@ -301,6 +343,7 @@ fn run_inner(
         regenerate::run(
             ctx,
             regenerate::Plain {
+                prepared: capture.is_some(),
                 args: &args,
                 identity: &identity,
                 workspace,

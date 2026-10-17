@@ -38,6 +38,7 @@ use vibe_resolver::{ResolvedGraph, SolveError};
 mod apply;
 mod error;
 mod events;
+pub mod evolution;
 mod fetched;
 mod lifecycle;
 mod plan;

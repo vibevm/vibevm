@@ -762,3 +762,114 @@ fn induced_edges_retain_declaration_and_consumer_intent() {
         Plan::Ready(_)
     ));
 }
+
+#[test]
+fn m_05_e_2_exact_capture_replays_induced_edges_and_dormant_choices() {
+    let fixture = Fixture::new();
+    let Plan::Ready(plan) = crate::plan(
+        &fixture.source,
+        &fixture.root,
+        fixture.request(),
+        &NullObserver,
+    )
+    .unwrap() else {
+        panic!("ready")
+    };
+    let retained = plan.clone();
+    crate::apply(
+        &fixture.source,
+        *plan,
+        vibe_core::user_config::SlotIntegrity::TrustPresence,
+        &vibe_workspace::hooks::HookPolicy {
+            allowed_groups: vec![],
+            allow_hooks: false,
+        },
+    )
+    .unwrap();
+    let lock = Lockfile::read(fixture.root.join(Lockfile::FILENAME)).unwrap();
+    let replay = crate::evolution::PreparedReinstall::from_planned(
+        &lock,
+        &fixture.source,
+        &retained,
+        &fixture.source.catalog,
+    )
+    .unwrap();
+    assert_eq!(
+        replay.report.decision,
+        crate::evolution::Decision::ExactReuse
+    );
+    assert_eq!(replay.resolution().len(), lock.packages.len());
+    let report = replay.report.value();
+    assert_eq!(
+        report["differences"]["resolved"]["before"],
+        report["differences"]["resolved"]["after"]
+    );
+    assert!(report.to_string().contains("later"));
+    assert!(report.to_string().contains("configuration.dependencies["));
+}
+
+#[test]
+fn m_05_e_2_missing_authority_and_unknown_epoch_refuse() {
+    let fixture = Fixture::new();
+    let mut lock = fixture.apply();
+    assert!(crate::evolution::require_update_authority(&lock).is_err());
+    lock.meta.configuration.as_mut().unwrap().epoch += 1;
+    assert!(crate::evolution::require_update_authority(&lock).is_err());
+    assert!(
+        crate::evolution::require_update_authority(&Lockfile::empty(
+            "test",
+            "2026-10-17T00:00:00Z"
+        ))
+        .is_ok()
+    );
+}
+
+#[test]
+fn m_05_e_2_update_requires_new_shown_default_receipt() {
+    let mut fixture = Fixture::new().with_defaults();
+    fixture.apply();
+    let before = std::fs::read(fixture.root.join(Lockfile::FILENAME)).unwrap();
+    let c = fixture
+        .source
+        .intent
+        .as_mut()
+        .unwrap()
+        .configuration
+        .as_mut()
+        .unwrap();
+    c.definitions[0]
+        .definition
+        .constraints
+        .groups
+        .get_mut(&f("choice"))
+        .unwrap()
+        .defaults = Some([f("gate")].into());
+    let mut workspace = vibe_workspace::Workspace::discover(&fixture.root).unwrap();
+    let mut manifest = Manifest::read(fixture.root.join(Manifest::FILENAME)).unwrap();
+    let update = crate::evolution::plan_update(
+        &fixture.source,
+        &fixture.root,
+        &mut manifest,
+        &mut workspace,
+        fixture.request(),
+        vibe_core::manifest::SpecFormat::Mixed,
+        &NullObserver,
+    )
+    .unwrap();
+    assert_eq!(
+        update.report.decision,
+        crate::evolution::Decision::ReconfigurationRequired
+    );
+    assert!(
+        update
+            .report
+            .needs
+            .iter()
+            .any(|n| n.contains("shown-definition default authorization"))
+    );
+    assert!(update.plan.is_none());
+    assert_eq!(
+        before,
+        std::fs::read(fixture.root.join(Lockfile::FILENAME)).unwrap()
+    );
+}

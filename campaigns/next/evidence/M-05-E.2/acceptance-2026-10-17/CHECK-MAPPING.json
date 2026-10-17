@@ -1,0 +1,120 @@
+{
+  "contract_id": "contract.m05.e2",
+  "version": 1,
+  "exact_general_slot_count": 5,
+  "mapping": [
+    {
+      "slot": "00",
+      "verification_id": "verify.authored.m05.e2.00",
+      "obligation": "vibe-install actual E2 family",
+      "actual_method": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--test",
+        "m_05_e_2_cases",
+        "m_05_e_2_",
+        "--",
+        "--test-threads=1"
+      ],
+      "author_exit": 0,
+      "author_passed": 3,
+      "author_failed": 0,
+      "author_filtered": 28
+    },
+    {
+      "slot": "01",
+      "verification_id": "verify.authored.m05.e2.01",
+      "obligation": "vibe-orchestrator actual E2 family",
+      "actual_method": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "install::m_05_e_2_cases",
+        "--",
+        "--test-threads=1"
+      ],
+      "author_exit": 0,
+      "author_passed": 6,
+      "author_failed": 0,
+      "author_filtered": 660,
+      "subsequent_affected_exact_repeat": {
+        "case": "install::m_05_e_2_cases::prepared_replay_binds_leaf_capture_without_solve",
+        "exit": 0,
+        "passed": 1,
+        "failed": 0,
+        "filtered": 665,
+        "additional_unique_cases": 0
+      }
+    },
+    {
+      "slot": "02",
+      "verification_id": "verify.authored.m05.e2.02",
+      "obligation": "vibe-cli actual E2 family",
+      "actual_method": [
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "commands::m_05_e_2_cases",
+        "--",
+        "--test-threads=1"
+      ],
+      "author_exit": 0,
+      "author_passed": 6,
+      "author_failed": 0,
+      "author_filtered": 952
+    },
+    {
+      "slot": "03",
+      "verification_id": "verify.authored.m05.e2.03",
+      "obligation": "literal global formatting",
+      "actual_method": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "author_exit": 1,
+      "literal_record_state": "failed",
+      "Root_semantic_adjudication": "separate; cannot rewrite failed result"
+    },
+    {
+      "slot": "04",
+      "verification_id": "verify.authored.m05.e2.04",
+      "obligation": "diff whitespace",
+      "actual_method": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "author_exit": 0
+    }
+  ],
+  "author_unique_final_cases": 15,
+  "subsequent_repeat_executions": 1,
+  "no_new_execution_by_assembler": true,
+  "actual_fmt_output_paths": [
+    "crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+    "crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+    "crates/vibe-mcp/src/machine_session/incremental.rs",
+    "crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+    "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+    "crates/vibe-publish/src/package_git_payload/tests.rs",
+    "crates/vibe-wire/src/generated/format_id/properties.rs"
+  ],
+  "author_heading_list_error": "The report section Global fmt baseline files incorrectly copied the E2 changed-file list; actual retained fmt stdout above names these seven paths. Root separately reports semantic reviewer checked unchanged status versus HEAD aff3f408 and pre-E1; assembler did not inspect Git/source to independently establish that classification.",
+  "not_a_semantic_or_safety_verdict": true
+}

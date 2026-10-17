@@ -59,6 +59,19 @@ pub fn run(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
+    run_with_intent(ctx, args, embedded_root, root_offline, None).map(|_| ())
+}
+
+/// Explicit typed admission from a trusted host, using the ordinary update
+/// lifecycle, source constructor and confirmation policy.
+pub fn run_with_intent(
+    ctx: &output::Context,
+    args: UpdateArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    intent: Option<vibe_resolver::resolvo_engine::request::NormalizedRequest>,
+) -> Result<Option<vibe_install::evolution::EvolutionReport>> {
+    let configuration_report = std::sync::Arc::new(std::sync::Mutex::new(None));
     let PreparedUpdate {
         lease,
         user_config,
@@ -75,8 +88,10 @@ pub fn run(
     // the whole declared graph through the install substrate; anything else
     // moves exactly the named subtree. Both are `vibe update`, both report the
     // update root, and both borrow the SAME recorder.
-    let whole = args.all || args.packages.is_empty();
+    let whole = intent.is_some() || args.all || args.packages.is_empty();
     let execution = Execution {
+        configuration_report: configuration_report.clone(),
+        intent,
         args,
         embedded_root,
         offline,
@@ -95,7 +110,12 @@ pub fn run(
     let finalized = compile_trace::finalize(trace, exit, &now);
     let rendered = render_finalized(ctx, finalized);
     drop(lease_owner);
-    rendered
+    rendered?;
+    let report = configuration_report
+        .lock()
+        .map_err(|_| anyhow::anyhow!("configuration report lock poisoned"))?
+        .take();
+    Ok(report)
 }
 
 /// The prepared inputs both executed regions own.
@@ -105,6 +125,9 @@ pub fn run(
 /// re-reads none of them, so the tree the trace was locked against is the tree
 /// the update works on.
 pub(super) struct Execution {
+    pub(super) configuration_report:
+        std::sync::Arc<std::sync::Mutex<Option<vibe_install::evolution::EvolutionReport>>>,
+    pub(super) intent: Option<vibe_resolver::resolvo_engine::request::NormalizedRequest>,
     pub(super) args: UpdateArgs,
     pub(super) embedded_root: Option<PathBuf>,
     /// The command's ONE resolved offline posture — see

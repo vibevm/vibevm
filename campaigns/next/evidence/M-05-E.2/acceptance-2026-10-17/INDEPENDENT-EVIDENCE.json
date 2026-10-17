@@ -1,0 +1,212 @@
+{
+  "retained_logs": [
+    {
+      "source": "/tmp/m05-e2-report-final-install.log",
+      "retained": "/fast/git/v/research/2026-10-17-m05e2-semantic-review/evidence/m05-e2-report-final-install.log",
+      "sha256": "60fc1d52448158fa3b309d44b177a6dc89da12cadd75559258af533a7f557a6e",
+      "bytes": 24503,
+      "test_summaries": [
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 28 filtered out; finished in 0.28s"
+      ]
+    },
+    {
+      "source": "/tmp/m05-e2-report-final-orchestrator.log",
+      "retained": "/fast/git/v/research/2026-10-17-m05e2-semantic-review/evidence/m05-e2-report-final-orchestrator.log",
+      "sha256": "1aa1ea79494eff218fe6a02e82bfeab416eb23f86103a0185a01798457c3c105",
+      "bytes": 31752,
+      "test_summaries": [
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 660 filtered out; finished in 0.46s"
+      ]
+    },
+    {
+      "source": "/tmp/m05-e2-report-final-cli.log",
+      "retained": "/fast/git/v/research/2026-10-17-m05e2-semantic-review/evidence/m05-e2-report-final-cli.log",
+      "sha256": "3145e5989ebd6d955f0b709e2fed66bb0d8683b2a8688ddd0a18b876f1b6150a",
+      "bytes": 142684,
+      "test_summaries": [
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 952 filtered out; finished in 0.63s"
+      ]
+    },
+    {
+      "source": "/tmp/m05-e2-missing-final.log",
+      "retained": "/fast/git/v/research/2026-10-17-m05e2-semantic-review/evidence/m05-e2-missing-final.log",
+      "sha256": "e6460f0295299920fdfcc0d842baf31dee6a938040b0151ff87e70949c357390",
+      "bytes": 31289,
+      "test_summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 665 filtered out; finished in 0.02s"
+      ]
+    },
+    {
+      "source": "/tmp/m05-e2-fmt.log",
+      "retained": "/fast/git/v/research/2026-10-17-m05e2-semantic-review/evidence/m05-e2-fmt.log",
+      "sha256": "0830a5205329534a498c9a4c6343785d774c13180297fb64e076b6f1d03538db",
+      "bytes": 6742,
+      "test_summaries": []
+    },
+    {
+      "source": "/tmp/m05-e2-report-final-checks.json",
+      "retained": "/fast/git/v/research/2026-10-17-m05e2-semantic-review/evidence/m05-e2-report-final-checks.json",
+      "sha256": "8b9bddf5b89c773c2af4ad9b1743be58796e7e0e280370269364fc2b4123b1c4",
+      "bytes": 1018,
+      "test_summaries": []
+    }
+  ],
+  "fmt_baseline": [
+    {
+      "path": "crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+      "current_equals_before_E1_233bd5a8": true,
+      "last_committed_change": "a08764f83752848c85d4b3f6c42953c0f517c45a test(machine): share Deploy key with trusted local API"
+    },
+    {
+      "path": "crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+      "current_equals_before_E1_233bd5a8": true,
+      "last_committed_change": "0151e0426e1134a866e9936bee51c87eaf34fe5a test(machine): retain Deploy partial truth across local API"
+    },
+    {
+      "path": "crates/vibe-mcp/src/machine_session/incremental.rs",
+      "current_equals_before_E1_233bd5a8": true,
+      "last_committed_change": "b9264148ea3ce14d2313e16538c1ce20f076e53b feat(api): add bounded incremental nonblocking frame codec"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+      "current_equals_before_E1_233bd5a8": true,
+      "last_committed_change": "b312dd066f1618479596674ae58f86b07fe363b6 fix(lifecycle): retain canonical package source digest"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+      "current_equals_before_E1_233bd5a8": true,
+      "last_committed_change": "43f110fdfcbcd22d6d2bb79d87149215fe8ee9ec feat(api): enforce scoped controls and coordinate terminal inspection"
+    },
+    {
+      "path": "crates/vibe-publish/src/package_git_payload/tests.rs",
+      "current_equals_before_E1_233bd5a8": true,
+      "last_committed_change": "0c61b23fdadb1435c8cc4b7488d09e58d8d63a47 feat(publish): retain package Git payload under pending run"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+      "current_equals_before_E1_233bd5a8": true,
+      "last_committed_change": "cecd8552725a3fc17dd9139b1eabf0c5910db4ef feat(install): record exact requested and resolved configuration"
+    }
+  ],
+  "published_binding": {
+    "patch_sha256": "5c9de987b4224025c42492f6a03c8b6575998284ce1aa14ef6af29a9caad210c",
+    "patch_bytes": 94990,
+    "report_sha256": "7a71cc672273cb99b0c66ae523d4e96a32f194d78309fa2f8e4c83d45c2feab0",
+    "report_bytes": 25477,
+    "actual_HEAD": "aff3f408eb86aec8e5f7462693f36e10c13a98d0",
+    "method": "Pure text hunk reconstruction against git show HEAD:path, asserting every removed/context line, then byte equality with actual file; no Git index/worktree mutation.",
+    "all22_match": true,
+    "files": [
+      {
+        "path": "crates/vibe-cli/src/commands/mod.rs",
+        "sha256": "513338f8cdfe8f3d36be961bc154e64a55470a8229bb5a4df2aecf588285aa9a",
+        "bytes": 2315
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/reinstall.rs",
+        "sha256": "e9785d0cac63cd8e27e6b2ec82918f86273ca983fe00b475af697f8239087237",
+        "bytes": 13452
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/reinstall/force.rs",
+        "sha256": "c8ef9df4cd3d65e7ebeec838a48edd3bd5eb0dbe0fc6114707d28ed178d947b5",
+        "bytes": 20685
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/reinstall/prepare.rs",
+        "sha256": "3a4f721ce986e9985d483edcd03120b8076df26d877c561bf710412ccc944e95",
+        "bytes": 6396
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/reinstall/regenerate.rs",
+        "sha256": "0fc564c76d30383b04143fbb44b5024f0699531b76c403096a7caadb764c550b",
+        "bytes": 7673
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/update.rs",
+        "sha256": "22dc5b383386dd507745dc41cbaf43f24873f5d3aedc7fe7d7438c5e829a7709",
+        "bytes": 6255
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/update/scoped.rs",
+        "sha256": "39085acb21f1a8e5fe2372baf4eb48d57e2eecf23e3b6554e452f6a675f1a77c",
+        "bytes": 19956
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/update/whole.rs",
+        "sha256": "aa862c43e8921b2318ce36f7833ced53b40acf12d5506eb831bbb2a5f79c7aef",
+        "bytes": 15198
+      },
+      {
+        "path": "crates/vibe-install/Cargo.toml",
+        "sha256": "3a166a89a4587e3bcd21d5d165a6e2670677b0e976cf86e114aaf27304c420d6",
+        "bytes": 1338
+      },
+      {
+        "path": "crates/vibe-install/src/apply.rs",
+        "sha256": "05c03f8280bcac09de1a798dada9c2ee418318b77570fd47daf4edd3cc888eee",
+        "bytes": 23869
+      },
+      {
+        "path": "crates/vibe-install/src/fetched.rs",
+        "sha256": "ce4dd6d4c00f275590a0091cb0d2a20506843a76cd953b6bfa3c85bc03073127",
+        "bytes": 7709
+      },
+      {
+        "path": "crates/vibe-install/src/lib.rs",
+        "sha256": "628e03ddc00889d793ce258edbc91dba43191c5a1dfb2ca0c2c470b368232609",
+        "bytes": 18852
+      },
+      {
+        "path": "crates/vibe-install/src/plan.rs",
+        "sha256": "8fde879a1fcdafea96f99fef06858c1650a28efdad2db9ea64bf5809c1c56b5e",
+        "bytes": 30270
+      },
+      {
+        "path": "crates/vibe-install/src/record/m_05_d_1_cases.rs",
+        "sha256": "40eb9bbb44815a0bcc58f3151987f8e4352e879c3d2fd99a13b80fc88315fad5",
+        "bytes": 30659
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/install/mod.rs",
+        "sha256": "1b2f4d63ca9502afd7560e1bc70a4f3fd23f5846a3ec7c6d6bcc13c05401f217",
+        "bytes": 26254
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/lib.rs",
+        "sha256": "604d53ce7c1313418f1eebf278cd03574bc5f3117d598e65c2414f38f7b1a72b",
+        "bytes": 16785
+      },
+      {
+        "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "sha256": "97c9cbb83d193cd1795fa1d1c5e61ad0054006429f016898b004f4b857b58ca3",
+        "bytes": 156161
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/m_05_e_2_cases.rs",
+        "sha256": "29b5d0714c6625d6c29aafe76604728737b054326e683fc77c249740144172b5",
+        "bytes": 5405
+      },
+      {
+        "path": "crates/vibe-install/src/evolution.rs",
+        "sha256": "9fdc981d545285cb3a7e98368bb504c5718ca331ee78b2d2ea3da80b2fc42f34",
+        "bytes": 29632
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/install/configured_source.rs",
+        "sha256": "4c6edede4442564fa8eee546578a7b2753179ea167005140dddc62f95e54eb1f",
+        "bytes": 3501
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/install/m_05_e_2_cases.rs",
+        "sha256": "c6d0f51222fa65eebc47bba6c38116212a368daca4fc306b3c28e9989d66086d",
+        "bytes": 7769
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/install/m_05_e_2_fixture.rs",
+        "sha256": "e6594cb07c858ba3de1c5e50f5d2bb01471c692a91b636ae08e8d906ecd5e0d0",
+        "bytes": 7692
+      }
+    ]
+  }
+}

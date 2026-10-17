@@ -68,8 +68,10 @@ pub enum Plan {
 /// A confirmed-pending resolution — everything [`apply`](crate::apply)
 /// needs, carried by value so the apply phase cannot observe state
 /// the plan did not produce.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PlannedInstall {
+    pub(crate) captured_catalog: Option<vibe_resolver::resolvo_engine::CatalogInspection>,
+    pub(crate) configuration_update: bool,
     pub(crate) strict_conversion: bool,
     pub(crate) project_root: PathBuf,
     pub(crate) request: InstallRequest,
@@ -238,6 +240,29 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     spec_format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
+    plan_prepared_mode(
+        source,
+        project_root,
+        manifest,
+        workspace,
+        request,
+        spec_format,
+        observer,
+        false,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn plan_prepared_mode<S: InstallSource + ?Sized>(
+    source: &S,
+    project_root: &Path,
+    manifest: &mut Manifest,
+    workspace: &mut Workspace,
+    request: InstallRequest,
+    spec_format: SpecFormat,
+    observer: &dyn PlanObserver,
+    update: bool,
+) -> Result<Plan> {
     let lockfile = load_or_empty_lockfile(&workspace.root, &request.generated_by)?;
     let configured_lock = crate::record::read_configuration(&lockfile)?;
     if configured_lock
@@ -356,7 +381,8 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     // lockfile-respecting: a fresh lock is honoured verbatim, with no
     // version drift inside a constraint. An explicit
     // `vibe install <pkgref>` always runs the full pipeline.
-    if request.roots.is_empty()
+    if !update
+        && request.roots.is_empty()
         && freshness.matches
         && (!admitted_request || lockfile.meta.configuration.is_some())
     {
@@ -404,7 +430,9 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         source.normalized_request().unwrap_or(&normalized),
     )?;
     let source = &transaction;
-    crate::record::validate_replay(&lockfile, source, &request.roots)?;
+    if !update {
+        crate::record::validate_replay(&lockfile, source, &request.roots)?;
+    }
     if let Some(catalog) = source.catalog_inspection() {
         observer.catalog(catalog);
     }
@@ -596,11 +624,19 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
             .unwrap_or_default(),
         &fetched,
     )?;
-    crate::record::validate_replayed_result(&lockfile, current_record.as_ref(), &request.roots)?;
-    if migration_pending {
+    if !update {
+        crate::record::validate_replayed_result(
+            &lockfile,
+            current_record.as_ref(),
+            &request.roots,
+        )?;
+    }
+    if migration_pending && !update {
         manifest.write(project_root.join(Manifest::FILENAME))?;
     }
     Ok(Plan::Ready(Box::new(PlannedInstall {
+        captured_catalog: source.catalog_inspection().cloned(),
+        configuration_update: update,
         strict_conversion: false,
         project_root: project_root.to_path_buf(),
         request,

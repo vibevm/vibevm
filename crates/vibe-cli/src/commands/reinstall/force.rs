@@ -45,6 +45,72 @@ use super::inputs::{confirm, exact_pkgref, reinstall_stream_mode, resolver_args}
 
 struct SourceHashes(HashMap<(Group, String), String>);
 
+/// Exact prepared replay enters the same lifecycle/materialization owner as
+/// ordinary force, after the immutable proof has been checked. No resolver,
+/// provider, fetch or prompt is called on this path.
+pub(super) fn run_captured(
+    ctx: &output::Context,
+    inputs: Forced<'_>,
+    capture: &vibe_install::evolution::PreparedReinstall,
+) -> Result<ReinstallDraft> {
+    capture.validate(inputs.lockfile)?;
+    let resolution = capture.resolution();
+    let agent: std::sync::Arc<dyn vibe_lifecycle::AgentBackend> =
+        std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
+            &inputs.workspace.root,
+            &inputs.workspace.root_manifest,
+        ));
+    let lifecycle = InstallSlotLifecycle::from_projection_observed_prepared(
+        &inputs.workspace.root,
+        &inputs.workspace.root_manifest,
+        &resolution,
+        &resolution,
+        inputs.workspace,
+        inputs.metadata.clone(),
+        reinstall_stream_mode(ctx),
+        vibe_install::SlotLifecycleSeams {
+            observer: std::sync::Arc::new(LifecycleSlotObserver::new(ctx, inputs.metadata.clone())),
+            agent: agent.clone(),
+        },
+        inputs.lease.clone(),
+    )?;
+    let source_hashes = SourceHashes(
+        resolution
+            .iter()
+            .map(|r| {
+                (
+                    (r.group.clone(), r.name.clone()),
+                    r.source_hash.as_ref().expect("captured hash").to_string(),
+                )
+            })
+            .collect(),
+    );
+    apply(
+        ctx,
+        Apply {
+            lifecycle: &lifecycle,
+            identity: inputs.identity,
+            workspace: inputs.workspace,
+            metadata: inputs.metadata,
+            spec_format: inputs.spec_format,
+            trace: inputs.trace,
+            resolution: &resolution,
+            source_hashes,
+            lease: inputs.lease,
+            agent: &agent,
+        },
+    )
+    .map_err(|e| {
+        carry_measured(e, || {
+            RegisteredReportDraft::Reinstall(Box::new(ReinstallDraft::failed(
+                inputs.identity,
+                lifecycle.progress(),
+                lifecycle.take_reports().unwrap_or_default(),
+            )))
+        })
+    })
+}
+
 impl SlotVerifier for SourceHashes {
     fn source_hash<'a>(&'a self, dep: &ResolvedDep) -> Option<&'a str> {
         self.0

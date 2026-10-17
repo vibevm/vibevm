@@ -57,10 +57,11 @@ pub(super) struct PreparedReinstall {
     pub(super) trace: TracePreparation,
 }
 
-pub(super) fn prepare(
+pub(super) fn prepare_with_capture(
     ctx: &output::Context,
     args: &ReinstallArgs,
     root_offline: bool,
+    capture: Option<&vibe_install::evolution::PreparedReinstall>,
 ) -> Result<PreparedReinstall> {
     let project_root = resolve_project_root(&args.path)?;
     // The OUTERMOST lock, before anything execution-shaped is read: a
@@ -72,6 +73,26 @@ pub(super) fn prepare(
     // The ONE read of the SELECTED node's `vibe.toml` — see the module note on
     // what it decides and what it does not.
     let selection = SelectedManifest::read(&project_root).prepare();
+    // Check exact evidence under the same lease before run selection or any
+    // continuation can allocate lifecycle effects. The selection owns the
+    // actual workspace snapshot; execution still proves that bundle later.
+    if let Some(workspace) = selection.loaded_workspace() {
+        let lock = super::inputs::load_lockfile(&workspace.root);
+        if let Some(capture) = capture {
+            capture.validate(&lock?)?;
+            if !args.force {
+                let format = crate::commands::install::resolve_spec_format(
+                    &workspace.root_manifest,
+                    user_config.install.spec_format,
+                );
+                capture.validate_slots(&workspace.root, format)?;
+            }
+        } else if let Ok(lock) = lock {
+            vibe_install::evolution::require_update_authority(&lock).context(
+                "reinstall unavailable: prepared exact captures and current authority required",
+            )?;
+        }
+    }
     let requested = "reinstall";
     let chain = vec!["install".to_string()];
     // MATERIALISATION force and HOSTED-REPARK force are different things.

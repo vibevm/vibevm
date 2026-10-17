@@ -1,0 +1,58 @@
+{
+  "review": "independent_read_only_M05_E2_semantic_code_spec",
+  "recommendation": "bounded_candidate_no_actionable_P1_P2_found",
+  "accepted": false,
+  "root_owns_acceptance": true,
+  "campaign_tasks_accepted_claim": false,
+  "head": "aff3f408eb86aec8e5f7462693f36e10c13a98d0",
+  "supplied_attributed_source": "233bd5a8f9e92baf04f65f19ede8d693d7dfabf3",
+  "patch_sha256": "5c9de987b4224025c42492f6a03c8b6575998284ce1aa14ef6af29a9caad210c",
+  "patch_bytes": 94990,
+  "report_sha256": "7a71cc672273cb99b0c66ae523d4e96a32f194d78309fa2f8e4c83d45c2feab0",
+  "report_bytes": 25477,
+  "artifact_hashes_match": true,
+  "worktree_patch_files_checked": 22,
+  "worktree_patch_mismatches": [],
+  "p1": 0,
+  "p2": 0,
+  "findings": [],
+  "reporting_correction": {
+    "issue": "Global fmt baseline files list duplicates E2changedpaths",
+    "actual_fmt_files": 7,
+    "all_actual_fmt_files_match_HEAD_and_preE1": true,
+    "introduced_by_E1_or_E2": false,
+    "global_fmt_reported_exit": 1
+  },
+  "recorded_checks": {
+    "install": {
+      "passed": 3,
+      "failed": 0,
+      "filtered": 28
+    },
+    "orchestrator": {
+      "passed": 6,
+      "failed": 0,
+      "filtered": 660
+    },
+    "cli": {
+      "passed": 6,
+      "failed": 0,
+      "filtered": 952
+    },
+    "affected_repeat": {
+      "passed": 1,
+      "failed": 0,
+      "filtered": 665
+    },
+    "unique_tests": 15,
+    "reviewer_reran": false
+  },
+  "evidence": "/fast/git/v/research/2026-10-17-m05e2-semantic-review/EVIDENCE.json",
+  "limitations": [
+    "typed CLI command-adapter coverage; raw choice grammar/TTY/machine transport remains E4",
+    "E3 transaction/removal recovery and broader race windows not accepted here",
+    "global formatting remains baseline failure",
+    "Root must reconcile stale dispatched source attribution with actual E1-based candidate"
+  ],
+  "report": "/fast/git/v/research/2026-10-17-m05e2-semantic-review/REPORT.md"
+}

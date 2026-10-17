@@ -1,0 +1,45 @@
+{
+  "status": "Root_exact_safety_review",
+  "job_id": "job.runtime.packet.continuation.9b02c1e182c1854697727083e51849cd609d6fa98f63ad67c5b6b983372287b8",
+  "attempt_id": "attempt.runtime.packet.continuation.9b02c1e182c1854697727083e51849cd609d6fa98f63ad67c5b6b983372287b8",
+  "effect_id": "effect.runtime.packet.continuation.9b02c1e182c1854697727083e51849cd609d6fa98f63ad67c5b6b983372287b8",
+  "boundary": "Return a complete reconfiguration plan without applying drift.",
+  "current_public_job": {
+    "revision": 9194,
+    "execution": "succeeded",
+    "collection": "candidate_recorded",
+    "effect": "completed",
+    "safe": "unknown",
+    "stop_receipt": {
+      "delivery": "delivered",
+      "effect_id": "effect.runtime.packet.continuation.9b02c1e182c1854697727083e51849cd609d6fa98f63ad67c5b6b983372287b8",
+      "observation": "observation.vibevm-campaign"
+    }
+  },
+  "managed_metadata": {
+    "accounting_pending": false,
+    "collected": true,
+    "failed": false,
+    "process_stopped": true,
+    "result": {
+      "source_sequence": 2219,
+      "target": {
+        "dispatch_id": "dispatch.runtime.packet.continuation.9b02c1e182c1854697727083e51849cd609d6fa98f63ad67c5b6b983372287b8",
+        "job_id": "job.runtime.packet.continuation.9b02c1e182c1854697727083e51849cd609d6fa98f63ad67c5b6b983372287b8"
+      }
+    },
+    "source_sequence": 2219,
+    "state": "process_stopped",
+    "target": {
+      "dispatch_id": "dispatch.runtime.packet.continuation.9b02c1e182c1854697727083e51849cd609d6fa98f63ad67c5b6b983372287b8",
+      "job_id": "job.runtime.packet.continuation.9b02c1e182c1854697727083e51849cd609d6fa98f63ad67c5b6b983372287b8"
+    },
+    "unknown_tail": false
+  },
+  "known_pod_absent": 3590490,
+  "root_decision": "Complete source artifact and reconfiguration report preserved; tests use isolated fixtures. Normal exact-process stop delivered and current managed metadata stopped/collected with known tail. No live apply to campaign/package installation. Source WIP persists; not whole-attempt no-write or rollback evidence.",
+  "limitations": [
+    "Exact E2 boundary only; general checks do not substitute safety.",
+    "Source implementation persists for integration."
+  ]
+}
