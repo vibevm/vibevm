@@ -1,0 +1,263 @@
+{
+  "status": "recommend_accept_original_scope",
+  "p1": 0,
+  "p2": 0,
+  "findings": [],
+  "base": "efc6da9a04034dc280b4d5a0eabe8f8b4c723f97",
+  "candidate_id": "managed-result.8afc7db31db11e92b719203af8524575dc48e34ced701634ed85462bde7fe4a6",
+  "collected_revision": 11849,
+  "prior_review": "/fast/git/v/research/2026-10-17-m05f1-first-review/RESULT.json",
+  "first_frozen_snapshot_preserved": true,
+  "artifacts": {
+    "report": {
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/d02e7469a2a085338c026cb356712dee05127014915f02a4b7f0681caa63f239",
+      "bytes": 105308,
+      "sha256": "d02e7469a2a085338c026cb356712dee05127014915f02a4b7f0681caa63f239"
+    },
+    "patch": {
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/ffed1c43bc3b9f55588652414542f8f3b91546b4d95300017dce6197166202bc",
+      "bytes": 67844,
+      "sha256": "ffed1c43bc3b9f55588652414542f8f3b91546b4d95300017dce6197166202bc"
+    }
+  },
+  "final_path_count": 22,
+  "tracked_modified_count": 17,
+  "untracked_new_count": 5,
+  "current_hash_inventory": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "a3605b7cb7a0846868c80aecbcd5b604e097a90cff82fb1502c62be8344a12d3",
+      "bytes": 148455,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features.rs",
+      "sha256": "1df07cfdd8d782edfb9d411e6fa32abfc9cbb1c06d4dd7695274abcba395c8c5",
+      "bytes": 4175,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/m_05_f_1_cases.rs",
+      "sha256": "bb4ee17cbdbbdce976f41d3d5c1f364a13184c2735590807e327b48eba5ca45e",
+      "bytes": 4905,
+      "status": "untracked_new",
+      "delta_from_first": "modified",
+      "first_sha256": "88bf8ce9cfadb15be000e514e7086d384f08a62b34db2dc50354e4954b00ef4e"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/profile.rs",
+      "sha256": "6364a891d8afdfacf312b5fbe38dd8d16f899d752dc145953c3acb46f09e4ada",
+      "bytes": 6316,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/profile/constrained.rs",
+      "sha256": "45fa82ac54f30b4830aaab35cadcb5368377501182494ffb380fac956a0c1114",
+      "bytes": 4627,
+      "status": "untracked_new",
+      "delta_from_first": "modified",
+      "first_sha256": "e46788354334fa9dcea9058cb7f9a8dc139c7228a3e1de20eec3f52611c5594e"
+    },
+    {
+      "path": "crates/vibe-install/Cargo.toml",
+      "sha256": "0f59da4b920cc8c22f65d2f6e1b3df9b236be3e6dff53c5048d494f25030c9ab",
+      "bytes": 1410,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "crates/vibe-install/src/lib.rs",
+      "sha256": "fb47942bc59eac02fd00cd6d979ad378db38c6869db39c62138322c22bd9fa8e",
+      "bytes": 18921,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "crates/vibe-install/src/m_05_f_1_cases.rs",
+      "sha256": "e454a7042170b2cc653a1ff00ceaf3abeaa136f3629a54df3bd5e823297a187a",
+      "bytes": 8468,
+      "status": "untracked_new",
+      "delta_from_first": "modified",
+      "first_sha256": "9a96b7e1407125464be6cd51675e62132d31149c868627c47cf96a0d545ab1cc"
+    },
+    {
+      "path": "crates/vibe-package-source/src/cells.rs",
+      "sha256": "7374804997c79ff0135a3bae26d55102c995df2fc0370c3d88f167daf7c08426",
+      "bytes": 14075,
+      "status": "tracked_modified",
+      "delta_from_first": "added_owner_path"
+    },
+    {
+      "path": "crates/vibe-package-source/src/source.rs",
+      "sha256": "5be847ad1014401a02805c929db018651fca92e728eb932328c059bc453a497a",
+      "bytes": 22522,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "crates/vibe-registry/src/candidate_metadata.rs",
+      "sha256": "cc87854f9c1daac1e86255a2449bb767084c25aa2c9f2c01e200c5ccf4f0e395",
+      "bytes": 5400,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "crates/vibe-registry/src/local_registry.rs",
+      "sha256": "7685d2c2f0c34e1cf8cf2a1df54702168b6dc4959b74393e747ae7e20980f025",
+      "bytes": 16795,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "crates/vibe-resolver/src/local_registry_provider.rs",
+      "sha256": "39a4de65f6f349f0eaa7d10d658226d1a764fda295f553c7583cee5f977c2c63",
+      "bytes": 7349,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "sha256": "b13c7516929498a3e0d314b4e3648865b89301ca757d91eb71b5b1e294ea6ab7",
+      "bytes": 36751,
+      "status": "tracked_modified",
+      "delta_from_first": "modified",
+      "first_sha256": "077101a8819757bbe22caacdaa6204198dc8da5876823fcbe10efdd64a1bcd01"
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/m_05_f_1_cases.rs",
+      "sha256": "6570d5f75d0f522f782f8cba74215bfa7759ae9e1e034ef96b5f63e745d265fc",
+      "bytes": 7237,
+      "status": "untracked_new",
+      "delta_from_first": "modified",
+      "first_sha256": "20364c0a0f37b844d5621ff05e74da6c6d44566dc0f7b1e176c91fb465cfd235"
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+      "sha256": "9be719e2b1c16b80ac775e789aabe1d7a17fe0be6f797f29e79b1cebb19a4348",
+      "bytes": 21705,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/request.rs",
+      "sha256": "111b0c068b42b1c99bf073b0b5fb368a0f23c8ad4819d7628e1e7d2e79c3d347",
+      "bytes": 15047,
+      "status": "tracked_modified",
+      "delta_from_first": "added_owner_path"
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/README.md",
+      "sha256": "e06369ab17d3c09889e86ddde98aeae65d27145428c216bdafe853fc982589f7",
+      "bytes": 10977,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/tests/f1_fixture.rs",
+      "sha256": "3754264372ddf9d2eaa9d1161a765809f36c278fca37b52a5094af8f50e013c4",
+      "bytes": 6969,
+      "status": "untracked_new",
+      "delta_from_first": "modified",
+      "first_sha256": "323a0774ba1aeb15a62bd322478add432442a76274df4303617cb7d4e02ecf83"
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibe.toml",
+      "sha256": "0db48009aa53c682c50a084546c7bdaed394de469df13b9df6f7776833185fd0",
+      "bytes": 4354,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibevm/vibespecs/boot/03-flow-redbook.xml",
+      "sha256": "9f3ce37417724e05c3fbb676eedde5bad4e164a304464776fddf22ae98864379",
+      "bytes": 7936,
+      "status": "tracked_modified",
+      "delta_from_first": "unchanged"
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "sha256": "4aa318f95ddaef1374c04c2e5e5b2ebbd1726878eadfe351dc8da1f1023e340b",
+      "bytes": 167347,
+      "status": "tracked_modified",
+      "delta_from_first": "modified",
+      "first_sha256": "3abc0f4e78955808763cce74c84ee38c4cdf57991988f5be8b8645e11a371678"
+    }
+  ],
+  "modified_from_frozen_first": [
+    "crates/vibe-core/src/manifest/package/features/m_05_f_1_cases.rs",
+    "crates/vibe-core/src/manifest/package/features/profile/constrained.rs",
+    "crates/vibe-install/src/m_05_f_1_cases.rs",
+    "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+    "crates/vibe-resolver/src/resolvo_engine/m_05_f_1_cases.rs",
+    "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/tests/f1_fixture.rs",
+    "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+  ],
+  "unchanged_from_frozen_first": [
+    "Cargo.lock",
+    "crates/vibe-core/src/manifest/package/features.rs",
+    "crates/vibe-core/src/manifest/package/features/profile.rs",
+    "crates/vibe-install/Cargo.toml",
+    "crates/vibe-install/src/lib.rs",
+    "crates/vibe-package-source/src/source.rs",
+    "crates/vibe-registry/src/candidate_metadata.rs",
+    "crates/vibe-registry/src/local_registry.rs",
+    "crates/vibe-resolver/src/local_registry_provider.rs",
+    "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+    "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/README.md",
+    "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibe.toml",
+    "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibevm/vibespecs/boot/03-flow-redbook.xml"
+  ],
+  "added_owner_paths": [
+    "crates/vibe-package-source/src/cells.rs",
+    "crates/vibe-resolver/src/resolvo_engine/request.rs"
+  ],
+  "all_manifest_hashes_match_current_source": true,
+  "patch_paths_equal_actual_tracked_plus_untracked": true,
+  "read_only_reverse_patch_check_exit": 0,
+  "original_p2_resolutions": [
+    {
+      "legacy_profile": "constrained::read returns None for array-valued profile; real legacy decoder validates it. Existing core compatibility case now asserts profile=[] survives; unknown string profile still refuses."
+    },
+    {
+      "candidate_input": "admission skips unbound inventory rows; C2 inserts candidate-local NeedsSelection with only known required declarations and refuses selected unresolved candidates before returned effects. Ordinary routes use same known-required projection then refuse selected rich candidates without consumer input. Real configured/ordinary discarded-OR regression and selected-unbound negative cover the condition."
+    }
+  ],
+  "actual_retained_host_GNU_test_results": {
+    "core-final.log": [
+      "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 651 filtered out; finished in 0.01s"
+    ],
+    "resolver-corrected.log": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 133 filtered out; finished in 0.14s"
+    ],
+    "install-corrected.log": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 35 filtered out; finished in 0.81s"
+    ],
+    "c2-preservation.log": [
+      "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 127 filtered out; finished in 0.01s"
+    ]
+  },
+  "test_counts": {
+    "core_F1": 3,
+    "resolver_F1": 1,
+    "install_F1": 1,
+    "existing_C2_law_regression": 7
+  },
+  "tests_rerun_by_reviewer": false,
+  "environment": "Producer used explicitly corrected current grant for ordinary Linux GNU host, offline locked jobs2; no musl cross-build claimed from helper runtime config.",
+  "mechanical_results": "globalfmt7baselineFailed retained; scopedfmt16Rust and diff/reversecheck passed; XML parse also checked read-only here.",
+  "original_acceptance_assessment": [
+    "Local selected graphs contain exactly one Redbook continuity branch and preserve independent/positive-branch addon semantics through actual package-owned reader,C1/B2/C2,normalLocalSource/planner.",
+    "Version remains1.1.0; rootconsumer vibe.toml unchanged; no sibling conflict edit/publication/version increment in candidate."
+  ],
+  "meaningful_limits": [
+    "No durable apply/product installation was required or claimed; real source+prepared planner evidence supports original local graph criterion.",
+    "No universal CLI/service/MCP/all-reader/crossplatform/F2 migration closure claimed or demanded.",
+    "All original failed runs and historical metadata failure remain in report; later success does not erase them."
+  ],
+  "root_acceptance_required": true,
+  "reviewer_actions": "Read-only code/report/patch/hash/XML only; no source/spec/Git writes, builds/tests/models/API/store/process actions.",
+  "report": "/fast/git/v/research/2026-10-17-m05f1-final-review/REPORT.md"
+}

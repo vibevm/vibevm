@@ -1,0 +1,29 @@
+{
+  "decision": "approve_original_functional_scope_for_normal_API_acceptance",
+  "criteria_satisfied": [
+    0,
+    1
+  ],
+  "approved": true,
+  "safety_approved": true,
+  "work_id": "work.m05.f1",
+  "candidate_id": "managed-result.8afc7db31db11e92b719203af8524575dc48e34ced701634ed85462bde7fe4a6",
+  "job_id": "job.runtime.packet.continuation.46bb46c6f64680b36627da345b7f58bbda9cd9c86e62cafb9f20da500e098ded",
+  "review": "/fast/git/v/research/2026-10-17-m05f1-final-review/RESULT.json",
+  "review_sha256": "f3009ec49e69ef078df7cc364d803d76c680149973fc0e41f360ba79a66cfef5",
+  "rationale": "Original full F1 local graph/addon semantics and version/publication boundaries approved after exact22path review and actualhostcore3/resolver1/install1 plus7existingC2laws. ActualRedbook1.1 constraineddefinition reaches incumbentB1B2C1C2 normalLocalSource bind/planner, with explicitselected/defaultauthority, localcontinuity conflicts, optional positive additions and exactsource identities. Bothlegacyprofilearray andunusedrichcandidate P2 fixed; actuallyselectedunboundrich refusesbeforeeffects. Root inspected actualRedbookmanifest and reader marker shape; no F2migration/CLIparity/newgrammar-horizon demanded.",
+  "safety_basis": "Exact original boundary: Local definition and fixtures only; publication is root M-12 authority. Finalpatch is22local source/spec/test/packagepaths, noRootvibe.toml/siblingconflict/versionbump; actualtestprivatefixture/productionpreparedplanner, no productapply or externalpublication. Failclosed selectedunbound/unauthorizeddefaults beforeeffects verified by source+retainedcases. Bound solely tocurrentF1generation/candidate/attempt/effect, not a global safety or Shipping verdict.",
+  "formal_checks": {
+    "00": "passed: finalcore3 includinglegacyprofile compatibility",
+    "01": "passed: finalresolver1 withunusedOR/selectedunbound/sourceguards; existingC2law7 additionalpreservation",
+    "02": "passed: finalinstall1 actualnormalLocalSource+externalproductionplanner",
+    "03": "failed: literalglobalfmtsevenunchangedbaselinefiles; scoped16RustPassed separate",
+    "04": "passed: actualgitdiffcheck0 andreadonlyreversepatch0"
+  },
+  "limits": [
+    "NoF2consumer migration oruniversalCLI/service/MCP/durableapply claim.",
+    "No version bump/source orpackagepublication frommanagedworker; RootauthorizedGitmirroring isseparateprocess.",
+    "GlobalfmtFailed remains; firstunexecutedcases/Androidallplatformmetadata101 andlatercompile/fixturefailures retained honestly.",
+    "Rootapproval isnotWorkAccepted; normalguardedpublicAPI willrecord actualacceptance next."
+  ]
+}

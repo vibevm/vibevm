@@ -210,7 +210,7 @@ impl DepProvider for RouteProvider<'_> {
         n: &str,
         v: &semver::Version,
     ) -> Result<Manifest, DepProviderError> {
-        self.catalog.fetch_manifest(g, n, v)
+        self.catalog.required_source_manifest(g, n, v)
     }
 }
 impl VersionEnumerator for RouteProvider<'_> {
@@ -248,7 +248,7 @@ impl LegacyRouteProvider<'_> {
         n: &str,
         v: &semver::Version,
     ) -> Result<(Manifest, BTreeMap<String, (String, Vec<usize>)>), DepProviderError> {
-        let mut manifest = self.0.catalog.fetch_manifest(g, n, v)?;
+        let mut manifest = self.0.fetch_manifest(g, n, v)?;
         let parent = format!("{g}/{n}");
         let retained = |declaration: &str| {
             self.0.retained.iter().find(|e| {

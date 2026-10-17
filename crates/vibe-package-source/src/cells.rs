@@ -301,6 +301,16 @@ pub(crate) fn solve_catalog_request(
     let mut manifests = std::collections::BTreeMap::new();
     let mut effects = std::collections::BTreeMap::new();
     for node in recorded.graph.iter() {
+        if catalog
+            .metadata(&node.group, &node.name, &node.version)?
+            .checked_features
+            .is_some()
+        {
+            return Err(SolveError::UnsupportedRoute(format!(
+                "{}/{}@{}: package-owned choices require current consumer/domain input",
+                node.group, node.name, node.version
+            )));
+        }
         let manifest = catalog.fetch_manifest(&node.group, &node.name, &node.version)?;
         let feature_request = if node.is_root {
             vibe_resolver::FeatureRequest {

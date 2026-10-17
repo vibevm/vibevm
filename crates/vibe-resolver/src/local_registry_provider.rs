@@ -67,6 +67,9 @@ impl<'a> DepProvider for LocalRegistryDepProvider<'a> {
                 name: name.to_string(),
             });
         }
+        // Legacy direct solvers keep their metadata-only read. The ordinary
+        // decoder refuses opt-in constrained bytes, which must use the
+        // configured transaction with the captured definition below.
         let path = dir.join(Manifest::FILENAME);
         Manifest::read(&path).map_err(|e| {
             DepProviderError::Other(format!(
@@ -74,6 +77,22 @@ impl<'a> DepProvider for LocalRegistryDepProvider<'a> {
                 path.display()
             ))
         })
+    }
+
+    fn candidate_metadata(
+        &self,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<vibe_registry::CandidateMetadata, DepProviderError> {
+        let dir = self
+            .registry
+            .root()
+            .join(group.as_str())
+            .join(name)
+            .join(format!("v{version}"));
+        vibe_registry::CandidateMetadata::read_local_registry(&dir)
+            .map_err(|e| DepProviderError::Other(e.to_string()))
     }
 }
 

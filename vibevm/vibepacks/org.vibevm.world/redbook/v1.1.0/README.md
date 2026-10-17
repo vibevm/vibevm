@@ -14,11 +14,31 @@ agnostic of any particular coding agent. @status:impl/done
 @fact:THE-UMBRELLA-NAMES-A-TESTED-SET-AND-CARRIES-THE-BOOK This umbrella package names
 a **tested set** of them and carries the book itself. @status:impl/done
 
-@fact:REQUIRING-THE-UMBRELLA-INSTALLS-THE-WHOLE-COLLECTION Requiring `flow:redbook` installs the whole collection: the members
-arrive through the dependency closure, each contributing its own
-boot snippet and its own `spec/flows/<name>/` documents. @status:impl/done
+@fact:REQUIRING-THE-UMBRELLA-INSTALLS-THE-WHOLE-COLLECTION The current mutable 1.1.0 definition installs the common collection plus the explicitly selected continuity and additions. Selected members arrive through the dependency closure and contribute their own boot snippets and protocol documents. @status:spec/done
 
-## The edition model {#editions}
+## Continuity and additions in 1.1.0 {#continuity}
+
+The package-owned `constrained-r1` definition declares exactly one continuity
+option: `mup` activates `multi-user-planning`; `wal` activates `wal`.
+The declared default is `mup`. A fresh unattended request still requires a
+selection or explicit permission for that exact shown default.
+
+`additions` accepts zero or more of `health-audit`, `manual-tests`,
+`comparative-research` and `dev-runtime-docs`. `mup-additions` offers
+`discovery-prompt` for optional collaborative research with MUP;
+`wal-additions` offers `wal-specspaces` for WAL's specification-space adapter.
+Both branch groups use positive same-package guards. A selection in the
+inactive branch stays dormant and adds no dependencies. Continuity conflicts
+are local to Redbook; a separately required WAL or MUP package stays legal.
+
+This source definition is consumed by the explicit normalized Rust source
+route. The legacy manifest decoder refuses this opt-in grammar. Existing
+consumer exclusions are migrated separately; this change does not publish
+packages or change the current 1.1.0 version. Governing rules:
+`PROP-003#M05F1-PROFILE`, `#M05F1-ADMISSION`, `#M05F1-REDBOOK` and
+`PROP-000#REDBOOK-COMPOSITION-POLICY` (D-019).
+
+## Historical edition model {#editions}
 
 @fact:THE-UMBRELLAS-VERSION-IS-THE-EDITION-NUMBER The umbrella's version is the **edition number**. @status:impl/done
 
@@ -37,10 +57,10 @@ edition is a new umbrella version with refreshed pins. @status:impl/done
   two-process model, the file IPC, and the memory model. @status:impl/done
 - @fact:EDITION-0-2-0 **Edition 0.2.0** (the second edition) — added eleven project-practice
   flows for running a project over the long haul. @status:impl/done
-- @fact:EDITION-1-0-0 **Edition 1.0.0** (this edition) — remints the tested
+- @fact:EDITION-1-0-0 **Edition 1.0.0** (the historical release edition) — remints the tested
   collection as the stable 1.0 world. @status:impl/done
 
-## Members (edition 1.0.0) {#members}
+## Historical members (edition 1.0.0) {#members}
 
 @fact:books-core-table-lead The book's core: @status:impl/done
 
@@ -131,4 +151,3 @@ removed by uninstalling them individually. @status:impl/done
 
 @fact:THE-BOOK-TEXT-SHIPS-UNDER-THE-SAME-TERMS The book text under `spec/book/` is the
 author's manuscript and ships under the same terms. @status:impl/done
-

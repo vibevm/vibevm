@@ -4769,9 +4769,11 @@ dependencies = [
  "vibe-facts",
  "vibe-lifecycle",
  "vibe-native-loader-fixture",
+ "vibe-package-source",
  "vibe-registry",
  "vibe-resolver",
  "vibe-safefs",
+ "vibe-test-support",
  "vibe-wire",
  "vibe-workspace",
 ]

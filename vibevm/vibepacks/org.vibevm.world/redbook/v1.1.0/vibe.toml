@@ -20,11 +20,9 @@ source = "vibevm/vibespecs/boot/03-flow-redbook.xml"
 
 category = "flow"
 
-# Edition 1.0.0 — the 1.0 release edition. An edition is a tested set:
-# members are pinned exactly, and the umbrella's version is the
-# edition number. Members evolve on their own lines between editions.
-# This edition adds the wave-2 practices (operating-modes through
-# tool-design-lessons) to the ten of edition 0.1.0.
+# Current mutable next cohort 1.1.0 (D-019), following historical edition 1.0.
+# Members remain exactly pinned; routine composition changes do not bump it.
+# PROP-003#M05F1-REDBOOK: continuity is package-local explicit choice.
 
 [[boot_snippet.fragment]]
 source = "vibevm/vibespecs/boot/03a-member-wal.xml"
@@ -64,3 +62,49 @@ when = "installed:org.vibevm.world/wal-specspaces"
 # Governing law: spec://org.vibevm.core/vibevm/common/PROP-000#REDBOOK-COMPOSITION-POLICY; public distribution remains held by NEXT-PUBLICATION-HOLD.
 "flow:org.vibevm.world/dev-runtime-docs" = "=1.1.0"
 "flow:org.vibevm.world/wal-specspaces" = "=1.1.0"
+"flow:org.vibevm.world/wal" = "=1.1.0"
+"flow:org.vibevm.world/multi-user-planning" = "=1.1.0"
+
+# Optionality belongs to declarations; effects reference those same IDs and
+# preserve their exact version/source/visibility metadata.
+[features]
+profile = "constrained-r1"
+optional = [
+  "org.vibevm.world/multi-user-planning",
+  "org.vibevm.world/wal",
+  "org.vibevm.world/wal-specspaces",
+  "org.vibevm.world/health-audit",
+  "org.vibevm.world/manual-tests",
+  "org.vibevm.world/comparative-research",
+  "org.vibevm.world/dev-runtime-docs",
+  "org.vibevm.world/discovery-prompt",
+]
+
+[features.effects]
+mup = [{ dependency = "org.vibevm.world/multi-user-planning" }]
+wal = [{ dependency = "org.vibevm.world/wal" }]
+health-audit = [{ dependency = "org.vibevm.world/health-audit" }]
+manual-tests = [{ dependency = "org.vibevm.world/manual-tests" }]
+comparative-research = [{ dependency = "org.vibevm.world/comparative-research" }]
+dev-runtime-docs = [{ dependency = "org.vibevm.world/dev-runtime-docs" }]
+discovery-prompt = [{ dependency = "org.vibevm.world/discovery-prompt" }]
+wal-specspaces = [{ dependency = "org.vibevm.world/wal-specspaces" }]
+
+[features.groups.continuity]
+cardinality = "exactly-one"
+members = ["mup", "wal"]
+defaults = ["mup"]
+
+[features.groups.additions]
+cardinality = "zero-or-more"
+members = ["health-audit", "manual-tests", "comparative-research", "dev-runtime-docs"]
+
+[features.groups.mup-additions]
+cardinality = "zero-or-more"
+members = ["discovery-prompt"]
+guards = [{ member = "mup" }]
+
+[features.groups.wal-additions]
+cardinality = "zero-or-more"
+members = ["wal-specspaces"]
+guards = [{ member = "wal" }]

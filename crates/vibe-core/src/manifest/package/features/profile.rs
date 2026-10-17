@@ -6,6 +6,8 @@ use serde::{Deserialize, Serialize};
 use super::{FeaturesTable, constraints::*, effects::*};
 use crate::manifest::{Manifest, package::ManifestWire};
 
+pub mod constrained;
+
 pub(crate) trait FeatureWire: Default + Clone {
     fn is_empty(&self) -> bool;
 }
@@ -165,7 +167,12 @@ pub(crate) fn read_typed(text: &str) -> Result<CheckedFeatureManifest, String> {
     let legacy = wire.features.legacy();
     // Parsing typed fields is not sufficient: reject alias/legacy sigils in
     // typed operands before constructing their canonical semantic projection.
-    for effects in wire.features.features.values() {
+    validate_typed(&wire.features.features)?;
+    compose(wire.into_manifest_with_features(legacy)?)
+}
+
+fn validate_typed(features: &BTreeMap<String, Vec<TypedEffect>>) -> Result<(), String> {
+    for effects in features.values() {
         for effect in effects {
             match effect {
                 TypedEffect::Local(v) => {
@@ -181,5 +188,5 @@ pub(crate) fn read_typed(text: &str) -> Result<CheckedFeatureManifest, String> {
             }
         }
     }
-    compose(wire.into_manifest_with_features(legacy)?)
+    Ok(())
 }

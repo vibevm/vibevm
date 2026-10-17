@@ -15,6 +15,9 @@
 mod capabilities;
 mod catalog;
 pub mod configuration;
+
+#[cfg(test)]
+mod m_05_f_1_cases;
 pub mod request;
 mod snapshot;
 pub use capabilities::{CapIndex, CapProvider};
