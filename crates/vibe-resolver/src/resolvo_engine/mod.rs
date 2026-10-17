@@ -494,3 +494,6 @@ pub use semver::Version as CandidateVersion;
 
 #[cfg(test)]
 mod m_05_c_3_cases;
+
+#[cfg(test)]
+mod m_05_g_1_cases;

@@ -345,7 +345,9 @@ impl InstallSource for FrozenSource<'_> {
                     if !parent.dependencies.contains(&provider) { parent.dependencies.push(provider.clone()); }
                     resolution.recorded.choices.push(vibe_resolver::resolvo_engine::SelectedChoice { parent: edge.parent.clone(), declaration: edge.declaration.clone(), alternative: 0, provider });
                 }
-                vibe_resolver::resolvo_engine::request::RouteResolution::bind(&self.catalog, &self.request, resolution.recorded, resolution.manifests, resolution.effects)
+                let mut rebound = vibe_resolver::resolvo_engine::request::RouteResolution::bind(&self.catalog, &self.request, resolution.recorded, resolution.manifests, resolution.effects)?;
+                rebound.rejected = resolution.rejected;
+                Ok(rebound)
             });
         match result {
             Ok(resolution) => {

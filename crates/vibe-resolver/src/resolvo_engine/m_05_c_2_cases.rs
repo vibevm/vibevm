@@ -65,7 +65,7 @@ impl VersionEnumerator for Source {
         }
     }
 }
-fn catalog() -> TransactionCatalog {
+pub(super) fn catalog() -> TransactionCatalog {
     let directory = tempfile::tempdir().unwrap();
     let mut source = Source(BTreeMap::new());
     for (name, version, body) in [
@@ -105,7 +105,7 @@ fn catalog() -> TransactionCatalog {
     }
     TransactionCatalog::capture(&source, &[p("app"), p("blocker")]).unwrap()
 }
-fn request() -> wire::Request {
+pub(super) fn request() -> wire::Request {
     let mut request = codec::decode_request(include_bytes!(
         "../../../../formats/corpora/consumer-configuration-request/e1/valid/omitted.json"
     ))
@@ -117,7 +117,7 @@ fn request() -> wire::Request {
     request.edges[0].selections.clear();
     request
 }
-fn definitions(
+pub(super) fn definitions(
     catalog: &TransactionCatalog,
     request: &wire::Request,
 ) -> Vec<CandidateConfiguration> {
@@ -185,7 +185,7 @@ fn full_graph(graph: &ResolvedGraph) -> Vec<(String, bool, Vec<String>)> {
         })
         .collect()
 }
-fn assert_selected(result: &ConfiguredResolution, extra: &[&str]) {
+pub(super) fn assert_selected(result: &ConfiguredResolution, extra: &[&str]) {
     let mut expected = FeatureExpansion {
         active_features: ["ordinary".into()].into(),
         active_deps: ["org.example/good".into()].into(),

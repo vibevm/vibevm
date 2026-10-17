@@ -266,7 +266,7 @@ pub(crate) fn solve_catalog_request(
                 retained,
             )
             .map_err(|error| SolveError::Configuration(Box::new(error)))?;
-        return RouteResolution::bind(
+        let mut resolution = RouteResolution::bind(
             catalog,
             request,
             RecordedResolution {
@@ -275,7 +275,9 @@ pub(crate) fn solve_catalog_request(
             },
             result.manifests,
             result.effects,
-        );
+        )?;
+        resolution.rejected = result.rejected;
+        return Ok(resolution);
     }
     let provider = RouteProvider {
         catalog,

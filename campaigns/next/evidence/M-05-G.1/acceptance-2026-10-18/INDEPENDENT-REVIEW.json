@@ -1,0 +1,239 @@
+{
+  "status": "recommend_accept_original_G1_scope",
+  "p1": 0,
+  "p2": 0,
+  "findings": [],
+  "candidate_id": "managed-result.a65158e615e7353c7079ea0828afd157eb794f73a0c51571eacd1e26ce8e26de",
+  "base": "88174dd48c2855a2c1770647060cbc3a980ca852",
+  "job_execution": "Root reported actual job13092 succeeded; candidate flags not acceptance",
+  "freeze": "/fast/git/v/research/2026-10-18-m05g1-candidate/FREEZE.json",
+  "freeze_sha256": "91a0e5780128dd108a7c73744182ad3f10fac7fb1b513c6be0444ea5b0a69ca5",
+  "artifacts": [
+    {
+      "kind": "report",
+      "path": "/fast/git/v/research/2026-10-18-m05g1-candidate/REPORT.txt",
+      "sha256": "4767ec8c1864010e02b4ad115e261354e8844c12916219be7f86a4527dbb886c",
+      "bytes": 598023
+    },
+    {
+      "kind": "patch",
+      "path": "/fast/git/v/research/2026-10-18-m05g1-candidate/CANDIDATE.patch",
+      "sha256": "ab9e113a4f4961156c0bee0ab40ed5a6a32e633518bbb5ca1cf8f7e503bacee6",
+      "bytes": 56992
+    }
+  ],
+  "source_hash_inventory": [
+    {
+      "path": "crates/vibe-package-source/src/cells.rs",
+      "sha256": "831f6c6f17f8aa3f58c7760ee22cb8895e1dcdde24ab1a27166d9fcb800ffcfd",
+      "bytes": 14168
+    },
+    {
+      "path": "crates/vibe-package-source/src/source.rs",
+      "sha256": "38280090c78992bad4592ffc7bf2815381c4d4e4ab632d3bc312d0dd875613ad",
+      "bytes": 22593
+    },
+    {
+      "path": "crates/vibe-package-source/src/source/transaction.rs",
+      "sha256": "750332db0a1257e4e5c6aa61d017c59595da0802feb82fc5175207c54475aa3b",
+      "bytes": 18199
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+      "sha256": "7833dca3211e4de0c016842cdad5688e50d264f3a70dc34b027182fb5d36e477",
+      "bytes": 18882
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+      "sha256": "bb2704b4e9adb6fe99c0c1b7f5c1b11ada9e43779ed80d089d88ca326d512418",
+      "bytes": 21739
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/request.rs",
+      "sha256": "ffe87ab2a3a1817b9a50b39ca43d8e4ba16062f86dba78f6334c243731e027e1",
+      "bytes": 15302
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "sha256": "21e1c7c48ace5047bd8846191548bc9c7ed10e5551bd294520d5030e83b4ea7d",
+      "bytes": 175753
+    },
+    {
+      "path": "crates/vibe-install/tests/g1_support/mod.rs",
+      "sha256": "7411abcc1659e021aba110f1be8e554c4d0033dd94e5cf20e98213aa6c7f22d7",
+      "bytes": 6129
+    },
+    {
+      "path": "crates/vibe-install/tests/m_05_g_1_cases.rs",
+      "sha256": "0cd261ac95958f67fb4cf817e782a5db1b791abd4b4dd0d6096f9fc7f2e9ff76",
+      "bytes": 12539
+    },
+    {
+      "path": "crates/vibe-package-source/src/source/m_05_g_1_cases.rs",
+      "sha256": "1280c9a330c0c416b31aa8ad2e73335268ea0a98cbe52c8d19ffc2ae0026f97e",
+      "bytes": 12329
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/m_05_g_1_cases.rs",
+      "sha256": "f6c3dad840a0212cbc3df29235c731a8f5493302984645ffc2dce6618ec4a74b",
+      "bytes": 11102
+    }
+  ],
+  "frozen_files_verified": 11,
+  "patch_paths_equal_frozen_source": true,
+  "read_only_reverse_patch_check_exit": 0,
+  "tracked_baseline_blob_prefixes_verified_at_base": 7,
+  "governing_XML_parse": "passed",
+  "original_task": {
+    "id": "M-05-G.1",
+    "title": "Prove supported solver and workspace parity",
+    "goal": "Close candidate and configuration behavior across actually supported backends.",
+    "read_paths": [
+      "crates/vibe-resolver/src/lib.rs",
+      "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+      "crates/vibe-package-source/src/source.rs",
+      "crates/vibe-install/src/visibility_projection.rs",
+      "crates/vibe-resolver/src/features.rs",
+      "crates/vibe-resolver/Cargo.toml",
+      "crates/vibe-package-source/Cargo.toml",
+      "crates/vibe-package-source/src/lib.rs"
+    ],
+    "write_paths": [
+      "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "crates/vibe-resolver/src/",
+      "crates/vibe-package-source/src/",
+      "crates/vibe-install/tests/",
+      "crates/vibe-resolver/Cargo.toml",
+      "crates/vibe-resolver/src/lib.rs",
+      "crates/vibe-package-source/Cargo.toml",
+      "crates/vibe-package-source/src/lib.rs"
+    ],
+    "steps": [
+      "Run the accepted feature/group corpus against each supported backend capability set.",
+      "Compare selected request/effect graph or equivalent typed conflict, including multi-member roots and capability/OR providers.",
+      "Keep unsupported semantics explicit and ensure all supported routes expose rejected-candidate reasons."
+    ],
+    "positive_cases": [
+      "Each supported backend preserves all consumers and finds the same valid configuration class."
+    ],
+    "negative_cases": [
+      "Candidate leakage, wrong-version conditional satisfaction and hidden fallback fail the corpus."
+    ],
+    "checks": [
+      "SELECT BEFORE DISPATCH: vibe-resolver target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-resolver <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "SELECT BEFORE DISPATCH: vibe-package-source target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-package-source <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "SELECT BEFORE DISPATCH: vibe-install target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-install <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "cargo fmt --all -- --check",
+      "git diff --check"
+    ],
+    "acceptance": [
+      "Backend matrix records exact exercised modes and unsupported ones.",
+      "Final graph retains actual selected technical providers."
+    ],
+    "safe_stop": "A backend-specific unsupported result cannot be reported as full parity.",
+    "commit_subject": "test(resolver): prove configuration backend parity",
+    "notes": [
+      "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+      "Permanent destination: vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml (existing source). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+      "TO CREATE: m_05_g_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+      "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+      "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+    ]
+  },
+  "original_task_file_sha256": "03370f83f77e668605bfe6ae807daf655402204946306fd83ab18b2e54981276",
+  "criteria": [
+    {
+      "criterion": "Backend matrix records exact exercised modes and unsupported ones.",
+      "assessment": "Supported. Explicit code-backed matrix distinguishes shared pure B1/B2 evaluation, configured resolvo, typed naive/sat refusal, measured legacy support and source/search limits; no unsupported cell counted as full parity."
+    },
+    {
+      "criterion": "Final graph retains actual selected technical providers.",
+      "assessment": "Supported. Standard source/planner routes retain actual selected capability/OR/declaration/provider witnesses and immutable identities. Tests validate graph edges against actual choices and preserve choices/effects/request/reasons through retry."
+    }
+  ],
+  "safe_stop_assessment": "Honored: BackendCapability, first-pick OR Provider failure, offline Multi source-unavailable and configured unsupported boundaries remain explicit, never reported as full parity or solver fallback.",
+  "production_changes": [
+    "RouteResolution adds candidate-local rejected reasons, initialized empty for legacy routes.",
+    "cells::solve_catalog_request copies actual ConfiguredResolution.rejected; FrozenSource masked/conditional rebinding preserves that vector.",
+    "Selected graph/source/request/provenance guard predicates are unchanged; four C2 helpers only pub(super) for existing accepted oracle reuse."
+  ],
+  "scope_assessment": "Real owned Rust source/planner regression work, not disconnected smoke substitution. No new backend/solver/CLI/MCP/process/context authority; spec addendum preserves all prior laws.",
+  "retained_final_logs": {
+    "resolver-g1-4.log": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 134 filtered out; finished in 0.04s",
+    "source-g1-7.log": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 42 filtered out; finished in 0.10s",
+    "install-g1-5.log": "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s",
+    "resolver-m_05_b_1_cases.log": "test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 124 filtered out; finished in 0.00s",
+    "resolver-m_05_b_2_cases.log": "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 127 filtered out; finished in 0.00s",
+    "resolver-m_05_c_1_cases.log": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 134 filtered out; finished in 0.00s",
+    "resolver-m_05_c_2_cases.log": "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 129 filtered out; finished in 0.01s",
+    "resolver-m_05_c_3_cases.log": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 134 filtered out; finished in 0.00s",
+    "source-m_05_c_1_cases.log": "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 43 filtered out; finished in 0.00s",
+    "source-m_05_c_3_cases.log": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 42 filtered out; finished in 0.07s"
+  },
+  "new_tests": 13,
+  "retained_existing_tests": 39,
+  "distinct_selected_tests": 52,
+  "family_counts": {
+    "resolver_G1": 4,
+    "package_source_G1": 4,
+    "install_G1": 5,
+    "B1": 12,
+    "B2": 9,
+    "resolver_C1": 2,
+    "resolver_C2": 7,
+    "resolver_C3": 2,
+    "source_C1": 3,
+    "source_C3": 4
+  },
+  "actual_matrix": [
+    "28 cardinality/selection/default combinations +2 guard branches via configured resolvo vs pure evaluator",
+    "12 Local/Multi/Embedded x default/resolvo/naive/sat legacy source cells including solve/metadata/empty mask retry",
+    "12 corresponding configured source cells:6 resolvo positives,6 explicit naive/sat BackendCapability controls",
+    "Missing-first OR Local/Embedded measured resolvo success vs naive/sat first-pick failure; offline Multi reports source-unavailable for all",
+    "9 wrong-version OR source cells;3 corruptLocal backend controls",
+    "9 multi-member legacy workspace positives and9 incompatible-root typed conflicts",
+    "9 authored multi-consumer workspace cells:3 configured resolvo positives,6 refusal controls",
+    "3 prepared visibility retry sources retain exact selected effects/request/rejected reasons",
+    "3 Local active wrong-version conditional planner refusals vs roots-only technical solve",
+    "Direct configured forwarding strong/weak/native/multiple-instance explicit unsupported controls"
+  ],
+  "baseline_fmt": {
+    "state": "failed",
+    "retained_fmt_log_paths": {
+      "fmt-all-1.log": [
+        "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs"
+      ]
+    },
+    "scope_fmt": "separate success, not substitution"
+  },
+  "failures_preserved": [
+    "resolver missing captured app2 definition and cardinality oracle assumption",
+    "source self-crate/import/manifest-field compile failure",
+    "duplicate edge multiplicity oracle error",
+    "offlineMulti missing metadata incorrectly expected absence initially",
+    "install reachable-provider ordering/cache interference",
+    "private test-module import compile failure",
+    "authored shared-instance identity mismatch correctly refused by B2",
+    "bounded process-local org.g1 cache fixture isolation correction"
+  ],
+  "meaningful_limits": [
+    "B1/B2 native/separate-domain pure tests do not imply technical native/multiple-instance support.",
+    "Configured conditional/obsoletes/nonregistry/crosspackageforwarding/native/multiple-instance support not added.",
+    "Naive/sat OR search completeness and reverse-registry capability discovery not claimed.",
+    "Rejected vector carries actual candidate-local evaluator reasons, not an invented complete SAT rejection decision trace.",
+    "No remote network/allplatform/crossmusl/CLI-MCP/apply-recovery/G2 matrix gate added.",
+    "Globalfmt7 baseline debt remains outside this candidate."
+  ],
+  "reviewer_actions": "Read-only source/task/dispatch/report/hash/XML/base-blob checks; no tests/builds/models/API/process/source/spec/Git mutations.",
+  "acceptance_owner": "Root; this recommendation does not accept/stop/mutate current G1 Work",
+  "report": "/fast/git/v/research/2026-10-18-m05g1-final-review/REPORT.md"
+}
