@@ -1,0 +1,45 @@
+{
+  "task": "M-05-E.1",
+  "review_kind": "independent_read_only_final_delta",
+  "accepted": false,
+  "acceptance_owner": "Root FirstAgent",
+  "source_base": "87da7758f7ecddc447cc8da0062443773d57af86",
+  "source_hashes_matched": 15,
+  "exact_changed_and_untracked_path_set_matched": true,
+  "patch_source_bindings_matched": 15,
+  "published_artifact_hashes_matched": 2,
+  "changed_since_second": 4,
+  "prior_p2": "positive CLI production reachability",
+  "prior_p2_disposition": "resolved by ordinary show::run/run_features -> Unix host query -> public held-basis exchange -> ordinary stdout, with real dispatch test",
+  "new_findings": [],
+  "new_p1_count": 0,
+  "new_p2_count": 0,
+  "published_final_current_tests": 16,
+  "applicable_retained_unique_tests": 17,
+  "combined_unique_tests": 33,
+  "failed_current_run": {
+    "exit": 101,
+    "passed": 6,
+    "failed": 1,
+    "reason": "negative socket test expected EOF instead of legitimate ConnectionReset; corrected cfg(test) assertion retains refusal/no-response checks"
+  },
+  "global_fmt": {
+    "exit": 1,
+    "new_run": false,
+    "baseline_interpretation": "Root-owned"
+  },
+  "criteria": {
+    "fast_path_request_definition_identity": "supported by unchanged source and applicable prior execution",
+    "discovery_no_authored_cache_mutation": "supported for frozen service, not endpoint or whole-process activity"
+  },
+  "qualified_limits": [
+    "Unix-only CLI host transport; explicit refusal elsewhere",
+    "Caller-trusted endpoint; root/capture are correlation, not peer authentication",
+    "Embedding host owns access/listener/lifecycle; no auto-started daemon",
+    "Presentation response grants no install/default/configuration authority",
+    "Global fmt failure remains failure"
+  ],
+  "tests_builds_models_process_api_cleanup_or_git_mutations_by_reviewer": 0,
+  "recommendation": "Root may evaluate original E1 acceptance with previous P2 resolved; no additional broad verification/architecture gates requested",
+  "report": "REPORT.md"
+}

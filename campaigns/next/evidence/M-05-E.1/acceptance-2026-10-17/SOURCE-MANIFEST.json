@@ -1,0 +1,69 @@
+{
+  "repository": "/fast/git/v/vibevm-next",
+  "source_base": "87da7758f7ecddc447cc8da0062443773d57af86",
+  "files": [
+    {
+      "path": "crates/vibe-cli/src/cli/inspect.rs",
+      "sha256": "52ba888e63b9bc810c776b4910596e32cb67ee70d901c132f28aab2081f7141e"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/show/features.rs",
+      "sha256": "ac0f16412ab734defc581d88ab04533e33ec3873aa8f3d354a2e3ec196b15b32"
+    },
+    {
+      "path": "crates/vibe-install/src/lib.rs",
+      "sha256": "68cd4fc6f7f108a0dfcd6fe5803bcdc0eac2c60d1a357541905e17d41f12946e"
+    },
+    {
+      "path": "crates/vibe-install/src/plan.rs",
+      "sha256": "54361165c5fd675af5b3be34a9b2309bab480d8400106913b2e7293bc9589a64"
+    },
+    {
+      "path": "crates/vibe-install/src/record.rs",
+      "sha256": "53482faf61a96341bfa0e0fb4756bf89a3c99d4fae67966fefb11257fa7ff89c"
+    },
+    {
+      "path": "crates/vibe-install/tests/m_05_a_1_cases.rs",
+      "sha256": "cd4f17aa54a93af58f5817109d9ad95db6a7f527b39fd32527d702a120e88a74"
+    },
+    {
+      "path": "crates/vibe-install/tests/m_05_e_1_cases.rs",
+      "sha256": "c43d2e90d912a4f9124b8af4442273cf8ddd834b3580f5b3dc1dda28cd895cf2"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "sha256": "57cd25efeea619563732d5c7b16f4b79a51db5b4bf37bcf9e4ce55c96089fcd0"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/configuration_discovery.rs",
+      "sha256": "25b284f2120d0c23e6351f626c2e248660fb7f4d920c93669d2236619f0a42a9"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/catalog.rs",
+      "sha256": "49688832ac49e33e438db73641b18813704385aa1013e0d2b20209cc7d467212"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/configuration_discovery_fixture.rs",
+      "sha256": "6dcc366ccb9b520d87fa2474c593ad13b17aa1daeec6609d9c10d5f8579e9fcb"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/mod.rs",
+      "sha256": "fbab512e81e5d3ef1391660a5a2590b03e431e798a6be5454a385b126e53c0f0"
+    },
+    {
+      "path": "crates/vibe-workspace/src/configuration_discovery.rs",
+      "sha256": "4defbbb85b81b6d052ab5f26e67c1a55626ce4ecb2e6ddcf50fa2dad49f05f59"
+    },
+    {
+      "path": "crates/vibe-workspace/src/lib.rs",
+      "sha256": "9b91800f275c548fe11515e86059d3d176efe53c88aaf65d9e52186d82487c7b"
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "sha256": "f03b05a7d211b22d2c73c758fb1fcddef6101bd5ccd5c05f651d0faa69dfc4be"
+    }
+  ],
+  "candidate_id": "managed-result.d85c80ca855a31150e6c53c36c5e92d0b2084a73e82bbb33d49a8ebfb16be81e",
+  "accepted": false,
+  "path_provenance": "actual git diff HEAD +nonignored untracked; report uses scope not changed_paths"
+}

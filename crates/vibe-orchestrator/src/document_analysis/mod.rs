@@ -13,6 +13,9 @@ mod boot_preview;
 mod buffers;
 mod capture;
 mod catalog;
+pub use catalog::{
+    ConfigurationAdmission, PreparedConfigurationDiscovery, prepare_configuration_discovery,
+};
 mod compile_plan;
 pub mod edit;
 mod invalidation;

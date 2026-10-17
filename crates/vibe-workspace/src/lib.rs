@@ -374,3 +374,4 @@ mod tests;
 mod selected_manifest_tests;
 
 pub mod boot_debugger;
+pub mod configuration_discovery;

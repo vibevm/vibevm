@@ -42,6 +42,7 @@ mod fetched;
 mod lifecycle;
 mod plan;
 mod record;
+pub use record::{RequestFreshness, configuration_definition, request_freshness, requested_record};
 mod slot_verify;
 pub use slot_verify::{
     DerivedMaterializationProof, PreparedPackageOverlay, VerifiedSourceMembership, source_strength,

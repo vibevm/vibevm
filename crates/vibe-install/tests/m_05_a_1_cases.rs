@@ -172,15 +172,13 @@ fn fresh_requested_features() {
     ));
     let mut changed = request();
     changed.features.explicit.push("extra".into());
-    assert!(matches!(
-        vibe_install::plan(&source, dir.path(), changed.clone(), &NullObserver).unwrap(),
-        Plan::Fresh
-    ));
-    assert!(source.0.lock().unwrap().is_empty());
+    // E1 successor: the historical A1 observation was Fresh here. Retain the
+    // fixture and unchanged control; only the bug assertion is superseded.
+    refused(&source, dir.path(), changed.clone());
+    assert_eq!(source.0.lock().unwrap().len(), 1);
     assert_eq!(std::fs::read(dir.path().join("vibe.lock")).unwrap(), before);
     changed.roots = vec![pkg("org.demo/shared@^1")];
     refused(&source, dir.path(), changed);
-    assert_eq!(source.0.lock().unwrap().len(), 1);
-    // Confirmed: changing only the requested feature still returns Fresh,
-    // leaving the lock without extra. The explicit-root control reaches solve.
+    assert_eq!(source.0.lock().unwrap().len(), 2);
+    // Both changed-feature and explicit-root requests now reach solve.
 }
