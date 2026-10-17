@@ -134,6 +134,9 @@ pub(crate) fn run(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
+    if args.choice.choice_host.is_some() {
+        return super::choices::run(ctx, &args, root_offline);
+    }
     run_with_scope(
         ctx,
         args,

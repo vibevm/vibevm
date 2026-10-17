@@ -20,6 +20,16 @@ pub struct ConfigurationResolution {
     pub result: vibe_wire::generated::consumer_configuration::e1::result::Result,
     /// Full B1 effects, aligned with result outcomes. Unresolved choices have none.
     pub expansions: Vec<Option<FeatureExpansion>>,
+    /// Active controls projected by the evaluator's existing guard walk.
+    pub questions: Vec<ConfigurationQuestion>,
+}
+#[derive(Debug, Clone)]
+pub struct ConfigurationQuestion {
+    pub representative: usize,
+    pub group: LocalFeatureRef,
+    pub cardinality: Cardinality,
+    pub eligible: BTreeSet<LocalFeatureRef>,
+    pub defaults: Option<BTreeSet<LocalFeatureRef>>,
 }
 
 pub fn resolve_consumer_configuration(
@@ -46,6 +56,7 @@ pub fn resolve_consumer_configuration(
     }
     let mut outcomes = Vec::new();
     let mut expansions = Vec::new();
+    let mut questions = Vec::new();
     for (instance, indices) in instances {
         let matching: Vec<_> = definitions
             .iter()
@@ -196,6 +207,13 @@ pub fn resolve_consumer_configuration(
                         )
                     })
                     .collect();
+                questions.push(ConfigurationQuestion {
+                    representative: indices[0],
+                    group: name.clone(),
+                    cardinality: group.cardinality,
+                    eligible: eligible.clone(),
+                    defaults: group.defaults.clone(),
+                });
                 for (offset, (left, intent, members)) in requests.iter().enumerate() {
                     for (right, other_intent, other) in &requests[offset + 1..] {
                         let conflict = match (intent, other_intent) {
@@ -278,7 +296,11 @@ pub fn resolve_consumer_configuration(
         outcomes.push(outcome);
     }
     let result = codec::result_for(request, outcomes)?;
-    Ok(ConfigurationResolution { result, expansions })
+    Ok(ConfigurationResolution {
+        result,
+        expansions,
+        questions,
+    })
 }
 
 #[cfg(test)]

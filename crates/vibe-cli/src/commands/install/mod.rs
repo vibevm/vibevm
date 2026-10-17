@@ -22,6 +22,7 @@
 //! workspace being traced right now".
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+mod choices;
 
 mod closure_diff;
 mod confirm;

@@ -18,6 +18,7 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
 
 pub mod adapter_plan;
 pub mod boot_debugger;
+pub mod configuration_choice;
 pub mod configuration_discovery;
 #[cfg(test)]
 mod m_05_d_2_cases;
@@ -107,6 +108,7 @@ pub trait McpTool {
 pub fn default_tools() -> Vec<Box<dyn McpTool>> {
     vec![
         Box::new(configuration_discovery::ConfigurationDiscoveryMcpTool::default()),
+        Box::new(configuration_choice::ConfigurationChoiceMcpTool),
         Box::new(BootDebuggerMcpTool),
         Box::new(adapter_plan::AdapterPlanMcpTool),
         Box::new(QueryPackageMcpTool),

@@ -48,6 +48,7 @@ pub struct ConfigurationAdmission {
 pub struct PreparedConfigurationDiscovery {
     capture: super::AnalysisCapture,
     view: vibe_workspace::configuration_discovery::ConfigurationDiscovery,
+    definitions: Vec<vibe_resolver::resolvo_engine::configuration::CandidateConfiguration>,
 }
 impl PreparedConfigurationDiscovery {
     pub fn admit(capture: super::AnalysisCapture, admissions: Vec<ConfigurationAdmission>) -> Self {
@@ -150,7 +151,21 @@ impl PreparedConfigurationDiscovery {
             candidates,
             unavailable,
         );
-        Self { capture, view }
+        let definitions = if view.unavailable.is_empty() {
+            admissions.into_iter().map(|a| a.candidate).collect()
+        } else {
+            Vec::new()
+        };
+        Self {
+            capture,
+            view,
+            definitions,
+        }
+    }
+    pub(crate) fn admitted_definitions(
+        &self,
+    ) -> &[vibe_resolver::resolvo_engine::configuration::CandidateConfiguration] {
+        &self.definitions
     }
     pub fn capture_id(&self) -> &str {
         self.capture.id()

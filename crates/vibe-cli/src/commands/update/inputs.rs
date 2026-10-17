@@ -22,6 +22,7 @@ use crate::cli::{InstallArgs, UpdateArgs};
 /// `--registry` / `--git` / feature flags, so those default off.
 pub(super) fn install_args_from(args: &UpdateArgs) -> InstallArgs {
     InstallArgs {
+        choice: Default::default(),
         packages: Vec::new(),
         global: false,
         agent: None,

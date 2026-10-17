@@ -1,0 +1,12 @@
+{
+  "kind": "definitive_prestate_CAS_refusal_link",
+  "semantic_intent": "m05.e4.offline.accept.claim.07",
+  "old_request": "/fast/zap-managed/2026-10-17-vibevm-campaign/requests/m05.e4.offline.accept.claim.07.json",
+  "old_request_sha256": "f84773300fbe0e73c9392aa17bbe910f7738043f0f6908451b5a51f4e5fb6b02",
+  "refusal": "HTTP409/stale_revision/command expected revision differs from transaction pre-state",
+  "old_expected_revision": 11320,
+  "new_execution_key": "m05.e4.offline.accept.claim.07.cas1",
+  "scope_unchanged": true,
+  "history_preserved": true,
+  "unknown_effect_retry": false
+}

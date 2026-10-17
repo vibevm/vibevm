@@ -58,6 +58,9 @@ tracing.workspace = true
 tempfile.workspace = true
 
 [dev-dependencies]
+vibe-registry.workspace = true
+vibe-resolver.workspace = true
+semver.workspace = true
 vibe-extension-registry.workspace = true
 # The staging-residue REDs need deterministic pre/post-publication failures;
 # the feature compiles the injection points out of every shipped build.

@@ -104,6 +104,15 @@ pub struct PlannedInstall {
 }
 
 impl PlannedInstall {
+    /// Exact D1 authored request and selected-effect/provenance record for
+    /// presentation before confirmation. This grants no apply authority.
+    pub fn configuration_record(&self) -> Result<Option<vibe_core::manifest::LockedConfiguration>> {
+        crate::record::configuration_record(
+            self.normalized_request.as_ref(),
+            &self.selected_provenance,
+            &self.fetched,
+        )
+    }
     /// Recheck the confirmation boundary before apply can write anything.
     pub(crate) fn validate_selected_routes(&self) -> Result<()> {
         let Some(request) = &self.normalized_request else {

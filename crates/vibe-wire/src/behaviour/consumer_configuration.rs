@@ -4,6 +4,53 @@ use std::collections::{BTreeMap, BTreeSet};
 use vibe_core::environment::*;
 use vibe_core::manifest::{feature_constraints as core, feature_effects::*};
 
+#[cfg(test)]
+mod m_05_e_4_cases {
+    use super::*;
+    #[test]
+    fn explicit_empty_and_omitted_answers_remain_distinct() {
+        let mut request = decode_request(include_bytes!(
+            "../../../../formats/corpora/consumer-configuration-request/e1/valid/omitted.json"
+        ))
+        .unwrap();
+        let edge = &mut request.edges[0];
+        edge.selections.insert(
+            "choice".into(),
+            wire::Selection {
+                intent: wire::SelectionIntent::Exact,
+                provenance: "wire:explicit-answer".into(),
+                members: Some(vec![]),
+            },
+        );
+        let roundtrip = decode_request(&serde_json::to_vec(&request).unwrap()).unwrap();
+        assert_eq!(request, roundtrip);
+        let admitted = admit_request(&roundtrip).unwrap();
+        assert!(
+            matches!(&admitted[0].selections[&LocalFeatureRef::new("choice").unwrap()].selection,core::Selection::Explicit(m) if m.is_empty())
+        );
+        request.edges[0]
+            .selections
+            .get_mut("choice")
+            .unwrap()
+            .members = None;
+        assert!(matches!(
+            admit_request(&request).unwrap()[0].selections
+                [&LocalFeatureRef::new("choice").unwrap()]
+                .selection,
+            core::Selection::Omitted
+        ));
+    }
+    #[test]
+    fn transport_does_not_accept_an_admission_flag() {
+        let mut value: serde_json::Value = serde_json::from_slice(include_bytes!(
+            "../../../../formats/corpora/consumer-configuration-request/e1/valid/omitted.json"
+        ))
+        .unwrap();
+        value["admitted"] = serde_json::json!(true);
+        assert!(decode_request(&serde_json::to_vec(&value).unwrap()).is_err());
+    }
+}
+
 fn reference(s: &str) -> Result<Reference, String> {
     Reference::new(s).map_err(|e| e.to_string())
 }

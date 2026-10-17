@@ -1,0 +1,275 @@
+{
+  "status": "request_changes",
+  "review_kind": "independent_read_only_semantic_review",
+  "head": "644bbd0de25e1335e21e513b3228c1a688256bf0",
+  "candidate": "managed-result.ff025c3875c78d96c5d516ae9ab46f9f66d6fa23900e2128019e435143fb90e6",
+  "p1": 0,
+  "p2": 1,
+  "findings": [
+    {
+      "priority": 2,
+      "title": "Choice-host install silently drops the CLI offline posture",
+      "file": "crates/vibe-cli/src/commands/install/direct.rs",
+      "start": 137,
+      "end": 138,
+      "observed": "The early choice_host branch calls choices::run(ctx, &args), dropping root_offline and bypassing normal prepare/direct offline resolution. choices::run never consumes args.offline or the environment/config ladder. ChoiceOperation has no caller offline binding; ConfigurationChoiceHost Prepare uses self.install.clone() at configuration_choice.rs418–424.",
+      "consequence": "An invocation that explicitly requests offline can reach an online-configured trusted host and execute the ordinary normalized source transaction/acquisition under the host online posture. This violates the existing CLI offline boundary, even though semantic selections/default receipts remain valid.",
+      "source_contract": "crates/vibe-cli/src/cli.rs143–154 documents resolution/fetch entirely offline; cli/pkg.rs54–67 and commands/install/direct.rs85–86 preserve the normal effective ladder.",
+      "reproduction_inference": "Use an admitted online-configured ConfigurationChoiceHost (InstallRequest.offline=false), then the ordinary CLI --offline choice-host prepare path with explicit shown/default permission and a selected source needing acquisition. Client offline is neither transmitted nor checked. No network experiment was run.",
+      "minimal_fix": "Preserve the effective caller offline posture at the choice entry/host preparation boundary, or refuse a posture mismatch before source preparation/acquisition. Continue using the same host/source owner; do not add a planner or universal lifecycle.",
+      "verification_gap": "Current shared fixture makes InstallRequest.offline=true and CLI direct test passes true, so all retained positives have compatible offline state and cannot detect this loss. Add one bounded arm to existing CLI/service family with an online-capable counting/refusing source to prove caller offline is preserved or rejected before source work; no broad suite required."
+    }
+  ],
+  "artifacts": {
+    "report": {
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/6e78b90ffc50bd1cb8f15738a0460f08bcf31f1b8d526a849335f6aacb54b375",
+      "bytes": 1004930,
+      "sha256": "6e78b90ffc50bd1cb8f15738a0460f08bcf31f1b8d526a849335f6aacb54b375"
+    },
+    "patch": {
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/cee91e65b979e01f9d441bf624a9f3d3976466fb63626c17a03601c3fd4b1d22",
+      "bytes": 74861,
+      "sha256": "cee91e65b979e01f9d441bf624a9f3d3976466fb63626c17a03601c3fd4b1d22"
+    }
+  },
+  "tracked_modified_count": 22,
+  "untracked_new_count": 4,
+  "changed_paths": [
+    {
+      "path": "Cargo.lock",
+      "kind": "tracked_modified",
+      "bytes": 148409,
+      "sha256": "21a82e641b571f9bd089ca0680cd6c1b8998f18d9e12bcb29d4271d29b2b3b8b"
+    },
+    {
+      "path": "crates/vibe-cli/src/cli/lifecycle.rs",
+      "kind": "tracked_modified",
+      "bytes": 8959,
+      "sha256": "60e9caa911f732487c3edd9e099eb7d4898a9bd0ce151fe2ac5a8989289ce245"
+    },
+    {
+      "path": "crates/vibe-cli/src/cli/pkg.rs",
+      "kind": "tracked_modified",
+      "bytes": 23734,
+      "sha256": "20233f28b4a5453a28d6fad62adb95e9dc044aa65c92ad2b96be422fe27201cc"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/cache/add.rs",
+      "kind": "tracked_modified",
+      "bytes": 18279,
+      "sha256": "38e11f5951a5cb3ecc561ceb2f3a1cd4bdc8fe9efd75d70b039e15a03ad1623e"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/install/choices.rs",
+      "kind": "untracked_new",
+      "bytes": 16646,
+      "sha256": "ba91fc1c3814dba459c9517b231fdb4296513ede37113d391fbc0f5bb8ec6330"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/install/direct.rs",
+      "kind": "tracked_modified",
+      "bytes": 15028,
+      "sha256": "60eb880cf67b53d01a73363cdc8414ffbd05bdeeb726ae3bdadb7747a0e362ed"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/install/direct/tests.rs",
+      "kind": "tracked_modified",
+      "bytes": 13054,
+      "sha256": "bb138ff6d55eebc27c13f86c011f261cb51165b286844a8c6ecc55d6ccf36335"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "kind": "tracked_modified",
+      "bytes": 6001,
+      "sha256": "4a17c94919da4c2ba1d838b0b1db259e47ef3dedcafd96f13465e23c29db6099"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/install/global_mcp.rs",
+      "kind": "tracked_modified",
+      "bytes": 12553,
+      "sha256": "eb5a3e72997f522914ff372434e17b936aa201de15d6211abacdb385bf6c77f3"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/install/mod.rs",
+      "kind": "tracked_modified",
+      "bytes": 3147,
+      "sha256": "55dd26e26c3412076d0b2229fa3918924176d571e29f219ab09f25def4b7ec55"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/reinstall/inputs.rs",
+      "kind": "tracked_modified",
+      "bytes": 5052,
+      "sha256": "99e6bd9489fa973866c0d03ce2f890d96ccd6b21331a13af2f4eaa8175bbcd70"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update/inputs.rs",
+      "kind": "tracked_modified",
+      "bytes": 5151,
+      "sha256": "036e350539688dbaf3a10b900896e38f9f42456b934fe48e4cff5743d9fcd091"
+    },
+    {
+      "path": "crates/vibe-install/src/evolution.rs",
+      "kind": "tracked_modified",
+      "bytes": 31721,
+      "sha256": "eaf163e779d9de0977eced5e433f5d66a64bd1c10a882ac95e461adb59464e14"
+    },
+    {
+      "path": "crates/vibe-install/src/plan.rs",
+      "kind": "tracked_modified",
+      "bytes": 30938,
+      "sha256": "1196bcd6469bce8e87789902435fb00612a4cce3793edadc5d7cffca07f63dd8"
+    },
+    {
+      "path": "crates/vibe-mcp/Cargo.toml",
+      "kind": "tracked_modified",
+      "bytes": 3176,
+      "sha256": "d348effc0afab252a62a87fdfc65c66ee14a10969613dc6033fb2a06ebef507b"
+    },
+    {
+      "path": "crates/vibe-mcp/src/context.rs",
+      "kind": "tracked_modified",
+      "bytes": 24894,
+      "sha256": "d1a58bc25c7fcfb3fe47f1bcf3542273d71025ce6df618483f3121755bed7559"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "kind": "tracked_modified",
+      "bytes": 27442,
+      "sha256": "29711de4957652310659099828c4f0504c5ccc9e44b18b431fb885eedc2bd9dc"
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/configuration_choice.rs",
+      "kind": "untracked_new",
+      "bytes": 4983,
+      "sha256": "c9332cbd8abace824571c4454564da8e19801618df103cb2a06fe0ed623fc34e"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/catalog.rs",
+      "kind": "tracked_modified",
+      "bytes": 20037,
+      "sha256": "da955bf662e4e4419483d18ef697feea10408ff8aa110e78a1912cf7760a2506"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/document_analysis/mod.rs",
+      "kind": "tracked_modified",
+      "bytes": 7701,
+      "sha256": "e022442b741ede9c128fad370429185355df5b7f29254dc2898f6a82aeb8c24b"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation.rs",
+      "kind": "tracked_modified",
+      "bytes": 19853,
+      "sha256": "05e428831b8422a00e233a696f7a130ff9a190a8d88f72a23b75b99f4fb66a2d"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/configuration_choice.rs",
+      "kind": "untracked_new",
+      "bytes": 21301,
+      "sha256": "93f151899f5cb9c968bd733c1d87d614d58de57109ddb1773c482411632b7d85"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/configuration_choice_fixture.rs",
+      "kind": "untracked_new",
+      "bytes": 3523,
+      "sha256": "2d51cab0b5256dac29a876dab2dd8a95b2ba336db8af6b7f24e28b2b14d91609"
+    },
+    {
+      "path": "crates/vibe-resolver/src/features/configuration.rs",
+      "kind": "tracked_modified",
+      "bytes": 13331,
+      "sha256": "614dfa8ad2d2ac3bdc0d99ce804d6a4c13797408fed9a685ba4d849870f4af95"
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/consumer_configuration.rs",
+      "kind": "tracked_modified",
+      "bytes": 11887,
+      "sha256": "51d8cc9ba6b1abf36ce7be0334a574a7058bfe748dc48c62b4e9a72d1d02ff76"
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "kind": "tracked_modified",
+      "bytes": 164048,
+      "sha256": "3c7cae52dfedc19dd460f7d7be6fa560bbb9dcf0bb6a0127e886a92dc466b425"
+    }
+  ],
+  "patch_paths_equal_actual_wip": true,
+  "reverse_apply_check_read_only_exit": 0,
+  "original_acceptance": [
+    "CLI/service/MCP produce the same request and prepared effect graph.",
+    "Machine invocation completes or returns typed input requirements without waiting on TTY."
+  ],
+  "original_criteria_assessment": [
+    "Shared typed request/prepared graph parity supported by code and retained real CLI adapter/default MCP Server dispatcher fixtures; not blocked by lack of a new universal host lifecycle.",
+    "NonTTY typed needs/no terminal path and actual PTY radio/checkbox/persistence supported; offline compatibility regression still needs correction before recommending acceptance."
+  ],
+  "retained_log_results": {
+    "b2-regression.log": {
+      "test_results": [
+        "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 124 filtered out; finished in 0.00s"
+      ],
+      "fmt_paths": []
+    },
+    "cli-verified.log": {
+      "test_results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 966 filtered out; finished in 0.30s"
+      ],
+      "fmt_paths": []
+    },
+    "mcp-verified.log": {
+      "test_results": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 219 filtered out; finished in 0.14s"
+      ],
+      "fmt_paths": []
+    },
+    "service-verified.log": {
+      "test_results": [
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 668 filtered out; finished in 0.12s"
+      ],
+      "fmt_paths": []
+    },
+    "wire-1.log": {
+      "test_results": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 282 filtered out; finished in 0.00s"
+      ],
+      "fmt_paths": []
+    },
+    "fmt-final.log": {
+      "test_results": [],
+      "fmt_paths": [
+        "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs"
+      ]
+    },
+    "diff-final.log": {
+      "test_results": [],
+      "fmt_paths": []
+    }
+  },
+  "new_builds_tests_models_api_git_mutations": false,
+  "spec_assessment": {
+    "xml_parse": "passed read-only parse",
+    "e4_anchors": [
+      "M05E4-CAPTURE",
+      "M05E4-ATTENDED",
+      "M05E4-UNATTENDED",
+      "M05E4-PREPARED-OPERATIONS",
+      "M05E4-APPLIED-INTENT",
+      "M05E4-EXPOSURE"
+    ],
+    "head_diff_has_no_removed_lines": true,
+    "statuses": "all spec/plan; no promotion/acceptance",
+    "independent_laws": "all prior HEAD contract bytes retained; six E4 anchors preserve B1/B2/C1/C2/C3/D1/D2/E1/E2/E3 boundaries; earlier uncommitted wording is not independently reconstructable from HEAD alone"
+  },
+  "conditional_oracles": {
+    "codegen": "No schema/generator/generated output registration diff. Conditional global check-codegen not required by actual changed paths.",
+    "wire": "New serde ChoiceOperation is a public domain operation payload, not a new registered MachineSession format/epoch; existing generated request/result codecs production unchanged. Actual CLI/MCP/domain serialization plus two wire-owner codec tests are the concrete narrower retained oracle; no global wire-diff pass claimed."
+  },
+  "scope_note": "26 actual paths include mechanical literals plus minimal install/resolver/context owners beyond original E4 ceiling; report attributes them to Owner-proxy continuation scope correction. Root confirms that grant rather than treating this reviewer as expanding scope. Two originally preflight-approved parser files: only pkg.rs changed; inspect.rs unchanged.",
+  "acceptance_owner": "Root",
+  "report_path": "/fast/git/v/research/2026-10-17-m05e4-semantic-review/REPORT.md"
+}

@@ -25,6 +25,27 @@ use vibe_orchestrator::InstallPolicy;
 
 use crate::SERVER_NAME;
 
+impl ServerContext {
+    pub fn with_configuration_choices(
+        mut self,
+        host: std::sync::Arc<
+            vibe_orchestrator::machine_operation::configuration_choice::ConfigurationChoiceHost,
+        >,
+    ) -> Result<Self, String> {
+        if self.project_root != host.root() {
+            return Err("configuration choice root differs".into());
+        }
+        self.configuration_choice = Some(host);
+        Ok(self)
+    }
+    pub fn configuration_choice_host(
+        &self,
+    ) -> Option<&vibe_orchestrator::machine_operation::configuration_choice::ConfigurationChoiceHost>
+    {
+        self.configuration_choice.as_deref()
+    }
+}
+
 mod document_edit;
 mod migration;
 #[cfg(test)]
@@ -43,6 +64,11 @@ mod migration_tests;
 /// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
 pub struct ServerContext {
+    configuration_choice: Option<
+        std::sync::Arc<
+            vibe_orchestrator::machine_operation::configuration_choice::ConfigurationChoiceHost,
+        >,
+    >,
     adapter_plan: Option<
         std::sync::Arc<vibe_orchestrator::machine_operation::adapter_plan::AdapterPlanRoute>,
     >,
@@ -340,6 +366,7 @@ impl ServerContext {
             .map(|home| home.join("cache"))
             .unwrap_or_default();
         ServerContext {
+            configuration_choice: None,
             document_analysis: None,
             adapter_plan: None,
             boot_debugger: None,
@@ -367,6 +394,7 @@ impl ServerContext {
         store_root: impl Into<PathBuf>,
     ) -> Self {
         ServerContext {
+            configuration_choice: None,
             document_analysis: None,
             adapter_plan: None,
             boot_debugger: None,
@@ -480,6 +508,7 @@ mod tests {
     fn context_carries_exactly_public_roots_and_private_lifecycle_authority() {
         fn destructure(context: ServerContext) {
             let ServerContext {
+                configuration_choice,
                 adapter_plan,
                 boot_debugger,
                 document_analysis,
@@ -498,6 +527,7 @@ mod tests {
                 fixed_deploy_bridge,
             } = context;
             let _ = (
+                configuration_choice,
                 adapter_plan,
                 boot_debugger,
                 document_analysis,
