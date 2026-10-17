@@ -3,6 +3,7 @@
     "file": "bind2.accept.claim.0.json",
     "original_sha256": "45445195672cd5e5e21835e34f0e815ab0c76809f09ce9474e59718849393b45",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.claim.0",
         "disposition": "committed",
@@ -327,14 +328,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.claim.0"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.claim.1.json",
     "original_sha256": "ba8a6e904149c25fd88ae221c0c4af57326ceda5bd43f495dee7a8f13fbec600",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.claim.1",
         "disposition": "committed",
@@ -659,14 +660,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.claim.1"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.claim.2.json",
     "original_sha256": "a8acd4dc48ed5ed75170b813750d178d025cc1b9e7721d14fa7f5789103214af",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.claim.2",
         "disposition": "committed",
@@ -991,14 +992,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.claim.2"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.evidence.full-contract.json",
     "original_sha256": "18d13a58f47656084d3afd5655083a82a221d68394ff3050f5709809e8e4f424",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.evidence.full-contract",
         "disposition": "committed",
@@ -1033,14 +1034,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.evidence.full-contract"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.open-review.json",
     "original_sha256": "495615350bd26622eac78262fec48dba7cb37f708c0e40562bcb8fcc3c755816",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.open-review",
         "disposition": "committed",
@@ -1075,14 +1076,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.open-review"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.result.0.json",
     "original_sha256": "40c93c6b04c6c21e438a92e9a860dddc707493b7135b616c08d7423e1000ec7e",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.result.0",
         "disposition": "committed",
@@ -1497,14 +1498,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.result.0"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.result.1.json",
     "original_sha256": "4e1c6bcf06116c64dd3e55efef001c1d17ae36b790ff4111195bb8f18e4cf90b",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.result.1",
         "disposition": "committed",
@@ -1919,14 +1920,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.result.1"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.result.2.json",
     "original_sha256": "e1960aae6074867b4c0ad6e27c4a62d4b54a6e518c472b25e117d5bf85b662e8",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.result.2",
         "disposition": "committed",
@@ -2341,14 +2342,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.result.2"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.safety.claim.json",
     "original_sha256": "c297645dd38bb5f5187a7b4d23fe7f931305730a903f6757b7bea7b73e1799bc",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.safety.claim",
         "disposition": "committed",
@@ -3007,14 +3008,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.safety.claim"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.safety.record.json",
     "original_sha256": "5e0cb6dd0ce5b21353f1b9c78bbedad0e26e09def56f78641f3ae4531d73941d",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.safety.record",
         "disposition": "committed",
@@ -3817,14 +3818,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.safety.record"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.safety.result.json",
     "original_sha256": "f2af4a1e9756670d9be78181bd7ec096d463eb13a725e8fa001da8d0fcbdbd2a",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.safety.result",
         "disposition": "committed",
@@ -4573,14 +4574,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.safety.result"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.stage.minimal.json",
     "original_sha256": "eb910983b3fc86b1b7525ba0f40eb256ed14daf927c5aba8d35414ef95d2f4d0",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.stage.minimal",
         "disposition": "committed",
@@ -4615,14 +4616,14 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.stage.minimal"
-      },
-      "status": "committed"
+      }
     }
   },
   {
     "file": "bind2.accept.work.minimal.json",
     "original_sha256": "04aa35a69ac98117c2734472f8b31eb70a382ca5108d9e8603869db8d8d170b8",
     "value": {
+      "status": "committed",
       "receipt": {
         "command_id": "campaign.remaining.bind2.accept.work.minimal",
         "disposition": "committed",
@@ -4657,8 +4658,7 @@
           "store_id": "store.vibevm-campaign.remaining"
         },
         "transaction_id": "tx:campaign.remaining.bind2.accept.work.minimal"
-      },
-      "status": "committed"
+      }
     }
   }
 ]
