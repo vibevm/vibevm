@@ -2723,3 +2723,14 @@ structure, and it goes when the file does.
 | @fact:B250-SEVERITY **severity** | P3 — existing formatting debt; no new functional campaign gate. |
 | @fact:B250-DISPOSITION **disposition** | Defer to an owning-file or formatting maintenance change. Preserve generated-file ownership for vibe-wire/src/generated/format_id/properties.rs; do not hand-edit generated output or call the global command passed. |
 | @fact:B250-FILED **filed by** | First Agent M05C1 acceptance, 2026-10-16. |
+
+
+## B-251 — machine coverage catalogue tests retain stale cardinalities {#b-251}
+
+| field | value |
+|---|---|
+| @fact:B251-WHAT **what** | Three existing machine_operation::coverage tests expect214/213 catalogue rows while the unchanged current catalogue provides219/218. The separate exact reviewed planner binding remains covered by the selected BIND.2 cases. |
+| @fact:B251-EVIDENCE **evidence** | NEXT-PREVIEW-BIND.2 final published report7d17b852203b2ff48e369a5ebe3f880589744afbf1a70246936a7c5ddc012bd0; reviewed-coverage-owner exit101,1pass/3fail. Independent review compared coverage.rs, its tests and coverage-e1.json againstddc502417: all byte-identical. Actual/expected219vs214 and218vs213 twice. |
+| @fact:B251-SEVERITY **severity** | P3 — preexisting stale test inventory; no BIND.2 regression and no extra current admission gate. |
+| @fact:B251-DISPOSITION **disposition** | Reconcile the actual added surfaces in the owning coverage maintenance task, preferably asserting meaningful named membership as well as the complete count. Preserve gap/binding distinctions; do not skip failures, silently weaken assertions or call the family passed. Must be resolved before claiming a green full catalogue gate. |
+| @fact:B251-FILED **filed by** | First Agent BIND.2 semantic review,2026-10-17. |
