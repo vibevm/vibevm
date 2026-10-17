@@ -61,7 +61,7 @@ pub(super) fn identity_from_observations(
     }
     let intent = manifest.intent_identity(&normative)?;
     let graph = WorkGraph::parse_documents(&work_texts)?;
-    let work = graph.identity(manifest);
+    let work = graph.identity(manifest)?;
     Ok(ChangeIdentityAnalysis {
         intent,
         work,

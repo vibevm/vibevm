@@ -6003,6 +6003,7 @@ dependencies = [
  "vibe-index",
  "vibe-publish",
  "vibe-registry",
+ "vibe-requirements",
  "vibe-safefs",
  "vibe-spec",
  "vibe-specdoc",

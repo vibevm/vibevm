@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "explicit-source-interpretation-and-migration"
+selected_node = "."
+slug = "explicit-source-interpretation-and-migration"
+title = "explicit-source-interpretation-and-migration"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

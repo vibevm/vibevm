@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "explicit-manifest-migration-profile-law"
+selected_node = "."
+slug = "explicit-manifest-migration-profile-law"
+title = "explicit-manifest-migration-profile-law"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "authored-extension-schema-and-selected-observation"
+selected_node = "."
+slug = "authored-extension-schema-and-selected-observation"
+title = "authored-extension-schema-and-selected-observation"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

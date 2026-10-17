@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "migration-planning-wire-types"
+selected_node = "."
+slug = "migration-planning-wire-types"
+title = "migration-planning-wire-types"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

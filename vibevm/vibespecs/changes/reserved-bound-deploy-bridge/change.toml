@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "reserved-bound-deploy-bridge"
+selected_node = "."
+slug = "reserved-bound-deploy-bridge"
+title = "reserved-bound-deploy-bridge"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

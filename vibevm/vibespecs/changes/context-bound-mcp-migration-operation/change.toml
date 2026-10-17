@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "context-bound-mcp-migration-operation"
+selected_node = "."
+slug = "context-bound-mcp-migration-operation"
+title = "context-bound-mcp-migration-operation"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

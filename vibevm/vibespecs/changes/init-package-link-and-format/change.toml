@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "init-package-link-and-format"
+selected_node = "."
+slug = "init-package-link-and-format"
+title = "init-package-link-and-format"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

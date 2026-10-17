@@ -79,8 +79,16 @@ pub fn plan_change_full_pass(
             });
         }
     }
-    let selected =
-        SelectedFullPass::select(&parsed.manifest, &normative, &parsed.identities.graph, work)?;
+    let selected = SelectedFullPass::select(
+        &parsed.manifest,
+        &normative,
+        &parsed
+            .identities
+            .as_ref()
+            .ok_or(FullPassPreparationError::AnalysisUnavailable)?
+            .graph,
+        work,
+    )?;
     Ok(ChangeFullPassPlan {
         capture: view.capture_id().into(),
         selected,

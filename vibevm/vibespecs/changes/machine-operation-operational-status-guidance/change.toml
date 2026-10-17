@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-operation-operational-status-guidance"
+selected_node = "."
+slug = "machine-operation-operational-status-guidance"
+title = "machine-operation-operational-status-guidance"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

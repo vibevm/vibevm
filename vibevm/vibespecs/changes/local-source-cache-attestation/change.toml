@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "local-source-cache-attestation"
+selected_node = "."
+slug = "local-source-cache-attestation"
+title = "local-source-cache-attestation"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "reserved-owner-lifetime-and-retired-attach"
+selected_node = "."
+slug = "reserved-owner-lifetime-and-retired-attach"
+title = "reserved-owner-lifetime-and-retired-attach"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

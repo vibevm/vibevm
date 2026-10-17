@@ -1,0 +1,502 @@
+{
+  "head": "233bd5a8f9e92baf04f65f19ede8d693d7dfabf3",
+  "records": [
+    {
+      "path": "vibevm/vibespecs/changes/architecture-law-traceability/release-impact.json",
+      "change_id": "architecture-law-traceability",
+      "byte_len": 2049,
+      "sha256": "4eceb2f82af34564110569342d391b218f9c54d8569b66f7fa0bd1e7e9795113",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/authored-extension-schema-and-selected-observation/release-impact.json",
+      "change_id": "authored-extension-schema-and-selected-observation",
+      "byte_len": 6582,
+      "sha256": "094eb9bc2f2e3d675abbdd757e463aaef1185f77fe22d5584d0657f089eb15da",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/bootstrap-accounting-record-maintenance/release-impact.json",
+      "change_id": "bootstrap-accounting-record-maintenance",
+      "byte_len": 2364,
+      "sha256": "f71f4b21aa0295f6bff9c04ea8c2e6aedf4911df7dbd8e8edd8afc00a78d1731",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/capability-inventory-foundation/release-impact.json",
+      "change_id": "capability-inventory-foundation",
+      "byte_len": 7314,
+      "sha256": "d47423f77882816a68164f8654041e09f8d7a9e01cfbdb9961e4616e3d6558bf",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/capability-traceability-maintenance/release-impact.json",
+      "change_id": "capability-traceability-maintenance",
+      "byte_len": 4485,
+      "sha256": "dab3d7e19bf9a122e0538c9726974020eb80bb70517ebc872ed9e541da8e4683",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/cli-pure-migration-planning/release-impact.json",
+      "change_id": "cli-pure-migration-planning",
+      "byte_len": 3155,
+      "sha256": "1afd3c3b531b48e0b14daedf3fcde6283647e065f0300272def4bec8c27a4689",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/context-bound-mcp-migration-operation/release-impact.json",
+      "change_id": "context-bound-mcp-migration-operation",
+      "byte_len": 4528,
+      "sha256": "1a5d0b66e9be20a362baa8f48d9bdd6aeea77fc6bee59cdf49e0e17bf4e6fb56",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/distribution-smoke-preparation/release-impact.json",
+      "change_id": "distribution-smoke-preparation",
+      "byte_len": 3257,
+      "sha256": "2a58308318ea926e024c6892c9571649481300eee5785a200349a42849f84adf",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/environment-layout-traceability/release-impact.json",
+      "change_id": "environment-layout-traceability",
+      "byte_len": 2144,
+      "sha256": "16237c0741f2bce140bfebfacf9e63cfb7f2973063772106063359f62bf539b6",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/environment-role-source-contract/release-impact.json",
+      "change_id": "environment-role-source-contract",
+      "byte_len": 3756,
+      "sha256": "8f4de3e47e9f58ba9584493dc768db0191701d58c540730827ff22befd146671",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/environment-role-traceability/release-impact.json",
+      "change_id": "environment-role-traceability",
+      "byte_len": 2108,
+      "sha256": "c141cacbf5b21053cfbf37ab7e184dbc486879f81c5469ade175c9c89f76785c",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/explicit-cli-manifest-migration-operation/release-impact.json",
+      "change_id": "explicit-cli-manifest-migration-operation",
+      "byte_len": 4128,
+      "sha256": "7cff31bfb3c5176841b8db36ce99a29c8f5caf030333b60a94ba7329475a22c6",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/explicit-manifest-migration-profile-law/release-impact.json",
+      "change_id": "explicit-manifest-migration-profile-law",
+      "byte_len": 3342,
+      "sha256": "bed7b99ea0046e49cde30964588f8df3864e671d4d105c7404ea87fd2e46a444",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/explicit-source-interpretation-and-migration/release-impact.json",
+      "change_id": "explicit-source-interpretation-and-migration",
+      "byte_len": 7697,
+      "sha256": "b1fee3e4d0789034f7d7fb2492cf2b7f19b3cae07c40e0a7c97d2e4a0b35df02",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/fake-publication-owner-journal/release-impact.json",
+      "change_id": "fake-publication-owner-journal",
+      "byte_len": 5729,
+      "sha256": "8239f62fac4010e844af5080f4d97d43eea2c4f414d820a18932b5e4eaaec788",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/fixed-local-build-package-and-linked-output/release-impact.json",
+      "change_id": "fixed-local-build-package-and-linked-output",
+      "byte_len": 6480,
+      "sha256": "95bb9dfc1ee87339ee6d7b56b34571202fa91752b0214fe7bb54d6162845aa85",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/init-package-link-and-format/release-impact.json",
+      "change_id": "init-package-link-and-format",
+      "byte_len": 3058,
+      "sha256": "c91a7742a580363d6e648fe1e44a60871aa33184ae7eeda272edb7177f9b9123",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/injected-environment-layout-source/release-impact.json",
+      "change_id": "injected-environment-layout-source",
+      "byte_len": 3842,
+      "sha256": "0950258538912461d6ba1bc4da1f91e98e4959b2c7f2ca9bc83423bf592a22c4",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/local-source-cache-attestation/release-impact.json",
+      "change_id": "local-source-cache-attestation",
+      "byte_len": 8040,
+      "sha256": "81f16ab55db6e965917f723c572ed919553e7f850d2825c4f0ee0edf69a0dea0",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/local-source-retrieval/release-impact.json",
+      "change_id": "local-source-retrieval",
+      "byte_len": 4544,
+      "sha256": "c1ffa190c2188472018cae6af7f08c3a773188f9b13c049d784fb50812c09627",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-authority-foundation/release-impact.json",
+      "change_id": "machine-authority-foundation",
+      "byte_len": 5426,
+      "sha256": "3e9747f16857ccbe406cb88db5bca6b079e823399a92c6711e9cf78378b9353e",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-authority-traceability/release-impact.json",
+      "change_id": "machine-authority-traceability",
+      "byte_len": 2244,
+      "sha256": "200aeebecbee58a34e9c64d39c367c6bbb491129359e58b88c278dc7d57d9cfa",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-capability-catalogue-and-gap-registry/release-impact.json",
+      "change_id": "machine-capability-catalogue-and-gap-registry",
+      "byte_len": 4794,
+      "sha256": "ba6ddd431e943e4a22b1932c60a36afca17de9625e48d4ddd9dceba930224d57",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-composite-page-projection/release-impact.json",
+      "change_id": "machine-composite-page-projection",
+      "byte_len": 5261,
+      "sha256": "55f98f8bb345b4b88fe7a34c25cfa5b6a5146500cced5bf8fe0042524478fce3",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-entity-location-core-model/release-impact.json",
+      "change_id": "machine-entity-location-core-model",
+      "byte_len": 4245,
+      "sha256": "8ecbc90988d9f42fb96a09c5cd4afabde6587cb73d6a582df00e06200bea6af5",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-entity-view-capability-catalogue/release-impact.json",
+      "change_id": "machine-entity-view-capability-catalogue",
+      "byte_len": 3449,
+      "sha256": "3b40e3abfd447a516a57ced9519649a7f42bc6e6a875014a3215778c242bc8ac",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-entity-view-source-contract/release-impact.json",
+      "change_id": "machine-entity-view-source-contract",
+      "byte_len": 3541,
+      "sha256": "c655033ee8d72b5a05ec3002eda6094f64644dd02d217c73bc0c569553bce2a2",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-entity-view-traceability/release-impact.json",
+      "change_id": "machine-entity-view-traceability",
+      "byte_len": 1687,
+      "sha256": "7ee4396372ab6f9abcc5709652364aa9fc83dc6c840626a4b90187c385e3313b",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-entity-view-wire-and-reader/release-impact.json",
+      "change_id": "machine-entity-view-wire-and-reader",
+      "byte_len": 9130,
+      "sha256": "33c29eb5bd2410827f9e1d1d63d0d27dbf1296ffaf12a81aedc6174ac35a12e0",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-location-uri-wire-metadata/release-impact.json",
+      "change_id": "machine-location-uri-wire-metadata",
+      "byte_len": 4855,
+      "sha256": "66a5fecab5d467cf2a420e910e3d72c5bfc2ed8602cc19bb2c25f205c688b050",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-operation-contract-source/release-impact.json",
+      "change_id": "machine-operation-contract-source",
+      "byte_len": 4592,
+      "sha256": "98f08cdee0cdb6af810a032aa5346b6bdffcfca0d9c2ac4385df3ea0be0d8fc0",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-operation-operational-status-guidance/release-impact.json",
+      "change_id": "machine-operation-operational-status-guidance",
+      "byte_len": 1869,
+      "sha256": "ad5ce7282e7f68c23d71095211efa471db7d0fd5e363b3de61595bf35e223408",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-operation-traceability/release-impact.json",
+      "change_id": "machine-operation-traceability",
+      "byte_len": 2011,
+      "sha256": "c7166ab9347777b1985b09e256ebc44edff2b00b616efd73236c4cbf8e8675f8",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-operation-wire-and-reader/release-impact.json",
+      "change_id": "machine-operation-wire-and-reader",
+      "byte_len": 8596,
+      "sha256": "69359d2b39a218e59527ef2554967d90887153c342678a58beb9b457419ee976",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-resource-uri-adapter/release-impact.json",
+      "change_id": "machine-resource-uri-adapter",
+      "byte_len": 3341,
+      "sha256": "493a807257977a5d5486c641df33abd2536b13a35be9484315feab27ec2da262",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/mailbox-proof-citation/release-impact.json",
+      "change_id": "mailbox-proof-citation",
+      "byte_len": 2076,
+      "sha256": "4b8aeb03942762279bdaa610317ca3a65e4f1b3f9a4fb39ce098be2f79008a16",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/manifest-migration-operation-wire/release-impact.json",
+      "change_id": "manifest-migration-operation-wire",
+      "byte_len": 6976,
+      "sha256": "e2725238124495fe53856ac0c377bf9cc119061cac9ef282e7f40b150370a01a",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/manifest-migration-traceability/release-impact.json",
+      "change_id": "manifest-migration-traceability",
+      "byte_len": 2025,
+      "sha256": "ff685ac8259fe3a8dc73d618186dbffe4e8ed97c81db8aff9558299ba6fd78a4",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/mcp-pure-migration-planning/release-impact.json",
+      "change_id": "mcp-pure-migration-planning",
+      "byte_len": 3222,
+      "sha256": "c8cfcad369c7b187dfdf17d6021092f84f6a15ab9fd727631b5c59e41afda0e1",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/mcp-query-input-refusal/release-impact.json",
+      "change_id": "mcp-query-input-refusal",
+      "byte_len": 3034,
+      "sha256": "8e5a39672420f90951bdf50b8133400ffe8ad54ca6d85193b602757a68726ae8",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-application-citation-maintenance/release-impact.json",
+      "change_id": "migration-application-citation-maintenance",
+      "byte_len": 2408,
+      "sha256": "fc3c5fab7e55370d15f328f77d6272f4e612faa70f6ecc8302ba447b6c94d454",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-application-traceability/release-impact.json",
+      "change_id": "migration-application-traceability",
+      "byte_len": 2254,
+      "sha256": "25ef7fb28d86bf75c06fbc604cdda5159e48b40681f1fcdfe456c91fdfbaf7eb",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-generated-provenance-copy/release-impact.json",
+      "change_id": "migration-generated-provenance-copy",
+      "byte_len": 2908,
+      "sha256": "af0e16cf9839c48da8af6818ca4cb8881ea04ff3745895b591aac9bf626dbb64",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-machine-traceability/release-impact.json",
+      "change_id": "migration-machine-traceability",
+      "byte_len": 2044,
+      "sha256": "48f1035dca988e0fce5a7a7000e7b50cf417d1440dd51959459d0a1658b64dad",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-planning-wire-types/release-impact.json",
+      "change_id": "migration-planning-wire-types",
+      "byte_len": 9881,
+      "sha256": "52793af08991a0875abd8ec5373dd5402f7cccbdd67d7106f97a4cd0639a7484",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-profile-epoch-metadata/release-impact.json",
+      "change_id": "migration-profile-epoch-metadata",
+      "byte_len": 3120,
+      "sha256": "6aa0630f64f4d5040f540b2237c3ab6b4af250b7248cb1de336faf5a59420236",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-reader-generation-policy/release-impact.json",
+      "change_id": "migration-reader-generation-policy",
+      "byte_len": 3385,
+      "sha256": "b936abf09bb1cb135dad9d0a9c240d090fb439f9bf3b0add5492ae1ec50235b2",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-recovery-filesystem-primitives/release-impact.json",
+      "change_id": "migration-recovery-filesystem-primitives",
+      "byte_len": 4124,
+      "sha256": "c3ccab528fac057bf4bf0a4dd6733bde97fb2b81555ea045a6025d8ce819dccc",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/next-version-derived-state/release-impact.json",
+      "change_id": "next-version-derived-state",
+      "byte_len": 207668,
+      "sha256": "0e08d64367d5efec9bac626bbf506bbbcddb46e0cd09155c0c9e6fcc16c50428",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/next-version-source-floor/release-impact.json",
+      "change_id": "next-version-source-floor",
+      "byte_len": 934768,
+      "sha256": "47f8d76220199c42a1ce3886200622548de3d0c524fd01007220b1ca7b86889c",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/next-version-traceability/release-impact.json",
+      "change_id": "next-version-traceability",
+      "byte_len": 2307,
+      "sha256": "0a84644b6871d7bc591153874a380722af1a9c010814bc00dbab2cdab3ab1b16",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/ordinary-commonmark-structure-and-exports/release-impact.json",
+      "change_id": "ordinary-commonmark-structure-and-exports",
+      "byte_len": 5976,
+      "sha256": "65b9f617278ba33614736211bb8b4e4cc7bba028310dcdbdc798c07a55c14b1d",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/originating-publication-ownership/release-impact.json",
+      "change_id": "originating-publication-ownership",
+      "byte_len": 4056,
+      "sha256": "e9a13e55ccaf80edc6a70ff25eba422183b4c6e8faad579898961d530e075a35",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/owned-manifest-migration-runtime/release-impact.json",
+      "change_id": "owned-manifest-migration-runtime",
+      "byte_len": 4510,
+      "sha256": "bab4b290e3f69da1913a3ea0d9d8e18136a89abec7a9ae1ef76ba2ef27d405fb",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/portable-manifest-migration-source/release-impact.json",
+      "change_id": "portable-manifest-migration-source",
+      "byte_len": 4407,
+      "sha256": "9da6fa7cc3c53c8a358b884da378005062131715fdfdc51400c4bd43d2521f16",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/preview-accounting-foundation/release-impact.json",
+      "change_id": "preview-accounting-foundation",
+      "byte_len": 20817,
+      "sha256": "06896526f9e58e80f7488a3fee8f4e3bde3382a4a4e7776b4e8c48c972ee8bb3",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/protected-install-tree-witness-and-attach/release-impact.json",
+      "change_id": "protected-install-tree-witness-and-attach",
+      "byte_len": 5770,
+      "sha256": "da770e74028b9bb6a8b8fe3134bc39139070404daf760cafe3833ee4149078a0",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/protected-validate-lifecycle/release-impact.json",
+      "change_id": "protected-validate-lifecycle",
+      "byte_len": 8605,
+      "sha256": "c1ed7fc083a7bf176ba6d4bd2d813cb6520c15cd1ab044da25f66cee36318195",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/pure-environment-role-foundation/release-impact.json",
+      "change_id": "pure-environment-role-foundation",
+      "byte_len": 4448,
+      "sha256": "c0d54d40fb7f675e2f526fb1b5118c9866be6c1c8ead39f6529e16a9a42d8238",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/pure-machine-service-and-envelope-tool/release-impact.json",
+      "change_id": "pure-machine-service-and-envelope-tool",
+      "byte_len": 5218,
+      "sha256": "9ddd9c16a525822daaf2ff93298aff3ce77092ec57a087172e153acfdab62e0a",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/pure-materialization-migration-planner/release-impact.json",
+      "change_id": "pure-materialization-migration-planner",
+      "byte_len": 3043,
+      "sha256": "e0ef149bb5fc8c57c1ed109f344a3680697ea0ef548480003d7995788b41fec1",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/pure-migration-transport-adapter/release-impact.json",
+      "change_id": "pure-migration-transport-adapter",
+      "byte_len": 3187,
+      "sha256": "86c425c220405e378d79697f5ca9be286199daaae0515ece813cf1c761aaaa56",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/raw-xml-resources-and-selected-slot-map/release-impact.json",
+      "change_id": "raw-xml-resources-and-selected-slot-map",
+      "byte_len": 9209,
+      "sha256": "18e576f65aa580b5f96112020cb75d5dbf9f5f5d95dd56cb55b4ded4cf713291",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/reserved-bound-deploy-bridge/release-impact.json",
+      "change_id": "reserved-bound-deploy-bridge",
+      "byte_len": 4238,
+      "sha256": "316ccc95271d45b83fd41d84eaecadb17791c0ab82d915feb06821bfb51751fe",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/reserved-owner-lifetime-and-retired-attach/release-impact.json",
+      "change_id": "reserved-owner-lifetime-and-retired-attach",
+      "byte_len": 3133,
+      "sha256": "6e1157322f852c406ad5ab866d940019f8ddde298c1babd701936dcc79049980",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/role-classification-eto-laws/release-impact.json",
+      "change_id": "role-classification-eto-laws",
+      "byte_len": 6157,
+      "sha256": "40071ca17f14e3584266cd885221390f27f5f98b2af9e60bef1df5a48a8b34b6",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/selected-source-consumer-routing/release-impact.json",
+      "change_id": "selected-source-consumer-routing",
+      "byte_len": 11025,
+      "sha256": "932d762c5cef8c9f9b2c94f09101167246e773f01c84bf94c11887117ddac91b",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/source-traceability-maintenance/release-impact.json",
+      "change_id": "source-traceability-maintenance",
+      "byte_len": 5532,
+      "sha256": "ca39c1101cd326d49b7607f9fe5e98e671352cb87e4e71b6e4509b59e0de2604",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/strict-migration-transport-source/release-impact.json",
+      "change_id": "strict-migration-transport-source",
+      "byte_len": 3641,
+      "sha256": "c53412ba00dc4ff64f9a7ccd59db1ea9d01a96e8464249e6d2190f434c69bfc0",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/target-aware-environment-layout/release-impact.json",
+      "change_id": "target-aware-environment-layout",
+      "byte_len": 4354,
+      "sha256": "8252587ef76f0312ebe9ecc21b95d9c511649b90e86b588c0501ddcc836dfeb1",
+      "baseline_match": true
+    },
+    {
+      "path": "vibevm/vibespecs/changes/vvm-mirror-refusal-test-maintenance/release-impact.json",
+      "change_id": "vvm-mirror-refusal-test-maintenance",
+      "byte_len": 2337,
+      "sha256": "a7440a3efdda9b8ff79c269bb77a7f583df956116ab38590a11e113ae830983e",
+      "baseline_match": true
+    }
+  ]
+}

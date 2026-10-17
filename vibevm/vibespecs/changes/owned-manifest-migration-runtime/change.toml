@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "owned-manifest-migration-runtime"
+selected_node = "."
+slug = "owned-manifest-migration-runtime"
+title = "owned-manifest-migration-runtime"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

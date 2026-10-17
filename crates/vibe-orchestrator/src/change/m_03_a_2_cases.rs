@@ -111,7 +111,7 @@ fn captured_selected_plan_is_saved_read_only_and_exposes_unavailable_carriage() 
     assert_eq!(plan.selection().work(), "work-a");
     assert_eq!(
         plan.selection().intent(),
-        &v.analysis().unwrap().identities.intent
+        &v.analysis().unwrap().identities.as_ref().unwrap().intent
     );
     assert_eq!(
         plan.selection().operations(),

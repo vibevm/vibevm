@@ -46,9 +46,9 @@ fn connected_structural_graph() {
     assert_eq!(b.predecessors, ["work-a"]);
     assert_eq!(b.needs[0].kind, WorkNeedKind::Verification);
     assert_eq!(b.needs[0].target, "tests/a.rs");
-    assert_eq!(g.identity(&c).recipe(), WORK_RECIPE);
+    assert_eq!(g.identity(&c).unwrap().recipe(), WORK_RECIPE);
     assert_ne!(
-        g.identity(&c).digest(),
+        g.identity(&c).unwrap().digest(),
         identity(&c, b"Intent", b"Accept").digest()
     );
 }
@@ -60,7 +60,10 @@ fn canonical_graph_order_and_selected_contribution() {
         .replace("['src/z.rs','src/b.rs']", "['src/b.rs','src/z.rs']")
         .replace("[{kind='verification',target='tests/z.rs'},{kind='implementation',target='src/z.rs'},{kind='documentation',target='docs/a.md'}]", "[{kind='documentation',target='docs/a.md'},{kind='implementation',target='src/z.rs'},{kind='verification',target='tests/z.rs'}]");
     let multi = graph(&[A, multiple, C]);
-    assert_eq!(multi.identity(&c), graph(&[C, &reversed, A]).identity(&c));
+    assert_eq!(
+        multi.identity(&c).unwrap(),
+        graph(&[C, &reversed, A]).identity(&c).unwrap()
+    );
     assert_eq!(
         multi
             .item("work-b")
@@ -73,13 +76,13 @@ fn canonical_graph_order_and_selected_contribution() {
     );
     let first = graph(&[A, B, C]);
     let reordered = graph(&[C, B, A]);
-    assert_eq!(first.identity(&c), reordered.identity(&c));
+    assert_eq!(first.identity(&c).unwrap(), reordered.identity(&c).unwrap());
     assert_eq!(
         first.contribution_identity(&c, &["work-b"]).unwrap(),
         reordered.contribution_identity(&c, &["work-b"]).unwrap()
     );
     let edited = graph(&[A, B, &C.replace("src/c.rs", "src/other.rs")]);
-    assert_ne!(first.identity(&c), edited.identity(&c));
+    assert_ne!(first.identity(&c).unwrap(), edited.identity(&c).unwrap());
     assert_eq!(
         first.contribution_identity(&c, &["work-b"]).unwrap(),
         edited.contribution_identity(&c, &["work-b"]).unwrap()
@@ -187,7 +190,10 @@ fn normative_edit_and_binding_change_invalidate_intent() {
     .unwrap();
     let other = ChangeManifest::parse_str(TEXT, &context, &context.directory(c.id())).unwrap();
     assert_ne!(original, identity(&other, b"Intent", b"Accept"));
-    assert_ne!(graph(&[A]).identity(&c), graph(&[A]).identity(&other));
+    assert_ne!(
+        graph(&[A]).identity(&c).unwrap(),
+        graph(&[A]).identity(&other).unwrap()
+    );
     assert_eq!(
         c.intent_identity(&[]).unwrap_err().kind,
         ChangeErrorKind::Input
@@ -238,7 +244,7 @@ fn framing_is_unambiguous_and_versioned() {
     );
     let g = graph(&[A, B]);
     assert_ne!(
-        g.identity(&c).digest(),
+        g.identity(&c).unwrap().digest(),
         g.contribution_identity(&c, &["work-b"]).unwrap().digest()
     );
     assert_eq!(identity(&c, b"ab", b"c").recipe(), INTENT_RECIPE);

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "environment-role-traceability"
+selected_node = "."
+slug = "environment-role-traceability"
+title = "environment-role-traceability"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

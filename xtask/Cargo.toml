@@ -30,6 +30,7 @@ vibe-publish.workspace = true
 zip.workspace = true
 sha2.workspace = true
 vibe-core.workspace = true
+vibe-requirements.workspace = true
 specmark.workspace = true
 vibe-wire.workspace = true
 vibe-safefs.workspace = true

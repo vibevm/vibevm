@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "capability-inventory-foundation"
+selected_node = "."
+slug = "capability-inventory-foundation"
+title = "capability-inventory-foundation"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

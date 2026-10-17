@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "explicit-cli-manifest-migration-operation"
+selected_node = "."
+slug = "explicit-cli-manifest-migration-operation"
+title = "explicit-cli-manifest-migration-operation"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

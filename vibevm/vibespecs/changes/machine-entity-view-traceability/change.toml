@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-entity-view-traceability"
+selected_node = "."
+slug = "machine-entity-view-traceability"
+title = "machine-entity-view-traceability"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

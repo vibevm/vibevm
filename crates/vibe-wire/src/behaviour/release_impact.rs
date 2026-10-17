@@ -35,6 +35,24 @@ fn safe_relative_path(value: &str) -> bool {
 }
 
 impl ReleaseImpact {
+    /// Shared native/accounting boundary over exact retained bytes.
+    pub fn read_for_change(bytes: &[u8], id: &str, path: &str) -> Result<Self, ReleaseImpactError> {
+        let record: Self = serde_json::from_slice(bytes)
+            .map_err(|_| fault("record", "invalid registered release-impact shape"))?;
+        record.validate_release_impact()?;
+        if record.change_id != id {
+            return Err(fault(
+                "change_id",
+                "evidence differs from immutable change identity",
+            ));
+        }
+        if record.acceptance.review_evidence == path
+            || record.evidence.iter().any(|e| e.source == path)
+        {
+            return Err(fault("evidence", "release-impact cannot prove itself"));
+        }
+        Ok(record)
+    }
     /// Validate meaning the JTD shape cannot express before accepting a record.
     pub fn validate_release_impact(&self) -> Result<(), ReleaseImpactError> {
         if self.schema != 1 {

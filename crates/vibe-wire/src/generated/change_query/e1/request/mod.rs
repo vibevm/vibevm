@@ -28,6 +28,9 @@ pub enum RequestRole {
     #[serde(rename = "refinement")]
     Refinement,
 
+    #[serde(rename = "release-impact")]
+    ReleaseImpact,
+
     #[serde(rename = "work")]
     Work,
 }

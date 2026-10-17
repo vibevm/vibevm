@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "fixed-local-build-package-and-linked-output"
+selected_node = "."
+slug = "fixed-local-build-package-and-linked-output"
+title = "fixed-local-build-package-and-linked-output"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

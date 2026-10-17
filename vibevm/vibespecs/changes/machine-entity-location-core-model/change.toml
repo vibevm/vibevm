@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "machine-entity-location-core-model"
+selected_node = "."
+slug = "machine-entity-location-core-model"
+title = "machine-entity-location-core-model"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

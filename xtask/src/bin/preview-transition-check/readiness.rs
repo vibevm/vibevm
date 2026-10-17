@@ -60,7 +60,7 @@ fn roles(transition: &Transition, report: &mut CheckReport) {
     unsupported(
         report,
         "bindings-roles-owner-unavailable",
-        "The bootstrap checker has no authoritative native role/meaningful-identity adapter connected. Roles requires actual non-normative discovery, immutable ID/byte preservation and unchanged intent/work identities; declarations or equal producer hashes do not prove them.",
+        "This declaration-only readiness branch has not run the authoritative native role/meaningful-identity adapter; the bindings roles entrypoint performs that inspection. Roles requires actual non-normative discovery, immutable ID/byte preservation and unchanged intent/work identities; declarations or equal producer hashes do not prove them.",
     );
 }
 

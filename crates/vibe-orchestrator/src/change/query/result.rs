@@ -26,6 +26,7 @@ fn role_name(role: D) -> &'static str {
         D::Acceptance => "acceptance",
         D::Work => "work",
         D::Closure => "closure",
+        D::ReleaseImpact => "release-impact",
     }
 }
 pub(super) fn produce(
@@ -46,6 +47,13 @@ pub(super) fn produce(
         )
     })?;
     let manifest = &parsed.manifest;
+    let identities = parsed.identities.as_ref().ok_or_else(|| {
+        wire::refused(
+            Code::InvalidChange,
+            "evidence-only registration: normative intent/work subjects unavailable",
+            vec![],
+        )
+    })?;
     let requested: Vec<_> = request
         .roles
         .iter()
@@ -115,6 +123,8 @@ pub(super) fn produce(
         let mut state = RoleState::Unclassified;
         if doc.role == D::Work {
             state = RoleState::Work;
+        } else if doc.role == D::ReleaseImpact {
+            state = RoleState::Inert;
         } else if doc.role == D::Closure {
             state = RoleState::Inert;
             gaps.push(gap(
@@ -387,8 +397,7 @@ pub(super) fn produce(
         }
     }
     facts.sort_by(|a, b| a.metadata.address.cmp(&b.metadata.address));
-    let work_items = parsed
-        .identities
+    let work_items = identities
         .graph
         .items()
         .map(|item| WorkItem {
@@ -432,10 +441,10 @@ pub(super) fn produce(
         coordinate: manifest.coordinate().into(),
         selected_node: manifest.selected_node().into(),
         directory: manifest.directory().to_str().unwrap().into(),
-        intent_recipe: parsed.identities.intent.recipe().into(),
-        intent_hash: parsed.identities.intent.digest().into(),
-        work_recipe: parsed.identities.work.recipe().into(),
-        work_hash: parsed.identities.work.digest().into(),
+        intent_recipe: identities.intent.recipe().into(),
+        intent_hash: identities.intent.digest().into(),
+        work_recipe: identities.work.recipe().into(),
+        work_hash: identities.work.digest().into(),
         capture: service.capture.id().into(),
         roles,
         omitted_roles,

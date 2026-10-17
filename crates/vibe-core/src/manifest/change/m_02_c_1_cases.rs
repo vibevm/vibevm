@@ -61,7 +61,10 @@ fn bound_domain_preserves_legacy_vector_and_work_identity() {
     let graph =
         WorkGraph::parse_documents(&["schema=1\n[[items]]\nid='work-a'\ntouches=['src/a.rs']\n"])
             .unwrap();
-    assert_eq!(graph.identity(&old), graph.identity(&bound));
+    assert_eq!(
+        graph.identity(&old).unwrap(),
+        graph.identity(&bound).unwrap()
+    );
     assert_eq!(
         graph.contribution_identity(&old, &["work-a"]).unwrap(),
         graph.contribution_identity(&bound, &["work-a"]).unwrap()

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "bootstrap-accounting-record-maintenance"
+selected_node = "."
+slug = "bootstrap-accounting-record-maintenance"
+title = "bootstrap-accounting-record-maintenance"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

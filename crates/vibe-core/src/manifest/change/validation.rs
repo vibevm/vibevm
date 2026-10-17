@@ -23,6 +23,22 @@ pub(super) fn validate(
         ));
     }
     let id = ChangeId::parse(&wire.change.id)?;
+    let evidence_only = wire.origins.is_empty()
+        && wire.documents.len() == 1
+        && wire.documents[0].role == ChangeDocumentRole::ReleaseImpact;
+    if epoch == 0
+        && (!wire.change.id.starts_with("chg-")
+            || wire
+                .documents
+                .iter()
+                .any(|d| d.role == ChangeDocumentRole::ReleaseImpact))
+    {
+        return Err(invalid(
+            ChangeErrorKind::Role,
+            "documents",
+            "pilot0 does not admit release evidence",
+        ));
+    }
     if wire.change.selected_node != context.selected_node {
         return Err(invalid(
             ChangeErrorKind::SelectedNode,
@@ -51,7 +67,7 @@ pub(super) fn validate(
             "does not match configured root and immutable ID",
         ));
     }
-    if wire.origins.is_empty() {
+    if wire.origins.is_empty() && !evidence_only {
         return Err(invalid(
             ChangeErrorKind::Origin,
             "origins",
@@ -209,6 +225,9 @@ pub(super) fn validate(
             ));
         }
         if (doc.role == ChangeDocumentRole::Closure && (doc.normative || doc.input))
+            || (doc.role == ChangeDocumentRole::ReleaseImpact
+                && (doc.normative || !doc.input || doc.path != "release-impact.json"))
+            || (doc.path == "release-impact.json" && doc.role != ChangeDocumentRole::ReleaseImpact)
             || (doc.role == ChangeDocumentRole::Work && doc.normative)
             || (doc.normative && !doc.input)
         {
@@ -221,7 +240,7 @@ pub(super) fn validate(
         intent |= doc.role == ChangeDocumentRole::Intent && doc.input && doc.normative;
         acceptance |= doc.role == ChangeDocumentRole::Acceptance && doc.input && doc.normative;
     }
-    if !intent || !acceptance {
+    if !evidence_only && (!intent || !acceptance) {
         return Err(invalid(
             ChangeErrorKind::MissingRole,
             "documents",

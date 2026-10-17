@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "mcp-query-input-refusal"
+selected_node = "."
+slug = "mcp-query-input-refusal"
+title = "mcp-query-input-refusal"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

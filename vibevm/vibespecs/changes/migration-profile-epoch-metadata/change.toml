@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "migration-profile-epoch-metadata"
+selected_node = "."
+slug = "migration-profile-epoch-metadata"
+title = "migration-profile-epoch-metadata"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

@@ -129,12 +129,12 @@ fn two_clients_dirty_refinements_are_isolated() {
     assert_eq!(av.raw(id), Some(b"Client A refinement\n".as_slice()));
     assert_eq!(bv.raw(id), Some(b"Client B refinement\n".as_slice()));
     assert_ne!(
-        av.analysis().unwrap().identities.intent,
-        bv.analysis().unwrap().identities.intent
+        av.analysis().unwrap().identities.as_ref().unwrap().intent,
+        bv.analysis().unwrap().identities.as_ref().unwrap().intent
     );
     assert_eq!(
-        av.analysis().unwrap().identities.work,
-        bv.analysis().unwrap().identities.work
+        av.analysis().unwrap().identities.as_ref().unwrap().work,
+        bv.analysis().unwrap().identities.as_ref().unwrap().work
     );
     assert_eq!(av.analysis().unwrap().manifest.id().as_str(), ID);
     assert_ne!(av.capture_id(), bv.capture_id());

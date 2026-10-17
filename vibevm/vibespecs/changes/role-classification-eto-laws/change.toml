@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "role-classification-eto-laws"
+selected_node = "."
+slug = "role-classification-eto-laws"
+title = "role-classification-eto-laws"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

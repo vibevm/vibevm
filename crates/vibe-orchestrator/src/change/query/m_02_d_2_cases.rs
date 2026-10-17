@@ -125,3 +125,37 @@ fn declared_role_filter_is_exact_and_unknown_role_has_candidates() {
         serde_json::json!(["intent", "acceptance"])
     );
 }
+
+#[test]
+fn release_evidence_role_roundtrips_through_actual_query() {
+    let root = fixture();
+    let dir = root.path().join("vibevm/vibespecs/changes").join(ID);
+    let mut text = fs::read_to_string(dir.join("change.toml")).unwrap();
+    text.push_str("\n[[documents]]\nrole='release-impact'\npath='release-impact.json'\nnormative=false\ninput=true\n");
+    fs::write(dir.join("change.toml"), text).unwrap();
+    let mut record: serde_json::Value = serde_json::from_str(include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../formats/corpora/release-impact/e1/valid/internal-refactor.json"
+    )))
+    .unwrap();
+    record["change_id"] = ID.into();
+    let bytes = serde_json::to_vec(&record).unwrap();
+    fs::write(dir.join("release-impact.json"), &bytes).unwrap();
+    let request = serde_json::json!({"schema":1,"mode":"show","id":ID,"roles":["release-impact"]});
+    let response = crate::machine_operation::MachineOperationService::read_change_json(
+        root.path(),
+        None,
+        &request,
+    );
+    wire::validate_response(&response).unwrap();
+    let value = serde_json::to_value(response).unwrap();
+    assert_eq!(value["status"], "success", "{value}");
+    assert_eq!(value["roles"].as_array().unwrap().len(), 1);
+    assert_eq!(value["roles"][0]["role"], "release-impact");
+    assert_eq!(value["roles"][0]["state"], "inert");
+    assert_eq!(
+        value["roles"][0]["raw_hex"],
+        bytes.iter().map(|b| format!("{b:02x}")).collect::<String>()
+    );
+    assert_eq!(fs::read(dir.join("release-impact.json")).unwrap(), bytes);
+}

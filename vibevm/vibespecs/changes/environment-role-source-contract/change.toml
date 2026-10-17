@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "environment-role-source-contract"
+selected_node = "."
+slug = "environment-role-source-contract"
+title = "environment-role-source-contract"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

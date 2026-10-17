@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "raw-xml-resources-and-selected-slot-map"
+selected_node = "."
+slug = "raw-xml-resources-and-selected-slot-map"
+title = "raw-xml-resources-and-selected-slot-map"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "originating-publication-ownership"
+selected_node = "."
+slug = "originating-publication-ownership"
+title = "originating-publication-ownership"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

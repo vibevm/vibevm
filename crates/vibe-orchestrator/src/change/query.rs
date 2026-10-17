@@ -219,7 +219,8 @@ impl crate::machine_operation::MachineOperationService {
             Ok(service) => service.query(&request),
             Err(ChangeReadError::Declaration(error)) => {
                 let code = match error {
-                    vibe_requirements::change::SavedChangeError::Declaration(_) => {
+                    vibe_requirements::change::SavedChangeError::Declaration(_)
+                    | vibe_requirements::change::SavedChangeError::Evidence(_) => {
                         Code::InvalidChange
                     }
                     vibe_requirements::change::SavedChangeError::MissingDocument(_) => {

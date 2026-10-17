@@ -1,0 +1,14 @@
+schema = 1
+origins = []
+
+[change]
+id = "vvm-mirror-refusal-test-maintenance"
+selected_node = "."
+slug = "vvm-mirror-refusal-test-maintenance"
+title = "vvm-mirror-refusal-test-maintenance"
+
+[[documents]]
+role = "release-impact"
+path = "release-impact.json"
+normative = false
+input = true

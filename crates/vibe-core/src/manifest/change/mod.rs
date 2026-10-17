@@ -68,16 +68,24 @@ pub(crate) fn invalid(
 pub struct ChangeId(String);
 impl ChangeId {
     pub fn parse(text: &str) -> Result<Self, ChangeError> {
-        let valid = text.strip_prefix("chg-").is_some_and(|s| {
-            s.len() == 32
-                && s.bytes()
-                    .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
-        });
+        let valid = text.strip_prefix("chg-").map_or_else(
+            || {
+                !text.is_empty()
+                    && text
+                        .bytes()
+                        .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
+            },
+            |s| {
+                s.len() == 32
+                    && s.bytes()
+                        .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+            },
+        );
         if !valid {
             return Err(invalid(
                 ChangeErrorKind::Identity,
                 "change.id",
-                "expected chg- and32lowercase hex digits",
+                "expected immutable bootstrap ID or chg- and32lowercase hex digits",
             ));
         }
         declarant_path_component(text).map_err(|_| {
@@ -182,6 +190,7 @@ pub enum ChangeDocumentRole {
     Acceptance,
     Work,
     Closure,
+    ReleaseImpact,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -272,6 +281,11 @@ impl ChangeManifest {
     pub fn documents(&self) -> &[ChangeDocument] {
         &self.wire.documents
     }
+    pub fn is_evidence_only(&self) -> bool {
+        self.wire.origins.is_empty()
+            && self.wire.documents.len() == 1
+            && self.wire.documents[0].role == ChangeDocumentRole::ReleaseImpact
+    }
     pub fn metadata(&self) -> &BTreeMap<String, toml::Value> {
         &self.wire.metadata
     }
@@ -304,3 +318,6 @@ mod m_02_c_1_cases;
 
 #[cfg(test)]
 mod m_03_a_2_cases;
+
+#[cfg(test)]
+mod preview_bind_cases;
