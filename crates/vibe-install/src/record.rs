@@ -282,7 +282,7 @@ fn config_value(v: &vibe_core::manifest::feature_effects::ConfigValue) -> serde_
 /// Lossless, explicitly tagged projection of the admitted B1/B2 definition.
 /// It is evidence compared against current authored inputs, never an authority
 /// reconstructed from an outcome or an alternate solver input.
-fn definition(
+pub fn configuration_definition(
     d: &vibe_resolver::features::configuration::ConfigurationDefinition,
 ) -> crate::error::Result<String> {
     use serde_json::{Value, json};
@@ -348,7 +348,7 @@ fn definition(
     serde_json::to_string(&value).map_err(|e| lock_error(e.to_string()))
 }
 
-fn requested_record(
+pub fn requested_record(
     request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
 ) -> crate::error::Result<vibe_wire::generated::lock_configuration::e1::requested::Requested> {
     use serde_json::json;
@@ -356,11 +356,11 @@ fn requested_record(
     let mut defaults = Vec::new();
     if let Some(c) = &request.configuration {
         for d in &c.definitions {
-            definitions.push(json!({"package":d.package.to_string(),"version":d.version.to_string(),"identity":identity(&d.identity),"definition":definition(&d.definition)?}));
+            definitions.push(json!({"package":d.package.to_string(),"version":d.version.to_string(),"identity":identity(&d.identity),"definition":configuration_definition(&d.definition)?}));
         }
         for b in &c.defaults {
             let (edge, id, shown, r) = b.receipt();
-            defaults.push(json!({"edge":edge,"identity":identity(id),"definition":definition(shown)?,"request":serde_json::to_string(r).map_err(|e|lock_error(e.to_string()))?}));
+            defaults.push(json!({"edge":edge,"identity":identity(id),"definition":configuration_definition(shown)?,"request":serde_json::to_string(r).map_err(|e|lock_error(e.to_string()))?}));
         }
     }
     let mut value = json!({"epoch":"1","roots":request.roots.iter().map(ToString::to_string).collect::<Vec<_>>(),
@@ -372,6 +372,44 @@ fn requested_record(
             json!(serde_json::to_string(&c.request).map_err(|e| lock_error(e.to_string()))?);
     }
     serde_json::from_value(value).map_err(|e| lock_error(e.to_string()))
+}
+
+/// Pure D1 comparison performed before planning can choose a Fresh shortcut.
+/// No catalog acquisition or reconstruction of authored choices occurs here.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RequestFreshness {
+    pub matches: bool,
+    pub retained_identity: Option<String>,
+    pub current_identity: String,
+}
+
+pub fn request_freshness(
+    lock: &Lockfile,
+    current: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
+) -> crate::error::Result<RequestFreshness> {
+    let now = requested_record(current)?;
+    let current_identity = vibe_core::manifest::LockedConfiguration::digest(
+        &serde_json::to_string(&now).map_err(|e| lock_error(e.to_string()))?,
+    );
+    let (matches, retained_identity) = match &lock.meta.configuration {
+        Some(record) => {
+            let (old, _) =
+                vibe_wire::behaviour::lock_configuration::decode(record).map_err(lock_error)?;
+            (old == now, Some(record.request_digest.clone()))
+        }
+        None => (
+            current.configuration.is_none()
+                && current.features.explicit.is_empty()
+                && !current.features.no_defaults
+                && !current.features.all,
+            None,
+        ),
+    };
+    Ok(RequestFreshness {
+        matches,
+        retained_identity,
+        current_identity,
+    })
 }
 
 /// Build once before apply effects, from the exact confirmed C3 evidence.
@@ -509,7 +547,7 @@ pub(crate) fn configuration_record(
     for p in provenance {
         edges.push(json!({"parent":p.selected.parent.to_string(),"declaration":p.selected.declaration,"alternative":p.selected.alternative,
             "provider":p.selected.provider.to_string(),"owner_identity":identity(&p.declaration_identity),"provider_identity":identity(&p.provider_identity),
-            "definition":p.configured_definition.as_ref().map(definition).transpose()?.unwrap_or_default(),"request_digest":"pending"}));
+            "definition":p.configured_definition.as_ref().map(configuration_definition).transpose()?.unwrap_or_default(),"request_digest":"pending"}));
     }
     let resolved = serde_json::from_value(json!({"epoch":"1","request_digest":"pending","packages":packages,"edges":edges,"configurations":configurations})).map_err(|e|lock_error(e.to_string()))?;
     vibe_wire::behaviour::lock_configuration::encode(requested, resolved)

@@ -61,6 +61,26 @@ pub struct ShowConfigArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct ShowFeaturesArgs {
+    /// Discover declarations from a frozen capture without selecting defaults.
+    #[arg(long)]
+    pub discover: bool,
+
+    /// Explicitly freeze disk resources for this invocation. Does not admit normalized definitions.
+    #[arg(long, requires = "discover")]
+    pub prepare: bool,
+
+    /// Cached manifest to include in explicit preparation, relative to --path. Repeatable.
+    #[arg(long, requires = "prepare")]
+    pub cached_manifest: Vec<String>,
+
+    /// Query a caller-trusted local M16 host holding an admitted frozen basis (Unix socket).
+    #[arg(long, requires_all = ["discover", "capture"], conflicts_with = "prepare")]
+    pub discovery_host: Option<PathBuf>,
+
+    /// Exact capture held by --discovery-host. Does not prepare or admit resources.
+    #[arg(long, requires = "discovery_host")]
+    pub capture: Option<String>,
+
     /// Project root. Defaults to current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,

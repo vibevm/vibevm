@@ -300,13 +300,35 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     let (roots, preferred_roots, root_origins) =
         effective_root_constraints(workspace, project_root, &request.roots, &lockfile)?;
 
+    let mut normalized = vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
+        &roots,
+        &request.features,
+    );
+    normalized.root_origins = root_origins;
+    let freshness = crate::record::request_freshness(
+        &lockfile,
+        source.normalized_request().unwrap_or(&normalized),
+    )?;
+    let freshness_identity = format!(
+        "request/definition identity current={} retained={}",
+        freshness.current_identity,
+        freshness
+            .retained_identity
+            .as_deref()
+            .unwrap_or("legacy-default-request")
+    );
+
     // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, the 2026-08-24 ruling): zero
     // dependencies is a fresh project, not an error — regenerate the boot
     // artifacts of the empty world and report the fresh shape.
     // Admitted transaction intent is not represented by the legacy lockfile.
     // Neither an empty manifest nor its freshness can discharge that request.
     let admitted_request = source.normalized_request().is_some();
-    if roots.is_empty() && !admitted_request {
+    if roots.is_empty() && !admitted_request && freshness.matches {
+        observer
+            .progress()
+            .task("Checking request freshness")
+            .skip(&format!("empty request is fresh; {freshness_identity}"));
         return Ok(Plan::Fresh);
     }
 
@@ -334,7 +356,11 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     // lockfile-respecting: a fresh lock is honoured verbatim, with no
     // version drift inside a constraint. An explicit
     // `vibe install <pkgref>` always runs the full pipeline.
-    if request.roots.is_empty() && !admitted_request {
+    if request.roots.is_empty()
+        && freshness.matches
+        && (!admitted_request || lockfile.meta.configuration.is_some())
+    {
+        crate::record::validate_replay(&lockfile, source, &request.roots)?;
         let ws = &*workspace;
         match vibe_workspace::freshness::check(ws, &lockfile) {
             vibe_workspace::freshness::Freshness::Fresh
@@ -343,7 +369,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
                 if migration_pending {
                     manifest.write(project_root.join(Manifest::FILENAME))?;
                 }
-                resolution_task.skip("vibe.lock is fresh");
+                resolution_task.skip(&format!("vibe.lock is fresh; {freshness_identity}"));
                 return Ok(Plan::Fresh);
             }
             vibe_workspace::freshness::Freshness::Fresh => {
@@ -368,12 +394,15 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         }
     }
 
-    let mut normalized = vibe_resolver::resolvo_engine::request::NormalizedRequest::legacy(
-        &roots,
-        &request.features,
-    );
-    normalized.root_origins = root_origins;
-    let transaction = transaction::PlanningSource::capture_request(source, &normalized)?;
+    if !freshness.matches {
+        observer.on(PlanEvent::Reresolving {
+            reason: format!("request or definition changed; {freshness_identity}"),
+        });
+    }
+    let transaction = transaction::PlanningSource::capture_request(
+        source,
+        source.normalized_request().unwrap_or(&normalized),
+    )?;
     let source = &transaction;
     crate::record::validate_replay(&lockfile, source, &request.roots)?;
     if let Some(catalog) = source.catalog_inspection() {

@@ -1,0 +1,604 @@
+{
+  "status": "Root_semantic_decision_pending",
+  "work_id": "work.m05.e1",
+  "candidate_id": "managed-result.d85c80ca855a31150e6c53c36c5e92d0b2084a73e82bbb33d49a8ebfb16be81e",
+  "contract_id": "contract.m05.e1",
+  "contract_digest": "292560995b94736e8456c042f7a97b241ecfb8fcabee3d43f468c096c8609ad0",
+  "criteria": [
+    "Fast-path decisions cite request/definition identity.",
+    "Discovery purity counters show no authored/cache mutation."
+  ],
+  "slots": [
+    {
+      "slot": 0,
+      "verification_id": "verify.authored.m05.e1.00",
+      "declared_method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-install",
+          "--test",
+          "m_05_e_1_cases"
+        ],
+        "cases": [
+          "choice_only_defeats_fresh",
+          "feature_only_defeats_fresh",
+          "definition_only_defeats_fresh",
+          "unchanged_request_and_definition_reuses_fresh",
+          "missing_current_authority_never_fresh",
+          "empty_cached_discovery_no_provider_or_writes",
+          "repeated_unresolved_needs_selection_no_loop"
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "vibe-install TO CREATE integration target; manifest lib.test=false",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "passed",
+      "literal_final_exit": 0,
+      "unique_tests_counted": 10,
+      "log_binding": "second/check-00-attempt-3.log",
+      "actual_final_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--test",
+        "m_05_e_1_cases"
+      ],
+      "source_applicability": "Unchanged applicable source/dependency closure; retained second-run evidence",
+      "note": "No new execution by assembler"
+    },
+    {
+      "slot": 1,
+      "verification_id": "verify.authored.m05.e1.01",
+      "declared_method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-install",
+          "--test",
+          "m_05_a_1_cases",
+          "fresh_requested_features",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "fresh_requested_features"
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "vibe-install EXISTING test; update exact bug assertion under Root scope",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "passed",
+      "literal_final_exit": 0,
+      "unique_tests_counted": 1,
+      "log_binding": "second/check-01-attempt-1.log",
+      "actual_final_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--test",
+        "m_05_a_1_cases",
+        "fresh_requested_features",
+        "--",
+        "--exact"
+      ],
+      "source_applicability": "Unchanged applicable source/dependency closure; retained second-run evidence",
+      "note": "No new execution by assembler"
+    },
+    {
+      "slot": 2,
+      "verification_id": "verify.authored.m05.e1.02",
+      "declared_method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-install",
+          "--test",
+          "prepared_planning",
+          "the_root_union_reads_the_supplied_tree_not_the_file",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "The prepared planner reads member constraints from the supplied staged tree without relying on a stale characterization."
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "Existing public prepared_planning exact root-union regression",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "passed",
+      "literal_final_exit": 0,
+      "unique_tests_counted": 1,
+      "log_binding": "second/check-02-attempt-1.log",
+      "actual_final_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--test",
+        "prepared_planning",
+        "the_root_union_reads_the_supplied_tree_not_the_file",
+        "--",
+        "--exact"
+      ],
+      "source_applicability": "Unchanged applicable source/dependency closure; retained second-run evidence",
+      "note": "No new execution by assembler"
+    },
+    {
+      "slot": 3,
+      "verification_id": "verify.authored.m05.e1.03",
+      "declared_method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-workspace",
+          "--lib",
+          "configuration_discovery::m_05_e_1_cases"
+        ],
+        "cases": [
+          "frozen_definition_effect_default_identity",
+          "empty_cache_unavailable",
+          "query_preserves_manifest_lock_and_cache",
+          "same_unresolved_basis_returns_needs_selection"
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "vibe-workspace TO CREATE reviewed module family if workspace owns bridge; proposed src/configuration_discovery.rs",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "passed",
+      "literal_final_exit": 0,
+      "unique_tests_counted": 4,
+      "log_binding": "second/check-03-attempt-2.log",
+      "actual_final_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-workspace",
+        "--lib",
+        "configuration_discovery::m_05_e_1_cases"
+      ],
+      "source_applicability": "Unchanged applicable source/dependency closure; retained second-run evidence",
+      "note": "No new execution by assembler"
+    },
+    {
+      "slot": 4,
+      "verification_id": "verify.authored.m05.e1.04",
+      "declared_method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-cli",
+          "--bin",
+          "vibe",
+          "commands::show::features::m_05_e_1_cases"
+        ],
+        "cases": [
+          "discovery_renders_candidates_without_selection",
+          "empty_cached_discovery_unavailable",
+          "repeated_unresolved_terminates",
+          "legacy_locked_feature_view_preserved"
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "vibe-cli TO CREATE inline/module family in original features.rs scope",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "passed",
+      "literal_final_exit": 0,
+      "unique_tests_counted": 5,
+      "log_binding": "third/check-04.log",
+      "actual_final_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--bin",
+        "vibe",
+        "commands::show::features::m_05_e_1_cases"
+      ],
+      "source_applicability": "Current third run",
+      "note": "No new execution by assembler"
+    },
+    {
+      "slot": 5,
+      "verification_id": "verify.authored.m05.e1.05",
+      "declared_method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-mcp",
+          "--lib",
+          "tools::configuration_discovery::m_05_e_1_cases"
+        ],
+        "cases": [
+          "same_service_result_as_cli",
+          "empty_cache_no_provider",
+          "purity_counters_and_no_mutation",
+          "unresolved_returns_needs_selection_once"
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "vibe-mcp TO CREATE tools/configuration_discovery.rs and parent module registration",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "passed",
+      "literal_final_exit": 0,
+      "unique_tests_counted": 4,
+      "log_binding": "third/check-05.log",
+      "actual_final_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-mcp",
+        "--lib",
+        "tools::configuration_discovery::m_05_e_1_cases"
+      ],
+      "source_applicability": "Current third run",
+      "note": "No new execution by assembler"
+    },
+    {
+      "slot": 6,
+      "verification_id": "verify.authored.m05.e1.06",
+      "declared_method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-orchestrator",
+          "--lib",
+          "document_analysis::catalog::m_05_e_1_cases"
+        ],
+        "cases": [
+          "captured_choices_effects_defaults_no_selection",
+          "empty_capture_unavailable_no_provider",
+          "repeated_unresolved_is_stable_needs_selection",
+          "no_cache_or_authored_mutations"
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "vibe-orchestrator TO CREATE inline pure-cached seam family if owner changed",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "passed",
+      "literal_final_exit": 0,
+      "unique_tests_counted": 7,
+      "log_binding": "third/check-06-attempt-2.log",
+      "actual_final_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "document_analysis::catalog::m_05_e_1_cases"
+      ],
+      "source_applicability": "Current third run",
+      "note": "No new execution by assembler"
+    },
+    {
+      "slot": 7,
+      "verification_id": "verify.authored.m05.e1.07",
+      "declared_method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-install",
+          "--test",
+          "prepared_planning",
+          "the_root_union_reads_the_supplied_tree_not_the_file",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "the_root_union_reads_the_supplied_tree_not_the_file"
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "vibe-install existing prepared_planning control",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "passed",
+      "literal_final_exit": 0,
+      "unique_tests_counted": 0,
+      "log_binding": "second/check-02-attempt-1.log",
+      "actual_final_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--test",
+        "prepared_planning",
+        "the_root_union_reads_the_supplied_tree_not_the_file",
+        "--",
+        "--exact"
+      ],
+      "source_applicability": "Unchanged applicable source/dependency closure; retained second-run evidence",
+      "note": "Same actual proof as slot02, counted once"
+    },
+    {
+      "slot": 8,
+      "verification_id": "verify.authored.m05.e1.08",
+      "declared_method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-install",
+          "--test",
+          "prepared_planning",
+          "a_fresh_plan_leaves_the_callers_workspace_available",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "a_fresh_plan_leaves_the_callers_workspace_available"
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "vibe-install existing prepared_planning control",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "passed",
+      "literal_final_exit": 0,
+      "unique_tests_counted": 1,
+      "log_binding": "second/check-08-attempt-1.log",
+      "actual_final_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--test",
+        "prepared_planning",
+        "a_fresh_plan_leaves_the_callers_workspace_available",
+        "--",
+        "--exact"
+      ],
+      "source_applicability": "Unchanged applicable source/dependency closure; retained second-run evidence",
+      "note": "No new execution by assembler"
+    },
+    {
+      "slot": 9,
+      "verification_id": "verify.authored.m05.e1.09",
+      "declared_method": {
+        "argv": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--",
+          "--check"
+        ],
+        "cases": [
+          "Literal required command; retain actual exit and B-250 unrelated baseline paths; no global rewrite or relabel."
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "Literal required command; retain actual exit and B-250 unrelated baseline paths; no global rewrite or relabel.",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "failed",
+      "literal_final_exit": 1,
+      "unique_tests_counted": 0,
+      "log_binding": "second/check-09.log",
+      "actual_final_argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "source_applicability": "Unchanged applicable source/dependency closure; retained second-run evidence",
+      "note": "Literal global failure preserved; scoped format0 does not convert slot09 toPassed"
+    },
+    {
+      "slot": 10,
+      "verification_id": "verify.authored.m05.e1.10",
+      "declared_method": {
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cases": [
+          "Required tracked whitespace gate; inspect added paths as needed."
+        ],
+        "environment": "Declaration only; use current Root-configured toolchain and actual exclusive build-target lease, CARGO_NET_OFFLINE=true, RUSTUP_AUTO_INSTALL=0, offline/locked Cargo, umask0077 and fresh private TMP. No old target/authority grant inherited. Before this Work dispatch, select affected nonzero cases/targets; TO CREATE names do not assert existence or passing checks. Keep conditional oracle applicability and actual baseline failures explicit.",
+        "subjects": [
+          {
+            "id": "work.m05.e1",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "Required tracked whitespace gate; inspect added paths as needed.",
+        "toolchain": "Existing configured project Rust/Cargo/Git toolchain; no installation or version change authorized."
+      },
+      "proposed_verification_state": "passed",
+      "literal_final_exit": 0,
+      "unique_tests_counted": 0,
+      "log_binding": "third/check-10-final.log",
+      "actual_final_argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "source_applicability": "Current third run",
+      "note": "No new execution by assembler"
+    }
+  ],
+  "unique_test_count": 33,
+  "known_global_fmt_failure": {
+    "exit": 1,
+    "verification_state": "failed",
+    "new_run": false,
+    "baseline_files": [
+      {
+        "path": "crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+        "sha256": "ad0a9f196c9d1d98526aa459330c3a491137dcfd17fc31aaba494d4f48ae6ae1",
+        "byte_equal_source_base": true
+      },
+      {
+        "path": "crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+        "sha256": "8846206a2507282e1e1136313951a65680eaef4973ebfd4c4e00d1e9e5ad3c01",
+        "byte_equal_source_base": true
+      },
+      {
+        "path": "crates/vibe-mcp/src/machine_session/incremental.rs",
+        "sha256": "092ca216e0ff322e678f417541f6ac3dcece1595ccbd43df9524afb2381a343d",
+        "byte_equal_source_base": true
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+        "sha256": "0ec1f9647c6da11be5ca59a82b01a207fdd8ad294177d40b421557530d0f8e64",
+        "byte_equal_source_base": true
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+        "sha256": "916d0e3de07e867da8ac75f321a4067aab73fb659093ca10191a0c35de899d16",
+        "byte_equal_source_base": true
+      },
+      {
+        "path": "crates/vibe-publish/src/package_git_payload/tests.rs",
+        "sha256": "5844bd05784847cf4f9b12c44cb81dd7757a2cfb80fd946f9011646fea7f3636",
+        "byte_equal_source_base": true
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "sha256": "a03832d80a44325af466820717a535b1f3b1dd54d0d12d42bc533b46b192350a",
+        "byte_equal_source_base": true
+      }
+    ]
+  },
+  "limits": [
+    "Literal global cargo fmt --all -- --check is exit1 on seven unchanged baseline paths; slot09 must remain Failed, never a literal pass. Scoped rustfmt0 is separate evidence.",
+    "33 unique selected cases =17 applicable retained +16 current; slots02/07 share one actual root-union execution.",
+    "Current M16 first run exit101 (6pass/1fail) and prior E0425 compile101 are retained; only final applicable runs count.",
+    "Unix caller-trusted endpoint; embedding host owns access/lifecycle. No cross-user authentication or all-platform proof.",
+    "Frozen discovery counters exclude socket I/O, explicit preparation and other process activity. No install/default authorization.",
+    "This accepts only unchanged original E1 criteria for work.m05.e1 if Root chooses; obligation.m05 remains shared across eight contracts and is not wholly completed here.",
+    "NEXT-P0-GATE remains Root-owned current-admission control; no historical receipt or new waiver is fabricated.",
+    "Root independent verification/safety reports must be normally published; candidate Report remains the exact observation artifact for domain adjudication."
+  ]
+}

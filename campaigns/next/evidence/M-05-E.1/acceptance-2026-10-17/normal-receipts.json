@@ -1,0 +1,147 @@
+[
+  {
+    "command": "m05.e1.accept.claim.00",
+    "status": "committed",
+    "revision": 8683
+  },
+  {
+    "command": "m05.e1.accept.claim.01",
+    "status": "committed",
+    "revision": 8685
+  },
+  {
+    "command": "m05.e1.accept.claim.02",
+    "status": "committed",
+    "revision": 8687
+  },
+  {
+    "command": "m05.e1.accept.claim.03",
+    "status": "committed",
+    "revision": 8689
+  },
+  {
+    "command": "m05.e1.accept.claim.04",
+    "status": "committed",
+    "revision": 8691
+  },
+  {
+    "command": "m05.e1.accept.claim.05",
+    "status": "committed",
+    "revision": 8693
+  },
+  {
+    "command": "m05.e1.accept.claim.06",
+    "status": "committed",
+    "revision": 8695
+  },
+  {
+    "command": "m05.e1.accept.claim.07",
+    "status": "committed",
+    "revision": 8697
+  },
+  {
+    "command": "m05.e1.accept.claim.08",
+    "status": "committed",
+    "revision": 8699
+  },
+  {
+    "command": "m05.e1.accept.claim.09",
+    "status": "committed",
+    "revision": 8701
+  },
+  {
+    "command": "m05.e1.accept.claim.10",
+    "status": "committed",
+    "revision": 8703
+  },
+  {
+    "command": "m05.e1.accept.evidence.full-contract",
+    "status": "committed",
+    "revision": 8709
+  },
+  {
+    "command": "m05.e1.accept.open-review",
+    "status": "committed",
+    "revision": 8708
+  },
+  {
+    "command": "m05.e1.accept.result.00",
+    "status": "committed",
+    "revision": 8684
+  },
+  {
+    "command": "m05.e1.accept.result.01",
+    "status": "committed",
+    "revision": 8686
+  },
+  {
+    "command": "m05.e1.accept.result.02",
+    "status": "committed",
+    "revision": 8688
+  },
+  {
+    "command": "m05.e1.accept.result.03",
+    "status": "committed",
+    "revision": 8690
+  },
+  {
+    "command": "m05.e1.accept.result.04",
+    "status": "committed",
+    "revision": 8692
+  },
+  {
+    "command": "m05.e1.accept.result.05",
+    "status": "committed",
+    "revision": 8694
+  },
+  {
+    "command": "m05.e1.accept.result.06",
+    "status": "committed",
+    "revision": 8696
+  },
+  {
+    "command": "m05.e1.accept.result.07",
+    "status": "committed",
+    "revision": 8698
+  },
+  {
+    "command": "m05.e1.accept.result.08",
+    "status": "committed",
+    "revision": 8700
+  },
+  {
+    "command": "m05.e1.accept.result.09",
+    "status": "committed",
+    "revision": 8702
+  },
+  {
+    "command": "m05.e1.accept.result.10",
+    "status": "committed",
+    "revision": 8704
+  },
+  {
+    "command": "m05.e1.accept.safety.claim",
+    "status": "committed",
+    "revision": 8705
+  },
+  {
+    "command": "m05.e1.accept.safety.record",
+    "status": "committed",
+    "revision": 8707
+  },
+  {
+    "command": "m05.e1.accept.safety.result",
+    "status": "committed",
+    "revision": 8706
+  },
+  {
+    "command": "m05.e1.accept.stage.minimal",
+    "status": "committed",
+    "revision": 8710
+  },
+  {
+    "command": "m05.e1.accept.work.minimal",
+    "status": "committed",
+    "revision": 8711
+  }
+]
