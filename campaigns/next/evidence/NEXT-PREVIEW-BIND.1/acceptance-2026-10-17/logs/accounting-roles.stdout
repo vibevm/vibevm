@@ -1,0 +1,10 @@
+
+running 5 tests
+test bindings_roles_tests::saved_manifest_limit_is_shared_with_accounting ... ok
+test bindings_roles_tests::wrong_id_digest_path_epoch_and_normative_evidence_refuse ... ok
+test bindings_roles_tests::saved_role_limit_is_shared_for_evidence_and_ordinary_inputs ... ok
+test bindings_roles_tests::linked_proof_stays_pending_despite_roles_and_producer_flags ... ok
+test bindings_roles_tests::authoritative_native_accounting_join_and_retained_census ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 60 filtered out; finished in 5.13s
+

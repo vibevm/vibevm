@@ -1,0 +1,35 @@
+{
+  "review": "BIND.1 correction independent semantic review",
+  "head": "233bd5a8f9e92baf04f65f19ede8d693d7dfabf3",
+  "recommendation": "conditional_acceptance_pending_reviewed_checkpoint_and_check_codegen",
+  "remaining_p1_p2": [],
+  "prior_findings": [
+    {"id": "R1", "disposition": "resolved", "reason": "Both public WorkGraph identity APIs share evidence-only admission before framing."},
+    {"id": "R2", "disposition": "resolved", "reason": "Accounting consumes native read_saved_change admission, validation and retained snapshot bytes."}
+  ],
+  "independent_observations": {
+    "report_and_patch_digests_match": true,
+    "embedded_source_map_equals_final_witness": true,
+    "current_source_hashes_matched": 109,
+    "current_source_hash_mismatches": 0,
+    "retained_original_source_files_present": 104,
+    "retained_release_record_bytes_ids_and_manifest_ids_matched": 71,
+    "retained_release_record_mismatches": 0,
+    "raw_recorded_current_rust_tests_passed": 19,
+    "raw_recorded_current_rust_tests_failed": 0,
+    "raw_recorded_actual_roles_verdict": "passed",
+    "raw_recorded_actual_roles_exit": 0,
+    "raw_recorded_actual_roles_claims": 4
+  },
+  "outstanding_gate": {"name": "check-codegen", "recorded_exit": 1, "next": "Root reviewed source checkpoint then rerun; no stale-generation conclusion or gate waiver."},
+  "limitations": [
+    "Review did not execute tests; raw logs and current source hashes were independently inspected.",
+    "Historical 19 missing evidence sources and two out-of-catalogue capture IDs remain disclosed.",
+    "Evidence-only CLI query refusal remains explicit; native saved/captured APIs consume the records.",
+    "Full linkage/facade/documentation/release proof belongs to later scope.",
+    "Root retains Work acceptance and campaign accounting."
+  ],
+  "product_edits": false,
+  "git_mutations": false,
+  "extra_tests_requested": false
+}

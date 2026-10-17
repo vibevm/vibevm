@@ -1,0 +1,614 @@
+{
+  "schema": 1,
+  "task": "NEXT-PREVIEW-BIND.1",
+  "status": "accepted_through_zap",
+  "source_commit": "478c58f8b648124645145008a7374f57323a4360",
+  "accepted_count": 95,
+  "original_task_count": 222,
+  "work_acceptance_revision": 5518,
+  "work_revision": 7,
+  "candidate_id": "managed-result.fbca70f2e4ee6e0d61dbb6e24e3bad1e29fbccde342381128e15b1f34d4ca2fa",
+  "job_id": "job.runtime.packet.continuation.185dfbf48740a202eb6c8b5e51c508a885661067b411d3db48eb772cafc905bc",
+  "actual_model": "gpt-6.1-sol",
+  "effort": "medium",
+  "current_rust_case_count": 19,
+  "retained_prior_counts": [
+    1,
+    1,
+    28
+  ],
+  "codegen_exit": 0,
+  "source_files": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "9e5c2bc98ba7236264f64f1cd657e9a24cf78a0afbc84bbc370e41fb32e943cc"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/identity.rs",
+      "sha256": "beb8b6453452b597f0bab4e5b5ac27997dd75d3d40c37a325e4fa1b0795e5f67"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "sha256": "123c8595902d779baaa5c150b8c749097a642d5dcdb2021a7941bf6a55be10ab"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "sha256": "aed6cab35dfd0c8bff7aa679ec94d68d9967809b7be6ca4b361485491c5467c5"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/m_02_c_1_cases.rs",
+      "sha256": "1e46ba3c711206f3888553aa24977bdad7425adccafcf38531750ce7f6e8cb16"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/mod.rs",
+      "sha256": "fea0495cdb36a17335f86bea1e6b6c16e2744d6288be5afd20d74c4d69482757"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/preview_bind_cases.rs",
+      "sha256": "422e85bcf777e870d2edf8e3a0490b1599d5d92b81ca895b0196143f4bd20e0d"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/change/validation.rs",
+      "sha256": "898381e24aa96dbfbcd666e5c04af95d8ed66acc8d700621240eda969e41d93a"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/full_pass.rs",
+      "sha256": "99f2f0caaa001424e1c36e788be08dc6af4b3df17bc6eda921811acb5c51da25"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/m_02_b_3_cases.rs",
+      "sha256": "20958b59cc9ae3876141c523a9dc08f3eaeac59948cda26a12a6cec3c3bc2240"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/m_02_c_1_cases.rs",
+      "sha256": "f4c52b25ddec68eabbba5bc0c111a5a97b599c074dac0195b84b6c2a11dd9501"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/m_03_a_2_cases.rs",
+      "sha256": "4b7d346a876a9dd270233417b284cf35b95d38262c3c327cacdc3df9e82df418"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/query.rs",
+      "sha256": "f06a9218918a6460daaa47be34bfc37874f335cbeb74679bd45a1de1c4e1a302"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/query/m_02_d_2_cases.rs",
+      "sha256": "8f0dd262bb458825524dbf006255ce636567cf5397c019ad4e4890b5bb5e6bd1"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/query/result.rs",
+      "sha256": "f2d52079ee2448fc7d32d411c27de1384b8f5b238c67d4804e4d75515d777e7c"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/change/rebase.rs",
+      "sha256": "95226addddb05f61d0de6ce7d191973829c54e717170e4fb8f7e0006ca2b0808"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/captured.rs",
+      "sha256": "bfabcb5c577c8fbbafeeb349adbd52e80ea40a365ff2073bfe52751c5031937c"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/evidence.rs",
+      "sha256": "4e97c510a7d4ad1c0aa82702d24ef52a645efb717e72127a45de5cc7e2927f3a"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/identity.rs",
+      "sha256": "ad595afc9bb213dd04b92070803957c5db7cbac6b64d5b7d59b8718eac1a5d84"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/m_02_b_3_cases.rs",
+      "sha256": "dbd6bc5e2fe80fb3768c270ddec70c322563f594e8365e97b5cecc2eee1da9bb"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/mod.rs",
+      "sha256": "b7a076f7b5ecb9c6eceb2ac1c24c20154f035fac6cf41f2f5e598b53e1326d92"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/preview_bind_cases.rs",
+      "sha256": "61583260fc3a380d11f20e39766ec04910224a7fbec2d80db667bce5f77575a2"
+    },
+    {
+      "path": "crates/vibe-requirements/src/change/read.rs",
+      "sha256": "f92826eff275ed185db7a2cf8778f6261d894d5c2a91ffe502a51d50eca7d49f"
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/change_query.rs",
+      "sha256": "d38202606bd555ff3299139dc61e8340c329553e0db6308c42a83f6ca39f083d"
+    },
+    {
+      "path": "crates/vibe-wire/src/behaviour/release_impact.rs",
+      "sha256": "78d6a6c2d0c864fc07a790acc4f73f3377321255bd50a57da5d099e99a51e2b5"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/e1/request/mod.rs",
+      "sha256": "c1730c999e4cea906696dedcf933bd87fd5d83efc99a1a4507c46d72def31247"
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/change_query/e1/response/mod.rs",
+      "sha256": "978949e72840a62bf781a10514558fd4d81f3c218768e52831e86f44ad406bbf"
+    },
+    {
+      "path": "formats/breaks/006.md",
+      "sha256": "1e64b94735e3f832d277ba23522edcf05ab13d83e9ed8e0f0ec2839b05189e13"
+    },
+    {
+      "path": "formats/corpora/change-manifest/e1/retained-preview.json",
+      "sha256": "bb3b8ba4d8f6a33d14f387575ca552fbd9ea02b9f3fe97bc584500b43786c18c"
+    },
+    {
+      "path": "schemas/change_query/e1/request.jtd.json",
+      "sha256": "c0cf04a585942649339faefed131dec1a95624928ca6655a5c5ef39307a6138a"
+    },
+    {
+      "path": "schemas/change_query/e1/response.jtd.json",
+      "sha256": "babcaf50ab11c27b58f2b5fecc514a52123b274eef8fe8e626da099f1712c2b7"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/architecture-law-traceability/change.toml",
+      "sha256": "d0c5e4c422acc2edef831cb9ab18628edd86d05a52ef54ad2c4dd45d56cde0cd"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/authored-extension-schema-and-selected-observation/change.toml",
+      "sha256": "d0013593b382188777bb932fdf1990b485582389f7822ccdc2b6154e37064f38"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/bootstrap-accounting-record-maintenance/change.toml",
+      "sha256": "bb204594de73aeaf7bad5f6668e04b55a0ce2600d9d44c2b057fe6822768430b"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/capability-inventory-foundation/change.toml",
+      "sha256": "a5c2602aa1e1c647c0863c99f4e80743f11848e08736495ec9ad028a53c76fbe"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/capability-traceability-maintenance/change.toml",
+      "sha256": "9509c6637d7ca7aa04e1dec18ee34bcc971bcad11084c132c9c6c306984ba589"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/cli-pure-migration-planning/change.toml",
+      "sha256": "3b2363973207a83cd9193b4e5ab2804e79238e3cc01443104ef43c06f05384d5"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/context-bound-mcp-migration-operation/change.toml",
+      "sha256": "5e5ee0703b88b389304320ac7f3f9235406078b057a1ab5d3cc4d320b5944f21"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/distribution-smoke-preparation/change.toml",
+      "sha256": "26069410c76e9aad466ef473bb3245aa0b9e48d497fca67c255148f655cc53f3"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/environment-layout-traceability/change.toml",
+      "sha256": "ed236fa7d1319235eb3d6a0f8ec8067963d6cb60e28791d61c2d0c09930d0b5b"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/environment-role-source-contract/change.toml",
+      "sha256": "713700fd01abe19c3c26d17491a247352c6dd42ba1fe92ccc7ad9ed1dc27ccd2"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/environment-role-traceability/change.toml",
+      "sha256": "99d361e8a5b051df91288049a5d04406b2adbb4d45ff2c5b93cb7b0297a63f2d"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/explicit-cli-manifest-migration-operation/change.toml",
+      "sha256": "8004af0982a839d8caa95f945b48d907c5eff2931b804524319dd92958144db1"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/explicit-manifest-migration-profile-law/change.toml",
+      "sha256": "9a402827134e3866331acb4fe07373b8e290e372e906943d438abce4682c64c2"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/explicit-source-interpretation-and-migration/change.toml",
+      "sha256": "765aa073c014b4d759801f4979926e56e0cfe353480f76caae0383be4f707534"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/fake-publication-owner-journal/change.toml",
+      "sha256": "93c0ed13b78c2f93a49603dae1e47070d72ff46dbad805f555d1208dc7f013cb"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/fixed-local-build-package-and-linked-output/change.toml",
+      "sha256": "8a47baa8d773cf35f533458c265f0f8123ed2903a6237e9f951f86ecbcfb873a"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/init-package-link-and-format/change.toml",
+      "sha256": "d7303f1e192ca26ea81d735a8724ade38d53d77f0740df8aec8a2a87f0e880d0"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/injected-environment-layout-source/change.toml",
+      "sha256": "946a5ede8db64fa68ad987de89e051a744a95bdcd863fc2a301b1482515a46c2"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/local-source-cache-attestation/change.toml",
+      "sha256": "dd82df0c81cf5e481caa4e22024da3d3f7dcbe7676ef17db69425234806d9800"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/local-source-retrieval/change.toml",
+      "sha256": "ee7cf81b9b6d1311e839466b5ef764228beba48442947c104218bc717d9b490b"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-authority-foundation/change.toml",
+      "sha256": "4b3422954dbc6bb7c7071f4aee23f747b8a0b6093f42323da5ecca60da597ad5"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-authority-traceability/change.toml",
+      "sha256": "6208baa57ea20090746f39db56430c969f3d6a2b01a66c8cb9d04821046cb57a"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-capability-catalogue-and-gap-registry/change.toml",
+      "sha256": "95085e606f5ead6a162c07c1c4082abef2cb0d3269279842ed992f49702e6383"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-composite-page-projection/change.toml",
+      "sha256": "ad89bdd4bf42dd7683730f0ed109df48f8ba6deb803ff8369e7c6c41feae5bca"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-entity-location-core-model/change.toml",
+      "sha256": "4e329b9fc8b0394842062695cb744fd930f3cbebaccbd4d39c940571fe221543"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-entity-view-capability-catalogue/change.toml",
+      "sha256": "68c9e5b7c961e6293a7520189b8c163e456a8c25af3d4032f317303dec4e0a23"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-entity-view-source-contract/change.toml",
+      "sha256": "653610ba8fc57bca59069cdaf41698adc8f9d984162ff49f39693befa12e7bc4"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-entity-view-traceability/change.toml",
+      "sha256": "bb860c9f6fed94d2e3dc3f0ca66ce9a5f51139e3a9da750577427038a1af490a"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-entity-view-wire-and-reader/change.toml",
+      "sha256": "9f492fa86de2c588a54595825719cd5f7a3e29511bacfaa3a0cef4f7e65f920c"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-location-uri-wire-metadata/change.toml",
+      "sha256": "47ded1fbf6c4aa74a6fbb51365ca5af7828f95230fddf582b66c18cf649e0868"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-operation-contract-source/change.toml",
+      "sha256": "708306000c7a802d9d92eb820d3d19458d242ed5cc3ace84d9b88326e1922d26"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-operation-operational-status-guidance/change.toml",
+      "sha256": "a2349314e70f80fb314253214ee10e14c7c6ae8cd1d33a73ed61e71c41f604ed"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-operation-traceability/change.toml",
+      "sha256": "ef717f5546fa6d2671a1ef045db39b038643faca404282d1dad9a3d0df9d83ac"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-operation-wire-and-reader/change.toml",
+      "sha256": "68cad8ac525dee2a25041f985b9cc0c71263319ed937ce637798d9de18a5e1b1"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/machine-resource-uri-adapter/change.toml",
+      "sha256": "fd48ee8a88e530fe20669c072014fd63f9e95b892de65c6bab7170d4c501075a"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/mailbox-proof-citation/change.toml",
+      "sha256": "77a0fb2e0d215e8736cbde7cc6e8aff21c407b209cc3ae56edb21afc7778b7e7"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/manifest-migration-operation-wire/change.toml",
+      "sha256": "dd3f161eb47588428043594e5607453814946840d0f88091fff97d273403f835"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/manifest-migration-traceability/change.toml",
+      "sha256": "f3e38c7cff2d202d17a8ceafbb22756cab3cb4d749f3b6d40be13d34ee35c764"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/mcp-pure-migration-planning/change.toml",
+      "sha256": "5d8ed201bf1ec7de3a3b0ec150a28575c2e301cc2c446202ae6edeb250db391c"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/mcp-query-input-refusal/change.toml",
+      "sha256": "405e4c231c71cd026f51d0b12c27fc0bd89365110ebfe1f2570e0cc65073dcc4"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-application-citation-maintenance/change.toml",
+      "sha256": "b577b517fcefb67bf4a8db0c2c1dc07ca58385d0bc907363c9c6e7c26da05e08"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-application-traceability/change.toml",
+      "sha256": "d218b500a797d1a3e6be5aa5cd0530f0977b49bf32a3e7b2b228040a88fb3a1f"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-generated-provenance-copy/change.toml",
+      "sha256": "f6a9e200096ba53ab741ba1ac84ad13c179947b612fa5b17eca928d90e81b4fb"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-machine-traceability/change.toml",
+      "sha256": "006a9c2dd8f0eaa001c6946dada5647b8e0d9e53c90f8688869d8369954a8b62"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-planning-wire-types/change.toml",
+      "sha256": "b6f6d05071d7309b3a039bc3cdfc79ff1d7e1bf117bae2a2ab890ce5fe68e385"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-profile-epoch-metadata/change.toml",
+      "sha256": "ca863e8cca87e85ce3f9f262c10246ba0e6e1701a9a514322fa42f2390d0aad7"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-reader-generation-policy/change.toml",
+      "sha256": "3f65b50da80d0525d5d3f93a4535628fb2c623fbff12a205718c4f1b9392750b"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/migration-recovery-filesystem-primitives/change.toml",
+      "sha256": "7458232ad7d6572a164cdda35cc3c9e44617a84ce2c102a89d62d31e16f047a6"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/next-version-derived-state/change.toml",
+      "sha256": "fde4dbb7d05891024b6e65873dcc002340645b30ad6c6b312e77d339343ddc46"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/next-version-source-floor/change.toml",
+      "sha256": "2ad3a593303a7aae1ead3698b7b635db25e2f3d8512d74a85903441da43b8887"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/next-version-traceability/change.toml",
+      "sha256": "bc3bf15ef8a594a3d513d048ebd1f776a316585d53cca0cc30f65d130e9f54d2"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/ordinary-commonmark-structure-and-exports/change.toml",
+      "sha256": "a17d2715548ee4d5640c7e320b8bb30bcde5024813347b8f204073b196049628"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/originating-publication-ownership/change.toml",
+      "sha256": "6b0f38b2c85526e71b030b45794b56243baad25d94799f83e07e04a7bb7fa5eb"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/owned-manifest-migration-runtime/change.toml",
+      "sha256": "06b45846b8821977e96324e6d39057dd8bd22dbe158a4e7c5d5077b8f8beb1a9"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/portable-manifest-migration-source/change.toml",
+      "sha256": "eda32b2143198d5f46ea48daeceb138327b07d0193b6ceea387b57c2749d4083"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/preview-accounting-foundation/change.toml",
+      "sha256": "84680ec0a29e9ce2aa6ecff062a6110de32762d7cd554f32ca943543f39f626c"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/protected-install-tree-witness-and-attach/change.toml",
+      "sha256": "10c0506fcf773236074efab8376606e666d70f7e680cf26c50507926b5b10330"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/protected-validate-lifecycle/change.toml",
+      "sha256": "854b6fbb007b37f546df440e9212d3f6198bae2f77a8cb7c5516a0301250e696"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/pure-environment-role-foundation/change.toml",
+      "sha256": "d0953df04ffaa8d50615834cf3edaac8a070390e28bf7ca1c9a86f253af4ef1b"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/pure-machine-service-and-envelope-tool/change.toml",
+      "sha256": "5d01e9d2cbe73b6005ad94dd2337a52f09672c105c2f187b6fe30b2d50df3e45"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/pure-materialization-migration-planner/change.toml",
+      "sha256": "3f8f4504c14a02033814be08c23ca9cf692e77176b4cd8ae4a80acd1433e4070"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/pure-migration-transport-adapter/change.toml",
+      "sha256": "c06aa33bd31a17afe8c35d819e0fb1f4d1eee7226b0657d129221af4cbd8d4df"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/raw-xml-resources-and-selected-slot-map/change.toml",
+      "sha256": "9693bc6f95682ce7a6cea1e57af8a1d79016a1305bd722efd3641abbc0b1e1cf"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/reserved-bound-deploy-bridge/change.toml",
+      "sha256": "d6610ecd4560ee4f12bc233603ab5e2815928bf9a0c17cdf0810fd75338c825f"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/reserved-owner-lifetime-and-retired-attach/change.toml",
+      "sha256": "e1ce98395c477fad8e5c0d20a4ac0e66698b39ad3bbd57927c9434dd9e0bf0b2"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/role-classification-eto-laws/change.toml",
+      "sha256": "2fca849524f8933e105cf6d6a5f3538f42c8899e4c0e8c75ea3c0688a8cf18b3"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/selected-source-consumer-routing/change.toml",
+      "sha256": "15ef4d9dd34916c250013f78cd5f228c29cc46fc16f3c49fa6f598b4c0aee4b9"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/source-traceability-maintenance/change.toml",
+      "sha256": "195f4a147d8af0fcb367eb7d064e142b3c4effbdcef75aab7879bd84429a37a5"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/strict-migration-transport-source/change.toml",
+      "sha256": "e28045dd4fbc2e78c3f4eb41ba5e9290062b3697cf7cf479022adce8309b6887"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/target-aware-environment-layout/change.toml",
+      "sha256": "49581c47c9ccc6d966f5041f45f6eae0e5f62387b8e4a41307e37c6168fa0181"
+    },
+    {
+      "path": "vibevm/vibespecs/changes/vvm-mirror-refusal-test-maintenance/change.toml",
+      "sha256": "8d7e0a6022b8a133861d981a4d6feb3f336f0ed317dcc9461b86184c7020b855"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "sha256": "a941a781322d389e0e0558d420206d45f9ad4af23bd736e468c896227e0a3f5d"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-081-preview-change-accounting.xml",
+      "sha256": "03ac1f6bb9aeff104167337f1e910bbe50dd1b4957aec54ab16faa47d3e58f05"
+    },
+    {
+      "path": "xtask/Cargo.toml",
+      "sha256": "c7278d1a3eff66310cf11d28d1c6822678588f743c507a20382819c53579d309"
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/bindings.rs",
+      "sha256": "90b336e77923a8ca0825aba042f023dee2ffa4b147aa49d24c07752ce1df54b5"
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/bindings_roles_tests.rs",
+      "sha256": "c5130d1bd34eae11d24f1edf947ccfe0bd8277dd956870300e2ba310a0637f14"
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/main.rs",
+      "sha256": "b44ac87008abd580044aa0113c4110591c468f7a64e9eee13c0cf30132b0fd7e"
+    },
+    {
+      "path": "xtask/src/bin/preview-transition-check/readiness.rs",
+      "sha256": "5f40b5e6cd6bd8acf6a7405c4bae3881b8c52ee0ae4b4d036a6891d4efd79e60"
+    }
+  ],
+  "limits": [
+    "19 retained evidence-source targets remain absent and two capture IDs lie outside selected catalogues; unchanged reference bytes do not prove universal target resolution.",
+    "94 capability IDs preserved; full capability/migration join, facade, documentation/release closure and publication remain later BIND.2 obligations.",
+    "Epoch-one CLI query explicitly refuses evidence-only subjects; saved/captured native readers do support the registrations.",
+    "Original red compile/test/codegen results remain retained; current passes do not erase failure history.",
+    "Retained path/refusal (1), producer-flags (1), Python (28) checks were not rerun after correction. No full-suite, all-platform or warning-free claim."
+  ],
+  "accepted_at": "2026-10-17T02:25:46.884680+00:00",
+  "archive_files": [
+    {
+      "path": "INDEPENDENT-REPORT.md",
+      "sha256": "4e539f00c12bf1e9d81a650dad02f9f3c19ecc3f8db023ce3ec9c8ddfe343c2f",
+      "bytes": 7751
+    },
+    {
+      "path": "INDEPENDENT-RESULT.json",
+      "sha256": "6fb21728257c5ac3787460ca460b0d498549465ddbd29788eaaf3debc5663146",
+      "bytes": 1900
+    },
+    {
+      "path": "README.md",
+      "sha256": "685362f13a76d13a5c2fa1bd4d6b268a5afda6eea04bf5534b2c8055e36074ee",
+      "bytes": 1558
+    },
+    {
+      "path": "check-mapping.json",
+      "sha256": "4d0f58b81419ca8a453e968be35c9f43f5a131ecc022bc3913c1cc6937e77bb4",
+      "bytes": 51636
+    },
+    {
+      "path": "logs/accounting-roles.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "logs/accounting-roles.stdout",
+      "sha256": "df7410914f328ca709fd4634c503f251bd44a0e6c147914416b09e80cbce4100",
+      "bytes": 565
+    },
+    {
+      "path": "logs/actual-roles.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "logs/actual-roles.stdout",
+      "sha256": "7cd6586734718f26df5766f017f6cbeb6d4168ddb9ab0ff60d0431ef3b21a655",
+      "bytes": 68843
+    },
+    {
+      "path": "logs/checker-flags-final.log",
+      "sha256": "17b42eec62ed448d53fcc18c878fc892f5266f76a0ae883605af58e4d6df4bd8",
+      "bytes": 132557
+    },
+    {
+      "path": "logs/core-adoption.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "logs/core-adoption.stdout",
+      "sha256": "af3a23da467e80b86e8ec77ef407406f8749a54ef11c219dcf6e9bf0a9628aa8",
+      "bytes": 546
+    },
+    {
+      "path": "logs/core-bound.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "logs/core-bound.stdout",
+      "sha256": "82a9fba90357cca551483990e4a3581f5ce0649d60fb4cab4494ab75bd9fef61",
+      "bytes": 215
+    },
+    {
+      "path": "logs/core-identities.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "logs/core-identities.stdout",
+      "sha256": "f394bb6bfc504b7a86ac220de2722c467cebad1f369583192d5b7bc520e1d76e",
+      "bytes": 652
+    },
+    {
+      "path": "logs/core-path.log",
+      "sha256": "1de18e25b5a972e49531469318c0acd9046fb1d35c29c7d32be455a35bebfe67",
+      "bytes": 14760
+    },
+    {
+      "path": "logs/diff-check.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "logs/diff-check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "logs/python-tools.stderr",
+      "sha256": "59ebc7f2862ff0919cbf09be640eb53ae46a9658a01c93f1c52d69b897a2ca72",
+      "bytes": 132972
+    },
+    {
+      "path": "logs/requirements-adoption.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "logs/requirements-adoption.stdout",
+      "sha256": "ab9f46b04e092a63265cae1a3ddc92604556962f63f1229c54f0391fab2377fe",
+      "bytes": 333
+    },
+    {
+      "path": "logs/requirements-root.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "logs/requirements-root.stdout",
+      "sha256": "183c2466d29b120723d7bab020c04f4333811d05f4ae8085790eb5829fafeee1",
+      "bytes": 201
+    },
+    {
+      "path": "normal-receipts.json",
+      "sha256": "676db2549de179b86f4a8fdd7a3dc5bd188f8e3945c420b0d44dcafa893e5a24",
+      "bytes": 25918
+    },
+    {
+      "path": "root-codegen-command.json",
+      "sha256": "9a48c66919d80005cd930ae7de2250d15b12ca3146b1ad69cb872d102722776f",
+      "bytes": 498
+    },
+    {
+      "path": "root-codegen-result.json",
+      "sha256": "7cb671843fb305b19bb907644f63dd5e98e973d0e5a3c306ec03f068331778e9",
+      "bytes": 101
+    },
+    {
+      "path": "root-codegen.log",
+      "sha256": "04814d09765e67b814c96377f1abd12f4855f782099cd67e13b5ca2e0e2036ef",
+      "bytes": 299347
+    },
+    {
+      "path": "root-safety-review.json",
+      "sha256": "fb84fecf0b629e221e0bd0dec76eea2d2cf5ada8ab93fb4d5f5a811b9320e00a",
+      "bytes": 1815
+    },
+    {
+      "path": "work-accepted.json",
+      "sha256": "483ef7d5ca6939cb4c82bb026163adfca50e05000a3f0f5aad6e5ed9fb11c957",
+      "bytes": 572
+    }
+  ]
+}
