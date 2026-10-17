@@ -33,9 +33,11 @@ use crate::{WorkspaceError, layout_paths};
 mod build_ignore;
 mod derived;
 mod descriptor_map;
+mod removal;
 mod slot_cow;
 mod slot_diff;
 mod slot_record;
+pub use removal::validate_owned_slot_removal;
 
 pub use build_ignore::{BUILD_OUTPUT_IGNORES, ensure_build_output_ignores};
 pub(crate) use derived::materialise_with_spec_format_report;

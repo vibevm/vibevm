@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-17T16:25:55.869200+00:00",
+  "decision": "approve_original_functional_scope_for_normal_API_acceptance",
+  "accepted_in_store": false,
+  "work_id": "work.m05.e3",
+  "candidate_id": "managed-result.ca2667758dfa73696b3b56f03409d50765c42d5330827f00a28ea931821fe1df",
+  "contract_digest": "80b3b42aacde241c97393326ed36c4d62c78ef555aad0fa53b825de1671240d1",
+  "criteria_satisfied": [
+    0,
+    1
+  ],
+  "review": "/fast/git/v/research/2026-10-17-m05e3-second-review/RESULT.json",
+  "review_sha256": "5ab79e137c0b5117d1b5219c1ad269ff4c5a8244b873fc90e749a1bcfc834c36",
+  "source_paths_revalidated": 18,
+  "checks": {
+    "E3_distinct_passed": 19,
+    "E2_controls_passed": 2,
+    "global_fmt": "Failed:7 unchanged patch-disjoint baseline files",
+    "diff_check": "Passed"
+  },
+  "reason": "Original boundary fault/retained recovery and affected-dependents-before-delete requirements, whole-world semantic planning/current admitted requests and shared-root positive/negative cases have concrete evidence; prior2P2fixed. ProducerUnsatisfied is retained advisory. Root prior forward-resume/automaticinverseboot/exhaustivecompiler/universalremoval expansion withdrawn as acceptance gates. No automaticcomplete rollback/nativeexecutionguarantee claimed.",
+  "limits": [
+    "Only local-prefix restoration is implemented; changed node boot/redirects refuse and preserve evidence. No complete rollback claim.",
+    "Full future compiler/provider/hook success is not promised by semantic planning; later failures retain explicit uncertainty.",
+    "Unsafe/unsupported deletion worlds fail closed; universal removal coverage is not claimed.",
+    "New M05E3 spec additions and worker Unsatisfied advisory are not independent expansions of the original task.",
+    "No reviewer test/build/API/Git/source mutation. Global fmt literally Failed on seven patch-disjoint baseline paths."
+  ],
+  "future_debt": [
+    "Durable forward-apply resume retaining all original source authority",
+    "Owner-integrated inverse boot compensation and automatic end-to-end rollback",
+    "Exhaustive mid-syscall/process-kill/native compiler failure matrix",
+    "Expanded in-place, capability/OR and unprepared configured CLI removal support",
+    "Broader native/preset/compiler pre-execution validation and late native carriage recovery; current epoch/lowering order retained"
+  ],
+  "safety_scope": "This collected managed execution only: actual RuntimeJobeffectCompleted and normal process_stopped/known_tail, no global safety or semantic fullrollback claim.",
+  "count_before": 98,
+  "count_after_only_when_WorkAccepted": 99,
+  "root_acceptance_owner": true
+}

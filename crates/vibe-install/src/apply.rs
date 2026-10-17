@@ -306,24 +306,49 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
     native: Option<NativeApplyPreparation<'_>>,
 ) -> Result<PreparedApplyReport> {
+    planned.preconditions.validate()?;
     planned.validate_selected_routes()?;
+    // Rebind the current source using the SAME admitted request. This is a
+    // freshness check, never a solve or authorization of replacement defaults.
+    if let Some(request) = &planned.normalized_request {
+        if let Some(current_request) = source.normalized_request() {
+            if crate::requested_record(current_request)? != crate::requested_record(request)? {
+                return Err(vibe_resolver::SolveError::UnsupportedRoute(
+                    "authored request changed since planning; refusing before writes".into(),
+                )
+                .into());
+            }
+        }
+        let current = source.begin_normalized_transaction(request)?;
+        match current.as_deref() {
+            Some(current) => validate_current_source(current, &planned)?,
+            None => validate_current_source(source, &planned)?,
+        }
+    } else {
+        validate_current_source(source, &planned)?;
+    }
     let preflight_configuration = crate::record::configuration_record(
         planned.normalized_request.as_ref(),
         &planned.selected_provenance,
         &planned.fetched,
     )?;
-    crate::record::validate_replayed_result(
-        &planned.lockfile,
-        preflight_configuration.as_ref(),
-        if planned.configuration_update {
-            &planned.roots
-        } else {
-            &planned.request.roots
-        },
-    )?;
+    if !planned.authored_reconfiguration {
+        crate::record::validate_replayed_result(
+            &planned.lockfile,
+            preflight_configuration.as_ref(),
+            if planned.configuration_update {
+                &planned.roots
+            } else {
+                &planned.request.roots
+            },
+        )?;
+    }
     let PlannedInstall {
+        preconditions: _,
+        manifest_pending,
         captured_catalog: _,
         configuration_update: _,
+        authored_reconfiguration: _,
         strict_conversion,
         project_root,
         request,
@@ -395,9 +420,46 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     } else {
         merge_manifest_requires(&mut manifest, &finalized_roots)
     };
-    if manifest_changed {
+    let workspace = Workspace::discover_with_selected_manifest(&project_root, &manifest)?;
+    vibe_workspace::install::preflight_resolution_with_configuration(
+        &workspace,
+        &resolution,
+        spec_format,
+        preflight_configuration.as_ref(),
+    )?;
+    let slots = lockfile
+        .packages
+        .iter()
+        .filter(|p| !p.materialization.is_in_place())
+        .map(|p| std::path::PathBuf::from(vibedeps::slot_rel_path(&p.group, &p.name, &p.version)))
+        .chain(
+            resolution
+                .iter()
+                .filter(|dep| {
+                    !dep.manifest
+                        .package
+                        .as_ref()
+                        .is_some_and(|p| p.materialization.is_in_place())
+                })
+                .map(|dep| {
+                    std::path::PathBuf::from(vibedeps::slot_rel_path(
+                        &dep.group,
+                        &dep.name,
+                        &dep.version,
+                    ))
+                }),
+        )
+        .collect::<Vec<_>>();
+    let mut recovery = vibe_workspace::configuration_transaction::ConfigurationTransaction::begin(
+        &_pre_apply_workspace,
+        &slots,
+        "install",
+    )?;
+    recovery.enter("manifest", false)?;
+    if manifest_changed || manifest_pending {
         manifest.write(project_root.join(Manifest::FILENAME))?;
     }
+    recovery.checkpoint()?;
 
     // 7. Rebuild the workspace so the boot computation reads the just-updated
     //    `[requires]`. This is a legitimate NEW epoch — the manifest above was
@@ -407,7 +469,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     //    concurrent writer decide what this command installed. The preloaded
     //    seam takes the in-memory value for the selected node and discovers
     //    the rest of the tree around it.
-    let workspace = Workspace::discover_with_selected_manifest(&project_root, &manifest)?;
+    // The workspace above already contains the exact prepared manifest delta.
 
     // 7a. PROP-022 §2.4 — perform the deferred incremental `in-place` updates
     //     the plan held back (a re-resolve of an already-present in-place
@@ -420,6 +482,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     //     materialise pass reads the "already placed" signal and runs the hook
     //     without moving anything. This extends the canonical incremental path
     //     (`vibe update <pkg>`) to the general install re-resolve.
+    recovery.enter("slot", true)?;
     materialise_deferred_in_place(source, &workspace, &mut fetched, &mut resolution)?;
 
     // 8. Apply: materialise each package into vibedeps/, run each freshly
@@ -454,24 +517,26 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
                     platform, policies,
                 ))
             };
-            let prepared = vibe_workspace::install::apply_resolution_native_with_configuration(
-                &workspace,
-                &resolution,
-                slot_integrity,
-                spec_format,
-                Some(&slot_verifier),
-                lifecycle,
-                trace,
-                &mut prepare,
-                run,
-                &mut make_provider,
-                &progress,
-                preflight_configuration.as_ref(),
-            )?;
+            let prepared =
+                vibe_workspace::install::apply_resolution_native_with_configuration_recovery(
+                    &workspace,
+                    &resolution,
+                    slot_integrity,
+                    spec_format,
+                    Some(&slot_verifier),
+                    lifecycle,
+                    trace,
+                    &mut prepare,
+                    run,
+                    &mut make_provider,
+                    &progress,
+                    preflight_configuration.as_ref(),
+                    Some(&mut recovery),
+                )?;
             (prepared.outcome, Some(prepared.carriage))
         }
         None => (
-            vibe_workspace::install::apply_resolution_with_configuration(
+            vibe_workspace::install::apply_resolution_with_configuration_recovery(
                 &workspace,
                 &resolution,
                 slot_integrity,
@@ -480,6 +545,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
                 lifecycle,
                 trace,
                 preflight_configuration.as_ref(),
+                Some(&mut recovery),
             )?,
             None,
         ),
@@ -490,6 +556,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         "packages",
     );
     apply_task.finish();
+    recovery.checkpoint()?;
 
     for warning in &outcome.integrity_warnings {
         tracing::warn!(target: "vibe_install::apply", "{warning}");
@@ -560,7 +627,9 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         &selected_provenance,
         &fetched,
     )?;
+    recovery.enter("lock", false)?;
     lockfile.write(workspace.lockfile_path())?;
+    recovery.checkpoint()?;
     record_task.finish();
 
     // 11. PROP-020 §2.1 — post-install hooks run once the package is durable
@@ -573,10 +642,22 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     if let Some(observer) = observer {
         observer.record_complete(InstallProgress::complete(&outcome));
     }
+    recovery.enter("post-install", true)?;
     let post_install_reports = match outcome.take_post_install_plan() {
         Some(plan) => run_post_install_slot_lifecycle(plan, lifecycle)?,
         None => Vec::new(),
     };
+    recovery.checkpoint()?;
+    if post_install_reports
+        .iter()
+        .any(|report| report.status == "post-install-failed")
+    {
+        // A flagged nonfatal hook failure preserves the normal report shape,
+        // but is not proof that the operation or its external effects completed.
+        recovery.enter("post-install-failed", true)?;
+    } else {
+        recovery.complete()?;
+    }
 
     Ok(PreparedApplyReport {
         workspace,
@@ -589,4 +670,33 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
             lifecycle_run: None,
         },
     })
+}
+
+fn validate_current_source<S: InstallSource + ?Sized>(
+    source: &S,
+    planned: &PlannedInstall,
+) -> Result<()> {
+    if let Some(captured) = &planned.captured_catalog {
+        if source.catalog_inspection().map(|c| &c.candidates) != Some(&captured.candidates) {
+            return Err(vibe_resolver::SolveError::UnsupportedRoute(
+                "catalog changed since planning; refusing before configuration writes".into(),
+            )
+            .into());
+        }
+    }
+    for fetched in &planned.fetched {
+        let row = &fetched.cached.resolved;
+        let package = PackageRef::parse(&format!("{}/{}@={}", row.group, row.name, row.version))?;
+        source.validate_catalog_candidate(&package)?;
+        if !fetched.cached.package_meta().materialization.is_in_place()
+            && vibe_registry::compute_content_hash(&fetched.cached.cache_dir)?
+                != fetched.cached.content_hash
+        {
+            return Err(vibe_resolver::SolveError::UnsupportedRoute(format!(
+                "captured payload changed for `{package}`; refusing before writes"
+            ))
+            .into());
+        }
+    }
+    Ok(())
 }

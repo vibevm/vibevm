@@ -70,8 +70,11 @@ pub enum Plan {
 /// the plan did not produce.
 #[derive(Debug, Clone)]
 pub struct PlannedInstall {
+    pub(crate) preconditions: crate::preconditions::FilePreconditions,
+    pub(crate) manifest_pending: bool,
     pub(crate) captured_catalog: Option<vibe_resolver::resolvo_engine::CatalogInspection>,
     pub(crate) configuration_update: bool,
+    pub(crate) authored_reconfiguration: bool,
     pub(crate) strict_conversion: bool,
     pub(crate) project_root: PathBuf,
     pub(crate) request: InstallRequest,
@@ -263,6 +266,7 @@ pub(crate) fn plan_prepared_mode<S: InstallSource + ?Sized>(
     observer: &dyn PlanObserver,
     update: bool,
 ) -> Result<Plan> {
+    let preconditions = crate::preconditions::FilePreconditions::capture(workspace)?;
     let lockfile = load_or_empty_lockfile(&workspace.root, &request.generated_by)?;
     let configured_lock = crate::record::read_configuration(&lockfile)?;
     if configured_lock
@@ -631,12 +635,12 @@ pub(crate) fn plan_prepared_mode<S: InstallSource + ?Sized>(
             &request.roots,
         )?;
     }
-    if migration_pending && !update {
-        manifest.write(project_root.join(Manifest::FILENAME))?;
-    }
     Ok(Plan::Ready(Box::new(PlannedInstall {
+        preconditions,
+        manifest_pending: migration_pending,
         captured_catalog: source.catalog_inspection().cloned(),
         configuration_update: update,
+        authored_reconfiguration: false,
         strict_conversion: false,
         project_root: project_root.to_path_buf(),
         request,

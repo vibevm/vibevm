@@ -59,7 +59,9 @@ pub use bootgen::effective_subskills;
 pub(crate) use bootgen::node_own_boot;
 use bootgen::validate_redirect_blocks;
 pub use hook_output::{
-    apply_resolution_native_with_configuration, apply_resolution_with_configuration,
+    apply_resolution_native_with_configuration,
+    apply_resolution_native_with_configuration_recovery, apply_resolution_with_configuration,
+    apply_resolution_with_configuration_recovery,
 };
 /// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
 pub use model::{
@@ -86,7 +88,6 @@ pub use slot_lifecycle::{
 
 #[cfg(test)]
 pub(crate) use bootgen::analyze_effective_bound_native;
-pub use bootgen::verify_boot_graph;
 /// The R4.3 lane analyzer's write-free entry (packages-2026-09 §9): one
 /// selected node's lane composed and compiled under the analyzer
 /// observer — the same composition regeneration runs, minus every write.
@@ -98,6 +99,10 @@ pub use bootgen::{
     BootRegeneration, regenerate_boot, regenerate_boot_from, regenerate_boot_from_traced,
     regenerate_boot_from_traced_prepared, regenerate_boot_from_with_spec_format,
     regenerate_boot_traced, regenerate_boot_with_spec_format,
+};
+pub use bootgen::{
+    preflight_removal, preflight_resolution, preflight_resolution_with_configuration,
+    verify_boot_graph,
 };
 mod native;
 pub use native::{

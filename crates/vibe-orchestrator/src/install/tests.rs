@@ -266,6 +266,222 @@ fn metadata(root: &Path) -> RunMetadata {
     }
 }
 
+mod m_05_e_3_cases {
+    use super::*;
+    use vibe_install::InstallSource;
+
+    struct Source(vibe_package_source::InstallResolver);
+    impl PackageSource for Source {
+        fn qualify(
+            &self,
+            p: &vibe_core::PackageRef,
+            _: &vibe_core::manifest::Lockfile,
+        ) -> anyhow::Result<vibe_core::PackageRef> {
+            Ok(p.clone())
+        }
+    }
+    impl InstallSource for Source {
+        fn begin_normalized_transaction(
+            &self,
+            r: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
+        ) -> Result<Option<Box<dyn InstallSource + '_>>, vibe_resolver::SolveError> {
+            self.0.begin_normalized_transaction(r)
+        }
+        fn solve(
+            &self,
+            r: &[vibe_core::PackageRef],
+        ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+            self.0.solve(r)
+        }
+        fn manifest_of(
+            &self,
+            p: &vibe_core::PackageRef,
+        ) -> Result<vibe_core::manifest::Manifest, vibe_resolver::SolveError> {
+            self.0.manifest_of(p)
+        }
+        fn solve_masked(
+            &self,
+            r: &[vibe_core::PackageRef],
+            b: &std::collections::BTreeSet<(String, String)>,
+        ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+            self.0.solve_masked(r, b)
+        }
+        fn resolve_and_fetch(
+            &self,
+            p: &vibe_core::PackageRef,
+            s: &Path,
+            e: Option<&str>,
+        ) -> Result<vibe_registry::CachedPackage, vibe_registry::RegistryError> {
+            self.0.resolve_and_fetch(p, s, e)
+        }
+        fn materialise_in_place(
+            &self,
+            p: &vibe_core::PackageRef,
+            s: &Path,
+        ) -> Result<vibe_registry::InPlaceMaterialised, vibe_registry::RegistryError> {
+            self.0.materialise_in_place(p, s)
+        }
+    }
+    struct Factory(PathBuf);
+    impl PackageSourceFactory for Factory {
+        fn build(&self, input: PackageSourceBuild<'_>) -> anyhow::Result<Box<dyn PackageSource>> {
+            Ok(Box::new(Source(
+                vibe_package_source::build_install_resolver(
+                    &vibe_package_source::PackageSourceOptions {
+                        registry: Some(self.0.clone()),
+                        ..Default::default()
+                    },
+                    input.manifest,
+                    input.embedded_root,
+                    input.project_root,
+                    input.global,
+                    input.offline,
+                    input.locked,
+                )?,
+            )))
+        }
+    }
+
+    #[test]
+    fn normal_execute_prepared_faults_at_actual_manifest_slot_boot_lock_writers() {
+        use vibe_workspace::configuration_transaction::{
+            ConfigurationTransaction, RECOVERY_DIRECTORY, with_boundary_fault,
+        };
+        for phase in ["manifest", "slot", "boot", "lock"] {
+            let project = empty_project();
+            let registry = tempfile::tempdir().unwrap();
+            let group = format!("org.e3fault.{phase}.p{}", std::process::id());
+            let package = registry.path().join(format!("{group}/app/v1.0.0"));
+            std::fs::create_dir_all(&package).unwrap();
+            std::fs::write(
+                package.join("vibe.toml"),
+                format!("[package]\ngroup='{group}'\nname='app'\nkind='flow'\nversion='1.0.0'\n"),
+            )
+            .unwrap();
+            let root = resolve_project_root(project.path()).unwrap();
+            let workspace = vibe_workspace::Workspace::discover(&root).unwrap();
+            let manifest_before = std::fs::read(root.join("vibe.toml")).unwrap();
+            let result = with_boundary_fault(&root, phase, || {
+                execute_prepared(
+                    InstallExecution {
+                        args: InstallInputs {
+                            packages: vec![format!("{group}/app")],
+                            ..Default::default()
+                        },
+                        environment: &CountingEnvironment::default(),
+                        policy: InstallPolicy {
+                            offline: true,
+                            ..Default::default()
+                        },
+                        lease: lease_for(&root),
+                        manifest_mutation: &NoManifestMutation,
+                        selection: SelectedManifest::read(&root).prepare(),
+                        metadata: metadata(&root),
+                        sources: &Factory(registry.path().to_path_buf()),
+                        confirm_gate: &AlwaysYes,
+                        observer: &SilentInstall,
+                        agent: Arc::new(vibe_lifecycle::NoAgentBackend),
+                        trace: None,
+                    },
+                    &mut CountingStage::default(),
+                )
+            });
+            let Err(error) = result else {
+                panic!("expected {phase} interruption");
+            };
+            assert!(
+                error.to_string().contains("injected interruption"),
+                "{phase}: {error}"
+            );
+            assert_ne!(
+                std::fs::read(root.join("vibe.toml")).unwrap(),
+                manifest_before
+            );
+            let operations = std::fs::read_dir(root.join(RECOVERY_DIRECTORY))
+                .unwrap()
+                .collect::<Result<Vec<_>, _>>()
+                .unwrap();
+            assert_eq!(operations.len(), 1);
+            let operation = operations[0].file_name().into_string().unwrap();
+            let relative = PathBuf::from(vibe_workspace::vibedeps::slot_rel_path(
+                &vibe_core::Group::parse(&group).unwrap(),
+                "app",
+                &semver::Version::new(1, 0, 0),
+            ));
+            let mut tx =
+                ConfigurationTransaction::reopen(&workspace, &[relative.clone()], &operation)
+                    .unwrap();
+            assert_eq!(tx.report()["phase"], phase);
+            if matches!(phase, "manifest" | "slot") {
+                tx.restore_local_prefix().unwrap();
+                assert_eq!(
+                    std::fs::read(root.join("vibe.toml")).unwrap(),
+                    manifest_before
+                );
+                assert!(!root.join(&relative).exists());
+                assert!(!root.join("vibe.lock").exists());
+            } else {
+                assert!(
+                    tx.restore_local_prefix()
+                        .unwrap_err()
+                        .to_string()
+                        .contains("boot compensation")
+                );
+            }
+            assert!(tx.recovery_path().join("journal.json").exists());
+        }
+    }
+
+    #[test]
+    fn normal_execute_prepared_applies_standard_source_and_clears_completed_evidence() {
+        let project = empty_project();
+        let registry = tempfile::tempdir().unwrap();
+        let group = format!("org.e3.p{}", std::process::id());
+        let package = registry.path().join(format!("{group}/app/v1.0.0"));
+        std::fs::create_dir_all(&package).unwrap();
+        std::fs::write(
+            package.join("vibe.toml"),
+            format!("[package]\ngroup='{group}'\nname='app'\nkind='flow'\nversion='1.0.0'\n"),
+        )
+        .unwrap();
+        let root = resolve_project_root(project.path()).unwrap();
+        let run = execute_prepared(
+            InstallExecution {
+                args: InstallInputs {
+                    packages: vec![format!("{group}/app")],
+                    ..Default::default()
+                },
+                environment: &CountingEnvironment::default(),
+                policy: InstallPolicy {
+                    offline: true,
+                    ..Default::default()
+                },
+                lease: lease_for(&root),
+                manifest_mutation: &NoManifestMutation,
+                selection: SelectedManifest::read(&root).prepare(),
+                metadata: metadata(&root),
+                sources: &Factory(registry.path().to_path_buf()),
+                confirm_gate: &AlwaysYes,
+                observer: &SilentInstall,
+                agent: Arc::new(vibe_lifecycle::NoAgentBackend),
+                trace: None,
+            },
+            &mut CountingStage::default(),
+        )
+        .unwrap();
+        assert!(matches!(run.disposition, InstallDisposition::Applied));
+        assert_eq!(
+            vibe_core::manifest::Lockfile::read(root.join("vibe.lock"))
+                .unwrap()
+                .packages
+                .len(),
+            1
+        );
+        let recovery = root.join(vibe_workspace::configuration_transaction::RECOVERY_DIRECTORY);
+        assert_eq!(std::fs::read_dir(recovery).unwrap().count(), 0);
+    }
+}
+
 /// A package-free lifecycle builds ZERO package sources.
 ///
 /// The mutation this kills is hoisting the factory build above the empty-world

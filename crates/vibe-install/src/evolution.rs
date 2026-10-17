@@ -693,3 +693,58 @@ pub fn plan_update<S: InstallSource + ?Sized>(
         plan: Some(plan),
     })
 }
+
+/// Plan an explicitly supplied new authored configuration. Unlike update,
+/// this entrypoint is the caller's reconfiguration request; it never derives
+/// intent or consent from the retained resolved state. The unchanged update
+/// and exact replay paths continue to require retained intent.
+pub fn plan_reconfiguration<S: InstallSource + ?Sized>(
+    source: &S,
+    root: &Path,
+    request: InstallRequest,
+    format: SpecFormat,
+    observer: &dyn PlanObserver,
+) -> crate::error::Result<crate::PlannedInstall> {
+    let admitted = source
+        .normalized_request()
+        .filter(|r| r.configuration.is_some())
+        .ok_or_else(|| {
+            error(
+                "NeedsSelection: reconfiguration requires current admitted authored configuration",
+            )
+        })?;
+    if !request.roots.is_empty() {
+        return Err(error(
+            "reconfiguration cannot replace workspace declarations with CLI install roots",
+        ));
+    }
+    let mut manifest = Manifest::read(root.join(Manifest::FILENAME))?;
+    let mut workspace = Workspace::discover(root)?;
+    let Plan::Ready(mut plan) = crate::plan::plan_prepared_mode(
+        source,
+        root,
+        &mut manifest,
+        &mut workspace,
+        request,
+        format,
+        observer,
+        true,
+    )?
+    else {
+        return Err(error(
+            "reconfiguration requires a complete selected desired world",
+        ));
+    };
+    let canonical = |roots: &[vibe_core::PackageRef]| {
+        let mut roots = roots.iter().map(ToString::to_string).collect::<Vec<_>>();
+        roots.sort();
+        roots
+    };
+    if plan.captured_catalog.is_none() || canonical(&admitted.roots) != canonical(&plan.roots) {
+        return Err(error(
+            "reconfiguration requires exact captured catalog and complete workspace root union",
+        ));
+    }
+    plan.authored_reconfiguration = true;
+    Ok(*plan)
+}
