@@ -1,0 +1,101 @@
+{
+  "base": "62b61fe6c7c43bbcb1dc24bf03c4fd95bd19179a",
+  "patch_sha256": "2a8ec852e059b2132d157b63bc8889da9bd69065f015b828cbff5cf16ae35840",
+  "report_sha256": "34cff17d1a37baf81dea70eeb7a3ba2af0307f4b6b1c589fff9c322c4f600ab6",
+  "source_paths": [
+    {
+      "path": "crates/vibe-cli/src/commands/uninstall.rs",
+      "bytes": 31952,
+      "sha256": "101a6e227a38bbc13cee6ade58ed88651f9dafe32022609702654bfd16a4da9b"
+    },
+    {
+      "path": "crates/vibe-install/src/apply.rs",
+      "bytes": 28221,
+      "sha256": "0065e773aae80bd2e0d8955b765148e0958722250c0914211efd1e86ea0ef076"
+    },
+    {
+      "path": "crates/vibe-install/src/evolution.rs",
+      "bytes": 31543,
+      "sha256": "73a5991848b982701c5202ca95ed2791c730f71a267eb2205498a2395c0e943c"
+    },
+    {
+      "path": "crates/vibe-install/src/lib.rs",
+      "bytes": 18888,
+      "sha256": "c03150c8dd93066235975ac9796be1906243dbdc570f0f90ecbc77cfb2b6b8b9"
+    },
+    {
+      "path": "crates/vibe-install/src/plan.rs",
+      "bytes": 30514,
+      "sha256": "e7bfa35f97ae75aa2665a21c8f3e6adb672a0eb588e672cdfa07750cdae6299f"
+    },
+    {
+      "path": "crates/vibe-install/src/record/m_05_d_1_cases.rs",
+      "bytes": 33098,
+      "sha256": "6d6e68766674044ffafca81895121e8f4c6999f62de729a8a4fe8466c2e38bba"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/install/tests.rs",
+      "bytes": 22025,
+      "sha256": "0ca7db48c087c04bdfa5b6ae782cc6b6d8a6a4f6fdc597d993dd1ba7cc0eab24"
+    },
+    {
+      "path": "crates/vibe-workspace/src/install.rs",
+      "bytes": 13626,
+      "sha256": "e083f95e2c9c2777a0845fc401b07f55c1022272efa32acca7df877d1db2e6be"
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen.rs",
+      "bytes": 21052,
+      "sha256": "5e8ae218ec7b42245b8f6049047ebaebab6538b94c29ec5021c680e75564c30f"
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/hook_output.rs",
+      "bytes": 16023,
+      "sha256": "00eb3c4a4909988e8fc6ba39fd961d61cc9987f8b767f5e02470a09100e37e6b"
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/prune.rs",
+      "bytes": 3470,
+      "sha256": "6e9f836964d45574d1eb52c17e9047b234bf0675beb0d8f64b99d2b1e47e515e"
+    },
+    {
+      "path": "crates/vibe-workspace/src/lib.rs",
+      "bytes": 14542,
+      "sha256": "19dc8188e4262c8e35dc06fa98b46914e548e747f3813bef37783e2bf0916555"
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps.rs",
+      "bytes": 15135,
+      "sha256": "cc774aca850cd9e912b4a8fba307ca78335368f884acc874b7aa90fe0700a2c0"
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "bytes": 159847,
+      "sha256": "1adaa99a59144139f60c857b04352d22c34f0254028440f1584cf197ada85d9a"
+    },
+    {
+      "path": "crates/vibe-install/src/preconditions.rs",
+      "bytes": 1731,
+      "sha256": "20f5f0a0df4e6103b46a9a7939a8ec33deed116d5c045f51e9c453d0db86b457"
+    },
+    {
+      "path": "crates/vibe-install/src/removal.rs",
+      "bytes": 23397,
+      "sha256": "5cb0408955200dc6c02154d2ab371752e2a845d2443df7b2965bc4b64165305c"
+    },
+    {
+      "path": "crates/vibe-workspace/src/configuration_transaction.rs",
+      "bytes": 29672,
+      "sha256": "d5c127b05548177795be3a4a4d9e46da7c3c91651151f9edbd5f1a5e3c63c5a4"
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/removal.rs",
+      "bytes": 2559,
+      "sha256": "110da80af940619d21b3d4dd09d3646c09e222c212f18488f1683941428295e4"
+    }
+  ],
+  "paths": 18,
+  "live_match": true,
+  "source_readonly": true,
+  "root_scope_question": "Do not inherit prior Root-added forward-resume/complete-native-fault/inplace-witness obligations without original task/PROP evidence; judge real whole-world/recoverableapply/removal meaning."
+}

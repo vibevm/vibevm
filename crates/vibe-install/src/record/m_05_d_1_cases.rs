@@ -333,6 +333,84 @@ impl Fixture {
         Lockfile::read(self.root.join(Lockfile::FILENAME)).unwrap()
     }
 }
+mod m_05_e_3_cases {
+    use super::*;
+
+    #[test]
+    fn catalog_drift_refuses_normal_apply_before_product_writes() {
+        let mut fixture = Fixture::new();
+        let Plan::Ready(plan) = crate::plan(
+            &fixture.source,
+            &fixture.root,
+            fixture.request(),
+            &NullObserver,
+        )
+        .unwrap() else {
+            panic!("ready")
+        };
+        let before = std::fs::read(fixture.root.join("vibe.toml")).unwrap();
+        fixture.source.catalog.candidates.clear();
+        let error = crate::apply(
+            &fixture.source,
+            *plan,
+            vibe_core::user_config::SlotIntegrity::TrustPresence,
+            &vibe_workspace::hooks::HookPolicy {
+                allowed_groups: vec![],
+                allow_hooks: false,
+            },
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("catalog changed"));
+        assert_eq!(
+            before,
+            std::fs::read(fixture.root.join("vibe.toml")).unwrap()
+        );
+        assert!(!fixture.root.join("vibe.lock").exists());
+        assert!(
+            !fixture
+                .root
+                .join(vibe_workspace::configuration_transaction::RECOVERY_DIRECTORY)
+                .exists()
+        );
+    }
+
+    #[test]
+    fn payload_drift_refuses_normal_apply_without_manifest_or_slot_writes() {
+        let fixture = Fixture::new();
+        let Plan::Ready(plan) = crate::plan(
+            &fixture.source,
+            &fixture.root,
+            fixture.request(),
+            &NullObserver,
+        )
+        .unwrap() else {
+            panic!("ready")
+        };
+        std::fs::write(
+            fixture.source.provider.0.join("owner/new.txt"),
+            "substituted bytes",
+        )
+        .unwrap();
+        let before = std::fs::read(fixture.root.join("vibe.toml")).unwrap();
+        let error = crate::apply(
+            &fixture.source,
+            *plan,
+            vibe_core::user_config::SlotIntegrity::TrustPresence,
+            &vibe_workspace::hooks::HookPolicy {
+                allowed_groups: vec![],
+                allow_hooks: false,
+            },
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("captured payload changed"));
+        assert_eq!(
+            before,
+            std::fs::read(fixture.root.join("vibe.toml")).unwrap()
+        );
+        assert!(!fixture.root.join("vibe.lock").exists());
+    }
+}
+
 #[test]
 fn production_apply_records_requested_and_resolved_separately() {
     let mut defaults = Fixture::new().with_defaults();

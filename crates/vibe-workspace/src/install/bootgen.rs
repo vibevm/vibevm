@@ -430,6 +430,115 @@ pub(super) fn validate_redirect_blocks(
     Ok(())
 }
 
+/// Removal already has materialized retained slots. Project exactly those
+/// rows through the incumbent durable reader and lower their owner plans before
+/// the first manifest, lock or slot mutation.
+pub fn preflight_removal(
+    workspace: &Workspace,
+    desired: &vibe_core::manifest::Lockfile,
+    spec_format: SpecFormat,
+) -> Result<(), WorkspaceError> {
+    let resolution = desired
+        .packages
+        .iter()
+        .map(|package| materialised_read::durable_row(&workspace.root, package))
+        .collect::<Result<Vec<_>, _>>()?;
+    preflight_resolution_with_configuration(
+        workspace,
+        &resolution,
+        spec_format,
+        desired.meta.configuration.as_ref(),
+    )?;
+    let world = ExtensionWorldEpoch::from_resolution(&workspace.root, &resolution)
+        .map_err(owner_plans::world_error)?;
+    let _ = lower_owner_runtimes(
+        workspace,
+        &world,
+        OwnerRuntimeLowering::compatibility_root_without_presets(),
+    )?;
+    Ok(())
+}
+
+/// Read-only structural preflight over the complete planned world. Reuses the
+/// normal composition; it does not execute native providers
+/// or claim that external hook effects have been validated or compensated.
+pub fn preflight_resolution(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    spec_format: SpecFormat,
+) -> Result<(), WorkspaceError> {
+    preflight_resolution_with_configuration(workspace, resolution, spec_format, None)
+}
+
+/// Validate the exact captured selected exports before materialization. This
+/// uses source content, never a not-yet-created slot or a replacement epoch.
+pub fn preflight_resolution_with_configuration(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    spec_format: SpecFormat,
+    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
+) -> Result<(), WorkspaceError> {
+    validate_redirect_blocks(workspace, resolution)?;
+    for dep in resolution {
+        let package = format!("{}/{}@{}", dep.group, dep.name, dep.version);
+        let fail = |reason| WorkspaceError::SlotLifecycle {
+            phase: "preflight",
+            package: package.clone(),
+            reason,
+        };
+        let exports = effective_subskills::selected_exports(
+            configuration,
+            &package,
+            &dep.source_hash
+                .as_ref()
+                .map(ToString::to_string)
+                .unwrap_or_default(),
+        )
+        .map_err(&fail)?;
+        effective_subskills::capture_selected_subskills(&dep.content_dir, &exports)
+            .map_err(fail)?;
+    }
+    let identities = resolution
+        .iter()
+        .map(|dep| (dep.group.clone(), dep.name.clone()))
+        .collect::<HashSet<_>>();
+    if identities.len() != resolution.len()
+        || resolution
+            .iter()
+            .any(|dep| dep.requires.iter().any(|edge| !identities.contains(edge)))
+    {
+        return Err(WorkspaceError::Io {
+            path: workspace.root.clone(),
+            reason: "incomplete or duplicate planned dependency graph; refusing before writes"
+                .into(),
+        });
+    }
+    let table = build_unit_table(&workspace.root, resolution);
+    let with_static = hybrid_emit::with_static_set(&table);
+    let inherited = node_own_boot(&workspace.root, ".")?
+        .into_iter()
+        .filter(|b| b.category == Some(BootCategory::Foundation))
+        .collect::<Vec<_>>();
+    for (rel, manifest) in workspace.iter_nodes() {
+        let own = node_own_boot(&workspace.node_abs_path(rel), rel)?;
+        let dependencies = node_dependency_boot(
+            &workspace.root,
+            manifest,
+            resolution,
+            &table,
+            &with_static,
+            spec_format,
+        );
+        boot::compute_effective_boot(NodeBootInputs {
+            own_boot: &own,
+            inherited_foundation: if rel == "." { &[] } else { &inherited },
+            dependencies: &dependencies,
+            default_link: manifest.boot.default_link,
+        })?;
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -22,6 +22,26 @@ pub(super) fn prune_stale_slots(
         return Ok(Vec::new());
     }
     let keep: HashSet<&str> = kept.iter().map(String::as_str).collect();
+    // The complete caller keep set authorizes desired state, not ownership of
+    // arbitrary directories. Only the previous lock's slots can be pruned;
+    // unknown/orphan state is outside this transaction's before-images.
+    let lock_path = workspace_root.join("vibe.lock");
+    let lock = vibe_core::manifest::Lockfile::read(&lock_path);
+    let owned: HashSet<String> = match lock {
+        Ok(lock) => lock
+            .packages
+            .iter()
+            .filter(|p| !p.materialization.is_in_place())
+            .map(|p| crate::vibedeps::slot_rel_path(&p.group, &p.name, &p.version))
+            .collect(),
+        Err(_) if !lock_path.exists() => HashSet::new(),
+        Err(error) => {
+            return Err(WorkspaceError::Io {
+                path: lock_path,
+                reason: error.to_string(),
+            });
+        }
+    };
     let mut pruned = Vec::new();
     for kind_name in fs::read_dir(&vibedeps_dir).map_err(|e| io_err(&vibedeps_dir, e))? {
         let kind_name = kind_name.map_err(|e| io_err(&vibedeps_dir, e))?;
@@ -48,9 +68,13 @@ pub(super) fn prune_stale_slots(
             let rel = layout_paths::vibedeps(format!("{kn}/{ver}"));
             if keep.contains(rel.as_str()) {
                 any_kept = true;
-            } else {
+            } else if owned.contains(&rel)
+                && crate::vibedeps::validate_owned_slot_removal(&version_dir).is_ok()
+            {
                 fs::remove_dir_all(&version_dir).map_err(|e| io_err(&version_dir, e))?;
                 pruned.push(rel);
+            } else {
+                any_kept = true;
             }
         }
         if !any_kept {

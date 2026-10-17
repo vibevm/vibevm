@@ -94,6 +94,31 @@ pub fn apply_resolution_with_configuration(
     trace: Option<&crate::compile_trace::TraceRun>,
     configuration: Option<&vibe_core::manifest::LockedConfiguration>,
 ) -> Result<InstallOutcome, WorkspaceError> {
+    apply_resolution_with_configuration_recovery(
+        workspace,
+        resolution,
+        slot_integrity,
+        spec_format,
+        slot_verifier,
+        lifecycle,
+        trace,
+        configuration,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub fn apply_resolution_with_configuration_recovery(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    lifecycle: SlotLifecycleMode<'_>,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
+    recovery: Option<&mut crate::configuration_transaction::ConfigurationTransaction>,
+) -> Result<InstallOutcome, WorkspaceError> {
     match lifecycle {
         SlotLifecycleMode::None => apply_with_materialise_lifecycle(
             workspace,
@@ -104,6 +129,7 @@ pub fn apply_resolution_with_configuration(
             MaterialiseLifecycle::None,
             trace,
             configuration,
+            recovery,
         ),
         SlotLifecycleMode::Callback(callback) => apply_with_materialise_lifecycle(
             workspace,
@@ -114,6 +140,7 @@ pub fn apply_resolution_with_configuration(
             MaterialiseLifecycle::Callback(callback),
             trace,
             configuration,
+            recovery,
         ),
         SlotLifecycleMode::LegacyHooks { policy, output } => {
             let runner = ConfiguredHookRunner::new(output);
@@ -130,6 +157,7 @@ pub fn apply_resolution_with_configuration(
                 },
                 trace,
                 configuration,
+                recovery,
             )
         }
     }
@@ -144,6 +172,7 @@ fn apply_with_materialise_lifecycle(
     lifecycle: MaterialiseLifecycle<'_>,
     trace: Option<&crate::compile_trace::TraceRun>,
     configuration: Option<&vibe_core::manifest::LockedConfiguration>,
+    mut recovery: Option<&mut crate::configuration_transaction::ConfigurationTransaction>,
 ) -> Result<InstallOutcome, WorkspaceError> {
     // A malformed instruction block aborts before any mutation.
     validate_redirect_blocks(workspace, resolution)?;
@@ -170,6 +199,10 @@ fn apply_with_materialise_lifecycle(
 
     let kept: Vec<String> = materialised.iter().chain(&skipped).cloned().collect();
     let pruned = prune_stale_slots(&workspace.root, &kept)?;
+    if let Some(recovery) = recovery.as_mut() {
+        recovery.checkpoint()?;
+        recovery.enter("boot", false)?;
+    }
     let nodes_regenerated = super::bootgen::regenerate_boot_from_traced_prepared_configuration(
         workspace,
         resolution,
@@ -328,6 +361,59 @@ where
     ) -> Result<P, WorkspaceError>,
     P: crate::extension_world::OwnerNativeCompileProvider,
 {
+    apply_resolution_native_with_configuration_recovery(
+        workspace,
+        resolution,
+        slot_integrity,
+        spec_format,
+        slot_verifier,
+        lifecycle,
+        trace,
+        prepare,
+        run,
+        make_provider,
+        progress,
+        configuration,
+        None,
+    )
+}
+
+/// Native writes participate in the same manifest/slot/boot/lock coordinator.
+#[allow(clippy::too_many_arguments)]
+pub fn apply_resolution_native_with_configuration_recovery<F, G, P>(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    lifecycle: SlotLifecycleMode<'_>,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    prepare: &mut F,
+    run: crate::extension_world::OwnerRuntimeRunFacts,
+    make_provider: &mut G,
+    progress: &vibe_core::progress::Progress,
+    configuration: Option<&vibe_core::manifest::LockedConfiguration>,
+    mut recovery: Option<&mut crate::configuration_transaction::ConfigurationTransaction>,
+) -> Result<NativeInstallOutcome, WorkspaceError>
+where
+    F: FnMut(
+        &Workspace,
+        &[ResolvedDep],
+    ) -> Result<
+        (
+            crate::extension_world::ExtensionWorldEpoch,
+            crate::extension_world::OwnerRuntimeLowering,
+        ),
+        WorkspaceError,
+    >,
+    G: FnMut(
+        std::collections::BTreeMap<
+            crate::extension_world::OwnerRuntimeId,
+            vibe_spec::CompilerNativePolicy,
+        >,
+    ) -> Result<P, WorkspaceError>,
+    P: crate::extension_world::OwnerNativeCompileProvider,
+{
     validate_redirect_blocks(workspace, resolution)?;
     let materialise = |lifecycle| {
         materialise_resolution_with_spec_format(
@@ -370,6 +456,10 @@ where
         .cloned()
         .collect::<Vec<_>>();
     let pruned = prune_stale_slots(&workspace.root, &kept)?;
+    if let Some(recovery) = recovery.as_mut() {
+        recovery.checkpoint()?;
+        recovery.enter("boot", true)?;
+    }
     // This callback is deliberately HERE: every slot and pre-install effect
     // is now visible, while boot publication and the lock write have not run.
     let (world, lowering) = prepare(workspace, resolution)?;

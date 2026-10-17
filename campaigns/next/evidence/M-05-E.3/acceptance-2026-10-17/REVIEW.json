@@ -1,0 +1,118 @@
+{
+  "review": "independent_original_scope_second_E3_candidate",
+  "candidate": "managed-result.ca2667758dfa73696b3b56f03409d50765c42d5330827f00a28ea931821fe1df",
+  "recommendation": "normal_Root_acceptance_of_original_E3_with_explicit_MVP_limits",
+  "root_owns_acceptance": true,
+  "p1": [],
+  "p2": [],
+  "prior_findings": {
+    "mutable_deletion_membership": "fixed: private vector/read-only accessor",
+    "native_filename_alias": "fixed: component projection refuses unrepresentable names before capture/deletion; real CLI refusal evidence"
+  },
+  "source_integrity": {
+    "base": "62b61fe6c7c43bbcb1dc24bf03c4fd95bd19179a",
+    "paths": 18,
+    "all_size_hashes_match": true,
+    "all_reconstructed_from_base_and_published_patch": true,
+    "patch_sha256": "2a8ec852e059b2132d157b63bc8889da9bd69065f015b828cbff5cf16ae35840",
+    "patch_bytes": 138042,
+    "managed_report_sha256": "34cff17d1a37baf81dea70eeb7a3ba2af0307f4b6b1c589fff9c322c4f600ab6"
+  },
+  "original_acceptance": {
+    "0": "satisfied for stated writer boundaries and retained recovery state: real install/uninstall fault injection plus guarded local restoration/third-state refusal and explicit changed-boot safe stop",
+    "1": "satisfied: removal explanation precedes confirmation and mutation; exact selected desired/reverse closure preserves shared roots/dependencies"
+  },
+  "original_cases": {
+    "branch_switch_shared_dependency": "actual admitted standard-source plan_reconfiguration/apply fixture",
+    "remove_unused_explicit_root_shared_dependency": "actual uninstall and admitted configured removal fixtures",
+    "unsat_needs_selection_catalog_drift_no_write": "standard-source bind/planner refusals plus common apply drift fixtures",
+    "interruption_hook_failure_no_false_rollback": "real writer checkpoint faults, pre/post shell effects, retained journal/uncertainty, complete_rollback=false"
+  },
+  "required_remaining_for_original_MVP": [],
+  "optional_debt_not_new_acceptance_gates": [
+    "Durable forward-apply resume retaining all original source authority",
+    "Owner-integrated inverse boot compensation and automatic end-to-end rollback",
+    "Exhaustive mid-syscall/process-kill/native compiler failure matrix",
+    "Expanded in-place, capability/OR and unprepared configured CLI removal support",
+    "Broader native/preset/compiler pre-execution validation and late native carriage recovery; current epoch/lowering order retained"
+  ],
+  "qualifications": [
+    "Only local-prefix restoration is implemented; changed node boot/redirects refuse and preserve evidence. No complete rollback claim.",
+    "Full future compiler/provider/hook success is not promised by semantic planning; later failures retain explicit uncertainty.",
+    "Unsafe/unsupported deletion worlds fail closed; universal removal coverage is not claimed.",
+    "New M05E3 spec additions and worker Unsatisfied advisory are not independent expansions of the original task.",
+    "No reviewer test/build/API/Git/source mutation. Global fmt literally Failed on seven patch-disjoint baseline paths."
+  ],
+  "checks": [
+    {
+      "name": "install-final",
+      "log": "/tmp/m05e3-continuation.mbhdNM/install-final.log",
+      "sha256": "c04a9a37eadd9522f2b7f29b52353f33f2c9ffcac850bdcd08f1fef9bcb7eda1",
+      "exit": 0,
+      "passed": 4,
+      "summary": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 31 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "workspace-final",
+      "log": "/tmp/m05e3-continuation.mbhdNM/workspace-final.log",
+      "sha256": "c968490b91c94b618bc4a94375d3a8e823c97f54e8a52e497870b4cb5d0e900d",
+      "exit": 0,
+      "passed": 5,
+      "summary": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 744 filtered out; finished in 0.01s"
+      ]
+    },
+    {
+      "name": "orchestrator-second",
+      "log": "/tmp/m05e3-continuation.mbhdNM/orchestrator-second.log",
+      "sha256": "c3f3193a7c415b4a68092f3ad0bb40c3bd165e52fadb3c9012ae1a491fbb7fd2",
+      "exit": 0,
+      "passed": 2,
+      "summary": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 666 filtered out; finished in 0.09s"
+      ]
+    },
+    {
+      "name": "cli-final",
+      "log": "/tmp/m05e3-continuation.mbhdNM/cli-final.log",
+      "sha256": "cc656ceedf8a49376dc555e74f1a8911d8e1620357fdc5cf6c1fe78d236a8408",
+      "exit": 0,
+      "passed": 8,
+      "summary": [
+        "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 958 filtered out; finished in 1.13s"
+      ]
+    },
+    {
+      "name": "e2-controls",
+      "log": "/tmp/m05e3-continuation.mbhdNM/e2-controls.log",
+      "sha256": "6164421f619dd1833e76c416217a04e98779624f8509bc0f27e4d3a50472c6b7",
+      "exit": 0,
+      "passed": 2,
+      "summary": [
+        "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 666 filtered out; finished in 0.47s"
+      ]
+    },
+    {
+      "name": "fmt-final",
+      "log": "/tmp/m05e3-continuation.mbhdNM/fmt-final.log",
+      "sha256": "0830a5205329534a498c9a4c6343785d774c13180297fb64e076b6f1d03538db",
+      "exit": 1,
+      "passed": null,
+      "summary": []
+    },
+    {
+      "name": "diff-final",
+      "log": "/tmp/m05e3-continuation.mbhdNM/diff-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0,
+      "passed": null,
+      "summary": []
+    }
+  ],
+  "distinct_E3": 19,
+  "E2_controls": 2,
+  "total_unique": 21,
+  "review_runs": 0
+}
