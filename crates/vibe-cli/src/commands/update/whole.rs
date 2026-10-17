@@ -131,6 +131,8 @@ fn run(
     trace: Option<&TraceRun>,
 ) -> Result<UpdateDraft> {
     let Execution {
+        configuration_report,
+        intent,
         args,
         embedded_root,
         offline,
@@ -140,13 +142,39 @@ fn run(
         metadata,
     } = execution;
     let identity = UpdateIdentity::from_args(selection.root(), &args);
-    let install_args = install_args_from(&args);
+    let mut install_args = install_args_from(&args);
+    if let Some(request) = &intent {
+        install_args.packages = args.packages.clone();
+        if !args.packages.is_empty() {
+            if let (Some(manifest), Some(workspace)) =
+                (selection.parsed_ref(), selection.loaded_workspace())
+            {
+                let lock = super::inputs::load_lockfile(&workspace.root)?;
+                install_args.packages =
+                    super::scoped::qualify_roots(&args.packages, manifest, &lock)?
+                        .iter()
+                        .map(ToString::to_string)
+                        .collect();
+            }
+        }
+        install_args.features = request.features.explicit.clone();
+        install_args.no_default_features = request.features.no_defaults;
+        install_args.all_features = request.features.all;
+    }
     let confirm_gate =
         install::CliConfirmGate::new(ctx, install_args.assume_yes, &identity.project_root);
     let install_observer =
         install::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
     let sources = install::CliPackageSourceFactory {
         args: &install_args,
+    };
+    let configured_sources = intent.map(|request| vibe_orchestrator::ConfiguredUpdateSource {
+        factory: &sources,
+        request,
+    });
+    let sources: &dyn vibe_orchestrator::ports::PackageSourceFactory = match &configured_sources {
+        Some(configured) => configured,
+        None => &sources,
     };
     let policy = install_args.policy(offline, &user_config);
     let environment = install::CliRegistryEnvironment::new(move || embedded_root);
@@ -160,7 +188,8 @@ fn run(
             lease.root(),
             selection.parsed_ref(),
         ));
-    let run = install::execute_prepared(
+    let mut reported_configuration = None;
+    let result = vibe_orchestrator::execute_prepared_reporting(
         install::InstallExecution {
             // The delegated resolver arguments carry `trace_compile: false`:
             // this command already owns the one recorder, and a second request
@@ -178,14 +207,20 @@ fn run(
             manifest_mutation: &install::NoManifestMutation,
             selection,
             metadata,
-            sources: &sources,
+            sources,
             confirm_gate: &confirm_gate,
             observer: &install_observer,
             agent,
             trace,
         },
         &mut world_stage,
-    )?;
+        &mut reported_configuration,
+    );
+    *configuration_report
+        .lock()
+        .map_err(|_| anyhow::anyhow!("configuration report lock poisoned"))? =
+        reported_configuration;
+    let run = result?;
     if let Some(delegation) = run.parked.as_ref() {
         crate::commands::lifecycle::check_delegation(delegation)?;
     }

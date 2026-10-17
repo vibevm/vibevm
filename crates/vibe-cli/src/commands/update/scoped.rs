@@ -125,6 +125,8 @@ fn run(
     trace: Option<&TraceRun>,
 ) -> Result<UpdateDraft> {
     let Execution {
+        configuration_report: _,
+        intent: _,
         args,
         embedded_root,
         offline,
@@ -147,6 +149,7 @@ fn run(
     );
 
     let mut lockfile = load_lockfile(&workspace.root)?;
+    vibe_install::evolution::require_update_authority(&lockfile)?;
     // PROP-050 ##VERIFY-LOCK-DIFF — the scoped update's own pre-apply
     // snapshot: the lock as loaded (before the entry replacements below
     // mutate it in place) and the boot lanes' byte sizes. Diffed against
@@ -375,7 +378,7 @@ fn run(
 /// `vibe update` refreshes an installed package, so a bare short name resolves
 /// against `vibe.lock` alone — no index, no network — and a name not locked
 /// fails here with a clear "not installed".
-fn qualify_roots(
+pub(super) fn qualify_roots(
     packages: &[String],
     manifest: &Manifest,
     lockfile: &Lockfile,

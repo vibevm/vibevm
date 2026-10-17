@@ -1,0 +1,20 @@
+{
+  "acceptance": [
+    "Replay/update reports distinguish exact reuse from changed semantic inputs.",
+    "No new option is selected as an incidental solver decision."
+  ],
+  "active_job": null,
+  "depends_on": [
+    "work.m05.e1"
+  ],
+  "kind": "atom",
+  "order": 2,
+  "parent_id": "work.m05",
+  "required_stage": "functional",
+  "revision": 7,
+  "state": "accepted",
+  "title": "Implement exact reinstall and intent-preserving update",
+  "validation_generation": 0,
+  "work_id": "work.m05.e2",
+  "work_type": "change"
+}

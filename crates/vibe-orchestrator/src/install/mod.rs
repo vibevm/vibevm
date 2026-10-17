@@ -20,6 +20,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 use specmark::spec;
 
 mod args;
+mod configured_source;
+pub use configured_source::ConfiguredUpdateSource;
 mod inputs;
 mod lease;
 mod outcome;
@@ -176,6 +178,17 @@ pub fn execute_prepared(
     // context, which is exactly what this boundary exists to refuse.
     after_durable_world: &mut dyn AfterDurableWorld,
 ) -> Result<InstallRun> {
+    execute_prepared_reporting(execution, after_durable_world, &mut None)
+}
+
+/// The same public execution owner, retaining the exact configuration report
+/// for a typed host without changing registered command wire schemas.
+pub fn execute_prepared_reporting(
+    execution: InstallExecution<'_>,
+    after_durable_world: &mut dyn AfterDurableWorld,
+    configuration_report: &mut Option<vibe_install::evolution::EvolutionReport>,
+) -> Result<InstallRun> {
+    *configuration_report = None;
     let InstallExecution {
         args,
         environment,
@@ -297,6 +310,7 @@ pub fn execute_prepared(
             node.requires.packages.is_empty() && node.requires.git_packages.is_empty()
         })
         && lockfile_snapshot.meta.root_dependencies.is_empty()
+        && lockfile_snapshot.meta.configuration.is_none()
     {
         observer.narrate(InstallNarration::EmptyWorld);
         let boot_task = progress.task("Generating boot artifacts for the empty world");
@@ -367,15 +381,50 @@ pub fn execute_prepared(
     // The compatibility wrapper would re-read the selected `vibe.toml` — the
     // very file a `--git` run rewrote a few lines above — and re-discover the
     // tree that rewrite was replayed into.
-    let plan = vibe_install::plan_prepared_with_spec_format(
-        resolver.as_ref(),
-        &project_root,
-        &mut manifest,
-        &mut workspace,
-        request,
-        spec_format,
-        observer.plan_events(),
-    )?;
+    let configured_update = lockfile_snapshot
+        .meta
+        .configuration
+        .as_ref()
+        .map(|record| {
+            vibe_wire::behaviour::lock_configuration::decode(record)
+                .map(|(request, _)| request.configuration.is_some())
+                .map_err(anyhow::Error::msg)
+        })
+        .transpose()?
+        .unwrap_or(false);
+    let plan = if run_metadata.requested == "update" && configured_update {
+        let update = vibe_install::evolution::plan_update(
+            resolver.as_ref(),
+            &project_root,
+            &mut manifest,
+            &mut workspace,
+            request,
+            spec_format,
+            observer.plan_events(),
+        )?;
+        *configuration_report = Some(update.report.clone());
+        observer
+            .plan_events()
+            .on(vibe_install::PlanEvent::Reresolving {
+                reason: update.report.value().to_string(),
+            });
+        update.plan.ok_or_else(|| {
+            anyhow::anyhow!(
+                "configuration update requires reconfiguration: {}",
+                update.report.value()
+            )
+        })?
+    } else {
+        vibe_install::plan_prepared_with_spec_format(
+            resolver.as_ref(),
+            &project_root,
+            &mut manifest,
+            &mut workspace,
+            request,
+            spec_format,
+            observer.plan_events(),
+        )?
+    };
     match plan {
         Plan::Fresh => {
             if args.strict_conversion {
@@ -537,3 +586,6 @@ fn refuse_fresh_failed_conversions(
 #[cfg(test)]
 #[path = "tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod m_05_e_2_cases;

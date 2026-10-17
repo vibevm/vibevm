@@ -315,9 +315,15 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     crate::record::validate_replayed_result(
         &planned.lockfile,
         preflight_configuration.as_ref(),
-        &planned.request.roots,
+        if planned.configuration_update {
+            &planned.roots
+        } else {
+            &planned.request.roots
+        },
     )?;
     let PlannedInstall {
+        captured_catalog: _,
+        configuration_update: _,
         strict_conversion,
         project_root,
         request,

@@ -4,6 +4,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
 use std::path::{Path, PathBuf};
 
+#[cfg(test)]
+mod m_05_e_2_cases;
+
 use anyhow::{Context, Result, bail};
 use vibe_core::manifest::Manifest;
 

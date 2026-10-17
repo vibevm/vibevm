@@ -27,7 +27,7 @@ pub struct NodeInstallMeta {
 
 /// One resolved + fetched package, with the feature expansion and the
 /// per-node metadata gathered alongside it during resolution.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Fetched {
     pub cached: CachedPackage,
     pub feature_expansion: FeatureExpansion,

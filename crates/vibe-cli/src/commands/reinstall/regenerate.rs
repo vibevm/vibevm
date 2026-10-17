@@ -36,6 +36,7 @@ use super::draft::{ReinstallDraft, ReinstallIdentity, regenerated};
 use super::inputs::confirm;
 
 pub(super) struct Plain<'a> {
+    pub(super) prepared: bool,
     pub(super) args: &'a ReinstallArgs,
     pub(super) identity: &'a ReinstallIdentity,
     pub(super) workspace: &'a Workspace,
@@ -50,6 +51,7 @@ pub(super) struct Plain<'a> {
 
 pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallDraft> {
     let Plain {
+        prepared,
         args,
         identity,
         workspace,
@@ -79,11 +81,13 @@ pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallD
         if node_count == 1 { "" } else { "s" },
     ));
 
-    if !confirm(
-        ctx,
-        args,
-        "Regenerate the boot artifacts from the materialised vibedeps/ tree?",
-    )? {
+    if !prepared
+        && !confirm(
+            ctx,
+            args,
+            "Regenerate the boot artifacts from the materialised vibedeps/ tree?",
+        )?
+    {
         return Err(InstallError::UserDeclined.into());
     }
 
