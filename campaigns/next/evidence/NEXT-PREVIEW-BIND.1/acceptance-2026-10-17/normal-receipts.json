@@ -1,0 +1,678 @@
+[
+  {
+    "file": "bind1.accept.claim.0.confirmation.json",
+    "original_sha256": "5d721614fad6a6a8bb03a14be7c527db8737ded4113deed2cc4ecc4a7ba63985",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.0",
+        "disposition": "exact_retry",
+        "event_digest": "51fe68e3d3f7d7d334dba152cb01abb8090dd5090e6c7f7141f03d6a31445950",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.0",
+        "revision": 5490,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.0"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.0.json",
+    "original_sha256": "ce3d4ee154f4583ad81c595f5128ae92406e8d2776fcafe9a69c92485cf96634",
+    "value": {
+      "command_digest": "272c2228c5d04214b473eb0e912e1847ded495145044b1a09a62e01c5e5c8e92",
+      "command_id": "campaign.remaining.bind1.accept.claim.0",
+      "status": "unknown"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.1.json",
+    "original_sha256": "f3090d7ac5a58e5561828abc6664f046e5ab08cf3e4ddda954eccd5e59e0a448",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.1",
+        "disposition": "committed",
+        "event_digest": "18e3528c5791fe560189e005062a5b719580dd4971ab87b77d7803a3c8ee58cb",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.1",
+        "revision": 5492,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.1"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.10.json",
+    "original_sha256": "4461afd9cb5a22e42949c741500ad384baf87e8ff54358cd93e069a4657ffd63",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.10",
+        "disposition": "committed",
+        "event_digest": "acc71c86fa63fd4ed7e5ecfe08a78fe1c6f496d44f6dcf297c4eb0900b3b1b6e",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.10",
+        "revision": 5494,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.10"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.2.json",
+    "original_sha256": "d943b5baae4493a43a6483e8829f1ca9fc9a1b85bdb3ee64f428126b675ff2d7",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.2",
+        "disposition": "committed",
+        "event_digest": "1356683986470b8e50967efe608c5d89dca7f6749706199009bfc686562e161e",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.2",
+        "revision": 5496,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.2"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.3.json",
+    "original_sha256": "04d07953158a1ecae3e02f45e1973c351a6f0ffdc20c964857db58a46e9ec973",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.3",
+        "disposition": "committed",
+        "event_digest": "1971a49cca5e2ca3becb2e698a64cf59ca28f21e9d118ad2315ce1dd70a3ef3c",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.3",
+        "revision": 5498,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.3"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.4.json",
+    "original_sha256": "e065ab5105fef031112f22bda300ef48d3b97edbf91b399e722bcc2546a6bf16",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.4",
+        "disposition": "committed",
+        "event_digest": "ad300359ab475af189f181977f537f5120ed3acdf7de4bd6264fd3de86ea82fd",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.4",
+        "revision": 5500,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.4"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.5.json",
+    "original_sha256": "9cff387b5cf00d99b1be0427f78fad8dae237672f275db989541eeb2f0ed4777",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.5",
+        "disposition": "committed",
+        "event_digest": "3771347e487d4ff585775e7264f03e2f76ab67768e09f2a7b972d1a0b702fae8",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.5",
+        "revision": 5502,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.5"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.6.json",
+    "original_sha256": "9161198fe9be1fcf6baae6b551cc76de2a01a68fcb94c8aeb9f6adafd9c2929d",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.6",
+        "disposition": "committed",
+        "event_digest": "090cbdad00dec907480eb2181ee9c5914650b5f767cc145749155dc922584532",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.6",
+        "revision": 5504,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.6"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.7.json",
+    "original_sha256": "1c76074b6cdaa519f7e298de4d2aabd5d1eeaf0bb7ebd4c8b3a072685ac88a51",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.7",
+        "disposition": "committed",
+        "event_digest": "637eaf1034aba399a99d92ac9cae733087f53f7888a137103d5d9e908152ff86",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.7",
+        "revision": 5506,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.7"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.8.json",
+    "original_sha256": "99f26ea715bd14801d6768865f1e37b76b6d4930e9840649fd9c1cd4df84e5ba",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.8",
+        "disposition": "committed",
+        "event_digest": "e576b0ac20aed9dd90860941e26ed25bfa7057170572d6cfab2c56d8c8d400a6",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.8",
+        "revision": 5508,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.8"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.claim.9.json",
+    "original_sha256": "63813b0fca318fcd004809057b2c3fc2af43c1524fed9f868f4bfc7bdd4005ff",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.claim.9",
+        "disposition": "committed",
+        "event_digest": "a8bffcf8446eae1cc9536f15f5fb76f230ddb21e32770c83ae9c6ef1e3c4af58",
+        "event_id": "event:campaign.remaining.bind1.accept.claim.9",
+        "revision": 5510,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.claim.9"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.evidence.full-contract.json",
+    "original_sha256": "5d2f486f6473d54737cd348d0a5ab36376baadcdd6e161117f2970372a3d1c96",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.evidence.full-contract",
+        "disposition": "committed",
+        "event_digest": "3feeda81a42c69c4abb0d1fb37f182a22d7762b12025b1d67f4f69e0c1fb6a9d",
+        "event_id": "event:campaign.remaining.bind1.accept.evidence.full-contract",
+        "revision": 5516,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.evidence.full-contract"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.open-review.json",
+    "original_sha256": "644b87421997cca48d175f4268e87a6618da3b9e5651d87221309040a98e7471",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.open-review",
+        "disposition": "committed",
+        "event_digest": "4ce2dbbfb2d1494bb1dcdb84be553918b7065a4616108e702453e0a384829a1c",
+        "event_id": "event:campaign.remaining.bind1.accept.open-review",
+        "revision": 5515,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.open-review"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.0.json",
+    "original_sha256": "2386933826be0f4de77dbbea197abef3ba4cdf30e2227d11b1d54009292c7888",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.0",
+        "disposition": "committed",
+        "event_digest": "d75038282b350f4094362d322130f73822f0718eeba23a7e1d5a85083cbc1893",
+        "event_id": "event:campaign.remaining.bind1.accept.result.0",
+        "revision": 5491,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.0"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.1.json",
+    "original_sha256": "26e9c52a1f87b39f3a8fbee29db473dbd9a1b4dcb767b86a9780b107164adbea",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.1",
+        "disposition": "committed",
+        "event_digest": "18ade3b37e144adae9917521558fa3d9270d2acfb1fab396196f93388c82c2b6",
+        "event_id": "event:campaign.remaining.bind1.accept.result.1",
+        "revision": 5493,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.1"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.10.json",
+    "original_sha256": "73138206fee2fffdecbb2b39a57fc1427ba221e15149ebbe2550048780c16752",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.10",
+        "disposition": "committed",
+        "event_digest": "40b837d69b035f60b3f7821bff6fdff70536c10a4a8dc8714e2a7bfbaa2d0d89",
+        "event_id": "event:campaign.remaining.bind1.accept.result.10",
+        "revision": 5495,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.10"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.2.json",
+    "original_sha256": "1e710ce4f889c6e25d79ce4d331019dc56ee7cbc0b8b58cc4b0c24409c030059",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.2",
+        "disposition": "committed",
+        "event_digest": "a4398529939ad39f5c34e8a11922ede0faff5979aa6f1afa6474e8b9f69fea15",
+        "event_id": "event:campaign.remaining.bind1.accept.result.2",
+        "revision": 5497,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.2"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.3.json",
+    "original_sha256": "17321eb422f2fac83fc4ef6da71e2d7783e50c0653774159bb9452bbcf73de3d",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.3",
+        "disposition": "committed",
+        "event_digest": "dde9fdb5b6b6da947b3686875e41d4a5bfde5c3fd34a187ff3928d1cf7301765",
+        "event_id": "event:campaign.remaining.bind1.accept.result.3",
+        "revision": 5499,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.3"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.4.json",
+    "original_sha256": "b9870a8e6317cec0dad2943e900ce0ed55178f4a1867ddb94b3aec2ae0138804",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.4",
+        "disposition": "committed",
+        "event_digest": "37f9b7c133afc8adf770e865202550b47e2bfd6eb0455bfd78b06db88022bfc4",
+        "event_id": "event:campaign.remaining.bind1.accept.result.4",
+        "revision": 5501,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.4"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.5.json",
+    "original_sha256": "b6ece46805a08e344f2a07413bd67d4155baefdf45bcf820a0ec3ac5ea71693b",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.5",
+        "disposition": "committed",
+        "event_digest": "aab87d57cc1a5b771d50b870037eaa60c20c4d8a47fe88e31995e26381226140",
+        "event_id": "event:campaign.remaining.bind1.accept.result.5",
+        "revision": 5503,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.5"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.6.json",
+    "original_sha256": "7157351a97defe1f5d6ae09fa1427b3c3c75b527bd2be08fb747146213a6da2d",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.6",
+        "disposition": "committed",
+        "event_digest": "409c75651fd97d819176ebc7b23eb73cc25cb1f305e8b39a242452dfae666d49",
+        "event_id": "event:campaign.remaining.bind1.accept.result.6",
+        "revision": 5505,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.6"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.7.json",
+    "original_sha256": "3e272e8a46b8a4d44a43d3ef9375489ed8b07aa59a061fdf2a59d4a4d8a76c1f",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.7",
+        "disposition": "committed",
+        "event_digest": "a0213b23261f23028d01fcdeba95bc3107ce19438eb9c33a22c711a6cd0807f7",
+        "event_id": "event:campaign.remaining.bind1.accept.result.7",
+        "revision": 5507,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.7"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.8.json",
+    "original_sha256": "7dbed00abc86463bce3b27e3c4ebca4536b8155a3205b78aae2ff6bbf8f48ce1",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.8",
+        "disposition": "committed",
+        "event_digest": "effff0cade1aca77bd944b77a0338495947e61ccf95b9a3f5e9ee6aeee015a39",
+        "event_id": "event:campaign.remaining.bind1.accept.result.8",
+        "revision": 5509,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.8"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.result.9.json",
+    "original_sha256": "ad93ee40847cbb81297244b6b1c3288916ab6531ef497abfcc928c3301a051f1",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.result.9",
+        "disposition": "committed",
+        "event_digest": "bcf4bb749ad133a177af3495c50b9310e2acd510bf12f60c459cab614e450745",
+        "event_id": "event:campaign.remaining.bind1.accept.result.9",
+        "revision": 5511,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.result.9"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.safety.claim.json",
+    "original_sha256": "4219b7e52a7b5d14e130c16e29a5244d8240707172c475cb899bc220416b7ee2",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.safety.claim",
+        "disposition": "committed",
+        "event_digest": "e938b04c80ee48d10467e903c9ee23963fb5e3ddf93baa8e2420f8e5ec969b3f",
+        "event_id": "event:campaign.remaining.bind1.accept.safety.claim",
+        "revision": 5512,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.safety.claim"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.safety.record.json",
+    "original_sha256": "f757277376eabad702555bdc2e6914fda3f8213d9ec05472e8125b022b6cb01c",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.safety.record",
+        "disposition": "committed",
+        "event_digest": "cb8c11772d9bd51f930e46c9925ddcb73f9e5987e597304fb5cd396b8d079166",
+        "event_id": "event:campaign.remaining.bind1.accept.safety.record",
+        "revision": 5514,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.safety.record"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.safety.result.json",
+    "original_sha256": "7ad8fa757cf820b5c70635fefc9e8ca01aea583b6675b98e7dd591140d175443",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.safety.result",
+        "disposition": "committed",
+        "event_digest": "9d518e9f60b4393a0f6acacba1ce1fe2c7809455e3afe695ff5ddafa5d9bfe56",
+        "event_id": "event:campaign.remaining.bind1.accept.safety.result",
+        "revision": 5513,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.safety.result"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.stage.minimal.json",
+    "original_sha256": "9390ce2149fade9498f233841fb51742ba7db3d3091e0e45ebc9913efaee47bf",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.stage.minimal",
+        "disposition": "committed",
+        "event_digest": "b20334367dba8ca20b61d88b7ebb16fc9b39c9992fa260be51af462a74090e7a",
+        "event_id": "event:campaign.remaining.bind1.accept.stage.minimal",
+        "revision": 5517,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.stage.minimal"
+      },
+      "status": "committed"
+    }
+  },
+  {
+    "file": "bind1.accept.work.minimal.json",
+    "original_sha256": "8fbdb63ed40e8c77abca6540867ec945f6b9b811e0c7efe25c1653e3e7c2421b",
+    "value": {
+      "receipt": {
+        "command_id": "campaign.remaining.bind1.accept.work.minimal",
+        "disposition": "committed",
+        "event_digest": "24e29820a6b4fb4878c41eb4ba6b33e569ddb0ab50eb2b9f063b96068fd9b70e",
+        "event_id": "event:campaign.remaining.bind1.accept.work.minimal",
+        "revision": 5518,
+        "store": {
+          "base_id": "base.vibevm-campaign.remaining",
+          "campaign_id": "campaign.vibevm-campaign.remaining",
+          "codec_epoch": 2,
+          "reducer_epoch": 1,
+          "store_epoch": "zap/2",
+          "store_id": "store.vibevm-campaign.remaining"
+        },
+        "transaction_id": "tx:campaign.remaining.bind1.accept.work.minimal"
+      },
+      "status": "committed"
+    }
+  }
+]

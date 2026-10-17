@@ -1,0 +1,6 @@
+
+running 1 test
+test manifest::change::m_02_c_1_cases::bound_domain_preserves_legacy_vector_and_work_identity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 650 filtered out; finished in 0.00s
+

@@ -1,0 +1,28 @@
+{
+  "kind": "Root_scoped_local_safe_boundary_review",
+  "observed_at_utc": "2026-10-17T02:17:11.994574+00:00",
+  "job_id": "job.runtime.packet.continuation.185dfbf48740a202eb6c8b5e51c508a885661067b411d3db48eb772cafc905bc",
+  "attempt_id": "attempt.runtime.packet.continuation.185dfbf48740a202eb6c8b5e51c508a885661067b411d3db48eb772cafc905bc",
+  "dispatch_id": "dispatch.runtime.packet.continuation.185dfbf48740a202eb6c8b5e51c508a885661067b411d3db48eb772cafc905bc",
+  "effect_id": "effect.runtime.packet.continuation.185dfbf48740a202eb6c8b5e51c508a885661067b411d3db48eb772cafc905bc",
+  "candidate_id": "managed-result.fbca70f2e4ee6e0d61dbb6e24e3bad1e29fbccde342381128e15b1f34d4ca2fa",
+  "boundary": "Stop once native role adoption and identity preservation pass; migration/facade binding belongs to BIND.2.",
+  "source_commit": "478c58f8b648124645145008a7374f57323a4360",
+  "git_tree_clean": true,
+  "process_stopped": true,
+  "final_output_known": true,
+  "output_collected": true,
+  "native_output_sequence": 1176,
+  "independent_review": "/fast/git/v/research/2026-10-17-bind1-correction-review/INDEPENDENT-REPORT.md",
+  "codegen": {
+    "exit_code": 0,
+    "seconds": 8.055322168002021,
+    "source": "478c58f8b648124645145008a7374f57323a4360"
+  },
+  "finding": "Declared BIND1 local implementation boundary satisfied: native role/identity preservation reviewed; selected tests and post-checkpoint codegen passed; original output retained and actual managed process stopped. This is an attributed Root safety verification using observed state, not a fake general test or a provider-side model claim.",
+  "limits": [
+    "No BIND2 migration/facade/linkage or release closure acceptance",
+    "No campaign completion",
+    "Functional evidence is adjudicated separately; this record does not replace checks"
+  ]
+}

@@ -1,0 +1,903 @@
+{
+  "status": "checks_covered_concrete_protocol_ready_pending_owner_optional_verifier_fix_and_root_observation",
+  "work_id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+  "candidate_id": "managed-result.fbca70f2e4ee6e0d61dbb6e24e3bad1e29fbccde342381128e15b1f34d4ca2fa",
+  "job_id": "job.runtime.packet.continuation.185dfbf48740a202eb6c8b5e51c508a885661067b411d3db48eb772cafc905bc",
+  "plans_source": "/fast/zap-managed/2026-10-17-vibevm-campaign/planning/BIND1-AUTHORED-REGISTRATION.json#/material/workspace/checks",
+  "canonical_order": [
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.0",
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.1",
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.10",
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.2",
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.3",
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.4",
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.5",
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.6",
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.7",
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.8",
+    "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.9"
+  ],
+  "mapping": [
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.0",
+      "registered_plan": {
+        "arguments": [
+          "test",
+          "-p",
+          "vibe-core",
+          "--lib",
+          "manifest::change::m_02_b_1_cases::escaping_and_closure_input_roles_refuse",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-0"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "cargo",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "core-existing-path-role: existing_test_source_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.0",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-core",
+          "--lib",
+          "manifest::change::m_02_b_1_cases::escaping_and_closure_input_roles_refuse",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "Preserve role path, duplicate-role alias and closure self-input refusal."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "core-existing-path-role: existing_test_source_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "retained_prior_exact_check",
+      "observed_exit": 0,
+      "selected_case_count": 1,
+      "actual_rust_case_names": [
+        "manifest::change::m_02_b_1_cases::escaping_and_closure_input_roles_refuse"
+      ],
+      "raw_log": "logs/core-path.log",
+      "raw_log_sha256": "1de18e25b5a972e49531469318c0acd9046fb1d35c29c7d32be455a35bebfe67",
+      "exit_file": null,
+      "reuse_limit": "Not rerun after correction; retained history. Owner correction changed shared WorkGraph identity API/callers and accounting saved-reader delegation; original parser/path test, readiness policy and Python sources are unchanged.",
+      "uncovered": false
+    },
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.1",
+      "registered_plan": {
+        "arguments": [
+          "test",
+          "-p",
+          "vibe-core",
+          "--lib",
+          "manifest::change::m_02_b_2_cases::framed_intent_ignores_cosmetics_work_and_closure",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-1"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "cargo",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "core-existing-identity: existing_test_source_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.1",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-core",
+          "--lib",
+          "manifest::change::m_02_b_2_cases::framed_intent_ignores_cosmetics_work_and_closure",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "Existing intent exclusion remains unchanged."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "core-existing-identity: existing_test_source_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "current_larger_family_with_exact_case",
+      "observed_exit": 0,
+      "selected_case_count": 6,
+      "actual_rust_case_names": [
+        "manifest::change::m_02_b_2_cases::connected_structural_graph",
+        "manifest::change::m_02_b_2_cases::framing_is_unambiguous_and_versioned",
+        "manifest::change::m_02_b_2_cases::normative_edit_and_binding_change_invalidate_intent",
+        "manifest::change::m_02_b_2_cases::graph_refuses_cycle_duplicate_unknown_and_state",
+        "manifest::change::m_02_b_2_cases::canonical_graph_order_and_selected_contribution",
+        "manifest::change::m_02_b_2_cases::framed_intent_ignores_cosmetics_work_and_closure"
+      ],
+      "raw_log": "logs/core-identities.stdout",
+      "raw_log_sha256": "f394bb6bfc504b7a86ac220de2722c467cebad1f369583192d5b7bc520e1d76e",
+      "exit_file": "logs/core-identities.exit",
+      "reuse_limit": "Executed before source commit; source bytes matched independent 109-file witness. Root postcommit codegen separately passed.",
+      "uncovered": false
+    },
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.10",
+      "registered_plan": {
+        "arguments": [
+          "diff",
+          "--check"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-10"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "git",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "diff: existing_command",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.10",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cases": [
+          "Read-only whitespace check; Root owns all Git mutations."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "diff: existing_command",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "current_exact_check",
+      "observed_exit": 0,
+      "selected_case_count": 0,
+      "actual_rust_case_names": [],
+      "raw_log": "logs/diff-check.stdout",
+      "raw_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_file": "logs/diff-check.exit",
+      "reuse_limit": "Executed before source commit; source bytes matched independent 109-file witness. Root postcommit codegen separately passed.",
+      "uncovered": false
+    },
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.2",
+      "registered_plan": {
+        "arguments": [
+          "test",
+          "-p",
+          "vibe-core",
+          "--lib",
+          "manifest::change::m_02_c_1_cases::bound_domain_preserves_legacy_vector_and_work_identity",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-2"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "cargo",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "core-existing-bound: existing_test_source_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.2",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-core",
+          "--lib",
+          "manifest::change::m_02_c_1_cases::bound_domain_preserves_legacy_vector_and_work_identity",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "Existing bound/legacy identity vectors remain valid."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "core-existing-bound: existing_test_source_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "current_exact_check",
+      "observed_exit": 0,
+      "selected_case_count": 1,
+      "actual_rust_case_names": [
+        "manifest::change::m_02_c_1_cases::bound_domain_preserves_legacy_vector_and_work_identity"
+      ],
+      "raw_log": "logs/core-bound.stdout",
+      "raw_log_sha256": "82a9fba90357cca551483990e4a3581f5ce0649d60fb4cab4494ab75bd9fef61",
+      "exit_file": "logs/core-bound.exit",
+      "reuse_limit": "Executed before source commit; source bytes matched independent 109-file witness. Root postcommit codegen separately passed.",
+      "uncovered": false
+    },
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.3",
+      "registered_plan": {
+        "arguments": [
+          "test",
+          "-p",
+          "vibe-core",
+          "--lib",
+          "manifest::change::preview_bind_cases"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-3"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "cargo",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "core-new-adoption: proposed_test_to_implement",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.3",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-core",
+          "--lib",
+          "manifest::change::preview_bind_cases"
+        ],
+        "cases": [
+          "Proposed3: retained immutable-ID grammar/role adoption; normative/self-closing/escaping/unknown-epoch refusals; evidence additions/updates excluded from intent/work with declared invariants preserved."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "core-new-adoption: proposed_test_to_implement",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "current_exact_check",
+      "observed_exit": 0,
+      "selected_case_count": 4,
+      "actual_rust_case_names": [
+        "manifest::change::preview_bind_cases::evidence_only_public_work_subjects_refuse_empty_and_selected_graphs",
+        "manifest::change::preview_bind_cases::retained_immutable_id_and_evidence_only_registration",
+        "manifest::change::preview_bind_cases::evidence_addition_excluded_from_independent_subjects",
+        "manifest::change::preview_bind_cases::normative_self_closing_escaping_and_unknown_epoch_refuse"
+      ],
+      "raw_log": "logs/core-adoption.stdout",
+      "raw_log_sha256": "af3a23da467e80b86e8ec77ef407406f8749a54ef11c219dcf6e9bf0a9628aa8",
+      "exit_file": "logs/core-adoption.exit",
+      "reuse_limit": "Executed before source commit; source bytes matched independent 109-file witness. Root postcommit codegen separately passed.",
+      "uncovered": false
+    },
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.4",
+      "registered_plan": {
+        "arguments": [
+          "test",
+          "-p",
+          "vibe-requirements",
+          "--lib",
+          "change::m_02_b_1_cases::configured_nondefault_root_is_used_by_actual_lookup",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-4"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "cargo",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "requirements-existing-root: existing_test_source_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.4",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-requirements",
+          "--lib",
+          "change::m_02_b_1_cases::configured_nondefault_root_is_used_by_actual_lookup",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "Actual configured-root lookup, no guessed legacy spec/ path."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "requirements-existing-root: existing_test_source_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "current_exact_check",
+      "observed_exit": 0,
+      "selected_case_count": 1,
+      "actual_rust_case_names": [
+        "change::m_02_b_1_cases::configured_nondefault_root_is_used_by_actual_lookup"
+      ],
+      "raw_log": "logs/requirements-root.stdout",
+      "raw_log_sha256": "183c2466d29b120723d7bab020c04f4333811d05f4ae8085790eb5829fafeee1",
+      "exit_file": "logs/requirements-root.exit",
+      "reuse_limit": "Executed before source commit; source bytes matched independent 109-file witness. Root postcommit codegen separately passed.",
+      "uncovered": false
+    },
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.5",
+      "registered_plan": {
+        "arguments": [
+          "test",
+          "-p",
+          "vibe-requirements",
+          "--lib",
+          "change::preview_bind_cases"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-5"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "cargo",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "requirements-new-native-read: proposed_test_to_implement",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.5",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "vibe-requirements",
+          "--lib",
+          "change::preview_bind_cases"
+        ],
+        "cases": [
+          "Proposed2: actual saved/captured native evidence discovery with exact bytes and preserved references; evidence update after accepted contribution keeps intent/work identity and read-only effects."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "requirements-new-native-read: proposed_test_to_implement",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "current_exact_check",
+      "observed_exit": 0,
+      "selected_case_count": 2,
+      "actual_rust_case_names": [
+        "change::preview_bind_cases::evidence_update_after_contribution_preserves_subject_and_retained_observation",
+        "change::preview_bind_cases::all_retained_records_saved_and_captured_preserve_exact_bytes"
+      ],
+      "raw_log": "logs/requirements-adoption.stdout",
+      "raw_log_sha256": "ab9f46b04e092a63265cae1a3ddc92604556962f63f1229c54f0391fab2377fe",
+      "exit_file": "logs/requirements-adoption.exit",
+      "reuse_limit": "Executed before source commit; source bytes matched independent 109-file witness. Root postcommit codegen separately passed.",
+      "uncovered": false
+    },
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.6",
+      "registered_plan": {
+        "arguments": [
+          "test",
+          "-p",
+          "xtask",
+          "--bin",
+          "preview-transition-check",
+          "bindings_roles_tests"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-6"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "cargo",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "checker-new-roles: proposed_test_to_implement",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.6",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "xtask",
+          "--bin",
+          "preview-transition-check",
+          "bindings_roles_tests"
+        ],
+        "cases": [
+          "Proposed3: actual authoritative native/accounting join incl retained-ID census; wrong ID/digest/path/epoch/normative evidence refusal; later linked/migration proof stays pending despite roles success and producer flags."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "checker-new-roles: proposed_test_to_implement",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "current_exact_check",
+      "observed_exit": 0,
+      "selected_case_count": 5,
+      "actual_rust_case_names": [
+        "bindings_roles_tests::saved_manifest_limit_is_shared_with_accounting",
+        "bindings_roles_tests::wrong_id_digest_path_epoch_and_normative_evidence_refuse",
+        "bindings_roles_tests::saved_role_limit_is_shared_for_evidence_and_ordinary_inputs",
+        "bindings_roles_tests::linked_proof_stays_pending_despite_roles_and_producer_flags",
+        "bindings_roles_tests::authoritative_native_accounting_join_and_retained_census"
+      ],
+      "raw_log": "logs/accounting-roles.stdout",
+      "raw_log_sha256": "df7410914f328ca709fd4634c503f251bd44a0e6c147914416b09e80cbce4100",
+      "exit_file": "logs/accounting-roles.exit",
+      "reuse_limit": "Executed before source commit; source bytes matched independent 109-file witness. Root postcommit codegen separately passed.",
+      "uncovered": false
+    },
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.7",
+      "registered_plan": {
+        "arguments": [
+          "test",
+          "-p",
+          "xtask",
+          "--bin",
+          "preview-transition-check",
+          "readiness_tests::producer_complete_flags_and_verified_labels_cannot_establish_owner_results",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-7"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "cargo",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "checker-existing-false-flags: existing_test_source_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.7",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "cargo",
+          "test",
+          "-p",
+          "xtask",
+          "--bin",
+          "preview-transition-check",
+          "readiness_tests::producer_complete_flags_and_verified_labels_cannot_establish_owner_results",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "Preserve refusal to promote labels to owner proof when authoritative inputs absent."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "checker-existing-false-flags: existing_test_source_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "retained_prior_exact_check",
+      "observed_exit": 0,
+      "selected_case_count": 1,
+      "actual_rust_case_names": [
+        "readiness_tests::producer_complete_flags_and_verified_labels_cannot_establish_owner_results"
+      ],
+      "raw_log": "logs/checker-flags-final.log",
+      "raw_log_sha256": "17b42eec62ed448d53fcc18c878fc892f5266f76a0ae883605af58e4d6df4bd8",
+      "exit_file": null,
+      "reuse_limit": "Not rerun after correction; retained history. Owner correction changed shared WorkGraph identity API/callers and accounting saved-reader delegation; original parser/path test, readiness policy and Python sources are unchanged.",
+      "uncovered": false
+    },
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.8",
+      "registered_plan": {
+        "arguments": [
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools/preview-transition/tests",
+          "-p",
+          "test_*.py"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-8"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "python3",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "python-required-tools: existing_command_grammar_and_tests_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.8",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools/preview-transition/tests",
+          "-p",
+          "test_*.py"
+        ],
+        "cases": [
+          "Original named focused tool suite:3 transport +25 assembler tests; not a whole product suite. Assembler suite may build its own existing Rust binary once. Reuse supplied PREVIEW_TRANSITION_ASSEMBLER_BIN only when it matches consumed source, otherwise ordinary authorized warm build."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "python-required-tools: existing_command_grammar_and_tests_verified",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "retained_prior_exact_check",
+      "observed_exit": 0,
+      "selected_case_count": 28,
+      "actual_rust_case_names": [],
+      "raw_log": "logs/python-tools.stderr",
+      "raw_log_sha256": "59ebc7f2862ff0919cbf09be640eb53ae46a9658a01c93f1c52d69b897a2ca72",
+      "exit_file": null,
+      "reuse_limit": "Not rerun after correction; retained history. Owner correction changed shared WorkGraph identity API/callers and accounting saved-reader delegation; original parser/path test, readiness policy and Python sources are unchanged.",
+      "uncovered": false
+    },
+    {
+      "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.9",
+      "registered_plan": {
+        "arguments": [
+          "-B",
+          "tools/preview-transition/check.py",
+          "--transition",
+          "docs/releases/developer-preview-1-to-2/transition.json",
+          "--mode",
+          "bindings",
+          "--stage",
+          "roles",
+          "--format",
+          "json"
+        ],
+        "cases": [
+          "spec://org.vibevm.zap/zap/authored/6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c#check-9"
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "program": "python3",
+        "sources": [
+          {
+            "digest": "47eafd651516ff8cd7af432ea54b8d200fa5a91259a7757ea47d25d363eb9894",
+            "source_id": "source.vibevm-next.current-state"
+          }
+        ],
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "actual-retained-roles: existing_command_currently_reports_owner_unavailable_by_source",
+        "toolchain": "existing configured repository Rust/Python toolchain",
+        "verification_id": "verify.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c.9",
+        "working_directory": "resource.workspace"
+      },
+      "method": {
+        "argv": [
+          "python3",
+          "-B",
+          "tools/preview-transition/check.py",
+          "--transition",
+          "docs/releases/developer-preview-1-to-2/transition.json",
+          "--mode",
+          "bindings",
+          "--stage",
+          "roles",
+          "--format",
+          "json"
+        ],
+        "cases": [
+          "Required existing permanent entrypoint; actual successful roles predicate after implementation, no synthetic Passed label. Main transition covers4 records; separate all71 native adoption/byte census is mandatory and cannot be inferred from this command."
+        ],
+        "environment": "Current Root authorization for this BIND.1 iteration: exclusive CARGO_TARGET_DIR=/fast/zap-managed/2026-10-14-m10b1-correction/cargo-target; RUSTUP_AUTO_INSTALL=0; CARGO_NET_OFFLINE=true; umask0077; fresh private0700 TMPDIR created with mktemp. Use existing installed toolchain and /home/olegchir/.cargo/bin/cargo with --offline --locked for Cargo checks. This reuses derived build artifacts only, not any old Work/Job/Root grant. Do not access other files in the old realm. No current cargo/rustc/rustdoc process observed and no other Vibe writer admitted; if a live conflict appears, report it instead of building concurrently. Root-authorized warm target, private scratch, offline; no full suite",
+        "subjects": [
+          {
+            "id": "work.authored.6c9880ca4f2eabd75e018225d2d8eb9dac84ef0775ba2eca02dfd91f8a0e719c",
+            "kind": "work"
+          },
+          {
+            "id": "source.vibevm-next.current-state",
+            "kind": "source"
+          }
+        ],
+        "target": "actual-retained-roles: existing_command_currently_reports_owner_unavailable_by_source",
+        "toolchain": "existing configured repository Rust/Python toolchain"
+      },
+      "coverage": "current_exact_check",
+      "observed_exit": 0,
+      "selected_case_count": 0,
+      "actual_rust_case_names": [],
+      "raw_log": "logs/actual-roles.stdout",
+      "raw_log_sha256": "7cd6586734718f26df5766f017f6cbeb6d4168ddb9ab0ff60d0431ef3b21a655",
+      "exit_file": "logs/actual-roles.exit",
+      "reuse_limit": "Executed before source commit; source bytes matched independent 109-file witness. Root postcommit codegen separately passed.",
+      "uncovered": false
+    }
+  ],
+  "current_rust_case_count": 19,
+  "retained_prior_counts": [
+    1,
+    1,
+    28
+  ],
+  "additional_root_codegen": {
+    "exit_code": 0,
+    "seconds": 8.055322168002021,
+    "source": "478c58f8b648124645145008a7374f57323a4360"
+  },
+  "limits": [
+    "19 retained evidence-source targets remain absent and two capture IDs lie outside selected catalogues; unchanged reference bytes do not prove universal target resolution.",
+    "94 capability IDs preserved; full capability/migration join, facade, documentation/release closure and publication remain later BIND.2 obligations.",
+    "Epoch-one CLI query explicitly refuses evidence-only subjects; saved/captured native readers do support the registrations.",
+    "Original red compile/test/codegen results remain retained; current passes do not erase failure history.",
+    "Retained path/refusal (1), producer-flags (1), Python (28) checks were not rerun after correction. No full-suite, all-platform or warning-free claim."
+  ],
+  "blocker": {
+    "safe": "unknown",
+    "declared_verifier": null,
+    "safe_verifications": [],
+    "source": "zap-app/src/runtime_service/authored_coding/builder.rs:241; zap-runtime/src/runtime_updates.rs:170; zap-runtime/src/stop_ingress.rs:244; zap-domain/src/acceptance/applicability.rs:27",
+    "meaning": "No existing positive safe receipt scope can match a null declared verifier. General scope never proves safe. Current cached job cannot open candidate review and reach normal WorkAccepted under unchanged owner implementation.",
+    "state": "pre_fix_observed; minimal owner fix announced by Root, not installed or independently verified by this worker"
+  }
+}

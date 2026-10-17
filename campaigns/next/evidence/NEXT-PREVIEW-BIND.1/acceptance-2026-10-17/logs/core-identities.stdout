@@ -1,0 +1,11 @@
+
+running 6 tests
+test manifest::change::m_02_b_2_cases::connected_structural_graph ... ok
+test manifest::change::m_02_b_2_cases::framing_is_unambiguous_and_versioned ... ok
+test manifest::change::m_02_b_2_cases::normative_edit_and_binding_change_invalidate_intent ... ok
+test manifest::change::m_02_b_2_cases::graph_refuses_cycle_duplicate_unknown_and_state ... ok
+test manifest::change::m_02_b_2_cases::canonical_graph_order_and_selected_contribution ... ok
+test manifest::change::m_02_b_2_cases::framed_intent_ignores_cosmetics_work_and_closure ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 645 filtered out; finished in 0.00s
+

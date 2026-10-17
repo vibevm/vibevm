@@ -1,0 +1,7 @@
+
+running 2 tests
+test change::preview_bind_cases::evidence_update_after_contribution_preserves_subject_and_retained_observation ... ok
+test change::preview_bind_cases::all_retained_records_saved_and_captured_preserve_exact_bytes ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 82 filtered out; finished in 0.47s
+

@@ -1,0 +1,9 @@
+
+running 4 tests
+test manifest::change::preview_bind_cases::evidence_only_public_work_subjects_refuse_empty_and_selected_graphs ... ok
+test manifest::change::preview_bind_cases::retained_immutable_id_and_evidence_only_registration ... ok
+test manifest::change::preview_bind_cases::evidence_addition_excluded_from_independent_subjects ... ok
+test manifest::change::preview_bind_cases::normative_self_closing_escaping_and_unknown_epoch_refuse ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 647 filtered out; finished in 0.00s
+
