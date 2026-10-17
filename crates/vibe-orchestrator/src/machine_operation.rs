@@ -6,6 +6,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-080#MACHINE-OPERATION-SERVICE");
 
 use std::collections::BTreeMap;
+pub mod configuration_choice;
 use std::fmt;
 
 use specmark::spec;

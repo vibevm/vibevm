@@ -740,10 +740,15 @@ pub fn plan_reconfiguration<S: InstallSource + ?Sized>(
         roots.sort();
         roots
     };
-    if plan.captured_catalog.is_none() || canonical(&admitted.roots) != canonical(&plan.roots) {
-        return Err(error(
-            "reconfiguration requires exact captured catalog and complete workspace root union",
-        ));
+    if plan.captured_catalog.is_none() {
+        return Err(error("reconfiguration requires exact captured catalog"));
+    }
+    if canonical(&admitted.roots) != canonical(&plan.roots) {
+        return Err(error(format!(
+            "reconfiguration requires complete workspace root union: admitted={:?}, workspace={:?}",
+            canonical(&admitted.roots),
+            canonical(&plan.roots)
+        )));
     }
     plan.authored_reconfiguration = true;
     Ok(*plan)

@@ -103,6 +103,7 @@ pub(crate) fn update(
     let project_root = existing_user_project_root()?;
     ensure_locked(&project_root, &package)?;
     let install_args = InstallArgs {
+        choice: Default::default(),
         packages: vec![package.clone()],
         global: false,
         agent: None,

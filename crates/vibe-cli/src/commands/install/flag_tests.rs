@@ -30,6 +30,7 @@ use super::*;
 /// one field at a time.
 fn base_args() -> InstallArgs {
     InstallArgs {
+        choice: Default::default(),
         packages: Vec::new(),
         global: false,
         agent: None,

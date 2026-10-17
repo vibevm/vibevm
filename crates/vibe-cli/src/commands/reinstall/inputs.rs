@@ -67,6 +67,7 @@ pub(super) fn exact_pkgref(
 /// / `[[mirror]]` / `[[override]]` / git-source declarations.
 pub(super) fn resolver_args() -> InstallArgs {
     InstallArgs {
+        choice: Default::default(),
         packages: Vec::new(),
         global: false,
         agent: None,

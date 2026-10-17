@@ -72,6 +72,8 @@ impl InstallArgs {
 
 #[derive(Debug, Clone, clap::Args)]
 pub struct InstallArgs {
+    #[command(flatten)]
+    pub choice: ChoiceArgs,
     /// Zero or more package references, each `<kind>:<name>[@<version>]`.
     /// When empty, `vibe install` reads the project's `vibe.toml`
     /// `[requires].packages` and installs every entry — same shape as
@@ -291,6 +293,28 @@ pub struct InstallArgs {
     /// either alone enables it. Neither can switch the other off.
     #[arg(long)]
     pub trace_compile: bool,
+}
+
+/// Explicit configuration answers to a caller-trusted prepared host.
+#[derive(Debug, Clone, Default, clap::Args)]
+pub struct ChoiceArgs {
+    /// Trusted local endpoint retaining admitted definitions and source authority.
+    #[arg(long, requires = "choice_capture")]
+    pub choice_host: Option<PathBuf>,
+    #[arg(long, requires = "choice_host")]
+    pub choice_capture: Option<String>,
+    /// Exact consumer request containing explicit selections; never definitions.
+    #[arg(long, requires = "shown_definition")]
+    pub choice_request: Option<PathBuf>,
+    /// Identity returned by the host's questions operation.
+    #[arg(long, requires = "choice_host")]
+    pub shown_definition: Option<String>,
+    /// Authorize declared defaults for this exact shown definition and request.
+    #[arg(long, requires = "shown_definition")]
+    pub allow_defaults: bool,
+    /// Apply an explicitly confirmed prepared plan; otherwise return its graph.
+    #[arg(long, requires = "choice_host")]
+    pub apply_choices: bool,
 }
 
 #[derive(Debug, clap::Args)]

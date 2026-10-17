@@ -370,6 +370,7 @@ fn projectless_resolver(global: &GlobalRegistryConfig, offline: bool) -> Result<
 /// `vibe install` would use.
 fn stub_install_args(path: PathBuf) -> InstallArgs {
     InstallArgs {
+        choice: Default::default(),
         packages: Vec::new(),
         global: false,
         agent: None,

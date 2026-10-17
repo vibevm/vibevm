@@ -13,6 +13,9 @@ mod boot_preview;
 mod buffers;
 mod capture;
 mod catalog;
+pub(crate) fn choice_identity(value: &serde_json::Value) -> String {
+    digest(&serde_json::to_vec(value).expect("JSON value serialization"))
+}
 pub use catalog::{
     ConfigurationAdmission, PreparedConfigurationDiscovery, prepare_configuration_discovery,
 };

@@ -1,0 +1,32 @@
+{
+  "decision": "approve_original_functional_scope_for_normal_API_acceptance",
+  "criteria_satisfied": [
+    0,
+    1
+  ],
+  "approved": true,
+  "safety_approved": true,
+  "work_id": "work.m05.e4",
+  "candidate_id": "managed-result.b6f7ddc29992e5180dda72458182d21c5433751695dd503db1417279c188e689",
+  "job_id": "job.runtime.packet.continuation.56f06c6549ff2a9fe69401d6d924e5d5c4923dafc833776ed2bc1f0962961f87",
+  "review": "/fast/git/v/research/2026-10-17-m05e4-offline-review/RESULT.json",
+  "review_sha256": "0d269384cf9f46bad4ec185a59ba13f9bf41914a89908b53389959d1a2bb9b80",
+  "rationale": "Original full E4 shared choice owner request/prepared graph, real CLI/MCP/service and PTY/no-TTY behavior, exact shown/default consent and D1/E3 trace reviewed. One independent offline P2 corrected with effective incumbent offline ladder and refusal before source work, zero source calls fixture; 5 corrected paths and21 unchanged hashes. Root inspected report and actual offline entry/guard source; independent re-review0P1P2. No universal host lifecycle or new recovery matrix added.",
+  "safety_basis": "Original NeedsSelection/exact shown identity boundary supported by nonTTY/no-semantic-input cases, stale/refused selections before product mutation, and explicit offline mismatch before Evaluate/Prepare/Apply; actual test source and retained scoped reports. Scoped to this Work generation/candidate and current applicable material; not arbitrary process health or global safety.",
+  "formal_checks": {
+    "00": "passed: fresh CLI1 actual PTY/JSON/offline mismatch",
+    "01": "passed: fresh MCP2 actual registered dispatcher",
+    "02": "passed: fresh service7",
+    "03": "passed: retained owning wire2 unchanged; not rerun",
+    "04": "failed: literal global fmt same7unchangedbaselinepaths",
+    "05": "passed: actual git diff --check0",
+    "06": "conditional obligation satisfied: codegen applicability predicate false, no schema/generator/generated registration changes; global command not run/no exit claimed",
+    "07": "conditional obligation satisfied: global wire oracle applicability predicate false, no registered format/epoch production change; concrete owning codec and adapter cases; global command not run/no exit claimed"
+  },
+  "limits": [
+    "Unix-only standalone CLI endpoint remains explicit; no Windows implementation claim",
+    "Fullsuite not run; original scoped12E4+9B2 and fresh10corrective cases only",
+    "Root decision is not WorkAccepted; execute existing normal public acceptance route next",
+    "Seven unrelated baseline fmt failures remain Failed"
+  ]
+}
