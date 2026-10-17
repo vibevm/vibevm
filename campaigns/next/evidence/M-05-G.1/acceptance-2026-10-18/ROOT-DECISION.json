@@ -1,0 +1,22 @@
+{
+  "decision": "approve_original_functional_scope_for_normal_API_acceptance",
+  "criteria_satisfied": [
+    0,
+    1
+  ],
+  "candidate_id": "managed-result.a65158e615e7353c7079ea0828afd157eb794f73a0c51571eacd1e26ce8e26de",
+  "freeze": "/fast/git/v/research/2026-10-18-m05g1-candidate/FREEZE.json",
+  "freeze_sha256": "91a0e5780128dd108a7c73744182ad3f10fac7fb1b513c6be0444ea5b0a69ca5",
+  "review": "/fast/git/v/research/2026-10-18-m05g1-final-review/REPORT.md",
+  "review_sha256": "24554fbc249ce848d9d132d63bd1b481b55c60f4c3276e0ac7ca57bd36a71de6",
+  "rationale": "Root inspected original G1 requirements, independent source/evidence review and production delta. Actual resolver/source/planner matrices preserve complete configured requests/effects, workspace consumer origins and actual capability/OR witnesses. Unsupported configured naive/sat and measured legacy source/search boundaries are explicitly refusal cells, not successful parity. Propagating actual rejected candidate reasons through rebound routes fixes information loss without weakening source/graph guards. Both original criteria supported; no new backend or G2 acceptance invented.",
+  "formal_checks": "13 new G1 plus39 retained distinct tests passed in exact retained logs; global fmt remains Failed in7 unchanged baseline paths; scoped diff/reverse checks passed.",
+  "safety_basis": "Actual managed Job13175 execution succeeded, same effect normal stop delivered; source frozen and useful WIP preserved; no external publish/installation effects claimed. Backend-specific unsupported results retained explicitly, never full parity.",
+  "limitations": [
+    "Configured rich solve remains resolvo only.",
+    "Naive/sat legacy first-pick/source limitations remain explicitly measured.",
+    "Global fmt baseline remains Failed.",
+    "ResultIntake canonical acceptance not yet observed; this Root judgment is not WorkAccepted."
+  ],
+  "observed_at": "2026-10-17T21:56:36.003090+00:00"
+}

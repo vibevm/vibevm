@@ -1,0 +1,21 @@
+{
+  "status": "reviewed-not-yet-canonically-accepted",
+  "acceptance_receipt_created": false,
+  "intent": "result-intake.m05.g1.root.original-scope.v1",
+  "source_snapshot": {
+    "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/planning/M05-G1-RESULT-INTAKE-CURRENT.json",
+    "sha256": "afcdf7dec296e33ccf3ee2fa17a62c2a43eed24949410b2e2337bb91f3b5eb72",
+    "bytes": 19266
+  },
+  "source_observation": {
+    "accepted_value_present": false,
+    "assessment_status": null,
+    "need_count": 1,
+    "input_available": null,
+    "basis": "99cbe6d385d256c6a5dc4ee0decbae45265ccd00e7f33da2e6a9de309beb59ec"
+  },
+  "interpretation": "Read-only intake data may advance while Root works; this projection creates no canonical receipt or acceptance claim. Root must add actual proof/update README after acceptance.",
+  "root_reported_progress_at_task_dispatch": "Same existing intent underway with subject/guard/check progress; not a canonical acceptance or a fresh store query by this promotion.",
+  "full_subject_contract_arrays_copied": false,
+  "next_owner": "Root"
+}

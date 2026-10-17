@@ -516,3 +516,7 @@ mod m_05_c_1_cases;
 #[cfg(test)]
 #[path = "source/m_05_c_3_cases.rs"]
 mod m_05_c_3_cases;
+
+#[cfg(test)]
+#[path = "source/m_05_g_1_cases.rs"]
+mod m_05_g_1_cases;

@@ -1,0 +1,193 @@
+{
+  "status": "canonically_accepted",
+  "actual_WorkAccepted_revision": 13760,
+  "intake_intent": "result-intake.m05.g1.root.original-scope.v1",
+  "intake_revision": 13767,
+  "work": {
+    "acceptance": [
+      "Backend matrix records exact exercised modes and unsupported ones.",
+      "Final graph retains actual selected technical providers."
+    ],
+    "active_job": null,
+    "depends_on": [
+      "work.m05.f2"
+    ],
+    "kind": "atom",
+    "order": 7,
+    "parent_id": "work.m05",
+    "required_stage": "functional",
+    "revision": 5,
+    "state": "accepted",
+    "title": "Prove supported solver and workspace parity",
+    "validation_generation": 0,
+    "work_id": "work.m05.g1",
+    "work_type": "change"
+  },
+  "acceptance": {
+    "acceptance_id": "intake-acceptance:6817cccf5958b0852a83e771f6d14bba860bacb370edb05d65579e9bd7702388",
+    "candidate_id": "managed-result.a65158e615e7353c7079ea0828afd157eb794f73a0c51571eacd1e26ce8e26de",
+    "contract_version": 1,
+    "evidence_ids": [
+      "intake-evidence:6817cccf5958b0852a83e771f6d14bba860bacb370edb05d65579e9bd7702388"
+    ],
+    "generation": 0,
+    "integration_acceptance_ids": [],
+    "obligation_ids": [
+      "obligation.m05"
+    ],
+    "outcome_id": "outcome.vibevm-next.complete",
+    "revision": 1,
+    "stage_acceptance_id": "intake-stage:6817cccf5958b0852a83e771f6d14bba860bacb370edb05d65579e9bd7702388",
+    "summary": "Root inspected original G1 requirements, independent source/evidence review and production delta. Actual resolver/source/planner matrices preserve complete configured requests/effects, workspace consumer origins and actual capability/OR witnesses. Unsupported configured naive/sat and measured legacy source/search boundaries are explicitly refusal cells, not successful parity. Propagating actual rejected candidate reasons through rebound routes fixes information loss without weakening source/graph guards. Both original criteria supported; no new backend or G2 acceptance invented.",
+    "work_id": "work.m05.g1"
+  },
+  "needs": [],
+  "product_receipts": [
+    {
+      "id": "intake-attempt:1e7ebdd4166b8715beeb333e0995c3e0afe92181801eb5d834f4494da61ce445",
+      "step": "claim:verify.authored.m05.g1.00",
+      "semantic": "d8c2011695f9d402c1272ea08ee9e8d207d4859f3350fc819db00999135dc300",
+      "receipt": 13261,
+      "revision": 13268,
+      "predecessor": null
+    },
+    {
+      "id": "intake-attempt:f1ed4557dc10e0cf0827be0ec35ff5420d66b695c1a3a2c884dcb09a55024426",
+      "step": "result:verify.authored.m05.g1.00",
+      "semantic": "ac50e9ef8050739daa2d96be54f39817a8e3d66addd1b3ee6bbcf28b35cca196",
+      "receipt": 13290,
+      "revision": 13297,
+      "predecessor": "intake-attempt:1e7ebdd4166b8715beeb333e0995c3e0afe92181801eb5d834f4494da61ce445"
+    },
+    {
+      "id": "intake-attempt:fc8cb668311060652cc7064056b1eeff61d0f049a0c4a31887d4d93b5d1ea938",
+      "step": "claim:verify.authored.m05.g1.01",
+      "semantic": "fdaf4a880fbc58159fc0747e80d120b2296117ae6d6a5f45e3224838467ede32",
+      "receipt": 13326,
+      "revision": 13333,
+      "predecessor": "intake-attempt:f1ed4557dc10e0cf0827be0ec35ff5420d66b695c1a3a2c884dcb09a55024426"
+    },
+    {
+      "id": "intake-attempt:2676bc6632d665b4452f1accc8041cfa02204e4ba161be91e2b47a74a128d929",
+      "step": "result:verify.authored.m05.g1.01",
+      "semantic": "0a9c552f6c1d620cd6540c4d152ec054b84ecd33fdeb70444cad1d688d669b1d",
+      "receipt": 13355,
+      "revision": 13362,
+      "predecessor": "intake-attempt:fc8cb668311060652cc7064056b1eeff61d0f049a0c4a31887d4d93b5d1ea938"
+    },
+    {
+      "id": "intake-attempt:0ab605866f91d80ae643905224d61b6917c496ee0f9cf5e3da9f16c603ed1d75",
+      "step": "claim:verify.authored.m05.g1.02",
+      "semantic": "5ac4d907be4424c19b86316293e0c72d636fd0da32365c9dbe8c47a7b4181658",
+      "receipt": 13391,
+      "revision": 13398,
+      "predecessor": "intake-attempt:2676bc6632d665b4452f1accc8041cfa02204e4ba161be91e2b47a74a128d929"
+    },
+    {
+      "id": "intake-attempt:b7b964aa62b86dea9faa444cedd7655afb235be28bc50183cca5a07aeda2c8c8",
+      "step": "result:verify.authored.m05.g1.02",
+      "semantic": "930d1db84dddc7a4fc9f8f6e5b572ee3a1fa84982f0ef6f98c5a0c87b928ac72",
+      "receipt": 13420,
+      "revision": 13427,
+      "predecessor": "intake-attempt:0ab605866f91d80ae643905224d61b6917c496ee0f9cf5e3da9f16c603ed1d75"
+    },
+    {
+      "id": "intake-attempt:b41c479bd82bc4b6b49648c8901e28f438dd937117098a71d00a02a2a581af12",
+      "step": "claim:verify.authored.m05.g1.03",
+      "semantic": "ea49bc860f956265fa42a828c19dd79f85167a602a1cf324ace0317f1d7258da",
+      "receipt": 13456,
+      "revision": 13463,
+      "predecessor": "intake-attempt:b7b964aa62b86dea9faa444cedd7655afb235be28bc50183cca5a07aeda2c8c8"
+    },
+    {
+      "id": "intake-attempt:e97164b9ec43137e914ede8fea435d69b9b9d9e94eebbb7202b4e890e4607e08",
+      "step": "result:verify.authored.m05.g1.03",
+      "semantic": "8263ee4015ce77c26732131f26190a6271e5067dd64a41d9663e1a31fdf9a7ac",
+      "receipt": 13485,
+      "revision": 13492,
+      "predecessor": "intake-attempt:b41c479bd82bc4b6b49648c8901e28f438dd937117098a71d00a02a2a581af12"
+    },
+    {
+      "id": "intake-attempt:4b4323af601d931baccc84c475a22394dfee67a965d261f87f6a0a007963758e",
+      "step": "claim:verify.authored.m05.g1.04",
+      "semantic": "388a9d3b04aaffe72d97049f1217ce283c607589ee16deb7464a9aa99eee3434",
+      "receipt": 13521,
+      "revision": 13528,
+      "predecessor": "intake-attempt:e97164b9ec43137e914ede8fea435d69b9b9d9e94eebbb7202b4e890e4607e08"
+    },
+    {
+      "id": "intake-attempt:354bb4c7c6b305af985254217e81537a2f9c38aa8b58820a21e037f5da4b49ed",
+      "step": "result:verify.authored.m05.g1.04",
+      "semantic": "02a2a73b6f0e3806eae03782af1d83f75efe6ebf3935362edb2d99e2388e7dd3",
+      "receipt": 13550,
+      "revision": 13557,
+      "predecessor": "intake-attempt:4b4323af601d931baccc84c475a22394dfee67a965d261f87f6a0a007963758e"
+    },
+    {
+      "id": "intake-attempt:cc74429a287ba1e914daa62d2f355c14b83f84d1da4c03a32b518b1d6b4c6b6d",
+      "step": "claim:intake-safety:eae63e5625944ebb94de151c2c221e0145a62bc299c07c256537a362bb75515e",
+      "semantic": "5659582c710c8e8273b6acc8d2804788ec1a7bc1b8dc8ff5e457575ede1c41f9",
+      "receipt": 13586,
+      "revision": 13593,
+      "predecessor": "intake-attempt:354bb4c7c6b305af985254217e81537a2f9c38aa8b58820a21e037f5da4b49ed"
+    },
+    {
+      "id": "intake-attempt:1ca8b8d63abbb739697d68db9485c46ae942c4bc4673d888dcc25b200d6bee3a",
+      "step": "result:intake-safety:eae63e5625944ebb94de151c2c221e0145a62bc299c07c256537a362bb75515e",
+      "semantic": "f2e42182170d881656cd39228c6a9ef2eadbffbc1c2f1bcc15018a7091161fa6",
+      "receipt": 13615,
+      "revision": 13622,
+      "predecessor": "intake-attempt:cc74429a287ba1e914daa62d2f355c14b83f84d1da4c03a32b518b1d6b4c6b6d"
+    },
+    {
+      "id": "intake-attempt:f5fb32db824da8b1316b88a954ee8a40ae732197dfc8d2333634b12f3d7e7618",
+      "step": "safe-state",
+      "semantic": "8e88f365124d7e9c2f825a28dcebc3fbaff379dc2ae337eca228670091ea22aa",
+      "receipt": 13644,
+      "revision": 13651,
+      "predecessor": "intake-attempt:1ca8b8d63abbb739697d68db9485c46ae942c4bc4673d888dcc25b200d6bee3a"
+    },
+    {
+      "id": "intake-attempt:f39c416058aa1484191b7c027e956961a2f08ab1de30e3a757e034bff911a8b9",
+      "step": "review",
+      "semantic": "880f9f5162828a0a030008a81a1c032a0913eb5ab4c189fb89ed8c65bd4615a1",
+      "receipt": 13673,
+      "revision": 13680,
+      "predecessor": "intake-attempt:f5fb32db824da8b1316b88a954ee8a40ae732197dfc8d2333634b12f3d7e7618"
+    },
+    {
+      "id": "intake-attempt:2b59befb2d2b7b674f57e8b3f11c5a01c6cd7a3d173f4ab74b90d5fdc7c6b1af",
+      "step": "evidence",
+      "semantic": "76520db657aee676932564e20c38e1097ceabfcca3845d9784835f165e38184f",
+      "receipt": 13702,
+      "revision": 13709,
+      "predecessor": "intake-attempt:f39c416058aa1484191b7c027e956961a2f08ab1de30e3a757e034bff911a8b9"
+    },
+    {
+      "id": "intake-attempt:62351a341f5730cab7966ad20e5bed3a4bad0f8a4d41c3bc7c3bf5b25c97d9f2",
+      "step": "stage",
+      "semantic": "88d8fe77ade2d8d3c5f5d6a617c97de4e60569c1a52e0d2a9b06e140b7fefabe",
+      "receipt": 13731,
+      "revision": 13738,
+      "predecessor": "intake-attempt:2b59befb2d2b7b674f57e8b3f11c5a01c6cd7a3d173f4ab74b90d5fdc7c6b1af"
+    },
+    {
+      "id": "intake-attempt:58e76627c0c36080d77b008c0b39435e50458fa4964d5ce81561651b322a8d40",
+      "step": "work",
+      "semantic": "d25440ee3592fe4fa6a006d5c1725d400723c55009dde6d400ef8aeecbf910ca",
+      "receipt": 13760,
+      "revision": 13767,
+      "predecessor": "intake-attempt:62351a341f5730cab7966ad20e5bed3a4bad0f8a4d41c3bc7c3bf5b25c97d9f2"
+    }
+  ],
+  "safe": "completed",
+  "stop_receipt": {
+    "delivery": "delivered",
+    "effect_id": "effect.runtime.packet.known:c1577fa467dba74f54e006d909f88519034a508a7cfc14cfc7eefeccd08b9267",
+    "observation": "observation.vibevm-campaign"
+  },
+  "original_report_digest": "4767ec8c1864010e02b4ad115e261354e8844c12916219be7f86a4527dbb886c",
+  "original_patch_digest": "ab9e113a4f4961156c0bee0ab40ed5a6a32e633518bbb5ca1cf8f7e503bacee6",
+  "observed_at": "2026-10-17T22:37:15.910397+00:00",
+  "no_manual_product_reassembly": true
+}

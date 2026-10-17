@@ -82,6 +82,9 @@ pub struct RouteResolution {
     pub provenance: Vec<EdgeProvenance>,
     pub manifests: BTreeMap<String, Manifest>,
     pub effects: BTreeMap<String, FeatureExpansion>,
+    /// Candidate-local configuration refusals from the same immutable solve.
+    /// Legacy cells do not evaluate configured candidates and leave this empty.
+    pub rejected: Vec<super::configuration::CandidateReason>,
 }
 impl RouteResolution {
     pub fn bind(
@@ -191,6 +194,7 @@ impl RouteResolution {
             provenance,
             manifests,
             effects,
+            rejected: Vec::new(),
         })
     }
 }

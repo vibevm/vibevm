@@ -1,0 +1,76 @@
+{
+  "utc": "2026-10-17T21:53:42.164875+00:00",
+  "head": "88174dd48c2855a2c1770647060cbc3a980ca852",
+  "candidate_id": "managed-result.a65158e615e7353c7079ea0828afd157eb794f73a0c51571eacd1e26ce8e26de",
+  "artifacts": [
+    {
+      "kind": "report",
+      "path": "/fast/git/v/research/2026-10-18-m05g1-candidate/REPORT.txt",
+      "sha256": "4767ec8c1864010e02b4ad115e261354e8844c12916219be7f86a4527dbb886c",
+      "bytes": 598023
+    },
+    {
+      "kind": "patch",
+      "path": "/fast/git/v/research/2026-10-18-m05g1-candidate/CANDIDATE.patch",
+      "sha256": "ab9e113a4f4961156c0bee0ab40ed5a6a32e633518bbb5ca1cf8f7e503bacee6",
+      "bytes": 56992
+    }
+  ],
+  "files": [
+    {
+      "path": "crates/vibe-package-source/src/cells.rs",
+      "sha256": "831f6c6f17f8aa3f58c7760ee22cb8895e1dcdde24ab1a27166d9fcb800ffcfd",
+      "bytes": 14168
+    },
+    {
+      "path": "crates/vibe-package-source/src/source.rs",
+      "sha256": "38280090c78992bad4592ffc7bf2815381c4d4e4ab632d3bc312d0dd875613ad",
+      "bytes": 22593
+    },
+    {
+      "path": "crates/vibe-package-source/src/source/transaction.rs",
+      "sha256": "750332db0a1257e4e5c6aa61d017c59595da0802feb82fc5175207c54475aa3b",
+      "bytes": 18199
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+      "sha256": "7833dca3211e4de0c016842cdad5688e50d264f3a70dc34b027182fb5d36e477",
+      "bytes": 18882
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+      "sha256": "bb2704b4e9adb6fe99c0c1b7f5c1b11ada9e43779ed80d089d88ca326d512418",
+      "bytes": 21739
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/request.rs",
+      "sha256": "ffe87ab2a3a1817b9a50b39ca43d8e4ba16062f86dba78f6334c243731e027e1",
+      "bytes": 15302
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "sha256": "21e1c7c48ace5047bd8846191548bc9c7ed10e5551bd294520d5030e83b4ea7d",
+      "bytes": 175753
+    },
+    {
+      "path": "crates/vibe-install/tests/g1_support/mod.rs",
+      "sha256": "7411abcc1659e021aba110f1be8e554c4d0033dd94e5cf20e98213aa6c7f22d7",
+      "bytes": 6129
+    },
+    {
+      "path": "crates/vibe-install/tests/m_05_g_1_cases.rs",
+      "sha256": "0cd261ac95958f67fb4cf817e782a5db1b791abd4b4dd0d6096f9fc7f2e9ff76",
+      "bytes": 12539
+    },
+    {
+      "path": "crates/vibe-package-source/src/source/m_05_g_1_cases.rs",
+      "sha256": "1280c9a330c0c416b31aa8ad2e73335268ea0a98cbe52c8d19ffc2ae0026f97e",
+      "bytes": 12329
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/m_05_g_1_cases.rs",
+      "sha256": "f6c3dad840a0212cbc3df29235c731a8f5493302984645ffc2dce6618ec4a74b",
+      "bytes": 11102
+    }
+  ]
+}

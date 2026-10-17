@@ -1,0 +1,137 @@
+{
+  "status": "reviewed-not-yet-canonically-accepted",
+  "evidence_level": "Actual retained report outputs plus independent source/evidence review and Root semantic approval; no canonical receipt invented.",
+  "candidate": "managed-result.a65158e615e7353c7079ea0828afd157eb794f73a0c51571eacd1e26ce8e26de",
+  "raw_report": {
+    "kind": "report",
+    "path": "/fast/git/v/research/2026-10-18-m05g1-candidate/REPORT.txt",
+    "sha256": "4767ec8c1864010e02b4ad115e261354e8844c12916219be7f86a4527dbb886c",
+    "bytes": 598023
+  },
+  "raw_patch": {
+    "kind": "patch",
+    "path": "/fast/git/v/research/2026-10-18-m05g1-candidate/CANDIDATE.patch",
+    "sha256": "ab9e113a4f4961156c0bee0ab40ed5a6a32e633518bbb5ca1cf8f7e503bacee6",
+    "bytes": 56992
+  },
+  "new_target_families": [
+    {
+      "package": "vibe-resolver",
+      "target": [
+        "--lib"
+      ],
+      "family": "resolvo_engine::m_05_g_1_cases",
+      "passed": 4,
+      "failed": 0,
+      "filtered": 134
+    },
+    {
+      "package": "vibe-package-source",
+      "target": [
+        "--lib"
+      ],
+      "family": "source::m_05_g_1_cases",
+      "passed": 4,
+      "failed": 0,
+      "filtered": 42
+    },
+    {
+      "package": "vibe-install",
+      "target": [
+        "--test",
+        "m_05_g_1_cases"
+      ],
+      "passed": 5,
+      "failed": 0,
+      "filtered": 0
+    }
+  ],
+  "literal_final_log_excerpts": [
+    {
+      "embedded_log": "resolver-g1-4.log",
+      "selected_raw_section_sha256": "67f03145b45e23d867e972448ec624551d6a52dfdfe6a5ebf8af0737b5687622",
+      "selected_raw_section_bytes": 17121,
+      "literal_summary": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 134 filtered out; finished in 0.04s"
+    },
+    {
+      "embedded_log": "source-g1-7.log",
+      "selected_raw_section_sha256": "e88aba0515a26341eea264864feec38e1a501c14d316c45cae4872b7e717a26b",
+      "selected_raw_section_bytes": 29114,
+      "literal_summary": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 42 filtered out; finished in 0.10s"
+    },
+    {
+      "embedded_log": "install-g1-5.log",
+      "selected_raw_section_sha256": "80b0952c85fe43fd9a755a83dce10963c286548b7191c2e6abfdf4c79405c973",
+      "selected_raw_section_bytes": 29596,
+      "literal_summary": "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s"
+    },
+    {
+      "embedded_log": "resolver-m_05_b_1_cases.log",
+      "selected_raw_section_sha256": "24a21216d9626e1d6871c3c30a97bc8e96d024057c1d28020212ad734f859189",
+      "selected_raw_section_bytes": 17740,
+      "literal_summary": "test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 124 filtered out; finished in 0.00s"
+    },
+    {
+      "embedded_log": "resolver-m_05_b_2_cases.log",
+      "selected_raw_section_sha256": "7ee7ca4397d1d594160c9367ebccbbf0045a5a4427ed0db3bc4536904e51b5be",
+      "selected_raw_section_bytes": 17544,
+      "literal_summary": "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 127 filtered out; finished in 0.00s"
+    },
+    {
+      "embedded_log": "resolver-m_05_c_1_cases.log",
+      "selected_raw_section_sha256": "6dfd22f5bc0ef2cef8e2011dd6de14d265f72404d5cb8e503d63a2485d47bd7b",
+      "selected_raw_section_bytes": 16833,
+      "literal_summary": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 134 filtered out; finished in 0.00s"
+    },
+    {
+      "embedded_log": "resolver-m_05_c_2_cases.log",
+      "selected_raw_section_sha256": "ac682660a54601f56533ef068298fa803cf41602b43453173d169aee2d9f560c",
+      "selected_raw_section_bytes": 17277,
+      "literal_summary": "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 129 filtered out; finished in 0.01s"
+    },
+    {
+      "embedded_log": "resolver-m_05_c_3_cases.log",
+      "selected_raw_section_sha256": "6428604d702e99be2d8513e4fbe6b392c2dbcd1b1dde8fa72594e5ccdf5f1b89",
+      "selected_raw_section_bytes": 16819,
+      "literal_summary": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 134 filtered out; finished in 0.00s"
+    },
+    {
+      "embedded_log": "source-m_05_c_1_cases.log",
+      "selected_raw_section_sha256": "0bda4f2d00807caaab6bf73b2df6db172c7899a8b4541b414ada8780586d6a3b",
+      "selected_raw_section_bytes": 28981,
+      "literal_summary": "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 43 filtered out; finished in 0.00s"
+    },
+    {
+      "embedded_log": "source-m_05_c_3_cases.log",
+      "selected_raw_section_sha256": "e4d0b458b17b6e67281c4481c724a061d04842487629f57b1764340f4e454f65",
+      "selected_raw_section_bytes": 29071,
+      "literal_summary": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 42 filtered out; finished in 0.07s"
+    }
+  ],
+  "distinct_counts": {
+    "new": 13,
+    "retained": 39,
+    "total": 52,
+    "not_sum_of_repeated_runs": true
+  },
+  "global_fmt": {
+    "state": "failed",
+    "exit_code": 1,
+    "unchanged_baseline_files": 7,
+    "retained_fmt_paths": {
+      "fmt-all-1.log": [
+        "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs"
+      ]
+    },
+    "not_rewritten_passed": true
+  },
+  "scoped_fmt": "separate success, not global replacement",
+  "diff_reverse_XML_hashes": "diff0/reverse0/XMLparse/frozen11hashes independently checked at review; promotion no new tests",
+  "failed_iterations": "All failed iterations/raw logs remain private in original report; bounded summary in MANAGED-SUMMARY.md."
+}
