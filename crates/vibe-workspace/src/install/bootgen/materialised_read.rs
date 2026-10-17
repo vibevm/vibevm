@@ -66,9 +66,11 @@ pub(super) fn durable_row(
         ));
     }
     let manifest_path = slot.join(Manifest::FILENAME);
-    let manifest = Manifest::read(&manifest_path).map_err(|error| WorkspaceError::Manifest {
-        path: manifest_path,
-        source: Box::new(error),
+    let manifest = Manifest::read_package_source(&manifest_path).map_err(|error| {
+        WorkspaceError::Manifest {
+            path: manifest_path,
+            source: Box::new(error),
+        }
     })?;
     let declared = manifest.package.as_ref().ok_or_else(|| {
         super::owner_plans::world_error(

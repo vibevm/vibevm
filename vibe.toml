@@ -35,8 +35,6 @@ link = "dynamic"
 version = "^1.1.0"
 link = "static-transitive"
 exclude = [
-  "org.vibevm.world/wal",
-  "org.vibevm.world/wal-specspaces",
 ]
 
 # vibevm is its own bootstrap project — the tool itself, and now the first
@@ -104,3 +102,32 @@ inputs = [
   "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/tools/**",
   "vibevm/vibepacks/org.vibevm.doc/web/v1.1.0/tooling/site-build/**",
 ]
+
+# Explicit old Redbook intent replaces the manual WAL exclusions above.
+# Keep the independent MUP root and the previously fixed four global addons
+# plus discovery-prompt. No version bump or publication approval is implied.
+[[consumer_configuration]]
+dependency = "org.vibevm.world/redbook"
+domain = "workspace"
+definition = "org.vibevm.core/vibevm"
+definition_owner = "vibevm"
+target = "org.vibevm.core/vibevm"
+target_owner = "vibevm"
+instance = "org.vibevm.world/redbook"
+configuration = "authored"
+
+[consumer_configuration.selections.continuity]
+intent = "exact"
+members = ["mup"]
+
+[consumer_configuration.selections.additions]
+intent = "additive"
+members = ["health-audit", "manual-tests", "comparative-research", "dev-runtime-docs"]
+
+[consumer_configuration.selections.mup-additions]
+intent = "additive"
+members = ["discovery-prompt"]
+
+[consumer_configuration.selections.wal-additions]
+intent = "additive"
+members = []

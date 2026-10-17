@@ -453,6 +453,19 @@ pub fn plan_update<S: InstallSource + ?Sized>(
     format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> crate::error::Result<UpdatePlan> {
+    if source
+        .normalized_request()
+        .and_then(|r| r.configuration.as_ref())
+        .is_none()
+        && workspace
+            .iter_nodes()
+            .any(|(_, node)| !node.consumer_configuration.is_empty())
+    {
+        let bound = crate::bind_authored_request(source, workspace, &request.features)?;
+        return plan_update(
+            &*bound, root, manifest, workspace, request, format, observer,
+        );
+    }
     let lock = Lockfile::read(workspace.root.join(Lockfile::FILENAME))?;
     let current = source.normalized_request();
     let mut report = report(&lock, current)?;
@@ -705,6 +718,25 @@ pub fn plan_reconfiguration<S: InstallSource + ?Sized>(
     format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> crate::error::Result<crate::PlannedInstall> {
+    if !request.roots.is_empty() {
+        return Err(error(
+            "reconfiguration cannot replace workspace declarations with CLI install roots",
+        ));
+    }
+    if source
+        .normalized_request()
+        .and_then(|r| r.configuration.as_ref())
+        .is_none()
+    {
+        let workspace = Workspace::discover(root)?;
+        if workspace
+            .iter_nodes()
+            .any(|(_, node)| !node.consumer_configuration.is_empty())
+        {
+            let bound = crate::bind_authored_request(source, &workspace, &request.features)?;
+            return plan_reconfiguration(&*bound, root, request, format, observer);
+        }
+    }
     let admitted = source
         .normalized_request()
         .filter(|r| r.configuration.is_some())
@@ -713,11 +745,6 @@ pub fn plan_reconfiguration<S: InstallSource + ?Sized>(
                 "NeedsSelection: reconfiguration requires current admitted authored configuration",
             )
         })?;
-    if !request.roots.is_empty() {
-        return Err(error(
-            "reconfiguration cannot replace workspace declarations with CLI install roots",
-        ));
-    }
     let mut manifest = Manifest::read(root.join(Manifest::FILENAME))?;
     let mut workspace = Workspace::discover(root)?;
     let Plan::Ready(mut plan) = crate::plan::plan_prepared_mode(

@@ -1,0 +1,29 @@
+{
+  "decision": "approve_original_functional_scope_for_normal_API_acceptance",
+  "criteria_satisfied": [
+    0,
+    1
+  ],
+  "approved": true,
+  "safety_approved": true,
+  "utc": "2026-10-17T20:32:22.329642+00:00",
+  "work_id": "work.m05.f2",
+  "candidate_id": "managed-result.ffcc316f8ef4f9f51520752097bd23ca72e431ba8fb3f3fe4dc720657a6c4a28",
+  "job_id": "job.runtime.packet.known:cfadb4868f41619ffedaadfec2502b95a632f06a99396278d5be8033079ac813",
+  "review": "/fast/git/v/research/2026-10-17-m05f2-final-review/RESULT.json",
+  "review_sha256": "e796857dc863d8ffe5c58a0aaae96abd13741812b800f37eee0fa84ea3aaa167",
+  "rationale": "Original full F2 persistent authored consumer migration and normal reader/source/planner/M13 saved-apply supported by exact26path independent0P1P2 review and retained install4 plus latestexactmigration1/orchestrator3 cases. Existing root comments/settings/independentMUP/statictransitive/global4addons/MUPdiscovery/sharedroots and dormant roundtrip retained; ambiguity/missingchoice leaves unappliedNeed, removedchoice diagnoses without erasingintent. Same26packages with allold24edges and one intendedRedbook-to-existingMUP relation. No futureversion/publicationapproval or newCLIparity/transactionmatrix/F3 gate. Root independently rehashed all26currentfiles afternormalStopDelivered.",
+  "safety_basis": "Bound only to original F2 candidate/generation/attempt/effect: preserve unapplied migration diff when intent ambiguous. Current actual consumer intent unambiguouslyMUP from historicalmanifest/exclusions+independentMUP; RootauthorizedcurrentVibeRepo edits are frozen26paths, normalM13 fixtures demonstrate no overwrite on ambiguity/stale beforeimage and missingchoice returnsNeed. All test apply/store/home isolated fixtures; no real-user-home install, Git mutation or externalpublication byworker. Source/selection/provenance checks retained; scopednormalStopDelivered12588/executionsucceeded and exactfrozen26sourcehashes after stop observed. This is Root scoped effect-completed judgment, not inferred from producer flags or a globalsafety/Shipping verdict; normaltrustedAPI safety witness still mustrecord actualproof.",
+  "formal_checks": {
+    "00": "passed: retainedinstall4/4 pre-smallguard plusfinalexactmigration1/1; finalguard pathcoveredlatestorchestrator3/3",
+    "01": "passed: latestorchestrator3/3 includingmissingchoice,both/neither,savedapply,stale input",
+    "02": "failed: literalglobalfmt7unchangedbaselinefiles; notwaived/rewritten",
+    "03": "passed: actualgitdiffcheck0/reversepatch0/XML2 parse/all26sourcehashes"
+  },
+  "limits": [
+    "No generalCLI/MCP migrationparity, G1/G2backend/transactionmatrix, universalrecovery or fullSDK/Shipping claimed.",
+    "No futureversion/packagepublication approval; RootordinaryGitmirror process separate.",
+    "Earliercompile/fixture failures and ownSIGTERM-without-summary retained; globalfmtFailed remains.",
+    "This Root approval is not canonical WorkAccepted; existingguardednormalAPI mustrecord acceptance."
+  ]
+}

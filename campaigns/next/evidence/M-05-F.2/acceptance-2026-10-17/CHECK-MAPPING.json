@@ -1,0 +1,169 @@
+{
+  "formal_slots": 4,
+  "required_verification_ids": [
+    "verify.authored.m05.f2.00",
+    "verify.authored.m05.f2.01",
+    "verify.authored.m05.f2.02",
+    "verify.authored.m05.f2.03"
+  ],
+  "mapping": [
+    {
+      "slot": "00",
+      "verification_id": "verify.authored.m05.f2.00",
+      "state_proposal": "passed",
+      "evidence_status": "author report claims; Root judgment/trusted recording pending",
+      "owning_package": "vibe-install",
+      "target_selection": [
+        "--test",
+        "m_05_f_2_cases"
+      ],
+      "case_family": "m_05_f_2_cases",
+      "selection_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--test",
+        "m_05_f_2_cases",
+        "m_05_f_2_cases"
+      ],
+      "argv_label": "normalized target selection; full exact process flags in genuine report",
+      "recorded_command_reference": {
+        "artifact_digest": "0b72a2be06d4b31fe87d87e9ebd19d6f2a04dd73b0675069927a735b3c778ce6",
+        "embedded_log": "install-10-final.log"
+      },
+      "reported_passed": 4,
+      "reported_failed": 0,
+      "reported_filtered": 36,
+      "reported_exit": 0,
+      "reported_test_seconds": 323.37,
+      "actual_nonzero_reported": true,
+      "final_source_qualification": {
+        "small_followup": "missing profile choices guard before parse; full4 not rerun after guard",
+        "embedded_log": "install-11-final-exact.log",
+        "case": "m_05_f_2_cases::m_05_f_2_normal_migration_preserves_old_graph_and_comments",
+        "selection_suffix": [
+          "--",
+          "--exact",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "reported_passed": 1,
+        "reported_failed": 0,
+        "reported_filtered": 39,
+        "reported_exit": 0,
+        "reported_test_seconds": 33.78,
+        "negative_guard_coverage": "last-source orchestrator3 family covers missing profile -> NeedsInput",
+        "no_claim_all_four_last_source": true
+      }
+    },
+    {
+      "slot": "01",
+      "verification_id": "verify.authored.m05.f2.01",
+      "state_proposal": "passed",
+      "evidence_status": "author report claims; Root judgment/trusted recording pending",
+      "owning_package": "vibe-orchestrator",
+      "target_selection": [
+        "--lib"
+      ],
+      "case_family": "migration::m_05_f_2_cases",
+      "selection_argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--lib",
+        "migration::m_05_f_2_cases"
+      ],
+      "argv_label": "normalized target selection; full exact process flags in genuine report",
+      "recorded_command_reference": {
+        "artifact_digest": "0b72a2be06d4b31fe87d87e9ebd19d6f2a04dd73b0675069927a735b3c778ce6",
+        "embedded_log": "orchestrator-3-final.log"
+      },
+      "reported_passed": 3,
+      "reported_failed": 0,
+      "reported_filtered": 675,
+      "reported_exit": 0,
+      "reported_test_seconds": 0.02,
+      "actual_nonzero_reported": true
+    },
+    {
+      "slot": "02",
+      "verification_id": "verify.authored.m05.f2.02",
+      "state_proposal": "failed",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "reported_exit": 1,
+      "unchanged_baseline_path_count": 7,
+      "reported_diff_hunks": 12,
+      "baseline_paths_as_reported": [
+        "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs"
+      ],
+      "scoped_fmt_not_substitution": true
+    },
+    {
+      "slot": "03",
+      "verification_id": "verify.authored.m05.f2.03",
+      "state_proposal": "passed",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "reported_exit": 0
+    }
+  ],
+  "test_counts": {
+    "install_family_pre_guard": 4,
+    "install_final_exact_repeat": 1,
+    "orchestrator_final_family": 3,
+    "no_eight_distinct_case_claim": true
+  },
+  "failures_retained": [
+    "install-1 exit101 E0616; no tests",
+    "install-2 1pass/3fail cache race and provenance",
+    "install-3 1/3 declaration versus exact pin",
+    "install-4 1/3 rich slot legacy parser",
+    "install-5 1/3 XML format",
+    "install-6 exit101 after own SIGTERM; no full summary, hang not established",
+    "install-7-exact 0/1 wrong graph oracle",
+    "install-9 3/1 invalid removed-option fixture",
+    "orchestrator-1 2/1 package-role restriction",
+    "diagnostic attachment failures retained in authored logs",
+    "global fmt02 exit1 remains Failed"
+  ],
+  "genuine_report": {
+    "byte_len": 513273,
+    "digest": "0b72a2be06d4b31fe87d87e9ebd19d6f2a04dd73b0675069927a735b3c778ce6",
+    "kind": "report"
+  },
+  "no_conditional_06_07": true,
+  "tests_rerun_by_preparer": false,
+  "Root_judgment": {
+    "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/planning/M05-F2-ROOT-SEMANTIC-DECISION.json",
+    "sha256": "d444264117c2040efbe5244843cff72f974fe52edd2f72745745c0a4e53e81f4",
+    "decision": "approve_original_functional_scope_for_normal_API_acceptance",
+    "approved_by_Root": true,
+    "criteria_satisfied": [
+      0,
+      1
+    ],
+    "safety_approved_by_Root": true,
+    "not_canonical_acceptance": true
+  }
+}

@@ -118,10 +118,10 @@ impl PlannedInstall {
         let Some(request) = &self.normalized_request else {
             return Ok(());
         };
-        let inconsistent = || {
-            vibe_resolver::SolveError::UnsupportedRoute(
-                "planned graph differs from normalized request or selected edge provenance".into(),
-            )
+        let inconsistent = |detail: String| {
+            vibe_resolver::SolveError::UnsupportedRoute(format!(
+                "planned graph differs from normalized request or selected edge provenance: {detail}"
+            ))
         };
         let selected = |p: &PackageRef| {
             self.fetched.iter().any(|f| {
@@ -130,16 +130,26 @@ impl PlannedInstall {
                     && p.version.matches(&f.cached.resolved.version)
             })
         };
+        // A declaration's version requirement and its selected exact pin
+        // need not have the same VersionSpec representation (or kind hint).
+        // Both must refer to the same actual selected package and version.
+        let same_selected = |a: &PackageRef, b: &PackageRef| {
+            a.group == b.group && a.name == b.name && selected(a) && selected(b)
+        };
         if request.roots.iter().any(|p| !selected(p)) || self.resolution.len() != self.fetched.len()
         {
-            return Err(inconsistent().into());
+            return Err(inconsistent("root membership or resolution length".into()).into());
         }
         for f in &self.fetched {
             let node = &f.cached.resolved;
             let Some(row) = self.resolution.iter().find(|r| {
                 r.group == node.group && r.name == node.name && r.version == node.version
             }) else {
-                return Err(inconsistent().into());
+                return Err(inconsistent(format!(
+                    "missing resolution row for {}/{}",
+                    node.group, node.name
+                ))
+                .into());
             };
             let dependencies: Vec<_> = f
                 .meta
@@ -155,11 +165,15 @@ impl PlannedInstall {
                             edge.parent.group.as_ref() == Some(&node.group)
                                 && edge.parent.name == node.name
                                 && edge.parent.version.matches(&node.version)
-                                && edge.provider == *dep
+                                && same_selected(&edge.provider, dep)
                         })
                 })
             {
-                return Err(inconsistent().into());
+                return Err(inconsistent(format!(
+                    "dependency row for {}/{}",
+                    node.group, node.name
+                ))
+                .into());
             }
         }
         for proof in &self.selected_provenance {
@@ -169,10 +183,13 @@ impl PlannedInstall {
                     edge.parent.group.as_ref() == Some(&f.cached.resolved.group)
                         && edge.parent.name == f.cached.resolved.name
                         && edge.parent.version.matches(&f.cached.resolved.version)
-                        && f.meta.dependencies.contains(&edge.provider)
+                        && f.meta
+                            .dependencies
+                            .iter()
+                            .any(|dep| same_selected(dep, &edge.provider))
                 })
             {
-                return Err(inconsistent().into());
+                return Err(inconsistent(format!("unbound selected edge: {edge:?}")).into());
             }
         }
         Ok(())
@@ -279,6 +296,11 @@ pub(crate) fn plan_prepared_mode<S: InstallSource + ?Sized>(
     let lockfile = load_or_empty_lockfile(&workspace.root, &request.generated_by)?;
     let configured_lock = crate::record::read_configuration(&lockfile)?;
     if configured_lock
+        && workspace.root_manifest.consumer_configuration.is_empty()
+        && workspace
+            .members
+            .iter()
+            .all(|m| m.manifest.consumer_configuration.is_empty())
         && source
             .normalized_request()
             .and_then(|r| r.configuration.as_ref())
@@ -343,6 +365,26 @@ pub(crate) fn plan_prepared_mode<S: InstallSource + ?Sized>(
         &request.features,
     );
     normalized.root_origins = root_origins;
+    if let Some(admitted) = source.normalized_request() {
+        normalized = admitted.clone();
+    }
+    let authored = crate::authored_configuration(workspace, &mut normalized)?;
+    // Freeze authored definitions before freshness, through the standard
+    // source/catalog constructor. No default consent comes from the manifest.
+    let authored_transaction =
+        transaction::PlanningSource::capture_authored(source, &normalized, authored)?;
+    let source = &authored_transaction;
+    if authored
+        && source
+            .normalized_request()
+            .and_then(|r| r.configuration.as_ref())
+            .is_none()
+    {
+        return Err(vibe_resolver::SolveError::UnsupportedRoute(
+            "authored configuration requires a normalized source transaction".into(),
+        )
+        .into());
+    }
     let freshness = crate::record::request_freshness(
         &lockfile,
         source.normalized_request().unwrap_or(&normalized),
@@ -692,7 +734,7 @@ mod m_05_c_3_cases;
 
 /// Preserve each workspace declaration. Explicit roots supersede only the
 /// exact selected node's named declaration, never another member's constraint.
-fn effective_root_constraints(
+pub(crate) fn effective_root_constraints(
     workspace: &Workspace,
     project_root: &Path,
     explicit: &[PackageRef],

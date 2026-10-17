@@ -153,7 +153,7 @@ fn read_validated_descriptor_map_with_optional_format(
         .get("package")
         .and_then(toml::Value::as_table)
         .is_some_and(|table| table.contains_key("sources") || table.contains_key("source_exports"));
-    let package = Manifest::parse_str(text)
+    let package = Manifest::parse_package_source(text)
         .map_err(|error| format!("installed slot manifest: {error}"))?
         .package
         .ok_or_else(|| "installed slot requires [package]".to_owned())?;

@@ -7,6 +7,20 @@ pub(super) struct PlanningSource<'a, S: ?Sized> {
     frozen: Option<Box<dyn InstallSource + 'a>>,
 }
 impl<'a, S: InstallSource + ?Sized> PlanningSource<'a, S> {
+    pub(super) fn capture_authored(
+        original: &'a S,
+        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
+        authored: bool,
+    ) -> std::result::Result<Self, SolveError> {
+        Ok(Self {
+            original,
+            frozen: if authored {
+                original.begin_normalized_transaction(request)?
+            } else {
+                None
+            },
+        })
+    }
     pub(super) fn capture_request(
         original: &'a S,
         request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
@@ -23,6 +37,12 @@ macro_rules! forward {
     };
 }
 impl<S: InstallSource + ?Sized> InstallSource for PlanningSource<'_, S> {
+    fn begin_normalized_transaction(
+        &self,
+        request: &vibe_resolver::resolvo_engine::request::NormalizedRequest,
+    ) -> std::result::Result<Option<Box<dyn InstallSource + '_>>, SolveError> {
+        forward!(self, begin_normalized_transaction(request))
+    }
     fn solve_conditional(
         &self,
         roots: &[PackageRef],

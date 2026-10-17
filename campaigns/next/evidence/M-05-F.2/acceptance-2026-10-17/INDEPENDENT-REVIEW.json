@@ -1,0 +1,291 @@
+{
+  "status": "recommend_accept_original_scope",
+  "p1": 0,
+  "p2": 0,
+  "findings": [],
+  "original_task": {
+    "path": "/fast/git/v/vibevm-next/campaigns/next/tasks/M-05-F.json",
+    "entry": "tasks[id=M-05-F.2]",
+    "raw_file_sha256": "57df97692a1d5735d24983d1afe233d361d5573a8dc86b1e982d29814ea42ecd",
+    "canonical_file_sha256": "c6446854bc54d6fb30c4dcea3c06c1dec95c8e0712121c5dba11779ac070f86d",
+    "canonical_entry_sha256": "a83d7da76d48ad4bbb25c69640cfc6d8ba71149b6e791251c6c186d8178ed693",
+    "canonicalization": "json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(comma,colon)).encode(UTF-8), no newline"
+  },
+  "original_entry_unchanged": true,
+  "base": "ef6c55db6b712c5d5f6124026150bd5ae857581e",
+  "candidate_id": "managed-result.ffcc316f8ef4f9f51520752097bd23ca72e431ba8fb3f3fe4dc720657a6c4a28",
+  "collection_revision": 12563,
+  "stop_delivered_revision": 12588,
+  "frozen_authority": "/fast/git/v/research/2026-10-17-m05f2-candidate/FREEZE.json",
+  "freeze_sha256": "f14f8bd163c58b2718d1e9b20830fc63c66ccc98d8d924e8d381c697e39f7bf4",
+  "artifacts": [
+    {
+      "kind": "report",
+      "path": "/fast/git/v/research/2026-10-17-m05f2-candidate/REPORT.txt",
+      "sha256": "0b72a2be06d4b31fe87d87e9ebd19d6f2a04dd73b0675069927a735b3c778ce6",
+      "bytes": 513273
+    },
+    {
+      "kind": "patch",
+      "path": "/fast/git/v/research/2026-10-17-m05f2-candidate/CANDIDATE.patch",
+      "sha256": "b75a891947691fa03f26eba85670af87de61be1a4e093af4cd8609719075805d",
+      "bytes": 78271
+    }
+  ],
+  "source_hash_inventory": [
+    {
+      "path": "crates/vibe-core/src/manifest/consumer_configuration.rs",
+      "sha256": "fc0540919e48c92eef15aae957420b6eccc820ade940092a3faea540d44105ce",
+      "bytes": 996
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/document.rs",
+      "sha256": "98504d28a9b3f10962dce40c9cce771b1b52d82c045ba6bd4ac4430a3ca9107b",
+      "bytes": 24183
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/migration.rs",
+      "sha256": "bc4a51ff896492e7525e9c481ab7aeb52817c4b4cfbffbe0e33f9cb4a0491b75",
+      "bytes": 21837
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/migration/redbook.rs",
+      "sha256": "f5bb7cd14ccc52cf11b3e8777b73b9437d375569c3520e576351e473c51ba88d",
+      "bytes": 9947
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "sha256": "7fae63324f8ddfa042647c9efd08161ede3edeb84afd6a7d23178cd110913a1f",
+      "bytes": 20423
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/visibility.rs",
+      "sha256": "990dad5823a3f8a7e51e00f21ce9c4074606d6bdbe7d6e0be50175a06d6df211",
+      "bytes": 23729
+    },
+    {
+      "path": "crates/vibe-install/Cargo.toml",
+      "sha256": "45b59979ad0d73c652f66e2b733d299f2574488b956f27f510925bd47e0d92c8",
+      "bytes": 1463
+    },
+    {
+      "path": "crates/vibe-install/src/authored_configuration.rs",
+      "sha256": "2e4bfa7858f77b3fb4f30c5363d39b2c540cb9a5c5554833dfd43687980ecb51",
+      "bytes": 4540
+    },
+    {
+      "path": "crates/vibe-install/src/evolution.rs",
+      "sha256": "24d493585145c459d1cec2a0dbc195fd928243bfceb7951a9f24ae659fa7fd3d",
+      "bytes": 32653
+    },
+    {
+      "path": "crates/vibe-install/src/lib.rs",
+      "sha256": "b32047c67d42d8135f1c4374e318f809c33cd60f03698292284e6dc26482deb2",
+      "bytes": 19063
+    },
+    {
+      "path": "crates/vibe-install/src/m_05_f_2_cases.rs",
+      "sha256": "83d95ec1f03ca7e16c514c1669d24c4afdb3c15cc8387ac1ce339b5f199293ad",
+      "bytes": 14985
+    },
+    {
+      "path": "crates/vibe-install/src/plan.rs",
+      "sha256": "1495b9b494c3f1c491d9aec3a408fbbed5a9c72884df24e108b014a39a143fea",
+      "bytes": 32869
+    },
+    {
+      "path": "crates/vibe-install/src/plan/transaction.rs",
+      "sha256": "67e27001dd63af97ff6a6971cdd04ee67f697aa8b09b5072a22607c93f86c10d",
+      "bytes": 4184
+    },
+    {
+      "path": "crates/vibe-install/tests/fixtures/m_05_f_2_old.toml",
+      "sha256": "1a5a3edb12e46ca4a9d7a79d601debcab3b512adee90811f69cb418d1282b9e9",
+      "bytes": 549
+    },
+    {
+      "path": "crates/vibe-install/tests/fixtures/m_05_f_2_redbook_old.toml",
+      "sha256": "21150f0c7a699eeb79a06d59e9a076ea804f40e8cc97244c416a0553b1749c07",
+      "bytes": 2818
+    },
+    {
+      "path": "crates/vibe-install/tests/fixtures/m_05_f_2_root_old.toml",
+      "sha256": "0d3dc66dc639a60bc0ade5341563c075c2de514010675da580e3df83428766cb",
+      "bytes": 4436
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/lib.rs",
+      "sha256": "65e531aeab4a32885d0c95cfaa29d3f74fc3d1ac796e6b99d95c0bfe43b87140",
+      "bytes": 16804
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/migration/m_05_f_2_cases.rs",
+      "sha256": "ab036176fda7e7a7f542b2ab22269ab6b92ca96c8bc711fdfb848dcbd0d17906",
+      "bytes": 3283
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/migration/mod.rs",
+      "sha256": "79f154655fdca5a30a80e3a7ffcc57a6b259c338780fdbfd1d61daf6ad0ffad6",
+      "bytes": 2162
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/materialised_read.rs",
+      "sha256": "a1598ce34130f39681b6ce471a1b80f4287d1efda41a9eefaa8629e5994c6c29",
+      "bytes": 7085
+    },
+    {
+      "path": "crates/vibe-workspace/src/migration_application/validation.rs",
+      "sha256": "e2ef022531a60dbdd8745dd9b2d6b16e7f056ae5cda18598394edca6c23ada58",
+      "bytes": 11419
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/derived/selection.rs",
+      "sha256": "da9431e699fdb45be5d57fe0a8fdffc78a4ab14736f19fe23b12bfa5c63891cf",
+      "bytes": 12016
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+      "sha256": "f1a3d3fae53b22d3e642650a3e5ffcbe391451e9d75f0cf6a1ed8b87f909f0ac",
+      "bytes": 14642
+    },
+    {
+      "path": "vibe.toml",
+      "sha256": "6741eca04339058dad2621f328e851f4ec85dff0eecf20124b9431356e0ddc53",
+      "bytes": 5299
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibevm/vibespecs/boot/03-flow-redbook.xml",
+      "sha256": "fae98bfd8411a22deaa7ae879f35dacce9fa0b69ffe8ee1a6704fae241c2f6a2",
+      "bytes": 7936
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "sha256": "e83c2ff10d656bcf0f7951d538c9c9a08117c7faa804a629c042e8a5ed0331f5",
+      "bytes": 169957
+    }
+  ],
+  "file_count": 26,
+  "tracked_modified_count": 17,
+  "untracked_new_count": 9,
+  "all_frozen_hashes_and_sizes_verified": true,
+  "current_main_matches_frozen_26_file_set_and_bytes": true,
+  "patch_path_set_matches_frozen_26": true,
+  "read_only_reverse_patch_check_exit": 0,
+  "xml_parse": "governing PROP003 and Redbook boot XML passed read-only parse",
+  "criteria": [
+    {
+      "original": "Before/after graph and comments demonstrate preserved consumer meaning.",
+      "assessment": "Supported: exact before fixtures, comments and declaration/settings checks; actual graph26nodes24->25edges only adds Redbook->alreadyindependentlyrequiredMUP, preserving every old selected edge. Real M13savedapply and persistent normalreader->F1C1/B1B2C2/planner/apply/replay owners exercised."
+    },
+    {
+      "original": "Current consumer migration does not manufacture future version or publication approval.",
+      "assessment": "Supported: current1.1.0 unchanged; no siblingglobalconflict/newversion/publicationapproval/rootcustody transition in source. No Git/publication effect by worker claimed or required; Root owns next acceptance/commit/mirror."
+    }
+  ],
+  "source_conclusions": [
+    "Persistent ConsumerConfiguration fields are manifest-owned, strict/typed; normal planner reads all workspace rows and binds actual immutable source, not lock-derived DTO.",
+    "M13 explicit scoped recipe retains old comments/metadata and independentlyauthoredMUP, infers only unambiguous exclusions, otherwise NeedsInput; normal savedapply replay/CAS retained.",
+    "Actualroot explicit MUP/global4/MUPdiscovery/WALempty matches proposed semantics; unrelated root settings/declarations/comments preserved.",
+    "Switchstory explicitly newlyselects WALspecspaces separately from actualrootmigration; D1 original+dormant records, currentexactsource/fullslots and E2 preparedoffline replay survive MUP->WAL->MUP with independentroots.",
+    "Removedchoice uses a valid changed definition, normal E2update diagnosis and no manifest/lockmutation; no silent dropping/defaultselection.",
+    "Requirement-vs-exactpin provenance comparison now checks same actual selected coordinate/version instead of RustVersionSpec equality; C1/effect/sourcepreconditions remain.",
+    "Project-role M13 apply exception is scoped to newtargetprofile; project/package XOR prevents frozenpackage bypass, older package-only profiles and frozenlaw remain.",
+    "Explicit package-source reader added only at metadata consumers; ordinary legacy parser and F1choiceauthority remain distinct.",
+    "Redbookboot paragraph/anchor content only relocated for formatvalidity; freshC1captures bind changedbytes; priorrules retained."
+  ],
+  "retained_test_evidence": {
+    "install-10-final.log": {
+      "test_results": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 36 filtered out; finished in 323.37s"
+      ],
+      "running": [
+        "running 4 tests"
+      ],
+      "fmt_paths": [],
+      "graph_observations": [
+        "test m_05_f_2_cases::m_05_f_2_normal_migration_preserves_old_graph_and_comments ... F2 graph: before/after packages=26, old edges=24, new edges=25; added Redbook-to-existing-MUP edge",
+        "test m_05_f_2_cases::m_05_f_2_switch_back_restores_dormant_additions_and_shared_root ... F2 branch mup: complete reconfiguration plan prepared",
+        "F2 branch mup: applied, dormant intent retained, exact replay validated",
+        "F2 branch wal: complete reconfiguration plan prepared",
+        "F2 branch wal: applied, dormant intent retained, exact replay validated",
+        "F2 branch mup: complete reconfiguration plan prepared",
+        "F2 branch mup: applied, dormant intent retained, exact replay validated"
+      ],
+      "has_summary": true
+    },
+    "install-11-final-exact.log": {
+      "test_results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 39 filtered out; finished in 33.78s"
+      ],
+      "running": [
+        "running 1 test"
+      ],
+      "fmt_paths": [],
+      "graph_observations": [
+        "F2 graph: before/after packages=26, old edges=24, new edges=25; added Redbook-to-existing-MUP edge"
+      ],
+      "has_summary": true
+    },
+    "orchestrator-3-final.log": {
+      "test_results": [
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 675 filtered out; finished in 0.02s"
+      ],
+      "running": [
+        "running 3 tests"
+      ],
+      "fmt_paths": [],
+      "graph_observations": [],
+      "has_summary": true
+    },
+    "install-6.log": {
+      "test_results": [],
+      "running": [
+        "running 4 tests"
+      ],
+      "fmt_paths": [],
+      "graph_observations": [],
+      "has_summary": false
+    },
+    "fmt-final3.log": {
+      "test_results": [],
+      "running": [],
+      "fmt_paths": [
+        "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/frame_cross_surface.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-cli/tests/cli_mcp_fixed_deploy/local_route.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-mcp/src/machine_session/incremental.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/exact_local_install_decision/tests.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-publish/src/package_git_payload/tests.rs",
+        "/fast/git/v/vibevm-next/crates/vibe-wire/src/generated/format_id/properties.rs"
+      ],
+      "graph_observations": [],
+      "has_summary": false
+    }
+  },
+  "verification_interpretation": "Fullinstall4/4 before final smallmissing-profileguard; finalexact1/1 plus finalorchestrator3/3 onlastsource cover that changedguard. No default rerun323sfamily needed. Tests ordinaryGNUhost under current grant, notmuslhelperqualification.",
+  "failures_retained": [
+    "E0616 compilerfailure no tests",
+    "installparallelcache/sourceprovenance failures",
+    "declarationvsselectedpin mismatch",
+    "richslotlegacyparser failure",
+    "bootXML paragraphposition refusal",
+    "SIGTERMownslowtest withoutcomplete summary, not falsepass/hangclaim",
+    "wronglegacygraphoracle failure",
+    "invalidremoved-optionfixture failure",
+    "M13package-only application refusal, scoped fix",
+    "globalfmtFailed7unchangedbaseline"
+  ],
+  "baseline_global_fmt": "Failed,7 unchanged files; scopedformat/diff separate",
+  "reviewer_tests_builds_models_API_source_Git_mutations": false,
+  "bounded_limits": [
+    "No actualuserhome/liveproductinstall required or performed; temporaryfixtures execute apply/replay.",
+    "No registeredmigrationCLI/MCP parity, universalreader/crossplatform/G1G2transactionmatrix demanded or claimed.",
+    "PreparedReplay uses currentretained receipts/payloads; no solver/defaultreselction during replay validation.",
+    "FullhistoricalRedbook tree identity notclaimed; exactbeforemanifestbytes and fixtureC1identity distinguished."
+  ],
+  "remaining_actual_debt": [
+    "Existing7-fileglobalfmtbaseline debt only, outsidecandidate."
+  ],
+  "acceptance_owner": "Root normalAPI judgment; report advisory",
+  "report": "/fast/git/v/research/2026-10-17-m05f2-final-review/REPORT.md"
+}

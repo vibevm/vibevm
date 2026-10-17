@@ -42,3 +42,6 @@ vibe-native-loader-fixture = { path = "../vibe-native-loader/tests/fixtures/nati
 [[test]]
 name = "m_05_e_2_cases"
 path = "src/lib.rs"
+[[test]]
+name = "m_05_f_2_cases"
+path = "src/lib.rs"
