@@ -17,6 +17,7 @@ pub struct CandidateIdentity {
 pub struct CandidateMetadata {
     pub identity: CandidateIdentity,
     pub manifest: Manifest,
+    pub checked_features: Option<vibe_core::manifest::feature_profile::CheckedFeatureManifest>,
 }
 
 impl CandidateMetadata {
@@ -34,12 +35,21 @@ impl CandidateMetadata {
     ) -> Result<Self, RegistryError> {
         let source = crate::git_backend::shell::without_userinfo(&source);
         let text = std::str::from_utf8(bytes).map_err(|e| invalid(&source, e))?;
-        let manifest = Manifest::parse_str(text).map_err(|e| invalid(&source, e))?;
+        let checked_features = vibe_core::manifest::feature_profile::constrained::read(text)
+            .map_err(|e| invalid(&source, e))?;
+        let manifest = match &checked_features {
+            Some(checked) => checked.manifest.clone(),
+            None => Manifest::parse_str(text).map_err(|e| invalid(&source, e))?,
+        };
         manifest
             .require_package()
             .map_err(|e| invalid(&source, e))?;
         let mut hash = Sha256::new();
-        hash.update(b"vibe-manifest-legacy-r1\0");
+        if checked_features.is_some() {
+            hash.update(b"vibe-manifest-constrained-r1\0");
+        } else {
+            hash.update(b"vibe-manifest-legacy-r1\0");
+        }
         hash.update(bytes);
         Ok(Self {
             identity: CandidateIdentity {
@@ -48,6 +58,7 @@ impl CandidateMetadata {
                 definition: format!("sha256:{:x}", hash.finalize()),
             },
             manifest,
+            checked_features,
         })
     }
 

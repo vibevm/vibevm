@@ -125,3 +125,6 @@ pub mod effects;
 mod m_05_b_1_cases;
 
 pub mod profile;
+
+#[cfg(test)]
+mod m_05_f_1_cases;

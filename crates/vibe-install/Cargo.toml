@@ -33,6 +33,8 @@ vibe-wire.workspace = true
 vibe-workspace.workspace = true
 
 [dev-dependencies]
+vibe-package-source.workspace = true
+vibe-test-support.workspace = true
 serde_json.workspace = true
 tempfile.workspace = true
 vibe-safefs.workspace = true

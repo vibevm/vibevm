@@ -1,0 +1,194 @@
+{
+  "status": "request_changes_source_review_verification_pending",
+  "p1": 0,
+  "p2": 2,
+  "findings": [
+    {
+      "priority": 2,
+      "title": "Do not interpret a legacy array-valued feature named profile as an opt-in marker",
+      "file": "crates/vibe-core/src/manifest/package/features/profile/constrained.rs",
+      "start": 70,
+      "end": 75,
+      "source_observation": "read() finds any features.profile and rejects unless profile.as_str()==Some(constrained-r1). CandidateMetadata::from_bytes calls it before legacy Manifest::parse_str. Legacy FeaturesTable permits any ordinary feature key including profile with an array of effects.",
+      "concrete_input": "[package]\nname='legacy'\ngroup='org.example'\nkind='flow'\nversion='1.1.0'\n[features]\nprofile=[]\n",
+      "consequence": "Previously valid absent/legacy local package metadata fails as unknown authored profile. Direct ordinary parser can still parse it, so the new metadata path violates explicit legacy preservation.",
+      "minimal_correction": "Discriminate the explicit marker shape without reserving an existing array-valued legacy feature name. Return no opt-in for a valid legacy array-valued profile feature; retain strict unknown-string-profile and malformed constrained profile refusal. Add one arm to existing core compatibility case; no new matrix.",
+      "evidence_status": "Source-proven missing branch; no Rust reproduction executed."
+    },
+    {
+      "priority": 2,
+      "title": "Do not demand consumer input from every unselected catalog candidate",
+      "file": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "start": 71,
+      "end": 104,
+      "related_lines": "same file278–288 early missing-definitions check; package-source/source.rs bind_request new unconditional call",
+      "source_observation": "admit_source_definitions iterates self.inspect().candidates and requires current configuration plus matching caller instance for every metadata.checked_features row. solve_configuration_routes also rejects any checked-profile inventory row absent from definitions before SAT selection. Base C1 capture traverses all versions, recommends, requires_any alternatives and target dependencies (catalog.rs45–69), so inventory contains unselected alternatives.",
+      "consequence": "A valid solution using a different technical alternative/discarded version is refused merely because an unused constrained Redbook candidate is in the captured inventory and has no incoming consumer edge. This moves a selection need to discovery/pre-solve and violates preserved C2 unreachable-candidate behavior.",
+      "concrete_source_scenario": "A normal captured root offers requires_any=[unconstrained viable alternative, Redbook] and another root/constraint excludes Redbook, or an unused constrained version/dependency exists only in a discarded candidate. No Redbook consumer instance is needed by the selected solution, yet bind_request errors missing original consumer instance before the solver can choose the other valid path.",
+      "minimal_correction": "Retain/capture and validate immutable package definitions independently of current consumer demand; bind only actual caller consumer inputs and make missing input/definitions conditional on candidate participation through the incumbent candidate-conditioned need/refusal mechanism. Never fabricate domains/default consent, treat a selected unbound profile as legacy required-all, or weaken selected definition/receipt equality. One bounded discarded-alternative arm in the existing resolver story suffices; no generic caller/CLI parity requirement.",
+      "evidence_status": "Source-proven early unconditional guard plus base capture traversal; no Rust reproduction executed."
+    }
+  ],
+  "base": "efc6da9a04034dc280b4d5a0eabe8f8b4c723f97",
+  "candidate": "managed-result.25572df0648414d85377508f9deb65b0215477ffcf05eefea26448670225d538",
+  "authority": "Frozen source/20 manifest-hashed files; Main mutable continuation not candidate authority",
+  "snapshot_path": "/fast/git/v/research/2026-10-17-m05f1-first-candidate/SOURCE-SNAPSHOT.json",
+  "snapshot_sha256": "1dc8c53217fe74391c5c3092ba9d7bdfc29042ba54ab6a08b76ecfc12c0c2726",
+  "source_paths": [
+    {
+      "path": "Cargo.lock",
+      "status": " M",
+      "sha256": "a3605b7cb7a0846868c80aecbcd5b604e097a90cff82fb1502c62be8344a12d3",
+      "bytes": 148455
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features.rs",
+      "status": " M",
+      "sha256": "1df07cfdd8d782edfb9d411e6fa32abfc9cbb1c06d4dd7695274abcba395c8c5",
+      "bytes": 4175
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/profile.rs",
+      "status": " M",
+      "sha256": "6364a891d8afdfacf312b5fbe38dd8d16f899d752dc145953c3acb46f09e4ada",
+      "bytes": 6316
+    },
+    {
+      "path": "crates/vibe-install/Cargo.toml",
+      "status": " M",
+      "sha256": "0f59da4b920cc8c22f65d2f6e1b3df9b236be3e6dff53c5048d494f25030c9ab",
+      "bytes": 1410
+    },
+    {
+      "path": "crates/vibe-install/src/lib.rs",
+      "status": " M",
+      "sha256": "fb47942bc59eac02fd00cd6d979ad378db38c6869db39c62138322c22bd9fa8e",
+      "bytes": 18921
+    },
+    {
+      "path": "crates/vibe-package-source/src/source.rs",
+      "status": " M",
+      "sha256": "5be847ad1014401a02805c929db018651fca92e728eb932328c059bc453a497a",
+      "bytes": 22522
+    },
+    {
+      "path": "crates/vibe-registry/src/candidate_metadata.rs",
+      "status": " M",
+      "sha256": "cc87854f9c1daac1e86255a2449bb767084c25aa2c9f2c01e200c5ccf4f0e395",
+      "bytes": 5400
+    },
+    {
+      "path": "crates/vibe-registry/src/local_registry.rs",
+      "status": " M",
+      "sha256": "7685d2c2f0c34e1cf8cf2a1df54702168b6dc4959b74393e747ae7e20980f025",
+      "bytes": 16795
+    },
+    {
+      "path": "crates/vibe-resolver/src/local_registry_provider.rs",
+      "status": " M",
+      "sha256": "39a4de65f6f349f0eaa7d10d658226d1a764fda295f553c7583cee5f977c2c63",
+      "bytes": 7349
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "status": " M",
+      "sha256": "077101a8819757bbe22caacdaa6204198dc8da5876823fcbe10efdd64a1bcd01",
+      "bytes": 34558
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+      "status": " M",
+      "sha256": "9be719e2b1c16b80ac775e789aabe1d7a17fe0be6f797f29e79b1cebb19a4348",
+      "bytes": 21705
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/README.md",
+      "status": " M",
+      "sha256": "e06369ab17d3c09889e86ddde98aeae65d27145428c216bdafe853fc982589f7",
+      "bytes": 10977
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibe.toml",
+      "status": " M",
+      "sha256": "0db48009aa53c682c50a084546c7bdaed394de469df13b9df6f7776833185fd0",
+      "bytes": 4354
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibevm/vibespecs/boot/03-flow-redbook.xml",
+      "status": " M",
+      "sha256": "9f3ce37417724e05c3fbb676eedde5bad4e164a304464776fddf22ae98864379",
+      "bytes": 7936
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "status": " M",
+      "sha256": "3abc0f4e78955808763cce74c84ee38c4cdf57991988f5be8b8645e11a371678",
+      "bytes": 166797
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/m_05_f_1_cases.rs",
+      "status": "??",
+      "sha256": "88bf8ce9cfadb15be000e514e7086d384f08a62b34db2dc50354e4954b00ef4e",
+      "bytes": 4576
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/profile/constrained.rs",
+      "status": "??",
+      "sha256": "e46788354334fa9dcea9058cb7f9a8dc139c7228a3e1de20eec3f52611c5594e",
+      "bytes": 4496
+    },
+    {
+      "path": "crates/vibe-install/src/m_05_f_1_cases.rs",
+      "status": "??",
+      "sha256": "9a96b7e1407125464be6cd51675e62132d31149c868627c47cf96a0d545ab1cc",
+      "bytes": 7286
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/m_05_f_1_cases.rs",
+      "status": "??",
+      "sha256": "20364c0a0f37b844d5621ff05e74da6c6d44566dc0f7b1e176c91fb465cfd235",
+      "bytes": 5801
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/tests/f1_fixture.rs",
+      "status": "??",
+      "sha256": "323a0774ba1aeb15a62bd322478add432442a76274df4303617cb7d4e02ecf83",
+      "bytes": 4615
+    }
+  ],
+  "frozen_hashes_verified": 20,
+  "artifacts": {
+    "patch": {
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/a0dd4ede3a0cb479afa456954676c3c668ac8fef9af14f87d529e886888449cf",
+      "bytes": 58014,
+      "sha256": "a0dd4ede3a0cb479afa456954676c3c668ac8fef9af14f87d529e886888449cf"
+    },
+    "report": {
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/b0a5161005b462f31834aa5c1f37383696dbc1ab6b579c3936b70d2cc66889c0",
+      "bytes": 17080,
+      "sha256": "b0a5161005b462f31834aa5c1f37383696dbc1ab6b579c3936b70d2cc66889c0"
+    }
+  },
+  "patch_path_set_equals_frozen_paths": true,
+  "read_only_reverse_patch_check_on_frozen_source_exit": 0,
+  "rust_tests_executed": 0,
+  "declared_test_counts": {
+    "core": 3,
+    "resolver": 1,
+    "install": 1
+  },
+  "functional_verification": "Pending explicit current Root target/config grant and same-Work managed continuation; no acceptance recommended before actual nonzero evidence. Producer Unsatisfied is advisory not a new semantic gate.",
+  "metadata_failure": "Retained all-platform metadata101 missing android_system_properties0.1.5 is not a Linux/musl compile failure. No network fetch requested.",
+  "mechanical_checks_retained": "globalfmt7baselineFailed; scopedfmt14files exit0; diff exit0; no-index new-file exits1 with empty whitespace diagnostics, initial aggregation assertion failure honestly retained.",
+  "positive_source_assessment": [
+    "Real authored constrained-r1 table in currentRedbook1.1, not fixture-only definition.",
+    "Existing generic ManifestWire and B1 effects/declarations/B2 Constraints reused; separate opt-in reader, old B3 profile code factored without semantic change except new marker discrimination finding.",
+    "CandidateMetadata captures actual manifest bytes/C1 profile-domain hash and checked definition; resolver compares full admitted semantics with actual captured definition, not copied receipt alone.",
+    "Normal LocalSource constructor -> bind_request -> C1 catalog -> FrozenSource -> C2 -> existing planner is actually targeted by source fixtures; runtime exposure still unproven until tests run.",
+    "ExplicitMUP/WAL exactly-one defaultMUP/local additions/positivebranchguards are present; no siblingglobalconflicts, versionbump or F2 rootmigration in frozenpatch.",
+    "Five prospective Rust cases declared in real source targets; no zero-test green claimed."
+  ],
+  "scope_limits": "No generic CLI/service/MCP/all-readers/crossplatform expansion, new release, F2 migration or broad matrix demanded. Preserve useful WIP.",
+  "reviewer_actions": "Read-only source/patch/report/hash/XML checks only; no builds/tests/models/API/store/Git writes/source changes.",
+  "report": "/fast/git/v/research/2026-10-17-m05f1-first-review/REPORT.md"
+}

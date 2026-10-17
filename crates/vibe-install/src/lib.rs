@@ -41,6 +41,8 @@ mod events;
 pub mod evolution;
 mod fetched;
 mod lifecycle;
+#[cfg(test)]
+mod m_05_f_1_cases;
 mod plan;
 mod preconditions;
 mod record;

@@ -254,7 +254,7 @@ impl InstallResolver {
     /// returned source consume this same request and captured catalog.
     pub fn bind_request(
         &self,
-        request: vibe_resolver::resolvo_engine::request::NormalizedRequest,
+        mut request: vibe_resolver::resolvo_engine::request::NormalizedRequest,
     ) -> Result<impl InstallSource + '_, vibe_resolver::SolveError> {
         let provider = transaction::CaptureProvider {
             source: self,
@@ -264,6 +264,7 @@ impl InstallResolver {
             &provider,
             &request.catalog_roots(),
         )?;
+        catalog.admit_source_definitions(&mut request)?;
         Ok(transaction::FrozenSource {
             source: self,
             catalog,

@@ -26,6 +26,126 @@ pub struct CandidateConfiguration {
     pub definition: ConfigurationDefinition,
 }
 
+impl CandidateConfiguration {
+    /// Admit package-owned bytes with an original caller-supplied instance.
+    pub fn from_metadata(
+        metadata: &vibe_registry::CandidateMetadata,
+        instance: ConfigurationInstance,
+    ) -> Result<Option<Self>, DepProviderError> {
+        let Some(checked) = &metadata.checked_features else {
+            return Ok(None);
+        };
+        let meta = metadata
+            .manifest
+            .require_package()
+            .map_err(|e| DepProviderError::Other(e.to_string()))?;
+        let package = PackageRef::parse(&format!("{}/{}", meta.group, meta.name))
+            .map_err(|e| DepProviderError::Other(e.to_string()))?;
+        if !matches!(&instance.package, PackageIdentity::Vibe(p)
+            if p.group == package.group && p.name == package.name && p.version.matches(&meta.version))
+        {
+            return Err(DepProviderError::Other(
+                "authored definition instance differs from package".into(),
+            ));
+        }
+        Ok(Some(Self {
+            package,
+            version: meta.version.clone(),
+            identity: metadata.identity.clone(),
+            definition: ConfigurationDefinition {
+                instance,
+                program: checked.program.clone(),
+                declarations: checked.declarations.clone(),
+                constraints: checked.constraints.clone(),
+            },
+        }))
+    }
+}
+
+impl TransactionCatalog {
+    /// Known requirements only: optional declarations never become required
+    /// merely because no consumer input has been supplied yet.
+    pub fn required_source_manifest(
+        &self,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<Manifest, DepProviderError> {
+        let metadata = self.metadata(group, name, version)?;
+        let mut manifest = metadata.manifest.clone();
+        if let Some(checked) = &metadata.checked_features {
+            manifest.requires.packages = checked
+                .declarations
+                .dependencies
+                .values()
+                .filter(|d| !d.optional)
+                .filter_map(|d| match &d.source {
+                    DependencySource::Registry(p) => Some(p.clone()),
+                    _ => None,
+                })
+                .collect();
+        }
+        Ok(manifest)
+    }
+
+    /// Attach actual captured definitions without inventing consumer/domain intent.
+    pub fn admit_source_definitions(
+        &self,
+        request: &mut super::request::NormalizedRequest,
+    ) -> Result<(), SolveError> {
+        for (coordinate, _) in &self.inspect().candidates {
+            let (qualified, version) = coordinate.rsplit_once('@').expect("C1 coordinate");
+            let package = PackageRef::parse(qualified).expect("C1 package");
+            let version = semver::Version::parse(version).expect("C1 version");
+            let metadata = self.metadata(
+                package.group.as_ref().unwrap(),
+                package.name.as_str(),
+                &version,
+            )?;
+            if metadata.checked_features.is_none() {
+                continue;
+            }
+            let Some(input) = request.configuration.as_mut() else {
+                continue;
+            };
+            let edges =
+                codec::admit_request(&input.request).map_err(SolveError::UnsupportedRoute)?;
+            let Some(instance) = edges.iter().find_map(|edge| match &edge.instance.package {
+                PackageIdentity::Vibe(p)
+                    if p.group == package.group
+                        && p.name == package.name
+                        && p.version.matches(&version) =>
+                {
+                    Some(edge.instance.clone())
+                }
+                _ => None,
+            }) else {
+                // Inventory is not participation. Keep the checked source
+                // in C1 without inventing an incoming consumer instance.
+                continue;
+            };
+            let candidate = CandidateConfiguration::from_metadata(metadata, instance)?
+                .expect("checked profile");
+            if let Some(existing) = input.definitions.iter().find(|d| {
+                d.package.group == package.group
+                    && d.package.name == package.name
+                    && d.version == version
+            }) {
+                if existing.identity != candidate.identity
+                    || existing.definition != candidate.definition
+                {
+                    return Err(SolveError::UnsupportedRoute(
+                        "substituted package-owned definition".into(),
+                    ));
+                }
+            } else {
+                input.definitions.push(candidate);
+            }
+        }
+        Ok(())
+    }
+}
+
 /// Explicit authorization of defaults from one shown definition for one edge.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DefaultBinding {
@@ -168,14 +288,12 @@ impl ResolvoDepSolver<&TransactionCatalog> {
             let (qualified, version) = coordinate.rsplit_once('@').expect("C1 coordinate");
             let package = PackageRef::parse(qualified).expect("C1 qualified package");
             let version = semver::Version::parse(version).expect("C1 version");
-            let manifest = &self
-                .provider
-                .metadata(
-                    package.group.as_ref().expect("C1 group"),
-                    package.name.as_str(),
-                    &version,
-                )?
-                .manifest;
+            let metadata = self.provider.metadata(
+                package.group.as_ref().expect("C1 group"),
+                package.name.as_str(),
+                &version,
+            )?;
+            let manifest = &metadata.manifest;
             if !manifest.conditional_deps.is_empty()
                 || !manifest.obsoletes.packages.is_empty()
                 || !manifest.requires.git_packages.is_empty()
@@ -218,6 +336,32 @@ impl ResolvoDepSolver<&TransactionCatalog> {
             blocked,
             retained,
         };
+        // Missing authority is a candidate-local need. Only a selected row can
+        // surface it; source validation already happened during C1 capture.
+        for (coordinate, _) in &self.provider.inspect().candidates {
+            let (qualified, version) = coordinate.rsplit_once('@').expect("C1 coordinate");
+            let package = PackageRef::parse(qualified).expect("C1 package");
+            let group = package.group.as_ref().expect("C1 group");
+            let version = semver::Version::parse(version).expect("C1 version");
+            let metadata = self
+                .provider
+                .metadata(group, package.name.as_str(), &version)?;
+            if metadata.checked_features.is_some() {
+                provider.candidates.insert(
+                    (group.clone(), package.name.to_string(), version.clone()),
+                    Candidate {
+                        manifest: self.provider.required_source_manifest(group, package.name.as_str(), &version)?,
+                        activation: Activation::NeedsSelection("missing original consumer instance or admitted package-owned definition".into()),
+                        reason: CandidateReason {
+                            coordinate: coordinate.clone(),
+                            identity: metadata.identity.clone(),
+                            edges: vec![],
+                            reason: "missing original consumer instance or admitted package-owned definition".into(),
+                        },
+                    },
+                );
+            }
+        }
         // Validate all admitted definitions before classifying incompatibility.
         // Malformed/dangling source data must never become a SAT rejection.
         for d in definitions {
@@ -232,6 +376,16 @@ impl ResolvoDepSolver<&TransactionCatalog> {
                     "configuration definition differs from immutable catalog identity".into(),
                 )
                 .into());
+            }
+            if let Some(actual) =
+                CandidateConfiguration::from_metadata(metadata, d.definition.instance.clone())?
+            {
+                if actual.definition != d.definition {
+                    return Err(DepProviderError::Other(
+                        "normalized definition differs from package-owned bytes".into(),
+                    )
+                    .into());
+                }
             }
             d.definition
                 .constraints
@@ -274,6 +428,15 @@ impl ResolvoDepSolver<&TransactionCatalog> {
                     })
                     .collect();
                 if matching.len() != 1 {
+                    if matching.is_empty()
+                        && self
+                            .provider
+                            .metadata(group, name, &version)?
+                            .checked_features
+                            .is_some()
+                    {
+                        continue;
+                    }
                     return Err(DepProviderError::Other(format!(
                         "missing or ambiguous configured definition for {group}/{name}@{version}"
                     ))

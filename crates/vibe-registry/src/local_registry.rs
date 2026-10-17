@@ -217,7 +217,7 @@ impl LocalRegistry {
         .into_entry();
 
         let manifest_path = cache_dir.join(Manifest::FILENAME);
-        let manifest = Manifest::read(&manifest_path)?;
+        let manifest = crate::CandidateMetadata::read_local_registry(&cache_dir)?.manifest;
         if manifest.package.is_none() {
             return Err(RegistryError::MalformedMeta {
                 path: manifest_path.clone(),

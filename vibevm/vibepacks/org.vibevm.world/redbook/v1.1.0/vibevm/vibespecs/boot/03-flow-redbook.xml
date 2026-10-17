@@ -27,7 +27,8 @@ not standing instructions.</DO-NOT-READ-THE-BOOK-AT-SESSION-BOOT></p>
 actually arises; the members' boot snippets carry everything a
 session needs.</OPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES></p>
   </spirit-source>
-  <member-list title="The members (edition 1.0.0)">
+  <p><REDBOOK-CURRENT-COMPOSITION fact="true" status="spec/done">The mutable 1.1.0 manifest declares exactly-one continuity: MUP (declared default) or WAL. Defaults require explicit consent bound to the shown definition. Global additions are independent; MUP research and WAL specspaces additions are guarded by their selected branch. Dormant additions contribute no effects. The historical roster below is reference context; the manifest and explicit consumer request determine the current closure. This package declares no global MUP/WAL conflict.</REDBOOK-CURRENT-COMPOSITION></p>
+  <member-list title="Historical members (edition 1.0.0)">
     <p><books-core-list-lead fact="true" status="impl/done">The book's core — the four IPC requirements and the memory model:</books-core-list-lead></p>
     <facts ordered="false">
       <MEMBER-TWO-PROCESS-MODEL fact="true" status="impl/done">`two-process-model` — the foundation: human and AI as

@@ -1,0 +1,10 @@
+{
+  "classification": "definitive_prestate_CAS_refusal",
+  "semantic_step": "safety.claim.json",
+  "old_request": "/fast/zap-managed/2026-10-17-vibevm-campaign/requests/m05.f1.continuation.accept.safety.claim.json",
+  "old_sha256": "9a628fd0d4aa3e2f7c30e0f732a0688472dbe0b6a550b8057264db03cb5417c1",
+  "old_expected_revision": 11959,
+  "new_linked_execution": "m05.f1.continuation.accept.safety.claim.cas1",
+  "scope_and_subject_unchanged": true,
+  "unknown_effect_reissued": false
+}
