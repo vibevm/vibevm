@@ -12,6 +12,7 @@ fn fixture() -> tempfile::TempDir {
 }
 fn args(root: &std::path::Path, script: Option<&str>) -> BootArgs {
     BootArgs {
+        registry: None,
         root: root.into(),
         artifact: "STATIC.md".into(),
         kind: ArtifactKind::Static,

@@ -152,3 +152,7 @@ pub fn from_emission(capture_id: String, event: &vibe_spec::EmissionEvent) -> Su
 
 #[cfg(test)]
 mod m_06_e_1_cases;
+
+#[cfg(test)]
+mod m_06_e_2_cases;
+pub mod scenario;

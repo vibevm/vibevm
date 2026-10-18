@@ -54,6 +54,13 @@
             "loading_overrides": {"values": {"type": "string"}, "metadata": {"x-empty": "emit"}}
           }
         },
+        "scenario": {
+          "properties": {
+            "snapshot_id": {"type": "string"},
+            "target": {"type": "string"},
+            "draft_json": {"type": "string"}
+          }
+        },
         "capture": {
           "properties": {}
         },

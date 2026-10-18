@@ -18,15 +18,28 @@ impl InstallResolver {
         request: NormalizedRequest,
         host: HostCapture,
     ) -> Result<FrozenWorld, String> {
+        self.capture_boot_world_typed(request, host)
+            .map_err(|e| match e {
+                super::scenario::CaptureFailure::Incomplete(s)
+                | super::scenario::CaptureFailure::Incompatible(s) => s,
+            })
+    }
+    pub(super) fn capture_boot_world_typed(
+        &self,
+        request: NormalizedRequest,
+        host: HostCapture,
+    ) -> Result<FrozenWorld, super::scenario::CaptureFailure> {
         if request.roots != host.manifest.requires.packages {
-            return Err("normalized roots differ from captured host requires".into());
+            return Err(super::scenario::CaptureFailure::Incompatible(
+                "normalized roots differ from captured host requires".into(),
+            ));
         }
         let transaction = self
             .bind_request(request.clone())
-            .map_err(|e| e.to_string())?;
+            .map_err(super::scenario::solve_failure)?;
         let graph =
             vibe_install::resolve_boot_comparison(&transaction, &request.roots, &host.manifest)
-                .map_err(|e| e.to_string())?;
+                .map_err(super::scenario::install_failure)?;
         let catalog = transaction
             .catalog_inspection()
             .ok_or("missing transaction catalog")?;
@@ -80,7 +93,7 @@ impl InstallResolver {
                     .map_err(|e| e.to_string())?;
                 if &before.identity != identity {
                     if before.identity.source == identity.source {
-                        return Err(format!("stale catalog/source capture: {key}"));
+                        return Err(format!("stale catalog/source capture: {key}").into());
                     }
                     continue;
                 }
@@ -141,7 +154,7 @@ impl InstallResolver {
                 let after = vibe_registry::CandidateMetadata::read_local_registry(&directory)
                     .map_err(|e| e.to_string())?;
                 if &after.identity != identity {
-                    return Err(format!("stale catalog/source capture: {key}"));
+                    return Err(format!("stale catalog/source capture: {key}").into());
                 }
                 captured = true;
                 break;
@@ -167,6 +180,7 @@ impl InstallResolver {
             format!("{admitted:?}; {route:?}; {:?}", self.cell_selection()),
             missing,
         )
+        .map_err(Into::into)
     }
 
     /// The standard source composition binds both prepared worlds into the

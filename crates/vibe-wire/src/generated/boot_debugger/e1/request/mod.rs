@@ -53,6 +53,9 @@ pub enum Command {
     #[serde(rename = "replay")]
     Replay(Box<CommandReplay>),
 
+    #[serde(rename = "scenario")]
+    Scenario(Box<CommandScenario>),
+
     #[serde(rename = "tree")]
     Tree(Box<CommandTree>),
 }
@@ -157,6 +160,16 @@ pub struct CommandReplay {
     pub inspection_id: String,
 
     pub limit: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CommandScenario {
+    pub draft_json: String,
+
+    pub snapshot_id: String,
+
+    pub target: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

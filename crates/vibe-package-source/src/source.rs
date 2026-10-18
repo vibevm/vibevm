@@ -23,6 +23,7 @@ mod m_06_d_1_cases;
 #[cfg(test)]
 mod m_06_d_2_cases;
 mod preview;
+mod scenario;
 
 /// Either a M0-shape local-directory registry (used by an explicit registry
 /// path and the in-tree fixture path) or a full PROP-002 multi-registry

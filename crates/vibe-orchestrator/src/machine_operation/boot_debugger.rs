@@ -23,8 +23,8 @@ use vibe_wire::generated::{
         operation_stream_message as stream,
     },
 };
-pub use vibe_workspace::boot_debugger::hypothetical;
 pub use vibe_workspace::boot_debugger::protocol::CapturedKind;
+pub use vibe_workspace::boot_debugger::{hypothetical, scenario};
 use vibe_workspace::boot_debugger::{
     measurement,
     protocol::{self, Projection},
@@ -118,6 +118,7 @@ pub struct BootDebuggerRoute {
     kind: CapturedKind,
     context: String,
     state: Mutex<State>,
+    scenario_producer: Option<Arc<dyn scenarios::ScenarioProducer>>,
 }
 impl BootDebuggerRoute {
     pub fn new(
@@ -140,6 +141,7 @@ impl BootDebuggerRoute {
         let context = format!("boot-context:{}", first.context());
         let route = Self {
             host,
+            scenario_producer: None,
             artifact,
             kind,
             context,
@@ -167,6 +169,9 @@ impl BootDebuggerRoute {
             .state
             .lock()
             .map_err(|_| "debugger state unavailable")?;
+        Self::captured_host(&state, id)
+    }
+    fn captured_host(state: &State, id: &str) -> Result<hypothetical::HostCapture, String> {
         let snapshot = state
             .snapshots
             .get(id)
@@ -575,5 +580,6 @@ mod dispatch;
 mod m_06_d_2_cases;
 pub mod preparation;
 mod preview;
+pub mod scenarios;
 #[cfg(test)]
 mod tests;

@@ -37,9 +37,27 @@ impl Service for RouteService<'_> {
     }
 }
 
-const HELP: &str = "Boot inspector — commands (row and snapshot ordinals start at 0):\nshow | next | prev | parent | child | select ROW | detail | source [BYTE_OFFSET]\nrefresh | snapshot N | compare BEFORE AFTER | help | quit\nSource displays captured emitted bytes, not authored source coordinates.\n";
+const HELP: &str = "Boot inspector — commands (row and snapshot ordinals start at 0):\nshow | next | prev | parent | child | select ROW | detail | source [BYTE_OFFSET]\nrefresh | snapshot N | compare BEFORE AFTER | scenario OS_TARGET DRAFT_JSON | preview SELECTORS_JSON | help | quit\nScenario drafts contain baseline_selections (features, no_defaults, all_features, configuration) and edits.\nEdit actions: add (package, loading), remove (coordinate), toggle (package, enabled, loading), reconfigure (selections).\nLoading is null or a legal link value; configuration is null or an explicit consumer request.\nPreview selectors: scenario_id, expected_baseline, expected_candidate, expected_catalog, loading_overrides.\nSource displays captured emitted bytes, not authored source coordinates.\n";
 
 fn parse(line: &str) -> std::result::Result<Action, String> {
+    let line = line.trim();
+    if let Some(rest) = line.strip_prefix("scenario ") {
+        let (target, draft) = rest
+            .split_once(' ')
+            .ok_or("expected scenario OS_TARGET DRAFT_JSON")?;
+        // Validate the immutable control vocabulary before the shared producer.
+        let _: vibe_workspace::boot_debugger::scenario::Draft =
+            serde_json::from_str(draft).map_err(|e| e.to_string())?;
+        return Ok(Action::Scenario {
+            target: target.into(),
+            draft_json: draft.into(),
+        });
+    }
+    if let Some(rest) = line.strip_prefix("preview ") {
+        return serde_json::from_str(rest)
+            .map(Action::Preview)
+            .map_err(|e| e.to_string());
+    }
     let words: Vec<_> = line.split_whitespace().collect();
     let ordinal = |s: &str| {
         s.parse::<usize>()
@@ -151,7 +169,25 @@ pub(super) fn serve(
         write!(output, "{HELP}")?;
     }
     render(&viewer.frame(None, None), json, output)?;
-    let mut script = script.map(|s| s.split(';'));
+    let mut script = script.map(|s| {
+        // Commands may carry JSON strings containing semicolons. Only a
+        // delimiter outside a quoted string separates script commands.
+        let (mut quoted, mut escaped) = (false, false);
+        s.split(move |c| {
+            if escaped {
+                escaped = false;
+                return false;
+            }
+            if quoted && c == '\\' {
+                escaped = true;
+                return false;
+            }
+            if c == '"' {
+                quoted = !quoted;
+            }
+            c == ';' && !quoted
+        })
+    });
     loop {
         let line = if let Some(script) = &mut script {
             let Some(line) = script.next() else {
