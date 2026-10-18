@@ -1,9 +1,14 @@
 use super::*;
 
 impl BootDebuggerRoute {
-    pub(super) fn preview(&self, state: &State, request: &q::CommandPreview) -> Answer<r::Result> {
+    pub(super) fn preview(
+        &self,
+        state: &mut State,
+        request: &q::CommandPreview,
+    ) -> Answer<r::Result> {
         let scenario = state.scenarios.get(&request.scenario_id);
         let mut body = r::BodyPreview {
+            produced_snapshot_id: None,
             scenario_id: request.scenario_id.clone(),
             baseline_world: request.expected_baseline.clone(),
             candidate_world: request.expected_candidate.clone(),
@@ -38,6 +43,11 @@ impl BootDebuggerRoute {
                     body.missing.push(error);
                 }
                 Ok(preview) => {
+                    if let Some(produced) = preview.produced.filter(|p| p.has_derivative_reads()) {
+                        let capture_id = scenario.candidate().capture().to_owned();
+                        body.produced_snapshot_id =
+                            Some(self.retain_produced(state, &capture_id, produced)?);
+                    }
                     body.status = if preview.status == "complete" {
                         r::BodyPreviewStatus::Complete
                     } else {

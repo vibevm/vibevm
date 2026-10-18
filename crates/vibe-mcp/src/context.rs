@@ -26,6 +26,20 @@ use vibe_orchestrator::InstallPolicy;
 use crate::SERVER_NAME;
 
 impl ServerContext {
+    /// Explicit source host configuration; transport cannot supply records or roots.
+    pub fn with_source_derivatives(
+        mut self,
+        catalog: vibe_workspace::source_query::derivatives::DerivativeCatalog,
+    ) -> Self {
+        self.source_derivatives = catalog;
+        self
+    }
+    pub fn source_derivatives(
+        &self,
+    ) -> &vibe_workspace::source_query::derivatives::DerivativeCatalog {
+        &self.source_derivatives
+    }
+
     pub fn with_configuration_choices(
         mut self,
         host: std::sync::Arc<
@@ -64,6 +78,7 @@ mod migration_tests;
 /// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
 pub struct ServerContext {
+    source_derivatives: vibe_workspace::source_query::derivatives::DerivativeCatalog,
     configuration_choice: Option<
         std::sync::Arc<
             vibe_orchestrator::machine_operation::configuration_choice::ConfigurationChoiceHost,
@@ -193,6 +208,12 @@ impl ServerContext {
                         vibe_orchestrator::machine_operation::boot_debugger::CapturedKind::Static,
                     )
                     .ok()
+                    .and_then(|route| {
+                        route
+                            .configure_derivatives(self.source_derivatives.clone())
+                            .ok()?;
+                        Some(route)
+                    })
                 })
                 .as_ref()
         })
@@ -390,6 +411,7 @@ impl ServerContext {
             adapter_plan: None,
             boot_debugger: None,
             default_boot_debugger: std::sync::OnceLock::new(),
+            source_derivatives: Default::default(),
             document_edit_authority: None,
             project_root: project_root.into(),
             store_root,
@@ -421,6 +443,7 @@ impl ServerContext {
             adapter_plan: None,
             boot_debugger: None,
             default_boot_debugger: std::sync::OnceLock::new(),
+            source_derivatives: Default::default(),
             document_edit_authority: None,
             project_root: project_root.into(),
             store_root: store_root.into(),
@@ -549,7 +572,9 @@ mod tests {
                 fixed_cargo_bridge,
                 client_deploy_bridge,
                 fixed_deploy_bridge,
+                source_derivatives,
             } = context;
+            assert!(source_derivatives.records().is_empty());
             let _ = (
                 configuration_choice,
                 adapter_plan,

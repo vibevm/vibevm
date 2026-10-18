@@ -156,3 +156,6 @@ mod m_06_e_1_cases;
 #[cfg(test)]
 mod m_06_e_2_cases;
 pub mod scenario;
+
+#[cfg(test)]
+mod m_10_d_1_cases;

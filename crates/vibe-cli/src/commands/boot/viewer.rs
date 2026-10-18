@@ -120,6 +120,9 @@ fn render(frame: &Frame, json: bool, output: &mut impl Write) -> Result<()> {
                 )?;
             }
         }
+        if let Some(catalog) = &frame.derivative_catalog_json {
+            writeln!(output, "Retained derivative history: {catalog}")?;
+        }
         for gap in &frame.gaps {
             writeln!(output, "Gap: {gap:?}")?;
         }

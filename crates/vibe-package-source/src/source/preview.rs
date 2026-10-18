@@ -29,6 +29,14 @@ impl InstallResolver {
         request: NormalizedRequest,
         host: HostCapture,
     ) -> Result<FrozenWorld, super::scenario::CaptureFailure> {
+        self.capture_boot_world_with_derivatives(request, host, &Default::default())
+    }
+    pub fn capture_boot_world_with_derivatives(
+        &self,
+        request: NormalizedRequest,
+        host: HostCapture,
+        derivatives: &vibe_orchestrator::machine_operation::boot_debugger::DerivativeCatalog,
+    ) -> Result<FrozenWorld, super::scenario::CaptureFailure> {
         if request.roots != host.manifest.requires.packages {
             return Err(super::scenario::CaptureFailure::Incompatible(
                 "normalized roots differ from captured host requires".into(),
@@ -151,6 +159,9 @@ impl InstallResolver {
                         }
                     }
                 }
+                if let Some(package) = &manifest.package {
+                    files.extend(derivatives.capture_selected(&project, package)?);
+                }
                 let after = vibe_registry::CandidateMetadata::read_local_registry(&directory)
                     .map_err(|e| e.to_string())?;
                 if &after.identity != identity {
@@ -180,6 +191,7 @@ impl InstallResolver {
             format!("{admitted:?}; {route:?}; {:?}", self.cell_selection()),
             missing,
         )
+        .and_then(|world| world.with_derivative_catalog(derivatives.clone()))
         .map_err(Into::into)
     }
 

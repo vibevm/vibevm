@@ -28,7 +28,7 @@ mod captured_source;
 )]
 mod compiler;
 pub mod editor_positions;
-pub use captured_source::{CapturedSectionSource, CapturedSpecDocument};
+pub use captured_source::{CapturedDerivativeRead, CapturedSectionSource, CapturedSpecDocument};
 mod directives;
 mod doctree;
 mod embed;

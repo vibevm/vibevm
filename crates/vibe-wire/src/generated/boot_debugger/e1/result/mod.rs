@@ -120,6 +120,9 @@ pub struct BodyCapture {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum BodyChunkBasis {
+    #[serde(rename = "captured_projection")]
+    CapturedProjection,
+
     #[serde(rename = "original_bytes")]
     OriginalBytes,
 }
@@ -198,6 +201,11 @@ pub struct BodyInspect {
     pub resources: Vec<Resource>,
 
     pub sources: Vec<Source>,
+
+    /// Array of strict derivative-result records retained with this snapshot.
+    /// Observed history, not authenticated compiler joins.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub derivative_catalog_json: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -279,6 +287,9 @@ pub struct BodyPreview {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub comparison_json: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub produced_snapshot_id: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -309,6 +320,44 @@ pub struct Count {
 
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub unavailable: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum DerivativeReadCurrentBase {
+    #[serde(rename = "unverified")]
+    Unverified,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum DerivativeReadProjectionRecipe {
+    #[serde(rename = "captured_vibe_selection_v1")]
+    CapturedVibeSelectionV1,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum DerivativeReadStrength {
+    #[serde(rename = "observed")]
+    Observed,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DerivativeRead {
+    pub current_base: DerivativeReadCurrentBase,
+
+    /// Strict derivative-result record checked by the retained core binding
+    /// owner.
+    pub derivative_result_json: String,
+
+    pub path: String,
+
+    pub projection_recipe: DerivativeReadProjectionRecipe,
+
+    pub projection_resource_id: String,
+
+    pub raw_resource_id: String,
+
+    pub strength: DerivativeReadStrength,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -351,6 +400,9 @@ pub struct Placement {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ResourceBasis {
+    #[serde(rename = "captured_projection")]
+    CapturedProjection,
+
     #[serde(rename = "original_bytes")]
     OriginalBytes,
 }
@@ -388,6 +440,11 @@ pub struct Source {
     pub snapshot_id: String,
 
     pub source: u32,
+
+    /// Same-invocation successful compiler read. Observed retained provenance,
+    /// not current base authentication.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub derivative_read: Option<DerivativeRead>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

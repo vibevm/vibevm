@@ -22,12 +22,101 @@ struct Document {
 pub struct CapturedSectionSource {
     documents: BTreeMap<String, Document>,
     refused: BTreeMap<String, String>,
+    derivatives: BTreeMap<
+        String,
+        (
+            vibe_wire::generated::derivative_result::DerivativeResult,
+            String,
+        ),
+    >,
+    reads: std::sync::Mutex<Vec<CapturedDerivativeRead>>,
 }
+/// Exact selected read observed by the incumbent compiler worklist. The
+/// projection is the actual text supplied to SourceIr, not a raw coordinate.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+pub struct CapturedDerivativeRead {
+    pub address: String,
+    pub record: vibe_wire::generated::derivative_result::DerivativeResult,
+    pub path: String,
+    pub projection: String,
+}
+
 impl CapturedSectionSource {
+    /// Inputs must already be admitted against the selected captured world.
+    /// Document identities are derived from the checked local owner and path,
+    /// never associated with later compiler output by hash or path search.
+    pub fn with_derivatives(
+        mut documents: Vec<CapturedSpecDocument>,
+        records: &[vibe_wire::generated::derivative_result::DerivativeResult],
+    ) -> Result<Self, String> {
+        let mut derivatives = BTreeMap::new();
+        for record in records {
+            let binding = record.checked_binding().map_err(|e| e.to_string())?;
+            let local = binding.local();
+            if local.descriptor.interpretation()
+                != vibe_core::manifest::SourceInterpretation::VibeSpec
+            {
+                return Err("captured compiler derivative requires Vibe-spec".into());
+            }
+            let syntax = match local.descriptor.media() {
+                "application/xml" => CapturedSyntax::VibeXml(Vocabulary::Spec),
+                "text/markdown" => CapturedSyntax::VibeMarkdown,
+                _ => return Err("unsupported captured Vibe media".into()),
+            };
+            for file in &local.files {
+                let relative = std::path::Path::new(&file.path)
+                    .strip_prefix(vibe_core::layout::current_specs_root())
+                    .map_err(|_| "captured Vibe path outside specs root")?;
+                let stem = crate::canonical_doc_path(&relative.to_string_lossy());
+                let address = SpecAddress::parse(&format!(
+                    "spec://{}/{}/{stem}",
+                    local
+                        .owner
+                        .group
+                        .as_ref()
+                        .ok_or("missing derivative group")?,
+                    local.owner.name
+                ))
+                .map_err(|e| e.to_string())?;
+                let key = address.without_pin();
+                if derivatives
+                    .insert(key, (record.clone(), file.path.clone()))
+                    .is_some()
+                {
+                    return Err("ambiguous captured derivative document".into());
+                }
+                let mut pinned = address;
+                if let crate::Authority::Package { version, .. } = &mut pinned.authority {
+                    *version = Some(
+                        local
+                            .owner
+                            .version
+                            .to_string()
+                            .trim_start_matches('=')
+                            .to_string(),
+                    );
+                }
+                documents.push(CapturedSpecDocument {
+                    address: pinned,
+                    raw: file.bytes.clone().into(),
+                    syntax,
+                });
+            }
+        }
+        let mut result = Self::new(documents)?;
+        result.derivatives = derivatives;
+        Ok(result)
+    }
+    pub fn compiler_reads(&self) -> Vec<CapturedDerivativeRead> {
+        self.reads.lock().expect("private captured reads").clone()
+    }
+
     pub fn new(documents: Vec<CapturedSpecDocument>) -> Result<Self, String> {
         let mut result = Self {
             documents: BTreeMap::new(),
             refused: BTreeMap::new(),
+            derivatives: BTreeMap::new(),
+            reads: Default::default(),
         };
         for document in documents {
             if !document.address.anchor.is_empty() || document.address.pinned_r.is_some() {
@@ -72,6 +161,26 @@ impl CapturedSectionSource {
     }
 }
 impl SectionSource for CapturedSectionSource {
+    fn observe_compiler_read(&self, address: &SpecAddress, source: &crate::embed::ResolvedSource) {
+        let mut root = address.clone();
+        root.anchor.clear();
+        root.pinned_r = None;
+        if let crate::Authority::Package { version, .. } = &mut root.authority {
+            *version = None;
+        }
+        if let Some((record, path)) = self.derivatives.get(&root.without_pin()) {
+            self.reads
+                .lock()
+                .expect("private captured reads")
+                .push(CapturedDerivativeRead {
+                    address: address.to_string(),
+                    record: record.clone(),
+                    path: path.clone(),
+                    projection: source.text().to_owned(),
+                });
+        }
+    }
+
     fn section_text(&self, address: &SpecAddress) -> Result<String, String> {
         if let Some(revision) = address.pinned_r {
             return Err(format!(

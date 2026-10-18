@@ -39,6 +39,9 @@ pub struct BootArgs {
     /// Admit only this local registry for explicit scenario capture.
     #[arg(long)]
     pub registry: Option<PathBuf>,
+    /// Retain these project-relative derivative result records as observed history.
+    #[arg(long = "derivative-record")]
+    pub derivative_records: Vec<String>,
 }
 pub fn run(args: BootArgs) -> Result<()> {
     run_with_io(args, std::io::stdin().lock(), &mut std::io::stdout().lock())
@@ -64,13 +67,22 @@ fn open_route(args: &BootArgs) -> Result<Arc<BootDebuggerRoute>> {
         ArtifactKind::Index => CapturedKind::Index,
         ArtifactKind::Compiler => CapturedKind::Compiler,
     };
-    vibe_package_source::InstallResolver::open_boot_debugger(
+    let route = vibe_package_source::InstallResolver::open_boot_debugger(
         &root,
         args.registry.as_deref(),
         &args.artifact,
         kind,
     )
-    .map_err(|e| anyhow::anyhow!(e))
+    .map_err(|e| anyhow::anyhow!(e))?;
+    let catalog = vibe_workspace::source_query::derivatives::DerivativeCatalog::load(
+        &root,
+        &args.derivative_records,
+    )
+    .map_err(|e| anyhow::anyhow!(e))?;
+    route
+        .configure_derivatives(catalog)
+        .map_err(|e| anyhow::anyhow!(e.message))?;
+    Ok(route)
 }
 /// First output is the host-assigned capture/context. Subsequent lines are
 /// strict OperationEnvelope inputs and outputs, never CLI flag reparsing.
@@ -169,3 +181,6 @@ mod cross_surface;
 
 #[cfg(test)]
 mod m_06_e_2_cases;
+
+#[cfg(test)]
+mod m_10_d_1_cases;

@@ -26,7 +26,7 @@ impl BootDebuggerRoute {
                         )
                     })?;
                     let id = capture.id().to_owned();
-                    let snapshot = Arc::new(self.snapshot(capture));
+                    let snapshot = Arc::new(self.snapshot(capture, &state.derivatives));
                     let body = r::Body::Capture(Box::new(r::BodyCapture {
                         capture_id: id.clone(),
                         resources: snapshot.resources.clone(),
@@ -141,6 +141,7 @@ impl BootDebuggerRoute {
         let body = match command {
             Command::Inspect(_) => r::Body::Inspect(Box::new(r::BodyInspect {
                 capture_id: id.clone(),
+                derivative_catalog_json: snapshot.derivatives.clone(),
                 resources: snapshot.resources.clone(),
                 nodes: snapshot.nodes.clone(),
                 sources: snapshot.sources.clone(),
@@ -174,12 +175,18 @@ impl BootDebuggerRoute {
                 }))
             }
             Command::Cost(_) => {
-                let resource = snapshot
-                    .capture
-                    .resource(self.artifact)
-                    .ok_or_else(internal)?;
-                let payload = resource
-                    .raw()
+                let artifact = snapshot
+                    .resources
+                    .first()
+                    .and_then(|r| snapshot.retained.get(&r.resource_id))
+                    .map(Vec::as_slice)
+                    .or_else(|| {
+                        snapshot
+                            .capture
+                            .resource(self.artifact)
+                            .and_then(|r| r.raw())
+                    });
+                let payload = artifact
                     .map(measurement::measure_reader)
                     .transpose()
                     .map_err(|_| internal())?;
@@ -255,10 +262,20 @@ impl BootDebuggerRoute {
                     .ok_or_else(|| {
                         fault(e::ErrorCode::UnknownResource, "resource not in snapshot")
                     })?;
-                let (_, resource) = snapshot.capture.resources().nth(i).ok_or_else(internal)?;
-                let bytes = resource.raw().ok_or_else(|| {
-                    fault(e::ErrorCode::Unavailable, "captured bytes unavailable")
-                })?;
+                let bytes = snapshot
+                    .retained
+                    .get(&c.resource_id)
+                    .map(Vec::as_slice)
+                    .or_else(|| {
+                        snapshot
+                            .capture
+                            .resources()
+                            .nth(i)
+                            .and_then(|(_, r)| r.raw())
+                    })
+                    .ok_or_else(|| {
+                        fault(e::ErrorCode::Unavailable, "captured bytes unavailable")
+                    })?;
                 let offset = usize::try_from(decimal(&c.offset)?)
                     .map_err(|_| fault(e::ErrorCode::InvalidRequest, "offset overflow"))?;
                 if offset > bytes.len() {
@@ -270,8 +287,12 @@ impl BootDebuggerRoute {
                 let end = offset.saturating_add(c.limit as usize).min(bytes.len());
                 r::Body::Chunk(Box::new(r::BodyChunk {
                     resource_id: c.resource_id,
-                    digest: resource.content_digest().ok_or_else(internal)?,
-                    basis: r::BodyChunkBasis::OriginalBytes,
+                    digest: snapshot.resources[i].digest.clone().ok_or_else(internal)?,
+                    basis: if snapshot.resources[i].basis == r::ResourceBasis::CapturedProjection {
+                        r::BodyChunkBasis::CapturedProjection
+                    } else {
+                        r::BodyChunkBasis::OriginalBytes
+                    },
                     offset: c.offset,
                     total: bytes.len().to_string(),
                     hex_bytes: bytes[offset..end]

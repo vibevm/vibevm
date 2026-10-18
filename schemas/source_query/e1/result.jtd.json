@@ -16,6 +16,9 @@
     "chunk": { "ref": "chunk" },
     "outline": { "elements": { "ref": "outline_node" }, "metadata": { "x-empty": "emit" } }
   },
+  "optionalProperties": {
+    "derivative_result_json": { "type": "string", "metadata": { "x-default": null, "description": "Strict derivative-result JSON; retained observed provenance only, never current base or source proof." } }
+  },
   "definitions": {
     "location": { "properties": {
       "path": { "type": "string" },

@@ -28,6 +28,8 @@ pub enum Action {
 /// Fields containing domain evidence are copied verbatim from service results.
 #[derive(Debug, Serialize)]
 pub struct Frame {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub derivative_catalog_json: Option<String>,
     pub snapshots: Vec<String>,
     pub snapshot_id: String,
     pub selected: Option<usize>,
@@ -167,7 +169,10 @@ impl<S: Service> Viewer<S> {
                     .ok_or("captured source mapping unavailable")?;
                 q::Command::Chunk(Box::new(q::CommandChunk {
                     snapshot_id: self.current.capture_id.clone(),
-                    resource_id: source.artifact_resource_id.clone(),
+                    resource_id: source
+                        .authored_resource_id
+                        .clone()
+                        .unwrap_or_else(|| source.artifact_resource_id.clone()),
                     filter: q::CommandChunkFilter::Raw,
                     offset: offset.to_string(),
                     limit: 2048,
@@ -189,11 +194,21 @@ impl<S: Service> Viewer<S> {
                 return Ok(Some(result));
             }
         };
-        self.service.query(command).map(Some)
+        let result = self.service.query(command)?;
+        if let r::Body::Preview(preview) = &result.body {
+            if let Some(id) = &preview.produced_snapshot_id {
+                self.load(id)?;
+                if !self.snapshots.contains(id) {
+                    self.snapshots.push(id.clone());
+                }
+            }
+        }
+        Ok(Some(result))
     }
 
     pub fn frame(&self, observation: Option<r::Result>, diagnostic: Option<String>) -> Frame {
         Frame {
+            derivative_catalog_json: self.current.derivative_catalog_json.clone(),
             snapshots: self.snapshots.clone(),
             snapshot_id: self.current.capture_id.clone(),
             selected: self.selected,
