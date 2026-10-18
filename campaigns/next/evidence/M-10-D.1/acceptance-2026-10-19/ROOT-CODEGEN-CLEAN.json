@@ -1,0 +1,8 @@
+{
+  "exit_code": 0,
+  "source_commit": "d772671c9b34a356ec6d0c306ed0f8090961d4cf",
+  "result": "xtask check-codegen: clean.",
+  "prior_dirty_comparison_exit": 1,
+  "prior_dirty_codegen_changed_bytes": 0,
+  "worker_failed_results_retained": true
+}

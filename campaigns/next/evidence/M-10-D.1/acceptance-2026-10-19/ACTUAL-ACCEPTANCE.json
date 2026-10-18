@@ -1,0 +1,190 @@
+{
+  "task": "M-10-D.1",
+  "status": "canonically_accepted",
+  "actual_WorkAccepted_revision": 80402,
+  "work": {
+    "acceptance": [
+      "CLI/API/MCP inspection agrees on identity, bytes and completeness.",
+      "All required families appear in the debugger/source proof matrix."
+    ],
+    "active_job": null,
+    "depends_on": [
+      "work.m06.c2"
+    ],
+    "kind": "atom",
+    "order": 1,
+    "parent_id": "work.m10",
+    "required_stage": "functional",
+    "revision": 11,
+    "state": "accepted",
+    "title": "Expose derivatives in source and boot inspection",
+    "validation_generation": 0,
+    "work_id": "work.m10.d1",
+    "work_type": "change"
+  },
+  "intake_intent": "intake.m10.d1.original-scope.1",
+  "intake_revision": 80425,
+  "acceptance": {
+    "acceptance_id": "intake-acceptance:a326adcdf8e802f90aaf1c224134e88dd59771953fb54004deea7c1fd79dd525",
+    "candidate_id": "managed-result.e415e96f1bfb519ac4c07e5329d6b5a49cea1253b29e292483190978653d5008",
+    "contract_version": 1,
+    "evidence_ids": [
+      "intake-evidence:a326adcdf8e802f90aaf1c224134e88dd59771953fb54004deea7c1fd79dd525"
+    ],
+    "generation": 0,
+    "integration_acceptance_ids": [],
+    "obligation_ids": [
+      "obligation.m10"
+    ],
+    "outcome_id": "outcome.vibevm-next.complete",
+    "revision": 1,
+    "stage_acceptance_id": "intake-stage:a326adcdf8e802f90aaf1c224134e88dd59771953fb54004deea7c1fd79dd525",
+    "summary": "Root independent source review and native read-only review0P1/P2,43frozen files; actual source and same-invocation compiler closure join is implemented through ordinary CLI/API/MCP, all5families explicit. Published16selectedpasses, clean Root codegen0 and unchanged source.",
+    "work_id": "work.m10.d1"
+  },
+  "needs": [],
+  "product_receipts": [
+    {
+      "id": "intake-attempt:8f5938964542d20ef456e8f7ffa9a44f55f0426255536df720808c27356e2111",
+      "step": "claim:verify.m10.d1.01",
+      "semantic": "cfe31f0b81670e9a0e3a5033a42a3c99012cdbc377a3b2b0b24afedbdaaae4ad",
+      "receipt": 78394,
+      "revision": 78417,
+      "predecessor": null
+    },
+    {
+      "id": "intake-attempt:facab9936a6ee9b8a588f56a7ec4199ef158e31a584863e1a553a29e281867ff",
+      "step": "result:verify.m10.d1.01",
+      "semantic": "08404dc9a2f886b20cd5f05b39c1955242a464f98e83fb1972a5db5aea4413ef",
+      "receipt": 78505,
+      "revision": 78544,
+      "predecessor": "intake-attempt:8f5938964542d20ef456e8f7ffa9a44f55f0426255536df720808c27356e2111"
+    },
+    {
+      "id": "intake-attempt:81441c2dab9d630c70aa994e806076dc5c563063e27db0e7ae6104cba47bb1dd",
+      "step": "claim:verify.m10.d1.03",
+      "semantic": "8a346d8128cb25dadb54965cb52967585042eef71942c46c1ed6b01ae3181b26",
+      "receipt": 78655,
+      "revision": 78678,
+      "predecessor": "intake-attempt:facab9936a6ee9b8a588f56a7ec4199ef158e31a584863e1a553a29e281867ff"
+    },
+    {
+      "id": "intake-attempt:bf0550637c36cb42f04abf9035e5465544d35418f8fe62d32239b01e22cc271f",
+      "step": "result:verify.m10.d1.03",
+      "semantic": "bc26559a01c2d17147a89eb516ec6322c78f0bcba351b34aaedf11f0fa66d6e2",
+      "receipt": 78766,
+      "revision": 78805,
+      "predecessor": "intake-attempt:81441c2dab9d630c70aa994e806076dc5c563063e27db0e7ae6104cba47bb1dd"
+    },
+    {
+      "id": "intake-attempt:7889b6667c0b5e6f2eb79a4381430d659d6ba1f676a8a765496592f57b8002e2",
+      "step": "claim:verify.m10.d1.05",
+      "semantic": "625a1d61ae7dd646d47fbdd009b13d64f7a35aed3215b5b35e6e44c06b4118d5",
+      "receipt": 78916,
+      "revision": 78939,
+      "predecessor": "intake-attempt:bf0550637c36cb42f04abf9035e5465544d35418f8fe62d32239b01e22cc271f"
+    },
+    {
+      "id": "intake-attempt:135aef7c8198e4dcedae363281508ed00d3da8cbe840e20dbb03a24bc0a60749",
+      "step": "result:verify.m10.d1.05",
+      "semantic": "7d19ffa84c51b03a6bd7cfeaf4ae6b5f742070d46d503c2d657bb6b09845cf94",
+      "receipt": 79027,
+      "revision": 79071,
+      "predecessor": "intake-attempt:7889b6667c0b5e6f2eb79a4381430d659d6ba1f676a8a765496592f57b8002e2"
+    },
+    {
+      "id": "intake-attempt:7c39a7d22d416e11d2476f92700f47168068a0b825737a4c7df167229b79c319",
+      "step": "claim:verify.m10.d1.06",
+      "semantic": "c76838ab8038d5664645f64d126e51748e8b5bc30c0f24353d9454278ab29cb3",
+      "receipt": 79182,
+      "revision": 79205,
+      "predecessor": "intake-attempt:135aef7c8198e4dcedae363281508ed00d3da8cbe840e20dbb03a24bc0a60749"
+    },
+    {
+      "id": "intake-attempt:3cc4f43c767446aedd9343e919da5ff572271bfe40e2c2802eb65a86042d9ca9",
+      "step": "result:verify.m10.d1.06",
+      "semantic": "4b8d0b153fa1604f129c958b44f180495c219d3d21587d2160cbf865cf8f9eb2",
+      "receipt": 79293,
+      "revision": 79332,
+      "predecessor": "intake-attempt:7c39a7d22d416e11d2476f92700f47168068a0b825737a4c7df167229b79c319"
+    },
+    {
+      "id": "intake-attempt:f9e59206a276bee16429d0fe7d2ed1bd0bae6258f8687f7fca37df85955ec94b",
+      "step": "claim:verify.m10.d1.07",
+      "semantic": "45d1ba7aa3977344f5fef5290e98dc3e170d648e44c0ecb3dcdef227b45f03bf",
+      "receipt": 79443,
+      "revision": 79466,
+      "predecessor": "intake-attempt:3cc4f43c767446aedd9343e919da5ff572271bfe40e2c2802eb65a86042d9ca9"
+    },
+    {
+      "id": "intake-attempt:dc054c2ea829393e4219a71ee17936947da2c4a08a7ed28bf40f15b08503f14c",
+      "step": "result:verify.m10.d1.07",
+      "semantic": "8780c88070cede64fc95cbb90d0e6b81a64089dd08fca24875ba8e7cf763a243",
+      "receipt": 79554,
+      "revision": 79593,
+      "predecessor": "intake-attempt:f9e59206a276bee16429d0fe7d2ed1bd0bae6258f8687f7fca37df85955ec94b"
+    },
+    {
+      "id": "intake-attempt:f216c043e176bbce24a1d7a5e3e4fcebff7aa7b67e3bba835388159590e3dcac",
+      "step": "claim:intake-safety:46f5f2088081a03fad1224e69ded033abe294d5a24b165d918198e6b514d8eb6",
+      "semantic": "1d8c392448b35fbf5d13d9305468775760e26865e25ddd672c1c40021f848bd1",
+      "receipt": 79704,
+      "revision": 79727,
+      "predecessor": "intake-attempt:dc054c2ea829393e4219a71ee17936947da2c4a08a7ed28bf40f15b08503f14c"
+    },
+    {
+      "id": "intake-attempt:cd201c6c7a801e808671848b0d33ab6daad3c840854753a7d8e9dd06bc3e32b4",
+      "step": "result:intake-safety:46f5f2088081a03fad1224e69ded033abe294d5a24b165d918198e6b514d8eb6",
+      "semantic": "46fbdc20c6e336daa4d993c17fa1706b252a25e89e923c1be9e9803e23063e0d",
+      "receipt": 79815,
+      "revision": 79854,
+      "predecessor": "intake-attempt:f216c043e176bbce24a1d7a5e3e4fcebff7aa7b67e3bba835388159590e3dcac"
+    },
+    {
+      "id": "intake-attempt:5a75fbf01567a9a656b3da6d4a411970f020ab5404f9f6bbb11d5cdb75f89573",
+      "step": "safe-state",
+      "semantic": "b145205298db664bcbdb20809d7bd767337ef6a33a885b1cf1fd0eaace659b40",
+      "receipt": 79942,
+      "revision": 79965,
+      "predecessor": "intake-attempt:cd201c6c7a801e808671848b0d33ab6daad3c840854753a7d8e9dd06bc3e32b4"
+    },
+    {
+      "id": "intake-attempt:de1f0d18c8fed159ac6b97129592bdd0679c2291198afe31384ce8202ba1dce8",
+      "step": "review",
+      "semantic": "3924dd99dc482556c4e7303e52a1bef1a3fb117e83fb486b94e955bb36cb20e1",
+      "receipt": 80053,
+      "revision": 80076,
+      "predecessor": "intake-attempt:5a75fbf01567a9a656b3da6d4a411970f020ab5404f9f6bbb11d5cdb75f89573"
+    },
+    {
+      "id": "intake-attempt:960aa43b766941786a2dca3b9a746cc3e1b5b9d0d773772cdafc45578f789e50",
+      "step": "evidence",
+      "semantic": "df84d95e5b932992f4bc8a805b0290c5ee6ea56bcde721d7e345282760bd89f2",
+      "receipt": 80164,
+      "revision": 80203,
+      "predecessor": "intake-attempt:de1f0d18c8fed159ac6b97129592bdd0679c2291198afe31384ce8202ba1dce8"
+    },
+    {
+      "id": "intake-attempt:fec28abf422fb0af0efecfb1c9408b16595d3d6d3c6bcf0015438b3f75877dbb",
+      "step": "stage",
+      "semantic": "d871bcbaaadc9dd74cd66b7848819dcafdb444263c7a92f7ffc332eb6e56aa57",
+      "receipt": 80291,
+      "revision": 80314,
+      "predecessor": "intake-attempt:960aa43b766941786a2dca3b9a746cc3e1b5b9d0d773772cdafc45578f789e50"
+    },
+    {
+      "id": "intake-attempt:bc8b38517d4da8f4056abdba0dc3047fb25cf69a96ed525bc0285ac61e26d082",
+      "step": "work",
+      "semantic": "32b5216f56d59c12e078667c2bf761c90d92f020b83fa445d546ace2c54fd1a1",
+      "receipt": 80402,
+      "revision": 80425,
+      "predecessor": "intake-attempt:fec28abf422fb0af0efecfb1c9408b16595d3d6d3c6bcf0015438b3f75877dbb"
+    }
+  ],
+  "candidate": "managed-result.e415e96f1bfb519ac4c07e5329d6b5a49cea1253b29e292483190978653d5008",
+  "producer_report": "c5c9cb29572b38cf690dee7912c5c361ebde2f4905a339618a2b83eb3ecd70ac",
+  "producer_patch": "955cd758f635840a961793ef5d0d77d66be4a52d5470b2c63e67dae385340089",
+  "source_commit": "d772671c9b34a356ec6d0c306ed0f8090961d4cf",
+  "observed_at": "2026-10-18T22:17:28.820617+00:00",
+  "normal_product_controller": true
+}
