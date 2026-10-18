@@ -1,0 +1,31 @@
+{
+  "task": "M-06-D.2",
+  "observed_at": "2026-10-18T15:27:58.312129+00:00",
+  "source_commit": "cb6ebb1bab0b5bb6cfc424ebb4a8d3e342f0f643",
+  "acceptance": {
+    "acceptance_id": "intake-acceptance:c05961dc9ab06a03d690764ed07c3cf580e2c0a2ca717b46a5d672ed8cd21295",
+    "candidate_id": "managed-result.d4046ee901a9177ad7ad255728f45f8fef52937b3237dcdb70ceecd107cd0877",
+    "contract_version": 1,
+    "evidence_ids": [
+      "intake-evidence:c05961dc9ab06a03d690764ed07c3cf580e2c0a2ca717b46a5d672ed8cd21295"
+    ],
+    "generation": 0,
+    "integration_acceptance_ids": [],
+    "obligation_ids": [
+      "obligation.m06"
+    ],
+    "outcome_id": "outcome.vibevm-next.complete",
+    "revision": 1,
+    "stage_acceptance_id": "intake-stage:c05961dc9ab06a03d690764ed07c3cf580e2c0a2ca717b46a5d672ed8cd21295",
+    "summary": "Root adopts independent original-scope review with0P1/0P2. Genuine current completed known-tail candidate; no native/hydration provider or universal preparation recovery claim.",
+    "work_id": "work.m06.d2"
+  },
+  "work_state": "accepted",
+  "work_revision": 5,
+  "report": "3e43911ba43dd9e54137da97186214c43f6454693a4ca3b843176a29ff4a66ac",
+  "patch": "68e688a7d0c14468e6d38f887ca28f413b6fee3d4f51e3d04f8e4a9a28ab6ec6",
+  "selected_cases_passed": 18,
+  "global_fmt": "failed: seven unchanged baseline files",
+  "codegen": "passed",
+  "followup": "BACKLOG.md#b-252"
+}
