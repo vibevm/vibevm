@@ -648,9 +648,17 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         None => Vec::new(),
     };
     recovery.checkpoint()?;
+    // Callback execution records soft failures on the lifecycle owner rather
+    // than in the legacy HookReport list. Inspect without draining the reports
+    // that the outer apply still owes its caller.
+    let callback_post_failed = match observer {
+        Some(observer) => observer.has_failed_post_install()?,
+        None => false,
+    };
     if post_install_reports
         .iter()
         .any(|report| report.status == "post-install-failed")
+        || callback_post_failed
     {
         // A flagged nonfatal hook failure preserves the normal report shape,
         // but is not proof that the operation or its external effects completed.

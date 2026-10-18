@@ -17,6 +17,7 @@ pub const RECOVERY_DIRECTORY: &str = ".vibe-configuration-recovery";
 struct BoundaryFault {
     root: PathBuf,
     phase: String,
+    before: bool,
 }
 thread_local! {
     static BOUNDARY_FAULT: std::cell::RefCell<Option<BoundaryFault>> = const { std::cell::RefCell::new(None) };
@@ -28,6 +29,17 @@ thread_local! {
 /// Unwinding restores the previous injection scope.
 #[doc(hidden)]
 pub fn with_boundary_fault<T>(root: &Path, phase: &str, action: impl FnOnce() -> T) -> T {
+    with_phase_fault(root, phase, false, action)
+}
+
+/// Interrupt after the durable write-ahead marker, before the phase's writer.
+/// Like the checkpoint hook, this is one-shot and root/thread scoped.
+#[doc(hidden)]
+pub fn with_before_boundary_fault<T>(root: &Path, phase: &str, action: impl FnOnce() -> T) -> T {
+    with_phase_fault(root, phase, true, action)
+}
+
+fn with_phase_fault<T>(root: &Path, phase: &str, before: bool, action: impl FnOnce() -> T) -> T {
     struct Reset(Option<BoundaryFault>);
     impl Drop for Reset {
         fn drop(&mut self) {
@@ -38,19 +50,19 @@ pub fn with_boundary_fault<T>(root: &Path, phase: &str, action: impl FnOnce() ->
         fault.replace(Some(BoundaryFault {
             root: root.to_path_buf(),
             phase: phase.into(),
+            before,
         }))
     });
     let _reset = Reset(previous);
     action()
 }
 
-fn inject_boundary_fault(root: &Path, phase: &str) -> Result<(), WorkspaceError> {
+fn inject_boundary_fault(root: &Path, phase: &str, before: bool) -> Result<(), WorkspaceError> {
     let fire = BOUNDARY_FAULT.with(|fault| {
         let mut fault = fault.borrow_mut();
-        if fault
-            .as_ref()
-            .is_some_and(|fault| fault.root == root && fault.phase == phase)
-        {
+        if fault.as_ref().is_some_and(|fault| {
+            fault.root == root && fault.phase == phase && fault.before == before
+        }) {
             fault.take();
             true
         } else {
@@ -60,7 +72,11 @@ fn inject_boundary_fault(root: &Path, phase: &str) -> Result<(), WorkspaceError>
     if fire {
         Err(error(
             root,
-            format!("injected interruption after {phase} writer checkpoint"),
+            format!(
+                "injected interruption {} {phase} writer {}",
+                if before { "before" } else { "after" },
+                if before { "entry" } else { "checkpoint" }
+            ),
         ))
     } else {
         Ok(())
@@ -597,7 +613,8 @@ impl ConfigurationTransaction {
         self.journal.phase = phase.into();
         self.journal.in_flight = true;
         self.journal.external_effects_possible |= external_effects_possible;
-        self.persist()
+        self.persist()?;
+        inject_boundary_fault(&self.root, phase, true)
     }
 
     /// Record only a phase whose caller proved successful. A failed phase stays
@@ -610,7 +627,7 @@ impl ConfigurationTransaction {
         self.journal.checkpoint = current;
         self.journal.in_flight = false;
         self.persist()?;
-        inject_boundary_fault(&self.root, &self.journal.phase)
+        inject_boundary_fault(&self.root, &self.journal.phase, false)
     }
 
     /// Read-only evidence for error/report adapters and recovery tools. The

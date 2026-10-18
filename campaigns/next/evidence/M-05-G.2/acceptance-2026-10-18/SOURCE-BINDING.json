@@ -1,0 +1,94 @@
+{
+  "status": "current_source_hashes_match_frozen_correction_not_acceptance",
+  "task": "M-05-G.2",
+  "work_id": "work.m05.g2",
+  "candidate_id": "managed-result.df75b9f12478125c2579fbcb211c1751be5a8ded54914ca1f748fa61ca55df3a",
+  "job_id": "job.runtime.packet.continuation.7616e1b817d1b8b1ab1b8f1b859718cbfef9ac0fd423f0c4debee46291fd42cf",
+  "validation_generation": 0,
+  "base_commit": "73b192f4a22b2f729ec326962475bed7e060adc6",
+  "artifacts": {
+    "report": {
+      "sha256": "9c6c95805c4243e13b63638e2683185260961d1934d68dde3a2790dd44307d34",
+      "bytes": 4815151
+    },
+    "patch": {
+      "sha256": "b4b877ad47f329740628ee42105992e34f500873d9fc8555e7e1f4ebdb3a0b2a",
+      "bytes": 67912
+    }
+  },
+  "original_task": {
+    "path": "campaigns/next/tasks/M-05-G.json",
+    "sha256": "03370f83f77e668605bfe6ae807daf655402204946306fd83ab18b2e54981276",
+    "title": "Close transaction and Redbook coexistence regressions",
+    "goal": "Verify failure recovery, independent WAL/MUP use and current version policy.",
+    "acceptance": [
+      "M-05 gates include real contribution activation, recovery and exact replay.",
+      "Every failed prefix has a retained typed disposition, not a silent repair."
+    ],
+    "safe_stop": "Leave recovery-required evidence and no public republish."
+  },
+  "frozen_inventory": {
+    "path": "/fast/git/v/research/2026-10-18-m05g2-correction-candidate/FREEZE.json",
+    "sha256": "e6e83ea919d3265791b8923f0c875a311989e694d56fb50de782d01da0785c3c"
+  },
+  "source_files": [
+    {
+      "path": "crates/vibe-workspace/src/configuration_transaction.rs",
+      "sha256": "05986f25727325cdffcbc65193abf20a7cda8f28d65def1385aa9225824159b2",
+      "bytes": 30405,
+      "current_matches_frozen": true
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "sha256": "12df50430e89ea0a88d098a69dcefba08a8a7bad807cdbeb0ff60f9fdfa09891",
+      "bytes": 178091,
+      "current_matches_frozen": true
+    },
+    {
+      "path": "crates/vibe-install/tests/support/g2.rs",
+      "sha256": "94254f66bec4dd10a415bbd929c1c36cbd7794fde0a9c21f2898d71537451c1d",
+      "bytes": 8262,
+      "current_matches_frozen": true
+    },
+    {
+      "path": "crates/vibe-install/tests/m_05_g_2_cases.rs",
+      "sha256": "18cbc4bceb1274fedb4b88a3fd9bee930b95f46d1ff4c80bd52f3a5e0ed2a264",
+      "bytes": 25988,
+      "current_matches_frozen": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/tests/m_05_g_2_cases.rs",
+      "sha256": "abac8f62eb5959c1d6ac591bc2a54435e944472b315133b6b638de2a1ffb73a7",
+      "bytes": 11086,
+      "current_matches_frozen": true
+    },
+    {
+      "path": "crates/vibe-cli/tests/m_05_g_2_cases.rs",
+      "sha256": "f031c30f13d12515eb3f7ad4d71cf240ba80005b3442b266e716b5332d0595a5",
+      "bytes": 11108,
+      "current_matches_frozen": true
+    },
+    {
+      "path": "crates/vibe-install/src/apply.rs",
+      "sha256": "db0304eca87881ccc95aad67c31c941fe80c00edd6addfd6190a6ca1d9efc003",
+      "bytes": 28603,
+      "current_matches_frozen": true
+    },
+    {
+      "path": "crates/vibe-install/src/lifecycle.rs",
+      "sha256": "9b8b47dc3dd3f8fab65286c6e14fdb598b73622787ffd081994b27884353d33f",
+      "bytes": 20343,
+      "current_matches_frozen": true
+    }
+  ],
+  "independent_review": {
+    "report_path": "/fast/git/v/research/2026-10-18-m05g2-correction-review/REPORT.md",
+    "report_sha256": "60b0e113fa6cac4f548b8990fbe616315ade3836c73605330474452a3635b38c",
+    "result_path": "/fast/git/v/research/2026-10-18-m05g2-correction-review/RESULT.json",
+    "result_sha256": "183fe00335f879d63147f8d526ed2da4ab47b9f7d9e7b4e104b41f28dce6234d",
+    "P1": 0,
+    "P2": 0
+  },
+  "snapshot_limit": "Eight current source files hashed only; no source edits/tests/builds/API queries. Frozen base is historical baseline, not an invented future commit.",
+  "no_raw_report_or_source_copies": true
+}

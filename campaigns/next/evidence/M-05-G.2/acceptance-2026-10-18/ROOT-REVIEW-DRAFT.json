@@ -1,0 +1,80 @@
+{
+  "status": "Root_original_scope_semantically_approved_canonical_acceptance_pending",
+  "task": "M-05-G.2",
+  "work_id": "work.m05.g2",
+  "candidate_id": "managed-result.df75b9f12478125c2579fbcb211c1751be5a8ded54914ca1f748fa61ca55df3a",
+  "job_id": "job.runtime.packet.continuation.7616e1b817d1b8b1ab1b8f1b859718cbfef9ac0fd423f0c4debee46291fd42cf",
+  "validation_generation": 0,
+  "base_commit": "73b192f4a22b2f729ec326962475bed7e060adc6",
+  "artifacts": {
+    "report": {
+      "sha256": "9c6c95805c4243e13b63638e2683185260961d1934d68dde3a2790dd44307d34",
+      "bytes": 4815151
+    },
+    "patch": {
+      "sha256": "b4b877ad47f329740628ee42105992e34f500873d9fc8555e7e1f4ebdb3a0b2a",
+      "bytes": 67912
+    }
+  },
+  "Root_saved_decision": {
+    "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/planning/M05-G2-ROOT-SEMANTIC-DECISION.json",
+    "sha256": "cfc34f44edf8931ce3d325ece33f534acaa2793cb697b36b0614b3190cb3ea13",
+    "criteria_satisfied": [
+      0,
+      1
+    ],
+    "functional_stage": "functional",
+    "rationale": "Original G2 criteria supported by real source-backed contribution/reconfiguration/replay and typed interrupted-prefix tests. Independent full-scope review0P1/0P2; former callback soft-post failure journal-loss fixed at lifecycle owner before finalization. Actual18distinct selectedtests passed0failed, report/source hashes match. Explicit unsupported/partial recovery paths remain typed and honest; no automatic package bump or public republish.",
+    "limitations": [
+      "Global cargo fmt check remains Failed in seven unchanged baseline files; own touched formatting/diff/XML checks passed.",
+      "Prepared exact offline replay and exercised bounded Rust/CLI transaction scope; no universal rollback, all-platform or arbitrary legacy hook support claimed.",
+      "Same exact retained result collected after8MiB consumer repair; actual native same-effect StopDelivered at17781, original historicalunknown remainsrecorded. No newmodelrun or forgedreceipt."
+    ]
+  },
+  "original_criteria": [
+    {
+      "index": 0,
+      "statement": "M-05 gates include real contribution activation, recovery and exact replay.",
+      "Root_disposition": "satisfied"
+    },
+    {
+      "index": 1,
+      "statement": "Every failed prefix has a retained typed disposition, not a silent repair.",
+      "Root_disposition": "satisfied"
+    }
+  ],
+  "prior_P2_closure": {
+    "state": "closed",
+    "owner_query": {
+      "path": "crates/vibe-install/src/lifecycle.rs",
+      "line": 206,
+      "meaning": "Non-destructive actual post/fail/flagged report query; lock errors propagate."
+    },
+    "owner_finalization": {
+      "path": "crates/vibe-install/src/apply.rs",
+      "line": 654,
+      "meaning": "Checks lifecycle-owned callback outcome before complete, retains post-install-failed/external uncertainty."
+    },
+    "actual_regression": "Same real CLI preexit1/postsoftfail exit0 failflagged; retained journal and lifecycle fail record. Successful pre/post hooks leave0journals.",
+    "no_report_drain_or_new_rollback_engine": true
+  },
+  "scope_supported": [
+    "Before/after actual manifest/slot/boot/lock/post-install writers10legs plus actual pre/post hook4legs with retained image/phase/effect evidence.",
+    "Independent WAL+MUP coexist; Redbook exactly-one local continuity edge retains independent sibling; actual boot/contributions and provider witnesses.",
+    "Shared roots/dependencies and dormant branch switching/back; missing/conflicting inputs refuse; explicit default/source authority retained.",
+    "Prepared offline exact replay with captured request/source/content/definition/default/payload identity and no solve/fetch; corrupt source/third-state edits refuse.",
+    "Mutable Redbook1.1.0 remains unchanged/no automatic bump or public republish; honest partial/unsupported recovery retains external uncertainty."
+  ],
+  "canonical_work_snapshot": {
+    "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/planning/M05-G2-CURRENT-WORK.json",
+    "sha256": "6ebfac0b34418ad913f756d2211edae37c85f47776d756655f4b25280c865a6a",
+    "revision": 6,
+    "state": "candidate",
+    "validation_generation": 0
+  },
+  "actual_WorkAccepted_revision": null,
+  "actual_WorkAcceptanceRecord": null,
+  "future_commit": null,
+  "promotion_instruction": "Root fills real acceptance receipt/record only after normal API commit, then promotes/commits. Do not mark accepted or increment campaign count from this draft.",
+  "no_campaign_count_asserted": true
+}
