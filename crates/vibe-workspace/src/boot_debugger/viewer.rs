@@ -8,7 +8,7 @@ pub trait Service {
     fn query(&self, command: q::Command) -> Result<r::Result, String>;
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub enum Action {
     Next,
     Previous,
@@ -21,6 +21,8 @@ pub enum Action {
     Source(u64),
     Compare(usize, usize),
     Show,
+    Scenario { target: String, draft_json: String },
+    Preview(q::CommandPreview),
 }
 
 /// Fields containing domain evidence are copied verbatim from service results.
@@ -94,6 +96,14 @@ impl<S: Service> Viewer<S> {
 
     pub fn apply(&mut self, action: Action) -> Result<Option<r::Result>, String> {
         let command = match action {
+            Action::Scenario { target, draft_json } => {
+                q::Command::Scenario(Box::new(q::CommandScenario {
+                    snapshot_id: self.current.capture_id.clone(),
+                    target,
+                    draft_json,
+                }))
+            }
+            Action::Preview(request) => q::Command::Preview(Box::new(request)),
             Action::Show => return Ok(None),
             Action::Select(i) => {
                 self.select(i)?;

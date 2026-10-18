@@ -6,10 +6,11 @@ use std::{
     path::PathBuf,
     sync::Arc,
 };
-use vibe_orchestrator::{
-    document_analysis::{AnalysisLimits, DocumentAnalysisHost, ResourceDeclaration, ResourceRole},
-    machine_operation::boot_debugger::{self, BootDebuggerRoute},
+#[cfg(test)]
+use vibe_orchestrator::document_analysis::{
+    AnalysisLimits, DocumentAnalysisHost, ResourceDeclaration, ResourceRole,
 };
+use vibe_orchestrator::machine_operation::boot_debugger::{self, BootDebuggerRoute};
 use vibe_workspace::boot_debugger::protocol::CapturedKind;
 mod viewer;
 
@@ -31,10 +32,13 @@ pub struct BootArgs {
     #[arg(long)]
     pub root: PathBuf,
     /// Project-relative captured artifact, selected by the host at startup.
-    #[arg(long)]
+    #[arg(long, default_value = "STATIC.md")]
     pub artifact: String,
-    #[arg(long, value_enum)]
+    #[arg(long, value_enum, default_value = "static")]
     pub kind: ArtifactKind,
+    /// Admit only this local registry for explicit scenario capture.
+    #[arg(long)]
+    pub registry: Option<PathBuf>,
 }
 pub fn run(args: BootArgs) -> Result<()> {
     run_with_io(args, std::io::stdin().lock(), &mut std::io::stdout().lock())
@@ -55,38 +59,18 @@ fn open_route(args: &BootArgs) -> Result<Arc<BootDebuggerRoute>> {
         .root
         .canonicalize()
         .context("opening explicit debugger root")?;
-    let host = DocumentAnalysisHost::new(
-        &root,
-        "vibe.toml",
-        vec![
-            ResourceDeclaration {
-                path: "vibe.toml".into(),
-                role: ResourceRole::Manifest,
-            },
-            ResourceDeclaration {
-                path: args.artifact.clone(),
-                role: ResourceRole::Opaque,
-            },
-        ],
-        AnalysisLimits {
-            resource_bytes: 64 * 1024 * 1024,
-            capture_bytes: 128 * 1024 * 1024,
-            open_buffers: 16,
-        },
-    )?;
-    let artifact = host
-        .resource(&args.artifact)
-        .context("artifact declaration")?;
     let kind = match args.kind {
         ArtifactKind::Static => CapturedKind::Static,
         ArtifactKind::Index => CapturedKind::Index,
         ArtifactKind::Compiler => CapturedKind::Compiler,
     };
-    let route = Arc::new(
-        BootDebuggerRoute::new(host, artifact, kind)
-            .map_err(|e| anyhow::anyhow!("{}", e.message))?,
-    );
-    Ok(route)
+    vibe_package_source::InstallResolver::open_boot_debugger(
+        &root,
+        args.registry.as_deref(),
+        &args.artifact,
+        kind,
+    )
+    .map_err(|e| anyhow::anyhow!(e))
 }
 /// First output is the host-assigned capture/context. Subsequent lines are
 /// strict OperationEnvelope inputs and outputs, never CLI flag reparsing.
@@ -182,3 +166,6 @@ mod m_06_c_1_cases {
 #[cfg(test)]
 #[path = "m_06_c_1_cases.rs"]
 mod cross_surface;
+
+#[cfg(test)]
+mod m_06_e_2_cases;

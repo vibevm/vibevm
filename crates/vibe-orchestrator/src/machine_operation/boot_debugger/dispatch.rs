@@ -16,6 +16,7 @@ impl BootDebuggerRoute {
                 Command::PreparationPlan(_) | Command::Prepare(_) | Command::PreparationRead(_) => {
                     unreachable!("handled above")
                 }
+                Command::Scenario(c) => return self.scenario(state, c),
                 Command::Preview(c) => return self.preview(state, c),
                 Command::Capture(_) => {
                     let capture = state.client.freeze().map_err(|_| {

@@ -72,6 +72,11 @@ pub struct ServerContext {
     adapter_plan: Option<
         std::sync::Arc<vibe_orchestrator::machine_operation::adapter_plan::AdapterPlanRoute>,
     >,
+    default_boot_debugger: std::sync::OnceLock<
+        Option<
+            std::sync::Arc<vibe_orchestrator::machine_operation::boot_debugger::BootDebuggerRoute>,
+        >,
+    >,
     boot_debugger: Option<
         std::sync::Arc<vibe_orchestrator::machine_operation::boot_debugger::BootDebuggerRoute>,
     >,
@@ -178,7 +183,19 @@ impl ServerContext {
     ) -> Option<
         &std::sync::Arc<vibe_orchestrator::machine_operation::boot_debugger::BootDebuggerRoute>,
     > {
-        self.boot_debugger.as_ref()
+        self.boot_debugger.as_ref().or_else(|| {
+            self.default_boot_debugger
+                .get_or_init(|| {
+                    vibe_package_source::InstallResolver::open_boot_debugger(
+                        &self.project_root,
+                        None,
+                        "STATIC.md",
+                        vibe_orchestrator::machine_operation::boot_debugger::CapturedKind::Static,
+                    )
+                    .ok()
+                })
+                .as_ref()
+        })
     }
     /// Explicit read-only document scope; no lifecycle/native authority.
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-080#DOCUMENT-BUFFER-LAW")]
@@ -362,6 +379,8 @@ impl ServerContext {
     }
 
     pub fn new(project_root: impl Into<PathBuf>) -> Self {
+        let project_root = project_root.into();
+        let project_root = project_root.canonicalize().unwrap_or(project_root);
         let store_root = vibe_core::settings::settings_dir()
             .map(|home| home.join("cache"))
             .unwrap_or_default();
@@ -370,6 +389,7 @@ impl ServerContext {
             document_analysis: None,
             adapter_plan: None,
             boot_debugger: None,
+            default_boot_debugger: std::sync::OnceLock::new(),
             document_edit_authority: None,
             project_root: project_root.into(),
             store_root,
@@ -393,11 +413,14 @@ impl ServerContext {
         project_root: impl Into<PathBuf>,
         store_root: impl Into<PathBuf>,
     ) -> Self {
+        let project_root = project_root.into();
+        let project_root = project_root.canonicalize().unwrap_or(project_root);
         ServerContext {
             configuration_choice: None,
             document_analysis: None,
             adapter_plan: None,
             boot_debugger: None,
+            default_boot_debugger: std::sync::OnceLock::new(),
             document_edit_authority: None,
             project_root: project_root.into(),
             store_root: store_root.into(),
@@ -511,6 +534,7 @@ mod tests {
                 configuration_choice,
                 adapter_plan,
                 boot_debugger,
+                default_boot_debugger,
                 document_analysis,
                 document_edit_authority,
                 project_root,
@@ -530,6 +554,7 @@ mod tests {
                 configuration_choice,
                 adapter_plan,
                 boot_debugger,
+                default_boot_debugger,
                 document_analysis,
                 document_edit_authority,
                 project_root,

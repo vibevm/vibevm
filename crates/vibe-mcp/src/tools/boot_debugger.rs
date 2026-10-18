@@ -8,9 +8,9 @@ impl McpTool for BootDebuggerMcpTool {
         ToolDescriptor {
             name: "boot_debugger".into(),
             description:
-                "Structured captured boot inspection through the host-bound operation envelope."
+                "Captured boot inspection and explicit local scenarios. Call with {} to discover context, then send strict operation envelopes."
                     .into(),
-            input_schema: json!({"type":"object","properties":{"schema":{"const":1},"operation_id":{"type":"string"},"domain_owner":{"type":"string"},"source_id":{"type":"string"},"evidence_id":{"type":"null"},"body":{"type":"object"}},"required":["schema","operation_id","domain_owner","source_id","evidence_id","body"],"additionalProperties":false}),
+            input_schema: json!({"type":"object","oneOf":[{"type":"object","maxProperties":0},{"type":"object","properties":{"schema":{"const":1},"operation_id":{"type":"string"},"domain_owner":{"type":"string"},"source_id":{"type":"string"},"evidence_id":{"type":"null"},"body":{"type":"object"}},"required":["schema","operation_id","domain_owner","source_id","evidence_id","body"],"additionalProperties":false}]}),
         }
     }
     fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
@@ -20,6 +20,23 @@ impl McpTool for BootDebuggerMcpTool {
         route
             .compare_context_root(&ctx.project_root)
             .map_err(|e| ToolError::InvalidArguments(e.message))?;
+        // Empty input discovers the host context and captures the admitted
+        // inventory; subsequent commands use strict operation envelopes.
+        let initial;
+        let args = if args.as_object().is_some_and(|o| o.is_empty()) {
+            use vibe_wire::generated::boot_debugger::e1::request as q;
+            initial = serde_json::to_value(
+                vibe_orchestrator::machine_operation::boot_debugger::input(&q::Request {
+                    schema: 1,
+                    context_id: route.context_id().into(),
+                    command: q::Command::Capture(Box::new(q::CommandCapture {})),
+                }),
+            )
+            .map_err(|e| ToolError::Internal(e.to_string()))?;
+            &initial
+        } else {
+            args
+        };
         let bytes = serde_json::to_vec(args).map_err(|e| ToolError::Internal(e.to_string()))?;
         let reply = route.exchange(&bytes);
         let is_error = matches!(
@@ -375,5 +392,169 @@ mod m_06_d_2_cases {
         }
         assert!(!root.join(".vibe").exists());
         assert!(!root.join("vibevm").exists());
+    }
+}
+
+#[cfg(test)]
+mod m_06_e_2_cases {
+    use super::*;
+    use vibe_orchestrator::machine_operation::boot_debugger::{
+        debugger_request as q, debugger_result as r, input,
+    };
+    use vibe_wire::generated::machine::e1::operation_envelope as env;
+    use vibe_workspace::boot_debugger::{
+        scenario::*,
+        viewer::{Action, Service, Viewer},
+    };
+    fn answer(tool: &dyn McpTool, ctx: &ServerContext, value: Value) -> r::Result {
+        let output = tool.run(&value, ctx).unwrap();
+        let envelope: env::OperationEnvelope =
+            serde_json::from_value(output.structured().clone()).unwrap();
+        let env::Body::Result(body) = envelope.body else {
+            panic!()
+        };
+        assert_eq!(body.effect_state, env::BodyResultEffectState::NoEffects);
+        serde_json::from_str(body.payload_json.as_deref().unwrap()).unwrap()
+    }
+    struct Client<'a> {
+        tool: &'a dyn McpTool,
+        ctx: &'a ServerContext,
+        context: String,
+    }
+    impl Service for Client<'_> {
+        fn query(&self, command: q::Command) -> Result<r::Result, String> {
+            Ok(answer(
+                self.tool,
+                self.ctx,
+                serde_json::to_value(input(&q::Request {
+                    schema: 1,
+                    context_id: self.context.clone(),
+                    command,
+                }))
+                .unwrap(),
+            ))
+        }
+    }
+    fn files(root: &std::path::Path) -> Vec<(std::path::PathBuf, Vec<u8>)> {
+        fn walk(at: &std::path::Path, out: &mut Vec<(std::path::PathBuf, Vec<u8>)>) {
+            for e in std::fs::read_dir(at).unwrap() {
+                let e = e.unwrap();
+                if e.file_type().unwrap().is_dir() {
+                    walk(&e.path(), out);
+                } else {
+                    out.push((e.path(), std::fs::read(e.path()).unwrap()));
+                }
+            }
+        }
+        let mut out = vec![];
+        walk(root, &mut out);
+        out.sort();
+        out
+    }
+    #[test]
+    fn registered_default_tool_produces_controls_and_replays_viewer_comparison_without_writes() {
+        let root = tempfile::tempdir().unwrap();
+        let package = root.path().join("vibevm/vibepacks/org.example/app/v1.0.0");
+        std::fs::create_dir_all(&package).unwrap();
+        std::fs::write(package.join("vibe.toml"), "[package]\ngroup='org.example'\nname='app'\nkind='flow'\nversion='1.0.0'\n[boot_snippet]\nsource='boot.md'\n[[boot_snippet.fragment]]\nsource='future.md'\nwhen='os:linux'\n").unwrap();
+        std::fs::write(package.join("boot.md"), "real static bytes").unwrap();
+        std::fs::write(package.join("future.md"), "potential future bytes").unwrap();
+        std::fs::write(
+            root.path().join("vibe.toml"),
+            "[project]\nname='fixture'\nversion='1.0.0'\n[boot]\ndefault_link='static'\n",
+        )
+        .unwrap();
+        let before = files(root.path());
+        let context = ServerContext::new(root.path());
+        let tool = crate::tools::default_tools()
+            .into_iter()
+            .find(|t| t.descriptor().name == "boot_debugger")
+            .unwrap();
+        // Standard empty-input discovery, no manually constructed route/map.
+        let initial = answer(tool.as_ref(), &context, json!({}));
+        let client = Client {
+            tool: tool.as_ref(),
+            ctx: &context,
+            context: initial.context_id,
+        };
+        let mut viewer = Viewer::new(client).unwrap();
+        for edit in [
+            Edit::Add {
+                package: "org.example/app@=1.0.0".into(),
+                loading: Some(vibe_core::manifest::LinkType::Static),
+            },
+            Edit::Toggle {
+                package: "org.example/app@=1.0.0".into(),
+                enabled: true,
+                loading: Some(vibe_core::manifest::LinkType::Static),
+            },
+            Edit::Reconfigure {
+                selections: Selections::default(),
+            },
+        ] {
+            let draft = Draft {
+                baseline_selections: Selections::default(),
+                edits: vec![edit],
+            };
+            let first = viewer
+                .apply(Action::Scenario {
+                    target: "os:linux".into(),
+                    draft_json: serde_json::to_string(&draft).unwrap(),
+                })
+                .unwrap()
+                .unwrap();
+            let r::Body::Preview(p) = &first.body else {
+                panic!()
+            };
+            assert_eq!(p.status, r::BodyPreviewStatus::Complete, "{p:?}");
+            let comparison: Value =
+                serde_json::from_str(p.comparison_json.as_deref().unwrap()).unwrap();
+            assert_eq!(
+                comparison["candidate"]["runtime_reads"]["status"],
+                "unavailable"
+            );
+            let selectors = q::CommandPreview {
+                scenario_id: p.scenario_id.clone(),
+                expected_baseline: p.baseline_world.clone(),
+                expected_candidate: p.candidate_world.clone(),
+                expected_catalog: p.candidate_catalog.clone(),
+                loading_overrides: Default::default(),
+            };
+            let again = viewer
+                .apply(Action::Preview(selectors.clone()))
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                serde_json::to_value(&first.body).unwrap(),
+                serde_json::to_value(again.body).unwrap()
+            );
+            if !p.placements.is_empty() {
+                let mut illegal = selectors;
+                illegal
+                    .loading_overrides
+                    .insert("org.example/app".into(), "dynamic".into());
+                let result = viewer.apply(Action::Preview(illegal)).unwrap().unwrap();
+                let r::Body::Preview(p) = result.body else {
+                    panic!()
+                };
+                assert_eq!(p.status, r::BodyPreviewStatus::Incompatible);
+            }
+        }
+        assert_eq!(files(root.path()), before);
+        let missing = viewer
+            .apply(Action::Preview(q::CommandPreview {
+                scenario_id: "unprepared".into(),
+                expected_baseline: "none".into(),
+                expected_candidate: "none".into(),
+                expected_catalog: "none".into(),
+                loading_overrides: Default::default(),
+            }))
+            .unwrap()
+            .unwrap();
+        let r::Body::Preview(p) = missing.body else {
+            panic!()
+        };
+        assert_eq!(p.status, r::BodyPreviewStatus::Incomplete);
+        assert_eq!(files(root.path()), before);
     }
 }
