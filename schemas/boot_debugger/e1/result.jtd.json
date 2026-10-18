@@ -28,6 +28,14 @@
     }
   },
   "definitions": {
+    "placement": {
+      "properties": {
+        "origin": {"type": "string"},
+        "path": {"type": "string"},
+        "loading": {"type": "string"},
+        "when": {"type": "string", "nullable": true}
+      }
+    },
     "count": {
       "properties": {
         "exact": {
@@ -106,6 +114,21 @@
     "body": {
       "discriminator": "kind",
       "mapping": {
+        "preview": {
+          "properties": {
+            "scenario_id": {"type": "string"},
+            "baseline_world": {"type": "string"},
+            "candidate_world": {"type": "string"},
+            "candidate_catalog": {"type": "string"},
+            "target": {"type": "string"},
+            "status": {"enum": ["complete", "incomplete", "incompatible", "stale"], "metadata": {"x-vocabulary": "closed"}},
+            "missing": {"elements": {"type": "string"}, "metadata": {"x-empty": "emit"}},
+            "placements": {"elements": {"ref": "placement"}, "metadata": {"x-empty": "emit"}},
+            "artifact": {"type": "string", "nullable": true},
+            "compiler_carrier_json": {"type": "string", "nullable": true},
+            "measurement_json": {"type": "string", "nullable": true}
+          }
+        },
         "capture": {
           "properties": {
             "capture_id": {

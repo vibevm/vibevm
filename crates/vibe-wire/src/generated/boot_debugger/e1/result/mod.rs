@@ -64,6 +64,9 @@ pub enum Body {
     #[serde(rename = "inspect")]
     Inspect(Box<BodyInspect>),
 
+    #[serde(rename = "preview")]
+    Preview(Box<BodyPreview>),
+
     #[serde(rename = "replay")]
     Replay(Box<BodyReplay>),
 
@@ -195,6 +198,50 @@ pub struct BodyInspect {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum BodyPreviewStatus {
+    #[serde(rename = "complete")]
+    Complete,
+
+    #[serde(rename = "incompatible")]
+    Incompatible,
+
+    #[serde(rename = "incomplete")]
+    Incomplete,
+
+    #[serde(rename = "stale")]
+    Stale,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct BodyPreview {
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub artifact: Option<String>,
+
+    pub baseline_world: String,
+
+    pub candidate_catalog: String,
+
+    pub candidate_world: String,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub compiler_carrier_json: Option<String>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub measurement_json: Option<String>,
+
+    pub missing: Vec<String>,
+
+    pub placements: Vec<Placement>,
+
+    pub scenario_id: String,
+
+    pub status: BodyPreviewStatus,
+
+    pub target: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BodyReplay {
     pub inspection_id: String,
@@ -247,6 +294,19 @@ pub struct Node {
     pub root: bool,
 
     pub source: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Placement {
+    pub loading: String,
+
+    pub origin: String,
+
+    pub path: String,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub when: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

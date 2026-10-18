@@ -41,6 +41,71 @@ fn ask(route: &BootDebuggerRoute, command: q::Command) -> Answer<r::Result> {
         command,
     })
 }
+
+#[test]
+fn m_06_d_1_cases_preview_exchange_uses_prepared_world() {
+    let (root, route, _) = fixture();
+    std::fs::write(root.path().join("vibe.toml"), "[project]\nname='fixture'\nversion='1.0.0'\n[requires.packages]\n'org.example/app'={version='1.0.0',link='static'}\n").unwrap();
+    let id = capture(&route);
+    let host = route.hypothetical_host(&id).unwrap();
+    let package = hypothetical::SelectedPackage {
+        manifest: vibe_core::manifest::Manifest::parse_str("[package]\ngroup='org.example'\nname='app'\nkind='flow'\nversion='1.0.0'\n[boot_snippet]\nsource='boot.md'\n").unwrap(),
+        requires: vec![], files: BTreeMap::from([("boot.md".into(), b"# Frozen route fixture\n".to_vec())]),
+        source_identity: "fixture source capture".into(),
+    };
+    let world = hypothetical::FrozenWorld::from_resolution(
+        host,
+        vec![package],
+        "catalog".into(),
+        "fixture normalized resolution".into(),
+        vec![],
+    )
+    .unwrap();
+    let scenario =
+        hypothetical::PreparedScenario::new(world.clone(), world, "os:linux".into()).unwrap();
+    let request = route.retain_hypothetical(scenario).unwrap();
+    let wire = serde_json::to_vec(&input(&request)).unwrap();
+    let answer = route.exchange(&wire);
+    let env::Body::Result(result) = &answer.body else {
+        panic!("{answer:?}")
+    };
+    let decoded: r::Result = serde_json::from_str(result.payload_json.as_deref().unwrap()).unwrap();
+    let r::Body::Preview(body) = decoded.body else {
+        panic!()
+    };
+    assert_eq!(body.status, r::BodyPreviewStatus::Complete);
+    assert!(body.artifact.unwrap().contains("Frozen route fixture"));
+    assert!(body.compiler_carrier_json.is_some());
+    std::fs::write(root.path().join("INDEX.md"), b"changed live artifact").unwrap();
+    assert_eq!(answer, route.exchange(&wire));
+    assert_eq!(
+        std::fs::read(root.path().join("INDEX.md")).unwrap(),
+        b"changed live artifact"
+    );
+}
+
+#[test]
+fn m_06_d_1_cases_unprepared_preview_names_missing_capture() {
+    let (_root, route, _) = fixture();
+    let answer = ask(
+        &route,
+        q::Command::Preview(Box::new(q::CommandPreview {
+            scenario_id: "uncaptured".into(),
+            expected_baseline: "baseline".into(),
+            expected_candidate: "candidate".into(),
+            expected_catalog: "catalog".into(),
+            loading_overrides: BTreeMap::new(),
+        })),
+    )
+    .unwrap();
+    let r::Body::Preview(body) = answer.body else {
+        panic!()
+    };
+    assert_eq!(body.status, r::BodyPreviewStatus::Incomplete);
+    assert_eq!(body.missing, vec!["prepared scenario capture: uncaptured"]);
+    assert!(body.artifact.is_none());
+    assert!(body.measurement_json.is_none());
+}
 fn capture(route: &BootDebuggerRoute) -> String {
     ask(route, q::Command::Capture(Box::new(q::CommandCapture {})))
         .unwrap()

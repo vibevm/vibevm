@@ -6,6 +6,7 @@ use vibe_spec::{
     BootGraph, GraphContribution, GraphOccurrence, InclusionParent, ReferenceState, SourceIdentity,
 };
 pub mod dynamic_index;
+pub mod hypothetical;
 pub mod measurement;
 pub mod protocol;
 pub mod retained;
