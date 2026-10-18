@@ -7,7 +7,10 @@ use vibe_spec::{
 };
 pub mod dynamic_index;
 pub mod hypothetical;
+#[cfg(test)]
+mod m_06_d_2_cases;
 pub mod measurement;
+pub mod preparation;
 pub mod protocol;
 pub mod retained;
 mod static_summary;

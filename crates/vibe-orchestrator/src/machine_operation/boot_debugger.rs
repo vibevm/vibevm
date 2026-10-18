@@ -1,5 +1,5 @@
 //! Host-bound immutable inspection and explicit prepared builtin previews.
-//! No project writer or live source/provider port enters request dispatch.
+//! Preparation is a separate host-admitted operation; inspection has no provider calls.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#DEBUGGER-PROTOCOL");
 use super::stream_message::{self, ExpectedBinding};
 use crate::{
@@ -106,6 +106,7 @@ struct State {
     inspections: BTreeMap<String, Inspection>,
     next: u64,
     scenarios: BTreeMap<String, hypothetical::PreparedScenario>,
+    preparations: BTreeMap<String, Arc<preparation::PreparationService>>,
 }
 
 /// The embedding chooses one already admitted boot artifact and its reader.
@@ -148,6 +149,7 @@ impl BootDebuggerRoute {
                 inspections: BTreeMap::new(),
                 next: 1,
                 scenarios: BTreeMap::new(),
+                preparations: BTreeMap::new(),
             }),
         };
         Ok(route)
@@ -429,6 +431,7 @@ impl BootDebuggerRoute {
     }
     /// Strict generated structured input through the incumbent operation envelope.
     pub fn exchange(&self, bytes: &[u8]) -> env::OperationEnvelope {
+        let mut preparation_requested = false;
         let answer = (|| {
             if bytes.len() > stream_message::MAX_FRAME_BYTES {
                 return Err(fault(
@@ -458,8 +461,9 @@ impl BootDebuggerRoute {
                     "foreign request format",
                 ));
             }
-            let request = serde_json::from_str(&body.payload_json)
+            let request: q::Request = serde_json::from_str(&body.payload_json)
                 .map_err(|_| fault(e::ErrorCode::InvalidRequest, "invalid generated request"))?;
+            preparation_requested = matches!(&request.command, q::Command::Prepare(_));
             self.request(request)
         })();
         let body = match answer {
@@ -502,6 +506,10 @@ impl BootDebuggerRoute {
                         r::Body::Inspect(v) => !v.gaps.is_empty(),
                         r::Body::Explain(v) => v.unavailable.is_some(),
                         r::Body::Cost(_) | r::Body::Tree(_) => true,
+                        r::Body::Preparation(p) => !matches!(
+                            p.status,
+                            r::BodyPreparationStatus::Complete | r::BodyPreparationStatus::Planned
+                        ),
                         _ => false,
                     };
                     env::Body::Result(Box::new(env::BodyResult {
@@ -509,7 +517,18 @@ impl BootDebuggerRoute {
                         payload_json: Some(
                             serde_json::to_string(&result).expect("generated result"),
                         ),
-                        effect_state: env::BodyResultEffectState::NoEffects,
+                        effect_state: if preparation_requested
+                            && matches!(&result.body, r::Body::Preparation(p) if p.outcome_json.is_some())
+                        {
+                            if matches!(&result.body, r::Body::Preparation(p) if p.status == r::BodyPreparationStatus::RecoveryRequired)
+                            {
+                                env::BodyResultEffectState::Uncertain
+                            } else {
+                                env::BodyResultEffectState::Completed
+                            }
+                        } else {
+                            env::BodyResultEffectState::NoEffects
+                        },
                         completeness: if partial {
                             env::BodyResultCompleteness::Partial
                         } else {
@@ -522,7 +541,11 @@ impl BootDebuggerRoute {
             Err(error) => env::Body::Error(Box::new(env::BodyError {
                 format_id: Some("boot-debugger-error".into()),
                 payload_json: Some(serde_json::to_string(&error).expect("generated error")),
-                effect_state: env::BodyErrorEffectState::NoEffects,
+                effect_state: if preparation_requested {
+                    env::BodyErrorEffectState::Uncertain
+                } else {
+                    env::BodyErrorEffectState::NoEffects
+                },
                 completeness: env::BodyErrorCompleteness::Complete,
                 provenance_id: None,
             })),
@@ -548,6 +571,9 @@ pub fn input(request: &q::Request) -> env::OperationEnvelope {
 }
 
 mod dispatch;
+#[cfg(test)]
+mod m_06_d_2_cases;
+pub mod preparation;
 mod preview;
 #[cfg(test)]
 mod tests;

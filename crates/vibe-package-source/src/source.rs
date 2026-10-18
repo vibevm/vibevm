@@ -17,8 +17,11 @@ use vibe_registry::{
 };
 
 use crate::cells::{ProviderCell, ProviderResource, selection_flags};
+mod boot_preparation;
 #[cfg(test)]
 mod m_06_d_1_cases;
+#[cfg(test)]
+mod m_06_d_2_cases;
 mod preview;
 
 /// Either a M0-shape local-directory registry (used by an explicit registry

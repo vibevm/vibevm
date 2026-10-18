@@ -191,7 +191,7 @@ impl InstallResolver {
     }
 }
 
-fn capture_spec_tree(
+pub(super) fn capture_spec_tree(
     project: &vibe_safefs::Project,
     directory: &Path,
     relative: &Path,

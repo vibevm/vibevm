@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Immutable boot debugger protocol; no build or write authority.",
+    "description": "Captured boot inspection and explicit host-admitted preview preparation.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-072#DEBUGGER-PROTOCOL",
       "r": 1
@@ -24,6 +24,27 @@
     "command": {
       "discriminator": "action",
       "mapping": {
+        "preparation_plan": {
+          "properties": {
+            "plan_id": {
+              "type": "string"
+            }
+          }
+        },
+        "prepare": {
+          "properties": {
+            "plan_id": {
+              "type": "string"
+            }
+          }
+        },
+        "preparation_read": {
+          "properties": {
+            "plan_id": {
+              "type": "string"
+            }
+          }
+        },
         "preview": {
           "properties": {
             "scenario_id": {"type": "string"},

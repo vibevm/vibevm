@@ -2734,3 +2734,13 @@ structure, and it goes when the file does.
 | @fact:B251-SEVERITY **severity** | P3 — preexisting stale test inventory; no BIND.2 regression and no extra current admission gate. |
 | @fact:B251-DISPOSITION **disposition** | Reconcile the actual added surfaces in the owning coverage maintenance task, preferably asserting meaningful named membership as well as the complete count. Preserve gap/binding distinctions; do not skip failures, silently weaken assertions or call the family passed. Must be resolved before claiming a green full catalogue gate. |
 | @fact:B251-FILED **filed by** | First Agent BIND.2 semantic review,2026-10-17. |
+
+## B-252 — preparation evidence readback has no continuation consumer {#b-252}
+
+| field | value |
+|---|---|
+| @fact:B252-WHAT **what** | M-06-D.2 retains actual captured bytes and typed partial outcomes, readable after provider revocation. No production consumer yet passes those retained bytes into another preparation plan or D1 hypothetical preview. For the same deterministic plan ID, execute returns the retained partial/interrupted outcome; regrant alone does not resume it. The wire exposes no resume/reset/renew command. A different cache or plan creates another operation and is not evidence of automatic recovery. |
+| @fact:B252-EVIDENCE **evidence** | PROP-072 PREVIEW-PREPARATION; vibe-orchestrator machine_operation/boot_debugger/preparation.rs retained-result branch; vibe-package-source source/boot_preparation.rs and source/preview.rs. Independent M-06-D.2 review found the original effect-separation and retained-partial-evidence criteria satisfied, with no P1/P2 regression. |
+| @fact:B252-SEVERITY **severity** | P2 — missing continuation capability; no additional D2 acceptance or campaign launch gate. |
+| @fact:B252-DISPOSITION **disposition** | Deferred. Add an explicit consumer of retained captured evidence and a bounded continuation policy using existing lifecycle/reservation owners. Preserve historical reads without current provider authority, and never repeat an uncertain effect merely because a grant was renewed. Remote, hydration and native producers remain explicitly unavailable until separately implemented; do not infer them from the provider interface. |
+| @fact:B252-FILED **filed by** | First Agent M-06-D.2 semantic review, 2026-10-18. |

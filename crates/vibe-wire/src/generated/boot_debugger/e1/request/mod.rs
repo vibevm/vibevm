@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
-/// Immutable boot debugger protocol; no build or write authority.
+/// Captured boot inspection and explicit host-admitted preview preparation.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Request {
@@ -37,6 +37,15 @@ pub enum Command {
 
     #[serde(rename = "inspect")]
     Inspect(Box<CommandInspect>),
+
+    #[serde(rename = "preparation_plan")]
+    PreparationPlan(Box<CommandPreparationPlan>),
+
+    #[serde(rename = "preparation_read")]
+    PreparationRead(Box<CommandPreparationRead>),
+
+    #[serde(rename = "prepare")]
+    Prepare(Box<CommandPrepare>),
 
     #[serde(rename = "preview")]
     Preview(Box<CommandPreview>),
@@ -106,6 +115,24 @@ pub struct CommandExplain {
 #[serde(deny_unknown_fields)]
 pub struct CommandInspect {
     pub snapshot_id: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CommandPreparationPlan {
+    pub plan_id: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CommandPreparationRead {
+    pub plan_id: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CommandPrepare {
+    pub plan_id: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
