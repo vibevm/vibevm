@@ -1,0 +1,31 @@
+{
+  "checks": [
+    {
+      "verification": "verify.m06.c2.01",
+      "state": "passed",
+      "report": "CLI --bin vibe m_06_c_2_cases final4 passed/0 failed/967 filtered; registration policy pair each1 passed/0 failed/970 filtered; production build0 and real headless/interactive/default structured fixtures all0. Published report 1db95672a703716ebb60a6582ee043dc1defc18a1915b001967076fbb835fbfd; independent review SHA256 2e3634bf12cad9b84db781facc4a958a64f1765ee16363e5c7f33548f2b51330. All initial failures retained in original report.",
+      "revision": 20734
+    },
+    {
+      "verification": "verify.m06.c2.03",
+      "state": "passed",
+      "report": "Workspace --lib m_06_c_2_cases2 passed/0 failed/749 filtered. Actual captured service/presentation source and immutable snapshot behavior independently reviewed. Published report 1db95672a703716ebb60a6582ee043dc1defc18a1915b001967076fbb835fbfd; independent review SHA256 2e3634bf12cad9b84db781facc4a958a64f1765ee16363e5c7f33548f2b51330. All initial failures retained in original report.",
+      "revision": 20735
+    },
+    {
+      "verification": "verify.m06.c2.04",
+      "state": "failed",
+      "report": "Literal cargo fmt --all -- --check FAILED exit1 on seven unchanged unrelated baseline files. Initial new module order error corrected; final scoped rustfmt0 is separate and does not change this Failed result. Published report 1db95672a703716ebb60a6582ee043dc1defc18a1915b001967076fbb835fbfd; independent review SHA256 2e3634bf12cad9b84db781facc4a958a64f1765ee16363e5c7f33548f2b51330. All initial failures retained in original report.",
+      "revision": 20736
+    },
+    {
+      "verification": "verify.m06.c2.05",
+      "state": "passed",
+      "report": "Actual git diff --check exit0. Independent frozen nine-path source hashes, reverse apply check0, PROP072 existing clauses preserved, new XML parse passed. Published report 1db95672a703716ebb60a6582ee043dc1defc18a1915b001967076fbb835fbfd; independent review SHA256 2e3634bf12cad9b84db781facc4a958a64f1765ee16363e5c7f33548f2b51330. All initial failures retained in original report.",
+      "revision": 20737
+    }
+  ],
+  "global_fmt_remains_failed": true,
+  "additional_reported_registration_tests": 2,
+  "additional_reported_production_fixtures": 3
+}

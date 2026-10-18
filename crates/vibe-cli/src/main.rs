@@ -37,6 +37,11 @@ pub(crate) fn promoted_env_names() -> &'static BTreeSet<String> {
     PROMOTED_FROM_USER_CONFIG.get_or_init(BTreeSet::new)
 }
 
+fn boot_viewer_policy(command: &Command) -> Option<command_progress::CommandPolicy> {
+    matches!(command, Command::Boot(args) if args.view)
+        .then_some(command_progress::CommandPolicy::Interactive)
+}
+
 fn main() -> ExitCode {
     let cli = match Cli::try_parse() {
         Ok(cli) => cli,
@@ -77,21 +82,38 @@ fn main() -> ExitCode {
         && read_env_opt("TERM")
             .map(|term| !term.eq_ignore_ascii_case("dumb"))
             .unwrap_or(true);
-    let (ctx, command_activity) = command_progress::configure_context(
-        output::Context::from_flags(
-            cli.quiet,
-            cli.json,
-            cli.invoked_by.as_deref(),
-            cli.unattended,
-            cli.agent_mode,
-        ),
-        &cli.command,
-        cli.verbose,
-        std::io::stdout().is_terminal(),
-        progress_interactive,
-        cli.no_progress,
-        read_env_opt("VIBE_NO_PROGRESS").as_deref(),
+    let base_context = output::Context::from_flags(
+        cli.quiet,
+        cli.json,
+        cli.invoked_by.as_deref(),
+        cli.unattended,
+        cli.agent_mode,
     );
+    // Standalone viewer registration owns the terminal; structured Boot still
+    // uses the incumbent PersistentProtocol policy. Keep this typed override
+    // here with the C2 composition registration, not in stdin protocol code.
+    let (ctx, command_activity) = if let Some(policy) = boot_viewer_policy(&cli.command) {
+        let disabled = command_progress::progress_disabled(
+            cli.no_progress,
+            read_env_opt("VIBE_NO_PROGRESS").as_deref(),
+        );
+        let ctx = base_context.with_progress(
+            cli.verbose,
+            policy.progress_mode(progress_interactive, disabled),
+        );
+        let activity = command_progress::CommandActivity::start(&ctx, policy);
+        (ctx, activity)
+    } else {
+        command_progress::configure_context(
+            base_context,
+            &cli.command,
+            cli.verbose,
+            std::io::stdout().is_terminal(),
+            progress_interactive,
+            cli.no_progress,
+            read_env_opt("VIBE_NO_PROGRESS").as_deref(),
+        )
+    };
 
     // Ensure `~/.vibe/registry.toml` exists with the default pair (vibespecs
     // GitHub + GitVerse) on any registry-needing command. A fresh checkout on

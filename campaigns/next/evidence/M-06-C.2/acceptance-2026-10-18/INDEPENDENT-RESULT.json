@@ -1,0 +1,96 @@
+{
+  "status": "recommend_accept_original_C2_scope",
+  "P1": 0,
+  "P2": 0,
+  "base": "62a9fafd2fe4006f5872ecb16aeb9ca58d960c2f",
+  "artifact_report": {
+    "digest": "1db95672a703716ebb60a6582ee043dc1defc18a1915b001967076fbb835fbfd",
+    "bytes": 27845
+  },
+  "artifact_patch": {
+    "digest": "c73b404fa5cc491838974580612ed43f5708e41e2e7e5dc822a741c0097b8b31",
+    "bytes": 40134
+  },
+  "source_path_count": 9,
+  "source_before_after_unchanged": true,
+  "reverse_apply_check_exit": 0,
+  "criteria": [
+    {
+      "index": 0,
+      "statement": "Headless viewer and API report the same nodes, provenance and differences.",
+      "recommendation": "supported"
+    },
+    {
+      "index": 1,
+      "statement": "Standalone D-007 viewer exists; no IDE plugin/MVP is introduced.",
+      "recommendation": "supported"
+    }
+  ],
+  "production_trace": [
+    "main Command::Boot typed view policy",
+    "boot::run/run_with_io/open_route",
+    "DocumentAnalysisHost explicit declared root/artifact",
+    "BootDebuggerRoute typed immutable service",
+    "workspace Viewer presentation state",
+    "CLI RouteService shared result/error forwarding"
+  ],
+  "preserved_PROP072": {
+    "baseline_full_read": true,
+    "prior_top_level_elements_unchanged": 8,
+    "all_prior_leaf_clauses_retained": true,
+    "only_ignoring_interelement_tails": true,
+    "new_viewer_clauses": 3,
+    "XML_parse": "passed"
+  },
+  "retained_checks": {
+    "CLI_new_C2": {
+      "passed": 4,
+      "failed": 0,
+      "filtered": 967
+    },
+    "workspace_new_C2": {
+      "passed": 2,
+      "failed": 0,
+      "filtered": 749
+    },
+    "policy_inventory": {
+      "passed": 1,
+      "failed": 0,
+      "filtered": 970
+    },
+    "policy_stream": {
+      "passed": 1,
+      "failed": 0,
+      "filtered": 970
+    },
+    "production_executable_fixtures": {
+      "headless": 0,
+      "interactive": 0,
+      "default_structured": 0
+    },
+    "production_build_exit": 0,
+    "global_fmt": "failed seven unchanged baseline files",
+    "scoped_fmt_exit": 0,
+    "diff_check_exit": 0
+  },
+  "checks_evidence": "immutable published report harness excerpts+production fixture driver; reviewer did not rerun",
+  "limits": [
+    "current-world captured inspector, not M06 preview gates",
+    "line-oriented interactive UI allowed by thin-local original contract",
+    "full Inspect/source catalogue retained in memory; bounded visible20nodes, no arbitrary memory guarantee",
+    "shared resource differences, not semantic graph-edit algorithm",
+    "missing authored-source mapping/offsets stay null/gaps",
+    "native collection seq0 remains separate; no canonical acceptance/turn-completion claim"
+  ],
+  "reviewer_actions": {
+    "source_edits": 0,
+    "tests_builds": 0,
+    "API_model_process": 0,
+    "Git_mutations": 0,
+    "worktrees": 0
+  },
+  "canonical_acceptance_performed": false,
+  "Root_final_judgment_owner": true,
+  "manifest_sha256": "daf5511e27293847f60c93d4735b33fd03225236d86bf79f63dff3d689d166ff",
+  "report_sha256": "2e3634bf12cad9b84db781facc4a958a64f1765ee16363e5c7f33548f2b51330"
+}

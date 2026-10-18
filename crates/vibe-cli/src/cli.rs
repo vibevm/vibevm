@@ -159,7 +159,7 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
-    /// Exchange structured boot debugger requests on stdin/stdout.
+    /// Inspect captured boot evidence: structured stdin/stdout or standalone --view.
     Boot(crate::commands::boot::BootArgs),
     /// Query an explicitly prepared adapter session over bounded JSON lines.
     AdapterPlan(crate::commands::adapter_plan::AdapterPlanArgs),

@@ -10,6 +10,7 @@ pub mod measurement;
 pub mod protocol;
 pub mod retained;
 mod static_summary;
+pub mod viewer;
 pub use static_summary::{StaticDecompileError, capture_static, decompile_static};
 
 /// Existing CLI summary vocabulary, now shared without changing its JSON.

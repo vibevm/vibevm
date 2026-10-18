@@ -1,0 +1,118 @@
+{
+  "state": "published_patch_review_frozen_source_stable",
+  "files": [
+    {
+      "path": "crates/vibe-cli/src/cli.rs",
+      "sha256": "bd540ddad4249e4e62bfb3dd2b5dfe2cb88e879d888da336bda7308a1cef3453",
+      "bytes": 22022
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/mod.rs",
+      "sha256": "7f5305c5e27e7b6959701f1e6e42a6a931e489f03674c0d35bc4cc373016bbb7",
+      "bytes": 6437
+    },
+    {
+      "path": "crates/vibe-cli/src/main.rs",
+      "sha256": "861d9730e1ab3720b5f606094dd9a463d03df44bcb7ea9436f1622fd17800bb2",
+      "bytes": 28292
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/mod.rs",
+      "sha256": "2f8a77722dda3423d5361dd267f1149a04533ae81722b28e8a6560f3f671b0a0",
+      "bytes": 5336
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "sha256": "6be4c5cdec713d5f97c0f94916e1c6975bf0b45be8cbae223168471b7c0cb5c6",
+      "bytes": 16690
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/viewer.rs",
+      "sha256": "9a6c85d1ba5845ae4212c72cc7894a35e0c9d5dfccb92a4ed2753f53a3d52f35",
+      "bytes": 7265
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/viewer_tests.rs",
+      "sha256": "d6f2280f7fa282a9d2a5111b8b93cad0eaecd5767b2255803367cf40df05a301",
+      "bytes": 9149
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/viewer.rs",
+      "sha256": "8097ce7f79c7975a66f1bfe9e9815780779180c8dcf039b1a877667673bcd4a1",
+      "bytes": 7758
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/viewer_tests.rs",
+      "sha256": "800a2dd93446bbfa839245533d361684e45b273131b630978541df5bd8d18bab",
+      "bytes": 3746
+    }
+  ],
+  "base": "62a9fafd2fe4006f5872ecb16aeb9ca58d960c2f",
+  "after": [
+    {
+      "path": "crates/vibe-cli/src/cli.rs",
+      "sha256": "bd540ddad4249e4e62bfb3dd2b5dfe2cb88e879d888da336bda7308a1cef3453",
+      "bytes": 22022,
+      "matches_before": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/mod.rs",
+      "sha256": "7f5305c5e27e7b6959701f1e6e42a6a931e489f03674c0d35bc4cc373016bbb7",
+      "bytes": 6437,
+      "matches_before": true
+    },
+    {
+      "path": "crates/vibe-cli/src/main.rs",
+      "sha256": "861d9730e1ab3720b5f606094dd9a463d03df44bcb7ea9436f1622fd17800bb2",
+      "bytes": 28292,
+      "matches_before": true
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/mod.rs",
+      "sha256": "2f8a77722dda3423d5361dd267f1149a04533ae81722b28e8a6560f3f671b0a0",
+      "bytes": 5336,
+      "matches_before": true
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "sha256": "6be4c5cdec713d5f97c0f94916e1c6975bf0b45be8cbae223168471b7c0cb5c6",
+      "bytes": 16690,
+      "matches_before": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/viewer.rs",
+      "sha256": "9a6c85d1ba5845ae4212c72cc7894a35e0c9d5dfccb92a4ed2753f53a3d52f35",
+      "bytes": 7265,
+      "matches_before": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/viewer_tests.rs",
+      "sha256": "d6f2280f7fa282a9d2a5111b8b93cad0eaecd5767b2255803367cf40df05a301",
+      "bytes": 9149,
+      "matches_before": true
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/viewer.rs",
+      "sha256": "8097ce7f79c7975a66f1bfe9e9815780779180c8dcf039b1a877667673bcd4a1",
+      "bytes": 7758,
+      "matches_before": true
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/viewer_tests.rs",
+      "sha256": "800a2dd93446bbfa839245533d361684e45b273131b630978541df5bd8d18bab",
+      "bytes": 3746,
+      "matches_before": true
+    }
+  ],
+  "published_report": {
+    "digest": "1db95672a703716ebb60a6582ee043dc1defc18a1915b001967076fbb835fbfd",
+    "bytes": 27845
+  },
+  "published_patch": {
+    "digest": "c73b404fa5cc491838974580612ed43f5708e41e2e7e5dc822a741c0097b8b31",
+    "bytes": 40134
+  },
+  "reverse_apply_check_exit": 0,
+  "all_prior_PROP072_top_level_unchanged": true,
+  "source_writes_by_reviewer": 0
+}

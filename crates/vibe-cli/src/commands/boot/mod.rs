@@ -11,6 +11,7 @@ use vibe_orchestrator::{
     machine_operation::boot_debugger::{self, BootDebuggerRoute},
 };
 use vibe_workspace::boot_debugger::protocol::CapturedKind;
+mod viewer;
 
 #[derive(Debug, Clone, Copy, ValueEnum)]
 pub enum ArtifactKind {
@@ -20,6 +21,12 @@ pub enum ArtifactKind {
 }
 #[derive(Debug, Args)]
 pub struct BootArgs {
+    /// Standalone line-oriented boot inspector (help lists its commands).
+    #[arg(long)]
+    pub view: bool,
+    /// Drive the viewer headlessly with semicolon-separated commands; emit JSON frames.
+    #[arg(long, requires = "view")]
+    pub send: Option<String>,
     /// Explicit host root; request bodies cannot change it.
     #[arg(long)]
     pub root: PathBuf,
@@ -30,6 +37,20 @@ pub struct BootArgs {
     pub kind: ArtifactKind,
 }
 pub fn run(args: BootArgs) -> Result<()> {
+    run_with_io(args, std::io::stdin().lock(), &mut std::io::stdout().lock())
+}
+
+/// Standard command composition, shared by terminal and headless fixtures.
+fn run_with_io(args: BootArgs, input: impl BufRead, output: &mut impl Write) -> Result<()> {
+    let route = open_route(&args)?;
+    if args.view {
+        viewer::serve(&route, input, output, args.send.as_deref())
+    } else {
+        serve(&route, input, output)
+    }
+}
+
+fn open_route(args: &BootArgs) -> Result<Arc<BootDebuggerRoute>> {
     let root = args
         .root
         .canonicalize()
@@ -65,11 +86,7 @@ pub fn run(args: BootArgs) -> Result<()> {
         BootDebuggerRoute::new(host, artifact, kind)
             .map_err(|e| anyhow::anyhow!("{}", e.message))?,
     );
-    serve(
-        &route,
-        std::io::stdin().lock(),
-        &mut std::io::stdout().lock(),
-    )
+    Ok(route)
 }
 /// First output is the host-assigned capture/context. Subsequent lines are
 /// strict OperationEnvelope inputs and outputs, never CLI flag reparsing.
