@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Immutable boot debugger protocol; no build or write authority.
+/// Captured boot inspection and explicit host-admitted preview preparation.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Result {
@@ -63,6 +63,9 @@ pub enum Body {
 
     #[serde(rename = "inspect")]
     Inspect(Box<BodyInspect>),
+
+    #[serde(rename = "preparation")]
+    Preparation(Box<BodyPreparation>),
 
     #[serde(rename = "preview")]
     Preview(Box<BodyPreview>),
@@ -195,6 +198,40 @@ pub struct BodyInspect {
     pub resources: Vec<Resource>,
 
     pub sources: Vec<Source>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum BodyPreparationStatus {
+    #[serde(rename = "complete")]
+    Complete,
+
+    #[serde(rename = "needs_preparation")]
+    NeedsPreparation,
+
+    #[serde(rename = "partial")]
+    Partial,
+
+    #[serde(rename = "planned")]
+    Planned,
+
+    #[serde(rename = "recovery_required")]
+    RecoveryRequired,
+
+    #[serde(rename = "unavailable")]
+    Unavailable,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct BodyPreparation {
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub outcome_json: Option<String>,
+
+    pub plan_id: String,
+
+    pub plan_json: String,
+
+    pub status: BodyPreparationStatus,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

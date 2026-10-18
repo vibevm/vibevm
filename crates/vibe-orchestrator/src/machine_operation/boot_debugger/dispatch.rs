@@ -3,8 +3,19 @@ use super::*;
 impl BootDebuggerRoute {
     pub(super) fn dispatch(&self, state: &mut State, command: q::Command) -> Answer<r::Result> {
         use q::Command;
+        match &command {
+            Command::PreparationPlan(c) => return self.preparation(state, &c.plan_id, false, true),
+            Command::Prepare(c) => return self.preparation(state, &c.plan_id, true, false),
+            Command::PreparationRead(c) => {
+                return self.preparation(state, &c.plan_id, false, false);
+            }
+            _ => {}
+        }
         let id =
             match &command {
+                Command::PreparationPlan(_) | Command::Prepare(_) | Command::PreparationRead(_) => {
+                    unreachable!("handled above")
+                }
                 Command::Preview(c) => return self.preview(state, c),
                 Command::Capture(_) => {
                     let capture = state.client.freeze().map_err(|_| {
