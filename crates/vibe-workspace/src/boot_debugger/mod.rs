@@ -149,3 +149,6 @@ pub fn from_emission(capture_id: String, event: &vibe_spec::EmissionEvent) -> Su
     graph.gaps.push("Emission counts identify contribution occurrences only; per-node source, position and inclusion chains are unavailable in this observer event.".into());
     SummaryCapture { capture_id, graph }
 }
+
+#[cfg(test)]
+mod m_06_e_1_cases;

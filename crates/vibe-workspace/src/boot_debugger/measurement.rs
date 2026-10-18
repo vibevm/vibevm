@@ -19,6 +19,12 @@ pub enum Count {
     Unavailable { reason: String },
 }
 impl Count {
+    pub fn exact_value(&self) -> Option<u64> {
+        match self {
+            Self::Exact { value } => Some(*value),
+            _ => None,
+        }
+    }
     pub fn exact(value: u64) -> Self {
         Self::Exact { value }
     }

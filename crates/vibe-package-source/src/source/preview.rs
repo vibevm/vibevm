@@ -24,9 +24,9 @@ impl InstallResolver {
         let transaction = self
             .bind_request(request.clone())
             .map_err(|e| e.to_string())?;
-        let graph = transaction
-            .solve(&request.roots)
-            .map_err(|e| e.to_string())?;
+        let graph =
+            vibe_install::resolve_boot_comparison(&transaction, &request.roots, &host.manifest)
+                .map_err(|e| e.to_string())?;
         let catalog = transaction
             .catalog_inspection()
             .ok_or("missing transaction catalog")?;
@@ -86,7 +86,11 @@ impl InstallResolver {
                 }
                 // Effective configuration can change boot/subskill loading;
                 // only the exact source declaration may supply this capture.
-                if before.manifest != manifest {
+                let mut source_declaration = before.manifest.clone();
+                // A selected dependency set is resolver metadata, not source
+                // derivation. All other authored source/owner fields must match.
+                source_declaration.requires.packages = manifest.requires.packages.clone();
+                if source_declaration != manifest {
                     missing.push(format!("configured source/owner preparation: {key}"));
                     captured = true;
                     break;
@@ -160,12 +164,7 @@ impl InstallResolver {
             host,
             packages,
             catalog.digest.clone(),
-            format!(
-                "{admitted:?}; {:?}; {:?}; {:?}",
-                route.recorded.choices,
-                route.effects,
-                self.cell_selection()
-            ),
+            format!("{admitted:?}; {route:?}; {:?}", self.cell_selection()),
             missing,
         )
     }

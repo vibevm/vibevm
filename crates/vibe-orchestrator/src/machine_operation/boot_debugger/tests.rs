@@ -586,3 +586,59 @@ fn m_06_c_1_cases_same_client_overlay_presence_and_retained_basis() {
     assert!(client.freeze().is_err());
     assert_eq!(stable, inspect());
 }
+
+#[test]
+fn m_06_e_1_cases_partial_baseline_keeps_both_worlds_and_unavailable_delta() {
+    let (root, route, _) = fixture();
+    std::fs::write(
+        root.path().join("vibe.toml"),
+        "[project]\nname='fixture'\nversion='1.0.0'\n",
+    )
+    .unwrap();
+    let id = capture(&route);
+    let host = route.hypothetical_host(&id).unwrap();
+    // An explicitly unavailable source owner, not a replacement graph/solver.
+    let baseline = hypothetical::FrozenWorld::from_resolution(
+        host.clone(),
+        vec![],
+        "baseline-catalog".into(),
+        "admitted-baseline".into(),
+        vec!["transitive source capture: org.example/missing".into()],
+    )
+    .unwrap();
+    let candidate = hypothetical::FrozenWorld::from_resolution(
+        host,
+        vec![],
+        "candidate-catalog".into(),
+        "admitted-candidate".into(),
+        vec![],
+    )
+    .unwrap();
+    let baseline_id = baseline.identity().to_owned();
+    let candidate_id = candidate.identity().to_owned();
+    let scenario =
+        hypothetical::PreparedScenario::new(baseline, candidate, "os:linux".into()).unwrap();
+    let input = route.retain_hypothetical(scenario).unwrap();
+    let r::Body::Preview(body) = route.request(input).unwrap().body else {
+        panic!()
+    };
+    assert_eq!(body.status, r::BodyPreviewStatus::Incomplete);
+    assert_eq!(
+        body.missing,
+        vec!["baseline: transitive source capture: org.example/missing"]
+    );
+    let comparison: serde_json::Value =
+        serde_json::from_str(body.comparison_json.as_ref().unwrap()).unwrap();
+    assert_eq!(comparison["baseline"]["world"], baseline_id);
+    assert_eq!(comparison["candidate"]["world"], candidate_id);
+    for delta in comparison["marginal"].as_array().unwrap() {
+        assert_eq!(delta["baseline"]["world"], baseline_id);
+        assert_eq!(delta["candidate"]["world"], candidate_id);
+        assert_eq!(delta["value"]["status"], "unavailable");
+    }
+    assert_eq!(comparison["candidate"]["static_raw"]["value"], 0);
+    assert_eq!(
+        comparison["baseline"]["static_raw"]["status"],
+        "unavailable"
+    );
+}

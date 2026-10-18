@@ -45,3 +45,7 @@ path = "src/lib.rs"
 [[test]]
 name = "m_05_f_2_cases"
 path = "src/lib.rs"
+
+[[test]]
+name = "m_06_e_1_cases"
+path = "src/lib.rs"

@@ -276,6 +276,9 @@ pub struct BodyPreview {
     pub status: BodyPreviewStatus,
 
     pub target: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub comparison_json: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

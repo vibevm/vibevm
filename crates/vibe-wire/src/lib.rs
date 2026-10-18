@@ -119,3 +119,6 @@ mod m_05_d_1_cases;
 
 #[cfg(test)]
 mod m_06_d_2_cases;
+
+#[cfg(test)]
+mod m_06_e_1_cases;

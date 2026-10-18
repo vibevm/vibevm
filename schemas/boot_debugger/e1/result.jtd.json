@@ -154,6 +154,9 @@
             "artifact": {"type": "string", "nullable": true},
             "compiler_carrier_json": {"type": "string", "nullable": true},
             "measurement_json": {"type": "string", "nullable": true}
+          },
+          "optionalProperties": {
+            "comparison_json": {"type": "string", "metadata": {"x-default": null}}
           }
         },
         "capture": {
