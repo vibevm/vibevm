@@ -138,6 +138,13 @@ pub fn validate_result(result: &QueryResult) -> std::result::Result<(), &'static
     {
         return Err("native path");
     }
+    if let Some(encoded) = &result.derivative_result_json {
+        let record: crate::generated::derivative_result::DerivativeResult =
+            serde_json::from_str(encoded).map_err(|_| "derivative record shape")?;
+        record
+            .checked_binding()
+            .map_err(|_| "derivative record identity")?;
+    }
     let observation = &result.observation;
     if !digest(&observation.resolution_hash, "sha256-query-resolution/1:")
         || !digest(&observation.document_hash, "sha256:")

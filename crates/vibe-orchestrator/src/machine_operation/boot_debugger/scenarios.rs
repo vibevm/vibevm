@@ -7,6 +7,16 @@ pub enum ScenarioFailure {
     Incomplete(String),
 }
 pub trait ScenarioProducer: Send + Sync {
+    fn capture_with_derivatives(
+        &self,
+        host: hypothetical::HostCapture,
+        draft: &scenario::Draft,
+        target: &str,
+        _derivatives: &vibe_workspace::source_query::derivatives::DerivativeCatalog,
+    ) -> Result<hypothetical::PreparedScenario, ScenarioFailure> {
+        self.capture(host, draft, target)
+    }
+
     fn capture(
         &self,
         host: hypothetical::HostCapture,
@@ -25,6 +35,7 @@ impl BootDebuggerRoute {
         command: &q::CommandScenario,
     ) -> Answer<r::Result> {
         let mut body = r::BodyPreview {
+            produced_snapshot_id: None,
             scenario_id: String::new(),
             baseline_world: String::new(),
             candidate_world: String::new(),
@@ -48,7 +59,7 @@ impl BootDebuggerRoute {
                 .ok_or_else(|| {
                     ScenarioFailure::Incomplete("local scenario producer not configured".into())
                 })?
-                .capture(host, &draft, &command.target)
+                .capture_with_derivatives(host, &draft, &command.target, &state.derivatives)
         };
         match produce() {
             Ok(scenario) => {

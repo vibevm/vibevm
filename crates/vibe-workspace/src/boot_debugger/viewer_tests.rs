@@ -31,6 +31,7 @@ fn fixture() -> Fixture {
     Fixture {
         calls: Rc::new(RefCell::new(vec![])),
         view: r::BodyInspect {
+            derivative_catalog_json: None,
             capture_id: "frozen".into(),
             compiler_carrier_format_id: None,
             compiler_carrier_json: None,

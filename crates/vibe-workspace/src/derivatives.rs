@@ -250,3 +250,5 @@ mod rebase;
 pub use rebase::{RebaseDisposition, RebaseHandoff, RebaseReview};
 #[cfg(test)]
 mod m_10_c_2_cases;
+
+pub(crate) use inspection::inventory as inspection_inventory;

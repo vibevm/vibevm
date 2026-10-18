@@ -16,7 +16,11 @@ impl McpTool for ReadSpecMcpTool {
 }
 
 pub(super) fn run_query(args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
-    let response = SourceQueryService::execute_json(&ctx.project_root, args);
+    let response = SourceQueryService::execute_json_with_catalog(
+        &ctx.project_root,
+        args,
+        ctx.source_derivatives().clone(),
+    );
     let is_error = response.is_error();
     let value = response.into_value();
     if is_error {

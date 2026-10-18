@@ -29,6 +29,7 @@ use vibe_workspace::boot_debugger::{
     measurement,
     protocol::{self, Projection},
 };
+pub use vibe_workspace::source_query::derivatives::DerivativeCatalog;
 
 pub const OPERATION: &str = "rust:vibe-workspace:boot-debugger";
 pub const SOURCE: &str = "captured-boot-debugger/1";
@@ -80,12 +81,14 @@ fn decimal(s: &str) -> Answer<u64> {
 }
 
 struct Snapshot {
-    capture: AnalysisCapture,
+    capture: Arc<AnalysisCapture>,
+    retained: BTreeMap<String, Vec<u8>>,
     projection: Option<Projection>,
     resources: Vec<r::Resource>,
     nodes: Vec<r::Node>,
     sources: Vec<r::Source>,
     gaps: Vec<String>,
+    derivatives: Option<String>,
 }
 struct Inspection {
     snapshot: String,
@@ -102,6 +105,7 @@ struct Inspection {
 }
 struct State {
     client: DocumentClient,
+    derivatives: vibe_workspace::source_query::derivatives::DerivativeCatalog,
     snapshots: BTreeMap<String, Arc<Snapshot>>,
     inspections: BTreeMap<String, Inspection>,
     next: u64,
@@ -147,6 +151,7 @@ impl BootDebuggerRoute {
             context,
             state: Mutex::new(State {
                 client,
+                derivatives: Default::default(),
                 snapshots: BTreeMap::new(),
                 inspections: BTreeMap::new(),
                 next: 1,
@@ -241,9 +246,34 @@ impl BootDebuggerRoute {
                 "capture already retained",
             ));
         }
-        state
-            .snapshots
-            .insert(id.clone(), Arc::new(self.snapshot(capture)));
+        let snapshot = self.snapshot(capture, &state.derivatives);
+        state.snapshots.insert(id.clone(), Arc::new(snapshot));
+        Ok(id)
+    }
+    /// Retain passive derivative history alongside one actual host capture.
+    /// No compiler-to-derivative join is inferred from labels, paths or hashes.
+    /// This host composition seam does not grant current source proof.
+    pub fn retain_derivative_capture(
+        &self,
+        capture: AnalysisCapture,
+        catalog: &vibe_workspace::source_query::derivatives::DerivativeCatalog,
+    ) -> Answer<String> {
+        if format!("boot-context:{}", capture.context()) != self.context {
+            return Err(fault(
+                e::ErrorCode::WrongContext,
+                "capture belongs to another host",
+            ));
+        }
+        let id = capture.id().to_owned();
+        let mut state = self.state.lock().map_err(|_| internal())?;
+        if state.snapshots.contains_key(&id) {
+            return Err(fault(
+                e::ErrorCode::InvalidRequest,
+                "capture already retained",
+            ));
+        }
+        let snapshot = self.snapshot(capture, catalog);
+        state.snapshots.insert(id.clone(), Arc::new(snapshot));
         Ok(id)
     }
     pub fn compare_context_root(&self, root: &Path) -> Answer<()> {
@@ -252,7 +282,20 @@ impl BootDebuggerRoute {
         }
         Ok(())
     }
-    fn snapshot(&self, capture: AnalysisCapture) -> Snapshot {
+    /// Explicit host configuration applies only to subsequent captures. Existing
+    /// snapshots and page sessions keep their original exact catalogue.
+    pub fn configure_derivatives(
+        &self,
+        catalog: vibe_workspace::source_query::derivatives::DerivativeCatalog,
+    ) -> Answer<()> {
+        self.state.lock().map_err(|_| internal())?.derivatives = catalog;
+        Ok(())
+    }
+    fn snapshot(
+        &self,
+        capture: AnalysisCapture,
+        catalog: &vibe_workspace::source_query::derivatives::DerivativeCatalog,
+    ) -> Snapshot {
         let resources = capture
             .resources()
             .enumerate()
@@ -325,6 +368,7 @@ impl BootDebuggerRoute {
                     artifact_digest: artifact_digest.clone(),
                     // A graph identity is not an authenticated join to a host path.
                     authored_resource_id: None,
+                    derivative_read: None,
                 });
             }
             for (c, row) in p.graph.contributions.iter().enumerate() {
@@ -350,13 +394,21 @@ impl BootDebuggerRoute {
                 }
             }
         }
+        let derivatives = if catalog.records().is_empty() {
+            None
+        } else {
+            gaps.push("Derivative catalogue is retained observed history; current base and compiler occurrence joins are unavailable.".into());
+            Some(serde_json::to_string(catalog.records()).expect("checked retained records"))
+        };
         Snapshot {
-            capture,
+            capture: Arc::new(capture),
+            retained: BTreeMap::new(),
             projection,
             resources,
             nodes,
             sources,
             gaps,
+            derivatives,
         }
     }
     fn result(&self, snapshot: Option<String>, body: r::Body) -> Answer<r::Result> {
@@ -583,3 +635,5 @@ mod preview;
 pub mod scenarios;
 #[cfg(test)]
 mod tests;
+
+mod produced;

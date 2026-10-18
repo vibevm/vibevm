@@ -14,6 +14,7 @@ use vibe_spec::SelectedPackage;
 use crate::extension_world::{ExtensionWorldEpoch, ExtensionWorldError};
 
 mod capture;
+pub mod derivatives;
 mod visibility;
 pub use capture::{
     BoundSourceInputs, CanonicalNodeIdentity, CapturedSourceFile, CommonMarkExtraction,

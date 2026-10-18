@@ -28,6 +28,9 @@ pub struct ReadArgs {
     pub path: PathBuf,
     #[arg(long)]
     pub request_json: Option<String>,
+    /// Host-selected project-relative derivative result records (observed provenance).
+    #[arg(long = "derivative-record")]
+    pub derivative_records: Vec<String>,
     #[arg(
         long,
         value_enum,
@@ -52,6 +55,22 @@ pub struct ReadArgs {
 }
 
 pub fn run(args: &SpecArgs, json_output: bool) -> ExitCode {
+    run_with_io(
+        args,
+        json_output,
+        &mut std::io::stdout().lock(),
+        &mut std::io::stderr().lock(),
+    )
+    .unwrap_or_else(|_| ExitCode::from(1))
+}
+
+/// The standard source command, with output streams supplied by its caller.
+pub(super) fn run_with_io(
+    args: &SpecArgs,
+    json_output: bool,
+    output: &mut impl std::io::Write,
+    errors: &mut impl std::io::Write,
+) -> std::io::Result<ExitCode> {
     let (args, resolve) = match &args.command {
         SpecCommand::Read(args) => (args, false),
         SpecCommand::Resolve(args) => (args, true),
@@ -61,39 +80,60 @@ pub fn run(args: &SpecArgs, json_output: bool) -> ExitCode {
         Err(message) => {
             let error = json!({"schema":1,"code":"invalid_request","message":message,"boundary":"CLI request","candidates":[]});
             if json_output {
-                println!("{error}")
+                writeln!(output, "{error}")?
             } else {
-                eprintln!("vibe: {message}");
+                writeln!(errors, "vibe: {message}")?;
             }
-            return ExitCode::from(1);
+            return Ok(ExitCode::from(1));
         }
     };
-    let response = SourceQueryService::execute_json(&args.path, &request);
+    let response = if vibe_wire::behaviour::source_query::read_request(&request).is_err() {
+        SourceQueryService::execute_json(&args.path, &request)
+    } else {
+        let catalog = match vibe_workspace::source_query::derivatives::DerivativeCatalog::load(
+            &args.path,
+            &args.derivative_records,
+        ) {
+            Ok(catalog) => catalog,
+            Err(message) => {
+                let error = json!({"schema":1,"code":"unavailable_world","message":message,"boundary":"derivative host configuration","candidates":[]});
+                if json_output {
+                    writeln!(output, "{error}")?;
+                } else {
+                    writeln!(errors, "vibe: {message}")?;
+                }
+                return Ok(ExitCode::from(1));
+            }
+        };
+        SourceQueryService::execute_json_with_catalog(&args.path, &request, catalog)
+    };
     let failed = response.is_error();
     let value = response.into_value();
     if json_output {
-        println!("{value}");
+        writeln!(output, "{value}")?;
     } else if failed {
-        eprintln!(
+        writeln!(
+            errors,
             "vibe: {}",
             value["message"].as_str().unwrap_or("Source query refused")
-        );
+        )?;
     } else if let Some(content) = value["content"]
         .as_str()
         .filter(|content| !content.is_empty())
     {
-        print!("{content}");
+        write!(output, "{content}")?;
     } else {
-        println!(
+        writeln!(
+            output,
             "{}",
             serde_json::to_string_pretty(&value).expect("validated source result")
-        );
+        )?;
     }
-    if failed {
+    Ok(if failed {
         ExitCode::from(1)
     } else {
         ExitCode::SUCCESS
-    }
+    })
 }
 
 fn request(args: &ReadArgs, resolve: bool) -> Result<Value, &'static str> {

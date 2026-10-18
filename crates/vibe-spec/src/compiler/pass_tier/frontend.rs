@@ -65,6 +65,17 @@ impl<Source: crate::SectionSource, Admit> AdmittedSource<'_, Source, Admit> {
         Ok(self.source.read_resolved_source(address, metadata))
     }
 
+    pub(crate) fn observe_compiler_read(
+        &self,
+        address: &crate::SpecAddress,
+        source: &crate::embed::ResolvedSource,
+    ) {
+        // Observers cannot veto compilation, including by unwinding.
+        let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            self.source.observe_compiler_read(address, source)
+        }));
+    }
+
     pub(crate) fn expand_pattern(
         &self,
         address: &crate::SpecAddress,

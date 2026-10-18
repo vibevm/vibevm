@@ -45,6 +45,7 @@ fn args(root: &std::path::Path, send: Option<String>) -> BootArgs {
     BootArgs {
         root: root.into(),
         registry: None,
+        derivative_records: vec![],
         artifact: "STATIC.md".into(),
         kind: ArtifactKind::Static,
         view: send.is_some(),

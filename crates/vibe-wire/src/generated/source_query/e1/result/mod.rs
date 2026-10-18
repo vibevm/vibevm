@@ -65,6 +65,11 @@ pub struct Result {
 
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub status: Option<String>,
+
+    /// Strict derivative-result JSON; retained observed provenance only, never
+    /// current base or source proof.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub derivative_result_json: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

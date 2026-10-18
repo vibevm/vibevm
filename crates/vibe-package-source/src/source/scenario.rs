@@ -22,6 +22,15 @@ impl InstallResolver {
         draft: &Draft,
         target: String,
     ) -> Result<PreparedScenario, CaptureFailure> {
+        self.capture_boot_scenario_with_derivatives(baseline, draft, target, &Default::default())
+    }
+    pub fn capture_boot_scenario_with_derivatives(
+        &self,
+        baseline: HostCapture,
+        draft: &Draft,
+        target: String,
+        derivatives: &vibe_orchestrator::machine_operation::boot_debugger::DerivativeCatalog,
+    ) -> Result<PreparedScenario, CaptureFailure> {
         let candidate = draft
             .candidate(&baseline, &target)
             .map_err(CaptureFailure::Incompatible)?;
@@ -31,8 +40,13 @@ impl InstallResolver {
             &candidate.selections,
             &candidate.draft_identity,
         );
-        let baseline = self.capture_boot_world_typed(baseline_request, baseline)?;
-        let candidate = self.capture_boot_world_typed(candidate_request, candidate.host)?;
+        let baseline =
+            self.capture_boot_world_with_derivatives(baseline_request, baseline, derivatives)?;
+        let candidate = self.capture_boot_world_with_derivatives(
+            candidate_request,
+            candidate.host,
+            derivatives,
+        )?;
         PreparedScenario::new(baseline, candidate, target).map_err(CaptureFailure::Incompatible)
     }
 }
@@ -104,6 +118,15 @@ impl vibe_orchestrator::machine_operation::boot_debugger::scenarios::ScenarioPro
         draft: &Draft,
         target: &str,
     ) -> Result<PreparedScenario, CaptureFailure> {
+        self.capture_with_derivatives(host, draft, target, &Default::default())
+    }
+    fn capture_with_derivatives(
+        &self,
+        host: HostCapture,
+        draft: &Draft,
+        target: &str,
+        derivatives: &vibe_orchestrator::machine_operation::boot_debugger::DerivativeCatalog,
+    ) -> Result<PreparedScenario, CaptureFailure> {
         if !host.manifest.requires.git_packages.is_empty() {
             return Err(CaptureFailure::Incomplete(
                 "git source preparation unsupported".into(),
@@ -122,7 +145,7 @@ impl vibe_orchestrator::machine_operation::boot_debugger::scenarios::ScenarioPro
             &[],
         )
         .map_err(|e| CaptureFailure::Incomplete(e.to_string()))?;
-        resolver.capture_boot_scenario(host, draft, target.into())
+        resolver.capture_boot_scenario_with_derivatives(host, draft, target.into(), derivatives)
     }
 }
 impl InstallResolver {

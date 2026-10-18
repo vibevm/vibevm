@@ -31,7 +31,7 @@ pub struct InventoryDifference {
     /// None means removal. Unchanged paths appear in show, not diff.
     pub after: Option<FileInspection>,
 }
-fn inventory(source: &RetainedSource) -> Vec<FileInspection> {
+pub(crate) fn inventory(source: &RetainedSource) -> Vec<FileInspection> {
     let mut rows: Vec<_> = source
         .files
         .iter()

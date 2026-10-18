@@ -48,8 +48,10 @@ pub struct FrozenWorld {
     packages: Vec<SelectedPackage>,
     catalog: String,
     identity: String,
+    identity_basis: String,
     missing: Vec<String>,
     resolution_evidence: String,
+    derivatives: crate::source_query::derivatives::DerivativeCatalog,
 }
 impl FrozenWorld {
     /// Bind source-owner supplied resolution evidence once. This constructor
@@ -110,9 +112,83 @@ impl FrozenWorld {
             packages,
             catalog,
             identity: digest(&encoded),
+            identity_basis: digest(&encoded),
             missing,
             resolution_evidence: request_and_choices,
+            derivatives: Default::default(),
         })
+    }
+    /// Bind checked records to the already selected, finite source inventory.
+    /// This is observed capture continuity, not current base authentication.
+    pub fn with_derivative_catalog(
+        mut self,
+        catalog: crate::source_query::derivatives::DerivativeCatalog,
+    ) -> Result<Self, String> {
+        for record in catalog.records() {
+            let binding = record.checked_binding().map_err(|e| e.to_string())?;
+            let local = binding.local();
+            let Some(row) = self.packages.iter().find(|row| {
+                row.manifest.package.as_ref().is_some_and(|p| {
+                    local.owner.group.as_ref() == Some(&p.group)
+                        && local.owner.name.as_str() == p.name
+                        && local.owner.kind.as_ref() == Some(&p.kind)
+                        && local.owner.version.to_string() == format!("={}", p.version)
+                })
+            }) else {
+                continue;
+            };
+            let p = row.manifest.require_package().map_err(|e| e.to_string())?;
+            for file in &local.files {
+                if row.files.get(&file.path) != Some(&file.bytes)
+                    || !matches!(p.select_source(&file.path).map_err(|e| format!("{e:?}"))?, vibe_core::manifest::SelectedSource::Descriptor { descriptor, .. } if descriptor == &local.descriptor)
+                {
+                    return Err("stale derivative selected bytes/descriptor".into());
+                }
+            }
+            let selected: Vec<_> = row
+                .files
+                .iter()
+                .filter(|(path, _)| match local.descriptor.selector() {
+                    vibe_core::manifest::SourceSelector::File(p) => *path == p,
+                    vibe_core::manifest::SourceSelector::Directory(p) => {
+                        path.starts_with(&format!("{p}/"))
+                    }
+                })
+                .collect();
+            if selected.len() != local.files.len() {
+                return Err("stale derivative selected inventory".into());
+            }
+        }
+        self.identity = if catalog.records().is_empty() {
+            self.identity_basis.clone()
+        } else {
+            digest(
+                &serde_json::to_vec(&(&self.identity_basis, catalog.records()))
+                    .map_err(|e| e.to_string())?,
+            )
+        };
+        self.derivatives = catalog;
+        Ok(self)
+    }
+    fn derivative_records(
+        &self,
+        p: &vibe_core::manifest::PackageMeta,
+    ) -> Vec<vibe_wire::generated::derivative_result::DerivativeResult> {
+        self.derivatives
+            .records()
+            .iter()
+            .filter(|record| {
+                record.checked_binding().is_ok_and(|b| {
+                    b.local().owner.group.as_ref() == Some(&p.group)
+                        && b.local().owner.name.as_str() == p.name
+                        && b.local().owner.kind.as_ref() == Some(&p.kind)
+                        && b.local().owner.version.to_string() == format!("={}", p.version)
+                        && b.local().descriptor.interpretation()
+                            == vibe_core::manifest::SourceInterpretation::VibeSpec
+                })
+            })
+            .cloned()
+            .collect()
     }
     pub fn identity(&self) -> &str {
         &self.identity
@@ -211,6 +287,8 @@ pub struct Placement {
 }
 #[derive(Debug, Serialize)]
 pub struct Preview {
+    #[serde(skip)]
+    pub produced: Option<ProducedBoot>,
     pub status: String,
     pub missing: Vec<String>,
     pub placements: Vec<Placement>,
@@ -219,8 +297,33 @@ pub struct Preview {
     pub measurement: Option<measurement::Lane>,
     pub comparison: Option<comparison::Comparison>,
 }
+/// Same-invocation compiler closure and actual successful source-read witnesses.
+/// Constructed only at the builtin producer; readers cannot attach a catalogue.
+#[derive(Debug)]
+pub struct ProducedBoot {
+    graph: vibe_spec::BootGraph,
+    reads: Vec<vibe_spec::CapturedDerivativeRead>,
+    artifact: Vec<u8>,
+    world: String,
+}
+impl ProducedBoot {
+    pub fn has_derivative_reads(&self) -> bool {
+        !self.reads.is_empty()
+    }
+    pub fn into_parts(
+        self,
+    ) -> (
+        vibe_spec::BootGraph,
+        Vec<vibe_spec::CapturedDerivativeRead>,
+        Vec<u8>,
+        String,
+    ) {
+        (self.graph, self.reads, self.artifact, self.world)
+    }
+}
 fn incomplete(missing: Vec<String>) -> Preview {
     Preview {
+        produced: None,
         status: "incomplete".into(),
         missing,
         placements: vec![],
@@ -231,11 +334,19 @@ fn incomplete(missing: Vec<String>) -> Preview {
     }
 }
 #[derive(Default)]
-struct Carrier(Mutex<Option<Vec<u8>>>);
+struct Carrier {
+    closure: Mutex<Option<Vec<u8>>>,
+    assembled: Mutex<Option<Vec<u8>>>,
+}
 impl vibe_spec::CompileTraceSink for Carrier {
     fn record(&self, event: &vibe_spec::PassTraceEvent<'_>) {
+        if event.output().level
+            == vibe_wire::generated::compiler_trace_index::e1::index::IrLevel::Closure
+        {
+            *self.closure.lock().expect("private trace") = event.snapshot().map(Vec::from);
+        }
         if event.pass() == "assemble" {
-            *self.0.lock().expect("private trace") = event.snapshot().map(Vec::from);
+            *self.assembled.lock().expect("private trace") = event.snapshot().map(Vec::from);
         }
     }
 }
@@ -255,6 +366,7 @@ fn compile_world(
     let mut files = world.host.files.clone();
     let mut dependencies = vec![];
     let mut documents = vec![];
+    let mut derivative_records = vec![];
     let mut addresses = BTreeMap::new();
     let mut missing = vec![];
     if world
@@ -273,7 +385,16 @@ fn compile_world(
         if !row.manifest.extensions.is_empty() || !row.manifest.mechanism_decls.is_empty() {
             missing.push(format!("{}: {coordinate}", owner_stage(&row.manifest)));
         }
-        if !p.sources.is_empty() || p.bridge {
+        let records = world.derivative_records(p);
+        let covered = p.format == PackageFormat::Normal
+            && !records.is_empty()
+            && p.sources.iter().all(|descriptor| {
+                records.iter().any(|r| {
+                    r.checked_binding()
+                        .is_ok_and(|b| &b.local().descriptor == descriptor)
+                })
+            });
+        if (!p.sources.is_empty() && !covered) || p.bridge {
             missing.push(format!("captured descriptor derivation: {coordinate}"));
         }
         let slot = package_slot(p);
@@ -309,6 +430,25 @@ fn compile_world(
                     syntax,
                 });
             }
+        }
+        if covered && !p.bridge {
+            for record in &records {
+                let binding = record.checked_binding().map_err(|e| e.to_string())?;
+                for file in &binding.local().files {
+                    // The source constructor and this provider address use the
+                    // same incumbent canonical path owner before compilation.
+                    let relative = Path::new(&file.path)
+                        .strip_prefix(vibe_core::layout::current_specs_root())
+                        .map_err(|_| "captured Vibe derivative outside specs root")?;
+                    let stem = vibe_spec::canonical_doc_path(&relative.to_string_lossy());
+                    addresses.insert(
+                        format!("{slot}/{}", file.path),
+                        vibe_spec::SpecAddress::parse(&format!("spec://{coordinate}/{stem}"))
+                            .map_err(|e| e.to_string())?,
+                    );
+                }
+            }
+            derivative_records.extend(records);
         }
         let snippet = row.manifest.boot_snippet.as_ref();
         let contribution = |path: &Path, when: Option<&vibe_core::manifest::WhenCondition>| {
@@ -434,6 +574,7 @@ fn compile_world(
     }
     if inputs.is_empty() {
         return Ok(Preview {
+            produced: None,
             status: "complete".into(),
             missing: vec![],
             placements,
@@ -463,7 +604,8 @@ fn compile_world(
     )
     .map_err(|e| e.to_string())?;
     let trace = Carrier::default();
-    let source = vibe_spec::CapturedSectionSource::new(documents)?;
+    let source =
+        vibe_spec::CapturedSectionSource::with_derivatives(documents, &derivative_records)?;
     let artifact = match vibe_spec::compile_artifact_traced(plan, &source, &trace) {
         Ok(a) => a,
         Err(error) => {
@@ -473,7 +615,7 @@ fn compile_world(
         }
     };
     let bytes = trace
-        .0
+        .assembled
         .into_inner()
         .map_err(|e| e.to_string())?
         .ok_or("missing compiler assemble capture")?;
@@ -506,7 +648,20 @@ fn compile_world(
         measurement::measure_graph(world.identity(), &projection.graph, &raw, &BTreeMap::new());
     projection.measurement.artifact =
         Some(measurement::measure_reader(artifact.bytes()).map_err(|e| e.to_string())?);
+    let closure = trace
+        .closure
+        .into_inner()
+        .map_err(|e| e.to_string())?
+        .ok_or("missing same-invocation compiler closure")?;
+    let graph = vibe_spec::inspect_boot_snapshot(&closure)?;
+    let produced = ProducedBoot {
+        graph,
+        reads: source.compiler_reads(),
+        artifact: artifact.bytes().to_vec(),
+        world: world.identity().into(),
+    };
     Ok(Preview {
+        produced: Some(produced),
         status: "complete".into(),
         missing: vec![],
         placements,

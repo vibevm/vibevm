@@ -558,3 +558,6 @@ mod m_06_e_2_cases {
         assert_eq!(files(root.path()), before);
     }
 }
+
+#[cfg(test)]
+mod m_10_d_1_cases;

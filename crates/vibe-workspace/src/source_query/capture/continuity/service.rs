@@ -47,6 +47,7 @@ pub struct SourceQueryService {
     world: Arc<WitnessedSourceWorld>,
     resolver: FileResolver,
     own_identity: String,
+    derivatives: crate::source_query::derivatives::DerivativeCatalog,
 }
 
 impl SourceQueryService {
@@ -111,7 +112,104 @@ impl SourceQueryService {
             world,
             resolver,
             own_identity,
+            derivatives: Default::default(),
         })
+    }
+
+    /// Host configuration supplies strict retained records separately from wire
+    /// requests. Attaching history never promotes selected bytes to source proof.
+    pub fn with_derivative_catalog(
+        mut self,
+        catalog: crate::source_query::derivatives::DerivativeCatalog,
+    ) -> Self {
+        self.derivatives = catalog;
+        self
+    }
+
+    /// Historical observed inventories, independent of live provider presence.
+    pub fn inspect_retained_derivative(
+        &self,
+        result: &str,
+    ) -> Result<
+        crate::derivatives::DerivativeInspection,
+        vibe_core::manifest::derivation::BindingError,
+    > {
+        self.derivatives.inspect(result)
+    }
+
+    fn derivative_for_output(
+        &self,
+        key: &CaptureOwner,
+        output: &str,
+    ) -> Result<Option<String>, QueryError> {
+        if self.derivatives.records().is_empty() {
+            return Ok(None);
+        }
+        let capture = self
+            .world
+            .prepared
+            .captured
+            .get(key)
+            .ok_or_else(|| unavailable("derivative selected capture"))?;
+        let manifest = capture.captured_manifest().map_err(world_error)?;
+        let Some(package) = manifest.package.as_ref() else {
+            return Ok(None);
+        };
+        for record in self.derivatives.records() {
+            let binding = record
+                .checked_binding()
+                .map_err(|_| unavailable("retained derivative binding"))?;
+            let local = binding.local();
+            if local.owner.group.as_ref() != Some(&package.group)
+                || local.owner.name.as_str() != package.name
+                || local.owner.kind.as_ref() != Some(&package.kind)
+                || local.owner.version.to_string() != format!("={}", package.version)
+            {
+                continue;
+            }
+            if !local.files.iter().any(|f| f.path == output) {
+                continue;
+            }
+            let owner = match key {
+                CaptureOwner::SelfNode => None,
+                CaptureOwner::Dependency { group, name } => Some((group.as_str(), name.as_str())),
+            };
+            for file in &local.files {
+                let selected = self
+                    .world
+                    .extract_source(owner, &file.path)
+                    .map_err(extraction_error)?;
+                if selected.raw() != file.bytes
+                    || selected
+                        .provenance
+                        .descriptor
+                        .as_ref()
+                        .map(|d| &d.descriptor)
+                        != Some(&local.descriptor)
+                {
+                    return Err(refusal(
+                        ErrorCode::StaleExpectation,
+                        "derivative selected inventory",
+                        "Selected bytes or descriptor differ from retained derivative",
+                        vec![],
+                    ));
+                }
+            }
+            let project = vibe_safefs::Project::open(&capture.root)
+                .map_err(|_| unavailable("derivative selected root"))?;
+            crate::derivatives::capture_retained(&project, local).map_err(|_| {
+                refusal(
+                    ErrorCode::StaleExpectation,
+                    "derivative selected membership",
+                    "Current local inventory differs from retained derivative",
+                    vec![],
+                )
+            })?;
+            return serde_json::to_string(record)
+                .map(Some)
+                .map_err(|_| unavailable("derivative record encoding"));
+        }
+        Ok(None)
     }
 
     /// Host composition prepares observations separately from request reading.
@@ -121,6 +219,14 @@ impl SourceQueryService {
 
     /// Invalid closed shape/epoch refuses before any host preparation/read.
     pub fn execute_json(root: &Path, value: &Value) -> SourceQueryResponse {
+        Self::execute_json_with_catalog(root, value, Default::default())
+    }
+
+    pub fn execute_json_with_catalog(
+        root: &Path,
+        value: &Value,
+        catalog: crate::source_query::derivatives::DerivativeCatalog,
+    ) -> SourceQueryResponse {
         let request = match wire::read_request(value) {
             Ok(request) => request,
             Err(boundary) => {
@@ -136,7 +242,9 @@ impl SourceQueryService {
                 ));
             }
         };
-        match Self::prepare_host(root).and_then(|service| service.query(&request)) {
+        match Self::prepare_host(root)
+            .and_then(|service| service.with_derivative_catalog(catalog).query(&request))
+        {
             Ok(result) => SourceQueryResponse::Success(result),
             Err(error) => SourceQueryResponse::Refused(error),
         }
@@ -183,6 +291,7 @@ impl SourceQueryService {
             CaptureOwner::SelfNode => None,
             CaptureOwner::Dependency { group, name } => Some((group.as_str(), name.as_str())),
         };
+        let derivative = self.derivative_for_output(&key, &output)?;
         let source = self
             .world
             .extract_source(owner, &output)
@@ -319,13 +428,18 @@ impl SourceQueryService {
             }
             None => None,
         };
+        let correlation = source.capture.identity.observation_correlation_token();
+        let correlation = match derivative.as_deref() {
+            Some(record) => format!("{correlation}:{record}"),
+            None => correlation,
+        };
         let (content, chunk) = if request.mode == RequestMode::Read {
             chunk::read(
                 &fragment,
                 request,
                 &resolution_hash,
                 &document_hash,
-                &source.capture.identity.observation_correlation_token(),
+                &correlation,
             )?
         } else {
             (
@@ -345,7 +459,7 @@ impl SourceQueryService {
             .map_err(|_| unavailable("selected location root"))?
             .to_string_lossy()
             .replace('\\', "/");
-        let result = json!({
+        let mut result = json!({
             "schema":1,"address":canonical.as_str(),"mode":request.mode,"format":request.format,
             "dictionary":if vocabulary==Vocabulary::Doc {"vibe-doc"} else {"vibe-spec"},
             "status":selected_status(&selected),"heading_chain":selected.heading_chain,
@@ -355,6 +469,9 @@ impl SourceQueryService {
                 "descriptor_identity":descriptor.identity,"manifest_hash":format!("sha256:{}",source.provenance.manifest_sha256),"captured_bytes":source.capture.bytes.len(),"encoding":"utf8",
                 "representation_recipe":format!("{}+{}+{}",vibe_specdoc::CONVERTER_RECIPE,vibe_specdoc::selection::SELECTION_RECIPE,if request.format==RequestFormat::Md {"md"} else {"xml"}),
                 "strength":match source.provenance.strength {super::SourceStrength::Observed=>"observed",super::SourceStrength::RecordConsistent=>"record-consistent",super::SourceStrength::SourceProven=>return Err(unavailable("verified source proof owner"))}}});
+        if let Some(derivative) = derivative {
+            result["derivative_result_json"] = json!(derivative);
+        }
         let result =
             wire::read_result(&result).map_err(|_| unavailable("generated result invariant"))?;
         self.world.revalidate_current().map_err(world_error)?;

@@ -343,6 +343,7 @@ fn discover_uses<E>(
                 return Ok(());
             }
         };
+        source.observe_compiler_read(address, &source_observation);
         let (text, format, physical_stem) = source_observation.into_parts();
         let document = parse(
             SourceIr::new(
@@ -551,6 +552,7 @@ fn observe_document<E>(
         Ok(source_observation) => {
             // A `#source` expansion or `#embed` target: reached, never
             // declared, so it carries its own address identity as its subject.
+            source.observe_compiler_read(address, &source_observation);
             let (text, format, physical_stem) = source_observation.into_parts();
             let document = parse(
                 SourceIr::reached(DocumentAddress::Spec(address.clone()), format, text),

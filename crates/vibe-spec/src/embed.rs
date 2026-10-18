@@ -48,6 +48,10 @@ pub trait SectionSource {
         self.read_resolved_source(addr, metadata)
     }
 
+    /// Infallible observation at the compiler worklist's successful source read.
+    /// This cannot supply content or alter compiler selection.
+    fn observe_compiler_read(&self, _addr: &SpecAddress, _source: &ResolvedSource) {}
+
     fn expand_pattern(&self, addr: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
         Ok(vec![addr.clone()])
     }
@@ -123,6 +127,10 @@ impl ResolvedSource {
                 .map_err(|error| error.to_string())?,
             physical_stem,
         })
+    }
+
+    pub(crate) fn text(&self) -> &str {
+        &self.text
     }
 
     pub fn format(&self) -> &str {
