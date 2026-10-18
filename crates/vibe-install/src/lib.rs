@@ -422,3 +422,7 @@ pub trait InstallSource {
         slot: &Path,
     ) -> Result<InPlaceMaterialised, RegistryError>;
 }
+
+pub use visibility_projection::resolve_boot_comparison;
+#[cfg(test)]
+mod m_06_e_1_cases;

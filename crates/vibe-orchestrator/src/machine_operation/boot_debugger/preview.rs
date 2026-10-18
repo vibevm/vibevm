@@ -15,6 +15,7 @@ impl BootDebuggerRoute {
             artifact: None,
             compiler_carrier_json: None,
             measurement_json: None,
+            comparison_json: None,
         };
         match scenario {
             None => body.missing.push(format!(
@@ -56,6 +57,7 @@ impl BootDebuggerRoute {
                     body.artifact = preview.artifact;
                     body.compiler_carrier_json = preview.carrier.as_ref().map(json).transpose()?;
                     body.measurement_json = preview.measurement.as_ref().map(json).transpose()?;
+                    body.comparison_json = preview.comparison.as_ref().map(json).transpose()?;
                 }
             },
         }

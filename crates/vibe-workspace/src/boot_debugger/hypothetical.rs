@@ -49,6 +49,7 @@ pub struct FrozenWorld {
     catalog: String,
     identity: String,
     missing: Vec<String>,
+    resolution_evidence: String,
 }
 impl FrozenWorld {
     /// Bind source-owner supplied resolution evidence once. This constructor
@@ -58,8 +59,37 @@ impl FrozenWorld {
         packages: Vec<SelectedPackage>,
         catalog: String,
         request_and_choices: String,
-        missing: Vec<String>,
+        mut missing: Vec<String>,
     ) -> Result<Self, String> {
+        let mut membership = HashSet::new();
+        for row in &packages {
+            let p = row.manifest.require_package().map_err(|e| e.to_string())?;
+            if !membership.insert((p.group.clone(), p.name.to_string())) {
+                return Err(format!(
+                    "duplicate selected package membership: {}/{}",
+                    p.group, p.name
+                ));
+            }
+        }
+        for row in &packages {
+            for edge in &row.requires {
+                if !membership.contains(edge) {
+                    missing.push(format!(
+                        "transitive selected source capture: {}/{}",
+                        edge.0, edge.1
+                    ));
+                }
+            }
+        }
+        for root in &host.manifest.requires.packages {
+            if root
+                .group
+                .as_ref()
+                .is_none_or(|g| !membership.contains(&(g.clone(), root.name.to_string())))
+            {
+                missing.push(format!("selected root source capture: {root}"));
+            }
+        }
         let rows: Vec<_> = packages
             .iter()
             .map(|p| (&p.manifest, &p.requires, &p.files, &p.source_identity))
@@ -71,7 +101,7 @@ impl FrozenWorld {
             &host.files,
             rows,
             &catalog,
-            request_and_choices,
+            &request_and_choices,
             &missing,
         ))
         .map_err(|e| e.to_string())?;
@@ -81,6 +111,7 @@ impl FrozenWorld {
             catalog,
             identity: digest(&encoded),
             missing,
+            resolution_evidence: request_and_choices,
         })
     }
     pub fn identity(&self) -> &str {
@@ -157,7 +188,17 @@ impl PreparedScenario {
         {
             return Err("stale hypothetical world/catalog/source capture".into());
         }
-        compile_world(&self.candidate, overrides)
+        let baseline = compile_world(&self.baseline, &BTreeMap::new())?;
+        let mut candidate = compile_world(&self.candidate, overrides)?;
+        let comparison = comparison::compare(self, &baseline, &candidate)?;
+        if baseline.status != "complete" {
+            candidate.status = "incomplete".into();
+            candidate
+                .missing
+                .extend(baseline.missing.iter().map(|m| format!("baseline: {m}")));
+        }
+        candidate.comparison = Some(comparison);
+        Ok(candidate)
     }
 }
 
@@ -176,6 +217,7 @@ pub struct Preview {
     pub artifact: Option<String>,
     pub carrier: Option<vibe_wire::generated::compiler_ir::e1::ir::Ir>,
     pub measurement: Option<measurement::Lane>,
+    pub comparison: Option<comparison::Comparison>,
 }
 fn incomplete(missing: Vec<String>) -> Preview {
     Preview {
@@ -185,6 +227,7 @@ fn incomplete(missing: Vec<String>) -> Preview {
         artifact: None,
         carrier: None,
         measurement: None,
+        comparison: None,
     }
 }
 #[derive(Default)]
@@ -233,11 +276,7 @@ fn compile_world(
         if !p.sources.is_empty() || p.bridge {
             missing.push(format!("captured descriptor derivation: {coordinate}"));
         }
-        let slot = if p.materialization.is_in_place() {
-            crate::vibedeps::in_place_slot_rel_path(&p.group, &p.name)
-        } else {
-            crate::vibedeps::slot_rel_path(&p.group, &p.name, &p.version)
-        };
+        let slot = package_slot(p);
         for (path, bytes) in &row.files {
             files.insert(format!("{slot}/{path}"), bytes.clone());
         }
@@ -401,6 +440,7 @@ fn compile_world(
             artifact: None,
             carrier: None,
             measurement: None,
+            comparison: None,
         });
     }
     let xml = world
@@ -473,6 +513,7 @@ fn compile_world(
         artifact: Some(String::from_utf8(artifact.into_bytes()).map_err(|e| e.to_string())?),
         carrier: projection.graph.carrier,
         measurement: Some(projection.measurement),
+        comparison: None,
     })
 }
 fn loading_name(link: LinkType) -> &'static str {
@@ -498,3 +539,13 @@ fn owner_stage(manifest: &Manifest) -> &'static str {
 #[cfg(test)]
 #[path = "m_06_d_1_cases.rs"]
 mod m_06_d_1_cases;
+
+pub mod comparison;
+
+fn package_slot(p: &vibe_core::manifest::PackageMeta) -> String {
+    if p.materialization.is_in_place() {
+        crate::vibedeps::in_place_slot_rel_path(&p.group, &p.name)
+    } else {
+        crate::vibedeps::slot_rel_path(&p.group, &p.name, &p.version)
+    }
+}

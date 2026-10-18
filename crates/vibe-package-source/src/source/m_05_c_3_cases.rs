@@ -10,6 +10,12 @@ fn p(n: &str) -> PackageRef {
 fn fixture(
     solver: Option<&'static str>,
 ) -> (tempfile::TempDir, InstallResolver, NormalizedRequest) {
+    fixture_with_boot(solver, false)
+}
+pub(super) fn fixture_with_boot(
+    solver: Option<&'static str>,
+    with_boot: bool,
+) -> (tempfile::TempDir, InstallResolver, NormalizedRequest) {
     let dir = tempfile::tempdir().unwrap();
     for (name, body) in [
         (
@@ -25,6 +31,16 @@ fn fixture(
         let path = dir.path().join(format!("org.example/{name}/v1.0.0"));
         std::fs::create_dir_all(&path).unwrap();
         std::fs::write(path.join("vibe.toml"),format!("[package]\ngroup='org.example'\nname='{name}'\nkind='flow'\nversion='1.0.0'\n{body}")).unwrap();
+        if with_boot {
+            use std::io::Write;
+            let mut file = std::fs::OpenOptions::new()
+                .append(true)
+                .open(path.join("vibe.toml"))
+                .unwrap();
+            file.write_all(b"[boot_snippet]\nsource='boot.md'\n")
+                .unwrap();
+            std::fs::write(path.join("boot.md"), format!("# {name}\n\nexact {name}\n")).unwrap();
+        }
     }
     let source = InstallResolver::Local(
         crate::cells::local_registry(dir.path().into()).unwrap(),

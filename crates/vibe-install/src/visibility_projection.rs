@@ -683,3 +683,15 @@ fn prune_requires(requires: &mut Requires, targets: &BTreeSet<String>) {
         .excludes
         .retain(|target, _| !targets.contains(target));
 }
+
+/// Metadata-only selected-route projection for frozen boot capture. Uses the
+/// same visibility/technical-edge authority as install, without plan/fetch/apply.
+pub fn resolve_boot_comparison(
+    source: &dyn InstallSource,
+    roots: &[PackageRef],
+    host: &Manifest,
+) -> Result<ResolvedGraph> {
+    let graph = source.solve(roots)?;
+    let effective = resolve_effective(source, roots, host, "boot-comparison-host", graph)?;
+    Ok(effective.graph)
+}
