@@ -201,6 +201,19 @@ impl InstallSlotLifecycle {
         }
     }
 
+    /// Inspect callback outcomes before the apply owner finalizes its recovery
+    /// journal, leaving every report available for the caller's final result.
+    pub(crate) fn has_failed_post_install(&self) -> Result<bool> {
+        let reports = self
+            .reports
+            .lock()
+            .map_err(|_| Error::Lifecycle("slot lifecycle report lock was poisoned".into()))?;
+        let point = ExtensionPoint::Slot(SlotPoint::PostInstall).to_string();
+        Ok(reports
+            .iter()
+            .any(|report| report.point == point && report.status == "fail" && report.flagged))
+    }
+
     pub fn take_reports(&self) -> Result<Vec<SlotLifecycleReport>> {
         let mut reports = self
             .reports

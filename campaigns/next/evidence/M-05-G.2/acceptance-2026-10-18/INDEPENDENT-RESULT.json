@@ -1,0 +1,328 @@
+{
+  "status": "recommend_accept_original_G2_scope",
+  "P1": 0,
+  "P2": 0,
+  "prior_P2": {
+    "state": "closed",
+    "first_review": "/fast/git/v/research/2026-10-18-m05g2-final-review/RESULT.json",
+    "fix_owners": [
+      {
+        "file": "crates/vibe-install/src/apply.rs",
+        "line": 654
+      },
+      {
+        "file": "crates/vibe-install/src/lifecycle.rs",
+        "line": 206
+      }
+    ],
+    "former_red_test": "cli_failed_pre_and_post_hooks_retain_typed_effect_dispositions",
+    "actual_soft_post_exit": 0,
+    "actual_pre_failure_exit": 1,
+    "retained_fail_flagged_reports": true,
+    "non_destructive_query": true,
+    "success_journal_cleanup_assertion_added": true
+  },
+  "original_acceptance": [
+    {
+      "index": 0,
+      "recommendation": "supported",
+      "statement": "M-05 gates include real contribution activation, recovery and exact replay."
+    },
+    {
+      "index": 1,
+      "recommendation": "supported",
+      "statement": "Every failed prefix has a retained typed disposition, not a silent repair."
+    }
+  ],
+  "base_commit": "73b192f4a22b2f729ec326962475bed7e060adc6",
+  "job_id": "job.runtime.packet.continuation.7616e1b817d1b8b1ab1b8f1b859718cbfef9ac0fd423f0c4debee46291fd42cf",
+  "source_files": [
+    {
+      "path": "crates/vibe-workspace/src/configuration_transaction.rs",
+      "sha256": "05986f25727325cdffcbc65193abf20a7cda8f28d65def1385aa9225824159b2",
+      "bytes": 30405,
+      "hash_match": true,
+      "byte_len_match": true,
+      "report_snapshot_matches": true
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "sha256": "12df50430e89ea0a88d098a69dcefba08a8a7bad807cdbeb0ff60f9fdfa09891",
+      "bytes": 178091,
+      "hash_match": true,
+      "byte_len_match": true,
+      "report_snapshot_matches": true
+    },
+    {
+      "path": "crates/vibe-install/tests/support/g2.rs",
+      "sha256": "94254f66bec4dd10a415bbd929c1c36cbd7794fde0a9c21f2898d71537451c1d",
+      "bytes": 8262,
+      "hash_match": true,
+      "byte_len_match": true,
+      "report_snapshot_matches": true
+    },
+    {
+      "path": "crates/vibe-install/tests/m_05_g_2_cases.rs",
+      "sha256": "18cbc4bceb1274fedb4b88a3fd9bee930b95f46d1ff4c80bd52f3a5e0ed2a264",
+      "bytes": 25988,
+      "hash_match": true,
+      "byte_len_match": true,
+      "report_snapshot_matches": true
+    },
+    {
+      "path": "crates/vibe-orchestrator/tests/m_05_g_2_cases.rs",
+      "sha256": "abac8f62eb5959c1d6ac591bc2a54435e944472b315133b6b638de2a1ffb73a7",
+      "bytes": 11086,
+      "hash_match": true,
+      "byte_len_match": true,
+      "report_snapshot_matches": true
+    },
+    {
+      "path": "crates/vibe-cli/tests/m_05_g_2_cases.rs",
+      "sha256": "f031c30f13d12515eb3f7ad4d71cf240ba80005b3442b266e716b5332d0595a5",
+      "bytes": 11108,
+      "hash_match": true,
+      "byte_len_match": true,
+      "report_snapshot_matches": true
+    },
+    {
+      "path": "crates/vibe-install/src/apply.rs",
+      "sha256": "db0304eca87881ccc95aad67c31c941fe80c00edd6addfd6190a6ca1d9efc003",
+      "bytes": 28603,
+      "hash_match": true,
+      "byte_len_match": true,
+      "report_snapshot_matches": true
+    },
+    {
+      "path": "crates/vibe-install/src/lifecycle.rs",
+      "sha256": "9b8b47dc3dd3f8fab65286c6e14fdb598b73622787ffd081994b27884353d33f",
+      "bytes": 20343,
+      "hash_match": true,
+      "byte_len_match": true,
+      "report_snapshot_matches": true
+    }
+  ],
+  "patch": {
+    "sha256": "b4b877ad47f329740628ee42105992e34f500873d9fc8555e7e1f4ebdb3a0b2a",
+    "bytes": 67912,
+    "path_count": 8,
+    "paths_equal_frozen": true
+  },
+  "report": {
+    "sha256": "9c6c95805c4243e13b63638e2683185260961d1934d68dde3a2790dd44307d34",
+    "bytes": 4815151,
+    "lines": 32710
+  },
+  "actual_current_embedded_logs": [
+    {
+      "name": "cli-red-rerun.log",
+      "byte_len": 143484,
+      "sha256": "a367150e15e345f4db7d994e4a41828b63788999154b29b249d68266275c8a72",
+      "declared_hash_matches": true,
+      "summary": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered": 5,
+        "seconds": 0.51
+      },
+      "case_names": [
+        "cli_failed_pre_and_post_hooks_retain_typed_effect_dispositions"
+      ]
+    },
+    {
+      "name": "install-family.log",
+      "byte_len": 4073876,
+      "sha256": "db4c18616296ca232c8c66b1027361c3eb69007dc1aa09081fdfab5d4368e09c",
+      "declared_hash_matches": true,
+      "summary": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered": 0,
+        "seconds": 660.59
+      },
+      "case_names": [
+        "actual_pre_post_hook_prefixes_keep_external_effect_uncertainty",
+        "every_before_after_prefix_retains_identity_images_and_partial_recovery",
+        "independent_wal_mup_without_redbook_activate_both_real_boot_contributions",
+        "missing_and_conflicting_selection_refuse_before_product_writes",
+        "offline_replay_refuses_changed_lock_source_payload_definition_and_slot",
+        "redbook_coexists_switches_dormant_contributions_and_replays_exactly",
+        "source_corruption_between_plan_and_apply_refuses_without_product_writes",
+        "stale_workspace_and_third_state_edits_are_never_overwritten"
+      ]
+    },
+    {
+      "name": "orchestrator-family.log",
+      "byte_len": 29830,
+      "sha256": "d61acd3638dff528e267671bcdace02ea6f5bd0a1294c62231efa62677f4f83b",
+      "declared_hash_matches": true,
+      "summary": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered": 0,
+        "seconds": 234.35
+      },
+      "case_names": [
+        "execute_prepared_applies_real_redbook_and_independent_roots",
+        "execute_prepared_missing_input_never_treats_confirmation_as_choice",
+        "execute_prepared_parks_pre_and_post_with_measured_partial_effects",
+        "execute_prepared_propagates_each_before_after_interruption_and_retains_evidence"
+      ]
+    },
+    {
+      "name": "cli-family.log",
+      "byte_len": 143881,
+      "sha256": "6095b51e519ae9f27158d6119ccef8d648615265482841e966f7908dc43ff9ff",
+      "declared_hash_matches": true,
+      "summary": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered": 0,
+        "seconds": 78.22
+      },
+      "case_names": [
+        "cli_configured_removal_without_new_authority_refuses_and_retains_shared_roots",
+        "cli_failed_pre_and_post_hooks_retain_typed_effect_dispositions",
+        "cli_hook_success_activates_real_contribution_before_boot_and_after_lock",
+        "cli_no_input_is_typed_and_leaves_product_state_unchanged",
+        "cli_supported_removal_retains_shared_dependency_until_last_consumer",
+        "cli_unclassified_legacy_sugar_refuses_with_recovery_evidence"
+      ]
+    },
+    {
+      "name": "fmt-all.log",
+      "byte_len": 7363,
+      "sha256": "97b96ee580dbc72a73228bd5fb6ed405efe134886a8f0e50b4b5768d9cde3e0f",
+      "declared_hash_matches": true,
+      "summary": null,
+      "case_names": []
+    },
+    {
+      "name": "fmt-all-final.log",
+      "byte_len": 6742,
+      "sha256": "0830a5205329534a498c9a4c6343785d774c13180297fb64e076b6f1d03538db",
+      "declared_hash_matches": true,
+      "summary": null,
+      "case_names": []
+    },
+    {
+      "name": "scoped-fmt.log",
+      "byte_len": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "declared_hash_matches": true,
+      "summary": null,
+      "case_names": []
+    },
+    {
+      "name": "diff-check.log",
+      "byte_len": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "declared_hash_matches": true,
+      "summary": null,
+      "case_names": []
+    }
+  ],
+  "current_commands_and_reported_exit": [
+    {
+      "slot": 0,
+      "package": "vibe-install",
+      "command": "cargo test --offline --locked -p vibe-install --test m_05_g_2_cases -- --test-threads=1 --nocapture",
+      "exit": 0,
+      "summary": "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 660.59s"
+    },
+    {
+      "slot": 1,
+      "package": "vibe-orchestrator",
+      "command": "cargo test --offline --locked -p vibe-orchestrator --test m_05_g_2_cases -- --test-threads=1 --nocapture",
+      "exit": 0,
+      "summary": "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 234.35s"
+    },
+    {
+      "slot": 2,
+      "package": "vibe-cli",
+      "command": "cargo test --offline --locked -p vibe-cli --test m_05_g_2_cases -- --test-threads=1 --nocapture",
+      "exit": 0,
+      "summary": "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 78.22s"
+    },
+    {
+      "slot": 3,
+      "command": "cargo fmt --all -- --check",
+      "exit": 1,
+      "outcome": "FAILED on seven unchanged baseline files; first iteration also caught new query formatting, corrected before final run"
+    },
+    {
+      "slot": 4,
+      "command": "git diff --check",
+      "exit": 0
+    }
+  ],
+  "actual_latest_counts": {
+    "install": {
+      "passed": 8,
+      "failed": 0,
+      "filtered": 0
+    },
+    "orchestrator": {
+      "passed": 4,
+      "failed": 0,
+      "filtered": 0
+    },
+    "cli": {
+      "passed": 6,
+      "failed": 0,
+      "filtered": 0
+    },
+    "distinct_total": 18,
+    "extra_exact_regression_repeat": {
+      "passed": 1,
+      "failed": 0,
+      "filtered": 5,
+      "counted_as_extra_distinct": false
+    }
+  },
+  "formal_checks": {
+    "00": "passed",
+    "01": "passed",
+    "02": "passed",
+    "03": "failed literal baseline fmt",
+    "04": "passed diff-check"
+  },
+  "scope_matrix": {
+    "real_contribution_activation": true,
+    "independent_WAL_MUP_Redbook_local_choice": true,
+    "shared_roots_dependencies_dormant_intent": true,
+    "before_after_writer_legs": 10,
+    "actual_hook_legs": 4,
+    "source_corruption_concurrent_edits_refuse": true,
+    "prepared_offline_replay_only": "public Rust prepared boundary, no solve/fetch",
+    "no_autobump_publication": true,
+    "partial_external_effects_not_full_rollback": true,
+    "missing_input_not_confirmation": true
+  },
+  "remaining_limits": [
+    "global fmt seven-file baseline remains Failed",
+    "no universal/unprepared configured CLI reinstall claim",
+    "unsupported configured removal/legacy unclassified sugar remain refusals",
+    "external effects/changed boot may remain typed partial/unsupported recovery",
+    "report collection4MiB result_fault versus4,815,151B is separate transport configuration; canonical intake/acceptance pending Root"
+  ],
+  "review_mutations": {
+    "source": 0,
+    "API": 0,
+    "Git": 0,
+    "build_test": 0,
+    "model": 0,
+    "control": 0
+  },
+  "acceptance_performed": false,
+  "Root_is_final_judgment_owner": true,
+  "report_sha256": "60b0e113fa6cac4f548b8990fbe616315ade3836c73605330474452a3635b38c"
+}

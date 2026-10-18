@@ -1,0 +1,200 @@
+{
+  "status": "reviewed_verification_evidence_canonical_WorkAccepted_pending",
+  "task": "M-05-G.2",
+  "work_id": "work.m05.g2",
+  "candidate_id": "managed-result.df75b9f12478125c2579fbcb211c1751be5a8ded54914ca1f748fa61ca55df3a",
+  "job_id": "job.runtime.packet.continuation.7616e1b817d1b8b1ab1b8f1b859718cbfef9ac0fd423f0c4debee46291fd42cf",
+  "validation_generation": 0,
+  "base_commit": "73b192f4a22b2f729ec326962475bed7e060adc6",
+  "artifacts": {
+    "report": {
+      "sha256": "9c6c95805c4243e13b63638e2683185260961d1934d68dde3a2790dd44307d34",
+      "bytes": 4815151
+    },
+    "patch": {
+      "sha256": "b4b877ad47f329740628ee42105992e34f500873d9fc8555e7e1f4ebdb3a0b2a",
+      "bytes": 67912
+    }
+  },
+  "formal_checks": [
+    {
+      "slot": 0,
+      "verification_id": "verify.authored.m05.g2.00",
+      "state": "passed",
+      "argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-install",
+        "--test",
+        "m_05_g_2_cases",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "exit": 0,
+      "passed": 8,
+      "failed": 0,
+      "filtered": 0,
+      "seconds": 660.59,
+      "cases": [
+        "actual_pre_post_hook_prefixes_keep_external_effect_uncertainty",
+        "every_before_after_prefix_retains_identity_images_and_partial_recovery",
+        "independent_wal_mup_without_redbook_activate_both_real_boot_contributions",
+        "missing_and_conflicting_selection_refuse_before_product_writes",
+        "offline_replay_refuses_changed_lock_source_payload_definition_and_slot",
+        "redbook_coexists_switches_dormant_contributions_and_replays_exactly",
+        "source_corruption_between_plan_and_apply_refuses_without_product_writes",
+        "stale_workspace_and_third_state_edits_are_never_overwritten"
+      ],
+      "embedded_log_sha256": "db4c18616296ca232c8c66b1027361c3eb69007dc1aa09081fdfab5d4368e09c",
+      "embedded_log_hash_verified_by_reviewer": true
+    },
+    {
+      "slot": 1,
+      "verification_id": "verify.authored.m05.g2.01",
+      "state": "passed",
+      "argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-orchestrator",
+        "--test",
+        "m_05_g_2_cases",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "exit": 0,
+      "passed": 4,
+      "failed": 0,
+      "filtered": 0,
+      "seconds": 234.35,
+      "cases": [
+        "execute_prepared_applies_real_redbook_and_independent_roots",
+        "execute_prepared_missing_input_never_treats_confirmation_as_choice",
+        "execute_prepared_parks_pre_and_post_with_measured_partial_effects",
+        "execute_prepared_propagates_each_before_after_interruption_and_retains_evidence"
+      ],
+      "embedded_log_sha256": "d61acd3638dff528e267671bcdace02ea6f5bd0a1294c62231efa62677f4f83b",
+      "embedded_log_hash_verified_by_reviewer": true
+    },
+    {
+      "slot": 2,
+      "verification_id": "verify.authored.m05.g2.02",
+      "state": "passed",
+      "argv": [
+        "/home/olegchir/.cargo/bin/cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "-p",
+        "vibe-cli",
+        "--test",
+        "m_05_g_2_cases",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "exit": 0,
+      "passed": 6,
+      "failed": 0,
+      "filtered": 0,
+      "seconds": 78.22,
+      "cases": [
+        "cli_configured_removal_without_new_authority_refuses_and_retains_shared_roots",
+        "cli_failed_pre_and_post_hooks_retain_typed_effect_dispositions",
+        "cli_hook_success_activates_real_contribution_before_boot_and_after_lock",
+        "cli_no_input_is_typed_and_leaves_product_state_unchanged",
+        "cli_supported_removal_retains_shared_dependency_until_last_consumer",
+        "cli_unclassified_legacy_sugar_refuses_with_recovery_evidence"
+      ],
+      "embedded_log_sha256": "6095b51e519ae9f27158d6119ccef8d648615265482841e966f7908dc43ff9ff",
+      "embedded_log_hash_verified_by_reviewer": true
+    },
+    {
+      "slot": 3,
+      "verification_id": "verify.authored.m05.g2.03",
+      "state": "failed",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 1,
+      "unchanged_baseline_file_count": 7,
+      "scoped_fmt_is_not_substitute": true
+    },
+    {
+      "slot": 4,
+      "verification_id": "verify.authored.m05.g2.04",
+      "state": "passed",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "supplemental": {
+        "scoped_rustfmt_exit": 0,
+        "PROP003_XML_parse": "ok"
+      }
+    }
+  ],
+  "distinct_tests": {
+    "install": 8,
+    "orchestrator": 4,
+    "cli": 6,
+    "total": 18,
+    "passed": 18,
+    "failed": 0
+  },
+  "former_red_exact_repeat": {
+    "case": "cli_failed_pre_and_post_hooks_retain_typed_effect_dispositions",
+    "passed": 1,
+    "failed": 0,
+    "filtered": 5,
+    "seconds": 0.51,
+    "exit": 0,
+    "extra_distinct_case": false
+  },
+  "trusted_check_references": {
+    "revisions": [
+      15848,
+      15849,
+      15850,
+      15851,
+      15852
+    ],
+    "source": "Root-supplied exact trusted-check references; matching candidate/states retained in saved Root decision; no API query by preparer",
+    "states": [
+      "passed",
+      "passed",
+      "passed",
+      "failed",
+      "passed"
+    ]
+  },
+  "safety_references": {
+    "Root_saved_decision_exact_review_hash_match": true,
+    "actual_same_effect_StopDelivered_job_revision": 17781,
+    "trusted_safety_receipt_revision": 17824,
+    "scope": "Leave recovery-required evidence and no public republish.",
+    "basis": "Original boundary: leave recovery-required evidence and no public republish. Exact retained result/candidate/source8/report/patch independently reviewed0P1P2; real18tests retain typed partial/recovery/external-effect uncertainty, soft post failure journal and successful cleanup. No public republish/versionbump. Original same-effect native StopDelivered now observed at job17781 through actual Root38 Pod232/Zap47ef unchanged stop key; oldnativewriter absent. Historical unknown_tail remains recorded and is not asserted complete. This scoped safety does not claim universal rollback, tail integrity or unsupported platform behavior. Review SHA256 60b0e113fa6cac4f548b8990fbe616315ade3836c73605330474452a3635b38c.",
+    "limits": "No universal rollback/tail/platform safety claim; historical unknown retained."
+  },
+  "failures_preserved": [
+    "Original18case attempt had17passed1failed; explicit soft post failure journal-loss P2 retained and now closed.",
+    "Earlier fixture/oracle/compile/unfinished SIGTERM outcomes remain archived, no invented aggregate.",
+    "First correction globalfmt caught query formatting; corrected before freeze. Final globalfmt seven-file baseline remains Failed.",
+    "Report collection4MiB versus4,815,151B was consumer ingress limit, repaired by same-binary8MiB configuration; not functional failure/new model run."
+  ],
+  "preparer_tests_run": 0,
+  "canonical_acceptance_pending": true
+}
