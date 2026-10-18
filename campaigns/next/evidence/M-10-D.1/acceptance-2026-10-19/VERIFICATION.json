@@ -1,0 +1,42 @@
+{
+  "reported_selected_test_results": {
+    "resolver": {
+      "passed": 2,
+      "failed": 0
+    },
+    "workspace": {
+      "passed": 4,
+      "failed": 0
+    },
+    "MCP": {
+      "passed": 6,
+      "failed": 0
+    },
+    "CLI_bin": {
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "literal_globalfmt": {
+    "exit_code": 1,
+    "state": "failed",
+    "unchanged_baseline_files": 7
+  },
+  "root_diff_check": 0,
+  "root_patch_reverse_check": 0,
+  "root_codegen_dirty": {
+    "exit_code": 1,
+    "generated_bytes_changed": 0
+  },
+  "root_codegen_clean": {
+    "exit_code": 0,
+    "source_commit": "d772671c9b34a356ec6d0c306ed0f8090961d4cf"
+  },
+  "independent_source_review": {
+    "P1": 0,
+    "P2": 0,
+    "matched_frozen_files": 43
+  },
+  "earlier_failures_preserved": "WORKER-REPORT.md",
+  "runtime_execution": "succeeded, candidate_recorded, normal StopDelivered and physical retirement observed; no native payload activation claim"
+}

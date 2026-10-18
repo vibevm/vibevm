@@ -1,0 +1,180 @@
+{
+  "head": "c9363af48959ecd12f7c7bef44c3fd4e061f9cd1",
+  "files": {
+    "crates/vibe-cli/src/commands/boot/m_06_e_2_cases.rs": {
+      "sha256": "0f954deb2488ffa2bff3aad3499758a7e51dc1dabf3a42ab626f5e33eb365cf3",
+      "bytes": 12660
+    },
+    "crates/vibe-cli/src/commands/boot/m_10_d_1_cases.rs": {
+      "sha256": "1088ad2957a27d29e84167811fff5de7fe2f10d1cbe849626872437d54aaf1ac",
+      "bytes": 9858
+    },
+    "crates/vibe-cli/src/commands/boot/mod.rs": {
+      "sha256": "c2470532c550a914cc00c3ad8ea4c80e195865340365aecd689fbf70d5083e77",
+      "bytes": 6572
+    },
+    "crates/vibe-cli/src/commands/boot/viewer.rs": {
+      "sha256": "290e152475e42620548f01831e6f2e4677f1c2dce9ec0ea2557924d505abba43",
+      "bytes": 9192
+    },
+    "crates/vibe-cli/src/commands/boot/viewer_tests.rs": {
+      "sha256": "c56e1a242a3ce56a066c48670d720c434ae03b0691d5f19d5a9357ecaa6dbc9b",
+      "bytes": 9209
+    },
+    "crates/vibe-cli/src/commands/spec/mod.rs": {
+      "sha256": "b72f12b4b6d3138f06a3911ae72b1be0325f658404a64f5c68b6f4117857ab49",
+      "bytes": 6819
+    },
+    "crates/vibe-mcp/src/context.rs": {
+      "sha256": "45360cb44bf8e88708a66904b849e7b0eb497d9a679ecaed1df6724be5c2f8a6",
+      "bytes": 27007
+    },
+    "crates/vibe-mcp/src/tools/boot_debugger.rs": {
+      "sha256": "8d93e01cba4bc262d495513b98e9e56bfecff46a1a2da5c20c4d68f93882d984",
+      "bytes": 23393
+    },
+    "crates/vibe-mcp/src/tools/boot_debugger/m_10_d_1_cases.rs": {
+      "sha256": "e66894d1d30a172a7d4fd5773d31e8e54d0a601a781a24c1a0d6116bebab6876",
+      "bytes": 24850
+    },
+    "crates/vibe-mcp/src/tools/read_spec.rs": {
+      "sha256": "28cc79e6ea5e9bfb245187547c1001596baafa69e6f57380506137d28b63ea74",
+      "bytes": 3276
+    },
+    "crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs": {
+      "sha256": "e1a1f1e2de160d088d6eb51eea83fdb4280d6b0e1a43685b530d4c2dad5ed9dd",
+      "bytes": 25851
+    },
+    "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs": {
+      "sha256": "03606a05eebfa6840dcdb24a2eb1e1bc0cb19a4638f63b22d5e9b6c6e2bacc67",
+      "bytes": 22619
+    },
+    "crates/vibe-orchestrator/src/machine_operation/boot_debugger/preview.rs": {
+      "sha256": "f02ca42152e0837951c918ae2ea79402059041ebdaed38a4c3226d4e573d9e2f",
+      "bytes": 3223
+    },
+    "crates/vibe-orchestrator/src/machine_operation/boot_debugger/produced.rs": {
+      "sha256": "7ac2967f4f73f4af173aecfc8864ac37b81db4f18fdb33f786925325d6921e24",
+      "bytes": 6381
+    },
+    "crates/vibe-orchestrator/src/machine_operation/boot_debugger/scenarios.rs": {
+      "sha256": "58f562c50afe03408f14bcfa0dc80c6fb2e3f568eb3c55f5e2c11755a5358d1b",
+      "bytes": 3598
+    },
+    "crates/vibe-package-source/src/source/preview.rs": {
+      "sha256": "7da1483602cb549deac7c4d7836c4eb725741a218b5364515391a317897f9edc",
+      "bytes": 11576
+    },
+    "crates/vibe-package-source/src/source/scenario.rs": {
+      "sha256": "4fe7adccead71ecc6598772cfd51e312c7de48313f25bb1620ecaa3133500f29",
+      "bytes": 8388
+    },
+    "crates/vibe-spec/src/captured_source.rs": {
+      "sha256": "1a40f5b6ae99c38030f6e3696aff49d67561ece0e2a29ed3179bb3f97253e575",
+      "bytes": 13237
+    },
+    "crates/vibe-spec/src/compiler/pass_tier/frontend.rs": {
+      "sha256": "db36553f5e903d1f99585985b20c13bc518a4b75e548f4bf18896e1e77d9c00f",
+      "bytes": 18198
+    },
+    "crates/vibe-spec/src/compiler/worklist.rs": {
+      "sha256": "bd152476f904949039636a82f3895b6c98aaa46a9d39a9e9aa319e5ae166d3ab",
+      "bytes": 18898
+    },
+    "crates/vibe-spec/src/embed.rs": {
+      "sha256": "ee0c265af5d02592e7c29b90d6e319ea00bc20089b37480b48ba54c6f1c25f05",
+      "bytes": 19441
+    },
+    "crates/vibe-spec/src/lib.rs": {
+      "sha256": "628de275c5f7bfbde50d016708dc14a8d1310090b496a5cab48f12debdf58ac2",
+      "bytes": 6221
+    },
+    "crates/vibe-spec/src/resolver.rs": {
+      "sha256": "5b8b6a74fb3e02c158a0591e623b18acf42b7cf6ea2668072f25487259404534",
+      "bytes": 25418
+    },
+    "crates/vibe-spec/src/resolver/m_10_d_1_cases.rs": {
+      "sha256": "680e8374cdef0e3c537fa17e8d9131d0a48c96e170aab0fe52233fd0d451e8e7",
+      "bytes": 3044
+    },
+    "crates/vibe-wire/src/behaviour/source_query.rs": {
+      "sha256": "870c5e437d034ca9dd39ec51138d5911515c97e5905107d42ccd01c1f03cf418",
+      "bytes": 16027
+    },
+    "crates/vibe-wire/src/generated/boot_debugger/e1/result/mod.rs": {
+      "sha256": "dd20941b42502f2da49233fb4379bec598f9ff9bb76165c1b425cb3e93a659d5",
+      "bytes": 11955
+    },
+    "crates/vibe-wire/src/generated/source_query/e1/result/mod.rs": {
+      "sha256": "02cc64d3b3c6db48b351eff5b99d121e29367e810dbc6e431b67aefadaa01703",
+      "bytes": 4101
+    },
+    "crates/vibe-workspace/src/boot_debugger/hypothetical.rs": {
+      "sha256": "bee8cf07e3fbb86e01cb52ce14b7675cf96bc93f98b2823d5ab821873550e7d8",
+      "bytes": 25497
+    },
+    "crates/vibe-workspace/src/boot_debugger/m_10_d_1_cases.rs": {
+      "sha256": "64d3d7d5a3711b3f25ba8c7c4ddca0ee3080de1fb9eb9c95682fe27512177450",
+      "bytes": 11094
+    },
+    "crates/vibe-workspace/src/boot_debugger/mod.rs": {
+      "sha256": "9dcae6408efb5113be4f621e025e994a80c71af18063cdce2425dcbef9f5906d",
+      "bytes": 5532
+    },
+    "crates/vibe-workspace/src/boot_debugger/viewer.rs": {
+      "sha256": "a73fa01a65cbed8fd5172d8a955253b368a60de9657aa8ad290214cc8ed27026",
+      "bytes": 8844
+    },
+    "crates/vibe-workspace/src/boot_debugger/viewer_tests.rs": {
+      "sha256": "e89372afe56b525964953291a4853e6fc1422fc1c49edd4c2e94ccb05040cfc2",
+      "bytes": 3789
+    },
+    "crates/vibe-workspace/src/derivatives.rs": {
+      "sha256": "0ce2d0a08d54560dfd46ee9f33643fcc06ad7fb6ae2ba4cd44a908aa6070b47c",
+      "bytes": 8221
+    },
+    "crates/vibe-workspace/src/derivatives/inspection.rs": {
+      "sha256": "cce65a4edba8b3087a67153b71f7961963056700ce956376d0227e42fa93a13f",
+      "bytes": 3879
+    },
+    "crates/vibe-workspace/src/source_query/capture/continuity/service.rs": {
+      "sha256": "0d24437c8e3982e9ab8e1068f6bfd85571f04e487328f38b3c2e2abdab8883ac",
+      "bytes": 27864
+    },
+    "crates/vibe-workspace/src/source_query/derivatives.rs": {
+      "sha256": "e9946558a4a42bffce183c3b6a218ca02a2cd4b9ffcddb453431057a841a8cab",
+      "bytes": 5689
+    },
+    "crates/vibe-workspace/src/source_query/mod.rs": {
+      "sha256": "b2a1a75fa2a975911a59a8194531ade2fcbefec21b5f8b4ce04e8276779ac785",
+      "bytes": 5260
+    },
+    "fixtures/next/derivatives/inspection_route_fixture.rs": {
+      "sha256": "5e1c41ac13a5ba190ec846124d1c82ef98961efc8f320d1560834cf4e8598bce",
+      "bytes": 9116
+    },
+    "schemas/boot_debugger/e1/result.jtd.json": {
+      "sha256": "c3e68ec1e909f9c753599e720f92ff264ed4a8ab1fafba17ff5d7d4ac1f6edad",
+      "bytes": 13597
+    },
+    "schemas/source_query/e1/result.jtd.json": {
+      "sha256": "9e5458defbfd7ec36614f9c3755639becf29931e24791e0e717fc459eda98324",
+      "bytes": 3105
+    },
+    "vibevm/vibespecs/common/PROP-070-resource-resolution.xml": {
+      "sha256": "7a9d98390f1ac24fd76d176ed5c078318ed338d039a12533117d08bb4c9a89fd",
+      "bytes": 27539
+    },
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml": {
+      "sha256": "2db787cc52fb4dcfaef56ea066a31610e85ab3cb4d0dab7271fdac98714df243",
+      "bytes": 28655
+    },
+    "vibevm/vibespecs/common/PROP-074-local-derivatives.xml": {
+      "sha256": "3d291a36e8a372546ec4101909879288cf53e0f855b38a8ba5a201ec0266e29e",
+      "bytes": 21729
+    }
+  },
+  "candidate": "managed-result.e415e96f1bfb519ac4c07e5329d6b5a49cea1253b29e292483190978653d5008",
+  "report": "c5c9cb29572b38cf690dee7912c5c361ebde2f4905a339618a2b83eb3ecd70ac",
+  "patch": "955cd758f635840a961793ef5d0d77d66be4a52d5470b2c63e67dae385340089"
+}
