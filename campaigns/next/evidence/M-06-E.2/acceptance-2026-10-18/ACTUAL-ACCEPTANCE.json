@@ -1,0 +1,220 @@
+{
+  "task": "M-06-E.2",
+  "observed_at": "2026-10-18T19:38:47.461864+00:00",
+  "source_commit": "25f60dff7c581d451d2afe0859675a44b991ce2e",
+  "work_id": "work.m06.e2",
+  "work_state": "accepted",
+  "work_revision": 9,
+  "criteria": [
+    "Each scenario is inspectable before install and produces no project writes.",
+    "Machine clients can reproduce the viewer's comparison using captured inputs."
+  ],
+  "intake_id": "result-intake.m06.e2.current-original-scope.v1",
+  "acceptance": {
+    "acceptance_id": "intake-acceptance:2a94a206542c4d4465b2111f8346ac7b011b0f462c60de45971f61cd4e636a1f",
+    "candidate_id": "managed-result.c908b1300859094b667ef2d02058fdcaf6b17dd4f151e370567453fe8867f818",
+    "contract_version": 1,
+    "evidence_ids": [
+      "intake-evidence:2a94a206542c4d4465b2111f8346ac7b011b0f462c60de45971f61cd4e636a1f"
+    ],
+    "generation": 0,
+    "integration_acceptance_ids": [],
+    "obligation_ids": [
+      "obligation.m06"
+    ],
+    "outcome_id": "outcome.vibevm-next.complete",
+    "revision": 1,
+    "stage_acceptance_id": "intake-stage:2a94a206542c4d4465b2111f8346ac7b011b0f462c60de45971f61cd4e636a1f",
+    "summary": "Root adopts completed original-scope review and actual source-bound focused3workspace+3CLI+1MCP passes. Worker codegen Failed1 is preserved separately from Root actual staged clean codegen gate. No portable cross-session archive, remote/native production completeness or exact future-session cost claim.",
+    "work_id": "work.m06.e2"
+  },
+  "candidate_id": "managed-result.c908b1300859094b667ef2d02058fdcaf6b17dd4f151e370567453fe8867f818",
+  "artifacts": [
+    {
+      "byte_len": 277208,
+      "digest": "8b04f2077d830718a7b847406b3feaba3e847da8dc70ff3569cc8bc1b87c8785",
+      "kind": "report"
+    },
+    {
+      "byte_len": 74162,
+      "digest": "dae21bd00aed6c498ba90b21c093e9630f600b0f8400858365e4531ebbcbedcc",
+      "kind": "patch"
+    }
+  ],
+  "intake_checks": 19,
+  "intake_commands": 17,
+  "observations": 6,
+  "source_files": [
+    {
+      "path": "crates/vibe-cli/src/commands/boot/m_06_e_2_cases.rs",
+      "sha256": "94449a6e3ebf2db9c9c862cb84092bf3025db2e5475bd7af6af684ceb1f6630d",
+      "bytes": 12624,
+      "new": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/mod.rs",
+      "sha256": "d5f59f19c2c9b30dfdd5fc63eb93459157ccbf57769cb47861705738617a10ef",
+      "bytes": 6064,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/viewer.rs",
+      "sha256": "e8abb8d1a69007fe1c9fecabe24d66e96f277351725b841ef54a012b86552494",
+      "bytes": 9045,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/boot/viewer_tests.rs",
+      "sha256": "54eeb046096773b2e00363710ea930050af6008550f71eb7e0917401c8bd87a4",
+      "bytes": 9173,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-mcp/src/context.rs",
+      "sha256": "189e880c85bc0039c14325aa32fc6d09dc4d5f5b8b1ac85edd5637b8e01d4b41",
+      "bytes": 26014,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-mcp/src/tools/boot_debugger.rs",
+      "sha256": "f698fba4bfcaede2adc9c149d8ed0c752a1a512bbea023a6fbdccce84854bedb",
+      "bytes": 23359,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs",
+      "sha256": "5a0738cc87adf7edb03c2c093fec4d6319984951d284dfbe8d89eb9177ac1c5a",
+      "bytes": 23467,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs",
+      "sha256": "5e4ff27af8d004826e7df3547d43fc9dde96427537ed0674de9b4432bccdb4d5",
+      "bytes": 21748,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger/scenarios.rs",
+      "sha256": "fc6553303cec463e824e05ae9d9a7b3061df2086be78b590671152b1c46ef9af",
+      "bytes": 3176,
+      "new": true
+    },
+    {
+      "path": "crates/vibe-package-source/src/source.rs",
+      "sha256": "5f62c25de0af150ce9a74eb8f0b9e8df951fe8cfb1b4dc16a81db41e4827d7f0",
+      "bytes": 22742,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-package-source/src/source/preview.rs",
+      "sha256": "426cf6ab57ff11c9b806557c395870bbe05ef264ec34db10265aaa7682553489",
+      "bytes": 10962,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-package-source/src/source/scenario.rs",
+      "sha256": "df38ef3f62f31c00751d8e3949dbe666fe1562d38c90cf946cd87746fa4b42cc",
+      "bytes": 7505,
+      "new": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/boot_debugger/e1/request/mod.rs",
+      "sha256": "50e70112ebbe9e3b177e5307f8f9b294b9714d9e293c7b7a791e882030d30bb8",
+      "bytes": 4479,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/m_06_e_2_cases.rs",
+      "sha256": "b0c17f12a2924ed7e9502b432d599421e1cceb4e425e98e4364ae02c25cee877",
+      "bytes": 5310,
+      "new": true
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/mod.rs",
+      "sha256": "91c838f92e3cf944a952ac5954e507e10c9dfa35b1c8b76e189b7dd7dceb5a32",
+      "bytes": 5498,
+      "new": false
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/scenario.rs",
+      "sha256": "56de46e95799920acb5beed5e87a705d1870322758baf8c4f492d47e4633113b",
+      "bytes": 6338,
+      "new": true
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/viewer.rs",
+      "sha256": "7e1f417fab5f1ee1ae0803b83e077014542bd820c61f0e87e671171d8c5b2f0d",
+      "bytes": 8201,
+      "new": false
+    },
+    {
+      "path": "schemas/boot_debugger/e1/request.jtd.json",
+      "sha256": "72f58b1af6a5a7c6d08e9aa2f1b94bc1b44ee8d7a437a5fd38b8bc1e2463677f",
+      "bytes": 3945,
+      "new": false
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "sha256": "82c0cac6af85e0c61409b7c7ebb1d92ed49352965a87668fe1db7bd79adb0c0e",
+      "bytes": 26339,
+      "new": false
+    }
+  ],
+  "independent_review": {
+    "verdict": "accept_original_scope",
+    "P1": 0,
+    "P2": 0,
+    "report_sha256": "760f3899cf4e3c7d1767bc7c09b12db7391839ef3149a9b4336731bf535ce8ab"
+  },
+  "functional_checks": {
+    "workspace_lib": {
+      "passed": 3,
+      "failed": 0,
+      "filtered": 762
+    },
+    "cli_bin_vibe": {
+      "passed": 3,
+      "failed": 0,
+      "filtered": 971
+    },
+    "mcp_lib": {
+      "passed": 1,
+      "failed": 0,
+      "filtered": 222
+    },
+    "distinct_final_cases": 7,
+    "reviewer_reran_tests": false
+  },
+  "history": {
+    "initial_mcp": "exit101 exhaustive ServerContext test pattern missing new field; corrected and final cases pass",
+    "global_fmt": "final Failed exit1 seven unchanged baseline files; initial changed formatting corrected; no waiver",
+    "diff_check": "reported exit0",
+    "worker_check_codegen": [
+      "initial exit1 missing CARGO_MANIFEST_DIR",
+      "correct invocation exit1 generated Scenario carrier differed old index; real generation done, not missing schema metadata or disguised pass"
+    ],
+    "root_check_codegen": {
+      "exit": 0,
+      "log": "/fast/git/v/research/2026-10-18-m06e2-final-review/root-check-codegen.log",
+      "sha256": "bacf931f79cff332b56717dc5aaccd0cbb8f365e34af07e7185074108da97d8f",
+      "result": "clean after review/staging schema+generated owners; no Root source edits"
+    }
+  },
+  "root_codegen": {
+    "exit_code": 0,
+    "log_sha256": "bacf931f79cff332b56717dc5aaccd0cbb8f365e34af07e7185074108da97d8f",
+    "result": "xtask check-codegen: clean."
+  },
+  "limits": [
+    "Explicit admitted local builtin producer only; missing remote/git/native/hybrid/configured-source preparation remains typed incomplete, not implicit fetch/hydration.",
+    "Requested OS target is bound and future predicates remain potential; runtime/session/billing cost stays unavailable.",
+    "Reproducibility is same retained host/draft/world/selectors in-session, not portable cross-session archive/handover.",
+    "Initial resource inventory is fixed by host scope; new resource census needs a new host. Existing explicit capture refreshes declared resources.",
+    "Default MCP local registry is project/vibevm/vibepacks; CLI can explicitly select another local registry."
+  ],
+  "automatic_projection": {
+    "accepted_contracts": 109,
+    "total_contracts": 222,
+    "meaning": "observed automatic status at acceptance, not a manually maintained counter"
+  }
+}

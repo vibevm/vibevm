@@ -1,0 +1,24 @@
+--- Actual selected test output: workspace.log ---
+running 3 tests
+test boot_debugger::m_06_e_2_cases::ambiguous_edits_and_non_os_target_refuse_without_touching_baseline ... ok
+test boot_debugger::m_06_e_2_cases::strict_draft_roundtrip_keeps_explicit_disabled_toggle ... ok
+test boot_debugger::m_06_e_2_cases::immutable_add_remove_toggle_and_reconfigure_preserve_unrelated_intent ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 762 filtered out; finished in 0.00s
+
+--- Actual selected test output: cli-final.log ---
+running 3 tests
+test commands::boot::m_06_e_2_cases::ordinary_missing_preparation_is_incomplete_without_install ... ok
+test commands::boot::m_06_e_2_cases::actual_continuity_reconfiguration_preserves_shared_contribution_and_missing_choice_is_typed ... ok
+test commands::boot::m_06_e_2_cases::ordinary_constructor_headless_controls_and_retained_replay_leave_every_file_unchanged ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 971 filtered out; finished in 0.14s
+
+--- Actual selected test output: mcp-final.log ---
+running 1 test
+test tools::boot_debugger::m_06_e_2_cases::registered_default_tool_produces_controls_and_replays_viewer_comparison_without_writes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 222 filtered out; finished in 0.04s
+
+Root cached check-codegen: exit0, xtask check-codegen: clean.
+Log SHA256 bacf931f79cff332b56717dc5aaccd0cbb8f365e34af07e7185074108da97d8f
