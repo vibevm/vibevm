@@ -17,6 +17,9 @@ use vibe_registry::{
 };
 
 use crate::cells::{ProviderCell, ProviderResource, selection_flags};
+#[cfg(test)]
+mod m_06_d_1_cases;
+mod preview;
 
 /// Either a M0-shape local-directory registry (used by an explicit registry
 /// path and the in-tree fixture path) or a full PROP-002 multi-registry

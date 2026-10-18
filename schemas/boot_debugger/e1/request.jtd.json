@@ -24,6 +24,15 @@
     "command": {
       "discriminator": "action",
       "mapping": {
+        "preview": {
+          "properties": {
+            "scenario_id": {"type": "string"},
+            "expected_baseline": {"type": "string"},
+            "expected_candidate": {"type": "string"},
+            "expected_catalog": {"type": "string"},
+            "loading_overrides": {"values": {"type": "string"}, "metadata": {"x-empty": "emit"}}
+          }
+        },
         "capture": {
           "properties": {}
         },

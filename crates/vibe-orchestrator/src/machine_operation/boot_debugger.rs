@@ -1,4 +1,5 @@
-//! Host-bound immutable boot inspection. No compiler, writer or provider port.
+//! Host-bound immutable inspection and explicit prepared builtin previews.
+//! No project writer or live source/provider port enters request dispatch.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#DEBUGGER-PROTOCOL");
 use super::stream_message::{self, ExpectedBinding};
 use crate::{
@@ -12,6 +13,9 @@ use std::{
     sync::{Arc, Mutex},
 };
 use vibe_core::machine_view::OpaqueText;
+pub use vibe_wire::generated::boot_debugger::e1::request as debugger_request;
+pub use vibe_wire::generated::boot_debugger::e1::request::Request as BootDebuggerRequest;
+pub use vibe_wire::generated::boot_debugger::e1::result as debugger_result;
 use vibe_wire::generated::{
     boot_debugger::e1::{error as e, request as q, result as r},
     machine::e1::{
@@ -19,9 +23,11 @@ use vibe_wire::generated::{
         operation_stream_message as stream,
     },
 };
+pub use vibe_workspace::boot_debugger::hypothetical;
+pub use vibe_workspace::boot_debugger::protocol::CapturedKind;
 use vibe_workspace::boot_debugger::{
     measurement,
-    protocol::{self, CapturedKind, Projection},
+    protocol::{self, Projection},
 };
 
 pub const OPERATION: &str = "rust:vibe-workspace:boot-debugger";
@@ -99,6 +105,7 @@ struct State {
     snapshots: BTreeMap<String, Arc<Snapshot>>,
     inspections: BTreeMap<String, Inspection>,
     next: u64,
+    scenarios: BTreeMap<String, hypothetical::PreparedScenario>,
 }
 
 /// The embedding chooses one already admitted boot artifact and its reader.
@@ -140,6 +147,7 @@ impl BootDebuggerRoute {
                 snapshots: BTreeMap::new(),
                 inspections: BTreeMap::new(),
                 next: 1,
+                scenarios: BTreeMap::new(),
             }),
         };
         Ok(route)
@@ -149,6 +157,65 @@ impl BootDebuggerRoute {
     }
     pub fn context_id(&self) -> &str {
         &self.context
+    }
+    /// Extract only an already retained, host-admitted finite inventory.
+    /// This does not freeze live files or grant a source/provider capability.
+    pub fn hypothetical_host(&self, id: &str) -> Result<hypothetical::HostCapture, String> {
+        let state = self
+            .state
+            .lock()
+            .map_err(|_| "debugger state unavailable")?;
+        let snapshot = state
+            .snapshots
+            .get(id)
+            .ok_or("missing retained host capture")?;
+        let files: BTreeMap<_, _> = snapshot
+            .capture
+            .resources()
+            .filter_map(|(_, r)| r.raw().map(|bytes| (r.path().to_owned(), bytes.to_vec())))
+            .collect();
+        let text = files
+            .get("vibe.toml")
+            .ok_or("missing host manifest capture: vibe.toml")?;
+        let manifest = vibe_core::manifest::Manifest::parse_str(
+            std::str::from_utf8(text).map_err(|e| e.to_string())?,
+        )
+        .map_err(|e| e.to_string())?;
+        Ok(hypothetical::HostCapture {
+            id: id.into(),
+            manifest,
+            files,
+        })
+    }
+    /// Normal composition seam: the package source binds both real resolver
+    /// worlds before transport can request pure computation. Tokens cannot
+    /// supply a graph, source path or compiler/provider implementation.
+    pub fn retain_hypothetical(
+        &self,
+        scenario: hypothetical::PreparedScenario,
+    ) -> Result<q::Request, String> {
+        let mut state = self
+            .state
+            .lock()
+            .map_err(|_| "debugger state unavailable")?;
+        for world in [scenario.baseline(), scenario.candidate()] {
+            if !state.snapshots.contains_key(world.capture()) {
+                return Err("missing or foreign retained source capture".into());
+            }
+        }
+        let request = q::Request {
+            schema: 1,
+            context_id: self.context.clone(),
+            command: q::Command::Preview(Box::new(q::CommandPreview {
+                scenario_id: scenario.identity().into(),
+                expected_baseline: scenario.baseline().identity().into(),
+                expected_candidate: scenario.candidate().identity().into(),
+                expected_catalog: scenario.candidate().catalog().into(),
+                loading_overrides: BTreeMap::new(),
+            })),
+        };
+        state.scenarios.insert(scenario.identity().into(), scenario);
+        Ok(request)
     }
     /// Explicit host composition can retain another registered client's frozen
     /// overlay. Wire requests cannot construct a capture or acquire that client.
@@ -481,5 +548,6 @@ pub fn input(request: &q::Request) -> env::OperationEnvelope {
 }
 
 mod dispatch;
+mod preview;
 #[cfg(test)]
 mod tests;

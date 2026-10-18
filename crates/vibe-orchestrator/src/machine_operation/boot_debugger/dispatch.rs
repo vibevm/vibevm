@@ -5,6 +5,7 @@ impl BootDebuggerRoute {
         use q::Command;
         let id =
             match &command {
+                Command::Preview(c) => return self.preview(state, c),
                 Command::Capture(_) => {
                     let capture = state.client.freeze().map_err(|_| {
                         fault(
