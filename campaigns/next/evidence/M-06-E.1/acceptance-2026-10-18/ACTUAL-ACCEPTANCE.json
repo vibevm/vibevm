@@ -1,0 +1,54 @@
+{
+  "schema": "vibevm.campaign.acceptance/1",
+  "task": "M-06-E.1",
+  "observed_at": "2026-10-18T17:55:05.790833+00:00",
+  "source_commit": "72cf4d6bdbc9d88657bdb66e4bead45a3d7f1e8f",
+  "source_patch_sha256": "1a4c34b2dc2edd8236beb087a4d7470e38d9e5ddc80cb1655551a5aeeaaed262",
+  "work_state": "accepted",
+  "work_revision": 7,
+  "acceptance": {
+    "acceptance_id": "intake-acceptance:f66b20c704fdb4b64025ef447e2c7726c96cdc1122e1e013fb3617e6986083fc",
+    "candidate_id": "managed-result.dc5f676c3eaf6dda0059d7c42318a26defc0ae473bc5270df8723f3e4c560444",
+    "contract_version": 1,
+    "generation": 0,
+    "outcome_id": "outcome.vibevm-next.complete",
+    "stage_acceptance_id": "intake-stage:f66b20c704fdb4b64025ef447e2c7726c96cdc1122e1e013fb3617e6986083fc",
+    "work_id": "work.m06.e1"
+  },
+  "original_intake": "result-intake.m06.e1.corrected-original-scope.v1",
+  "original_criteria": [
+    "Every delta links to exact baseline/candidate graph and contribution identities.",
+    "Static and dynamic costs remain separately reported."
+  ],
+  "evidence": {
+    "corrected_report_sha256": "f0a52ea2a23199aed30fe7504cb9e74e2d92d1b49830bcc2368004d8a077f562",
+    "original_report_sha256": "83035c07ce858dba547d13726b7e555364e93833dee3ff00af3e79b333057194",
+    "independent_review_sha256": "4f9984b99fb31e4d698875969d03d764ce0240f4a47b3fe3d8d22753877784e2",
+    "independent_result_sha256": "2ef9c809fa2a27aabc49bad10054074fc19cf267be99f7e16d3f7527d31ad311",
+    "source_manifest_sha256": "8eb7ba52357d7b7e7c481e3c64383a6765b71e828266af249ad026f8dead1c99",
+    "corrected_root_codegen_log_sha256": "ca8beb9056657990a0a79ced294f8a4d30ceb4ac07c1dd8fd44080e04031a069"
+  },
+  "checks": {
+    "historical_original_E1_passes": 9,
+    "historical_D1_compatibility_passes": 11,
+    "functional_tests_rerun_by_correction": 0,
+    "changed_since_original_review": 2,
+    "unchanged_reviewed_sources": 18,
+    "worker_codegen_exit": 1,
+    "worker_codegen_reason": "Generation succeeded; normal final diff found generated serde(default) absent from the prior index.",
+    "root_codegen_after_index_integration_exit": 0,
+    "global_fmt_exit": 1,
+    "global_fmt_note": "Historical unchanged seven baseline files; not rerun or replaced by scoped formatting.",
+    "current_diff_checks_exit": 0
+  },
+  "verified_source_mirrors": {
+    "github_1_1_0": "72cf4d6bdbc9d88657bdb66e4bead45a3d7f1e8f",
+    "gitverse_1_1_0": "72cf4d6bdbc9d88657bdb66e4bead45a3d7f1e8f"
+  },
+  "limits": [
+    "Production exposure is the explicit host-bound existing library/debugger preview route; default CLI/MCP scenario controls belong to E2.",
+    "Resolution evidence is retained owner Debug data bound by frozen identity, not a stable portable resolution protocol.",
+    "Dynamic potential is not observed runtime/session cost; unsupported capture and unproved emitted attribution remain unavailable.",
+    "This acceptance does not establish cross-platform/native execution, universal final-tail recovery or additional accounting-provider settlement."
+  ]
+}
