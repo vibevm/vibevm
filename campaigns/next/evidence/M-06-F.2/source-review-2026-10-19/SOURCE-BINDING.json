@@ -1,0 +1,9 @@
+{
+  "worker_base": "a50bcb82edcf48b8002faa259f7a0c51a03b9e5a",
+  "source_commit": "96f213cf064196c4fe2dd49521fcf296b5e5fb80",
+  "candidate": "managed-result.d0528e006e1a578250151e2e4b43abdf64a2afd1a859ab80cf66449725e2ca17",
+  "work": "work.m06.f2",
+  "canonical_acceptance": false,
+  "source_scope_review": "Root read original contract/report/criticalproductiondiff/independent0P1P2; all15sourcehashes unchanged",
+  "tests": "11original-family+3SafeFS passed; vibe-spec LLVM override only; globalfmt failed on unchangedbaseline; no release/defaultbackend/totalheap/tokenizer theorem"
+}
