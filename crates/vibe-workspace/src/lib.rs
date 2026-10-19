@@ -376,3 +376,7 @@ mod selected_manifest_tests;
 
 pub mod boot_debugger;
 pub mod configuration_discovery;
+
+#[cfg(test)]
+#[path = "vibedeps/m_06_g_4_cases.rs"]
+mod m_06_g_4_cases;

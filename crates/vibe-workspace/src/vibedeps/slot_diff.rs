@@ -11,12 +11,13 @@ use sha2::{Digest, Sha256};
 use vibe_core::ContentHash;
 
 use super::{
-    CopyMode, SLOT_RECORD_FILENAME, SlotRecord, io_err, read_slot_record, sha256_file,
-    write_slot_record,
+    CopyMode, SLOT_RECORD_FILENAME, SlotRecord, read_slot_record, sha256_file, write_slot_record,
 };
 use crate::{WorkspaceError, path_to_slash};
 
+pub(super) mod path_limits;
 mod place;
+use path_limits::io_error as io_err;
 mod plan;
 mod report;
 
@@ -161,6 +162,7 @@ fn reconcile_slot_with_policy(
     record: &SlotRecord,
     policy: PublicationPolicy,
 ) -> Result<MaterialiseReport, WorkspaceError> {
+    path_limits::preflight(slot, files)?;
     let old_record = inspect_existing_record(slot)?;
     let footprint = files.iter().map(|file| file.path.clone()).collect();
 

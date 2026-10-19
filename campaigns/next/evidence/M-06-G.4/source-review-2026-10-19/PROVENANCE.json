@@ -1,0 +1,9 @@
+{
+  "published_report_sha256": "0b1253d03cf68774cc987a8d817e637ba47dd5613089acfa1fe4be9beb25c7ee",
+  "published_report_bytes": 52850,
+  "archive_report_sha256": "1fd1b235d55bf4d6341420f58690f8c0af6768ae906a2123826d33637a66d58a",
+  "trailing_whitespace_only_lines_normalized": 9,
+  "original_artifact_unchanged": true,
+  "full_task_complete": false,
+  "work_accepted": false
+}

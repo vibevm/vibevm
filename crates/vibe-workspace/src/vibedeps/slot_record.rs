@@ -108,6 +108,7 @@ pub fn write_slot_record(slot: &Path, record: &SlotRecord) -> Result<(), String>
     })?;
     let mut temporary = tempfile::Builder::new()
         .prefix(".vibe-record-")
+        .rand_bytes(super::slot_diff::path_limits::STAGING_RANDOM_BYTES)
         .tempfile_in(slot)
         .map_err(|error| {
             format!(
