@@ -1,0 +1,31 @@
+{
+  "intake": "intake.m06.f2.original-scope.1",
+  "needs": [],
+  "accepted": {
+    "acceptance_id": "intake-acceptance:b114bf69bc8eb1df914c20aaeeda84278fcb6ff7fa63b9223da357d0a7c0b508",
+    "candidate_id": "managed-result.d0528e006e1a578250151e2e4b43abdf64a2afd1a859ab80cf66449725e2ca17",
+    "contract_version": 1,
+    "evidence_ids": [
+      "intake-evidence:b114bf69bc8eb1df914c20aaeeda84278fcb6ff7fa63b9223da357d0a7c0b508"
+    ],
+    "generation": 0,
+    "integration_acceptance_ids": [],
+    "obligation_ids": [
+      "obligation.m06"
+    ],
+    "outcome_id": "outcome.vibevm-next.complete",
+    "revision": 1,
+    "stage_acceptance_id": "intake-stage:b114bf69bc8eb1df914c20aaeeda84278fcb6ff7fa63b9223da357d0a7c0b508",
+    "summary": "Root reviewed original task, publishedreport, criticalproductiondiff and independent15file review0P1/0P2; final11original-family+3SafeFSpasses qualify the actualdeclaredconfiguration.",
+    "work_id": "work.m06.f2"
+  },
+  "work": {
+    "work_id": "work.m06.f2",
+    "state": "accepted",
+    "revision": 7
+  },
+  "source_commit": "96f213cf064196c4fe2dd49521fcf296b5e5fb80",
+  "source_review_commit": "2b5e9eb92d556d6ea11dc3c3118c092c62849759",
+  "observed_campaign_accepted": 113,
+  "total_contracts": 222
+}
