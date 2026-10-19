@@ -1,0 +1,123 @@
+{
+  "head": "b37c05210d0e0a29d51aa6952e6410faaf3d9496",
+  "files": {
+    "crates/vibe-agent-projection/src/pkgskill/derivative.rs": {
+      "sha256": "13a8b1087fa2bc228f70054b3e56acebc4ab581abc7009e6300c3e8de7f360c2",
+      "bytes": 4695
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy.rs": {
+      "sha256": "abb85bed355d1fb29b13eb75b0891bad99b8f2008b82b233dcd1ea6de381782c",
+      "bytes": 37797
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/bridge.rs": {
+      "sha256": "147d68d77e950f3c19e7f7ffe23d6c962be11b14e622a3f3dcd5add6f1101540",
+      "bytes": 23408
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/bridge/capsule.rs": {
+      "sha256": "3de0537cf13e94a247c65c7d030ad2f7be9c5d8d6d1b50c1b5cb338740bbeb29",
+      "bytes": 10355
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/derivative.rs": {
+      "sha256": "81251d6bbc80161c5bba1e892c8e07f416d70c567e030be963f4e198df6f756a",
+      "bytes": 12458
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/derivative/m_10_b_2_cases.rs": {
+      "sha256": "f68b06eac357d99a0c38120425659bfc82fc4f0639566e05db66df2bbfe483a8",
+      "bytes": 13196
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/error.rs": {
+      "sha256": "a62c6ba961552aa2506393788ec60e4dcd833bda7110b473390c839807060424",
+      "bytes": 24766
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs": {
+      "sha256": "216a2ba0983dd924c7c64e13be310a653377f8778be19de5b4b455c76efd3260",
+      "bytes": 11025
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs": {
+      "sha256": "e039f1c48cf7b47d4959b2c04e5bdb8b0be66e73d90b6caac7969e9b5f0fca57",
+      "bytes": 17653
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/state.rs": {
+      "sha256": "e56db55f75c39bda132d2707cf7532ae0918f887027ec068d0f93f2b394d1eae",
+      "bytes": 38698
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/state/inverse.rs": {
+      "sha256": "79ddcc5083bb9dae5678e63bda562f192bffb9db2330ca6828cb5b35b0b590c8",
+      "bytes": 3940
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs": {
+      "sha256": "eaa8900c123f3022c902ca2e1f452e8ea035589205c24942ff863f406078c52c",
+      "bytes": 57407
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/view.rs": {
+      "sha256": "a6b2972a93cec45476d33ba364862671539e81eca8a9fd11bc10c04fda6bbf6e",
+      "bytes": 10926
+    },
+    "crates/vibe-lifecycle/src/mechanism/vibebin/bound_provider.rs": {
+      "sha256": "6dc0f8e54fc6a08cae4fd269299938c5e6b97651488427126c1bd2d4180034c3",
+      "bytes": 17219
+    },
+    "crates/vibe-lifecycle/src/retained_mechanism.rs": {
+      "sha256": "23c1a1f3fb3a432e2f99aece3c1abecb97abd2e6af8a236653160679abe59669",
+      "bytes": 20627
+    },
+    "crates/vibe-lifecycle/src/retained_mechanism/fixed_deploy.rs": {
+      "sha256": "f0f3bf2ff9c7e11f4cfd1a4037220795d072c2b749d42ffa62d7f12e28121a31",
+      "bytes": 18041
+    },
+    "crates/vibe-workspace/src/derivatives.rs": {
+      "sha256": "1da82b5ec73dfd347d62859bdb318580d83ed96e92242e9dc1dde0ee895943f1",
+      "bytes": 8255
+    },
+    "vibevm/vibespecs/common/PROP-074-local-derivatives.xml": {
+      "sha256": "295c047b48377414895af98014616b6ceced896147a642f706fecbf14c6f41da",
+      "bytes": 26040
+    },
+    "crates/vibe-agent-projection/src/pkgskill/derivative/m_10_d_2_cases.rs": {
+      "sha256": "44f3aa7fb851918959765ef6c3899d91d3bb1d3eb38b39067b6db0c6c8de7145",
+      "bytes": 2540
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/bridge/cleanup.rs": {
+      "sha256": "be44c3c562df5ca87bd084c50fc46e611e5a66e7e79ade4f6932853da7307a1f",
+      "bytes": 13867
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/derivative/m_10_d_2_cases.rs": {
+      "sha256": "346318f9be075a49a0dfa0284e269ee3eb6395f1c30a22480dd0052e1c81c134",
+      "bytes": 41200
+    },
+    "crates/vibe-lifecycle/src/mechanism/deploy/generic/m_10_d_2_cases.rs": {
+      "sha256": "9efa9e5a7be326493a495dfcbffd44f211102a06aa43b84fe0261de0b348d73c",
+      "bytes": 7434
+    },
+    "crates/vibe-workspace/src/derivatives/m_10_d_2_cases.rs": {
+      "sha256": "46611d6e1b913d39cc09c7525784bd8a7ccbcc06189ce9671666ccac408a0973",
+      "bytes": 1770
+    }
+  },
+  "unchanged_since_partial_review": [
+    "crates/vibe-agent-projection/src/pkgskill/derivative.rs",
+    "crates/vibe-agent-projection/src/pkgskill/derivative/m_10_d_2_cases.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/derivative/m_10_b_2_cases.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs",
+    "crates/vibe-lifecycle/src/mechanism/deploy/generic/m_10_d_2_cases.rs",
+    "crates/vibe-workspace/src/derivatives.rs",
+    "crates/vibe-workspace/src/derivatives/m_10_d_2_cases.rs"
+  ],
+  "drift_at_review_completion": [],
+  "artifacts": {
+    "8a4d00d9cb4a5869200714320cabc40dbd2cb285eb05de272a66200c9f65942a": {
+      "sha256": "8a4d00d9cb4a5869200714320cabc40dbd2cb285eb05de272a66200c9f65942a",
+      "bytes": 27860
+    },
+    "07ec50f0e0f5cb56972e681384a781cff0439c1a1ce030665bd0bc1b572e1790": {
+      "sha256": "07ec50f0e0f5cb56972e681384a781cff0439c1a1ce030665bd0bc1b572e1790",
+      "bytes": 161499
+    }
+  },
+  "patch_reverse_check": {
+    "exit": 0,
+    "read_only": true,
+    "command": "git apply --reverse --check <published patch>"
+  }
+}

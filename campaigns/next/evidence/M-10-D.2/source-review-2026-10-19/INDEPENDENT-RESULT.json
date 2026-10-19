@@ -1,0 +1,72 @@
+{
+  "verdict": "source_evidence_clear_original_D2_scope",
+  "p1": 0,
+  "p2": 0,
+  "findings": [],
+  "recommendation": "Root ordinary verification and result-intake decision",
+  "canonical_acceptance": false,
+  "former_gaps": {
+    "ordinary_non_test_derivative_consumer": "closed by public trusted host with_derivative and standard submission bridge",
+    "same_bound_owner_update_cleanup_recovery": "closed by actual generation0_to1 and retained-authority paths and deciding cases"
+  },
+  "source_head": "b37c05210d0e0a29d51aa6952e6410faaf3d9496",
+  "source_hashes_count": 23,
+  "source_drift": [],
+  "artifact_verification": {
+    "8a4d00d9cb4a5869200714320cabc40dbd2cb285eb05de272a66200c9f65942a": {
+      "sha256": "8a4d00d9cb4a5869200714320cabc40dbd2cb285eb05de272a66200c9f65942a",
+      "bytes": 27860
+    },
+    "07ec50f0e0f5cb56972e681384a781cff0439c1a1ce030665bd0bc1b572e1790": {
+      "sha256": "07ec50f0e0f5cb56972e681384a781cff0439c1a1ce030665bd0bc1b572e1790",
+      "bytes": 161499
+    }
+  },
+  "patch_reverse_check_exit": 0,
+  "spec_preservation": {
+    "HEAD_section_ids_preserved_exactly": 16,
+    "new_sections": [
+      "EXPLICIT-ACTIVATION"
+    ],
+    "independent_laws_deleted": false
+  },
+  "reported_current_tests": {
+    "distinct_passed": 33,
+    "derivative": 11,
+    "bound_effect": 7,
+    "bridge": 10,
+    "pinned_provider": 5,
+    "repeated_runs_not_added": true
+  },
+  "prior_evidence": {
+    "distinct_prior_passes": 12,
+    "overlap_rerun_derivative": 7,
+    "unchanged_prior_supporting_cases": 5,
+    "not_45_distinct_current": true
+  },
+  "literal_checks": {
+    "globalfmt": "exit1;12hunks7unchanged baseline files;not waived",
+    "diff_check": "exit0",
+    "xml": "wellformed/existing16sections exact preservation;not suite replacement",
+    "codegen": "no strict carrier change;no closure claimed"
+  },
+  "scope_limits": [
+    "explicit embedding-library surface, no new CLI commissioning requirement",
+    "real code/launcher publication, no derivative payload execution claim",
+    "one independent bound builtin destination set",
+    "CAS payload/history retained after active cleanup",
+    "no cross-binding migration/arbitrary retarget/earlier-payload restoration/native cross-platform claim"
+  ],
+  "review_actions": {
+    "source_writes": 0,
+    "git_mutations": 0,
+    "api_calls": 0,
+    "runtime_actions": 0,
+    "cargo": 0,
+    "tests": 0,
+    "models": 0,
+    "agents": 0
+  },
+  "report_sha256": "a54c924561d14ce86a7ee42e935aef170756e4fe2ee39e30490001786cff8a2a",
+  "manifest_sha256": "a65bd17f02ec323778b5e39c0b77c2a5ec7392e94b1c876f78f846313f4e3256"
+}
