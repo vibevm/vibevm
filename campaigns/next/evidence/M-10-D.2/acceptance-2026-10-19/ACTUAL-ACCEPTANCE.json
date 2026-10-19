@@ -1,0 +1,114 @@
+{
+  "intake": "intake.m10.d2.original-scope.1",
+  "needs": [],
+  "accepted": {
+    "acceptance_id": "intake-acceptance:6b9d8f84a8736498ed34c541efa237529214a0e998847e8e6ccff10fc2fdbd61",
+    "candidate_id": "candidate.published.63bf43daa365a09dece0f8230c9a3b128928dcab789a7fc1ae52e650ca5c0df6",
+    "contract_version": 1,
+    "evidence_ids": [
+      "intake-evidence:6b9d8f84a8736498ed34c541efa237529214a0e998847e8e6ccff10fc2fdbd61"
+    ],
+    "generation": 0,
+    "integration_acceptance_ids": [],
+    "obligation_ids": [
+      "obligation.m10"
+    ],
+    "outcome_id": "outcome.vibevm-next.complete",
+    "revision": 1,
+    "stage_acceptance_id": "intake-stage:6b9d8f84a8736498ed34c541efa237529214a0e998847e8e6ccff10fc2fdbd61",
+    "summary": "Root approves original-scope meaning after independent0P1/0P2 review, direct original task read,23matching source hashes, immutable report/patch digest checks, reverse patch/diff0 and exact preservation of16old PROP074sections. Trusted recovery uses existing RecordCandidate; raw malformed result remains immutable, no new coding run or task acceptance from flags.",
+    "work_id": "work.m10.d2"
+  },
+  "work": {
+    "acceptance": [
+      "Evidence joins exact derivative result, grant, artifact, observed effect and receipt.",
+      "General families and downstream active/inert paths satisfy M-10 exit."
+    ],
+    "active_job": null,
+    "depends_on": [
+      "work.m10.d1"
+    ],
+    "kind": "atom",
+    "order": 2,
+    "parent_id": "work.m10",
+    "required_stage": "functional",
+    "revision": 7,
+    "state": "accepted",
+    "title": "Prove derivative activation, revocation and recovery",
+    "validation_generation": 0,
+    "work_id": "work.m10.d2",
+    "work_type": "integration"
+  },
+  "source_commit": "de50ff7e1",
+  "source_review_commit": "2e26884266a31ddd5890e9883316beb1090a2187",
+  "product_steps": [
+    {
+      "step": "claim:verify.m10.d2.01",
+      "receipt": 93830
+    },
+    {
+      "step": "result:verify.m10.d2.01",
+      "receipt": 93962
+    },
+    {
+      "step": "claim:verify.m10.d2.03",
+      "receipt": 94140
+    },
+    {
+      "step": "result:verify.m10.d2.03",
+      "receipt": 94272
+    },
+    {
+      "step": "claim:verify.m10.d2.05",
+      "receipt": 94450
+    },
+    {
+      "step": "result:verify.m10.d2.05",
+      "receipt": 94584
+    },
+    {
+      "step": "claim:verify.m10.d2.06",
+      "receipt": 94762
+    },
+    {
+      "step": "result:verify.m10.d2.06",
+      "receipt": 94897
+    },
+    {
+      "step": "claim:verify.m10.d2.07",
+      "receipt": 95075
+    },
+    {
+      "step": "result:verify.m10.d2.07",
+      "receipt": 95209
+    },
+    {
+      "step": "claim:intake-safety:f879b1032c2c5dcdf414caf93c8fabeee53256f6598d737a58116468ef95fd77",
+      "receipt": 95387
+    },
+    {
+      "step": "result:intake-safety:f879b1032c2c5dcdf414caf93c8fabeee53256f6598d737a58116468ef95fd77",
+      "receipt": 95519
+    },
+    {
+      "step": "safe-state",
+      "receipt": 95667
+    },
+    {
+      "step": "review",
+      "receipt": 95801
+    },
+    {
+      "step": "evidence",
+      "receipt": 95936
+    },
+    {
+      "step": "stage",
+      "receipt": 96088
+    },
+    {
+      "step": "work",
+      "receipt": 96247
+    }
+  ]
+}
