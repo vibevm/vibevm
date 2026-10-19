@@ -513,3 +513,63 @@ fn a_rebound_final_name_refuses_symlink_and_directory_occupants() {
     assert!(rendered.contains("occupied.json"), "{rendered}");
     assert!(rendered.contains("final-name race"), "{rendered}");
 }
+
+#[test]
+fn m_06_f_2_capture_owns_bytes_without_weakening_bounded_readers() {
+    let (dir, project) = project();
+    let bytes = vec![b'x'; 64 * 1024 * 1024 + 1];
+    fs::write(dir.path().join("large"), &bytes).unwrap();
+    assert!(
+        project
+            .read_file_snapshot_bounded("large", 64 * 1024 * 1024)
+            .is_err()
+    );
+    let snapshot = project.capture_file_snapshot("large").unwrap().unwrap();
+    assert_eq!(snapshot.bytes, bytes);
+    assert_eq!(snapshot.size, bytes.len() as u64);
+    fs::write(dir.path().join("large"), b"changed in place").unwrap();
+    assert_eq!(snapshot.bytes, bytes);
+    assert_eq!(project.capture_file_snapshot("absent").unwrap(), None);
+    fs::write(dir.path().join("empty"), b"").unwrap();
+    assert!(
+        project
+            .capture_file_snapshot("empty")
+            .unwrap()
+            .unwrap()
+            .bytes
+            .is_empty()
+    );
+}
+
+#[test]
+fn m_06_f_2_capture_refuses_growth_and_replaced_final_name() {
+    let (dir, project) = project();
+    let path = dir.path().join("data");
+    fs::write(&path, b"before").unwrap();
+    let changed = path.clone();
+    arm_before_bounded_read(Some(Box::new(move |_, _| {
+        fs::write(&changed, b"longer content").unwrap();
+    })));
+    let result = project.capture_file_snapshot("data");
+    arm_before_bounded_read(None);
+    assert!(result.is_err());
+    let changed = path.clone();
+    arm_before_bounded_read(Some(Box::new(move |_, _| {
+        fs::rename(&changed, changed.with_extension("old")).unwrap();
+        fs::write(&changed, b"longer content").unwrap();
+    })));
+    let result = project.capture_file_snapshot("data");
+    arm_before_bounded_read(None);
+    assert!(result.is_err());
+}
+
+#[test]
+fn m_06_f_2_capture_preserves_link_refusals() {
+    let (dir, project) = project();
+    fs::write(dir.path().join("original"), b"data").unwrap();
+    fs::hard_link(dir.path().join("original"), dir.path().join("alias")).unwrap();
+    assert!(project.capture_file_snapshot("alias").is_err());
+    if link_file(&dir.path().join("original"), &dir.path().join("symlink")) {
+        assert!(project.capture_file_snapshot("symlink").is_err());
+    }
+}

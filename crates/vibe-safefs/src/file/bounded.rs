@@ -11,6 +11,9 @@
 //! the final name is reopened through the same pinned capability and must
 //! still denote the very object that supplied the bytes, so a read can never
 //! answer for an object the path has already swapped out from under it.
+//! Trusted debugger capture separately opts into `capture_file_snapshot`:
+//! owned finite historical bytes without a fixed diagnostic admission quota,
+//! under the same two-pass and final-name proofs and checked allocations.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW");
 
@@ -79,6 +82,15 @@ impl Project {
         self.read_file_snapshot_bounded_in(&root, relative, cap)
     }
 
+    /// Capture a finite regular file without a diagnostic admission quota.
+    /// The held file's observed length fences both passes; growth, changed
+    /// bytes, unsafe links and a replaced final name still refuse. Allocation
+    /// failure is explicit. This returns owned historical bytes, not a live view.
+    pub fn capture_file_snapshot(&self, relative: &str) -> Result<Option<StableFileSnapshot>> {
+        let root = self.root_dir()?;
+        self.read_snapshot_in(&root, relative, None, false)
+    }
+
     /// The pinned-directory form of [`Self::read_file_snapshot_bounded`].
     pub fn read_file_snapshot_bounded_in(
         &self,
@@ -112,9 +124,18 @@ impl Project {
         cap: usize,
         allow_hardlinks: bool,
     ) -> Result<Option<StableFileSnapshot>> {
-        let limit = cap
-            .checked_add(1)
+        cap.checked_add(1)
             .with_context(|| format!("cap {cap} is usize::MAX: cap + 1 would overflow"))?;
+        self.read_snapshot_in(directory, relative, Some(cap), allow_hardlinks)
+    }
+
+    fn read_snapshot_in(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+        cap: Option<usize>,
+        allow_hardlinks: bool,
+    ) -> Result<Option<StableFileSnapshot>> {
         let Some((holder, name)) = self.holder_of(directory, relative)? else {
             return Ok(None);
         };
@@ -138,6 +159,15 @@ impl Project {
         let before = file
             .metadata()
             .with_context(|| format!("inspecting `{}`", display.display()))?;
+        // No policy ceiling for trusted capture: the finite observed length
+        // is coherence evidence, and one extra byte detects growth.
+        let cap = match cap {
+            Some(cap) => cap,
+            None => {
+                usize::try_from(before.len()).context("capture length exceeds address space")?
+            }
+        };
+        let limit = cap.checked_add(1).context("capture read fence overflow")?;
         if before.len() > cap as u64 {
             bail!(
                 "`{}` is {} bytes, over the {cap}-byte cap",
@@ -367,7 +397,12 @@ fn bounded_pass(
 ) -> Result<Vec<u8>> {
     file.seek(SeekFrom::Start(0))
         .with_context(|| format!("seeking `{}`", display.display()))?;
-    let mut bytes = Vec::with_capacity(metadata_len as usize);
+    let mut bytes = Vec::new();
+    bytes
+        .try_reserve_exact(
+            usize::try_from(metadata_len).context("snapshot length exceeds address space")?,
+        )
+        .context("allocating stable snapshot")?;
     let mut fenced = file.take(limit as u64);
     let mut chunk = [0u8; READ_CHUNK];
     loop {
@@ -389,7 +424,9 @@ fn bounded_pass(
                 display.display()
             );
         }
-        bytes.reserve_exact(used);
+        bytes
+            .try_reserve_exact(used)
+            .context("allocating stable snapshot chunk")?;
         bytes.extend_from_slice(&chunk[..used]);
     }
 }

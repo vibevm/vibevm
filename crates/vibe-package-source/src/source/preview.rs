@@ -145,10 +145,7 @@ impl InstallResolver {
                         }
                         for path in paths {
                             if let Some(snapshot) = project
-                                .read_file_snapshot_bounded(
-                                    &path.to_string_lossy().replace('\\', "/"),
-                                    64 * 1024 * 1024,
-                                )
+                                .capture_file_snapshot(&path.to_string_lossy().replace('\\', "/"))
                                 .map_err(|e| e.to_string())?
                             {
                                 files.insert(
@@ -259,7 +256,7 @@ pub(super) fn capture_spec_tree(
         {
             let path = relative.to_string_lossy().replace('\\', "/");
             let snapshot = project
-                .read_file_snapshot_bounded(&path, 64 * 1024 * 1024)
+                .capture_file_snapshot(&path)
                 .map_err(|e| e.to_string())?
                 .ok_or_else(|| format!("source changed during capture: {path}"))?;
             files.insert(path, snapshot.bytes);

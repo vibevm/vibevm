@@ -100,7 +100,7 @@ impl DocumentClient {
             total = total
                 .checked_add(bytes.as_ref().map_or(0, |b| b.len()))
                 .ok_or(DocumentAnalysisError::ResourceLimit)?;
-            if total > self.host.limits.capture_bytes {
+            if !self.host.boot_capture && total > self.host.limits.capture_bytes {
                 return Err(DocumentAnalysisError::ResourceLimit);
             }
             resources.insert(
@@ -121,7 +121,7 @@ impl DocumentClient {
             total = total
                 .checked_add(buffer.bytes.len())
                 .ok_or(DocumentAnalysisError::ResourceLimit)?;
-            if total > self.host.limits.capture_bytes {
+            if !self.host.boot_capture && total > self.host.limits.capture_bytes {
                 return Err(DocumentAnalysisError::ResourceLimit);
             }
             let resource = resources
@@ -167,7 +167,7 @@ impl DocumentClient {
                 destination.disposition = ResourceDisposition::MoveDestination { source: *id };
             }
         }
-        if total > self.host.limits.capture_bytes {
+        if !self.host.boot_capture && total > self.host.limits.capture_bytes {
             return Err(DocumentAnalysisError::ResourceLimit);
         }
         state.captures = state
