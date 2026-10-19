@@ -1,0 +1,7 @@
+{
+  "raw_artifact_sha256": "f437264fa0e85b8ad4523a971302964f7f4d05836fd4d6557f623a8aed137734",
+  "raw_bytes": 19444,
+  "repository_copy_sha256": "2193e0a7e59cb3469c524dc64e988d9162991b3748506b217ca76f3e81ec7833",
+  "normalization": "Only one-space empty diff-context lines normalized to empty lines; raw immutable report unchanged in artifact store.",
+  "normalized_lines": 4
+}

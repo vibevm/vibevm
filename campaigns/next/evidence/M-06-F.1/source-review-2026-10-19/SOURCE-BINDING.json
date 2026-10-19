@@ -1,0 +1,55 @@
+{
+  "head": "3bdaad1b5fb351f4dc2f6f6723c58f97d864e0e4",
+  "files": {
+    "crates/vibe-cli/src/commands/boot/m_10_d_1_cases.rs": {
+      "sha256": "ce174d5e60cebefd7645bc91f9e814ec6af00febcd8818f3f6c475b87f75271f",
+      "bytes": 9869
+    },
+    "crates/vibe-cli/src/commands/boot/mod.rs": {
+      "sha256": "240f9a769c48f467214906fb7f75519b12c07a1947040ce27270fb0abc000b69",
+      "bytes": 6606
+    },
+    "crates/vibe-cli/src/commands/boot/viewer.rs": {
+      "sha256": "5a78aab891923c5fbd1cd5f51171c782c2aebc91937d2b493c54ed91e8de72b3",
+      "bytes": 9773
+    },
+    "crates/vibe-mcp/src/tools/boot_debugger.rs": {
+      "sha256": "48f360184bce9747ebc16ca079d758469842a6f87998fdae478558d842833567",
+      "bytes": 28559
+    },
+    "crates/vibe-workspace/src/boot_debugger/mod.rs": {
+      "sha256": "a4e81e1e38ccb4ffb93ecfd581f0930e67b4dc8e1dcec242eb76315e4ddd5389",
+      "bytes": 5566
+    },
+    "crates/vibe-workspace/src/boot_debugger/viewer.rs": {
+      "sha256": "850989b96d5ca61efec424b7dc53097afdc62a6c844fb40dd701024f7eab57a7",
+      "bytes": 9816
+    },
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml": {
+      "sha256": "4a2b1a129cbf5bc3b54ccb8e01c33e68dd09267934cbdaf420d683b9e91f4950",
+      "bytes": 29670
+    },
+    "crates/vibe-cli/src/commands/boot/m_06_f_1_cases.rs": {
+      "sha256": "a90a13b038948db698e64bfd08e1158ba834c3655e975596d3bcb77dd7b00944",
+      "bytes": 13351
+    },
+    "crates/vibe-workspace/src/boot_debugger/m_06_f_1_cases.rs": {
+      "sha256": "669aad92a0ec935aeaed7451d38817cc3883f69d25cd82da593fd6907b35bdd7",
+      "bytes": 2832
+    }
+  },
+  "artifacts": {
+    "f437264fa0e85b8ad4523a971302964f7f4d05836fd4d6557f623a8aed137734": {
+      "bytes": 19444,
+      "sha256": "f437264fa0e85b8ad4523a971302964f7f4d05836fd4d6557f623a8aed137734"
+    },
+    "9687a1b0cac91f8f16a2a976a217f5a972b9fbf6527083e7548c6cf380b7447f": {
+      "bytes": 34688,
+      "sha256": "9687a1b0cac91f8f16a2a976a217f5a972b9fbf6527083e7548c6cf380b7447f"
+    }
+  },
+  "drift_at_review_completion": [],
+  "patch_reverse_check_exit": 0,
+  "spec_HEAD_content_preserved_byte_for_byte": true,
+  "spec_prior_fact_clauses": 27
+}
