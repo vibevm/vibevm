@@ -36,6 +36,12 @@ fn bundle(target: &str) -> BundleDistributionManifest {
                 size: 10,
                 digest: DIGEST_A.to_string(),
             },
+            DistributionComponent {
+                name: DistributionComponentName::VibeAppProxy,
+                path: "vibe-app-proxy".to_string(),
+                size: 10,
+                digest: DIGEST_A.to_string(),
+            },
         ],
         source_archive: source_archive(),
     }
@@ -81,10 +87,15 @@ fn aggregate() -> AggregateDistributionManifest {
 }
 
 #[test]
-fn bundle_requires_exactly_the_two_runtime_components() {
+fn bundle_accepts_historical_pair_and_current_triple() {
     bundle(SUPPORTED_DISTRIBUTION_TARGETS[0])
         .validate()
         .unwrap();
+    let mut historical = bundle(SUPPORTED_DISTRIBUTION_TARGETS[0]);
+    historical
+        .components
+        .retain(|entry| entry.name != DistributionComponentName::VibeAppProxy);
+    historical.validate().unwrap();
     let mut invalid = bundle(SUPPORTED_DISTRIBUTION_TARGETS[0]);
     invalid.components[1].name = DistributionComponentName::VibeIndex;
     assert!(matches!(

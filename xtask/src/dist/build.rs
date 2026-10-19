@@ -29,6 +29,7 @@ use output::{run_visible, write_output};
 
 const COMPONENT_VIBE: &str = "vibe";
 const COMPONENT_INDEX: &str = "vibe-index";
+const COMPONENT_PROXY: &str = "vibe-app-proxy";
 
 #[derive(Debug, Clone)]
 pub(crate) struct BuildOptions {
@@ -368,7 +369,10 @@ fn select_binaries(stdout: &[u8]) -> Result<BTreeMap<String, PathBuf>> {
             continue;
         };
         if !target.kind.iter().any(|kind| kind == "bin")
-            || !matches!(target.name.as_str(), COMPONENT_VIBE | COMPONENT_INDEX)
+            || !matches!(
+                target.name.as_str(),
+                COMPONENT_VIBE | COMPONENT_INDEX | COMPONENT_PROXY
+            )
         {
             continue;
         }
@@ -383,7 +387,7 @@ fn select_binaries(stdout: &[u8]) -> Result<BTreeMap<String, PathBuf>> {
             );
         }
     }
-    for required in [COMPONENT_VIBE, COMPONENT_INDEX] {
+    for required in [COMPONENT_VIBE, COMPONENT_INDEX, COMPONENT_PROXY] {
         let path = selected
             .get(required)
             .with_context(|| format!("Cargo emitted no compiler-artifact for `{required}`"))?;
@@ -408,9 +412,14 @@ fn assemble_bundle(
         [
             (COMPONENT_VIBE, "vibe.exe"),
             (COMPONENT_INDEX, "vibe-index.exe"),
+            (COMPONENT_PROXY, "vibe-app-proxy.exe"),
         ]
     } else {
-        [(COMPONENT_VIBE, "vibe"), (COMPONENT_INDEX, "vibe-index")]
+        [
+            (COMPONENT_VIBE, "vibe"),
+            (COMPONENT_INDEX, "vibe-index"),
+            (COMPONENT_PROXY, "vibe-app-proxy"),
+        ]
     };
     let mut entries = Vec::new();
     let mut components = Vec::new();
@@ -422,10 +431,11 @@ fn assemble_bundle(
         verify_version(source, component, version)?;
         let bytes = fs::read(source)
             .with_context(|| format!("reading built component `{}`", source.display()))?;
-        let name = if component == COMPONENT_VIBE {
-            DistributionComponentName::Vibe
-        } else {
-            DistributionComponentName::VibeIndex
+        let name = match component {
+            COMPONENT_VIBE => DistributionComponentName::Vibe,
+            COMPONENT_INDEX => DistributionComponentName::VibeIndex,
+            COMPONENT_PROXY => DistributionComponentName::VibeAppProxy,
+            _ => unreachable!(),
         };
         components.push(DistributionComponent {
             name,
@@ -568,26 +578,9 @@ pub(crate) fn verified_bundle_entries(
     Ok(entries)
 }
 
-fn verify_version(path: &Path, component: &str, version: &Version) -> Result<()> {
-    let mut command = Command::new(path);
-    command.arg("--version");
-    scrub_release_credentials(&mut command);
-    let output = command
-        .output()
-        .with_context(|| format!("running `{component} --version` at `{}`", path.display()))?;
-    if !output.status.success() {
-        bail!(
-            "`{component} --version` failed with exit {:?}",
-            output.status.code()
-        );
-    }
-    let actual = String::from_utf8_lossy(&output.stdout).trim().to_string();
-    let expected = format!("{component} {version}");
-    if actual != expected {
-        bail!("`{component} --version` returned `{actual}`; expected `{expected}`");
-    }
-    Ok(())
-}
+#[path = "build/version_verify.rs"]
+mod version_verify;
+use version_verify::verify_version;
 
 #[cfg(test)]
 #[path = "build/tests.rs"]

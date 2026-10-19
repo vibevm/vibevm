@@ -37,12 +37,14 @@ fn artifact_names_are_version_and_target_exact() {
 }
 
 #[test]
-fn cargo_messages_select_exactly_the_two_products() {
+fn cargo_messages_select_exactly_the_three_products() {
     let temp = tempfile::tempdir().unwrap();
     let vibe = temp.path().join("vibe");
     let index = temp.path().join("vibe-index");
+    let proxy = temp.path().join("vibe-app-proxy");
     std::fs::write(&vibe, b"vibe").unwrap();
     std::fs::write(&index, b"index").unwrap();
+    std::fs::write(&proxy, b"proxy").unwrap();
     let lines = [
         serde_json::json!({
             "reason": "build-script-executed",
@@ -59,6 +61,11 @@ fn cargo_messages_select_exactly_the_two_products() {
             "target": {"name": "vibe-index", "kind": ["bin"]},
             "executable": index
         }),
+        serde_json::json!({
+            "reason": "compiler-artifact",
+            "target": {"name": "vibe-app-proxy", "kind": ["bin"]},
+            "executable": proxy
+        }),
     ];
     let input = lines
         .into_iter()
@@ -66,9 +73,10 @@ fn cargo_messages_select_exactly_the_two_products() {
         .collect::<Vec<_>>()
         .join("\n");
     let selected = select_binaries(input.as_bytes()).unwrap();
-    assert_eq!(selected.len(), 2);
+    assert_eq!(selected.len(), 3);
     assert!(selected[COMPONENT_VIBE].is_file());
     assert!(selected[COMPONENT_INDEX].is_file());
+    assert!(selected[COMPONENT_PROXY].is_file());
 }
 
 #[test]

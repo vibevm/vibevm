@@ -68,6 +68,41 @@ impl InstallerOptionDecl {
             validate_shell_command(command, "[[installer_options]]", "post_install")?;
         }
         self.installation.validate()?;
+        let mut public_names = BTreeSet::new();
+        for command in &self.public_commands {
+            if !is_portable_token(&command.name) || command.name == "vibe" {
+                return Err(format!(
+                    "[[installer_options.public_commands]].name `{}` must be a portable lowercase token other than `vibe`",
+                    command.name
+                ));
+            }
+            if !public_names.insert(command.name.as_str()) {
+                return Err(format!(
+                    "[[installer_options.public_commands]].name `{}` is duplicated in installer option `{}`",
+                    command.name, self.id
+                ));
+            }
+            if matches!(
+                &self.installation,
+                InstallerMethod::Zip { runners, .. } | InstallerMethod::TarGz { runners, .. }
+                    if runners.iter().any(|runner| runner.name == command.name)
+            ) {
+                return Err(format!(
+                    "[[installer_options.public_commands]].name `{}` conflicts with an archive runner in installer option `{}`",
+                    command.name, self.id
+                ));
+            }
+            if !self
+                .launchers
+                .iter()
+                .any(|launcher| launcher.id == command.launcher)
+            {
+                return Err(format!(
+                    "[[installer_options.public_commands]] `{}` references unknown launcher `{}` in installer option `{}`",
+                    command.name, command.launcher, self.id
+                ));
+            }
+        }
         Ok(())
     }
 }

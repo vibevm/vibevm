@@ -1,5 +1,6 @@
 //! Apply a selected package-owned installer and its hooks.
 
+use super::model::PublicCommand;
 use super::*;
 use vibe_core::manifest::{InstallerMethod, LauncherDecl};
 
@@ -14,10 +15,39 @@ pub(super) struct AppliedApplication {
     pub(super) command_publication: Option<command::CommandPublication>,
     pub(super) launchers: Vec<model::ApplicationLauncherOwnership>,
     pub(super) user_launchers: Vec<UserLauncher>,
+    pub(super) public_commands: Vec<PublicCommand>,
     pub(super) install_kind: InstallKind,
     pub(super) selected_option_id: String,
     pub(super) selected_platform: String,
     pub(super) suspended: Option<binary::SuspendedBinary>,
+}
+
+impl AppliedApplication {
+    pub(super) fn rollback(&mut self) -> Result<()> {
+        if let Some(publication) = self.publication.take() {
+            publication.rollback()?;
+        }
+        if let Some(publication) = self.command_publication.take() {
+            publication.rollback()?;
+        }
+        if let Some(suspended) = self.suspended.take() {
+            suspended.rollback_after_source(&self.launchers)?;
+        }
+        Ok(())
+    }
+
+    pub(super) fn commit(&mut self) -> Result<()> {
+        if let Some(publication) = self.publication.take() {
+            publication.commit();
+        }
+        if let Some(publication) = self.command_publication.take() {
+            publication.commit();
+        }
+        if let Some(suspended) = self.suspended.take() {
+            suspended.commit()?;
+        }
+        Ok(())
+    }
 }
 
 fn user_launchers(declarations: &[LauncherDecl]) -> Vec<UserLauncher> {
@@ -33,6 +63,16 @@ fn user_launchers(declarations: &[LauncherDecl]) -> Vec<UserLauncher> {
             icon: entry.icon.clone(),
             terminal: entry.terminal,
             default: entry.default,
+        })
+        .collect()
+}
+
+fn public_commands(declarations: &[vibe_core::manifest::PublicCommandDecl]) -> Vec<PublicCommand> {
+    declarations
+        .iter()
+        .map(|entry| PublicCommand {
+            name: entry.name.clone(),
+            launcher: entry.launcher.clone(),
         })
         .collect()
 }
@@ -60,6 +100,7 @@ pub(super) fn apply(
     let selected_platform = format!("{}/{}", resolved.selected_platform, resolved.selected_arch);
     let selected_option_id = resolved.selected_option_id.clone();
     let authored_launchers = user_launchers(&resolved.launchers);
+    let authored_commands = public_commands(&resolved.public_commands);
     let provenance = ApplicationProvenance {
         available_source: resolved.source.clone(),
         selected: ApplicationSelection::Source {
@@ -143,6 +184,7 @@ pub(super) fn apply(
                 command_publication: Some(command_publication),
                 launchers: Vec::new(),
                 user_launchers: authored_launchers,
+                public_commands: authored_commands,
                 install_kind: InstallKind::Shell,
                 selected_option_id,
                 selected_platform,
@@ -178,6 +220,7 @@ pub(super) fn apply(
                 &staging,
                 offline,
                 progress,
+                true,
             )?;
             let publication = binary::publish(
                 settings,
@@ -190,6 +233,33 @@ pub(super) fn apply(
             let management = publication.management();
             let app_root = binary::payload_root(&management)?;
             let launchers = publication.launchers();
+            let mut user_launchers = authored_launchers;
+            let mut public_commands = authored_commands;
+            for runner in publication.provider_runners() {
+                let alias = runner.logical_name;
+                let id = format!("archive-runner-{alias}");
+                if public_commands.iter().any(|entry| entry.name == alias)
+                    || user_launchers.iter().any(|entry| entry.id == id)
+                {
+                    publication.rollback()?;
+                    bail!("archive runner `{alias}` conflicts with an authored public command");
+                }
+                user_launchers.push(UserLauncher {
+                    id: id.clone(),
+                    name: runner.name,
+                    description: None,
+                    executable: runner.relative_path.to_string_lossy().into_owned(),
+                    args: Vec::new(),
+                    working_directory: None,
+                    icon: None,
+                    terminal: false,
+                    default: false,
+                });
+                public_commands.push(PublicCommand {
+                    name: alias,
+                    launcher: id,
+                });
+            }
             Ok(AppliedApplication {
                 application: resolved.application.clone(),
                 host_root: host,
@@ -200,7 +270,8 @@ pub(super) fn apply(
                 publication: Some(publication),
                 command_publication: None,
                 launchers,
-                user_launchers: authored_launchers,
+                user_launchers,
+                public_commands,
                 install_kind: if matches!(format, distribution::DirectArchiveFormat::Zip) {
                     InstallKind::Zip
                 } else {
@@ -292,6 +363,7 @@ pub(super) fn apply(
                 command_publication: Some(command_publication),
                 launchers: Vec::new(),
                 user_launchers: authored_launchers,
+                public_commands: authored_commands,
                 install_kind: if extension == "exe" {
                     InstallKind::Exe
                 } else {
@@ -308,15 +380,7 @@ pub(super) fn apply(
         && let Err(error) =
             command::run_shell_hook(script, &package_root, &applied.app_root, ctx.is_json())
     {
-        if let Some(publication) = applied.publication.take() {
-            publication.rollback()?;
-        }
-        if let Some(publication) = applied.command_publication.take() {
-            publication.rollback()?;
-        }
-        if let Some(suspended) = applied.suspended.take() {
-            suspended.rollback_after_source(&applied.launchers)?;
-        }
+        applied.rollback()?;
         return Err(error.context(
                 "post_install failed; the prior index remains, but an external installer may have changed its payload",
             ));

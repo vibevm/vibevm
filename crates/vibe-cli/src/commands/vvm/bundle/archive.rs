@@ -32,7 +32,7 @@ use file_verify::{
 
 use super::super::model::{InstallRecord, Kind, Origin, Profile, VersionId};
 use super::super::placer;
-use super::super::store::{BINARY_NAME, INDEX_BINARY_NAME, VersionStore};
+use super::super::store::{APP_PROXY_BINARY_NAME, BINARY_NAME, INDEX_BINARY_NAME, VersionStore};
 
 const LICENSE_FILENAME: &str = "LICENSE.md";
 const README_FILENAME: &str = "README.md";
@@ -258,6 +258,9 @@ fn verified_existing_instance(
             DistributionComponentName::VibeIndex => {
                 store.index_binary_path(&record.version_id(), record.instance)
             }
+            DistributionComponentName::VibeAppProxy => {
+                store.app_proxy_binary_path(&record.version_id(), record.instance)
+            }
         };
         let Ok(digest) = hash_regular_exact(
             &path,
@@ -334,6 +337,8 @@ fn validate_platform_paths(manifest: &BundleDistributionManifest) -> Result<()> 
             (DistributionComponentName::Vibe, false) => "vibe",
             (DistributionComponentName::VibeIndex, true) => "vibe-index.exe",
             (DistributionComponentName::VibeIndex, false) => "vibe-index",
+            (DistributionComponentName::VibeAppProxy, true) => "vibe-app-proxy.exe",
+            (DistributionComponentName::VibeAppProxy, false) => "vibe-app-proxy",
         };
         if component.path != expected {
             bail!(
@@ -401,6 +406,7 @@ fn extract_verified_bundle(
         let destination = match component.name {
             DistributionComponentName::Vibe => bin_dir.join(BINARY_NAME),
             DistributionComponentName::VibeIndex => bin_dir.join(INDEX_BINARY_NAME),
+            DistributionComponentName::VibeAppProxy => bin_dir.join(APP_PROXY_BINARY_NAME),
         };
         if let Err(error) = extract_hashed_entry(archive, component, &destination) {
             task.fail("component extraction failed");

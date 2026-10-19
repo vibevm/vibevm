@@ -3,17 +3,21 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#ownership");
 
+pub(super) mod alternatives;
 mod apply;
 mod arguments;
 mod binary;
 mod command;
 mod distribution;
 mod launch;
+mod lease;
 mod local_source;
 mod model;
+mod mutations;
 mod options;
 mod process;
 mod remote;
+mod removal;
 mod report;
 mod source;
 mod store;
@@ -36,10 +40,15 @@ use model::{
     ApplicationSelection, ApplicationStatus, CONTEXT_PROTOCOL, InstallKind, ManagementEntry,
     ManagementRuntime, UserLauncher,
 };
+use mutations::{
+    ensure_external_isolation, ensure_external_uninstall_isolated, fresh_revision,
+    record_for_package, register_alternative, reject_identity_collision, retire_alternative,
+    settings_root,
+};
 use options::InstallChoice;
 use process::{dispatch, validate_management};
 use source::{ResolvedApplication, qualified_ref, resolve_global_application};
-use store::ApplicationStore;
+use store::{ApplicationStore, installation_host_root, installation_key};
 
 /// Inspect authored launch points using the currently installed application record.
 pub fn launcher_listing(package: &str, project_root: Option<&Path>) -> Result<serde_json::Value> {
@@ -85,6 +94,7 @@ pub fn install(
     let settings = settings_root()?;
     let store = ApplicationStore::open(&settings)?;
     let mut index = store.load()?;
+    alternatives::recover_pending(&index, &settings)?;
     let spelling = &args.packages[0];
     let offline = root_offline || args.offline;
     let choice = InstallChoice {
@@ -103,11 +113,23 @@ pub fn install(
         &progress,
     )?;
     reject_identity_collision(&index, &resolved.application)?;
-    let host = settings
-        .join("opt")
-        .join("apps")
-        .join(&resolved.application.id);
-    let prior = index.applications.get(&resolved.application.id);
+    let key = installation_key(&resolved.application.package);
+    ensure_external_isolation(&index, &resolved, &key, &settings)?;
+    let host = installation_host_root(
+        &settings,
+        &resolved.application.id,
+        &resolved.application.package,
+    );
+    let prior = index.applications.get(&key);
+    let _launch_lease = if prior.is_some_and(|record| record.status == ApplicationStatus::Ready) {
+        Some(
+            lease::try_acquire_exclusive(&settings, &key)?.ok_or_else(|| {
+                anyhow::anyhow!("application_in_use: `{key}` has an active launcher")
+            })?,
+        )
+    } else {
+        None
+    };
     let mut applied = apply(
         ctx,
         &store,
@@ -122,46 +144,54 @@ pub fn install(
         prior,
         &progress,
     )?;
+    let slot = applied.application.id.clone();
     index.applications.insert(
-        applied.application.id.clone(),
+        key.clone(),
         ApplicationRecord {
             application: applied.application.clone(),
             host_root: applied.host_root.clone(),
             app_root: Some(applied.app_root.clone()),
-            management: applied.management,
+            management: applied.management.clone(),
             status: ApplicationStatus::Ready,
             provenance: Some(applied.provenance.clone()),
             launchers: applied.launchers.clone(),
             user_launchers: applied.user_launchers.clone(),
+            public_commands: applied.public_commands.clone(),
             install_kind: Some(applied.install_kind),
             selected_option_id: Some(applied.selected_option_id.clone()),
             selected_platform: Some(applied.selected_platform.clone()),
         },
     );
+    if let Err(error) = register_alternative(&mut index, &slot, &key, &applied.public_commands) {
+        applied.rollback()?;
+        return Err(error);
+    }
+    index.revision = fresh_revision();
+    let mut alternative_publication =
+        match alternatives::projection::prepare_slot(&mut index, &settings, &slot) {
+            Ok(publication) => publication,
+            Err(error) => {
+                applied.rollback()?;
+                return Err(error);
+            }
+        };
     let recording = progress.task("Recording global application state");
     if let Err(error) = store.save(&index) {
         recording.fail("application state recording failed");
-        if let Some(publication) = applied.publication.take() {
-            publication.rollback()?;
+        if error
+            .downcast_ref::<store::UncertainIndexCommit>()
+            .is_some()
+        {
+            return Err(error.context("application state may already reference the prepared installation; preserved staged files for recovery"));
         }
-        if let Some(publication) = applied.command_publication.take() {
-            publication.rollback()?;
-        }
-        if let Some(suspended) = applied.suspended.take() {
-            suspended.rollback_after_source(&applied.launchers)?;
-        }
+        alternative_publication.rollback()?;
+        applied.rollback()?;
         return Err(error);
     }
     recording.finish();
-    if let Some(publication) = applied.publication.take() {
-        publication.commit();
-    }
-    if let Some(publication) = applied.command_publication.take() {
-        publication.commit();
-    }
-    if let Some(suspended) = applied.suspended.take() {
-        suspended.commit()?;
-    }
+    alternative_publication.commit_current()?;
+    alternative_publication.commit()?;
+    applied.commit()?;
     render(
         ctx,
         "install",
@@ -187,6 +217,7 @@ pub fn update(
     let settings = settings_root()?;
     let store = ApplicationStore::open(&settings)?;
     let mut index = store.load()?;
+    alternatives::recover_pending(&index, &settings)?;
     let prior = record_for_package(&index, &requested)?.clone();
     let reuse_prior = args.platform.is_none() && args.arch.is_none() && args.installer.is_none();
     let (prior_platform, prior_arch) = prior
@@ -225,60 +256,98 @@ pub fn update(
         bail!("updated application declaration changes the installed application id");
     }
     reject_identity_collision(&index, &resolved.application)?;
+    let key = installation_key(&resolved.application.package);
+    let same_installation = key == installation_key(&prior.application.package);
+    let target_prior = index
+        .applications
+        .get(&key)
+        .filter(|record| record.status == ApplicationStatus::Ready)
+        .cloned();
+    let _launch_lease = if target_prior.is_some() {
+        Some(
+            lease::try_acquire_exclusive(&settings, &key)?.ok_or_else(|| {
+                anyhow::anyhow!("application_in_use: `{key}` has an active launcher")
+            })?,
+        )
+    } else {
+        None
+    };
+    ensure_external_isolation(&index, &resolved, &key, &settings)?;
+    let host = installation_host_root(
+        &settings,
+        &resolved.application.id,
+        &resolved.application.package,
+    );
     let mut applied = apply(
         ctx,
         &store,
         &settings,
-        prior.host_root.clone(),
+        host,
         resolved,
         ApplicationOperation::Update,
         offline,
         args.from_source,
         args.binary,
         args.force,
-        Some(&prior),
+        target_prior
+            .as_ref()
+            .or_else(|| same_installation.then_some(&prior)),
         &progress,
     )?;
+    let slot = applied.application.id.clone();
+    let prior_key = installation_key(&prior.application.package);
     index.applications.insert(
-        applied.application.id.clone(),
+        key.clone(),
         ApplicationRecord {
             application: applied.application.clone(),
             host_root: applied.host_root.clone(),
             app_root: Some(applied.app_root.clone()),
-            management: applied.management,
+            management: applied.management.clone(),
             status: ApplicationStatus::Ready,
             provenance: Some(applied.provenance.clone()),
             launchers: applied.launchers.clone(),
             user_launchers: applied.user_launchers.clone(),
+            public_commands: applied.public_commands.clone(),
             install_kind: Some(applied.install_kind),
             selected_option_id: Some(applied.selected_option_id.clone()),
             selected_platform: Some(applied.selected_platform.clone()),
         },
     );
+    if let Err(error) = register_alternative(&mut index, &slot, &key, &applied.public_commands) {
+        applied.rollback()?;
+        return Err(error);
+    }
+    if let Some(alternative) = index.alternatives.get_mut(&slot)
+        && alternative.global_default.as_deref() == Some(prior_key.as_str())
+    {
+        alternative.global_default = Some(key.clone());
+    }
+    index.revision = fresh_revision();
+    let mut alternative_publication =
+        match alternatives::projection::prepare_slot(&mut index, &settings, &slot) {
+            Ok(publication) => publication,
+            Err(error) => {
+                applied.rollback()?;
+                return Err(error);
+            }
+        };
     let recording = progress.task("Recording global application state");
     if let Err(error) = store.save(&index) {
         recording.fail("application state recording failed");
-        if let Some(publication) = applied.publication.take() {
-            publication.rollback()?;
+        if error
+            .downcast_ref::<store::UncertainIndexCommit>()
+            .is_some()
+        {
+            return Err(error.context("application state may already reference the prepared update; preserved staged files for recovery"));
         }
-        if let Some(publication) = applied.command_publication.take() {
-            publication.rollback()?;
-        }
-        if let Some(suspended) = applied.suspended.take() {
-            suspended.rollback_after_source(&applied.launchers)?;
-        }
+        alternative_publication.rollback()?;
+        applied.rollback()?;
         return Err(error);
     }
     recording.finish();
-    if let Some(publication) = applied.publication.take() {
-        publication.commit();
-    }
-    if let Some(publication) = applied.command_publication.take() {
-        publication.commit();
-    }
-    if let Some(suspended) = applied.suspended.take() {
-        suspended.commit()?;
-    }
+    alternative_publication.commit_current()?;
+    alternative_publication.commit()?;
+    applied.commit()?;
     render(
         ctx,
         "update",
@@ -297,7 +366,27 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
     let settings = settings_root()?;
     let store = ApplicationStore::open(&settings)?;
     let mut index = store.load()?;
+    alternatives::recover_pending(&index, &settings)?;
     let prior = record_for_package(&index, &requested)?.clone();
+    let key = installation_key(&prior.application.package);
+    let slot = prior.application.id.clone();
+    if index
+        .alternatives
+        .get(&slot)
+        .and_then(|alternative| alternative.global_default.as_deref())
+        == Some(key.as_str())
+        && index.applications.iter().any(|(other_key, record)| {
+            other_key != &key
+                && record.application.id == slot
+                && record.status == ApplicationStatus::Ready
+        })
+    {
+        bail!(
+            "selected installation `{key}` has other ready alternatives; select a replacement before uninstalling it"
+        );
+    }
+    let _launch_lease = lease::try_acquire_exclusive(&settings, &key)?
+        .ok_or_else(|| anyhow::anyhow!("application_in_use: `{key}` has an active launcher"))?;
     let validation = progress.task("Validating application management ownership");
     let management = match validate_management(&prior.host_root, &prior.management) {
         Ok(management) => {
@@ -321,21 +410,51 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
                 return Err(error);
             }
         };
+        let prior_revision = index.revision.clone();
         index.applications.insert(
-            prior.application.id.clone(),
+            key.clone(),
             ApplicationRecord {
                 status: ApplicationStatus::Undeployed,
                 ..prior.clone()
             },
         );
+        retire_alternative(&mut index, &slot, &key);
+        index.revision = fresh_revision();
+        let mut alternative_publication =
+            alternatives::projection::prepare_slot(&mut index, &settings, &slot)?;
+        let removal_intent = match removal::prepare(
+            &settings,
+            &key,
+            &prior_revision,
+            &index.revision,
+            &prior,
+            &removal_tx,
+        ) {
+            Ok(intent) => intent,
+            Err(error) => {
+                alternative_publication.rollback()?;
+                return Err(error);
+            }
+        };
         let recording = progress.task("Recording global application state");
         if let Err(error) = store.save(&index) {
             recording.fail("application state recording failed");
-            removal_tx.rollback()?;
+            if error
+                .downcast_ref::<store::UncertainIndexCommit>()
+                .is_some()
+            {
+                return Err(error.context("application removal has an uncertain index commit; retained projection and cleanup intents for recovery"));
+            }
+            let cleanup_rollback = removal_intent.rollback();
+            let projection_rollback = alternative_publication.rollback();
+            cleanup_rollback?;
+            projection_rollback?;
             return Err(error);
         }
         recording.finish();
-        removal_tx.commit()?;
+        alternative_publication.commit_current()?;
+        alternative_publication.commit()?;
+        removal_intent.commit()?;
         return render(
             ctx,
             "uninstall",
@@ -347,6 +466,7 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
         );
     }
     if management.runtime == ManagementRuntime::Command {
+        ensure_external_uninstall_isolated(&index, &slot, &key)?;
         let message = command::uninstall(
             &management,
             &prior.application.id,
@@ -354,15 +474,21 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
             args.force,
         )?;
         index.applications.insert(
-            prior.application.id.clone(),
+            key.clone(),
             ApplicationRecord {
                 status: ApplicationStatus::Undeployed,
                 ..prior.clone()
             },
         );
+        retire_alternative(&mut index, &slot, &key);
+        index.revision = fresh_revision();
+        let mut alternative_publication =
+            alternatives::projection::prepare_slot(&mut index, &settings, &slot)?;
         store.save(&index).map_err(|error| error.context(
             "recording command uninstall failed after the external uninstaller ran; external payload state may have changed"
         ))?;
+        alternative_publication.commit_current()?;
+        alternative_publication.commit()?;
         return render(
             ctx,
             "uninstall",
@@ -402,18 +528,24 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
         bail!("application uninstall did not report undeployed");
     }
     index.applications.insert(
-        context.application.id.clone(),
+        key.clone(),
         ApplicationRecord {
             status: ApplicationStatus::Undeployed,
             ..prior.clone()
         },
     );
+    retire_alternative(&mut index, &slot, &key);
+    index.revision = fresh_revision();
+    let mut alternative_publication =
+        alternatives::projection::prepare_slot(&mut index, &settings, &slot)?;
     let recording = progress.task("Recording global application state");
     if let Err(error) = store.save(&index) {
         recording.fail("application state recording failed");
         return Err(error);
     }
     recording.finish();
+    alternative_publication.commit_current()?;
+    alternative_publication.commit()?;
     render(
         ctx,
         "uninstall",
@@ -446,65 +578,4 @@ fn context(
         vibe_executable,
         offline,
     })
-}
-
-fn settings_root() -> Result<PathBuf> {
-    vibe_core::settings::settings_dir().ok_or_else(|| {
-        anyhow::anyhow!(
-            "the Vibe settings root is unavailable; set VIBE_SETTINGS or make the user home resolvable"
-        )
-    })
-}
-
-fn reject_identity_collision(
-    index: &model::ApplicationIndex,
-    application: &model::ApplicationIdentity,
-) -> Result<()> {
-    if let Some(existing) = index.applications.get(&application.id)
-        && (existing.application.package.group != application.package.group
-            || existing.application.package.name != application.package.name)
-    {
-        bail!(
-            "application id `{}` is already bound to {}/{}",
-            application.id,
-            existing.application.package.group,
-            existing.application.package.name
-        );
-    }
-    if let Some((existing_id, _)) = index.applications.iter().find(|(id, record)| {
-        id.as_str() != application.id
-            && record.application.package.group == application.package.group
-            && record.application.package.name == application.package.name
-    }) {
-        bail!(
-            "application package {}/{} is already bound to application id `{existing_id}`",
-            application.package.group,
-            application.package.name
-        );
-    }
-    Ok(())
-}
-
-fn record_for_package<'a>(
-    index: &'a model::ApplicationIndex,
-    requested: &vibe_core::PackageRef,
-) -> Result<&'a ApplicationRecord> {
-    let group = requested
-        .group
-        .as_ref()
-        .ok_or_else(|| anyhow::anyhow!("global application package is unqualified"))?
-        .to_string();
-    index
-        .applications
-        .values()
-        .find(|record| {
-            record.application.package.group == group
-                && record.application.package.name == requested.name.as_str()
-        })
-        .ok_or_else(|| {
-            anyhow::anyhow!(
-                "not_installed: global application {group}/{} is not installed",
-                requested.name
-            )
-        })
 }

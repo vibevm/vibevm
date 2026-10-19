@@ -98,11 +98,12 @@ pub fn verify_direct_archive(
     staging: &Path,
     offline: bool,
     progress: &Progress,
+    provider_local: bool,
 ) -> Result<VerifiedDistribution> {
     if staging.exists() {
         bail!("archive staging destination already exists");
     }
-    if cfg!(windows) && !runners.is_empty() {
+    if cfg!(windows) && !provider_local && !runners.is_empty() {
         bail!("direct archive Windows runner requires a literal-argument native launcher");
     }
     let parent = staging
@@ -221,6 +222,7 @@ pub fn verify_direct_archive(
     }
     let mut launchers = Vec::new();
     let mut destinations = BTreeSet::new();
+    let mut logical_names = BTreeSet::new();
     let mut covered = BTreeSet::new();
     for runner in runners {
         let path = runner
@@ -231,26 +233,40 @@ pub fn verify_direct_archive(
         if !files.iter().any(|file| file.path == path) {
             bail!("archive runner is absent from selected payload");
         }
-        let command = selected
-            .commands
-            .iter()
-            .find(|command| super::super::model::launcher_kind(&runner.name, command).is_some())
-            .ok_or_else(|| anyhow::anyhow!("archive runner name does not match a command"))?;
+        portable_path(&runner.name)?;
+        if runner.name.contains('/') {
+            bail!("archive runner name must be one portable component");
+        }
+        let command = if provider_local {
+            let logical = logical_runner_name(&runner.name)?;
+            if !logical_names.insert(logical.clone()) {
+                bail!("direct archive repeats a logical runner name");
+            }
+            logical
+        } else {
+            selected
+                .commands
+                .iter()
+                .find(|command| super::super::model::launcher_kind(&runner.name, command).is_some())
+                .ok_or_else(|| anyhow::anyhow!("archive runner name does not match a command"))?
+                .clone()
+        };
         if !destinations.insert(runner.name.to_ascii_lowercase()) {
             bail!("direct archive repeats a runner destination");
         }
-        if super::super::model::launcher_kind(&runner.name, command)
-            .is_some_and(|kind| kind.covers_command_on(std::env::consts::OS))
+        if !provider_local
+            && super::super::model::launcher_kind(&runner.name, &command)
+                .is_some_and(|kind| kind.covers_command_on(std::env::consts::OS))
         {
             covered.insert(command.clone());
         }
         launchers.push(BundleLauncher {
-            command: command.clone(),
+            command,
             path: path.into(),
             destination: runner.name.clone(),
         });
     }
-    if covered.len() != selected.commands.len() {
+    if !provider_local && covered.len() != selected.commands.len() {
         bail!("direct archive lacks a runnable public runner for a declared command");
     }
     fs::rename(&selected_root, staging).context("staging selected archive payload")?;
@@ -275,6 +291,22 @@ pub fn verify_direct_archive(
         asset_sha256: sha256.to_ascii_lowercase(),
         direct_archive: true,
     })
+}
+
+fn logical_runner_name(name: &str) -> Result<String> {
+    let logical = [".exe", ".cmd", ".bat", ".ps1", ".sh"]
+        .iter()
+        .find_map(|suffix| name.strip_suffix(suffix))
+        .unwrap_or(name);
+    if logical.is_empty()
+        || logical.len() > 64
+        || !logical.bytes().all(|byte| {
+            byte.is_ascii_lowercase() || byte.is_ascii_digit() || matches!(byte, b'-' | b'_')
+        })
+    {
+        bail!("archive runner has no portable logical command name");
+    }
+    Ok(logical.to_owned())
 }
 
 fn valid_digest(value: &str) -> Result<()> {

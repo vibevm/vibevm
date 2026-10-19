@@ -9,7 +9,24 @@ use std::collections::BTreeMap;
 pub struct ApplicationIndex {
     pub protocol: String,
 
+    pub revision: String,
+
     pub applications: BTreeMap<String, ApplicationRecord>,
+
+    pub alternatives: BTreeMap<String, AlternativeRecord>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AlternativeRecord {
+    #[serde(rename = "globalDefault")]
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub global_default: Option<String>,
+
+    #[serde(rename = "reservedCommands")]
+    pub reserved_commands: Vec<String>,
+
+    pub runners: Vec<ApplicationLauncherOwnership>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -80,6 +97,10 @@ pub struct ApplicationRecord {
     #[serde(rename = "userLaunchers")]
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub user_launchers: Vec<UserLauncher>,
+
+    #[serde(rename = "publicCommands")]
+    #[serde(default)]
+    pub public_commands: Vec<PublicCommand>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -205,6 +226,14 @@ pub struct PackageIdentity {
 }
 
 pub type Path = std::path::PathBuf;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PublicCommand {
+    pub name: String,
+
+    pub launcher: String,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

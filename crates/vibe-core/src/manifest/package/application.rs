@@ -110,6 +110,17 @@ pub struct LauncherDecl {
     pub default: bool,
 }
 
+/// A portable command claimed by this installer option. Its launcher is
+/// resolved from the same option after installation, so different packages
+/// and platforms may use different executables for the same public name.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PublicCommandDecl {
+    pub name: String,
+    pub launcher: String,
+}
+
 /// A named choice for one platform and CPU architecture. Multiple choices
 /// may target the same pair; IDs distinguish them for selection and updates.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
@@ -130,6 +141,8 @@ pub struct InstallerOptionDecl {
     pub installation: InstallerMethod,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub launchers: Vec<LauncherDecl>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub public_commands: Vec<PublicCommandDecl>,
 }
 
 /// Stable release-index locator for platform application distributions.

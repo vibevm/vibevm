@@ -1,7 +1,7 @@
 //! Application CLI grammar checks.
 use clap::Parser;
 
-use super::{AppCommand, Cli, Command};
+use super::{AlternativeShell, AlternativesCommand, AppCommand, Cli, Command};
 
 #[test]
 fn app_run_preserves_literal_extra_arguments() {
@@ -156,4 +156,187 @@ fn global_application_force_is_accepted_for_each_operation() {
 
     assert!(Cli::try_parse_from(["vibe", "update", "--force", "flow:example"]).is_err());
     assert!(Cli::try_parse_from(["vibe", "uninstall", "--force", "flow:example"]).is_err());
+}
+
+#[test]
+fn alternatives_grammar_keeps_list_and_actions_distinct() {
+    let cli = Cli::try_parse_from(["vibe", "app", "alternatives", "editor", "--json"]).unwrap();
+    assert!(cli.json);
+    let Command::App(app) = cli.command else {
+        panic!("expected app");
+    };
+    let AppCommand::Alternatives(args) = app.command else {
+        panic!("expected alternatives");
+    };
+    assert_eq!(args.slot.as_deref(), Some("editor"));
+    assert!(args.command.is_none());
+
+    let cli = Cli::try_parse_from(["vibe", "app", "alternatives", "select", "editor", "pkg/a@1"])
+        .unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app");
+    };
+    let AppCommand::Alternatives(args) = app.command else {
+        panic!("expected alternatives");
+    };
+    assert!(args.slot.is_none());
+    assert!(
+        matches!(args.command, Some(AlternativesCommand::Select { slot, installation }) if slot == "editor" && installation == "pkg/a@1")
+    );
+}
+
+#[test]
+fn alternatives_session_and_run_grammar_preserve_shell_and_literal_args() {
+    let cli = Cli::try_parse_from([
+        "vibe",
+        "app",
+        "alternatives",
+        "use",
+        "editor",
+        "pkg/a@1",
+        "--shell",
+        "powershell",
+        "--json",
+    ])
+    .unwrap();
+    assert!(cli.json);
+    let Command::App(app) = cli.command else {
+        panic!("expected app");
+    };
+    let AppCommand::Alternatives(args) = app.command else {
+        panic!("expected alternatives");
+    };
+    assert!(matches!(
+        args.command,
+        Some(AlternativesCommand::Use {
+            shell: Some(AlternativeShell::Powershell),
+            ..
+        })
+    ));
+
+    let cli = Cli::try_parse_from([
+        "vibe",
+        "app",
+        "alternatives",
+        "clear",
+        "--all",
+        "--shell",
+        "cmd",
+    ])
+    .unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app");
+    };
+    let AppCommand::Alternatives(args) = app.command else {
+        panic!("expected alternatives");
+    };
+    assert!(matches!(
+        args.command,
+        Some(AlternativesCommand::Clear {
+            slot: None,
+            all: true,
+            shell: Some(AlternativeShell::Cmd)
+        })
+    ));
+
+    let cli = Cli::try_parse_from([
+        "vibe",
+        "app",
+        "alternatives",
+        "run",
+        "editor",
+        "code",
+        "--",
+        "two words",
+        "$HOME",
+        "x;y",
+    ])
+    .unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app");
+    };
+    let AppCommand::Alternatives(args) = app.command else {
+        panic!("expected alternatives");
+    };
+    assert!(
+        matches!(args.command, Some(AlternativesCommand::Run { slot, command, args }) if slot == "editor" && command == "code" && args == ["two words", "$HOME", "x;y"])
+    );
+}
+
+#[test]
+fn alternatives_choose_shell_and_slot_clear_have_unambiguous_arguments() {
+    let cli = Cli::try_parse_from(["vibe", "app", "alternatives", "choose", "editor"]).unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app");
+    };
+    let AppCommand::Alternatives(args) = app.command else {
+        panic!("expected alternatives");
+    };
+    assert!(matches!(args.command, Some(AlternativesCommand::Choose { slot }) if slot == "editor"));
+
+    let cli =
+        Cli::try_parse_from(["vibe", "app", "alternatives", "shell", "editor", "pkg/a@1"]).unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app");
+    };
+    let AppCommand::Alternatives(args) = app.command else {
+        panic!("expected alternatives");
+    };
+    assert!(
+        matches!(args.command, Some(AlternativesCommand::Shell { slot, installation }) if slot == "editor" && installation == "pkg/a@1")
+    );
+
+    let cli = Cli::try_parse_from(["vibe", "app", "alternatives", "clear", "editor"]).unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app");
+    };
+    let AppCommand::Alternatives(args) = app.command else {
+        panic!("expected alternatives");
+    };
+    assert!(
+        matches!(args.command, Some(AlternativesCommand::Clear { slot: Some(slot), all: false, .. }) if slot == "editor")
+    );
+    assert!(
+        Cli::try_parse_from(["vibe", "app", "alternatives", "clear", "editor", "--all"]).is_err()
+    );
+}
+
+#[test]
+fn alternatives_start_preserves_explicit_launcher_and_literal_extra_arguments() {
+    let cli = Cli::try_parse_from([
+        "vibe",
+        "app",
+        "alternatives",
+        "start",
+        "editor",
+        "--launcher",
+        "console",
+        "--",
+        "two words",
+        "$HOME",
+        "x;y",
+    ])
+    .unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app");
+    };
+    let AppCommand::Alternatives(args) = app.command else {
+        panic!("expected alternatives");
+    };
+    assert!(
+        matches!(args.command, Some(AlternativesCommand::Start { slot, launcher, args })
+        if slot == "editor" && launcher.as_deref() == Some("console")
+            && args == ["two words", "$HOME", "x;y"])
+    );
+
+    let cli = Cli::try_parse_from(["vibe", "app", "alternatives", "start", "editor"]).unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app");
+    };
+    let AppCommand::Alternatives(args) = app.command else {
+        panic!("expected alternatives");
+    };
+    assert!(
+        matches!(args.command, Some(AlternativesCommand::Start { launcher: None, args, .. }) if args.is_empty())
+    );
 }

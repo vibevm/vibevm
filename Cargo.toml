@@ -178,6 +178,7 @@ quick-xml = "0.41.0"
 # declared direct so the wire conversion uses the audited codec rather than a
 # handwritten one (R6.2b central ruling 4).
 base64 = "0.22"
+signal-hook = "0.3.18"
 syn = { version = "2", features = ["full", "visit"] }
 quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }

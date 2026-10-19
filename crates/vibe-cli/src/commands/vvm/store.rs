@@ -87,14 +87,9 @@ pub enum StoreError {
     UnsafeMutationPath { path: PathBuf, detail: String },
 }
 
-/// The `vibe` binary's file name on this platform.
-pub const BINARY_NAME: &str = if cfg!(windows) { "vibe.exe" } else { "vibe" };
-/// The companion `vibe-index` binary's file name on this platform.
-pub const INDEX_BINARY_NAME: &str = if cfg!(windows) {
-    "vibe-index.exe"
-} else {
-    "vibe-index"
-};
+#[path = "store_names.rs"]
+mod names;
+pub use names::{APP_PROXY_BINARY_NAME, BINARY_NAME, INDEX_BINARY_NAME};
 
 /// Owns the on-disk layout under `$VIBEVM_INSTALL_ROOT/opt` (PROP-019 §2.4).
 #[derive(Debug, Clone)]
@@ -178,6 +173,11 @@ impl VersionStore {
     /// The companion binary in a modern bundle instance.
     pub fn index_binary_path(&self, id: &VersionId, instance: u64) -> PathBuf {
         self.instance_bin_dir(id, instance).join(INDEX_BINARY_NAME)
+    }
+
+    pub fn app_proxy_binary_path(&self, id: &VersionId, instance: u64) -> PathBuf {
+        self.instance_bin_dir(id, instance)
+            .join(APP_PROXY_BINARY_NAME)
     }
 
     /// The exact source snapshot owned by a modern binary instance.

@@ -4,12 +4,17 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#ownership" },
     "rustOptions": { "package": "vibe_wire::application::e1::index" },
     "x-rust-type": "ApplicationIndex",
-    "x-wire-order": ["protocol", "applications"]
+    "x-wire-order": ["protocol", "revision", "applications", "alternatives"]
   },
   "properties": {
     "protocol": { "type": "string" },
+    "revision": { "type": "string" },
     "applications": {
       "values": { "ref": "application_record" },
+      "metadata": { "x-empty": "emit" }
+    },
+    "alternatives": {
+      "values": { "ref": "alternative_record" },
       "metadata": { "x-empty": "emit" }
     }
   },
@@ -56,6 +61,21 @@
       "properties": {
         "destination": { "ref": "path" },
         "sha256": { "type": "string" }
+      }
+    },
+    "public_command": {
+      "metadata": { "x-wire-order": ["name", "launcher"] },
+      "properties": {
+        "name": { "type": "string" },
+        "launcher": { "type": "string" }
+      }
+    },
+    "alternative_record": {
+      "metadata": { "x-wire-order": ["globalDefault", "reservedCommands", "runners"] },
+      "properties": {
+        "globalDefault": { "type": "string", "nullable": true },
+        "reservedCommands": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "runners": { "elements": { "ref": "application_launcher_ownership" }, "metadata": { "x-empty": "emit" } }
       }
     },
     "user_launcher": {
@@ -108,7 +128,7 @@
       }
     },
     "application_record": {
-      "metadata": { "x-wire-order": ["application", "hostRoot", "appRoot", "installKind", "selectedOptionId", "selectedPlatform", "management", "status", "provenance", "launchers", "userLaunchers"] },
+      "metadata": { "x-wire-order": ["application", "hostRoot", "appRoot", "installKind", "selectedOptionId", "selectedPlatform", "management", "status", "provenance", "launchers", "userLaunchers", "publicCommands"] },
       "properties": {
         "application": { "ref": "application_identity" },
         "hostRoot": { "ref": "path" },
@@ -122,7 +142,8 @@
         "selectedPlatform": { "type": "string", "metadata": { "x-default": null } },
         "provenance": { "ref": "application_provenance", "metadata": { "x-default": null } },
         "launchers": { "elements": { "ref": "application_launcher_ownership" }, "metadata": { "x-empty": "omit" } },
-        "userLaunchers": { "elements": { "ref": "user_launcher" }, "metadata": { "x-empty": "omit" } }
+        "userLaunchers": { "elements": { "ref": "user_launcher" }, "metadata": { "x-empty": "omit" } },
+        "publicCommands": { "elements": { "ref": "public_command" }, "metadata": { "x-empty": "emit" } }
       }
     }
   }

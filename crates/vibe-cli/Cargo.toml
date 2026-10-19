@@ -14,6 +14,10 @@ description = "The `vibe` CLI — entry point for vibevm"
 name = "vibe"
 path = "src/main.rs"
 
+[[bin]]
+name = "vibe-app-proxy"
+path = "src/bin/vibe-app-proxy.rs"
+
 [build]
 features = ["rfd/xdg-portal"]
 
@@ -84,6 +88,7 @@ dialoguer.workspace = true
 dirs.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+signal-hook.workspace = true
 sha2.workspace = true
 tempfile.workspace = true
 thiserror.workspace = true

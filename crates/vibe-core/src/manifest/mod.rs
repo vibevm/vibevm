@@ -59,7 +59,7 @@ pub use mechanism::{
 };
 pub use package::application::{
     ApplicationDistributionDecl, ApplicationSourceDecl, ApplicationSourceKind, ArchiveRunnerDecl,
-    InstallerMethod, InstallerOptionDecl, LauncherDecl,
+    InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl,
 };
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, ApplicationRuntime,

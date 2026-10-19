@@ -62,9 +62,9 @@ pub enum ReleaseManifestError {
     )]
     UnsupportedTarget { target: String },
     #[error(
-        "bundle for `{target}` must contain exactly `vibe` and `vibe-index` once each \
+        "bundle for `{target}` must contain `vibe` and `vibe-index`, optionally `vibe-app-proxy`, once each \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
-         fix: rebuild the bundle with both required executable components)"
+         fix: rebuild the bundle with valid executable components)"
     )]
     Components { target: String },
     #[error(

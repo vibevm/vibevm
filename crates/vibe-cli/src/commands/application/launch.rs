@@ -1,5 +1,6 @@
 //! Resolve and run installed application launch points from the durable index.
 
+use std::ffi::{OsStr, OsString};
 use std::fs;
 use std::io::IsTerminal;
 use std::path::{Component, Path, PathBuf};
@@ -7,14 +8,18 @@ use std::process::{Command, Stdio};
 
 use anyhow::{Context, Result, bail};
 use serde_json::{Value, json};
+use specmark::spec;
+
+mod status;
 
 use super::model::{ApplicationRecord, ApplicationStatus, ManagementRuntime, UserLauncher};
 use super::source::qualified_ref;
-use super::{ApplicationStore, binary, record_for_package, settings_root};
+use super::store::installation_key;
+use super::{ApplicationStore, binary, lease, record_for_package, settings_root};
 
 struct ResolvedLauncher {
     executable: PathBuf,
-    working_directory: PathBuf,
+    working_directory: Option<PathBuf>,
     args: Vec<String>,
     icon: Option<PathBuf>,
     icon_diagnostic: Option<String>,
@@ -35,10 +40,78 @@ struct KnownValues {
     icon_diagnostic: Option<String>,
 }
 
+/// Installation-time projection for an OS PATH proxy. The proxy executes this
+/// target itself; ordinary command invocation never reads Vibe's index.
+#[derive(Debug)]
+pub(super) struct PublicLaunchPlan {
+    pub target: PathBuf,
+    pub args: Vec<String>,
+    pub cwd: Option<PathBuf>,
+}
+
+pub(super) fn plan_public_launcher(
+    record: &ApplicationRecord,
+    launcher_id: &str,
+    settings: &Path,
+) -> Result<PublicLaunchPlan> {
+    if record.status != ApplicationStatus::Ready {
+        bail!("public command target is not deployed");
+    }
+    let launcher = record
+        .user_launchers
+        .iter()
+        .find(|entry| entry.id == launcher_id)
+        .ok_or_else(|| anyhow::anyhow!("unknown public command launcher `{launcher_id}`"))?;
+    let root = app_root(record)?;
+    let app_bin = settings.join("opt").join("bin");
+    let authored_path = resolve_path(&launcher.executable, &root, &app_bin, settings, None)
+        .map_err(|error| {
+            if error.to_string() == "project_required" {
+                anyhow::anyhow!("public command cannot use $project_root")
+            } else {
+                error
+            }
+        })?;
+    if authored_path.starts_with(&app_bin) {
+        bail!("public command cannot target shared opt/bin");
+    }
+    let canonical_root = canonical_dir(&root, "app_root")?;
+    let resolved = resolve_launcher_checked(launcher, record, &canonical_root, settings, None)
+        .map_err(|error| {
+            if error.to_string() == "project_required" {
+                anyhow::anyhow!("public command cannot use $project_root")
+            } else {
+                error
+            }
+        })?;
+    if !resolved.executable.starts_with(&canonical_root)
+        || resolved.executable.starts_with(&app_bin)
+    {
+        bail!("public command target must stay within registered app_root");
+    }
+    #[cfg(windows)]
+    if matches!(
+        resolved
+            .executable
+            .extension()
+            .and_then(|value| value.to_str())
+            .unwrap_or_default()
+            .to_ascii_lowercase()
+            .as_str(),
+        "cmd" | "bat" | "ps1"
+    ) {
+        bail!("Windows scripts cannot be public command targets");
+    }
+    Ok(PublicLaunchPlan {
+        target: resolved.executable,
+        args: resolved.args,
+        cwd: resolved.working_directory,
+    })
+}
+
 pub fn listing(package: &str, project_root: Option<&Path>) -> Result<Value> {
     let settings = settings_root()?;
-    let store = ApplicationStore::open(&settings)?;
-    let index = store.load()?;
+    let index = ApplicationStore::load_snapshot(&settings)?;
     let requested = qualified_ref(package)?;
     let record = record_for_package(&index, &requested)?;
     let app_root = app_root(record);
@@ -64,7 +137,10 @@ pub fn listing(package: &str, project_root: Option<&Path>) -> Result<Value> {
                         "available",
                         None,
                         Some(resolved.executable.display().to_string()),
-                        Some(resolved.working_directory.display().to_string()),
+                        resolved
+                            .working_directory
+                            .as_ref()
+                            .map(|path| path.display().to_string()),
                         Some(resolved.args),
                         resolved.icon.map(|path| path.display().to_string()),
                         resolved.icon_diagnostic,
@@ -138,13 +214,15 @@ fn known_values(
         .ok()
         .filter(|file| owned_file(file))
         .map(|file| file.display().to_string());
-    let working_directory = path(launcher.working_directory.as_deref().unwrap_or("."))
-        .and_then(|candidate| canonical_dir(&candidate, "working_directory"))
-        .ok()
-        .filter(|dir| {
-            dir.starts_with(app_root) || project_root.is_some_and(|root| dir.starts_with(root))
-        })
-        .map(|dir| dir.display().to_string());
+    let working_directory = launcher.working_directory.as_deref().and_then(|template| {
+        path(template)
+            .and_then(|candidate| canonical_dir(&candidate, "working_directory"))
+            .ok()
+            .filter(|dir| {
+                dir.starts_with(app_root) || project_root.is_some_and(|root| dir.starts_with(root))
+            })
+            .map(|dir| dir.display().to_string())
+    });
     let args = launcher
         .args
         .iter()
@@ -179,13 +257,49 @@ pub fn run(
     extra_args: &[String],
     project_root: Option<&Path>,
 ) -> Result<i32> {
+    let args: Vec<OsString> = extra_args.iter().map(OsString::from).collect();
+    run_os(package, launcher_id, &args, project_root)
+}
+
+#[spec(
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+    reason = "Capture caller PATH once at the CLI app-launch boundary for the child process."
+)]
+pub fn run_os(
+    package: &str,
+    launcher_id: &str,
+    extra_args: &[OsString],
+    project_root: Option<&Path>,
+) -> Result<i32> {
     let settings = settings_root()?;
-    let store = ApplicationStore::open(&settings)?;
-    let index = store.load()?;
+    let index = ApplicationStore::load_snapshot(&settings)?;
     let requested = qualified_ref(package)?;
-    let record = record_for_package(&index, &requested)?.clone();
-    drop(index);
-    drop(store);
+    let key = installation_key(&record_for_package(&index, &requested)?.application.package);
+    let _lease = lease::acquire_shared(&settings, &key)?;
+    let index = ApplicationStore::load_snapshot(&settings)?;
+    let record = record_for_package(&index, &requested)?;
+    if installation_key(&record.application.package) != key {
+        bail!("launcher_unavailable: installation changed during launch");
+    }
+    let inherited_path = std::env::var_os("PATH");
+    run_selected(
+        record,
+        launcher_id,
+        extra_args,
+        project_root,
+        &settings,
+        inherited_path.as_deref(),
+    )
+}
+
+fn run_selected(
+    record: &ApplicationRecord,
+    launcher_id: &str,
+    extra_args: &[OsString],
+    project_root: Option<&Path>,
+    settings: &Path,
+    inherited_path: Option<&OsStr>,
+) -> Result<i32> {
     let launcher = record
         .user_launchers
         .iter()
@@ -194,8 +308,8 @@ pub fn run(
     if record.status != ApplicationStatus::Ready {
         bail!("launcher_unavailable: application is not deployed");
     }
-    let root = app_root(&record)?;
-    let resolved = match resolve_launcher(launcher, &record, &root, &settings, project_root) {
+    let root = app_root(record)?;
+    let resolved = match resolve_launcher(launcher, record, &root, settings, project_root) {
         Resolution::Ready(value) => value,
         Resolution::RequiresProject => bail!("launcher_unavailable: project_required"),
         Resolution::Unavailable(reason) => bail!("launcher_unavailable: {reason}"),
@@ -209,27 +323,36 @@ pub fn run(
         .and_then(|value| value.to_str())
         .unwrap_or_default()
         .to_ascii_lowercase();
-    let mut command = if extension == "sh" && !cfg!(windows) {
-        let mut command = Command::new("sh");
-        command.arg(&resolved.executable);
-        command
-    } else if matches!(extension.as_str(), "cmd" | "bat" | "ps1" | "sh") {
-        bail!(
-            "launcher_unavailable: script format `{extension}` cannot preserve literal arguments on this platform"
-        );
-    } else {
-        Command::new(&resolved.executable)
-    };
-    let status = command
+    if matches!(extension.as_str(), "ps1" | "cmd" | "bat") || (cfg!(windows) && extension == "sh") {
+        bail!("launcher_unavailable: unsupported script format `{extension}`");
+    }
+    let mut command = Command::new(&resolved.executable);
+    command
         .args(&resolved.args)
         .args(extra_args)
-        .current_dir(&resolved.working_directory)
         .stdin(Stdio::inherit())
         .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
+        .stderr(Stdio::inherit());
+    let key = installation_key(&record.application.package);
+    let view = super::alternatives::projection::view_bin(settings, &record.application.id, &key);
+    if !view.is_dir() {
+        bail!("launcher_unavailable: installation PATH view is missing");
+    }
+    let mut paths = vec![view];
+    if let Some(inherited) = inherited_path {
+        paths.extend(std::env::split_paths(inherited));
+    }
+    command.env(
+        "PATH",
+        std::env::join_paths(paths).context("building application PATH")?,
+    );
+    if let Some(directory) = &resolved.working_directory {
+        command.current_dir(directory);
+    }
+    let status = command
         .status()
         .with_context(|| format!("launcher_unavailable: starting `{launcher_id}`"))?;
-    Ok(status.code().unwrap_or(1))
+    Ok(status::code(status))
 }
 
 fn app_root(record: &ApplicationRecord) -> Result<PathBuf> {
@@ -289,38 +412,44 @@ fn resolve_launcher_checked(
     if extension == "exe" && !cfg!(windows) {
         bail!("Windows executable cannot run on this platform");
     }
-    if matches!(extension.as_str(), "cmd" | "bat" | "ps1") || (extension == "sh" && cfg!(windows)) {
+    if extension == "ps1"
+        || (matches!(extension.as_str(), "cmd" | "bat") && !cfg!(windows))
+        || (extension == "sh" && cfg!(windows))
+    {
         bail!("script format `{extension}` cannot preserve literal arguments on this platform");
     }
     #[cfg(unix)]
-    if extension != "sh" {
+    {
         use std::os::unix::fs::PermissionsExt;
         if fs::metadata(&executable)?.permissions().mode() & 0o111 == 0 {
             bail!("executable is not marked executable");
         }
     }
-    if launcher.terminal && !(std::io::stdin().is_terminal() && std::io::stdout().is_terminal()) {
-        bail!("terminal_required");
-    }
-    let directory_template = launcher.working_directory.as_deref().unwrap_or(".");
-    let working_directory = resolve_path(
-        directory_template,
-        &app_root,
-        &app_bin,
-        settings,
-        project_root,
-    )?;
-    let working_directory = canonical_dir(&working_directory, "working_directory")?;
     let project_root = project_root
         .map(|path| canonical_dir(path, "project_root"))
         .transpose()?;
-    if !working_directory.starts_with(&app_root)
-        && !project_root
-            .as_ref()
-            .is_some_and(|root| working_directory.starts_with(root))
-    {
-        bail!("working_directory escapes app_root and project_root");
-    }
+    let working_directory = launcher
+        .working_directory
+        .as_deref()
+        .map(|template| {
+            let directory = resolve_path(
+                template,
+                &app_root,
+                &app_bin,
+                settings,
+                project_root.as_deref(),
+            )?;
+            let directory = canonical_dir(&directory, "working_directory")?;
+            if !directory.starts_with(&app_root)
+                && !project_root
+                    .as_ref()
+                    .is_some_and(|root| directory.starts_with(root))
+            {
+                bail!("working_directory escapes app_root and project_root");
+            }
+            Ok(directory)
+        })
+        .transpose()?;
     let args = launcher
         .args
         .iter()
@@ -457,3 +586,6 @@ fn canonical_file(path: &Path, field: &str) -> Result<PathBuf> {
     }
     Ok(resolved)
 }
+
+#[cfg(test)]
+mod tests;

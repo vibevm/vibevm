@@ -212,6 +212,7 @@ pub fn options_json(package: &str, options: &[InstallerOptionDecl]) -> Value {
                 "pre_install": option.pre_install,
                 "post_install": option.post_install,
                 "launchers": option.launchers,
+                "public_commands": option.public_commands,
                 "detected": Some(option.platform.as_str()) == detected_platform && option.arch == detected_arch,
             }));
     }
@@ -271,6 +272,7 @@ mod tests {
                 force_uninstall: "echo force uninstall".into(),
             },
             launchers: Vec::new(),
+            public_commands: Vec::new(),
         }
     }
 

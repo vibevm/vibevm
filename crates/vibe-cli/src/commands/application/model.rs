@@ -18,7 +18,7 @@ pub(super) use launcher::{launcher_belongs_to_command, launcher_kind};
 
 pub const CONTEXT_PROTOCOL: &str = "vibe-application-context/1";
 pub const RESULT_PROTOCOL: &str = "vibe-application-result/1";
-pub const INDEX_PROTOCOL: &str = "vibe-user-applications/1";
+pub const INDEX_PROTOCOL: &str = "vibe-user-applications/2";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ApplicationOperation {
@@ -26,14 +26,12 @@ pub enum ApplicationOperation {
     Update,
     Uninstall,
 }
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PackageIdentity {
     pub group: String,
     pub name: String,
     pub version: String,
 }
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ApplicationIdentity {
     pub id: String,
@@ -41,7 +39,6 @@ pub struct ApplicationIdentity {
     pub installer_package: PackageIdentity,
     pub commands: Vec<String>,
 }
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ApplicationContext {
     pub protocol: String,
@@ -53,14 +50,12 @@ pub struct ApplicationContext {
     pub vibe_executable: PathBuf,
     pub offline: bool,
 }
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ApplicationStatus {
     Ready,
     Undeployed,
     Failed,
 }
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum InstallKind {
     Source,
@@ -73,13 +68,11 @@ pub enum InstallKind {
     Exe,
     Msi,
 }
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ManagementEntry {
     pub runtime: ManagementRuntime,
     pub entry: PathBuf,
 }
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ManagementRuntime {
     Node,
@@ -87,7 +80,6 @@ pub enum ManagementRuntime {
     Native,
     Command,
 }
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ApplicationReply {
     pub protocol: String,
@@ -121,6 +113,23 @@ pub struct ApplicationRecord {
     pub provenance: Option<ApplicationProvenance>,
     pub launchers: Vec<ApplicationLauncherOwnership>,
     pub user_launchers: Vec<UserLauncher>,
+    pub public_commands: Vec<PublicCommand>,
+}
+
+/// A command exposed by this provider, backed by one of its authored launch points.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PublicCommand {
+    pub name: String,
+    pub launcher: String,
+}
+
+/// The durable global choice and owned public shims for one application slot.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AlternativeRecord {
+    pub global_default: Option<String>,
+    /// Names remain reserved after a provider is removed.
+    pub reserved_commands: Vec<String>,
+    pub runners: Vec<ApplicationLauncherOwnership>,
 }
 
 /// An authored launch point. Paths remain templates until launch time.
@@ -169,7 +178,11 @@ pub struct ApplicationProvenance {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ApplicationIndex {
     pub protocol: String,
+    pub revision: String,
+    /// Installed versions keyed by the exact `group/name@version` coordinate.
     pub applications: BTreeMap<String, ApplicationRecord>,
+    /// Slot id to its global default, reserved aliases, and public runner ownership.
+    pub alternatives: BTreeMap<String, AlternativeRecord>,
 }
 
 impl ApplicationContext {
@@ -235,10 +248,32 @@ impl ApplicationIndex {
     pub(crate) fn to_wire(&self) -> index_wire::ApplicationIndex {
         index_wire::ApplicationIndex {
             protocol: self.protocol.clone(),
+            revision: self.revision.clone(),
             applications: self
                 .applications
                 .iter()
                 .map(|(key, record)| (key.clone(), record_to_wire(record)))
+                .collect(),
+            alternatives: self
+                .alternatives
+                .iter()
+                .map(|(slot, alternative)| {
+                    (
+                        slot.clone(),
+                        index_wire::AlternativeRecord {
+                            global_default: alternative.global_default.clone(),
+                            reserved_commands: alternative.reserved_commands.clone(),
+                            runners: alternative
+                                .runners
+                                .iter()
+                                .map(|runner| index_wire::ApplicationLauncherOwnership {
+                                    destination: runner.destination.clone(),
+                                    sha256: runner.sha256.clone(),
+                                })
+                                .collect(),
+                        },
+                    )
+                })
                 .collect(),
         }
     }
@@ -246,11 +281,33 @@ impl ApplicationIndex {
     pub(crate) fn from_wire(value: index_wire::ApplicationIndex) -> Result<Self> {
         Ok(Self {
             protocol: value.protocol,
+            revision: value.revision,
             applications: value
                 .applications
                 .into_iter()
                 .map(|(key, record)| Ok((key, record_from_wire(record)?)))
                 .collect::<Result<_>>()?,
+            alternatives: value
+                .alternatives
+                .into_iter()
+                .map(|(slot, alternative)| {
+                    (
+                        slot,
+                        AlternativeRecord {
+                            global_default: alternative.global_default,
+                            reserved_commands: alternative.reserved_commands,
+                            runners: alternative
+                                .runners
+                                .into_iter()
+                                .map(|runner| ApplicationLauncherOwnership {
+                                    destination: runner.destination,
+                                    sha256: runner.sha256,
+                                })
+                                .collect(),
+                        },
+                    )
+                })
+                .collect(),
         })
     }
 }
@@ -362,6 +419,14 @@ fn record_to_wire(value: &ApplicationRecord) -> index_wire::ApplicationRecord {
                 default: launcher.default,
             })
             .collect(),
+        public_commands: value
+            .public_commands
+            .iter()
+            .map(|command| index_wire::PublicCommand {
+                name: command.name.clone(),
+                launcher: command.launcher.clone(),
+            })
+            .collect(),
     }
 }
 
@@ -465,6 +530,14 @@ fn record_from_wire(value: index_wire::ApplicationRecord) -> Result<ApplicationR
                 default: launcher.default,
             })
             .collect(),
+        public_commands: value
+            .public_commands
+            .into_iter()
+            .map(|command| PublicCommand {
+                name: command.name,
+                launcher: command.launcher,
+            })
+            .collect(),
     })
 }
 
@@ -515,7 +588,9 @@ impl Default for ApplicationIndex {
     fn default() -> Self {
         Self {
             protocol: INDEX_PROTOCOL.into(),
+            revision: String::new(),
             applications: BTreeMap::new(),
+            alternatives: BTreeMap::new(),
         }
     }
 }

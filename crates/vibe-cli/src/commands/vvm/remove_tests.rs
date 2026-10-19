@@ -1,7 +1,7 @@
 use super::*;
 use crate::cli::{ForcedKind, VvmGcArgs, VvmRemoveArgs};
 use crate::commands::vvm::model::{InstallRecord, Kind, Origin, Profile};
-use crate::commands::vvm::store::{BINARY_NAME, INDEX_BINARY_NAME};
+use crate::commands::vvm::store::{APP_PROXY_BINARY_NAME, BINARY_NAME, INDEX_BINARY_NAME};
 use specmark::verifies;
 use vibe_publish::release_manifest::DISTRIBUTION_SOURCE_ARCHIVE_FILENAME;
 
@@ -230,10 +230,12 @@ fn installed_store(instances: &[u64]) -> (tempfile::TempDir, VersionStore, Versi
         fs::create_dir_all(&bin).unwrap();
         let vibe = bin.join(BINARY_NAME);
         let index = bin.join(INDEX_BINARY_NAME);
+        let proxy = bin.join(APP_PROXY_BINARY_NAME);
         fs::write(&vibe, format!("payload-{instance}")).unwrap();
         fs::write(&index, format!("index-{instance}")).unwrap();
+        fs::write(&proxy, format!("proxy-{instance}")).unwrap();
         #[cfg(unix)]
-        for path in [&vibe, &index] {
+        for path in [&vibe, &index, &proxy] {
             use std::os::unix::fs::PermissionsExt;
             let mut permissions = fs::metadata(path).unwrap().permissions();
             permissions.set_mode(0o755);
@@ -242,6 +244,7 @@ fn installed_store(instances: &[u64]) -> (tempfile::TempDir, VersionStore, Versi
         let manifest = crate::commands::vvm::placer::manifest_for(&[
             (vibe, format!("bin/{BINARY_NAME}")),
             (index, format!("bin/{INDEX_BINARY_NAME}")),
+            (proxy, format!("bin/{APP_PROXY_BINARY_NAME}")),
         ])
         .unwrap();
         fs::write(

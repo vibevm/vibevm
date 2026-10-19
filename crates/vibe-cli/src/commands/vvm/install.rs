@@ -7,7 +7,7 @@
 //! `vibe` binary; they have moved to a separate products repo
 //! (`vibevm-term`) and now publish themselves to `PATH` through their own
 //! version-manager. The install pipeline here handles the essential `vibe`
-//! and `vibe-index` binaries — terminal apps resolve separately through
+//! `vibe-index` and `vibe-app-proxy` binaries — terminal apps resolve separately through
 //! `$VIBEVM_<APP>` → the active instance's packaged `<app>/` (back-compat)
 //! → `PATH` lookup, with an in-place fallback for `vibe tree`.
 
@@ -23,7 +23,7 @@ use vibe_core::progress::Progress;
 use super::builder::{Builder, ResolvedVersion};
 use super::model::{InstallRecord, Origin, Profile, VersionId};
 use super::placer::{self, Manifest};
-use super::store::{BINARY_NAME, INDEX_BINARY_NAME, VersionStore};
+use super::store::{APP_PROXY_BINARY_NAME, BINARY_NAME, INDEX_BINARY_NAME, VersionStore};
 use crate::output;
 
 mod freshness;
@@ -147,6 +147,10 @@ pub(crate) fn perform_install(
     let dist = vec![
         (out.binary.clone(), format!("bin/{BINARY_NAME}")),
         (out.index_binary.clone(), format!("bin/{INDEX_BINARY_NAME}")),
+        (
+            out.app_proxy_binary.clone(),
+            format!("bin/{APP_PROXY_BINARY_NAME}"),
+        ),
     ];
     let placement = progress.task("Placing essential binaries");
     placement.set_progress(0, Some(dist.len() as u64), "files");
@@ -285,10 +289,12 @@ mod tests {
             fs::create_dir_all(&dir).unwrap();
             let binary = dir.join(BINARY_NAME);
             let index_binary = dir.join(INDEX_BINARY_NAME);
+            let app_proxy_binary = dir.join(APP_PROXY_BINARY_NAME);
             fs::write(&binary, &self.content).unwrap();
             fs::write(&index_binary, &self.content).unwrap();
+            fs::write(&app_proxy_binary, &self.content).unwrap();
             #[cfg(unix)]
-            for path in [&binary, &index_binary] {
+            for path in [&binary, &index_binary, &app_proxy_binary] {
                 use std::os::unix::fs::PermissionsExt;
                 let mut permissions = fs::metadata(path).unwrap().permissions();
                 permissions.set_mode(0o755);
@@ -297,6 +303,7 @@ mod tests {
             Ok(BuildOutput {
                 binary,
                 index_binary,
+                app_proxy_binary,
                 toolchain: "rustc 0.0.0-fake".into(),
             })
         }
@@ -370,6 +377,7 @@ mod tests {
         let inst1 = store.instance_dir(&resolved.id, 1);
         assert!(inst1.join("bin").join(BINARY_NAME).is_file());
         assert!(inst1.join("bin").join(INDEX_BINARY_NAME).is_file());
+        assert!(inst1.join("bin").join(APP_PROXY_BINARY_NAME).is_file());
         assert_eq!(store.read_current().unwrap().unwrap(), inst1);
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 1);
 

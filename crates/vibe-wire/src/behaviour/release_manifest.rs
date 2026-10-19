@@ -48,7 +48,7 @@ pub const DISTRIBUTION_CMD_INSTALLER_FILENAME: &str = "install.cmd";
 pub const DISTRIBUTION_MANIFEST_MAX_BYTES: u64 = 4 * 1024 * 1024;
 /// Independent parser limit for the five-platform aggregate manifest.
 pub const DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES: u64 = 4 * 1024 * 1024;
-/// Maximum declared size of either executable carried inside a bundle.
+/// Maximum declared size of each executable carried inside a bundle.
 pub const DISTRIBUTION_COMPONENT_MAX_BYTES: u64 = 512 * 1024 * 1024;
 /// Maximum declared size of the raw bootstrap executable release asset.
 pub const DISTRIBUTION_BOOTSTRAP_MAX_BYTES: u64 = 512 * 1024 * 1024;
@@ -85,6 +85,7 @@ impl DistributionComponentName {
         match self {
             Self::Vibe => "vibe",
             Self::VibeIndex => "vibe-index",
+            Self::VibeAppProxy => "vibe-app-proxy",
         }
     }
 }

@@ -153,6 +153,8 @@ pub struct Installer {
 
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub pre_install: Option<String>,
+
+    pub public_commands: Vec<PublicCommand>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -187,6 +189,13 @@ pub struct Platform {
     pub detected: bool,
 
     pub id: String,
+
+    pub name: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PublicCommand {
+    pub launcher: String,
 
     pub name: String,
 }

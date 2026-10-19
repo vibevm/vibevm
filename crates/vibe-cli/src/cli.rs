@@ -13,6 +13,7 @@ use clap::{Parser, Subcommand};
 
 mod agentic;
 mod aiui;
+mod alternatives;
 mod cache;
 mod doc;
 mod explain;
@@ -39,6 +40,7 @@ mod workspace;
 
 pub use agentic::*;
 pub use aiui::*;
+pub use alternatives::*;
 pub use cache::*;
 pub use doc::*;
 pub use explain::*;
@@ -467,6 +469,9 @@ pub struct AppArgs {
 
 #[derive(Debug, clap::Subcommand)]
 pub enum AppCommand {
+    /// Manage persistent and session-local alternatives for one app slot.
+    Alternatives(AlternativesArgs),
+
     /// Show every declared installer and platform option without selecting one.
     Installers {
         package: String,

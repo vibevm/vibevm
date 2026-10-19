@@ -9,6 +9,7 @@ use anyhow::{Context, Result, bail};
 use vibe_core::PackageRef;
 use vibe_core::manifest::{
     ApplicationDistributionDecl, ApplicationSourceDecl, InstallerMethod, LauncherDecl, Manifest,
+    PublicCommandDecl,
 };
 use vibe_core::progress::Progress;
 use vibe_install::InstallSource;
@@ -21,6 +22,7 @@ pub struct ResolvedApplication {
     pub application: ApplicationIdentity,
     pub installer: InstallerMethod,
     pub launchers: Vec<LauncherDecl>,
+    pub public_commands: Vec<PublicCommandDecl>,
     pub pre_install: Option<String>,
     pub post_install: Option<String>,
     pub distribution: Option<ApplicationDistributionDecl>,
@@ -76,6 +78,7 @@ impl ResolvedApplication {
         if resolved.application != self.application
             || resolved.distribution != self.distribution
             || resolved.selected_option_id != self.selected_option_id
+            || resolved.public_commands != self.public_commands
         {
             bail!("tracked application source differs from its published bridge declaration");
         }
@@ -395,6 +398,7 @@ fn resolve_manifest_application(
         application,
         installer,
         launchers: selected_option.launchers,
+        public_commands: selected_option.public_commands,
         pre_install: selected_option.pre_install,
         post_install: selected_option.post_install,
         distribution: declaration.distribution,
@@ -435,6 +439,7 @@ fn resolve_deferred_application(
         },
         installer,
         launchers: selected_option.launchers,
+        public_commands: selected_option.public_commands,
         pre_install: selected_option.pre_install,
         post_install: selected_option.post_install,
         distribution: declaration.distribution,
