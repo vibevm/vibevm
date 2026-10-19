@@ -20,7 +20,7 @@ use crate::output::sanitize_progress_text;
 use super::model::launcher_belongs_to_command;
 use super::model::{
     ApplicationContext, ApplicationOperation, ApplicationReply, ApplicationStatus, ManagementEntry,
-    RESULT_PROTOCOL,
+    ManagementRuntime, RESULT_PROTOCOL,
 };
 
 const LIVE_LOG_POLL: Duration = Duration::from_millis(100);
@@ -135,6 +135,7 @@ pub fn resolve_node() -> Result<PathBuf> {
 pub fn dispatch(
     entry: &Path,
     current_dir: &Path,
+    runtime: ManagementRuntime,
     context: &ApplicationContext,
     context_path: &Path,
     reply_path: &Path,
@@ -168,9 +169,18 @@ pub fn dispatch(
     // wait. The structured application reply remains a different file.
     let mut stdout_tail = LiveLogTail::open(&stdout_path, LiveLogKind::Stdout);
     let mut stderr_tail = LiveLogTail::open(&stderr_path, LiveLogKind::Stderr);
-    let node = resolve_node()?;
-    let mut child = Command::new(&node)
-        .arg(entry)
+    let mut command = match runtime {
+        ManagementRuntime::Node => {
+            let mut command = Command::new(resolve_node()?);
+            command.arg(entry);
+            command
+        }
+        ManagementRuntime::Native => Command::new(entry),
+        ManagementRuntime::Builtin | ManagementRuntime::Command => {
+            bail!("non-program management cannot be dispatched as an external installer")
+        }
+    };
+    let mut child = command
         .current_dir(current_dir)
         .env("VIBE_APPLICATION_CONTEXT", context_path)
         .env("VIBE_APPLICATION_REPLY", reply_path)
@@ -279,6 +289,24 @@ fn validate_reply(context: &ApplicationContext, reply: &ApplicationReply) -> Res
         bail!("application installer reply does not match its dispatched context");
     }
     validate_launchers(context, reply)?;
+    if let Some(app_root) = &reply.app_root {
+        if !app_root.is_absolute()
+            || app_root
+                .components()
+                .any(|part| part == std::path::Component::ParentDir)
+        {
+            bail!("application installer reply appRoot must be an absolute path without `..`");
+        }
+        let metadata = fs::symlink_metadata(app_root)
+            .context("reading registered application payload root")?;
+        if metadata.file_type().is_symlink() || !metadata.is_dir() {
+            bail!("application installer reply appRoot is not a real directory");
+        }
+        let canonical = crate::commands::init::strip_unc_public(fs::canonicalize(app_root)?);
+        if &canonical != app_root {
+            bail!("application installer reply appRoot must be canonical");
+        }
+    }
     match (context.operation, &reply.status) {
         (
             ApplicationOperation::Install | ApplicationOperation::Update,

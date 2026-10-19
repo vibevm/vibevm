@@ -51,6 +51,22 @@ pub struct ApplicationRecord {
     #[serde(rename = "hostRoot")]
     pub host_root: Path,
 
+    #[serde(rename = "appRoot")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub app_root: Option<Path>,
+
+    #[serde(rename = "installKind")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub install_kind: Option<InstallKind>,
+
+    #[serde(rename = "selectedOptionId")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_option_id: Option<String>,
+
+    #[serde(rename = "selectedPlatform")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_platform: Option<String>,
+
     pub management: ManagementEntry,
 
     pub status: ApplicationStatus,
@@ -60,6 +76,10 @@ pub struct ApplicationRecord {
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub launchers: Vec<ApplicationLauncherOwnership>,
+
+    #[serde(rename = "userLaunchers")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub user_launchers: Vec<UserLauncher>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -122,6 +142,36 @@ pub enum ApplicationStatus {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum InstallKind {
+    #[serde(rename = "archive")]
+    Archive,
+
+    #[serde(rename = "command")]
+    Command,
+
+    #[serde(rename = "distribution")]
+    Distribution,
+
+    #[serde(rename = "exe")]
+    Exe,
+
+    #[serde(rename = "msi")]
+    Msi,
+
+    #[serde(rename = "shell")]
+    Shell,
+
+    #[serde(rename = "source")]
+    Source,
+
+    #[serde(rename = "tar_gz")]
+    TarGz,
+
+    #[serde(rename = "zip")]
+    Zip,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ManagementEntry {
     pub runtime: ManagementRuntime,
@@ -133,6 +183,12 @@ pub struct ManagementEntry {
 pub enum ManagementRuntime {
     #[serde(rename = "builtin")]
     Builtin,
+
+    #[serde(rename = "command")]
+    Command,
+
+    #[serde(rename = "native")]
+    Native,
 
     #[serde(rename = "node")]
     Node,
@@ -149,3 +205,29 @@ pub struct PackageIdentity {
 }
 
 pub type Path = std::path::PathBuf;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct UserLauncher {
+    pub id: String,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    pub executable: String,
+
+    pub args: Vec<String>,
+
+    #[serde(rename = "workingDirectory")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub working_directory: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<String>,
+
+    pub terminal: bool,
+
+    pub default: bool,
+}

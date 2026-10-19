@@ -222,7 +222,7 @@ fn same_file_metadata(before: &fs::Metadata, after: &fs::Metadata) -> Option<boo
     #[cfg(unix)]
     {
         use std::os::unix::fs::MetadataExt;
-        return Some(same && before.dev() == after.dev() && before.ino() == after.ino());
+        Some(same && before.dev() == after.dev() && before.ino() == after.ino())
     }
     #[cfg(not(unix))]
     Some(same)

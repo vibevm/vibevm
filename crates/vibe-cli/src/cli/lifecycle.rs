@@ -96,6 +96,9 @@ impl LifecycleArgs {
             server: None,
             from_source: false,
             local_source: false,
+            platform: None,
+            arch: None,
+            installer: None,
             path: self.path.clone(),
             registry: self.registry.clone(),
             assume_yes: self.assume_yes,
@@ -192,7 +195,7 @@ pub struct CleanArgs {
 #[derive(Debug, clap::Subcommand)]
 pub enum CleanChain {
     Validate(LifecycleArgs),
-    Install(InstallArgs),
+    Install(Box<InstallArgs>),
     Generate(LifecycleArgs),
     Build(LifecycleArgs),
     Test(LifecycleArgs),

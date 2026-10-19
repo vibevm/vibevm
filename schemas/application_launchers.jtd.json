@@ -1,0 +1,157 @@
+{
+  "metadata": {
+    "description": "Version 1 machine list from vibe app launchers PACKAGE --json.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_launchers"
+    }
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "application_id": {
+      "type": "string"
+    },
+    "package": {
+      "ref": "package_identity"
+    },
+    "default_launcher_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "app_root": {
+      "type": "string",
+      "nullable": true
+    },
+    "launchers": {
+      "elements": {
+        "ref": "launcher"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "package_identity": {
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "launcher": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "nullable": true
+        },
+        "default": {
+          "type": "boolean"
+        },
+        "terminal": {
+          "type": "boolean"
+        },
+        "executable": {
+          "ref": "path_value"
+        },
+        "args": {
+          "ref": "args_value"
+        },
+        "working_directory": {
+          "ref": "path_value"
+        },
+        "icon": {
+          "ref": "icon_value"
+        },
+        "status": {
+          "ref": "launcher_status"
+        },
+        "reason": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "path_value": {
+      "properties": {
+        "template": {
+          "type": "string",
+          "nullable": true
+        },
+        "base": {
+          "type": "string"
+        },
+        "resolved": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "args_value": {
+      "properties": {
+        "template": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "resolved": {
+          "ref": "string_list",
+          "nullable": true
+        }
+      }
+    },
+    "icon_value": {
+      "properties": {
+        "template": {
+          "type": "string",
+          "nullable": true
+        },
+        "resolved": {
+          "type": "string",
+          "nullable": true
+        },
+        "diagnostic": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "launcher_status": {
+      "enum": [
+        "available",
+        "requires_project",
+        "unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "string_list": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  }
+}

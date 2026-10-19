@@ -104,6 +104,18 @@ pub struct InstallArgs {
     #[arg(long, requires = "global")]
     pub local_source: bool,
 
+    /// Select an application platform or distribution ID (for example `ubuntu`).
+    #[arg(long, requires = "global", value_name = "PLATFORM")]
+    pub platform: Option<String>,
+
+    /// Select an application architecture ID within the selected platform.
+    #[arg(long, requires = "global", value_name = "ARCH")]
+    pub arch: Option<String>,
+
+    /// Select one application installer option by its stable ID.
+    #[arg(long, requires = "global", value_name = "ID")]
+    pub installer: Option<String>,
+
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
@@ -274,8 +286,9 @@ pub struct InstallArgs {
     #[arg(long, value_name = "ENV_VAR", requires = "git")]
     pub git_token_env: Option<String>,
 
-    /// Ignore reusable lifecycle contribution fingerprints for this install's
-    /// post-durability callback. Resolution/materialisation semantics are unchanged.
+    /// Project install: ignore reusable lifecycle contribution fingerprints for
+    /// the post-durability callback. Global application install: ask the
+    /// selected installer to force its install operation.
     #[arg(long)]
     pub force: bool,
 
@@ -404,6 +417,18 @@ pub struct UpdateArgs {
     #[arg(long, requires = "global")]
     pub local_source: bool,
 
+    /// Select an application platform or distribution ID (for example `ubuntu`).
+    #[arg(long, requires = "global", value_name = "PLATFORM")]
+    pub platform: Option<String>,
+
+    /// Select an application architecture ID within the selected platform.
+    #[arg(long, requires = "global", value_name = "ARCH")]
+    pub arch: Option<String>,
+
+    /// Select one application installer option by its stable ID.
+    #[arg(long, requires = "global", value_name = "ID")]
+    pub installer: Option<String>,
+
     /// For a global application, require the verified published binary.
     /// Refuse instead of falling back to source when this platform has no
     /// valid distribution.
@@ -430,6 +455,10 @@ pub struct UpdateArgs {
     /// Skip the interactive confirmation prompt.
     #[arg(long, alias = "yes")]
     pub assume_yes: bool,
+
+    /// Ask the selected global application installer to force its update operation.
+    #[arg(long, requires = "global")]
+    pub force: bool,
 
     /// Pin the resolved version exactly (`=x.y.z`) in
     /// `vibe.toml` `[requires].packages` instead of preserving the
@@ -506,6 +535,10 @@ pub struct UninstallArgs {
     /// Target agent registration for a global MCP package; `all` removes all owned registrations.
     #[arg(long, requires = "global")]
     pub agent: Option<String>,
+
+    /// Ask the selected global application installer to force its uninstall operation.
+    #[arg(long, requires = "global")]
+    pub force: bool,
 
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]

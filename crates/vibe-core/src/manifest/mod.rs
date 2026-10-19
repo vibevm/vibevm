@@ -58,7 +58,8 @@ pub use mechanism::{
     ProviderPin, ProviderPinParseError, is_portable_token,
 };
 pub use package::application::{
-    ApplicationDistributionDecl, ApplicationSourceDecl, ApplicationSourceKind,
+    ApplicationDistributionDecl, ApplicationSourceDecl, ApplicationSourceKind, ArchiveRunnerDecl,
+    InstallerMethod, InstallerOptionDecl, LauncherDecl,
 };
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, ApplicationRuntime,

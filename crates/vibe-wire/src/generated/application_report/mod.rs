@@ -19,8 +19,23 @@ pub enum ApplicationReportSelectedMode {
     #[serde(rename = "binary")]
     Binary,
 
+    #[serde(rename = "exe")]
+    Exe,
+
+    #[serde(rename = "msi")]
+    Msi,
+
+    #[serde(rename = "shell")]
+    Shell,
+
     #[serde(rename = "source")]
     Source,
+
+    #[serde(rename = "tar_gz")]
+    TarGz,
+
+    #[serde(rename = "zip")]
+    Zip,
 }
 
 /// Wire format for global user-application install/update/uninstall reports.

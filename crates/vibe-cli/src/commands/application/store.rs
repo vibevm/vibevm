@@ -4,7 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#ownership");
 
 use std::fs::{self, File, OpenOptions};
 use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use vibe_core::manifest::is_portable_token;
@@ -144,8 +144,8 @@ fn validate_index(index: &ApplicationIndex, settings_root: &Path) -> Result<()> 
         if key != &application.id || !is_portable_token(key) {
             bail!("application index key differs from a portable application id");
         }
-        if application.commands.is_empty() {
-            bail!("application index carries no advertised commands");
+        if application.commands.is_empty() && record.user_launchers.is_empty() {
+            bail!("application index carries no advertised commands or user launchers");
         }
         let mut commands = std::collections::BTreeSet::new();
         for command in &application.commands {
@@ -170,6 +170,53 @@ fn validate_index(index: &ApplicationIndex, settings_root: &Path) -> Result<()> 
             || record.management.entry == expected_host
         {
             bail!("application index carries a path outside its owned application host");
+        }
+        if let Some(app_root) = &record.app_root
+            && (!app_root.is_absolute()
+                || app_root
+                    .components()
+                    .any(|component| matches!(component, Component::CurDir | Component::ParentDir))
+                || app_root.as_os_str().is_empty())
+        {
+            bail!("application index carries an invalid application payload root");
+        }
+        match (&record.selected_option_id, &record.selected_platform) {
+            (None, None) => {}
+            (Some(option_id), Some(platform)) => {
+                let valid_platform = match platform.split_once('/') {
+                    Some((os, arch)) => {
+                        is_portable_token(os)
+                            && !arch.is_empty()
+                            && arch.bytes().all(|byte| {
+                                byte.is_ascii_lowercase()
+                                    || byte.is_ascii_digit()
+                                    || matches!(byte, b'_' | b'-')
+                            })
+                    }
+                    None => is_portable_token(platform),
+                };
+                if !is_portable_token(option_id) || !valid_platform {
+                    bail!("application index carries an invalid selected installer option");
+                }
+            }
+            _ => bail!("application index carries an incomplete selected installer option"),
+        }
+        let mut user_launcher_ids = std::collections::BTreeSet::new();
+        let mut has_default = false;
+        for launcher in &record.user_launchers {
+            if !is_portable_token(&launcher.id)
+                || !user_launcher_ids.insert(&launcher.id)
+                || launcher.name.trim().is_empty()
+                || launcher.executable.trim().is_empty()
+            {
+                bail!("application index carries an invalid user launcher declaration");
+            }
+            if launcher.default {
+                if has_default {
+                    bail!("application index carries multiple default user launchers");
+                }
+                has_default = true;
+            }
         }
         let launcher_root = settings_root.join("opt").join("bin");
         let mut launcher_destinations = std::collections::BTreeSet::new();
@@ -213,4 +260,112 @@ fn monotonic_nonce() -> u128 {
         .duration_since(UNIX_EPOCH)
         .map_or(0, |value| value.as_nanos());
     time ^ u128::from(NEXT.fetch_add(1, Ordering::Relaxed))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::commands::application::model::{
+        ApplicationIdentity, ApplicationRecord, ApplicationStatus, ManagementEntry,
+        ManagementRuntime, PackageIdentity, UserLauncher,
+    };
+
+    fn record(settings: &Path) -> ApplicationRecord {
+        let host_root = settings.join("opt/apps/demo");
+        ApplicationRecord {
+            application: ApplicationIdentity {
+                id: "demo".into(),
+                package: PackageIdentity {
+                    group: "org.demo".into(),
+                    name: "demo".into(),
+                    version: "1.0.0".into(),
+                },
+                installer_package: PackageIdentity {
+                    group: "org.demo".into(),
+                    name: "installer".into(),
+                    version: "1.0.0".into(),
+                },
+                commands: Vec::new(),
+            },
+            host_root: host_root.clone(),
+            app_root: Some(settings.join("external payload")),
+            install_kind: None,
+            selected_option_id: None,
+            selected_platform: None,
+            management: ManagementEntry {
+                runtime: ManagementRuntime::Native,
+                entry: host_root.join("manage"),
+            },
+            status: ApplicationStatus::Ready,
+            provenance: None,
+            launchers: Vec::new(),
+            user_launchers: vec![UserLauncher {
+                id: "main".into(),
+                name: "Example".into(),
+                description: None,
+                executable: "$app_root/bin/example".into(),
+                args: Vec::new(),
+                working_directory: None,
+                icon: None,
+                terminal: false,
+                default: true,
+            }],
+        }
+    }
+
+    #[test]
+    fn validates_launcher_only_index_and_keeps_host_ownership() {
+        let settings = std::env::temp_dir().join("application-index-validation");
+        let mut index = ApplicationIndex::default();
+        index.applications.insert("demo".into(), record(&settings));
+        validate_index(&index, &settings).unwrap();
+        index.applications.get_mut("demo").unwrap().host_root = settings.join("external payload");
+        assert!(validate_index(&index, &settings).is_err());
+    }
+
+    #[test]
+    fn rejects_multiple_default_user_launchers_and_nonabsolute_payload() {
+        let settings = std::env::temp_dir().join("application-index-validation");
+        let mut index = ApplicationIndex::default();
+        index.applications.insert("demo".into(), record(&settings));
+        index.applications.get_mut("demo").unwrap().app_root = Some(PathBuf::from("relative"));
+        assert!(validate_index(&index, &settings).is_err());
+        let record = index.applications.get_mut("demo").unwrap();
+        record.app_root = Some(settings.join("external payload"));
+        let mut second = record.user_launchers[0].clone();
+        second.id = "editor".into();
+        record.user_launchers.push(second);
+        assert!(validate_index(&index, &settings).is_err());
+    }
+
+    #[test]
+    fn installer_option_selection_requires_a_complete_portable_pair() {
+        let settings = std::env::temp_dir().join("application-index-validation");
+        let mut index = ApplicationIndex::default();
+        index.applications.insert("demo".into(), record(&settings));
+        index
+            .applications
+            .get_mut("demo")
+            .unwrap()
+            .selected_option_id = Some("homebrew".into());
+        assert!(validate_index(&index, &settings).is_err());
+        index
+            .applications
+            .get_mut("demo")
+            .unwrap()
+            .selected_platform = Some("macos/aarch64".into());
+        validate_index(&index, &settings).unwrap();
+        index
+            .applications
+            .get_mut("demo")
+            .unwrap()
+            .selected_platform = Some("macos".into());
+        validate_index(&index, &settings).unwrap();
+        index
+            .applications
+            .get_mut("demo")
+            .unwrap()
+            .selected_platform = Some("macos/aarch64/extra".into());
+        assert!(validate_index(&index, &settings).is_err());
+    }
 }

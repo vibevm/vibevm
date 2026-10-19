@@ -38,6 +38,22 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+[format.cli-application-installer-options]
+epoch = 1
+schema = "schemas/application_installer_options.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-application-launchers]
+epoch = 1
+schema = "schemas/application_launchers.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # ── User-local application durable/exchange records, PROP-059 ───────────────
 [format.application-index]
 epoch = 1

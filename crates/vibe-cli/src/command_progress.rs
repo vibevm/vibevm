@@ -18,6 +18,7 @@ use vibe_core::progress::{Progress, ProgressTask};
 pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "agentic",
     "aiui",
+    "app",
     "bin",
     "build",
     "cache",
@@ -148,6 +149,13 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Build(_) => FiniteFallback("Command build"),
         Command::Test(_) => FiniteFallback("Command test"),
         Command::Run(_) => TerminalPassthrough,
+        Command::App(args) => match &args.command {
+            crate::cli::AppCommand::Installers { .. }
+            | crate::cli::AppCommand::Launchers { .. } => FastMetadata,
+            crate::cli::AppCommand::Run { .. } | crate::cli::AppCommand::Start { .. } => {
+                TerminalPassthrough
+            }
+        },
         Command::Create(_) => FiniteFallback("Command create"),
         Command::Verify(_) => FiniteFallback("Command verify"),
         Command::Package(_) => FiniteFallback("Command package"),

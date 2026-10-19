@@ -174,6 +174,15 @@ fn main() -> ExitCode {
             }
             Err(error) => Err(error),
         },
+        Command::App(args) => {
+            match commands::app::run(&ctx, args, discover_embedded_root().as_deref(), cli.offline) {
+                Ok(Some(code)) => {
+                    return ExitCode::from(u8::try_from(code.clamp(0, 255)).unwrap_or(1));
+                }
+                Ok(None) => Ok(()),
+                Err(error) => Err(error),
+            }
+        }
         Command::Create(args) => run_lifecycle(vibe_lifecycle::Phase::Create, args),
         Command::Verify(args) => run_lifecycle(vibe_lifecycle::Phase::Verify, args),
         Command::Package(args) => run_lifecycle(vibe_lifecycle::Phase::Package, args),
@@ -559,11 +568,8 @@ fn vvm_offline(cli_offline: bool) -> bool {
     )
 }
 
-/// Read an environment override at the composition root: `Some(value)`
-/// only when the variable is set and non-empty. vibe's domain commands
-/// never read the ambient environment themselves — reads live here in
-/// main and the value is threaded down (CONVERT-PLAN v0.1 §1 item 0.4;
-/// the Phase-5 `ambient-env` rule names `main.rs` a recorded root).
+/// Read a nonempty environment override at the composition root, as required
+/// by the Phase-5 `ambient-env` rule.
 fn read_env_opt(name: &str) -> Option<String> {
     std::env::var(name).ok().filter(|s| !s.trim().is_empty())
 }
