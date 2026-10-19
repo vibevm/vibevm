@@ -1,0 +1,77 @@
+{
+  "status": "useful_source_candidate_reviewed_native_windows_evidence_open",
+  "p1": 0,
+  "p2": 0,
+  "findings": [],
+  "frozen_files": [
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-safefs/src/project.rs",
+      "relative_path": "crates/vibe-safefs/src/project.rs",
+      "sha256": "5c1a132bb70c55709f20451d08b205d4a3b5e886438c6c3d465c80f88d1fa044",
+      "bytes": 20502,
+      "actual_sha256": "5c1a132bb70c55709f20451d08b205d4a3b5e886438c6c3d465c80f88d1fa044",
+      "matches_freeze": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-safefs/src/project/path_limits.rs",
+      "relative_path": "crates/vibe-safefs/src/project/path_limits.rs",
+      "sha256": "161ee7cab59c0a33b0e3b8c6b4ada9b5e51f6efd676ca59098525f614917b70e",
+      "bytes": 2068,
+      "actual_sha256": "161ee7cab59c0a33b0e3b8c6b4ada9b5e51f6efd676ca59098525f614917b70e",
+      "matches_freeze": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/vibedeps/m_06_g_4_cases.rs",
+      "relative_path": "crates/vibe-workspace/src/vibedeps/m_06_g_4_cases.rs",
+      "sha256": "c133198fcd34a540ee6082e2ff69704cab16b1f31a36e52b4723032915e24fd9",
+      "bytes": 15110,
+      "actual_sha256": "c133198fcd34a540ee6082e2ff69704cab16b1f31a36e52b4723032915e24fd9",
+      "matches_freeze": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/vibedeps/slot_diff/path_limits.rs",
+      "relative_path": "crates/vibe-workspace/src/vibedeps/slot_diff/path_limits.rs",
+      "sha256": "e8f3d326cb47bc3ab4cffffde9e1cd9afca7fd2d61d3bbd73a31ac4539ec42d0",
+      "bytes": 6434,
+      "actual_sha256": "e8f3d326cb47bc3ab4cffffde9e1cd9afca7fd2d61d3bbd73a31ac4539ec42d0",
+      "matches_freeze": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+      "relative_path": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+      "sha256": "54f520abb238ece2a1742ff550efac24f9865721dbea7d5d1f9853662664528e",
+      "bytes": 49708,
+      "actual_sha256": "54f520abb238ece2a1742ff550efac24f9865721dbea7d5d1f9853662664528e",
+      "matches_freeze": true
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/.github/workflows/windows-materialization-paths.yml",
+      "relative_path": ".github/workflows/windows-materialization-paths.yml",
+      "sha256": "03442c0e05010e2dc7b271f0bfc78366eba8bb884943b00d86865f71d8f71584",
+      "bytes": 1991,
+      "actual_sha256": "03442c0e05010e2dc7b271f0bfc78366eba8bb884943b00d86865f71d8f71584",
+      "matches_freeze": true
+    }
+  ],
+  "source_hash_drift": 0,
+  "patch_coverage_exact_six": true,
+  "patch_target_hunks_checked": 11,
+  "patch_target_hunk_mismatches": [],
+  "published_report_digest_matches": true,
+  "published_patch_digest_matches": true,
+  "Root_reported_reverse_patch_exit": 0,
+  "linux_reported_cases": {
+    "passed": 3,
+    "failed": 0,
+    "filtered": 775
+  },
+  "native_windows_compiled_or_run": false,
+  "macos_run": false,
+  "reviewer_tests_run": false,
+  "task_accepted": false,
+  "campaign_accepted_count_root_reported": 113,
+  "campaign_total": 222,
+  "next": "Root commit/mirror current1.1.0 then inspect SHA-bound actual WindowsCI/native evidence before G4 acceptance",
+  "API_primary_source": "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationbyhandlew",
+  "additional_readonly_source": "crates/vibe-workspace/src/vibedeps/slot_diff.rs:159-180 actual preflight placement"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "path": "/fast/git/v/vibevm-next/crates/vibe-safefs/src/project.rs",
+    "relative_path": "crates/vibe-safefs/src/project.rs",
+    "sha256": "5c1a132bb70c55709f20451d08b205d4a3b5e886438c6c3d465c80f88d1fa044",
+    "bytes": 20502
+  },
+  {
+    "path": "/fast/git/v/vibevm-next/crates/vibe-safefs/src/project/path_limits.rs",
+    "relative_path": "crates/vibe-safefs/src/project/path_limits.rs",
+    "sha256": "161ee7cab59c0a33b0e3b8c6b4ada9b5e51f6efd676ca59098525f614917b70e",
+    "bytes": 2068
+  },
+  {
+    "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/vibedeps/m_06_g_4_cases.rs",
+    "relative_path": "crates/vibe-workspace/src/vibedeps/m_06_g_4_cases.rs",
+    "sha256": "c133198fcd34a540ee6082e2ff69704cab16b1f31a36e52b4723032915e24fd9",
+    "bytes": 15110
+  },
+  {
+    "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/vibedeps/slot_diff/path_limits.rs",
+    "relative_path": "crates/vibe-workspace/src/vibedeps/slot_diff/path_limits.rs",
+    "sha256": "e8f3d326cb47bc3ab4cffffde9e1cd9afca7fd2d61d3bbd73a31ac4539ec42d0",
+    "bytes": 6434
+  },
+  {
+    "path": "/fast/git/v/vibevm-next/vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+    "relative_path": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+    "sha256": "54f520abb238ece2a1742ff550efac24f9865721dbea7d5d1f9853662664528e",
+    "bytes": 49708
+  },
+  {
+    "path": "/fast/git/v/vibevm-next/.github/workflows/windows-materialization-paths.yml",
+    "relative_path": ".github/workflows/windows-materialization-paths.yml",
+    "sha256": "03442c0e05010e2dc7b271f0bfc78366eba8bb884943b00d86865f71d8f71584",
+    "bytes": 1991
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "original_sha256": "4b20cff8576bf5a83b1a0cd5861579fc6487621e070ead4682d3272782386a0c",
+  "original_bytes": 83229,
+  "archived_sha256": "79cb5e0e21cc16cf37cbb89244bfbda275316682990a6c590663102413bd48c8",
+  "normalization": "trailing whitespace only; final newline",
+  "changed_lines": 4
+}
