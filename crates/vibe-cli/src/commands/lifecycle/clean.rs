@@ -256,7 +256,7 @@ fn clean_continuation(
 ) -> Result<(Phase, InstallArgs, Option<super::DeployRequest>)> {
     Ok(match chain {
         CleanChain::Validate(args) => (Phase::Validate, args.install_args(), None),
-        CleanChain::Install(args) => (Phase::Install, args, None),
+        CleanChain::Install(args) => (Phase::Install, *args, None),
         CleanChain::Generate(args) => (Phase::Generate, args.install_args(), None),
         CleanChain::Build(args) => (Phase::Build, args.install_args(), None),
         CleanChain::Test(args) => (Phase::Test, args.install_args(), None),

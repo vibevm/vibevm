@@ -4,7 +4,7 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#reply" },
     "rustOptions": { "package": "vibe_wire::application::e1::reply" },
     "x-rust-type": "ApplicationReply",
-    "x-wire-order": ["protocol", "operation", "applicationId", "status", "hostRoot", "management", "commands", "message", "launchers"]
+    "x-wire-order": ["protocol", "operation", "applicationId", "status", "hostRoot", "appRoot", "management", "commands", "message", "launchers"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -17,6 +17,7 @@
     "message": { "type": "string" }
   },
   "optionalProperties": {
+    "appRoot": { "ref": "path", "metadata": { "x-default": null } },
     "launchers": { "elements": { "ref": "application_launcher_ownership" }, "metadata": { "x-empty": "omit" } }
   },
   "definitions": {
@@ -30,7 +31,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "management_runtime": {
-      "enum": ["node", "builtin"],
+      "enum": ["node", "builtin", "native", "command"],
       "metadata": { "x-vocabulary": "closed" }
     },
     "management_entry": {

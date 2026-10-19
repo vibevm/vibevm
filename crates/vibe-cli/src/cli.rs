@@ -182,6 +182,9 @@ pub enum Command {
     /// Run one explicit host command declared by `[[command]]` in `vibe.toml`.
     Run(RunArgs),
 
+    /// List and run launchers of an already installed user application.
+    App(AppArgs),
+
     /// Run the default lifecycle through agentic creation.
     Create(LifecycleArgs),
 
@@ -450,6 +453,51 @@ pub enum Command {
     Version,
 }
 
+/// User application launcher operations. `--path` is optional because
+/// application launchers can run without a selected project.
+#[derive(Debug, clap::Args)]
+pub struct AppArgs {
+    #[command(subcommand)]
+    pub command: AppCommand,
+
+    /// Selected project directory, when a launcher needs `$project_root`.
+    #[arg(long, global = true)]
+    pub path: Option<std::path::PathBuf>,
+}
+
+#[derive(Debug, clap::Subcommand)]
+pub enum AppCommand {
+    /// Show every declared installer and platform option without selecting one.
+    Installers {
+        package: String,
+        /// Resolve from this local registry instead of the configured registries.
+        #[arg(long)]
+        registry: Option<std::path::PathBuf>,
+    },
+
+    /// List launchers of an installed application.
+    Launchers { package: String },
+
+    /// Run one launcher by its exact stable ID.
+    Run {
+        package: String,
+        launcher_id: String,
+        /// Arguments passed literally after the launcher's declared arguments.
+        #[arg(last = true, allow_hyphen_values = true)]
+        args: Vec<String>,
+    },
+
+    /// Run the declared default launcher, or ask in an interactive terminal.
+    Start {
+        package: String,
+        #[arg(long)]
+        launcher: Option<String>,
+        /// Arguments passed literally after the launcher's declared arguments.
+        #[arg(last = true, allow_hyphen_values = true)]
+        args: Vec<String>,
+    },
+}
+
 /// `vibe bin` subcommands (PROP-025 §4).
 #[derive(clap::Subcommand, Debug)]
 pub enum BinCmd {
@@ -490,3 +538,7 @@ pub enum BinCmd {
 #[cfg(test)]
 #[path = "cli/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "cli/app_tests.rs"]
+mod app_tests;

@@ -31,6 +31,7 @@ use super::{
 #[serde(rename_all = "lowercase")]
 enum ApplicationRuntimeWire {
     Node,
+    Native,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -60,9 +61,13 @@ struct ApplicationSourceDeclWire {
 #[serde(deny_unknown_fields)]
 struct ApplicationDeclWire {
     id: String,
-    installer_package: PackageRef,
-    runtime: ApplicationRuntimeWire,
-    entry: PathBuf,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    installer_package: Option<PackageRef>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    runtime: Option<ApplicationRuntimeWire>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    entry: Option<PathBuf>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     commands: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     distribution: Option<ApplicationDistributionDeclWire>,
@@ -188,9 +193,10 @@ impl From<ApplicationDecl> for ApplicationDeclWire {
         Self {
             id: value.id,
             installer_package: value.installer_package,
-            runtime: match value.runtime {
+            runtime: value.runtime.map(|runtime| match runtime {
                 ApplicationRuntime::Node => ApplicationRuntimeWire::Node,
-            },
+                ApplicationRuntime::Native => ApplicationRuntimeWire::Native,
+            }),
             entry: value.entry,
             commands: value.commands,
             distribution: value.distribution.map(Into::into),
@@ -203,9 +209,10 @@ impl From<ApplicationDeclWire> for ApplicationDecl {
         Self {
             id: value.id,
             installer_package: value.installer_package,
-            runtime: match value.runtime {
+            runtime: value.runtime.map(|runtime| match runtime {
                 ApplicationRuntimeWire::Node => ApplicationRuntime::Node,
-            },
+                ApplicationRuntimeWire::Native => ApplicationRuntime::Native,
+            }),
             entry: value.entry,
             commands: value.commands,
             distribution: value.distribution.map(Into::into),

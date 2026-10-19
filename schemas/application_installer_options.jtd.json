@@ -1,0 +1,344 @@
+{
+  "metadata": {
+    "description": "Version 1 machine list from vibe app installers PACKAGE --json.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_installer_options"
+    }
+  },
+  "properties": {
+    "schema": {
+      "type": "string"
+    },
+    "package": {
+      "type": "string"
+    },
+    "detected": {
+      "ref": "detected_host"
+    },
+    "platforms": {
+      "elements": {
+        "ref": "platform"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "detected_host": {
+      "properties": {
+        "platform": {
+          "type": "string",
+          "nullable": true
+        },
+        "arch": {
+          "type": "string"
+        }
+      }
+    },
+    "platform": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "detected": {
+          "type": "boolean"
+        },
+        "architectures": {
+          "elements": {
+            "ref": "architecture"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "architecture": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "detected": {
+          "type": "boolean"
+        },
+        "installers": {
+          "elements": {
+            "ref": "installer"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "installer": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "installation": {
+          "ref": "installation"
+        },
+        "launchers": {
+          "elements": {
+            "ref": "launcher"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "detected": {
+          "type": "boolean"
+        },
+        "pre_install": {
+          "type": "string",
+          "nullable": true
+        },
+        "post_install": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "installation": {
+      "discriminator": "type",
+      "mapping": {
+        "shell": {
+          "properties": {
+            "app_root": {
+              "type": "string"
+            },
+            "install": {
+              "type": "string"
+            },
+            "uninstall": {
+              "type": "string"
+            },
+            "force_install": {
+              "type": "string"
+            },
+            "force_uninstall": {
+              "type": "string"
+            }
+          },
+          "optionalProperties": {
+            "update": {
+              "type": "string",
+              "metadata": {
+                "x-default": null
+              }
+            }
+          }
+        },
+        "zip": {
+          "properties": {
+            "source": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string"
+            }
+          },
+          "optionalProperties": {
+            "payload_root": {
+              "type": "string",
+              "metadata": {
+                "x-default": null
+              }
+            },
+            "runners": {
+              "elements": {
+                "ref": "runner"
+              },
+              "metadata": {
+                "x-empty": "omit"
+              }
+            }
+          }
+        },
+        "tar_gz": {
+          "properties": {
+            "source": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string"
+            }
+          },
+          "optionalProperties": {
+            "payload_root": {
+              "type": "string",
+              "metadata": {
+                "x-default": null
+              }
+            },
+            "runners": {
+              "elements": {
+                "ref": "runner"
+              },
+              "metadata": {
+                "x-empty": "omit"
+              }
+            }
+          }
+        },
+        "exe": {
+          "properties": {
+            "source": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string"
+            },
+            "app_root": {
+              "type": "string"
+            }
+          },
+          "optionalProperties": {
+            "arguments": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "omit"
+              }
+            },
+            "uninstall": {
+              "type": "string",
+              "metadata": {
+                "x-default": null
+              }
+            },
+            "force_arguments": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "omit"
+              }
+            },
+            "force_uninstall": {
+              "type": "string",
+              "metadata": {
+                "x-default": null
+              }
+            }
+          }
+        },
+        "msi": {
+          "properties": {
+            "source": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string"
+            },
+            "app_root": {
+              "type": "string"
+            }
+          },
+          "optionalProperties": {
+            "arguments": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "omit"
+              }
+            },
+            "uninstall": {
+              "type": "string",
+              "metadata": {
+                "x-default": null
+              }
+            },
+            "force_arguments": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "omit"
+              }
+            },
+            "force_uninstall": {
+              "type": "string",
+              "metadata": {
+                "x-default": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "runner": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "launcher": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "executable": {
+          "type": "string"
+        },
+        "terminal": {
+          "type": "boolean"
+        },
+        "default": {
+          "type": "boolean"
+        }
+      },
+      "optionalProperties": {
+        "description": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "args": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "working_directory": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "icon": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}

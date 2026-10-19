@@ -41,6 +41,7 @@ use crate::error::{Error, Result};
 use crate::package_ref::PackageRef;
 
 use super::ApplicationSourceDecl;
+use super::InstallerOptionDecl;
 use super::artifact::ArtifactsSection;
 use super::compile::CompileSection;
 use super::deploy::DeploySection;
@@ -90,6 +91,10 @@ pub struct Manifest {
     /// `[application]` — optional package-owned user-local application metadata.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub application: Option<ApplicationDecl>,
+
+    /// `[[installer_options]]` — explicit per-target installation choices.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub installer_options: Vec<InstallerOptionDecl>,
 
     /// `[application_source]` — a package-owned proxy to an application
     /// declaration in an external registry-shaped Git source.

@@ -1,17 +1,6 @@
 use super::*;
-use std::sync::{Arc, Mutex};
 use tempfile::tempdir;
-use vibe_core::progress::{ProgressEvent, ProgressEventKind, ProgressObserver};
-use zip::write::SimpleFileOptions;
-
-#[derive(Default)]
-struct Recorded(Mutex<Vec<ProgressEvent>>);
-
-impl ProgressObserver for Recorded {
-    fn observe(&self, event: ProgressEvent) {
-        self.0.lock().unwrap().push(event);
-    }
-}
+use vibe_core::manifest::ArchiveRunnerDecl;
 
 fn identity() -> ApplicationIdentity {
     ApplicationIdentity {
@@ -23,7 +12,7 @@ fn identity() -> ApplicationIdentity {
         },
         installer_package: super::super::model::PackageIdentity {
             group: "org.example".into(),
-            name: "installer".into(),
+            name: "demo".into(),
             version: "1.0.0".into(),
         },
         commands: vec!["demo".into()],
@@ -34,248 +23,93 @@ fn digest(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
 }
 
-fn fixture(special_manifest: bool) -> (tempfile::TempDir, PathBuf, DistributionTarget) {
+#[test]
+fn native_installer_file_requires_exact_sha256() {
     let temp = tempdir().unwrap();
-    let archive_path = temp.path().join("bundle.zip");
-    let files = [
-        ("management/launch.cmd", b"@echo off\r\n".as_slice()),
-        ("launchers/demo.cmd", b"@echo off\r\n".as_slice()),
-    ];
-    let manifest = BundleManifest {
-        protocol: BUNDLE_PROTOCOL.into(),
-        application: identity(),
-        os: "windows".into(),
-        arch: "x86_64".into(),
-        libc: None,
-        source_commit: "a".repeat(40),
-        source_tree: format!("sha256-tree/1:{}", "b".repeat(64)),
-        management: BundleManagement {
-            runtime: "builtin".into(),
-            entry: "management/launch.cmd".into(),
-        },
-        launchers: vec![BundleLauncher {
-            command: "demo".into(),
-            path: "launchers/demo.cmd".into(),
-            destination: "demo.cmd".into(),
-        }],
-        files: files
-            .iter()
-            .map(|(path, bytes)| BundleFile {
-                path: (*path).into(),
-                sha256: digest(bytes),
-                size: bytes.len() as u64,
-            })
-            .collect(),
-    };
-    let manifest_bytes = serde_json::to_vec(&bundle_manifest_to_wire(&manifest)).unwrap();
-    let file = File::create(&archive_path).unwrap();
-    let mut zip = zip::ZipWriter::new(file);
-    if special_manifest {
-        zip.add_symlink(BUNDLE_MANIFEST, "elsewhere", SimpleFileOptions::default())
-            .unwrap();
-    } else {
-        zip.start_file(BUNDLE_MANIFEST, SimpleFileOptions::default())
-            .unwrap();
-        zip.write_all(&manifest_bytes).unwrap();
-    }
-    for (path, bytes) in files {
-        zip.start_file(path, SimpleFileOptions::default()).unwrap();
-        zip.write_all(bytes).unwrap();
-    }
-    zip.finish().unwrap();
-    let size = fs::metadata(&archive_path).unwrap().len();
-    let target = DistributionTarget {
-        os: "windows".into(),
-        arch: "x86_64".into(),
-        libc: None,
-        format: "zip".into(),
-        url: "https://example.invalid/demo.zip".into(),
-        sha256: digest(&fs::read(&archive_path).unwrap()),
-        size,
-        source_commit: "a".repeat(40),
-        source_tree: format!("sha256-tree/1:{}", "b".repeat(64)),
-    };
-    (temp, archive_path, target)
-}
-
-#[test]
-fn strict_bundle_extracts_only_declared_hashed_files() {
-    let (temp, archive, target) = fixture(false);
-    let staging = temp.path().join("payload");
-    let verified = verify_archive(&archive, &target, &identity(), &staging).unwrap();
-    assert_eq!(verified.manifest.application.commands, ["demo"]);
-    assert!(staging.join("management/launch.cmd").is_file());
-}
-
-#[test]
-fn observed_extraction_reports_real_archive_entries_and_completion() {
-    let (temp, archive, target) = fixture(false);
-    let observer = Arc::new(Recorded::default());
-    let progress = Progress::new(observer.clone());
-    verify_archive_observed(
-        &archive,
-        &target,
-        &identity(),
-        &temp.path().join("payload"),
-        &progress,
+    let source = temp.path().join("installer.exe");
+    fs::write(&source, b"native installer").unwrap();
+    let destination = temp.path().join("verified.exe");
+    let source = source.to_str().unwrap();
+    assert!(
+        verify_installer_file(
+            source,
+            &digest(b"different"),
+            &destination,
+            true,
+            &Progress::default(),
+        )
+        .is_err()
+    );
+    assert!(!destination.exists());
+    verify_installer_file(
+        source,
+        &digest(b"native installer"),
+        &destination,
+        true,
+        &Progress::default(),
     )
     .unwrap();
-    let events = observer.0.lock().unwrap();
-    assert!(matches!(
-        &events[0].kind,
-        ProgressEventKind::Started { label }
-            if label == "Verifying and extracting application distribution"
-    ));
-    assert!(events.iter().any(|event| matches!(
-        event.kind,
-        ProgressEventKind::Progress {
-            total: Some(3),
-            ref unit,
-            ..
-        } if unit == "entries"
-    )));
-    assert!(matches!(
-        events.last().unwrap().kind,
-        ProgressEventKind::Finished
-    ));
+    assert_eq!(fs::read(destination).unwrap(), b"native installer");
 }
 
+#[cfg(not(windows))]
 #[test]
-fn special_descriptor_is_refused_before_execution() {
-    let (temp, archive, target) = fixture(true);
-    let error = verify_archive(&archive, &target, &identity(), &temp.path().join("payload"))
-        .unwrap_err()
-        .to_string();
-    assert!(error.contains("manifest entry is invalid"), "{error}");
-}
-
-#[test]
-fn missing_current_platform_is_typed_absence() {
-    let index = DistributionIndex {
-        protocol: INDEX_PROTOCOL.into(),
-        application: identity(),
-        release_tag: "v1.0.0".into(),
-        distributions: vec![DistributionTarget {
-            os: "plan9".into(),
-            arch: "mips".into(),
-            libc: None,
-            format: "zip".into(),
-            url: "https://example.invalid/x.zip".into(),
-            sha256: "a".repeat(64),
-            size: 1,
-            source_commit: "b".repeat(40),
-            source_tree: format!("sha256-tree/1:{}", "c".repeat(64)),
-        }],
+fn direct_zip_and_tar_gz_publish_verified_payload() {
+    let temp = tempdir().unwrap();
+    let runner = ArchiveRunnerDecl {
+        path: PathBuf::from("bin/demo"),
+        name: "demo".into(),
     };
-    assert!(matching_target(&index, &identity()).unwrap().is_none());
-}
-
-#[test]
-fn linux_target_selection_distinguishes_gnu_and_musl() {
-    let target = |libc: &str| DistributionTarget {
-        os: "linux".into(),
-        arch: "x86_64".into(),
-        libc: Some(libc.into()),
-        format: "zip".into(),
-        url: format!("https://example.invalid/{libc}.zip"),
-        sha256: "a".repeat(64),
-        size: 1,
-        source_commit: "b".repeat(40),
-        source_tree: format!("sha256-tree/1:{}", "c".repeat(64)),
-    };
-    let index = DistributionIndex {
-        protocol: INDEX_PROTOCOL.into(),
-        application: identity(),
-        release_tag: "v1.0.0".into(),
-        distributions: vec![target("musl"), target("gnu")],
-    };
-    let selected = matching_target_for(&index, "linux", "x86_64", Some("gnu"))
-        .unwrap()
+    let zip_path = temp.path().join("demo.zip");
+    let zip = File::create(&zip_path).unwrap();
+    let mut zip = zip::ZipWriter::new(zip);
+    zip.start_file("bin/demo", zip::write::SimpleFileOptions::default())
         .unwrap();
-    assert_eq!(selected.libc.as_deref(), Some("gnu"));
-}
+    zip.write_all(b"demo executable").unwrap();
+    zip.finish().unwrap();
 
-fn launcher_variants(os: &str, destinations: &[&str]) -> (BundleManifest, DistributionTarget) {
-    let (_temp, archive, mut target) = fixture(false);
-    let mut zip = ZipArchive::new(File::open(archive).unwrap()).unwrap();
-    let bytes = read_entry(&mut zip, BUNDLE_MANIFEST, MAX_MANIFEST_BYTES).unwrap();
-    let mut manifest = bundle_manifest_from_wire(serde_json::from_slice(&bytes).unwrap());
-    manifest.os = os.into();
-    manifest.libc = (os == "linux").then(|| "gnu".into());
-    target.os = manifest.os.clone();
-    target.libc = manifest.libc.clone();
-    manifest.management.entry = if os == "windows" {
-        "management/launch.cmd"
-    } else {
-        "management/launch.sh"
-    }
-    .into();
-    manifest.launchers = destinations
-        .iter()
-        .map(|destination| BundleLauncher {
-            command: "demo".into(),
-            path: format!("launchers/{destination}"),
-            destination: (*destination).into(),
-        })
-        .collect();
-    manifest.files = std::iter::once(manifest.management.entry.clone())
-        .chain(
-            manifest
-                .launchers
-                .iter()
-                .map(|launcher| launcher.path.clone()),
+    let tar_path = temp.path().join("demo.tar.gz");
+    let tar = File::create(&tar_path).unwrap();
+    let encoder = flate2::write::GzEncoder::new(tar, flate2::Compression::default());
+    let mut tar = tar::Builder::new(encoder);
+    let mut header = tar::Header::new_gnu();
+    header.set_size(b"demo executable".len() as u64);
+    header.set_mode(0o755);
+    header.set_cksum();
+    tar.append_data(&mut header, "bin/demo", &b"demo executable"[..])
+        .unwrap();
+    tar.finish().unwrap();
+    tar.into_inner().unwrap().finish().unwrap();
+
+    for (format, archive, name) in [
+        (DirectArchiveFormat::Zip, &zip_path, "zip"),
+        (DirectArchiveFormat::TarGz, &tar_path, "tar"),
+    ] {
+        let staging = temp.path().join(name);
+        let verified = verify_direct_archive(
+            archive.to_str().unwrap(),
+            format,
+            &digest(&fs::read(archive).unwrap()),
+            None,
+            std::slice::from_ref(&runner),
+            &identity(),
+            &staging,
+            true,
+            &Progress::default(),
         )
-        .map(|path| BundleFile {
-            path,
-            sha256: digest(b"launcher"),
-            size: 8,
-        })
-        .collect();
-    (manifest, target)
-}
-
-#[test]
-fn each_native_platform_accepts_independent_launcher_variants() {
-    for name in ["demo", "demo.cmd", "demo.bat", "demo.ps1", "demo.exe"] {
-        let (manifest, target) = launcher_variants("windows", &[name]);
-        validate_bundle(&manifest, &target, &identity()).unwrap();
-    }
-    for os in ["linux", "macos"] {
-        for names in [
-            vec!["demo"],
-            vec!["demo.sh"],
-            vec!["demo", "demo.sh", "demo.ps1"],
-        ] {
-            let (manifest, target) = launcher_variants(os, &names);
-            validate_bundle(&manifest, &target, &identity()).unwrap();
-        }
-    }
-    let (manifest, target) = launcher_variants("windows", &["demo.exe", "demo.bat", "demo.ps1"]);
-    validate_bundle(&manifest, &target, &identity()).unwrap();
-}
-
-#[test]
-fn nonnative_variants_cannot_supply_missing_platform_command_coverage() {
-    for name in ["demo.cmd", "demo.bat", "demo.exe", "demo.ps1"] {
-        let (manifest, target) = launcher_variants("linux", &[name]);
-        assert!(
-            validate_bundle(&manifest, &target, &identity())
-                .unwrap_err()
-                .to_string()
-                .contains("platform-runnable launcher")
+        .unwrap();
+        assert!(verified.direct_archive);
+        assert_eq!(verified.manifest.launchers[0].destination, "demo");
+        assert_eq!(
+            fs::read(staging.join("bin/demo")).unwrap(),
+            b"demo executable"
         );
     }
-    for names in [vec!["demo.py"], vec!["demo.exe", "demo.exe"]] {
-        let (manifest, target) = launcher_variants("windows", &names);
-        assert!(validate_bundle(&manifest, &target, &identity()).is_err());
+}
+
+#[test]
+fn archive_paths_reject_traversal_and_windows_unsafe_names() {
+    for path in ["../outside", "/absolute", "C:/absolute", "aux", "a\\b"] {
+        assert!(portable_path(path).is_err(), "{path}");
     }
-    let (mut manifest, target) = launcher_variants("windows", &["demo.exe"]);
-    manifest.application.commands.push("second".into());
-    let expected = manifest.application.clone();
-    assert!(
-        validate_bundle(&manifest, &target, &expected)
-            .unwrap_err()
-            .to_string()
-            .contains("platform-runnable launcher")
-    );
 }

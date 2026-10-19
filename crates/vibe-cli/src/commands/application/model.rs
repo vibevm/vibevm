@@ -61,6 +61,19 @@ pub enum ApplicationStatus {
     Failed,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum InstallKind {
+    Source,
+    Distribution,
+    Archive,
+    Command,
+    Shell,
+    Zip,
+    TarGz,
+    Exe,
+    Msi,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ManagementEntry {
     pub runtime: ManagementRuntime,
@@ -71,6 +84,8 @@ pub struct ManagementEntry {
 pub enum ManagementRuntime {
     Node,
     Builtin,
+    Native,
+    Command,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -80,6 +95,7 @@ pub struct ApplicationReply {
     pub application_id: String,
     pub status: ApplicationStatus,
     pub host_root: PathBuf,
+    pub app_root: Option<PathBuf>,
     pub management: Option<ManagementEntry>,
     pub commands: Vec<String>,
     pub message: String,
@@ -96,10 +112,29 @@ pub struct ApplicationLauncherOwnership {
 pub struct ApplicationRecord {
     pub application: ApplicationIdentity,
     pub host_root: PathBuf,
+    pub app_root: Option<PathBuf>,
+    pub install_kind: Option<InstallKind>,
+    pub selected_option_id: Option<String>,
+    pub selected_platform: Option<String>,
     pub management: ManagementEntry,
     pub status: ApplicationStatus,
     pub provenance: Option<ApplicationProvenance>,
     pub launchers: Vec<ApplicationLauncherOwnership>,
+    pub user_launchers: Vec<UserLauncher>,
+}
+
+/// An authored launch point. Paths remain templates until launch time.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UserLauncher {
+    pub id: String,
+    pub name: String,
+    pub description: Option<String>,
+    pub executable: String,
+    pub args: Vec<String>,
+    pub working_directory: Option<String>,
+    pub icon: Option<String>,
+    pub terminal: bool,
+    pub default: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -172,10 +207,13 @@ impl ApplicationReply {
                 reply_wire::ApplicationStatus::Failed => ApplicationStatus::Failed,
             },
             host_root: value.host_root,
+            app_root: value.app_root,
             management: value.management.map(|entry| ManagementEntry {
                 runtime: match entry.runtime {
                     reply_wire::ManagementRuntime::Node => ManagementRuntime::Node,
                     reply_wire::ManagementRuntime::Builtin => ManagementRuntime::Builtin,
+                    reply_wire::ManagementRuntime::Native => ManagementRuntime::Native,
+                    reply_wire::ManagementRuntime::Command => ManagementRuntime::Command,
                 },
                 entry: entry.entry,
             }),
@@ -272,10 +310,26 @@ fn record_to_wire(value: &ApplicationRecord) -> index_wire::ApplicationRecord {
     index_wire::ApplicationRecord {
         application: index_identity(&value.application),
         host_root: value.host_root.clone(),
+        app_root: value.app_root.clone(),
+        install_kind: value.install_kind.map(|kind| match kind {
+            InstallKind::Source => index_wire::InstallKind::Source,
+            InstallKind::Distribution => index_wire::InstallKind::Distribution,
+            InstallKind::Archive => index_wire::InstallKind::Archive,
+            InstallKind::Command => index_wire::InstallKind::Command,
+            InstallKind::Shell => index_wire::InstallKind::Shell,
+            InstallKind::Zip => index_wire::InstallKind::Zip,
+            InstallKind::TarGz => index_wire::InstallKind::TarGz,
+            InstallKind::Exe => index_wire::InstallKind::Exe,
+            InstallKind::Msi => index_wire::InstallKind::Msi,
+        }),
+        selected_option_id: value.selected_option_id.clone(),
+        selected_platform: value.selected_platform.clone(),
         management: index_wire::ManagementEntry {
             runtime: match value.management.runtime {
                 ManagementRuntime::Node => index_wire::ManagementRuntime::Node,
                 ManagementRuntime::Builtin => index_wire::ManagementRuntime::Builtin,
+                ManagementRuntime::Native => index_wire::ManagementRuntime::Native,
+                ManagementRuntime::Command => index_wire::ManagementRuntime::Command,
             },
             entry: value.management.entry.clone(),
         },
@@ -291,6 +345,21 @@ fn record_to_wire(value: &ApplicationRecord) -> index_wire::ApplicationRecord {
             .map(|launcher| index_wire::ApplicationLauncherOwnership {
                 destination: launcher.destination.clone(),
                 sha256: launcher.sha256.clone(),
+            })
+            .collect(),
+        user_launchers: value
+            .user_launchers
+            .iter()
+            .map(|launcher| index_wire::UserLauncher {
+                id: launcher.id.clone(),
+                name: launcher.name.clone(),
+                description: launcher.description.clone(),
+                executable: launcher.executable.clone(),
+                args: launcher.args.clone(),
+                working_directory: launcher.working_directory.clone(),
+                icon: launcher.icon.clone(),
+                terminal: launcher.terminal,
+                default: launcher.default,
             })
             .collect(),
     }
@@ -344,10 +413,26 @@ fn record_from_wire(value: index_wire::ApplicationRecord) -> Result<ApplicationR
     Ok(ApplicationRecord {
         application: domain_identity(value.application),
         host_root: value.host_root,
+        app_root: value.app_root,
+        install_kind: value.install_kind.map(|kind| match kind {
+            index_wire::InstallKind::Source => InstallKind::Source,
+            index_wire::InstallKind::Distribution => InstallKind::Distribution,
+            index_wire::InstallKind::Archive => InstallKind::Archive,
+            index_wire::InstallKind::Command => InstallKind::Command,
+            index_wire::InstallKind::Shell => InstallKind::Shell,
+            index_wire::InstallKind::Zip => InstallKind::Zip,
+            index_wire::InstallKind::TarGz => InstallKind::TarGz,
+            index_wire::InstallKind::Exe => InstallKind::Exe,
+            index_wire::InstallKind::Msi => InstallKind::Msi,
+        }),
+        selected_option_id: value.selected_option_id,
+        selected_platform: value.selected_platform,
         management: ManagementEntry {
             runtime: match value.management.runtime {
                 index_wire::ManagementRuntime::Node => ManagementRuntime::Node,
                 index_wire::ManagementRuntime::Builtin => ManagementRuntime::Builtin,
+                index_wire::ManagementRuntime::Native => ManagementRuntime::Native,
+                index_wire::ManagementRuntime::Command => ManagementRuntime::Command,
             },
             entry: value.management.entry,
         },
@@ -363,6 +448,21 @@ fn record_from_wire(value: index_wire::ApplicationRecord) -> Result<ApplicationR
             .map(|launcher| ApplicationLauncherOwnership {
                 destination: launcher.destination,
                 sha256: launcher.sha256,
+            })
+            .collect(),
+        user_launchers: value
+            .user_launchers
+            .into_iter()
+            .map(|launcher| UserLauncher {
+                id: launcher.id,
+                name: launcher.name,
+                description: launcher.description,
+                executable: launcher.executable,
+                args: launcher.args,
+                working_directory: launcher.working_directory,
+                icon: launcher.icon,
+                terminal: launcher.terminal,
+                default: launcher.default,
             })
             .collect(),
     })
@@ -419,3 +519,6 @@ impl Default for ApplicationIndex {
         }
     }
 }
+
+#[cfg(test)]
+mod tests;

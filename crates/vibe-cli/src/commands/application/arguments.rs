@@ -33,7 +33,6 @@ pub(super) fn validate_install_args(args: &InstallArgs) -> Result<()> {
         || args.rev.is_some()
         || args.git_auth.is_some()
         || args.git_token_env.is_some()
-        || args.force
         || args.trace_compile
     {
         bail!("global install received project-only package flags");

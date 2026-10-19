@@ -7,7 +7,7 @@ use std::path::Path;
 use anyhow::Result;
 use vibe_wire::generated::application_report::{ApplicationReport, ApplicationReportCommand};
 
-use super::model::{ApplicationProvenance, ApplicationSelection};
+use super::model::{ApplicationProvenance, ApplicationSelection, InstallKind};
 use crate::output;
 
 pub(super) fn render(
@@ -17,6 +17,7 @@ pub(super) fn render(
     message: &str,
     host_root: &Path,
     provenance: Option<&ApplicationProvenance>,
+    install_kind: Option<InstallKind>,
 ) -> Result<()> {
     if ctx.is_json() {
         let command = match command {
@@ -32,14 +33,18 @@ pub(super) fn render(
             application_id: application_id.into(),
             host_root: vibe_core::machine_json_path(host_root),
             message: message.into(),
-            selected_mode: provenance.map(|value| match value.selected {
-                ApplicationSelection::Source { .. } => {
-                    vibe_wire::generated::application_report::ApplicationReportSelectedMode::Source
-                }
-                ApplicationSelection::Binary { .. } => {
-                    vibe_wire::generated::application_report::ApplicationReportSelectedMode::Binary
-                }
-            }),
+            selected_mode: install_kind.map(|kind| match kind {
+                InstallKind::Source => vibe_wire::generated::application_report::ApplicationReportSelectedMode::Source,
+                InstallKind::Distribution | InstallKind::Archive => vibe_wire::generated::application_report::ApplicationReportSelectedMode::Binary,
+                InstallKind::Command | InstallKind::Shell => vibe_wire::generated::application_report::ApplicationReportSelectedMode::Shell,
+                InstallKind::Zip => vibe_wire::generated::application_report::ApplicationReportSelectedMode::Zip,
+                InstallKind::TarGz => vibe_wire::generated::application_report::ApplicationReportSelectedMode::TarGz,
+                InstallKind::Exe => vibe_wire::generated::application_report::ApplicationReportSelectedMode::Exe,
+                InstallKind::Msi => vibe_wire::generated::application_report::ApplicationReportSelectedMode::Msi,
+            }).or_else(|| provenance.map(|value| match value.selected {
+                ApplicationSelection::Source { .. } => vibe_wire::generated::application_report::ApplicationReportSelectedMode::Source,
+                ApplicationSelection::Binary { .. } => vibe_wire::generated::application_report::ApplicationReportSelectedMode::Binary,
+            })),
             selected_commit: provenance.and_then(|value| match &value.selected {
                 ApplicationSelection::Source { commit, .. } => commit.clone(),
                 ApplicationSelection::Binary { commit, .. } => Some(commit.clone()),

@@ -18,6 +18,10 @@ pub struct ApplicationReply {
     #[serde(rename = "hostRoot")]
     pub host_root: Path,
 
+    #[serde(rename = "appRoot")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub app_root: Option<Path>,
+
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub management: Option<ManagementEntry>,
 
@@ -73,6 +77,12 @@ pub struct ManagementEntry {
 pub enum ManagementRuntime {
     #[serde(rename = "builtin")]
     Builtin,
+
+    #[serde(rename = "command")]
+    Command,
+
+    #[serde(rename = "native")]
+    Native,
 
     #[serde(rename = "node")]
     Node,

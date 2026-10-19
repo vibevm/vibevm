@@ -33,7 +33,7 @@
   },
   "optionalProperties": {
     "selectedMode": {
-      "enum": ["source", "binary"],
+      "enum": ["source", "binary", "shell", "zip", "tar_gz", "exe", "msi"],
       "metadata": {
         "x-vocabulary": "closed",
         "x-default": null

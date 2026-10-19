@@ -19,8 +19,12 @@
       "enum": ["ready", "undeployed", "failed"],
       "metadata": { "x-vocabulary": "closed" }
     },
+    "install_kind": {
+      "enum": ["source", "distribution", "archive", "command", "shell", "zip", "tar_gz", "exe", "msi"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
     "management_runtime": {
-      "enum": ["node", "builtin"],
+      "enum": ["node", "builtin", "native", "command"],
       "metadata": { "x-vocabulary": "closed" }
     },
     "package_identity": {
@@ -52,6 +56,22 @@
       "properties": {
         "destination": { "ref": "path" },
         "sha256": { "type": "string" }
+      }
+    },
+    "user_launcher": {
+      "metadata": { "x-wire-order": ["id", "name", "description", "executable", "args", "workingDirectory", "icon", "terminal", "default"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "executable": { "type": "string" },
+        "args": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "terminal": { "type": "boolean" },
+        "default": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "description": { "type": "string", "metadata": { "x-default": null } },
+        "workingDirectory": { "type": "string", "metadata": { "x-default": null } },
+        "icon": { "type": "string", "metadata": { "x-default": null } }
       }
     },
     "application_source_observation": {
@@ -88,7 +108,7 @@
       }
     },
     "application_record": {
-      "metadata": { "x-wire-order": ["application", "hostRoot", "management", "status", "provenance", "launchers"] },
+      "metadata": { "x-wire-order": ["application", "hostRoot", "appRoot", "installKind", "selectedOptionId", "selectedPlatform", "management", "status", "provenance", "launchers", "userLaunchers"] },
       "properties": {
         "application": { "ref": "application_identity" },
         "hostRoot": { "ref": "path" },
@@ -96,8 +116,13 @@
         "status": { "ref": "application_status" }
       },
       "optionalProperties": {
+        "appRoot": { "ref": "path", "metadata": { "x-default": null } },
+        "installKind": { "ref": "install_kind", "metadata": { "x-default": null } },
+        "selectedOptionId": { "type": "string", "metadata": { "x-default": null } },
+        "selectedPlatform": { "type": "string", "metadata": { "x-default": null } },
         "provenance": { "ref": "application_provenance", "metadata": { "x-default": null } },
-        "launchers": { "elements": { "ref": "application_launcher_ownership" }, "metadata": { "x-empty": "omit" } }
+        "launchers": { "elements": { "ref": "application_launcher_ownership" }, "metadata": { "x-empty": "omit" } },
+        "userLaunchers": { "elements": { "ref": "user_launcher" }, "metadata": { "x-empty": "omit" } }
       }
     }
   }

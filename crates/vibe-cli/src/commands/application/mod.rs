@@ -3,36 +3,75 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#ownership");
 
+mod apply;
 mod arguments;
 mod binary;
+mod command;
 mod distribution;
+mod launch;
 mod local_source;
 mod model;
+mod options;
 mod process;
 mod remote;
 mod report;
-mod selection;
 mod source;
 mod store;
 
 use std::path::{Path, PathBuf};
 
 use anyhow::{Result, bail};
+
 use vibe_core::progress::Progress;
 
 use crate::cli::{InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
 
+use apply::apply;
 use arguments::{validate_install_args, validate_uninstall_args, validate_update_args};
 use report::render;
 
 use model::{
     ApplicationContext, ApplicationOperation, ApplicationProvenance, ApplicationRecord,
-    ApplicationSelection, ApplicationStatus, CONTEXT_PROTOCOL, ManagementEntry,
+    ApplicationSelection, ApplicationStatus, CONTEXT_PROTOCOL, InstallKind, ManagementEntry,
+    ManagementRuntime, UserLauncher,
 };
+use options::InstallChoice;
 use process::{dispatch, validate_management};
 use source::{ResolvedApplication, qualified_ref, resolve_global_application};
 use store::ApplicationStore;
+
+/// Inspect authored launch points using the currently installed application record.
+pub fn launcher_listing(package: &str, project_root: Option<&Path>) -> Result<serde_json::Value> {
+    launch::listing(package, project_root)
+}
+
+/// Run a named point from the current installed record and return its exit code.
+pub fn run_launcher(
+    package: &str,
+    launcher_id: &str,
+    extra_args: &[String],
+    project_root: Option<&Path>,
+) -> Result<i32> {
+    launch::run(package, launcher_id, extra_args, project_root)
+}
+
+/// List every package-authored installer without selecting or executing one.
+pub fn installer_listing(
+    package: &str,
+    registry: Option<&Path>,
+    embedded_root: Option<&Path>,
+    offline: bool,
+) -> Result<serde_json::Value> {
+    source::list_global_installer_options(
+        &settings_root()?,
+        registry,
+        embedded_root,
+        package,
+        offline,
+        &Progress::default(),
+    )
+}
 
 pub fn install(
     ctx: &output::Context,
@@ -48,11 +87,18 @@ pub fn install(
     let mut index = store.load()?;
     let spelling = &args.packages[0];
     let offline = root_offline || args.offline;
+    let choice = InstallChoice {
+        platform: args.platform.clone(),
+        arch: args.arch.clone(),
+        installer_id: args.installer.clone(),
+        interactive: !ctx.is_json() && !ctx.is_unattended() && console::user_attended(),
+    };
     let resolved = resolve_global_application(
         &settings,
         args.registry.as_deref(),
         embedded_root.as_deref(),
         spelling,
+        &choice,
         offline,
         &progress,
     )?;
@@ -72,6 +118,7 @@ pub fn install(
         offline,
         args.from_source,
         false,
+        args.force,
         prior,
         &progress,
     )?;
@@ -80,16 +127,24 @@ pub fn install(
         ApplicationRecord {
             application: applied.application.clone(),
             host_root: applied.host_root.clone(),
+            app_root: Some(applied.app_root.clone()),
             management: applied.management,
             status: ApplicationStatus::Ready,
             provenance: Some(applied.provenance.clone()),
             launchers: applied.launchers.clone(),
+            user_launchers: applied.user_launchers.clone(),
+            install_kind: Some(applied.install_kind),
+            selected_option_id: Some(applied.selected_option_id.clone()),
+            selected_platform: Some(applied.selected_platform.clone()),
         },
     );
     let recording = progress.task("Recording global application state");
     if let Err(error) = store.save(&index) {
         recording.fail("application state recording failed");
         if let Some(publication) = applied.publication.take() {
+            publication.rollback()?;
+        }
+        if let Some(publication) = applied.command_publication.take() {
             publication.rollback()?;
         }
         if let Some(suspended) = applied.suspended.take() {
@@ -99,6 +154,9 @@ pub fn install(
     }
     recording.finish();
     if let Some(publication) = applied.publication.take() {
+        publication.commit();
+    }
+    if let Some(publication) = applied.command_publication.take() {
         publication.commit();
     }
     if let Some(suspended) = applied.suspended.take() {
@@ -111,6 +169,7 @@ pub fn install(
         &applied.message,
         &applied.host_root,
         Some(&applied.provenance),
+        Some(applied.install_kind),
     )
 }
 
@@ -129,11 +188,36 @@ pub fn update(
     let store = ApplicationStore::open(&settings)?;
     let mut index = store.load()?;
     let prior = record_for_package(&index, &requested)?.clone();
+    let reuse_prior = args.platform.is_none() && args.arch.is_none() && args.installer.is_none();
+    let (prior_platform, prior_arch) = prior
+        .selected_platform
+        .as_deref()
+        .and_then(|value| value.split_once('/'))
+        .map_or((None, None), |(platform, arch)| {
+            (Some(platform.to_owned()), Some(arch.to_owned()))
+        });
+    let choice = InstallChoice {
+        platform: args
+            .platform
+            .clone()
+            .or_else(|| reuse_prior.then_some(prior_platform).flatten()),
+        arch: args
+            .arch
+            .clone()
+            .or_else(|| reuse_prior.then_some(prior_arch).flatten()),
+        installer_id: args.installer.clone().or_else(|| {
+            reuse_prior
+                .then(|| prior.selected_option_id.clone())
+                .flatten()
+        }),
+        interactive: !ctx.is_json() && !ctx.is_unattended() && console::user_attended(),
+    };
     let resolved = resolve_global_application(
         &settings,
         args.registry.as_deref(),
         embedded_root.as_deref(),
         spelling,
+        &choice,
         offline,
         &progress,
     )?;
@@ -151,6 +235,7 @@ pub fn update(
         offline,
         args.from_source,
         args.binary,
+        args.force,
         Some(&prior),
         &progress,
     )?;
@@ -159,16 +244,24 @@ pub fn update(
         ApplicationRecord {
             application: applied.application.clone(),
             host_root: applied.host_root.clone(),
+            app_root: Some(applied.app_root.clone()),
             management: applied.management,
             status: ApplicationStatus::Ready,
             provenance: Some(applied.provenance.clone()),
             launchers: applied.launchers.clone(),
+            user_launchers: applied.user_launchers.clone(),
+            install_kind: Some(applied.install_kind),
+            selected_option_id: Some(applied.selected_option_id.clone()),
+            selected_platform: Some(applied.selected_platform.clone()),
         },
     );
     let recording = progress.task("Recording global application state");
     if let Err(error) = store.save(&index) {
         recording.fail("application state recording failed");
         if let Some(publication) = applied.publication.take() {
+            publication.rollback()?;
+        }
+        if let Some(publication) = applied.command_publication.take() {
             publication.rollback()?;
         }
         if let Some(suspended) = applied.suspended.take() {
@@ -178,6 +271,9 @@ pub fn update(
     }
     recording.finish();
     if let Some(publication) = applied.publication.take() {
+        publication.commit();
+    }
+    if let Some(publication) = applied.command_publication.take() {
         publication.commit();
     }
     if let Some(suspended) = applied.suspended.take() {
@@ -190,6 +286,7 @@ pub fn update(
         &applied.message,
         &applied.host_root,
         Some(&applied.provenance),
+        Some(applied.install_kind),
     )
 }
 
@@ -213,11 +310,11 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
         }
     };
     if management.runtime == model::ManagementRuntime::Builtin {
-        let removal = progress.task("Removing binary application launchers");
-        let message = match binary::uninstall(&management) {
-            Ok(message) => {
+        let removal = progress.task("Preparing owned application removal");
+        let (message, removal_tx) = match binary::prepare_uninstall(&management, args.force) {
+            Ok(value) => {
                 removal.finish();
-                message
+                value
             }
             Err(error) => {
                 removal.fail("binary application removal failed");
@@ -234,9 +331,11 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
         let recording = progress.task("Recording global application state");
         if let Err(error) = store.save(&index) {
             recording.fail("application state recording failed");
+            removal_tx.rollback()?;
             return Err(error);
         }
         recording.finish();
+        removal_tx.commit()?;
         return render(
             ctx,
             "uninstall",
@@ -244,7 +343,38 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
             &message,
             &prior.host_root,
             prior.provenance.as_ref(),
+            prior.install_kind,
         );
+    }
+    if management.runtime == ManagementRuntime::Command {
+        let message = command::uninstall(
+            &management,
+            &prior.application.id,
+            ctx.is_json(),
+            args.force,
+        )?;
+        index.applications.insert(
+            prior.application.id.clone(),
+            ApplicationRecord {
+                status: ApplicationStatus::Undeployed,
+                ..prior.clone()
+            },
+        );
+        store.save(&index).map_err(|error| error.context(
+            "recording command uninstall failed after the external uninstaller ran; external payload state may have changed"
+        ))?;
+        return render(
+            ctx,
+            "uninstall",
+            &prior.application.id,
+            &message,
+            &prior.host_root,
+            prior.provenance.as_ref(),
+            prior.install_kind,
+        );
+    }
+    if args.force {
+        bail!("force uninstall is unsupported by the retained legacy manager");
     }
     let context = context(
         ApplicationOperation::Uninstall,
@@ -262,6 +392,7 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
     let reply = dispatch(
         &management.entry,
         current_dir,
+        management.runtime,
         &context,
         &context_path,
         &reply_path,
@@ -290,6 +421,7 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
         &reply.message,
         &context.host_root,
         prior.provenance.as_ref(),
+        prior.install_kind,
     )
 }
 
@@ -313,190 +445,6 @@ fn context(
         registry_root,
         vibe_executable,
         offline,
-    })
-}
-
-fn ready_management(host: &Path, reply: &model::ApplicationReply) -> Result<ManagementEntry> {
-    if reply.status != ApplicationStatus::Ready {
-        bail!(
-            "application installer did not report ready: {}",
-            reply.message
-        );
-    }
-    let management = reply
-        .management
-        .as_ref()
-        .ok_or_else(|| anyhow::anyhow!("ready application reply has no management entry"))?;
-    validate_management(host, management)
-}
-
-struct AppliedApplication {
-    application: model::ApplicationIdentity,
-    host_root: PathBuf,
-    management: ManagementEntry,
-    provenance: ApplicationProvenance,
-    message: String,
-    publication: Option<binary::BinaryPublication>,
-    launchers: Vec<model::ApplicationLauncherOwnership>,
-    suspended: Option<binary::SuspendedBinary>,
-}
-
-#[allow(clippy::too_many_arguments)]
-fn apply(
-    ctx: &output::Context,
-    store: &ApplicationStore,
-    settings: &Path,
-    host: PathBuf,
-    resolved: ResolvedApplication,
-    operation: ApplicationOperation,
-    offline: bool,
-    from_source: bool,
-    binary_only: bool,
-    prior: Option<&ApplicationRecord>,
-    progress: &Progress,
-) -> Result<AppliedApplication> {
-    let active_prior = prior.filter(|record| record.status == ApplicationStatus::Ready);
-    if let Some(selected) =
-        selection::select_binary(ctx, &resolved, from_source, binary_only, offline, progress)?
-    {
-        let target = selected.target;
-        std::fs::create_dir_all(&host)?;
-        let staging = host.join(format!(".distribution-pending-{}", std::process::id()));
-        if let Some(verified) =
-            distribution::fetch_and_verify(&target, &selected.application, &staging, progress)?
-        {
-            let application = verified.manifest.application.clone();
-            let provenance = ApplicationProvenance {
-                available_source: resolved.source.clone(),
-                selected: ApplicationSelection::Binary {
-                    commit: target.source_commit,
-                    source_tree: target.source_tree,
-                    os: target.os,
-                    arch: target.arch,
-                    asset_sha256: target.sha256,
-                },
-            };
-            let publishing = progress.task("Publishing verified application distribution");
-            let publication = match binary::publish(
-                settings,
-                &host,
-                verified,
-                active_prior.map(|record| &record.management),
-                active_prior.map_or(&[], |record| record.launchers.as_slice()),
-            ) {
-                Ok(publication) => {
-                    publishing.finish();
-                    publication
-                }
-                Err(error) => {
-                    publishing.fail("application publication failed");
-                    return Err(error);
-                }
-            };
-            let management = publication.management();
-            let launchers = publication.launchers();
-            return Ok(AppliedApplication {
-                application,
-                host_root: host,
-                management,
-                provenance,
-                message: "installed verified platform distribution".into(),
-                publication: Some(publication),
-                launchers,
-                suspended: None,
-            });
-        }
-    }
-    if binary_only {
-        bail!(
-            "no verified published binary is available for this application and platform; remove `--binary` to permit source fallback"
-        );
-    }
-    let resolved = resolved.materialize_source(settings, offline, progress)?;
-    let (installer_entry, installer_root, registry_root) = resolved.source_runtime()?;
-    let registry_root = Some(registry_root.to_path_buf());
-    let provider_operation = if active_prior
-        .is_some_and(|record| record.management.runtime == model::ManagementRuntime::Builtin)
-    {
-        ApplicationOperation::Install
-    } else {
-        operation
-    };
-    let context = context(
-        provider_operation,
-        resolved.application.clone(),
-        settings,
-        host,
-        registry_root,
-        offline,
-    )?;
-    let (context_path, reply_path) = store.request_paths()?;
-    let suspension = progress.task("Preparing source application transition");
-    let suspended = active_prior
-        .filter(|record| record.management.runtime == model::ManagementRuntime::Builtin)
-        .map(|record| binary::suspend(&record.host_root, &record.management))
-        .transpose();
-    let suspended = match suspended {
-        Ok(Some(suspended)) => {
-            suspension.finish();
-            Some(suspended)
-        }
-        Ok(None) => {
-            suspension.skip("no binary application transition required");
-            None
-        }
-        Err(error) => {
-            suspension.fail("application transition preparation failed");
-            return Err(error);
-        }
-    };
-    let reply = match dispatch(
-        installer_entry,
-        installer_root,
-        &context,
-        &context_path,
-        &reply_path,
-        progress,
-    ) {
-        Ok(reply) => reply,
-        Err(error) => {
-            if let Some(suspended) = suspended {
-                suspended.restore()?;
-            }
-            return Err(error);
-        }
-    };
-    let management = match ready_management(&context.host_root, &reply) {
-        Ok(management) => management,
-        Err(error) => {
-            if let Some(suspended) = suspended {
-                suspended.restore()?;
-            }
-            return Err(error);
-        }
-    };
-    let selected = ApplicationSelection::Source {
-        commit: resolved
-            .source
-            .as_ref()
-            .map(|value| value.resolved_commit.clone()),
-        source_tree: resolved
-            .source
-            .as_ref()
-            .map(|value| value.source_tree.clone()),
-    };
-    Ok(AppliedApplication {
-        application: context.application,
-        host_root: context.host_root,
-        management,
-        provenance: ApplicationProvenance {
-            available_source: resolved.source,
-            selected,
-        },
-        message: reply.message,
-        publication: None,
-        launchers: reply.launchers,
-        suspended,
     })
 }
 
@@ -555,7 +503,7 @@ fn record_for_package<'a>(
         })
         .ok_or_else(|| {
             anyhow::anyhow!(
-                "global application {group}/{} is not installed",
+                "not_installed: global application {group}/{} is not installed",
                 requested.name
             )
         })

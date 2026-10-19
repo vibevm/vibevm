@@ -10,6 +10,8 @@
 // of carrying its own copies — one type per name, emitted once.
 
 pub mod application;
+pub mod application_installer_options;
+pub mod application_launchers;
 pub mod application_report;
 pub mod artifact_record;
 pub mod boot_artifact_transaction;

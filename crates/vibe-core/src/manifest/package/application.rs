@@ -2,19 +2,134 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 
-use std::collections::BTreeSet;
+mod validation;
+
 use std::path::PathBuf;
 
+use serde::{Deserialize, Serialize};
 use specmark::spec;
 
 use crate::PackageRef;
-use crate::manifest::{declarant_path, is_portable_token};
 
 /// The first user-application runtime vocabulary.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
 pub enum ApplicationRuntime {
     Node,
+    Native,
+}
+
+/// One package-authored installation method. Selection belongs to the enclosing
+/// `[[installer_options]]` row; no platform command is inferred from its name.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "type", rename_all = "snake_case", deny_unknown_fields)]
+pub enum InstallerMethod {
+    Shell {
+        app_root: String,
+        install: String,
+        force_install: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        update: Option<String>,
+        uninstall: String,
+        force_uninstall: String,
+    },
+    Zip {
+        source: String,
+        sha256: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        payload_root: Option<PathBuf>,
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        runners: Vec<ArchiveRunnerDecl>,
+    },
+    TarGz {
+        source: String,
+        sha256: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        payload_root: Option<PathBuf>,
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        runners: Vec<ArchiveRunnerDecl>,
+    },
+    Exe {
+        source: String,
+        sha256: String,
+        app_root: String,
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        arguments: Vec<String>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        force_arguments: Option<Vec<String>>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        uninstall: Option<String>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        force_uninstall: Option<String>,
+    },
+    Msi {
+        source: String,
+        sha256: String,
+        app_root: String,
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        arguments: Vec<String>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        force_arguments: Option<Vec<String>>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        uninstall: Option<String>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        force_uninstall: Option<String>,
+    },
+}
+
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ArchiveRunnerDecl {
+    pub path: PathBuf,
+    pub name: String,
+}
+
+/// One user-facing entry of an installed application. Paths remain templates
+/// until launch, when the installed payload and optional project are known.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LauncherDecl {
+    pub id: String,
+    pub name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    pub executable: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub args: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub working_directory: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<String>,
+    #[serde(default)]
+    pub terminal: bool,
+    #[serde(default)]
+    pub default: bool,
+}
+
+/// A named choice for one platform and CPU architecture. Multiple choices
+/// may target the same pair; IDs distinguish them for selection and updates.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct InstallerOptionDecl {
+    pub id: String,
+    pub name: String,
+    pub platform: String,
+    pub platform_name: String,
+    pub arch: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub arch_name: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pre_install: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub post_install: Option<String>,
+    pub installation: InstallerMethod,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub launchers: Vec<LauncherDecl>,
 }
 
 /// Stable release-index locator for platform application distributions.
@@ -52,143 +167,9 @@ pub enum ApplicationSourceKind {
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
 pub struct ApplicationDecl {
     pub id: String,
-    pub installer_package: PackageRef,
-    pub runtime: ApplicationRuntime,
-    pub entry: PathBuf,
+    pub installer_package: Option<PackageRef>,
+    pub runtime: Option<ApplicationRuntime>,
+    pub entry: Option<PathBuf>,
     pub commands: Vec<String>,
     pub distribution: Option<ApplicationDistributionDecl>,
-}
-
-impl ApplicationDecl {
-    pub(crate) fn validate(&self) -> Result<(), String> {
-        if !is_portable_token(&self.id) {
-            return Err("[application].id must be a portable lowercase token".into());
-        }
-        if self.installer_package.group.is_none() || !self.installer_package.version.is_exact_pin()
-        {
-            return Err(
-                "[application].installer_package must be fully qualified and exactly pinned".into(),
-            );
-        }
-        declarant_path(&self.entry).map_err(|fault| {
-            format!(
-                "[application].entry must be a portable provider-relative file path: {}",
-                fault.reason()
-            )
-        })?;
-        if self.commands.is_empty() {
-            return Err("[application].commands must be nonempty".into());
-        }
-        let mut seen = BTreeSet::new();
-        for command in &self.commands {
-            if !is_portable_token(command) {
-                return Err(format!(
-                    "[application].commands value `{command}` is not a portable lowercase token"
-                ));
-            }
-            if !seen.insert(command) {
-                return Err(format!(
-                    "[application].commands contains duplicate `{command}`"
-                ));
-            }
-        }
-        if let Some(distribution) = &self.distribution {
-            distribution.validate()?;
-        }
-        Ok(())
-    }
-}
-
-impl ApplicationDistributionDecl {
-    fn validate(&self) -> Result<(), String> {
-        if !valid_repository(&self.repository) {
-            return Err("[application.distribution].repository must be owner/name".into());
-        }
-        if !valid_release_token(&self.release_tag) {
-            return Err(
-                "[application.distribution].release_tag must be a portable release token".into(),
-            );
-        }
-        declarant_path(PathBuf::from(&self.index_asset).as_path()).map_err(|fault| {
-            format!(
-                "[application.distribution].index_asset must be one portable file name: {}",
-                fault.reason()
-            )
-        })?;
-        if PathBuf::from(&self.index_asset).components().count() != 1 {
-            return Err(
-                "[application.distribution].index_asset must be one portable file name".into(),
-            );
-        }
-        Ok(())
-    }
-}
-
-impl ApplicationSourceDecl {
-    pub(crate) fn validate(&self) -> Result<(), String> {
-        if !credential_free_https(&self.url) {
-            return Err(
-                "[application_source].url must be credential-free HTTPS without query or fragment"
-                    .into(),
-            );
-        }
-        if !self.tracked_ref.starts_with("refs/heads/") || !valid_git_ref(&self.tracked_ref) {
-            return Err(
-                "[application_source].tracked_ref must be an explicit safe refs/heads/... name"
-                    .into(),
-            );
-        }
-        declarant_path(&self.registry_path).map_err(|fault| {
-            format!(
-                "[application_source].registry_path must be portable and relative: {}",
-                fault.reason()
-            )
-        })?;
-        Ok(())
-    }
-}
-
-fn valid_repository(value: &str) -> bool {
-    let mut parts = value.split('/');
-    matches!((parts.next(), parts.next(), parts.next()), (Some(owner), Some(repo), None)
-        if is_slug(owner) && is_slug(repo))
-}
-
-fn is_slug(value: &str) -> bool {
-    !value.is_empty()
-        && value.len() <= 100
-        && value
-            .bytes()
-            .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.'))
-}
-
-fn valid_release_token(value: &str) -> bool {
-    !value.is_empty()
-        && value.len() <= 128
-        && value
-            .bytes()
-            .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.'))
-}
-
-fn credential_free_https(value: &str) -> bool {
-    let Some(rest) = value.strip_prefix("https://") else {
-        return false;
-    };
-    let authority = rest.split('/').next().unwrap_or_default();
-    value.trim() == value
-        && !authority.is_empty()
-        && !authority.contains('@')
-        && !value.contains(['?', '#', '\\'])
-        && !value.bytes().any(|b| b.is_ascii_whitespace())
-}
-
-fn valid_git_ref(value: &str) -> bool {
-    !value.ends_with('/')
-        && !value.ends_with('.')
-        && !value.contains("..")
-        && !value.contains("@{")
-        && !value.contains("//")
-        && !value
-            .chars()
-            .any(|ch| ch.is_control() || ch.is_whitespace() || "~^:?*[\\".contains(ch))
 }

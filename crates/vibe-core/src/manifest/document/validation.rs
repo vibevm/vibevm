@@ -56,6 +56,9 @@ impl Manifest {
             if self.application.is_some() {
                 offenders.push("[application]");
             }
+            if !self.installer_options.is_empty() {
+                offenders.push("[[installer_options]]");
+            }
             if self.application_source.is_some() {
                 offenders.push("[application_source]");
             }
@@ -118,6 +121,111 @@ impl Manifest {
             application
                 .validate()
                 .map_err(|reason| Error::InvalidManifest { reason })?;
+            if application.installer_package.is_some() && application.commands.is_empty() {
+                return Err(Error::InvalidManifest {
+                    reason: "[application].commands must be nonempty for a legacy installer".into(),
+                });
+            }
+        }
+        if !self.installer_options.is_empty() && self.application.is_none() {
+            return Err(Error::InvalidManifest {
+                reason: "[[installer_options]] requires [application] identity".into(),
+            });
+        }
+        if !self.installer_options.is_empty()
+            && self
+                .package
+                .as_ref()
+                .is_none_or(|package| package.kind != crate::PackageKind::App)
+        {
+            return Err(Error::InvalidManifest {
+                reason: "[[installer_options]] requires [package] kind = app".into(),
+            });
+        }
+        if self
+            .application
+            .as_ref()
+            .is_some_and(|application| application.installer_package.is_some())
+            && !self.installer_options.is_empty()
+        {
+            return Err(Error::InvalidManifest {
+                reason: "legacy [application] installer fields cannot coexist with [[installer_options]]".into(),
+            });
+        }
+        if self
+            .application
+            .as_ref()
+            .is_some_and(|application| application.installer_package.is_none())
+            && self.installer_options.is_empty()
+            && self.application_source.is_none()
+        {
+            return Err(Error::InvalidManifest {
+                reason: "[application] requires nonempty [[installer_options]]".into(),
+            });
+        }
+        let mut option_ids = std::collections::BTreeSet::new();
+        let mut platform_names = std::collections::BTreeMap::<&str, &str>::new();
+        let mut arch_names = std::collections::BTreeMap::<(&str, &str), &str>::new();
+        for option in &self.installer_options {
+            option
+                .validate()
+                .map_err(|reason| Error::InvalidManifest { reason })?;
+            if !option_ids.insert(option.id.as_str()) {
+                return Err(Error::InvalidManifest {
+                    reason: format!("duplicate [[installer_options]].id `{}`", option.id),
+                });
+            }
+            if let Some(name) = platform_names.insert(&option.platform, &option.platform_name)
+                && name != option.platform_name.as_str()
+            {
+                return Err(Error::InvalidManifest {
+                    reason: format!(
+                        "[[installer_options]] platform `{}` has inconsistent platform_name",
+                        option.platform
+                    ),
+                });
+            }
+            if let Some(name) = &option.arch_name {
+                let key = (option.platform.as_str(), option.arch.as_str());
+                if let Some(existing) = arch_names.insert(key, name.as_str())
+                    && existing != name
+                {
+                    return Err(Error::InvalidManifest {
+                        reason: format!(
+                            "[[installer_options]] platform `{}` arch `{}` has inconsistent arch_name",
+                            option.platform, option.arch
+                        ),
+                    });
+                }
+            }
+            let mut launcher_ids = std::collections::BTreeSet::new();
+            let mut has_default = false;
+            for launcher in &option.launchers {
+                launcher
+                    .validate()
+                    .map_err(|reason| Error::InvalidManifest {
+                        reason: format!("[[installer_options]] `{}`: {reason}", option.id),
+                    })?;
+                if !launcher_ids.insert(launcher.id.as_str()) {
+                    return Err(Error::InvalidManifest {
+                        reason: format!(
+                            "[[installer_options]] `{}` has duplicate launcher id `{}`",
+                            option.id, launcher.id
+                        ),
+                    });
+                }
+                if launcher.default {
+                    if has_default {
+                        return Err(Error::InvalidManifest {
+                            reason: format!(
+                                "[[installer_options]] `{}` has more than one default launcher",
+                                option.id
+                            ),
+                        });
+                    }
+                    has_default = true;
+                }
+            }
         }
         if let Some(source) = &self.application_source {
             source
