@@ -8,7 +8,7 @@ include!(concat!(
 ));
 
 #[test]
-fn standard_command_constructor_exposes_exact_retained_history_for_all_families() {
+pub(super) fn standard_command_constructor_exposes_exact_retained_history_for_all_families() {
     for family in [
         "commonmark",
         "xml-data",

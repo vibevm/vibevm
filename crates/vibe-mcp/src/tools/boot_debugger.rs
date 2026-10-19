@@ -215,7 +215,7 @@ mod m_06_d_2_cases {
         machine::e1::operation_envelope as env,
     };
     #[test]
-    fn ordinary_mcp_route_prepares_local_source_and_reads_retained_bytes() {
+    pub(super) fn ordinary_mcp_route_prepares_local_source_and_reads_retained_bytes() {
         let tool = crate::tools::default_tools()
             .into_iter()
             .find(|tool| tool.descriptor().name == "boot_debugger")
@@ -378,6 +378,10 @@ mod m_06_d_2_cases {
             assert_eq!(effects, env::BodyResultEffectState::NoEffects);
             assert_eq!(retained, first);
             let (effects, _) = call(q::Command::Inspect(Box::new(q::CommandInspect {
+                snapshot_id: id.clone(),
+            })));
+            assert_eq!(effects, env::BodyResultEffectState::NoEffects);
+            let (effects, _) = call(q::Command::Cost(Box::new(q::CommandCost {
                 snapshot_id: id.clone(),
             })));
             assert_eq!(effects, env::BodyResultEffectState::NoEffects);
@@ -561,3 +565,121 @@ mod m_06_e_2_cases {
 
 #[cfg(test)]
 mod m_10_d_1_cases;
+
+#[cfg(test)]
+mod m_06_f_1_cases {
+    use super::*;
+    use vibe_orchestrator::machine_operation::boot_debugger::input;
+    use vibe_wire::generated::{
+        boot_debugger::e1::{request as q, result as r},
+        machine::e1::operation_envelope as env,
+    };
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../fixtures/next/derivatives/inspection_route_fixture.rs"
+    ));
+
+    #[test]
+    fn revoked_preparation_provider_retains_captured_data_without_execution() {
+        super::m_06_d_2_cases::ordinary_mcp_route_prepares_local_source_and_reads_retained_bytes();
+    }
+
+    #[test]
+    fn default_registered_host_retains_full_derivative_inspection_after_provider_removal() {
+        let f = InspectionFixture::new("vibe-spec");
+        let ctx = ServerContext::with_store_root(
+            f.source.output.root_path(),
+            f.source._home.path().join("unused"),
+        )
+        .with_source_derivatives(f.catalog.clone());
+        let server = std::cell::RefCell::new(crate::Server::new(
+            crate::MemoryTransport::with_input(""),
+            ctx,
+        ));
+        let rpc = |arguments: Value| {
+            let mut server = server.borrow_mut();
+            server.transport = crate::MemoryTransport::with_input(format!(
+                "{}\n",
+                json!({"jsonrpc":"2.0", "id":1, "method":"tools/call",
+                    "params":{"name":"boot_debugger", "arguments":arguments}})
+            ));
+            server.run().unwrap();
+            let output: Value = serde_json::from_str(&server.transport.take_output()).unwrap();
+            assert_eq!(output["result"]["isError"], false, "{output}");
+            let envelope: env::OperationEnvelope =
+                serde_json::from_value(output["result"]["structuredContent"].clone()).unwrap();
+            let env::Body::Result(body) = envelope.body else {
+                panic!()
+            };
+            assert_eq!(body.effect_state, env::BodyResultEffectState::NoEffects);
+            serde_json::from_str::<r::Result>(body.payload_json.as_deref().unwrap()).unwrap()
+        };
+        let initial = rpc(json!({}));
+        let call = |command| {
+            rpc(serde_json::to_value(input(&q::Request {
+                schema: 1,
+                context_id: initial.context_id.clone(),
+                command,
+            }))
+            .unwrap())
+        };
+        let prepared = call(q::Command::Scenario(Box::new(q::CommandScenario {
+            snapshot_id: initial.snapshot_id.unwrap(),
+            target: "os:linux".into(),
+            draft_json: "{\"baseline_selections\":{\"features\":[],\"no_defaults\":false,\"all_features\":false,\"configuration\":null},\"edits\":[]}".into(),
+        })));
+        let r::Body::Preview(prepared) = prepared.body else {
+            panic!()
+        };
+        assert_eq!(prepared.status, r::BodyPreviewStatus::Complete);
+        let id = prepared.produced_snapshot_id.unwrap();
+        let inspect = || {
+            call(q::Command::Inspect(Box::new(q::CommandInspect {
+                snapshot_id: id.clone(),
+            })))
+        };
+        let retained = inspect();
+        let r::Body::Inspect(view) = &retained.body else {
+            panic!()
+        };
+        assert!(view.compiler_carrier_json.is_some());
+        assert!(view.sources.iter().any(|s| s.derivative_read.is_some()));
+        fs::remove_dir_all(f.source.output.root_path().join("vibevm/vibepacks")).unwrap();
+        fs::remove_dir_all(f.source.base.root_path()).unwrap();
+        fs::remove_dir_all(f.source.local.root_path()).unwrap();
+        let before = inspection_files(f.source._home.path());
+        assert_eq!(inspect(), retained);
+        let cost = call(q::Command::Cost(Box::new(q::CommandCost {
+            snapshot_id: id.clone(),
+        })));
+        let r::Body::Cost(cost) = cost.body else {
+            panic!()
+        };
+        assert!(cost.raw_bytes.exact.is_some());
+        assert!(cost.tokens.unavailable.is_some());
+        for resource in &view.resources {
+            let mut offset = "0".to_string();
+            let mut bytes = 0;
+            loop {
+                let result = call(q::Command::Chunk(Box::new(q::CommandChunk {
+                    snapshot_id: id.clone(),
+                    resource_id: resource.resource_id.clone(),
+                    filter: q::CommandChunkFilter::Raw,
+                    offset,
+                    limit: 7,
+                })));
+                let r::Body::Chunk(chunk) = result.body else {
+                    panic!()
+                };
+                bytes += chunk.hex_bytes.len() / 2;
+                if let Some(next) = chunk.next_offset {
+                    offset = next;
+                } else {
+                    assert_eq!(bytes.to_string(), chunk.total);
+                    break;
+                }
+            }
+        }
+        assert_eq!(inspection_files(f.source._home.path()), before);
+    }
+}

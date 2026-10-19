@@ -37,7 +37,7 @@ impl Service for RouteService<'_> {
     }
 }
 
-const HELP: &str = "Boot inspector — commands (row and snapshot ordinals start at 0):\nshow | next | prev | parent | child | select ROW | detail | source [BYTE_OFFSET]\nrefresh | snapshot N | compare BEFORE AFTER | scenario OS_TARGET DRAFT_JSON | preview SELECTORS_JSON | help | quit\nScenario drafts contain baseline_selections (features, no_defaults, all_features, configuration) and edits.\nEdit actions: add (package, loading), remove (coordinate), toggle (package, enabled, loading), reconfigure (selections).\nLoading is null or a legal link value; configuration is null or an explicit consumer request.\nPreview selectors: scenario_id, expected_baseline, expected_candidate, expected_catalog, loading_overrides.\nSource displays captured emitted bytes, not authored source coordinates.\n";
+const HELP: &str = "Boot inspector — commands (row and snapshot ordinals start at 0):\nshow | next | prev | parent | child | select ROW | detail | why | inspect | cost | source [BYTE_OFFSET] | resource ORDINAL [BYTE_OFFSET]\nrefresh | snapshot N | compare BEFORE AFTER | scenario OS_TARGET DRAFT_JSON | preview SELECTORS_JSON | help | quit\nScenario drafts contain baseline_selections (features, no_defaults, all_features, configuration) and edits.\nEdit actions: add (package, loading), remove (coordinate), toggle (package, enabled, loading), reconfigure (selections).\nLoading is null or a legal link value; configuration is null or an explicit consumer request.\nPreview selectors: scenario_id, expected_baseline, expected_candidate, expected_catalog, loading_overrides.\nInspect exposes the complete resource inventory and compiler carrier. Resource ordinals follow that inventory.\nSource prefers captured authored bytes when mapped; chunk basis distinguishes original bytes and selected projections.\n";
 
 fn parse(line: &str) -> std::result::Result<Action, String> {
     let line = line.trim();
@@ -73,6 +73,16 @@ fn parse(line: &str) -> std::result::Result<Action, String> {
         ["snapshot", n] => Action::Snapshot(ordinal(n)?),
         ["refresh"] => Action::Refresh,
         ["detail"] => Action::Detail,
+        ["why"] => Action::Detail,
+        ["inspect"] => Action::Inspect,
+        ["cost"] => Action::Cost,
+        ["resource", n] => Action::Resource(ordinal(n)?, 0),
+        ["resource", n, offset] => Action::Resource(
+            ordinal(n)?,
+            offset
+                .parse()
+                .map_err(|_| "expected captured-byte offset")?,
+        ),
         ["source"] => Action::Source(0),
         ["source", n] => Action::Source(n.parse().map_err(|_| "expected original-byte offset")?),
         ["compare", a, b] => Action::Compare(ordinal(a)?, ordinal(b)?),
