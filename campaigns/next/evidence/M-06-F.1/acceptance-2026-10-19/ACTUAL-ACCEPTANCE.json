@@ -1,0 +1,116 @@
+{
+  "intake": "intake.m06.f1.original-scope.1",
+  "needs": [],
+  "accepted": {
+    "acceptance_id": "intake-acceptance:31e53d37d2f6e3bb4d8abf323e9a9546ad7d3e0eb58c41ec615eef39d1979b56",
+    "candidate_id": "managed-result.f81216904c7960f5f93f3891ac49ec7a733ea57e991914ed25c156a884178d75",
+    "contract_version": 1,
+    "evidence_ids": [
+      "intake-evidence:31e53d37d2f6e3bb4d8abf323e9a9546ad7d3e0eb58c41ec615eef39d1979b56"
+    ],
+    "generation": 1,
+    "integration_acceptance_ids": [],
+    "obligation_ids": [
+      "obligation.m06"
+    ],
+    "outcome_id": "outcome.vibevm-next.complete",
+    "revision": 1,
+    "stage_acceptance_id": "intake-stage:31e53d37d2f6e3bb4d8abf323e9a9546ad7d3e0eb58c41ec615eef39d1979b56",
+    "summary": "Root independent source review supports original F1 completion:9paths,8reported current selectedpasses including2reused fixture bodies; literal fmtfailure preserved.",
+    "work_id": "work.m06.f1"
+  },
+  "work": {
+    "acceptance": [
+      "Equivalent requests agree on structured nodes/metrics/diagnostics across surfaces.",
+      "Whole authorized structure is reachable without human-only hidden fields."
+    ],
+    "active_job": null,
+    "depends_on": [
+      "work.m06.e1",
+      "work.m06.e2",
+      "work.m10.d2"
+    ],
+    "kind": "atom",
+    "order": 521,
+    "parent_id": "work.m06",
+    "required_stage": "functional",
+    "revision": 7,
+    "state": "accepted",
+    "title": "Integrate derivatives and full debugger surface parity",
+    "validation_generation": 1,
+    "work_id": "work.m06.f1",
+    "work_type": "change"
+  },
+  "source_commit": "e9831024c",
+  "source_review_commit": "e8c6bafc0",
+  "product_steps": [
+    {
+      "step": "claim:verify.m06.f1.01",
+      "receipt": 101124
+    },
+    {
+      "step": "result:verify.m06.f1.01",
+      "receipt": 101219
+    },
+    {
+      "step": "claim:verify.m06.f1.03",
+      "receipt": 101353
+    },
+    {
+      "step": "result:verify.m06.f1.03",
+      "receipt": 101464
+    },
+    {
+      "step": "claim:verify.m06.f1.05",
+      "receipt": 101598
+    },
+    {
+      "step": "result:verify.m06.f1.05",
+      "receipt": 101709
+    },
+    {
+      "step": "claim:verify.m06.f1.06",
+      "receipt": 101843
+    },
+    {
+      "step": "result:verify.m06.f1.06",
+      "receipt": 101954
+    },
+    {
+      "step": "claim:verify.m06.f1.07",
+      "receipt": 102088
+    },
+    {
+      "step": "result:verify.m06.f1.07",
+      "receipt": 102199
+    },
+    {
+      "step": "claim:intake-safety:619296b4440ac3674a7febfe6e2013ed455ee1a66e77097800147c58b666274d",
+      "receipt": 102333
+    },
+    {
+      "step": "result:intake-safety:619296b4440ac3674a7febfe6e2013ed455ee1a66e77097800147c58b666274d",
+      "receipt": 102428
+    },
+    {
+      "step": "safe-state",
+      "receipt": 102539
+    },
+    {
+      "step": "review",
+      "receipt": 102650
+    },
+    {
+      "step": "evidence",
+      "receipt": 102763
+    },
+    {
+      "step": "stage",
+      "receipt": 102874
+    },
+    {
+      "step": "work",
+      "receipt": 102969
+    }
+  ]
+}
