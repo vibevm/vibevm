@@ -1,0 +1,46 @@
+{
+  "source_head": "4d45cf26ae8ca1d901784c0f534c7db7846673b3",
+  "files": [
+    {
+      "path": "crates/vibe-workspace/src/lib.rs",
+      "sha256": "89f39c5fb10eac03cd3251c77bc0b9d81f212cae0669429d1b077d701c02d231",
+      "bytes": 14615
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+      "sha256": "c4cdc8187529240b84164e9baccc5881759f6db53778b0325ce2a643049fbd42",
+      "bytes": 21023
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff/place.rs",
+      "sha256": "02fefea3d77027200b6fc53eef53308ca63a8813a67a3f9607411764a1e98b40",
+      "bytes": 6144
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+      "sha256": "162f215bc75dd7aadcf8ac7209d355318494ad592710e15cdb70507108c2a112",
+      "bytes": 20566
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/m_06_g_4_cases.rs",
+      "sha256": "276920314a3fd928f8b073401815adefcf1487f85628392cc0b5e11ffef89f00",
+      "bytes": 9045
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff/path_limits.rs",
+      "sha256": "29533bddcfecd8e847b72da366ce1ab0896eab4ab2639503c5188515091e0f6b",
+      "bytes": 3085
+    },
+    {
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+      "sha256": "ba061154007e3316798e29bc7d5c725ba47f52a1fd2e0641a34e156a2a8a2b00",
+      "bytes": 48458
+    }
+  ],
+  "candidate": "managed-result.e49acf8dafa2590c3d504ba3b4df5a2fa7080634150379e7ee3b9397580fcf7d",
+  "report_sha256": "0b1253d03cf68774cc987a8d817e637ba47dd5613089acfa1fe4be9beb25c7ee",
+  "report_bytes": 52850,
+  "patch_sha256": "1399cf4a5737ebc9946abfbff23b9a3ef833392c10c6f0192b45376db39acf07",
+  "patch_bytes": 18254,
+  "qualified_checks": "3 Linux selected cases passed; native Windows OPEN; global task NOT accepted"
+}

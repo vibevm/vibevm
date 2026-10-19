@@ -1,0 +1,68 @@
+{
+  "verdict": "useful_partial_source_clear_full_native_task_OPEN",
+  "p1": 0,
+  "p2": 0,
+  "findings": [],
+  "full_original_task_complete": false,
+  "canonical_acceptance": false,
+  "source_head": "4d45cf26ae8ca1d901784c0f534c7db7846673b3",
+  "source_hashes": {
+    "crates/vibe-workspace/src/lib.rs": "89f39c5fb10eac03cd3251c77bc0b9d81f212cae0669429d1b077d701c02d231",
+    "crates/vibe-workspace/src/vibedeps/slot_diff.rs": "c4cdc8187529240b84164e9baccc5881759f6db53778b0325ce2a643049fbd42",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/place.rs": "02fefea3d77027200b6fc53eef53308ca63a8813a67a3f9607411764a1e98b40",
+    "crates/vibe-workspace/src/vibedeps/slot_record.rs": "162f215bc75dd7aadcf8ac7209d355318494ad592710e15cdb70507108c2a112",
+    "crates/vibe-workspace/src/vibedeps/m_06_g_4_cases.rs": "276920314a3fd928f8b073401815adefcf1487f85628392cc0b5e11ffef89f00",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/path_limits.rs": "29533bddcfecd8e847b72da366ce1ab0896eab4ab2639503c5188515091e0f6b",
+    "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml": "ba061154007e3316798e29bc7d5c725ba47f52a1fd2e0641a34e156a2a8a2b00"
+  },
+  "source_drift": [],
+  "source_freeze_sha256": "210a1e4b6d83c4f3b4ec35716df54fb6b1ebb875dde0e47da49add392c9c2102",
+  "artifact_verification": {
+    "report": {
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/0b1253d03cf68774cc987a8d817e637ba47dd5613089acfa1fe4be9beb25c7ee",
+      "sha256": "0b1253d03cf68774cc987a8d817e637ba47dd5613089acfa1fe4be9beb25c7ee",
+      "bytes": 52850
+    },
+    "patch": {
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/1399cf4a5737ebc9946abfbff23b9a3ef833392c10c6f0192b45376db39acf07",
+      "sha256": "1399cf4a5737ebc9946abfbff23b9a3ef833392c10c6f0192b45376db39acf07",
+      "bytes": 18254
+    }
+  },
+  "patch_paths_match_freeze": true,
+  "current_changed_paths_match_freeze": true,
+  "reverse_patch_check_exit": 0,
+  "spec_HEAD_bytes_preserved_except_additive_three_lines": true,
+  "reported_checks": {
+    "Linux_selected_passed": 3,
+    "failed": 0,
+    "backend": "existing dev Cranelift;no override",
+    "native_Windows": "OPEN;cfg excluded not passed",
+    "macOS": "not executed",
+    "scoped_Rust_fmt": "exit0;6 files",
+    "diff_check": "exit0",
+    "initial_fmt_failure_retained": true,
+    "codegen_specmap": "no actual schema/generator/source-index impact found;not run"
+  },
+  "full_task_gaps": [
+    "native Windows long-root legal positive",
+    "native Windows unsupported/new-slot pre-effect oracle",
+    "exact effective host/API/component limit and numeric shortening remedy",
+    "Windows/macOS branches not executed/cross-compiled"
+  ],
+  "compatibility_risks": [
+    "tempfile suffix6\u21928 ASCII characters;2extra near-limit characters",
+    "O(files) extra metadata probes;no performance measurement/claim",
+    "read-only probes cannot guarantee later I/O or universal atomic refusal"
+  ],
+  "staging_semantics": "tempfile3.27 rand_bytes8 yields8 alphanumeric filename characters,not8 cryptographic bytes;probes match",
+  "review_actions": {
+    "tests": 0,
+    "builds": 0,
+    "API_runtime_model_process_actions": 0,
+    "git_mutations": 0,
+    "product_writes": 0,
+    "delegates": 0
+  },
+  "report_sha256": "9415de902c53956cd34b1d938236b8c621bc0412ac6975042980914df27d153b"
+}

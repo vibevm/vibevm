@@ -83,6 +83,7 @@ pub(super) fn place_strict_recorded(
 fn staged_file(parent: &Path) -> Result<tempfile::NamedTempFile, WorkspaceError> {
     tempfile::Builder::new()
         .prefix(".vibe-place-")
+        .rand_bytes(super::path_limits::STAGING_RANDOM_BYTES)
         .tempfile_in(parent)
         .map_err(|error| io_err(parent, error))
 }
