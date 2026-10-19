@@ -18,6 +18,9 @@ pub enum Action {
     Snapshot(usize),
     Refresh,
     Detail,
+    Inspect,
+    Cost,
+    Resource(usize, u64),
     Source(u64),
     Compare(usize, usize),
     Show,
@@ -107,6 +110,26 @@ impl<S: Service> Viewer<S> {
             }
             Action::Preview(request) => q::Command::Preview(Box::new(request)),
             Action::Show => return Ok(None),
+            Action::Inspect => q::Command::Inspect(Box::new(q::CommandInspect {
+                snapshot_id: self.current.capture_id.clone(),
+            })),
+            Action::Cost => q::Command::Cost(Box::new(q::CommandCost {
+                snapshot_id: self.current.capture_id.clone(),
+            })),
+            Action::Resource(index, offset) => {
+                let resource = self
+                    .current
+                    .resources
+                    .get(index)
+                    .ok_or("resource ordinal outside captured inventory")?;
+                q::Command::Chunk(Box::new(q::CommandChunk {
+                    snapshot_id: self.current.capture_id.clone(),
+                    resource_id: resource.resource_id.clone(),
+                    filter: q::CommandChunkFilter::Raw,
+                    offset: offset.to_string(),
+                    limit: 2048,
+                }))
+            }
             Action::Select(i) => {
                 self.select(i)?;
                 return Ok(None);
