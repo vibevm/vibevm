@@ -1,4 +1,6 @@
 {
-  "protocol": "vibe-user-applications/1",
-  "applications": {}
+  "protocol": "vibe-user-applications/2",
+  "revision": "00000000000000000000000000000001",
+  "applications": {},
+  "alternatives": {}
 }
