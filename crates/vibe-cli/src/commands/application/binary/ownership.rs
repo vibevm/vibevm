@@ -4,6 +4,30 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#binary-ownership
 
 use super::*;
 
+/// The public slot containing either a legacy direct host or a versioned
+/// provider host at slot/group/name/version.
+pub(super) fn slot_root_for_host(host: &Path) -> Result<PathBuf> {
+    let parent = host
+        .parent()
+        .ok_or_else(|| anyhow::anyhow!("application host has no parent"))?;
+    if parent.file_name().is_some_and(|name| name == "apps") {
+        return Ok(host.to_path_buf());
+    }
+    let group = parent
+        .parent()
+        .ok_or_else(|| anyhow::anyhow!("application host has no group"))?;
+    let slot = group
+        .parent()
+        .ok_or_else(|| anyhow::anyhow!("application host has no slot"))?;
+    if slot
+        .parent()
+        .is_none_or(|apps| apps.file_name().is_none_or(|name| name != "apps"))
+    {
+        bail!("application host is outside the slot installation layout");
+    }
+    Ok(slot.to_path_buf())
+}
+
 pub(super) fn verify_generation(root: &Path, manifest: &BundleManifest) -> Result<()> {
     for file in &manifest.files {
         let path = root.join(&file.path);
@@ -69,12 +93,35 @@ pub(super) fn read_management(entry: &ManagementEntry) -> Result<BinaryManagemen
     let host = management_dir
         .parent()
         .ok_or_else(|| anyhow::anyhow!("binary management entry has no host"))?;
-    let apps = host
+    let direct_apps = host
         .parent()
-        .filter(|path| path.file_name().is_some_and(|name| name == "apps"))
-        .ok_or_else(|| {
-            anyhow::anyhow!("binary management host is outside settings applications")
-        })?;
+        .filter(|path| path.file_name().is_some_and(|name| name == "apps"));
+    let (apps, slot) = if let Some(apps) = direct_apps {
+        (apps, host)
+    } else {
+        let package_name = host
+            .parent()
+            .ok_or_else(|| anyhow::anyhow!("binary host has no package name parent"))?;
+        let group = package_name
+            .parent()
+            .ok_or_else(|| anyhow::anyhow!("binary host has no package group parent"))?;
+        let slot = group
+            .parent()
+            .ok_or_else(|| anyhow::anyhow!("binary host has no slot parent"))?;
+        let apps = slot
+            .parent()
+            .filter(|path| path.file_name().is_some_and(|name| name == "apps"))
+            .ok_or_else(|| {
+                anyhow::anyhow!("binary management host is outside settings applications")
+            })?;
+        for directory in [slot, group, package_name] {
+            let metadata = fs::symlink_metadata(directory)?;
+            if metadata.file_type().is_symlink() || !metadata.is_dir() {
+                bail!("binary application package path contains a link or non-directory");
+            }
+        }
+        (apps, slot)
+    };
     let opt = apps
         .parent()
         .filter(|path| path.file_name().is_some_and(|name| name == "opt"))
@@ -96,7 +143,7 @@ pub(super) fn read_management(entry: &ManagementEntry) -> Result<BinaryManagemen
         || management_dir
             .file_name()
             .is_none_or(|name| name != "management")
-        || host.file_name().and_then(|name| name.to_str()) != Some(value.application_id.as_str())
+        || slot.file_name().and_then(|name| name.to_str()) != Some(value.application_id.as_str())
         || value.payload_root.parent() != Some(&host.join("generations"))
         || value.bundle_entry.parent().is_none()
         || !value.bundle_entry.starts_with(&value.payload_root)

@@ -4,7 +4,7 @@
 use super::*;
 
 #[test]
-fn verified_bundle_installs_both_tools_source_shims_and_force_refresh() {
+fn verified_bundle_installs_all_tools_source_shims_and_force_refresh() {
     let temp = tempfile::tempdir().unwrap();
     let source = source_zip(None);
     let fixture = write_bundle(temp.path(), b"vibe-binary", b"vibe-binary", &source, false);
@@ -27,6 +27,10 @@ fn verified_bundle_installs_both_tools_source_shims_and_force_refresh() {
     assert_eq!(
         std::fs::read(store.index_binary_path(&first.record.version_id(), 1)).unwrap(),
         b"index-binary"
+    );
+    assert_eq!(
+        std::fs::read(store.app_proxy_binary_path(&first.record.version_id(), 1)).unwrap(),
+        b"proxy-binary"
     );
     assert!(
         store
@@ -115,7 +119,7 @@ fn verified_bundle_installs_both_tools_source_shims_and_force_refresh() {
 
 #[test]
 fn tampered_immutable_instance_is_never_reused_or_repaired() {
-    for mutation in 0..5 {
+    for mutation in 0..6 {
         let temp = tempfile::tempdir().unwrap();
         let source = source_zip(None);
         let fixture = write_bundle(temp.path(), b"vibe-binary", b"vibe-binary", &source, false);
@@ -132,9 +136,10 @@ fn tampered_immutable_instance_is_never_reused_or_repaired() {
         let tampered = match mutation {
             0 => store.binary_path(&first.record.version_id(), 1),
             1 => store.index_binary_path(&first.record.version_id(), 1),
-            2 => home.join(DISTRIBUTION_MANIFEST_FILENAME),
-            3 => home.join("source/Cargo.toml"),
-            4 => home.join(DISTRIBUTION_SOURCE_ARCHIVE_FILENAME),
+            2 => store.app_proxy_binary_path(&first.record.version_id(), 1),
+            3 => home.join(DISTRIBUTION_MANIFEST_FILENAME),
+            4 => home.join("source/Cargo.toml"),
+            5 => home.join(DISTRIBUTION_SOURCE_ARCHIVE_FILENAME),
             _ => unreachable!(),
         };
         std::fs::write(&tampered, b"tampered").unwrap();

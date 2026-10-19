@@ -60,6 +60,11 @@ fn index_bin_name() -> &'static str {
     }
 }
 
+#[cfg(not(windows))]
+fn proxy_bin_name() -> &'static str {
+    "vibe-app-proxy"
+}
+
 #[test]
 fn ls_on_a_fresh_root_still_identifies_the_direct_source_execution() {
     let _fixture_guard = fixture_process_guard();
@@ -144,6 +149,10 @@ fn install_builds_publishes_and_records_under_the_temp_root() {
         bin.join(index_bin_name()).is_file(),
         "vibe-index published under bin/"
     );
+    assert!(
+        bin.join(proxy_bin_name()).is_file(),
+        "vibe-app-proxy published under bin/"
+    );
 
     let state =
         std::fs::read_to_string(base.path().join("opt").join("vibevm").join("state.toml")).unwrap();
@@ -162,7 +171,7 @@ fn install_builds_publishes_and_records_under_the_temp_root() {
 #[cfg(not(windows))]
 fn update_builds_and_activates_latest_like_install() {
     let _fixture_guard = fixture_process_guard();
-    // A source execution updates `latest`: it builds both essential binaries,
+    // A source execution updates `latest`: it builds all essential binaries,
     // publishes, and flips `current` to the new immutable instance.
     let base = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
@@ -182,11 +191,12 @@ fn update_builds_and_activates_latest_like_install() {
 }
 
 /// Write a minimal, dependency-free vibevm-shaped source tree (a cargo
-/// workspace with tiny `vibe` and `vibe-index` bins) under a git repo, so the
+/// workspace with tiny `vibe`, `vibe-index`, and `vibe-app-proxy` bins) under a git repo, so the
 /// real `CargoBuilder` has something tiny and offline to compile.
 fn write_tiny_source(dir: &Path) {
     use std::fs;
     fs::create_dir_all(dir.join("crates").join("vibe-cli").join("src")).unwrap();
+    fs::create_dir_all(dir.join("crates").join("vibe-cli").join("src").join("bin")).unwrap();
     fs::create_dir_all(dir.join("crates").join("vibe-index").join("src")).unwrap();
     fs::write(
         dir.join("Cargo.toml"),
@@ -196,7 +206,8 @@ fn write_tiny_source(dir: &Path) {
     fs::write(
         dir.join("crates").join("vibe-cli").join("Cargo.toml"),
         "[package]\nname = \"vibe-cli\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n\
-         [[bin]]\nname = \"vibe\"\npath = \"src/main.rs\"\n",
+         [[bin]]\nname = \"vibe\"\npath = \"src/main.rs\"\n\n\
+         [[bin]]\nname = \"vibe-app-proxy\"\npath = \"src/bin/vibe-app-proxy.rs\"\n",
     )
     .unwrap();
     fs::write(
@@ -221,7 +232,16 @@ fn write_tiny_source(dir: &Path) {
         "fn main() { println!(\"tiny vibe\"); }\n",
     )
     .unwrap();
-    // These two workspace packages have no dependencies; this complete lock
+    fs::write(
+        dir.join("crates")
+            .join("vibe-cli")
+            .join("src")
+            .join("bin")
+            .join("vibe-app-proxy.rs"),
+        "fn main() { println!(\"tiny vibe-app-proxy\"); }\n",
+    )
+    .unwrap();
+    // These workspace packages have no dependencies; this complete lock
     // keeps the real builder's production `cargo build --locked` contract.
     fs::write(
         dir.join("Cargo.lock"),

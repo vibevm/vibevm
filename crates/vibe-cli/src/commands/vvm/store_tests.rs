@@ -40,6 +40,10 @@ fn modern_bundle_paths_nest_under_kind_id_instance_and_legacy_vibe_still_resolve
         store.index_binary_path(&id, 4),
         expect.join("bin").join(INDEX_BINARY_NAME)
     );
+    assert_eq!(
+        store.app_proxy_binary_path(&id, 4),
+        expect.join("bin").join(APP_PROXY_BINARY_NAME)
+    );
     assert_eq!(store.instance_source_dir(&id, 4), expect.join("source"));
     fs::create_dir_all(&expect).unwrap();
     fs::write(expect.join(BINARY_NAME), b"legacy").unwrap();

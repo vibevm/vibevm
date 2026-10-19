@@ -4,7 +4,9 @@ use std::cell::{Cell, RefCell};
 use super::super::super::builder::{BuildOutput, Builder, ResolvedVersion};
 use super::super::super::model::{Kind, Origin, Profile, VersionId};
 use super::super::super::placer;
-use super::super::super::store::{BINARY_NAME, INDEX_BINARY_NAME, VersionStore};
+use super::super::super::store::{
+    APP_PROXY_BINARY_NAME, BINARY_NAME, INDEX_BINARY_NAME, VersionStore,
+};
 use super::super::{InstallRequest, perform_install};
 use crate::output;
 use vibe_core::progress::Progress;
@@ -79,7 +81,8 @@ impl Builder for CountingBuilder {
         fs::create_dir_all(&target)?;
         let binary = target.join(BINARY_NAME);
         let index_binary = target.join(INDEX_BINARY_NAME);
-        for path in [&binary, &index_binary] {
+        let app_proxy_binary = target.join(APP_PROXY_BINARY_NAME);
+        for path in [&binary, &index_binary, &app_proxy_binary] {
             fs::write(path, b"fixed test artifact")?;
             #[cfg(unix)]
             {
@@ -90,6 +93,7 @@ impl Builder for CountingBuilder {
         Ok(BuildOutput {
             binary,
             index_binary,
+            app_proxy_binary,
             toolchain: self.toolchain.borrow().clone(),
         })
     }

@@ -38,7 +38,7 @@
       }
     },
     "distribution_component_name": {
-      "enum": ["vibe", "vibe-index"],
+      "enum": ["vibe", "vibe-index", "vibe-app-proxy"],
       "metadata": {
         "description": "Which runtime executable a bundle component is. Closed vocabulary: the installer resolves each component to a fixed destination path, so an unfamiliar name has no safe behaviour.",
         "x-vocabulary": "closed"
@@ -68,7 +68,7 @@
     },
     "distribution_source_archive": {
       "metadata": {
-        "description": "Non-executable source snapshot shipped alongside the two runtime binaries.",
+        "description": "Non-executable source snapshot shipped alongside the runtime binaries.",
         "x-wire-order": ["path", "size", "digest", "tree_oid"]
       },
       "properties": {

@@ -172,6 +172,9 @@ executable = "$app_root/bin/demo"
 working_directory = "."
 args = ["${project_root}", "$$literal"]
 default = true
+[[installer_options.public_commands]]
+name = "demo"
+launcher = "main"
 [[installer_options]]
 id = "ubuntu-zip"
 name = "Portable archive"
@@ -213,8 +216,86 @@ executable = "bin/demo"
     ));
     assert_eq!(manifest.installer_options[0].launchers[0].name, "Demo");
     assert_eq!(
+        manifest.installer_options[0].public_commands[0].name,
+        "demo"
+    );
+    assert!(manifest.installer_options[1].public_commands.is_empty());
+    assert_eq!(
         Manifest::parse_str(&toml::to_string(&manifest).unwrap()).unwrap(),
         manifest
+    );
+}
+
+#[test]
+fn public_commands_are_local_to_an_installer_option() {
+    let base = r#"
+[package]
+name = "demo"
+group = "org.vibevm"
+kind = "app"
+version = "1.0.0"
+[application]
+id = "demo"
+[[installer_options]]
+id = "linux-shell"
+name = "Linux shell"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+[installer_options.installation]
+type = "shell"
+app_root = "/opt/demo"
+install = "echo install"
+force_install = "echo force install"
+uninstall = "echo uninstall"
+force_uninstall = "echo force uninstall"
+[[installer_options.launchers]]
+id = "main"
+name = "Demo"
+executable = "bin/demo"
+[[installer_options.public_commands]]
+name = "demo"
+launcher = "main"
+"#;
+    assert!(Manifest::parse_str(base).is_ok());
+    for (extra, expected) in [
+        (
+            "[[installer_options.public_commands]]\nname = \"demo\"\nlauncher = \"main\"\n",
+            "duplicated",
+        ),
+        (
+            "[[installer_options.public_commands]]\nname = \"vibe\"\nlauncher = \"main\"\n",
+            "other than `vibe`",
+        ),
+        (
+            "[[installer_options.public_commands]]\nname = \"bad name\"\nlauncher = \"main\"\n",
+            "portable lowercase token",
+        ),
+        (
+            "[[installer_options.public_commands]]\nname = \"other\"\nlauncher = \"missing\"\n",
+            "unknown launcher",
+        ),
+    ] {
+        let invalid = format!("{base}{extra}");
+        assert!(
+            Manifest::parse_str(&invalid)
+                .unwrap_err()
+                .to_string()
+                .contains(expected),
+            "{invalid}"
+        );
+    }
+
+    let archive = base.replacen(
+        "type = \"shell\"\napp_root = \"/opt/demo\"\ninstall = \"echo install\"\nforce_install = \"echo force install\"\nuninstall = \"echo uninstall\"\nforce_uninstall = \"echo force uninstall\"",
+        "type = \"zip\"\nsource = \"demo.zip\"\nsha256 = \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n[[installer_options.installation.runners]]\npath = \"bin/demo\"\nname = \"demo\"",
+        1,
+    );
+    assert!(
+        Manifest::parse_str(&archive)
+            .unwrap_err()
+            .to_string()
+            .contains("conflicts with an archive runner")
     );
 }
 

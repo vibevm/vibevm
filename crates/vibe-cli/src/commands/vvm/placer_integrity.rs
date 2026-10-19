@@ -71,6 +71,7 @@ pub(super) fn manifest_shape_valid(
         vec![
             format!("bin/{BINARY_NAME}"),
             format!("bin/{INDEX_BINARY_NAME}"),
+            format!("bin/{APP_PROXY_BINARY_NAME}"),
         ]
     };
     if manifest.files.len() != expected.len() {
@@ -108,6 +109,10 @@ mod tests {
         for (name, rel) in [
             (BINARY_NAME, format!("bin/{BINARY_NAME}")),
             (INDEX_BINARY_NAME, format!("bin/{INDEX_BINARY_NAME}")),
+            (
+                APP_PROXY_BINARY_NAME,
+                format!("bin/{APP_PROXY_BINARY_NAME}"),
+            ),
         ] {
             let path = temp.path().join(name);
             fs::write(&path, name.as_bytes()).unwrap();

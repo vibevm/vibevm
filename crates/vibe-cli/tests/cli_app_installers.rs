@@ -82,11 +82,11 @@ fn command_installer_options_are_listed_and_selected_by_os_and_arch() {
         serde_json::from_slice(&fs::read(user.settings.join("applications/index.json")).unwrap())
             .unwrap();
     assert_eq!(
-        index["applications"]["choice"]["selectedOptionId"],
+        index["applications"]["org.example/choice-app@1.0.0"]["selectedOptionId"],
         "other-cpu"
     );
     assert_eq!(
-        index["applications"]["choice"]["appRoot"],
+        index["applications"]["org.example/choice-app@1.0.0"]["appRoot"],
         fixture.other_root_text()
     );
 }
@@ -181,6 +181,75 @@ fn local_zip_option_installs_verified_payload_and_launcher() {
     assert!(String::from_utf8_lossy(&started.stdout).contains("LAUNCH_ARG=zip-fixed"));
 }
 
+#[cfg(target_os = "linux")]
+#[test]
+fn manually_selected_windows_zip_installs_but_public_exe_proxy_is_unavailable() {
+    let registry = tempfile::tempdir().unwrap();
+    let package = registry.path().join("org.example/windows-tool/v1.0.0");
+    fs::create_dir_all(&package).unwrap();
+    let archive = package.join("windows-tool.zip");
+    let mut zip = zip::ZipWriter::new(fs::File::create(&archive).unwrap());
+    zip.start_file(
+        "bin/tool.exe",
+        SimpleFileOptions::default().unix_permissions(0o755),
+    )
+    .unwrap();
+    zip.write_all(b"MZ\0\0tiny test payload").unwrap();
+    zip.finish().unwrap();
+    let digest = format!("{:x}", Sha256::digest(fs::read(&archive).unwrap()));
+    fs::write(
+        package.join("vibe.toml"),
+        format!(
+            "[package]\nname='windows-tool'\ngroup='org.example'\nkind='app'\nversion='1.0.0'\n\
+             [application]\nid='win-tool'\ncommands=[]\n\
+             [[installer_options]]\nid='windows-x64'\nname='Windows x64 ZIP'\nplatform='windows'\nplatform_name='Windows'\narch='x86_64'\n\
+             [installer_options.installation]\ntype='zip'\nsource='windows-tool.zip'\nsha256='{digest}'\n\
+             [[installer_options.launchers]]\nid='tool'\nname='Tool'\nexecutable='bin/tool.exe'\ndefault=true\n\
+             [[installer_options.public_commands]]\nname='tool'\nlauncher='tool'\n"
+        ),
+    )
+    .unwrap();
+
+    let user = UserScratch::new();
+    let installed = user
+        .vibe()
+        .current_dir(registry.path())
+        .args([
+            "install",
+            "-g",
+            "org.example/windows-tool",
+            "--registry",
+            registry.path().to_str().unwrap(),
+            "--platform",
+            "windows",
+            "--arch",
+            "x86_64",
+            "--installer",
+            "windows-x64",
+            "--json",
+        ])
+        .output()
+        .unwrap();
+    assert_success(&installed);
+    let index: Value =
+        serde_json::from_slice(&fs::read(user.settings.join("applications/index.json")).unwrap())
+            .unwrap();
+    assert_eq!(
+        index["applications"]["org.example/windows-tool@1.0.0"]["status"],
+        "ready"
+    );
+    let alias = user.settings.join("opt/bin/tool");
+    assert!(alias.is_file());
+    let invoked = Command::new(&alias).output().unwrap();
+    assert_eq!(invoked.status.code(), Some(127));
+    assert!(
+        String::from_utf8_lossy(&invoked.stderr)
+            .contains("Windows executable cannot run on this platform"),
+        "{}",
+        String::from_utf8_lossy(&invoked.stderr)
+    );
+}
+
 #[test]
 fn failed_zip_post_install_keeps_prior_index_payload_and_launcher() {
     let fixture = Fixture::new(true);
@@ -213,7 +282,7 @@ fn failed_zip_post_install_keeps_prior_index_payload_and_launcher() {
     let prior_index = fs::read(&index_path).unwrap();
     let prior_record: Value = serde_json::from_slice(&prior_index).unwrap();
     let prior_root = PathBuf::from(
-        prior_record["applications"]["choice"]["appRoot"]
+        prior_record["applications"]["org.example/choice-app@1.0.0"]["appRoot"]
             .as_str()
             .unwrap(),
     );
@@ -373,7 +442,7 @@ fn command_install_launch_and_update_keep_literal_args_and_current_paths() {
         "{stdout}"
     );
     assert!(
-        stdout.contains(&format!("LAUNCH_CWD={}", fixture.host_root_text())),
+        stdout.contains(&format!("LAUNCH_CWD={}", fixture._root.path().display())),
         "{stdout}"
     );
 

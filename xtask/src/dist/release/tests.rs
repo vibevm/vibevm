@@ -192,6 +192,7 @@ fn platform(target: &str) -> (PlatformDistributionFragment, Vec<u8>, Vec<u8>, Ve
     let version = Version::parse("1.0.0").unwrap();
     let vibe = format!("vibe:{target}").into_bytes();
     let index = format!("vibe-index:{target}").into_bytes();
+    let proxy = format!("vibe-app-proxy:{target}").into_bytes();
     let source_zip = write_zip(&[ArchiveEntry {
         name: "Cargo.toml".to_string(),
         bytes: b"[workspace]\n".to_vec(),
@@ -204,6 +205,11 @@ fn platform(target: &str) -> (PlatformDistributionFragment, Vec<u8>, Vec<u8>, Ve
         "vibe-index.exe"
     } else {
         "vibe-index"
+    };
+    let proxy_path = if windows {
+        "vibe-app-proxy.exe"
+    } else {
+        "vibe-app-proxy"
     };
     let manifest = BundleDistributionManifest::new(
         version.clone(),
@@ -221,6 +227,12 @@ fn platform(target: &str) -> (PlatformDistributionFragment, Vec<u8>, Vec<u8>, Ve
                 path: index_path.to_string(),
                 size: index.len() as u64,
                 digest: sha256_digest(&index),
+            },
+            DistributionComponent {
+                name: DistributionComponentName::VibeAppProxy,
+                path: proxy_path.to_string(),
+                size: proxy.len() as u64,
+                digest: sha256_digest(&proxy),
             },
         ],
         DistributionSourceArchive {
@@ -241,6 +253,11 @@ fn platform(target: &str) -> (PlatformDistributionFragment, Vec<u8>, Vec<u8>, Ve
         ArchiveEntry {
             name: index_path.to_string(),
             bytes: index,
+            mode: 0o755,
+        },
+        ArchiveEntry {
+            name: proxy_path.to_string(),
+            bytes: proxy,
             mode: 0o755,
         },
         ArchiveEntry {

@@ -52,6 +52,39 @@ fn native_installer_file_requires_exact_sha256() {
     assert_eq!(fs::read(destination).unwrap(), b"native installer");
 }
 
+#[test]
+fn provider_local_archive_accepts_windows_runner_without_legacy_command_coverage() {
+    let temp = tempdir().unwrap();
+    let archive_path = temp.path().join("native.zip");
+    let zip = File::create(&archive_path).unwrap();
+    let mut zip = zip::ZipWriter::new(zip);
+    zip.start_file("bin/demo.exe", zip::write::SimpleFileOptions::default())
+        .unwrap();
+    zip.write_all(b"native payload").unwrap();
+    zip.finish().unwrap();
+    let runner = ArchiveRunnerDecl {
+        path: PathBuf::from("bin/demo.exe"),
+        name: "demo.exe".into(),
+    };
+    let mut selected = identity();
+    selected.commands = vec!["different".into()];
+    let verified = verify_direct_archive(
+        archive_path.to_str().unwrap(),
+        DirectArchiveFormat::Zip,
+        &digest(&fs::read(&archive_path).unwrap()),
+        None,
+        &[runner],
+        &selected,
+        &temp.path().join("staged"),
+        true,
+        &Progress::default(),
+        true,
+    )
+    .unwrap();
+    assert_eq!(verified.manifest.launchers[0].command, "demo");
+    assert_eq!(verified.manifest.launchers[0].destination, "demo.exe");
+}
+
 #[cfg(not(windows))]
 #[test]
 fn direct_zip_and_tar_gz_publish_verified_payload() {
@@ -96,6 +129,7 @@ fn direct_zip_and_tar_gz_publish_verified_payload() {
             &staging,
             true,
             &Progress::default(),
+            false,
         )
         .unwrap();
         assert!(verified.direct_archive);

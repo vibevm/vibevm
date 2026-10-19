@@ -77,9 +77,9 @@ pub(super) fn target_sort_key(target: &str) -> usize {
     }
 }
 
-/// The canonical order of the two components inside a bundle manifest: the
-/// wire strings themselves, ascending. `"vibe"` sorts before `"vibe-index"`,
-/// which is the order every published `DISTRIBUTION.json` has always carried.
+/// The canonical order of components inside a bundle manifest: the
+/// wire strings themselves, ascending. New manifests place `vibe-app-proxy`
+/// between `vibe` and `vibe-index`; historical manifests retain their pair.
 /// The generated component name derives no `Ord` — ordering is a property of
 /// the wire vocabulary, not of the Rust enum's declaration order — so the
 /// sort key is stated here, beside the target order it stands next to.
@@ -95,13 +95,17 @@ pub(super) fn validate_components(
         .iter()
         .map(|component| component.name.as_str())
         .collect::<BTreeSet<_>>();
-    let required = [
+    let historical = [
         DistributionComponentName::Vibe.as_str(),
         DistributionComponentName::VibeIndex.as_str(),
     ]
     .into_iter()
     .collect::<BTreeSet<_>>();
-    if components.len() != required.len() || names != required {
+    let mut current = historical.clone();
+    current.insert(DistributionComponentName::VibeAppProxy.as_str());
+    if !((components.len() == historical.len() && names == historical)
+        || (components.len() == current.len() && names == current))
+    {
         return Err(ReleaseManifestError::Components {
             target: target.to_string(),
         });

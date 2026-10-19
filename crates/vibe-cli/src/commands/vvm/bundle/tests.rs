@@ -23,7 +23,9 @@ use crate::cli::VvmBootstrapArgs;
 use crate::commands::vvm::VvmEnv;
 use crate::commands::vvm::env::{EnvPersister, Persisted};
 use crate::commands::vvm::model::{InstallRecord, Kind, Origin, VersionId};
-use crate::commands::vvm::store::{BINARY_NAME, INDEX_BINARY_NAME, VersionStore};
+use crate::commands::vvm::store::{
+    APP_PROXY_BINARY_NAME, BINARY_NAME, INDEX_BINARY_NAME, VersionStore,
+};
 
 const COMMIT: &str = "0123456789abcdef0123456789abcdef01234567";
 const TREE: &str = "89abcdef0123456789abcdef0123456789abcdef";
@@ -107,6 +109,7 @@ fn write_versioned_bundle(
     extra_outer: bool,
 ) -> Fixture {
     let vibe_index = b"index-binary";
+    let vibe_proxy = b"proxy-binary";
     let manifest = BundleDistributionManifest::new(
         version.clone(),
         COMMIT,
@@ -117,6 +120,12 @@ fn write_versioned_bundle(
                 path: BINARY_NAME.to_string(),
                 size: declared_vibe.len() as u64,
                 digest: digest(declared_vibe),
+            },
+            DistributionComponent {
+                name: DistributionComponentName::VibeAppProxy,
+                path: APP_PROXY_BINARY_NAME.to_string(),
+                size: vibe_proxy.len() as u64,
+                digest: digest(vibe_proxy),
             },
             DistributionComponent {
                 name: DistributionComponentName::VibeIndex,
@@ -137,6 +146,7 @@ fn write_versioned_bundle(
     let mut entries = vec![
         (BINARY_NAME, actual_vibe),
         (INDEX_BINARY_NAME, vibe_index.as_slice()),
+        (APP_PROXY_BINARY_NAME, vibe_proxy.as_slice()),
         (DISTRIBUTION_SOURCE_ARCHIVE_FILENAME, source),
         (DISTRIBUTION_MANIFEST_FILENAME, manifest_bytes.as_slice()),
         ("LICENSE.md", b"license".as_slice()),
@@ -177,6 +187,17 @@ fn platform_bundle(
                 path: if windows { "vibe.exe" } else { "vibe" }.to_string(),
                 size: 1,
                 digest: digest(b"v"),
+            },
+            DistributionComponent {
+                name: DistributionComponentName::VibeAppProxy,
+                path: if windows {
+                    "vibe-app-proxy.exe"
+                } else {
+                    "vibe-app-proxy"
+                }
+                .to_string(),
+                size: 1,
+                digest: digest(b"p"),
             },
             DistributionComponent {
                 name: DistributionComponentName::VibeIndex,

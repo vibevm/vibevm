@@ -93,11 +93,14 @@ pub enum DistributionComponentName {
     #[serde(rename = "vibe")]
     Vibe,
 
+    #[serde(rename = "vibe-app-proxy")]
+    VibeAppProxy,
+
     #[serde(rename = "vibe-index")]
     VibeIndex,
 }
 
-/// Non-executable source snapshot shipped alongside the two runtime binaries.
+/// Non-executable source snapshot shipped alongside the runtime binaries.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct DistributionSourceArchive {

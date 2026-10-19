@@ -11,7 +11,7 @@ use dialoguer::Select;
 use serde_json::Value;
 use vibe_core::manifest::Manifest;
 
-use crate::cli::{AppArgs, AppCommand};
+use crate::cli::{AlternativeShell, AlternativesArgs, AlternativesCommand, AppArgs, AppCommand};
 use crate::output;
 
 pub fn run(
@@ -22,6 +22,7 @@ pub fn run(
 ) -> Result<Option<i32>> {
     let app_path = args.path;
     match args.command {
+        AppCommand::Alternatives(args) => run_alternatives(ctx, args),
         AppCommand::Installers { package, registry } => {
             let listing = super::application::installer_listing(
                 &package,
@@ -85,6 +86,186 @@ pub fn run(
             Ok(Some(code))
         }
     }
+}
+
+fn run_alternatives(ctx: &output::Context, args: AlternativesArgs) -> Result<Option<i32>> {
+    use super::application::alternatives;
+
+    match args.command {
+        None => {
+            let slot = args.slot.as_deref().ok_or_else(|| {
+                anyhow::anyhow!("slot_required: specify `vibe app alternatives SLOT`")
+            })?;
+            let listing = alternatives::listing(slot)?;
+            if ctx.is_json() {
+                ctx.emit_json(&listing)?;
+            } else {
+                print_alternatives(&listing, slot, ctx.is_quiet());
+            }
+            Ok(None)
+        }
+        Some(AlternativesCommand::Select { slot, installation }) => {
+            let selected = alternatives::select(&slot, &installation)?;
+            if ctx.is_json() {
+                ctx.emit_json(&selected)?;
+            } else {
+                println!("{slot}: selected {installation}");
+            }
+            Ok(None)
+        }
+        Some(AlternativesCommand::Choose { slot }) => {
+            if ctx.is_json()
+                || ctx.is_unattended()
+                || !std::io::stdin().is_terminal()
+                || !std::io::stderr().is_terminal()
+            {
+                bail!(
+                    "selection_required: `choose` requires an interactive terminal; use `select SLOT INSTALLATION`"
+                );
+            }
+            let listing = alternatives::listing(&slot)?;
+            let Some(installation) = choose_alternative(&listing)? else {
+                return Ok(None);
+            };
+            alternatives::select(&slot, &installation)?;
+            println!("{slot}: selected {installation}");
+            Ok(None)
+        }
+        Some(AlternativesCommand::Use {
+            slot,
+            installation,
+            shell,
+        }) => {
+            let delta = alternatives::use_session(&slot, &installation, alternative_shell(shell))?;
+            emit_session_delta(ctx, &delta)?;
+            Ok(None)
+        }
+        Some(AlternativesCommand::Clear { slot, all, shell }) => {
+            if !all && slot.is_none() {
+                bail!("slot_required: specify SLOT or --all");
+            }
+            let delta =
+                alternatives::clear_session(slot.as_deref(), all, alternative_shell(shell))?;
+            emit_session_delta(ctx, &delta)?;
+            Ok(None)
+        }
+        Some(AlternativesCommand::Shell { slot, installation }) => ctx
+            .suspend_progress(|| alternatives::shell(&slot, &installation))
+            .map(Some),
+        Some(AlternativesCommand::Run {
+            slot,
+            command,
+            args,
+        }) => ctx
+            .suspend_progress(|| alternatives::run(&slot, &command, &args))
+            .map(Some),
+        Some(AlternativesCommand::Start {
+            slot,
+            launcher,
+            args,
+        }) => ctx
+            .suspend_progress(|| alternatives::start(&slot, launcher.as_deref(), &args))
+            .map(Some),
+    }
+}
+
+fn alternative_shell(shell: Option<AlternativeShell>) -> &'static str {
+    shell
+        .map(AlternativeShell::as_str)
+        .unwrap_or(if cfg!(windows) { "powershell" } else { "posix" })
+}
+
+fn emit_session_delta(ctx: &output::Context, delta: &Value) -> Result<()> {
+    if ctx.is_json() {
+        return ctx.emit_json(delta);
+    }
+    let script = delta
+        .get("script")
+        .and_then(Value::as_str)
+        .ok_or_else(|| anyhow::anyhow!("application session response has no script"))?;
+    print!("{script}");
+    Ok(())
+}
+
+fn print_alternatives(listing: &Value, slot: &str, quiet: bool) {
+    let installations = listing
+        .get("installations")
+        .and_then(Value::as_array)
+        .map(Vec::as_slice)
+        .unwrap_or(&[]);
+    println!("{slot}: {} installation(s)", installations.len());
+    if quiet {
+        return;
+    }
+    for entry in installations {
+        let key = launcher_field(entry, "key");
+        let group = entry
+            .pointer("/package/group")
+            .and_then(Value::as_str)
+            .unwrap_or("");
+        let name = entry
+            .pointer("/package/name")
+            .and_then(Value::as_str)
+            .unwrap_or("");
+        let version = entry
+            .pointer("/package/version")
+            .and_then(Value::as_str)
+            .unwrap_or("");
+        let status = launcher_field(entry, "status");
+        let selected = if entry.get("selected_effective").and_then(Value::as_bool) == Some(true) {
+            " [selected]"
+        } else {
+            ""
+        };
+        println!("  {key}: {group}/{name}@{version} ({status}){selected}");
+    }
+}
+
+fn choose_alternative(listing: &Value) -> Result<Option<String>> {
+    let installations = listing
+        .get("installations")
+        .and_then(Value::as_array)
+        .ok_or_else(|| {
+            anyhow::anyhow!("application alternatives listing has no installations array")
+        })?;
+    let choices = installations
+        .iter()
+        .filter(|entry| {
+            entry
+                .get("status")
+                .and_then(Value::as_str)
+                .is_some_and(|status| status.eq_ignore_ascii_case("ready"))
+        })
+        .filter_map(|entry| {
+            let key = entry.get("key")?.as_str()?;
+            let group = entry
+                .pointer("/package/group")
+                .and_then(Value::as_str)
+                .unwrap_or("");
+            let name = entry
+                .pointer("/package/name")
+                .and_then(Value::as_str)
+                .unwrap_or("");
+            let version = entry
+                .pointer("/package/version")
+                .and_then(Value::as_str)
+                .unwrap_or("");
+            Some((key.to_owned(), format!("{group}/{name}@{version} ({key})")))
+        })
+        .collect::<Vec<_>>();
+    if choices.is_empty() {
+        bail!("no_alternatives: slot has no ready installations");
+    }
+    let labels = choices
+        .iter()
+        .map(|(_, label)| label.as_str())
+        .collect::<Vec<_>>();
+    let choice = Select::new()
+        .with_prompt("Select application installation")
+        .items(&labels)
+        .default(0)
+        .interact_opt()?;
+    Ok(choice.map(|index| choices[index].0.clone()))
 }
 
 fn selected_project_root(explicit: Option<&Path>) -> Result<Option<PathBuf>> {
