@@ -204,7 +204,12 @@ fn compile_clients(root: &Path) -> ClientExecutables {
         } else {
             name.to_owned()
         });
-        std::fs::copy(&built, &path).expect("fake client copies");
+        let staged = root.join(format!(".{name}.pending"));
+        std::fs::copy(&built, &staged).expect("fake client stages");
+        std::fs::File::open(&staged)
+            .and_then(|file| file.sync_all())
+            .expect("fake client stage syncs");
+        std::fs::rename(&staged, &path).expect("fake client publishes after writer closes");
         ClientExecutable::Resolved {
             command: name.to_owned(),
             path,
