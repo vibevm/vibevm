@@ -32,3 +32,6 @@ pub(crate) mod worklist;
 mod artifact_tests;
 
 pub(crate) mod boot_graph;
+
+#[cfg(test)]
+mod m_06_f_2_cases;

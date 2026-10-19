@@ -683,3 +683,6 @@ mod m_06_f_1_cases {
         assert_eq!(inspection_files(f.source._home.path()), before);
     }
 }
+
+#[cfg(test)]
+mod m_06_f_2_cases;

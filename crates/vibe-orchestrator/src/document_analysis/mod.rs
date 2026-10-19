@@ -94,6 +94,7 @@ pub struct DocumentAnalysisHost {
     primary: ResourceId,
     declarations: BTreeMap<ResourceId, ResourceDeclaration>,
     limits: AnalysisLimits,
+    boot_capture: bool,
     clients: AtomicU64,
     participants: Mutex<edit::ParticipantRegistry>,
 }
@@ -105,6 +106,27 @@ impl DocumentAnalysisHost {
         primary_manifest: &str,
         declarations: Vec<ResourceDeclaration>,
         limits: AnalysisLimits,
+    ) -> Result<Arc<Self>, DocumentAnalysisError> {
+        Self::with_capture_policy(root, primary_manifest, declarations, limits, false)
+    }
+
+    /// Trusted boot debugger composition: retain complete finite disk captures.
+    /// Editor buffers and request limits remain governed by `limits`.
+    pub fn for_boot_capture(
+        root: &Path,
+        primary_manifest: &str,
+        declarations: Vec<ResourceDeclaration>,
+        limits: AnalysisLimits,
+    ) -> Result<Arc<Self>, DocumentAnalysisError> {
+        Self::with_capture_policy(root, primary_manifest, declarations, limits, true)
+    }
+
+    fn with_capture_policy(
+        root: &Path,
+        primary_manifest: &str,
+        declarations: Vec<ResourceDeclaration>,
+        limits: AnalysisLimits,
+        boot_capture: bool,
     ) -> Result<Arc<Self>, DocumentAnalysisError> {
         if limits.resource_bytes == 0
             || limits.resource_bytes == usize::MAX
@@ -159,6 +181,7 @@ impl DocumentAnalysisHost {
             primary,
             declarations: rows,
             limits,
+            boot_capture,
             clients: AtomicU64::new(1),
             participants: Mutex::new(edit::ParticipantRegistry::default()),
         }))
@@ -200,9 +223,13 @@ impl DocumentAnalysisHost {
             .declarations
             .get(&id)
             .ok_or(DocumentAnalysisError::UnknownResource)?;
-        self.project
-            .read_file_snapshot_bounded(&declaration.path, self.limits.resource_bytes)
-            .map_err(|_| DocumentAnalysisError::Unavailable)
+        let snapshot = if self.boot_capture {
+            self.project.capture_file_snapshot(&declaration.path)
+        } else {
+            self.project
+                .read_file_snapshot_bounded(&declaration.path, self.limits.resource_bytes)
+        };
+        snapshot.map_err(|_| DocumentAnalysisError::Unavailable)
     }
 }
 #[derive(Debug)]

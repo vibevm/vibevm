@@ -190,10 +190,12 @@ impl InstallResolver {
                 });
             }
         }
-        let host = DocumentAnalysisHost::new(
+        let host = DocumentAnalysisHost::for_boot_capture(
             &root,
             "vibe.toml",
             declarations,
+            // Editor/open-buffer limits only; trusted finite boot captures
+            // have no resource or aggregate diagnostic admission ceiling.
             AnalysisLimits {
                 resource_bytes: 64 * 1024 * 1024,
                 capture_bytes: 128 * 1024 * 1024,
