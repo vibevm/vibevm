@@ -1,5 +1,6 @@
 [package]
 name = "vibe-cli"
+default-run = "vibe"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
