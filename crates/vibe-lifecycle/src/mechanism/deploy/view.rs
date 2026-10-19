@@ -148,6 +148,31 @@ impl DeployStateView {
 
     /// One deployment's finalised receipt, or `None` when there is none —
     /// including when the whole state home is absent.
+    pub(crate) fn read_bound_generation(
+        &self,
+        home: &DeploymentHome,
+        generation: u32,
+    ) -> Result<Option<DeployReceipt>, DeployError> {
+        let Some(project) = &self.project else {
+            return Ok(None);
+        };
+        let Some(receipt) = read_record::<DeployReceipt>(
+            project,
+            &home.member(&format!("receipt-generation-{generation}.json")),
+        )?
+        else {
+            return Ok(None);
+        };
+        let receipt = checked_receipt(receipt)?;
+        home.ensure_binding(RECEIPT_FILE, receipt.operation_binding.as_ref())?;
+        if receipt.generation != generation || home.operation_binding().is_none() {
+            return Err(DeployError::BindingMismatch {
+                record: "bound receipt history",
+            });
+        }
+        Ok(Some(receipt))
+    }
+
     pub(crate) fn read_receipt(
         &self,
         home: &DeploymentHome,

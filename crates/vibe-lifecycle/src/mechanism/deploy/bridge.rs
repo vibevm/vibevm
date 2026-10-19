@@ -25,6 +25,8 @@ const BRIDGE_FORMAT: &str = "vibevm.deploy.bound-vibe-bin-bridge/1";
 const RESULT_FORMAT: &str = "vibevm.deploy.bound-vibe-bin-result/1";
 
 mod capsule;
+mod cleanup;
+pub(crate) use cleanup::{BoundCleanupPlan, execute_bound_cleanup, prepare_bound_cleanup};
 mod request;
 pub(crate) use capsule::inspect_host_admitted_bound_vibe_bin_cold;
 use request::canonical_request_with_mode;
@@ -71,6 +73,7 @@ pub(crate) struct BoundDeployPartial {
     pub intent: String,
     pub receipt: String,
     pub sidecar: String,
+    pub inverse: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -168,6 +171,7 @@ fn partial(settings: &vibe_safefs::Project, home: &DeploymentHome) -> BoundDeplo
                 intent: error.to_string(),
                 receipt: error.to_string(),
                 sidecar: error.to_string(),
+                inverse: error.to_string(),
             };
         }
     };
@@ -180,6 +184,13 @@ fn partial(settings: &vibe_safefs::Project, home: &DeploymentHome) -> BoundDeplo
         intent: status(view.read_intent(home).map(|row| row.is_some())),
         receipt: status(view.read_receipt(home).map(|row| row.is_some())),
         sidecar: status(view.read_lock_resources(home).map(|row| row.is_some())),
+        inverse: status(
+            super::state::DeployState::observe_bound(settings).and_then(|state| {
+                state.map_or(Ok(false), |state| {
+                    state.read_inverse(home).map(|row| row.is_some())
+                })
+            }),
+        ),
     }
 }
 
@@ -189,6 +200,11 @@ fn verified_receipt(
     bridge: &Bridge,
 ) -> Result<(DeployReceipt, String)> {
     let view = DeployStateView::open_bound(settings)?;
+    if super::state::DeployState::observe_bound(settings)?
+        .is_some_and(|state| !matches!(state.read_inverse(home), Ok(None)))
+    {
+        return Err(refused("bound inverse remains or is unreadable"));
+    }
     if view.read_intent(home)?.is_some() {
         return Err(refused("bound intent remains"));
     }
@@ -216,7 +232,12 @@ fn verified_receipt(
         || receipt.provider.key != bridge.provider_pin
         || receipt.artifact_digest != bridge.artifact_digest
         || receipt.generation != committed.generation
-        || receipt.generation != 0
+        || u64::from(receipt.generation)
+            != bridge
+                .plan
+                .get("generation")
+                .and_then(|v| v.as_u64())
+                .unwrap_or(0)
         || receipt
             .resources
             .iter()
@@ -312,15 +333,19 @@ fn inspect(
             run_id,
         });
     }
-    match verified_receipt(settings, home, &bridge) {
-        Ok((receipt, digest)) if digest == result.receipt_sha256 => {
-            Ok(BoundDeployBridgeInspection::Completed {
-                run_id,
-                receipt,
-                replayed: true,
-            })
-        }
-        _ => Ok(BoundDeployBridgeInspection::Uncertain {
+    let completed = match verified_receipt(settings, home, &bridge) {
+        Ok((receipt, digest)) if digest == result.receipt_sha256 => Some(receipt),
+        _ => cleanup::cleaned_receipt(lease, settings, home, &bridge, &result)
+            .ok()
+            .or_else(|| cleanup::historical_receipt(settings, home, &bridge, &result).ok()),
+    };
+    match completed {
+        Some(receipt) => Ok(BoundDeployBridgeInspection::Completed {
+            run_id,
+            receipt,
+            replayed: true,
+        }),
+        None => Ok(BoundDeployBridgeInspection::Uncertain {
             partial: partial(settings, home),
             run_id,
         }),
@@ -351,6 +376,7 @@ pub(crate) fn submit_host_admitted_bound_vibe_bin(
         principal,
         current_generation,
         RequestMode::Legacy,
+        None,
     )
 }
 
@@ -376,10 +402,11 @@ pub(crate) fn submit_host_admitted_bound_vibe_bin_profiled(
         principal,
         current_generation,
         RequestMode::Profiled,
+        None,
     )
 }
 
-fn submit_with_request_mode(
+pub(crate) fn submit_with_request_mode(
     lease: &LifecycleLease,
     namespace: &SubmissionNamespace,
     scope: &SubmissionScope,
@@ -390,6 +417,7 @@ fn submit_with_request_mode(
     principal: &str,
     current_generation: &mut dyn FnMut() -> std::result::Result<Option<String>, DeployError>,
     mode: RequestMode,
+    derivative: Option<&super::derivative::DerivativeSources<'_>>,
 ) -> Result<BoundDeployBridgeInspection> {
     lease.ensure_root(execution.project_root, "at protected bound deploy")?;
     if admitted.binding() != request_binding
@@ -464,6 +492,9 @@ fn submit_with_request_mode(
                 "target": target_id, "provider_pin": pin, "bound_plan_hash": bound_hash,
                 "project": execution.project, "package": execution.package,
                 "profile": execution.selection.profile, "artifact_digest": artifact_digest,
+                "derivative_result": derivative.map(|sources| &sources.result),
+                "generation": target_request.recovery_intent.map(|i| i.target.generation)
+                    .unwrap_or_else(|| target_request.prior_receipt.map_or(0, |r| r.generation.saturating_add(1))),
                 "resources": plan.resources.iter().map(|row| (&row.resource, &row.desired_digest)).collect::<Vec<_>>(),
                 "lock_resources": plan.lock_resources,
             });
@@ -537,14 +568,40 @@ fn submit_with_request_mode(
             }),
         }
     };
-    let applied = execute_host_admitted_bound_vibe_bin_with_hook(
-        execution,
-        request_binding,
-        admitted,
-        principal,
-        current_generation,
-        Some(&mut callback),
-    );
+    let applied = if let Some(sources) = derivative {
+        let current = sources.read().map_err(refused)?;
+        let target = execution
+            .targets
+            .iter()
+            .find(|target| &target.id == target_id)
+            .ok_or_else(|| refused("selected target absent"))?;
+        let grant = super::derivative::DerivativeAdmission::bind(
+            current.result(),
+            execution,
+            target,
+            admitted,
+        )
+        .map_err(refused)?;
+        grant.execute_with_hook(
+            sources.entry,
+            sources.base,
+            sources.local,
+            execution,
+            request_binding,
+            principal,
+            current_generation,
+            Some(&mut callback),
+        )
+    } else {
+        execute_host_admitted_bound_vibe_bin_with_hook(
+            execution,
+            request_binding,
+            admitted,
+            principal,
+            current_generation,
+            Some(&mut callback),
+        )
+    };
     let Some(bridge) = created else {
         return Err(applied
             .err()

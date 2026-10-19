@@ -63,7 +63,7 @@ pub enum DeployError {
     /// The bound intent survives a possible external write; recovery needs
     /// fresh host admission and must not infer no-effects from this failure.
     #[error(
-        "bound deployment of `{target}` under `{binding}` may have published resources: {reason}; the intent is retained and recovery requires fresh host admission"
+        "bound deployment of `{target}` under `{binding}` may have published resources: {reason}; the ownership journal is retained and recovery requires fresh host admission"
     )]
     BoundPublicationUncertain {
         target: String,

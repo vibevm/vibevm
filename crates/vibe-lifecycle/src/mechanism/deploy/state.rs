@@ -472,6 +472,30 @@ impl DeployState {
         Ok(())
     }
 
+    /// Retire bound lock ownership only after independently verified cleanup
+    /// published the empty receipt. Absence, rather than an unbound empty
+    /// sidecar, preserves the all-or-none binding law.
+    pub(crate) fn retire_bound_lock_resources(
+        &self,
+        home: &DeploymentHome,
+    ) -> Result<(), DeployError> {
+        let receipt = self
+            .read_receipt(home)?
+            .ok_or(DeployError::BindingMismatch {
+                record: "bound cleanup receipt",
+            })?;
+        if home.operation_binding().is_none()
+            || receipt.status != vibe_wire::generated::deploy_receipt::ReceiptStatus::RolledBack
+            || !receipt.resources.is_empty()
+            || self.read_inverse(home)?.is_none()
+        {
+            return Err(DeployError::BindingMismatch {
+                record: "bound lock retirement",
+            });
+        }
+        self.remove(&home.member(LOCK_RESOURCES_FILE))
+    }
+
     /// Publish one deployment's intent journal atomically.
     ///
     /// Validated through the A2 behaviour cell BEFORE any byte reaches the
@@ -528,6 +552,26 @@ impl DeployState {
             reason: error.to_string(),
         })?;
         self.publish(&home.member(RECEIPT_FILE), receipt)
+    }
+
+    /// Immutable verified bound generations remain inspectable after update.
+    pub(crate) fn archive_bound_receipt(
+        &self,
+        home: &DeploymentHome,
+        receipt: &DeployReceipt,
+    ) -> Result<(), DeployError> {
+        home.ensure_binding(RECEIPT_FILE, receipt.operation_binding.as_ref())?;
+        checked_receipt(receipt.clone())?;
+        let name = home.member(&format!("receipt-generation-{}.json", receipt.generation));
+        if let Some(existing) = self.read::<DeployReceipt>(&name)? {
+            if existing != *receipt {
+                return Err(DeployError::BindingMismatch {
+                    record: "bound receipt history",
+                });
+            }
+            return Ok(());
+        }
+        self.publish(&name, receipt)
     }
 
     /// Read back one deployment's receipt, or `None` when it never applied.

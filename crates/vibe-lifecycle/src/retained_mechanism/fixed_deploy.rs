@@ -16,6 +16,7 @@ pub struct FixedDeployHostAdmission<'a> {
     source: Option<StableFileSnapshot>,
     admitted: AdmittedLocalDeployBinding,
     request_mode: deploy::RequestMode,
+    derivative: Option<crate::mechanism::deploy::derivative::DerivativeSources<'a>>,
 }
 
 fn authored_fixed_deploy(
@@ -71,6 +72,37 @@ fn authored_fixed_deploy(
 }
 
 impl<'a> FixedDeployHostAdmission<'a> {
+    /// Explicitly select a materialized derivative for this fresh host permit.
+    /// Passive reads and read-only inspection cannot construct this permit.
+    /// The same held inputs are independently rechecked at effect boundaries.
+    pub fn with_derivative(
+        mut self,
+        entry: &'a vibe_safefs::Project,
+        base: &'a vibe_safefs::Project,
+        local: &'a vibe_safefs::Project,
+    ) -> Result<Self, RetainedMechanismError> {
+        if self.source.is_none() {
+            return Err(RetainedMechanismError::Refused(
+                "a reserved key only inspects its retained result; use a fresh key for activation"
+                    .into(),
+            ));
+        }
+        let current = vibe_workspace::derivatives::MaterializedDerivative::read(
+            entry,
+            base,
+            local,
+            4 * 1024 * 1024,
+        )
+        .map_err(|error| RetainedMechanismError::Refused(error.to_string()))?;
+        self.derivative = Some(crate::mechanism::deploy::derivative::DerivativeSources {
+            entry,
+            base,
+            local,
+            result: current.result().record().result_identity.clone(),
+        });
+        Ok(self)
+    }
+
     /// The cooperative host supplies a held lease, C1 authority and physical
     /// roots. A captured authored manifest independently validates its plan.
     pub fn issue_from_trusted_host(
@@ -193,6 +225,7 @@ impl<'a> FixedDeployHostAdmission<'a> {
             source,
             admitted,
             request_mode,
+            derivative: None,
         })
     }
 }
@@ -226,6 +259,7 @@ pub fn submit_fixed_bound_vibe_bin(
         source,
         admitted,
         request_mode,
+        derivative,
     } = admission;
     if key != captured_key {
         return Err(FixedDeploySubmitError {
@@ -295,11 +329,7 @@ pub fn submit_fixed_bound_vibe_bin(
         });
     }
     let binding = admitted.binding().clone();
-    let submit = match request_mode {
-        deploy::RequestMode::Legacy => deploy::submit_host_admitted_bound_vibe_bin,
-        deploy::RequestMode::Profiled => deploy::submit_host_admitted_bound_vibe_bin_profiled,
-    };
-    match submit(
+    match deploy::submit_with_request_mode(
         lease,
         namespace,
         scope,
@@ -309,6 +339,8 @@ pub fn submit_fixed_bound_vibe_bin(
         admitted,
         facts.principal_ref,
         current_generation,
+        request_mode,
+        derivative.as_ref(),
     ) {
         Ok(observed) => Ok(map_deploy_observation(Some(observed))),
         Err(error) => {
@@ -347,4 +379,89 @@ pub fn submit_fixed_bound_vibe_bin(
             })
         }
     }
+}
+
+/// An inspectable closed cleanup plan. It carries ownership evidence, never
+/// forward permission or a current provider callback.
+pub struct FixedDeployCleanupPlan {
+    plan: deploy::BoundCleanupPlan,
+}
+impl FixedDeployCleanupPlan {
+    pub fn receipt(&self) -> &DeployReceipt {
+        self.plan.receipt()
+    }
+
+    pub fn prepare_from_trusted_host(
+        lease: &LifecycleLease,
+        namespace: &SubmissionNamespace,
+        scope: &SubmissionScope,
+        key: &str,
+        facts: DeployColdHostFacts<'_>,
+    ) -> Result<Self, RetainedMechanismError> {
+        SubmissionReservations::validate_namespace(lease, namespace, scope)?;
+        let host = issue_deploy_binding(&facts)?;
+        Ok(Self {
+            plan: deploy::prepare_bound_cleanup(lease, namespace, scope, key, &host)
+                .map_err(deploy_error)?,
+        })
+    }
+
+    /// Separate fresh host approval of this exact retained plan. A read-only
+    /// admission, historical receipt or old forward permit cannot call this.
+    pub fn approve_from_trusted_host<'a>(
+        self,
+        lease: &'a LifecycleLease,
+        facts: DeployColdHostFacts<'_>,
+        current_generation: &mut dyn FnMut() -> Result<Option<String>, crate::DeployError>,
+    ) -> Result<FixedDeployCleanupAdmission<'a>, RetainedMechanismError> {
+        lease
+            .ensure_root(facts.project_root, "at retained cleanup approval")
+            .map_err(|e| RetainedMechanismError::Refused(e.to_string()))?;
+        let admitted = issue_deploy_binding(&facts)?;
+        self.plan.validate_host(&admitted).map_err(deploy_error)?;
+        if current_generation()
+            .map_err(|e| RetainedMechanismError::Refused(e.to_string()))?
+            .as_deref()
+            != facts.selected_generation_ref
+        {
+            return Err(RetainedMechanismError::Refused(
+                "cleanup host generation changed".into(),
+            ));
+        }
+        Ok(FixedDeployCleanupAdmission {
+            lease,
+            plan: self.plan,
+            admitted,
+        })
+    }
+}
+
+/// Non-cloneable fresh cleanup authority, distinct from forward admission.
+pub struct FixedDeployCleanupAdmission<'a> {
+    lease: &'a LifecycleLease,
+    plan: deploy::BoundCleanupPlan,
+    admitted: AdmittedLocalDeployBinding,
+}
+
+/// Removes only retained owned launcher/pointer resources. Immutable CAS
+/// payloads remain retained; no provider resolver or artifact source is used.
+pub fn cleanup_fixed_bound_vibe_bin(
+    admission: FixedDeployCleanupAdmission<'_>,
+    current_generation: &mut dyn FnMut() -> Result<Option<String>, crate::DeployError>,
+) -> Result<Vec<String>, RetainedMechanismError> {
+    admission
+        .lease
+        .ensure_root(
+            admission.admitted.project().root_path(),
+            "at retained cleanup",
+        )
+        .map_err(|e| RetainedMechanismError::Refused(e.to_string()))?;
+    deploy::execute_bound_cleanup(
+        admission.plan,
+        admission.admitted,
+        current_generation,
+        &chrono::Utc::now().to_rfc3339(),
+        admission.lease,
+    )
+    .map_err(deploy_error)
 }

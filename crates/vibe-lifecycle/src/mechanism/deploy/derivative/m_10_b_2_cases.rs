@@ -12,7 +12,7 @@ use vibe_workspace::{
     source_query::CapturedSourceFile,
 };
 
-fn result(fixture: &Fixture, base_resource: &str) -> BoundDerivative {
+pub(super) fn result(fixture: &Fixture, base_resource: &str) -> BoundDerivative {
     let upstream = Fixture::new("sealed original bytes");
     let source = |fixture: &Fixture, name: &str| {
         SourceInput::new(
@@ -41,7 +41,7 @@ fn result(fixture: &Fixture, base_resource: &str) -> BoundDerivative {
     result
 }
 
-fn host(execution: &DeployExecution<'_>) -> AdmittedLocalDeployBinding {
+pub(super) fn host(execution: &DeployExecution<'_>) -> AdmittedLocalDeployBinding {
     AdmittedLocalDeployBinding::issue(TrustedLocalDeployFacts {
         host_context_id: "fixture-host",
         instance_ref: "local-result",
@@ -67,14 +67,14 @@ fn host(execution: &DeployExecution<'_>) -> AdmittedLocalDeployBinding {
     })
     .unwrap()
 }
-fn target() -> DeployTarget {
+pub(super) fn target() -> DeployTarget {
     crate::mechanism::vibebin::support::target(
         "local-helper",
         "helper.exe",
         Some("command = 'local-helper'"),
     )
 }
-fn export() -> ExportTarget {
+pub(super) fn export() -> ExportTarget {
     ExportTarget {
         name: "executable-file".into(),
         interface: ExportInterface::Files(vec!["target/debug/helper.exe".into()]),

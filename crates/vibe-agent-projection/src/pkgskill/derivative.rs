@@ -123,3 +123,6 @@ mod m_10_b_2_cases;
 
 #[cfg(test)]
 mod m_10_c_1_cases;
+
+#[cfg(test)]
+mod m_10_d_2_cases;

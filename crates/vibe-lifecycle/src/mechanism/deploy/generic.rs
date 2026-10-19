@@ -310,3 +310,6 @@ impl GenericHost {
         Ok(AdmittedClient { capture, payloads })
     }
 }
+
+#[cfg(test)]
+mod m_10_d_2_cases;

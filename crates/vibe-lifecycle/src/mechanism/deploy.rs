@@ -126,20 +126,100 @@ pub(crate) fn execute_host_admitted_bound_vibe_bin(
     )
 }
 
+/// A bound update/recovery can use only the exact current receipt and lock
+/// generation. Missing sidecars never receive the legacy fallback.
+fn validate_bound_ownership(
+    binding: &EnvironmentOperationBinding,
+    execution: &DeployExecution<'_>,
+    target: &str,
+    pin: &str,
+    receipt: Option<&vibe_wire::generated::deploy_receipt::DeployReceipt>,
+    intent: Option<&vibe_wire::generated::deploy_intent::DeployIntent>,
+    locks: Option<&sidecar::LockResources>,
+) -> Result<(), DeployError> {
+    let fail = || DeployError::BindingMismatch {
+        record: "bound prior receipt/intent/sidecar",
+    };
+    if let Some(receipt) = receipt {
+        if receipt.operation_binding.as_ref() != Some(binding)
+            || receipt.identity != identity_of(execution)
+            || receipt.target != target
+            || receipt.profile != execution.selection.profile
+            || receipt.provider.key != pin
+            || receipt.status != vibe_wire::generated::deploy_receipt::ReceiptStatus::Verified
+        {
+            return Err(fail());
+        }
+        let locks = locks.ok_or_else(fail)?;
+        let matches = |row: &sidecar::LockBinding| {
+            row.operation_binding.as_ref() == Some(binding)
+                && row.generation == receipt.generation
+                && row.native.is_none()
+                && row.resources
+                    == receipt
+                        .resources
+                        .iter()
+                        .map(|r| r.resource.clone())
+                        .collect::<Vec<_>>()
+        };
+        if !locks.committed.as_ref().is_some_and(matches)
+            && !(intent.is_some_and(|i| i.target.generation == receipt.generation)
+                && locks.pending.as_ref().is_some_and(matches))
+        {
+            return Err(fail());
+        }
+    } else if locks.and_then(|l| l.committed.as_ref()).is_some() {
+        return Err(fail());
+    }
+    if let Some(intent) = intent {
+        if intent.operation_binding.as_ref() != Some(binding)
+            || intent.target.project != execution.project
+            || intent.target.package.as_deref() != execution.package
+            || intent.target.target != target
+            || intent.target.profile != execution.selection.profile
+        {
+            return Err(fail());
+        }
+        let locks = locks.ok_or_else(fail)?;
+        let matches = |row: &sidecar::LockBinding| {
+            row.operation_binding.as_ref() == Some(binding)
+                && row.matches(intent.target.generation, &intent.plan_hash)
+                && row.native.is_none()
+                && row.resources
+                    == intent
+                        .resources
+                        .iter()
+                        .map(|r| r.resource.clone())
+                        .collect::<Vec<_>>()
+        };
+        if !locks.pending.as_ref().is_some_and(matches)
+            && !(receipt.is_some_and(|r| r.generation == intent.target.generation)
+                && locks.pending.is_none()
+                && locks.committed.as_ref().is_some_and(matches))
+        {
+            return Err(fail());
+        }
+    } else if locks.and_then(|l| l.pending.as_ref()).is_some() {
+        return Err(fail());
+    }
+    Ok(())
+}
+
+type BoundPreAcquireHook<'a> = dyn FnMut(
+        &DeploymentHome,
+        &DeployTargetRequest<'_>,
+        &crate::mechanism::deploy::protocol::DeployPlan,
+        &str,
+    ) -> Result<(), DeployError>
+    + 'a;
+
 fn execute_host_admitted_bound_vibe_bin_with_hook(
     execution: &DeployExecution<'_>,
     request_binding: &EnvironmentOperationBinding,
     admitted: AdmittedLocalDeployBinding,
     principal: &str,
     current_generation: &mut dyn FnMut() -> Result<Option<String>, DeployError>,
-    mut before_acquire: Option<
-        &mut dyn FnMut(
-            &DeploymentHome,
-            &DeployTargetRequest<'_>,
-            &crate::mechanism::deploy::protocol::DeployPlan,
-            &str,
-        ) -> Result<(), DeployError>,
-    >,
+    mut before_acquire: Option<&mut BoundPreAcquireHook<'_>>,
 ) -> Result<Vec<DeployOutcome>, DeployError> {
     let [target_id] = execution.selection.targets.as_slice() else {
         return Err(DeployError::BoundScopeUnsupported {
@@ -197,21 +277,50 @@ fn execute_host_admitted_bound_vibe_bin_with_hook(
         &binding,
     )?;
     let state_view = DeployStateView::open_bound(admitted.settings())?;
-    for (record, present) in [
-        ("intent", state_view.read_intent(&home)?.is_some()),
-        ("receipt", state_view.read_receipt(&home)?.is_some()),
-        (
-            "lock-resources",
-            state_view.read_lock_resources(&home)?.is_some(),
-        ),
-    ] {
-        if present {
-            return Err(DeployError::BoundPriorGenerationUnavailable {
-                target: target_id.clone(),
-                record,
+    let current_receipt = state_view.read_receipt(&home)?;
+    if let Some(receipt) = &current_receipt {
+        if state_view
+            .read_bound_generation(&home, receipt.generation)?
+            .as_ref()
+            != Some(receipt)
+        {
+            return Err(DeployError::BindingMismatch {
+                record: "bound receipt differs from verified history",
             });
         }
     }
+    let intent = state_view.read_intent(&home)?;
+    let sidecar = state_view.read_lock_resources(&home)?;
+    let prior_receipt = if let Some(intent) = &intent {
+        if current_receipt
+            .as_ref()
+            .is_some_and(|r| r.generation == intent.target.generation)
+        {
+            match intent.prior_generation {
+                Some(generation) => {
+                    Some(state_view.read_bound_generation(&home, generation)?.ok_or(
+                        DeployError::BindingMismatch {
+                            record: "recovery prior history",
+                        },
+                    )?)
+                }
+                None => None,
+            }
+        } else {
+            current_receipt.clone()
+        }
+    } else {
+        current_receipt.clone()
+    };
+    validate_bound_ownership(
+        &binding,
+        execution,
+        target_id,
+        &pin,
+        current_receipt.as_ref(),
+        intent.as_ref(),
+        sidecar.as_ref(),
+    )?;
     let (artifact, bound_artifact) =
         artifact::resolve_bound_project_artifact(admitted.project(), target)?;
     let preplan_provider = BoundVibeBinProvider::for_preplan(admitted.settings(), &bound_artifact);
@@ -222,12 +331,47 @@ fn execute_host_admitted_bound_vibe_bin_with_hook(
         settings_root: execution.settings_root,
         user_home: execution.user_home,
         clients: execution.clients,
-        prior_receipt: None,
-        recovery_intent: None,
+        prior_receipt: prior_receipt.as_ref(),
+        recovery_intent: intent.as_ref(),
         artifact: Some(&artifact),
         staging: None,
     };
     let plan = preplan_provider.plan(&request)?;
+    if let Some(prior) = &prior_receipt {
+        let mut old_artifact = artifact.clone();
+        old_artifact.digest = prior.artifact_digest.clone();
+        let mut old_plan = plan.clone();
+        old_plan.config_digest = prior.desired_config_digest.clone();
+        old_plan.resources = prior
+            .resources
+            .iter()
+            .map(|r| protocol::PlannedDeployResource {
+                resource: r.resource.clone(),
+                desired_digest: r.post_digest.clone(),
+            })
+            .collect();
+        let old_request = DeployTargetRequest {
+            artifact: Some(&old_artifact),
+            ..request
+        };
+        let old_hash = transaction::bound_plan_hash(&old_request, &pin, &old_plan, &binding);
+        if !sidecar
+            .as_ref()
+            .and_then(|s| s.committed.as_ref())
+            .is_some_and(|row| row.generation == prior.generation && row.plan_hash == old_hash)
+            && !intent.as_ref().is_some_and(|i| {
+                current_receipt
+                    .as_ref()
+                    .is_some_and(|r| r.generation == i.target.generation)
+                    && sidecar.as_ref().is_some_and(|s| s.pending.is_none())
+            })
+        {
+            return Err(DeployError::BindingMismatch {
+                record: "bound prior plan sidecar",
+            });
+        }
+    }
+
     // The descriptor belongs to the selected builtin; the plan was produced
     // through its pinned bound adapter. Reuse the incumbent resource laws.
     let selected = Selected {
@@ -256,21 +400,14 @@ fn execute_host_admitted_bound_vibe_bin_with_hook(
     let state = DeployState::open_bound(locked.settings())?;
     state.verify_bound_home(locked.settings())?;
     let _deployment = state.lock_deployment(&home)?;
-    for (record, present) in [
-        ("intent", state.read_intent(&home)?.is_some()),
-        ("receipt", state.read_receipt(&home)?.is_some()),
-        (
-            "lock-resources",
-            state.read_lock_resources(&home)?.is_some(),
-        ),
-        ("inverse", state.read_inverse(&home)?.is_some()),
-    ] {
-        if present {
-            return Err(DeployError::BoundPriorGenerationUnavailable {
-                target: target_id.clone(),
-                record,
-            });
-        }
+    if state.read_receipt(&home)? != current_receipt
+        || state.read_intent(&home)? != intent
+        || state.read_lock_resources(&home)? != sidecar
+        || state.read_inverse(&home)?.is_some()
+    {
+        return Err(DeployError::BindingMismatch {
+            record: "bound ownership changed after plan",
+        });
     }
     let _resource_guards = state.lock_destinations(&plan.lock_resources)?;
     let resources: Vec<String> = plan
