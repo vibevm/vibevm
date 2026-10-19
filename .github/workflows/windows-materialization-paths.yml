@@ -21,13 +21,14 @@ jobs:
     timeout-minutes: 45
     env:
       RUSTUP_AUTO_INSTALL: '0'
-      VIBE_G4_EVIDENCE_DIR: ${{ runner.temp }}/g4-evidence
     steps:
       - name: Check out this source revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
       - name: Record native environment and run selected cases
+        env:
+          VIBE_G4_EVIDENCE_DIR: ${{ runner.temp }}/g4-evidence
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path $env:VIBE_G4_EVIDENCE_DIR | Out-Null
