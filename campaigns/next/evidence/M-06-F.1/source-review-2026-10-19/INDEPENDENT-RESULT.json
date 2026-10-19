@@ -1,0 +1,73 @@
+{
+  "verdict": "source_evidence_clear_original_F1_scope",
+  "p1": 0,
+  "p2": 0,
+  "findings": [],
+  "canonical_acceptance": false,
+  "recommendation": "Root ordinary verification/intake decision",
+  "source_head": "3bdaad1b5fb351f4dc2f6f6723c58f97d864e0e4",
+  "source_files": 9,
+  "source_drift": [],
+  "artifact_verification": {
+    "f437264fa0e85b8ad4523a971302964f7f4d05836fd4d6557f623a8aed137734": {
+      "bytes": 19444,
+      "sha256": "f437264fa0e85b8ad4523a971302964f7f4d05836fd4d6557f623a8aed137734"
+    },
+    "9687a1b0cac91f8f16a2a976a217f5a972b9fbf6527083e7548c6cf380b7447f": {
+      "bytes": 34688,
+      "sha256": "9687a1b0cac91f8f16a2a976a217f5a972b9fbf6527083e7548c6cf380b7447f"
+    }
+  },
+  "reverse_patch_check_exit": 0,
+  "production_routes": {
+    "CLI": "actual parser and production run_with_io/open_route/viewer typed delegation",
+    "MCP": "Server::new/default_tools/Server::run on ordinary explicitly configured context",
+    "canonical_API": "same retained BootDebuggerRoute request/exchange",
+    "new_actions": [
+      "Inspect",
+      "Cost",
+      "Resource"
+    ],
+    "why": "alias of existing Detail/Explain"
+  },
+  "strict_carrier_changed": false,
+  "codegen_impact": "none indicated; no speculative gate",
+  "spec_preservation": {
+    "all_HEAD_bytes_preserved_except_one_additive_line": true,
+    "prior_fact_clauses_preserved": 27,
+    "new_clause": "DEBUGGER-SURFACE-PARITY"
+  },
+  "reported_current_checks": {
+    "workspace_passed": 2,
+    "CLI_passed": 4,
+    "MCP_passed": 2,
+    "total_selected_functions_passed": 8,
+    "reused_prior_fixture_bodies": 2,
+    "not_all_wholly_new_scenarios": true,
+    "globalfmt": "exit1;7 unrelated unchanged files;not waived",
+    "diff_check": "exit0",
+    "initial_failures_preserved": [
+      "workspace1pass1fail exact-current-base witness missing",
+      "CLI0pass2fail baseline selections/frame count fixture errors"
+    ]
+  },
+  "limits": [
+    "finite authorized traversal, not F2 scale/concurrency/eviction",
+    "native-format retained fixture, no native execution",
+    "no installed independent CLI process claim",
+    "no universal network/hostile-writer proof",
+    "Observed/current-base limits unchanged"
+  ],
+  "review_actions": {
+    "tests": 0,
+    "cargo": 0,
+    "api_calls": 0,
+    "runtime": 0,
+    "models": 0,
+    "agents": 0,
+    "source_writes": 0,
+    "git_mutations": 0
+  },
+  "report_sha256": "b09cf776c6c341955069226fab9438429da3a9c2ec7eaaa5069e5d1bebe19953",
+  "manifest_sha256": "07f01fcce679ccb38d54ccc22a1c91cd916643a56c1b7accf4ed978b834e8825"
+}
