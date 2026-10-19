@@ -1,0 +1,51 @@
+name: Windows materialization paths
+
+on:
+  push:
+    branches: ['1.1.0']
+    paths:
+      - '.github/workflows/windows-materialization-paths.yml'
+      - 'crates/vibe-workspace/src/vibedeps/**'
+      - 'crates/vibe-workspace/src/install/**'
+      - 'crates/vibe-workspace/src/lib.rs'
+      - 'crates/vibe-safefs/src/project.rs'
+      - 'crates/vibe-safefs/src/project/path_limits.rs'
+      - 'vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml'
+
+permissions:
+  contents: read
+
+jobs:
+  materialization-paths:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    env:
+      RUSTUP_AUTO_INSTALL: '0'
+      VIBE_G4_EVIDENCE_DIR: ${{ runner.temp }}/g4-evidence
+    steps:
+      - name: Check out this source revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Record native environment and run selected cases
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path $env:VIBE_G4_EVIDENCE_DIR | Out-Null
+          $log = Join-Path $env:VIBE_G4_EVIDENCE_DIR 'native-windows.log'
+          "source_sha=$env:GITHUB_SHA runner_os=$env:RUNNER_OS image=$env:ImageOS image_version=$env:ImageVersion" | Tee-Object -FilePath $log
+          rustc -vV >> $log 2>&1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo -V >> $log 2>&1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked -j2 -p vibe-workspace --lib m_06_g_4_cases -- --nocapture >> $log 2>&1
+          $testExit = $LASTEXITCODE
+          "cargo_test_exit=$testExit" | Add-Content $log
+          Get-Content $log
+          exit $testExit
+      - name: Retain native log and compact evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: g4-native-windows-${{ github.sha }}
+          path: ${{ runner.temp }}/g4-evidence/
+          if-no-files-found: error

@@ -23,10 +23,25 @@ pub(super) fn preflight(slot: &Path, files: &[PreparedSlotFile]) -> Result<(), W
 }
 
 fn probe(path: &Path, stage: &str) -> Result<(), WorkspaceError> {
+    #[cfg(windows)]
+    let volume_query = check_windows_components(path, stage)?;
     match fs::symlink_metadata(path) {
         // Missing paths are expected for new slots. Other failures retain
         // their existing owner/stage; only native length errors are diagnosed here.
-        Err(error) if is_length_error(&error) => Err(length_error(path, stage, error)),
+        Err(error) if is_length_error(&error) => {
+            let error = length_error(path, stage, error);
+            #[cfg(windows)]
+            let error = match error {
+                WorkspaceError::SpecMaterialization { path, reason } => {
+                    WorkspaceError::SpecMaterialization {
+                        path,
+                        reason: format!("{reason} Volume component query: {volume_query}."),
+                    }
+                }
+                other => other,
+            };
+            Err(error)
+        }
         _ => Ok(()),
     }
 }
@@ -85,4 +100,63 @@ fn length_error(path: &Path, stage: &str, error: io::Error) -> WorkspaceError {
             error.raw_os_error()
         ),
     }
+}
+
+/// Query the nearest existing parent without creating missing directories.
+/// Each prospective path is checked separately so an existing nested mount uses
+/// its own volume. Missing suffixes cannot hide an oversized component.
+#[cfg(windows)]
+fn check_windows_components(path: &Path, stage: &str) -> Result<String, WorkspaceError> {
+    use std::os::windows::ffi::OsStrExt;
+
+    for parent in path.ancestors().skip(1) {
+        let project = match vibe_safefs::Project::open(parent) {
+            Ok(project) => project,
+            Err(error) => {
+                if error.chain().any(|cause| {
+                    cause.downcast_ref::<io::Error>().is_some_and(|error| {
+                        error.kind() == io::ErrorKind::NotFound || is_length_error(error)
+                    })
+                }) {
+                    continue;
+                }
+                return Ok(format!("unavailable at `{}`: {error:#}", parent.display()));
+            }
+        };
+        let limit = match project.windows_maximum_component_length() {
+            Ok(limit) => limit as usize,
+            Err(error) => return Ok(format!("unavailable at `{}`: {error}", parent.display())),
+        };
+        for component in path
+            .strip_prefix(parent)
+            .expect("ancestor prefix")
+            .components()
+        {
+            let measured = component.as_os_str().encode_wide().count();
+            if measured > limit {
+                return Err(WorkspaceError::SpecMaterialization {
+                    path: path.to_path_buf(),
+                    reason: format!(
+                        "path-length refusal during {stage}: `{}`; component `{}` measures \
+                         {measured} UTF-16 code units excluding NUL; volume component limit {limit} \
+                         WCHARs from GetVolumeInformationByHandleW on pinned parent `{}`; \
+                         exceeds limit by {} UTF-16 code units. Root shortening cannot fix this \
+                         component; choose a shorter package coordinate/filename or a capable \
+                         target volume and retry. No filename is silently shortened. \
+                         Pre-effect metadata refusal; no native failure code was generated. \
+                         This component bound does not establish a total path limit.",
+                        path.display(),
+                        component.as_os_str().to_string_lossy(),
+                        parent.display(),
+                        measured - limit,
+                    ),
+                });
+            }
+        }
+        return Ok(format!(
+            "component limit {limit} WCHARs at `{}`; total path limit unknown",
+            parent.display()
+        ));
+    }
+    Ok("unavailable: no existing parent capability".into())
 }

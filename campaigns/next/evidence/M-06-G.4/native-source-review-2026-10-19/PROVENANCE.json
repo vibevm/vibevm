@@ -1,0 +1,8 @@
+{
+  "source_head": "07af7fecd07869436df90e5b8466ad2f8f946874",
+  "job": "job.runtime.packet.recovery.432439848eb23be9457f6ba20a5b9c22404520f02c4d6165f5efe31bcca5dfe7",
+  "report_digest": "4b20cff8576bf5a83b1a0cd5861579fc6487621e070ead4682d3272782386a0c",
+  "patch_digest": "32e3dd44d128bffc014063b4133d67c446d7e44f0f9a30cc98146c52338df72d",
+  "reverse_patch_exit": 0,
+  "accepted": false
+}

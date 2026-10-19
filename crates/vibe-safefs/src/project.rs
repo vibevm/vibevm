@@ -10,6 +10,8 @@ use crate::component::ensure_safe_component;
 
 pub(crate) mod absolute;
 mod enumerate;
+#[cfg(windows)]
+mod path_limits;
 mod reset;
 
 pub use absolute::{PinnedAbsentPath, PinnedAbsoluteFile};
