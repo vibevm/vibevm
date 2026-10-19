@@ -1,4 +1,4 @@
-//! Durable causal marker for an in-progress opt-launcher saga inverse.
+//! Durable causal marker for an in-progress owned inverse or bound cleanup.
 
 use super::{DeployState, DeploymentHome};
 use crate::mechanism::deploy::error::DeployError;
@@ -36,6 +36,36 @@ impl InverseRecord {
             receipt_post_digest: receipt_post_digest.to_owned(),
             prior_state_handle: prior_state_handle.to_owned(),
         }
+    }
+
+    /// A closed cleanup recipe, not fabricated prior bytes or forward authority.
+    pub(crate) fn bound_cleanup(
+        receipt: &vibe_wire::generated::deploy_receipt::DeployReceipt,
+    ) -> Result<Self, DeployError> {
+        use sha2::{Digest, Sha256};
+        let owned = receipt
+            .resources
+            .first()
+            .ok_or(DeployError::BindingMismatch {
+                record: "empty cleanup ownership",
+            })?;
+        let hash = format!(
+            "{:x}",
+            Sha256::digest(serde_json::to_vec(receipt).map_err(|_| {
+                DeployError::BindingMismatch {
+                    record: "cleanup receipt encoding",
+                }
+            })?)
+        );
+        let mut marker = Self::new(
+            receipt.generation,
+            &receipt.provider.key,
+            &owned.resource,
+            &owned.post_digest,
+            &format!("bound-cleanup/1:{hash}"),
+        );
+        marker.operation_binding = receipt.operation_binding.clone();
+        Ok(marker)
     }
 
     fn validate(&self) -> Result<(), DeployError> {

@@ -341,11 +341,9 @@ impl Transaction<'_> {
         Ok(applied)
     }
 
-    /// First-generation bound apply through the incumbent journal and
-    /// provider protocol. The host owns `admitted` and the fresh generation
-    /// oracle; neither the request nor a provider descriptor can mint them.
-    /// Interrupted bound work is deliberately refused before provider calls
-    /// until a separate pinned recovery owner is admitted.
+    /// Bound apply/update and exact-plan recovery through the incumbent
+    /// journal and provider protocol. The host owns `admitted` and the fresh
+    /// generation oracle; the request and descriptor cannot mint either.
     pub(crate) fn apply_bound(
         &self,
         provider: &dyn DeployProvider,
@@ -387,45 +385,57 @@ impl Transaction<'_> {
             self.state.verify_bound_home(admitted.settings())
         };
         observe(current_generation)?;
-        if request.prior_receipt.is_some() || self.state.read_receipt(self.home)?.is_some() {
-            return Err(DeployError::BoundPriorGenerationUnavailable {
-                target: request.target.id.clone(),
-                record: "receipt",
-            });
-        }
-        if request.recovery_intent.is_some() || self.state.read_intent(self.home)?.is_some() {
-            return Err(DeployError::BoundPriorGenerationUnavailable {
-                target: request.target.id.clone(),
-                record: "intent",
-            });
-        }
-        if self.state.read_inverse(self.home)?.is_some() {
-            return Err(DeployError::BoundPriorGenerationUnavailable {
-                target: request.target.id.clone(),
-                record: "inverse marker",
+        let current_receipt = self.state.read_receipt(self.home)?;
+        let existing_intent = self.state.read_intent(self.home)?;
+        if existing_intent.as_ref() != request.recovery_intent
+            || (existing_intent.is_none() && current_receipt.as_ref() != request.prior_receipt)
+            || self.state.read_inverse(self.home)?.is_some()
+        {
+            return Err(DeployError::BindingMismatch {
+                record: "bound transaction ownership",
             });
         }
         let plan_hash = bound_plan_hash(request, self.provider_pin, plan, binding);
-        if self
-            .state
-            .read_checkpoints(self.home, &plan_hash)?
-            .is_some()
-        {
-            return Err(DeployError::BoundPriorGenerationUnavailable {
-                target: request.target.id.clone(),
-                record: "checkpoint ledger",
-            });
-        }
-        if self
-            .state
-            .read_lock_resources(self.home)?
-            .is_some_and(|sidecar| sidecar.committed.is_some())
-        {
-            return Err(DeployError::BoundPriorGenerationUnavailable {
-                target: request.target.id.clone(),
-                record: "committed lock sidecar",
-            });
-        }
+        let generation = if let Some(intent) = request.recovery_intent {
+            let expected_prior = request.prior_receipt.map(|r| r.generation);
+            let expected_generation = expected_prior.map_or(Some(0), |n| n.checked_add(1));
+            if intent.plan_hash != plan_hash
+                || intent.prior_generation != expected_prior
+                || Some(intent.target.generation) != expected_generation
+                || intent.resources.len() != plan.resources.len()
+                || intent
+                    .resources
+                    .iter()
+                    .zip(&plan.resources)
+                    .any(|(before, desired)| {
+                        before.resource != desired.resource
+                            || before.desired_digest != desired.desired_digest
+                            || before.prior_digest
+                                != prior_digest(request.prior_receipt, &desired.resource)
+                    })
+            {
+                return Err(DeployError::BindingMismatch {
+                    record: "bound recovery plan",
+                });
+            }
+            intent.target.generation
+        } else {
+            if self
+                .state
+                .read_checkpoints(self.home, &plan_hash)?
+                .is_some()
+            {
+                return Err(DeployError::BindingMismatch {
+                    record: "orphan bound checkpoints",
+                });
+            }
+            request
+                .prior_receipt
+                .map_or(Some(0), |r| r.generation.checked_add(1))
+                .ok_or(DeployError::BindingMismatch {
+                    record: "bound generation overflow",
+                })?
+        };
         let descriptor = provider.descriptor();
         if self.provider_pin != BUILTIN_VIBE_BIN_PIN
             || descriptor.provider.key != BUILTIN_VIBE_BIN_PIN
@@ -444,39 +454,41 @@ impl Transaction<'_> {
         // Durable pending physical ownership precedes the intent, which in
         // turn precedes every provider effect. No bound legacy fallback can
         // reconstruct this sidecar after an interrupted publication.
-        sidecar::stage_pending_with_binding(
-            self.state,
-            self.home,
-            0,
-            &plan_hash,
-            &plan.lock_resources,
-            None,
-            Some(binding),
-        )?;
-        let intent = DeployIntent {
-            operation_binding: Some(binding.clone()),
-            plan_hash: plan_hash.clone(),
-            resources: plan
-                .resources
-                .iter()
-                .map(|planned| IntentResource {
-                    resource: planned.resource.clone(),
-                    desired_digest: planned.desired_digest.clone(),
-                    prior_digest: None,
-                })
-                .collect(),
-            schema: INTENT_EPOCH,
-            started_at: stamped,
-            target: DeployTargetIdentity {
-                generation: 0,
-                profile: request.profile.to_owned(),
-                project: self.identity.project.clone(),
-                target: request.target.id.clone(),
-                package: self.identity.package.clone(),
-            },
-            prior_generation: None,
-        };
-        self.state.write_intent(self.home, &intent)?;
+        if request.recovery_intent.is_none() {
+            sidecar::stage_pending_with_binding(
+                self.state,
+                self.home,
+                generation,
+                &plan_hash,
+                &plan.lock_resources,
+                None,
+                Some(binding),
+            )?;
+            let intent = DeployIntent {
+                operation_binding: Some(binding.clone()),
+                plan_hash: plan_hash.clone(),
+                resources: plan
+                    .resources
+                    .iter()
+                    .map(|planned| IntentResource {
+                        resource: planned.resource.clone(),
+                        desired_digest: planned.desired_digest.clone(),
+                        prior_digest: prior_digest(request.prior_receipt, &planned.resource),
+                    })
+                    .collect(),
+                schema: INTENT_EPOCH,
+                started_at: stamped,
+                target: DeployTargetIdentity {
+                    generation,
+                    profile: request.profile.to_owned(),
+                    project: self.identity.project.clone(),
+                    target: request.target.id.clone(),
+                    package: self.identity.package.clone(),
+                },
+                prior_generation: request.prior_receipt.map(|r| r.generation),
+            };
+            self.state.write_intent(self.home, &intent)?;
+        }
         // These checks happen after the durable intent but before apply; a
         // refusal here retains it and does not claim an effect occurred.
         observe(current_generation)?;
@@ -486,12 +498,65 @@ impl Transaction<'_> {
             binding: binding.binding_id.clone(),
             reason,
         };
-        let report = provider
-            .apply(request, plan, &mut ledger)
-            .map_err(|error| uncertain(error.to_string()))?;
+        let resources: Vec<String> = plan.resources.iter().map(|r| r.resource.clone()).collect();
+        // Independently read the interrupted journal's prior/desired states
+        // before invoking any recovering provider effect.
+        let report = if let Some(intent) = request.recovery_intent {
+            let observed = provider.verify(request, &resources)?;
+            let diverged = divergent(intent, &observed);
+            if !diverged.is_empty() {
+                return Err(DeployError::RecoverDivergence {
+                    target: request.target.id.clone(),
+                    resources: diverged.join(", "),
+                });
+            }
+            if let Some(receipt) = current_receipt
+                .as_ref()
+                .filter(|r| r.generation == generation)
+            {
+                if !mismatched(plan, &observed).is_empty()
+                    || receipt.artifact_digest != request.artifact.expect("bound artifact").digest
+                    || receipt.desired_config_digest != plan.config_digest
+                    || receipt
+                        .resources
+                        .iter()
+                        .map(|r| (&r.resource, &r.post_digest))
+                        .collect::<Vec<_>>()
+                        != plan
+                            .resources
+                            .iter()
+                            .map(|r| (&r.resource, &r.desired_digest))
+                            .collect::<Vec<_>>()
+                {
+                    return Err(uncertain(
+                        "finalized bound receipt differs from recovery plan".into(),
+                    ));
+                }
+                after_bound_promotion(self.state, self.home, generation, &plan_hash)?;
+                self.state.retire_intent(self.home)?;
+                observe(current_generation).map_err(|e| {
+                    DeployError::BoundCommitCleanupUncertain {
+                        target: request.target.id.clone(),
+                        binding: binding.binding_id.clone(),
+                        reason: e.to_string(),
+                    }
+                })?;
+                return Ok(AppliedDeployment {
+                    generation,
+                    reversible: receipt.reversible,
+                    resources: receipt.resources.clone(),
+                    prior_state_handle: None,
+                    settlement: Settlement::BenignRetire,
+                });
+            }
+            provider.recover(request, plan, &observed, &mut ledger)
+        } else {
+            provider.apply(request, plan, &mut ledger)
+        }
+        .map_err(|error| uncertain(error.to_string()))?;
         if report.prior_state_handle.is_some() {
             return Err(uncertain(
-                "first bound generation unexpectedly reported a prior state handle".into(),
+                "bound builtin unexpectedly reported a prior state handle".into(),
             ));
         }
         let after_effect = |current: &mut dyn FnMut() -> Result<Option<String>, DeployError>| {
@@ -527,7 +592,7 @@ impl Transaction<'_> {
                 provider,
                 request,
                 plan,
-                0,
+                generation,
                 &owned,
                 report.prior_state_handle.clone(),
                 &format!(
@@ -535,16 +600,37 @@ impl Transaction<'_> {
                     report.evidence, fingerprint.digest, fingerprint.summary
                 ),
                 ReceiptStatus::Verified,
-                false,
+                request.recovery_intent.is_some(),
             )
             .map_err(|error| uncertain(error.to_string()))?;
         receipt.operation_binding = Some(binding.clone());
+        // A crash can follow immutable history publication but precede the
+        // current receipt. Reuse only that exact independently reverified
+        // business result, preserving its original clock/evidence bytes.
+        if let Some(archived) = super::view::DeployStateView::open_bound(admitted.settings())?
+            .read_bound_generation(self.home, generation)?
+        {
+            let mut expected = receipt.clone();
+            expected.applied_at = archived.applied_at;
+            expected.finalized_at = archived.finalized_at;
+            expected.evidence = archived.evidence.clone();
+            if expected != archived {
+                return Err(uncertain(
+                    "bound generation history differs from independently verified plan".into(),
+                ));
+            }
+            receipt = archived;
+        }
+        after_effect(current_generation)?;
+        self.state
+            .archive_bound_receipt(self.home, &receipt)
+            .map_err(|error| uncertain(error.to_string()))?;
         after_effect(current_generation)?;
         self.state
             .write_receipt(self.home, &receipt)
             .map_err(|error| uncertain(error.to_string()))?;
         after_effect(current_generation)?;
-        sidecar::promote(self.state, self.home, 0, &plan_hash)
+        sidecar::promote(self.state, self.home, generation, &plan_hash)
             .map_err(|error| uncertain(error.to_string()))?;
         after_effect(current_generation)?;
         self.state.retire_intent(self.home).map_err(|error| {
@@ -560,12 +646,154 @@ impl Transaction<'_> {
             reason: error.to_string(),
         })?;
         Ok(AppliedDeployment {
-            generation: 0,
+            generation,
             reversible: plan.reversible,
             resources: owned,
             prior_state_handle: report.prior_state_handle,
-            settlement: Settlement::Nothing,
+            settlement: if request.recovery_intent.is_some() {
+                Settlement::RolledForward
+            } else {
+                Settlement::Nothing
+            },
         })
+    }
+
+    /// Fresh host-authorized retained cleanup. The causal inverse marker
+    /// binds the complete receipt before any member disappears; restart
+    /// permits only that exact receipt's post-digest or absence.
+    pub(crate) fn remove_bound(
+        &self,
+        provider: &dyn DeployProvider,
+        request: &DeployTargetRequest<'_>,
+        receipt: &DeployReceipt,
+        admitted: &LockedLocalDeployBinding,
+        current_generation: &mut dyn FnMut() -> Result<Option<String>, DeployError>,
+    ) -> Result<Vec<String>, DeployError> {
+        self.state.require_legacy_state(self.home)?;
+        let uncertain = |reason: String| DeployError::BoundPublicationUncertain {
+            target: receipt.target.clone(),
+            binding: admitted.binding().binding_id.clone(),
+            reason,
+        };
+        let observe = |oracle: &mut dyn FnMut() -> Result<Option<String>, DeployError>| {
+            let generation = oracle()?;
+            admitted
+                .reobserve_before_commit(generation.as_deref())
+                .map_err(|e| uncertain(e.to_string()))?;
+            self.state.verify_bound_home(admitted.settings())
+        };
+        observe(current_generation)?;
+        if receipt.operation_binding.as_ref() != Some(admitted.binding())
+            || self.home.operation_binding() != Some(admitted.binding())
+            || self.provider_pin != BUILTIN_VIBE_BIN_PIN
+            || request.artifact.is_some()
+            || self.state.read_intent(self.home)?.is_some()
+        {
+            return Err(DeployError::BindingMismatch {
+                record: "bound cleanup scope",
+            });
+        }
+        let marker = InverseRecord::bound_cleanup(receipt)?;
+        let existing = self.state.read_inverse(self.home)?;
+        if existing.as_ref().is_some_and(|old| old != &marker) {
+            return Err(DeployError::BindingMismatch {
+                record: "bound cleanup marker",
+            });
+        }
+        let current = self
+            .state
+            .read_receipt(self.home)?
+            .ok_or(DeployError::BindingMismatch {
+                record: "bound cleanup receipt",
+            })?;
+        let finalized = current.status == ReceiptStatus::RolledBack
+            && current.resources.is_empty()
+            && current.operation_binding == receipt.operation_binding
+            && current.generation == receipt.generation
+            && current.identity == receipt.identity
+            && current.target == receipt.target
+            && current.artifact_digest == receipt.artifact_digest
+            && current.provider == receipt.provider
+            && current.desired_config_digest == receipt.desired_config_digest
+            && current.profile == receipt.profile;
+        if current != *receipt && !(existing.is_some() && finalized) {
+            return Err(DeployError::BindingMismatch {
+                record: "bound cleanup receipt changed",
+            });
+        }
+        let resources: Vec<String> = receipt
+            .resources
+            .iter()
+            .map(|r| r.resource.clone())
+            .collect();
+        let observed = provider.verify(request, &resources)?;
+        if observed.len() != receipt.resources.len()
+            || receipt.resources.iter().any(|owned| {
+                !observed.iter().any(|row| {
+                    row.resource == owned.resource
+                        && ((!finalized
+                            && row.digest.as_deref() == Some(owned.post_digest.as_str()))
+                            || (existing.is_some() && row.digest.is_none()))
+                })
+            })
+        {
+            return Err(DeployError::UndeployDrift {
+                target: receipt.target.clone(),
+                resources: resources.join(", "),
+            });
+        }
+        if existing.is_none() {
+            self.state.write_inverse(self.home, &marker)?;
+        }
+        observe(current_generation)?;
+        let present = observed
+            .iter()
+            .filter(|r| r.digest.is_some())
+            .map(|r| r.resource.clone())
+            .collect::<Vec<_>>();
+        let report = provider
+            .remove(request, &present, None)
+            .map_err(|e| uncertain(e.to_string()))?;
+        observe(current_generation)?;
+        let after = provider
+            .verify(request, &resources)
+            .map_err(|e| uncertain(e.to_string()))?;
+        if after != report.expected_remaining || after.iter().any(|r| r.digest.is_some()) {
+            return Err(uncertain("independent bound cleanup verify differs".into()));
+        }
+        if !finalized {
+            let mut reversed = receipt.clone();
+            reversed.status = ReceiptStatus::RolledBack;
+            reversed.resources.clear();
+            reversed.prior_state_handle = None;
+            reversed.finalized_at = Some(self.timestamp(request)?);
+            reversed.evidence = Some(sanitize(&format!(
+                "{}; {}",
+                receipt.evidence.as_deref().unwrap_or(""),
+                report.evidence
+            )));
+            self.state
+                .write_receipt(self.home, &reversed)
+                .map_err(|e| uncertain(e.to_string()))?;
+        }
+        observe(current_generation)?;
+        self.state
+            .retire_bound_lock_resources(self.home)
+            .map_err(|e| uncertain(e.to_string()))?;
+        observe(current_generation)?;
+        self.state.retire_inverse(self.home).map_err(|e| {
+            DeployError::BoundCommitCleanupUncertain {
+                target: receipt.target.clone(),
+                binding: admitted.binding().binding_id.clone(),
+                reason: e.to_string(),
+            }
+        })?;
+        observe(current_generation).map_err(|e| DeployError::BoundCommitCleanupUncertain {
+            target: receipt.target.clone(),
+            binding: admitted.binding().binding_id.clone(),
+            reason: e.to_string(),
+        })?;
+        Ok(report.removed)
     }
 
     /// Settle an unretired intent journal, whatever it turns out to be.
@@ -933,6 +1161,33 @@ impl Transaction<'_> {
                 value: self.created_at.to_owned(),
                 reason: error.to_string(),
             })
+    }
+}
+
+/// Receipt publication and sidecar promotion are distinct crash windows.
+fn after_bound_promotion(
+    state: &DeployState,
+    home: &DeploymentHome,
+    generation: u32,
+    hash: &str,
+) -> Result<(), DeployError> {
+    let locks = state
+        .read_lock_resources(home)?
+        .ok_or(DeployError::BindingMismatch {
+            record: "bound promotion",
+        })?;
+    if locks.pending.is_some() {
+        sidecar::promote(state, home, generation, hash)
+    } else if locks
+        .committed
+        .as_ref()
+        .is_some_and(|r| r.matches(generation, hash))
+    {
+        Ok(())
+    } else {
+        Err(DeployError::BindingMismatch {
+            record: "bound promotion",
+        })
     }
 }
 

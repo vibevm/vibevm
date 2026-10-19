@@ -1,4 +1,4 @@
-//! Literal fixture decision boundary. No provider invocation or deployment.
+//! Independent derivative admission and explicit host-owned activation.
 //! The non-cloneable host carrier is consumed, never replaced by a trust flag.
 use sha2::{Digest, Sha256};
 use vibe_core::manifest::{DeployTarget, ExtensionHandler};
@@ -12,14 +12,40 @@ use super::binding::AdmittedLocalDeployBinding;
 use super::model::DeployExecution;
 use super::protocol::ResolvedDeployArtifact;
 
-/// No production caller is wired before the fixture safe-stop is qualified.
-#[allow(dead_code)]
+/// Exact result admission consumed by the trusted fixed-deploy host route.
 pub(crate) struct DerivativeAdmission {
     host: AdmittedLocalDeployBinding,
     result: String,
     descriptor: DeployTarget,
     selected: vibe_extension_registry::MechanismRegistryRow,
     artifact: ResolvedDeployArtifact,
+}
+
+/// Held source inputs selected explicitly by a trusted library host.
+/// These inputs are data; only the separate host admission grants an effect.
+pub(crate) struct DerivativeSources<'a> {
+    pub(crate) entry: &'a vibe_safefs::Project,
+    pub(crate) base: &'a vibe_safefs::Project,
+    pub(crate) local: &'a vibe_safefs::Project,
+    pub(crate) result: String,
+}
+
+impl DerivativeSources<'_> {
+    pub(crate) fn read(
+        &self,
+    ) -> Result<vibe_workspace::derivatives::MaterializedDerivative, String> {
+        let current = vibe_workspace::derivatives::MaterializedDerivative::read(
+            self.entry,
+            self.base,
+            self.local,
+            4 * 1024 * 1024,
+        )
+        .map_err(|error| error.to_string())?;
+        if current.result().record().result_identity != self.result {
+            return Err("selected derivative result changed".into());
+        }
+        Ok(current)
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -59,7 +85,6 @@ impl DerivativeAdmission {
     /// The trusted host explicitly selects THIS result and target. Package
     /// installation, signatures, wire bindings and compatibility cannot call
     /// this without the incumbent pinned host admission.
-    #[allow(dead_code)]
     pub(crate) fn bind(
         result: &BoundDerivative,
         execution: &DeployExecution<'_>,
@@ -99,6 +124,106 @@ impl DerivativeAdmission {
             selected: selected.row().clone(),
             artifact,
         })
+    }
+}
+
+/// Explicit opt-in consumer of a fresh result admission. This is crate-private:
+/// no public command or automatic source discovery grants activation.
+impl DerivativeAdmission {
+    #[cfg(test)]
+    pub(crate) fn execute(
+        self,
+        entry: &vibe_safefs::Project,
+        base: &vibe_safefs::Project,
+        local: &vibe_safefs::Project,
+        execution: &DeployExecution<'_>,
+        binding: &EnvironmentOperationBinding,
+        principal: &str,
+        current_generation: &mut dyn FnMut() -> Result<Option<String>, super::DeployError>,
+    ) -> Result<Vec<super::DeployOutcome>, super::DeployError> {
+        self.execute_with_hook(
+            entry,
+            base,
+            local,
+            execution,
+            binding,
+            principal,
+            current_generation,
+            None,
+        )
+    }
+
+    pub(crate) fn execute_with_hook(
+        self,
+        entry: &vibe_safefs::Project,
+        base: &vibe_safefs::Project,
+        local: &vibe_safefs::Project,
+        execution: &DeployExecution<'_>,
+        binding: &EnvironmentOperationBinding,
+        principal: &str,
+        current_generation: &mut dyn FnMut() -> Result<Option<String>, super::DeployError>,
+        before_acquire: Option<&mut super::BoundPreAcquireHook<'_>>,
+    ) -> Result<Vec<super::DeployOutcome>, super::DeployError> {
+        let refusal = |reason: String| super::DeployError::BoundGrantChanged {
+            target: self.descriptor.id.clone(),
+            reason,
+        };
+        if execution.selection.targets != [self.descriptor.id.clone()]
+            || !execution
+                .targets
+                .iter()
+                .any(|target| target == &self.descriptor)
+        {
+            return Err(refusal("selected derivative descriptor changed".into()));
+        }
+        let selected = vibe_extension_registry::resolve_mechanism(
+            execution.registry,
+            &self.descriptor.mechanism,
+            self.descriptor.provider.as_ref(),
+            execution.routes,
+        )?;
+        if selected.row().pin() != self.selected.pin()
+            || selected.row().provider() != self.selected.provider()
+            || selected.row().declaration() != self.selected.declaration()
+        {
+            return Err(refusal("admitted derivative provider changed".into()));
+        }
+        // The incumbent executor observes generation before planning, after
+        // planning and at its commit boundaries under destination ownership.
+        // Reopen BOTH authored sources at each of those observations. A retained
+        // result or verify_tree alone cannot stand in for current source proof.
+        let mut checked_generation = || {
+            let generation = current_generation()?;
+            let current = vibe_workspace::derivatives::MaterializedDerivative::read(
+                entry,
+                base,
+                local,
+                4 * 1024 * 1024,
+            )
+            .map_err(|error| refusal(error.to_string()))?;
+            if current.result().record().result_identity != self.result {
+                return Err(refusal(
+                    "admission belongs to another derivative result".into(),
+                ));
+            }
+            let project = vibe_safefs::Project::open(execution.project_root)
+                .map_err(|error| refusal(error.to_string()))?;
+            let (artifact, _) =
+                super::artifact::resolve_bound_project_artifact(&project, &self.descriptor)?;
+            own_artifact(current.result(), &artifact).map_err(&refusal)?;
+            if artifact != self.artifact {
+                return Err(refusal("admitted derivative artifact changed".into()));
+            }
+            Ok(generation)
+        };
+        super::execute_host_admitted_bound_vibe_bin_with_hook(
+            execution,
+            binding,
+            self.host,
+            principal,
+            &mut checked_generation,
+            before_acquire,
+        )
     }
 }
 
@@ -184,3 +309,6 @@ pub(crate) fn decide(
 
 #[cfg(test)]
 mod m_10_b_2_cases;
+
+#[cfg(test)]
+mod m_10_d_2_cases;

@@ -20,7 +20,7 @@ use vibe_safefs::Project;
 /// borrows a destination lock tied to the same pinned settings project.
 pub(crate) struct BoundVibeBinProvider<'a> {
     view: BoundView<'a>,
-    artifact: &'a BoundProjectArtifact,
+    artifact: Option<&'a BoundProjectArtifact>,
 }
 
 #[derive(Clone, Copy)]
@@ -35,7 +35,7 @@ impl<'a> BoundVibeBinProvider<'a> {
     pub(crate) fn for_preplan(settings: &'a Project, artifact: &'a BoundProjectArtifact) -> Self {
         Self {
             view: BoundView::Preplan(settings),
-            artifact,
+            artifact: Some(artifact),
         }
     }
 
@@ -45,7 +45,15 @@ impl<'a> BoundVibeBinProvider<'a> {
     ) -> Self {
         Self {
             view: BoundView::Locked(store),
-            artifact,
+            artifact: Some(artifact),
+        }
+    }
+
+    /// Closed retained cleanup needs no artifact source or live provider selection.
+    pub(crate) fn for_retained(store: &'a BoundVibeBinStore<'a>) -> Self {
+        Self {
+            view: BoundView::Locked(store),
+            artifact: None,
         }
     }
 
@@ -60,10 +68,9 @@ impl<'a> BoundVibeBinProvider<'a> {
         MechanismError,
     > {
         let (destination, resolved) = VibeBinProvider.admit(request)?;
-        if !self
-            .artifact
-            .matches_resolved(&resolved.relative, &resolved.digest, resolved.bytes)
-        {
+        if !self.artifact.is_some_and(|artifact| {
+            artifact.matches_resolved(&resolved.relative, &resolved.digest, resolved.bytes)
+        }) {
             return Err(DeployProviderError::BoundArtifactMismatch {
                 target: request.target.id.clone(),
                 artifact: resolved.id.clone(),
@@ -96,59 +103,103 @@ impl<'a> BoundVibeBinProvider<'a> {
                 .state(resource)
                 .map(|state| state.map(|value| value.sha256))
                 .map_err(|error| observation_error(request, resource, error).into()),
-            BoundView::Preplan(_) => Err(effect_not_ready(request, "verify")),
-        }
-    }
-
-    fn classify_launcher(
-        &self,
-        request: &DeployTargetRequest<'_>,
-        relative: &str,
-    ) -> Result<launcher::Occupant, MechanismError> {
-        match self.view {
-            BoundView::Locked(store) => store
-                .classify_launcher(relative)
-                .map_err(|error| observation_error(request, relative, error).into()),
             BoundView::Preplan(settings) => settings
-                .read_file_bounded(relative, 64 * 1024)
-                .map(|bytes| {
-                    bytes
-                        .as_deref()
-                        .map_or(launcher::Occupant::Vacant, launcher::classify_bytes)
-                })
+                .stable_file_state(resource)
+                .map(|state| state.map(|value| value.sha256))
                 .map_err(|error| {
                     DeployProviderError::Observe {
                         target: request.target.id.clone(),
-                        resource: relative.into(),
-                        reason: format!("{error:#}"),
+                        resource: resource.into(),
+                        reason: error.to_string(),
                     }
                     .into()
                 }),
         }
     }
 
-    fn pointer_present(
+    fn check_destination(
         &self,
         request: &DeployTargetRequest<'_>,
-        relative: &str,
-    ) -> Result<bool, MechanismError> {
-        match self.view {
-            BoundView::Locked(store) => store
-                .state(relative)
-                .map(|state| state.is_some())
-                .map_err(|error| observation_error(request, relative, error).into()),
-            BoundView::Preplan(settings) => settings
-                .read_file_bounded(relative, 128)
-                .map(|bytes| bytes.is_some())
-                .map_err(|error| {
-                    DeployProviderError::Observe {
+        desired: &[PlannedDeployResource],
+    ) -> Result<(), MechanismError> {
+        if request.prior_receipt.is_none() && request.recovery_intent.is_none() {
+            let resource = &desired[0].resource;
+            let occupant = match self.view {
+                BoundView::Locked(store) => store
+                    .classify_launcher(resource)
+                    .map_err(|e| observation_error(request, resource, e))?,
+                BoundView::Preplan(settings) => settings
+                    .read_file_bounded(resource, 64 * 1024)
+                    .map_err(|e| DeployProviderError::Observe {
                         target: request.target.id.clone(),
-                        resource: relative.into(),
-                        reason: format!("{error:#}"),
-                    }
-                    .into()
-                }),
+                        resource: resource.clone(),
+                        reason: e.to_string(),
+                    })?
+                    .as_deref()
+                    .map_or(launcher::Occupant::Vacant, launcher::classify_bytes),
+            };
+            launcher::refuse_collision(&request.target.id, resource, occupant)?;
+            if occupant != launcher::Occupant::Vacant {
+                return Err(effect_not_ready(
+                    request,
+                    "update of an unowned destination",
+                ));
+            }
         }
+        if let Some(prior) = request.prior_receipt {
+            if prior.resources.len() != desired.len()
+                || prior
+                    .resources
+                    .iter()
+                    .any(|owned| !desired.iter().any(|row| row.resource == owned.resource))
+            {
+                return Err(effect_not_ready(
+                    request,
+                    "changing the owned destination set",
+                ));
+            }
+        }
+        for row in desired {
+            let observed = self.observe(request, &row.resource)?;
+            let prior = request.prior_receipt.and_then(|receipt| {
+                receipt
+                    .resources
+                    .iter()
+                    .find(|owned| owned.resource == row.resource)
+                    .map(|owned| owned.post_digest.as_str())
+            });
+            let allowed = if let Some(intent) = request.recovery_intent {
+                let expected = intent
+                    .resources
+                    .iter()
+                    .find(|r| r.resource == row.resource)
+                    .ok_or_else(|| effect_not_ready(request, "recovery resource differs"))?;
+                if expected.desired_digest != row.desired_digest
+                    || expected.prior_digest.as_deref() != prior
+                {
+                    return Err(effect_not_ready(request, "recovery before-image differs"));
+                }
+                observed.as_deref() == prior
+                    || observed.as_deref() == Some(row.desired_digest.as_str())
+            } else {
+                observed.as_deref() == prior
+            };
+            if !allowed {
+                if request.prior_receipt.is_none() && request.recovery_intent.is_none() {
+                    return Err(effect_not_ready(
+                        request,
+                        "update of an unowned destination",
+                    ));
+                }
+                return Err(DeployProviderError::Observe {
+                    target: request.target.id.clone(),
+                    resource: row.resource.clone(),
+                    reason: "destination differs from exact prior/desired ownership".into(),
+                }
+                .into());
+            }
+        }
+        Ok(())
     }
 }
 
@@ -190,20 +241,7 @@ impl DeployProvider for BoundVibeBinProvider<'_> {
     }
 
     fn plan(&self, request: &DeployTargetRequest<'_>) -> Result<DeployPlan, MechanismError> {
-        if request.prior_receipt.is_some() || request.recovery_intent.is_some() {
-            return Err(effect_not_ready(request, "update or recovery"));
-        }
         let (destination, artifact) = self.admit(request)?;
-        let occupant = self.classify_launcher(request, &destination.launcher)?;
-        launcher::refuse_collision(&request.target.id, &destination.launcher, occupant)?;
-        if occupant != launcher::Occupant::Vacant
-            || self.pointer_present(request, &destination.pointer)?
-        {
-            return Err(effect_not_ready(
-                request,
-                "update of an unowned destination",
-            ));
-        }
         let resources = vec![
             PlannedDeployResource {
                 desired_digest: digest_of(&destination.body),
@@ -214,6 +252,7 @@ impl DeployProvider for BoundVibeBinProvider<'_> {
                 resource: destination.pointer.clone(),
             },
         ];
+        self.check_destination(request, &resources)?;
         let lock_resources = resources
             .iter()
             .map(|planned| planned.resource.clone())
@@ -230,7 +269,6 @@ impl DeployProvider for BoundVibeBinProvider<'_> {
             resources,
             lock_resources,
             config_digest: destination.config_digest(),
-            // The first bound route has no admitted remove or inverse replay.
             reversible: false,
         })
     }
@@ -252,9 +290,6 @@ impl DeployProvider for BoundVibeBinProvider<'_> {
         let BoundView::Locked(store) = self.view else {
             return Err(effect_not_ready(request, "apply"));
         };
-        if request.prior_receipt.is_some() || request.recovery_intent.is_some() {
-            return Err(effect_not_ready(request, "update or recovery"));
-        }
         let (destination, artifact) = self.admit(request)?;
         let expected = [
             PlannedDeployResource {
@@ -278,38 +313,18 @@ impl DeployProvider for BoundVibeBinProvider<'_> {
             }
             .into());
         }
-        let occupant = store
-            .classify_launcher(&destination.launcher)
-            .map_err(|error| observation_error(request, &destination.launcher, error))?;
-        launcher::refuse_collision(&request.target.id, &destination.launcher, occupant)?;
-        if occupant != launcher::Occupant::Vacant
-            || store
-                .prior_pointer(&destination.pointer)
-                .map_err(|error| observation_error(request, &destination.pointer, error))?
-                .is_some()
-        {
-            return Err(effect_not_ready(
-                request,
-                "update of an unowned destination",
-            ));
-        }
+        self.check_destination(request, &expected)?;
         let payload = store::payload_relative(destination.flavour, &artifact.digest);
         let placement = store
-            .place_payload(self.artifact, destination.flavour)
+            .place_payload(
+                self.artifact
+                    .ok_or_else(|| effect_not_ready(request, "missing forward artifact"))?,
+                destination.flavour,
+            )
             .map_err(|error| write_error(request, &payload, error))?;
         checkpoint.completed(&payload)?;
-        // Recheck the collision after the payload step. The physical lock
-        // coordinates participating writers; this still detects other edits.
-        let occupant = store
-            .classify_launcher(&destination.launcher)
-            .map_err(|error| observation_error(request, &destination.launcher, error))?;
-        launcher::refuse_collision(&request.target.id, &destination.launcher, occupant)?;
-        if occupant != launcher::Occupant::Vacant {
-            return Err(effect_not_ready(
-                request,
-                "update of an unowned destination",
-            ));
-        }
+        // Reobserve the exact owned states after immutable payload publication.
+        self.check_destination(request, &expected)?;
         store
             .write_resource(
                 &destination.launcher,
@@ -356,20 +371,91 @@ impl DeployProvider for BoundVibeBinProvider<'_> {
     fn remove(
         &self,
         request: &DeployTargetRequest<'_>,
-        _resources: &[String],
-        _prior_state_handle: Option<&str>,
+        resources: &[String],
+        prior_state_handle: Option<&str>,
     ) -> Result<RemoveReport, MechanismError> {
-        Err(effect_not_ready(request, "remove"))
+        let BoundView::Locked(store) = self.view else {
+            return Err(effect_not_ready(request, "remove"));
+        };
+        if self.artifact.is_some() || prior_state_handle.is_some() {
+            return Err(effect_not_ready(request, "remove"));
+        }
+        let receipt = request
+            .prior_receipt
+            .ok_or_else(|| effect_not_ready(request, "cleanup receipt absent"))?;
+        let destination = Destination::resolve(
+            &request.target.id,
+            request.target.config.as_ref(),
+            launcher::LauncherFlavour::NATIVE,
+        )?;
+        let expected = [
+            (destination.launcher.as_str(), digest_of(&destination.body)),
+            (
+                destination.pointer.as_str(),
+                digest_of(&launcher::pointer_body(&receipt.artifact_digest)),
+            ),
+        ];
+        if receipt.desired_config_digest != destination.config_digest()
+            || receipt.resources.len() != expected.len()
+            || receipt.resources.iter().any(|r| {
+                !expected
+                    .iter()
+                    .any(|(name, digest)| r.resource == *name && r.post_digest == *digest)
+            })
+            || resources
+                .iter()
+                .any(|r| !expected.iter().any(|(name, _)| r == name))
+        {
+            return Err(effect_not_ready(
+                request,
+                "unknown retained cleanup semantics",
+            ));
+        }
+        // Reobserve the complete set before the first removal. The engine's
+        // durable inverse marker is what permits already-absent members.
+        for (name, digest) in &expected {
+            let observed = self.observe(request, name)?;
+            if observed.as_ref().is_some_and(|found| found != digest) {
+                return Err(effect_not_ready(request, "cleanup third digest"));
+            }
+        }
+        let mut removed = Vec::new();
+        for resource in resources {
+            if store
+                .remove_resource(resource)
+                .map_err(|e| write_error(request, resource, e))?
+            {
+                removed.push(resource.clone());
+            }
+        }
+        Ok(RemoveReport {
+            removed,
+            expected_remaining: expected
+                .iter()
+                .map(|(name, _)| ObservedResource {
+                    resource: (*name).into(),
+                    digest: None,
+                })
+                .collect(),
+            evidence: "removed retained bound launcher and pointer; immutable CAS payload retained"
+                .into(),
+        })
     }
 
     fn recover(
         &self,
         request: &DeployTargetRequest<'_>,
-        _plan: &DeployPlan,
+        plan: &DeployPlan,
         _observed: &[ObservedResource],
-        _checkpoint: &mut CheckpointLedger<'_>,
+        checkpoint: &mut CheckpointLedger<'_>,
     ) -> Result<ApplyReport, MechanismError> {
-        Err(effect_not_ready(request, "recover"))
+        if request.recovery_intent.is_none() {
+            return Err(effect_not_ready(
+                request,
+                "recovery without retained intent",
+            ));
+        }
+        self.apply(request, plan, checkpoint)
     }
 }
 

@@ -165,6 +165,47 @@ pub(super) fn verify_existing(
     validate(&capsule, request, bridge, binding, roots)
 }
 
+pub(super) fn verify_retained(
+    lease: &LifecycleLease,
+    run_id: &str,
+    bridge: &Bridge,
+    binding: &EnvironmentOperationBinding,
+    roots: &RootTokens,
+) -> Result<()> {
+    let capsule = read_capsule(lease, run_id)?.ok_or_else(|| refused("retained capsule absent"))?;
+    validate(&capsule, capsule.request.as_bytes(), bridge, binding, roots)
+}
+
+pub(super) fn retained_target(
+    lease: &LifecycleLease,
+    run_id: &str,
+) -> Result<vibe_core::manifest::DeployTarget> {
+    let capsule = read_capsule(lease, run_id)?.ok_or_else(|| refused("retained input absent"))?;
+    let value = canonical_value(capsule.request.as_bytes())?;
+    let text = |key: &str| {
+        value[key]
+            .as_str()
+            .map(str::to_owned)
+            .ok_or_else(|| refused("retained target field absent"))
+    };
+    let config = if value["config"].is_null() {
+        None
+    } else {
+        Some(vibe_core::manifest::ExtensionConfig::from_table(
+            serde_json::from_value::<toml::Table>(value["config"].clone())?,
+        ))
+    };
+    Ok(vibe_core::manifest::DeployTarget {
+        id: text("target")?,
+        artifact: text("artifact")?,
+        mechanism: text("mechanism")?.parse().map_err(refused)?,
+        provider: None,
+        when: None,
+        depends_on: Some(Vec::new()),
+        config,
+    })
+}
+
 /// Historical inspection requires a newly issued, held host grant. Capsule
 /// paths are values only; the settings Project is never opened from them.
 pub(crate) fn inspect_host_admitted_bound_vibe_bin_cold(

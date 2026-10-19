@@ -336,7 +336,10 @@ impl DeployProvider for ClosedProvider<'_> {
                     self.boundary.set(GenericEffect::Destinations);
                 }
                 let directory = root.dir(&components, true).map_err(mechanism)?;
-                root.publish_new_in(&directory, &name, after)
+                // Retained semantics stage absent-file desired blobs as 0600.
+                // Publish that exact mode too; ambient umask must not make a
+                // just-created file immediately fail retained cleanup.
+                root.publish_new_in_with_mode(&directory, &name, after, Some(0o600))
             };
             match publication {
                 Ok(_) => self.boundary.set(GenericEffect::Destinations),

@@ -33,7 +33,8 @@ use crate::{
 
 mod fixed_deploy;
 pub use fixed_deploy::{
-    FixedDeployHostAdmission, FixedDeploySubmitError, submit_fixed_bound_vibe_bin,
+    FixedDeployCleanupAdmission, FixedDeployCleanupPlan, FixedDeployHostAdmission,
+    FixedDeploySubmitError, cleanup_fixed_bound_vibe_bin, submit_fixed_bound_vibe_bin,
 };
 
 /// Historical status only. In particular there is no fresh Ready/dispatch
@@ -445,7 +446,17 @@ fn map_deploy_observation(observed: Option<BoundDeployBridgeInspection>) -> Depl
             RetainedInspection::Uncertain {
                 run_id,
                 partial: DeployPartial {
-                    intent: partial.intent,
+                    // The existing external carrier has no inverse member.
+                    // Preserve the retained cleanup journal in its unavailable
+                    // detail instead of falsely reporting no pending work.
+                    intent: if partial.inverse == "absent" {
+                        partial.intent
+                    } else {
+                        format!(
+                            "unavailable: forward intent {}; retained inverse {}",
+                            partial.intent, partial.inverse
+                        )
+                    },
                     receipt: partial.receipt,
                     sidecar: partial.sidecar,
                 },
