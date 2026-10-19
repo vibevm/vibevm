@@ -1,0 +1,109 @@
+{
+  "verdict": "source_evidence_clear_original_F2_scope_with_reported_backend_qualification",
+  "p1": 0,
+  "p2": 0,
+  "findings": [],
+  "canonical_acceptance": false,
+  "recommendation": "Root ordinary verification/intake using actual qualified configuration and preserved globalfmt failure",
+  "source_head": "a50bcb82edcf48b8002faa259f7a0c51a03b9e5a",
+  "source_hashes": {
+    "/fast/git/v/vibevm-next/crates/vibe-cli/tests/m_06_f_2_cases.rs": "cfdd54935391a9bfca4131f944e895277a6a876cf4bb6001805a9d167930c3a7",
+    "/fast/git/v/vibevm-next/crates/vibe-mcp/src/tools/boot_debugger.rs": "533c65126a04b0a7c730b51c57ee52f380cad18e3d3df18450999981f9a23705",
+    "/fast/git/v/vibevm-next/crates/vibe-mcp/src/tools/boot_debugger/m_06_f_2_cases.rs": "6f7432f37ac8a798b6c6c72d7e489ab0669d917021b834f600384a6278749013",
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/capture.rs": "f89d84953082d67f7dd4a2fd418a0f60b74606259652301b46074ee7fa24d608",
+    "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/mod.rs": "ca2bc6c1bd2d78e3aea8007a0a8f6b37bb9f225cf4d99fcbf1500c1a9a6600b5",
+    "/fast/git/v/vibevm-next/crates/vibe-package-source/src/source/preview.rs": "f8ca335794a2029d8523a8a1b2af3723bd4a6af3ef17b3df5e021be936b8349f",
+    "/fast/git/v/vibevm-next/crates/vibe-package-source/src/source/scenario.rs": "d3906c1c7ae68253beaa4d7cf36313f73686bfdedab1148d5539ce130aa7f445",
+    "/fast/git/v/vibevm-next/crates/vibe-safefs/src/file/bounded.rs": "6be01a52290b03d569ad42c00c2bc05c5487a6a16351eace1386270a7f1c21f2",
+    "/fast/git/v/vibevm-next/crates/vibe-safefs/src/file/bounded_tests.rs": "20f7bb47c61d42e6bbf7dfbc24934932ab38f85bd8b9914e7106f6acf7c52a18",
+    "/fast/git/v/vibevm-next/crates/vibe-spec/src/compiler/m_06_f_2_cases.rs": "82cb79e82bd0c2f5bd8f03bfafbfd186f9555b6921656b9b389e36e574dc3722",
+    "/fast/git/v/vibevm-next/crates/vibe-spec/src/compiler/mod.rs": "4d51142d91fda2fd875be7256aba884ea6336ca2d6c3ba319096c237ea7d7e21",
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/m_06_f_2_cases.rs": "888e1cf195aa511d5c44daee8f9038ca9fba711181ada42e500f7b523b0c7b04",
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/m_06_f_2_fixture.rs": "2c569117e691f1a8f5baf15ec58b5a95f21f584db075c99b0b98e27546b9479a",
+    "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/mod.rs": "8f2a8e424249f9e03a5f4ebea2c263e35ab84457475eb0dc6697ccfc28139b1e",
+    "/fast/git/v/vibevm-next/vibevm/vibespecs/common/PROP-072-boot-observability.xml": "f6aa4a213baf6ad85a1b9b4ec76e9179646e4141c51fe5efae99910e5cf996d8"
+  },
+  "source_drift": [],
+  "source_count": 15,
+  "source_freeze_sha256": "e2f3ba5e2adcfa2c93b1ee51c5117a005854a25c0f5e0671be6b588eb55de4a1",
+  "artifacts": [
+    {
+      "kind": "report",
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/e2424981e7c119e914f04a2924a5bc98692ec578888ba41799844189f77a07f7",
+      "sha256": "e2424981e7c119e914f04a2924a5bc98692ec578888ba41799844189f77a07f7",
+      "bytes": 31190
+    },
+    {
+      "kind": "patch",
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/a009561c54f8baf48cac7f9292d4c6282a2a7d1de00f4c07a94fe4c81f40d3ff",
+      "sha256": "a009561c54f8baf48cac7f9292d4c6282a2a7d1de00f4c07a94fe4c81f40d3ff",
+      "bytes": 54476
+    }
+  ],
+  "artifact_sha_and_length_verified": true,
+  "patch_matches_exact_frozen_tracked_untracked_paths": true,
+  "unexpected_changed_paths": [],
+  "reverse_patch_check_exit": 0,
+  "scope": {
+    "original_goal_criteria_preserved": true,
+    "six_corrective_owners_Root_authorized": true,
+    "schema_dependency_config_changes": false,
+    "PROP048_changed": false
+  },
+  "spec_preservation": {
+    "all_HEAD_bytes_preserved_after_removing_two_additive_lines": true,
+    "prior_fact_clauses_preserved": 28,
+    "new_clauses": [
+      "DEBUGGER-CAPTURE-POLICY",
+      "DEBUGGER-SCALE-EVIDENCE"
+    ]
+  },
+  "reported_final_tests": {
+    "original_families_passed": 11,
+    "workspace": 3,
+    "CLI_integration": 4,
+    "MCP": 2,
+    "spec": 2,
+    "supplemental_SafeFS": 3,
+    "per_command_vibe_spec_codegen_backend": "llvm",
+    "default_backend_or_release_pass_claimed": false,
+    "Cranelift_cause_proven": false
+  },
+  "previous_failures_preserved": {
+    "prior_partial_selected": 10,
+    "prior_passed": 8,
+    "prior_failed": 2,
+    "capture_refusal_reproduced_before_correction": true
+  },
+  "literal_checks": {
+    "globalfmt": "exit1;7 unrelated unchanged baseline paths;not waived",
+    "scoped_14_Rust_fmt": "exit0;not global success",
+    "diff_check": "exit0"
+  },
+  "evidence_qualifiers": {
+    "synthetic_units": 1048576,
+    "exact_model_tokens": "unavailable",
+    "result_bytes": 3152896,
+    "scalars": 2104064,
+    "max_raw_chunk_bytes": 2048,
+    "max_chunk_RPC_frame_bytes": 10169,
+    "max_page_JSON_bytes": 2376,
+    "process_VmHWM_kB": 108628,
+    "isolated_heap_or_total_memory_bound": "unavailable",
+    "large_capture_threshold_regression_bytes": 67108865,
+    "cancellation": "inspection only;build cancel not requested",
+    "native_crossplatform_execution_claim": false
+  },
+  "review_actions": {
+    "tests": 0,
+    "cargo": 0,
+    "target_access": 0,
+    "source_writes": 0,
+    "git_mutations": 0,
+    "api_DB_config_runtime_actions": 0,
+    "models": 0,
+    "delegates": 0,
+    "process_state_reads": 0
+  },
+  "report_sha256": "22642e264953afa4ba510cd1e4621f4ef7cd76324d35e6f16a0a93eb2c32331e"
+}

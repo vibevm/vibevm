@@ -1,0 +1,95 @@
+{
+  "root_HEAD": "a50bcb82edcf48b8002faa259f7a0c51a03b9e5a",
+  "files": [
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-cli/tests/m_06_f_2_cases.rs",
+      "sha256": "cfdd54935391a9bfca4131f944e895277a6a876cf4bb6001805a9d167930c3a7",
+      "bytes": 8071
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-mcp/src/tools/boot_debugger.rs",
+      "sha256": "533c65126a04b0a7c730b51c57ee52f380cad18e3d3df18450999981f9a23705",
+      "bytes": 28593
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-mcp/src/tools/boot_debugger/m_06_f_2_cases.rs",
+      "sha256": "6f7432f37ac8a798b6c6c72d7e489ab0669d917021b834f600384a6278749013",
+      "bytes": 14142
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/capture.rs",
+      "sha256": "f89d84953082d67f7dd4a2fd418a0f60b74606259652301b46074ee7fa24d608",
+      "bytes": 7042
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-orchestrator/src/document_analysis/mod.rs",
+      "sha256": "ca2bc6c1bd2d78e3aea8007a0a8f6b37bb9f225cf4d99fcbf1500c1a9a6600b5",
+      "bytes": 8697
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-package-source/src/source/preview.rs",
+      "sha256": "f8ca335794a2029d8523a8a1b2af3723bd4a6af3ef17b3df5e021be936b8349f",
+      "bytes": 11423
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-package-source/src/source/scenario.rs",
+      "sha256": "d3906c1c7ae68253beaa4d7cf36313f73686bfdedab1148d5539ce130aa7f445",
+      "bytes": 8552
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-safefs/src/file/bounded.rs",
+      "sha256": "6be01a52290b03d569ad42c00c2bc05c5487a6a16351eace1386270a7f1c21f2",
+      "bytes": 23744
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-safefs/src/file/bounded_tests.rs",
+      "sha256": "20f7bb47c61d42e6bbf7dfbc24934932ab38f85bd8b9914e7106f6acf7c52a18",
+      "bytes": 23617
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-spec/src/compiler/m_06_f_2_cases.rs",
+      "sha256": "82cb79e82bd0c2f5bd8f03bfafbfd186f9555b6921656b9b389e36e574dc3722",
+      "bytes": 3273
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-spec/src/compiler/mod.rs",
+      "sha256": "4d51142d91fda2fd875be7256aba884ea6336ca2d6c3ba319096c237ea7d7e21",
+      "bytes": 960
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/m_06_f_2_cases.rs",
+      "sha256": "888e1cf195aa511d5c44daee8f9038ca9fba711181ada42e500f7b523b0c7b04",
+      "bytes": 7637
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/m_06_f_2_fixture.rs",
+      "sha256": "2c569117e691f1a8f5baf15ec58b5a95f21f584db075c99b0b98e27546b9479a",
+      "bytes": 630
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/crates/vibe-workspace/src/boot_debugger/mod.rs",
+      "sha256": "8f2a8e424249f9e03a5f4ebea2c263e35ab84457475eb0dc6697ccfc28139b1e",
+      "bytes": 5600
+    },
+    {
+      "path": "/fast/git/v/vibevm-next/vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "sha256": "f6aa4a213baf6ad85a1b9b4ec76e9179646e4141c51fe5efae99910e5cf996d8",
+      "bytes": 31393
+    }
+  ],
+  "artifacts": [
+    {
+      "kind": "report",
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/e2424981e7c119e914f04a2924a5bc98692ec578888ba41799844189f77a07f7",
+      "sha256": "e2424981e7c119e914f04a2924a5bc98692ec578888ba41799844189f77a07f7",
+      "bytes": 31190
+    },
+    {
+      "kind": "patch",
+      "path": "/fast/zap-managed/2026-10-17-vibevm-campaign/service/artifacts/blobs/a009561c54f8baf48cac7f9292d4c6282a2a7d1de00f4c07a94fe4c81f40d3ff",
+      "sha256": "a009561c54f8baf48cac7f9292d4c6282a2a7d1de00f4c07a94fe4c81f40d3ff",
+      "bytes": 54476
+    }
+  ],
+  "candidate": "managed-result.d0528e006e1a578250151e2e4b43abdf64a2afd1a859ab80cf66449725e2ca17"
+}
