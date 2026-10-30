@@ -576,10 +576,11 @@ script = "recipes/build.sh"
         .unwrap()
         .to_string()
         + "sources = []\n[installer_options.installation.recipe]\nscript = \"build.sh\"\n";
-    assert!(
-        Manifest::parse_str(&empty)
-            .unwrap_err()
-            .to_string()
-            .contains("at least one")
-    );
+    // No sources: the package tree itself is the input (PROP-059#source-build).
+    let manifest = Manifest::parse_str(&empty).unwrap();
+    let InstallerMethod::SourceBuild { sources, .. } = &manifest.installer_options[0].installation
+    else {
+        panic!("source_build expected");
+    };
+    assert!(sources.is_empty());
 }

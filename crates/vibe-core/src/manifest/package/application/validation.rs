@@ -391,11 +391,7 @@ fn credential_free_https(value: &str) -> bool {
 /// executes the declaration this accepts.
 fn validate_source_build(sources: &[SourceInputDecl], recipe: &RecipeDecl) -> Result<(), String> {
     let table = "[installer_options.installation]";
-    if sources.is_empty() {
-        return Err(format!(
-            "{table}.sources must declare at least one source_build input"
-        ));
-    }
+    // No sources is valid: the package tree itself is then the only input.
     let mut names = BTreeSet::new();
     for source in sources {
         let single = declarant_path(Path::new(&source.name)).is_ok()
