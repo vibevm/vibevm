@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>User applications on native macOS (PROP-059) — source build, launchers, proxies, shell, external volume</title>
+  <p><purpose fact="true" status="impl/work">**Purpose.** macOS has no Linux fixture coverage for: the parent-shell detection through `proc_pidpath` (zsh is the default login shell), the `/bin/zsh` fallback, a source build with the Xcode command-line tools, signals through the proxy in Terminal, and an external volume under `/Volumes` as a storage library. The owner proves these here, on a real Mac (`PROP-059#acceptance`).</purpose></p>
+  <p><isolation-note fact="true" status="impl/work">Every step runs against an isolated settings root (`VIBE_SETTINGS`). The Vim source tarball (about 20 MB) is downloaded once and cached under that root.</isolation-note></p>
+  <section title="Preconditions">
+    <facts ordered="false">
+      <PRE-HOST fact="true" status="impl/work">macOS 14 or newer on Apple silicon or Intel; Xcode command-line tools (`xcode-select --install`) for `cc`, `make` and the curses headers; network access to github.com.</PRE-HOST>
+      <PRE-BINARIES fact="true" status="impl/work">`cargo build -p vibe-cli --bins`: `target/debug/vibe` and `target/debug/vibe-app-proxy` beside it.</PRE-BINARIES>
+      <PRE-PACKAGE fact="true" status="impl/work">The Vim bridge `org.vibevm.apps/vim@1.1.0` resolvable from the registry or from a checkout laid out as `&lt;reg&gt;/org.vibevm.apps/vim/v1.1.0/` with `--registry &lt;reg&gt;`.</PRE-PACKAGE>
+      <PRE-VOLUME fact="true" status="impl/work">Optional for step 6: an external volume (USB disk or a mounted disk image) with a free directory.</PRE-VOLUME>
+    </facts>
+  </section>
+  <section title="Setup">
+    <fence>export VIBE_SETTINGS="$TMPDIR/vibe-mt05"; rm -rf "$VIBE_SETTINGS"
+vibe=&lt;checkout&gt;/target/debug/vibe</fence>
+  </section>
+  <section title="Steps">
+    <facts ordered="true">
+      <STEP-1-DETECT fact="true" status="impl/work">**Detection picks the macOS source build for this CPU.**</STEP-1-DETECT>
+    </facts>
+    <fence>$vibe app installers org.vibevm.apps/vim</fence>
+    <p><EXP-1 fact="true" status="impl/work">**Expected.** `Detected: macos/aarch64` (or `x86_64`), the macOS platform listed first and marked detected, with exactly one installer detected for the CPU (`macos-source-arm64` or `macos-source-intel`, type `source_build`, one URL source, recipe `recipes/build-posix.sh`).</EXP-1></p>
+    <facts ordered="true">
+      <STEP-2-BUILD fact="true" status="impl/work">**Source build with host detection.**</STEP-2-BUILD>
+    </facts>
+    <fence>time $vibe install -g org.vibevm.apps/vim --unattended
+ls "$VIBE_SETTINGS/opt/apps/vim/org.vibevm.apps.vim@1.1.0/bin" "$VIBE_SETTINGS/cache/app-sources"
+ls "$VIBE_SETTINGS/cache/app-build" 2&gt;/dev/null</fence>
+    <p><EXP-2 fact="true" status="impl/work">**Expected.** The tarball is fetched and verified, `configure` / `make` / `make install` output streams live, the install finishes in a few minutes, and the payload holds `bin/vim` (the wrapper), `bin/vim-bin` and `share/vim/vim92`. The tarball sits in `cache/app-sources/&lt;sha256&gt;/v9.2.1167.tar.gz`; `cache/app-build` is empty or absent (the work directory is deleted after success). `opt/bin/vim` is a copy of the proxy.</EXP-2></p>
+    <facts ordered="true">
+      <STEP-3-RUNTIME fact="true" status="impl/work">**The relocated payload finds its runtime.**</STEP-3-RUNTIME>
+    </facts>
+    <fence>"$VIBE_SETTINGS/opt/bin/vim" --version | head -2
+"$VIBE_SETTINGS/opt/bin/vim"     # interactive: :echo $VIMRUNTIME  then  :q</fence>
+    <p><EXP-3 fact="true" status="impl/work">**Expected.** The banner says 9.2 with patches 1-1167. Inside Vim, `$VIMRUNTIME` is `…/opt/apps/vim/org.vibevm.apps.vim@1.1.0/share/vim/vim92` (not a path under `cache/app-build`), syntax highlighting works on a `.sh` file, and `:q` returns to the shell with exit 0.</EXP-3></p>
+    <facts ordered="true">
+      <STEP-4-SIGNALS fact="true" status="impl/work">**Signals through the proxy in Terminal.**</STEP-4-SIGNALS>
+    </facts>
+    <fence>"$VIBE_SETTINGS/opt/bin/vim"     # interactive: press Ctrl+C, then :q
+"$VIBE_SETTINGS/opt/bin/vim" &amp; sleep 1; kill -TERM $!; wait $!; echo "exit=$?"</fence>
+    <p><EXP-4 fact="true" status="impl/work">**Expected.** `Ctrl+C` reaches Vim, which shows its usual hint and keeps running; `:q` exits 0. `SIGTERM` to the proxy is forwarded to Vim and the proxy exits with `143` (128 + 15).</EXP-4></p>
+    <facts ordered="true">
+      <STEP-5-SHELL fact="true" status="impl/work">**`vibe shell` from zsh, from bash, and from an unrecognised parent.**</STEP-5-SHELL>
+    </facts>
+    <fence>$vibe shell            # from the default zsh
+echo "$0 ${PATH%%:*}"; vim --version | head -1; exit
+bash -c "$vibe shell"  # from bash
+python3 -c "import os; os.execv('$vibe', ['vibe', 'shell'])"   # unrecognised parent</fence>
+    <p><EXP-5 fact="true" status="impl/work">**Expected.** From zsh the child is the same zsh image; from bash it is that bash; from the Python parent it is the fallback `/bin/zsh`. In every case the first PATH entry is `$VIBE_SETTINGS/opt/bin`, `vim --version` works, and `exit` returns the shell's status. `--json` and a non-terminal invocation are refused.</EXP-5></p>
+    <facts ordered="true">
+      <STEP-6-VOLUME fact="true" status="impl/work">**An external volume as a library.** With a volume mounted at `/Volumes/USB`:</STEP-6-VOLUME>
+    </facts>
+    <fence>$vibe storage add /Volumes/USB/vibe-apps --id usb
+$vibe storage move org.vibevm.apps/vim@1.1.0 --to usb
+vim --version | head -1
+diskutil unmount /Volumes/USB
+$vibe app list; "$VIBE_SETTINGS/opt/bin/vim" --version; echo "exit=$?"
+# remount the volume
+$vibe app list
+$vibe storage move org.vibevm.apps/vim@1.1.0 --to default; $vibe storage gc</fence>
+    <p><EXP-6 fact="true" status="impl/work">**Expected.** The library marker is written on the volume, the move copies the payload there (the wrapper keeps working because `$VIM` follows the payload), and `vim --version` runs from the volume. After unmounting, `app list` shows `unavailable` with the reason and the proxy exits 127 with one `vibe-app-proxy: unavailable: …` line. After remounting it is `ready` again without any command; the move back and `gc` leave nothing unreferenced.</EXP-6></p>
+    <facts ordered="true">
+      <STEP-7-OFFLINE fact="true" status="impl/work">**Offline reinstall from the source cache, then uninstall.**</STEP-7-OFFLINE>
+    </facts>
+    <fence>$vibe --offline install -g org.vibevm.apps/vim --unattended
+$vibe uninstall -g org.vibevm.apps/vim@1.1.0
+ls "$VIBE_SETTINGS/opt/bin" "$VIBE_SETTINGS/opt/apps/vim" 2&gt;&amp;1</fence>
+    <p><EXP-7 fact="true" status="impl/work">**Expected.** The offline reinstall rebuilds from the cached tarball without network and replaces the payload in place. The uninstall deletes the payload directory and, as the last provider, the `opt/bin/vim` proxy; `opt/apps/vim` is empty.</EXP-7></p>
+  </section>
+  <section title="Pass">
+    <p><pass-criteria fact="true" status="impl/work">Every step reads as described on a real Mac: detection, the source build with the Xcode tools, the relocated runtime, signals through the proxy, `vibe shell` for zsh, bash and the fallback, the external-volume library with unavailability and moves, the offline rebuild and a clean uninstall. The owner signs the date below.</pass-criteria></p>
+  </section>
+  <section title="Sign-off">
+    <facts ordered="false">
+      <SIGNOFF-OWNER fact="true" status="impl/work">[ ] Owner sign-off on native macOS (date / initials): ______</SIGNOFF-OWNER>
+    </facts>
+  </section>
+</spec>

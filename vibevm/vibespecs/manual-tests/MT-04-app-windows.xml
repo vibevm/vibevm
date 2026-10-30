@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>User applications on native Windows (PROP-059) — ZIP install, launchers, proxies, shell, storage</title>
+  <p><purpose fact="true" status="impl/work">**Purpose.** The Linux fixtures prove the application subsystem's logic (install, launch, proxies, alternatives, storage, source builds). Windows differs in what no fixture reaches from Linux: the ZIP method and its payload layout, the `.exe` proxy copies in `opt\bin`, direct native launch of `gvim.exe` without an intermediate `cmd`, `Ctrl+C` through the proxy, `vibe shell` reusing `cmd.exe` / PowerShell / `pwsh`, and a removable drive as a storage library. The owner proves these here, on a real Windows machine (`PROP-059#acceptance`).</purpose></p>
+  <p><isolation-note fact="true" status="impl/work">Every step runs against an isolated settings root (`VIBE_SETTINGS`), so the operator's real `~\.vibe` is never touched. Vim's upstream ZIP (about 15 MB) is downloaded once.</isolation-note></p>
+  <section title="Preconditions">
+    <facts ordered="false">
+      <PRE-HOST fact="true" status="impl/work">Windows 10/11 x86_64 with PowerShell and `cmd.exe`; network access to github.com.</PRE-HOST>
+      <PRE-BINARIES fact="true" status="impl/work">`cargo build -p vibe-cli --bins` on the machine: `target\debug\vibe.exe` AND `target\debug\vibe-app-proxy.exe` beside it (the proxy image is copied into `opt\bin` for every public command).</PRE-BINARIES>
+      <PRE-PACKAGE fact="true" status="impl/work">The Vim bridge `org.vibevm.apps/vim@1.1.0` is resolvable: either published to the registry, or a checkout of `vibevm-packages/vim` laid out as `&lt;reg&gt;\org.vibevm.apps\vim\v1.1.0\` and passed with `--registry &lt;reg&gt;`.</PRE-PACKAGE>
+      <PRE-DRIVE fact="true" status="impl/work">Optional for step 7: a removable drive (USB stick) with a free directory.</PRE-DRIVE>
+    </facts>
+  </section>
+  <section title="Setup">
+    <fence>$env:VIBE_SETTINGS = "$env:TEMP\vibe-mt04"
+Remove-Item -Recurse -Force $env:VIBE_SETTINGS -ErrorAction SilentlyContinue
+$vibe = "&lt;checkout&gt;\target\debug\vibe.exe"</fence>
+  </section>
+  <section title="Steps">
+    <facts ordered="true">
+      <STEP-1-INSTALLERS fact="true" status="impl/work">**Listing without installing.**</STEP-1-INSTALLERS>
+    </facts>
+    <fence>&amp; $vibe app installers org.vibevm.apps/vim --json</fence>
+    <p><EXP-1 fact="true" status="impl/work">**Expected.** A JSON listing whose `detected` names `windows` / `x86_64`, the `windows` platform first and marked detected, with installer `windows-zip` (type `zip`) and launchers `gvim` (default) and `vim`; the Ubuntu and source-build rows are listed but not detected. Nothing is downloaded and `$env:VIBE_SETTINGS` holds no `applications\index.json` yet.</EXP-1></p>
+    <facts ordered="true">
+      <STEP-2-INSTALL fact="true" status="impl/work">**ZIP install with host detection.**</STEP-2-INSTALL>
+    </facts>
+    <fence>&amp; $vibe install -g org.vibevm.apps/vim --unattended
+Get-ChildItem "$env:VIBE_SETTINGS\opt\apps\vim\org.vibevm.apps.vim@1.1.0"
+Get-ChildItem "$env:VIBE_SETTINGS\opt\bin"</fence>
+    <p><EXP-2 fact="true" status="impl/work">**Expected.** The ZIP is fetched and its SHA-256 verified; the payload (`vim92\gvim.exe`, `vim92\vim.exe`, `vim92\vim.ico`, the runtime tree) sits under `opt\apps\vim\org.vibevm.apps.vim@1.1.0\` because `payload_root = "vim"` selected the archive's `vim\` subtree. `opt\bin` holds `vim.exe` and `gvim.exe`, each a byte copy of `vibe-app-proxy.exe`. The summary line names the installation and `windows-zip`. `applications\index.json` has protocol `vibe-user-applications/3`, one installation with `library: "default"` and `portable: true`, and slot `vim` defaulting to it.</EXP-2></p>
+    <facts ordered="true">
+      <STEP-3-LAUNCHERS fact="true" status="impl/work">**Launcher listing and direct native launch.**</STEP-3-LAUNCHERS>
+    </facts>
+    <fence>&amp; $vibe app launchers org.vibevm.apps/vim
+&amp; $vibe app start org.vibevm.apps/vim
+&amp; $vibe app run org.vibevm.apps/vim vim -- --version</fence>
+    <p><EXP-3 fact="true" status="impl/work">**Expected.** Both launchers are `available` with resolved absolute paths inside the payload and the `.ico` resolved; `gvim` is marked default. `app start` opens a gVim window directly (Task Manager shows `gvim.exe` as a child of `vibe.exe`, no `cmd.exe` in between); closing it returns 0. `app run … vim -- --version` prints the Vim 9.2 banner in the console and exits 0.</EXP-3></p>
+    <facts ordered="true">
+      <STEP-4-PROXY fact="true" status="impl/work">**PATH proxy and Ctrl+C.**</STEP-4-PROXY>
+    </facts>
+    <fence>&amp; "$env:VIBE_SETTINGS\opt\bin\vim.exe" --version
+&amp; "$env:VIBE_SETTINGS\opt\bin\vim.exe"      # interactive: type :q&lt;Enter&gt;
+&amp; "$env:VIBE_SETTINGS\opt\bin\vim.exe"      # interactive: press Ctrl+C, then :q&lt;Enter&gt;</fence>
+    <p><EXP-4 fact="true" status="impl/work">**Expected.** The proxy starts console Vim in the same console with no intermediate shell; `--version` prints the banner. In the interactive runs Vim owns the console, `Ctrl+C` is seen by Vim (it shows `Type :qa and press &lt;Enter&gt;…`, the proxy does not die), and `:q` returns to PowerShell with exit 0. The proxy never prints anything of its own on success.</EXP-4></p>
+    <facts ordered="true">
+      <STEP-5-SHELL fact="true" status="impl/work">**`vibe shell` from PowerShell, `pwsh` and `cmd.exe`.**</STEP-5-SHELL>
+    </facts>
+    <fence>&amp; $vibe shell
+$env:PATH.Split(';')[0]
+vim --version
+exit</fence>
+    <p><EXP-5 fact="true" status="impl/work">**Expected.** From Windows PowerShell the child is `powershell.exe`; from `pwsh` it is `pwsh.exe`; from `cmd.exe` it is `cmd.exe` (the parent image is reused). Inside, the first PATH entry is `$env:VIBE_SETTINGS\opt\bin`, `vim --version` works through the proxy, and `exit` returns to the caller with the shell's own exit status. `vibe shell --json` and `vibe shell --unattended` are refused before any shell starts.</EXP-5></p>
+    <facts ordered="true">
+      <STEP-6-SESSION fact="true" status="impl/work">**Session choice (`VIBE_APP_USE`) with a second provider.** Install a second provider of the same slot — the published `org.vibevm.apps/vim@1.0.1` is one — then:</STEP-6-SESSION>
+    </facts>
+    <fence>&amp; $vibe app alternatives vim
+&amp; $vibe app use vim org.vibevm.apps/vim@1.0.1
+$env:VIBE_APP_USE = "vim=org.vibevm.apps/vim@1.1.0"; vim --version; Remove-Item Env:VIBE_APP_USE</fence>
+    <p><EXP-6 fact="true" status="impl/work">**Expected.** `alternatives` lists both providers, the default, and `vim` / `gvim` with the providers offering them. `app use` moves the global default; the session variable overrides it for that process only, and the next `vim --version` without the variable follows the global default again.</EXP-6></p>
+    <facts ordered="true">
+      <STEP-7-STORAGE fact="true" status="impl/work">**A removable drive as a library; unavailability; move.** With a USB drive `E:`:</STEP-7-STORAGE>
+    </facts>
+    <fence>&amp; $vibe storage add E:\vibe-apps --id usb
+&amp; $vibe storage move org.vibevm.apps/vim@1.1.0 --to usb
+vim --version
+# eject / unplug the drive
+&amp; $vibe app list
+vim --version; $LASTEXITCODE
+&amp; $vibe uninstall -g org.vibevm.apps/vim@1.1.0
+# plug the drive back in
+&amp; $vibe app list
+&amp; $vibe storage move org.vibevm.apps/vim@1.1.0 --to default
+&amp; $vibe storage gc</fence>
+    <p><EXP-7 fact="true" status="impl/work">**Expected.** `storage add` creates `E:\vibe-apps\vibe-library.toml` and lists `usb`. The move copies the payload to `E:\vibe-apps\apps\vim\…`, rewrites the index and deletes the old directory; `vim --version` still works through the unchanged proxy. With the drive gone, `app list` shows the installation `unavailable` with the reason (library directory missing), `vim.exe` exits 127 with one `vibe-app-proxy: unavailable: …` line, and `uninstall -g` is refused without touching anything. After re-plugging, `app list` shows `ready` with no other command; the move back succeeds, and `gc` reports nothing unreferenced.</EXP-7></p>
+    <facts ordered="true">
+      <STEP-8-UNINSTALL fact="true" status="impl/work">**Uninstall.**</STEP-8-UNINSTALL>
+    </facts>
+    <fence>&amp; $vibe uninstall -g org.vibevm.apps/vim@1.1.0
+Get-ChildItem "$env:VIBE_SETTINGS\opt\bin"; Get-ChildItem "$env:VIBE_SETTINGS\opt\apps\vim"</fence>
+    <p><EXP-8 fact="true" status="impl/work">**Expected.** The payload directory is deleted; with another provider still installed the slot default moves to it and the proxies stay; after the last provider is removed `opt\bin\vim.exe` and `gvim.exe` are gone and `opt\bin` keeps any unrelated file (the version-manager shims).</EXP-8></p>
+  </section>
+  <section title="Pass">
+    <p><pass-criteria fact="true" status="impl/work">Every step reads as described on a real Windows host: ZIP install, direct native launch of gVim, console Vim through the `.exe` proxy with Ctrl+C handled by Vim, `vibe shell` reusing each of the three parent shells, the session variable, the removable-drive library with unavailability and moves, and a clean uninstall. The owner signs the date below.</pass-criteria></p>
+  </section>
+  <section title="Sign-off">
+    <facts ordered="false">
+      <SIGNOFF-OWNER fact="true" status="impl/work">[ ] Owner sign-off on native Windows (date / initials): ______</SIGNOFF-OWNER>
+    </facts>
+  </section>
+</spec>
