@@ -65,6 +65,7 @@ pub mod run;
 pub mod scrape;
 pub mod search;
 pub mod select;
+pub mod shell;
 pub mod short_name;
 pub mod show;
 pub mod skill;

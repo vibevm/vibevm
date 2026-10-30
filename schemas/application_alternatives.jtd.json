@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "description": "Version 1 machine listing from vibe app alternatives SLOT --json.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#alternatives"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_alternatives"
+    },
+    "x-wire-order": ["protocol", "slot", "default", "providers", "commands"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "slot": { "type": "string" },
+    "default": { "type": "string", "nullable": true },
+    "providers": {
+      "elements": { "ref": "provider" },
+      "metadata": { "x-empty": "emit" }
+    },
+    "commands": {
+      "elements": { "ref": "command" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "package": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "status": {
+      "enum": ["ready", "unavailable"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "provider": {
+      "metadata": { "x-wire-order": ["key", "package", "method", "status", "reason", "default", "commands"] },
+      "properties": {
+        "key": { "type": "string" },
+        "package": { "ref": "package" },
+        "method": { "type": "string" },
+        "status": { "ref": "status" },
+        "reason": { "type": "string", "nullable": true },
+        "default": { "type": "boolean" },
+        "commands": {
+          "elements": { "type": "string" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "command": {
+      "metadata": { "x-wire-order": ["name", "providers"] },
+      "properties": {
+        "name": { "type": "string" },
+        "providers": {
+          "elements": { "type": "string" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    }
+  }
+}

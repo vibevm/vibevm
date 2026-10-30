@@ -8,10 +8,12 @@ use std::path::Path;
 
 use vibe_wire::generated::application_list as wire;
 
+use crate::alternatives::reserved_names;
 use crate::error::AppError;
 use crate::index::{Index, Installation, Location};
 use crate::installer::{self, shell};
 use crate::launch;
+use crate::proxies;
 use crate::resolve::qualified_ref;
 use crate::settings::SettingsRoot;
 use crate::storage::{Availability, Storage};
@@ -121,6 +123,7 @@ pub fn uninstall(
             }
         };
     let slot = installation.slot.clone();
+    let reserved = reserved_names(&index);
     index.installations.remove(&key);
     if index.default_of(&slot) == Some(key.as_str()) {
         let ready: Vec<&String> = index
@@ -145,6 +148,12 @@ pub fn uninstall(
         fs::remove_dir_all(&directory)
             .map_err(|source| installer::io("removing", &directory, source))?;
     }
+    proxies::sync(
+        ctx.settings,
+        &reserved,
+        &reserved_names(&index),
+        ctx.proxy_image,
+    )?;
     Ok(Outcome {
         command: Command::Uninstall,
         slot_default: index.default_of(&slot).map(str::to_owned),
@@ -169,11 +178,7 @@ pub fn list(settings: &SettingsRoot) -> Result<wire::ApplicationList, AppError> 
         .iter()
         .map(|(key, record)| {
             let root = launch::app_root(record, &storage);
-            let reason = match &root {
-                Ok(root) if root.is_dir() => None,
-                Ok(root) => Some(format!("app_root `{}` is missing", root.display())),
-                Err(reason) => Some(reason.clone()),
-            };
+            let reason = launch::unavailable_reason(&root);
             wire::Installation {
                 key: key.clone(),
                 slot: record.slot.clone(),

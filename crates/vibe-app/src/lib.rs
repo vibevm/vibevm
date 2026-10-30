@@ -2,8 +2,9 @@
 //! install an upstream application per platform, how to launch it and which
 //! commands it puts on PATH. This crate owns every capability — settings,
 //! storage libraries, the index, resolution, selection, installers, the
-//! install / update / uninstall operations and launch — and the CLI and the
-//! PATH proxy stay thin callers.
+//! install / update / uninstall operations, launch, slot alternatives, PATH
+//! proxy synchronisation and session choices — and the CLI and the PATH proxy
+//! stay thin callers.
 //!
 //! Durable state is plain files replaced atomically: one index, one
 //! `storage.toml`, library markers and directories. An interrupted operation
@@ -20,16 +21,22 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#library-first");
 
+mod alternatives;
 mod error;
 mod index;
 mod installer;
 mod launch;
 mod operations;
+mod proxies;
 mod resolve;
 mod select;
+mod session;
 mod settings;
 mod storage;
 
+pub use alternatives::{
+    DefaultChange, listing as alternatives_listing, reserved_commands, set_default,
+};
 pub use error::{AppError, InstallerError, LaunchError, ResolveError, StateError};
 pub use index::{
     AuthoredCommands, INDEX_PROTOCOL, Index, Installation, Location, Method, PackageCoordinate,
@@ -41,12 +48,14 @@ pub use launch::{
 pub use operations::{
     Command, InstallRequest, OperationContext, Outcome, install, installed, list, uninstall, update,
 };
+pub use proxies::{proxy_file_name, sync as sync_proxies};
 pub use resolve::{
     ResolvedPackage, from_global, from_local_registry, from_manifest, qualified_ref,
 };
 pub use select::{
     Chooser, InstallChoice, detected_arch, detected_platform, options_listing, select_option,
 };
+pub use session::{SESSION_VARIABLE, SessionChoices};
 pub use settings::{MutationLock, SettingsRoot};
 pub use storage::{
     Availability, DEFAULT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker, Storage, StorageConfig,

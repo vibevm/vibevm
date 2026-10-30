@@ -4504,6 +4504,7 @@ dependencies = [
  "futures",
  "indicatif",
  "jsonschema",
+ "libc",
  "predicates",
  "progress-core",
  "rat-salsa",

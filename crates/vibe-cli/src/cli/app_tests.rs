@@ -159,11 +159,30 @@ fn global_application_force_is_accepted_for_each_operation() {
 }
 
 #[test]
-fn app_list_parses_and_alternatives_wait_for_their_phase() {
+fn app_list_use_alternatives_and_shell_parse() {
     let cli = Cli::try_parse_from(["vibe", "app", "list", "--json"]).unwrap();
     let Command::App(app) = cli.command else {
         panic!("expected app command");
     };
     assert!(matches!(app.command, AppCommand::List));
-    assert!(Cli::try_parse_from(["vibe", "app", "alternatives", "editor"]).is_err());
+    let cli = Cli::try_parse_from(["vibe", "app", "alternatives", "editor"]).unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app command");
+    };
+    assert!(matches!(app.command, AppCommand::Alternatives { slot } if slot == "editor"));
+    let cli =
+        Cli::try_parse_from(["vibe", "app", "use", "editor", "org.example/vim@9.1.0"]).unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app command");
+    };
+    assert!(
+        matches!(app.command, AppCommand::Use { slot, key } if slot == "editor" && key == "org.example/vim@9.1.0")
+    );
+    assert!(Cli::try_parse_from(["vibe", "app", "use", "editor"]).is_err());
+    let cli = Cli::try_parse_from(["vibe", "shell", "-g", "--use", "a=x", "--use", "b=y"]).unwrap();
+    let Command::Shell(shell) = cli.command else {
+        panic!("expected shell command");
+    };
+    assert!(shell.global);
+    assert_eq!(shell.uses, ["a=x", "b=y"]);
 }

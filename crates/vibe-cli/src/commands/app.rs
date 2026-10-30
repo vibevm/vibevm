@@ -1,9 +1,11 @@
 //! CLI adapter for installed applications: `vibe app installers`,
-//! `launchers`, `run`, `start` and `list` over the `vibe-app` library. This
-//! adapter parses, chooses an ID in an attended terminal and renders.
+//! `launchers`, `run`, `start`, `list`, `use` and `alternatives` over the
+//! `vibe-app` library. This adapter parses, chooses an ID in an attended
+//! terminal and renders.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations");
 
+mod alternatives;
 pub(crate) mod global;
 
 use std::ffi::OsString;
@@ -61,6 +63,14 @@ pub fn run(
             } else {
                 print_list(&listing, ctx.is_quiet());
             }
+            Ok(None)
+        }
+        AppCommand::Use { slot, key } => {
+            alternatives::use_default(ctx, &slot, &key)?;
+            Ok(None)
+        }
+        AppCommand::Alternatives { slot } => {
+            alternatives::alternatives(ctx, &slot)?;
             Ok(None)
         }
         AppCommand::Run {

@@ -189,9 +189,11 @@ fn shell_method_installs_lists_runs_and_runs_the_authored_uninstall() {
     assert_eq!(record["appRoot"], app_root.display().to_string());
     assert_eq!(record["portable"], false);
     assert_eq!(record["publicCommands"][0]["name"], "tool");
-    assert!(
-        !user.settings.join("opt/bin").exists(),
-        "PATH proxies are a later phase"
+    let proxy = user.settings.join("opt/bin/tool");
+    assert_eq!(
+        fs::read(&proxy).unwrap(),
+        fs::read(env!("CARGO_BIN_EXE_vibe-app-proxy")).unwrap(),
+        "the reserved command `tool` has its PATH proxy"
     );
 
     let listed = json(&fixture.vibe(&user, &["app", "list", "--json"]));
@@ -230,6 +232,7 @@ fn shell_method_installs_lists_runs_and_runs_the_authored_uninstall() {
     assert!(String::from_utf8_lossy(&removed.stderr).contains("SHELL_UNINSTALLED"));
     assert!(fixture.root.path().join("uninstalled.marker").is_file());
     assert!(app_root.is_dir(), "an external app_root is never deleted");
+    assert!(!proxy.exists(), "the last provider's proxy is removed");
     assert_eq!(index(&user)["installations"], serde_json::json!({}));
 }
 

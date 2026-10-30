@@ -22,6 +22,7 @@ pub enum FormatId {
     ApplicationIndex,
     ArtifactRecord,
     BootArtifactTransaction,
+    CliApplicationAlternatives,
     CliApplicationInstallerOptions,
     CliApplicationLaunchers,
     CliApplicationList,

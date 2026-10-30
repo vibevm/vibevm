@@ -30,6 +30,7 @@ mod requirements;
 mod run;
 mod scrape;
 mod select;
+mod shell;
 mod skill;
 mod specmap;
 mod term;
@@ -56,6 +57,7 @@ pub use requirements::*;
 pub use run::*;
 pub use scrape::*;
 pub use select::*;
+pub use shell::*;
 pub use skill::*;
 pub use specmap::*;
 pub use term::*;
@@ -184,6 +186,11 @@ pub enum Command {
 
     /// List and run launchers of an already installed user application.
     App(AppArgs),
+
+    /// Start an interactive shell with installed applications on PATH and the
+    /// given per-shell provider choices (`--use SLOT=KEY`).
+    #[command(long_about = shell::LONG_ABOUT)]
+    Shell(ShellArgs),
 
     /// Run the default lifecycle through agentic creation.
     Create(LifecycleArgs),
@@ -489,6 +496,12 @@ pub enum AppCommand {
         #[arg(last = true, allow_hyphen_values = true)]
         args: Vec<String>,
     },
+
+    /// Make one installation the global default provider of its slot.
+    Use { slot: String, key: String },
+
+    /// List the providers of a slot, its default and the commands each provides.
+    Alternatives { slot: String },
 
     /// Run the declared default launcher, or ask in an interactive terminal.
     Start {

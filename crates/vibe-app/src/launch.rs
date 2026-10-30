@@ -111,6 +111,15 @@ pub fn app_root(installation: &Installation, storage: &Storage) -> Result<PathBu
     }
 }
 
+/// Why a derived `app_root` is not ready, or `None` when it is a directory.
+pub(crate) fn unavailable_reason(root: &Result<PathBuf, String>) -> Option<String> {
+    match root {
+        Ok(root) if root.is_dir() => None,
+        Ok(root) => Some(format!("app_root `{}` is missing", root.display())),
+        Err(reason) => Some(reason.clone()),
+    }
+}
+
 /// A launch point resolved against the installed payload.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-paths")]

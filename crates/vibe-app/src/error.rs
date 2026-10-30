@@ -259,4 +259,38 @@ pub enum AppError {
         path: String,
         reason: String,
     },
+    #[error(
+        "command `{command}` is reserved by slot `{owner}` and cannot be claimed by slot `{slot}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-059#alternatives; fix: uninstall the providers of `{owner}` first, \
+         or install a package whose public commands do not collide)"
+    )]
+    CommandReserved {
+        command: String,
+        slot: String,
+        owner: String,
+    },
+    #[error(
+        "slot `{slot}` has no installed provider (violates spec://org.vibevm.core/vibevm/common/PROP-059#alternatives; \
+         fix: check `vibe app list` for the installed slots)"
+    )]
+    UnknownSlot { slot: String },
+    #[error(
+        "`{key}` is not an installed provider of slot `{slot}`; providers: {providers} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-059#alternatives; fix: name one installation key exactly as listed)"
+    )]
+    NotProvider {
+        slot: String,
+        key: String,
+        providers: String,
+    },
+    #[error(
+        "the PATH proxy image `{path}` is missing (violates spec://org.vibevm.core/vibevm/common/PROP-059#proxy; \
+         fix: reinstall vibe so that vibe-app-proxy ships beside the vibe executable)"
+    )]
+    ProxyImage { path: String },
+    #[error(
+        "malformed session choice `{entry}`; expected SLOT=KEY entries separated by `;` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-059#session-selection; fix: correct VIBE_APP_USE or the --use argument)"
+    )]
+    SessionChoice { entry: String },
 }

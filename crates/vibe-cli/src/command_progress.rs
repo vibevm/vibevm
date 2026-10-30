@@ -53,6 +53,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "search",
     "select",
     "self",
+    "shell",
     "show",
     "skill",
     "specmap",
@@ -152,7 +153,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::App(args) => match &args.command {
             crate::cli::AppCommand::Installers { .. }
             | crate::cli::AppCommand::Launchers { .. }
-            | crate::cli::AppCommand::List => FastMetadata,
+            | crate::cli::AppCommand::List
+            | crate::cli::AppCommand::Alternatives { .. } => FastMetadata,
+            crate::cli::AppCommand::Use { .. } => FiniteFallback("Command app use"),
             crate::cli::AppCommand::Run { .. } | crate::cli::AppCommand::Start { .. } => {
                 TerminalPassthrough
             }
@@ -193,7 +196,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             AiuiSubcommand::PtyStart(_) => FiniteFallback("Command aiui pty-start"),
             AiuiSubcommand::Scrollbar(_) => FiniteFallback("Command aiui scrollbar"),
         },
-        Command::Term(_) | Command::Frame(_) => TerminalPassthrough,
+        Command::Term(_) | Command::Frame(_) | Command::Shell(_) => TerminalPassthrough,
         Command::Skill(args) => match &args.command {
             SkillSubcommand::List(_) => FastMetadata,
             SkillSubcommand::Install(_) => FiniteFallback("Command skill install"),

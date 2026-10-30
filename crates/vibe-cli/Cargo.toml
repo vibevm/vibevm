@@ -119,6 +119,10 @@ futures.workspace = true
 [target.'cfg(target_os = "linux")'.dependencies]
 wayland-backend.workspace = true
 
+# `vibe shell` reads the parent shell image through libproc's proc_pidpath.
+[target.'cfg(target_os = "macos")'.dependencies]
+libc.workspace = true
+
 [dev-dependencies]
 flate2.workspace = true
 tar.workspace = true
