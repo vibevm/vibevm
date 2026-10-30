@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title id="root">APP-CLEAN campaign v0.1 — the clean user-application subsystem</title>
+  <status stage="impl" state="in-progress" comment="Opened 2026-10-30 on local main 7081b2376 after the October prototype was archived."/>
+
+  <section title="1. Mandate (owner, 2026-10-30, verbatim)">
+    <p><mandate fact="true" status="impl/done">«возьми процесс в свои руки и доведи работу. Можешь использовать Opus 5.5 в качестве исполнителя-субагента, когда нужно.» «почисти всё от слопа, сделай пожалуйста красивое чистое решение, которое удовлетворяет изначальным желаниям. Без ерунды типа ACID-транзакций бесконечной надежности.» «и спецификацию от ерунды тоже стоит почистить». The original wishes are the mandates recorded in the archived plan: declared platform/architecture/installer options with shell, archive, EXE, MSI methods, forced operations and hooks, authored launchers, slot alternatives with one global and distinct per-shell choices, direct native launch, the Vim bridge; sources fetched by URL or local path with platform-specific sh / PowerShell recipes; several storage libraries with attach, detach, inventory, unavailability and moves; portability by default; a top-level `vibe shell`.</mandate></p>
+  </section>
+
+  <section title="2. Baseline (verified 2026-10-30)">
+    <p><baseline fact="true" status="impl/done">Local `main` reset to `7081b2376` (installer-options model, native proxy, Phase 0R fixes; +14 743 / −2 489 lines over v1.0.7). The prototype (729 commits, +354k lines) is `archive/app-overlay-prototype-2026-10`; its J/3 continuation is branch `app-publication-j3`. Nothing after v1.0.7 was ever pushed. `cargo build -p vibe-cli --bins` is green at the baseline. The contract is the rewritten `PROP-059`, which `vibe check` accepts with 0 errors. The machine has 14 GiB free on an ext4 disk with a 64 GiB warm `target/`, so packets run sequentially in this checkout, never in parallel worktrees.</baseline></p>
+  </section>
+
+  <section title="3. Decisions">
+    <p><decision-rewrite fact="true" status="impl/done">D1 — rewrite the subsystem as the `vibe-app` library crate with thin CLI and proxy surfaces, reusing reviewed pieces of the baseline (option selection, archive extraction safety, launcher template grammar, registry resolution, Windows proxy supervision) and deleting the rest (installer child-process protocol, leases, projections, pending-removal intents, release-index distribution). Rejected: incremental refactoring of the baseline module, because its index, proxy descriptor and alternatives model already carry the prototype's shape.</decision-rewrite></p>
+    <p><decision-state fact="true" status="impl/done">D2 — one index file, one `storage.toml`, library markers, directories; atomic rename only. Rejected: any journal, checkpoint, lease or recovery command (`PROP-059#decisions`).</decision-state></p>
+    <p><decision-session fact="true" status="impl/done">D3 — session alternatives are the `VIBE_APP_USE` environment variable read by the proxy. Rejected: per-session PATH view directories with masks (files to publish, recover and garbage-collect for a choice that is inherently process-scoped).</decision-session></p>
+    <p><decision-recipe fact="true" status="impl/done">D4 — source builds are a plain recipe runner inside `vibe-app`. Rejected: routing through the project Build/Package lifecycle planes, which coupled applications to project artifact records in the prototype.</decision-recipe></p>
+    <p><decision-executors fact="true" status="impl/done">D5 — the owner designated Opus 5.5 subagents as executors for this campaign; the central session owns the contract, packet authoring, every review and every commit. This is an owner override of the delegation-first GLM route for the campaign's duration.</decision-executors></p>
+  </section>
+
+  <section title="4. Phases">
+    <p><phase-1 fact="true" status="impl/in-progress">P1 — manifest model, `vibe-app` crate (settings, storage libraries, index `/3`, resolution, selection, shell / zip / tar_gz / exe / msi installers, hooks, force, install / update / uninstall, launch), CLI wiring, removal of the baseline module and the retired `application/e1` wire formats. Gate: public Linux fixtures for shell and archive install → list → run → uninstall; workspace build, tests, clippy, conform, codegen and wire-diff green.</phase-1></p>
+    <p><phase-2 fact="true" status="impl/planned">P2 — proxy binary rewrite and publication, `app use`, `app alternatives`, `VIBE_APP_USE`, `vibe shell`. Gate: public Linux fixture with two providers in one slot, global switch, two concurrent session choices, PTY shell test.</phase-2></p>
+    <p><phase-3 fact="true" status="impl/planned">P3 — `source_build` method: inputs, cache, recipe runner, offline. Gate: public Linux fixture with one locally served URL source and one package-local file.</phase-3></p>
+    <p><phase-4 fact="true" status="impl/planned">P4 — `vibe storage` list / add / attach / detach / move / gc, unavailability through launch and proxy, portability. Gate: public Linux two-library fixture per `PROP-059#acceptance`.</phase-4></p>
+    <p><phase-5 fact="true" status="impl/planned">P5 — manual tests for Windows and macOS, user documentation, the Vim bridge package refreshed against the final manifest, full `tools/self-check.sh`, health-audit entry, close-out report.</phase-5></p>
+  </section>
+
+  <section title="5. Execution ledger">
+    <p><ledger fact="true" status="impl/in-progress">2026-10-30: archive branch created, `main` reset, PROP-059 rewritten, plan authored. P1 packet dispatched.</ledger></p>
+  </section>
+</spec>
