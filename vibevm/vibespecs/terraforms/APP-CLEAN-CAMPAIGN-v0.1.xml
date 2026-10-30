@@ -20,14 +20,14 @@
   </section>
 
   <section title="4. Phases">
-    <p><phase-1 fact="true" status="impl/in-progress">P1 — manifest model, `vibe-app` crate (settings, storage libraries, index `/3`, resolution, selection, shell / zip / tar_gz / exe / msi installers, hooks, force, install / update / uninstall, launch), CLI wiring, removal of the baseline module and the retired `application/e1` wire formats. Gate: public Linux fixtures for shell and archive install → list → run → uninstall; workspace build, tests, clippy, conform, codegen and wire-diff green.</phase-1></p>
-    <p><phase-2 fact="true" status="impl/planned">P2 — proxy binary rewrite and publication, `app use`, `app alternatives`, `VIBE_APP_USE`, `vibe shell`. Gate: public Linux fixture with two providers in one slot, global switch, two concurrent session choices, PTY shell test.</phase-2></p>
+    <p><phase-1 fact="true" status="impl/done">P1 — manifest model, `vibe-app` crate (settings, storage libraries, index `/3`, resolution, selection, shell / zip / tar_gz / exe / msi installers, hooks, force, install / update / uninstall, launch), CLI wiring, removal of the baseline module and the retired `application/e1` wire formats. Gate: public Linux fixtures for shell and archive install → list → run → uninstall; workspace build, tests, clippy, conform, codegen and wire-diff green.</phase-1></p>
+    <p><phase-2 fact="true" status="impl/in-progress">P2 — proxy binary rewrite and publication, `app use`, `app alternatives`, `VIBE_APP_USE`, `vibe shell`. Gate: public Linux fixture with two providers in one slot, global switch, two concurrent session choices, PTY shell test.</phase-2></p>
     <p><phase-3 fact="true" status="impl/planned">P3 — `source_build` method: inputs, cache, recipe runner, offline. Gate: public Linux fixture with one locally served URL source and one package-local file.</phase-3></p>
     <p><phase-4 fact="true" status="impl/planned">P4 — `vibe storage` list / add / attach / detach / move / gc, unavailability through launch and proxy, portability. Gate: public Linux two-library fixture per `PROP-059#acceptance`.</phase-4></p>
     <p><phase-5 fact="true" status="impl/planned">P5 — manual tests for Windows and macOS, user documentation, the Vim bridge package refreshed against the final manifest, full `tools/self-check.sh`, health-audit entry, close-out report.</phase-5></p>
   </section>
 
   <section title="5. Execution ledger">
-    <p><ledger fact="true" status="impl/in-progress">2026-10-30: archive branch created, `main` reset, PROP-059 rewritten, plan authored. P1 packet dispatched.</ledger></p>
+    <p><ledger fact="true" status="impl/in-progress">2026-10-30: archive branch created, `main` reset, PROP-059 rewritten, plan authored. P1 packet dispatched. P1 reviewed and landed as 6ade17d8b + af6dfb36a: review removed a payload digest the executor had added (a full-payload hash per install and uninstall) and made `--library` on external methods a refusal; vibe-app is 3 959 lines. P2 dispatched.</ledger></p>
   </section>
 </spec>
