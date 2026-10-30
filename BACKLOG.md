@@ -2402,3 +2402,13 @@ structure, and it goes when the file does.
 | @fact:B218-SEVERITY **severity** | P3 — test-only; a real second `vibe` process holding the lock is refused correctly. |
 | @fact:B218-DISPOSITION **disposition** | `open` — a bounded product-side retry (a few hundred milliseconds) would remove the test helper and absorb the same race between two real `vibe` processes; decide whether the contract's "a held lock is refused, never awaited" admits it. |
 | @fact:B218-FILED **filed by** | APP-CLEAN campaign, 2026-10-31. |
+
+## B-219 — native-fixture tests fail after a `cargo build --workspace` {#b-219}
+
+| field | value |
+|---|---|
+| @fact:B219-WHAT **what** | The native-loader fixture tests in `vibe-native-loader`, `vibe-install` and `vibe-lifecycle` locate their `cdylib` fixture by asserting exactly one `libvibe_native_loader_*fixture.so` across `target/debug/` and `target/debug/deps/`. `cargo test` builds the fixtures into `deps/` only, but a preceding `cargo build --workspace` uplifts them into `target/debug/` as well, so the next `cargo test --workspace` fails 11 tests with "expected exactly one … found [deps/…, …]". The tests are sensitive to build history, not to code. |
+| @fact:B219-EVIDENCE **evidence** | 2026-10-31 `tools/self-check.sh` on `a435a9abf`: step 2 failed with 11 such tests after the P6 executor's `cargo build --workspace`; removing the uplifted copies and rerunning the three packages was green. The archived prototype met the same class (its `fix(test)` commits of 2026-10-20 about fixture linkage). |
+| @fact:B219-SEVERITY **severity** | P2 — the release gate goes red from an ordinary developer action; the fixtures themselves are correct. |
+| @fact:B219-DISPOSITION **disposition** | `open` — make the lookup deterministic (prefer `deps/`, or the newest artifact) in the shared fixture helper instead of asserting uniqueness; until then, delete `target/debug/libvibe_native_loader_*fixture.so` before `cargo test --workspace`. |
+| @fact:B219-FILED **filed by** | APP-CLEAN campaign close-out, 2026-10-31. |
