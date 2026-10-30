@@ -33,14 +33,24 @@ switch pass after `--`, for example
 `vibe build --path ../../../../..` remains the complete lifecycle build.
 
 The low-level `./vibevm-doc.sh` and `./vibevm-doc.ps1` launchers serve an
-existing build and are retained for the globally installed command. They no
-longer silently replace the complete catalogue with fixtures. The small package
-test catalogue is selected explicitly with `--fixture`; it is not an end-user
-site.
+existing build of this checkout. They no longer silently replace the complete
+catalogue with fixtures. The small package test catalogue is selected
+explicitly with `--fixture`; it is not an end-user site.
 
-`vibe install -g org.vibevm.doc/web --local-source` installs this checkout's
-application command in one spelling. It is the shorthand for
-`--from-source --registry <main-root>/vibevm/vibepacks --offline`.
+The package is also a globally installable application with the id
+`vibevm-doc`. Install it from the registry with `vibe install -g
+org.vibevm.doc/web`, or from a checkout with `vibe install -g
+org.vibevm.doc/web --registry <checkout>/vibevm/vibepacks`. Every platform row
+is a `source_build` with no sources: the recipe (`tooling/local-site/install.sh`
+on Linux and macOS, `install.ps1` on Windows) copies this package tree without
+build output into the installation's `site/` and writes a relocatable
+`bin/vibevm-doc` wrapper (`bin\vibevm-doc.cmd` on Windows) around
+`tooling/local-site/run.mjs`. vibe then puts the `vibevm-doc` command on PATH;
+it takes the same arguments as the launchers above (`vibevm-doc --help`) and
+serves on `http://127.0.0.1:4322/`. The installed copy carries no build
+output: run it from a vibevm checkout root to serve that checkout's
+`.vibe/site-build/site`, or pass `--site DIR` to serve any built site.
+`vibe uninstall -g org.vibevm.doc/web` removes it.
 
 When the JavaScript closure is absent, the native build runs the pinned
 `pnpm install`. It inherits the standard npm/pnpm configuration, including the

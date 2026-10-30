@@ -10,6 +10,7 @@ import {
   nativeStaticRoot,
   parseArguments,
   requestFile,
+  selectStaticRoot,
   staticRoot,
 } from "./run.mjs";
 
@@ -66,6 +67,57 @@ test("the native output is selected only for the monorepo source slot", async ()
   assert.equal(
     nativeStaticRoot(packageRoot),
     join(host, ".vibe", "site-build", "site"),
+  );
+});
+
+test("--site names the served directory relative to the working directory", async () => {
+  const cwd = await mkdtemp(join(tmpdir(), "vibevm-doc-cwd-"));
+  const packageRoot = resolve("package-root");
+  assert.equal(parseArguments(["--site", "built"]).site, "built");
+  assert.throws(() => parseArguments(["--site"]), /requires a directory/u);
+  await mkdir(join(cwd, ".vibe", "site-build", "site"), { recursive: true });
+  const options = parseArguments(["--site", "built"]);
+  assert.equal(
+    selectStaticRoot(options, packageRoot, { VIBE_SITE_DIST: "x" }, cwd),
+    join(cwd, "built"),
+  );
+  const absolute = join(tmpdir(), "elsewhere");
+  assert.equal(
+    selectStaticRoot(
+      parseArguments(["--site", absolute]),
+      packageRoot,
+      {},
+      cwd,
+    ),
+    absolute,
+  );
+});
+
+test("a checkout root's site build is served from its working directory", async () => {
+  const cwd = await mkdtemp(join(tmpdir(), "vibevm-doc-checkout-"));
+  const packageRoot = resolve("package-root");
+  assert.equal(
+    selectStaticRoot(parseArguments([]), packageRoot, {}, cwd),
+    join(packageRoot, "site", "dist"),
+  );
+  const checkout = join(cwd, ".vibe", "site-build", "site");
+  await mkdir(checkout, { recursive: true });
+  assert.equal(
+    selectStaticRoot(parseArguments([]), packageRoot, {}, cwd),
+    checkout,
+  );
+  assert.equal(
+    selectStaticRoot(
+      parseArguments([]),
+      packageRoot,
+      { VIBE_SITE_DIST: "preview" },
+      cwd,
+    ),
+    join(packageRoot, "site", "preview"),
+  );
+  assert.equal(
+    selectStaticRoot(parseArguments(["--fixture"]), packageRoot, {}, cwd),
+    join(packageRoot, "site", "dist"),
   );
 });
 
