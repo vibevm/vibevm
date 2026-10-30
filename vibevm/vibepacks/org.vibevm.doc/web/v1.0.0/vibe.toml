@@ -30,6 +30,145 @@ requires_kinds = []
 [application]
 id = "vibevm-doc"
 
+# Every platform installs the same way: a source build with no sources, so
+# the package tree itself is the input (VIBE_PACKAGE); the recipe copies it
+# without build output and writes a relocatable `bin/vibevm-doc` wrapper
+# (spec://org.vibevm.core/vibevm/common/PROP-059#source-build).
+[[installer_options]]
+id = "linux-x64"
+name = "Local site launcher"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+arch_name = "Intel/AMD 64-bit"
+
+[installer_options.installation]
+type = "source_build"
+
+[installer_options.installation.recipe]
+interpreter = "posix_sh"
+script = "tooling/local-site/install.sh"
+
+[[installer_options.launchers]]
+id = "vibevm-doc"
+name = "vibevm.org local site"
+description = "Serves the site on http://127.0.0.1:4322/"
+executable = "bin/vibevm-doc"
+terminal = true
+default = true
+
+[[installer_options.public_commands]]
+name = "vibevm-doc"
+launcher = "vibevm-doc"
+
+[[installer_options]]
+id = "linux-arm64"
+name = "Local site launcher"
+platform = "linux"
+platform_name = "Linux"
+arch = "aarch64"
+arch_name = "ARM 64-bit"
+
+[installer_options.installation]
+type = "source_build"
+
+[installer_options.installation.recipe]
+interpreter = "posix_sh"
+script = "tooling/local-site/install.sh"
+
+[[installer_options.launchers]]
+id = "vibevm-doc"
+name = "vibevm.org local site"
+description = "Serves the site on http://127.0.0.1:4322/"
+executable = "bin/vibevm-doc"
+terminal = true
+default = true
+
+[[installer_options.public_commands]]
+name = "vibevm-doc"
+launcher = "vibevm-doc"
+
+[[installer_options]]
+id = "macos-arm64"
+name = "Local site launcher"
+platform = "macos"
+platform_name = "macOS"
+arch = "aarch64"
+arch_name = "Apple silicon"
+
+[installer_options.installation]
+type = "source_build"
+
+[installer_options.installation.recipe]
+interpreter = "posix_sh"
+script = "tooling/local-site/install.sh"
+
+[[installer_options.launchers]]
+id = "vibevm-doc"
+name = "vibevm.org local site"
+description = "Serves the site on http://127.0.0.1:4322/"
+executable = "bin/vibevm-doc"
+terminal = true
+default = true
+
+[[installer_options.public_commands]]
+name = "vibevm-doc"
+launcher = "vibevm-doc"
+
+[[installer_options]]
+id = "macos-intel"
+name = "Local site launcher"
+platform = "macos"
+platform_name = "macOS"
+arch = "x86_64"
+arch_name = "Intel 64-bit"
+
+[installer_options.installation]
+type = "source_build"
+
+[installer_options.installation.recipe]
+interpreter = "posix_sh"
+script = "tooling/local-site/install.sh"
+
+[[installer_options.launchers]]
+id = "vibevm-doc"
+name = "vibevm.org local site"
+description = "Serves the site on http://127.0.0.1:4322/"
+executable = "bin/vibevm-doc"
+terminal = true
+default = true
+
+[[installer_options.public_commands]]
+name = "vibevm-doc"
+launcher = "vibevm-doc"
+
+[[installer_options]]
+id = "windows-x64"
+name = "Local site launcher"
+platform = "windows"
+platform_name = "Windows"
+arch = "x86_64"
+arch_name = "Intel/AMD 64-bit"
+
+[installer_options.installation]
+type = "source_build"
+
+[installer_options.installation.recipe]
+interpreter = "windows_powershell"
+script = "tooling/local-site/install.ps1"
+
+[[installer_options.launchers]]
+id = "vibevm-doc"
+name = "vibevm.org local site"
+description = "Serves the site on http://127.0.0.1:4322/"
+executable = "bin/vibevm-doc.cmd"
+terminal = true
+default = true
+
+[[installer_options.public_commands]]
+name = "vibevm-doc"
+launcher = "vibevm-doc"
+
 # The TypeScript discipline the package is authored under: the seven-step
 # floor, the structural gate and the traceability map all come from this
 # family (spec://org.vibevm.core/vibevm/common/PROP-057#STACK-FLOOR).

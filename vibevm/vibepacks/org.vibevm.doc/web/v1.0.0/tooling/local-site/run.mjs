@@ -50,6 +50,12 @@ export function parseArguments(argv) {
         throw new Error("--port must be an integer from 0 through 65535");
       value.port = port;
       index += 1;
+    } else if (argument === "--site") {
+      const directory = argv[index + 1];
+      if (directory === undefined || directory === "")
+        throw new Error("--site requires a directory");
+      value.site = directory;
+      index += 1;
     } else if (argument === "--help" || argument === "-h") value.help = true;
     else throw new Error(`unknown argument: ${argument}`);
   }
@@ -75,6 +81,31 @@ export function nativeStaticRoot(root = PACKAGE_ROOT) {
   if (resolve(root) !== sourceSlot || !existsSync(join(host, "vibe.toml")))
     return null;
   return join(host, ".vibe", "site-build", "site");
+}
+
+/**
+ * The directory to serve: `--site`, then `VIBE_SITE_DIST`, then the build of
+ * the checkout the command runs in, then the monorepo slot's native output,
+ * then the package's own `site/dist`. A `--fixture` build skips the two
+ * checkout outputs so the catalogue it just built is what gets served.
+ */
+export function selectStaticRoot(
+  options,
+  root = PACKAGE_ROOT,
+  environment = process.env,
+  cwd = process.cwd(),
+) {
+  if (options.site !== undefined) return resolve(cwd, options.site);
+  if ((environment.VIBE_SITE_DIST ?? "").trim() !== "")
+    return staticRoot(root, environment);
+  if (!options.build) {
+    const checkout = join(resolve(cwd), ".vibe", "site-build", "site");
+    if (existsSync(checkout)) return checkout;
+    const native = nativeStaticRoot(root);
+    if (native !== null && existsSync(join(native, "index.html")))
+      return native;
+  }
+  return staticRoot(root, environment);
 }
 
 export function requestFile(root, requestUrl) {
@@ -176,25 +207,19 @@ export async function runLocalSite(
   const options = parseArguments(argv);
   if (options.help) {
     process.stdout.write(
-      "usage: vibevm-doc [--port PORT] [--fixture] [--no-install]\n" +
+      "usage: vibevm-doc [--site DIR] [--port PORT] [--fixture] [--no-install]\n" +
         "Serve an existing complete site on 127.0.0.1 (default port 4322).\n" +
+        "Run it from a vibevm checkout root to serve .vibe/site-build/site,\n" +
+        "or pass --site DIR to serve any built site directory.\n" +
         "--fixture explicitly builds the web package's small test catalogue.\n",
     );
     return null;
   }
   await prepare(options, root);
-  const explicitOutput = (process.env.VIBE_SITE_DIST ?? "").trim() !== "";
-  const nativeOutput = nativeStaticRoot(root);
-  const output =
-    !options.build &&
-    !explicitOutput &&
-    nativeOutput !== null &&
-    existsSync(join(nativeOutput, "index.html"))
-      ? nativeOutput
-      : staticRoot(root);
+  const output = selectStaticRoot(options, root);
   if (!existsSync(join(output, "index.html")))
     throw new Error(
-      `${output}: no complete static site; run \`vibe run vibevm-doc\` from the main repository, or pass --fixture for the package test catalogue`,
+      `${output}: no complete static site; run \`vibe run vibevm-doc\` from the main repository, run this command from a checkout root, pass --site DIR, or pass --fixture for the package test catalogue`,
     );
   const server = createStaticServer(output);
   await new Promise((accept, reject) => {
