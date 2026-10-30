@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "description": "Version 1 machine report from vibe storage move KEY --to LIBRARY --json.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#move"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_storage_move"
+    },
+    "x-wire-order": ["protocol", "key", "from", "to", "old_app_root", "new_app_root", "message"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "key": { "type": "string" },
+    "from": { "type": "string" },
+    "to": { "type": "string" },
+    "old_app_root": { "type": "string" },
+    "new_app_root": { "type": "string" },
+    "message": { "type": "string" }
+  }
+}

@@ -70,6 +70,30 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+[format.cli-application-storage-list]
+epoch = 1
+schema = "schemas/application_storage_list.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-application-storage-gc]
+epoch = 1
+schema = "schemas/application_storage_gc.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-application-storage-move]
+epoch = 1
+schema = "schemas/application_storage_move.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # ── User-local application durable/exchange records, PROP-059 ───────────────
 [format.application-index]
 epoch = 2

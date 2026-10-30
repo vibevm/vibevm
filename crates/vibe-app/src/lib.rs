@@ -3,8 +3,8 @@
 //! commands it puts on PATH. This crate owns every capability — settings,
 //! storage libraries, the index, resolution, selection, installers, the
 //! install / update / uninstall operations, launch, slot alternatives, PATH
-//! proxy synchronisation and session choices — and the CLI and the PATH proxy
-//! stay thin callers.
+//! proxy synchronisation, session choices and the `vibe storage` library
+//! edits, moves and sweeps — and the CLI and the PATH proxy stay thin callers.
 //!
 //! Durable state is plain files replaced atomically: one index, one
 //! `storage.toml`, library markers and directories. An interrupted operation
@@ -37,7 +37,7 @@ mod storage;
 pub use alternatives::{
     DefaultChange, listing as alternatives_listing, reserved_commands, set_default,
 };
-pub use error::{AppError, InstallerError, LaunchError, ResolveError, StateError};
+pub use error::{AppError, InstallerError, LaunchError, ResolveError, StateError, StorageError};
 pub use index::{
     AuthoredCommands, INDEX_PROTOCOL, Index, Installation, Location, Method, PackageCoordinate,
 };
@@ -58,6 +58,7 @@ pub use select::{
 pub use session::{SESSION_VARIABLE, SessionChoices};
 pub use settings::{MutationLock, SettingsRoot};
 pub use storage::{
-    Availability, DEFAULT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker, Storage, StorageConfig,
-    create_library,
+    Availability, DEFAULT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker, Moved, Storage,
+    StorageConfig, add as storage_add, attach as storage_attach, create_library,
+    detach as storage_detach, gc as storage_gc, listing as storage_list, relocate as storage_move,
 };

@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "description": "Version 1 machine listing from vibe storage list --json.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_storage_list"
+    },
+    "x-wire-order": ["protocol", "libraries"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "libraries": {
+      "elements": { "ref": "library" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "status": {
+      "enum": ["ready", "unavailable"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "library": {
+      "metadata": { "x-wire-order": ["id", "path", "default", "status", "reason", "installations"] },
+      "properties": {
+        "id": { "type": "string" },
+        "path": { "type": "string", "nullable": true },
+        "default": { "type": "boolean" },
+        "status": { "ref": "status" },
+        "reason": { "type": "string", "nullable": true },
+        "installations": {
+          "elements": { "ref": "installation" },
+          "metadata": { "x-empty": "emit" }
+        }
+      }
+    },
+    "installation": {
+      "metadata": { "x-wire-order": ["key", "slot", "status", "reason"] },
+      "properties": {
+        "key": { "type": "string" },
+        "slot": { "type": "string" },
+        "status": { "ref": "status" },
+        "reason": { "type": "string", "nullable": true }
+      }
+    }
+  }
+}

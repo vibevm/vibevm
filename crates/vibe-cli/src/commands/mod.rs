@@ -70,6 +70,7 @@ pub mod short_name;
 pub mod show;
 pub mod skill;
 pub mod specmap;
+pub mod storage;
 pub mod term;
 pub mod tools;
 pub mod trace;

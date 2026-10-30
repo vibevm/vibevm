@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "description": "Version 1 machine report from vibe storage gc [--delete] --json.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#move"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_storage_gc"
+    },
+    "x-wire-order": ["protocol", "deleted", "orphans", "skipped"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "deleted": { "type": "boolean" },
+    "orphans": {
+      "elements": { "ref": "orphan" },
+      "metadata": { "x-empty": "emit" }
+    },
+    "skipped": {
+      "elements": { "ref": "skipped" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "orphan": {
+      "metadata": { "x-wire-order": ["library", "path"] },
+      "properties": {
+        "library": { "type": "string" },
+        "path": { "type": "string" }
+      }
+    },
+    "skipped": {
+      "metadata": { "x-wire-order": ["library", "reason"] },
+      "properties": {
+        "library": { "type": "string" },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}
