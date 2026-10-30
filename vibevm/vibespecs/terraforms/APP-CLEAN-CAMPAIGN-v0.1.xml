@@ -27,7 +27,9 @@
     <p><phase-5 fact="true" status="impl/planned">P5 — manual tests for Windows and macOS, user documentation, the Vim bridge package refreshed against the final manifest, full `tools/self-check.sh`, health-audit entry, close-out report.</phase-5></p>
   </section>
 
+  <p><phase-6 fact="true" status="impl/planned">P6 — project-local applications per `PROP-059#project-scope`: app dependencies in `vibe.toml` / `vibe.lock`, the project home `vibevm/vibeopt/` with the user-home layout, consent-gated materialisation on `vibe install`, home selection for `update` / `uninstall` / `app` without `-g`, two-home PATH in `vibe shell`, git ignore. Gate: public Linux fixture that installs an app into a fresh project, runs it through the project `opt/bin` inside `vibe shell`, and reinstalls it from the lockfile in a second checkout.</phase-6></p>
+
   <section title="5. Execution ledger">
-    <p><ledger fact="true" status="impl/in-progress">2026-10-30: archive branch created, `main` reset, PROP-059 rewritten, plan authored. P1 packet dispatched. P1 reviewed and landed as 6ade17d8b + af6dfb36a: review removed a payload digest the executor had added (a full-payload hash per install and uninstall) and made `--library` on external methods a refusal; vibe-app is 3 959 lines. P2 dispatched.</ledger></p>
+    <p><ledger fact="true" status="impl/in-progress">2026-10-30: archive branch created, `main` reset, PROP-059 rewritten, plan authored. P1 packet dispatched. P1 reviewed and landed as 6ade17d8b + af6dfb36a: review removed a payload digest the executor had added (a full-payload hash per install and uninstall) and made `--library` on external methods a refusal; vibe-app is 3 959 lines. P2 dispatched. Owner approved project-local applications; P6 added.</ledger></p>
   </section>
 </spec>
