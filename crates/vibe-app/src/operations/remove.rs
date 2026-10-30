@@ -42,6 +42,17 @@ pub fn installed<'a>(
                     .is_ok_and(|version| requested.version.matches(&version))
         })
         .collect();
+    // `pkg@1.0.0` is a caret requirement to the package grammar, but an
+    // installed version spelled out literally is what the user means.
+    let literal = spelling
+        .rsplit_once('@')
+        .map(|(_, version)| version.trim_start_matches('='));
+    if let Some((key, record)) = candidates
+        .iter()
+        .find(|(_, record)| Some(record.package.version.as_str()) == literal)
+    {
+        return Ok((key.as_str(), record));
+    }
     let defaults: Vec<&(&String, &Installation)> = candidates
         .iter()
         .filter(|(key, record)| index.default_of(&record.slot) == Some(key.as_str()))
