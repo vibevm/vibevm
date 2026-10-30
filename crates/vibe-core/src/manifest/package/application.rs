@@ -77,6 +77,7 @@ pub enum InstallerMethod {
         force_uninstall: Option<String>,
     },
     SourceBuild {
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
         sources: Vec<SourceInputDecl>,
         recipe: RecipeDecl,
     },
