@@ -17,6 +17,7 @@ use crate::error::StateError;
 /// let dir = tempfile::tempdir().unwrap();
 /// let settings = vibe_app::SettingsRoot::new(dir.path());
 /// assert!(settings.index_path().ends_with("applications/index.json"));
+/// assert!(settings.app_sources_cache().ends_with("cache/app-sources"));
 /// let _lock = settings.lock().unwrap();
 /// assert!(settings.lock().is_err(), "a second mutation is refused");
 /// ```
@@ -64,6 +65,18 @@ impl SettingsRoot {
     /// `<settings>/opt/bin`, where every reserved command has its PATH proxy.
     pub fn proxy_dir(&self) -> PathBuf {
         self.root.join("opt").join("bin")
+    }
+
+    /// `<settings>/cache/app-sources`: verified `source_build` downloads,
+    /// one `<sha256>/<filename>` per input.
+    pub fn app_sources_cache(&self) -> PathBuf {
+        self.root.join("cache").join("app-sources")
+    }
+
+    /// `<settings>/cache/app-build`: `source_build` work directories; a
+    /// failed build leaves its directory here for inspection.
+    pub fn app_build_dir(&self) -> PathBuf {
+        self.root.join("cache").join("app-build")
     }
 
     /// Take the `applications/.mutation.lock` exclusive lock, creating the

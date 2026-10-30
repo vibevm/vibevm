@@ -6115,10 +6115,10 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/error.rs",
       "item_kind": "enum",
-      "line": 182,
+      "line": 192,
       "symbol": "vibe_app::error::AppError",
-      "end_line": 296,
-      "fingerprint": "tok1:0396385c33678aa815b2382ebf74f230b8920c0d57f6a57ba7f1ae8393495e0a"
+      "end_line": 312,
+      "fingerprint": "tok1:96e963ce8286ac4e3e8f297196cf128c56b30c6f911a1246b58b024b46ff329c"
     },
     {
       "crate_name": "vibe-app",
@@ -6126,16 +6126,16 @@
       "item_kind": "enum",
       "line": 103,
       "symbol": "vibe_app::error::InstallerError",
-      "end_line": 158,
-      "fingerprint": "tok1:5b32ef2bd8241c1ccde5e442fe77d53ec9376cf465fdbf428c6e14a8fae69664"
+      "end_line": 168,
+      "fingerprint": "tok1:7ca739fc5fa2f04f49d3681ccb71622d0e049cd22bdd3e416f4f725d59aaeb6c"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/error.rs",
       "item_kind": "enum",
-      "line": 160,
+      "line": 170,
       "symbol": "vibe_app::error::LaunchError",
-      "end_line": 180,
+      "end_line": 190,
       "fingerprint": "tok1:5213a3f2f74f51a33f57424c815ececaa3e22c64c9e4ef58bbebb2a0469fdb27"
     },
     {
@@ -6311,6 +6311,24 @@
     },
     {
       "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/installer/source_build.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_app::installer::source_build",
+      "end_line": 7,
+      "fingerprint": "tok1:ab18a97a5186e50de15afd6395e95d77c9417840154c2571d462c1dae1f1679b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/installer/source_build.rs",
+      "item_kind": "struct",
+      "line": 24,
+      "symbol": "vibe_app::installer::source_build::SourceBuild",
+      "end_line": 39,
+      "fingerprint": "tok1:a4e63499e35234acff21fa36163e6274851d096d3f822ac936d0992aff28723b"
+    },
+    {
+      "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/launch.rs",
       "item_kind": "mod",
       "line": 4,
@@ -6412,19 +6430,28 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/apply.rs",
       "item_kind": "mod",
-      "line": 5,
+      "line": 6,
       "symbol": "vibe_app::operations::apply",
-      "end_line": 5,
+      "end_line": 6,
       "fingerprint": "tok1:4b96650c6f57c83f58a584e4a1932446d8591651756b8cc293f30611a60b8332"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/apply.rs",
       "item_kind": "mod",
-      "line": 6,
+      "line": 7,
       "symbol": "vibe_app::operations::apply",
-      "end_line": 6,
+      "end_line": 7,
       "fingerprint": "tok1:59fd6bc3249f3abfcdb408f855e3498985188a75b4ad135bd02b48be0e90ba0b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/apply.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_app::operations::apply",
+      "end_line": 8,
+      "fingerprint": "tok1:ab18a97a5186e50de15afd6395e95d77c9417840154c2571d462c1dae1f1679b"
     },
     {
       "crate_name": "vibe-app",
@@ -6529,9 +6556,9 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/settings.rs",
       "item_kind": "struct",
-      "line": 29,
+      "line": 30,
       "symbol": "vibe_app::settings::MutationLock",
-      "end_line": 35,
+      "end_line": 36,
       "fingerprint": "tok1:984d748b8b2c728d516d7868980a07ca0e0f151d970183a186d74dc1588a43bc"
     },
     {
@@ -6540,8 +6567,8 @@
       "item_kind": "struct",
       "line": 13,
       "symbol": "vibe_app::settings::SettingsRoot",
-      "end_line": 27,
-      "fingerprint": "tok1:de25bef6637f063203b1d40af2a31d81ba44d86cfb574e887400948082235175"
+      "end_line": 28,
+      "fingerprint": "tok1:a692d7b7a41cda970022de2e0d59a06352cbbc16f40f0bc4f44900cfc6ec1374"
     },
     {
       "crate_name": "vibe-app",
@@ -35496,7 +35523,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::AppError",
-      "line": 184,
+      "line": 194,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "implements"
@@ -35504,7 +35531,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::AppError",
-      "line": 185,
+      "line": 195,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "documents"
@@ -35528,7 +35555,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::LaunchError",
-      "line": 162,
+      "line": 172,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations",
       "verb": "implements"
@@ -35536,7 +35563,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::LaunchError",
-      "line": 163,
+      "line": 173,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations",
       "verb": "documents"
@@ -35710,6 +35737,22 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-app/src/installer/source_build.rs",
+      "from_symbol": "vibe_app::installer::source_build",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#source-build",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/installer/source_build.rs",
+      "from_symbol": "vibe_app::installer::source_build::SourceBuild",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#source-build",
+      "verb": "documents"
+    },
+    {
       "file": "crates/vibe-app/src/launch.rs",
       "from_symbol": "vibe_app::launch",
       "line": 5,
@@ -35800,7 +35843,7 @@
     {
       "file": "crates/vibe-app/src/operations/apply.rs",
       "from_symbol": "vibe_app::operations::apply",
-      "line": 6,
+      "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#force-and-hooks",
       "verb": "implements"
@@ -35808,9 +35851,17 @@
     {
       "file": "crates/vibe-app/src/operations/apply.rs",
       "from_symbol": "vibe_app::operations::apply",
-      "line": 5,
+      "line": 6,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/apply.rs",
+      "from_symbol": "vibe_app::operations::apply",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#source-build",
       "verb": "implements"
     },
     {
@@ -35904,7 +35955,7 @@
     {
       "file": "crates/vibe-app/src/settings.rs",
       "from_symbol": "vibe_app::settings::MutationLock",
-      "line": 32,
+      "line": 33,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "documents"
@@ -35912,7 +35963,7 @@
     {
       "file": "crates/vibe-app/src/settings.rs",
       "from_symbol": "vibe_app::settings::SettingsRoot",
-      "line": 24,
+      "line": 25,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "documents"
@@ -139803,6 +139854,12 @@
   ],
   "suspects": [],
   "warnings": [
+    {
+      "code": "overloaded-item",
+      "file": "crates/vibe-app/src/operations/apply.rs",
+      "line": 6,
+      "message": "`vibe_app::operations::apply` realises 3 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
+    },
     {
       "code": "overloaded-item",
       "file": "crates/vibe-extension-registry/src/tests/view.rs",

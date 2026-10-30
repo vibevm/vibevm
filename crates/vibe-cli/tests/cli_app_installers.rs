@@ -176,13 +176,14 @@ fn every_option_is_listed_grouped_with_the_detected_host_first() {
 }
 
 #[test]
-fn source_build_is_modelled_but_refused_at_install_time() {
+fn an_explicit_source_build_option_is_selected_and_refused_offline_on_a_cache_miss() {
     let fixture = Fixture::new();
     let user = UserScratch::new();
     let registry = fixture.registry.to_str().unwrap();
     let output = fixture.vibe(
         &user,
         &[
+            "--offline",
             "install",
             "-g",
             PACKAGE,
@@ -194,8 +195,9 @@ fn source_build_is_modelled_but_refused_at_install_time() {
     );
     assert!(!output.status.success());
     let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(stderr.contains("not implemented in this phase"), "{stderr}");
+    assert!(stderr.contains("--offline is set"), "{stderr}");
     assert!(!user.settings.join("applications/index.json").exists());
+    assert!(!user.settings.join("cache/app-build").exists());
 }
 
 #[cfg(target_os = "linux")]
