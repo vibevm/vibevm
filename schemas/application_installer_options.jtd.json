@@ -119,6 +119,14 @@
           "type": "string",
           "nullable": true
         }
+      },
+      "optionalProperties": {
+        "portable": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null
+          }
+        }
       }
     },
     "installation": {
@@ -148,6 +156,12 @@
               "metadata": {
                 "x-default": null
               }
+            },
+            "interpreter": {
+              "ref": "interpreter",
+              "metadata": {
+                "x-default": null
+              }
             }
           }
         },
@@ -166,14 +180,6 @@
               "metadata": {
                 "x-default": null
               }
-            },
-            "runners": {
-              "elements": {
-                "ref": "runner"
-              },
-              "metadata": {
-                "x-empty": "omit"
-              }
             }
           }
         },
@@ -191,14 +197,6 @@
               "type": "string",
               "metadata": {
                 "x-default": null
-              }
-            },
-            "runners": {
-              "elements": {
-                "ref": "runner"
-              },
-              "metadata": {
-                "x-empty": "omit"
               }
             }
           }
@@ -288,23 +286,32 @@
               }
             }
           }
-        }
-      }
-    },
-    "runner": {
-      "properties": {
-        "path": {
-          "type": "string"
         },
-        "name": {
-          "type": "string"
+        "source_build": {
+          "properties": {
+            "sources": {
+              "elements": {
+                "ref": "source_input"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "recipe": {
+              "ref": "recipe"
+            }
+          }
         }
       }
     },
     "public_command": {
       "properties": {
-        "name": { "type": "string" },
-        "launcher": { "type": "string" }
+        "name": {
+          "type": "string"
+        },
+        "launcher": {
+          "type": "string"
+        }
       }
     },
     "launcher": {
@@ -348,6 +355,61 @@
         },
         "icon": {
           "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "interpreter": {
+      "enum": [
+        "posix_sh",
+        "windows_cmd",
+        "windows_powershell"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "source_input": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "url": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "path": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "extract": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "recipe": {
+      "properties": {
+        "script": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "interpreter": {
+          "ref": "interpreter",
           "metadata": {
             "x-default": null
           }

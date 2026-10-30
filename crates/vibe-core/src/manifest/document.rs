@@ -40,7 +40,6 @@ use specmark::spec;
 use crate::error::{Error, Result};
 use crate::package_ref::PackageRef;
 
-use super::ApplicationSourceDecl;
 use super::InstallerOptionDecl;
 use super::artifact::ArtifactsSection;
 use super::compile::CompileSection;
@@ -95,11 +94,6 @@ pub struct Manifest {
     /// `[[installer_options]]` — explicit per-target installation choices.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub installer_options: Vec<InstallerOptionDecl>,
-
-    /// `[application_source]` — a package-owned proxy to an application
-    /// declaration in an external registry-shaped Git source.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub application_source: Option<ApplicationSourceDecl>,
 
     /// `[workspace]` — declares member packages this node coordinates.
     #[serde(default, skip_serializing_if = "Option::is_none")]

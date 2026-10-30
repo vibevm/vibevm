@@ -4442,6 +4442,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-app"
+version = "1.0.7"
+dependencies = [
+ "chrono",
+ "core-ai-native-specmark",
+ "flate2",
+ "reqwest 0.12.28",
+ "semver",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tar",
+ "tempfile",
+ "thiserror 2.0.18",
+ "toml 0.9.12+spec-1.1.0",
+ "vibe-core",
+ "vibe-install",
+ "vibe-package-source",
+ "vibe-registry",
+ "vibe-wire",
+ "zip",
+]
+
+[[package]]
 name = "vibe-check"
 version = "1.0.7"
 dependencies = [
@@ -4504,6 +4528,7 @@ dependencies = [
  "tracing-subscriber",
  "vibe-actions",
  "vibe-agent-projection",
+ "vibe-app",
  "vibe-check",
  "vibe-core",
  "vibe-doc",

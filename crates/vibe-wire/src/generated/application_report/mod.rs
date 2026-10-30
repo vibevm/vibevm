@@ -16,9 +16,6 @@ pub enum ApplicationReportCommand {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ApplicationReportSelectedMode {
-    #[serde(rename = "binary")]
-    Binary,
-
     #[serde(rename = "exe")]
     Exe,
 
@@ -28,8 +25,8 @@ pub enum ApplicationReportSelectedMode {
     #[serde(rename = "shell")]
     Shell,
 
-    #[serde(rename = "source")]
-    Source,
+    #[serde(rename = "source_build")]
+    SourceBuild,
 
     #[serde(rename = "tar_gz")]
     TarGz,
@@ -46,8 +43,7 @@ pub struct ApplicationReport {
 
     pub command: ApplicationReportCommand,
 
-    #[serde(rename = "hostRoot")]
-    pub host_root: String,
+    pub installation: String,
 
     pub message: String,
 
@@ -55,13 +51,13 @@ pub struct ApplicationReport {
 
     pub protocol: String,
 
-    #[serde(rename = "availableSourceCommit")]
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub available_source_commit: Option<String>,
+    #[serde(rename = "slotDefault")]
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub slot_default: Option<String>,
 
-    #[serde(rename = "selectedCommit")]
+    #[serde(rename = "appRoot")]
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub selected_commit: Option<String>,
+    pub app_root: Option<String>,
 
     #[serde(rename = "selectedMode")]
     #[serde(default, skip_serializing_if = "Option::is_none")]

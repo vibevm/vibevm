@@ -93,17 +93,6 @@ pub struct InstallArgs {
     #[arg(long, requires = "global")]
     pub server: Option<String>,
 
-    /// For a global application, build the resolved source revision even
-    /// when a verified platform distribution is available.
-    #[arg(long, requires = "global")]
-    pub from_source: bool,
-
-    /// Global-application developer shorthand: resolve from this checkout's
-    /// `vibevm/vibepacks`, force the source implementation, and stay offline.
-    /// Equivalent to `--from-source --registry <root>/vibevm/vibepacks --offline`.
-    #[arg(long, requires = "global")]
-    pub local_source: bool,
-
     /// Select an application platform or distribution ID (for example `ubuntu`).
     #[arg(long, requires = "global", value_name = "PLATFORM")]
     pub platform: Option<String>,
@@ -115,6 +104,11 @@ pub struct InstallArgs {
     /// Select one application installer option by its stable ID.
     #[arg(long, requires = "global", value_name = "ID")]
     pub installer: Option<String>,
+
+    /// Place an owned (archive or source-built) application payload in this
+    /// storage library instead of the default `<settings>/opt`.
+    #[arg(long, requires = "global", value_name = "ID")]
+    pub library: Option<String>,
 
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]
@@ -406,17 +400,6 @@ pub struct UpdateArgs {
     #[arg(short = 'g', long = "global")]
     pub global: bool,
 
-    /// For a global application, build the resolved source revision even
-    /// when a verified platform distribution is available.
-    #[arg(long, requires = "global")]
-    pub from_source: bool,
-
-    /// Global-application developer shorthand: resolve from this checkout's
-    /// `vibevm/vibepacks`, force the source implementation, and stay offline.
-    /// Equivalent to `--from-source --registry <root>/vibevm/vibepacks --offline`.
-    #[arg(long, requires = "global")]
-    pub local_source: bool,
-
     /// Select an application platform or distribution ID (for example `ubuntu`).
     #[arg(long, requires = "global", value_name = "PLATFORM")]
     pub platform: Option<String>,
@@ -429,15 +412,10 @@ pub struct UpdateArgs {
     #[arg(long, requires = "global", value_name = "ID")]
     pub installer: Option<String>,
 
-    /// For a global application, require the verified published binary.
-    /// Refuse instead of falling back to source when this platform has no
-    /// valid distribution.
-    #[arg(
-        long,
-        requires = "global",
-        conflicts_with_all = ["from_source", "local_source"]
-    )]
-    pub binary: bool,
+    /// Place an owned (archive or source-built) application payload in this
+    /// storage library instead of the default `<settings>/opt`.
+    #[arg(long, requires = "global", value_name = "ID")]
+    pub library: Option<String>,
 
     /// Explicit local source registry for a global application update.
     #[arg(long)]

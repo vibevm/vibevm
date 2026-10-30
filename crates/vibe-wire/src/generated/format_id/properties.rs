@@ -5,16 +5,12 @@ use super::{ForeignParsers, FormatId, UnknownFields};
 impl FormatId {
     /// Every variant, in registry (sorted-id) order.
     pub const ALL: &[FormatId] = &[
-        FormatId::ApplicationBundleManifest,
-        FormatId::ApplicationContext,
-        FormatId::ApplicationDistributionIndex,
         FormatId::ApplicationIndex,
-        FormatId::ApplicationManagement,
-        FormatId::ApplicationReply,
         FormatId::ArtifactRecord,
         FormatId::BootArtifactTransaction,
         FormatId::CliApplicationInstallerOptions,
         FormatId::CliApplicationLaunchers,
+        FormatId::CliApplicationList,
         FormatId::CliApplicationReport,
         FormatId::CliExtensionsReport,
         FormatId::CliInitReport,
@@ -116,16 +112,12 @@ impl FormatId {
     /// The registry id, verbatim (e.g. `cli-init-report`).
     pub fn id(self) -> &'static str {
         match self {
-            FormatId::ApplicationBundleManifest => "application-bundle-manifest",
-            FormatId::ApplicationContext => "application-context",
-            FormatId::ApplicationDistributionIndex => "application-distribution-index",
             FormatId::ApplicationIndex => "application-index",
-            FormatId::ApplicationManagement => "application-management",
-            FormatId::ApplicationReply => "application-reply",
             FormatId::ArtifactRecord => "artifact-record",
             FormatId::BootArtifactTransaction => "boot-artifact-transaction",
             FormatId::CliApplicationInstallerOptions => "cli-application-installer-options",
             FormatId::CliApplicationLaunchers => "cli-application-launchers",
+            FormatId::CliApplicationList => "cli-application-list",
             FormatId::CliApplicationReport => "cli-application-report",
             FormatId::CliExtensionsReport => "cli-extensions-report",
             FormatId::CliInitReport => "cli-init-report",
@@ -228,16 +220,12 @@ impl FormatId {
     /// The epoch this format lives in (PROP-044 §4.6 `##M-EPOCHS`).
     pub fn epoch(self) -> u32 {
         match self {
-            FormatId::ApplicationBundleManifest => 1,
-            FormatId::ApplicationContext => 1,
-            FormatId::ApplicationDistributionIndex => 1,
-            FormatId::ApplicationIndex => 1,
-            FormatId::ApplicationManagement => 1,
-            FormatId::ApplicationReply => 1,
+            FormatId::ApplicationIndex => 2,
             FormatId::ArtifactRecord => 1,
             FormatId::BootArtifactTransaction => 1,
             FormatId::CliApplicationInstallerOptions => 1,
             FormatId::CliApplicationLaunchers => 1,
+            FormatId::CliApplicationList => 1,
             FormatId::CliApplicationReport => 1,
             FormatId::CliExtensionsReport => 1,
             FormatId::CliInitReport => 1,
@@ -340,16 +328,12 @@ impl FormatId {
     /// Whether the format is rebuildable without a human (PROP-044 §5).
     pub fn recoverable(self) -> bool {
         match self {
-            FormatId::ApplicationBundleManifest => false,
-            FormatId::ApplicationContext => true,
-            FormatId::ApplicationDistributionIndex => false,
             FormatId::ApplicationIndex => false,
-            FormatId::ApplicationManagement => false,
-            FormatId::ApplicationReply => true,
             FormatId::ArtifactRecord => false,
             FormatId::BootArtifactTransaction => false,
             FormatId::CliApplicationInstallerOptions => true,
             FormatId::CliApplicationLaunchers => true,
+            FormatId::CliApplicationList => true,
             FormatId::CliApplicationReport => true,
             FormatId::CliExtensionsReport => true,
             FormatId::CliInitReport => true,
@@ -452,16 +436,12 @@ impl FormatId {
     /// How many independent parsers read this format (PROP-044 §5).
     pub fn foreign_parsers(self) -> ForeignParsers {
         match self {
-            FormatId::ApplicationBundleManifest => ForeignParsers::Many,
-            FormatId::ApplicationContext => ForeignParsers::Many,
-            FormatId::ApplicationDistributionIndex => ForeignParsers::Many,
             FormatId::ApplicationIndex => ForeignParsers::None,
-            FormatId::ApplicationManagement => ForeignParsers::None,
-            FormatId::ApplicationReply => ForeignParsers::None,
             FormatId::ArtifactRecord => ForeignParsers::None,
             FormatId::BootArtifactTransaction => ForeignParsers::None,
             FormatId::CliApplicationInstallerOptions => ForeignParsers::Many,
             FormatId::CliApplicationLaunchers => ForeignParsers::Many,
+            FormatId::CliApplicationList => ForeignParsers::Many,
             FormatId::CliApplicationReport => ForeignParsers::Many,
             FormatId::CliExtensionsReport => ForeignParsers::Many,
             FormatId::CliInitReport => ForeignParsers::Many,
@@ -564,16 +544,12 @@ impl FormatId {
     /// Policy for undeclared object members, independent of parser count.
     pub fn unknown_fields(self) -> UnknownFields {
         match self {
-            FormatId::ApplicationBundleManifest => UnknownFields::Deny,
-            FormatId::ApplicationContext => UnknownFields::Deny,
-            FormatId::ApplicationDistributionIndex => UnknownFields::Deny,
             FormatId::ApplicationIndex => UnknownFields::Deny,
-            FormatId::ApplicationManagement => UnknownFields::Deny,
-            FormatId::ApplicationReply => UnknownFields::Deny,
             FormatId::ArtifactRecord => UnknownFields::Deny,
             FormatId::BootArtifactTransaction => UnknownFields::Deny,
             FormatId::CliApplicationInstallerOptions => UnknownFields::Allow,
             FormatId::CliApplicationLaunchers => UnknownFields::Allow,
+            FormatId::CliApplicationList => UnknownFields::Allow,
             FormatId::CliApplicationReport => UnknownFields::Allow,
             FormatId::CliExtensionsReport => UnknownFields::Allow,
             FormatId::CliInitReport => UnknownFields::Allow,

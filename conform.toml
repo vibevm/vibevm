@@ -64,6 +64,7 @@ gated = [
     "vibe-facts",
     "vibe-actions",
     "vibe-agent-projection",
+    "vibe-app",
     "vibe-settings",
     "vibe-index",
     "vibe-install",
@@ -89,6 +90,7 @@ gated = [
 # with no lib target, so `cargo test --doc` cannot compile its examples;
 # gating it would enforce uncompiled prose, the opposite of the rule.
 gated_pub_doctest = [
+    "vibe-app",
     "vibe-core",
     "vibe-ext",
     "vibe-extension-registry",

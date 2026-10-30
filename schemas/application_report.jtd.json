@@ -24,30 +24,28 @@
     "applicationId": {
       "type": "string"
     },
-    "hostRoot": {
+    "installation": {
       "type": "string"
     },
     "message": {
       "type": "string"
+    },
+    "slotDefault": {
+      "type": "string",
+      "nullable": true
     }
   },
   "optionalProperties": {
+    "appRoot": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
     "selectedMode": {
-      "enum": ["source", "binary", "shell", "zip", "tar_gz", "exe", "msi"],
+      "enum": ["shell", "zip", "tar_gz", "exe", "msi", "source_build"],
       "metadata": {
         "x-vocabulary": "closed",
-        "x-default": null
-      }
-    },
-    "selectedCommit": {
-      "type": "string",
-      "metadata": {
-        "x-default": null
-      }
-    },
-    "availableSourceCommit": {
-      "type": "string",
-      "metadata": {
         "x-default": null
       }
     }

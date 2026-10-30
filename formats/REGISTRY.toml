@@ -54,59 +54,22 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+[format.cli-application-list]
+epoch = 1
+schema = "schemas/application_list.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # ── User-local application durable/exchange records, PROP-059 ───────────────
 [format.application-index]
-epoch = 1
-schema = "schemas/application/e1/index.jtd.json"
+epoch = 2
+schema = "schemas/application/e2/index.jtd.json"
 recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
-corpus = "formats/corpora/application/e1"
-sunset = "none"
-
-[format.application-management]
-epoch = 1
-schema = "schemas/application/e1/management.jtd.json"
-recoverable = false
-foreign_parsers = "none"
-unknown_fields = "deny"
-corpus = "formats/corpora/application/e1"
-sunset = "none"
-
-[format.application-context]
-epoch = 1
-schema = "schemas/application/e1/context.jtd.json"
-recoverable = true
-foreign_parsers = "many"
-unknown_fields = "deny"
-corpus = "formats/corpora/application/e1"
-sunset = "none"
-
-[format.application-reply]
-epoch = 1
-schema = "schemas/application/e1/reply.jtd.json"
-recoverable = true
-foreign_parsers = "none"
-unknown_fields = "deny"
-corpus = "formats/corpora/application/e1"
-sunset = "none"
-
-[format.application-distribution-index]
-epoch = 1
-schema = "schemas/application/e1/distribution_index.jtd.json"
-recoverable = false
-foreign_parsers = "many"
-unknown_fields = "deny"
-corpus = "formats/corpora/application/e1"
-sunset = "none"
-
-[format.application-bundle-manifest]
-epoch = 1
-schema = "schemas/application/e1/bundle_manifest.jtd.json"
-recoverable = false
-foreign_parsers = "many"
-unknown_fields = "deny"
-corpus = "formats/corpora/application/e1"
+corpus = "formats/corpora/application/e2"
 sunset = "none"
 
 [format.cli-extensions-report]

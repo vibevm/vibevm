@@ -1,900 +1,237 @@
-//! Local, cross-platform application installer and launcher CLI coverage.
+//! `vibe app installers PACKAGE` lists every declared installer option on the
+//! new model without selecting or running one (PROP-059 `#installer-options`).
 
 mod common;
 
 use std::fs;
-use std::io::Write;
-use std::path::{Path, PathBuf};
-use std::process::{Command, Output};
+use std::path::PathBuf;
+use std::process::Output;
 
 use common::UserScratch;
 use serde_json::Value;
-use sha2::{Digest, Sha256};
-use zip::write::SimpleFileOptions;
+use vibe_wire::generated::application_installer_options::ApplicationInstallerOptions;
 
 const PACKAGE: &str = "org.example/choice-app";
 
-#[test]
-fn command_installer_options_are_listed_and_selected_by_os_and_arch() {
-    let fixture = Fixture::new(true);
-    let user = UserScratch::new();
+struct Fixture {
+    root: tempfile::TempDir,
+    registry: PathBuf,
+}
 
-    let listed = fixture.json(
+impl Fixture {
+    fn new() -> Self {
+        let root = tempfile::tempdir().unwrap();
+        let registry = root.path().join("registry");
+        let package = registry.join("org.example/choice-app/v1.0.0");
+        fs::create_dir_all(&package).unwrap();
+        let host = std::env::consts::OS;
+        let arch = std::env::consts::ARCH;
+        let digest = "a".repeat(64);
+        let app_root = root.path().join("external");
+        let manifest = format!(
+            r#"[package]
+name = "choice-app"
+group = "org.example"
+kind = "app"
+version = "1.0.0"
+
+[application]
+id = "choice"
+portable = false
+
+[[installer_options]]
+id = "host"
+name = "Host shell"
+platform = "{host}"
+platform_name = "{host}"
+arch = "{arch}"
+pre_install = "echo prepare"
+[installer_options.installation]
+type = "shell"
+app_root = {app_root}
+install = "echo install"
+force_install = "echo force"
+uninstall = "echo uninstall"
+force_uninstall = "echo force uninstall"
+interpreter = "posix_sh"
+[[installer_options.launchers]]
+id = "main"
+name = "Main"
+executable = "$app_bin/tool"
+default = true
+[[installer_options.public_commands]]
+name = "choice"
+launcher = "main"
+
+[[installer_options]]
+id = "other-cpu"
+name = "Other CPU archive"
+platform = "{host}"
+platform_name = "{host}"
+arch = "zz-cpu"
+arch_name = "Imaginary CPU"
+portable = true
+[installer_options.installation]
+type = "zip"
+source = "choice.zip"
+sha256 = "{digest}"
+payload_root = "choice"
+
+[[installer_options]]
+id = "other-os"
+name = "Plan 9 build"
+platform = "plan9"
+platform_name = "Plan 9"
+arch = "{arch}"
+[installer_options.installation]
+type = "source_build"
+[[installer_options.installation.sources]]
+name = "upstream"
+url = "https://example.invalid/choice.tar.gz"
+sha256 = "{digest}"
+[installer_options.installation.recipe]
+script = "build.sh"
+"#,
+            app_root = serde_json::to_string(&app_root.display().to_string()).unwrap(),
+        );
+        fs::write(package.join("vibe.toml"), manifest).unwrap();
+        Self { root, registry }
+    }
+
+    fn vibe(&self, user: &UserScratch, args: &[&str]) -> Output {
+        user.vibe()
+            .current_dir(self.root.path())
+            .args(args)
+            .output()
+            .unwrap()
+    }
+}
+
+fn ok(output: &Output) -> String {
+    assert!(
+        output.status.success(),
+        "status={} stdout={} stderr={}",
+        output.status,
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    String::from_utf8_lossy(&output.stdout).into_owned()
+}
+
+#[test]
+fn every_option_is_listed_grouped_with_the_detected_host_first() {
+    let fixture = Fixture::new();
+    let user = UserScratch::new();
+    let registry = fixture.registry.to_str().unwrap();
+    let output = fixture.vibe(
         &user,
         &[
             "app",
             "installers",
             PACKAGE,
             "--registry",
-            fixture.registry_text(),
+            registry,
             "--json",
         ],
     );
-    let _: vibe_wire::generated::application_installer_options::ApplicationInstallerOptions =
-        serde_json::from_value(listed.clone()).unwrap();
+    let listed: Value = serde_json::from_str(&ok(&output)).unwrap();
+    let typed: ApplicationInstallerOptions = serde_json::from_value(listed.clone()).unwrap();
+    assert_eq!(typed.package, PACKAGE);
     let platforms = listed["platforms"].as_array().unwrap();
     assert_eq!(platforms.len(), 2);
-    assert!(
-        platforms
-            .iter()
-            .any(|row| row["id"] == fixture.os && row["name"] == fixture.os)
-    );
-    assert!(
-        platforms
-            .iter()
-            .any(|row| row["id"] == "plan9" && row["name"] == "Plan 9")
-    );
-    let options: Vec<&Value> = platforms
+    assert_eq!(platforms[0]["id"], std::env::consts::OS);
+    assert_eq!(platforms[0]["detected"], true);
+    assert_eq!(platforms[0]["architectures"][0]["detected"], true);
+    assert_eq!(platforms[1]["name"], "Plan 9");
+    let installers: Vec<&Value> = platforms
         .iter()
         .flat_map(|platform| platform["architectures"].as_array().unwrap())
         .flat_map(|arch| arch["installers"].as_array().unwrap())
         .collect();
-    assert_eq!(options.len(), 3);
-    assert!(options.iter().any(|row| row["id"] == "host"));
-    assert!(options.iter().any(|row| row["id"] == "other-cpu"));
-    assert!(options.iter().any(|row| row["id"] == "other-os"));
+    let by_id = |id: &str| {
+        installers
+            .iter()
+            .find(|row| row["id"] == id)
+            .copied()
+            .unwrap()
+    };
+    assert_eq!(installers.len(), 3);
+    assert_eq!(by_id("host")["installation"]["interpreter"], "posix_sh");
+    assert_eq!(by_id("host")["public_commands"][0]["name"], "choice");
+    assert_eq!(by_id("host")["pre_install"], "echo prepare");
+    assert_eq!(by_id("other-cpu")["portable"], true);
+    assert_eq!(by_id("other-cpu")["installation"]["payload_root"], "choice");
+    assert_eq!(by_id("other-os")["installation"]["type"], "source_build");
+    assert!(
+        !user.settings.join("applications").exists(),
+        "listing never mutates state"
+    );
 
-    // An explicitly named, non-detected target is selectable; the helper is
-    // deliberately the same local binary, so no foreign program is executed.
-    let installed = fixture.output(
+    let text = ok(&fixture.vibe(
         &user,
-        &[
-            "install",
-            "-g",
-            PACKAGE,
-            "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.other_arch,
-            "--installer",
-            "other-cpu",
-            "--json",
-        ],
-    );
-    assert_success(&installed);
-    assert!(String::from_utf8_lossy(&installed.stderr).contains("INSTALL_STDOUT"));
-    assert!(String::from_utf8_lossy(&installed.stderr).contains("INSTALL_STDERR"));
-    assert!(fixture.other_root.join("bin").join(helper_name()).is_file());
-
-    let index: Value =
-        serde_json::from_slice(&fs::read(user.settings.join("applications/index.json")).unwrap())
-            .unwrap();
-    assert_eq!(
-        index["applications"]["org.example/choice-app@1.0.0"]["selectedOptionId"],
-        "other-cpu"
-    );
-    assert_eq!(
-        index["applications"]["org.example/choice-app@1.0.0"]["appRoot"],
-        fixture.other_root_text()
-    );
+        &["app", "installers", PACKAGE, "--registry", registry],
+    ));
+    assert!(text.contains("choice-app: 3 installer(s)"), "{text}");
+    assert!(text.contains("other-cpu: Other CPU archive"), "{text}");
 }
 
 #[test]
-fn unknown_platform_can_be_selected_explicitly() {
-    let fixture = Fixture::new(true);
+fn source_build_is_modelled_but_refused_at_install_time() {
+    let fixture = Fixture::new();
     let user = UserScratch::new();
-    let installed = fixture.output(
+    let registry = fixture.registry.to_str().unwrap();
+    let output = fixture.vibe(
         &user,
         &[
             "install",
             "-g",
             PACKAGE,
             "--registry",
-            fixture.registry_text(),
+            registry,
             "--platform",
             "plan9",
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "other-os",
-            "--json",
         ],
     );
-    assert_success(&installed);
-    assert!(String::from_utf8_lossy(&installed.stderr).contains("INSTALL_STDOUT"));
-    assert!(fixture.other_root.join("bin").join(helper_name()).is_file());
-    let listing = fixture.json(&user, &["app", "launchers", PACKAGE, "--json"]);
-    let _: vibe_wire::generated::application_launchers::ApplicationLaunchers =
-        serde_json::from_value(listing.clone()).unwrap();
-    assert_eq!(listing["launchers"][0]["id"], "alien");
-    assert_eq!(listing["app_root"], fixture.other_root_text());
-}
-
-#[test]
-fn local_zip_option_installs_verified_payload_and_launcher() {
-    let fixture = Fixture::new(true);
-    let user = UserScratch::new();
-    let package_dir = fixture.manifest.parent().unwrap();
-    let archive = package_dir.join("payload.zip");
-    let file = fs::File::create(&archive).unwrap();
-    let mut zip = zip::ZipWriter::new(file);
-    zip.start_file(
-        format!("bin/{}", helper_name()),
-        SimpleFileOptions::default().unix_permissions(0o755),
-    )
-    .unwrap();
-    zip.write_all(&fs::read(&fixture.helper).unwrap()).unwrap();
-    zip.finish().unwrap();
-    let digest = format!("{:x}", Sha256::digest(fs::read(&archive).unwrap()));
-    fs::write(
-        &fixture.manifest,
-        format!(
-            "[package]\nname='choice-app'\ngroup='org.example'\nkind='app'\nversion='1.0.0'\n\
-             [application]\nid='choice'\ncommands=[]\n\
-             [[installer_options]]\nid='local-zip'\nname='Local ZIP'\nplatform={platform}\nplatform_name={platform}\narch={arch}\n\
-             [installer_options.installation]\ntype='zip'\nsource='payload.zip'\nsha256='{digest}'\n\
-             [[installer_options.launchers]]\nid='main'\nname='ZIP Main'\nexecutable='bin/{helper}'\nargs=['zip-fixed']\ndefault=true\n",
-            platform = toml_string(fixture.os),
-            arch = toml_string(fixture.arch),
-            helper = helper_name(),
-        ),
-    )
-    .unwrap();
-
-    let installed = fixture.output(
-        &user,
-        &[
-            "install",
-            "-g",
-            PACKAGE,
-            "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "local-zip",
-            "--json",
-        ],
-    );
-    assert_success(&installed);
-    let report: Value = serde_json::from_slice(&installed.stdout).unwrap();
-    assert_eq!(report["selectedMode"], "zip");
-    let listing = fixture.json(&user, &["app", "launchers", PACKAGE, "--json"]);
-    assert_eq!(listing["default_launcher_id"], "main");
-    assert_eq!(listing["launchers"][0]["status"], "available");
-    let started = fixture.output(&user, &["app", "start", PACKAGE]);
-    assert_success(&started);
-    assert!(String::from_utf8_lossy(&started.stdout).contains("LAUNCH_ARG=zip-fixed"));
+    assert!(!output.status.success());
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(stderr.contains("not implemented in this phase"), "{stderr}");
+    assert!(!user.settings.join("applications/index.json").exists());
 }
 
 #[cfg(target_os = "linux")]
 #[test]
-fn manually_selected_windows_zip_installs_but_public_exe_proxy_is_unavailable() {
-    let registry = tempfile::tempdir().unwrap();
-    let package = registry.path().join("org.example/windows-tool/v1.0.0");
-    fs::create_dir_all(&package).unwrap();
-    let archive = package.join("windows-tool.zip");
-    let mut zip = zip::ZipWriter::new(fs::File::create(&archive).unwrap());
-    zip.start_file(
-        "bin/tool.exe",
-        SimpleFileOptions::default().unix_permissions(0o755),
-    )
-    .unwrap();
-    zip.write_all(b"MZ\0\0tiny test payload").unwrap();
-    zip.finish().unwrap();
-    let digest = format!("{:x}", Sha256::digest(fs::read(&archive).unwrap()));
-    fs::write(
-        package.join("vibe.toml"),
-        format!(
-            "[package]\nname='windows-tool'\ngroup='org.example'\nkind='app'\nversion='1.0.0'\n\
-             [application]\nid='win-tool'\ncommands=[]\n\
-             [[installer_options]]\nid='windows-x64'\nname='Windows x64 ZIP'\nplatform='windows'\nplatform_name='Windows'\narch='x86_64'\n\
-             [installer_options.installation]\ntype='zip'\nsource='windows-tool.zip'\nsha256='{digest}'\n\
-             [[installer_options.launchers]]\nid='tool'\nname='Tool'\nexecutable='bin/tool.exe'\ndefault=true\n\
-             [[installer_options.public_commands]]\nname='tool'\nlauncher='tool'\n"
-        ),
-    )
-    .unwrap();
-
+fn an_explicit_non_detected_option_is_selectable_and_listed_after_install() {
+    let fixture = Fixture::new();
     let user = UserScratch::new();
-    let installed = user
-        .vibe()
-        .current_dir(registry.path())
-        .args([
-            "install",
-            "-g",
-            "org.example/windows-tool",
-            "--registry",
-            registry.path().to_str().unwrap(),
-            "--platform",
-            "windows",
-            "--arch",
-            "x86_64",
-            "--installer",
-            "windows-x64",
-            "--json",
-        ])
-        .output()
-        .unwrap();
-    assert_success(&installed);
-    let index: Value =
-        serde_json::from_slice(&fs::read(user.settings.join("applications/index.json")).unwrap())
-            .unwrap();
-    assert_eq!(
-        index["applications"]["org.example/windows-tool@1.0.0"]["status"],
-        "ready"
-    );
-    let alias = user.settings.join("opt/bin/tool");
-    assert!(alias.is_file());
-    let invoked = Command::new(&alias).output().unwrap();
-    assert_eq!(invoked.status.code(), Some(127));
-    assert!(
-        String::from_utf8_lossy(&invoked.stderr)
-            .contains("Windows executable cannot run on this platform"),
-        "{}",
-        String::from_utf8_lossy(&invoked.stderr)
-    );
-}
-
-#[test]
-fn failed_zip_post_install_keeps_prior_index_payload_and_launcher() {
-    let fixture = Fixture::new(true);
-    let user = UserScratch::new();
-    let package_dir = fixture.manifest.parent().unwrap();
-    let initial_archive = package_dir.join("payload-initial.zip");
-    write_zip_payload(&initial_archive, &fixture.helper, false);
-    let initial_digest = format!("{:x}", Sha256::digest(fs::read(&initial_archive).unwrap()));
-    write_zip_manifest(&fixture, "payload-initial.zip", &initial_digest, None);
-
-    let installed = fixture.output(
+    let registry = fixture.registry.to_str().unwrap();
+    let app_root = fixture.root.path().join("external");
+    fs::create_dir_all(app_root.join("bin")).unwrap();
+    let output = fixture.vibe(
         &user,
         &[
             "install",
             "-g",
             PACKAGE,
             "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "local-zip",
-            "--json",
-        ],
-    );
-    assert_success(&installed);
-    let index_path = user.settings.join("applications/index.json");
-    let prior_index = fs::read(&index_path).unwrap();
-    let prior_record: Value = serde_json::from_slice(&prior_index).unwrap();
-    let prior_root = PathBuf::from(
-        prior_record["applications"]["org.example/choice-app@1.0.0"]["appRoot"]
-            .as_str()
-            .unwrap(),
-    );
-    let prior_executable = prior_root.join("bin").join(helper_name());
-    let prior_payload = fs::read(&prior_executable).unwrap();
-    let prior_listing = fixture.json(&user, &["app", "launchers", PACKAGE, "--json"]);
-
-    let replacement_archive = package_dir.join("payload-replacement.zip");
-    write_zip_payload(&replacement_archive, &fixture.helper, true);
-    let replacement_digest = format!(
-        "{:x}",
-        Sha256::digest(fs::read(&replacement_archive).unwrap())
-    );
-    let failing_hook = shell_command(&fixture.helper, "fail-post-install", &fixture.host_root);
-    write_zip_manifest(
-        &fixture,
-        "payload-replacement.zip",
-        &replacement_digest,
-        Some(&failing_hook),
-    );
-
-    let failed = fixture.output(
-        &user,
-        &[
-            "update",
-            "-g",
-            PACKAGE,
-            "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "local-zip",
-        ],
-    );
-    assert!(!failed.status.success());
-    assert!(String::from_utf8_lossy(&failed.stderr).contains("post_install"));
-    assert!(String::from_utf8_lossy(&failed.stderr).contains("POST_INSTALL_FAILED"));
-    assert_eq!(fs::read(&index_path).unwrap(), prior_index);
-    assert_eq!(fs::read(&prior_executable).unwrap(), prior_payload);
-    let after = fixture.json(&user, &["app", "launchers", PACKAGE, "--json"]);
-    assert_eq!(after, prior_listing);
-    let started = fixture.output(&user, &["app", "start", PACKAGE]);
-    assert_success(&started);
-    assert!(String::from_utf8_lossy(&started.stdout).contains("LAUNCH_ARG=zip-fixed"));
-}
-
-#[test]
-fn local_tar_gz_option_installs_verified_payload() {
-    let fixture = Fixture::new(true);
-    let user = UserScratch::new();
-    let package_dir = fixture.manifest.parent().unwrap();
-    let archive = package_dir.join("payload.tar.gz");
-    let output = fs::File::create(&archive).unwrap();
-    let encoder = flate2::write::GzEncoder::new(output, flate2::Compression::default());
-    let mut tar = tar::Builder::new(encoder);
-    let bytes = fs::read(&fixture.helper).unwrap();
-    let mut header = tar::Header::new_gnu();
-    header.set_size(bytes.len() as u64);
-    header.set_mode(0o755);
-    header.set_cksum();
-    tar.append_data(
-        &mut header,
-        format!("bin/{}", helper_name()),
-        bytes.as_slice(),
-    )
-    .unwrap();
-    tar.into_inner().unwrap().finish().unwrap();
-    let digest = format!("{:x}", Sha256::digest(fs::read(&archive).unwrap()));
-    fs::write(
-        &fixture.manifest,
-        format!(
-            "[package]\nname='choice-app'\ngroup='org.example'\nkind='app'\nversion='1.0.0'\n\
-             [application]\nid='choice'\ncommands=[]\n\
-             [[installer_options]]\nid='local-tar'\nname='Local tar.gz'\nplatform={platform}\nplatform_name={platform}\narch={arch}\n\
-             [installer_options.installation]\ntype='tar_gz'\nsource='payload.tar.gz'\nsha256='{digest}'\n\
-             [[installer_options.launchers]]\nid='main'\nname='tar Main'\nexecutable='bin/{helper}'\nargs=['tar-fixed']\ndefault=true\n",
-            platform = toml_string(fixture.os),
-            arch = toml_string(fixture.arch),
-            helper = helper_name(),
-        ),
-    )
-    .unwrap();
-    let installed = fixture.output(
-        &user,
-        &[
-            "install",
-            "-g",
-            PACKAGE,
-            "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "local-tar",
-            "--json",
-        ],
-    );
-    assert_success(&installed);
-    let report: Value = serde_json::from_slice(&installed.stdout).unwrap();
-    assert_eq!(report["selectedMode"], "tar_gz");
-    let listing = fixture.json(&user, &["app", "launchers", PACKAGE, "--json"]);
-    assert_eq!(listing["launchers"][0]["status"], "available");
-    let started = fixture.output(&user, &["app", "start", PACKAGE]);
-    assert_success(&started);
-    assert!(String::from_utf8_lossy(&started.stdout).contains("LAUNCH_ARG=tar-fixed"));
-}
-
-#[test]
-fn command_install_launch_and_update_keep_literal_args_and_current_paths() {
-    let fixture = Fixture::new(true);
-    let user = UserScratch::new();
-    let installed = fixture.output(
-        &user,
-        &[
-            "install",
-            "-g",
-            PACKAGE,
-            "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "host",
-        ],
-    );
-    assert_success(&installed);
-    assert!(String::from_utf8_lossy(&installed.stdout).contains("INSTALL_STDOUT"));
-    assert!(String::from_utf8_lossy(&installed.stderr).contains("INSTALL_STDERR"));
-
-    let listing = fixture.json(&user, &["app", "launchers", PACKAGE, "--json"]);
-    assert_eq!(listing["protocol"], "vibe-app-launchers/1");
-    assert_eq!(listing["default_launcher_id"], "main");
-    assert_eq!(listing["app_root"], fixture.host_root_text());
-    assert_eq!(listing["launchers"].as_array().unwrap().len(), 2);
-    assert_eq!(listing["launchers"][0]["id"], "main");
-    assert_eq!(listing["launchers"][0]["status"], "available");
-    assert_eq!(
-        listing["launchers"][0]["executable"]["template"],
-        format!("bin/{}", helper_name())
-    );
-    assert_eq!(listing["launchers"][1]["id"], "secondary");
-
-    let literal = "a b;$HOME$(echo untouched)";
-    let launched = fixture.output(&user, &["app", "run", PACKAGE, "secondary", "--", literal]);
-    assert_success(&launched);
-    let stdout = String::from_utf8_lossy(&launched.stdout);
-    assert!(stdout.contains("LAUNCH_ARG=secondary-fixed"), "{stdout}");
-    assert!(
-        stdout.contains(&format!("LAUNCH_ARG={literal}")),
-        "{stdout}"
-    );
-    assert!(
-        stdout.contains(&format!("LAUNCH_CWD={}", fixture._root.path().display())),
-        "{stdout}"
-    );
-
-    let started = fixture.output(&user, &["app", "start", PACKAGE]);
-    assert_success(&started);
-    assert!(String::from_utf8_lossy(&started.stdout).contains("LAUNCH_ARG=main-fixed"));
-
-    fixture.write_manifest(false);
-    let updated = fixture.output(
-        &user,
-        &[
-            "update",
-            "-g",
-            PACKAGE,
-            "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "host",
-        ],
-    );
-    assert_success(&updated);
-    assert!(String::from_utf8_lossy(&updated.stdout).contains("UPDATE_STDOUT"));
-    assert!(String::from_utf8_lossy(&updated.stderr).contains("UPDATE_STDERR"));
-    let after = fixture.json(&user, &["app", "launchers", PACKAGE, "--json"]);
-    assert_eq!(after["default_launcher_id"], Value::Null);
-    assert_eq!(after["launchers"].as_array().unwrap().len(), 1);
-    assert_eq!(after["launchers"][0]["id"], "only");
-    let start_without_default = fixture.output(&user, &["app", "start", PACKAGE]);
-    assert!(!start_without_default.status.success());
-    assert!(String::from_utf8_lossy(&start_without_default.stderr).contains("selection_required"));
-}
-
-#[test]
-fn shell_hooks_run_in_order_and_force_uses_distinct_commands() {
-    let fixture = Fixture::new(true);
-    let user = UserScratch::new();
-    let installed = fixture.output(
-        &user,
-        &[
-            "install",
-            "-g",
-            PACKAGE,
-            "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "host",
-        ],
-    );
-    assert_success(&installed);
-    assert_markers_in_order(
-        &installed.stdout,
-        &[
-            "PRE_INSTALL_STDOUT",
-            "INSTALL_STDOUT",
-            "POST_INSTALL_STDOUT",
-        ],
-    );
-
-    let forced = fixture.output(
-        &user,
-        &[
-            "install",
-            "-g",
-            PACKAGE,
-            "--force",
-            "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "host",
-        ],
-    );
-    assert_success(&forced);
-    assert_markers_in_order(
-        &forced.stdout,
-        &[
-            "PRE_INSTALL_STDOUT",
-            "FORCE_INSTALL_STDOUT",
-            "POST_INSTALL_STDOUT",
-        ],
-    );
-    assert!(
-        !String::from_utf8_lossy(&forced.stdout)
-            .lines()
-            .any(|line| line == "INSTALL_STDOUT")
-    );
-
-    let removed = fixture.output(&user, &["uninstall", "-g", PACKAGE, "--force"]);
-    assert_success(&removed);
-    assert!(String::from_utf8_lossy(&removed.stdout).contains("FORCE_UNINSTALL_STDOUT"));
-}
-
-#[test]
-fn failed_pre_install_hook_preserves_last_successful_index() {
-    let fixture = Fixture::new(true);
-    let user = UserScratch::new();
-    let installed = fixture.output(
-        &user,
-        &[
-            "install",
-            "-g",
-            PACKAGE,
-            "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "host",
-        ],
-    );
-    assert_success(&installed);
-    let index_path = user.settings.join("applications/index.json");
-    let before = fs::read(&index_path).unwrap();
-    fixture.fail_pre_install_hook();
-
-    let failed = fixture.output(
-        &user,
-        &[
-            "update",
-            "-g",
-            PACKAGE,
-            "--registry",
-            fixture.registry_text(),
-            "--platform",
-            fixture.os,
-            "--arch",
-            fixture.arch,
-            "--installer",
-            "host",
-        ],
-    );
-    assert!(!failed.status.success());
-    assert!(String::from_utf8_lossy(&failed.stderr).contains("PRE_INSTALL_FAILED"));
-    assert!(!String::from_utf8_lossy(&failed.stdout).contains("UPDATE_STDOUT"));
-    assert_eq!(fs::read(&index_path).unwrap(), before);
-}
-
-struct Fixture {
-    _root: tempfile::TempDir,
-    registry: PathBuf,
-    manifest: PathBuf,
-    helper: PathBuf,
-    host_root: PathBuf,
-    other_root: PathBuf,
-    os: &'static str,
-    arch: &'static str,
-    other_arch: &'static str,
-}
-
-impl Fixture {
-    fn new(default: bool) -> Self {
-        let root = tempfile::tempdir().unwrap();
-        let registry = root.path().join("registry");
-        let package = registry.join("org.example/choice-app/v1.0.0");
-        fs::create_dir_all(&package).unwrap();
-        let helper = root.path().join(helper_name());
-        compile_helper(&helper);
-        let os = std::env::consts::OS;
-        let arch = std::env::consts::ARCH;
-        let other_arch = if arch == "aarch64" {
-            "x86_64"
-        } else {
-            "aarch64"
-        };
-        let host_root = root.path().join("External App Ω");
-        let other_root = root.path().join("Other CPU Ω");
-        let fixture = Self {
-            _root: root,
             registry,
-            manifest: package.join("vibe.toml"),
-            helper,
-            host_root,
-            other_root,
-            os,
-            arch,
-            other_arch,
-        };
-        fixture.write_manifest(default);
-        fixture
-    }
-
-    fn write_manifest(&self, default: bool) {
-        let host_launcher = if default {
-            format!(
-                "[[installer_options.launchers]]\nid='main'\nname='Main'\nexecutable='bin/{}'\nargs=['main-fixed']\ndefault=true\n\
-                 [[installer_options.launchers]]\nid='secondary'\nname='Secondary'\nexecutable='bin/{}'\nargs=['secondary-fixed']\n",
-                helper_name(),
-                helper_name(),
-            )
-        } else {
-            format!(
-                "[[installer_options.launchers]]\nid='only'\nname='Only'\nexecutable='bin/{}'\nargs=['only-fixed']\n",
-                helper_name(),
-            )
-        };
-        let content = format!(
-            "[package]\nname='choice-app'\ngroup='org.example'\nkind='app'\nversion='1.0.0'\n\
-             [application]\nid='choice'\ncommands=[]\n\
-             [[installer_options]]\nid='host'\nname='Host Installer'\nplatform={os}\nplatform_name={os}\narch={arch}\npre_install={host_pre}\npost_install={host_post}\n\
-             [installer_options.installation]\ntype='shell'\napp_root={host_root}\n\
-             install={host_install}\nforce_install={host_force_install}\nupdate={host_update}\nuninstall={host_uninstall}\nforce_uninstall={host_force_uninstall}\n\
-             {host_launcher}\n\
-             [[installer_options]]\nid='other-cpu'\nname='Other CPU Installer'\nplatform={os}\nplatform_name={os}\narch={other_arch}\n\
-             [installer_options.installation]\ntype='shell'\napp_root={other_root}\n\
-             install={other_install}\nforce_install={other_force_install}\nuninstall={other_uninstall}\nforce_uninstall={other_force_uninstall}\n\
-             [[installer_options.launchers]]\nid='other'\nname='Other CPU'\nexecutable='bin/{helper_file}'\n\
-             [[installer_options]]\nid='other-os'\nname='Other OS Installer'\nplatform='plan9'\nplatform_name='Plan 9'\narch={arch}\n\
-             [installer_options.installation]\ntype='shell'\napp_root={other_root}\n\
-             install={other_install}\nforce_install={other_force_install}\nuninstall={other_uninstall}\nforce_uninstall={other_force_uninstall}\n\
-             [[installer_options.launchers]]\nid='alien'\nname='Other OS'\nexecutable='bin/{helper_file}'\n",
-            os = toml_string(self.os),
-            arch = toml_string(self.arch),
-            other_arch = toml_string(self.other_arch),
-            host_root = toml_string(self.host_root_text()),
-            other_root = toml_string(self.other_root_text()),
-            host_pre = toml_string(&shell_command(&self.helper, "pre-install", &self.host_root)),
-            host_post = toml_string(&shell_command(
-                &self.helper,
-                "post-install",
-                &self.host_root
-            )),
-            host_install = toml_string(&shell_command(&self.helper, "install", &self.host_root)),
-            host_force_install = toml_string(&shell_command(
-                &self.helper,
-                "force-install",
-                &self.host_root
-            )),
-            host_update = toml_string(&shell_command(&self.helper, "update", &self.host_root)),
-            host_uninstall =
-                toml_string(&shell_command(&self.helper, "uninstall", &self.host_root)),
-            host_force_uninstall = toml_string(&shell_command(
-                &self.helper,
-                "force-uninstall",
-                &self.host_root
-            )),
-            other_install = toml_string(&shell_command(&self.helper, "install", &self.other_root)),
-            other_force_install = toml_string(&shell_command(
-                &self.helper,
-                "force-install",
-                &self.other_root
-            )),
-            other_uninstall =
-                toml_string(&shell_command(&self.helper, "uninstall", &self.other_root)),
-            other_force_uninstall = toml_string(&shell_command(
-                &self.helper,
-                "force-uninstall",
-                &self.other_root
-            )),
-            helper_file = helper_name(),
-        );
-        fs::write(&self.manifest, content).unwrap();
-    }
-
-    fn fail_pre_install_hook(&self) {
-        let original = fs::read_to_string(&self.manifest).unwrap();
-        let prior = format!(
-            "pre_install={}",
-            toml_string(&shell_command(&self.helper, "pre-install", &self.host_root))
-        );
-        let failing = format!(
-            "pre_install={}",
-            toml_string(&shell_command(
-                &self.helper,
-                "fail-pre-install",
-                &self.host_root
-            ))
-        );
-        assert!(original.contains(&prior));
-        fs::write(&self.manifest, original.replacen(&prior, &failing, 1)).unwrap();
-    }
-
-    fn registry_text(&self) -> &str {
-        self.registry.to_str().unwrap()
-    }
-    fn host_root_text(&self) -> &str {
-        self.host_root.to_str().unwrap()
-    }
-    fn other_root_text(&self) -> &str {
-        self.other_root.to_str().unwrap()
-    }
-
-    fn output(&self, user: &UserScratch, args: &[&str]) -> Output {
-        user.vibe()
-            .current_dir(self._root.path())
-            .args(args)
-            .output()
-            .unwrap()
-    }
-
-    fn json(&self, user: &UserScratch, args: &[&str]) -> Value {
-        let output = self.output(user, args);
-        assert_success(&output);
-        serde_json::from_slice(&output.stdout).unwrap()
-    }
-}
-
-fn write_zip_payload(archive: &Path, helper: &Path, replacement: bool) {
-    let file = fs::File::create(archive).unwrap();
-    let mut zip = zip::ZipWriter::new(file);
-    zip.start_file(
-        format!("bin/{}", helper_name()),
-        SimpleFileOptions::default().unix_permissions(0o755),
-    )
-    .unwrap();
-    zip.write_all(&fs::read(helper).unwrap()).unwrap();
-    if replacement {
-        zip.start_file("replacement.txt", SimpleFileOptions::default())
-            .unwrap();
-        zip.write_all(b"new generation").unwrap();
-    }
-    zip.finish().unwrap();
-}
-
-fn write_zip_manifest(fixture: &Fixture, source: &str, digest: &str, post_install: Option<&str>) {
-    let post = post_install.map_or_else(String::new, |command| {
-        format!("post_install={}\n", toml_string(command))
-    });
-    fs::write(
-        &fixture.manifest,
-        format!(
-            "[package]\nname='choice-app'\ngroup='org.example'\nkind='app'\nversion='1.0.0'\n\
-             [application]\nid='choice'\ncommands=[]\n\
-             [[installer_options]]\nid='local-zip'\nname='Local ZIP'\nplatform={platform}\nplatform_name={platform}\narch={arch}\n{post}\
-             [installer_options.installation]\ntype='zip'\nsource={source}\nsha256='{digest}'\n\
-             [[installer_options.launchers]]\nid='main'\nname='ZIP Main'\nexecutable='bin/{helper}'\nargs=['zip-fixed']\ndefault=true\n",
-            platform = toml_string(fixture.os),
-            arch = toml_string(fixture.arch),
-            source = toml_string(source),
-            helper = helper_name(),
-        ),
-    )
-    .unwrap();
-}
-
-fn helper_name() -> &'static str {
-    if cfg!(windows) {
-        "fixture-app.exe"
-    } else {
-        "fixture-app"
-    }
-}
-
-fn toml_string(value: &str) -> String {
-    serde_json::to_string(value).unwrap()
-}
-
-fn shell_command(helper: &Path, operation: &str, app_root: &Path) -> String {
-    format!(
-        "{} {operation} {}",
-        shell_word(helper),
-        shell_word(app_root)
-    )
-}
-
-fn shell_word(path: &Path) -> String {
-    let value = path.to_str().unwrap();
-    if cfg!(windows) {
-        format!("\"{value}\"")
-    } else {
-        format!("'{}'", value.replace('\'', "'\"'\"'"))
-    }
-}
-
-fn assert_success(output: &Output) {
-    assert!(
-        output.status.success(),
-        "status={} stdout={} stderr={}",
-        output.status,
-        String::from_utf8_lossy(&output.stdout),
-        String::from_utf8_lossy(&output.stderr),
+            "--platform",
+            std::env::consts::OS,
+            "--installer",
+            "host",
+            "--json",
+        ],
     );
+    let report: Value = serde_json::from_str(&ok(&output)).unwrap();
+    assert_eq!(report["applicationId"], "choice");
+    assert!(String::from_utf8_lossy(&output.stderr).contains("install"));
+    let listing: Value = serde_json::from_str(&ok(
+        &fixture.vibe(&user, &["app", "launchers", PACKAGE, "--json"])
+    ))
+    .unwrap();
+    assert_eq!(listing["default_launcher_id"], "main");
+    assert_eq!(listing["launchers"][0]["status"], "unavailable");
+    assert_eq!(listing["app_root"], app_root.display().to_string());
+    let list: Value =
+        serde_json::from_str(&ok(&fixture.vibe(&user, &["app", "list", "--json"]))).unwrap();
+    assert_eq!(list["installations"][0]["portable"], false);
 }
-
-fn assert_markers_in_order(output: &[u8], markers: &[&str]) {
-    let output = String::from_utf8_lossy(output);
-    let mut offset = 0;
-    for marker in markers {
-        let relative = output[offset..]
-            .find(marker)
-            .unwrap_or_else(|| panic!("missing marker `{marker}` in {output}"));
-        offset += relative + marker.len();
-    }
-}
-
-fn compile_helper(path: &Path) {
-    let source = path.with_extension("rs");
-    fs::write(&source, HELPER_SOURCE).unwrap();
-    let output = Command::new("rustc")
-        .arg("--edition=2021")
-        .arg(&source)
-        .arg("-o")
-        .arg(path)
-        .output()
-        .unwrap();
-    assert_success(&output);
-}
-
-const HELPER_SOURCE: &str = r#"
-use std::{env, fs, path::PathBuf};
-fn main() {
-    let mut args = env::args_os().skip(1);
-    let operation = args.next().and_then(|arg| arg.to_str().map(str::to_owned));
-    match operation.as_deref() {
-        Some("install" | "force-install" | "update") => {
-            let root = PathBuf::from(args.next().expect("payload root"));
-            let bin = root.join("bin");
-            fs::create_dir_all(&bin).unwrap();
-            let destination = bin.join(if cfg!(windows) { "fixture-app.exe" } else { "fixture-app" });
-            fs::copy(env::current_exe().unwrap(), &destination).unwrap();
-            #[cfg(unix)] {
-                use std::os::unix::fs::PermissionsExt;
-                fs::set_permissions(&destination, fs::Permissions::from_mode(0o755)).unwrap();
-            }
-            let marker = match operation.as_deref() {
-                Some("install") => "INSTALL",
-                Some("force-install") => "FORCE_INSTALL",
-                _ => "UPDATE",
-            };
-            println!("{marker}_STDOUT");
-            eprintln!("{marker}_STDERR");
-        }
-        Some("pre-install") => println!("PRE_INSTALL_STDOUT"),
-        Some("post-install") => println!("POST_INSTALL_STDOUT"),
-        Some("fail-pre-install") => {
-            eprintln!("PRE_INSTALL_FAILED");
-            std::process::exit(17);
-        }
-        Some("fail-post-install") => {
-            eprintln!("POST_INSTALL_FAILED");
-            std::process::exit(19);
-        }
-        Some("uninstall") => { println!("UNINSTALL_STDOUT"); }
-        Some("force-uninstall") => { println!("FORCE_UNINSTALL_STDOUT"); }
-        Some(first) => {
-            println!("LAUNCH_ARG={first}");
-            for arg in args { println!("LAUNCH_ARG={}", arg.to_string_lossy()); }
-            println!("LAUNCH_CWD={}", env::current_dir().unwrap().display());
-        }
-        None => panic!("operation or launcher argument is required"),
-    }
-}
-"#;

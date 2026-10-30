@@ -10,7 +10,8 @@ use anyhow::{Context, Result, bail};
 use crate::cli::{InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
 
-use super::{application, install, mcp, uninstall, update};
+use super::app::global as application;
+use super::{install, mcp, uninstall, update};
 
 pub(crate) fn run_install(
     ctx: &output::Context,

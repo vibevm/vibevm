@@ -1,0 +1,96 @@
+{
+  "metadata": {
+    "description": "The one user-application inventory: installations by key and the global default of each slot.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#index" },
+    "rustOptions": { "package": "vibe_wire::application::e2::index" },
+    "x-rust-type": "ApplicationIndex",
+    "x-wire-order": ["protocol", "installations", "slots"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "installations": {
+      "values": { "ref": "installation" },
+      "metadata": { "x-empty": "emit" }
+    },
+    "slots": {
+      "values": { "ref": "slot" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "method": {
+      "enum": ["shell", "zip", "tar_gz", "exe", "msi", "source_build"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "interpreter": {
+      "enum": ["posix_sh", "windows_cmd", "windows_powershell"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "package": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "slot": {
+      "metadata": { "x-wire-order": ["default"] },
+      "properties": {
+        "default": { "type": "string", "nullable": true }
+      }
+    },
+    "launcher": {
+      "metadata": { "x-wire-order": ["id", "name", "description", "executable", "args", "workingDirectory", "icon", "terminal", "default"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "executable": { "type": "string" },
+        "args": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "terminal": { "type": "boolean" },
+        "default": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "description": { "type": "string", "metadata": { "x-default": null } },
+        "workingDirectory": { "type": "string", "metadata": { "x-default": null } },
+        "icon": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "public_command": {
+      "metadata": { "x-wire-order": ["name", "launcher"] },
+      "properties": {
+        "name": { "type": "string" },
+        "launcher": { "type": "string" }
+      }
+    },
+    "authored_commands": {
+      "metadata": { "x-wire-order": ["uninstall", "forceUninstall", "update", "interpreter"] },
+      "optionalProperties": {
+        "uninstall": { "type": "string", "metadata": { "x-default": null } },
+        "forceUninstall": { "type": "string", "metadata": { "x-default": null } },
+        "update": { "type": "string", "metadata": { "x-default": null } },
+        "interpreter": { "ref": "interpreter", "metadata": { "x-default": null } }
+      }
+    },
+    "installation": {
+      "metadata": { "x-wire-order": ["slot", "package", "option", "platform", "arch", "method", "library", "directory", "appRoot", "portable", "launchers", "publicCommands", "commands"] },
+      "properties": {
+        "slot": { "type": "string" },
+        "package": { "ref": "package" },
+        "option": { "type": "string" },
+        "platform": { "type": "string" },
+        "arch": { "type": "string" },
+        "method": { "ref": "method" },
+        "portable": { "type": "boolean" },
+        "launchers": { "elements": { "ref": "launcher" }, "metadata": { "x-empty": "emit" } },
+        "publicCommands": { "elements": { "ref": "public_command" }, "metadata": { "x-empty": "emit" } },
+        "commands": { "ref": "authored_commands" }
+      },
+      "optionalProperties": {
+        "library": { "type": "string", "metadata": { "x-default": null } },
+        "directory": { "type": "string", "metadata": { "x-default": null } },
+        "appRoot": { "type": "string", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}

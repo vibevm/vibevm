@@ -1,0 +1,50 @@
+{
+  "protocol": "vibe-user-applications/3",
+  "installations": {
+    "org.example/editor@1.2.0": {
+      "slot": "editor",
+      "package": { "group": "org.example", "name": "editor", "version": "1.2.0" },
+      "option": "linux-zip",
+      "platform": "linux",
+      "arch": "x86_64",
+      "method": "zip",
+      "library": "default",
+      "directory": "apps/editor/org.example.editor@1.2.0",
+      "portable": true,
+      "launchers": [
+        {
+          "id": "main",
+          "name": "Editor",
+          "executable": "$app_bin/editor",
+          "args": ["--fixed"],
+          "workingDirectory": "$project_root",
+          "terminal": true,
+          "default": true
+        }
+      ],
+      "publicCommands": [{ "name": "edit", "launcher": "main" }],
+      "commands": {}
+    },
+    "org.example/editor-apt@2.0.0": {
+      "slot": "editor",
+      "package": { "group": "org.example", "name": "editor-apt", "version": "2.0.0" },
+      "option": "ubuntu-apt",
+      "platform": "ubuntu",
+      "arch": "x86_64",
+      "method": "shell",
+      "appRoot": "/usr/lib/editor",
+      "portable": false,
+      "launchers": [],
+      "publicCommands": [],
+      "commands": {
+        "uninstall": "sudo apt-get remove editor",
+        "forceUninstall": "sudo apt-get purge editor",
+        "update": "sudo apt-get install --only-upgrade editor",
+        "interpreter": "posix_sh"
+      }
+    }
+  },
+  "slots": {
+    "editor": { "default": "org.example/editor@1.2.0" }
+  }
+}

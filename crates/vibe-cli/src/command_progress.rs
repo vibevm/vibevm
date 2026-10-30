@@ -151,20 +151,11 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Run(_) => TerminalPassthrough,
         Command::App(args) => match &args.command {
             crate::cli::AppCommand::Installers { .. }
-            | crate::cli::AppCommand::Launchers { .. } => FastMetadata,
+            | crate::cli::AppCommand::Launchers { .. }
+            | crate::cli::AppCommand::List => FastMetadata,
             crate::cli::AppCommand::Run { .. } | crate::cli::AppCommand::Start { .. } => {
                 TerminalPassthrough
             }
-            crate::cli::AppCommand::Alternatives(args) => match &args.command {
-                Some(crate::cli::AlternativesCommand::Run { .. })
-                | Some(crate::cli::AlternativesCommand::Shell { .. })
-                | Some(crate::cli::AlternativesCommand::Start { .. }) => TerminalPassthrough,
-                Some(crate::cli::AlternativesCommand::Select { .. })
-                | Some(crate::cli::AlternativesCommand::Choose { .. }) => {
-                    FiniteFallback("Command application alternatives")
-                }
-                _ => FastMetadata,
-            },
         },
         Command::Create(_) => FiniteFallback("Command create"),
         Command::Verify(_) => FiniteFallback("Command verify"),

@@ -9,20 +9,21 @@ use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 use specmark::spec;
 
-use crate::PackageRef;
-
-/// The first user-application runtime vocabulary.
+/// The interpreter that evaluates an authored shell command or recipe script.
+/// Absent means the host default: `posix_sh` on Linux/macOS, `windows_cmd`
+/// on Windows.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
-pub enum ApplicationRuntime {
-    Node,
-    Native,
+#[serde(rename_all = "snake_case")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
+pub enum ShellInterpreter {
+    PosixSh,
+    WindowsCmd,
+    WindowsPowershell,
 }
 
 /// One package-authored installation method. Selection belongs to the enclosing
 /// `[[installer_options]]` row; no platform command is inferred from its name.
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case", deny_unknown_fields)]
 pub enum InstallerMethod {
@@ -34,22 +35,20 @@ pub enum InstallerMethod {
         update: Option<String>,
         uninstall: String,
         force_uninstall: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        interpreter: Option<ShellInterpreter>,
     },
     Zip {
         source: String,
         sha256: String,
         #[serde(default, skip_serializing_if = "Option::is_none")]
         payload_root: Option<PathBuf>,
-        #[serde(default, skip_serializing_if = "Vec::is_empty")]
-        runners: Vec<ArchiveRunnerDecl>,
     },
     TarGz {
         source: String,
         sha256: String,
         #[serde(default, skip_serializing_if = "Option::is_none")]
         payload_root: Option<PathBuf>,
-        #[serde(default, skip_serializing_if = "Vec::is_empty")]
-        runners: Vec<ArchiveRunnerDecl>,
     },
     Exe {
         source: String,
@@ -77,19 +76,64 @@ pub enum InstallerMethod {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         force_uninstall: Option<String>,
     },
+    SourceBuild {
+        sources: Vec<SourceInputDecl>,
+        recipe: RecipeDecl,
+    },
 }
 
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+impl InstallerMethod {
+    /// The stable `installation.type` spelling of this method.
+    pub fn kind(&self) -> &'static str {
+        match self {
+            Self::Shell { .. } => "shell",
+            Self::Zip { .. } => "zip",
+            Self::TarGz { .. } => "tar_gz",
+            Self::Exe { .. } => "exe",
+            Self::Msi { .. } => "msi",
+            Self::SourceBuild { .. } => "source_build",
+        }
+    }
+
+    /// Owned methods place their payload in a library directory vibe controls;
+    /// external methods only register the `app_root` an installer produced.
+    pub fn is_owned(&self) -> bool {
+        matches!(
+            self,
+            Self::Zip { .. } | Self::TarGz { .. } | Self::SourceBuild { .. }
+        )
+    }
+}
+
+/// One `[[installation.sources]]` input of a `source_build` method.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#source-build")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct ArchiveRunnerDecl {
-    pub path: PathBuf,
+pub struct SourceInputDecl {
     pub name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path: Option<PathBuf>,
+    pub sha256: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub extract: Option<bool>,
+}
+
+/// The `installation.recipe` of a `source_build` method: a package-relative
+/// script run by the selected interpreter.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#source-build")]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RecipeDecl {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub interpreter: Option<ShellInterpreter>,
+    pub script: PathBuf,
 }
 
 /// One user-facing entry of an installed application. Paths remain templates
 /// until launch, when the installed payload and optional project are known.
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LauncherDecl {
@@ -113,7 +157,7 @@ pub struct LauncherDecl {
 /// A portable command claimed by this installer option. Its launcher is
 /// resolved from the same option after installation, so different packages
 /// and platforms may use different executables for the same public name.
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PublicCommandDecl {
@@ -123,7 +167,7 @@ pub struct PublicCommandDecl {
 
 /// A named choice for one platform and CPU architecture. Multiple choices
 /// may target the same pair; IDs distinguish them for selection and updates.
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct InstallerOptionDecl {
@@ -135,6 +179,8 @@ pub struct InstallerOptionDecl {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub arch_name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub portable: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub pre_install: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub post_install: Option<String>,
@@ -145,44 +191,24 @@ pub struct InstallerOptionDecl {
     pub public_commands: Vec<PublicCommandDecl>,
 }
 
-/// Stable release-index locator for platform application distributions.
-///
-/// Artifact digests deliberately live in the release-owned index rather than
-/// in source: publishing a binary must not mutate the commit it describes.
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#distribution")]
-pub struct ApplicationDistributionDecl {
-    pub repository: String,
-    pub release_tag: String,
-    pub index_asset: String,
-}
-
-/// A published bridge may delegate its application declaration to a mutable,
-/// explicitly named Git branch. Each operation resolves that branch to an
-/// immutable commit and records the resulting provenance.
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#sources")]
-pub struct ApplicationSourceDecl {
-    pub kind: ApplicationSourceKind,
-    pub url: String,
-    pub tracked_ref: String,
-    pub registry_path: PathBuf,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#sources")]
-pub enum ApplicationSourceKind {
-    Git,
-}
-
-/// Strict package-only `[application]` metadata.
-#[derive(Debug, Clone, PartialEq, Eq)]
+/// Strict package-only `[application]` metadata: the slot name and the
+/// package-wide portability default.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct ApplicationDecl {
     pub id: String,
-    pub installer_package: Option<PackageRef>,
-    pub runtime: Option<ApplicationRuntime>,
-    pub entry: Option<PathBuf>,
-    pub commands: Vec<String>,
-    pub distribution: Option<ApplicationDistributionDecl>,
+    #[serde(
+        default = "portable_default",
+        skip_serializing_if = "is_portable_default"
+    )]
+    pub portable: bool,
+}
+
+fn portable_default() -> bool {
+    true
+}
+
+fn is_portable_default(value: &bool) -> bool {
+    *value
 }
