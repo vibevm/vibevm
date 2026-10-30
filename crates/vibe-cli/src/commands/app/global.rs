@@ -52,7 +52,10 @@ pub(crate) fn resolve_package(
     Ok(vibe_app::from_global(settings.path(), spelling, offline)?)
 }
 
-fn chooser(prompt: &str, items: &[String]) -> std::result::Result<Option<usize>, String> {
+pub(super) fn chooser(
+    prompt: &str,
+    items: &[String],
+) -> std::result::Result<Option<usize>, String> {
     Select::new()
         .with_prompt(prompt)
         .items(items)
@@ -61,7 +64,7 @@ fn chooser(prompt: &str, items: &[String]) -> std::result::Result<Option<usize>,
         .map_err(|error| error.to_string())
 }
 
-fn attended(ctx: &output::Context) -> bool {
+pub(super) fn attended(ctx: &output::Context) -> bool {
     !ctx.is_json() && !ctx.is_unattended() && console::user_attended()
 }
 

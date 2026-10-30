@@ -206,8 +206,10 @@ fn global_application_flags_parse_and_retired_ones_are_gone() {
         );
     }
     assert!(Cli::try_parse_from(["vibe", "update", "-g", "org.example/demo", "--binary"]).is_err());
+    // `--library` parses without `-g`; the project home refuses it at run time
+    // (spec://org.vibevm.core/vibevm/common/PROP-059#project-scope).
     assert!(
-        Cli::try_parse_from(["vibe", "install", "org.example/demo", "--library", "usb"]).is_err()
+        Cli::try_parse_from(["vibe", "install", "org.example/demo", "--library", "usb"]).is_ok()
     );
 }
 

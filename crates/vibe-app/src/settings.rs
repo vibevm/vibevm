@@ -1,6 +1,8 @@
-//! The user settings root and its single mutation lock.
+//! The application home (the user settings root or a project home) and its
+//! single mutation lock.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#index");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#project-scope");
 
 use std::fs::{self, File, OpenOptions};
 use std::io::Write;
@@ -10,8 +12,11 @@ use specmark::spec;
 
 use crate::error::StateError;
 
-/// The current user's settings root (`~/.vibe` or `$VIBE_SETTINGS`), threaded
-/// in by the caller; this crate never reads the environment itself.
+/// An application home: the current user's settings root (`~/.vibe` or
+/// `$VIBE_SETTINGS`) or a project home `<project>/vibevm/vibeopt`, threaded in
+/// by the caller; this crate never reads the environment itself. Both have
+/// the same layout; a project home keeps its downloads and build work
+/// directories in the user home's `cache/`.
 ///
 /// ```
 /// let dir = tempfile::tempdir().unwrap();
@@ -20,11 +25,16 @@ use crate::error::StateError;
 /// assert!(settings.app_sources_cache().ends_with("cache/app-sources"));
 /// let _lock = settings.lock().unwrap();
 /// assert!(settings.lock().is_err(), "a second mutation is refused");
+///
+/// let project = vibe_app::SettingsRoot::project(&dir.path().join("p"), &settings);
+/// assert!(project.proxy_dir().ends_with("p/vibevm/vibeopt/opt/bin"));
+/// assert_eq!(project.app_sources_cache(), settings.app_sources_cache());
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
 pub struct SettingsRoot {
     root: PathBuf,
+    cache: PathBuf,
 }
 
 /// Held for the duration of one mutating command; dropping it releases the
@@ -35,10 +45,26 @@ pub struct MutationLock {
     _file: File,
 }
 
+/// The project home relative to its project root.
+pub const PROJECT_HOME: [&str; 2] = ["vibevm", "vibeopt"];
+
 impl SettingsRoot {
     pub fn new(root: &Path) -> Self {
         Self {
             root: root.to_path_buf(),
+            cache: root.join("cache"),
+        }
+    }
+
+    /// The project home `<project_root>/vibevm/vibeopt`, sharing the source
+    /// cache and build directories of `user`.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope")]
+    pub fn project(project_root: &Path, user: &SettingsRoot) -> Self {
+        Self {
+            root: PROJECT_HOME
+                .iter()
+                .fold(project_root.to_path_buf(), |path, part| path.join(part)),
+            cache: user.cache.clone(),
         }
     }
 
@@ -68,15 +94,15 @@ impl SettingsRoot {
     }
 
     /// `<settings>/cache/app-sources`: verified `source_build` downloads,
-    /// one `<sha256>/<filename>` per input.
+    /// one `<sha256>/<filename>` per input (the user home's for a project).
     pub fn app_sources_cache(&self) -> PathBuf {
-        self.root.join("cache").join("app-sources")
+        self.cache.join("app-sources")
     }
 
     /// `<settings>/cache/app-build`: `source_build` work directories; a
     /// failed build leaves its directory here for inspection.
     pub fn app_build_dir(&self) -> PathBuf {
-        self.root.join("cache").join("app-build")
+        self.cache.join("app-build")
     }
 
     /// Take the `applications/.mutation.lock` exclusive lock, creating the

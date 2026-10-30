@@ -466,16 +466,22 @@ pub enum Command {
     Version,
 }
 
-/// User application launcher operations. `--path` is optional because
-/// application launchers can run without a selected project.
+/// User application operations. Inside a project (the working directory or
+/// `--path` holds `vibe.toml`) they act on the project home; `-g` or no
+/// project selects the user settings root.
 #[derive(Debug, clap::Args)]
 pub struct AppArgs {
     #[command(subcommand)]
     pub command: AppCommand,
 
-    /// Selected project directory, when a launcher needs `$project_root`.
+    /// Selected project directory: its project home `vibevm/vibeopt` is the
+    /// application home, and launchers resolve `$project_root` in it.
     #[arg(long, global = true)]
     pub path: Option<std::path::PathBuf>,
+
+    /// Act on the user settings root even inside a project.
+    #[arg(short = 'g', long, global = true)]
+    pub global: bool,
 }
 
 #[derive(Debug, clap::Subcommand)]

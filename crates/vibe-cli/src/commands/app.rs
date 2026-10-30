@@ -7,16 +7,17 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operati
 
 mod alternatives;
 pub(crate) mod global;
+pub(crate) mod home;
+pub(crate) mod project;
 
 use std::ffi::OsString;
 use std::io::IsTerminal;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use anyhow::{Result, bail};
 use dialoguer::Select;
 use serde_json::Value;
 use vibe_app::{Index, LaunchRequest, Storage};
-use vibe_core::manifest::Manifest;
 
 use crate::cli::{AppArgs, AppCommand};
 use crate::output;
@@ -27,7 +28,8 @@ pub fn run(
     embedded_root: Option<&Path>,
     offline: bool,
 ) -> Result<Option<i32>> {
-    let app_path = args.path;
+    let project_root = home::selected_project(args.path.as_deref())?;
+    let app_home = home::select(args.global, project_root.as_deref())?;
     match args.command {
         AppCommand::Installers { package, registry } => {
             let settings = global::settings_root()?;
@@ -47,8 +49,7 @@ pub fn run(
             Ok(None)
         }
         AppCommand::Launchers { package } => {
-            let project_root = selected_project_root(app_path.as_deref())?;
-            let listing = launcher_listing(&package, project_root.as_deref())?;
+            let listing = launcher_listing(&app_home, &package, project_root.as_deref())?;
             if ctx.is_json() {
                 ctx.emit_json(&listing)?;
             } else {
@@ -57,7 +58,7 @@ pub fn run(
             Ok(None)
         }
         AppCommand::List => {
-            let listing = serde_json::to_value(vibe_app::list(&global::settings_root()?)?)?;
+            let listing = serde_json::to_value(vibe_app::list(app_home.settings())?)?;
             if ctx.is_json() {
                 ctx.emit_json(&listing)?;
             } else {
@@ -66,11 +67,11 @@ pub fn run(
             Ok(None)
         }
         AppCommand::Use { slot, key } => {
-            alternatives::use_default(ctx, &slot, &key)?;
+            alternatives::use_default(ctx, app_home.settings(), &slot, &key)?;
             Ok(None)
         }
         AppCommand::Alternatives { slot } => {
-            alternatives::alternatives(ctx, &slot)?;
+            alternatives::alternatives(ctx, app_home.settings(), &slot)?;
             Ok(None)
         }
         AppCommand::Run {
@@ -78,9 +79,14 @@ pub fn run(
             launcher_id,
             args,
         } => {
-            let project_root = selected_project_root(app_path.as_deref())?;
             let code = ctx.suspend_progress(|| {
-                run_launcher(&package, &launcher_id, &args, project_root.as_deref())
+                run_launcher(
+                    &app_home,
+                    &package,
+                    &launcher_id,
+                    &args,
+                    project_root.as_deref(),
+                )
             })?;
             Ok(Some(code))
         }
@@ -89,42 +95,47 @@ pub fn run(
             launcher,
             args,
         } => {
-            let project_root = selected_project_root(app_path.as_deref())?;
             let id = match launcher {
                 Some(id) => id,
                 None => {
-                    let listing = launcher_listing(&package, project_root.as_deref())?;
+                    let listing = launcher_listing(&app_home, &package, project_root.as_deref())?;
                     let Some(id) = choose_launcher(&listing, ctx)? else {
                         return Ok(None);
                     };
                     id
                 }
             };
-            let code = ctx
-                .suspend_progress(|| run_launcher(&package, &id, &args, project_root.as_deref()))?;
+            let code = ctx.suspend_progress(|| {
+                run_launcher(&app_home, &package, &id, &args, project_root.as_deref())
+            })?;
             Ok(Some(code))
         }
     }
 }
 
-fn launcher_listing(package: &str, project_root: Option<&Path>) -> Result<Value> {
-    let settings = global::settings_root()?;
-    let index = Index::load(&settings)?;
-    let storage = Storage::load(&settings)?;
+fn launcher_listing(
+    app_home: &home::AppHome,
+    package: &str,
+    project_root: Option<&Path>,
+) -> Result<Value> {
+    let settings = app_home.settings();
+    let index = Index::load(settings)?;
+    let storage = Storage::load(settings)?;
     let (_, installation) = vibe_app::installed(&index, package)?;
     let listing = vibe_app::launcher_listing(installation, &storage, settings.path(), project_root);
     Ok(serde_json::to_value(listing)?)
 }
 
 fn run_launcher(
+    app_home: &home::AppHome,
     package: &str,
     launcher_id: &str,
     args: &[String],
     project_root: Option<&Path>,
 ) -> Result<i32> {
-    let settings = global::settings_root()?;
-    let index = Index::load(&settings)?;
-    let storage = Storage::load(&settings)?;
+    let settings = app_home.settings();
+    let index = Index::load(settings)?;
+    let storage = Storage::load(settings)?;
     let (_, installation) = vibe_app::installed(&index, package)?;
     let extra_args: Vec<OsString> = args.iter().map(OsString::from).collect();
     let request = LaunchRequest {
@@ -162,17 +173,6 @@ fn print_list(listing: &Value, quiet: bool) {
             None => println!("  {slot}: {key} ({method}, {status}){default}"),
         }
     }
-}
-
-fn selected_project_root(explicit: Option<&Path>) -> Result<Option<PathBuf>> {
-    if let Some(path) = explicit {
-        return super::resolve_project_root(path).map(Some);
-    }
-    let cwd = std::env::current_dir()?;
-    if cwd.join(Manifest::FILENAME).is_file() {
-        return super::resolve_project_root(&cwd).map(Some);
-    }
-    Ok(None)
 }
 
 fn launchers(listing: &Value) -> Result<&[Value]> {

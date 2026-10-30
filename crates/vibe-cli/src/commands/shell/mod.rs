@@ -18,7 +18,7 @@ use anyhow::{Context, Result, bail};
 use vibe_app::{SESSION_VARIABLE, SessionChoices};
 
 use crate::cli::ShellArgs;
-use crate::commands::app::global;
+use crate::commands::app::{global, home};
 use crate::output;
 
 pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
@@ -28,10 +28,10 @@ pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
     if !std::io::stdin().is_terminal() || !std::io::stdout().is_terminal() {
         bail!("vibe shell requires stdin and stdout attached to a terminal");
     }
-    // `-g` and the default both select the user-global scope today; a project
-    // home will be composed ahead of it in a later phase.
-    let _global_only = args.global;
-    let settings = global::settings_root()?;
+    // `Auto` scope puts an existing project home ahead of the user home;
+    // `-g` selects the user home alone.
+    let project = home::project_at(&std::env::current_dir()?)?;
+    let bins = home::shell_bins(args.global, project.as_deref(), &global::settings_root()?);
     let (inherited_path, inherited_use) = inherited();
     let mut choices = match inherited_use {
         Some(value) => SessionChoices::parse(
@@ -44,7 +44,7 @@ pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
     for entry in &args.uses {
         choices.apply(entry)?;
     }
-    let path = compose_path(&[settings.proxy_dir()], inherited_path.as_deref())?;
+    let path = compose_path(&bins, inherited_path.as_deref())?;
     let shell = parent::shell().context("selecting the interactive shell")?;
     let mut command = Command::new(&shell);
     command

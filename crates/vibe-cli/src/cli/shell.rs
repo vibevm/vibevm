@@ -5,8 +5,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#shell-command");
 
 pub(super) const LONG_ABOUT: &str = "Start an interactive shell with installed applications on PATH.\n\
     \n\
-    PATH begins with the opt/bin directory of the user settings root, where every\n\
-    reserved application command has its proxy. Each --use SLOT=KEY selects a\n\
+    PATH begins with the opt/bin directory of the project home vibevm/vibeopt\n\
+    (when the working directory is a project whose home exists), then that of\n\
+    the user settings root; -g selects the user settings root alone. Every\n\
+    reserved application command has its proxy there. Each --use SLOT=KEY selects a\n\
     provider for this shell only, through VIBE_APP_USE; an inherited VIBE_APP_USE\n\
     is kept and a later choice wins per slot. The global default is untouched.\n\
     \n\
@@ -18,7 +20,7 @@ pub(super) const LONG_ABOUT: &str = "Start an interactive shell with installed a
 /// Arguments for `vibe shell`.
 #[derive(Debug, Default, clap::Args)]
 pub struct ShellArgs {
-    /// Select the user-global application scope (the only scope today).
+    /// Select the user settings root alone, even inside a project.
     #[arg(short = 'g', long)]
     pub global: bool,
 

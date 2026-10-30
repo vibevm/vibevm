@@ -4,18 +4,23 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#alternatives");
 
 use anyhow::Result;
+use vibe_app::SettingsRoot;
 use vibe_wire::generated::application_alternatives::{ApplicationAlternatives, Status};
 
 use super::global;
 use crate::output;
 
-pub(super) fn use_default(ctx: &output::Context, slot: &str, key: &str) -> Result<()> {
-    let settings = global::settings_root()?;
+pub(super) fn use_default(
+    ctx: &output::Context,
+    settings: &SettingsRoot,
+    slot: &str,
+    key: &str,
+) -> Result<()> {
     let proxy_image = global::proxy_image()?;
-    let change = vibe_app::set_default(&settings, slot, key, &proxy_image)?;
+    let change = vibe_app::set_default(settings, slot, key, &proxy_image)?;
     if ctx.is_json() {
         // The machine answer is the slot's listing after the change.
-        return ctx.emit_json(&vibe_app::alternatives_listing(&settings, slot)?);
+        return ctx.emit_json(&vibe_app::alternatives_listing(settings, slot)?);
     }
     ctx.summary(&match &change.previous {
         Some(previous) if previous != &change.default => format!(
@@ -30,8 +35,12 @@ pub(super) fn use_default(ctx: &output::Context, slot: &str, key: &str) -> Resul
     Ok(())
 }
 
-pub(super) fn alternatives(ctx: &output::Context, slot: &str) -> Result<()> {
-    let listing = vibe_app::alternatives_listing(&global::settings_root()?, slot)?;
+pub(super) fn alternatives(
+    ctx: &output::Context,
+    settings: &SettingsRoot,
+    slot: &str,
+) -> Result<()> {
+    let listing = vibe_app::alternatives_listing(settings, slot)?;
     if ctx.is_json() {
         return ctx.emit_json(&listing);
     }

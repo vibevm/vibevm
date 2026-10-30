@@ -84,7 +84,7 @@ fn app_installers_accepts_registry_and_global_json() {
 }
 
 #[test]
-fn global_application_selection_flags_do_not_apply_to_project_commands() {
+fn application_selection_flags_parse_with_and_without_global() {
     let install = Cli::try_parse_from([
         "vibe",
         "install",
@@ -125,13 +125,20 @@ fn global_application_selection_flags_do_not_apply_to_project_commands() {
     assert_eq!(update.arch.as_deref(), Some("arm64"));
     assert_eq!(update.installer.as_deref(), Some("source"));
 
-    assert!(Cli::try_parse_from(["vibe", "install", "--installer", "archive"]).is_err());
-    assert!(Cli::try_parse_from(["vibe", "update", "--platform", "linux"]).is_err());
-    assert!(Cli::try_parse_from(["vibe", "install", "--arch", "x86_64"]).is_err());
+    // Project-home materialisation takes the same selection flags
+    // (spec://org.vibevm.core/vibevm/common/PROP-059#project-scope).
+    let project = Cli::try_parse_from(["vibe", "install", "--installer", "archive"]).unwrap();
+    let Command::Install(project) = project.command else {
+        panic!("expected install command");
+    };
+    assert!(!project.global);
+    assert_eq!(project.installer.as_deref(), Some("archive"));
+    assert!(Cli::try_parse_from(["vibe", "update", "--platform", "linux"]).is_ok());
+    assert!(Cli::try_parse_from(["vibe", "install", "--arch", "x86_64"]).is_ok());
 }
 
 #[test]
-fn global_application_force_is_accepted_for_each_operation() {
+fn application_force_is_accepted_for_each_operation() {
     let install =
         Cli::try_parse_from(["vibe", "install", "-g", "app:org.example/tool", "--force"]).unwrap();
     let Command::Install(install) = install.command else {
@@ -154,8 +161,8 @@ fn global_application_force_is_accepted_for_each_operation() {
     };
     assert!(uninstall.force);
 
-    assert!(Cli::try_parse_from(["vibe", "update", "--force", "flow:example"]).is_err());
-    assert!(Cli::try_parse_from(["vibe", "uninstall", "--force", "flow:example"]).is_err());
+    assert!(Cli::try_parse_from(["vibe", "update", "--force", "flow:example"]).is_ok());
+    assert!(Cli::try_parse_from(["vibe", "uninstall", "--force", "flow:example"]).is_ok());
 }
 
 #[test]
@@ -165,6 +172,12 @@ fn app_list_use_alternatives_and_shell_parse() {
         panic!("expected app command");
     };
     assert!(matches!(app.command, AppCommand::List));
+    assert!(!app.global);
+    let cli = Cli::try_parse_from(["vibe", "app", "list", "-g"]).unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app command");
+    };
+    assert!(app.global);
     let cli = Cli::try_parse_from(["vibe", "app", "alternatives", "editor"]).unwrap();
     let Command::App(app) = cli.command else {
         panic!("expected app command");
