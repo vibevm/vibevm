@@ -387,8 +387,8 @@ fn credential_free_https(value: &str) -> bool {
         && !value.bytes().any(|b| b.is_ascii_whitespace())
 }
 
-/// `source_build` model validation (`PROP-059#source-build`). Execution is
-/// a later phase; the declaration is already checked in full.
+/// `source_build` model validation (`PROP-059#source-build`); `vibe-app`
+/// executes the declaration this accepts.
 fn validate_source_build(sources: &[SourceInputDecl], recipe: &RecipeDecl) -> Result<(), String> {
     let table = "[installer_options.installation]";
     if sources.is_empty() {

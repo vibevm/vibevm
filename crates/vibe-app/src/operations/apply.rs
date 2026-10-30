@@ -1,9 +1,11 @@
 //! Running one selected installer option: hooks, the installer child or the
-//! archive placement, and the resulting installation record. Nothing here
-//! writes the index; a failure leaves at most an orphan directory.
+//! owned placement of an archive or source-build payload, and the resulting
+//! installation record. Nothing here writes the index; a failure leaves at
+//! most an orphan directory (or a failed build's work directory).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#force-and-hooks");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#source-build");
 
 use std::fs;
 use std::path::{Component, Path, PathBuf};
@@ -15,6 +17,7 @@ use crate::index::{AuthoredCommands, Installation, Location, Method};
 use crate::installer::archive::{self, ArchiveFormat};
 use crate::installer::hooks::{self, Hook};
 use crate::installer::native::{self, NativeKind};
+use crate::installer::source_build::{self, SourceBuild};
 use crate::installer::{self, shell};
 use crate::resolve::{ResolvedPackage, strip_verbatim};
 use crate::storage::{DEFAULT_LIBRARY, Storage};
@@ -72,9 +75,45 @@ pub(super) fn apply(
         commands,
     };
     match &option.installation {
-        InstallerMethod::SourceBuild { .. } => Err(AppError::NotImplemented {
-            method: "source_build",
-        }),
+        InstallerMethod::SourceBuild { sources, recipe } => {
+            let resolved = selected.resolved;
+            let cache_root = ctx.settings.app_sources_cache();
+            let work = ctx.settings.app_build_dir().join(format!(
+                "{}-{}",
+                resolved.package.directory_name(),
+                std::process::id()
+            ));
+            let build = SourceBuild {
+                sources,
+                recipe,
+                package_root: &resolved.root,
+                cache_root: &cache_root,
+                work: &work,
+                platform: &option.platform,
+                arch: &option.arch,
+                offline: ctx.offline,
+                json: ctx.json,
+            };
+            let mut work_created = false;
+            let placed = place_owned(ctx, storage, selected, &mut |_, payload| {
+                Ok(source_build::produce(&build, payload, &mut work_created)?)
+            });
+            match placed {
+                Ok((location, retired)) => {
+                    let _ = fs::remove_dir_all(&work);
+                    Ok(Applied {
+                        installation: record(location, AuthoredCommands::default()),
+                        retired,
+                    })
+                }
+                Err(error) if work_created => Err(AppError::SourceBuild {
+                    key: resolved.package.key(),
+                    work: work.display().to_string(),
+                    source: Box::new(error),
+                }),
+                Err(error) => Err(error),
+            }
+        }
         InstallerMethod::Zip {
             source,
             sha256,
@@ -90,13 +129,24 @@ pub(super) fn apply(
             } else {
                 ArchiveFormat::TarGz
             };
-            let archive = Archive {
-                format,
-                source,
-                sha256,
-                payload_root: payload_root.as_deref(),
-            };
-            let (location, retired) = place_owned(ctx, storage, selected, &archive)?;
+            let package_root = &selected.resolved.root;
+            let (location, retired) =
+                place_owned(ctx, storage, selected, &mut |staging, payload| {
+                    let artifact = staging.join("artifact");
+                    installer::fetch_verified(
+                        source,
+                        sha256,
+                        package_root,
+                        &artifact,
+                        ctx.offline,
+                    )?;
+                    Ok(archive::extract(
+                        &artifact,
+                        format,
+                        payload_root.as_deref(),
+                        payload,
+                    )?)
+                })?;
             Ok(Applied {
                 installation: record(location, AuthoredCommands::default()),
                 retired,
@@ -198,12 +248,9 @@ pub(super) fn apply(
     }
 }
 
-struct Archive<'a> {
-    format: ArchiveFormat,
-    source: &'a str,
-    sha256: &'a str,
-    payload_root: Option<&'a Path>,
-}
+/// Writes a new payload directory at its second argument, using the
+/// staging directory (first argument) for scratch files.
+type Produce<'p> = dyn FnMut(&Path, &Path) -> Result<(), AppError> + 'p;
 
 enum External<'a> {
     Shell {
@@ -218,14 +265,16 @@ enum External<'a> {
     },
 }
 
-/// Fetch, verify and extract an archive into `<library>/apps/<slot>/<dir>`,
-/// replacing the same key in place without inspecting the old payload; a
-/// failing extraction or post-hook moves the previous payload back.
+/// Produce an owned payload (an extracted archive or a recipe's `VIBE_OUT`)
+/// and place it at `<library>/apps/<slot>/<dir>`, replacing the same key in
+/// place without inspecting the old payload; a failing producer or
+/// post-hook moves the previous payload back. `pre_install` runs before the
+/// producer, `post_install` after placement.
 fn place_owned(
     ctx: &OperationContext<'_>,
     storage: &Storage,
     selected: &Selected<'_>,
-    archive: &Archive<'_>,
+    produce: &mut Produce<'_>,
 ) -> Result<(Location, Vec<PathBuf>), AppError> {
     let key = selected.resolved.package.key();
     let prior_owned = selected.prior.and_then(|prior| match &prior.location {
@@ -269,26 +318,18 @@ fn place_owned(
     fs::create_dir_all(&staging).map_err(|source| installer::io("creating", &staging, source))?;
     let payload = staging.join("payload");
     let previous = staging.join("previous");
-    let placed = (|| {
-        let artifact = staging.join("artifact");
-        installer::fetch_verified(
-            archive.source,
-            archive.sha256,
-            package_root,
-            &artifact,
-            ctx.offline,
-        )?;
-        archive::extract(&artifact, archive.format, archive.payload_root, &payload)?;
+    let placed = produce(&staging, &payload).and_then(|()| {
         if target.exists() {
             fs::rename(&target, &previous)
                 .map_err(|source| installer::io("moving aside", &target, source))?;
         }
-        fs::rename(&payload, &target).map_err(|source| installer::io("placing", &target, source))
-    })();
+        fs::rename(&payload, &target)
+            .map_err(|source| installer::io("placing", &target, source).into())
+    });
     if let Err(error) = placed {
         restore(&target, &previous);
         let _ = fs::remove_dir_all(&staging);
-        return Err(error.into());
+        return Err(error);
     }
     if let Err(error) = hooks::run(
         Hook::PostInstall,

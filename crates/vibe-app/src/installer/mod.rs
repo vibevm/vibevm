@@ -9,6 +9,7 @@ pub mod archive;
 pub mod hooks;
 pub mod native;
 pub mod shell;
+pub mod source_build;
 
 use std::fs::{self, File};
 use std::io::{self, Read, Write};

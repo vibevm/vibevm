@@ -146,6 +146,16 @@ pub enum InstallerError {
     )]
     Interpreter { interpreter: &'static str },
     #[error(
+        "source_build input `{name}` cannot be laid out: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#source-build; \
+         fix: give the source a URL or path ending in a portable file name, and set `extract = true` only on .zip, .tar.gz or .tgz files)"
+    )]
+    SourceLayout { name: String, reason: String },
+    #[error(
+        "the source_build recipe exited 0 but VIBE_OUT `{path}` is not a non-empty directory (violates spec://org.vibevm.core/vibevm/common/PROP-059#source-build; \
+         fix: make the recipe write the installed payload into $VIBE_OUT)"
+    )]
+    EmptyOutput { path: String },
+    #[error(
         "{action} `{path}` failed: {source} (violates spec://org.vibevm.core/vibevm/common/PROP-059#ownership; \
          fix: check the permissions and free space of the storage library)"
     )]
@@ -203,10 +213,16 @@ pub enum AppError {
     )]
     AmbiguousInstallation { package: String },
     #[error(
-        "the `{method}` method is not implemented in this phase (violates spec://org.vibevm.core/vibevm/common/PROP-059#source-build; \
-         fix: select another installer option with --installer)"
+        "source_build of `{key}` failed; its work directory `{work}` is kept for inspection \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-059#source-build; fix: inspect and then delete the directory, \
+         correct the cause below and install again): {source}"
     )]
-    NotImplemented { method: &'static str },
+    SourceBuild {
+        key: String,
+        work: String,
+        #[source]
+        source: Box<AppError>,
+    },
     #[error(
         "--force is unsupported for `{key}`: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#force-and-hooks; \
          fix: run without --force or select an option that declares the forced variant)"
