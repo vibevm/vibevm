@@ -51,6 +51,7 @@ use store::VersionStore;
 pub(crate) use builder::SOURCE_BUILD_ENVIRONMENT;
 pub(crate) use embedded::embedded_root_at;
 pub use selfloc::{SelfLocation, derive_self, same_location};
+pub(crate) use store::APP_PROXY_BINARY_NAME;
 
 /// Env var naming the install base (defaults to `~/.vibe`); the
 /// VVM root is `$VIBEVM_INSTALL_ROOT/opt`. Read at the composition root and

@@ -11,13 +11,15 @@ mod remove;
 pub use remove::{installed, list, uninstall};
 
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use vibe_core::manifest::InstallerOptionDecl;
 
+use crate::alternatives::{check_reservation, reserved_names};
 use crate::error::{AppError, ResolveError};
 use crate::index::{Index, Location, Method};
+use crate::proxies;
 use crate::resolve::ResolvedPackage;
 use crate::select::{Chooser, InstallChoice, select_option};
 use crate::settings::SettingsRoot;
@@ -35,6 +37,9 @@ pub struct OperationContext<'a> {
     pub offline: bool,
     /// Present only in an attended terminal.
     pub chooser: Option<Chooser<'a>>,
+    /// The `vibe-app-proxy` image copied into `opt/bin` for every reserved
+    /// command; the caller locates it beside its own executable.
+    pub proxy_image: &'a Path,
 }
 
 /// The selection and placement flags of `install -g` / `update -g`.
@@ -79,6 +84,7 @@ pub fn install(
     let storage = Storage::load(ctx.settings)?;
     let option = choose(ctx, resolved, &request.choice)?;
     let key = resolved.package.key();
+    admit(ctx, &index, &[key.as_str()], resolved, &option)?;
     let prior = index.installations.get(&key).cloned();
     if let Some(prior) = &prior {
         ensure_available(&key, prior, &storage)?;
@@ -145,6 +151,13 @@ pub fn update(
     };
     let option = choose(ctx, resolved, &choice)?;
     let key = resolved.package.key();
+    admit(
+        ctx,
+        &index,
+        &[key.as_str(), prior_key.as_str()],
+        resolved,
+        &option,
+    )?;
     let owned = Method::of(&option.installation).is_owned();
     let same_key = index.installations.get(&key).cloned();
     if let Some(existing) = &same_key {
@@ -205,6 +218,7 @@ fn commit(
     replaces: Option<String>,
     command: Command,
 ) -> Result<Outcome, AppError> {
+    let reserved = reserved_names(index);
     let installation = applied.installation;
     let key = installation.package.key();
     let slot = installation.slot.clone();
@@ -234,6 +248,12 @@ fn commit(
     for directory in applied.retired {
         let _ = fs::remove_dir_all(directory);
     }
+    proxies::sync(
+        ctx.settings,
+        &reserved,
+        &reserved_names(index),
+        ctx.proxy_image,
+    )?;
     Ok(Outcome {
         command,
         slot_default: index.default_of(&slot).map(str::to_owned),
@@ -243,6 +263,27 @@ fn commit(
         app_root,
         message: String::new(),
     })
+}
+
+/// Checks that run before any child: the option's public commands are not
+/// reserved by another slot, and the proxy image exists when it is needed.
+fn admit(
+    ctx: &OperationContext<'_>,
+    index: &Index,
+    replacing: &[&str],
+    resolved: &ResolvedPackage,
+    option: &InstallerOptionDecl,
+) -> Result<(), AppError> {
+    check_reservation(
+        index,
+        replacing,
+        &resolved.application.id,
+        &option.public_commands,
+    )?;
+    if !option.public_commands.is_empty() {
+        proxies::require_image(ctx.proxy_image)?;
+    }
+    Ok(())
 }
 
 fn choose(

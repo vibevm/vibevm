@@ -223,6 +223,7 @@ fn main() -> ExitCode {
             },
         ),
         Command::Aiui(args) => commands::aiui::run(&ctx, args),
+        Command::Shell(args) => commands::shell::run(&ctx, args),
         Command::Term(args) => commands::term::run(&ctx, args),
         Command::Frame(args) => commands::term::run_frame(&ctx, args),
         Command::Skill(args) => commands::skill::run(&ctx, args, cli.offline),

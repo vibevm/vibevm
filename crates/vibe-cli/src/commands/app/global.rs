@@ -28,6 +28,13 @@ pub(crate) fn settings_root() -> Result<SettingsRoot> {
     Ok(SettingsRoot::new(&root))
 }
 
+/// The `vibe-app-proxy` image shipped beside the running `vibe` executable;
+/// `vibe-app` copies it into `opt/bin` for every reserved command.
+pub(crate) fn proxy_image() -> Result<PathBuf> {
+    let exe = std::env::current_exe().context("locating the running vibe executable")?;
+    Ok(exe.with_file_name(crate::commands::vvm::APP_PROXY_BINARY_NAME))
+}
+
 /// Resolve one app package: an explicit (or embedded) local registry first,
 /// otherwise the configured global registries.
 pub(crate) fn resolve_package(
@@ -94,6 +101,7 @@ pub fn install(
     }
     let offline = root_offline || args.offline;
     let settings = settings_root()?;
+    let proxy_image = proxy_image()?;
     let resolved = resolve_package(
         &settings,
         args.registry.as_deref(),
@@ -117,6 +125,7 @@ pub fn install(
             json: ctx.is_json(),
             offline,
             chooser: attended.then_some(&chooser as vibe_app::Chooser<'_>),
+            proxy_image: &proxy_image,
         };
         vibe_app::install(&operation, &resolved, &request)
     })?;
@@ -136,6 +145,7 @@ pub fn update(
         bail!("global update received project-only package flags");
     }
     let settings = settings_root()?;
+    let proxy_image = proxy_image()?;
     let resolved = resolve_package(
         &settings,
         args.registry.as_deref(),
@@ -159,6 +169,7 @@ pub fn update(
             json: ctx.is_json(),
             offline: root_offline,
             chooser: attended.then_some(&chooser as vibe_app::Chooser<'_>),
+            proxy_image: &proxy_image,
         };
         vibe_app::update(&operation, &resolved, &request)
     })?;
@@ -171,12 +182,14 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
         bail!("global uninstall received project-only --path");
     }
     let settings = settings_root()?;
+    let proxy_image = proxy_image()?;
     let outcome = ctx.suspend_progress(|| {
         let operation = OperationContext {
             settings: &settings,
             json: ctx.is_json(),
             offline: root_offline,
             chooser: None,
+            proxy_image: &proxy_image,
         };
         vibe_app::uninstall(&operation, &args.package, args.force)
     })?;

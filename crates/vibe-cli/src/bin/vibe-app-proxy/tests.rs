@@ -1,141 +1,163 @@
+use super::resolve::{Launch, Vars, expand, home_of, parse_session, resolve};
 use super::*;
-use std::io::Write;
+use std::fs;
+use std::path::Path;
 
-fn write_json(path: &Path, value: serde_json::Value) {
-    fs::create_dir_all(path.parent().unwrap()).unwrap();
-    let mut file = File::create(path).unwrap();
-    file.write_all(serde_json::to_string(&value).unwrap().as_bytes())
-        .unwrap();
+/// A home with one owned zip installation `org.example/alpha@1.0.0` in the
+/// default library and one external `org.example/beta@1.0.0`, both
+/// providing `tool` for slot `tool`.
+fn home() -> (tempfile::TempDir, PathBuf) {
+    let dir = tempfile::tempdir().unwrap();
+    let home = fs::canonicalize(dir.path()).unwrap();
+    let alpha = home.join("opt/apps/tool/org.example.alpha@1.0.0");
+    let beta = home.join("external/beta");
+    for root in [&alpha, &beta] {
+        fs::create_dir_all(root.join("bin")).unwrap();
+        fs::write(root.join("bin/tool"), "#!/bin/sh\n").unwrap();
+    }
+    fs::write(
+        home.join("opt/vibe-library.toml"),
+        "id = \"default\"\ncreated = \"now\"\n",
+    )
+    .unwrap();
+    fs::create_dir_all(home.join("opt/bin")).unwrap();
+    let launcher = serde_json::json!([{
+        "id": "main", "name": "Tool", "executable": "$app_bin/tool",
+        "args": ["--root=${app_root}", "$$x"], "workingDirectory": ".",
+        "terminal": false, "default": true
+    }]);
+    let record = |name: &str, location: serde_json::Value| {
+        let mut value = serde_json::json!({
+            "slot": "tool",
+            "package": {"group": "org.example", "name": name, "version": "1.0.0"},
+            "option": "linux", "platform": "linux", "arch": "x86_64",
+            "method": "zip", "portable": true, "launchers": launcher,
+            "publicCommands": [{"name": "tool", "launcher": "main"}],
+            "commands": {}
+        });
+        value
+            .as_object_mut()
+            .unwrap()
+            .extend(location.as_object().unwrap().clone());
+        value
+    };
+    let index = serde_json::json!({
+        "protocol": "vibe-user-applications/3",
+        "installations": {
+            "org.example/alpha@1.0.0": record("alpha", serde_json::json!({
+                "library": "default", "directory": "apps/tool/org.example.alpha@1.0.0"})),
+            "org.example/beta@1.0.0": record("beta", serde_json::json!({
+                "method": "shell", "portable": false, "appRoot": beta})),
+        },
+        "slots": {"tool": {"default": "org.example/alpha@1.0.0"}}
+    });
+    fs::create_dir_all(home.join("applications")).unwrap();
+    fs::write(home.join("applications/index.json"), index.to_string()).unwrap();
+    (dir, home)
+}
+
+#[test]
+fn session_value_grammar_matches_vibe_app() {
+    let choices = parse_session(" ; a = k1 ;b=k2;; a=k3 ;").unwrap();
+    assert_eq!(choices.get("a").map(String::as_str), Some("k3"));
+    assert_eq!(choices.len(), 2);
+    for bad in ["a", "=k", "a=", "a=b=c"] {
+        let error = parse_session(bad).unwrap_err();
+        assert!(error.contains(&format!("`{bad}`")), "{error}");
+    }
+}
+
+#[test]
+fn templates_expand_once_and_refuse_a_project() {
+    let vars = Vars {
+        app_root: Path::new("/apps/demo"),
+        vibe_home: Path::new("/home/u/.vibe"),
+    };
+    assert_eq!(
+        expand("${app_bin}/x $vibe_home $$5", &vars, "t").unwrap(),
+        "/apps/demo/bin/x /home/u/.vibe $5"
+    );
+    assert!(
+        expand("$project_root", &vars, "t")
+            .unwrap_err()
+            .contains("requires a project")
+    );
+    assert!(expand("$home", &vars, "t").is_err());
+    assert!(expand("${app_root", &vars, "t").is_err());
+}
+
+#[test]
+fn the_default_and_the_session_choice_select_the_provider() {
+    let (_dir, home) = home();
+    let proxy = home.join("opt/bin").join("tool");
+    assert_eq!(home_of(&proxy).unwrap(), home);
+    let alpha = home.join("opt/apps/tool/org.example.alpha@1.0.0");
+    assert_eq!(
+        resolve(&proxy, "tool", None).unwrap(),
+        Launch {
+            executable: alpha.join("bin/tool"),
+            args: vec![format!("--root={}", alpha.display()), "$x".into()],
+            working_directory: Some(alpha.clone()),
+        }
+    );
+    let chosen = resolve(&proxy, "tool", Some("tool=org.example/beta@1.0.0")).unwrap();
+    assert_eq!(chosen.executable, home.join("external/beta/bin/tool"));
+    let error = resolve(&proxy, "tool", Some("tool=org.example/none@1.0.0")).unwrap_err();
+    assert!(error.contains("not an installed provider"), "{error}");
+    let error = resolve(&proxy, "other", None).unwrap_err();
+    assert!(error.contains("not reserved"), "{error}");
+    let error = resolve(&proxy, "tool", Some("broken")).unwrap_err();
+    assert!(error.contains("malformed"), "{error}");
+}
+
+#[test]
+fn a_missing_library_or_default_is_a_clear_error() {
+    let (_dir, home) = home();
+    let proxy = home.join("opt/bin").join("tool");
+    fs::write(
+        home.join("opt/vibe-library.toml"),
+        "id = \"other\"\ncreated = \"now\"\n",
+    )
+    .unwrap();
+    let error = resolve(&proxy, "tool", None).unwrap_err();
+    assert!(error.starts_with("unavailable: library marker"), "{error}");
+    let path = home.join("applications/index.json");
+    let text = fs::read_to_string(&path).unwrap();
+    fs::write(
+        &path,
+        text.replace(
+            "\"default\":\"org.example/alpha@1.0.0\"",
+            "\"default\":null",
+        ),
+    )
+    .unwrap();
+    let error = resolve(&proxy, "tool", None).unwrap_err();
+    assert!(error.contains("has no default provider"), "{error}");
+    let error = home_of(Path::new("/nonexistent-home/opt/bin/tool")).unwrap_err();
+    assert!(error.contains("no application home"), "{error}");
 }
 
 #[cfg(unix)]
 #[test]
-fn direct_sidecar_keeps_fixed_and_caller_arguments() {
+fn caller_arguments_follow_the_launcher_arguments_literally() {
     let root = tempfile::tempdir().unwrap();
-    let sidecar = root.path().join("demo.proxy.json");
-    let lease = root
-        .path()
-        .join("applications/leases")
-        .join(format!("{}.lock", "a".repeat(64)));
-    fs::create_dir_all(lease.parent().unwrap()).unwrap();
-    write_json(
-        &sidecar,
-        serde_json::json!({
-            "protocol": PROXY_PROTOCOL, "mode": "direct", "target": "/bin/echo",
-            "args": ["fixed value"], "cwd": root.path(),
-            "lease": lease
-        }),
-    );
-    let resolved = resolve(&sidecar).unwrap();
-    assert!(matches!(resolved.descriptor, Proxy::Direct { .. }));
-    assert!(validate_direct(Path::new("/bin/echo"), Some(root.path()), &lease).is_ok());
-    assert!(
-        matches!(read_json::<Proxy>(&sidecar, MAX_SIDECAR_BYTES).unwrap(), Proxy::Direct { args, .. } if args == ["fixed value"])
-    );
+    let launch = Launch {
+        executable: PathBuf::from("/bin/echo"),
+        args: vec!["fixed value".into()],
+        working_directory: Some(root.path().to_path_buf()),
+    };
     let caller = [
         OsString::from("$(touch unsafe)"),
         OsString::from("two words"),
     ];
-    let output = direct_command(
-        Path::new("/bin/echo"),
-        &["fixed value".into()],
-        Some(root.path()),
-        &caller,
-    )
-    .output()
-    .unwrap();
+    let output = command_for(&launch, &caller)
+        .stdout(Stdio::piped())
+        .output()
+        .unwrap();
     assert_eq!(
         String::from_utf8(output.stdout).unwrap(),
         "fixed value $(touch unsafe) two words\n"
     );
     assert!(!root.path().join("unsafe").exists());
-    let cwd = direct_command(Path::new("/bin/pwd"), &[], Some(root.path()), &[])
-        .output()
-        .unwrap();
-    let actual_cwd = String::from_utf8(cwd.stdout).unwrap();
-    assert_eq!(
-        fs::canonicalize(actual_cwd.trim()).unwrap(),
-        fs::canonicalize(root.path()).unwrap()
-    );
-    assert_eq!(execute(&resolved, &[]).unwrap(), 0);
-}
-
-#[test]
-fn slot_pointer_selects_immutable_projection_descriptor() {
-    let root = tempfile::tempdir().unwrap();
-    let slot_dir = root.path().join("opt/alternatives/demo");
-    let current = slot_dir.join("current.json");
-    let alias = root.path().join("bin/demo.proxy.json");
-    write_json(
-        &alias,
-        serde_json::json!({"protocol":PROXY_PROTOCOL,"mode":"slot","slot":"demo","command":"demo","current":current}),
-    );
-    write_json(
-        &current,
-        serde_json::json!({"protocol":CURRENT_PROTOCOL,"projection":"a1b2"}),
-    );
-    let descriptor = slot_dir.join("projections/a1b2/commands/demo.json");
-    write_json(
-        &descriptor,
-        serde_json::json!({"protocol":PROXY_PROTOCOL,"mode":"unavailable","reason":"removed"}),
-    );
-    let resolved = resolve(&alias).unwrap();
-    assert_eq!(resolved.descriptor_path, descriptor);
-    assert!(matches!(resolved.descriptor, Proxy::Unavailable { .. }));
-}
-
-#[test]
-fn view_pointer_selects_exact_installation_projection() {
-    let root = tempfile::tempdir().unwrap();
-    let key = "org.example/demo@1.0.0";
-    let encoded = format!("{:x}", Sha256::digest(key.as_bytes()));
-    let view = root
-        .path()
-        .join("opt/alternatives/demo/installations")
-        .join(encoded);
-    let current = view.join("current.json");
-    let alias = view.join("bin/demo.proxy.json");
-    write_json(
-        &alias,
-        serde_json::json!({
-            "protocol":PROXY_PROTOCOL,"mode":"view","slot":"demo",
-            "installation":key,"command":"demo","current":current
-        }),
-    );
-    write_json(
-        &current,
-        serde_json::json!({"protocol":CURRENT_PROTOCOL,"projection":"a1b2"}),
-    );
-    let descriptor = view.join("projections/a1b2/commands/demo.json");
-    write_json(
-        &descriptor,
-        serde_json::json!({"protocol":PROXY_PROTOCOL,"mode":"unavailable","reason":"not ready"}),
-    );
-    assert_eq!(resolve(&alias).unwrap().descriptor_path, descriptor);
-    write_json(
-        &alias,
-        serde_json::json!({
-            "protocol":PROXY_PROTOCOL,"mode":"view","slot":"demo",
-            "installation":"org.example/demo@2.0.0","command":"demo","current":current
-        }),
-    );
-    assert!(resolve(&alias).is_err());
-}
-
-#[test]
-fn rejects_traversal_and_malformed_descriptors() {
-    let root = tempfile::tempdir().unwrap();
-    let alias = root.path().join("demo.proxy.json");
-    write_json(
-        &alias,
-        serde_json::json!({"protocol":PROXY_PROTOCOL,"mode":"slot","slot":"demo","command":"demo","current":"../current.json"}),
-    );
-    assert!(resolve(&alias).is_err());
-    write_json(
-        &alias,
-        serde_json::json!({"protocol":"bad","mode":"unavailable","reason":"gone"}),
-    );
-    assert!(resolve(&alias).is_err());
-    fs::write(&alias, vec![b'x'; MAX_SIDECAR_BYTES as usize + 1]).unwrap();
-    assert!(resolve(&alias).is_err());
+    assert_eq!(execute(&launch, &[]).unwrap(), 0);
 }

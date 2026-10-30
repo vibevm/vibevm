@@ -61,6 +61,11 @@ impl SettingsRoot {
         self.root.join("opt")
     }
 
+    /// `<settings>/opt/bin`, where every reserved command has its PATH proxy.
+    pub fn proxy_dir(&self) -> PathBuf {
+        self.root.join("opt").join("bin")
+    }
+
     /// Take the `applications/.mutation.lock` exclusive lock, creating the
     /// state directory on first use. A held lock is refused, never awaited.
     pub fn lock(&self) -> Result<MutationLock, StateError> {
