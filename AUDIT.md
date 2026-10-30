@@ -1308,3 +1308,34 @@ truth; the P3 batch that caught it also paid two of the debts below.
   carry was its last.
 - **2026-08-20-01 … -05** (this run's own rows) — dispositions as
   filed above; `-04` (lru advisory) re-check next run.
+
+## Audit run — 2026-10-31 (APP-CLEAN campaign close-out)
+
+The close-out sweep of the APP-CLEAN campaign (PROP-059 rewrite; plan
+`vibevm/vibespecs/terraforms/APP-CLEAN-CAMPAIGN-v0.1.xml`). Scope: the
+application subsystem landed in `6ade17d8b..a435a9abf` and the full
+seven-step gate on `a435a9abf`. The October prototype it replaces is
+`archive/app-overlay-prototype-2026-10` (729 commits, +354k lines, never
+pushed); the campaign's own report is in the plan's ledger.
+
+**5 findings** — 0 P1, 3 P2, 2 P3. Disposition: 3 filed, 1 accepted,
+1 open.
+
+| id | cat | sev | finding | disposition |
+|---|---|---|---|---|
+| 2026-10-31-01 | A1 | P2 | Native-fixture tests assert one `libvibe_native_loader_*fixture.so` across `target/debug` and `deps/`; a preceding `cargo build --workspace` uplifts a second copy and 11 tests go red on the next `cargo test --workspace`. | filed — BACKLOG B-219 |
+| 2026-10-31-02 | A2 | P3 | `vibe-lifecycle` `opencode_merges_and_removes_only_projected_members` failed once under the parallel workspace run and passes alone; the archived plan's mandate M7 names the same family (`Text file busy` under parallel OpenCode occupancy). | open — re-check next run |
+| 2026-10-31-03 | C | P2 | The 1.0.7 application index (`vibe-user-applications/1`) is refused, not migrated; the owner's own home carries one with `zap`. | accepted — owner ruling of 2026-10-19 (no compatibility); BACKLOG B-216, changelog upgrade note |
+| 2026-10-31-04 | C | P2 | `org.vibevm.zap/zap` lost its retired `[application_source]` declaration and has no `[[installer_options]]`, so it is not globally installable until re-declared in its own repository. | filed — BACKLOG B-217 |
+| 2026-10-31-05 | A1 | P3 | A child forked by another test thread briefly inherits the application mutation lock; the `vibe-app` storage unit tests retry that one refusal. | filed — BACKLOG B-218 |
+
+Notes. `-01`: the gate run of this close-out failed step 2 on exactly this
+class; deleting the uplifted copies and rerunning `vibe-install`,
+`vibe-native-loader` and `vibe-lifecycle` was green, every other step was
+green on the first run (fmt 6 s, clippy 204 s, vibe check 88 s, conform
+17 s, check-codegen 14 s, wire-diff 27 s). `-03` and `-04` are the two
+places the clean cut touches a user: both are one-time and named by the
+error text and the changelog. What the gate cannot see and this run
+checked by hand: the first real source build (Vim 9.2.1167 from its GitHub
+tarball) exposed PAX headers and a baked-in prefix, both fixed before
+close-out and recorded in the plan.
