@@ -8,6 +8,29 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+- **User applications rebuilt on a clean contract (PROP-059).** `vibe install -g`
+  installs an app package through its author-declared platform / architecture /
+  installer options — shell commands, ZIP and tar.gz payloads, Windows EXE and
+  MSI, or a build from pinned sources (`url` or package files, verified by
+  digest, cached for `--offline`, run through a `sh` / PowerShell recipe).
+  Launchers run natively; every public command gets a tiny native proxy in
+  `~/.vibe/opt/bin`; several providers of one slot install side by side with
+  `vibe app use` for the global default and `VIBE_APP_USE` for a per-shell
+  choice; `vibe shell [--use SLOT=KEY]` opens the parent shell with the
+  applications on PATH; `vibe storage` adds, attaches, detaches and lists
+  storage libraries, moves portable installations between them, and `gc`
+  removes what an interruption left behind. A missing disk is reported as
+  unavailable, never repaired around. Durable state is one index file, one
+  `storage.toml` and plain directories.
+- **Upgrade note.** The 1.0.7 application index (`vibe-user-applications/1`,
+  under `~/.vibe/applications/`) is not migrated: remove it and reinstall the
+  applications. The retired source-versus-binary bridge model
+  (`[application_source]`, `installer_package`, `commands`, `distribution`,
+  `--from-source`, `--binary`, `--local-source`) is gone; packages declare
+  `[[installer_options]]` instead.
+- `org.vibevm.doc/web` installs through a source-build recipe and puts
+  `vibevm-doc` on PATH.
+
 ## [1.0.7] — 2026-10-04
 
 - Source self-update freshness handles opaque untracked nested Git worktrees

@@ -2372,3 +2372,33 @@ structure, and it goes when the file does.
 | @fact:B215-SEVERITY **severity** | P3 — inherited test-only lint debt. |
 | @fact:B215-DISPOSITION **disposition** | `closed` — redundant file attributes removed; parent test-only boundaries retained. Full Linux workspace all-target Clippy and full seven-step gate passed during 1.0.3 distribution validation (2026-10-02). |
 | @fact:B215-FILED **filed by** | Init root declaration/group verification, 2026-10-02. |
+
+## B-216 — the old `vibe-user-applications/1` index is refused, not migrated {#b-216}
+
+| field | value |
+|---|---|
+| @fact:B216-WHAT **what** | The clean application subsystem (PROP-059, 2026-10-30) reads only `vibe-user-applications/3`. A settings root carrying the 1.0.7 index (`/1`, written by the retired installer child-process protocol) makes every global application command fail with "application index … is unreadable: protocol … is not …/3; fix: … remove it to start an empty inventory". The owner's own machine holds such an index with `zap` installed through the retired bridge model. |
+| @fact:B216-EVIDENCE **evidence** | `~/.vibe/applications/index.json` on the owner's Linux box, 2026-10-30; `crates/vibe-app/src/index.rs::from_wire` protocol check. The owner ruled on 2026-10-19 that the new model carries no compatibility requirement. |
+| @fact:B216-SEVERITY **severity** | P2 — one-time manual step on upgrade for anyone who installed an application with 1.0.7. |
+| @fact:B216-DISPOSITION **disposition** | `accepted` — no migration by owner ruling; the error names the remedy. The 1.0.8 changelog carries the upgrade note. |
+| @fact:B216-FILED **filed by** | APP-CLEAN campaign, 2026-10-31. |
+
+## B-217 — `org.vibevm.zap/zap` lost its application declaration {#b-217}
+
+| field | value |
+|---|---|
+| @fact:B217-WHAT **what** | The in-tree registry copy of `org.vibevm.zap/zap` declared `[application_source]`, `installer_package`, `commands` and `[application.distribution]`, all retired with the installer-options model. The copy now keeps only `[application] id = "zap"` and no `[[installer_options]]`, so `vibe install -g org.vibevm.zap/zap` refuses it as not globally installable until the package (in its own repository) declares installer options — most naturally a `source_build` row per platform whose recipe runs its existing Node installer. |
+| @fact:B217-EVIDENCE **evidence** | `vibevm/vibepacks/org.vibevm.zap/zap/v1.0.0/vibe.toml` after commit `af6dfb36a`; the owner's installed `zap` is in the `/1` index of B-216. |
+| @fact:B217-SEVERITY **severity** | P2 — the owner's own product is not installable through the new model until its package is re-declared. |
+| @fact:B217-DISPOSITION **disposition** | `open` — owner decision in the zap repository; the documentation-site package (`org.vibevm.doc/web`) was converted in this campaign and is the worked example. |
+| @fact:B217-FILED **filed by** | APP-CLEAN campaign, 2026-10-31. |
+
+## B-218 — a forked child briefly holds the application mutation lock {#b-218}
+
+| field | value |
+|---|---|
+| @fact:B218-WHAT **what** | `SettingsRoot::lock` takes a `try_lock` on `applications/.mutation.lock` and refuses when held. In one test process, a child spawned by another thread inherits the lock file descriptor between `fork` and `exec` (the descriptor is close-on-exec, the lock is per open-file-description), so a back-to-back `lock()` in a different test can see a stale holder for a few milliseconds. The `vibe-app` storage unit tests retry only that refusal; product code never retries. |
+| @fact:B218-EVIDENCE **evidence** | P4 executor report, 2026-10-30: intermittent `Locked` in `storage` unit tests, 25/25 green with the test-only retry; `crates/vibe-app/src/storage/relocate.rs::tests::retry_locked`. |
+| @fact:B218-SEVERITY **severity** | P3 — test-only; a real second `vibe` process holding the lock is refused correctly. |
+| @fact:B218-DISPOSITION **disposition** | `open` — a bounded product-side retry (a few hundred milliseconds) would remove the test helper and absorb the same race between two real `vibe` processes; decide whether the contract's "a held lock is refused, never awaited" admits it. |
+| @fact:B218-FILED **filed by** | APP-CLEAN campaign, 2026-10-31. |
