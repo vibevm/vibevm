@@ -280,7 +280,7 @@ pub enum AppError {
     #[error(
         "source_build of `{key}` failed; its work directory `{work}` is kept for inspection \
          (violates spec://org.vibevm.core/vibevm/common/PROP-059#source-build; fix: inspect and then delete the directory, \
-         correct the cause below and install again): {source}"
+         correct the cause below and install again)"
     )]
     SourceBuild {
         key: String,

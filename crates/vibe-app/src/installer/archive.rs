@@ -103,6 +103,15 @@ fn unpack(archive: &Path, format: ArchiveFormat, root: &Path) -> Result<usize, I
                     .ok_or_else(|| refuse("a tar path is not UTF-8"))?
                     .to_owned();
                 let kind = entry.header().entry_type();
+                // PAX global and per-entry extension headers carry metadata
+                // for the entries that follow (GitHub tarballs start with
+                // `pax_global_header`); they are not payload.
+                if matches!(
+                    kind,
+                    tar::EntryType::XGlobalHeader | tar::EntryType::XHeader
+                ) {
+                    continue;
+                }
                 if kind.is_dir() {
                     names.check(&name, true)?;
                     continue;
@@ -325,5 +334,32 @@ mod tests {
             )
             .is_err()
         );
+
+        // A PAX global header, as GitHub's tarballs carry, is metadata and
+        // never refused as a special entry.
+        let pax = dir.path().join("pax.tar.gz");
+        let encoder =
+            flate2::write::GzEncoder::new(File::create(&pax).unwrap(), flate2::Compression::fast());
+        let mut tar = tar::Builder::new(encoder);
+        let mut header = tar::Header::new_ustar();
+        header.set_entry_type(tar::EntryType::XGlobalHeader);
+        header.set_size(20);
+        header.set_cksum();
+        tar.append_data(
+            &mut header,
+            "pax_global_header",
+            b"52 comment=abcdef12\n".as_slice(),
+        )
+        .unwrap();
+        let mut header = tar::Header::new_gnu();
+        header.set_size(4);
+        header.set_mode(0o644);
+        header.set_cksum();
+        tar.append_data(&mut header, "repo-1.0/README", b"read".as_slice())
+            .unwrap();
+        tar.into_inner().unwrap().finish().unwrap();
+        let out3 = dir.path().join("out3");
+        extract(&pax, ArchiveFormat::TarGz, None, &out3).unwrap();
+        assert_eq!(fs::read(out3.join("repo-1.0/README")).unwrap(), b"read");
     }
 }
