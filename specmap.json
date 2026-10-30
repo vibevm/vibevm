@@ -6240,6 +6240,15 @@
     },
     {
       "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/fs_util.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_app::fs_util",
+      "end_line": 4,
+      "fingerprint": "tok1:4438f13f62a566148e00c853008fba055722ae338f5bc634d6572424a2fb53be"
+    },
+    {
+      "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/index.rs",
       "item_kind": "mod",
       "line": 5,
@@ -6629,28 +6638,46 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/settings.rs",
       "item_kind": "mod",
-      "line": 3,
+      "line": 4,
       "symbol": "vibe_app::settings",
-      "end_line": 3,
+      "end_line": 4,
       "fingerprint": "tok1:212283f361804dc1c0d70a97b0e4050816338fab510fadddcda2464e91c0d791"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/settings.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_app::settings",
+      "end_line": 5,
+      "fingerprint": "tok1:4db95b7d27398f0a8c431e7c421e64b3b25fcbcdfe140b2f437d57f2e32e7789"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/settings.rs",
       "item_kind": "struct",
-      "line": 30,
+      "line": 40,
       "symbol": "vibe_app::settings::MutationLock",
-      "end_line": 36,
+      "end_line": 46,
       "fingerprint": "tok1:984d748b8b2c728d516d7868980a07ca0e0f151d970183a186d74dc1588a43bc"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/settings.rs",
       "item_kind": "struct",
-      "line": 13,
+      "line": 15,
       "symbol": "vibe_app::settings::SettingsRoot",
-      "end_line": 28,
-      "fingerprint": "tok1:a692d7b7a41cda970022de2e0d59a06352cbbc16f40f0bc4f44900cfc6ec1374"
+      "end_line": 38,
+      "fingerprint": "tok1:7e14355d67dddba658af36f18969c68b2cf7045036cc85697f92bf70cf6da021"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/settings.rs",
+      "item_kind": "fn",
+      "line": 59,
+      "symbol": "vibe_app::settings::SettingsRoot::project",
+      "end_line": 69,
+      "fingerprint": "tok1:64a4eed58e2c1fc5cf505e1f2ddec14d1c60d1b7e37d254b6bc76fd5d68ddef4"
     },
     {
       "crate_name": "vibe-app",
@@ -7452,6 +7479,24 @@
       "symbol": "vibe_cli::commands::app::global",
       "end_line": 4,
       "fingerprint": "tok1:da6379df018c4d1ace99c7b0e52aec81f5be7f91bd97af66de8626bb04bcee36"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/home.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_cli::commands::app::home",
+      "end_line": 7,
+      "fingerprint": "tok1:4db95b7d27398f0a8c431e7c421e64b3b25fcbcdfe140b2f437d57f2e32e7789"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/project.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_cli::commands::app::project",
+      "end_line": 8,
+      "fingerprint": "tok1:4db95b7d27398f0a8c431e7c421e64b3b25fcbcdfe140b2f437d57f2e32e7789"
     },
     {
       "crate_name": "vibe-cli",
@@ -13523,9 +13568,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 194,
+      "line": 195,
       "symbol": "vibe_core::manifest::package::application::ApplicationDecl",
-      "end_line": 206,
+      "end_line": 207,
       "fingerprint": "tok1:a3c29cd30b45bdbd18acd7845f2d5feb2a113144a37bea484e467cc07abe8ed7"
     },
     {
@@ -13534,43 +13579,43 @@
       "item_kind": "enum",
       "line": 24,
       "symbol": "vibe_core::manifest::package::application::InstallerMethod",
-      "end_line": 83,
-      "fingerprint": "tok1:e12468a1134498636d0d9aa7d55f106441a4df7ee06c5b64ea2e2b2fb10753a6"
+      "end_line": 84,
+      "fingerprint": "tok1:fb798e45d6fe23688550080e70f18af3a69a086bdd05ad6daedfc681826bd9b8"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 168,
+      "line": 169,
       "symbol": "vibe_core::manifest::package::application::InstallerOptionDecl",
-      "end_line": 192,
+      "end_line": 193,
       "fingerprint": "tok1:495c88a83488e57735885a0b75a3d27d39c63d54925aef40512b28c1d1a9a89e"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 134,
+      "line": 135,
       "symbol": "vibe_core::manifest::package::application::LauncherDecl",
-      "end_line": 155,
+      "end_line": 156,
       "fingerprint": "tok1:4dbf31cee6f52557a2fd79be47e110132676f3ef14d6183392537075a079ed54"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 157,
+      "line": 158,
       "symbol": "vibe_core::manifest::package::application::PublicCommandDecl",
-      "end_line": 166,
+      "end_line": 167,
       "fingerprint": "tok1:04f03af3cd491eb9368dd0a32d7f7ad6e85b58c533d90605eb54289f482e0937"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 123,
+      "line": 124,
       "symbol": "vibe_core::manifest::package::application::RecipeDecl",
-      "end_line": 132,
+      "end_line": 133,
       "fingerprint": "tok1:205f67efe04cd404d78f701ae49ab918b10127f21110c98d9d6b4c3cee85e001"
     },
     {
@@ -13586,9 +13631,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 108,
+      "line": 109,
       "symbol": "vibe_core::manifest::package::application::SourceInputDecl",
-      "end_line": 121,
+      "end_line": 122,
       "fingerprint": "tok1:25a850495f8ff064819ac402badbd84c755582bdfa6c079df9d699764b309da2"
     },
     {
@@ -35795,6 +35840,14 @@
       "verb": "documents"
     },
     {
+      "file": "crates/vibe-app/src/fs_util.rs",
+      "from_symbol": "vibe_app::fs_util",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#move",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-app/src/index.rs",
       "from_symbol": "vibe_app::index",
       "line": 5,
@@ -36141,15 +36194,23 @@
     {
       "file": "crates/vibe-app/src/settings.rs",
       "from_symbol": "vibe_app::settings",
-      "line": 3,
+      "line": 4,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "implements"
     },
     {
       "file": "crates/vibe-app/src/settings.rs",
+      "from_symbol": "vibe_app::settings",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/settings.rs",
       "from_symbol": "vibe_app::settings::MutationLock",
-      "line": 33,
+      "line": 43,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "documents"
@@ -36157,10 +36218,18 @@
     {
       "file": "crates/vibe-app/src/settings.rs",
       "from_symbol": "vibe_app::settings::SettingsRoot",
-      "line": 25,
+      "line": 34,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/settings.rs",
+      "from_symbol": "vibe_app::settings::SettingsRoot::project",
+      "line": 61,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-app/src/storage/mod.rs",
@@ -36878,6 +36947,22 @@
       "line": 4,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/home.rs",
+      "from_symbol": "vibe_cli::commands::app::home",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/project.rs",
+      "from_symbol": "vibe_cli::commands::app::project",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope",
       "verb": "implements"
     },
     {
@@ -42420,7 +42505,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::ApplicationDecl",
-      "line": 196,
+      "line": 197,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
       "verb": "documents"
@@ -42436,7 +42521,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::InstallerOptionDecl",
-      "line": 170,
+      "line": 171,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options",
       "verb": "documents"
@@ -42444,7 +42529,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::LauncherDecl",
-      "line": 136,
+      "line": 137,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points",
       "verb": "documents"
@@ -42452,7 +42537,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::PublicCommandDecl",
-      "line": 160,
+      "line": 161,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points",
       "verb": "documents"
@@ -42460,7 +42545,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::RecipeDecl",
-      "line": 125,
+      "line": 126,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#source-build",
       "verb": "documents"
@@ -42476,7 +42561,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::SourceInputDecl",
-      "line": 109,
+      "line": 110,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#source-build",
       "verb": "documents"
@@ -85257,7 +85342,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a7182d2d691e51e3b2f95f9595f85191bc872227edd7a5261e4b1292317f83b7",
+      "content_hash": "sha256:60ea33c44989ae463dd84d8108fa9a8efb79f96ab6d1bcf19d0752f65c18da49",
       "doc_path": "common/PROP-059",
       "file": "vibevm/vibespecs/common/PROP-059-user-applications.xml",
       "heading": "PROP-059 — User applications: install, launch, alternatives, storage libraries",
@@ -85338,10 +85423,10 @@
     },
     {
       "anchor": "source-build",
-      "content_hash": "sha256:98dbfbcad345a04f3b5e9e2a8fc2dfd6ad1ea84b5785e5c82bb20ba9244aba8e",
+      "content_hash": "sha256:ac54a68ad79ee98602cc06360b6393dc4ab69fe17a83a7204c21f1257e90b469",
       "doc_path": "common/PROP-059",
       "file": "vibevm/vibespecs/common/PROP-059-user-applications.xml",
-      "heading": "`type = \"source_build\"` declares `[[installation.sources]]` and one `installation.recipe`. Each source has a `name` (directory name), either `url` or package-relative `path`, `sha256`, and `extract` (default `true` for `.zip`, `.tar.gz`, `.tgz`; otherwise the file is kept under its own filename). The recipe has `interpreter` (as for shell) and `script`, a package-relative file. vibe fetches and verifies every source, caches downloads under the settings root at `cache/app-sources/<sha256>/`, lays them out as `<work>/sources/<name>/`, then runs the script with working directory `<work>` and environment `VIBE_SOURCES`, `VIBE_WORK`, `VIBE_OUT`, `VIBE_PACKAGE` (the package tree) and `VIBE_PLATFORM` / `VIBE_ARCH`. A zero exit with a non-empty `VIBE_OUT` directory makes `VIBE_OUT` the installed payload; anything else fails before publication and leaves the work directory for inspection under `cache/app-build/`. `--offline` succeeds only when every source is cached. @status:spec/done",
+      "heading": "`type = \"source_build\"` declares zero or more `[[installation.sources]]` and one `installation.recipe`; with no sources the package tree itself is the input. Each source has a `name` (directory name), either `url` or package-relative `path`, `sha256`, and `extract` (default `true` for `.zip`, `.tar.gz`, `.tgz`; otherwise the file is kept under its own filename). The recipe has `interpreter` (as for shell) and `script`, a package-relative file. vibe fetches and verifies every source, caches downloads under the settings root at `cache/app-sources/<sha256>/`, lays them out as `<work>/sources/<name>/`, then runs the script with working directory `<work>` and environment `VIBE_SOURCES`, `VIBE_WORK`, `VIBE_OUT`, `VIBE_PACKAGE` (the package tree) and `VIBE_PLATFORM` / `VIBE_ARCH`. A zero exit with a non-empty `VIBE_OUT` directory makes `VIBE_OUT` the installed payload. `VIBE_OUT` is a staging path: the payload is moved into a library afterwards and may be moved again, so a recipe must produce a relocatable tree (relative lookup or a wrapper) and never bake the staging prefix into it; anything else fails before publication and leaves the work directory for inspection under `cache/app-build/`. `--offline` succeeds only when every source is cached. @status:spec/done",
       "line": 15,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#source-build"
     },
@@ -85464,10 +85549,10 @@
     },
     {
       "anchor": "shell-command",
-      "content_hash": "sha256:a2b881df9644a6287e9600e39c412325d4e48bbf3a86690ac8268d814ec881ca",
+      "content_hash": "sha256:3086e1c368c20a4eaa9e566a49e74caffb1ecb593098bab81df942bf40e257e4",
       "doc_path": "common/PROP-059",
       "file": "vibevm/vibespecs/common/PROP-059-user-applications.xml",
-      "heading": "`vibe shell [-g|--global] [--use SLOT=KEY]...` starts an interactive shell whose PATH begins with the `opt/bin` directories of the selected application homes in priority order (today one home, the user settings root; a project home is reserved for a later phase) and whose `VIBE_APP_USE` reflects the given choices. The shell executable is the caller's parent shell when it is `bash`, `zsh`, `cmd.exe`, `powershell.exe` or `pwsh.exe`, otherwise `/bin/sh` on Linux, `/bin/zsh` on macOS and the system `cmd.exe` on Windows. The command requires an attended non-JSON terminal, preserves the working directory and standard streams, and returns the shell's exit status. `-g` is accepted for forward compatibility with project-local installations and currently selects the same user-global scope. @status:spec/done",
+      "heading": "`vibe shell [-g|--global] [--use SLOT=KEY]...` starts an interactive shell whose PATH begins with the `opt/bin` directories of the selected application homes in priority order: the project home `vibevm/vibeopt` when the working directory is a project and that home exists, then the user settings root and whose `VIBE_APP_USE` reflects the given choices. The shell executable is the caller's parent shell when it is `bash`, `zsh`, `cmd.exe`, `powershell.exe` or `pwsh.exe`, otherwise `/bin/sh` on Linux, `/bin/zsh` on macOS and the system `cmd.exe` on Windows. The command requires an attended non-JSON terminal, preserves the working directory and standard streams, and returns the shell's exit status. `-g` selects the user home alone (`#project-scope`). @status:spec/done",
       "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#shell-command"
     },
@@ -85500,10 +85585,10 @@
     },
     {
       "anchor": "changelog",
-      "content_hash": "sha256:68a4fd63e4c5522dd1c5e55070e1f5183cfbbe8064ccb7b1e9636e2d187f811c",
+      "content_hash": "sha256:80fdb9c8a138650db67cea85741c28ce475099975a10a7d9119210e30f143835",
       "doc_path": "common/PROP-059",
       "file": "vibevm/vibespecs/common/PROP-059-user-applications.xml",
-      "heading": "2026-10-30: added `#project-scope` (owner decision the same day). 2026-10-30: rewritten as the clean contract; storage libraries, portability, source builds, session selection by environment and `vibe shell` folded into this document. Retired anchors below keep their names as tombstones. @status:spec/done",
+      "heading": "2026-10-31: `#shell-command` names the project home now that `#project-scope` is implemented. 2026-10-31: `#source-build` admits zero sources and states that `VIBE_OUT` is a staging path (first real build: Vim baked its prefix in). 2026-10-30: added `#project-scope` (owner decision the same day). 2026-10-30: rewritten as the clean contract; storage libraries, portability, source builds, session selection by environment and `vibe shell` folded into this document. Retired anchors below keep their names as tombstones. @status:spec/done",
       "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#changelog"
     },
@@ -99168,6 +99253,420 @@
       "heading": "[ ] Owner visual sign-off (date / initials): ______ @status:impl/work",
       "line": 79,
       "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-03-vibe-prefs-tui#SIGNOFF-OWNER"
+    },
+    {
+      "anchor": "purpose",
+      "content_hash": "sha256:c3adb1178803ad6865a5f306807bd48fec60b2698e8228071f417ef681af3c61",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Purpose.** The Linux fixtures prove the application subsystem's logic (install, launch, proxies, alternatives, storage, source builds). Windows differs in what no fixture reaches from Linux: the ZIP method and its payload layout, the `.exe` proxy copies in `opt\\bin`, direct native launch of `gvim.exe` without an intermediate `cmd`, `Ctrl+C` through the proxy, `vibe shell` reusing `cmd.exe` / PowerShell / `pwsh`, and a removable drive as a storage library. The owner proves these here, on a real Windows machine (`PROP-059#acceptance`). @status:impl/work",
+      "line": 4,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#purpose"
+    },
+    {
+      "anchor": "isolation-note",
+      "content_hash": "sha256:7a56f07ac4f378814ba626d4ce45139387d5b4c0e37ef6650d8ef5547666eff8",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "Every step runs against an isolated settings root (`VIBE_SETTINGS`), so the operator's real `~\\.vibe` is never touched. Vim's upstream ZIP (about 15 MB) is downloaded once. @status:impl/work",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#isolation-note"
+    },
+    {
+      "anchor": "PRE-HOST",
+      "content_hash": "sha256:be3d59e75a884603f2d557731d3e99eb47ba4c3e6087fec82b48ebccaab2d933",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "Windows 10/11 x86_64 with PowerShell and `cmd.exe`; network access to github.com. @status:impl/work",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#PRE-HOST"
+    },
+    {
+      "anchor": "PRE-BINARIES",
+      "content_hash": "sha256:f343ffb8273a4ca8629ecdf3604bf36197215f2171b982026a9086a7f119731c",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "`cargo build -p vibe-cli --bins` on the machine: `target\\debug\\vibe.exe` AND `target\\debug\\vibe-app-proxy.exe` beside it (the proxy image is copied into `opt\\bin` for every public command). @status:impl/work",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#PRE-BINARIES"
+    },
+    {
+      "anchor": "PRE-PACKAGE",
+      "content_hash": "sha256:f0d9f85aa887c44d7e06ffadba260b1ea4a6c70fab04463303e14a967249ade9",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "The Vim bridge `org.vibevm.apps/vim@1.1.0` is resolvable: either published to the registry, or a checkout of `vibevm-packages/vim` laid out as `<reg>\\org.vibevm.apps\\vim\\v1.1.0\\` and passed with `--registry <reg>`. @status:impl/work",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#PRE-PACKAGE"
+    },
+    {
+      "anchor": "PRE-DRIVE",
+      "content_hash": "sha256:5a0627c47a3c96d99e19064b37a6c57b7b96ffd0a4a10914ec04499970882a37",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "Optional for step 7: a removable drive (USB stick) with a free directory. @status:impl/work",
+      "line": 11,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#PRE-DRIVE"
+    },
+    {
+      "anchor": "STEP-1-INSTALLERS",
+      "content_hash": "sha256:255d0eea12cf9bacdfb2233220bc4a45a741707c5dc381c49b2bed5080c2fbf1",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Listing without installing.** @status:impl/work",
+      "line": 21,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#STEP-1-INSTALLERS"
+    },
+    {
+      "anchor": "EXP-1",
+      "content_hash": "sha256:000ee9ebc7379819319dd7e8684c0da703baac41f8307e9e2bf019a53bb6ec9a",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Expected.** A JSON listing whose `detected` names `windows` / `x86_64`, the `windows` platform first and marked detected, with installer `windows-zip` (type `zip`) and launchers `gvim` (default) and `vim`; the Ubuntu and source-build rows are listed but not detected. Nothing is downloaded and `$env:VIBE_SETTINGS` holds no `applications\\index.json` yet. @status:impl/work",
+      "line": 24,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#EXP-1"
+    },
+    {
+      "anchor": "STEP-2-INSTALL",
+      "content_hash": "sha256:75bb44fc185c8bec0fd62b3a264720bba4b5de7c6a48f1dba2c176843492823f",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**ZIP install with host detection.** @status:impl/work",
+      "line": 26,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#STEP-2-INSTALL"
+    },
+    {
+      "anchor": "EXP-2",
+      "content_hash": "sha256:c36b41248e8256ac13102b2d5c4563085ef9ec7bee735ab5fc26869f0fa7710c",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Expected.** The ZIP is fetched and its SHA-256 verified; the payload (`vim92\\gvim.exe`, `vim92\\vim.exe`, `vim92\\vim.ico`, the runtime tree) sits under `opt\\apps\\vim\\org.vibevm.apps.vim@1.1.0\\` because `payload_root = \"vim\"` selected the archive's `vim\\` subtree. `opt\\bin` holds `vim.exe` and `gvim.exe`, each a byte copy of `vibe-app-proxy.exe`. The summary line names the installation and `windows-zip`. `applications\\index.json` has protocol `vibe-user-applications/3`, one installation with `library: \"default\"` and `portable: true`, and slot `vim` defaulting to it. @status:impl/work",
+      "line": 31,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#EXP-2"
+    },
+    {
+      "anchor": "STEP-3-LAUNCHERS",
+      "content_hash": "sha256:026762736f8ed636283be986d2adc454486348520502d3772944f5914085ec1c",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Launcher listing and direct native launch.** @status:impl/work",
+      "line": 33,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#STEP-3-LAUNCHERS"
+    },
+    {
+      "anchor": "EXP-3",
+      "content_hash": "sha256:96c6f0c1831d33295dc121441816c033910026304a8af1fd6bf21ca673534e21",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Expected.** Both launchers are `available` with resolved absolute paths inside the payload and the `.ico` resolved; `gvim` is marked default. `app start` opens a gVim window directly (Task Manager shows `gvim.exe` as a child of `vibe.exe`, no `cmd.exe` in between); closing it returns 0. `app run … vim -- --version` prints the Vim 9.2 banner in the console and exits 0. @status:impl/work",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#EXP-3"
+    },
+    {
+      "anchor": "STEP-4-PROXY",
+      "content_hash": "sha256:ff51d00f195fa7ae7d1f963120d4b80011d5f561abcc13c56cd748e6359cfeb1",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**PATH proxy and Ctrl+C.** @status:impl/work",
+      "line": 40,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#STEP-4-PROXY"
+    },
+    {
+      "anchor": "EXP-4",
+      "content_hash": "sha256:d28a448b992267968aff793fb150cd1cca3e1548cdd6b85f1cb7e398c2dcd1dc",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Expected.** The proxy starts console Vim in the same console with no intermediate shell; `--version` prints the banner. In the interactive runs Vim owns the console, `Ctrl+C` is seen by Vim (it shows `Type :qa and press <Enter>…`, the proxy does not die), and `:q` returns to PowerShell with exit 0. The proxy never prints anything of its own on success. @status:impl/work",
+      "line": 45,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#EXP-4"
+    },
+    {
+      "anchor": "STEP-5-SHELL",
+      "content_hash": "sha256:40f0425b392a778263715a2077a702703784c48c563b31ad8f5b7c3cde4b0f91",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**`vibe shell` from PowerShell, `pwsh` and `cmd.exe`.** @status:impl/work",
+      "line": 47,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#STEP-5-SHELL"
+    },
+    {
+      "anchor": "EXP-5",
+      "content_hash": "sha256:83987470b5bbe416617c20584e46cca9cc4be9a1a4b5f1ab0ce20e2575d7649b",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Expected.** From Windows PowerShell the child is `powershell.exe`; from `pwsh` it is `pwsh.exe`; from `cmd.exe` it is `cmd.exe` (the parent image is reused). Inside, the first PATH entry is `$env:VIBE_SETTINGS\\opt\\bin`, `vim --version` works through the proxy, and `exit` returns to the caller with the shell's own exit status. `vibe shell --json` and `vibe shell --unattended` are refused before any shell starts. @status:impl/work",
+      "line": 53,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#EXP-5"
+    },
+    {
+      "anchor": "STEP-6-SESSION",
+      "content_hash": "sha256:85e7c21586ed4a12e7e7a98e2413e9142025ad4b9fecda21f9d9a991d2a6df38",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Session choice (`VIBE_APP_USE`) with a second provider.** Install a second provider of the same slot — the published `org.vibevm.apps/vim@1.0.1` is one — then: @status:impl/work",
+      "line": 55,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#STEP-6-SESSION"
+    },
+    {
+      "anchor": "EXP-6",
+      "content_hash": "sha256:073b1fc3e0e492bada5bf9fe28a6edbe8eeed0b178b58bfb41f8b43757a68dae",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Expected.** `alternatives` lists both providers, the default, and `vim` / `gvim` with the providers offering them. `app use` moves the global default; the session variable overrides it for that process only, and the next `vim --version` without the variable follows the global default again. @status:impl/work",
+      "line": 60,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#EXP-6"
+    },
+    {
+      "anchor": "STEP-7-STORAGE",
+      "content_hash": "sha256:2d05eb21ccd672662c615b846afecbf25a9e5784727a6e17c62de9fee6632137",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**A removable drive as a library; unavailability; move.** With a USB drive `E:`: @status:impl/work",
+      "line": 62,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#STEP-7-STORAGE"
+    },
+    {
+      "anchor": "EXP-7",
+      "content_hash": "sha256:a16d7f916046fe35bf92a1077e9956a5f6378d7ee0c7d187976a53d692859b44",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Expected.** `storage add` creates `E:\\vibe-apps\\vibe-library.toml` and lists `usb`. The move copies the payload to `E:\\vibe-apps\\apps\\vim\\…`, rewrites the index and deletes the old directory; `vim --version` still works through the unchanged proxy. With the drive gone, `app list` shows the installation `unavailable` with the reason (library directory missing), `vim.exe` exits 127 with one `vibe-app-proxy: unavailable: …` line, and `uninstall -g` is refused without touching anything. After re-plugging, `app list` shows `ready` with no other command; the move back succeeds, and `gc` reports nothing unreferenced. @status:impl/work",
+      "line": 75,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#EXP-7"
+    },
+    {
+      "anchor": "STEP-8-UNINSTALL",
+      "content_hash": "sha256:becc710425d57b106ea318065711293c85665bd2b23ed91478bcc76aa72b630a",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Uninstall.** @status:impl/work",
+      "line": 77,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#STEP-8-UNINSTALL"
+    },
+    {
+      "anchor": "EXP-8",
+      "content_hash": "sha256:d9540322c6b1e333deac1c0979bb2b3d61d1baa1bfbae3d6484cadfb20267102",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Expected.** The payload directory is deleted; with another provider still installed the slot default moves to it and the proxies stay; after the last provider is removed `opt\\bin\\vim.exe` and `gvim.exe` are gone and `opt\\bin` keeps any unrelated file (the version-manager shims). @status:impl/work",
+      "line": 81,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#EXP-8"
+    },
+    {
+      "anchor": "pass-criteria",
+      "content_hash": "sha256:07685ec4864fd103fda19745ad95e4a203341044236caefa34201406c35d9386",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "Every step reads as described on a real Windows host: ZIP install, direct native launch of gVim, console Vim through the `.exe` proxy with Ctrl+C handled by Vim, `vibe shell` reusing each of the three parent shells, the session variable, the removable-drive library with unavailability and moves, and a clean uninstall. The owner signs the date below. @status:impl/work",
+      "line": 84,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#pass-criteria"
+    },
+    {
+      "anchor": "SIGNOFF-OWNER",
+      "content_hash": "sha256:49447d1a0881459f1ebfcf8fac8efcc2ca24c66b10c8a66266b216eaa0c6802b",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "[ ] Owner sign-off on native Windows (date / initials): ______ @status:impl/work",
+      "line": 88,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#SIGNOFF-OWNER"
+    },
+    {
+      "anchor": "purpose",
+      "content_hash": "sha256:d65b2cbc786000eff25e48daa6e02727c2ed991c48038da676aca169ba418b49",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Purpose.** macOS has no Linux fixture coverage for: the parent-shell detection through `proc_pidpath` (zsh is the default login shell), the `/bin/zsh` fallback, a source build with the Xcode command-line tools, signals through the proxy in Terminal, and an external volume under `/Volumes` as a storage library. The owner proves these here, on a real Mac (`PROP-059#acceptance`). @status:impl/work",
+      "line": 4,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#purpose"
+    },
+    {
+      "anchor": "isolation-note",
+      "content_hash": "sha256:9a24837d27a0eaf0366c1edd03819afbe488fcec69ad163cadadf3b79469781e",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "Every step runs against an isolated settings root (`VIBE_SETTINGS`). The Vim source tarball (about 20 MB) is downloaded once and cached under that root. @status:impl/work",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#isolation-note"
+    },
+    {
+      "anchor": "PRE-HOST",
+      "content_hash": "sha256:189e0c6c51dba6bf0cb71412558ddb59015aab01038b9e4db68353d0c2fbb0ca",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "macOS 14 or newer on Apple silicon or Intel; Xcode command-line tools (`xcode-select --install`) for `cc`, `make` and the curses headers; network access to github.com. @status:impl/work",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#PRE-HOST"
+    },
+    {
+      "anchor": "PRE-BINARIES",
+      "content_hash": "sha256:369d44f4794b2a0327e9cb872688278c1bb74a416df8817615aa657b0ee41f93",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "`cargo build -p vibe-cli --bins`: `target/debug/vibe` and `target/debug/vibe-app-proxy` beside it. @status:impl/work",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#PRE-BINARIES"
+    },
+    {
+      "anchor": "PRE-PACKAGE",
+      "content_hash": "sha256:8ac6531bffd9c0d5ea08b48956d9fd19af833086e89ce26c13b3279503745ff4",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "The Vim bridge `org.vibevm.apps/vim@1.1.0` resolvable from the registry or from a checkout laid out as `<reg>/org.vibevm.apps/vim/v1.1.0/` with `--registry <reg>`. @status:impl/work",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#PRE-PACKAGE"
+    },
+    {
+      "anchor": "PRE-VOLUME",
+      "content_hash": "sha256:b5c658ebb1002fda5315a5bc4853247312dc427a63ba2a1e6ad640a40b355e0a",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "Optional for step 6: an external volume (USB disk or a mounted disk image) with a free directory. @status:impl/work",
+      "line": 11,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#PRE-VOLUME"
+    },
+    {
+      "anchor": "STEP-1-DETECT",
+      "content_hash": "sha256:5c032be50e21b1a0b2f50b58e1d8631c302fe10459ebc71b17c6462282664181",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Detection picks the macOS source build for this CPU.** @status:impl/work",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#STEP-1-DETECT"
+    },
+    {
+      "anchor": "EXP-1",
+      "content_hash": "sha256:39b52238bec66eaec274544f8f70679b11fe897395723f0354700090b815bb67",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Expected.** `Detected: macos/aarch64` (or `x86_64`), the macOS platform listed first and marked detected, with exactly one installer detected for the CPU (`macos-source-arm64` or `macos-source-intel`, type `source_build`, one URL source, recipe `recipes/build-posix.sh`). @status:impl/work",
+      "line": 23,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#EXP-1"
+    },
+    {
+      "anchor": "STEP-2-BUILD",
+      "content_hash": "sha256:0fca6fad5f8184d14a189d07f67e946e63afa7b379291613771fe8ce1bf92b79",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Source build with host detection.** @status:impl/work",
+      "line": 25,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#STEP-2-BUILD"
+    },
+    {
+      "anchor": "EXP-2",
+      "content_hash": "sha256:de4e82e1b201edde9f0b8906b6bbce545a313b442e9d66e3c0cf0278d47550a2",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Expected.** The tarball is fetched and verified, `configure` / `make` / `make install` output streams live, the install finishes in a few minutes, and the payload holds `bin/vim` (the wrapper), `bin/vim-bin` and `share/vim/vim92`. The tarball sits in `cache/app-sources/<sha256>/v9.2.1167.tar.gz`; `cache/app-build` is empty or absent (the work directory is deleted after success). `opt/bin/vim` is a copy of the proxy. @status:impl/work",
+      "line": 30,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#EXP-2"
+    },
+    {
+      "anchor": "STEP-3-RUNTIME",
+      "content_hash": "sha256:083c379ca50faf75c5a48b93e8205d8488082a49fcd2c631010e1ff403472898",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**The relocated payload finds its runtime.** @status:impl/work",
+      "line": 32,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#STEP-3-RUNTIME"
+    },
+    {
+      "anchor": "EXP-3",
+      "content_hash": "sha256:60be6a5eaf5fcc97ab884de1b0db128cde64d98bab1779730017821a1bb1af7a",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Expected.** The banner says 9.2 with patches 1-1167. Inside Vim, `$VIMRUNTIME` is `…/opt/apps/vim/org.vibevm.apps.vim@1.1.0/share/vim/vim92` (not a path under `cache/app-build`), syntax highlighting works on a `.sh` file, and `:q` returns to the shell with exit 0. @status:impl/work",
+      "line": 36,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#EXP-3"
+    },
+    {
+      "anchor": "STEP-4-SIGNALS",
+      "content_hash": "sha256:9c214a38cd8b79410f3b5e75bfe8224f05b051cfefa7154d851fefe89ca47aa4",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Signals through the proxy in Terminal.** @status:impl/work",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#STEP-4-SIGNALS"
+    },
+    {
+      "anchor": "EXP-4",
+      "content_hash": "sha256:698921aa6e50066adaf059859f50d221dafdcf12c1a7b4626c6220af90ebeac9",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Expected.** `Ctrl+C` reaches Vim, which shows its usual hint and keeps running; `:q` exits 0. `SIGTERM` to the proxy is forwarded to Vim and the proxy exits with `143` (128 + 15). @status:impl/work",
+      "line": 42,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#EXP-4"
+    },
+    {
+      "anchor": "STEP-5-SHELL",
+      "content_hash": "sha256:bc5775097aafafded482a1769eef625f5fea02a7e7deb66e5b2aa26553e11b94",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**`vibe shell` from zsh, from bash, and from an unrecognised parent.** @status:impl/work",
+      "line": 44,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#STEP-5-SHELL"
+    },
+    {
+      "anchor": "EXP-5",
+      "content_hash": "sha256:5d2e17435e9e148784aefb42c182ce59f2a42783f1eb62feb334d811091ef77b",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Expected.** From zsh the child is the same zsh image; from bash it is that bash; from the Python parent it is the fallback `/bin/zsh`. In every case the first PATH entry is `$VIBE_SETTINGS/opt/bin`, `vim --version` works, and `exit` returns the shell's status. `--json` and a non-terminal invocation are refused. @status:impl/work",
+      "line": 50,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#EXP-5"
+    },
+    {
+      "anchor": "STEP-6-VOLUME",
+      "content_hash": "sha256:805f24056592aaf6976f9d5390edbf6b9b1d21eae03a575c29c0cfb638dc4532",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**An external volume as a library.** With a volume mounted at `/Volumes/USB`: @status:impl/work",
+      "line": 52,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#STEP-6-VOLUME"
+    },
+    {
+      "anchor": "EXP-6",
+      "content_hash": "sha256:fce1e819842ab18084fbd3e29321b90cdd0e01bb1479cea458a3427f9638aa84",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Expected.** The library marker is written on the volume, the move copies the payload there (the wrapper keeps working because `$VIM` follows the payload), and `vim --version` runs from the volume. After unmounting, `app list` shows `unavailable` with the reason and the proxy exits 127 with one `vibe-app-proxy: unavailable: …` line. After remounting it is `ready` again without any command; the move back and `gc` leave nothing unreferenced. @status:impl/work",
+      "line": 62,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#EXP-6"
+    },
+    {
+      "anchor": "STEP-7-OFFLINE",
+      "content_hash": "sha256:7ae95816685b50c7f1db55e8862844c855d5391e333b753a419d1466c3606e7d",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Offline reinstall from the source cache, then uninstall.** @status:impl/work",
+      "line": 64,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#STEP-7-OFFLINE"
+    },
+    {
+      "anchor": "EXP-7",
+      "content_hash": "sha256:255538ec7c516b81d5234c89e45190636acd7d1fda87e963426d5f00135b4a10",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Expected.** The offline reinstall rebuilds from the cached tarball without network and replaces the payload in place. The uninstall deletes the payload directory and, as the last provider, the `opt/bin/vim` proxy; `opt/apps/vim` is empty. @status:impl/work",
+      "line": 69,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#EXP-7"
+    },
+    {
+      "anchor": "pass-criteria",
+      "content_hash": "sha256:98e046e6f4feb8688bfe5fe372e86ed409b91d13bfa2c8a37c97555d990752c7",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "Every step reads as described on a real Mac: detection, the source build with the Xcode tools, the relocated runtime, signals through the proxy, `vibe shell` for zsh, bash and the fallback, the external-volume library with unavailability and moves, the offline rebuild and a clean uninstall. The owner signs the date below. @status:impl/work",
+      "line": 72,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#pass-criteria"
+    },
+    {
+      "anchor": "SIGNOFF-OWNER",
+      "content_hash": "sha256:d73c7e7e5b45175d69c57a88f32525f637a6b4f0ae2cc35ac091fc7b9e98619c",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "[ ] Owner sign-off on native macOS (date / initials): ______ @status:impl/work",
+      "line": 76,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#SIGNOFF-OWNER"
     },
     {
       "anchor": "modules-purpose",

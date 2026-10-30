@@ -23,6 +23,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#library-first");
 
 mod alternatives;
 mod error;
+mod fs_util;
 mod index;
 mod installer;
 mod launch;
@@ -56,7 +57,7 @@ pub use select::{
     Chooser, InstallChoice, detected_arch, detected_platform, options_listing, select_option,
 };
 pub use session::{SESSION_VARIABLE, SessionChoices};
-pub use settings::{MutationLock, SettingsRoot};
+pub use settings::{MutationLock, PROJECT_HOME, SettingsRoot};
 pub use storage::{
     Availability, DEFAULT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker, Moved, Storage,
     StorageConfig, add as storage_add, attach as storage_attach, create_library,

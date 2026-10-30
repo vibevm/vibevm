@@ -89,7 +89,8 @@ pub fn relocate(settings: &SettingsRoot, spelling: &str, to: &str) -> Result<Mov
         .unwrap_or_default();
     let temporary = parent.join(format!(".moving-{name}-{}", std::process::id()));
     fs::create_dir_all(parent).map_err(|source| io("creating", parent, source))?;
-    copy_tree(&source, &temporary)?;
+    crate::fs_util::copy_tree(&source, &temporary)
+        .map_err(|failure| io(failure.action, &failure.path, failure.source))?;
     fs::rename(&temporary, &target).map_err(|source| io("placing", &target, source))?;
     if let Some(record) = index.installations.get_mut(&key) {
         record.location = Location::Owned {
@@ -209,49 +210,6 @@ fn directories(dir: &Path) -> Result<Vec<PathBuf>, StorageError> {
         }
     }
     Ok(found)
-}
-
-/// Copy a directory tree; `to` must not exist. Symbolic links are copied
-/// as links, file permissions travel with `fs::copy`.
-fn copy_tree(from: &Path, to: &Path) -> Result<(), StorageError> {
-    fs::create_dir(to).map_err(|source| io("creating", to, source))?;
-    for entry in fs::read_dir(from).map_err(|source| io("reading", from, source))? {
-        let entry = entry.map_err(|source| io("reading", from, source))?;
-        let source_path = entry.path();
-        let target = to.join(entry.file_name());
-        let kind = entry
-            .file_type()
-            .map_err(|source| io("reading", &source_path, source))?;
-        if kind.is_dir() {
-            copy_tree(&source_path, &target)?;
-        } else if kind.is_symlink() {
-            copy_link(&source_path, &target)?;
-        } else {
-            fs::copy(&source_path, &target)
-                .map_err(|source| io("copying", &source_path, source))?;
-        }
-    }
-    let permissions = fs::metadata(from)
-        .map_err(|source| io("reading", from, source))?
-        .permissions();
-    fs::set_permissions(to, permissions).map_err(|source| io("copying", from, source))
-}
-
-#[cfg(unix)]
-fn copy_link(from: &Path, to: &Path) -> Result<(), StorageError> {
-    let link = fs::read_link(from).map_err(|source| io("reading", from, source))?;
-    std::os::unix::fs::symlink(link, to).map_err(|source| io("copying", from, source))
-}
-
-#[cfg(windows)]
-fn copy_link(from: &Path, to: &Path) -> Result<(), StorageError> {
-    let link = fs::read_link(from).map_err(|source| io("reading", from, source))?;
-    let created = if fs::metadata(from).is_ok_and(|metadata| metadata.is_dir()) {
-        std::os::windows::fs::symlink_dir(link, to)
-    } else {
-        std::os::windows::fs::symlink_file(link, to)
-    };
-    created.map_err(|source| io("copying", from, source))
 }
 
 fn io(action: &'static str, path: &Path, source: std::io::Error) -> StorageError {

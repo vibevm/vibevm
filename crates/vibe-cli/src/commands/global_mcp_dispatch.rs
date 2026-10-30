@@ -2,6 +2,9 @@
 //!
 //! A user-scoped MCP package keeps its own Vibe project under settings, while
 //! agent configuration remains a second, explicitly managed destination.
+//! Without `-g`, app dependencies of a project are materialised into its
+//! project home; `update` and `uninstall` outside a project act on the user
+//! home's applications (PROP-059 `#project-scope`).
 
 use std::path::PathBuf;
 
@@ -11,6 +14,8 @@ use crate::cli::{InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
 
 use super::app::global as application;
+use super::app::home as application_home;
+use super::app::project as application_project;
 use super::{install, mcp, uninstall, update};
 
 pub(crate) fn run_install(
@@ -20,7 +25,7 @@ pub(crate) fn run_install(
     offline: bool,
 ) -> Result<()> {
     if !args.global {
-        return install::run_direct(ctx, args, embedded_root, offline);
+        return application_project::install(ctx, args, embedded_root, offline);
     }
     if !args
         .packages
@@ -77,7 +82,13 @@ pub(crate) fn run_uninstall(
     offline: bool,
 ) -> Result<()> {
     if !args.global {
-        return uninstall::run(ctx, args);
+        if let Some(root) = application_home::project_at(&args.path)? {
+            return application_project::uninstall(ctx, args, offline, &root);
+        }
+        if args.package.starts_with("mcp:") {
+            return uninstall::run(ctx, args);
+        }
+        return application::uninstall(ctx, args, offline);
     }
     if !args.package.starts_with("mcp:") {
         if args.agent.is_some() {
@@ -134,7 +145,19 @@ pub(crate) fn run_update(
     offline: bool,
 ) -> Result<()> {
     if !args.global {
-        return update::run(ctx, args, embedded_root, offline);
+        if let Some(root) = application_home::project_at(&args.path)? {
+            return application_project::update(ctx, args, embedded_root, offline, &root);
+        }
+        if args.all
+            || args.packages.is_empty()
+            || args
+                .packages
+                .iter()
+                .any(|package| package.starts_with("mcp:"))
+        {
+            return update::run(ctx, args, embedded_root, offline);
+        }
+        return application::update(ctx, args, embedded_root, offline);
     }
     let Some(package) = args
         .packages

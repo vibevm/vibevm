@@ -94,20 +94,21 @@ pub struct InstallArgs {
     pub server: Option<String>,
 
     /// Select an application platform or distribution ID (for example `ubuntu`).
-    #[arg(long, requires = "global", value_name = "PLATFORM")]
+    #[arg(long, value_name = "PLATFORM")]
     pub platform: Option<String>,
 
     /// Select an application architecture ID within the selected platform.
-    #[arg(long, requires = "global", value_name = "ARCH")]
+    #[arg(long, value_name = "ARCH")]
     pub arch: Option<String>,
 
     /// Select one application installer option by its stable ID.
-    #[arg(long, requires = "global", value_name = "ID")]
+    #[arg(long, value_name = "ID")]
     pub installer: Option<String>,
 
     /// Place an owned (archive or source-built) application payload in this
-    /// storage library instead of the default `<settings>/opt`.
-    #[arg(long, requires = "global", value_name = "ID")]
+    /// storage library of the user home instead of the default
+    /// `<settings>/opt`; refused for a project home.
+    #[arg(long, value_name = "ID")]
     pub library: Option<String>,
 
     /// Directory of the project (defaults to current).
@@ -281,8 +282,8 @@ pub struct InstallArgs {
     pub git_token_env: Option<String>,
 
     /// Project install: ignore reusable lifecycle contribution fingerprints for
-    /// the post-durability callback. Global application install: ask the
-    /// selected installer to force its install operation.
+    /// the post-durability callback. Application install (global or into the
+    /// project home): ask the selected installer to force its install operation.
     #[arg(long)]
     pub force: bool,
 
@@ -401,20 +402,21 @@ pub struct UpdateArgs {
     pub global: bool,
 
     /// Select an application platform or distribution ID (for example `ubuntu`).
-    #[arg(long, requires = "global", value_name = "PLATFORM")]
+    #[arg(long, value_name = "PLATFORM")]
     pub platform: Option<String>,
 
     /// Select an application architecture ID within the selected platform.
-    #[arg(long, requires = "global", value_name = "ARCH")]
+    #[arg(long, value_name = "ARCH")]
     pub arch: Option<String>,
 
     /// Select one application installer option by its stable ID.
-    #[arg(long, requires = "global", value_name = "ID")]
+    #[arg(long, value_name = "ID")]
     pub installer: Option<String>,
 
     /// Place an owned (archive or source-built) application payload in this
-    /// storage library instead of the default `<settings>/opt`.
-    #[arg(long, requires = "global", value_name = "ID")]
+    /// storage library of the user home instead of the default
+    /// `<settings>/opt`; refused for a project home.
+    #[arg(long, value_name = "ID")]
     pub library: Option<String>,
 
     /// Explicit local source registry for a global application update.
@@ -434,8 +436,8 @@ pub struct UpdateArgs {
     #[arg(long, alias = "yes")]
     pub assume_yes: bool,
 
-    /// Ask the selected global application installer to force its update operation.
-    #[arg(long, requires = "global")]
+    /// Ask the selected application installer to force its update operation.
+    #[arg(long)]
     pub force: bool,
 
     /// Pin the resolved version exactly (`=x.y.z`) in
@@ -514,8 +516,8 @@ pub struct UninstallArgs {
     #[arg(long, requires = "global")]
     pub agent: Option<String>,
 
-    /// Ask the selected global application installer to force its uninstall operation.
-    #[arg(long, requires = "global")]
+    /// Ask the selected application installer to force its uninstall operation.
+    #[arg(long)]
     pub force: bool,
 
     /// Directory of the project (defaults to current).

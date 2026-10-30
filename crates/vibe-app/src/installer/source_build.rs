@@ -285,43 +285,8 @@ fn move_payload(out: &Path, payload: &Path) -> Result<(), InstallerError> {
     if fs::rename(out, payload).is_ok() {
         return Ok(());
     }
-    copy_tree(out, payload)
-}
-
-fn copy_tree(from: &Path, to: &Path) -> Result<(), InstallerError> {
-    fs::create_dir(to).map_err(|source| super::io("creating", to, source))?;
-    let entries = fs::read_dir(from).map_err(|source| super::io("reading", from, source))?;
-    for entry in entries {
-        let entry = entry.map_err(|source| super::io("reading", from, source))?;
-        let source_path = entry.path();
-        let target = to.join(entry.file_name());
-        let kind = entry
-            .file_type()
-            .map_err(|source| super::io("reading", &source_path, source))?;
-        if kind.is_dir() {
-            copy_tree(&source_path, &target)?;
-        } else if kind.is_symlink() {
-            copy_link(&source_path, &target)?;
-        } else {
-            fs::copy(&source_path, &target)
-                .map_err(|source| super::io("copying", &target, source))?;
-        }
-    }
-    Ok(())
-}
-
-#[cfg(unix)]
-fn copy_link(link: &Path, target: &Path) -> Result<(), InstallerError> {
-    let pointee = fs::read_link(link).map_err(|source| super::io("reading", link, source))?;
-    std::os::unix::fs::symlink(pointee, target)
-        .map_err(|source| super::io("copying", target, source))
-}
-
-#[cfg(not(unix))]
-fn copy_link(link: &Path, target: &Path) -> Result<(), InstallerError> {
-    fs::copy(link, target)
-        .map(|_| ())
-        .map_err(|source| super::io("copying", target, source))
+    crate::fs_util::copy_tree(out, payload)
+        .map_err(|failure| super::io(failure.action, &failure.path, failure.source))
 }
 
 fn digest_of(path: &Path) -> io::Result<String> {
@@ -529,7 +494,7 @@ mod tests {
         );
 
         let copied = tree.package.join("copied");
-        copy_tree(&payload, &copied).unwrap();
+        crate::fs_util::copy_tree(&payload, &copied).unwrap();
         assert_eq!(fs::read(copied.join("bin/hello")).unwrap(), b"hello");
     }
 }
