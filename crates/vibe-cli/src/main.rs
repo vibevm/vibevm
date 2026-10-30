@@ -204,9 +204,8 @@ fn main() -> ExitCode {
         ),
         Command::Outdated(args) => commands::outdated::run(&ctx, args),
         Command::Search(args) => {
-            // The composition root reads the search command's
-            // environment overrides; the domain never touches the
-            // ambient env itself (CONVERT-PLAN v0.1 §1 item 0.4).
+            // The composition root reads the search command's environment overrides; the
+            // domain never touches the ambient env itself (CONVERT-PLAN v0.1 §1 item 0.4).
             let search_env = commands::search::SearchEnv {
                 github_api_base: read_env_opt(commands::search::GITHUB_API_BASE_ENV),
                 cache_dir: read_env_opt(vibe_registry::search::cache::CACHE_ROOT_ENV),
@@ -224,6 +223,7 @@ fn main() -> ExitCode {
         ),
         Command::Aiui(args) => commands::aiui::run(&ctx, args),
         Command::Shell(args) => commands::shell::run(&ctx, args),
+        Command::Storage(args) => commands::storage::run(&ctx, args),
         Command::Term(args) => commands::term::run(&ctx, args),
         Command::Frame(args) => commands::term::run_frame(&ctx, args),
         Command::Skill(args) => commands::skill::run(&ctx, args, cli.offline),

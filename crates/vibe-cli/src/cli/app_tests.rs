@@ -186,3 +186,41 @@ fn app_list_use_alternatives_and_shell_parse() {
     assert!(shell.global);
     assert_eq!(shell.uses, ["a=x", "b=y"]);
 }
+
+#[test]
+fn storage_subcommands_parse() {
+    use super::StorageCommand;
+
+    let storage = |args: &[&str]| {
+        let cli = Cli::try_parse_from(args).unwrap();
+        let Command::Storage(storage) = cli.command else {
+            panic!("expected storage command");
+        };
+        storage.command
+    };
+    assert!(matches!(
+        storage(&["vibe", "storage", "list"]),
+        StorageCommand::List
+    ));
+    assert!(matches!(
+        storage(&["vibe", "storage", "add", "/media/usb", "--id", "usb"]),
+        StorageCommand::Add { path, id } if path.to_str() == Some("/media/usb") && id.as_deref() == Some("usb")
+    ));
+    assert!(matches!(
+        storage(&["vibe", "storage", "attach", "/media/usb"]),
+        StorageCommand::Attach { .. }
+    ));
+    assert!(matches!(
+        storage(&["vibe", "storage", "detach", "usb"]),
+        StorageCommand::Detach { id } if id == "usb"
+    ));
+    assert!(matches!(
+        storage(&["vibe", "storage", "move", "org.example/tool@1.0.0", "--to", "default"]),
+        StorageCommand::Move { key, to } if key == "org.example/tool@1.0.0" && to == "default"
+    ));
+    assert!(matches!(
+        storage(&["vibe", "storage", "gc", "--delete"]),
+        StorageCommand::Gc { delete: true }
+    ));
+    assert!(Cli::try_parse_from(["vibe", "storage", "move", "org.example/tool"]).is_err());
+}

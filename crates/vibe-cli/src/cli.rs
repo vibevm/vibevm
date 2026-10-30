@@ -33,6 +33,7 @@ mod select;
 mod shell;
 mod skill;
 mod specmap;
+mod storage;
 mod term;
 mod vars;
 mod vvm;
@@ -60,6 +61,7 @@ pub use select::*;
 pub use shell::*;
 pub use skill::*;
 pub use specmap::*;
+pub use storage::*;
 pub use term::*;
 pub use vars::*;
 pub use vvm::*;
@@ -191,6 +193,10 @@ pub enum Command {
     /// given per-shell provider choices (`--use SLOT=KEY`).
     #[command(long_about = shell::LONG_ABOUT)]
     Shell(ShellArgs),
+
+    /// Manage the storage libraries that hold installed applications: list,
+    /// add, attach, detach, move an installation between them, and gc.
+    Storage(StorageArgs),
 
     /// Run the default lifecycle through agentic creation.
     Create(LifecycleArgs),

@@ -5,6 +5,12 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#availability");
 
+mod edit;
+mod relocate;
+
+pub use edit::{add, attach, detach, listing};
+pub use relocate::{Moved, gc, relocate};
+
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -180,6 +186,16 @@ pub fn create_library(path: &Path, id: &str) -> Result<(), StateError> {
         reason: error.to_string(),
     })?;
     write_atomic(&path.join(LIBRARY_MARKER), text.as_bytes())
+}
+
+/// Replace `storage.toml` atomically with `config`.
+fn save(settings: &SettingsRoot, config: &StorageConfig) -> Result<(), StateError> {
+    let path = settings.storage_path();
+    let text = toml::to_string(config).map_err(|error| StateError::Storage {
+        path: path.display().to_string(),
+        reason: error.to_string(),
+    })?;
+    write_atomic(&path, text.as_bytes())
 }
 
 fn read_marker(path: &Path) -> Result<LibraryMarker, String> {

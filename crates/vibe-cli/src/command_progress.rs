@@ -6,7 +6,7 @@ use crate::cli::{
     AgenticSubcommand, AiuiSubcommand, BinCmd, CacheSubcommand, Command, DocCommand,
     DocShellCommand, ExtensionsCommand, McpSubcommand, PrefsSubcommand, ProgressSubcommand,
     RegistryRemoveTarget, RegistrySubcommand, ScrapeCommand, ScrapeContractCommand, ShowSubcommand,
-    SkillSubcommand, VvmSubcommand, WorkspaceSubcommand,
+    SkillSubcommand, StorageCommand, VvmSubcommand, WorkspaceSubcommand,
 };
 use crate::commands::facts::FactsSubcommand;
 use crate::commands::refactor::RefactorCommand;
@@ -57,6 +57,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "show",
     "skill",
     "specmap",
+    "storage",
     "term",
     "test",
     "tools",
@@ -197,6 +198,14 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             AiuiSubcommand::Scrollbar(_) => FiniteFallback("Command aiui scrollbar"),
         },
         Command::Term(_) | Command::Frame(_) | Command::Shell(_) => TerminalPassthrough,
+        Command::Storage(args) => match &args.command {
+            StorageCommand::List => FastMetadata,
+            StorageCommand::Add { .. } => FiniteFallback("Command storage add"),
+            StorageCommand::Attach { .. } => FiniteFallback("Command storage attach"),
+            StorageCommand::Detach { .. } => FiniteFallback("Command storage detach"),
+            StorageCommand::Move { .. } => FiniteFallback("Command storage move"),
+            StorageCommand::Gc { .. } => FiniteFallback("Command storage gc"),
+        },
         Command::Skill(args) => match &args.command {
             SkillSubcommand::List(_) => FastMetadata,
             SkillSubcommand::Install(_) => FiniteFallback("Command skill install"),
