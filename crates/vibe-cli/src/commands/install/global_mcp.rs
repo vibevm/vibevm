@@ -93,9 +93,6 @@ pub(crate) fn update(
     if args.packages.len() != 1 || args.all {
         bail!("global MCP update requires exactly one `mcp:<group>/<name>` package");
     }
-    if args.from_source || args.local_source || args.binary {
-        bail!("--from-source, --local-source and --binary apply only to global applications");
-    }
     if args.path != Path::new(".") {
         bail!("global MCP update uses a dedicated user project; omit --path");
     }
@@ -107,11 +104,10 @@ pub(crate) fn update(
         global: false,
         agent: None,
         server: None,
-        from_source: false,
-        local_source: false,
         platform: None,
         arch: None,
         installer: None,
+        library: None,
         path: project_root.clone(),
         registry: args.registry,
         assume_yes: args.assume_yes,
@@ -219,9 +215,6 @@ fn ensure_locked(root: &Path, spelling: &str) -> Result<()> {
 fn validate_package(args: &InstallArgs) -> Result<&str> {
     if args.packages.len() != 1 {
         bail!("global MCP install requires exactly one `mcp:<group>/<name>` package");
-    }
-    if args.from_source || args.local_source {
-        bail!("--from-source and --local-source apply only to global applications");
     }
     if args.path != Path::new(".") {
         bail!("global MCP install uses a dedicated user project; omit --path");

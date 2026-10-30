@@ -59,9 +59,6 @@ impl Manifest {
             if !self.installer_options.is_empty() {
                 offenders.push("[[installer_options]]");
             }
-            if self.application_source.is_some() {
-                offenders.push("[application_source]");
-            }
             if self.boot_snippet.is_some() {
                 offenders.push("[boot_snippet]");
             }
@@ -121,11 +118,6 @@ impl Manifest {
             application
                 .validate()
                 .map_err(|reason| Error::InvalidManifest { reason })?;
-            if application.installer_package.is_some() && application.commands.is_empty() {
-                return Err(Error::InvalidManifest {
-                    reason: "[application].commands must be nonempty for a legacy installer".into(),
-                });
-            }
         }
         if !self.installer_options.is_empty() && self.application.is_none() {
             return Err(Error::InvalidManifest {
@@ -140,27 +132,6 @@ impl Manifest {
         {
             return Err(Error::InvalidManifest {
                 reason: "[[installer_options]] requires [package] kind = app".into(),
-            });
-        }
-        if self
-            .application
-            .as_ref()
-            .is_some_and(|application| application.installer_package.is_some())
-            && !self.installer_options.is_empty()
-        {
-            return Err(Error::InvalidManifest {
-                reason: "legacy [application] installer fields cannot coexist with [[installer_options]]".into(),
-            });
-        }
-        if self
-            .application
-            .as_ref()
-            .is_some_and(|application| application.installer_package.is_none())
-            && self.installer_options.is_empty()
-            && self.application_source.is_none()
-        {
-            return Err(Error::InvalidManifest {
-                reason: "[application] requires nonempty [[installer_options]]".into(),
             });
         }
         let mut option_ids = std::collections::BTreeSet::new();
@@ -227,22 +198,6 @@ impl Manifest {
                 }
             }
         }
-        if let Some(source) = &self.application_source {
-            source
-                .validate()
-                .map_err(|reason| Error::InvalidManifest { reason })?;
-        }
-        if self.application.is_some()
-            && self.application_source.is_some()
-            && !self.package.as_ref().is_some_and(|package| package.bridge)
-        {
-            return Err(Error::InvalidManifest {
-                reason:
-                    "[application] and [application_source] may coexist only on a bridge package"
-                        .into(),
-            });
-        }
-
         if has_package && !self.run_commands.is_empty() {
             return Err(Error::InvalidManifest {
                 reason: "[[command]] is host-owned and cannot be declared by a publishable package"

@@ -1,0 +1,33 @@
+[package]
+name = "vibe-app"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "User applications (PROP-059): package resolution, installer options, storage libraries, the index, installation and launch; the CLI and the PATH proxy are thin callers"
+
+[dependencies]
+chrono.workspace = true
+flate2.workspace = true
+reqwest.workspace = true
+semver.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+specmark.workspace = true
+tar.workspace = true
+thiserror.workspace = true
+toml.workspace = true
+vibe-core.workspace = true
+vibe-install.workspace = true
+vibe-package-source.workspace = true
+vibe-registry.workspace = true
+vibe-wire.workspace = true
+zip.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

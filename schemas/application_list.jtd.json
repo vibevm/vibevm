@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "description": "Version 1 machine list from vibe app list --json.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_list"
+    },
+    "x-wire-order": ["protocol", "installations"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "installations": {
+      "elements": { "ref": "installation" },
+      "metadata": { "x-empty": "emit" }
+    }
+  },
+  "definitions": {
+    "package": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "status": {
+      "enum": ["ready", "unavailable"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "installation": {
+      "metadata": { "x-wire-order": ["key", "slot", "package", "method", "status", "reason", "library", "app_root", "portable", "default"] },
+      "properties": {
+        "key": { "type": "string" },
+        "slot": { "type": "string" },
+        "package": { "ref": "package" },
+        "method": { "type": "string" },
+        "status": { "ref": "status" },
+        "reason": { "type": "string", "nullable": true },
+        "library": { "type": "string", "nullable": true },
+        "app_root": { "type": "string", "nullable": true },
+        "portable": { "type": "boolean" },
+        "default": { "type": "boolean" }
+      }
+    }
+  }
+}

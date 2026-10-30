@@ -307,8 +307,6 @@ pub(crate) struct ManifestWire {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     installer_options: Vec<crate::manifest::InstallerOptionDecl>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    application_source: Option<crate::manifest::ApplicationSourceDecl>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
     workspace: Option<WorkspaceSection>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     origin: Option<OriginSection>,
@@ -454,7 +452,6 @@ impl TryFrom<ManifestWire> for Manifest {
             package: wire.package,
             application: wire.application,
             installer_options: wire.installer_options,
-            application_source: wire.application_source,
             workspace: wire.workspace,
             origin: wire.origin,
             requires: wire.requires,
@@ -538,7 +535,6 @@ impl TryFrom<Manifest> for ManifestWire {
             package: manifest.package,
             application: manifest.application,
             installer_options: manifest.installer_options,
-            application_source: manifest.application_source,
             workspace: manifest.workspace,
             origin: manifest.origin,
             requires: manifest.requires,

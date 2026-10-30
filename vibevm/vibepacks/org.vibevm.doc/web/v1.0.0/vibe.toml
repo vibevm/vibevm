@@ -29,10 +29,6 @@ requires_kinds = []
 
 [application]
 id = "vibevm-doc"
-installer_package = "org.vibevm.doc/web@=1.0.0"
-runtime = "node"
-entry = "tooling/local-site/application.mjs"
-commands = ["vibevm-doc"]
 
 # The TypeScript discipline the package is authored under: the seven-step
 # floor, the structural gate and the traceability map all come from this

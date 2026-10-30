@@ -5,7 +5,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use std::collections::BTreeMap;
-use std::path::PathBuf;
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -16,62 +15,12 @@ use crate::manifest::project::AuthKind;
 use crate::manifest::purl::Purl;
 use crate::package_ref::{Group, PackageKind, PackageRef, VersionSpec};
 
-use super::application::{
-    ApplicationDecl, ApplicationDistributionDecl, ApplicationRuntime, ApplicationSourceDecl,
-    ApplicationSourceKind,
-};
 use super::capabilities::{AccessLevel, Requires, link_key};
 use super::deps::{inline_to_git_dep, inline_to_path_dep, inline_to_var_dep};
 use super::{
     Authorship, GitPackageDep, GitRefKind, LinkType, Materialization, PackageFormat, PackageMeta,
     PathPackageDep, PublishPosture, VarRegistryDep, is_false,
 };
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-enum ApplicationRuntimeWire {
-    Node,
-    Native,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-enum ApplicationSourceKindWire {
-    Git,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ApplicationDistributionDeclWire {
-    repository: String,
-    release_tag: String,
-    index_asset: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ApplicationSourceDeclWire {
-    kind: ApplicationSourceKindWire,
-    url: String,
-    tracked_ref: String,
-    registry_path: PathBuf,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ApplicationDeclWire {
-    id: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    installer_package: Option<PackageRef>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    runtime: Option<ApplicationRuntimeWire>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    entry: Option<PathBuf>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    commands: Vec<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    distribution: Option<ApplicationDistributionDeclWire>,
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -116,60 +65,6 @@ struct PackageMetaWire {
     format: PackageFormat,
 }
 
-impl Serialize for ApplicationDecl {
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        ApplicationDeclWire::from(self.clone()).serialize(serializer)
-    }
-}
-
-impl<'de> Deserialize<'de> for ApplicationDecl {
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        Ok(ApplicationDeclWire::deserialize(deserializer)?.into())
-    }
-}
-
-impl Serialize for ApplicationDistributionDecl {
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        ApplicationDistributionDeclWire::from(self.clone()).serialize(serializer)
-    }
-}
-
-impl<'de> Deserialize<'de> for ApplicationDistributionDecl {
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        Ok(ApplicationDistributionDeclWire::deserialize(deserializer)?.into())
-    }
-}
-
-impl Serialize for ApplicationSourceDecl {
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        ApplicationSourceDeclWire::from(self.clone()).serialize(serializer)
-    }
-}
-
-impl<'de> Deserialize<'de> for ApplicationSourceDecl {
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        Ok(ApplicationSourceDeclWire::deserialize(deserializer)?.into())
-    }
-}
-
 impl Serialize for PackageMeta {
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -185,84 +80,6 @@ impl<'de> Deserialize<'de> for PackageMeta {
         D: Deserializer<'de>,
     {
         Ok(PackageMetaWire::deserialize(deserializer)?.into())
-    }
-}
-
-impl From<ApplicationDecl> for ApplicationDeclWire {
-    fn from(value: ApplicationDecl) -> Self {
-        Self {
-            id: value.id,
-            installer_package: value.installer_package,
-            runtime: value.runtime.map(|runtime| match runtime {
-                ApplicationRuntime::Node => ApplicationRuntimeWire::Node,
-                ApplicationRuntime::Native => ApplicationRuntimeWire::Native,
-            }),
-            entry: value.entry,
-            commands: value.commands,
-            distribution: value.distribution.map(Into::into),
-        }
-    }
-}
-
-impl From<ApplicationDeclWire> for ApplicationDecl {
-    fn from(value: ApplicationDeclWire) -> Self {
-        Self {
-            id: value.id,
-            installer_package: value.installer_package,
-            runtime: value.runtime.map(|runtime| match runtime {
-                ApplicationRuntimeWire::Node => ApplicationRuntime::Node,
-                ApplicationRuntimeWire::Native => ApplicationRuntime::Native,
-            }),
-            entry: value.entry,
-            commands: value.commands,
-            distribution: value.distribution.map(Into::into),
-        }
-    }
-}
-
-impl From<ApplicationDistributionDecl> for ApplicationDistributionDeclWire {
-    fn from(value: ApplicationDistributionDecl) -> Self {
-        Self {
-            repository: value.repository,
-            release_tag: value.release_tag,
-            index_asset: value.index_asset,
-        }
-    }
-}
-
-impl From<ApplicationDistributionDeclWire> for ApplicationDistributionDecl {
-    fn from(value: ApplicationDistributionDeclWire) -> Self {
-        Self {
-            repository: value.repository,
-            release_tag: value.release_tag,
-            index_asset: value.index_asset,
-        }
-    }
-}
-
-impl From<ApplicationSourceDecl> for ApplicationSourceDeclWire {
-    fn from(value: ApplicationSourceDecl) -> Self {
-        Self {
-            kind: match value.kind {
-                ApplicationSourceKind::Git => ApplicationSourceKindWire::Git,
-            },
-            url: value.url,
-            tracked_ref: value.tracked_ref,
-            registry_path: value.registry_path,
-        }
-    }
-}
-
-impl From<ApplicationSourceDeclWire> for ApplicationSourceDecl {
-    fn from(value: ApplicationSourceDeclWire) -> Self {
-        Self {
-            kind: match value.kind {
-                ApplicationSourceKindWire::Git => ApplicationSourceKind::Git,
-            },
-            url: value.url,
-            tracked_ref: value.tracked_ref,
-            registry_path: value.registry_path,
-        }
     }
 }
 

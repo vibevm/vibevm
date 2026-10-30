@@ -19,16 +19,12 @@
 /// two stay in lockstep in both directions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FormatId {
-    ApplicationBundleManifest,
-    ApplicationContext,
-    ApplicationDistributionIndex,
     ApplicationIndex,
-    ApplicationManagement,
-    ApplicationReply,
     ArtifactRecord,
     BootArtifactTransaction,
     CliApplicationInstallerOptions,
     CliApplicationLaunchers,
+    CliApplicationList,
     CliApplicationReport,
     CliExtensionsReport,
     CliInitReport,

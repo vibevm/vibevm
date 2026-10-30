@@ -1,105 +1,56 @@
-//! User-application manifest grammar.
+//! User-application manifest grammar (`PROP-059#declaration`).
 
 use super::Manifest;
+use crate::manifest::{InstallerMethod, ShellInterpreter};
 
 const PACKAGE: &str = r#"
 [package]
-name = "zap"
-group = "org.vibevm.zap"
-kind = "flow"
+name = "demo"
+group = "org.vibevm"
+kind = "app"
 version = "1.1.0"
 
 [application]
-id = "zap"
-installer_package = "org.vibevm.zap/lens@=0.1.0"
-runtime = "node"
-entry = "tooling/source-install/application.mjs"
-commands = ["zap-quicklens", "zap-server"]
-
-[application.distribution]
-repository = "vibevm/zap"
-release_tag = "v1.0.0"
-index_asset = "DISTRIBUTIONS.json"
+id = "demo"
+portable = false
 "#;
 
 #[test]
 fn strict_application_declaration_round_trips() {
-    let manifest = Manifest::parse_str(PACKAGE).expect("valid application package");
-    let application = manifest.application.as_ref().expect("application");
-    assert_eq!(application.id, "zap");
+    let manifest = Manifest::parse_str(PACKAGE).unwrap();
+    let application = manifest.application.as_ref().unwrap();
+    assert_eq!(application.id, "demo");
+    assert!(!application.portable);
+    assert!(manifest.installer_options.is_empty());
     assert_eq!(
-        application.installer_package.as_ref().unwrap().to_string(),
-        "org.vibevm.zap/lens@=0.1.0"
+        Manifest::parse_str(&toml::to_string(&manifest).unwrap()).unwrap(),
+        manifest
     );
-    assert_eq!(
-        application.entry.as_ref().unwrap().to_string_lossy(),
-        "tooling/source-install/application.mjs"
-    );
-    assert_eq!(application.commands, ["zap-quicklens", "zap-server"]);
-    assert_eq!(
-        application.distribution.as_ref().unwrap().repository,
-        "vibevm/zap"
-    );
-    let rendered = toml::to_string(&manifest).expect("render");
-    Manifest::parse_str(&rendered).expect("round trip");
+    let default = Manifest::parse_str(&PACKAGE.replace("portable = false\n", "")).unwrap();
+    assert!(default.application.unwrap().portable);
 }
 
 #[test]
-fn application_source_proxy_is_strict_and_bridge_may_carry_binary_metadata() {
-    let proxy = r#"
-[package]
-name = "zap"
-group = "org.vibevm.zap"
-kind = "flow"
-version = "1.0.0"
-bridge = true
-
-[application_source]
-kind = "git"
-url = "https://github.com/vibevm/zap.git"
-tracked_ref = "refs/heads/1.0.0"
-registry_path = "vibevm/vibepacks"
-"#;
-    let manifest = Manifest::parse_str(proxy).expect("valid application proxy");
-    let source = manifest.application_source.as_ref().unwrap();
-    assert_eq!(source.tracked_ref, "refs/heads/1.0.0");
-    Manifest::parse_str(&toml::to_string(&manifest).unwrap()).expect("round trip");
-
-    for (from, to, expected) in [
-        (
-            "https://github.com/vibevm/zap.git",
-            "https://token@github.com/vibevm/zap.git",
-            "credential-free",
-        ),
-        ("refs/heads/1.0.0", "main", "refs/heads"),
-        ("vibevm/vibepacks", "../outside", "portable"),
+fn retired_application_fields_are_not_parsed() {
+    for retired in [
+        "installer_package = \"org.vibevm/demo@=1.0.0\"\n",
+        "runtime = \"node\"\n",
+        "entry = \"tooling/application.mjs\"\n",
+        "commands = [\"demo\"]\n",
     ] {
-        let error = Manifest::parse_str(&proxy.replacen(from, to, 1))
-            .unwrap_err()
-            .to_string();
-        assert!(error.contains(expected), "{error}");
+        let text = format!("{PACKAGE}{retired}");
+        assert!(Manifest::parse_str(&text).is_err(), "{text}");
     }
-    let both = format!(
-        "{proxy}\n[application]{}",
-        PACKAGE.split_once("[application]").unwrap().1
+    let bridge = format!(
+        "{PACKAGE}[application_source]\nkind = \"git\"\nurl = \"https://example.com/demo.git\"\ntracked_ref = \"refs/heads/main\"\nregistry_path = \"vibevm/vibepacks\"\n"
     );
-    let combined = Manifest::parse_str(&both).expect("bridge carries binary and source routes");
-    assert!(combined.application.is_some());
-    assert!(combined.application_source.is_some());
-
-    let non_bridge = both.replace("bridge = true\n", "");
-    assert!(
-        Manifest::parse_str(&non_bridge)
-            .unwrap_err()
-            .to_string()
-            .contains("only on a bridge package")
-    );
+    assert!(Manifest::parse_str(&bridge).is_err());
 }
 
 #[test]
 fn application_is_package_only_and_strict() {
     let project = PACKAGE.replacen(
-        "[package]\nname = \"zap\"\ngroup = \"org.vibevm.zap\"\nkind = \"flow\"\nversion = \"1.1.0\"",
+        "[package]\nname = \"demo\"\ngroup = \"org.vibevm\"\nkind = \"app\"\nversion = \"1.1.0\"",
         "[project]\nname = \"demo\"\nversion = \"1.0.0\"",
         1,
     );
@@ -109,32 +60,13 @@ fn application_is_package_only_and_strict() {
             .to_string()
             .contains("package-role")
     );
-    for (from, to, expected) in [
-        (
-            "org.vibevm.zap/lens@=0.1.0",
-            "org.vibevm.zap/lens",
-            "exactly pinned",
-        ),
-        (
-            "tooling/source-install/application.mjs",
-            "../application.mjs",
-            "provider-relative",
-        ),
-        (
-            "commands = [\"zap-quicklens\", \"zap-server\"]",
-            "commands = [\"zap-server\", \"zap-server\"]",
-            "duplicate",
-        ),
-    ] {
-        let invalid = PACKAGE.replacen(from, to, 1);
-        assert!(
-            Manifest::parse_str(&invalid)
-                .unwrap_err()
-                .to_string()
-                .contains(expected),
-            "{invalid}"
-        );
-    }
+    let invalid = PACKAGE.replacen("id = \"demo\"", "id = \"Bad Id\"", 1);
+    assert!(
+        Manifest::parse_str(&invalid)
+            .unwrap_err()
+            .to_string()
+            .contains("portable lowercase token")
+    );
 }
 
 #[test]
@@ -165,6 +97,7 @@ force_install = "apt-get --reinstall install demo"
 update = "apt-get upgrade demo"
 uninstall = "apt-get remove demo"
 force_uninstall = "apt-get purge demo"
+interpreter = "posix_sh"
 [[installer_options.launchers]]
 id = "main"
 name = "Demo"
@@ -182,14 +115,12 @@ platform = "ubuntu"
 platform_name = "Ubuntu"
 arch = "x86_64"
 arch_name = "64-bit x86"
+portable = false
 [installer_options.installation]
 type = "zip"
 source = "releases/demo.zip"
 sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 payload_root = "demo"
-[[installer_options.installation.runners]]
-path = "bin/demo"
-name = "demo"
 [[installer_options.launchers]]
 id = "main"
 name = "Demo archive"
@@ -208,12 +139,17 @@ executable = "bin/demo"
     );
     assert!(matches!(
         manifest.installer_options[0].installation,
-        super::super::InstallerMethod::Shell { .. }
+        InstallerMethod::Shell {
+            interpreter: Some(ShellInterpreter::PosixSh),
+            ..
+        }
     ));
     assert!(matches!(
         manifest.installer_options[1].installation,
-        super::super::InstallerMethod::Zip { .. }
+        InstallerMethod::Zip { .. }
     ));
+    assert_eq!(manifest.installer_options[1].portable, Some(false));
+    assert_eq!(manifest.installer_options[0].portable, None);
     assert_eq!(manifest.installer_options[0].launchers[0].name, "Demo");
     assert_eq!(
         manifest.installer_options[0].public_commands[0].name,
@@ -285,18 +221,6 @@ launcher = "main"
             "{invalid}"
         );
     }
-
-    let archive = base.replacen(
-        "type = \"shell\"\napp_root = \"/opt/demo\"\ninstall = \"echo install\"\nforce_install = \"echo force install\"\nuninstall = \"echo uninstall\"\nforce_uninstall = \"echo force uninstall\"",
-        "type = \"zip\"\nsource = \"demo.zip\"\nsha256 = \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n[[installer_options.installation.runners]]\npath = \"bin/demo\"\nname = \"demo\"",
-        1,
-    );
-    assert!(
-        Manifest::parse_str(&archive)
-            .unwrap_err()
-            .to_string()
-            .contains("conflicts with an archive runner")
-    );
 }
 
 #[test]
@@ -352,8 +276,20 @@ type = "{kind}"
     }
     for (text, expected) in [
         (
-            prefix.to_string(),
-            "requires nonempty [[installer_options]]",
+            option(
+                "zip",
+                "source = \"demo.zip\"\nsha256 = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n[[installer_options.installation.runners]]\npath = \"bin/demo\"\nname = \"demo\"",
+                "linux",
+            ),
+            "runners",
+        ),
+        (
+            option(
+                "shell",
+                "app_root = \"/opt/demo\"\ninstall = \"i\"\nforce_install = \"f\"\nuninstall = \"u\"\nforce_uninstall = \"fu\"\ninterpreter = \"fish\"",
+                "linux",
+            ),
+            "fish",
         ),
         (
             option(
@@ -547,5 +483,103 @@ force_uninstall = "echo force uninstall"
             .unwrap_err()
             .to_string()
             .contains("inconsistent arch_name")
+    );
+}
+
+#[test]
+fn application_without_installer_options_is_a_valid_product() {
+    let manifest = Manifest::parse_str(PACKAGE).unwrap();
+    assert!(manifest.installer_options.is_empty());
+}
+
+#[test]
+fn source_build_model_is_validated() {
+    let digest = "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc";
+    let base = format!(
+        r#"{PACKAGE}
+[[installer_options]]
+id = "build"
+name = "Build from source"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+[installer_options.installation]
+type = "source_build"
+[[installer_options.installation.sources]]
+name = "upstream"
+url = "http://127.0.0.1:8080/upstream.tar.gz"
+sha256 = "{digest}"
+[[installer_options.installation.sources]]
+name = "patches"
+path = "patches/fix.patch"
+sha256 = "{digest}"
+extract = false
+[installer_options.installation.recipe]
+interpreter = "posix_sh"
+script = "recipes/build.sh"
+"#
+    );
+    let manifest = Manifest::parse_str(&base).unwrap();
+    let InstallerMethod::SourceBuild { sources, recipe } =
+        &manifest.installer_options[0].installation
+    else {
+        panic!("source_build expected");
+    };
+    assert_eq!(sources.len(), 2);
+    assert_eq!(sources[1].extract, Some(false));
+    assert_eq!(recipe.interpreter, Some(ShellInterpreter::PosixSh));
+    assert!(manifest.installer_options[0].installation.is_owned());
+    assert_eq!(
+        Manifest::parse_str(&toml::to_string(&manifest).unwrap()).unwrap(),
+        manifest
+    );
+    for (from, to, expected) in [
+        ("name = \"patches\"", "name = \"upstream\"", "duplicated"),
+        (
+            "name = \"patches\"",
+            "name = \"a/b\"",
+            "portable directory name",
+        ),
+        (
+            "path = \"patches/fix.patch\"",
+            "path = \"patches/fix.patch\"\nurl = \"https://example.com/x\"",
+            "exactly one of url or path",
+        ),
+        (
+            "path = \"patches/fix.patch\"",
+            "path = \"../fix.patch\"",
+            "package-relative",
+        ),
+        (
+            "url = \"http://127.0.0.1:8080/upstream.tar.gz\"",
+            "url = \"ftp://example.com/x\"",
+            "HTTP(S)",
+        ),
+        (
+            "script = \"recipes/build.sh\"",
+            "script = \"/abs/build.sh\"",
+            "recipe.script",
+        ),
+    ] {
+        let invalid = base.replacen(from, to, 1);
+        assert!(
+            Manifest::parse_str(&invalid)
+                .unwrap_err()
+                .to_string()
+                .contains(expected),
+            "{invalid}"
+        );
+    }
+    let empty = base
+        .split("[[installer_options.installation.sources]]")
+        .next()
+        .unwrap()
+        .to_string()
+        + "sources = []\n[installer_options.installation.recipe]\nscript = \"build.sh\"\n";
+    assert!(
+        Manifest::parse_str(&empty)
+            .unwrap_err()
+            .to_string()
+            .contains("at least one")
     );
 }

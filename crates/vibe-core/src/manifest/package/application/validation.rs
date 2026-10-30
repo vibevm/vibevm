@@ -3,7 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 
 use std::collections::BTreeSet;
-use std::path::Path;
+use std::path::{Component, Path};
 
 use crate::manifest::{declarant_path, is_portable_token};
 
@@ -82,16 +82,6 @@ impl InstallerOptionDecl {
                     command.name, self.id
                 ));
             }
-            if matches!(
-                &self.installation,
-                InstallerMethod::Zip { runners, .. } | InstallerMethod::TarGz { runners, .. }
-                    if runners.iter().any(|runner| runner.name == command.name)
-            ) {
-                return Err(format!(
-                    "[[installer_options.public_commands]].name `{}` conflicts with an archive runner in installer option `{}`",
-                    command.name, self.id
-                ));
-            }
             if !self
                 .launchers
                 .iter()
@@ -123,32 +113,6 @@ impl ApplicationDecl {
         if !is_portable_token(&self.id) {
             return Err("[application].id must be a portable lowercase token".into());
         }
-        match (&self.installer_package, self.runtime, &self.entry) {
-            (None, None, None) => {}
-            (Some(package), Some(_), Some(entry)) => {
-                validate_external(package, entry, "[application]")?;
-            }
-            _ => return Err(
-                "[application] legacy installer_package/runtime/entry must be declared together"
-                    .into(),
-            ),
-        }
-        let mut seen = BTreeSet::new();
-        for command in &self.commands {
-            if !is_portable_token(command) {
-                return Err(format!(
-                    "[application].commands value `{command}` is not a portable lowercase token"
-                ));
-            }
-            if !seen.insert(command) {
-                return Err(format!(
-                    "[application].commands contains duplicate `{command}`"
-                ));
-            }
-        }
-        if let Some(distribution) = &self.distribution {
-            distribution.validate()?;
-        }
         Ok(())
     }
 }
@@ -164,6 +128,7 @@ impl InstallerMethod {
                 update,
                 uninstall,
                 force_uninstall,
+                interpreter: _,
             } => {
                 validate_command_root(app_root, table)?;
                 validate_shell_command(install, table, "install")?;
@@ -178,13 +143,11 @@ impl InstallerMethod {
                 source,
                 sha256,
                 payload_root,
-                runners,
             }
             | Self::TarGz {
                 source,
                 sha256,
                 payload_root,
-                runners,
             } => {
                 validate_source(source, table)?;
                 validate_sha256(sha256, table)?;
@@ -192,25 +155,8 @@ impl InstallerMethod {
                     declarant_path(root)
                         .map_err(|fault| format!("{table}.payload_root: {}", fault.reason()))?;
                 }
-                let mut names = BTreeSet::new();
-                let mut paths = BTreeSet::new();
-                for runner in runners {
-                    declarant_path(&runner.path)
-                        .map_err(|fault| format!("{table}.runners.path: {}", fault.reason()))?;
-                    if !is_portable_token(&runner.name) || !names.insert(runner.name.as_str()) {
-                        return Err(format!(
-                            "{table}.runners.name `{}` must be a unique portable token",
-                            runner.name
-                        ));
-                    }
-                    if !paths.insert(&runner.path) {
-                        return Err(format!(
-                            "{table}.runners.path `{}` is duplicated",
-                            runner.path.display()
-                        ));
-                    }
-                }
             }
+            Self::SourceBuild { sources, recipe } => validate_source_build(sources, recipe)?,
             Self::Exe {
                 source,
                 sha256,
@@ -323,21 +269,6 @@ fn validate_command_root(value: &str, table: &str) -> Result<(), String> {
     Ok(())
 }
 
-fn validate_external(package: &PackageRef, entry: &Path, table: &str) -> Result<(), String> {
-    if package.group.is_none() || !package.version.is_exact_pin() {
-        return Err(format!(
-            "{table}.installer_package must be fully qualified and exactly pinned"
-        ));
-    }
-    declarant_path(entry).map_err(|fault| {
-        format!(
-            "{table}.entry must be a portable provider-relative file path: {}",
-            fault.reason()
-        )
-    })?;
-    Ok(())
-}
-
 impl LauncherDecl {
     pub(crate) fn validate(&self) -> Result<(), String> {
         if !is_portable_token(&self.id) {
@@ -444,77 +375,6 @@ fn validate_template(value: &str, field: &str, path: bool) -> Result<(), String>
     Ok(())
 }
 
-impl ApplicationDistributionDecl {
-    fn validate(&self) -> Result<(), String> {
-        if !valid_repository(&self.repository) {
-            return Err("[application.distribution].repository must be owner/name".into());
-        }
-        if !valid_release_token(&self.release_tag) {
-            return Err(
-                "[application.distribution].release_tag must be a portable release token".into(),
-            );
-        }
-        declarant_path(PathBuf::from(&self.index_asset).as_path()).map_err(|fault| {
-            format!(
-                "[application.distribution].index_asset must be one portable file name: {}",
-                fault.reason()
-            )
-        })?;
-        if PathBuf::from(&self.index_asset).components().count() != 1 {
-            return Err(
-                "[application.distribution].index_asset must be one portable file name".into(),
-            );
-        }
-        Ok(())
-    }
-}
-
-impl ApplicationSourceDecl {
-    pub(crate) fn validate(&self) -> Result<(), String> {
-        if !credential_free_https(&self.url) {
-            return Err(
-                "[application_source].url must be credential-free HTTPS without query or fragment"
-                    .into(),
-            );
-        }
-        if !self.tracked_ref.starts_with("refs/heads/") || !valid_git_ref(&self.tracked_ref) {
-            return Err(
-                "[application_source].tracked_ref must be an explicit safe refs/heads/... name"
-                    .into(),
-            );
-        }
-        declarant_path(&self.registry_path).map_err(|fault| {
-            format!(
-                "[application_source].registry_path must be portable and relative: {}",
-                fault.reason()
-            )
-        })?;
-        Ok(())
-    }
-}
-
-fn valid_repository(value: &str) -> bool {
-    let mut parts = value.split('/');
-    matches!((parts.next(), parts.next(), parts.next()), (Some(owner), Some(repo), None)
-        if is_slug(owner) && is_slug(repo))
-}
-
-fn is_slug(value: &str) -> bool {
-    !value.is_empty()
-        && value.len() <= 100
-        && value
-            .bytes()
-            .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.'))
-}
-
-fn valid_release_token(value: &str) -> bool {
-    !value.is_empty()
-        && value.len() <= 128
-        && value
-            .bytes()
-            .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.'))
-}
-
 fn credential_free_https(value: &str) -> bool {
     let Some(rest) = value.strip_prefix("https://") else {
         return false;
@@ -527,13 +387,74 @@ fn credential_free_https(value: &str) -> bool {
         && !value.bytes().any(|b| b.is_ascii_whitespace())
 }
 
-fn valid_git_ref(value: &str) -> bool {
-    !value.ends_with('/')
-        && !value.ends_with('.')
-        && !value.contains("..")
-        && !value.contains("@{")
-        && !value.contains("//")
-        && !value
-            .chars()
-            .any(|ch| ch.is_control() || ch.is_whitespace() || "~^:?*[\\".contains(ch))
+/// `source_build` model validation (`PROP-059#source-build`). Execution is
+/// a later phase; the declaration is already checked in full.
+fn validate_source_build(sources: &[SourceInputDecl], recipe: &RecipeDecl) -> Result<(), String> {
+    let table = "[installer_options.installation]";
+    if sources.is_empty() {
+        return Err(format!(
+            "{table}.sources must declare at least one source_build input"
+        ));
+    }
+    let mut names = BTreeSet::new();
+    for source in sources {
+        let single = declarant_path(Path::new(&source.name)).is_ok()
+            && Path::new(&source.name).components().count() == 1
+            && matches!(
+                Path::new(&source.name).components().next(),
+                Some(Component::Normal(_))
+            );
+        if !single {
+            return Err(format!(
+                "{table}.sources.name `{}` must be one portable directory name",
+                source.name
+            ));
+        }
+        if !names.insert(source.name.to_ascii_lowercase()) {
+            return Err(format!(
+                "{table}.sources.name `{}` is duplicated",
+                source.name
+            ));
+        }
+        match (&source.url, &source.path) {
+            (Some(url), None) => {
+                if !credential_free_http(url) {
+                    return Err(format!(
+                        "{table}.sources `{}` url must be a credential-free HTTP(S) URL",
+                        source.name
+                    ));
+                }
+            }
+            (None, Some(path)) => {
+                declarant_path(path).map_err(|fault| {
+                    format!(
+                        "{table}.sources `{}` path must be package-relative: {}",
+                        source.name,
+                        fault.reason()
+                    )
+                })?;
+            }
+            _ => {
+                return Err(format!(
+                    "{table}.sources `{}` must declare exactly one of url or path",
+                    source.name
+                ));
+            }
+        }
+        validate_sha256(&source.sha256, table)?;
+    }
+    declarant_path(&recipe.script).map_err(|fault| {
+        format!(
+            "{table}.recipe.script must be a package-relative file: {}",
+            fault.reason()
+        )
+    })?;
+    Ok(())
+}
+
+fn credential_free_http(value: &str) -> bool {
+    match value.strip_prefix("http://") {
+        Some(rest) => credential_free_https(&format!("https://{rest}")),
+        None => credential_free_https(value),
+    }
 }

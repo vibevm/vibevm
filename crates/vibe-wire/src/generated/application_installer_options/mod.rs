@@ -45,6 +45,9 @@ pub enum Installation {
     #[serde(rename = "shell")]
     Shell(Box<InstallationShell>),
 
+    #[serde(rename = "source_build")]
+    SourceBuild(Box<InstallationSourceBuild>),
+
     #[serde(rename = "tar_gz")]
     TarGz(Box<InstallationTarGz>),
 
@@ -107,7 +110,17 @@ pub struct InstallationShell {
     pub uninstall: String,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub interpreter: Option<Interpreter>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub update: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InstallationSourceBuild {
+    pub recipe: Recipe,
+
+    pub sources: Vec<SourceInput>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -118,9 +131,6 @@ pub struct InstallationTarGz {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub payload_root: Option<String>,
-
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub runners: Vec<Runner>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -131,9 +141,6 @@ pub struct InstallationZip {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub payload_root: Option<String>,
-
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub runners: Vec<Runner>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -155,6 +162,21 @@ pub struct Installer {
     pub pre_install: Option<String>,
 
     pub public_commands: Vec<PublicCommand>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub portable: Option<bool>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Interpreter {
+    #[serde(rename = "posix_sh")]
+    PosixSh,
+
+    #[serde(rename = "windows_cmd")]
+    WindowsCmd,
+
+    #[serde(rename = "windows_powershell")]
+    WindowsPowershell,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -201,8 +223,25 @@ pub struct PublicCommand {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct Runner {
+pub struct Recipe {
+    pub script: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub interpreter: Option<Interpreter>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct SourceInput {
     pub name: String,
 
-    pub path: String,
+    pub sha256: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub extract: Option<bool>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
 }

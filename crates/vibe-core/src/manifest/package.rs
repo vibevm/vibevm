@@ -46,7 +46,7 @@ mod weak_deps;
 mod when;
 mod wire;
 
-pub use application::{ApplicationDecl, ApplicationRuntime};
+pub use application::ApplicationDecl;
 pub use binary::BinaryDecl;
 pub use deps::{GitPackageDep, GitRefKind, PathPackageDep, VarRegistryDep};
 pub use documentation::{

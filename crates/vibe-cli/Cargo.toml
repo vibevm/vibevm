@@ -24,6 +24,8 @@ features = ["rfd/xdg-portal"]
 
 [dependencies]
 specmark.workspace = true
+# User applications (PROP-059): install, launch, storage libraries.
+vibe-app.workspace = true
 vibe-core.workspace = true
 # The PROP-057 documentation pipeline behind `vibe doc`.
 vibe-doc.workspace = true
@@ -70,7 +72,6 @@ vibe-settings.workspace = true
 vibe-wire.workspace = true
 vibe-spec.workspace = true
 vibe-scrape.workspace = true
-vibe-safefs.workspace = true
 # `vibe explain` (the host traceability-explain command) is a thin surface
 # over the shared `vibe-trace` capability, which both the CLI and the MCP
 # `explain` tool call.
@@ -97,10 +98,7 @@ toml.workspace = true
 reqwest.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
-walkdir.workspace = true
 zip.workspace = true
-tar.workspace = true
-flate2.workspace = true
 # `vibe tree` interactive TUI (PROP-036 §2.11).
 rat-salsa.workspace = true
 rat-widget.workspace = true
@@ -122,6 +120,9 @@ futures.workspace = true
 wayland-backend.workspace = true
 
 [dev-dependencies]
+flate2.workspace = true
+tar.workspace = true
+walkdir.workspace = true
 indicatif = { workspace = true, features = ["in_memory"] }
 vibe-native-loader-compiler-fixture = { path = "../vibe-native-loader/tests/fixtures/native-compiler-plugin" }
 vibe-native-loader-json-backend-fixture = { path = "../vibe-native-loader/tests/fixtures/native-json-backend" }
