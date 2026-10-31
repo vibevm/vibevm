@@ -138,6 +138,28 @@ sunset = "none"
 
 # `vibe app work [PACKAGE] [--clean] --json` (PROP-065 `#work`): the kept
 # work directories of one home, their sizes and what a clean removed.
+# `vibe remap list --json` (PROP-066 `#display`): the rows active for one
+# invocation, with the locally computed diagnostics of every target. The
+# only interface a graphical client needs to draw the catalog.
+[format.cli-remap-listing]
+epoch = 1
+schema = "schemas/remap_listing.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe remap explain <url|sha256> --json` (PROP-066 `#precedence`): the whole
+# chain for one fetch — origin, every matching row in winning order, the chosen
+# target and the digest that will be checked. Answers a hover in a client.
+[format.cli-remap-explanation]
+epoch = 1
+schema = "schemas/remap_explanation.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-application-work]
 epoch = 1
 schema = "schemas/application_work.jtd.json"

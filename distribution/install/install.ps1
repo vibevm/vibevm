@@ -21,7 +21,21 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $script:VibeReleaseRepository = 'vibevm/vibevm'
-$script:VibeReleaseOrigin = "https://github.com/$($script:VibeReleaseRepository)/releases"
+# Where every download of this installer comes from. PROP-066 `#locator`:
+# a closed network has no github.com, so an operator may point the whole
+# installer at the one place their network allows by setting
+# $env:VIBEVM_RELEASE_ORIGIN before running it. The layout below it is
+# unchanged -- "<origin>/download/v<version>/<asset>" and
+# "<origin>/latest/download/<asset>" -- and so is every check that
+# follows: the manifest's schema, product, repository and tag are still
+# verified, and the bootstrap is still refused unless its size and SHA-256
+# match the manifest, which is what made the origin a replaceable detail in
+# the first place.
+$script:VibeReleaseOrigin = if ($env:VIBEVM_RELEASE_ORIGIN) {
+    $env:VIBEVM_RELEASE_ORIGIN
+} else {
+    "https://github.com/$($script:VibeReleaseRepository)/releases"
+}
 $script:VibeDistributionsAsset = 'DISTRIBUTIONS.json'
 $script:VibeManifestMaxBytes = [UInt64](4 * 1024 * 1024)
 $script:VibeBootstrapMaxBytes = [UInt64](512 * 1024 * 1024)

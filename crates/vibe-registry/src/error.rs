@@ -52,6 +52,24 @@ pub enum RegistryError {
     )]
     UnknownPackage { group: Group, name: String },
 
+    /// A remap row — or the active `unmatched = "deny"` policy — refused
+    /// this registry before any connection (`PROP-066#row`). Named here
+    /// rather than folded into `UnknownPackage`, because "nobody may fetch
+    /// from there" and "nothing is there" are different facts and the
+    /// reader acts differently on each.
+    #[error(
+        "remap_denied: reading registry `{registry}` at `{url}` is refused by {row}: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-066#row; \
+          fix: drop or narrow that remap row, or point it at a clone this host may \
+          read — `vibe remap explain {url}` prints the whole chain)"
+    )]
+    RemapDenied {
+        registry: String,
+        url: String,
+        row: String,
+        reason: String,
+    },
+
     #[error(
         "no version of `{group}/{name}` matches `{req}` \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \

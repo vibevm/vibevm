@@ -57,8 +57,38 @@ pub(super) fn select_platform<'a>(
         .with_context(|| format!("aggregate manifest has no platform `{target}`"))
 }
 
-pub(super) fn validated_release_base(raw: &str, expected_tag: &str) -> Result<String> {
+/// The release directory a bootstrap reads its assets from.
+///
+/// Two regimes, and the difference is who chose the base. A base **typed
+/// on the command line** keeps the strict check it always had: exactly the
+/// canonical HTTPS GitHub directory for this tag, no userinfo, no port, no
+/// query, no fragment — a bootstrap is the one moment a vibe has no vibe
+/// to check it, so an operator's typo must not become an origin.
+///
+/// A base a **remap row produced** (`from_remap`, `PROP-066#locator`) is
+/// accepted for any `https://` or `file://` location instead. The row is
+/// data the user wrote or accepted on this machine, it is listed by
+/// `vibe remap list` and explained by `vibe remap explain`, and every
+/// asset read from it is still verified against the aggregate manifest's
+/// own digests and sizes — which is the check that was ever load-bearing.
+/// Refusing a non-GitHub base there would refuse the whole point of
+/// PROP-066: a closed network has no github.com to be canonical about.
+/// `http://` stays refused in both regimes.
+pub(super) fn validated_release_base(
+    raw: &str,
+    expected_tag: &str,
+    from_remap: bool,
+) -> Result<String> {
     let url = reqwest::Url::parse(raw).context("parsing --release-base URL")?;
+    if from_remap {
+        if !matches!(url.scheme(), "https" | "file") {
+            bail!(
+                "a remapped release base must be an `https://` or `file://` location, not                  `{}` (violates spec://org.vibevm.core/vibevm/common/PROP-066#locator)",
+                url.scheme()
+            );
+        }
+        return Ok(raw.trim_end_matches('/').to_string());
+    }
     if url.scheme() != "https"
         || url.host_str() != Some("github.com")
         || !url.username().is_empty()

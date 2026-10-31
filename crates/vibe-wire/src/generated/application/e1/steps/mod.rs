@@ -137,6 +137,48 @@ pub struct Package {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RemapRowLayer {
+    #[serde(rename = "invocation")]
+    Invocation,
+
+    #[serde(rename = "local")]
+    Local,
+
+    #[serde(rename = "project_package")]
+    ProjectPackage,
+
+    #[serde(rename = "user_package")]
+    UserPackage,
+}
+
+/// The remap row that chose a candidate (PROP-066#provenance): its layer, the
+/// file or package that declared it, its position there, and its reason.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RemapRow {
+    pub layer: RemapRowLayer,
+
+    pub source: String,
+
+    pub index: u32,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
+}
+
+/// Which candidate served one input's bytes and the remap row that chose it
+/// (PROP-066#provenance); absent `row` means the artifact's own declared origin
+/// served it.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ServedBy {
+    pub target: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub row: Option<RemapRow>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Step {
     pub id: String,
@@ -169,6 +211,22 @@ pub struct Step {
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub env: Vec<EnvEntry>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub inputs: Vec<StepInput>,
+}
+
+/// One verified input of the step and, optionally, where its bytes came from
+/// (PROP-066#provenance). Additive: a reader of an older steps.json simply sees
+/// no inputs.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct StepInput {
+    pub name: String,
+
+    #[serde(rename = "servedBy")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub served_by: Option<ServedBy>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

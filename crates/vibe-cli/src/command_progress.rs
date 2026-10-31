@@ -49,6 +49,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "refactor",
     "registry",
     "reinstall",
+    "remap",
     "requirements",
     "run",
     "scrape",
@@ -315,6 +316,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Tree(args) if args.terminal && !args.plain => TerminalPassthrough,
         Command::Tree(args) if args.plain || !terminal_attached => FiniteFallback("Command tree"),
         Command::Tree(_) => Interactive,
+        // Both remap views read the rows the composition root already
+        // loaded and print them; there is no work to show.
+        Command::Remap(_) => FastMetadata,
         Command::Registry(args) => match &args.command {
             RegistrySubcommand::Sync(_)
             | RegistrySubcommand::Publish(_)

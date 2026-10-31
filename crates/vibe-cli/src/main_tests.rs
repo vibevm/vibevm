@@ -1,11 +1,13 @@
 //! The composition root's own red — the offline posture the version
 //! manager is handed.
 //!
-//! Its own cell because `main.rs` is the dispatch AND the one sanctioned
-//! ambient-env root, and a policy's proofs are a second responsibility
-//! from the policy itself. The `[env]` allowlist's proofs sit beside the
-//! allowlist, in `env_allowlist`.
-use super::*;
+//! Its own cell because the composition root is the assembly of ambient
+//! input, and a policy's proofs are a second responsibility from the
+//! policy itself. The `[env]` allowlist's proofs sit beside the
+//! allowlist, in `env_allowlist`. (It moved here with `vvm_offline` when
+//! `main.rs` reached its line budget; the resolver, the variable and the
+//! reason below are unchanged.)
+use super::vvm_offline;
 use rust_ai_native_env_audit::EnvGuard;
 
 /// The version manager is handed a RESOLVED posture, not a raw flag.

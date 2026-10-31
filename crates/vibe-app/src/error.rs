@@ -199,6 +199,18 @@ pub enum InstallerError {
     )]
     Offline { source_ref: String },
     #[error(
+        "remap_denied: fetching `{source_ref}` is refused by {row}: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-066#row; \
+          fix: drop or narrow that remap row, or point it at a target this host may read — \
+          `vibe remap explain {source_ref}` prints the whole chain)"
+    )]
+    RemapDenied {
+        source_ref: String,
+        /// The row that refused, or the policy that did.
+        row: String,
+        reason: String,
+    },
+    #[error(
         "archive is unsafe or malformed: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation; \
          fix: publish an archive of plain files and directories with portable relative names)"
     )]

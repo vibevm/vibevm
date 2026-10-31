@@ -477,7 +477,7 @@ mod checkout;
 
 /// The HTTPS single-file read that runs before `git archive` on the two
 /// hosts that serve one, and the rules that keep its misses honest.
-mod raw_http;
+pub mod raw_http;
 
 /// The read-only checkout queries (`last_commit_iso`, `branch`) — an
 /// `impl ShellGit` block of its own, split out per the file-length budget.

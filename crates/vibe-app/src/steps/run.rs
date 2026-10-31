@@ -15,7 +15,7 @@ use vibe_core::progress::ProgressTask;
 
 use crate::agents::AgentError;
 use crate::error::{AppError, InstallerError, StepError};
-use crate::index::{AuthoredCommands, EnvEntry, StepOutcome, StepRecord};
+use crate::index::{AuthoredCommands, StepOutcome};
 use crate::installer::{ChildIo, io, source_build};
 use crate::operations::{Command, OperationContext};
 use crate::resolve::ResolvedPackage;
@@ -29,6 +29,8 @@ use super::runs::{RunOutcome, RunRecord};
 use super::state::{Start, StepState, StepsFile};
 use super::template::Vars;
 use super::work::{human_bytes, tree_bytes};
+
+mod projections;
 
 /// The task label of one step (`PROP-065#display`): its id, its kind and
 /// its title, the same row a step panel and the event stream carry. A
@@ -307,6 +309,7 @@ impl<'a> Run<'a> {
                 uninstall: AuthoredCommands::default(),
                 agent: None,
                 env: Vec::new(),
+                served: Vec::new(),
             });
             self.save()?;
         }
@@ -400,6 +403,22 @@ impl<'a> Run<'a> {
                     StepPhase::Finish => Ok(Some(error)),
                 };
             }
+            // PROP-066 `#row`: a fetch refused before any connection is
+            // not a failed step. Nothing ran, nothing was fetched, and
+            // `--resume` cannot change the answer — only the row can — so
+            // the refusal surfaces as itself, keeping its `remap_denied`
+            // code and its refusal exit status instead of being wrapped as
+            // `step_failed`.
+            if matches!(
+                error,
+                AppError::Installer(InstallerError::RemapDenied { .. })
+            ) {
+                task.fail(error.to_string());
+                return match phase {
+                    StepPhase::Prepare => Err(error),
+                    StepPhase::Finish => Ok(Some(error)),
+                };
+            }
             task.fail(error.to_string());
             if step.optional {
                 continue;
@@ -455,6 +474,7 @@ impl<'a> Run<'a> {
             uninstall: AuthoredCommands::default(),
             agent: None,
             env: Vec::new(),
+            served: Vec::new(),
         };
         if !planned.run {
             task.skip(planned.reason.clone().unwrap_or_default());
@@ -505,6 +525,8 @@ impl<'a> Run<'a> {
                 task,
             );
         }
+        let package_key = self.plan.package.key();
+        let served = std::cell::RefCell::new(Vec::new());
         let cx = StepContext {
             work: &self.work,
             package_root: &self.resolved.root,
@@ -526,8 +548,15 @@ impl<'a> Run<'a> {
             update_in_place: self.update_in_place,
             io,
             env: &env,
+            remap: vibe_core::remap::active(),
+            package_key: &package_key,
+            served: &served,
         };
         let result = kinds::run(&cx, step);
+        // The candidates that served this step's inputs are part of the
+        // step's record whether it went on to succeed or fail
+        // (`PROP-066#provenance`).
+        state.served = served.borrow().clone();
         self.settle(state, result.map(|uninstall| (uninstall, None)), task)
     }
 
@@ -564,32 +593,5 @@ impl<'a> Run<'a> {
         self.state.record(state);
         self.save()?;
         outcome
-    }
-
-    /// The step outcomes the index keeps.
-    pub fn records(&self) -> Vec<StepRecord> {
-        self.plan
-            .steps
-            .iter()
-            .filter_map(|planned| Some((planned, self.state.get(&planned.step.id)?)))
-            .map(|(planned, state)| StepRecord {
-                id: state.id.clone(),
-                kind: state.kind.clone(),
-                phase: planned.step.phase,
-                outcome: state.outcome,
-                uninstall: state.uninstall.clone(),
-            })
-            .collect()
-    }
-
-    /// The environment entries the env steps applied, in step order
-    /// (`PROP-065#env-step`).
-    pub fn env_entries(&self) -> Vec<EnvEntry> {
-        self.plan
-            .steps
-            .iter()
-            .filter_map(|planned| self.state.get(&planned.step.id))
-            .flat_map(|state| state.env.iter().cloned())
-            .collect()
     }
 }

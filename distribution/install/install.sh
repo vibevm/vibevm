@@ -3,7 +3,17 @@
 set -eu
 
 VIBEVM_RELEASE_REPOSITORY="vibevm/vibevm"
-VIBEVM_RELEASE_ORIGIN="https://github.com/${VIBEVM_RELEASE_REPOSITORY}/releases"
+# Where every download of this installer comes from. PROP-066 `#locator`:
+# a closed network has no github.com, so an operator may point the whole
+# installer at the one place their network allows by exporting
+# VIBEVM_RELEASE_ORIGIN before running it. The layout below it is
+# unchanged — `<origin>/download/v<version>/<asset>` and
+# `<origin>/latest/download/<asset>` — and so is every check that follows:
+# the manifest's schema, product, repository and tag are still verified,
+# and the bootstrap is still refused unless its size and SHA-256 match the
+# manifest, which is what made the origin a replaceable detail in the first
+# place.
+VIBEVM_RELEASE_ORIGIN="${VIBEVM_RELEASE_ORIGIN:-https://github.com/${VIBEVM_RELEASE_REPOSITORY}/releases}"
 VIBEVM_DISTRIBUTIONS_ASSET="DISTRIBUTIONS.json"
 VIBEVM_MANIFEST_MAX_BYTES=4194304
 VIBEVM_BOOTSTRAP_MAX_BYTES=536870912

@@ -86,7 +86,41 @@ pub enum IndexUrlSource {
 /// `vibe.toml` and the machine-global `~/.vibe/registry.toml`, so the
 /// key carries in both columns.
 pub fn resolve_index_url(registry: &RegistrySection) -> IndexUrlResolution {
-    resolve_index_url_with(index_url_for(&registry.name), registry)
+    remapped(resolve_index_url_with(
+        index_url_for(&registry.name),
+        registry,
+    ))
+}
+
+/// Pass a resolved index base through the Locator (`PROP-066#locator`),
+/// so a `registry`, `prefix` or `package` row relocates a registry's index
+/// along with everything else that registry resolves to.
+///
+/// The env rung is left alone. `VIBEVM_INDEX_URL_<REGISTRY>` is an
+/// operator's per-run re-point — the invocation layer, in PROP-066's
+/// vocabulary, and the highest layer there is — so a row of any lower
+/// layer must not outrank it, and a row of the invocation layer would be
+/// the same person contradicting themselves in the same breath. The
+/// `index_url` key and the host-aware default are both below it and both
+/// remappable. A refusal switches the index off rather than failing the
+/// walk: a registry without a reachable index resolves through
+/// `git ls-remote`, which is the existing `Disabled` behaviour exactly.
+fn remapped(resolution: IndexUrlResolution) -> IndexUrlResolution {
+    let IndexUrlResolution::Url { base, source } = resolution else {
+        return resolution;
+    };
+    if source == IndexUrlSource::Env || vibe_core::remap::active().is_empty() {
+        return IndexUrlResolution::Url { base, source };
+    }
+    let artifact =
+        vibe_core::remap::Artifact::new(vibe_core::remap::ArtifactKind::IndexFile).with_url(&base);
+    match vibe_core::remap::active().choose_url(&artifact) {
+        Ok(chosen) => IndexUrlResolution::Url {
+            base: chosen,
+            source,
+        },
+        Err(_) => IndexUrlResolution::Disabled,
+    }
 }
 
 /// The ladder's pure core: the env step is passed in (already read)

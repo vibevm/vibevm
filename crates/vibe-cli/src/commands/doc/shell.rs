@@ -138,10 +138,18 @@ fn run_install(
     }
 
     let version = env!("CARGO_PKG_VERSION").to_string();
-    let base = args
+    // PROP-066 `#locator`: the shell's release root is remappable like
+    // every other artifact source. `--from` is still the operator's own
+    // word and is what the Locator is asked about, so a row may redirect
+    // it too — and a `deny` row refuses before any connection.
+    let declared = args
         .from
         .clone()
         .unwrap_or_else(|| fetch::RELEASE_ROOT.to_string());
+    let base = vibe_core::remap::active().choose_url(
+        &vibe_core::remap::Artifact::new(vibe_core::remap::ArtifactKind::DocShell)
+            .with_url(&declared),
+    )?;
     consent(ctx, &args, &env, &base, &version, &pin)?;
 
     let staging = into.with_file_name(format!(".download-{}-{}", std::process::id(), pin.sha256));

@@ -134,6 +134,21 @@ impl Mirror {
     }
 }
 
+/// The clone URL of the chosen source mirror after the Locator has had
+/// its say (`PROP-066#locator`).
+///
+/// The mirror list is a closed set of two public clone URLs, and a closed
+/// network has neither. Putting the chosen one through the Locator lets a
+/// `prefix` or `registry` row point a source install at an internal clone;
+/// the selector is still resolved against that clone and the build still
+/// checks out the commit it resolved, so a redirected clone can make the
+/// build fail or succeed and cannot change which revision is built.
+pub(crate) fn located_clone_url(mirror: Mirror) -> anyhow::Result<String> {
+    let artifact = vibe_core::remap::Artifact::new(vibe_core::remap::ArtifactKind::RegistryClone)
+        .with_url(mirror.url());
+    Ok(vibe_core::remap::active().choose_url(&artifact)?)
+}
+
 /// Pick the source mirror: an explicit `--mirror`, an interactive choice on
 /// a TTY, else the GitVerse default (PROP-019 §2.7).
 pub(crate) fn choose_mirror(

@@ -31,7 +31,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "step": {
-      "metadata": { "x-wire-order": ["id", "kind", "outcome", "reason", "started", "finished", "uninstall", "forceUninstall", "interpreter", "agent", "env"] },
+      "metadata": { "x-wire-order": ["id", "kind", "outcome", "reason", "started", "finished", "uninstall", "forceUninstall", "interpreter", "agent", "env", "inputs"] },
       "properties": {
         "id": { "type": "string" },
         "kind": { "type": "string" },
@@ -45,7 +45,49 @@
         "forceUninstall": { "type": "string", "metadata": { "x-default": null } },
         "interpreter": { "ref": "interpreter", "metadata": { "x-default": null } },
         "agent": { "ref": "agent_run", "metadata": { "x-default": null } },
-        "env": { "elements": { "ref": "env_entry" }, "metadata": { "x-empty": "omit" } }
+        "env": { "elements": { "ref": "env_entry" }, "metadata": { "x-empty": "omit" } },
+        "inputs": { "elements": { "ref": "step_input" }, "metadata": { "x-empty": "omit" } }
+      }
+    },
+    "remap_row": {
+      "metadata": {
+        "description": "The remap row that chose a candidate (PROP-066#provenance): its layer, the file or package that declared it, its position there, and its reason.",
+        "x-wire-order": ["layer", "source", "index", "reason"]
+      },
+      "properties": {
+        "layer": {
+          "enum": ["user_package", "project_package", "local", "invocation"],
+          "metadata": { "x-vocabulary": "closed" }
+        },
+        "source": { "type": "string" },
+        "index": { "type": "uint32" }
+      },
+      "optionalProperties": {
+        "reason": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "served_by": {
+      "metadata": {
+        "description": "Which candidate served one input's bytes and the remap row that chose it (PROP-066#provenance); absent `row` means the artifact's own declared origin served it.",
+        "x-wire-order": ["target", "row"]
+      },
+      "properties": {
+        "target": { "type": "string" }
+      },
+      "optionalProperties": {
+        "row": { "ref": "remap_row", "metadata": { "x-default": null } }
+      }
+    },
+    "step_input": {
+      "metadata": {
+        "description": "One verified input of the step and, optionally, where its bytes came from (PROP-066#provenance). Additive: a reader of an older steps.json simply sees no inputs.",
+        "x-wire-order": ["name", "servedBy"]
+      },
+      "properties": {
+        "name": { "type": "string" }
+      },
+      "optionalProperties": {
+        "servedBy": { "ref": "served_by", "metadata": { "x-default": null } }
       }
     },
     "env_op": {
