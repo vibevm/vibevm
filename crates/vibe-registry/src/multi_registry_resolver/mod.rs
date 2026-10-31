@@ -55,6 +55,7 @@ use crate::{
 };
 
 mod attempt;
+mod clone_chain;
 mod dispatch;
 mod offline;
 mod override_resolve;
@@ -66,6 +67,7 @@ mod sources;
 mod walk;
 
 pub use attempt::{RegistryWalkAttempt, WalkAttemptStatus};
+pub(crate) use clone_chain::clone_chain;
 pub use refresh::{RefreshReport, RefreshedEntry, RefreshedVia, SkippedEntry};
 pub use resolution::{MultiResolution, ResolvedPathDep};
 pub use source::{LocalRegistrySource, RegistrySource};
@@ -323,16 +325,13 @@ impl MultiRegistryResolver {
                 }));
                 continue;
             }
-            // Compose the priority-sorted mirror chain for this registry
-            // (named `of = "<reg.name>"` plus wildcard `of = "*"`). This
-            // is exactly what `Self::mirrors_for` would compute, but
-            // we're still building `self`.
-            let mut chain: Vec<&MirrorSection> = mirrors
-                .iter()
-                .filter(|m| m.of == reg.name || m.of == "*")
-                .collect();
-            chain.sort_by_key(|m| m.priority);
-            let mirror_urls: Vec<String> = chain.into_iter().map(|m| m.url.clone()).collect();
+            // PROP-066 `#locator`: the clone chain is the Locator's
+            // candidate list for this registry, not a second redirection
+            // mechanism beside it. A `[[mirror]]` user sees no change —
+            // the mirror tables are read as rows of the local layer, in
+            // the same priority order — and a `prefix`, `registry` or
+            // `package` row now reaches the clone the same way.
+            let mirror_urls = clone_chain(reg, mirrors, registries)?;
 
             // PROP-002 §2.2.1 — thread the registry's auth regime and
             // the explicit-or-derived token env-var name into the

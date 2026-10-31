@@ -46,6 +46,7 @@ use std::time::Duration;
 use vibe_core::manifest::Manifest;
 
 use super::GitError;
+pub use hosts::default_bases;
 use hosts::{AddressedRead, address};
 
 /// Timeout for one read, matching `index_client`'s fetch timeout. A read
@@ -320,7 +321,7 @@ pub(super) fn build_client() -> Option<reqwest::blocking::Client> {
 /// The two hosts this path knows, how a read is addressed on each, and
 /// how each one's answer is read — everything host-specific, and nothing
 /// that decides what an answer means.
-mod hosts;
+pub mod hosts;
 
 /// When a refusal is worth asking again, and how long the read waits
 /// before it does — every bound of the backoff, and nothing that makes a

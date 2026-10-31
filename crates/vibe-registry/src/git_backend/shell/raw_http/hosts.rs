@@ -50,6 +50,18 @@ pub(super) struct RawHost {
     pub(super) is_miss: fn(u16, &[u8]) -> bool,
 }
 
+/// The `(repository host, single-file base)` pairs of [`HOSTS`], as
+/// `PROP-066#locator` asks for them: the hardcoded table becomes the
+/// **default** `raw-file` rows of the Locator, so `vibe remap list` shows
+/// the two public endpoints and any row a user, a project or the
+/// invocation declares outranks them.
+pub fn default_bases() -> Vec<(&'static str, &'static str)> {
+    HOSTS
+        .iter()
+        .map(|host| (host.host, host.default_base))
+        .collect()
+}
+
 /// The hosts the fast path knows. `static`, not `const`, so a matched
 /// row borrows for `'static` rather than out of a temporary.
 pub(super) static HOSTS: [RawHost; 2] = [
@@ -114,14 +126,41 @@ pub(super) fn address(
     if !is_plain(refname) || !is_plain(path) {
         return None;
     }
-    let base = base_override.unwrap_or(host.default_base);
-    let request_url = (host.request_url)(base, &repo, refname, path)?;
+    let base = match base_override {
+        Some(base) => base.to_owned(),
+        None => remapped_base(host)?,
+    };
+    let request_url = (host.request_url)(&base, &repo, refname, path)?;
     Some(AddressedRead {
         url: request_url,
         token: repo.token,
         host,
         plain_url: repo.plain_url,
     })
+}
+
+/// The single-file base for `host` after the Locator has had its say
+/// (`PROP-066#locator`). The built-in base is a default row, so a row of
+/// any higher layer replaces it; `VIBEVM_INDEX_URL_*` reaches here as an
+/// invocation-layer row and keeps winning exactly as it did.
+///
+/// `None` — so, ask git — on a refusal. A `deny` row is not *enforced*
+/// here, because this path is an optimisation whose only fallback is the
+/// clone below it; the refusal belongs to the clone chain, which asks the
+/// Locator for the same host as a `registry-clone` artifact and refuses
+/// there. Falling through is therefore the honest answer: this reader has
+/// nothing to say about a host it was told not to read.
+fn remapped_base(host: &'static RawHost) -> Option<String> {
+    let locator = vibe_core::remap::active();
+    if locator.is_empty() {
+        return Some(host.default_base.to_owned());
+    }
+    locator
+        .choose_url(
+            &vibe_core::remap::Artifact::new(vibe_core::remap::ArtifactKind::RawFile)
+                .with_url(format!("https://{}/", host.host)),
+        )
+        .ok()
 }
 
 // ---- github.com ----

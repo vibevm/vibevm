@@ -84,7 +84,7 @@ pub use index::{
     StepRecord, ValueKind,
 };
 pub use installer::programs::{windows_cmd, windows_powershell, windows_system_program};
-pub use installer::{Interrupt, StepLogs, StepPanel};
+pub use installer::{Interrupt, ServedBy, ServedRow, StepLogs, StepPanel};
 pub use launch::{
     LaunchRequest, ResolvedLauncher, TemplateVars, app_root, exit_code, expand_template,
     icon_choice, launch_arguments, listing as launcher_listing,

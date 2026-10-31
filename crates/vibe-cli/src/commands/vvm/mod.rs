@@ -348,8 +348,9 @@ fn run_install_cmd(
                 env.refuse_offline(command, mirror.url())?;
             }
             let mirror = source::choose_mirror(ctx, args.mirror.as_deref())?;
-            ctx.step(&format!("updating managed clone from {}", mirror.url()));
-            let outcome = source::prepare_from_mirror(&store, mirror.url(), &selector, progress)?;
+            let clone_url = source::located_clone_url(mirror)?;
+            ctx.step(&format!("updating managed clone from {clone_url}"));
+            let outcome = source::prepare_from_mirror(&store, &clone_url, &selector, progress)?;
             (
                 outcome.src_dir,
                 outcome.resolved,

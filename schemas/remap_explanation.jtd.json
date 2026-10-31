@@ -1,0 +1,226 @@
+{
+  "metadata": {
+    "description": "Version 1 explanation of one fetch from vibe remap explain <url|sha256:\u2026> --json: the declared origin, the digest that will be checked, every matching remap row in winning order with its layer and reason, and the target the fetch will try first \u2014 or the refusal.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-066#precedence"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::remap_explanation"
+    },
+    "x-rust-type": "RemapExplanation",
+    "x-wire-order": [
+      "protocol",
+      "kind",
+      "origin",
+      "digest",
+      "policy",
+      "denied",
+      "chosen",
+      "matches"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "policy": {
+      "ref": "unmatched_policy"
+    },
+    "denied": {
+      "type": "boolean"
+    },
+    "matches": {
+      "elements": {
+        "ref": "match"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "optionalProperties": {
+    "origin": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "digest": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "chosen": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  },
+  "definitions": {
+    "match": {
+      "metadata": {
+        "description": "One matching row, in winning order (PROP-066#precedence): where it came from, what it matched, what it resolves this fetch to, and the computed diagnostics of that target.",
+        "x-wire-order": [
+          "order",
+          "layer",
+          "source",
+          "index",
+          "kind",
+          "what",
+          "to",
+          "deny",
+          "scheme",
+          "reach",
+          "host",
+          "why",
+          "scope",
+          "notes"
+        ]
+      },
+      "properties": {
+        "order": {
+          "type": "uint32"
+        },
+        "layer": {
+          "ref": "layer"
+        },
+        "source": {
+          "type": "string"
+        },
+        "index": {
+          "type": "uint32"
+        },
+        "kind": {
+          "ref": "key_kind"
+        },
+        "what": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "deny": {
+          "type": "boolean"
+        },
+        "scheme": {
+          "type": "string"
+        },
+        "reach": {
+          "ref": "reach"
+        }
+      },
+      "optionalProperties": {
+        "host": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "why": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "scope": {
+          "ref": "scope",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "notes": {
+          "elements": {
+            "ref": "note"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        }
+      }
+    },
+    "unmatched_policy": {
+      "metadata": {
+        "description": "The strictest `[policy] unmatched` of every active layer (PROP-066#policy).",
+        "x-vocabulary": "closed"
+      },
+      "enum": [
+        "allow",
+        "deny"
+      ]
+    },
+    "layer": {
+      "metadata": {
+        "description": "Which layer of PROP-066#layers the rows belong to, lowest precedence first.",
+        "x-vocabulary": "closed"
+      },
+      "enum": [
+        "user_package",
+        "project_package",
+        "local",
+        "invocation"
+      ]
+    },
+    "reach": {
+      "metadata": {
+        "description": "Where the target lives, computed and never trusted from the row (PROP-066#diagnostics): a local file or path, a private address, a public one, or a host this run could not classify.",
+        "x-vocabulary": "closed"
+      },
+      "enum": [
+        "local",
+        "private",
+        "public",
+        "unknown"
+      ]
+    },
+    "note": {
+      "metadata": {
+        "description": "A reason the reader should look twice (PROP-066#diagnostics): the target is unencrypted, the row is broad (a prefix over a public host), or the target could not be classified.",
+        "x-vocabulary": "closed"
+      },
+      "enum": [
+        "unencrypted",
+        "broad",
+        "unknown"
+      ]
+    },
+    "key_kind": {
+      "metadata": {
+        "description": "Which of the four keys of PROP-066#row the row matches on.",
+        "x-vocabulary": "closed"
+      },
+      "enum": [
+        "sha256",
+        "package",
+        "registry",
+        "prefix"
+      ]
+    },
+    "scope": {
+      "metadata": {
+        "description": "The installation, or the one step, a row is limited to.",
+        "x-wire-order": [
+          "package",
+          "step"
+        ]
+      },
+      "properties": {
+        "package": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "step": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}

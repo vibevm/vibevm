@@ -47,6 +47,19 @@ const GITHUB_RELEASE_ROOT: &str = "https://github.com/vibevm/vibevm/releases/dow
 const GITHUB_NEWEST_RELEASE_MANIFEST: &str =
     "https://github.com/vibevm/vibevm/releases/latest/download/DISTRIBUTIONS.json";
 
+/// The release base or `DISTRIBUTIONS.json` location to actually read
+/// (`PROP-066#locator`): the Locator's winning candidate for the declared
+/// one, or a refusal before any connection. The second half of the answer
+/// is whether a row produced it — `validated_release_base` keeps its
+/// strict GitHub check only for a base nobody remapped.
+fn located_distribution(declared: &str) -> Result<(String, bool)> {
+    let locator = vibe_core::remap::active();
+    let artifact = vibe_core::remap::Artifact::new(vibe_core::remap::ArtifactKind::Distribution)
+        .with_url(declared);
+    let chosen = locator.choose_url(&artifact)?;
+    Ok((chosen.clone(), chosen != declared))
+}
+
 struct RemoteContext<'a> {
     ctx: &'a output::Context,
     env: &'a VvmEnv,
@@ -106,7 +119,8 @@ fn bootstrap_with_downloader(
         bail!("bootstrap declaration exceeds distribution policy");
     }
     archive::verify_file_asset(bootstrap_executable, &platform.bootstrap)?;
-    let release_base = validated_release_base(&args.release_base, &platform.tag)?;
+    let (declared_base, from_remap) = located_distribution(&args.release_base)?;
+    let release_base = validated_release_base(&declared_base, &platform.tag, from_remap)?;
     install_selected(
         &RemoteContext {
             ctx,
@@ -281,7 +295,8 @@ fn move_to_newest_release(
     force: bool,
 ) -> Result<()> {
     let installed = binary_release_version(record)?;
-    let aggregate = fetch_aggregate(remote, GITHUB_NEWEST_RELEASE_MANIFEST)
+    let newest_manifest = located_distribution(GITHUB_NEWEST_RELEASE_MANIFEST)?.0;
+    let aggregate = fetch_aggregate(remote, &newest_manifest)
         .context("learning the newest published release")?;
     let newest = semver::Version::parse(&aggregate.version)
         .with_context(|| format!("reading newest release version `{}`", aggregate.version))?;
@@ -292,7 +307,7 @@ fn move_to_newest_release(
         return report_withdrawn_release(remote, record, &installed, &newest);
     }
     let platform = select_platform(&aggregate, &newest.to_string(), current_target()?)?;
-    let release_base = format!("{GITHUB_RELEASE_ROOT}/v{newest}");
+    let release_base = located_distribution(&format!("{GITHUB_RELEASE_ROOT}/v{newest}"))?.0;
     if newest > installed {
         remote
             .ctx
@@ -352,7 +367,7 @@ fn report_withdrawn_release(
 /// `self install X.Y.Z` and `self reinstall`. Returns whether an existing
 /// immutable instance was reused.
 fn install_release_version(remote: &RemoteContext<'_>, version: &str, force: bool) -> Result<bool> {
-    let release_base = format!("{GITHUB_RELEASE_ROOT}/v{version}");
+    let release_base = located_distribution(&format!("{GITHUB_RELEASE_ROOT}/v{version}"))?.0;
     let aggregate = fetch_aggregate(
         remote,
         &format!("{release_base}/{DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME}"),

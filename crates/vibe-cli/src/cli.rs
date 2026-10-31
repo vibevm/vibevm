@@ -9,6 +9,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+use std::path::PathBuf;
+
 use clap::{Parser, Subcommand};
 
 mod agent;
@@ -27,6 +29,7 @@ mod prefs;
 mod progress;
 mod query;
 mod registry;
+mod remap;
 mod requirements;
 mod run;
 mod scrape;
@@ -59,6 +62,7 @@ pub use prefs::*;
 pub use progress::*;
 pub use query::*;
 pub use registry::*;
+pub use remap::*;
 pub use requirements::*;
 pub use run::*;
 pub use scrape::*;
@@ -165,6 +169,20 @@ pub struct Cli {
     #[arg(long, global = true)]
     pub offline: bool,
 
+    /// PROP-066 `#layers`: read `[[remap]]` rows from this file for this
+    /// invocation. Repeatable; the last file wins among them, and every
+    /// one of them outranks a row in `~/.vibe/settings.toml`,
+    /// `.vibe/settings.local.toml` or a PROP-002 `[[mirror]]` /
+    /// `[[override]]` table. `VIBE_REMAP=<file>[,<file>]` names the same
+    /// files through the environment; the flags come later and therefore
+    /// win. A row changes only WHERE an artifact is looked for — every
+    /// digest is still checked exactly as before, so a remap can make a
+    /// fetch fail or succeed and can never change what is installed.
+    /// `vibe remap list` shows the active rows and `vibe remap explain`
+    /// the chain for one fetch.
+    #[arg(long = "remap", global = true, value_name = "FILE")]
+    pub remap: Vec<PathBuf>,
+
     #[command(subcommand)]
     pub command: Command,
 }
@@ -214,6 +232,10 @@ pub enum Command {
     /// given per-shell provider choices (`--use SLOT=KEY`).
     #[command(long_about = shell::LONG_ABOUT)]
     Shell(ShellArgs),
+
+    /// Show which remap rows are active and why one fetch resolves where
+    /// it does (PROP-066).
+    Remap(RemapArgs),
 
     /// Manage the storage libraries that hold installed applications: list,
     /// add, attach, detach, move an installation between them, and gc.

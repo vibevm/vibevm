@@ -287,6 +287,7 @@ mod tests {
                     uninstall: AuthoredCommands::default(),
                     agent: None,
                     env: Vec::new(),
+                    served: Vec::new(),
                 })
                 .collect(),
         }

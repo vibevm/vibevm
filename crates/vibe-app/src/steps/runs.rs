@@ -306,6 +306,7 @@ mod tests {
                 uninstall: Default::default(),
                 agent: None,
                 env: Vec::new(),
+                served: Vec::new(),
             }],
         });
         first.close(RunOutcome::Interrupted);

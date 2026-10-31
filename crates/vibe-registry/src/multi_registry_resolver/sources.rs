@@ -7,6 +7,26 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#g
 
 use super::*;
 
+/// The clone URL of a git-source dependency after the Locator has had its
+/// say (`PROP-066#locator`). The declared `url` stays in the manifest and
+/// in the lock — nothing is rewritten there — so the canonical origin is
+/// still visible for review and a lock stays portable between networks;
+/// only the place git is pointed at moves.
+///
+/// The artifact carries the dependency's `group/name`, so a `package` row
+/// redirects one dependency without touching the rest.
+fn located_git_source(dep: &GitPackageDep) -> Result<String, RegistryError> {
+    let artifact = vibe_core::remap::Artifact::new(vibe_core::remap::ArtifactKind::GitSourceDep)
+        .with_url(&dep.url)
+        .with_package(format!("{}/{}", dep.group, dep.name));
+    vibe_core::remap::active()
+        .choose_url(&artifact)
+        .map_err(|refusal| RegistryError::MalformedMeta {
+            path: PathBuf::from(dep.url.clone()),
+            reason: refusal.to_string(),
+        })
+}
+
 impl MultiRegistryResolver {
     /// Resolve a `[requires.packages]` git-source declaration
     /// (PROP-002 §2.4.1). Synthesises a single-package
@@ -22,9 +42,10 @@ impl MultiRegistryResolver {
     ) -> Result<MultiResolution, RegistryError> {
         let synthetic_name = format!("git-source-{}-{}", dep.group, dep.name);
         let refname = dep.ref_kind.as_str().to_string();
+        let clone_url = located_git_source(dep)?;
         let reg = GitPerPackageRegistry::open_single_package(
             &synthetic_name,
-            &dep.url,
+            &clone_url,
             &refname,
             &self.cache_root,
             Arc::clone(&self.backend),
@@ -202,9 +223,10 @@ impl MultiRegistryResolver {
         // not used here — we clone into our own `__git_sources__`
         // sub-tree so the cache stays organised by resolution mode.
         let synthetic_name = format!("git-source-{group}-{name}");
+        let clone_url = located_git_source(dep)?;
         let reg = GitPerPackageRegistry::open_single_package(
             &synthetic_name,
-            &dep.url,
+            &clone_url,
             &refname,
             &self.cache_root,
             Arc::clone(&self.backend),

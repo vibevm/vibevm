@@ -107,6 +107,7 @@ codes!(INSTALLER, InstallerError [] {
     Fetch => "fetch_failed", Failure, "an installer source could not be fetched";
     Digest => "digest_mismatch", Failure, "an installer source does not match its sha256";
     Offline => "offline", Failure, "an installer source needs the network under --offline";
+    RemapDenied => "remap_denied", Refusal, "a remap row or policy refused the fetch before any connection";
     Archive => "archive_invalid", Failure, "an archive is unsafe or malformed";
     WindowsOnly => "windows_only", Failure, "a native installer runs only on Windows";
     Interpreter => "interpreter_unavailable", Failure, "the selected interpreter does not exist on this host";
@@ -285,6 +286,7 @@ mod tests {
             "unavailable",
             "interrupted",
             "work_missing",
+            "remap_denied",
         ] {
             assert!(seen.contains(named), "PROP-065#error-codes names `{named}`");
         }

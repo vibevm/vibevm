@@ -13,6 +13,7 @@ use std::process::Command;
 
 use sha2::{Digest, Sha256};
 use vibe_core::manifest::{ShellInterpreter, SourceInputDecl};
+use vibe_core::remap::{Artifact, Locator};
 
 use crate::error::InstallerError;
 use crate::resolve::strip_verbatim;
@@ -87,36 +88,59 @@ fn extraction(
 }
 
 /// A URL input comes from `<cache>/<sha256>/<filename>` when the cached
-/// file still matches its digest, otherwise from the network into the
-/// cache; a path input is the verified package file itself.
+/// file still matches its digest, otherwise through the Locator into the
+/// cache (`PROP-066#locator`); a path input is the verified package file
+/// itself.
+///
+/// The second half of the answer is which candidate served the bytes —
+/// `None` when a cache hit or a package file needed no fetch at all.
 pub(crate) fn fetch(
     cache_root: &Path,
     package_root: &Path,
     source: &SourceInputDecl,
     offline: bool,
     watch: &super::FetchWatch<'_>,
-) -> Result<Fetched, InstallerError> {
+    locator: &Locator,
+    artifact: &Artifact,
+) -> Result<(Fetched, Option<super::ServedBy>), InstallerError> {
     let filename = source_filename(source)?;
     let extract = extraction(source, &filename)?;
     let sha256 = source.sha256.to_ascii_lowercase();
+    let mut served = None;
     let file = match (&source.url, &source.path) {
         (Some(url), _) => {
             let directory = cache_root.join(&sha256);
             let cached = directory.join(&filename);
             if digest_of(&cached).ok().as_deref() != Some(sha256.as_str()) {
-                if offline {
-                    return Err(InstallerError::Offline {
-                        source_ref: url.clone(),
-                    });
-                }
-                fs::create_dir_all(&directory)
-                    .map_err(|source| super::io("creating", &directory, source))?;
+                // The cache directory is created by whichever candidate
+                // actually writes into it, so a `deny` row leaves nothing
+                // behind at all — "refused before any connection" is also
+                // "refused before any file".
                 let partial = directory.join(format!(".{filename}.{}.part", std::process::id()));
                 let watch = super::FetchWatch {
                     size: source.size,
                     ..*watch
                 };
-                super::fetch_verified(url, &sha256, package_root, &partial, false, &watch)?;
+                // The refusal of a `deny` row comes before the offline
+                // refusal: a denied fetch is refused whatever the network
+                // posture, and `remap_denied` is the answer the reader can
+                // act on. A `path` row, conversely, is exactly what makes
+                // an `--offline` install of a URL input possible.
+                let input = artifact.clone().with_url(url.clone()).with_digest(&sha256);
+                let located = super::fetch_located(
+                    &super::Located {
+                        locator,
+                        artifact: &input,
+                        declared: url,
+                        sha256: &sha256,
+                        filename: Some(&filename),
+                    },
+                    package_root,
+                    &partial,
+                    offline,
+                    &watch,
+                )?;
+                served = Some(named(located, &source.name));
                 fs::rename(&partial, &cached).map_err(|source| {
                     let _ = fs::remove_file(&partial);
                     super::io("caching", &cached, source)
@@ -147,12 +171,22 @@ pub(crate) fn fetch(
             ));
         }
     };
-    Ok(Fetched {
-        name: source.name.clone(),
-        file,
-        filename,
-        extract,
-    })
+    Ok((
+        Fetched {
+            name: source.name.clone(),
+            file,
+            filename,
+            extract,
+        },
+        served,
+    ))
+}
+
+/// Name the served record after the `sources` entry rather than the step,
+/// so a step with several inputs reports one row per input.
+fn named(mut served: super::ServedBy, input: &str) -> super::ServedBy {
+    served.input = input.to_owned();
+    served
 }
 
 /// `<sources>/<name>/` holds the extracted archive or the file itself; a
@@ -285,6 +319,26 @@ mod tests {
         super::super::hex(&Sha256::digest(bytes))
     }
 
+    /// The fetch an unremapped host makes: an empty Locator, which answers
+    /// every artifact with its own declared origin.
+    fn plain(
+        cache: &Path,
+        package: &Path,
+        source: &SourceInputDecl,
+        offline: bool,
+    ) -> Result<Fetched, InstallerError> {
+        fetch(
+            cache,
+            package,
+            source,
+            offline,
+            &Default::default(),
+            &Locator::default(),
+            &Artifact::new(vibe_core::remap::ArtifactKind::AppInput),
+        )
+        .map(|(fetched, _)| fetched)
+    }
+
     #[test]
     fn file_names_and_extraction_default_by_extension() {
         let named = |url: &str| source_filename(&input("s", Some(url), None, "")).unwrap();
@@ -323,7 +377,7 @@ mod tests {
             None,
             &digest,
         );
-        let missing = fetch(&cache, &package, &source, true, &Default::default()).unwrap_err();
+        let missing = plain(&cache, &package, &source, true).unwrap_err();
         assert!(
             matches!(missing, InstallerError::Offline { .. }),
             "{missing}"
@@ -331,10 +385,10 @@ mod tests {
         let cached = cache.join(&digest).join("upstream.txt");
         fs::create_dir_all(cached.parent().unwrap()).unwrap();
         fs::write(&cached, b"tampered").unwrap();
-        let stale = fetch(&cache, &package, &source, true, &Default::default()).unwrap_err();
+        let stale = plain(&cache, &package, &source, true).unwrap_err();
         assert!(matches!(stale, InstallerError::Offline { .. }), "{stale}");
         fs::write(&cached, b"upstream").unwrap();
-        let hit = fetch(&cache, &package, &source, true, &Default::default()).unwrap();
+        let hit = plain(&cache, &package, &source, true).unwrap();
         assert_eq!(hit.file, cached);
         assert_eq!(hit.extract, None);
     }
@@ -347,14 +401,14 @@ mod tests {
         fs::write(package.join("fix.patch"), b"patch").unwrap();
         let wrong = input("fix", None, Some("fix.patch"), &"0".repeat(64));
         assert!(matches!(
-            fetch(&cache, &package, &wrong, false, &Default::default()),
+            plain(&cache, &package, &wrong, false),
             Err(InstallerError::Digest { .. })
         ));
         let right = input("fix", None, Some("fix.patch"), &sha(b"patch"));
         let sources = dir.path().join("work/sources");
         fs::create_dir_all(sources.join("fix")).unwrap();
         fs::write(sources.join("fix/stale"), b"old").unwrap();
-        let fetched = fetch(&cache, &package, &right, true, &Default::default()).unwrap();
+        let fetched = plain(&cache, &package, &right, true).unwrap();
         lay_out(&sources, &[fetched]).unwrap();
         assert_eq!(fs::read(sources.join("fix/fix.patch")).unwrap(), b"patch");
         assert!(!sources.join("fix/stale").exists());

@@ -177,18 +177,23 @@ pub(super) fn require_link_free_tree(root: &Path) -> Result<(), EmbeddedSourceEr
     Ok(())
 }
 
+/// Where one embedded source's hydrated tree lives.
+///
+/// The key is the **content hash alone** (`PROP-066#locator`): identity is
+/// content and location is a replaceable detail, so the same tree fetched
+/// from a mirror has to hit the entry the public host filled. Keying on
+/// the URL and the commit as well — the `v1` salt — meant a remap row
+/// could never reuse anything, which is the one thing a closed network
+/// has least of. The old entries are not migrated and simply miss; the
+/// cache is rebuildable, and a stale `v1` directory costs one re-fetch.
 pub(super) fn entry_path(
     root: &Path,
-    url: &str,
-    commit: &str,
+    _url: &str,
+    _commit: &str,
     content_hash: &ContentHash,
 ) -> PathBuf {
     let mut key = Sha256::new();
-    key.update(b"vibe-embedded-source-v1\0");
-    key.update(url.as_bytes());
-    key.update([0]);
-    key.update(commit.as_bytes());
-    key.update([0]);
+    key.update(b"vibe-embedded-source-v2\0");
     key.update(content_hash.as_str().as_bytes());
     root.join(hex(key.finalize()))
 }

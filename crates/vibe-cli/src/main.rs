@@ -75,6 +75,11 @@ fn run() -> ExitCode {
 
     promote_user_config_env();
     init_tracing();
+    composition::remap::install(
+        &cli.remap,
+        read_env_opt(vibe_core::remap::REMAP_ENV),
+        read_env_opt(composition::remap::RELEASE_ORIGIN_ENV),
+    );
 
     // VVM: derive the running version from the binary's own path, and warn
     // when the inherited $VIBEVM_HOME is stale (PROP-019 §2.5).
@@ -306,6 +311,9 @@ fn run() -> ExitCode {
         Command::Prefs(args) => commands::prefs::run(&ctx, args),
         Command::Tree(args) => commands::tree::run(&ctx, args),
         Command::Registry(args) => commands::registry::run(&ctx, args),
+        Command::Remap(args) => {
+            commands::remap::run(&ctx, args, composition::vvm_offline(cli.offline))
+        }
         Command::Cache(args) => commands::cache::run(&ctx, args, cli.offline),
         Command::Workspace(args) => commands::workspace::run(&ctx, args),
         Command::Vvm(args) => {
@@ -322,7 +330,7 @@ fn run() -> ExitCode {
                 home: dirs::home_dir(),
                 shell: read_env_opt("SHELL"),
                 path_var: read_env_opt("PATH"),
-                offline: vvm_offline(cli.offline),
+                offline: composition::vvm_offline(cli.offline),
                 source_build_environment: commands::vvm::SOURCE_BUILD_ENVIRONMENT
                     .into_iter()
                     .map(|name| (name.to_owned(), std::env::var_os(name)))
@@ -502,8 +510,17 @@ fn promote_user_config_env() {
             rejected.join(", ")
         );
     }
+    // PROP-066 `#locator`: the one `[proxy]` table reaches every reqwest
+    // client and every child `git` by the mechanism both already read —
+    // `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY`. Three fixed names from a
+    // typed table, not the free-form `[env]` map, so the allowlist above
+    // neither admits nor refuses them; the live-env rule below is shared.
+    let proxy = cfg.proxy.child_env();
     let mut promoted: BTreeSet<String> = BTreeSet::new();
-    for (name, value) in admitted {
+    for (name, value) in admitted
+        .into_iter()
+        .chain(proxy.iter().map(|(name, value)| (*name, &value[..])))
+    {
         if std::env::var_os(name).is_some() {
             // Live env wins — leave it alone.
             continue;
@@ -536,29 +553,6 @@ fn init_tracing() {
         .try_init();
 }
 
-/// The offline posture `vibe self` runs under (PROP-019 `##CMD-OFFLINE`).
-///
-/// The same ladder every registry-touching command resolves — the root
-/// `--offline` flag, then `VIBE_OFFLINE`, then the user-config
-/// `[net] offline` key (PROP-010 `##OFFLINE-LAYERING`) — through the same
-/// [`output::resolve_offline`], so the two cannot drift. It is resolved
-/// HERE because both of the lower rungs are ambient reads and the version
-/// manager's domain is forbidden them: it is handed the verdict as data.
-///
-/// A user config that cannot be parsed has already been reported once by
-/// [`promote_user_config_env`] at startup. Failing the command a second
-/// time over an optional layer would be the wrong trade, so its rung
-/// falls back to its own default — online — and the two rungs above it
-/// still decide.
-fn vvm_offline(cli_offline: bool) -> bool {
-    output::resolve_offline(
-        cli_offline,
-        UserConfig::load()
-            .map(|cfg| cfg.net.offline)
-            .unwrap_or(false),
-    )
-}
-
 /// Read a nonempty environment override at the composition root, as required
 /// by the Phase-5 `ambient-env` rule.
 fn read_env_opt(name: &str) -> Option<String> {
@@ -584,7 +578,3 @@ fn needs_global_registry(cmd: &cli::Command) -> bool {
             | Command::Cache(_)
     )
 }
-
-#[cfg(test)]
-#[path = "main_tests.rs"]
-mod tests;

@@ -451,6 +451,7 @@ pub(crate) fn undo_authored(
             uninstall: AuthoredCommands::default(),
             agent: None,
             env: Vec::new(),
+            served: Vec::new(),
         });
         record.steps(&state);
         if let Err(error) = result {

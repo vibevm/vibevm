@@ -1,5 +1,7 @@
 //! Tests for the resolver's own surface — the mirror-chain filter and
-//! sort exposed via [`MultiRegistryResolver::mirrors_for`].
+//! sort exposed via [`MultiRegistryResolver::mirrors_for`], and the clone
+//! chain the resolver actually hands each registry, which now comes from
+//! the Locator (`PROP-066#locator`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
@@ -48,6 +50,47 @@ fn mirrors_for_filters_and_sorts() {
     assert_eq!(m[0].url, "https://b");
     assert_eq!(m[1].url, "https://a");
     assert_eq!(m[2].url, "https://catchall");
+
+    // PROP-066 `#locator`: the chain the registry is actually tried
+    // through is the Locator's candidate list for a `registry-clone`
+    // artifact, and a `[[mirror]]` user must see no change at all — same
+    // three URLs, same priority order, the wildcard still last.
+    let declared = [registry_section("vibespecs", "git@host:org")];
+    let chain =
+        crate::multi_registry_resolver::clone_chain(&declared[0], &mirrors_again(), &declared)
+            .unwrap();
+    assert_eq!(
+        chain,
+        ["https://b", "https://a", "https://catchall"],
+        "the Locator's chain is the mirror chain"
+    );
+}
+
+/// The same four `[[mirror]]` rows as above; the chain assertion needs its
+/// own copy because `build_resolver` takes the vector by value.
+fn mirrors_again() -> Vec<MirrorSection> {
+    vec![
+        MirrorSection {
+            of: "vibespecs".to_string(),
+            url: "https://a".to_string(),
+            priority: 2,
+        },
+        MirrorSection {
+            of: "vibespecs".to_string(),
+            url: "https://b".to_string(),
+            priority: 1,
+        },
+        MirrorSection {
+            of: "*".to_string(),
+            url: "https://catchall".to_string(),
+            priority: 99,
+        },
+        MirrorSection {
+            of: "other".to_string(),
+            url: "https://unrelated".to_string(),
+            priority: 0,
+        },
+    ]
 }
 
 /// A `[[registry]]` whose `url` is a local, **non-git** directory is served

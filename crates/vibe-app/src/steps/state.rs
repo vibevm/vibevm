@@ -13,6 +13,7 @@ use vibe_wire::generated::application::e1::steps as wire;
 use crate::agents::RunMode;
 use crate::error::{AppError, StepError};
 use crate::index::{AuthoredCommands, EnvEntry, EnvOp, PackageCoordinate, StepOutcome, ValueKind};
+use crate::installer::{ServedBy, ServedRow};
 use crate::settings::write_atomic;
 
 /// Where a run starts (`--resume`, `--from-step ID`).
@@ -42,6 +43,9 @@ pub(crate) struct StepState {
     pub agent: Option<AgentRun>,
     /// The entries an `env` step applied (`PROP-065#env-step`).
     pub env: Vec<EnvEntry>,
+    /// Which candidate served each verified input of the step, and the
+    /// remap row that chose it (`PROP-066#provenance`).
+    pub served: Vec<ServedBy>,
 }
 
 /// How an agent step's agent ended.
@@ -169,6 +173,7 @@ impl StepsFile {
                         message: run.message.clone(),
                     }),
                     env: step.env.iter().map(env_to_wire).collect(),
+                    inputs: step.served.iter().map(served_to_wire).collect(),
                 })
                 .collect(),
         }
@@ -227,10 +232,65 @@ impl StepsFile {
                         message: run.message,
                     }),
                     env: step.env.into_iter().map(env_from_wire).collect(),
+                    served: step
+                        .inputs
+                        .into_iter()
+                        .filter_map(served_from_wire)
+                        .collect(),
                 })
                 .collect(),
         }
     }
+}
+
+/// The `PROP-066#layers` label of a layer, both ways.
+fn layer_to_wire(label: &str) -> wire::RemapRowLayer {
+    match label {
+        "invocation" => wire::RemapRowLayer::Invocation,
+        "project-package" => wire::RemapRowLayer::ProjectPackage,
+        "user-package" => wire::RemapRowLayer::UserPackage,
+        _ => wire::RemapRowLayer::Local,
+    }
+}
+
+fn layer_from_wire(layer: &wire::RemapRowLayer) -> &'static str {
+    match layer {
+        wire::RemapRowLayer::Invocation => "invocation",
+        wire::RemapRowLayer::ProjectPackage => "project-package",
+        wire::RemapRowLayer::UserPackage => "user-package",
+        wire::RemapRowLayer::Local => "local",
+    }
+}
+
+fn served_to_wire(served: &ServedBy) -> wire::StepInput {
+    wire::StepInput {
+        name: served.input.clone(),
+        served_by: Some(wire::ServedBy {
+            target: served.target.clone(),
+            row: served.row.as_ref().map(|row| wire::RemapRow {
+                layer: layer_to_wire(&row.layer),
+                source: row.source.clone(),
+                index: u32::try_from(row.index).unwrap_or(u32::MAX),
+                reason: row.reason.clone(),
+            }),
+        }),
+    }
+}
+
+/// An input entry without a `servedBy` records nothing about provenance,
+/// so it does not come back as a served record.
+fn served_from_wire(input: wire::StepInput) -> Option<ServedBy> {
+    let served = input.served_by?;
+    Some(ServedBy {
+        input: input.name,
+        target: served.target,
+        row: served.row.map(|row| ServedRow {
+            layer: layer_from_wire(&row.layer).to_owned(),
+            source: row.source,
+            index: row.index as usize,
+            reason: row.reason,
+        }),
+    })
 }
 
 fn env_to_wire(entry: &EnvEntry) -> wire::EnvEntry {

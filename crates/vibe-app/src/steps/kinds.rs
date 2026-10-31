@@ -7,16 +7,19 @@ use std::fs;
 use std::path::{Component, Path, PathBuf};
 use std::process::Command;
 
+use std::cell::RefCell;
+
 use vibe_core::manifest::{
     ArchiveFormatDecl, NativeFormatDecl, StepDecl, StepKind, StepOrigin, StepPhase,
 };
+use vibe_core::remap::{Artifact, ArtifactKind, Locator};
 
 use crate::error::{AppError, InstallerError, StepError};
 use crate::index::AuthoredCommands;
 use crate::installer::archive::{self, ArchiveFormat};
 use crate::installer::native::{self, NativeKind};
 use crate::installer::source_build::{self, digest_of};
-use crate::installer::{self, ChildIo, FetchWatch, io, run_child, shell};
+use crate::installer::{self, ChildIo, FetchWatch, ServedBy, io, run_child, shell};
 
 use super::template::{self, Vars};
 
@@ -39,9 +42,26 @@ pub(crate) struct StepContext<'a> {
     pub io: ChildIo<'a>,
     /// `VIBE_FEATURE_<ID>` and `VIBE_PARAM_<ID>` (`PROP-065#templates`).
     pub env: &'a [(String, String)],
+    /// The invocation's remap resolution point (`PROP-066#locator`): every
+    /// input of this step asks it where the bytes may come from.
+    pub remap: &'a Locator,
+    /// The package key (`<group>/<name>@<version>`) a `scope` row matches
+    /// and a `package` row is keyed on.
+    pub package_key: &'a str,
+    /// Where each input records the candidate that served it
+    /// (`PROP-066#provenance`). The runner reads it after the step and
+    /// puts it in `steps.json` and the run record.
+    pub served: &'a RefCell<Vec<ServedBy>>,
 }
 
 impl StepContext<'_> {
+    /// The artifact identity one input of `step` is asked about.
+    fn artifact(&self, step: String) -> Artifact {
+        Artifact::new(ArtifactKind::AppInput)
+            .with_package(self.package_key)
+            .with_step(step)
+    }
+
     fn watch(&self, size: Option<u64>) -> FetchWatch<'_> {
         FetchWatch {
             size,
@@ -80,15 +100,21 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
             let fetched = sources
                 .iter()
                 .map(|source| {
-                    source_build::fetch(
+                    let (fetched, served) = source_build::fetch(
                         cx.cache_root,
                         cx.package_root,
                         source,
                         cx.offline,
                         &cx.watch(None),
-                    )
+                        cx.remap,
+                        &cx.artifact(step.id.clone()),
+                    )?;
+                    if let Some(served) = served {
+                        cx.served.borrow_mut().push(served);
+                    }
+                    Ok(fetched)
                 })
-                .collect::<Result<Vec<_>, _>>()?;
+                .collect::<Result<Vec<_>, AppError>>()?;
             source_build::lay_out(&cx.work.join("sources"), &fetched)?;
         }
         StepKind::Archive {
@@ -226,14 +252,24 @@ fn verified_input(
 ) -> Result<PathBuf, AppError> {
     let file = input_file(cx.work, step);
     if digest_of(&file).ok().as_deref() != Some(sha256.to_ascii_lowercase().as_str()) {
-        installer::fetch_verified(
-            source,
-            sha256,
+        let artifact = cx
+            .artifact(step.id.clone())
+            .with_digest(sha256)
+            .with_url(source);
+        let served = installer::fetch_located(
+            &installer::Located {
+                locator: cx.remap,
+                artifact: &artifact,
+                declared: source,
+                sha256,
+                filename: file.file_name().and_then(|name| name.to_str()),
+            },
             cx.package_root,
             &file,
             cx.offline,
             &cx.watch(size),
         )?;
+        cx.served.borrow_mut().push(served);
     }
     Ok(file)
 }

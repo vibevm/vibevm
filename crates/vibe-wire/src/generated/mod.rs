@@ -76,6 +76,8 @@ pub mod progress_event;
 pub mod registry_publish_report;
 pub mod registry_sync_report;
 pub mod reinstall_report;
+pub mod remap_explanation;
+pub mod remap_listing;
 pub mod requirements_report;
 pub mod scrape;
 pub mod shared;

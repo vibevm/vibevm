@@ -1,0 +1,111 @@
+{
+  "metadata": {
+    "description": "Version 1 listing of the remap rows active for one invocation from vibe remap list --json: one block per source file or layer, every row with its key, its target and the locally computed diagnostics of that target, and a footer summarising targets per host.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-066#display" },
+    "rustOptions": { "package": "vibe_wire::remap_listing" },
+    "x-rust-type": "RemapListing",
+    "x-wire-order": ["protocol", "policy", "sources", "hosts", "denies"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "policy": { "ref": "unmatched_policy" },
+    "sources": { "elements": { "ref": "source" }, "metadata": { "x-empty": "emit" } },
+    "hosts": { "elements": { "ref": "host_summary" }, "metadata": { "x-empty": "emit" } },
+    "denies": { "type": "uint32" }
+  },
+  "definitions": {
+    "unmatched_policy": {
+      "metadata": {
+        "description": "The strictest `[policy] unmatched` of every active layer (PROP-066#policy).",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["allow", "deny"]
+    },
+    "layer": {
+      "metadata": {
+        "description": "Which layer of PROP-066#layers the rows belong to, lowest precedence first.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["user_package", "project_package", "local", "invocation"]
+    },
+    "reach": {
+      "metadata": {
+        "description": "Where the target lives, computed and never trusted from the row (PROP-066#diagnostics): a local file or path, a private address, a public one, or a host this run could not classify.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["local", "private", "public", "unknown"]
+    },
+    "note": {
+      "metadata": {
+        "description": "A reason the reader should look twice (PROP-066#diagnostics): the target is unencrypted, the row is broad (a prefix over a public host), or the target could not be classified.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["unencrypted", "broad", "unknown"]
+    },
+    "key_kind": {
+      "metadata": {
+        "description": "Which of the four keys of PROP-066#row the row matches on.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["sha256", "package", "registry", "prefix"]
+    },
+    "scope": {
+      "metadata": {
+        "description": "The installation, or the one step, a row is limited to.",
+        "x-wire-order": ["package", "step"]
+      },
+      "properties": {
+        "package": { "type": "string" }
+      },
+      "optionalProperties": {
+        "step": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "row": {
+      "metadata": {
+        "description": "One numbered row block of PROP-066#display: what it matches, what it redirects to, the computed diagnostics of that target, and the reason, scope and provenance when the row carries them.",
+        "x-wire-order": ["number", "kind", "what", "to", "deny", "scheme", "reach", "host", "why", "scope", "from", "notes"]
+      },
+      "properties": {
+        "number": { "type": "uint32" },
+        "kind": { "ref": "key_kind" },
+        "what": { "type": "string" },
+        "to": { "type": "string" },
+        "deny": { "type": "boolean" },
+        "scheme": { "type": "string" },
+        "reach": { "ref": "reach" }
+      },
+      "optionalProperties": {
+        "host": { "type": "string", "metadata": { "x-default": null } },
+        "why": { "type": "string", "metadata": { "x-default": null } },
+        "scope": { "ref": "scope", "metadata": { "x-default": null } },
+        "from": { "type": "string", "metadata": { "x-default": null } },
+        "notes": { "elements": { "ref": "note" }, "metadata": { "x-empty": "omit" } }
+      }
+    },
+    "source": {
+      "metadata": {
+        "description": "One header block of PROP-066#display: the file or package the rows came from, its layer, the policy it declared, and its rows in declaration order.",
+        "x-wire-order": ["source", "layer", "policy", "rows"]
+      },
+      "properties": {
+        "source": { "type": "string" },
+        "layer": { "ref": "layer" },
+        "policy": { "ref": "unmatched_policy" },
+        "rows": { "elements": { "ref": "row" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "host_summary": {
+      "metadata": {
+        "description": "One entry of the footer of PROP-066#display: how many rows point at this host, and how that host classifies.",
+        "x-wire-order": ["host", "rows", "scheme", "reach"]
+      },
+      "properties": {
+        "host": { "type": "string" },
+        "rows": { "type": "uint32" },
+        "scheme": { "type": "string" },
+        "reach": { "ref": "reach" }
+      }
+    }
+  }
+}

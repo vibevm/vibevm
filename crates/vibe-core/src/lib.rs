@@ -27,6 +27,7 @@ pub mod package_ref;
 pub mod progress;
 pub mod provenance;
 pub mod rel_path;
+pub mod remap;
 pub mod settings;
 pub mod timestamp;
 pub mod user_config;

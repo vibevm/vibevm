@@ -60,6 +60,8 @@ pub enum FormatId {
     CliRegistryPublishReport,
     CliRegistrySyncReport,
     CliReinstallReport,
+    CliRemapExplanation,
+    CliRemapListing,
     CliUninstallReport,
     CliUpdateReport,
     CompilerIr,
