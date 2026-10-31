@@ -305,13 +305,22 @@ fn events(stderr: &[u8]) -> Vec<Value> {
         .collect()
 }
 
+fn labels_of(events: &[Value]) -> Vec<String> {
+    events
+        .iter()
+        .filter(|event| event["kind"] == "start")
+        .filter_map(|event| event["label"].as_str().map(str::to_owned))
+        .collect()
+}
+
+/// A step task is labelled `<id> (<kind>)  <title>` (PROP-065 `#display`).
 fn step_labels(events: &[Value]) -> Vec<String> {
     events
         .iter()
         .filter(|event| event["kind"] == "start")
         .filter_map(|event| event["label"].as_str())
-        .filter(|label| label.contains(": ") && !label.starts_with("Command"))
-        .map(|label| label.split(':').next().unwrap_or_default().to_owned())
+        .filter(|label| label.contains(" (") && !label.starts_with("Command"))
+        .map(|label| label.split(" (").next().unwrap_or_default().to_owned())
         .collect()
 }
 
@@ -460,10 +469,19 @@ fn a_tool_drives_describe_plan_install_runs_cancel_and_errors() {
     let fetch_task = stream
         .iter()
         .find(|event| {
-            event["kind"] == "start" && event["label"].as_str().unwrap_or("").starts_with("fetch:")
+            event["kind"] == "start"
+                && event["label"]
+                    .as_str()
+                    .unwrap_or("")
+                    .starts_with("fetch (sources)")
         })
         .map(|event| event["task"].clone())
-        .unwrap();
+        .unwrap_or_else(|| panic!("no fetch start in {:#?}", labels_of(&stream)));
+    assert_eq!(
+        labels_of(&stream)[1],
+        "fetch (sources) Fetch the sources",
+        "a step row names its id, its kind and its title"
+    );
     let measured = stream
         .iter()
         .find(|event| event["kind"] == "measurement" && event["task"] == fetch_task)

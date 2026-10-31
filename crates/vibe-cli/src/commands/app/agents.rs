@@ -14,6 +14,7 @@ use vibe_app::{
 };
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
+use super::display::asking;
 use super::global;
 use crate::output;
 
@@ -107,6 +108,10 @@ fn resume_command(args: impl Iterator<Item = String>) -> String {
 /// starts, and an agent's answer when it ends (stderr; `--json` keeps
 /// stdout to its envelope).
 fn notify(notice: &AgentNotice<'_>) {
+    asking(|| show(notice));
+}
+
+fn show(notice: &AgentNotice<'_>) {
     match notice {
         AgentNotice::Prompt(prompt) => {
             eprintln!(
@@ -132,14 +137,16 @@ fn notify(notice: &AgentNotice<'_>) {
 
 /// The attended consent question (PROP-064 `#consent`).
 fn confirm(prompt: &AgentPrompt<'_>) -> std::result::Result<bool, String> {
-    Confirm::new()
-        .with_prompt(format!(
-            "Run agent `{}` with the prompt of step `{}`?",
-            prompt.agent, prompt.step
-        ))
-        .default(false)
-        .interact()
-        .map_err(|error| error.to_string())
+    asking(|| {
+        Confirm::new()
+            .with_prompt(format!(
+                "Run agent `{}` with the prompt of step `{}`?",
+                prompt.agent, prompt.step
+            ))
+            .default(false)
+            .interact()
+            .map_err(|error| error.to_string())
+    })
 }
 
 /// A parked step prints the fenced `vibe-agent-tasks` block a hosting agent

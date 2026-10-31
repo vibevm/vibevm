@@ -19,6 +19,7 @@ use vibe_core::{PackageKind, PackageRef};
 use vibe_workspace::vibedeps;
 
 use super::agents::{AgentSetup, report_parked};
+use super::display::StepDisplay;
 use super::global::{self, Observation};
 use super::home;
 use crate::cli::{InstallArgs, UninstallArgs, UpdateArgs};
@@ -34,6 +35,9 @@ const ALLOW_LISTED_GROUP: &str = "org.vibevm";
 struct Materialise<'a> {
     verb: &'static str,
     request: InstallRequest,
+    /// What the materialisation shows of its children (PROP-065
+    /// `#display`); the flags of the project command resolved it.
+    display: &'a StepDisplay,
     consent: bool,
     offline: bool,
     root: &'a Path,
@@ -60,6 +64,7 @@ pub(crate) fn install(
     let offline = root_offline || args.offline;
     let path = args.path.clone();
     let request = global::request(choice, None, args.force, &args.steps);
+    let display = StepDisplay::open(ctx, &args.steps);
     let hidden = if args.hidden {
         args.packages
             .iter()
@@ -80,6 +85,7 @@ pub(crate) fn install(
         &Materialise {
             verb: "install",
             request,
+            display: &display,
             consent,
             offline,
             root: &root,
@@ -104,12 +110,14 @@ pub(crate) fn update(
         arch: args.arch.clone(),
         installer: args.installer.clone(),
     };
+    let display = StepDisplay::open(ctx, &args.steps);
     let flags = Materialise {
         verb: "update",
         request: InstallRequest {
             purge_previous: args.purge_previous,
             ..global::request(choice, None, args.force, &args.steps)
         },
+        display: &display,
         consent: args.assume_yes || ctx.is_unattended(),
         offline: root_offline,
         root,
@@ -131,7 +139,8 @@ pub(crate) fn uninstall(
     let settings = SettingsRoot::project(root, &global::settings_root()?);
     let installed = installed_app_dependency(root, &settings, &args.package)?;
     let mut outcomes = Vec::new();
-    let observe = Observation::new(ctx, true)?;
+    let flat = StepDisplay::flat();
+    let observe = Observation::new(ctx, true, &flat)?;
     if !installed.is_empty() {
         let proxy_image = global::proxy_image()?;
         let operation = OperationContext {
@@ -141,8 +150,7 @@ pub(crate) fn uninstall(
         };
         let request = global::remove_request(&args);
         for exact in &installed {
-            let removal =
-                ctx.suspend_progress(|| vibe_app::uninstall(&operation, exact, &request))?;
+            let removal = flat.around(ctx, || vibe_app::uninstall(&operation, exact, &request))?;
             match removal.outcome {
                 Some(outcome) => outcomes.push(outcome),
                 None => return super::report::render_removal(ctx, &removal),
@@ -212,7 +220,7 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
     if locked.is_empty() && !settings.path().join("applications").exists() {
         return Ok(());
     }
-    let observe = Observation::new(ctx, true)?;
+    let observe = Observation::new(ctx, true, flags.display)?;
     install_pending(ctx, flags, &settings, &locked, &observe)?;
     for outcome in remove_unrecorded(ctx, flags.root, &settings, flags.offline, &observe)? {
         ctx.summary(&format!(
@@ -232,7 +240,7 @@ fn install_pending(
     flags: &Materialise<'_>,
     settings: &SettingsRoot,
     locked: &[LockedPackage],
-    observe: &Observation,
+    observe: &Observation<'_>,
 ) -> Result<()> {
     let index = Index::load(settings)?;
     let roots = root_dependencies(flags.root)?;
@@ -302,7 +310,7 @@ fn install_pending(
             .installations
             .values()
             .any(|record| record.package.same_package(&resolved.package));
-        let outcome = ctx.suspend_progress(|| {
+        let outcome = flags.display.around(ctx, || {
             let operation = OperationContext {
                 agent: agents.hooks(),
                 resolver: Some(&resolver),
@@ -323,7 +331,8 @@ fn install_pending(
                     vibe_app::install(&operation, &resolved, request)
                 },
             )
-        })?;
+        });
+        let outcome = flags.display.report(ctx, outcome)?;
         ctx.summary(&format!(
             "vibe {}: application `{}` — {} in the project home `{}`",
             flags.verb,
@@ -343,7 +352,7 @@ fn remove_unrecorded(
     root: &Path,
     settings: &SettingsRoot,
     offline: bool,
-    observe: &Observation,
+    observe: &Observation<'_>,
 ) -> Result<Vec<vibe_app::Outcome>> {
     if !settings.path().join("applications").exists() {
         return Ok(Vec::new());
@@ -355,14 +364,15 @@ fn remove_unrecorded(
             .iter()
             .any(|row| coordinate(row).key() == package.key())
     };
-    let outcomes = ctx.suspend_progress(|| {
+    let outcomes = {
+        let _held = ctx.hold_progress();
         let operation = OperationContext {
             chooser: None,
             feature_chooser: None,
             ..global::operation(ctx, settings, offline, &proxy_image, None, observe)
         };
-        vibe_app::remove_unrecorded(&operation, &recorded)
-    })?;
+        vibe_app::remove_unrecorded(&operation, &recorded)?
+    };
     Ok(outcomes)
 }
 

@@ -116,6 +116,10 @@ impl Fixture {
             "VIBE_AGENT_COMMAND",
             "VIBE_AGENT_ARGS",
             "VIBE_INVOKED_BY",
+            // The step panel's own fallbacks (PROP-065 `#display`): these
+            // proofs name the mode they mean.
+            "VIBE_APP_LOG",
+            "VIBE_APP_LOG_TAIL",
         ] {
             command.env_remove(variable);
         }
@@ -379,6 +383,108 @@ fn a_step_list_plans_installs_fails_resumes_and_restarts() {
     assert_eq!(record["steps"][3]["outcome"], "skipped");
     ok(&fixture.vibe(&user, &["uninstall", "-g", name]));
     assert!(!payload.exists());
+}
+
+/// A one-step owned option whose recipe prints forty lines, and fails on
+/// `FAIL` in its package tree.
+fn noisy(fixture: &Fixture) -> PathBuf {
+    let log = fixture.log.display();
+    let package = fixture.package(
+        "noisy",
+        "[[installer_options.steps]]\nid = \"build\"\ntitle = \"Build\"\nkind = \"recipe\"\n\
+         interpreter = \"posix_sh\"\nscript = \"build.sh\"\n",
+    );
+    fs::write(
+        package.join("build.sh"),
+        format!(
+            "set -e\ni=1\nwhile [ $i -le 40 ]; do echo \"NOISE line $i\"; i=$((i+1)); done\n\
+             echo RECIPE >> '{log}'\ntest ! -f \"$VIBE_PACKAGE/FAIL\" || exit 5\n\
+             mkdir -p \"$VIBE_OUT/bin\"\necho ok > \"$VIBE_OUT/bin/tool\"\n"
+        ),
+    )
+    .unwrap();
+    package
+}
+
+/// The `log: <path>` line `--log quiet` prints instead of child output.
+fn named_log(stderr: &str) -> PathBuf {
+    let line = stderr
+        .lines()
+        .find(|line| line.starts_with("step `build` log: "))
+        .unwrap_or_else(|| panic!("no step log named in {stderr}"));
+    PathBuf::from(line.trim_start_matches("step `build` log: "))
+}
+
+#[test]
+fn the_log_mode_decides_what_child_output_reaches_the_terminal() {
+    let fixture = Fixture::new();
+    let package = noisy(&fixture);
+    let user = UserScratch::new();
+    let name = "org.example/noisy";
+
+    // --log quiet: the log path instead of the output, and the log keeps it.
+    let quiet = fixture.app(&user, &["install", "-g"], name, &["--log", "quiet"]);
+    let stdout = ok(&quiet);
+    let stderr = String::from_utf8_lossy(&quiet.stderr).into_owned();
+    assert!(!stdout.contains("NOISE"), "{stdout}");
+    assert!(!stderr.contains("NOISE"), "{stderr}");
+    let log = named_log(&stderr);
+    let kept = fs::read_to_string(&log).unwrap();
+    assert!(
+        kept.contains("NOISE line 1\n") && kept.contains("NOISE line 40\n"),
+        "{kept}"
+    );
+
+    // A fold of zero lines is a valid request.
+    ok(&fixture.app(&user, &["install", "-g"], name, &["--log-tail", "0"]));
+
+    // The same mode from the environment, when no flag names one.
+    let mut command = user.vibe();
+    command
+        .current_dir(fixture.root.path())
+        .env("VIBE_APP_LOG", "quiet")
+        .env("VIBE_APP_LOG_TAIL", "2")
+        .args([
+            "install",
+            "-g",
+            name,
+            "--registry",
+            fixture.registry.to_str().unwrap(),
+        ]);
+    let from_env = command.output().unwrap();
+    let text = String::from_utf8_lossy(&from_env.stderr).into_owned();
+    assert!(from_env.status.success(), "{text}");
+    assert!(!text.contains("NOISE"), "{text}");
+    assert!(text.contains("step `build` log: "), "{text}");
+
+    // --log live keeps today's stream.
+    let live = fixture.app(&user, &["install", "-g"], name, &["--log", "live"]);
+    assert!(ok(&live).contains("NOISE line 40"), "live streams output");
+
+    // A failing step shows its log tail before the error names the step.
+    fs::write(package.join("FAIL"), "").unwrap();
+    let failure = fixture.app(&user, &["install", "-g"], name, &["--log", "quiet"]);
+    let error = failed(&failure);
+    let log = named_log(&error);
+    assert!(
+        error.contains(&format!("last 30 lines of {}:", log.display())),
+        "{error}"
+    );
+    assert!(error.contains("NOISE line 40"), "{error}");
+    assert!(!error.contains("NOISE line 1\n"), "only the tail: {error}");
+    assert!(error.contains("step `build` (recipe)"), "{error}");
+    assert!(error.contains("--resume"), "{error}");
+
+    // --json keeps its one envelope and says nothing of the tail.
+    let envelope = fixture.app(&user, &["install", "-g"], name, &["--json"]);
+    let json_error = failed(&envelope);
+    assert!(!json_error.contains("last 30 lines of"), "{json_error}");
+    assert!(json_error.contains("step_failed"), "{json_error}");
+
+    // An unnamed mode is refused by the argument parser.
+    let refused = fixture.app(&user, &["install", "-g"], name, &["--log", "nope"]);
+    assert_eq!(refused.status.code(), Some(2), "{}", failed(&refused));
+    assert!(failed(&refused).contains("--log"), "{}", failed(&refused));
 }
 
 #[test]

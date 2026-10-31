@@ -1,4 +1,5 @@
-//! One installer child: started with inherited stdin, its stdout and stderr
+//! One installer child: started with inherited stdin — or none while the
+//! caller draws a step panel (`PROP-065#display`) — its stdout and stderr
 //! teed into the step's run log while they still stream live
 //! (`PROP-065#runs`), each output line observed as progress detail
 //! (`PROP-065#events`), and an interrupt forwarded to it and waited for
@@ -6,6 +7,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#child-output");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#cancellation");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#display");
 
 use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
@@ -45,6 +47,95 @@ pub trait Interrupt: Sync {
     fn poll(&self, child: Option<u32>) -> bool;
 }
 
+/// The caller's interactive step panel (`PROP-065#display`).
+///
+/// A child that takes the whole terminal cannot share it with drawn bars or
+/// a key reader, so it runs with the panel released. The runner calls the
+/// two halves in pairs; the caller counts them if it nests.
+///
+/// ```
+/// use std::cell::Cell;
+///
+/// /// What a renderer does: stop drawing, then draw again.
+/// struct Fold {
+///     drawing: Cell<bool>,
+///     released: Cell<usize>,
+/// }
+/// impl vibe_app::StepPanel for Fold {
+///     fn release(&self) {
+///         self.drawing.set(false);
+///         self.released.set(self.released.get() + 1);
+///     }
+///     fn reclaim(&self) {
+///         self.drawing.set(true);
+///     }
+/// }
+///
+/// let fold = Fold {
+///     drawing: Cell::new(true),
+///     released: Cell::new(0),
+/// };
+/// let panel: &dyn vibe_app::StepPanel = &fold;
+/// panel.release();
+/// assert!(!fold.drawing.get(), "an attached child owns the terminal");
+/// panel.reclaim();
+/// assert!(fold.drawing.get() && fold.released.get() == 1);
+/// ```
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#display")]
+pub trait StepPanel {
+    /// Stop drawing and reading keys, and restore the terminal mode.
+    fn release(&self);
+    /// Draw and read keys again.
+    fn reclaim(&self);
+}
+
+/// Told where each step that runs a child writes its output log, before
+/// that child starts (`PROP-065#display`).
+///
+/// The caller names the log, or shows the tail of it when the step fails;
+/// the runner itself keeps writing the log either way.
+///
+/// ```
+/// use std::cell::RefCell;
+/// use std::path::{Path, PathBuf};
+///
+/// /// What the CLI does: remember each step's log for a later tail.
+/// struct Logs(RefCell<Vec<(String, PathBuf)>>);
+/// impl vibe_app::StepLogs for Logs {
+///     fn opening(&self, step: &str, log: &Path) {
+///         self.0.borrow_mut().push((step.to_owned(), log.to_owned()));
+///     }
+/// }
+///
+/// let logs = Logs(RefCell::new(Vec::new()));
+/// let told: &dyn vibe_app::StepLogs = &logs;
+/// told.opening("build", Path::new("/runs/1/steps/build/output.log"));
+/// assert_eq!(logs.0.borrow()[0].0, "build");
+/// assert!(logs.0.borrow()[0].1.ends_with("output.log"));
+/// ```
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#display")]
+pub trait StepLogs {
+    /// Name the output log of `step` before its child starts.
+    fn opening(&self, step: &str, log: &Path);
+}
+
+/// Holds the release for the lifetime of an attached child, so an early
+/// return or an unwind still gives the panel back.
+pub(crate) struct Released<'a>(&'a dyn StepPanel);
+
+impl<'a> Released<'a> {
+    pub(crate) fn hold(panel: &'a dyn StepPanel) -> Self {
+        panel.release();
+        Self(panel)
+    }
+}
+
+impl Drop for Released<'_> {
+    fn drop(&mut self) {
+        self.0.reclaim();
+    }
+}
+
 /// Where a child's output goes besides its run log.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum Relay {
@@ -66,6 +157,11 @@ pub(crate) struct ChildIo<'a> {
     pub stdout_log: Option<&'a Path>,
     pub task: Option<&'a ProgressTask>,
     pub interrupt: Option<&'a dyn Interrupt>,
+    /// A child that does not own the terminal gets no stdin of its own
+    /// while the caller's panel draws over it (`PROP-065#display`).
+    pub stdin_null: bool,
+    /// Released around a child that takes the whole terminal.
+    pub panel: Option<&'a dyn StepPanel>,
 }
 
 #[cfg(test)]
@@ -78,6 +174,8 @@ impl ChildIo<'static> {
             stdout_log: None,
             task: None,
             interrupt: None,
+            stdin_null: false,
+            panel: None,
         }
     }
 }
@@ -108,7 +206,11 @@ pub(crate) fn run_child(
         None => None,
     };
     command
-        .stdin(Stdio::inherit())
+        .stdin(if observe.stdin_null {
+            Stdio::null()
+        } else {
+            Stdio::inherit()
+        })
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
     let mut child = command.spawn().map_err(spawn_error)?;
@@ -338,6 +440,8 @@ mod tests {
             stdout_log: Some(&transcript),
             task: Some(&task),
             interrupt: None,
+            stdin_null: false,
+            panel: None,
         };
         run_child(&mut command, "recipe", &observe).unwrap();
         let text = fs::read_to_string(&log).unwrap();
@@ -355,6 +459,36 @@ mod tests {
         let mut lines = details.0.lock().unwrap().clone();
         lines.sort();
         assert_eq!(lines, ["one", "tail", "two"]);
+    }
+
+    #[test]
+    fn a_panelled_child_keeps_its_log_and_reads_no_stdin() {
+        let dir = tempfile::tempdir().unwrap();
+        let log = dir.path().join("steps/build/output.log");
+        let details = Arc::new(Details(Mutex::new(Vec::new())));
+        let task = Progress::new(details.clone()).task("build");
+        let mut command = Command::new("/bin/sh");
+        // Reading stdin would block forever on an inherited terminal; with
+        // `Stdio::null` the read ends at once and the step proceeds.
+        command.args(["-c", "cat > read.txt; echo QUIET_LINE"]);
+        command.current_dir(dir.path());
+        let observe = ChildIo {
+            relay: Relay::Quiet,
+            log: Some(&log),
+            stdout_log: None,
+            task: Some(&task),
+            interrupt: None,
+            stdin_null: true,
+            panel: None,
+        };
+        run_child(&mut command, "recipe", &observe).unwrap();
+        assert_eq!(fs::read_to_string(dir.path().join("read.txt")).unwrap(), "");
+        assert_eq!(
+            fs::read_to_string(&log).unwrap(),
+            "QUIET_LINE\n",
+            "a quiet relay still writes every byte to the run log"
+        );
+        assert_eq!(details.0.lock().unwrap().as_slice(), ["QUIET_LINE"]);
     }
 
     #[test]

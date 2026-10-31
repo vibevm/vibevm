@@ -14,9 +14,11 @@ use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use crate::cli::AgentModeArg;
 
 mod machine;
+mod panel;
 mod progress;
 mod structured;
 use machine::MachineRenderer;
+pub(crate) use panel::ProgressPanel;
 use progress::ProgressRenderer;
 pub(crate) use progress::{ProgressMode, sanitize_progress_text};
 pub(crate) use structured::app_error;
@@ -59,6 +61,28 @@ fn env_invoked_by() -> Option<String> {
         .ok()
         .map(|s| s.trim().to_string())
         .filter(|s| !s.is_empty())
+}
+
+/// Read the `VIBE_APP_LOG` env-var: the fallback for `--log` when the flag
+/// is absent (PROP-065 `#display`). Resolved here, with the invocation's
+/// other `VIBE_*` posture variables, so the application step display takes
+/// its mode as data and reads no environment of its own.
+pub fn env_app_log() -> Option<String> {
+    env_nonempty("VIBE_APP_LOG")
+}
+
+/// Read the `VIBE_APP_LOG_TAIL` env-var: the fallback for `--log-tail`.
+pub fn env_app_log_tail() -> Option<String> {
+    env_nonempty("VIBE_APP_LOG_TAIL")
+}
+
+/// One trimmed, nonempty environment value, or nothing: an exported
+/// `VIBE_APP_LOG=` must not shadow the flag-absent default.
+fn env_nonempty(name: &str) -> Option<String> {
+    std::env::var(name)
+        .ok()
+        .map(|value| value.trim().to_owned())
+        .filter(|value| !value.is_empty())
 }
 
 /// Resolve the agent context: CLI flag > env-var > unset. Empty
@@ -186,6 +210,9 @@ pub struct Context {
     progress_renderer: Option<Arc<ProgressRenderer>>,
     /// `--progress-format json`: `progress` feeds the machine renderer.
     machine_progress: bool,
+    /// Whether standard input is a terminal this invocation may read keys
+    /// from (PROP-065 `#display`); resolved once at the composition root.
+    terminal_input: bool,
     pub(crate) agent_user_dirs: vibe_agent_projection::agents::AgentUserDirectories,
     /// Detailed rendering policy belongs only to the CLI composition root.
     #[cfg(test)]
@@ -227,6 +254,7 @@ impl Context {
             progress: Progress::default(),
             progress_renderer: None,
             machine_progress: false,
+            terminal_input: false,
             agent_user_dirs: vibe_agent_projection::agents::AgentUserDirectories::ambient(),
             #[cfg(test)]
             verbose: false,

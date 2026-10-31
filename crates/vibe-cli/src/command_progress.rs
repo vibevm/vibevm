@@ -87,6 +87,10 @@ pub(crate) enum CommandPolicy {
     ExistingRoot,
     /// A finite invocation gets one plain stderr liveness fallback.
     FiniteFallback(&'static str),
+    /// A finite invocation whose own output is synchronized with the
+    /// renderer: the same named fallback root, drawn with bars on an
+    /// interactive terminal (PROP-065 `#display`).
+    InteractiveFallback(&'static str),
     /// A TUI or other interface owns the terminal until it exits.
     Interactive,
     /// A long-lived server or stdio protocol owns its streams.
@@ -106,9 +110,12 @@ impl CommandPolicy {
             return ProgressMode::Disabled;
         }
         match self {
-            Self::ExistingRoot if stderr_interactive => ProgressMode::Interactive,
+            Self::ExistingRoot | Self::InteractiveFallback(_) if stderr_interactive => {
+                ProgressMode::Interactive
+            }
             Self::ExistingRoot
             | Self::FiniteFallback(_)
+            | Self::InteractiveFallback(_)
             | Self::Interactive
             | Self::PersistentProtocol
             | Self::TerminalPassthrough => ProgressMode::Plain,
@@ -118,7 +125,7 @@ impl CommandPolicy {
 
     fn fallback_label(self) -> Option<&'static str> {
         match self {
-            Self::FiniteFallback(label) => Some(label),
+            Self::FiniteFallback(label) | Self::InteractiveFallback(label) => Some(label),
             _ => None,
         }
     }
@@ -130,8 +137,8 @@ impl CommandPolicy {
 /// `tree` route can distinguish its TUI from its redirected plain rendering.
 pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolicy {
     use CommandPolicy::{
-        ExistingRoot, FastMetadata, FiniteFallback, Interactive, PersistentProtocol,
-        SilentMetadata, TerminalPassthrough,
+        ExistingRoot, FastMetadata, FiniteFallback, Interactive, InteractiveFallback,
+        PersistentProtocol, SilentMetadata, TerminalPassthrough,
     };
 
     match command {
@@ -148,7 +155,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         {
             ExistingRoot
         }
-        Command::Install(_) => FiniteFallback("Command global install"),
+        // A global application install runs the step panel of PROP-065
+        // `#display`, so its own output is synchronized with the renderer.
+        Command::Install(_) => InteractiveFallback("Command global install"),
         Command::Generate(_) => FiniteFallback("Command generate"),
         Command::Build(_) => FiniteFallback("Command build"),
         Command::Test(_) => FiniteFallback("Command test"),
@@ -241,6 +250,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         },
         Command::Drain(_) => FiniteFallback("Command command"),
         Command::Uninstall(_) => FiniteFallback("Command uninstall"),
+        Command::Update(args) if args.global => InteractiveFallback("Command global update"),
         Command::Update(_) => FiniteFallback("Command update"),
         Command::Reinstall(_) => FiniteFallback("Command reinstall"),
         Command::Check(_) => FiniteFallback("Command check"),
@@ -374,6 +384,19 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
     }
 }
 
+/// Which of this invocation's standard streams are terminals, read once at
+/// the composition root so nothing below consults the ambient process.
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct Streams {
+    /// Standard output: decides a command's own interface policy.
+    pub(crate) stdout: bool,
+    /// Standard error: decides whether progress may manage the cursor.
+    pub(crate) stderr: bool,
+    /// Standard input: decides whether a panel may read keys
+    /// (PROP-065 `#display`).
+    pub(crate) stdin: bool,
+}
+
 /// Resolve the documented flag/environment opt-out without ambient reads.
 pub(crate) fn progress_disabled(flag: bool, environment: Option<&str>) -> bool {
     flag || environment.is_some_and(|value| {
@@ -401,16 +424,16 @@ pub(crate) fn configure_context(
     root: Context,
     command: &Command,
     verbose: bool,
-    stdout_interactive: bool,
-    stderr_interactive: bool,
+    streams: Streams,
     disabled: bool,
     machine: bool,
 ) -> (Context, CommandActivity) {
-    let policy = policy(command, stdout_interactive);
+    let policy = policy(command, streams.stdout);
+    let root = root.with_terminal_input(streams.stdin);
     let root = if machine && !disabled {
         root.with_machine_progress()
     } else {
-        root.with_progress(verbose, policy.progress_mode(stderr_interactive, disabled))
+        root.with_progress(verbose, policy.progress_mode(streams.stderr, disabled))
     };
     let activity = CommandActivity::start(&root, policy);
     let scoped = activity.scoped_context(&root);

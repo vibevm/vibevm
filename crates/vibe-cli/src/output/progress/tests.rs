@@ -1,7 +1,7 @@
 use super::*;
 use indicatif::InMemoryTerm;
 use std::sync::MutexGuard;
-use vibe_core::progress::Progress;
+use vibe_core::progress::{Progress, ProgressDiagnosticLevel};
 
 #[derive(Clone, Default)]
 struct SharedWriter(Arc<Mutex<Vec<u8>>>);
@@ -159,6 +159,145 @@ fn interactive_long_nested_label_stays_within_eighty_columns() {
     assert!(contents.lines().all(|line| line.chars().count() <= 80));
     child.finish();
     parent.finish();
+}
+
+/// The step panel of PROP-065 `#display` over an in-memory terminal.
+fn panelled(
+    rows: u16,
+    columns: u16,
+    tail: usize,
+    expanded: bool,
+) -> (InMemoryTerm, Arc<ProgressRenderer>) {
+    let terminal = InMemoryTerm::new(rows, columns);
+    let renderer = ProgressRenderer::interactive_target(
+        ProgressDrawTarget::term_like(Box::new(terminal.clone())),
+        false,
+    );
+    assert!(renderer.open_panel_every(tail, expanded, Duration::ZERO));
+    (terminal, renderer)
+}
+
+#[test]
+fn a_step_panel_folds_the_last_tail_lines_under_its_step_and_erases_them_on_finish() {
+    let (terminal, renderer) = panelled(12, 60, 5, false);
+    let progress = Progress::new(renderer.clone());
+    let step = progress.task("build (recipe)  Build");
+    for line in 1..=7 {
+        step.detail(format!("line {line}"));
+    }
+
+    let folded = terminal.contents();
+    assert!(folded.contains("build (recipe)"), "{folded:?}");
+    for kept in ["line 3", "line 4", "line 5", "line 6", "line 7"] {
+        assert!(folded.contains(kept), "{kept} missing from {folded:?}");
+    }
+    for replaced in ["line 1", "line 2"] {
+        assert!(!folded.contains(replaced), "{replaced} kept in {folded:?}");
+    }
+    assert!(
+        folded.lines().all(|line| line.chars().count() <= 60),
+        "{folded:?}"
+    );
+
+    step.finish();
+    renderer.suspend(|| ());
+    let after = terminal.contents();
+    assert!(after.contains("✓ build (recipe)"), "{after:?}");
+    assert!(
+        !after.contains("line 7"),
+        "the fold goes with its step: {after:?}"
+    );
+}
+
+#[test]
+fn a_zero_tail_draws_the_step_row_alone() {
+    let (terminal, renderer) = panelled(6, 60, 0, false);
+    let progress = Progress::new(renderer.clone());
+    let step = progress.task("build (recipe)  Build");
+    step.detail("not shown");
+    let contents = terminal.contents();
+    assert!(contents.contains("build (recipe)"), "{contents:?}");
+    assert!(!contents.contains("not shown"), "{contents:?}");
+    step.finish();
+}
+
+#[test]
+fn the_panel_toggle_replaces_the_fold_with_the_live_stream_and_folds_back() {
+    let (terminal, renderer) = panelled(12, 60, 5, false);
+    let progress = Progress::new(renderer.clone());
+    let step = progress.task("build (recipe)  Build");
+    step.detail("folded line");
+    assert!(terminal.contents().contains("folded line"));
+
+    renderer.toggle_panel();
+    step.detail("streamed line");
+    let expanded = terminal.contents();
+    assert!(expanded.contains("streamed line"), "{expanded:?}");
+    assert!(
+        !expanded.contains("folded line"),
+        "opening the fold erases it: {expanded:?}"
+    );
+
+    renderer.toggle_panel();
+    step.detail("folded again");
+    let refolded = terminal.contents();
+    assert!(
+        refolded.contains("streamed line"),
+        "no history is redrawn: {refolded:?}"
+    );
+    assert!(refolded.contains("folded again"), "{refolded:?}");
+    step.finish();
+}
+
+#[test]
+fn a_closed_panel_restores_the_verbose_detail_record_and_plain_draws_none() {
+    let (terminal, renderer) = panelled(12, 80, 5, false);
+    let progress = Progress::new(renderer.clone());
+    let step = progress.task("build (recipe)  Build");
+    step.detail("folded line");
+    renderer.close_panel();
+    let closed = terminal.contents();
+    assert!(!closed.contains("folded line"), "{closed:?}");
+    step.detail("after the panel");
+    assert!(
+        !terminal.contents().contains("after the panel"),
+        "a non-verbose renderer keeps detail to itself"
+    );
+    step.finish();
+
+    let writer = SharedWriter::default();
+    assert!(
+        !ProgressRenderer::plain(Box::new(writer), false).open_panel(5, false),
+        "a plain renderer draws no fold"
+    );
+}
+
+#[test]
+fn a_download_with_a_known_total_draws_a_bytes_bar() {
+    let (terminal, renderer) = panelled(8, 80, 5, false);
+    let progress = Progress::new(renderer.clone());
+    let fetch = progress.task("fetch (sources)  Fetch the sources");
+    fetch.set_progress(5 * 1024 * 1024, Some(10 * 1024 * 1024), "bytes");
+    renderer.suspend(|| ());
+    let bar = terminal.contents();
+    assert!(
+        bar.contains("/10.00 MiB"),
+        "a known total gives a bar: {bar:?}"
+    );
+    assert!(bar.contains("----"), "{bar:?}");
+    fetch.finish();
+
+    let unknown = progress.task("fetch (sources)  Fetch an unsized input");
+    unknown.set_progress(3 * 1024 * 1024, None, "bytes");
+    renderer.suspend(|| ());
+    let spinner = terminal.contents();
+    assert!(
+        spinner
+            .lines()
+            .any(|line| line.contains("Fetch an unsized input") && !line.contains("----")),
+        "an unknown total gives the bytes spinner: {spinner:?}"
+    );
+    unknown.finish();
 }
 
 #[test]

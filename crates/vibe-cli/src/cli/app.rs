@@ -3,6 +3,7 @@
 //! the structured-installation flags of `install` / `update`.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#display");
 
 /// User application operations. Inside a project (the working directory or
 /// `--path` holds `vibe.toml`) they act on the project home; `-g` or no
@@ -76,6 +77,36 @@ pub struct AppStepArgs {
     /// later `--from-step ID` restarts the build inside it.
     #[arg(long)]
     pub keep_work: bool,
+
+    /// How the step panel shows child output (PROP-065 `#display`):
+    /// `auto` folds the last lines under the running step on an
+    /// interactive terminal and streams live elsewhere, `live` starts with
+    /// the fold open, `tail` keeps it closed, `quiet` shows only each
+    /// step's log path. Falls back to `VIBE_APP_LOG`. Press `l` to fold
+    /// and unfold while a step runs.
+    #[arg(long, value_name = "MODE", value_enum)]
+    pub log: Option<AppLogArg>,
+
+    /// How many child-output lines stay folded under the running step
+    /// (default 5, `0` draws the step row alone). Falls back to
+    /// `VIBE_APP_LOG_TAIL`.
+    #[arg(long, value_name = "N")]
+    pub log_tail: Option<usize>,
+}
+
+/// How a step run shows the output of its children (PROP-065 `#display`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#display")]
+pub enum AppLogArg {
+    /// Fold the output under the running step on an interactive terminal,
+    /// stream it live anywhere else.
+    Auto,
+    /// Start with the fold open: every line above the step panel.
+    Live,
+    /// Keep the fold closed wherever a terminal can draw one.
+    Tail,
+    /// Show no child output at all, only each step's log path.
+    Quiet,
 }
 
 /// The mark of `vibe app mark` (PROP-065 `#uninstall-tree`).

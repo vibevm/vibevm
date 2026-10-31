@@ -50,10 +50,29 @@ fn existing_roots_do_not_gain_duplicate_fallback_tasks() {
             ProgressMode::Interactive
         );
     }
+    // A global application install draws the step panel of PROP-065
+    // `#display`: one named root, with bars on an interactive terminal.
     assert_eq!(
         parsed_policy(&["vibe", "install", "--global", "app:example"], true),
-        CommandPolicy::FiniteFallback("Command global install")
+        CommandPolicy::InteractiveFallback("Command global install")
     );
+    for argv in [
+        &["vibe", "install", "--global", "app:example"][..],
+        &["vibe", "update", "--global", "org.example/tool"][..],
+    ] {
+        let policy = parsed_policy(argv, true);
+        assert_eq!(
+            policy.progress_mode(true, false),
+            ProgressMode::Interactive,
+            "{argv:?}"
+        );
+        assert_eq!(
+            policy.progress_mode(false, false),
+            ProgressMode::Plain,
+            "{argv:?}"
+        );
+        assert!(policy.fallback_label().is_some(), "{argv:?}");
+    }
 }
 
 #[test]
@@ -226,8 +245,11 @@ fn the_machine_format_comes_from_the_flag_then_the_environment() {
         Context::from_flags(false, true, None, false, crate::cli::AgentModeArg::Auto),
         &cli.command,
         false,
-        false,
-        false,
+        Streams {
+            stdout: false,
+            stderr: false,
+            stdin: false,
+        },
         false,
         true,
     );
