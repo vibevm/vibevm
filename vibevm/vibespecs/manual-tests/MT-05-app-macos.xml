@@ -73,6 +73,12 @@ ls "$VIBE_SETTINGS/opt/bin" "$VIBE_SETTINGS/opt/apps/vim" 2&gt;&amp;1</fence>
     <fence>"$vibe" app describe org.vibevm.apps/vim --json | jq '.options[] | select(.id == "windows-source") | .steps[] | select(.requires) | {id, requires}'
 "$vibe" app plan org.vibevm.apps/vim --platform windows --arch x86_64 --installer windows-source --json; echo "exit $?"</fence>
     <p><EXP-REQUIREMENT fact="true" status="impl/work">**Expected.** `describe` names the build step with `requires: [{package: "org.vibevm.apps/mingw-w64@^15.2", scope: "build"}]` without resolving anything. The plan is refused before any download with exit 2 and the error code `requirement_unresolved`, naming `org.vibevm.apps/mingw-w64@^15.2` and the absence of an installer option for this host; `$VIBE_SETTINGS` gains no `applications/index.json`.</EXP-REQUIREMENT></p>
+    <facts ordered="true">
+      <STEP-MENU fact="true" status="impl/work">**Start-menu metadata and icons (PROP-059 `#menu`).** With `org.vibevm.apps/vim@1.1.2` installed from sources:</STEP-MENU>
+    </facts>
+    <fence>"$vibe" app launchers -g --all --menu --json
+"$vibe" app icon -g org.vibevm.apps/vim --size 48</fence>
+    <p><EXP-MENU fact="true" status="impl/done">**Expected.** One menu entry, the `tui` launcher `vim` under group `Vim`, whose icon set names the package SVG copied under `$VIBE_SETTINGS/applications/icons/org.vibevm.apps.vim@1.1.2/icons/vim.svg`; `app icon --size 48` prints that path (no raster exists, so the SVG answers); a graphical client opens the entry through a terminal because the kind is `tui`.</EXP-MENU></p>
   </section>
   <section title="Pass">
     <p><pass-criteria fact="true" status="impl/work">Every step reads as described on a real Mac: detection, the source build with the Xcode tools, the relocated runtime, signals through the proxy, `vibe shell` for zsh, bash and the fallback, the external-volume library with unavailability and moves, the offline rebuild and a clean uninstall. The owner signs the date below.</pass-criteria></p>
