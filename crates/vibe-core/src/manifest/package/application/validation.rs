@@ -97,9 +97,9 @@ impl InstallerOptionDecl {
         self.validate_steps()?;
         let mut public_names = BTreeSet::new();
         for command in &self.public_commands {
-            if !is_portable_token(&command.name) || command.name == "vibe" {
+            if !is_command_name(&command.name) || command.name == "vibe" {
                 return Err(format!(
-                    "[[installer_options.public_commands]].name `{}` must be a portable lowercase token other than `vibe`",
+                    "[[installer_options.public_commands]].name `{}` must be a command name (a lowercase letter or digit, then letters, digits, `-`, `_`, `.` or `+`, like `g++` or `python3.12`) other than `vibe`",
                     command.name
                 ));
             }
@@ -486,4 +486,23 @@ pub(super) fn credential_free_http(value: &str) -> bool {
         Some(rest) => credential_free_https(&format!("https://{rest}")),
         None => credential_free_https(value),
     }
+}
+
+/// A PATH command name as toolchains spell them: a lowercase ASCII letter or
+/// digit first, then letters, digits, `-`, `_`, `.` or `+`, ending in a
+/// letter, digit or `+`, with no `..` run. Wider than the portable-token
+/// grammar of ids because `g++`, `clang++` and `python3.12` are real
+/// commands a package must be able to publish.
+fn is_command_name(value: &str) -> bool {
+    let bytes = value.as_bytes();
+    let edge_ok = |byte: u8| byte.is_ascii_lowercase() || byte.is_ascii_digit();
+    let Some((&first, &last)) = bytes.first().zip(bytes.last()) else {
+        return false;
+    };
+    if !edge_ok(first) || !(edge_ok(last) || last == b'+') || value.contains("..") {
+        return false;
+    }
+    bytes
+        .iter()
+        .all(|byte| edge_ok(*byte) || matches!(byte, b'-' | b'_' | b'.' | b'+'))
 }
