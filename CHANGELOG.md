@@ -8,6 +8,8 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+- **Fix: a developer's embedded registry no longer hides application packages.** A source-installed `vibe` (`vibe self`, origin `external`) treats its checkout's `vibevm/vibepacks` as the embedded registry; `vibe install -g`, `app plan` and the other application verbs used it as the only source and answered `not in the registry` for every package it did not carry. Per PROP-030 `#precedence` the embedded registry is now first in the chain and a package it lacks falls through to the declared registries; an explicit `--registry` stays the whole source. Release bundles (origin `binary`) were never affected.
+
 ## [1.0.8] — 2026-10-31
 
 **Upgrade notes.**

@@ -37,8 +37,10 @@ pub(crate) fn proxy_image() -> Result<PathBuf> {
     Ok(exe.with_file_name(crate::commands::vvm::APP_PROXY_BINARY_NAME))
 }
 
-/// Resolve one app package: an explicit (or embedded) local registry first,
-/// otherwise the configured global registries.
+/// Resolve one app package: an explicit `--registry` is the whole source;
+/// a developer's embedded registry (PROP-030 `#precedence`) is first in the
+/// chain and a package it does not carry falls through to the configured
+/// global registries, which are the source otherwise.
 pub(crate) fn resolve_package(
     settings: &SettingsRoot,
     registry: Option<&Path>,
@@ -46,12 +48,22 @@ pub(crate) fn resolve_package(
     spelling: &str,
     offline: bool,
 ) -> Result<ResolvedPackage> {
-    if let Some(root) = registry.or(embedded_root) {
-        let local = crate::registry::application_local_registry(root.to_path_buf())
-            .with_context(|| format!("opening the application registry `{}`", root.display()))?;
+    if let Some(root) = registry {
+        let local = open_local(root)?;
         return Ok(vibe_app::from_local_registry(&local, root, spelling)?);
     }
+    if let Some(root) = embedded_root {
+        let local = open_local(root)?;
+        if vibe_app::local_registry_carries(&local, spelling)? {
+            return Ok(vibe_app::from_local_registry(&local, root, spelling)?);
+        }
+    }
     Ok(vibe_app::from_global(settings.path(), spelling, offline)?)
+}
+
+fn open_local(root: &Path) -> Result<vibe_registry::LocalRegistry> {
+    crate::registry::application_local_registry(root.to_path_buf())
+        .with_context(|| format!("opening the application registry `{}`", root.display()))
 }
 
 /// The package resolver of one command: the same explicit (or embedded)
