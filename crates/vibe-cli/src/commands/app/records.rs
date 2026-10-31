@@ -49,7 +49,8 @@ pub(super) fn runs(
 }
 
 /// The error-code table: code, enum, meaning and exit status (0 success,
-/// 1 a failed or interrupted step, 2 a refusal before any effect).
+/// 1 a failed or interrupted step, 2 a refusal before any effect, 75 a run
+/// parked for a hosting agent).
 pub(super) fn errors(ctx: &output::Context) -> Result<()> {
     let document = ApplicationErrors {
         protocol: "vibe-app-errors/1".into(),
@@ -67,7 +68,8 @@ pub(super) fn errors(ctx: &output::Context) -> Result<()> {
         return ctx.emit_json(&document);
     }
     ctx.summary(&format!(
-        "{} error code(s); exit status 0 success, 1 a failed or interrupted step, 2 a refusal before any effect",
+        "{} error code(s); exit status 0 success, 1 a failed or interrupted step, 2 a refusal before any effect, \
+         75 a run parked for a hosting agent",
         document.codes.len()
     ));
     if ctx.is_quiet() {

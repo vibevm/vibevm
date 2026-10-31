@@ -20,6 +20,50 @@ pub struct StepsFile {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum AgentMode {
+    #[serde(rename = "interactive")]
+    Interactive,
+
+    #[serde(rename = "unattended")]
+    Unattended,
+}
+
+/// One agent hook run of the step (PROP-064#record): the agent, the mode, the
+/// run directory holding the envelope, and when it ended the duration and the
+/// answer.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AgentRun {
+    pub agent: String,
+
+    pub mode: AgentMode,
+
+    pub envelope: String,
+
+    #[serde(rename = "durationMs")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_ms: Option<u32>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub status: Option<AgentStatus>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub message: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum AgentStatus {
+    #[serde(rename = "fail")]
+    Fail,
+
+    #[serde(rename = "ok")]
+    Ok,
+
+    #[serde(rename = "parked")]
+    Parked,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Interpreter {
     #[serde(rename = "posix_sh")]
     PosixSh,
@@ -86,4 +130,7 @@ pub struct Step {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub interpreter: Option<Interpreter>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub agent: Option<AgentRun>,
 }

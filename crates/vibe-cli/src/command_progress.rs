@@ -3,7 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-060#COMMAND-COVERAGE");
 
 use crate::cli::{
-    AgenticSubcommand, AiuiSubcommand, BinCmd, CacheSubcommand, Command, DocCommand,
+    AgentCommand, AgenticSubcommand, AiuiSubcommand, BinCmd, CacheSubcommand, Command, DocCommand,
     DocShellCommand, ExtensionsCommand, McpSubcommand, PrefsSubcommand, ProgressFormat,
     ProgressSubcommand, RegistryRemoveTarget, RegistrySubcommand, ScrapeCommand,
     ScrapeContractCommand, ShowSubcommand, SkillSubcommand, StorageCommand, VvmSubcommand,
@@ -17,6 +17,7 @@ use vibe_core::progress::{Progress, ProgressTask};
 /// Every top-level Clap command, used by the policy-inventory regression.
 #[cfg(test)]
 pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
+    "agent",
     "agentic",
     "aiui",
     "app",
@@ -211,6 +212,12 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             StorageCommand::Detach { .. } => FiniteFallback("Command storage detach"),
             StorageCommand::Move { .. } => FiniteFallback("Command storage move"),
             StorageCommand::Gc { .. } => FiniteFallback("Command storage gc"),
+        },
+        Command::Agent(args) => match &args.command {
+            AgentCommand::List | AgentCommand::Presets => FastMetadata,
+            AgentCommand::Use { .. } => FiniteFallback("Command agent use"),
+            AgentCommand::Add { .. } => FiniteFallback("Command agent add"),
+            AgentCommand::Remove { .. } => FiniteFallback("Command agent remove"),
         },
         Command::Skill(args) => match &args.command {
             SkillSubcommand::List(_) => FastMetadata,

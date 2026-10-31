@@ -113,6 +113,13 @@ impl SettingsRoot {
         self.root.join("cache").join("app-runs")
     }
 
+    /// `<settings>/agents.toml`, the agent hook registry (`PROP-064`). The
+    /// caller reads it from the user home also when installing into a
+    /// project home, so a project inherits the user's agents.
+    pub fn agents_path(&self) -> PathBuf {
+        self.root.join("agents.toml")
+    }
+
     /// Take the `applications/.mutation.lock` exclusive lock, creating the
     /// state directory on first use. A held lock is refused, never awaited.
     pub fn lock(&self) -> Result<MutationLock, StateError> {

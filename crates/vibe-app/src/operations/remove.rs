@@ -220,6 +220,7 @@ fn run_uninstalls(
         let observe = ChildIo {
             relay: ctx.relay(),
             log: Some(&log),
+            stdout_log: None,
             task: Some(&task),
             interrupt: ctx.interrupt,
         };
@@ -254,6 +255,7 @@ fn run_uninstalls(
             started: Some(started),
             finished: Some(chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)),
             uninstall: AuthoredCommands::default(),
+            agent: None,
         });
         record.steps(&state);
         if let Err(error) = result {

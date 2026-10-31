@@ -86,7 +86,9 @@ pub struct InstallArgs {
     pub global: bool,
 
     /// Target coding agent for a global MCP package. Without this flag an
-    /// interactive terminal offers all detected agents by default.
+    /// interactive terminal offers all detected agents by default. For a
+    /// global application, the agent that runs the installer's agent steps:
+    /// a definition of agents.toml or a built-in preset (PROP-064).
     #[arg(long, requires = "global")]
     pub agent: Option<String>,
 
@@ -454,6 +456,11 @@ pub struct UpdateArgs {
     /// Ask the selected application installer to force its update operation.
     #[arg(long)]
     pub force: bool,
+
+    /// The agent that runs the agent steps of a global application
+    /// installer: a definition of agents.toml or a built-in preset (PROP-064).
+    #[arg(long, value_name = "NAME", requires = "global")]
+    pub agent: Option<String>,
 
     /// Pin the resolved version exactly (`=x.y.z`) in
     /// `vibe.toml` `[requires].packages` instead of preserving the

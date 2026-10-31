@@ -17,6 +17,7 @@ use specmark::spec;
 use vibe_core::manifest::{InstallerOptionDecl, result_of};
 use vibe_core::progress::Progress;
 
+use crate::agents::AgentHooks;
 use crate::alternatives::{check_reservation, reserved_names};
 use crate::error::{AppError, ResolveError};
 use crate::index::{Index, Location, Method};
@@ -63,6 +64,8 @@ pub struct OperationContext<'a> {
     pub quiet_children: bool,
     /// Signals the caller received (`PROP-065#cancellation`).
     pub interrupt: Option<&'a dyn Interrupt>,
+    /// The agent of `agent` steps, consent and parking (`PROP-064`).
+    pub agent: AgentHooks<'a>,
 }
 
 impl OperationContext<'_> {
@@ -309,6 +312,7 @@ fn plan_option(
             parameter: ctx.parameter_prompt,
             license: ctx.license_prompt,
         },
+        agent: ctx.agent,
     })?;
     if let Some(show) = ctx.on_plan {
         show(&plan);

@@ -259,3 +259,105 @@ fn the_result_must_be_producible() {
     );
     assert!(refused(&with_method).contains("apply only to [[steps]]"));
 }
+
+#[test]
+fn an_agent_step_takes_a_multi_line_prompt_or_a_prompt_file_and_a_mode() {
+    use crate::manifest::AgentMode;
+
+    let multi_line = four_steps().replace(
+        "prompt = \"Fix $sources for ${feature:docs}\"",
+        "prompt = \"\"\"\nFix $sources.\n\tKeep $$HOME untouched.\n\"\"\"\nrequired = true",
+    );
+    let parsed = option(&multi_line);
+    let StepKind::Agent {
+        prompt,
+        prompt_file,
+        mode,
+        required,
+    } = &parsed.steps[1].kind
+    else {
+        panic!("step `fix` is an agent step");
+    };
+    assert_eq!(
+        prompt.as_deref(),
+        Some("Fix $sources.\n\tKeep $$HOME untouched.\n")
+    );
+    assert_eq!(
+        (prompt_file, *mode, *required),
+        (&None, Some(AgentMode::Unattended), true)
+    );
+
+    let from_file = four_steps()
+        .replace(
+            "prompt = \"Fix $sources for ${feature:docs}\"",
+            "prompt_file = \"prompts/fix.md\"",
+        )
+        .replace("mode = \"unattended\"", "mode = \"interactive\"");
+    let StepKind::Agent {
+        prompt_file, mode, ..
+    } = &option(&from_file).steps[1].kind
+    else {
+        panic!("step `fix` is an agent step");
+    };
+    assert_eq!(
+        prompt_file.as_deref(),
+        Some(std::path::Path::new("prompts/fix.md"))
+    );
+    assert_eq!(*mode, Some(AgentMode::Interactive));
+    let inherit = four_steps().replace("mode = \"unattended\"\n", "");
+    assert!(matches!(
+        option(&inherit).steps[1].kind,
+        StepKind::Agent { mode: None, .. }
+    ));
+}
+
+#[test]
+fn agent_step_fields_are_checked_with_named_reasons() {
+    let base = four_steps();
+    let cases: Vec<(String, &str)> = vec![
+        (
+            base.replace("prompt = \"Fix", "prompt = \"\\u0007Fix"),
+            "control characters other than line breaks",
+        ),
+        (
+            base.replace("mode = \"unattended\"", "mode = \"silent\""),
+            "unknown variant",
+        ),
+        (
+            base.replace(
+                "mode = \"unattended\"",
+                "mode = \"unattended\"\noptional = true\nrequired = true",
+            ),
+            "both optional and required",
+        ),
+        (
+            base.replace(
+                "prompt = \"Fix $sources for ${feature:docs}\"",
+                "prompt = \"   \"",
+            ),
+            "exactly one",
+        ),
+        (
+            base.replace("prompt = \"Fix $sources for ${feature:docs}\"", ""),
+            "exactly one",
+        ),
+        (
+            base.replace(
+                "prompt = \"Fix $sources for ${feature:docs}\"",
+                "prompt_file = \"../outside.md\"",
+            ),
+            "prompt_file must be a package-relative file",
+        ),
+        (
+            base.replace(
+                "mode = \"unattended\"",
+                "mode = \"unattended\"\ntimeout_secs = 5",
+            ),
+            "unknown field",
+        ),
+    ];
+    for (text, needle) in cases {
+        let error = refused(&text);
+        assert!(error.contains(needle), "expected `{needle}` in: {error}");
+    }
+}

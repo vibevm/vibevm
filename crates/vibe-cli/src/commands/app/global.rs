@@ -17,6 +17,7 @@ use vibe_wire::generated::application_report::{
     ApplicationReport, ApplicationReportCommand, ApplicationReportSelectedMode,
 };
 
+use super::agents::{AgentSetup, report_parked};
 use super::interrupt::Signals;
 use crate::cli::{AppChoiceArgs, AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
@@ -216,6 +217,7 @@ pub(super) fn operation<'a>(
         progress: &observe.progress,
         quiet_children: ctx.is_machine_progress(),
         interrupt: observe.interrupt(),
+        agent: vibe_app::AgentHooks::default(),
     }
 }
 
@@ -285,7 +287,6 @@ pub fn install(
         bail!("global install requires exactly one fully qualified application package");
     }
     if args.path != Path::new(".")
-        || args.agent.is_some()
         || args.language.is_some()
         || !args.features.is_empty()
         || args.no_default_features
@@ -325,17 +326,24 @@ pub fn install(
         installer: args.installer,
     };
     let request = request(choice, args.library, args.force, &args.steps);
+    let agents = AgentSetup::new(ctx, args.agent.as_deref(), args.assume_yes)?;
     if args.plan_only {
         let observe = Observation::new(ctx, false)?;
-        let operation = operation(ctx, &settings, offline, &proxy_image, None, &observe);
+        let operation = OperationContext {
+            agent: agents.hooks(),
+            ..operation(ctx, &settings, offline, &proxy_image, None, &observe)
+        };
         let plan = vibe_app::plan(&operation, &resolved, &request)?;
         return render_plan(ctx, &plan);
     }
     let show = plan_printer(ctx);
     let observe = Observation::new(ctx, true)?;
     let outcome = ctx.suspend_progress(|| {
-        let operation = operation(ctx, &settings, offline, &proxy_image, Some(&show), &observe);
-        vibe_app::install(&operation, &resolved, &request)
+        let operation = OperationContext {
+            agent: agents.hooks(),
+            ..operation(ctx, &settings, offline, &proxy_image, Some(&show), &observe)
+        };
+        report_parked(ctx, vibe_app::install(&operation, &resolved, &request))
     })?;
     render(ctx, &outcome)
 }
@@ -367,18 +375,22 @@ pub fn update(
         installer: args.installer,
     };
     let request = request(choice, args.library, args.force, &args.steps);
+    let agents = AgentSetup::new(ctx, args.agent.as_deref(), args.assume_yes)?;
     let show = plan_printer(ctx);
     let observe = Observation::new(ctx, true)?;
     let outcome = ctx.suspend_progress(|| {
-        let operation = operation(
-            ctx,
-            &settings,
-            root_offline,
-            &proxy_image,
-            Some(&show),
-            &observe,
-        );
-        vibe_app::update(&operation, &resolved, &request)
+        let operation = OperationContext {
+            agent: agents.hooks(),
+            ..operation(
+                ctx,
+                &settings,
+                root_offline,
+                &proxy_image,
+                Some(&show),
+                &observe,
+            )
+        };
+        report_parked(ctx, vibe_app::update(&operation, &resolved, &request))
     })?;
     render(ctx, &outcome)
 }

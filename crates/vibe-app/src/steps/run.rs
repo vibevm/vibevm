@@ -12,6 +12,7 @@ use vibe_core::manifest::{StepKind, StepOrigin, StepPhase};
 
 use vibe_core::progress::ProgressTask;
 
+use crate::agents::AgentError;
 use crate::error::{AppError, InstallerError, StepError};
 use crate::index::{AuthoredCommands, StepOutcome, StepRecord};
 use crate::installer::{ChildIo, io, source_build};
@@ -21,6 +22,7 @@ use crate::resolve::ResolvedPackage;
 use super::kinds::{self, StepContext};
 use super::params::step_env_name;
 use super::plan::{Plan, PlannedStep, work_dir};
+use super::resume::{StartPoint, start_point};
 use super::runs::{RunOutcome, RunRecord};
 use super::state::{Start, StepState, StepsFile};
 use super::template::Vars;
@@ -38,21 +40,26 @@ pub(crate) struct RunFlags {
 
 /// One sequence of steps over one work directory.
 pub(crate) struct Run<'a> {
-    ctx: &'a OperationContext<'a>,
-    resolved: &'a ResolvedPackage,
-    plan: &'a Plan,
-    work: PathBuf,
-    state: StepsFile,
+    pub(super) ctx: &'a OperationContext<'a>,
+    pub(super) resolved: &'a ResolvedPackage,
+    pub(super) plan: &'a Plan,
+    pub(super) work: PathBuf,
+    pub(super) state: StepsFile,
     /// Steps before this index are kept from the resumed state.
     first: usize,
+    /// A resume that starts in the finish phase keeps every prepare step
+    /// (a parked finish step, `PROP-064#parking`).
+    finish_resume: bool,
     fresh: bool,
     opened: bool,
     force: bool,
     update_in_place: bool,
     command: Command,
-    record: Option<RunRecord>,
+    pub(super) record: Option<RunRecord>,
     /// `VIBE_FEATURE_<ID>` and `VIBE_PARAM_<ID>` of every child.
     env: Vec<(String, String)>,
+    /// Steps a resumed state recorded `delegated` (`PROP-064#parking`).
+    pub(super) delegated: Vec<String>,
 }
 
 impl<'a> Run<'a> {
@@ -66,70 +73,22 @@ impl<'a> Run<'a> {
     ) -> Result<Self, AppError> {
         let work = work_dir(ctx.settings, &plan.package);
         let key = plan.package.key();
-        let fresh_state = || StepsFile {
-            package: plan.package.clone(),
-            option: plan.option.clone(),
-            features: plan.features.clone(),
-            steps: Vec::new(),
+        let StartPoint {
+            state,
+            first,
+            finish_resume,
+            delegated,
+        } = start_point(plan, &work, &flags.start)?;
+        let kept = |index: usize, planned: &PlannedStep| {
+            index < first || (finish_resume && planned.step.phase == StepPhase::Prepare)
         };
-        let (state, first) = match &flags.start {
-            Start::Fresh => (fresh_state(), 0),
-            start => {
-                let state = StepsFile::load(&work)?.ok_or_else(|| StepError::NothingToResume {
-                    key: key.clone(),
-                    work: work.display().to_string(),
-                })?;
-                let mismatch = if state.package != plan.package {
-                    Some(format!("it belongs to {}", state.package.key()))
-                } else if state.option != plan.option {
-                    Some(format!(
-                        "it ran installer `{}`, not `{}`",
-                        state.option, plan.option
-                    ))
-                } else if state.features != plan.features {
-                    Some(format!(
-                        "it ran with features [{}], not [{}]",
-                        state.features.join(", "),
-                        plan.features.join(", ")
-                    ))
-                } else {
-                    None
-                };
-                if let Some(reason) = mismatch {
-                    return Err(StepError::ResumeMismatch {
-                        work: work.display().to_string(),
-                        reason,
-                    }
-                    .into());
-                }
-                let first = match start {
-                    Start::FromStep(id) => plan
-                        .steps
-                        .iter()
-                        .position(|planned| &planned.step.id == id)
-                        .ok_or_else(|| StepError::UnknownStep {
-                            option: plan.option.clone(),
-                            step: id.clone(),
-                            steps: plan
-                                .steps
-                                .iter()
-                                .map(|planned| planned.step.id.as_str())
-                                .collect::<Vec<_>>()
-                                .join(", "),
-                        })?,
-                    _ => plan
-                        .steps
-                        .iter()
-                        .position(|planned| {
-                            state.get(&planned.step.id).map(|step| step.outcome)
-                                != Some(StepOutcome::Done)
-                        })
-                        .unwrap_or(plan.steps.len()),
-                };
-                (state, first)
-            }
+        let pending = || {
+            plan.steps
+                .iter()
+                .enumerate()
+                .filter(|(index, planned)| planned.run && !kept(*index, planned))
+                .map(|(_, planned)| planned)
         };
-        let pending = || plan.steps.iter().skip(first).filter(|planned| planned.run);
         if flags.force
             && pending().any(|planned| {
                 matches!(
@@ -180,6 +139,7 @@ impl<'a> Run<'a> {
             work,
             state,
             first,
+            finish_resume,
             fresh: flags.start == Start::Fresh,
             opened: false,
             force: flags.force,
@@ -187,7 +147,35 @@ impl<'a> Run<'a> {
             command: flags.command,
             record: None,
             env,
+            delegated,
         })
+    }
+
+    pub(super) fn attended(&self) -> bool {
+        self.ctx.chooser.is_some()
+    }
+
+    /// Whether a resume starts in the finish phase: every prepare step is
+    /// done and the payload is already placed (a parked finish step).
+    pub fn resumes_finish(&self) -> bool {
+        self.finish_resume
+    }
+
+    /// Whether the step at `index` is kept from the resumed state.
+    pub(super) fn kept(&self, index: usize) -> bool {
+        index < self.first
+            || (self.finish_resume && self.plan.steps[index].step.phase == StepPhase::Prepare)
+    }
+
+    pub(super) fn vars(&self, app_root: Option<&'a Path>) -> Vars<'a> {
+        Vars {
+            work: self.work.clone(),
+            package: &self.resolved.root,
+            vibe_home: self.ctx.settings.path(),
+            app_root,
+            features: &self.plan.features,
+            params: &self.plan.parameters,
+        }
     }
 
     pub fn work(&self) -> &Path {
@@ -211,9 +199,13 @@ impl<'a> Run<'a> {
             let path = self.work.join(directory);
             fs::create_dir_all(&path).map_err(|source| io("creating", &path, source))?;
         }
-        let again: Vec<&str> = self.plan.steps[self.first..]
+        let again: Vec<&str> = self
+            .plan
+            .steps
             .iter()
-            .map(|planned| planned.step.id.as_str())
+            .enumerate()
+            .filter(|(index, _)| !self.kept(*index))
+            .map(|(_, planned)| planned.step.id.as_str())
             .collect();
         self.state
             .steps
@@ -243,6 +235,7 @@ impl<'a> Run<'a> {
         let outcome = match error {
             None => RunOutcome::Done,
             Some(AppError::Step(StepError::Interrupted { .. })) => RunOutcome::Interrupted,
+            Some(AppError::Agent(AgentError::Parked(_))) => RunOutcome::Delegated,
             Some(_) => RunOutcome::Failed,
         };
         if let Some(record) = &mut self.record {
@@ -269,6 +262,7 @@ impl<'a> Run<'a> {
                 started: None,
                 finished: None,
                 uninstall: AuthoredCommands::default(),
+                agent: None,
             });
             self.save()?;
         }
@@ -328,7 +322,7 @@ impl<'a> Run<'a> {
                 continue;
             }
             let task = progress.task(format!("{}: {}", step.id, step.title));
-            if index < self.first {
+            if self.kept(index) {
                 task.skip("done before --resume");
                 continue;
             }
@@ -350,6 +344,13 @@ impl<'a> Run<'a> {
             ) {
                 task.fail("interrupted");
                 let error = self.interrupted(Some(step.id.clone()));
+                return match phase {
+                    StepPhase::Prepare => Err(error),
+                    StepPhase::Finish => Ok(Some(error)),
+                };
+            }
+            if matches!(error, AppError::Agent(AgentError::Parked(_))) {
+                task.skip("parked for the hosting agent");
                 return match phase {
                     StepPhase::Prepare => Err(error),
                     StepPhase::Finish => Ok(Some(error)),
@@ -408,6 +409,7 @@ impl<'a> Run<'a> {
             started: None,
             finished: None,
             uninstall: AuthoredCommands::default(),
+            agent: None,
         };
         if !planned.run {
             task.skip(planned.reason.clone().unwrap_or_default());
@@ -419,6 +421,22 @@ impl<'a> Run<'a> {
         let cache_root = settings.app_sources_cache();
         let log = self.record.as_ref().map(|record| record.log(&step.id));
         let ctx = self.ctx;
+        let io = ChildIo {
+            relay: ctx.relay(),
+            log: log.as_deref(),
+            stdout_log: None,
+            task: Some(task),
+            interrupt: ctx.interrupt,
+        };
+        if matches!(step.kind, StepKind::Agent { .. }) {
+            let (agent, result) = self.agent_step(planned, app_root, io);
+            state.agent = agent;
+            return self.settle(
+                state,
+                result.map(|message| (AuthoredCommands::default(), message)),
+                task,
+            );
+        }
         let cx = StepContext {
             work: &self.work,
             package_root: &self.resolved.root,
@@ -438,31 +456,38 @@ impl<'a> Run<'a> {
             offline: ctx.offline,
             force: self.force,
             update_in_place: self.update_in_place,
-            io: ChildIo {
-                relay: ctx.relay(),
-                log: log.as_deref(),
-                task: Some(task),
-                interrupt: ctx.interrupt,
-            },
+            io,
             env: &self.env,
         };
         let result = kinds::run(&cx, step);
-        state.finished = Some(now());
+        self.settle(state, result.map(|uninstall| (uninstall, None)), task)
+    }
+
+    /// Record a run step's outcome: done (with an agent's message as the
+    /// reason), delegated, interrupted or failed.
+    fn settle(
+        &mut self,
+        mut state: StepState,
+        result: Result<(AuthoredCommands, Option<String>), AppError>,
+        task: &ProgressTask,
+    ) -> Result<(), AppError> {
+        state.finished =
+            Some(chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true));
         let outcome = match result {
-            Ok(uninstall) => {
+            Ok((uninstall, message)) => {
                 task.finish();
                 state.outcome = StepOutcome::Done;
                 state.uninstall = uninstall;
+                state.reason = message;
                 Ok(())
             }
             Err(error) => {
-                state.outcome = if matches!(
-                    error,
-                    AppError::Installer(InstallerError::Interrupted { .. })
-                ) {
-                    StepOutcome::Interrupted
-                } else {
-                    StepOutcome::Failed
+                state.outcome = match &error {
+                    AppError::Installer(InstallerError::Interrupted { .. }) => {
+                        StepOutcome::Interrupted
+                    }
+                    AppError::Agent(AgentError::Parked(_)) => StepOutcome::Delegated,
+                    _ => StepOutcome::Failed,
                 };
                 state.reason = Some(error.to_string());
                 Err(error)

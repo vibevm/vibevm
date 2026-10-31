@@ -11,6 +11,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use clap::{Parser, Subcommand};
 
+mod agent;
 mod agentic;
 mod aiui;
 mod cache;
@@ -52,6 +53,7 @@ pub use mcp::*;
 pub use pkg::*;
 
 mod app;
+pub use agent::*;
 pub use app::*;
 pub use prefs::*;
 pub use progress::*;
@@ -216,6 +218,10 @@ pub enum Command {
     /// Manage the storage libraries that hold installed applications: list,
     /// add, attach, detach, move an installation between them, and gc.
     Storage(StorageArgs),
+
+    /// Configure the coding agents that run the agent steps of application
+    /// installers (PROP-064): list, presets, use, add, remove.
+    Agent(AgentArgs),
 
     /// Run the default lifecycle through agentic creation.
     Create(LifecycleArgs),

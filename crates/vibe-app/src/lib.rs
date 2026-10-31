@@ -21,6 +21,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#library-first");
 
+mod agents;
 mod alternatives;
 mod codes;
 mod describe;
@@ -38,6 +39,12 @@ mod settings;
 mod steps;
 mod storage;
 
+pub use agents::{
+    AgentDefinition, AgentError, AgentHooks, AgentNotice, AgentPrompt, AgentSource, AgentsConfig,
+    ConsentPrompt, Delivery, ExternalAgent, Invocation, PLACEHOLDERS, ParkedStep, Placeholders,
+    Preset, ResolvedAgent, RunMode, SelectedAgent, agent_list, preset as agent_preset,
+    preset_table as agent_preset_table, presets as agent_presets, select_agent,
+};
 pub use alternatives::{
     DefaultChange, listing as alternatives_listing, reserved_commands, set_default,
 };

@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "description": "Version 1 table of the built-in agent presets from vibe agent presets --json: one row per supported harness with its command and the interactive and unattended argument templates.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-064#presets" },
+    "rustOptions": { "package": "vibe_wire::agent_presets" },
+    "x-rust-type": "AgentPresets",
+    "x-wire-order": ["protocol", "placeholders", "presets"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "placeholders": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "presets": { "elements": { "ref": "preset" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "preset": {
+      "metadata": { "x-wire-order": ["name", "harness", "command", "interactive", "unattended"] },
+      "properties": {
+        "name": { "type": "string" },
+        "harness": { "type": "string" },
+        "command": { "type": "string" },
+        "interactive": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "unattended": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      }
+    }
+  }
+}

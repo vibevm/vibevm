@@ -61,6 +61,9 @@ pub(crate) enum Relay {
 pub(crate) struct ChildIo<'a> {
     pub relay: Relay,
     pub log: Option<&'a Path>,
+    /// A second log of standard output alone (an agent's `transcript.log`,
+    /// `PROP-064#envelope`).
+    pub stdout_log: Option<&'a Path>,
     pub task: Option<&'a ProgressTask>,
     pub interrupt: Option<&'a dyn Interrupt>,
 }
@@ -72,6 +75,7 @@ impl ChildIo<'static> {
         Self {
             relay: if json { Relay::Stderr } else { Relay::Live },
             log: None,
+            stdout_log: None,
             task: None,
             interrupt: None,
         }
@@ -99,6 +103,10 @@ pub(crate) fn run_child(
         Some(path) => Some(Arc::new(Mutex::new(open_log(path)?))),
         None => None,
     };
+    let stdout_log = match observe.stdout_log {
+        Some(path) => Some(Arc::new(Mutex::new(open_log(path)?))),
+        None => None,
+    };
     command
         .stdin(Stdio::inherit())
         .stdout(Stdio::piped())
@@ -116,6 +124,7 @@ pub(crate) fn run_child(
                 relay: observe.relay,
                 stderr,
                 log: log.clone(),
+                stdout_log: if stderr { None } else { stdout_log.clone() },
                 lines: lines.clone(),
                 observed: observe.task.is_some(),
             };
@@ -155,6 +164,14 @@ pub(crate) fn run_child(
         }
     }
     let status = status.ok_or_else(|| spawn_error(io::Error::other("no exit status")))?;
+    verdict(status, interrupted, what)
+}
+
+fn verdict(
+    status: std::process::ExitStatus,
+    interrupted: bool,
+    what: &str,
+) -> Result<(), InstallerError> {
     if interrupted {
         return Err(InstallerError::Interrupted { what: what.into() });
     }
@@ -168,6 +185,36 @@ pub(crate) fn run_child(
             |code| format!("with code {code}"),
         ),
     })
+}
+
+/// Run one child attached to the terminal: every standard stream is
+/// inherited, nothing is captured (an interactive agent session,
+/// `PROP-064#modes`); an interrupt is still forwarded and waited for.
+pub(crate) fn run_attached(
+    command: &mut Command,
+    what: &str,
+    interrupt: Option<&dyn Interrupt>,
+) -> Result<(), InstallerError> {
+    let spawn_error = |error: io::Error| InstallerError::Spawn {
+        what: what.into(),
+        reason: error.to_string(),
+    };
+    command
+        .stdin(Stdio::inherit())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit());
+    let mut child = command.spawn().map_err(spawn_error)?;
+    let pid = child.id();
+    let mut interrupted = false;
+    loop {
+        if let Some(interrupt) = interrupt {
+            interrupted |= interrupt.poll(Some(pid));
+        }
+        if let Some(status) = child.try_wait().map_err(spawn_error)? {
+            return verdict(status, interrupted, what);
+        }
+        std::thread::sleep(Duration::from_millis(20));
+    }
 }
 
 /// Never truncate a log being written: open it for appending.
@@ -189,6 +236,7 @@ struct Pump {
     relay: Relay,
     stderr: bool,
     log: Option<Arc<Mutex<File>>>,
+    stdout_log: Option<Arc<Mutex<File>>>,
     lines: mpsc::Sender<String>,
     observed: bool,
 }
@@ -203,10 +251,10 @@ impl Pump {
                 Ok(read) => read,
             };
             let chunk = &buffer[..read];
-            if let Some(log) = &self.log
-                && let Ok(mut file) = log.lock()
-            {
-                let _ = file.write_all(chunk);
+            for log in [&self.log, &self.stdout_log].into_iter().flatten() {
+                if let Ok(mut file) = log.lock() {
+                    let _ = file.write_all(chunk);
+                }
             }
             match (self.relay, self.stderr) {
                 (Relay::Live, false) => {
@@ -283,9 +331,11 @@ mod tests {
         let task = Progress::new(details.clone()).task("build");
         let mut command = Command::new("/bin/sh");
         command.args(["-c", "echo one; echo two >&2; printf tail"]);
+        let transcript = dir.path().join("transcript.log");
         let observe = ChildIo {
             relay: Relay::Quiet,
             log: Some(&log),
+            stdout_log: Some(&transcript),
             task: Some(&task),
             interrupt: None,
         };
@@ -297,6 +347,11 @@ mod tests {
         for piece in ["one\n", "two\n", "tail"] {
             assert!(text.contains(piece), "{piece:?} missing from {text:?}");
         }
+        assert_eq!(
+            fs::read_to_string(&transcript).unwrap(),
+            "one\ntail",
+            "the transcript keeps standard output alone"
+        );
         let mut lines = details.0.lock().unwrap().clone();
         lines.sort();
         assert_eq!(lines, ["one", "tail", "two"]);

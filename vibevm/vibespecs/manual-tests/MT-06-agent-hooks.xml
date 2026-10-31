@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Agent hooks through a real harness wrapper (PROP-064) — selection, consent, both modes, parking</title>
+  <p><purpose fact="true" status="impl/work">**Purpose.** The Linux fixture `crates/vibe-cli/tests/cli_app_agents.rs` proves the hook contract with a fake agent. What it cannot prove is that a real harness, started from the presets as data, reads the prompt, works in the step's directory and answers: an attended Claude Code session in the terminal, the same harness in print mode, and the consent question a person actually answers. The owner proves these here with `~/opt/bin/claude-codex`, a launcher that starts Claude Code against another gateway and passes every argument through unchanged, so it is the `claude-code` preset with a different `command` (`PROP-064#acceptance`).</purpose></p>
+  <p><isolation-note fact="true" status="impl/work">Every step runs against an isolated settings root (`VIBE_SETTINGS`) and a throw-away local registry. The agent runs with the user's authority in the installation work directory under that root; the demo prompt only writes one file there.</isolation-note></p>
+  <section title="Preconditions">
+    <facts ordered="false">
+      <PRE-HOST fact="true" status="impl/work">Linux with an interactive terminal; `~/opt/bin/claude-codex` runs and reaches its gateway (`~/opt/bin/claude-codex -p "say hi"` prints an answer).</PRE-HOST>
+      <PRE-BINARIES fact="true" status="impl/work">`cargo build -p vibe-cli --bins`: `target/debug/vibe` and `target/debug/vibe-app-proxy` beside it.</PRE-BINARIES>
+    </facts>
+  </section>
+  <section title="Setup">
+    <fence>export VIBE_SETTINGS="$(mktemp -d)/vibe-mt06"; mkdir -p "$VIBE_SETTINGS"
+vibe=&lt;checkout&gt;/target/debug/vibe
+reg="$(mktemp -d)/registry"; pkg="$reg/org.example/hooked/v1.0.0"; mkdir -p "$pkg/bin"
+printf '#!/bin/sh\necho hooked\n' &gt; "$pkg/bin/hooked"
+cat &gt; "$pkg/vibe.toml" &lt;&lt;'TOML'
+[package]
+name = "hooked"
+group = "org.example"
+kind = "app"
+version = "1.0.0"
+
+[application]
+id = "hooked"
+
+[[installer_options]]
+id = "main"
+name = "Main"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+
+[[installer_options.steps]]
+id = "payload"
+title = "Lay out the payload"
+kind = "copy"
+from = "bin"
+to = "bin"
+
+[[installer_options.steps]]
+id = "fix"
+title = "Let an agent write a note into the payload"
+kind = "agent"
+prompt = """
+Create the file $out/NOTE.txt containing one line that names today's date.
+Then write {"status": "ok", "message": "note written"} to the file named by
+the VIBE_HOOK_RUN environment variable plus /result.json, and stop.
+"""
+TOML
+sed -i "s/x86_64/$(uname -m)/" "$pkg/vibe.toml"</fence>
+  </section>
+  <section title="Steps">
+    <facts ordered="true">
+      <STEP-1-NONE fact="true" status="impl/work">**Without an agent the step is skipped and announced.**</STEP-1-NONE>
+    </facts>
+    <fence>$vibe app plan org.example/hooked --registry "$reg"</fence>
+    <p><EXP-1 fact="true" status="impl/work">**Expected.** Step 2 reads `skip (no agent configured) fix (agent)` and a closing `warning:` line names `fix` and the three ways to provide an agent (`--agent NAME`, `VIBE_AGENT_COMMAND`, `default` in agents.toml).</EXP-1></p>
+    <facts ordered="true">
+      <STEP-2-REGISTER fact="true" status="impl/work">**The wrapper is registered as a `claude-code` preset with its own command.**</STEP-2-REGISTER>
+    </facts>
+    <fence>$vibe agent presets
+$vibe agent add claude-codex --preset claude-code --command ~/opt/bin/claude-codex --default
+$vibe agent list; cat "$VIBE_SETTINGS/agents.toml"
+$vibe app plan org.example/hooked --registry "$reg"</fence>
+    <p><EXP-2 fact="true" status="impl/work">**Expected.** `presets` lists the six harnesses with their two templates. `list` shows `claude-codex [default] (preset claude-code)` with `interactive: …/claude-codex {prompt}` and `unattended: …/claude-codex -p {prompt}`; `agents.toml` starts with `default = "claude-codex"` and holds an `[agent.claude-codex]` table. The plan now reads `run fix (agent)` without a warning.</EXP-2></p>
+    <facts ordered="true">
+      <STEP-3-DECLINE fact="true" status="impl/work">**Declining the prompt runs nothing.**</STEP-3-DECLINE>
+    </facts>
+    <fence>$vibe install -g org.example/hooked --registry "$reg"     # answer "no"
+echo "exit=$?"; ls "$VIBE_SETTINGS/cache/app-work" 2&gt;&amp;1</fence>
+    <p><EXP-3 fact="true" status="impl/work">**Expected.** Before any step, the terminal shows `agent step `fix` (…) will run agent `claude-codex``, the command line with `{prompt}` and the full expanded prompt (with the real `$out` path), then asks `Run agent `claude-codex` with the prompt of step `fix`?`. Answering no ends with `needs consent` and exit 2; no work directory exists.</EXP-3></p>
+    <facts ordered="true">
+      <STEP-4-INTERACTIVE fact="true" status="impl/work">**Interactive: the harness takes over the terminal.**</STEP-4-INTERACTIVE>
+    </facts>
+    <fence>$vibe install -g org.example/hooked --registry "$reg"     # answer "yes"; let Claude Code do the task, then /exit
+echo "exit=$?"; cat "$VIBE_SETTINGS/opt/apps/hooked/org.example.hooked@1.0.0/bin/NOTE.txt"</fence>
+    <p><EXP-4 fact="true" status="impl/work">**Expected.** Claude Code opens in the terminal with the prompt already submitted, working in `…/cache/app-work/org.example.hooked@1.0.0`. After it writes the note and `result.json` and the session is closed, vibe prints `agent step `fix`: ok — note written`, places the payload and exits 0. `bin/NOTE.txt` is in the installed payload. Ctrl-C during the session ends it and the step is recorded `interrupted` (rerun with `--resume`).</EXP-4></p>
+    <facts ordered="true">
+      <STEP-5-UNATTENDED fact="true" status="impl/work">**Unattended: print mode, streamed and transcribed.**</STEP-5-UNATTENDED>
+    </facts>
+    <fence>$vibe install -g org.example/hooked --registry "$reg" --unattended
+$vibe app runs org.example/hooked
+ls "$(ls -d "$VIBE_SETTINGS"/cache/app-runs/org.example.hooked@1.0.0/* | tail -1)/steps/fix"</fence>
+    <p><EXP-5 fact="true" status="impl/work">**Expected.** The prompt is shown but no question is asked (`--unattended` implies `--assume-yes`); `claude-codex -p …` output streams live; the install exits 0. The newest run record's `steps/fix/` holds `prompt.md`, `context.json` (`"protocol": "vibe-agent-hook/1"`, `"mode": "unattended"`), `transcript.log` with the harness's answer, `result.json` and `output.log`; its `steps.json` records the step `done` with `"agent": {"agent": "claude-codex", "mode": "unattended", "status": "ok", …}`.</EXP-5></p>
+    <facts ordered="true">
+      <STEP-6-PARK fact="true" status="impl/work">**Inside a hosting agent the task is parked, then resumed.** Run this from a terminal session of the hosting harness itself, or force it with `--agent-mode agent`.</STEP-6-PARK>
+    </facts>
+    <fence>$vibe install -g org.example/hooked --registry "$reg" --agent-mode agent; echo "exit=$?"
+# perform the printed task by hand, as the hosting agent would:
+work="$VIBE_SETTINGS/cache/app-work/org.example.hooked@1.0.0"
+date &gt; "$work/out/NOTE.txt"
+echo '{"status":"ok","message":"done by the host"}' &gt; "$work/steps/fix/result.json"
+$vibe install -g org.example/hooked --registry "$reg" --agent-mode agent --resume; echo "exit=$?"</fence>
+    <p><EXP-6 fact="true" status="impl/work">**Expected.** The first command starts no agent, prints one fenced `vibe-agent-tasks` block naming the run, the task file `…/agentic/outbox/&lt;run&gt;/fix.md` and the exact `resume:` command, and exits 75. The task file holds the prompt, the context and the answer contract. After the answer is written, `--resume` validates it, skips the already done `payload` step, finishes and exits 0.</EXP-6></p>
+    <facts ordered="true">
+      <STEP-7-EXTERNAL fact="true" status="impl/work">**An external registration wins over the default; `--agent` wins over both.**</STEP-7-EXTERNAL>
+    </facts>
+    <fence>VIBE_AGENT_COMMAND=/bin/echo VIBE_AGENT_ARGS='["registered"]' $vibe install -g org.example/hooked --registry "$reg" --unattended; echo "exit=$?"
+VIBE_AGENT_COMMAND=/bin/echo $vibe install -g org.example/hooked --registry "$reg" --unattended --agent claude-codex; echo "exit=$?"</fence>
+    <p><EXP-7 fact="true" status="impl/work">**Expected.** The first run shows agent `external` and prints `registered --hook fix --mode unattended --prompt-file … --context-file … --work …` (`echo` exits 0 and writes no result, so the step is done without a message). The second run uses `claude-codex` again.</EXP-7></p>
+  </section>
+  <section title="Pass">
+    <p><pass-criteria fact="true" status="impl/work">Every step reads as described with the real wrapper: the announced skip, registration over a preset, the declined prompt with nothing run, an attended Claude Code session that answers through `result.json`, print mode with the transcript in the run record, parking with exit 75 and a validated `--resume`, and the selection order. The owner signs the date below.</pass-criteria></p>
+  </section>
+  <section title="Sign-off">
+    <facts ordered="false">
+      <SIGNOFF-OWNER fact="true" status="impl/work">[ ] Owner sign-off with ~/opt/bin/claude-codex (date / initials): ______</SIGNOFF-OWNER>
+    </facts>
+  </section>
+</spec>

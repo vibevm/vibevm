@@ -6,11 +6,14 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#principle");
 
+mod agent;
+mod envelope;
 mod features;
 mod kinds;
 mod params;
 mod plan;
 mod plan_view;
+mod resume;
 mod run;
 mod runs;
 mod sizes;

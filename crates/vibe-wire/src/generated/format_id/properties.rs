@@ -5,11 +5,15 @@ use super::{ForeignParsers, FormatId, UnknownFields};
 impl FormatId {
     /// Every variant, in registry (sorted-id) order.
     pub const ALL: &[FormatId] = &[
+        FormatId::ApplicationAgentHook,
+        FormatId::ApplicationAgentHookResult,
         FormatId::ApplicationIndex,
         FormatId::ApplicationRun,
         FormatId::ApplicationSteps,
         FormatId::ArtifactRecord,
         FormatId::BootArtifactTransaction,
+        FormatId::CliAgentList,
+        FormatId::CliAgentPresets,
         FormatId::CliApplicationAlternatives,
         FormatId::CliApplicationDescribe,
         FormatId::CliApplicationErrors,
@@ -123,11 +127,15 @@ impl FormatId {
     /// The registry id, verbatim (e.g. `cli-init-report`).
     pub fn id(self) -> &'static str {
         match self {
+            FormatId::ApplicationAgentHook => "application-agent-hook",
+            FormatId::ApplicationAgentHookResult => "application-agent-hook-result",
             FormatId::ApplicationIndex => "application-index",
             FormatId::ApplicationRun => "application-run",
             FormatId::ApplicationSteps => "application-steps",
             FormatId::ArtifactRecord => "artifact-record",
             FormatId::BootArtifactTransaction => "boot-artifact-transaction",
+            FormatId::CliAgentList => "cli-agent-list",
+            FormatId::CliAgentPresets => "cli-agent-presets",
             FormatId::CliApplicationAlternatives => "cli-application-alternatives",
             FormatId::CliApplicationDescribe => "cli-application-describe",
             FormatId::CliApplicationErrors => "cli-application-errors",
@@ -242,11 +250,15 @@ impl FormatId {
     /// The epoch this format lives in (PROP-044 §4.6 `##M-EPOCHS`).
     pub fn epoch(self) -> u32 {
         match self {
+            FormatId::ApplicationAgentHook => 1,
+            FormatId::ApplicationAgentHookResult => 1,
             FormatId::ApplicationIndex => 2,
             FormatId::ApplicationRun => 1,
             FormatId::ApplicationSteps => 1,
             FormatId::ArtifactRecord => 1,
             FormatId::BootArtifactTransaction => 1,
+            FormatId::CliAgentList => 1,
+            FormatId::CliAgentPresets => 1,
             FormatId::CliApplicationAlternatives => 1,
             FormatId::CliApplicationDescribe => 1,
             FormatId::CliApplicationErrors => 1,
@@ -361,11 +373,15 @@ impl FormatId {
     /// Whether the format is rebuildable without a human (PROP-044 §5).
     pub fn recoverable(self) -> bool {
         match self {
+            FormatId::ApplicationAgentHook => true,
+            FormatId::ApplicationAgentHookResult => true,
             FormatId::ApplicationIndex => false,
             FormatId::ApplicationRun => true,
             FormatId::ApplicationSteps => true,
             FormatId::ArtifactRecord => false,
             FormatId::BootArtifactTransaction => false,
+            FormatId::CliAgentList => true,
+            FormatId::CliAgentPresets => true,
             FormatId::CliApplicationAlternatives => true,
             FormatId::CliApplicationDescribe => true,
             FormatId::CliApplicationErrors => true,
@@ -480,11 +496,15 @@ impl FormatId {
     /// How many independent parsers read this format (PROP-044 §5).
     pub fn foreign_parsers(self) -> ForeignParsers {
         match self {
+            FormatId::ApplicationAgentHook => ForeignParsers::Many,
+            FormatId::ApplicationAgentHookResult => ForeignParsers::Many,
             FormatId::ApplicationIndex => ForeignParsers::None,
             FormatId::ApplicationRun => ForeignParsers::Many,
             FormatId::ApplicationSteps => ForeignParsers::None,
             FormatId::ArtifactRecord => ForeignParsers::None,
             FormatId::BootArtifactTransaction => ForeignParsers::None,
+            FormatId::CliAgentList => ForeignParsers::Many,
+            FormatId::CliAgentPresets => ForeignParsers::Many,
             FormatId::CliApplicationAlternatives => ForeignParsers::Many,
             FormatId::CliApplicationDescribe => ForeignParsers::Many,
             FormatId::CliApplicationErrors => ForeignParsers::Many,
@@ -599,11 +619,15 @@ impl FormatId {
     /// Policy for undeclared object members, independent of parser count.
     pub fn unknown_fields(self) -> UnknownFields {
         match self {
+            FormatId::ApplicationAgentHook => UnknownFields::Allow,
+            FormatId::ApplicationAgentHookResult => UnknownFields::Allow,
             FormatId::ApplicationIndex => UnknownFields::Deny,
             FormatId::ApplicationRun => UnknownFields::Allow,
             FormatId::ApplicationSteps => UnknownFields::Deny,
             FormatId::ArtifactRecord => UnknownFields::Deny,
             FormatId::BootArtifactTransaction => UnknownFields::Deny,
+            FormatId::CliAgentList => UnknownFields::Allow,
+            FormatId::CliAgentPresets => UnknownFields::Allow,
             FormatId::CliApplicationAlternatives => UnknownFields::Allow,
             FormatId::CliApplicationDescribe => UnknownFields::Allow,
             FormatId::CliApplicationErrors => UnknownFields::Allow,

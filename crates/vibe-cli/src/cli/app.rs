@@ -105,6 +105,10 @@ pub enum AppCommand {
         installer: Option<String>,
         #[command(flatten)]
         choice: AppChoiceArgs,
+        /// The agent that would run the installer's agent steps: a
+        /// definition of agents.toml or a built-in preset (PROP-064).
+        #[arg(long, value_name = "NAME")]
+        agent: Option<String>,
     },
 
     /// Print the declared features and steps of every installer option of a
@@ -138,7 +142,7 @@ pub enum AppCommand {
     /// List the stable error codes of application commands with their
     /// meaning and exit status (PROP-065 `#error-codes`, `#exit-codes`):
     /// 0 success, 1 a failed or interrupted step, 2 a refusal before any
-    /// effect.
+    /// effect, 75 a run parked for a hosting agent.
     Errors,
 
     /// List launchers of an installed application.

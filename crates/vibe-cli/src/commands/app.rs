@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations");
 
+pub(crate) mod agents;
 mod alternatives;
 mod describe;
 mod facts;
@@ -59,6 +60,7 @@ pub fn run(
             arch,
             installer,
             choice,
+            agent,
         } => {
             let settings = global::settings_root()?;
             let resolved = global::resolve_package(
@@ -70,14 +72,18 @@ pub fn run(
             )?;
             let proxy_image = global::proxy_image()?;
             let observe = global::Observation::new(ctx, false)?;
-            let operation = global::operation(
-                ctx,
-                app_home.settings(),
-                offline,
-                &proxy_image,
-                None,
-                &observe,
-            );
+            let agents = agents::AgentSetup::new(ctx, agent.as_deref(), false)?;
+            let operation = vibe_app::OperationContext {
+                agent: agents.hooks(),
+                ..global::operation(
+                    ctx,
+                    app_home.settings(),
+                    offline,
+                    &proxy_image,
+                    None,
+                    &observe,
+                )
+            };
             let request = global::plan_request(
                 vibe_app::InstallChoice {
                     platform,

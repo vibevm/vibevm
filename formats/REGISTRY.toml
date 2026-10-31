@@ -94,6 +94,24 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# The agent hook registry views (PROP-064 `#presets`): `vibe agent list
+# --json` and `vibe agent presets --json`.
+[format.cli-agent-list]
+epoch = 1
+schema = "schemas/agent_list.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-agent-presets]
+epoch = 1
+schema = "schemas/agent_presets.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # The machine progress stream (PROP-060 `#MACHINE-STREAM`): one JSON line per
 # observation on stderr under --progress-format json.
 [format.cli-progress-event]
@@ -162,6 +180,25 @@ sunset = "none"
 [format.application-run]
 epoch = 1
 schema = "schemas/application/e1/run.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# The agent hook envelope (PROP-064 `#envelope`, `#answer`): the context file
+# vibe writes for an agent and the result file the agent may write back. Any
+# agent harness or external tool reads and writes them.
+[format.application-agent-hook]
+epoch = 1
+schema = "schemas/application/e1/agent_hook.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.application-agent-hook-result]
+epoch = 1
+schema = "schemas/application/e1/agent_hook_result.jtd.json"
 recoverable = true
 foreign_parsers = "many"
 corpus = "none"

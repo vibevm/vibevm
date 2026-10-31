@@ -27,6 +27,8 @@ pub(crate) enum RunOutcome {
     Done,
     Failed,
     Interrupted,
+    /// Parked for a hosting agent (`PROP-064#parking`).
+    Delegated,
 }
 
 /// The open record of one run; dropping it unclosed records a failure.
@@ -99,7 +101,21 @@ impl RunRecord {
 
     /// `steps/<id>/output.log` of one step.
     pub fn log(&self, step: &str) -> PathBuf {
-        self.dir.join("steps").join(step).join("output.log")
+        self.step_dir(step).join("output.log")
+    }
+
+    /// `steps/<id>/` of one step: its log and, for an agent step, the
+    /// envelope, transcript and result (`PROP-064#record`).
+    pub fn step_dir(&self, step: &str) -> PathBuf {
+        self.dir.join("steps").join(step)
+    }
+
+    /// The record's directory name, which identifies the run.
+    pub fn id(&self) -> String {
+        self.dir
+            .file_name()
+            .map(|name| name.to_string_lossy().into_owned())
+            .unwrap_or_default()
     }
 
     /// Mirror the work directory's `steps.json`; best effort.
@@ -115,6 +131,7 @@ impl RunRecord {
             RunOutcome::Done => record::Outcome::Done,
             RunOutcome::Failed => record::Outcome::Failed,
             RunOutcome::Interrupted => record::Outcome::Interrupted,
+            RunOutcome::Delegated => record::Outcome::Delegated,
         };
         let _ = self.write_json("run.json", &self.record);
     }
@@ -278,6 +295,7 @@ mod tests {
                 started: None,
                 finished: None,
                 uninstall: Default::default(),
+                agent: None,
             }],
         });
         first.close(RunOutcome::Interrupted);

@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#error-codes");
 
 use specmark::spec;
 
+use crate::agents::AgentError;
 use crate::error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,
 };
@@ -23,6 +24,9 @@ pub enum ErrorClass {
     /// A started operation failed or was interrupted; resumable when a
     /// work directory is kept.
     Failure,
+    /// The run is parked for a hosting agent (`PROP-064#parking`); the
+    /// same command with `--resume` continues it.
+    Delegated,
 }
 
 /// One row of the error-code table.
@@ -36,7 +40,7 @@ pub struct ErrorCode {
     pub class: ErrorClass,
 }
 
-use ErrorClass::{Failure, Refusal};
+use ErrorClass::{Delegated, Failure, Refusal};
 
 macro_rules! codes {
     ($table:ident, $family:ident [$($delegate:ident),*] {
@@ -131,13 +135,25 @@ codes!(STEP, StepError [] {
     UnknownStep => "unknown_step", Refusal, "--from-step names no step";
 });
 
+codes!(AGENT, AgentError [] {
+    Unknown => "agent_unknown", Refusal, "the named agent is neither defined nor a preset";
+    Exists => "agent_exists", Refusal, "an agent definition of that name already exists";
+    Config => "agents_config_invalid", Refusal, "agents.toml is invalid";
+    Definition => "agent_definition_invalid", Refusal, "an agent definition lacks a command or a template";
+    Registration => "agent_registration_invalid", Refusal, "VIBE_AGENT_COMMAND / VIBE_AGENT_ARGS are malformed";
+    ConsentRequired => "consent_required", Refusal, "an agent prompt was not consented to";
+    Failed => "agent_failed", Failure, "the agent exited unsuccessfully or answered fail";
+    Parked => "delegated", Delegated, "the run is parked for the hosting agent; rerun with --resume";
+    Io => "agent_io", Failure, "writing the agent envelope failed";
+});
+
 codes!(LAUNCH, LaunchError [] {
     UnknownLauncher => "unknown_launcher", Refusal, "the launcher id is not declared";
     Unavailable => "launcher_unavailable", Refusal, "the launcher cannot run here";
     Spawn => "launcher_spawn_failed", Failure, "the launched program could not be started";
 });
 
-codes!(APP, AppError [State, Storage, Resolve, Installer, Launch, Step] {
+codes!(APP, AppError [State, Storage, Resolve, Installer, Launch, Step, Agent] {
     NotInstalled => "not_installed", Refusal, "the application is not installed";
     AmbiguousInstallation => "ambiguous_installation", Refusal, "several installed versions match";
     ForceUnsupported => "force_unsupported", Refusal, "--force has no authored variant to run";
@@ -162,7 +178,7 @@ codes!(APP, AppError [State, Storage, Resolve, Installer, Launch, Step] {
 /// assert!(codes.iter().any(|row| row.code == "need_unmet"));
 /// ```
 pub fn error_codes() -> Vec<ErrorCode> {
-    [STATE, STORAGE, RESOLVE, INSTALLER, STEP, LAUNCH, APP].concat()
+    [STATE, STORAGE, RESOLVE, INSTALLER, STEP, AGENT, LAUNCH, APP].concat()
 }
 
 impl AppError {
@@ -187,6 +203,10 @@ impl AppError {
                 | StepError::Copy { step, .. },
             ) => Some(step),
             Self::Step(StepError::Interrupted { step, .. }) => step.as_deref(),
+            Self::Agent(
+                AgentError::ConsentRequired { step, .. } | AgentError::Failed { step, .. },
+            ) => Some(step),
+            Self::Agent(AgentError::Parked(parked)) => Some(&parked.step),
             _ => None,
         }
     }
@@ -200,6 +220,7 @@ impl AppError {
                 | StepError::NothingToResume { work, .. }
                 | StepError::ResumeMismatch { work, .. },
             ) => Some(work),
+            Self::Agent(AgentError::Parked(parked)) => Some(&parked.work),
             _ => None,
         }
     }
@@ -236,6 +257,7 @@ mod tests {
             "parameter_invalid",
             "step_failed",
             "agent_missing",
+            "consent_required",
             "unavailable",
             "interrupted",
         ] {
