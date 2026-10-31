@@ -8,6 +8,27 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+## [1.0.8] — 2026-10-31
+
+**Upgrade notes.**
+- Every `[[installer_options.launchers]]` row must declare `kind` (`gui`,
+  `tui` or `command`); an application package published without it is
+  refused by this version. `org.vibevm.apps/vim@1.1.2` and
+  `org.vibevm.apps/mingw-w64@15.2.1` carry it; both declare
+  `min_vibe_version = "1.0.8"`. The registry cache refreshes an hour after
+  its last pull — `vibe registry sync` fetches the new tags at once.
+- A project `vibe.lock` that records application requirements carries the
+  new optional `required_by` field; vibe 1.0.7 and older refuse such a lock,
+  while every older lock still loads here.
+- A project resolves one version per package, so two applications requiring
+  different versions of one toolchain cannot share a project; the user home
+  keeps several versions of a slot side by side.
+- The license of a required application is asked for when that requirement
+  is planned, after earlier requirements may already be installed;
+  `--accept-license` admits every requirement unattended.
+- Application index records written by 1.0.7 (`vibe-user-applications/1`)
+  are refused, not migrated (B-216).
+
 - **Start-menu launchers and desktop entries (PROP-059 `#menu`,
   `#desktop-entries`).** Every launcher now declares `kind` (`gui`, `tui` or
   `command`); `terminal` follows from it and a disagreeing value is refused.
@@ -57,8 +78,6 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 - **Busy handler executables are retried.** A lifecycle handler whose spawn
   hits `ETXTBSY` (a just-written script still open in a concurrently forked
   child) is retried up to 20 times, 25 ms apart, before the spawn is reported.
-
-## [1.0.8] — 2026-10-31
 
 - **User applications rebuilt on a clean contract (PROP-059).** `vibe install -g`
   installs an app package through its author-declared platform / architecture /
