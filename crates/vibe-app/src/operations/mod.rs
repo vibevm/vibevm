@@ -42,7 +42,7 @@ use crate::select::{Chooser, InstallChoice, select_option};
 use crate::settings::SettingsRoot;
 use crate::steps::{
     self, FeatureChooser, FeatureRequest, HostFacts, LicensePrompt, ParameterPrompt, Plan,
-    PlanInput, Previous, Prompts, RequirementResolver, Start,
+    PlanInput, Previous, Prompts, RequiredBy, RequirementResolver, Start,
 };
 use crate::storage::{Availability, Storage};
 
@@ -143,6 +143,10 @@ pub struct InstallRequest {
     /// `update --purge-previous`: remove the replaced installation at once
     /// instead of keeping it hidden (`PROP-065#update-and-rollback`).
     pub purge_previous: bool,
+    /// Set by the requirement installer, never by a command: the package
+    /// and step that asked for this one, so its plan says whose it is
+    /// (`PROP-065#app-dependencies`).
+    pub required_by: Option<RequiredBy>,
 }
 
 /// The command an outcome reports.
@@ -350,6 +354,7 @@ fn plan_option(
         },
         agent: ctx.agent,
         requirements: Some(&requirements as RequirementResolver<'_>),
+        required_by: request.required_by.clone(),
     })?;
     if let Some(show) = ctx.on_plan {
         show(&plan);

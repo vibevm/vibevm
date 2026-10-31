@@ -140,6 +140,20 @@ pub(crate) struct PlanInput<'a> {
     pub agent: AgentHooks<'a>,
     /// Resolves `requires` entries (`PROP-065#app-dependencies`).
     pub requirements: Option<RequirementResolver<'a>>,
+    /// Set when this plan is a requirement of another package's plan.
+    pub required_by: Option<RequiredBy>,
+}
+
+/// Why a plan is being computed for a package the user did not name: the
+/// requiring package and the step that named it
+/// (`PROP-065#app-dependencies`).
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies")]
+pub struct RequiredBy {
+    /// The installation key of the package whose plan named the requirement.
+    pub package: String,
+    /// The requiring step; `None` for an option-level requirement.
+    pub step: Option<String>,
 }
 
 /// One step and whether it runs.
@@ -175,6 +189,12 @@ pub struct Plan {
     pub dependencies: Vec<PlannedDependency>,
     pub steps: Vec<PlannedStep>,
     pub warnings: Vec<String>,
+    /// Set when this plan belongs to a package another plan requires, so
+    /// the text says whose it is instead of appearing unexplained between
+    /// the owner's plan and its first step (`PROP-065#app-dependencies`).
+    /// The `vibe-app-plan/1` document is unchanged: a requirement is
+    /// already a `dependency` entry of the requiring plan.
+    pub required_by: Option<RequiredBy>,
 }
 
 /// The work directory of an installation key.
@@ -283,6 +303,7 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         dependencies,
         steps,
         warnings,
+        required_by: input.required_by.clone(),
     })
 }
 

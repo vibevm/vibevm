@@ -390,3 +390,111 @@ fn plain_suspend_stays_silent_through_long_input_and_resumes_on_ok_or_error() {
         assert_eq!(renderer.active_task_count(), 0);
     }
 }
+
+#[test]
+fn the_ascii_vocabulary_keeps_the_tree_columns_of_the_unicode_one() {
+    let unicode = TreeGlyphs::unicode();
+    let ascii = TreeGlyphs::ascii();
+    assert_eq!(unicode.label(0, "root"), "root");
+    assert_eq!(unicode.label(1, "step"), "├─ step");
+    assert_eq!(unicode.label(3, "deep"), "│  │  ├─ deep");
+    assert_eq!(ascii.label(0, "root"), "root");
+    assert_eq!(ascii.label(1, "step"), "|- step");
+    assert_eq!(ascii.label(3, "deep"), "|  |  |- deep");
+    assert_eq!(ascii.under(0), "  ");
+    assert_eq!(ascii.under(2), "  |  |  ");
+    for depth in 0..4 {
+        assert_eq!(
+            unicode.label(depth, "x").chars().count(),
+            ascii.label(depth, "x").chars().count(),
+            "both vocabularies draw the same columns"
+        );
+        assert_eq!(
+            unicode.under(depth).chars().count(),
+            ascii.under(depth).chars().count()
+        );
+    }
+}
+
+#[test]
+fn the_panel_draws_the_command_its_steps_and_a_requirement_as_one_tree() {
+    let (terminal, renderer) = panelled(16, 72, 3, false);
+    let progress = Progress::new(renderer.clone());
+    let command = progress.task("Command global install");
+    let steps = command.progress();
+
+    // A required package's whole install is one task of its own, and its
+    // steps are its children (PROP-065 `#display`).
+    let requirement = steps.task("requires org.example/toolchain@1.0.0 (build) for step build");
+    let required_step = requirement
+        .progress()
+        .task("fetch (archive)  Fetch the toolchain");
+    let nested = terminal.contents();
+    assert!(
+        nested.contains("├─ requires org.example/toolchain@1.0.0"),
+        "{nested:?}"
+    );
+    assert!(nested.contains("│  ├─ fetch (archive)"), "{nested:?}");
+    required_step.finish();
+    requirement.finish();
+    renderer.suspend(|| ());
+    let done = terminal.contents();
+    assert!(
+        done.contains("✓ │  ├─ fetch (archive)"),
+        "a finished row keeps its place in the tree: {done:?}"
+    );
+
+    let fetch = steps.task("fetch (sources)  Fetch the sources");
+    fetch.finish();
+    let build = steps.task("build (recipe)  Build");
+    build.detail("configure: done");
+    build.detail("cc main.c");
+    let folded = terminal.contents();
+    assert!(folded.contains("├─ build (recipe)"), "{folded:?}");
+    assert!(
+        folded.contains("  │  cc main.c"),
+        "the fold hangs under the running step's own vertical: {folded:?}"
+    );
+    assert!(
+        folded.lines().all(|line| line.chars().count() <= 72),
+        "{folded:?}"
+    );
+
+    build.finish();
+    command.finish();
+    renderer.suspend(|| ());
+    let after = terminal.contents();
+    assert!(after.contains("✓ ├─ fetch (sources)"), "{after:?}");
+    assert!(after.contains("✓ ├─ build (recipe)"), "{after:?}");
+    assert!(
+        after.contains("✓ Command global install"),
+        "the root closes the group: {after:?}"
+    );
+    assert!(
+        !after.contains("cc main.c"),
+        "the fold goes with its step: {after:?}"
+    );
+}
+
+#[test]
+fn a_skipped_and_a_failed_step_keep_their_markers_and_their_place_in_the_tree() {
+    let terminal = InMemoryTerm::new(8, 72);
+    let renderer = ProgressRenderer::interactive_target(
+        ProgressDrawTarget::term_like(Box::new(terminal.clone())),
+        false,
+    );
+    let progress = Progress::new(renderer.clone());
+    let command = progress.task("Command global install");
+    let skipped = command.progress().task("fix (agent)  Fix");
+    skipped.skip("no agent configured");
+    let failed = command.progress().task("build (recipe)  Build");
+    failed.fail("exit status 1");
+    command.finish();
+    renderer.suspend(|| ());
+    let after = terminal.contents();
+    // `InMemoryTerm` parses the escapes away and stderr is no terminal
+    // here, so the dim of a skipped row is not observable: what is
+    // asserted is the marker and the place in the tree.
+    assert!(after.contains("• ├─ fix (agent)"), "{after:?}");
+    assert!(after.contains("✗ ├─ build (recipe)"), "{after:?}");
+}

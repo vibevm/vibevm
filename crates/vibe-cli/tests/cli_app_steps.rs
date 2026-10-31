@@ -284,12 +284,30 @@ fn a_step_list_plans_installs_fails_resumes_and_restarts() {
     assert_eq!(plan["features"][1]["chosen"], true);
     let text = ok(&fixture.app(&user, &["app", "plan"], name, &["--feature", "fixes"]));
     assert!(
-        text.contains("skip  fix (agent)") && text.contains("skipped: no agent configured"),
+        text.contains("\u{251c}\u{2500}  2. skip  fix (agent)")
+            && text.contains("\u{2502}            skipped: no agent configured"),
         "{text}"
     );
     assert!(text.contains("warning: no agent is configured"), "{text}");
     let only = ok(&fixture.app(&user, &["install", "-g"], name, &["--plan-only"]));
-    assert!(only.contains("1. run   fetch (sources)"), "{only}");
+    // The step's title shares the node line, the identity column is as
+    // wide as the widest step of the whole tree, and the last step closes
+    // it (PROP-065 `#plan`).
+    let node = |ordinal: &str, identity: &str, title: &str| {
+        let branch = if ordinal == " 5" {
+            "\u{2514}"
+        } else {
+            "\u{251c}"
+        };
+        format!("    {branch}\u{2500} {ordinal}. {identity:<33}{title}\n")
+    };
+    for row in [
+        node(" 1", "run   fetch (sources)", "Fetch the sources"),
+        node(" 2", "skip  fix (agent)", "Let an agent adapt the sources"),
+        node(" 5", "run   announce (shell) [finish]", "Announce the root"),
+    ] {
+        assert!(only.contains(&row), "{row:?} missing from {only}");
+    }
     assert_eq!(hits.load(Ordering::SeqCst), 0, "planning downloads nothing");
     assert!(!user.settings.join("applications/index.json").exists());
 

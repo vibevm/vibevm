@@ -373,17 +373,23 @@ fn print_tail(log: &Path) {
 /// The panel's hotkey, read from the terminal in raw mode on its own
 /// thread (PROP-065 `#display`).
 ///
-/// Unix only: crossterm's raw mode clears `ISIG`, so the terminal stops
-/// generating `SIGINT` and stops delivering it to the running child. The
-/// reader therefore answers a `Ctrl-C` key event by raising `SIGINT` on
-/// this process, which is the very signal `super::interrupt::Signals`
-/// registered for — the flag is set, the next poll forwards the signal to
-/// the child and the step is recorded `interrupted`, exactly as a terminal
-/// Ctrl-C does without the panel (`PROP-065#cancellation`). Windows has no
-/// equivalent: its console control event is what reaches the child, and
-/// raw mode stops the console from sending it, so the panel renders there
-/// without a hotkey rather than with a weaker Ctrl-C.
-#[cfg(unix)]
+/// Raw mode takes the console's own Ctrl-C handling away, so the reader
+/// puts it back by hand on both families, and `Ctrl-C` under the panel
+/// ends the run exactly as it does without one (`PROP-065#cancellation`).
+/// On Unix raw mode clears `ISIG`, so the terminal stops generating
+/// `SIGINT`: the reader raises `SIGINT` on this process, which is the very
+/// signal `super::interrupt::Signals` registered for. On Windows raw mode
+/// clears `ENABLE_PROCESSED_INPUT`, so the console stops generating the
+/// control event: the reader generates `CTRL_C_EVENT` for the console's
+/// own process group, which is what reaches the attached child and the
+/// `SetConsoleCtrlHandler` routine of `Signals` alike. Either way the
+/// flag is set, the next poll forwards it to the child and the step is
+/// recorded `interrupted`.
+///
+/// The handler is always in place first: `global::Observation::new`
+/// installs `Signals` before `StepDisplay::around` opens the panel, and
+/// the reader starts only inside the panel.
+#[cfg(any(unix, windows))]
 mod keys {
     use std::sync::Arc;
     use std::sync::atomic::{AtomicBool, Ordering};
@@ -457,18 +463,54 @@ mod keys {
             match key.code {
                 KeyCode::Char('l') if key.modifiers == KeyModifiers::NONE => panel.toggle(),
                 KeyCode::Char('c' | 'C') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-                    let _ = signal_hook::low_level::raise(signal_hook::consts::SIGINT);
+                    interrupt();
                 }
                 // Unknown keys are ignored: the panel is not a TUI.
                 _ => {}
             }
         }
     }
+
+    /// Deliver the interrupt raw mode swallowed.
+    #[cfg(unix)]
+    fn interrupt() {
+        let _ = signal_hook::low_level::raise(signal_hook::consts::SIGINT);
+    }
+
+    #[cfg(windows)]
+    use console_event::interrupt;
+
+    /// `GenerateConsoleCtrlEvent` on the console this process shares with
+    /// its children, declared here like the `SetConsoleCtrlHandler` of
+    /// `super::interrupt` rather than through a new dependency.
+    #[cfg(windows)]
+    mod console_event {
+        #![allow(unsafe_code)]
+
+        #[link(name = "kernel32")]
+        unsafe extern "system" {
+            fn GenerateConsoleCtrlEvent(ctrl_event: u32, process_group_id: u32) -> i32;
+        }
+
+        const CTRL_C_EVENT: u32 = 0;
+        /// Every process attached to this console, children included.
+        const THIS_CONSOLE: u32 = 0;
+
+        #[specmark::spec(
+            deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+            reason = "unsafe-gate: raw mode clears ENABLE_PROCESSED_INPUT, and Rust has no standard-library API for generating a console control event; both arguments are kernel32 constants (spec://org.vibevm.core/vibevm/common/PROP-065#display)."
+        )]
+        pub(super) fn interrupt() {
+            // SAFETY: both arguments are constants of the documented
+            // kernel32 call, which borrows nothing.
+            let _ = unsafe { GenerateConsoleCtrlEvent(CTRL_C_EVENT, THIS_CONSOLE) };
+        }
+    }
 }
 
 /// Without a terminal whose mode this process may change, the panel draws
 /// its fold and takes no keys.
-#[cfg(not(unix))]
+#[cfg(not(any(unix, windows)))]
 mod keys {
     use crate::output::ProgressPanel;
 

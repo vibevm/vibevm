@@ -17,7 +17,7 @@ use crate::exposure::exposure_of;
 use crate::index::{Index, Installation, Mark, Requirement};
 use crate::resolve::qualified_ref;
 use crate::select::{InstallChoice, select_option};
-use crate::steps::{Plan, PlannedDependency, StepPaths, admit_license};
+use crate::steps::{Plan, PlannedDependency, RequiredBy, StepPaths, admit_license};
 use crate::storage::Storage;
 
 use super::{InstallRequest, OperationContext};
@@ -166,9 +166,29 @@ pub(super) fn install_required(
             hidden: dependency.hidden,
             mark: Mark::Auto,
             accept_license,
+            required_by: Some(RequiredBy {
+                package: plan.package.key(),
+                step: dependency.step.clone(),
+            }),
             ..InstallRequest::default()
         };
-        super::install_locked(ctx, resolved, &request, stack)?;
+        // The requirement's whole install is observed under one task, so a
+        // step panel draws its steps as a subtree of the requirement
+        // instead of mixing them in among the requiring package's own
+        // (`PROP-065#display`).
+        let task = ctx.progress.task(requirement_label(dependency));
+        let progress = task.progress();
+        let nested = OperationContext {
+            progress: &progress,
+            ..*ctx
+        };
+        match super::install_locked(&nested, resolved, &request, stack) {
+            Ok(_) => task.finish(),
+            Err(error) => {
+                task.fail(error.to_string());
+                return Err(error);
+            }
+        }
     }
     let mut paths = StepPaths::default();
     if plan.dependencies.is_empty() {
@@ -193,6 +213,16 @@ pub(super) fn install_required(
         }
     }
     Ok(paths)
+}
+
+/// The progress row one required package's install hangs under: its key,
+/// its scope and what asked for it (`PROP-065#display`).
+fn requirement_label(dependency: &PlannedDependency) -> String {
+    let scope = dependency.scope.as_str();
+    match &dependency.step {
+        Some(step) => format!("requires {} ({scope}) for step {step}", dependency.key),
+        None => format!("requires {} ({scope})", dependency.key),
+    }
 }
 
 /// The requirements an installation records from its plan.
