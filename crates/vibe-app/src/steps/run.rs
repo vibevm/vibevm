@@ -457,7 +457,11 @@ impl<'a> Run<'a> {
         }
         let env = self.paths.child_env(&self.env, &step.id, ctx.search_path);
         if matches!(step.kind, StepKind::Agent { .. }) {
-            let (agent, result) = self.agent_step(planned, app_root, io);
+            // The agent's child sees the PATH a recipe step of this option
+            // sees, and nothing more of the step environment
+            // (`PROP-065#app-dependencies`, `PROP-064#envelope`).
+            let requirements = self.paths.child_env(&[], &step.id, ctx.search_path);
+            let (agent, result) = self.agent_step(planned, app_root, io, &requirements);
             state.agent = agent;
             return self.settle(
                 state,

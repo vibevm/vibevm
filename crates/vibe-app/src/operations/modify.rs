@@ -141,7 +141,7 @@ pub fn modify(
     }
     let mut stack = Vec::new();
     deps::enter(&mut stack, &key)?;
-    let paths = deps::install_required(ctx, &plan, &mut stack)?;
+    let paths = deps::install_required(ctx, &plan, request.accept_license, &mut stack)?;
     let root = match &record.location {
         Location::Owned { .. } => launch::app_root(&record, &storage).ok(),
         Location::External { app_root } => Some(app_root.clone()),

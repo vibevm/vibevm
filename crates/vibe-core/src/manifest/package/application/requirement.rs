@@ -94,3 +94,92 @@ impl RequirementDecl {
         Ok(())
     }
 }
+
+/// Every application package `options` require, each with its effective
+/// scope: an option's own `requires` (`runtime` unless stated), then each
+/// authored step's (`build` unless stated), in declaration order. Every
+/// option counts, not only the host's, so a project lockfile that records
+/// them stays the record on every host (`PROP-065#app-dependencies`).
+///
+/// ```
+/// use vibe_core::manifest::{Manifest, RequirementScope, application_requirements};
+///
+/// let manifest = Manifest::parse_str(r#"
+/// [package]
+/// name = "demo"
+/// group = "org.example"
+/// kind = "app"
+/// version = "1.0.0"
+///
+/// [application]
+/// id = "demo"
+///
+/// [[installer_options]]
+/// id = "main"
+/// name = "Main"
+/// platform = "linux"
+/// platform_name = "Linux"
+/// arch = "x86_64"
+/// requires = ["org.example/runtime@2"]
+///
+/// [[installer_options.steps]]
+/// id = "build"
+/// title = "Build"
+/// kind = "copy"
+/// from = "payload"
+/// requires = ["org.example/gcc@13"]
+/// "#).unwrap();
+/// let found: Vec<(&str, RequirementScope)> = application_requirements(&manifest.installer_options)
+///     .into_iter()
+///     .map(|(requirement, scope)| (requirement.package(), scope))
+///     .collect();
+/// assert_eq!(found, [
+///     ("org.example/runtime@2", RequirementScope::Runtime),
+///     ("org.example/gcc@13", RequirementScope::Build),
+/// ]);
+/// // The resolver follows them like `[requires.packages]` entries.
+/// let edges: Vec<String> = manifest.resolution_requires().iter().map(|r| r.qualified_name()).collect();
+/// assert_eq!(edges, ["org.example/runtime", "org.example/gcc"]);
+/// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies")]
+pub fn application_requirements(
+    options: &[super::InstallerOptionDecl],
+) -> Vec<(&RequirementDecl, RequirementScope)> {
+    let mut found = Vec::new();
+    for option in options {
+        found.extend(
+            option
+                .requires
+                .iter()
+                .map(|requirement| (requirement, requirement.scope_or(RequirementScope::Runtime))),
+        );
+        for step in &option.steps {
+            found.extend(
+                step.requires.iter().map(|requirement| {
+                    (requirement, requirement.scope_or(RequirementScope::Build))
+                }),
+            );
+        }
+    }
+    found
+}
+
+impl crate::manifest::Manifest {
+    /// The package edges a dependency resolver follows from this manifest:
+    /// every `[requires.packages]` entry, then every application package an
+    /// installer option or step requires (`PROP-065#app-dependencies`: a
+    /// required application is a transitive dependency like any other).
+    /// An identical spelling appears once.
+    pub fn resolution_requires(&self) -> Vec<crate::PackageRef> {
+        let mut edges = self.requires.packages.clone();
+        for (requirement, _) in application_requirements(&self.installer_options) {
+            let Ok(reference) = crate::PackageRef::parse(requirement.package()) else {
+                continue;
+            };
+            if !edges.contains(&reference) {
+                edges.push(reference);
+            }
+        }
+        edges
+    }
+}

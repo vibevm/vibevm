@@ -59,6 +59,7 @@ fn publish_resolution_lock(root: &Path, resolution: &[ResolvedDep]) {
                     vibe_core::PackageRef::parse(&format!("{group}/{name}@={version}")).unwrap()
                 })
                 .collect(),
+            required_by: Vec::new(),
             admitted_by: dep.admitted_by.clone(),
             via_override: dep.via_override.clone(),
             overridden: false,

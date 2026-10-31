@@ -12,22 +12,24 @@
 
 mod common;
 
+use std::path::PathBuf;
+
 use common::app_registry::{AppRegistry, failed, json, ok};
+use common::fake_agent::{Record, script};
 use serde_json::json as value;
 
 const TOOLCHAIN: &str = "org.example/toolchain@1.0.0";
 const CONSUMER: &str = "org.example/consumer@1.0.0";
 const RUNNER: &str = "org.example/runner@1.0.0";
 
-/// The toolchain (`vibe-test-tcc`), a consumer whose build step requires it
-/// (build scope), and a runner whose option requires it (runtime scope).
-fn fixture() -> AppRegistry {
-    let apps = AppRegistry::new();
+/// The toolchain (`vibe-test-tcc`); `extra` precedes its steps (a license).
+fn add_toolchain(apps: &AppRegistry, extra: &str) -> PathBuf {
     let toolchain = apps.package(
         "toolchain",
         "1.0.0",
         "toolchain",
-        r#"
+        &format!(
+            r#"{extra}
 [[installer_options.steps]]
 id = "place"
 title = "Place the toolchain"
@@ -42,9 +44,15 @@ executable = "$app_bin/vibe-test-tcc"
 [[installer_options.public_commands]]
 name = "vibe-test-tcc"
 launcher = "tcc"
-"#,
+"#
+        ),
     );
     apps.script(&toolchain, "vibe-test-tcc", "TCC_RAN");
+    toolchain
+}
+
+/// A consumer whose build step requires the toolchain (build scope).
+fn add_consumer(apps: &AppRegistry) {
     let consumer = apps.package(
         "consumer",
         "1.0.0",
@@ -72,6 +80,14 @@ executable = "$app_bin/consumer"
          printf '#!/bin/sh\\necho CONSUMER\\n' > \"$VIBE_OUT/bin/consumer\"\nchmod 755 \"$VIBE_OUT/bin/consumer\"\n",
     )
     .unwrap();
+}
+
+/// The toolchain, a consumer whose build step requires it (build scope),
+/// and a runner whose option requires it (runtime scope).
+fn fixture() -> AppRegistry {
+    let apps = AppRegistry::new();
+    add_toolchain(&apps, "");
+    add_consumer(&apps);
     let runner = apps.package(
         "runner",
         "1.0.0",
@@ -261,4 +277,132 @@ fn a_runtime_requirement_is_exposed_and_blocks_its_removal_unless_cascaded() {
     assert!(apps.listed(RUNNER).is_null());
     assert!(apps.listed(TOOLCHAIN).is_null());
     assert!(!apps.settings().join("opt/bin/vibe-test-tcc").exists());
+}
+
+#[test]
+fn a_licensed_requirement_is_accepted_like_the_package_that_requires_it() {
+    let apps = AppRegistry::new();
+    let toolchain = add_toolchain(
+        &apps,
+        "[installer_options.license]\nfile = \"LICENSE.txt\"\nname = \"Toolchain License 1.0\"\n",
+    );
+    std::fs::write(toolchain.join("LICENSE.txt"), "Compile kindly.\n").unwrap();
+    add_consumer(&apps);
+
+    // `--assume-yes` alone accepts no license: the plan of the requiring
+    // package refuses before anything is fetched or run.
+    for (verb, extra) in [
+        (&["install", "-g"][..], &["--assume-yes", "--json"][..]),
+        (&["app", "plan"][..], &["--json"][..]),
+    ] {
+        let output = apps.app(verb, "org.example/consumer", extra);
+        let error = failed(&output);
+        assert_eq!(output.status.code(), Some(2), "{error}");
+        assert!(error.contains("\"code\":\"license_required\""), "{error}");
+        assert!(
+            error.contains(TOOLCHAIN),
+            "the requirement is named: {error}"
+        );
+    }
+    assert!(!apps.settings().join("applications/index.json").exists());
+    assert!(
+        !apps
+            .settings()
+            .join("cache/app-work/org.example.consumer@1.0.0")
+            .exists(),
+        "nothing ran"
+    );
+
+    // `--accept-license` accepts it exactly as it accepts the requirer's.
+    ok(&apps.app(
+        &["install", "-g"],
+        "org.example/consumer",
+        &["--accept-license"],
+    ));
+    let index = apps.index();
+    assert_eq!(
+        index["installations"][TOOLCHAIN]["license"]["name"],
+        "Toolchain License 1.0"
+    );
+    assert!(!apps.listed(CONSUMER).is_null());
+}
+
+#[test]
+fn an_agent_step_sees_the_requirement_path_a_recipe_step_sees() {
+    let apps = AppRegistry::new();
+    add_toolchain(&apps, "");
+    let agented = apps.package(
+        "agented",
+        "1.0.0",
+        "agented",
+        r#"
+requires = [{ package = "org.example/toolchain@1", scope = "build" }]
+
+[[installer_options.steps]]
+id = "build"
+title = "Build and record the PATH"
+kind = "recipe"
+interpreter = "posix_sh"
+script = "build.sh"
+
+[[installer_options.steps]]
+id = "fix"
+title = "Let an agent adapt the build"
+kind = "agent"
+prompt = "Adapt the build in $out."
+"#,
+    );
+    std::fs::write(
+        agented.join("build.sh"),
+        "set -e\nmkdir -p \"$VIBE_OUT/bin\"\nprintf '%s' \"$PATH\" > \"$VIBE_OUT/path.txt\"\n",
+    )
+    .unwrap();
+    let record = Record::new(&apps.root.path().join("agent-record"));
+    let registry = apps.registry();
+    let mut command = apps.user.vibe();
+    command
+        .current_dir(apps.root.path())
+        .env("HOME", apps.home())
+        .env("VIBE_AGENT_COMMAND", "sh")
+        .env(
+            "VIBE_AGENT_ARGS",
+            serde_json::to_string(&[script().display().to_string()]).unwrap(),
+        )
+        .env("FAKE_AGENT_RECORD", &record.dir)
+        .env_remove("VIBE_INVOKED_BY")
+        .env_remove("VIBE_APP_USE")
+        .args([
+            "install",
+            "-g",
+            "org.example/agented",
+            "--registry",
+            registry.to_str().unwrap(),
+            "--assume-yes",
+        ]);
+    ok(&command.output().unwrap());
+    assert_eq!(record.calls(), 1);
+
+    let recipe_path = std::fs::read_to_string(
+        apps.settings()
+            .join("opt/apps/agented/org.example.agented@1.0.0/path.txt"),
+    )
+    .unwrap();
+    let agent_path = record.env("PATH");
+    assert_eq!(
+        agent_path, recipe_path,
+        "one PATH for every step of the option"
+    );
+    let entries: Vec<&str> = agent_path.split(':').collect();
+    let proxies = apps
+        .settings()
+        .join("cache/app-proxies/org.example.toolchain@1.0.0/bin");
+    let bin = apps
+        .settings()
+        .join("opt/apps/toolchain/org.example.toolchain@1.0.0/bin");
+    assert_eq!(
+        entries[..2],
+        [proxies.to_str().unwrap(), bin.to_str().unwrap()],
+        "the requirement comes first: {agent_path}"
+    );
+    assert_eq!(record.env("VIBE_APP_USE"), format!("toolchain={TOOLCHAIN}"));
 }

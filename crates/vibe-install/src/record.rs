@@ -213,6 +213,8 @@ pub(crate) fn locked_package_from_fetched(
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: f.meta.dependencies.clone(),
+        // Filled once every row exists (`record_app_requirements`).
+        required_by: Vec::new(),
         admitted_by: resolved.admitted_by.clone(),
         via_override: resolved.via_override.clone(),
         overridden: c.overridden,
@@ -231,6 +233,17 @@ pub(crate) fn locked_package_from_fetched(
         // and the guard (PROP-022 §2.6) recognise an in-place slot.
         materialization: c.package_meta().materialization,
     }
+}
+
+/// Note on every lock row the locked application packages that require it
+/// (PROP-065 `#app-dependencies`), read from the fetched manifests.
+pub(crate) fn record_app_requirements(lockfile: &mut Lockfile, fetched: &[Fetched]) {
+    lockfile.record_app_requirements(|row| {
+        fetched
+            .iter()
+            .find(|f| f.cached.resolved.group == row.group && f.cached.resolved.name == row.name)
+            .map(|f| &f.cached.manifest)
+    });
 }
 
 #[cfg(test)]

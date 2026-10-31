@@ -223,7 +223,9 @@ impl<P: DepProvider> NaiveDepSolver<P> {
 
         // Capture direct package deps verbatim — they go straight into the
         // resolved node (used by lockfile `dependencies`).
-        let direct_deps: Vec<PackageRef> = manifest.requires.packages.clone();
+        // An application's installer requirements are edges like any
+        // other (PROP-065 #app-dependencies).
+        let direct_deps: Vec<PackageRef> = manifest.resolution_requires();
 
         // Resolve capability requires against the already-known provider
         // index (which now includes this package's own provides).

@@ -68,6 +68,7 @@ pub(super) fn locked(group_spelling: &str, name_spelling: &str, edges: &[&str]) 
             .iter()
             .map(|edge| PackageRef::parse(edge).unwrap())
             .collect(),
+        required_by: Vec::new(),
         admitted_by: None,
         via_override: None,
         overridden: false,

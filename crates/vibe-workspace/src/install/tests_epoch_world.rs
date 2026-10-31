@@ -139,6 +139,7 @@ pub(crate) fn locked(name: &str, hash: &str, dependencies: &[&str]) -> LockedPac
             .iter()
             .map(|edge| PackageRef::parse(edge).unwrap())
             .collect(),
+        required_by: Vec::new(),
         admitted_by: None,
         via_override: None,
         overridden: false,

@@ -102,6 +102,8 @@ pub(super) fn locked_package(
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: dependencies.to_vec(),
+        // Re-read from the fresh manifests once every row is in place.
+        required_by: old.map(|o| o.required_by.clone()).unwrap_or_default(),
         admitted_by: old.and_then(|package| package.admitted_by.clone()),
         via_override: old.and_then(|package| package.via_override.clone()),
         overridden: cached.overridden,

@@ -104,11 +104,21 @@ pub fn app_root(installation: &Installation, storage: &Storage) -> Result<PathBu
         } => match storage.availability(library) {
             Availability::Available => storage
                 .path_of(library)
-                .map(|root| root.join(directory))
+                .map(|root| library_path(&root, directory))
                 .ok_or_else(|| format!("library `{library}` is not configured")),
             Availability::Unavailable(reason) => Err(reason),
         },
     }
+}
+
+/// The path of a library-relative directory (`apps/<slot>/<key dir>`, `/`
+/// separated as the index records it) under a library root, joined one
+/// component at a time so every platform prints native separators.
+pub(crate) fn library_path(root: &Path, directory: &str) -> PathBuf {
+    directory
+        .split('/')
+        .filter(|part| !part.is_empty())
+        .fold(root.to_path_buf(), |path, part| path.join(part))
 }
 
 /// Why a derived `app_root` is not ready, or `None` when it is a directory.
@@ -455,5 +465,29 @@ mod tests {
         );
         fs::set_permissions(root.join("bin/tool"), fs::Permissions::from_mode(0o644)).unwrap();
         assert!(resolve(&launcher("bin/tool"), &vars(&root)).is_err());
+    }
+}
+
+#[cfg(test)]
+mod library_path_tests {
+    use std::path::{MAIN_SEPARATOR_STR, Path};
+
+    use super::library_path;
+
+    #[test]
+    fn a_library_relative_directory_joins_with_native_separators() {
+        let root = Path::new("library");
+        let joined = library_path(root, "apps/vim/org.vibevm.apps.vim@1.1.0");
+        assert_eq!(
+            joined,
+            root.join("apps")
+                .join("vim")
+                .join("org.vibevm.apps.vim@1.1.0")
+        );
+        assert_eq!(
+            joined.to_string_lossy(),
+            ["library", "apps", "vim", "org.vibevm.apps.vim@1.1.0"].join(MAIN_SEPARATOR_STR),
+            "every separator is the platform's own"
+        );
     }
 }

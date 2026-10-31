@@ -219,18 +219,21 @@ fn place_owned(
     let library_root = storage.usable(library)?;
     let slot = &selected.resolved.application.id;
     let directory = format!("apps/{slot}/{}", selected.resolved.package.directory_name());
-    let target = library_root.join(&directory);
+    let target = crate::launch::library_path(&library_root, &directory);
     let owned_by_record = prior_owned == Some((library, directory.as_str()));
     if target.exists() && !owned_by_record && !selected.force {
         return Err(AppError::ForeignDirectory {
             path: target.display().to_string(),
         });
     }
-    let staging = library_root.join(format!(
-        "apps/{slot}/.staging-{}-{}",
-        selected.resolved.package.directory_name(),
-        std::process::id()
-    ));
+    let staging = crate::launch::library_path(
+        &library_root,
+        &format!(
+            "apps/{slot}/.staging-{}-{}",
+            selected.resolved.package.directory_name(),
+            std::process::id()
+        ),
+    );
     fs::create_dir_all(&staging).map_err(|source| installer::io("creating", &staging, source))?;
     let payload = staging.join("payload");
     let previous = staging.join("previous");
@@ -269,7 +272,7 @@ fn place_owned(
         && (prior_library != library || prior_directory != directory)
         && let Some(root) = storage.path_of(prior_library)
     {
-        retired.push(root.join(prior_directory));
+        retired.push(crate::launch::library_path(&root, prior_directory));
     }
     Ok((
         Location::Owned {
@@ -325,7 +328,7 @@ fn retired_owned(storage: &Storage, prior: Option<&Installation>) -> Vec<PathBuf
             library, directory, ..
         }) => storage
             .path_of(library)
-            .map(|root| vec![root.join(directory)])
+            .map(|root| vec![crate::launch::library_path(&root, directory)])
             .unwrap_or_default(),
         _ => Vec::new(),
     }

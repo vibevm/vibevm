@@ -19,7 +19,7 @@ pub use lifecycle::{Change, ChangeVerb, expose, hide, hold, mark, rollback};
 pub use listing::{installed, list};
 pub use modify::{ModifyRequest, modify};
 pub use outdated::outdated;
-pub use remove::{Removal, RemoveRequest, autoremove, uninstall};
+pub use remove::{Removal, RemoveRequest, autoremove, remove_unrecorded, uninstall};
 pub use update::update;
 
 use std::ffi::OsStr;
@@ -197,7 +197,7 @@ fn install_entered(
         ensure_available(&key, prior, &storage)?;
     }
     let plan = plan_option(ctx, resolved, &option, request, None, &index)?;
-    let paths = deps::install_required(ctx, &plan, stack)?;
+    let paths = deps::install_required(ctx, &plan, request.accept_license, stack)?;
     let mut applied = apply::apply(
         ctx,
         &storage,
@@ -304,7 +304,15 @@ fn plan_option(
 ) -> Result<Plan, AppError> {
     let owner = resolved.package.key();
     let requirements = |spelling: &str, scope, step: Option<&str>| {
-        deps::resolve_requirement(ctx, index, &owner, spelling, scope, step)
+        deps::resolve_requirement(
+            ctx,
+            index,
+            &owner,
+            spelling,
+            scope,
+            step,
+            request.accept_license,
+        )
     };
     let plan = steps::plan(&PlanInput {
         resolved,

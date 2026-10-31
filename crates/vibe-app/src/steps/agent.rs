@@ -7,6 +7,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#consent");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#modes");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#parking");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#never");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#envelope");
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -179,6 +180,10 @@ pub(crate) struct AgentStep<'a> {
     pub attended: bool,
     pub earlier: Vec<(String, String, String)>,
     pub io: ChildIo<'a>,
+    /// The PATH (and `VIBE_APP_USE`) the step's requirements put first,
+    /// exactly as a recipe step of the same option receives them
+    /// (`PROP-065#app-dependencies`); empty without requirements.
+    pub requirements: &'a [(String, String)],
     /// The run record's `steps/<id>/`.
     pub record_step: Option<PathBuf>,
     /// `<home>/agentic/outbox/<run>/`.
@@ -325,6 +330,7 @@ fn spawn(
         .env("VIBE_SOURCES", cx.work.join("sources"))
         .env("VIBE_OUT", cx.work.join("out"))
         .env("VIBE_PACKAGE", cx.package_root)
+        .envs(cx.requirements.iter().map(|(name, value)| (name, value)))
         .envs(&invocation.env);
     if let Some(root) = cx.app_root {
         command.env("VIBE_APP_ROOT", root);
@@ -452,12 +458,14 @@ impl<'a> Run<'a> {
     }
 
     /// Deliver one agent step (`PROP-064`): `{work}` is the work directory,
-    /// or the placed root for a finish step.
+    /// or the placed root for a finish step; `requirements` is the PATH its
+    /// required installations put first.
     pub(super) fn agent_step(
         &self,
         planned: &PlannedStep,
         app_root: &Path,
         io: ChildIo<'_>,
+        requirements: &[(String, String)],
     ) -> (Option<AgentRun>, Result<Option<String>, AppError>) {
         let step = &planned.step;
         let finish = step.phase == StepPhase::Finish;
@@ -492,6 +500,7 @@ impl<'a> Run<'a> {
             attended: self.attended(),
             earlier,
             io,
+            requirements,
             record_step: self.record.as_ref().map(|record| record.step_dir(&step.id)),
             outbox: self
                 .ctx

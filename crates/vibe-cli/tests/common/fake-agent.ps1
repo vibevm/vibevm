@@ -11,7 +11,7 @@ New-Item -ItemType Directory -Force -Path $record | Out-Null
 Add-Content -Path (Join-Path $record 'calls') -Value 'call'
 Set-Content -Path (Join-Path $record 'args') -Value $args
 $names = 'VIBE_HOOK_STEP', 'VIBE_HOOK_RUN', 'VIBE_HOOK_PROMPT_FILE', 'VIBE_HOOK_CONTEXT_FILE',
-  'VIBE_WORK', 'VIBE_SOURCES', 'VIBE_OUT', 'VIBE_PACKAGE', 'VIBE_APP_ROOT', 'FAKE_AGENT_NAME'
+  'VIBE_WORK', 'VIBE_SOURCES', 'VIBE_OUT', 'VIBE_PACKAGE', 'VIBE_APP_ROOT', 'FAKE_AGENT_NAME', 'PATH', 'VIBE_APP_USE'
 $lines = foreach ($name in $names) { "$name=$([Environment]::GetEnvironmentVariable($name))" }
 Set-Content -Path (Join-Path $record 'env') -Value $lines
 Set-Content -Path (Join-Path $record 'cwd') -Value (Get-Location).Path

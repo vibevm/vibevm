@@ -203,7 +203,7 @@ pub(crate) fn resolve_effective<S: InstallSource + ?Sized>(
 }
 
 fn declaration_from_manifest(manifest: &Manifest) -> Result<NodeDecl> {
-    let edges = manifest
+    let mut edges: Vec<EdgeDecl> = manifest
         .requires
         .iter_pkgrefs()
         .filter_map(|(group, name)| {
@@ -215,6 +215,22 @@ fn declaration_from_manifest(manifest: &Manifest) -> Result<NodeDecl> {
             })
         })
         .collect();
+    // An application's installer requirements are resolver edges too
+    // (PROP-065 `#app-dependencies`), with the default access.
+    for reference in manifest.resolution_requires() {
+        let Some(group) = reference.group.as_ref() else {
+            continue;
+        };
+        let to = node_id(group, reference.name.as_str());
+        if !edges.iter().any(|edge| edge.to == to) {
+            edges.push(EdgeDecl {
+                to,
+                access: None,
+                friend: None,
+                exclude: Vec::new(),
+            });
+        }
+    }
     let visibility = manifest.visibility.clone().unwrap_or_default();
     let overrides = manifest
         .override_table
@@ -444,6 +460,16 @@ fn prune_manifest(manifest: &mut Manifest, targets: &BTreeSet<String>) {
         .retain(|disjunction| !disjunction.one_of.is_empty());
     for conditional in manifest.conditional_deps.values_mut() {
         prune_requires(&mut conditional.dependencies, targets);
+    }
+    let blocked = |requirement: &vibe_core::manifest::RequirementDecl| {
+        PackageRef::parse(requirement.package())
+            .is_ok_and(|reference| targets.contains(&reference.qualified_name()))
+    };
+    for option in &mut manifest.installer_options {
+        option.requires.retain(|requirement| !blocked(requirement));
+        for step in &mut option.steps {
+            step.requires.retain(|requirement| !blocked(requirement));
+        }
     }
 }
 

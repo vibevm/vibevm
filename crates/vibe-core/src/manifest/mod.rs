@@ -49,8 +49,8 @@ pub use extension::{
     ExtensionKey, ExtensionPass, ExtensionPassKind, ExtensionUse, ExtensionWhen, ExtensionsControl,
 };
 pub use lockfile::{
-    CURRENT_SCHEMA_VERSION, LockedEmbeddedSource, LockedPackage, LockedSubskill, Lockfile,
-    LockfileMeta, SourceKind, VirtualCapabilityRecord,
+    CURRENT_SCHEMA_VERSION, LockedEmbeddedSource, LockedPackage, LockedRequirer, LockedSubskill,
+    Lockfile, LockfileMeta, SourceKind, VirtualCapabilityRecord,
 };
 pub use mechanism::{
     HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,
@@ -63,7 +63,7 @@ pub use package::application::{
     OwnedWord, ParamEquals, ParameterDecl, ParameterType, ParameterValue, ProfileDecl,
     PublicCommandDecl, RecipeDecl, RequirementDecl, RequirementScope, RequirementTable, ResultDecl,
     ShellInterpreter, SourceInputDecl, StepDecl, StepKind, StepOrigin, StepPhase, StepVar,
-    expand_step_template, result_of, steps_of,
+    application_requirements, expand_step_template, result_of, steps_of,
 };
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, Authorship, BinaryDecl,

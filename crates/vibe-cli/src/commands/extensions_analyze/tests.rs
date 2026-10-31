@@ -73,6 +73,7 @@ fn fixture() -> TempDir {
         boot_snippet: Some("boot/10-lib.md".to_owned()),
         files_written: Vec::new(),
         dependencies: Vec::new(),
+        required_by: Vec::new(),
         admitted_by: None,
         via_override: None,
         overridden: false,
