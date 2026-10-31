@@ -30,7 +30,7 @@ use super::extension::{ExtensionHandler, validate_handler_shape};
 
 pub use identity::{
     HOST_OWNER, MechanismKey, MechanismKeyParseError, MechanismRole, MechanismRoleParseError,
-    ProviderOwner, ProviderPin, ProviderPinParseError, is_portable_token,
+    ProviderOwner, ProviderPin, ProviderPinParseError, is_command_name, is_portable_token,
 };
 pub(crate) use wire::{MechanismDeclWire, MechanismRoutesWire};
 
