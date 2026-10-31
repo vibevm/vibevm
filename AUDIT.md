@@ -1350,10 +1350,15 @@ phases Q1 … Q3 landed in `a435a9abf..50a6685cc`, the full seven-step gate on
 and the publication of `org.vibevm.apps/mingw-w64@15.2.0` and
 `org.vibevm.apps/vim@1.1.0`.
 
-**3 findings** — 0 P1, 0 P2, 3 P3. Disposition: 1 filed, 1 re-opened, 1 open.
+**8 findings** — 0 P1, 1 P2, 7 P3. Disposition: 5 filed, 1 re-opened, 2 fixed in-campaign (Q4–Q5b, release 1.0.8).
 
 | id | cat | sev | finding | disposition |
 |---|---|---|---|---|
 | 2026-10-31-06 | A2 | P3 | `vibe-lifecycle` `apply_rechecks_opencode_occupancy_after_a_clean_plan` failed once under the parallel workspace run with `Text file busy (os error 26)` spawning a just-written fixture executable, and passed three times alone — the family of 2026-10-31-02. | re-opened as the same row; re-check next run |
 | 2026-10-31-07 | C | P3 | Windows removal plans print the owned payload with mixed separators (`opt\apps/vim/…`). | filed — BACKLOG B-223 |
 | 2026-10-31-08 | C | P3 | Requirements between application packages are recorded in the home's index but not yet in a project's `vibe.lock`; `--accept-license` is not forwarded to a requirement; agent steps do not see the requirement PATH. | open — named in the campaign ledger (Q3) for the next wave |
+| 2026-10-31-09 | C | P2 | A launcher carried no explicit kind, no menu opt-in, no menu group and one icon path, so a desktop client could not build a start menu; `.desktop` files shipped with Linux software had no mapping. | fixed — Q5/Q5b (`f3cd83160`, `d2aef4e0a`), PROP-059 `#menu` / `#desktop-entries`, BACKLOG B-224 |
+| 2026-10-31-10 | C | P3 | `not_installed` named "global application" even when the project home was searched. | fixed — Q5b (`d2aef4e0a`), BACKLOG B-225 |
+| 2026-10-31-11 | C | P3 | The Windows `env` step and every shell/recipe interpreter spawned `powershell` / `cmd.exe` by bare name and failed under a reduced PATH. | fixed — `eb2686a2e`; native registry editing filed as BACKLOG B-226 |
+| 2026-10-31-12 | B | P3 | No way to refresh the user home's registry cache before the one-hour TTL; the publish index hook is not configured, so the index is rebuilt by hand, and a CDN served a stale `by-name` file for minutes after the push. | filed — BACKLOG B-227 |
+| 2026-10-31-13 | A2 | P3 | The bundle-manifest writer refused its own output once a third component (`vibe-app-proxy`) was added, breaking every native build of the first release attempt. | fixed — `62fe208d9`; release 1.0.8 run 41200711980 green on all five platforms |
