@@ -280,7 +280,7 @@ fn a_step_list_plans_installs_fails_resumes_and_restarts() {
     assert_eq!(plan["features"][1]["chosen"], true);
     let text = ok(&fixture.app(&user, &["app", "plan"], name, &["--feature", "fixes"]));
     assert!(
-        text.contains("skip (no agent configured) fix (agent)"),
+        text.contains("skip  fix (agent)") && text.contains("skipped: no agent configured"),
         "{text}"
     );
     assert!(text.contains("warning: no agent is configured"), "{text}");

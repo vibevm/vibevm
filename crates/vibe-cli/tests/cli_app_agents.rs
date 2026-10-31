@@ -24,7 +24,7 @@ fn without_an_agent_the_step_is_skipped_and_announced_before_anything_runs() {
     let fixture = Fixture::new("");
     let plan = ok(&run(fixture.app(&["app", "plan"], &[])));
     assert!(
-        plan.contains("skip (no agent configured) fix (agent)"),
+        plan.contains("skip  fix (agent)") && plan.contains("skipped: no agent configured"),
         "{plan}"
     );
     assert!(
