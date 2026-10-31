@@ -84,7 +84,7 @@ fn ordered(
         .iter()
         .map(|id| {
             if Some(id.as_str()) == detected {
-                format!("Detected automatically: {} ({id})", label(id))
+                format!("{} ({id})  [detected]", label(id))
             } else {
                 format!("{} ({id})", label(id))
             }
@@ -148,7 +148,7 @@ pub fn select_option(
             let (ids, labels) = ordered(platforms.clone(), detected, |id| {
                 platform_label(options, id)
             });
-            let index = ask(chooser, "Select application platform", &labels, "platform")?;
+            let index = ask(chooser, "Platform", &labels, "platform")?;
             ids[index].clone()
         }
         (None, None) => detected
@@ -179,7 +179,7 @@ pub fn select_option(
             let (ids, labels) = ordered(arches.clone(), host_arch, |id| {
                 arch_label(options, &platform, id)
             });
-            let prompt = format!("Select architecture for {platform}");
+            let prompt = format!("Architecture ({platform})");
             let index = ask(chooser, &prompt, &labels, "architecture")?;
             ids[index].clone()
         }
@@ -224,7 +224,7 @@ pub fn select_option(
                     .iter()
                     .map(|option| format!("{} ({})", option.name, option.id))
                     .collect();
-                let prompt = format!("Select installer for {platform}/{arch}");
+                let prompt = format!("Installer ({platform}/{arch})");
                 let index = ask(chooser, &prompt, &labels, "installer")?;
                 Ok(many[index].clone())
             }
@@ -439,8 +439,8 @@ mod tests {
         let selected = select_option(&options, &InstallChoice::default(), Some(&chooser)).unwrap();
         assert_eq!(selected.id, "host");
         let prompts = prompts.borrow();
-        assert!(prompts[0].1[0].starts_with("Detected automatically"));
-        assert!(prompts[1].1[0].starts_with("Detected automatically"));
+        assert!(prompts[0].1[0].ends_with("[detected]"));
+        assert!(prompts[1].1[0].ends_with("[detected]"));
         let cancel = |_: &str, _: &[String]| -> Result<Option<usize>, String> { Ok(None) };
         assert!(matches!(
             select_option(&options, &InstallChoice::default(), Some(&cancel)),

@@ -114,7 +114,9 @@ impl Plan {
         }
     }
 
-    /// The plan as text, one line per step.
+    /// The plan as text: the package, its fields aligned, then one
+    /// numbered step per block with its title, reason, needs and
+    /// requirements on indented lines.
     ///
     /// ```
     /// # use vibe_app::{Plan, PackageCoordinate};
@@ -133,18 +135,27 @@ impl Plan {
             Some(root) => format!("external `{root}`"),
             None => "owned".into(),
         };
-        let mut text = format!(
-            "plan for {}: installer `{}` ({}/{}), result {result}\n",
-            self.package.key(),
-            self.option,
-            self.platform,
-            self.arch
+        let mut text = format!("plan for {}\n", self.package.key());
+        let field = |text: &mut String, name: &str, value: &str| {
+            text.push_str(&format!("  {name:<10} {value}\n"));
+        };
+        field(
+            &mut text,
+            "installer",
+            &format!(
+                "{} ({}/{}), result {result}",
+                self.option, self.platform, self.arch
+            ),
         );
         if let Some(license) = &self.license {
-            text.push_str(&format!("  license: {} (accepted)\n", license.name));
+            field(
+                &mut text,
+                "license",
+                &format!("{} (accepted)", license.name),
+            );
         }
         if let Some(profile) = &self.profile {
-            text.push_str(&format!("  profile: {profile}\n"));
+            field(&mut text, "profile", profile);
         }
         if !self.declared.is_empty() {
             let features: Vec<String> = self
@@ -168,7 +179,7 @@ impl Plan {
                     format!("[{mark}] {}{why}", feature.id)
                 })
                 .collect();
-            text.push_str(&format!("  features: {}\n", features.join(" ")));
+            field(&mut text, "features", &features.join("  "));
         }
         for param in &self.parameters {
             let value = if param.secret {
@@ -176,53 +187,60 @@ impl Plan {
             } else {
                 &param.value
             };
-            text.push_str(&format!("  parameter {} = {value}\n", param.id));
+            field(&mut text, "parameter", &format!("{} = {value}", param.id));
         }
         if self.download_bytes > 0 || self.unknown_sizes > 0 {
             let unknown = match self.unknown_sizes {
                 0 => String::new(),
                 count => format!(" plus {count} input(s) of unknown size"),
             };
-            text.push_str(&format!(
-                "  download: {} bytes{unknown}\n",
-                self.download_bytes
-            ));
+            field(
+                &mut text,
+                "download",
+                &format!("{} bytes{unknown}", self.download_bytes),
+            );
         }
         for dependency in self.dependencies.iter().filter(|d| d.step.is_none()) {
-            text.push_str(&dependency_line(dependency));
+            field(&mut text, "requires", &dependency_text(dependency));
+        }
+        if !self.steps.is_empty() {
+            text.push_str("  steps\n");
         }
         for (index, planned) in self.steps.iter().enumerate() {
             let step = &planned.step;
-            for dependency in self
-                .dependencies
-                .iter()
-                .filter(|dependency| dependency.step.as_deref() == Some(step.id.as_str()))
-            {
-                text.push_str(&dependency_line(dependency));
-            }
-            let action = match &planned.reason {
-                Some(reason) => format!("skip ({reason})"),
-                None => "run".into(),
-            };
-            let needs = if step.needs.is_empty() {
-                String::new()
-            } else {
-                let needs: Vec<String> = step.needs.iter().map(ToString::to_string).collect();
-                format!(" [needs {}]", needs.join(", "))
-            };
+            let action = if planned.run { "run " } else { "skip" };
             let phase = if step.phase == StepPhase::Finish {
                 " [finish]"
             } else {
                 ""
             };
             text.push_str(&format!(
-                "  {}. {} {} ({}): {}{phase}{needs}\n",
+                "    {:>2}. {action}  {} ({}){phase}\n",
                 index + 1,
-                action,
                 step.id,
-                step.kind.name(),
-                step.title
+                step.kind.name()
             ));
+            let detail = |text: &mut String, line: &str| {
+                text.push_str(&format!("              {line}\n"));
+            };
+            detail(&mut text, &step.title);
+            if let Some(reason) = &planned.reason {
+                detail(&mut text, &format!("skipped: {reason}"));
+            }
+            if !step.needs.is_empty() {
+                let needs: Vec<String> = step.needs.iter().map(ToString::to_string).collect();
+                detail(&mut text, &format!("needs {}", needs.join(", ")));
+            }
+            for dependency in self
+                .dependencies
+                .iter()
+                .filter(|dependency| dependency.step.as_deref() == Some(step.id.as_str()))
+            {
+                detail(
+                    &mut text,
+                    &format!("requires {}", dependency_text(dependency)),
+                );
+            }
         }
         for warning in &self.warnings {
             text.push_str(&format!("warning: {warning}\n"));
@@ -231,21 +249,18 @@ impl Plan {
     }
 }
 
-/// One `dependency` entry of the text plan, shown ahead of the step that
-/// needs it (`PROP-065#app-dependencies`).
-fn dependency_line(dependency: &PlannedDependency) -> String {
+/// One requirement of the text plan: `install|use <key> (<scope>[, hidden])
+/// for \`<requirement>\``, shown under the step that needs it or among the
+/// plan's fields when no step does (`PROP-065#app-dependencies`).
+fn dependency_text(dependency: &PlannedDependency) -> String {
     let action = if dependency.installed {
         "use"
     } else {
         "install"
     };
     let exposure = if dependency.hidden { ", hidden" } else { "" };
-    let target = match &dependency.step {
-        Some(step) => format!(" for step `{step}`"),
-        None => String::new(),
-    };
     format!(
-        "  dependency: {action} {} ({}{exposure}) for `{}`{target}\n",
+        "{action} {} ({}{exposure}) for `{}`",
         dependency.key,
         dependency.scope.as_str(),
         dependency.package

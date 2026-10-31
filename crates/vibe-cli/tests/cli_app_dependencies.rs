@@ -128,9 +128,15 @@ fn a_build_requirement_is_installed_hidden_exposed_to_its_step_and_autoremoved()
     );
     let text = ok(&apps.app(&["app", "plan"], "org.example/consumer", &[]));
     let dependency = text
-        .find("dependency: install org.example/toolchain@1.0.0 (build, hidden)")
+        .find("requires install org.example/toolchain@1.0.0 (build, hidden)")
         .unwrap_or_else(|| panic!("{text}"));
-    assert!(dependency < text.find("1. run build").unwrap(), "{text}");
+    let step = text
+        .find("1. run   build")
+        .unwrap_or_else(|| panic!("{text}"));
+    assert!(
+        step < dependency,
+        "the requirement is listed under its step: {text}"
+    );
 
     ok(&apps.app(&["install", "-g"], "org.example/consumer", &[]));
     let payload = apps

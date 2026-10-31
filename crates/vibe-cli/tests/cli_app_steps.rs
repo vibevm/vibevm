@@ -285,7 +285,7 @@ fn a_step_list_plans_installs_fails_resumes_and_restarts() {
     );
     assert!(text.contains("warning: no agent is configured"), "{text}");
     let only = ok(&fixture.app(&user, &["install", "-g"], name, &["--plan-only"]));
-    assert!(only.contains("1. run fetch (sources)"), "{only}");
+    assert!(only.contains("1. run   fetch (sources)"), "{only}");
     assert_eq!(hits.load(Ordering::SeqCst), 0, "planning downloads nothing");
     assert!(!user.settings.join("applications/index.json").exists());
 
