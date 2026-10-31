@@ -163,6 +163,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | crate::cli::AppCommand::Steps { .. }
             | crate::cli::AppCommand::Describe { .. }
             | crate::cli::AppCommand::Runs { .. }
+            | crate::cli::AppCommand::Work { .. }
             | crate::cli::AppCommand::Errors
             | crate::cli::AppCommand::Outdated { .. }
             | crate::cli::AppCommand::Alternatives { .. } => FastMetadata,

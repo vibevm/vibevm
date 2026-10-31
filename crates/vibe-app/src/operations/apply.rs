@@ -41,6 +41,8 @@ pub(super) struct Applied {
     pub package_root: PathBuf,
     pub retired: Vec<PathBuf>,
     pub finish_failure: Option<AppError>,
+    /// The work directory `--keep-work` kept (`PROP-065#work`).
+    pub work: Option<PathBuf>,
 }
 
 pub(super) struct Selected<'a> {
@@ -55,6 +57,8 @@ pub(super) struct Selected<'a> {
     pub command: Command,
     /// The key an update replaces, named in the run record.
     pub replaces: Option<String>,
+    /// `--keep-work`: the work directory is not retired (`PROP-065#work`).
+    pub keep_work: bool,
     /// The requirements' PATH entries per step.
     pub paths: StepPaths,
 }
@@ -112,8 +116,12 @@ pub(super) fn apply(
         Ok((_, _, Some(failure), _)) | Err(failure) => Some(failure),
     });
     let (location, mut retired, finish_failure, launchers) = placed?;
-    // A parked finish step keeps the work directory for `--resume`.
-    if !matches!(finish_failure, Some(AppError::Agent(AgentError::Parked(_)))) {
+    // A parked finish step keeps the work directory for `--resume`, and
+    // `--keep-work` keeps it for the next `--from-step` (`PROP-065#work`).
+    let kept_work = selected.keep_work.then(|| run.work().to_path_buf());
+    if kept_work.is_none()
+        && !matches!(finish_failure, Some(AppError::Agent(AgentError::Parked(_))))
+    {
         retired.push(run.work().to_path_buf());
     }
     let mut steps = run.records();
@@ -204,6 +212,7 @@ pub(super) fn apply(
         package_root: selected.resolved.root.clone(),
         retired,
         finish_failure,
+        work: kept_work,
     })
 }
 

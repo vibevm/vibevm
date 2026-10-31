@@ -28,6 +28,7 @@ pub mod application_runs;
 pub mod application_storage_gc;
 pub mod application_storage_list;
 pub mod application_storage_move;
+pub mod application_work;
 pub mod artifact_record;
 pub mod boot_artifact_transaction;
 pub mod compiler_ir;

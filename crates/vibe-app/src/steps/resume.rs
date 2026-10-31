@@ -47,6 +47,7 @@ pub(crate) fn start_point(plan: &Plan, work: &Path, start: &Start) -> Result<Sta
     let state = StepsFile::load(work)?.ok_or_else(|| StepError::NothingToResume {
         key: key.clone(),
         work: work.display().to_string(),
+        reason: format!("no kept work directory `{}` exists", work.display()),
     })?;
     let mismatch = if state.package != plan.package {
         Some(format!("it belongs to {}", state.package.key()))
@@ -68,6 +69,27 @@ pub(crate) fn start_point(plan: &Plan, work: &Path, start: &Start) -> Result<Sta
         return Err(StepError::ResumeMismatch {
             work: work.display().to_string(),
             reason,
+        }
+        .into());
+    }
+    let settled = || {
+        plan.steps.iter().all(|planned| {
+            matches!(
+                state.get(&planned.step.id).map(|step| step.outcome),
+                Some(StepOutcome::Done | StepOutcome::Skipped)
+            )
+        })
+    };
+    if *start == Start::Resume && settled() {
+        // A directory kept after success (`#work`) has nothing left to
+        // continue; only a named step can be run again inside it.
+        return Err(StepError::NothingToResume {
+            key,
+            work: work.display().to_string(),
+            reason: format!(
+                "every step of the kept work directory `{}` has already run",
+                work.display()
+            ),
         }
         .into());
     }

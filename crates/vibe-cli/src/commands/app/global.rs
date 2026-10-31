@@ -199,6 +199,9 @@ pub(crate) fn host_facts() -> HostFacts<'static> {
     }
 }
 
+/// A run's one-line notice printer (PROP-065 `#work`).
+type Notice = Box<dyn Fn(&str)>;
+
 /// What one operation observes: the progress handle (the machine stream
 /// only; the human renderer keeps showing child output as before) and the
 /// caught signals of a mutating command.
@@ -209,6 +212,9 @@ pub(crate) struct Observation {
     pub(crate) environment: Option<Box<dyn UserEnvironment>>,
     /// The caller's PATH, behind the requirements a step sees first.
     pub(crate) search_path: Option<std::ffi::OsString>,
+    /// One-line run notices on stderr, so `--json` stays one envelope
+    /// (PROP-065 `#work`); absent when the caller asked for quiet.
+    notice: Option<Notice>,
 }
 
 impl Observation {
@@ -230,7 +236,12 @@ impl Observation {
                 super::facts::user_home().as_deref(),
             ),
             search_path: super::facts::search_path(),
+            notice: (!ctx.is_quiet()).then(|| Box::new(|text: &str| eprintln!("{text}")) as Notice),
         })
+    }
+
+    fn notice(&self) -> Option<&dyn Fn(&str)> {
+        self.notice.as_deref()
     }
 
     fn interrupt(&self) -> Option<&dyn Interrupt> {
@@ -262,6 +273,7 @@ pub(super) fn operation<'a>(
         parameter_prompt: attended.then_some(&parameter_prompt as vibe_app::ParameterPrompt<'_>),
         license_prompt: attended.then_some(&license_prompt as vibe_app::LicensePrompt<'_>),
         on_plan: show,
+        on_notice: observe.notice(),
         progress: &observe.progress,
         quiet_children: ctx.is_machine_progress(),
         interrupt: observe.interrupt(),
@@ -298,6 +310,7 @@ pub(super) fn request(
         library,
         force,
         start,
+        keep_work: steps.keep_work,
         ..plan_request(choice, &steps.choice)
     }
 }

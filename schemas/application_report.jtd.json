@@ -42,6 +42,13 @@
         "x-default": null
       }
     },
+    "work": {
+      "type": "string",
+      "metadata": {
+        "description": "The work directory an install or update kept because --keep-work was given (PROP-065#work); absent when it was deleted.",
+        "x-default": null
+      }
+    },
     "selectedMode": {
       "enum": ["shell", "zip", "tar_gz", "exe", "msi", "source_build", "steps"],
       "metadata": {

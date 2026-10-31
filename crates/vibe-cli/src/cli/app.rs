@@ -1,6 +1,6 @@
 //! The `vibe app` argument surface (PROP-059 `#launcher-operations`,
-//! PROP-065 `#plan`, `#describe`, `#runs`, `#error-codes`) and the
-//! structured-installation flags of `install` / `update`.
+//! PROP-065 `#plan`, `#describe`, `#runs`, `#work`, `#error-codes`) and
+//! the structured-installation flags of `install` / `update`.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations");
 
@@ -57,7 +57,7 @@ pub struct AppChoiceArgs {
 }
 
 /// The structured-installation flags of an application install or update
-/// (PROP-065 `#features`, `#resume`).
+/// (PROP-065 `#features`, `#resume`, `#work`).
 #[derive(Debug, Clone, Default, clap::Args)]
 pub struct AppStepArgs {
     #[command(flatten)]
@@ -71,6 +71,11 @@ pub struct AppStepArgs {
     /// Restart the kept application work directory at the named step.
     #[arg(long, value_name = "ID")]
     pub from_step: Option<String>,
+
+    /// Keep the application work directory after a successful run, so a
+    /// later `--from-step ID` restarts the build inside it.
+    #[arg(long)]
+    pub keep_work: bool,
 }
 
 /// The mark of `vibe app mark` (PROP-065 `#uninstall-tree`).
@@ -167,6 +172,23 @@ pub enum AppCommand {
         /// Keep only the newest N records and delete the rest.
         #[arg(long, value_name = "N")]
         prune: Option<usize>,
+    },
+
+    /// List the kept application work directories of the home with their
+    /// state, change time and size, and delete them on request
+    /// (PROP-065 `#work`); the download cache and the run records are
+    /// never touched.
+    Work {
+        /// The installed package whose kept work directory is meant;
+        /// omitted, every kept directory of the home is listed.
+        #[arg(group = "kept")]
+        package: Option<String>,
+        /// Delete the selected work directory; needs a package or `--all`.
+        #[arg(long, requires = "kept")]
+        clean: bool,
+        /// With `--clean`, every kept work directory of the home.
+        #[arg(long, group = "kept", requires = "clean")]
+        all: bool,
     },
 
     /// List the stable error codes of application commands with their

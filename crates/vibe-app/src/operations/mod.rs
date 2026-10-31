@@ -71,6 +71,9 @@ pub struct OperationContext<'a> {
     pub license_prompt: Option<LicensePrompt<'a>>,
     /// Shown the plan before the first step runs (`PROP-065#plan`).
     pub on_plan: Option<&'a dyn Fn(&Plan)>,
+    /// Shown a one-line notice before a run changes something the user
+    /// asked to keep (`PROP-065#work`).
+    pub on_notice: Option<&'a dyn Fn(&str)>,
     /// Step tasks, fetched bytes and child output lines are observed here
     /// (`PROP-065#events`).
     pub progress: &'a Progress,
@@ -122,6 +125,9 @@ pub struct InstallRequest {
     pub accept_license: bool,
     /// `--resume` / `--from-step`.
     pub start: Start,
+    /// `--keep-work`: leave the work directory of a successful run in
+    /// place for the next `--from-step` (`PROP-065#work`).
+    pub keep_work: bool,
     /// `--hidden`: install without exposure (`PROP-059#hidden-installations`).
     pub hidden: bool,
     /// `manual` for a package named by the user, `auto` for a requirement.
@@ -153,6 +159,8 @@ pub struct Outcome {
     pub app_root: Option<PathBuf>,
     pub slot_default: Option<String>,
     pub message: String,
+    /// The work directory `--keep-work` kept (`PROP-065#work`).
+    pub work: Option<PathBuf>,
 }
 
 /// Install one app package into the current user's settings root: its
@@ -212,6 +220,7 @@ fn install_entered(
             start: &request.start,
             command: Command::Install,
             replaces: None,
+            keep_work: request.keep_work,
             paths,
         },
     )?;
@@ -353,6 +362,7 @@ fn commit(
     command: Command,
 ) -> Result<Outcome, AppError> {
     let reserved = reserved_names(index);
+    let work = applied.work;
     let installation = applied.installation;
     let key = installation.package.key();
     let slot = installation.slot.clone();
@@ -414,6 +424,7 @@ fn commit(
         method,
         app_root,
         message: String::new(),
+        work,
     })
 }
 

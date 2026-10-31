@@ -483,3 +483,142 @@ fn a_required_agent_step_is_refused_and_a_method_form_describes_its_sugar_steps(
     assert_eq!(kinds, [("pre_install", "shell"), ("archive", "archive")]);
     assert_eq!(option["steps"][0]["hook"], "pre_install");
 }
+
+#[test]
+fn keep_work_keeps_the_work_directory_for_a_later_from_step_and_app_work_cleans_it() {
+    let tarball = tar_gz("tool.sh.in", "echo \"TOOL_RAN $*\"\n");
+    let url_sha = sha(&tarball);
+    let (url, hits) = serve(tarball);
+    let fixture = Fixture::new();
+    stepped(&fixture, &url, &url_sha);
+    let user = UserScratch::new();
+    let name = "org.example/stepped";
+    let work = user.settings.join(WORK);
+
+    // Without the flag a successful install still deletes the directory.
+    ok(&fixture.app(&user, &["install", "-g"], name, &[]));
+    assert!(!work.exists(), "success deletes the work directory");
+    assert_eq!(hits.load(Ordering::SeqCst), 1);
+
+    // --keep-work keeps it with every step done, and says so.
+    let report = json(&fixture.app(&user, &["install", "-g"], name, &["--keep-work", "--json"]));
+    assert_eq!(report["work"], work.display().to_string());
+    let text = ok(&fixture.app(&user, &["install", "-g"], name, &["--keep-work"]));
+    assert!(
+        text.contains(&format!("work directory kept: {}", work.display())),
+        "{text}"
+    );
+    let state: Value = serde_json::from_slice(&fs::read(work.join("steps.json")).unwrap()).unwrap();
+    let outcomes: Vec<&str> = state["steps"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|step| step["outcome"].as_str().unwrap())
+        .collect();
+    assert_eq!(outcomes, ["done", "skipped", "done", "done", "done"]);
+
+    // `app work --json` lists it as a directory kept after success.
+    let listing = json(&fixture.vibe(&user, &["app", "work", "-g", "--json"]));
+    assert_eq!(listing["protocol"], "vibe-app-work/1");
+    assert_eq!(
+        listing["home"],
+        user.settings.join("cache/app-work").display().to_string()
+    );
+    let entry = &listing["entries"][0];
+    assert_eq!(entry["key"], KEY);
+    assert_eq!(entry["state"], "done");
+    assert_eq!(entry["path"], work.display().to_string());
+    assert!(entry["bytes"].as_u64().unwrap() > 0, "{entry}");
+    assert!(entry["parts"]["sources"].as_u64().unwrap() > 0, "{entry}");
+    assert!(
+        entry.get("step").is_none(),
+        "a done directory names no step"
+    );
+
+    // --from-step reruns only from `build` inside the kept tree.
+    let before = fixture.log();
+    ok(&fixture.app(
+        &user,
+        &["install", "-g"],
+        name,
+        &["--from-step", "build", "--keep-work"],
+    ));
+    assert_eq!(fixture.log(), format!("{before}RECIPE\nFINISH\n"));
+    assert_eq!(
+        hits.load(Ordering::SeqCst),
+        1,
+        "a restart inside the kept tree never re-fetches"
+    );
+    assert!(work.join("sources/upstream/tool.sh.in").is_file());
+    assert!(work.join("steps.json").is_file(), "the directory is kept");
+
+    // --resume has nothing to continue when every step is done.
+    let error = failed(&fixture.app(&user, &["install", "-g"], name, &["--resume"]));
+    assert!(error.contains("has already run"), "{error}");
+    assert!(error.contains("--from-step"), "{error}");
+
+    // A fresh run replaces the kept directory and says so first.
+    let stderr = String::from_utf8_lossy(&fixture.app(&user, &["install", "-g"], name, &[]).stderr)
+        .into_owned();
+    assert!(
+        stderr.contains(&format!("replacing kept work directory {}", work.display())),
+        "{stderr}"
+    );
+    assert!(!work.exists(), "the fresh run deleted it again");
+
+    // The text listing names the key; a clean removes the directory only.
+    ok(&fixture.app(&user, &["install", "-g"], name, &["--keep-work"]));
+    let listed = ok(&fixture.vibe(&user, &["app", "work", "-g"]));
+    assert!(listed.contains(KEY), "{listed}");
+    assert!(listed.contains("state    done"), "{listed}");
+    let cleaned = ok(&fixture.vibe(&user, &["app", "work", "-g", name, "--clean"]));
+    assert!(
+        cleaned.contains(&format!("removed {}", work.display())) && cleaned.contains("freed "),
+        "{cleaned}"
+    );
+    assert!(!work.exists());
+    assert!(
+        user.settings.join("cache/app-runs").is_dir(),
+        "a clean keeps the run records"
+    );
+    assert!(
+        user.settings.join("cache/app-sources").is_dir(),
+        "a clean keeps the download cache"
+    );
+    let empty = ok(&fixture.vibe(&user, &["app", "work", "-g"]));
+    assert!(
+        empty.contains(&format!(
+            "no kept work directories in {}",
+            user.settings.join("cache/app-work").display()
+        )),
+        "{empty}"
+    );
+
+    // `--clean` needs a package or `--all`; an absent package is refused.
+    let usage = fixture.vibe(&user, &["app", "work", "-g", "--clean"]);
+    assert_eq!(usage.status.code(), Some(2), "{}", failed(&usage));
+    let absent = fixture.vibe(&user, &["app", "work", "-g", "org.example/absent"]);
+    assert_eq!(absent.status.code(), Some(2));
+    assert!(
+        failed(&absent).contains("no kept work directory"),
+        "{}",
+        failed(&absent)
+    );
+    let json_error = fixture.vibe(
+        &user,
+        &["app", "work", "-g", "org.example/absent", "--json"],
+    );
+    assert!(
+        String::from_utf8_lossy(&json_error.stderr).contains("work_missing")
+            || String::from_utf8_lossy(&json_error.stdout).contains("work_missing"),
+        "stdout={} stderr={}",
+        String::from_utf8_lossy(&json_error.stdout),
+        String::from_utf8_lossy(&json_error.stderr)
+    );
+
+    // --clean --all empties the home.
+    ok(&fixture.app(&user, &["install", "-g"], name, &["--keep-work"]));
+    assert!(work.exists());
+    ok(&fixture.vibe(&user, &["app", "work", "-g", "--clean", "--all"]));
+    assert!(!work.exists());
+}

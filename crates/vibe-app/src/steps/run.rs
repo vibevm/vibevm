@@ -27,6 +27,7 @@ use super::resume::{StartPoint, start_point};
 use super::runs::{RunOutcome, RunRecord};
 use super::state::{Start, StepState, StepsFile};
 use super::template::Vars;
+use super::work::{human_bytes, tree_bytes};
 
 /// The flags one run applies to every step.
 pub(crate) struct RunFlags {
@@ -203,6 +204,13 @@ impl<'a> Run<'a> {
             return Ok(());
         }
         if self.fresh && self.work.exists() {
+            if let Some(notice) = self.ctx.on_notice {
+                notice(&format!(
+                    "replacing kept work directory {} ({})",
+                    self.work.display(),
+                    human_bytes(tree_bytes(&self.work))
+                ));
+            }
             fs::remove_dir_all(&self.work).map_err(|source| io("clearing", &self.work, source))?;
         }
         for directory in ["sources", "out", "inputs"] {

@@ -20,6 +20,7 @@ mod runs;
 mod sizes;
 mod state;
 mod template;
+mod work;
 
 pub(crate) use env::StepPaths;
 pub use features::{FeatureRequest, FeatureResolution, Implied, ImpliedRule, resolve_features};
@@ -32,6 +33,7 @@ pub(crate) use runs::{RunOutcome, RunRecord};
 pub use runs::{prune_runs, runs};
 pub use state::Start;
 pub(crate) use state::{StepState, StepsFile};
+pub use work::{clean_work, human_bytes, work};
 
 #[cfg(test)]
 mod tests;
