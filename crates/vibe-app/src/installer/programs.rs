@@ -27,6 +27,10 @@ pub fn windows_powershell() -> PathBuf {
 
 /// The program at `relative` under `%SystemRoot%`, or `fallback` when the
 /// variable is unset or the file is missing.
+#[specmark::spec(
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+    reason = "`SystemRoot` names where the running Windows keeps cmd.exe and Windows PowerShell; it is fixed for the life of the process and read here once per spawn as the location of an OS program, not as configuration (spec://org.vibevm.core/vibevm/common/PROP-065#execution)."
+)]
 pub fn windows_system_program(relative: &str, fallback: &str) -> PathBuf {
     let root = std::env::var_os("SystemRoot").map(PathBuf::from);
     resolve_in(root.as_deref(), relative, fallback, |path| path.is_file())
