@@ -55,7 +55,7 @@ fn edit(
 ) -> Result<Change, AppError> {
     let _lock = settings.lock()?;
     let mut index = Index::load(settings)?;
-    let (key, record) = installed(&index, spelling)?;
+    let (key, record) = installed(settings, &index, spelling)?;
     let (key, slot) = (key.to_owned(), record.slot.clone());
     let reserved = reserved_names(&index);
     let message = apply(&mut index, &key)?;

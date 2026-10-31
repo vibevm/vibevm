@@ -15,38 +15,72 @@ use vibe_wire::generated::{
 
 use super::{PROJECT_REQUIRED, TemplateVars, app_root, locate_icon, resolve, unavailable_reason};
 use crate::error::LaunchError;
-use crate::icons::{ResolvedIcon, wire_shape};
-use crate::index::{Index, Installation, Location};
+use crate::icons::{ResolvedIcon, copies_dir, is_package_relative, join_relative, wire_shape};
+use crate::index::{Index, Installation};
+use crate::settings::SettingsRoot;
 use crate::storage::Storage;
 
-/// The application icon of an installation: package-relative files kept at
-/// the same relative path in an owned payload (`PROP-065#icon`).
-pub(crate) fn application_icon(
-    installation: &Installation,
-    root: &Result<PathBuf, String>,
-) -> Option<ResolvedIcon> {
-    let icon = installation.icon.as_ref()?;
-    let root = match (&installation.location, root) {
-        (Location::Owned { .. }, Ok(root)) => Some(root.clone()),
-        _ => None,
-    };
-    Some(ResolvedIcon::resolve(icon, |template| {
-        root.as_ref()
-            .map(|root| root.join(template))
-            .ok_or_else(|| "the application icon is kept only in an owned payload".into())
-    }))
+/// Where the icon files of one installation are found (`PROP-059#menu`):
+/// a package-relative file among the home's copies, a `$`-templated one in
+/// the payload under `app_root`.
+pub(crate) struct IconPlaces {
+    copies: PathBuf,
+    vars: Result<TemplateVars, String>,
 }
 
-fn launcher_icon(
-    icon: &IconDecl,
-    root: &Result<PathBuf, String>,
-    vars: Option<&TemplateVars>,
-) -> ResolvedIcon {
-    ResolvedIcon::resolve(icon, |template| match (root, vars) {
-        (Ok(_), Some(vars)) => locate_icon(template, vars),
-        (Err(reason), _) => Err(reason.clone()),
-        (Ok(_), None) => Err("app_root is unavailable".into()),
-    })
+impl IconPlaces {
+    /// The places of `installation` in the home `vibe_home` with its
+    /// derived `root`.
+    pub(crate) fn new(
+        vibe_home: &Path,
+        project_root: Option<&Path>,
+        installation: &Installation,
+        root: &Result<PathBuf, String>,
+    ) -> Self {
+        Self {
+            copies: copies_dir(&SettingsRoot::new(vibe_home), &installation.package),
+            vars: root.clone().map(|root| TemplateVars {
+                app_root: root,
+                vibe_home: vibe_home.to_path_buf(),
+                project_root: project_root.map(Path::to_path_buf),
+            }),
+        }
+    }
+
+    fn in_payload(&self, template: &str) -> Result<PathBuf, String> {
+        match &self.vars {
+            Ok(vars) => locate_icon(template, vars),
+            Err(reason) => Err(reason.clone()),
+        }
+    }
+
+    /// One icon file as an existing absolute path, or why there is none.
+    pub(crate) fn locate(&self, template: &str) -> Result<PathBuf, String> {
+        if !is_package_relative(template) {
+            return self.in_payload(template);
+        }
+        let copy = join_relative(&self.copies, template).unwrap_or_else(|| self.copies.clone());
+        if copy.is_file() {
+            return Ok(copy);
+        }
+        // A record installed before the copies existed may keep the file at
+        // the same relative path in its payload.
+        self.in_payload(template)
+            .map_err(|_| format!("icon `{}` does not exist", copy.display()))
+    }
+
+    /// Every file of an icon set located.
+    pub(crate) fn resolve(&self, icon: &IconDecl) -> ResolvedIcon {
+        ResolvedIcon::resolve(icon, |template| self.locate(template))
+    }
+}
+
+/// The application icon of an installation (`PROP-065#icon`).
+pub(crate) fn application_icon(
+    installation: &Installation,
+    places: &IconPlaces,
+) -> Option<ResolvedIcon> {
+    installation.icon.as_ref().map(|icon| places.resolve(icon))
 }
 
 fn kind(value: LauncherKind) -> wire::LauncherKind {
@@ -61,7 +95,9 @@ fn or_default(own: &[String], fallback: &[String]) -> Vec<String> {
     if own.is_empty() { fallback } else { own }.to_vec()
 }
 
-/// The `vibe-app-launchers/1` listing of one installation.
+/// The `vibe-app-launchers/1` listing of one installation. `vibe_home` is
+/// the application home: `$vibe_home` of the templates, and the home whose
+/// `applications/icons` keeps the package-relative icon files.
 pub fn listing(
     installation: &Installation,
     storage: &Storage,
@@ -74,10 +110,11 @@ pub fn listing(
         vibe_home: vibe_home.to_path_buf(),
         project_root: project_root.map(Path::to_path_buf),
     });
+    let places = IconPlaces::new(vibe_home, project_root, installation, &root);
     let launchers = installation
         .launchers
         .iter()
-        .map(|launcher| row(installation, launcher, &root, vars.as_ref()))
+        .map(|launcher| row(installation, launcher, &root, vars.as_ref(), &places))
         .collect();
     let menu = &installation.menu;
     wire::ApplicationLaunchers {
@@ -96,7 +133,7 @@ pub fn listing(
         menu_group: menu.menu_group.clone(),
         categories: menu.categories.clone(),
         keywords: menu.keywords.clone(),
-        icon_set: application_icon(installation, &root).and_then(|icon| wire_shape(&icon)),
+        icon_set: application_icon(installation, &places).and_then(|icon| wire_shape(&icon)),
         app_root: root.as_ref().ok().map(|path| path.display().to_string()),
         launchers,
     }
@@ -107,6 +144,7 @@ fn row(
     launcher: &LauncherDecl,
     root: &Result<PathBuf, String>,
     vars: Option<&TemplateVars>,
+    places: &IconPlaces,
 ) -> wire::Launcher {
     let outcome = match (root, vars) {
         (Ok(_), Some(vars)) => resolve(launcher, vars),
@@ -125,6 +163,10 @@ fn row(
         Some(IconDecl::Path(path)) => Some(path.clone()),
         _ => None,
     };
+    let located = short_form
+        .as_deref()
+        .filter(|template| !template.is_empty())
+        .map(|template| places.locate(template));
     let menu = &installation.menu;
     wire::Launcher {
         id: launcher.id.clone(),
@@ -165,13 +207,13 @@ fn row(
                 icon_set: action
                     .icon
                     .as_ref()
-                    .and_then(|icon| wire_shape(&launcher_icon(icon, root, vars))),
+                    .and_then(|icon| wire_shape(&places.resolve(icon))),
             })
             .collect(),
         icon_set: launcher
             .icon
             .as_ref()
-            .and_then(|icon| wire_shape(&launcher_icon(icon, root, vars))),
+            .and_then(|icon| wire_shape(&places.resolve(icon))),
         executable: wire::PathValue {
             template: Some(launcher.executable.clone()),
             base: "app_root".into(),
@@ -190,10 +232,10 @@ fn row(
         },
         icon: wire::IconValue {
             template: short_form,
-            resolved: resolved
+            resolved: located
                 .as_ref()
-                .and_then(|value| value.icon.as_ref().map(text)),
-            diagnostic: resolved.and_then(|value| value.icon_diagnostic),
+                .and_then(|value| value.as_ref().ok().map(text)),
+            diagnostic: located.and_then(Result::err),
         },
         status,
         reason,
@@ -253,11 +295,7 @@ pub fn icon_choice(
     prefer: Option<&str>,
 ) -> Result<icon_wire::ApplicationIcon, LaunchError> {
     let root = app_root(installation, storage);
-    let vars = root.as_ref().ok().map(|root| TemplateVars {
-        app_root: root.clone(),
-        vibe_home: vibe_home.to_path_buf(),
-        project_root: None,
-    });
+    let places = IconPlaces::new(vibe_home, None, installation, &root);
     let launcher = match launcher_id {
         Some(id) => Some(
             installation
@@ -270,14 +308,14 @@ pub fn icon_choice(
     };
     let own = launcher
         .and_then(|launcher| launcher.icon.as_ref())
-        .map(|icon| launcher_icon(icon, &root, vars.as_ref()));
-    let application = application_icon(installation, &root);
+        .map(|icon| places.resolve(icon));
+    let application = application_icon(installation, &places);
     let default = installation
         .launchers
         .iter()
         .find(|launcher| launcher.default)
         .and_then(|launcher| launcher.icon.as_ref())
-        .map(|icon| launcher_icon(icon, &root, vars.as_ref()));
+        .map(|icon| places.resolve(icon));
     let candidates: Vec<ResolvedIcon> = match launcher {
         Some(_) => own.into_iter().chain(application).collect(),
         None => application.into_iter().chain(default).collect(),

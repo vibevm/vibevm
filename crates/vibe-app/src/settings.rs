@@ -35,6 +35,7 @@ use crate::error::StateError;
 pub struct SettingsRoot {
     root: PathBuf,
     cache: PathBuf,
+    project: bool,
 }
 
 /// Held for the duration of one mutating command; dropping it releases the
@@ -53,6 +54,7 @@ impl SettingsRoot {
         Self {
             root: root.to_path_buf(),
             cache: root.join("cache"),
+            project: false,
         }
     }
 
@@ -65,6 +67,31 @@ impl SettingsRoot {
                 .iter()
                 .fold(project_root.to_path_buf(), |path, part| path.join(part)),
             cache: user.cache.clone(),
+            project: true,
+        }
+    }
+
+    /// Whether this is a project home rather than the user home.
+    pub fn is_project(&self) -> bool {
+        self.project
+    }
+
+    /// The home as an error names it: `the user home`, or `the project home
+    /// <path>` (`PROP-059#project-scope`).
+    ///
+    /// ```
+    /// let dir = tempfile::tempdir().unwrap();
+    /// let user = vibe_app::SettingsRoot::new(dir.path());
+    /// assert_eq!(user.home_name(), "the user home");
+    /// let project = vibe_app::SettingsRoot::project(&dir.path().join("p"), &user);
+    /// assert!(project.home_name().starts_with("the project home "));
+    /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope")]
+    pub fn home_name(&self) -> String {
+        if self.project {
+            format!("the project home {}", self.root.display())
+        } else {
+            "the user home".into()
         }
     }
 
@@ -74,6 +101,13 @@ impl SettingsRoot {
 
     pub fn applications_dir(&self) -> PathBuf {
         self.root.join("applications")
+    }
+
+    /// `<home>/applications/icons`: one directory per installation (named
+    /// like its library directory) holding the package-relative icon files
+    /// of the application and its launchers (`PROP-059#menu`).
+    pub fn app_icons_dir(&self) -> PathBuf {
+        self.applications_dir().join("icons")
     }
 
     pub fn index_path(&self) -> PathBuf {

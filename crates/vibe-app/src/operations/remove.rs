@@ -68,7 +68,7 @@ pub fn uninstall(
     let _lock = ctx.settings.lock()?;
     let index = Index::load(ctx.settings)?;
     let storage = Storage::load(ctx.settings)?;
-    let (key, _) = installed(&index, spelling)?;
+    let (key, _) = installed(ctx.settings, &index, spelling)?;
     let key = key.to_owned();
     let order = tree::removal_order(&index, &key, request.cascade)?;
     let mut after = index.clone();
@@ -98,9 +98,7 @@ pub fn uninstall(
     } else {
         orphans
     };
-    let mut outcome = outcome.ok_or_else(|| AppError::NotInstalled {
-        package: key.clone(),
-    })?;
+    let mut outcome = outcome.ok_or_else(|| AppError::not_installed(ctx.settings, &key))?;
     let others: Vec<&str> = planned
         .iter()
         .filter(|(doomed, _)| *doomed != key)
@@ -222,7 +220,8 @@ fn report(
 
 /// Remove exactly one installation under the held lock: its authored
 /// removal, then the record (the slot default passes on), then the owned
-/// payload, then the proxies. An external root is never deleted.
+/// payload, its icon copies (`PROP-059#menu`), then the proxies. An external
+/// root is never deleted.
 pub(crate) fn remove_locked(
     ctx: &OperationContext<'_>,
     key: &str,
@@ -230,14 +229,11 @@ pub(crate) fn remove_locked(
 ) -> Result<Outcome, AppError> {
     let mut index = Index::load(ctx.settings)?;
     let storage = Storage::load(ctx.settings)?;
-    let installation =
-        index
-            .installations
-            .get(key)
-            .cloned()
-            .ok_or_else(|| AppError::NotInstalled {
-                package: key.to_owned(),
-            })?;
+    let installation = index
+        .installations
+        .get(key)
+        .cloned()
+        .ok_or_else(|| AppError::not_installed(ctx.settings, key))?;
     let key = key.to_owned();
     let root = match &installation.location {
         Location::Owned { library, .. } => match storage.availability(library) {
@@ -332,6 +328,7 @@ pub(crate) fn remove_locked(
             .app_proxies_dir()
             .join(installation.package.directory_name()),
     );
+    crate::icons::remove_package_icons(ctx.settings, &installation.package);
     proxies::sync(
         ctx.settings,
         &reserved,

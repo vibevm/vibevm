@@ -529,9 +529,13 @@ fn a_tool_drives_describe_plan_install_runs_cancel_and_errors() {
         "$param:lang expanded"
     );
     let listed = ok(&fixture.plain(&["app", "list", "--json"]));
+    let copies = fixture.user.settings.join("applications/icons");
     assert_eq!(
         listed["installations"][0]["icon"],
-        payload.join("share/wizard.png").display().to_string()
+        copies
+            .join("org.example.wizard@1.0.0/share/wizard.png")
+            .display()
+            .to_string()
     );
 
     // runs: the record with its per-step log.

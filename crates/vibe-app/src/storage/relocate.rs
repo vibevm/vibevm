@@ -48,7 +48,7 @@ pub fn relocate(settings: &SettingsRoot, spelling: &str, to: &str) -> Result<Mov
     let _lock = settings.lock()?;
     let mut index = Index::load(settings)?;
     let storage = Storage::load(settings)?;
-    let (key, record) = installed(&index, spelling)?;
+    let (key, record) = installed(settings, &index, spelling)?;
     let key = key.to_owned();
     let Location::Owned { library, directory } = &record.location else {
         return Err(StorageError::NotPortable {

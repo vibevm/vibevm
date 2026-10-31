@@ -179,3 +179,44 @@ fn stdin_write_failure_kills_and_reaps_before_returning() {
         "child continued after stdin transport failure"
     );
 }
+
+#[cfg(unix)]
+#[test]
+fn a_busy_executable_is_retried_until_it_spawns_and_the_last_failure_is_kept() {
+    use std::cell::Cell;
+    use std::time::Duration;
+    let busy = || std::io::Error::from_raw_os_error(26);
+    let calls = Cell::new(0);
+    let spawned = spawn_retrying_busy(20, Duration::ZERO, || {
+        calls.set(calls.get() + 1);
+        if calls.get() < 3 {
+            Err(busy())
+        } else {
+            Ok("child")
+        }
+    });
+    assert_eq!(spawned.unwrap(), "child");
+    assert_eq!(calls.get(), 3, "two busy failures, then the spawn");
+
+    calls.set(0);
+    let exhausted = spawn_retrying_busy(4, Duration::ZERO, || -> std::io::Result<()> {
+        calls.set(calls.get() + 1);
+        Err(busy())
+    });
+    assert_eq!(calls.get(), 4, "bounded by the attempt count");
+    let error = exhausted.unwrap_err();
+    assert_eq!(error.raw_os_error(), Some(26));
+    assert_eq!(
+        error.to_string(),
+        busy().to_string(),
+        "the text is unchanged"
+    );
+
+    calls.set(0);
+    let missing = spawn_retrying_busy(20, Duration::ZERO, || -> std::io::Result<()> {
+        calls.set(calls.get() + 1);
+        Err(std::io::Error::from(std::io::ErrorKind::NotFound))
+    });
+    assert_eq!(missing.unwrap_err().kind(), std::io::ErrorKind::NotFound);
+    assert_eq!(calls.get(), 1, "any other failure is reported at once");
+}

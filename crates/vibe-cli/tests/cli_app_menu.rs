@@ -348,3 +348,129 @@ fn the_icon_choice_and_the_import_rows() {
         "{files:?}"
     );
 }
+
+const BUILT: &str = "org.example/built@1.0.0";
+
+/// `org.example/built`: an owned `source_build` whose recipe builds the
+/// payload from a package-local source. Its application icon and its menu
+/// launcher's icon set live only in the package tree, outside the payload.
+fn built_fixture() -> AppRegistry {
+    let apps = AppRegistry::new();
+    let package = apps.registry().join("org.example/built/v1.0.0");
+    fs::create_dir_all(package.join("icons/png")).unwrap();
+    fs::write(package.join("icons/built.svg"), "<svg/>").unwrap();
+    fs::write(package.join("icons/png/built-48.png"), png(48)).unwrap();
+    let source = "echo \"BUILT_RAN $*\"\n";
+    fs::write(package.join("tool.sh.in"), source).unwrap();
+    fs::write(
+        package.join("build.sh"),
+        "set -e\nmkdir -p \"$VIBE_OUT/bin\"\n\
+         { echo '#!/bin/sh'; cat \"$VIBE_SOURCES/tool/tool.sh.in\"; } > \"$VIBE_OUT/bin/tool\"\n\
+         chmod 755 \"$VIBE_OUT/bin/tool\"\n",
+    )
+    .unwrap();
+    let sha = {
+        use sha2::{Digest, Sha256};
+        format!("{:x}", Sha256::digest(source.as_bytes()))
+    };
+    fs::write(
+        package.join("vibe.toml"),
+        manifest(
+            "built",
+            "icon = \"icons/built.svg\"\n",
+            &format!(
+                "[installer_options.installation]\ntype = \"source_build\"\n\
+                 [[installer_options.installation.sources]]\nname = \"tool\"\npath = \"tool.sh.in\"\nsha256 = \"{sha}\"\n\
+                 [installer_options.installation.recipe]\ninterpreter = \"posix_sh\"\nscript = \"build.sh\"\n\n\
+                 [[installer_options.launchers]]\nid = \"main\"\nname = \"Built\"\nexecutable = \"$app_bin/tool\"\n\
+                 kind = \"gui\"\nmenu = true\ndefault = true\n\
+                 icon = {{ svg = \"icons/built.svg\", png = {{ \"48\" = \"icons/png/built-48.png\" }} }}\n"
+            ),
+        ),
+    )
+    .unwrap();
+    apps
+}
+
+/// A path the home keeps: absolute, existing and under its icon copies.
+fn kept(apps: &AppRegistry, path: &str, tail: &str) {
+    let copies = apps
+        .settings()
+        .join("applications/icons/org.example.built@1.0.0");
+    let path = Path::new(path);
+    assert!(path.is_absolute() && path.is_file(), "{}", path.display());
+    assert_eq!(path, copies.join(tail));
+}
+
+#[test]
+fn package_relative_icons_are_copied_into_the_home_survive_a_move_and_go_with_uninstall() {
+    let apps = built_fixture();
+    ok(&apps.app(&["install", "-g"], "org.example/built", &[]));
+    let copies = apps
+        .settings()
+        .join("applications/icons/org.example.built@1.0.0");
+    assert!(copies.join("icons/built.svg").is_file());
+    assert!(copies.join("icons/png/built-48.png").is_file());
+    let payload = apps
+        .settings()
+        .join("opt/apps/built/org.example.built@1.0.0");
+    assert!(payload.join("bin/tool").is_file());
+    assert!(
+        !payload.join("icons").exists(),
+        "the icons are not part of the payload"
+    );
+
+    let menu = json(&apps.vibe(&["app", "launchers", "-g", "--all", "--menu", "--json"]));
+    let installation = &menu["installations"][0];
+    assert_eq!(installation["key"], BUILT);
+    let main = launcher(installation, "main");
+    kept(
+        &apps,
+        icon_file(&main["icon_set"], "svg", None)["path"]
+            .as_str()
+            .unwrap(),
+        "icons/built.svg",
+    );
+    kept(
+        &apps,
+        icon_file(&main["icon_set"], "png", Some(48))["path"]
+            .as_str()
+            .unwrap(),
+        "icons/png/built-48.png",
+    );
+    kept(
+        &apps,
+        icon_file(&installation["icon_set"], "svg", None)["path"]
+            .as_str()
+            .unwrap(),
+        "icons/built.svg",
+    );
+    let row = apps.listed(BUILT);
+    kept(&apps, row["icon"].as_str().unwrap(), "icons/built.svg");
+
+    let printed = ok(&apps.vibe(&["app", "icon", "-g", "org.example/built", "--size", "48"]));
+    kept(&apps, printed.trim(), "icons/built.svg");
+    let raster = ok(&apps.vibe(&[
+        "app",
+        "icon",
+        "-g",
+        "org.example/built",
+        "--launcher",
+        "main",
+        "--size",
+        "48",
+    ]));
+    kept(&apps, raster.trim(), "icons/png/built-48.png");
+
+    // A storage move relocates the payload; the copies stay with the home.
+    let usb = apps.root.path().join("usb");
+    ok(&apps.vibe(&["storage", "add", usb.to_str().unwrap(), "--id", "usb"]));
+    ok(&apps.vibe(&["storage", "move", BUILT, "--to", "usb"]));
+    assert!(!payload.exists(), "the payload moved");
+    assert_eq!(apps.listed(BUILT)["library"], "usb");
+    let printed = ok(&apps.vibe(&["app", "icon", "-g", "org.example/built", "--size", "48"]));
+    kept(&apps, printed.trim(), "icons/built.svg");
+
+    ok(&apps.vibe(&["uninstall", "-g", "org.example/built"]));
+    assert!(!copies.exists(), "uninstall removes the copies");
+}

@@ -64,9 +64,7 @@ pub fn modify(
         .installations
         .get(&key)
         .cloned()
-        .ok_or_else(|| AppError::NotInstalled {
-            package: key.clone(),
-        })?;
+        .ok_or_else(|| AppError::not_installed(ctx.settings, &key))?;
     ensure_available(&key, &record, &storage)?;
     let choice = match &request.installer {
         Some(id) => {

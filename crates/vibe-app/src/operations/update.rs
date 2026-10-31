@@ -42,14 +42,12 @@ fn update_locked(
 ) -> Result<Outcome, AppError> {
     let index = Index::load(ctx.settings)?;
     let storage = Storage::load(ctx.settings)?;
-    let prior_key = previous_installation(&index, resolved)?;
+    let prior_key = previous_installation(ctx.settings, &index, resolved)?;
     let prior = index
         .installations
         .get(&prior_key)
         .cloned()
-        .ok_or_else(|| AppError::NotInstalled {
-            package: prior_key.clone(),
-        })?;
+        .ok_or_else(|| AppError::not_installed(ctx.settings, &prior_key))?;
     if prior.slot != resolved.application.id {
         return Err(AppError::SlotChanged {
             key: prior_key,

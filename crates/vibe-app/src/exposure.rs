@@ -58,7 +58,7 @@ pub fn expose_for_session(
 ) -> Result<Exposure, AppError> {
     let index = Index::load(settings)?;
     let storage = Storage::load(settings)?;
-    let (key, record) = installed(&index, spelling)?;
+    let (key, record) = installed(settings, &index, spelling)?;
     exposure_of(settings, &storage, key, record, proxy_image)
 }
 

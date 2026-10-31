@@ -1,6 +1,6 @@
-//! Icon sets resolved to absolute paths and the `vibe app icon` choice
-//! (`PROP-059#menu`). Nothing here rasterises: a client gets the best file
-//! that exists.
+//! Icon sets resolved to absolute paths, the `vibe app icon` choice and
+//! the home's copies of package-relative icon files (`PROP-059#menu`).
+//! Nothing here rasterises: a client gets the best file that exists.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#menu");
 
@@ -122,6 +122,13 @@ impl ResolvedIcon {
             .or_else(|| of("symbolic"))
     }
 }
+
+#[path = "icons/copies.rs"]
+mod copies;
+
+pub(crate) use copies::{
+    copies_dir, copy_package_icons, is_package_relative, join_relative, remove_package_icons,
+};
 
 /// Convert a serializable domain value into a generated wire type of the
 /// same JSON shape; `None` only when the shapes disagree, which the unit

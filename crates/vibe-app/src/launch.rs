@@ -394,7 +394,7 @@ pub fn exit_code(status: ExitStatus) -> i32 {
 #[path = "launch/listing.rs"]
 mod listing_form;
 
-pub(crate) use listing_form::application_icon;
+pub(crate) use listing_form::{IconPlaces, application_icon};
 pub use listing_form::{icon_choice, listing, listing_all};
 
 #[cfg(all(test, unix))]

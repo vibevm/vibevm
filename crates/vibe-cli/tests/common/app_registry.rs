@@ -82,11 +82,14 @@ impl AppRegistry {
 
     /// Run `vibe args…` in the registry root with the scratch HOME.
     pub fn vibe(&self, args: &[&str]) -> Output {
+        self.vibe_in(self.root.path(), args)
+    }
+
+    /// Run `vibe args…` in `dir` (a project directory, say) with the
+    /// scratch HOME.
+    pub fn vibe_in(&self, dir: &Path, args: &[&str]) -> Output {
         let mut command = self.user.vibe();
-        command
-            .current_dir(self.root.path())
-            .env("HOME", self.home())
-            .args(args);
+        command.current_dir(dir).env("HOME", self.home()).args(args);
         for variable in [
             "VIBE_AGENT_COMMAND",
             "VIBE_AGENT_ARGS",

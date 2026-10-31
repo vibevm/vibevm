@@ -6,6 +6,7 @@ use std::fs::File;
 use std::io::{Read, Seek, SeekFrom};
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
+use std::time::Duration;
 
 use specmark::spec;
 use thiserror::Error;
@@ -120,10 +121,11 @@ impl ProcessRunner for SystemProcessRunner {
             })?;
         command.stdout(stdout);
         command.stderr(stderr);
-        let mut child = command.spawn().map_err(|error| ProcessError::Spawn {
-            program: spec.program.display().to_string(),
-            reason: error.to_string(),
-        })?;
+        let mut child = spawn_retrying_busy(BUSY_ATTEMPTS, BUSY_PAUSE, || command.spawn())
+            .map_err(|error| ProcessError::Spawn {
+                program: spec.program.display().to_string(),
+                reason: error.to_string(),
+            })?;
         if let Some(bytes) = &spec.stdin {
             use std::io::Write;
             let Some(mut stdin) = child.stdin.take() else {
@@ -151,6 +153,49 @@ impl ProcessRunner for SystemProcessRunner {
             stdout_truncated,
             stderr_truncated,
         })
+    }
+}
+
+/// How often a spawn that hits a busy executable is tried in all.
+const BUSY_ATTEMPTS: u32 = 20;
+/// The pause between two tries of a busy executable.
+const BUSY_PAUSE: Duration = Duration::from_millis(25);
+/// `ETXTBSY`: the executable is open for writing in some process.
+#[cfg(unix)]
+const TEXT_FILE_BUSY: i32 = 26;
+
+/// Whether a spawn failure is a just-written executable still held open
+/// for writing — by another thread's forked child inheriting the writer's
+/// descriptor until its own exec — which clears by itself.
+fn is_text_file_busy(error: &std::io::Error) -> bool {
+    #[cfg(unix)]
+    {
+        error.raw_os_error() == Some(TEXT_FILE_BUSY)
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = error;
+        false
+    }
+}
+
+/// Run `spawn` up to `attempts` times, pausing `pause` between tries, while
+/// it fails with a busy text file; any other outcome, and the last busy
+/// failure, is returned unchanged.
+fn spawn_retrying_busy<T>(
+    attempts: u32,
+    pause: Duration,
+    mut spawn: impl FnMut() -> std::io::Result<T>,
+) -> std::io::Result<T> {
+    let mut tried = 1;
+    loop {
+        match spawn() {
+            Err(error) if is_text_file_busy(&error) && tried < attempts => {
+                tried += 1;
+                std::thread::sleep(pause);
+            }
+            outcome => return outcome,
+        }
     }
 }
 

@@ -340,8 +340,9 @@ fn plan_option(
     Ok(plan)
 }
 
-/// Record an applied installation, apply the slot default rules, write the
-/// index, then delete retired directories (a failure leaves an orphan).
+/// Record an applied installation, refresh its icon copies, apply the slot
+/// default rules, write the index, then delete retired directories and the
+/// copies of a replaced key (a failure leaves an orphan).
 fn commit(
     ctx: &OperationContext<'_>,
     storage: &Storage,
@@ -355,8 +356,13 @@ fn commit(
     let installation = applied.installation;
     let key = installation.package.key();
     let slot = installation.slot.clone();
+    crate::icons::copy_package_icons(ctx.settings, &installation, &applied.package_root)?;
+    let mut dropped = None;
     if let Some(old) = replaces.filter(|old| old != &key) {
-        index.installations.remove(&old);
+        dropped = index
+            .installations
+            .remove(&old)
+            .map(|record| record.package);
         if index.default_of(&slot) == Some(old.as_str()) {
             index.slots.insert(slot.clone(), Some(key.clone()));
         }
@@ -390,6 +396,9 @@ fn commit(
     index.save(ctx.settings)?;
     for directory in applied.retired {
         let _ = fs::remove_dir_all(directory);
+    }
+    if let Some(package) = dropped {
+        crate::icons::remove_package_icons(ctx.settings, &package);
     }
     proxies::sync(
         ctx.settings,
@@ -445,7 +454,11 @@ fn choose(
 
 /// The installed version an update starts from: the slot default when it is
 /// this package, otherwise the newest installed version.
-fn previous_installation(index: &Index, resolved: &ResolvedPackage) -> Result<String, AppError> {
+fn previous_installation(
+    home: &SettingsRoot,
+    index: &Index,
+    resolved: &ResolvedPackage,
+) -> Result<String, AppError> {
     let mut candidates: Vec<(&String, semver::Version)> = index
         .installations
         .iter()
@@ -460,9 +473,10 @@ fn previous_installation(index: &Index, resolved: &ResolvedPackage) -> Result<St
         })
         .collect();
     if candidates.is_empty() {
-        return Err(AppError::NotInstalled {
-            package: format!("{}/{}", resolved.package.group, resolved.package.name),
-        });
+        return Err(AppError::not_installed(
+            home,
+            format!("{}/{}", resolved.package.group, resolved.package.name),
+        ));
     }
     if let Some(default) = index.default_of(&resolved.application.id)
         && let Some((key, _)) = candidates.iter().find(|(key, _)| key.as_str() == default)
