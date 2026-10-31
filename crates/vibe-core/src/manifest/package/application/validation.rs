@@ -5,7 +5,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 use std::collections::BTreeSet;
 use std::path::{Component, Path};
 
-use crate::manifest::{declarant_path, is_portable_token};
+use crate::manifest::{declarant_path, is_command_name, is_portable_token};
 
 use super::*;
 
@@ -486,23 +486,4 @@ pub(super) fn credential_free_http(value: &str) -> bool {
         Some(rest) => credential_free_https(&format!("https://{rest}")),
         None => credential_free_https(value),
     }
-}
-
-/// A PATH command name as toolchains spell them: a lowercase ASCII letter or
-/// digit first, then letters, digits, `-`, `_`, `.` or `+`, ending in a
-/// letter, digit or `+`, with no `..` run. Wider than the portable-token
-/// grammar of ids because `g++`, `clang++` and `python3.12` are real
-/// commands a package must be able to publish.
-fn is_command_name(value: &str) -> bool {
-    let bytes = value.as_bytes();
-    let edge_ok = |byte: u8| byte.is_ascii_lowercase() || byte.is_ascii_digit();
-    let Some((&first, &last)) = bytes.first().zip(bytes.last()) else {
-        return false;
-    };
-    if !edge_ok(first) || !(edge_ok(last) || last == b'+') || value.contains("..") {
-        return false;
-    }
-    bytes
-        .iter()
-        .all(|byte| edge_ok(*byte) || matches!(byte, b'-' | b'_' | b'.' | b'+'))
 }

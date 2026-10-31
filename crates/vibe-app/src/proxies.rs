@@ -10,7 +10,7 @@ use std::fs::{self, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-use vibe_core::manifest::is_portable_token;
+use vibe_core::manifest::is_command_name;
 
 use crate::error::AppError;
 use crate::settings::{SettingsRoot, io};
@@ -98,7 +98,7 @@ pub fn sync(
 }
 
 fn command_name(name: &str) -> bool {
-    is_portable_token(name) && name != "vibe"
+    is_command_name(name) && name != "vibe"
 }
 
 /// Write an executable sibling and rename it over `path`.

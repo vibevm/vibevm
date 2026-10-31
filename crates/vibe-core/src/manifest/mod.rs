@@ -55,7 +55,7 @@ pub use lockfile::{
 pub use mechanism::{
     HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,
     MechanismKeyParseError, MechanismRole, MechanismRoleParseError, MechanismRoutes, ProviderOwner,
-    ProviderPin, ProviderPinParseError, is_portable_token,
+    ProviderPin, ProviderPinParseError, is_command_name, is_portable_token,
 };
 pub use package::application::{
     AgentMode, ArchiveFormatDecl, Condition, ExternalResult, FeatureDecl, InstallerMethod,
