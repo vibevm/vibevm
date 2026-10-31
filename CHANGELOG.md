@@ -8,6 +8,8 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+- **Readable plans and wizard answers.** `vibe app plan` and the plan shown before an attended install now print the package on its own line, the installer, features, download and plan-level requirements as aligned fields, and every step as a numbered block with its title, skip reason, needs and the requirements it pulls on indented lines; `app install` separates each plan with a blank line, and the platform, architecture and installer questions read `Platform: Windows (windows)  [detected]` instead of a sentence.
+
 - **Fix: a developer's embedded registry no longer hides application packages.** A source-installed `vibe` (`vibe self`, origin `external`) treats its checkout's `vibevm/vibepacks` as the embedded registry; `vibe install -g`, `app plan` and the other application verbs used it as the only source and answered `not in the registry` for every package it did not carry. Per PROP-030 `#precedence` the embedded registry is now first in the chain and a package it lacks falls through to the declared registries; an explicit `--registry` stays the whole source. Release bundles (origin `binary`) were never affected.
 
 ## [1.0.8] — 2026-10-31

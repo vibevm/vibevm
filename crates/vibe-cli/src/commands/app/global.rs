@@ -277,7 +277,7 @@ pub(super) fn operation<'a>(
 pub(super) fn plan_printer(ctx: &output::Context) -> impl Fn(&Plan) + '_ {
     move |plan: &Plan| {
         if !ctx.is_quiet() && !ctx.is_machine_progress() {
-            eprint!("{}", plan.render());
+            eprint!("\n{}\n", plan.render());
         }
     }
 }

@@ -174,7 +174,7 @@ fn conditions_decide_run_or_skip_with_the_deciding_condition() {
     assert!(wire.features[1].chosen);
     assert!(
         plan.render()
-            .contains("2. skip (when `feature = \"fixes\"` does not hold) fix (shell)")
+            .contains("2. skip  fix (shell)\n              Fix\n              skipped: when `feature = \"fixes\"` does not hold")
     );
 }
 
