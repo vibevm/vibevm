@@ -321,3 +321,22 @@ fn registry_value_kind_accepts_only_string_forms() {
     );
     assert!(RegistryValueKind::parse("Binary").is_err());
 }
+
+#[test]
+fn path_without_removes_only_the_equivalent_entry_and_keeps_raw_text() {
+    let cwd = Path::new(if cfg!(windows) { r"C:\work" } else { "/work" });
+    let lookup = |name: &str| (name == "TOOLS").then(|| "/opt/tools".to_string());
+    assert_eq!(
+        path_without_core("/a;%TOOLS%/bin/;/b", "/opt/tools/bin", cwd, lookup).as_deref(),
+        Some("/a;/b")
+    );
+    assert_eq!(
+        path_without_core("/a;/b", "/c", cwd, lookup),
+        None,
+        "nothing to remove leaves the raw value alone"
+    );
+    assert_eq!(
+        path_without_core("/c", "/c", cwd, lookup).as_deref(),
+        Some("")
+    );
+}

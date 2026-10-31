@@ -12,7 +12,7 @@ mod builder;
 mod bundle;
 mod doctor;
 mod embedded;
-mod env;
+pub(crate) mod env;
 mod error;
 mod git;
 mod import;

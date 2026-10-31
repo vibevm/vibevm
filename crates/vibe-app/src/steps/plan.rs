@@ -12,12 +12,13 @@ use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use vibe_core::manifest::{
-    AgentMode, Condition, FeatureDecl, InstallerOptionDecl, Need, ResultDecl, StepDecl, StepKind,
-    StepPhase, result_of, steps_of,
+    AgentMode, Condition, FeatureDecl, InstallerOptionDecl, Need, RequirementDecl,
+    RequirementScope, ResultDecl, StepDecl, StepKind, StepPhase, result_of, steps_of,
 };
 
 use crate::agents::AgentHooks;
 use crate::error::{AppError, StepError};
+use crate::error_lifecycle::LifecycleError;
 use crate::index::PackageCoordinate;
 use crate::resolve::ResolvedPackage;
 use crate::select::Chooser;
@@ -78,12 +79,46 @@ pub(crate) struct Prompts<'a> {
     pub license: Option<LicensePrompt<'a>>,
 }
 
+/// Resolves one requirement (`group/name@req`, its effective scope, the
+/// requiring step) against the home's index first, then the registries
+/// (`PROP-065#app-dependencies`).
+pub(crate) type RequirementResolver<'a> =
+    &'a dyn Fn(&str, RequirementScope, Option<&str>) -> Result<PlannedDependency, AppError>;
+
+/// One required application package of a plan (`PROP-065#app-dependencies`).
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies")]
+pub struct PlannedDependency {
+    /// The authored `group/name@requirement`.
+    pub package: String,
+    pub scope: RequirementScope,
+    /// The requiring step; `None` for an option-level requirement.
+    pub step: Option<String>,
+    /// The installation key that satisfies it.
+    pub key: String,
+    /// An installed version satisfies it and is used as is; otherwise it
+    /// is installed before the step that needs it.
+    pub installed: bool,
+    /// Whether the installation is (or will be) hidden.
+    pub hidden: bool,
+    /// The public commands it puts on the requiring step's PATH.
+    pub commands: Vec<String>,
+    /// The installer option that provides it (recorded, or chosen for this
+    /// host when it is installed first).
+    pub option: Option<String>,
+    /// The resolved package to install, when it is not installed.
+    pub resolved: Option<Box<ResolvedPackage>>,
+}
+
 /// What the installation an update starts from recorded.
 #[derive(Clone, Copy)]
 pub(crate) struct Previous<'a> {
     pub features: &'a [String],
     pub parameters: &'a BTreeMap<String, String>,
     pub license: Option<&'a str>,
+    /// Ask the feature question again with these values preselected
+    /// (`modify` in an attended terminal without flags, `PROP-065#modify`).
+    pub ask: bool,
 }
 
 /// Everything one plan is computed from.
@@ -103,6 +138,8 @@ pub(crate) struct PlanInput<'a> {
     /// The chosen agent and whether `vibe` runs inside a hosting agent
     /// (`PROP-064#selection`, `#parking`).
     pub agent: AgentHooks<'a>,
+    /// Resolves `requires` entries (`PROP-065#app-dependencies`).
+    pub requirements: Option<RequirementResolver<'a>>,
 }
 
 /// One step and whether it runs.
@@ -133,6 +170,9 @@ pub struct Plan {
     pub download_bytes: u64,
     /// Inputs that will be fetched without a declared size.
     pub unknown_sizes: u32,
+    /// Required application packages in plan order: option-level first,
+    /// then each running step's (`PROP-065#app-dependencies`).
+    pub dependencies: Vec<PlannedDependency>,
     pub steps: Vec<PlannedStep>,
     pub warnings: Vec<String>,
 }
@@ -176,8 +216,20 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
     );
     let mut steps = Vec::new();
     let mut skipped_agents = Vec::new();
+    let mut dependencies = option
+        .requires
+        .iter()
+        .map(|requirement| require(input, &key, requirement, RequirementScope::Runtime, None))
+        .collect::<Result<Vec<_>, _>>()?;
+    let provided: Vec<String> = dependencies
+        .iter()
+        .flat_map(|dependency| dependency.commands.iter().cloned())
+        .collect();
     for step in steps_of(option) {
-        let (run, reason) = decide(input, &step, &vars, &work, &key)?;
+        let (run, reason, needed) = decide(input, &step, &vars, &work, &key, &provided)?;
+        if run {
+            dependencies.extend(needed);
+        }
         if !run
             && matches!(step.kind, StepKind::Agent { .. })
             && reason.as_deref() == Some(NO_AGENT)
@@ -228,6 +280,7 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         license,
         download_bytes: fetched.bytes,
         unknown_sizes: fetched.unknown,
+        dependencies,
         steps,
         warnings,
     })
@@ -235,22 +288,50 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
 
 const NO_AGENT: &str = "no agent configured";
 
-/// Run or skip one step, or refuse the whole plan.
+/// Resolve one requirement through the caller's resolver.
+fn require(
+    input: &PlanInput<'_>,
+    key: &str,
+    requirement: &RequirementDecl,
+    default: RequirementScope,
+    step: Option<&str>,
+) -> Result<PlannedDependency, AppError> {
+    let resolver = input
+        .requirements
+        .ok_or_else(|| LifecycleError::RequirementUnresolved {
+            key: key.into(),
+            requirement: requirement.package().into(),
+            reason: "no package resolver is available in this context".into(),
+        })?;
+    resolver(requirement.package(), requirement.scope_or(default), step)
+}
+
+/// One step's decision: whether it runs, why not, and the requirements
+/// it brings when it runs.
+type Decision = (bool, Option<String>, Vec<PlannedDependency>);
+
+fn skip(reason: String) -> Result<Decision, AppError> {
+    Ok((false, Some(reason), Vec::new()))
+}
+
+/// Run or skip one step, or refuse the whole plan. `provided` names the
+/// public commands of the option-level requirements.
 fn decide(
     input: &PlanInput<'_>,
     step: &StepDecl,
     vars: &Vars<'_>,
     work: &Path,
     key: &str,
-) -> Result<(bool, Option<String>), AppError> {
+    provided: &[String],
+) -> Result<Decision, AppError> {
     for condition in &step.when {
         if !holds(input, condition, vars, step)? {
-            return Ok((false, Some(format!("when `{condition}` does not hold"))));
+            return skip(format!("when `{condition}` does not hold"));
         }
     }
     for condition in &step.unless {
         if holds(input, condition, vars, step)? {
-            return Ok((false, Some(format!("unless `{condition}` holds"))));
+            return skip(format!("unless `{condition}` holds"));
         }
     }
     if let StepKind::Agent { required, mode, .. } = &step.kind {
@@ -268,11 +349,11 @@ fn decide(
                 }
                 .into());
             }
-            return Ok((false, Some(NO_AGENT.into())));
+            return skip(NO_AGENT.into());
         }
         if *mode == Some(AgentMode::Interactive) && !input.attended && !input.agent.hosted {
             if step.optional {
-                return Ok((false, Some("unmet need `terminal`".into())));
+                return skip("unmet need `terminal`".into());
             }
             return Err(StepError::UnmetNeed {
                 key: key.into(),
@@ -282,12 +363,37 @@ fn decide(
             .into());
         }
     }
+    let mut needed = Vec::new();
+    for requirement in &step.requires {
+        match require(
+            input,
+            key,
+            requirement,
+            RequirementScope::Build,
+            Some(&step.id),
+        ) {
+            Ok(dependency) => needed.push(dependency),
+            Err(error) if step.optional => {
+                return skip(format!("unresolved requirement: {error}"));
+            }
+            Err(error) => return Err(error),
+        }
+    }
+    let commands: Vec<&str> = provided
+        .iter()
+        .map(String::as_str)
+        .chain(
+            needed
+                .iter()
+                .flat_map(|dependency| dependency.commands.iter().map(String::as_str)),
+        )
+        .collect();
     for need in &step.needs {
-        if need_met(input, need, step, work) {
+        if need_met(input, need, step, work, &commands) {
             continue;
         }
         if step.optional {
-            return Ok((false, Some(format!("unmet need `{need}`"))));
+            return skip(format!("unmet need `{need}`"));
         }
         return Err(StepError::UnmetNeed {
             key: key.into(),
@@ -296,7 +402,7 @@ fn decide(
         }
         .into());
     }
-    Ok((true, None))
+    Ok((true, None, needed))
 }
 
 fn holds(
@@ -322,10 +428,19 @@ fn holds(
     })
 }
 
-/// Whether a need of a running step is met on this host.
-fn need_met(input: &PlanInput<'_>, need: &Need, step: &StepDecl, work: &Path) -> bool {
+/// Whether a need of a running step is met on this host or by the public
+/// commands of its requirements (`PROP-065#app-dependencies`).
+fn need_met(
+    input: &PlanInput<'_>,
+    need: &Need,
+    step: &StepDecl,
+    work: &Path,
+    provided: &[&str],
+) -> bool {
     match need {
-        Need::Command(name) => (input.facts.command_present)(name),
+        Need::Command(name) => {
+            provided.contains(&name.as_str()) || (input.facts.command_present)(name)
+        }
         Need::Agent => input.agent.available(),
         Need::Terminal => input.attended,
         Need::Network if !input.offline => true,
@@ -364,9 +479,10 @@ fn choose_features(input: &PlanInput<'_>) -> Result<(Option<String>, FeatureReso
             })
     };
     let mut profile = request.profile.as_deref().map(find).transpose()?;
+    let reask = input.previous.is_some_and(|previous| previous.ask);
     let previous = input.previous.map(|previous| previous.features);
     let mut prompted = None;
-    let ask = request.is_empty() && previous.is_none() && input.attended;
+    let ask = request.is_empty() && (previous.is_none() || reask) && input.attended;
     if let (true, Some(features)) = (ask && !option.features.is_empty(), input.prompts.features) {
         let mut custom = true;
         if let (false, Some(chooser)) = (option.profiles.is_empty(), input.prompts.chooser) {
@@ -403,9 +519,13 @@ fn choose_features(input: &PlanInput<'_>) -> Result<(Option<String>, FeatureReso
                     }
                 })
                 .collect();
+            let chosen = match previous {
+                Some(recorded) if reask => recorded.to_vec(),
+                _ => defaults.selected.clone(),
+            };
             let preselected: Vec<bool> = order
                 .iter()
-                .map(|(_, feature)| defaults.selected.contains(&feature.id))
+                .map(|(_, feature)| chosen.contains(&feature.id))
                 .collect();
             let picked = features(
                 &format!("Select features of installer `{}`", option.id),

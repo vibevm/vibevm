@@ -438,6 +438,8 @@ pub enum AppError {
     Step(#[from] StepError),
     #[error(transparent)]
     Agent(#[from] crate::agents::AgentError),
+    #[error(transparent)]
+    Lifecycle(#[from] crate::error_lifecycle::LifecycleError),
     #[error(
         "not_installed: global application `{package}` is not installed (violates spec://org.vibevm.core/vibevm/common/PROP-059#commands; \
          fix: check `vibe app list` for the installed keys)"

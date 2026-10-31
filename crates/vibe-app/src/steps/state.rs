@@ -12,7 +12,7 @@ use vibe_wire::generated::application::e1::steps as wire;
 
 use crate::agents::RunMode;
 use crate::error::{AppError, StepError};
-use crate::index::{AuthoredCommands, PackageCoordinate, StepOutcome};
+use crate::index::{AuthoredCommands, EnvEntry, EnvOp, PackageCoordinate, StepOutcome, ValueKind};
 use crate::settings::write_atomic;
 
 /// Where a run starts (`--resume`, `--from-step ID`).
@@ -40,6 +40,8 @@ pub(crate) struct StepState {
     pub uninstall: AuthoredCommands,
     /// The agent run of an `agent` step (`PROP-064#record`).
     pub agent: Option<AgentRun>,
+    /// The entries an `env` step applied (`PROP-065#env-step`).
+    pub env: Vec<EnvEntry>,
 }
 
 /// How an agent step's agent ended.
@@ -166,6 +168,7 @@ impl StepsFile {
                         }),
                         message: run.message.clone(),
                     }),
+                    env: step.env.iter().map(env_to_wire).collect(),
                 })
                 .collect(),
         }
@@ -223,9 +226,46 @@ impl StepsFile {
                         }),
                         message: run.message,
                     }),
+                    env: step.env.into_iter().map(env_from_wire).collect(),
                 })
                 .collect(),
         }
+    }
+}
+
+fn env_to_wire(entry: &EnvEntry) -> wire::EnvEntry {
+    wire::EnvEntry {
+        step: entry.step.clone(),
+        op: match entry.op {
+            EnvOp::Set => wire::EnvOp::Set,
+            EnvOp::Unset => wire::EnvOp::Unset,
+            EnvOp::PathPrepend => wire::EnvOp::PathPrepend,
+        },
+        name: entry.name.clone(),
+        value: entry.value.clone(),
+        previous: entry.previous.clone(),
+        previous_kind: entry.previous_kind.map(|kind| match kind {
+            ValueKind::String => wire::ValueKind::String,
+            ValueKind::ExpandString => wire::ValueKind::ExpandString,
+        }),
+    }
+}
+
+fn env_from_wire(entry: wire::EnvEntry) -> EnvEntry {
+    EnvEntry {
+        step: entry.step,
+        op: match entry.op {
+            wire::EnvOp::Set => EnvOp::Set,
+            wire::EnvOp::Unset => EnvOp::Unset,
+            wire::EnvOp::PathPrepend => EnvOp::PathPrepend,
+        },
+        name: entry.name,
+        value: entry.value,
+        previous: entry.previous,
+        previous_kind: entry.previous_kind.map(|kind| match kind {
+            wire::ValueKind::String => ValueKind::String,
+            wire::ValueKind::ExpandString => ValueKind::ExpandString,
+        }),
     }
 }
 

@@ -40,6 +40,12 @@ pub struct ApplicationPlan {
     #[serde(rename = "unknownSizes")]
     pub unknown_sizes: u32,
 
+    /// The required application packages (PROP-065#app-dependencies), each
+    /// ahead of the step that needs it; an entry without `step` is required by
+    /// the option and precedes every step.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub dependencies: Vec<Dependency>,
+
     pub steps: Vec<Step>,
 
     pub warnings: Vec<String>,
@@ -57,6 +63,33 @@ pub enum Action {
 /// An exact non-negative byte count. JTD has no uint64 form, so generated Rust
 /// narrows the numeric form to u64.
 pub type ByteCount = u64;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Dependency {
+    pub package: String,
+
+    pub key: String,
+
+    pub scope: Scope,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub step: Option<String>,
+
+    pub action: DependencyAction,
+
+    pub hidden: bool,
+
+    pub commands: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum DependencyAction {
+    #[serde(rename = "install")]
+    Install,
+
+    #[serde(rename = "use")]
+    Use,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Feature {
@@ -142,6 +175,15 @@ pub enum Rule {
 
     #[serde(rename = "requires")]
     Requires,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Scope {
+    #[serde(rename = "build")]
+    Build,
+
+    #[serde(rename = "runtime")]
+    Runtime,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

@@ -65,7 +65,20 @@ pub fn sync(
     current: &BTreeSet<String>,
     proxy_image: &Path,
 ) -> Result<(), AppError> {
-    let dir = settings.proxy_dir();
+    sync_into(&settings.proxy_dir(), previous, current, proxy_image)
+}
+
+/// [`sync`] for any proxy directory of a home: `opt/bin`, or the session
+/// proxies of one installation (`PROP-059#hidden-installations`). A proxy
+/// finds its home as the nearest ancestor holding the index, so `dir`
+/// must lie inside the home.
+pub(crate) fn sync_into(
+    dir: &Path,
+    previous: &BTreeSet<String>,
+    current: &BTreeSet<String>,
+    proxy_image: &Path,
+) -> Result<(), AppError> {
+    let dir = dir.to_path_buf();
     for name in previous
         .difference(current)
         .filter(|name| command_name(name))

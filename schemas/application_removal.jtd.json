@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "description": "Version 1 removal of an application tree from vibe uninstall --plan-only --json and vibe app autoremove --json: the installations removed in order (dependents before dependencies), each with its removal actions in the install plan's order reversed, and the orphans left or removed.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree" },
+    "rustOptions": { "package": "vibe_wire::application_removal" },
+    "x-rust-type": "ApplicationRemoval",
+    "x-wire-order": ["protocol", "planOnly", "installations", "orphans"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "planOnly": { "type": "boolean" },
+    "installations": { "elements": { "ref": "installation" }, "metadata": { "x-empty": "emit" } },
+    "orphans": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "Auto installations nothing requires any more that this removal leaves in place." } }
+  },
+  "definitions": {
+    "reason": {
+      "enum": ["requested", "dependent", "orphan", "previous"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "action_kind": {
+      "enum": ["uninstall", "env", "proxies", "payload", "record"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "action": {
+      "metadata": { "x-wire-order": ["kind", "step", "detail"] },
+      "properties": {
+        "kind": { "ref": "action_kind" },
+        "detail": { "type": "string" }
+      },
+      "optionalProperties": {
+        "step": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "installation": {
+      "metadata": { "x-wire-order": ["key", "slot", "reason", "actions"] },
+      "properties": {
+        "key": { "type": "string" },
+        "slot": { "type": "string" },
+        "reason": { "ref": "reason" },
+        "actions": { "elements": { "ref": "action" }, "metadata": { "x-empty": "emit" } }
+      }
+    }
+  }
+}

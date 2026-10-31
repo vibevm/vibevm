@@ -110,6 +110,7 @@ pub(crate) fn update(
         library: None,
         steps: Default::default(),
         plan_only: false,
+        hidden: false,
         path: project_root.clone(),
         registry: args.registry,
         assume_yes: args.assume_yes,

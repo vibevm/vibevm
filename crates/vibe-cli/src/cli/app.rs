@@ -73,6 +73,13 @@ pub struct AppStepArgs {
     pub from_step: Option<String>,
 }
 
+/// The mark of `vibe app mark` (PROP-065 `#uninstall-tree`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum MarkArg {
+    Manual,
+    Auto,
+}
+
 #[derive(Debug, clap::Subcommand)]
 pub enum AppCommand {
     /// List every installed application with its status and slot default.
@@ -144,6 +151,73 @@ pub enum AppCommand {
     /// 0 success, 1 a failed or interrupted step, 2 a refusal before any
     /// effect, 75 a run parked for a hosting agent.
     Errors,
+
+    /// Change the choice of an installed application in place: another
+    /// installer option, feature set, profile or parameter values of the
+    /// same version; anything not named keeps its recorded value
+    /// (PROP-065 `#modify`).
+    Modify {
+        package: String,
+        /// Resolve from this local registry instead of the configured registries.
+        #[arg(long)]
+        registry: Option<std::path::PathBuf>,
+        /// Switch to another installer option of the same version by its ID.
+        #[arg(long, value_name = "ID")]
+        installer: Option<String>,
+        #[command(flatten)]
+        choice: AppChoiceArgs,
+        /// The agent that runs the installer's agent steps (PROP-064).
+        #[arg(long, value_name = "NAME")]
+        agent: Option<String>,
+    },
+
+    /// Report every installed application with its installed version and
+    /// the newest version the registries offer, changing nothing
+    /// (PROP-065 `#outdated`); `--offline` answers from the cache.
+    Outdated {
+        /// Look the newest versions up in this local registry instead of the
+        /// configured registries.
+        #[arg(long)]
+        registry: Option<std::path::PathBuf>,
+    },
+
+    /// Expose a hidden installation: it joins its slot's alternatives and
+    /// gets its proxies, and becomes the default only of a slot without one
+    /// (PROP-059 `#hidden-installations`).
+    Expose { package: String },
+
+    /// Hide an installation: no proxies, no place among the alternatives;
+    /// the default passes on. It stays installed and reachable with
+    /// `vibe shell --with`.
+    Hide { package: String },
+
+    /// Mark an installation `manual` (asked for by name) or `auto` (pulled
+    /// in by a requirement; autoremove takes it once nothing requires it)
+    /// (PROP-065 `#uninstall-tree`).
+    Mark {
+        #[arg(value_enum)]
+        mark: MarkArg,
+        package: String,
+    },
+
+    /// Remove every auto installation nothing requires any more and every
+    /// kept previous version (PROP-065 `#uninstall-tree`).
+    Autoremove {
+        /// Show what would be removed and change nothing.
+        #[arg(long)]
+        plan_only: bool,
+    },
+
+    /// Hold an installation: `outdated` reports it held and a bulk update
+    /// skips it (PROP-065 `#update-and-rollback`).
+    Hold { package: String },
+
+    /// Release the hold of an installation.
+    Unhold { package: String },
+
+    /// Expose the previous version an update kept, make it the default again
+    /// and hide the newer one (PROP-065 `#update-and-rollback`).
+    Rollback { package: String },
 
     /// List launchers of an installed application.
     Launchers { package: String },

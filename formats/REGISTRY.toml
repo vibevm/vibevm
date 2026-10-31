@@ -86,6 +86,26 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `vibe app outdated --json` (PROP-065 `#outdated`): polled by graphical
+# tools and schedulers that then call `update`.
+[format.cli-application-outdated]
+epoch = 1
+schema = "schemas/application_outdated.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/application-outdated/e1"
+sunset = "none"
+
+# The removal of an application tree (PROP-065 `#uninstall-tree`):
+# `vibe uninstall --plan-only --json` and `vibe app autoremove --json`.
+[format.cli-application-removal]
+epoch = 1
+schema = "schemas/application_removal.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-application-errors]
 epoch = 1
 schema = "schemas/application_errors.jtd.json"

@@ -4,8 +4,29 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ApplicationReportCommand {
+    #[serde(rename = "expose")]
+    Expose,
+
+    #[serde(rename = "hide")]
+    Hide,
+
+    #[serde(rename = "hold")]
+    Hold,
+
     #[serde(rename = "install")]
     Install,
+
+    #[serde(rename = "mark")]
+    Mark,
+
+    #[serde(rename = "modify")]
+    Modify,
+
+    #[serde(rename = "rollback")]
+    Rollback,
+
+    #[serde(rename = "unhold")]
+    Unhold,
 
     #[serde(rename = "uninstall")]
     Uninstall,

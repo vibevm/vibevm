@@ -71,6 +71,13 @@ pub struct Condition {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EnvSet {
+    pub name: String,
+
+    pub value: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Feature {
     pub id: String,
 
@@ -145,6 +152,9 @@ pub struct InstallerOption {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub license: Option<License>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub requires: Vec<Requirement>,
 
     pub steps: Vec<Step>,
 }
@@ -280,6 +290,15 @@ pub struct PublicCommand {
     pub launcher: String,
 }
 
+/// One required application package as declared (PROP-065#app-dependencies)
+/// with its effective scope.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Requirement {
+    pub package: String,
+
+    pub scope: Scope,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Result {
     #[serde(rename = "external")]
@@ -287,6 +306,15 @@ pub enum Result {
 
     #[serde(rename = "owned")]
     Owned,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Scope {
+    #[serde(rename = "build")]
+    Build,
+
+    #[serde(rename = "runtime")]
+    Runtime,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -399,4 +427,17 @@ pub struct Step {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub required: Option<bool>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub set: Vec<EnvSet>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub unset: Vec<String>,
+
+    #[serde(rename = "pathPrepend")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub path_prepend: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub requires: Vec<Requirement>,
 }

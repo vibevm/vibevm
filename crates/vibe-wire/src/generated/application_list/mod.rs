@@ -11,6 +11,30 @@ pub struct ApplicationList {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EnvEntry {
+    pub step: String,
+
+    pub op: EnvOp,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum EnvOp {
+    #[serde(rename = "path_prepend")]
+    PathPrepend,
+
+    #[serde(rename = "set")]
+    Set,
+
+    #[serde(rename = "unset")]
+    Unset,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Installation {
     pub key: String,
 
@@ -37,6 +61,36 @@ pub struct Installation {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub icon: Option<String>,
+
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub hidden: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mark: Option<Mark>,
+
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub held: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub superseded_by: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub requires: Vec<Requirement>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub required_by: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub env: Vec<EnvEntry>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Mark {
+    #[serde(rename = "auto")]
+    Auto,
+
+    #[serde(rename = "manual")]
+    Manual,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -46,6 +100,27 @@ pub struct Package {
     pub name: String,
 
     pub version: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Requirement {
+    pub package: String,
+
+    pub key: String,
+
+    pub scope: Scope,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub step: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Scope {
+    #[serde(rename = "build")]
+    Build,
+
+    #[serde(rename = "runtime")]
+    Runtime,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

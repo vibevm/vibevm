@@ -67,6 +67,12 @@ $vibe storage move org.vibevm.apps/vim@1.1.0 --to default; $vibe storage gc</fen
 $vibe uninstall -g org.vibevm.apps/vim@1.1.0
 ls "$VIBE_SETTINGS/opt/bin" "$VIBE_SETTINGS/opt/apps/vim" 2&gt;&amp;1</fence>
     <p><EXP-7 fact="true" status="impl/work">**Expected.** The offline reinstall rebuilds from the cached tarball without network and replaces the payload in place. The uninstall deletes the payload directory and, as the last provider, the `opt/bin/vim` proxy; `opt/apps/vim` is empty.</EXP-7></p>
+    <facts ordered="true">
+      <STEP-REQUIREMENT fact="true" status="impl/work">**The MinGW requirement seen from macOS (PROP-065 `#app-dependencies`).** The Vim bridge's `windows-source` option requires `org.vibevm.apps/mingw-w64@13` on its build step. A requirement is installed on the host that runs the installation, so on macOS it is described and refused, never installed.</STEP-REQUIREMENT>
+    </facts>
+    <fence>"$vibe" app describe org.vibevm.apps/vim --json | jq '.options[] | select(.id == "windows-source") | .steps[] | select(.requires) | {id, requires}'
+"$vibe" app plan org.vibevm.apps/vim --platform windows --arch x86_64 --installer windows-source --json; echo "exit $?"</fence>
+    <p><EXP-REQUIREMENT fact="true" status="impl/work">**Expected.** `describe` names the build step with `requires: [{package: "org.vibevm.apps/mingw-w64@13", scope: "build"}]` without resolving anything. The plan is refused before any download with exit 2 and the error code `requirement_unresolved`, naming `org.vibevm.apps/mingw-w64@13` and the absence of an installer option for this host; `$VIBE_SETTINGS` gains no `applications/index.json`.</EXP-REQUIREMENT></p>
   </section>
   <section title="Pass">
     <p><pass-criteria fact="true" status="impl/work">Every step reads as described on a real Mac: detection, the source build with the Xcode tools, the relocated runtime, signals through the proxy, `vibe shell` for zsh, bash and the fallback, the external-volume library with unavailability and moves, the offline rebuild and a clean uninstall. The owner signs the date below.</pass-criteria></p>

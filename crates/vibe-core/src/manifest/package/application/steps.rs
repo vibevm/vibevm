@@ -4,13 +4,14 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#steps");
 
+use std::collections::BTreeMap;
 use std::fmt;
 use std::path::PathBuf;
 
 use serde::{Deserialize, Deserializer, Serialize};
 use specmark::spec;
 
-use super::{ShellInterpreter, SourceInputDecl};
+use super::{RequirementDecl, ShellInterpreter, SourceInputDecl};
 
 /// One `[[installer_options.features]]` row a user selects, with its place
 /// in the feature tree and its relations (`PROP-065#feature-tree`).
@@ -192,6 +193,16 @@ pub enum AgentMode {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum StepKind {
+    /// Durable user-environment changes (`PROP-065#env-step`); always a
+    /// `finish` step.
+    Env {
+        #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+        set: BTreeMap<String, String>,
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        unset: Vec<String>,
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        path_prepend: Vec<String>,
+    },
     Sources {
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
         sources: Vec<SourceInputDecl>,
@@ -258,6 +269,7 @@ impl StepKind {
     /// The stable `kind` spelling.
     pub fn name(&self) -> &'static str {
         match self {
+            Self::Env { .. } => "env",
             Self::Sources { .. } => "sources",
             Self::Archive { .. } => "archive",
             Self::Recipe { .. } => "recipe",
@@ -316,6 +328,10 @@ pub struct StepDecl {
     pub phase: StepPhase,
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub optional: bool,
+    /// Application packages this step needs while it runs
+    /// (`PROP-065#app-dependencies`); `build` scope unless stated.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub requires: Vec<RequirementDecl>,
     #[serde(flatten)]
     pub kind: StepKind,
     #[serde(skip)]
@@ -334,6 +350,7 @@ impl StepDecl {
             needs: Vec::new(),
             phase: StepPhase::Prepare,
             optional: false,
+            requires: Vec::new(),
             kind,
             origin: StepOrigin::Authored,
         }

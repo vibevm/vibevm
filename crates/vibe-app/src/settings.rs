@@ -107,6 +107,14 @@ impl SettingsRoot {
         self.root.join("cache").join("app-work")
     }
 
+    /// `<home>/cache/app-proxies/<dir>/bin`: the PATH proxies of one
+    /// installation's public commands, put on the PATH of a session
+    /// (`vibe shell --with`) or of a requiring step instead of `opt/bin`
+    /// (`PROP-059#hidden-installations`, `PROP-065#app-dependencies`).
+    pub fn app_proxies_dir(&self) -> PathBuf {
+        self.root.join("cache").join("app-proxies")
+    }
+
     /// `<home>/cache/app-runs`: one directory per installation key holding
     /// a record per run, newest last (`PROP-065#runs`).
     pub fn app_runs_dir(&self) -> PathBuf {

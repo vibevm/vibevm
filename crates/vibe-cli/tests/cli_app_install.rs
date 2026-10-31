@@ -457,7 +457,10 @@ fn update_adds_an_owned_version_beside_and_reruns_a_shell_in_place() {
     assert_eq!(report["installation"], "org.example/archive-app@1.1.0");
     assert_eq!(report["slotDefault"], "org.example/archive-app@1.1.0");
     let installations = &index(&user)["installations"];
-    assert!(installations["org.example/archive-app@1.0.0"].is_object());
+    // PROP-065 `#update-and-rollback`: the replaced version is kept hidden.
+    let kept = &installations["org.example/archive-app@1.0.0"];
+    assert_eq!(kept["hidden"], true);
+    assert_eq!(kept["supersededBy"], "org.example/archive-app@1.1.0");
     assert!(installations["org.example/archive-app@1.1.0"].is_object());
     let removed = json(&fixture.vibe(
         &user,
@@ -468,7 +471,11 @@ fn update_adds_an_owned_version_beside_and_reruns_a_shell_in_place() {
             "--json",
         ],
     ));
-    assert_eq!(removed["slotDefault"], "org.example/archive-app@1.0.0");
+    assert_eq!(
+        removed["slotDefault"],
+        serde_json::Value::Null,
+        "a hidden kept version never becomes the default"
+    );
 
     let shell = Fixture::new("shell-up");
     let app_root = shell.root.path().join("root");

@@ -4,7 +4,7 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#runs" },
     "rustOptions": { "package": "vibe_wire::application::e1::run" },
     "x-rust-type": "RunRecord",
-    "x-wire-order": ["protocol", "key", "command", "option", "started", "finished", "outcome"]
+    "x-wire-order": ["protocol", "key", "command", "option", "started", "finished", "outcome", "replaces"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -15,11 +15,12 @@
     "outcome": { "ref": "outcome" }
   },
   "optionalProperties": {
-    "finished": { "type": "string", "metadata": { "x-default": null } }
+    "finished": { "type": "string", "metadata": { "x-default": null } },
+    "replaces": { "type": "string", "metadata": { "x-default": null, "description": "The installation key an update replaced (PROP-065#update-and-rollback)." } }
   },
   "definitions": {
     "command": {
-      "enum": ["install", "update", "uninstall"],
+      "enum": ["install", "update", "uninstall", "modify"],
       "metadata": { "x-vocabulary": "closed" }
     },
     "outcome": {

@@ -14,11 +14,12 @@ use vibe_core::progress::ProgressTask;
 
 use crate::agents::AgentError;
 use crate::error::{AppError, InstallerError, StepError};
-use crate::index::{AuthoredCommands, StepOutcome, StepRecord};
+use crate::index::{AuthoredCommands, EnvEntry, StepOutcome, StepRecord};
 use crate::installer::{ChildIo, io, source_build};
 use crate::operations::{Command, OperationContext};
 use crate::resolve::ResolvedPackage;
 
+use super::env::StepPaths;
 use super::kinds::{self, StepContext};
 use super::params::step_env_name;
 use super::plan::{Plan, PlannedStep, work_dir};
@@ -36,6 +37,11 @@ pub(crate) struct RunFlags {
     /// An update re-running external steps in place: shell steps run their
     /// `update` command when they declare one.
     pub update_in_place: bool,
+    /// The installation key an update replaces, named in the run record.
+    pub replaces: Option<String>,
+    /// What the requirements put first on each step's PATH
+    /// (`PROP-065#app-dependencies`).
+    pub paths: StepPaths,
 }
 
 /// One sequence of steps over one work directory.
@@ -60,6 +66,8 @@ pub(crate) struct Run<'a> {
     env: Vec<(String, String)>,
     /// Steps a resumed state recorded `delegated` (`PROP-064#parking`).
     pub(super) delegated: Vec<String>,
+    replaces: Option<String>,
+    paths: StepPaths,
 }
 
 impl<'a> Run<'a> {
@@ -148,6 +156,8 @@ impl<'a> Run<'a> {
             record: None,
             env,
             delegated,
+            replaces: flags.replaces,
+            paths: flags.paths,
         })
     }
 
@@ -211,13 +221,17 @@ impl<'a> Run<'a> {
             .steps
             .retain(|step| !again.contains(&step.id.as_str()));
         self.opened = true;
-        self.record = Some(RunRecord::open(
+        let mut record = RunRecord::open(
             self.ctx.settings,
             &self.plan.package,
             self.command,
             &self.plan.option,
             Some(self.plan),
-        )?);
+        )?;
+        if let Some(replaced) = &self.replaces {
+            record.replaces(replaced);
+        }
+        self.record = Some(record);
         self.save()
     }
 
@@ -263,6 +277,7 @@ impl<'a> Run<'a> {
                 finished: None,
                 uninstall: AuthoredCommands::default(),
                 agent: None,
+                env: Vec::new(),
             });
             self.save()?;
         }
@@ -410,6 +425,7 @@ impl<'a> Run<'a> {
             finished: None,
             uninstall: AuthoredCommands::default(),
             agent: None,
+            env: Vec::new(),
         };
         if !planned.run {
             task.skip(planned.reason.clone().unwrap_or_default());
@@ -428,6 +444,18 @@ impl<'a> Run<'a> {
             task: Some(task),
             interrupt: ctx.interrupt,
         };
+        if matches!(step.kind, StepKind::Env { .. }) {
+            let result = self.env_step(step, app_root);
+            if let Ok(applied) = &result {
+                state.env = applied.clone();
+            }
+            return self.settle(
+                state,
+                result.map(|_| (AuthoredCommands::default(), None)),
+                task,
+            );
+        }
+        let env = self.paths.child_env(&self.env, &step.id, ctx.search_path);
         if matches!(step.kind, StepKind::Agent { .. }) {
             let (agent, result) = self.agent_step(planned, app_root, io);
             state.agent = agent;
@@ -457,7 +485,7 @@ impl<'a> Run<'a> {
             force: self.force,
             update_in_place: self.update_in_place,
             io,
-            env: &self.env,
+            env: &env,
         };
         let result = kinds::run(&cx, step);
         self.settle(state, result.map(|uninstall| (uninstall, None)), task)
@@ -503,13 +531,25 @@ impl<'a> Run<'a> {
         self.plan
             .steps
             .iter()
-            .filter_map(|planned| self.state.get(&planned.step.id))
-            .map(|state| StepRecord {
+            .filter_map(|planned| Some((planned, self.state.get(&planned.step.id)?)))
+            .map(|(planned, state)| StepRecord {
                 id: state.id.clone(),
                 kind: state.kind.clone(),
+                phase: planned.step.phase,
                 outcome: state.outcome,
                 uninstall: state.uninstall.clone(),
             })
+            .collect()
+    }
+
+    /// The environment entries the env steps applied, in step order
+    /// (`PROP-065#env-step`).
+    pub fn env_entries(&self) -> Vec<EnvEntry> {
+        self.plan
+            .steps
+            .iter()
+            .filter_map(|planned| self.state.get(&planned.step.id))
+            .flat_map(|state| state.env.iter().cloned())
             .collect()
     }
 }

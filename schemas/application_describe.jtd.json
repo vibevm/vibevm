@@ -44,7 +44,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "installer_option": {
-      "metadata": { "x-wire-order": ["id", "name", "platform", "platformName", "arch", "archName", "form", "result", "appRoot", "portable", "launchers", "publicCommands", "features", "defaultFeatures", "profiles", "parameters", "license", "steps"] },
+      "metadata": { "x-wire-order": ["id", "name", "platform", "platformName", "arch", "archName", "form", "result", "appRoot", "portable", "launchers", "publicCommands", "features", "defaultFeatures", "profiles", "parameters", "license", "requires", "steps"] },
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
@@ -65,7 +65,29 @@
       "optionalProperties": {
         "archName": { "type": "string", "metadata": { "x-default": null } },
         "appRoot": { "type": "string", "metadata": { "x-default": null } },
-        "license": { "ref": "license", "metadata": { "x-default": null } }
+        "license": { "ref": "license", "metadata": { "x-default": null } },
+        "requires": { "elements": { "ref": "requirement" }, "metadata": { "x-empty": "omit" } }
+      }
+    },
+    "scope": {
+      "enum": ["build", "runtime"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "requirement": {
+      "metadata": {
+        "description": "One required application package as declared (PROP-065#app-dependencies) with its effective scope.",
+        "x-wire-order": ["package", "scope"]
+      },
+      "properties": {
+        "package": { "type": "string" },
+        "scope": { "ref": "scope" }
+      }
+    },
+    "env_set": {
+      "metadata": { "x-wire-order": ["name", "value"] },
+      "properties": {
+        "name": { "type": "string" },
+        "value": { "type": "string" }
       }
     },
     "launcher": {
@@ -202,7 +224,7 @@
       }
     },
     "step": {
-      "metadata": { "x-wire-order": ["id", "title", "kind", "description", "phase", "optional", "hook", "when", "unless", "needs", "sources", "format", "source", "sha256", "size", "payloadRoot", "interpreter", "script", "command", "forceInstall", "update", "uninstall", "forceUninstall", "arguments", "forceArguments", "from", "to", "prompt", "promptFile", "mode", "required"] },
+      "metadata": { "x-wire-order": ["id", "title", "kind", "description", "phase", "optional", "hook", "when", "unless", "needs", "sources", "format", "source", "sha256", "size", "payloadRoot", "interpreter", "script", "command", "forceInstall", "update", "uninstall", "forceUninstall", "arguments", "forceArguments", "from", "to", "prompt", "promptFile", "mode", "required", "set", "unset", "pathPrepend", "requires"] },
       "properties": {
         "id": { "type": "string" },
         "title": { "type": "string" },
@@ -236,7 +258,11 @@
         "prompt": { "type": "string", "metadata": { "x-default": null } },
         "promptFile": { "type": "string", "metadata": { "x-default": null } },
         "mode": { "type": "string", "metadata": { "x-default": null } },
-        "required": { "type": "boolean", "metadata": { "x-default": null } }
+        "required": { "type": "boolean", "metadata": { "x-default": null } },
+        "set": { "elements": { "ref": "env_set" }, "metadata": { "x-empty": "omit" } },
+        "unset": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "pathPrepend": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "requires": { "elements": { "ref": "requirement" }, "metadata": { "x-empty": "omit" } }
       }
     }
   }

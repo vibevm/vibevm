@@ -1,89 +1,187 @@
-//! `uninstall -g`, the installed-record lookup and the `app list` inventory.
+//! `uninstall`, tree removal and `autoremove` (`PROP-059#commands`,
+//! `PROP-065#uninstall-tree`): the authored removal of each installation
+//! (recorded uninstall commands and env rollbacks, `finish` before
+//! `prepare`, last step first), its proxies, its owned payload and its
+//! record, with a run record per removed installation.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#ownership");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree");
 
 use std::fs;
 use std::path::Path;
 
-use vibe_wire::generated::application_list as wire;
+use specmark::spec;
+use vibe_wire::generated::application_removal as wire;
 
 use crate::alternatives::reserved_names;
 use crate::error::{AppError, InstallerError};
-use crate::index::{AuthoredCommands, Index, Installation, Location, StepOutcome};
+use crate::error_lifecycle::LifecycleError;
+use crate::index::{AuthoredCommands, EnvEntry, Index, Installation, Location, StepOutcome};
 use crate::installer::{self, ChildIo, shell};
 use crate::launch;
 use crate::proxies;
-use crate::resolve::qualified_ref;
-use crate::settings::SettingsRoot;
 use crate::steps::{RunOutcome, RunRecord, StepState, StepsFile};
 use crate::storage::{Availability, Storage};
 
+use super::listing::installed;
+use super::tree::{self, Reason, Undo, script_of};
 use super::{Command, OperationContext, Outcome, normalize_slots};
 
-/// Find the one installed record a coordinate names: an exact match, or the
-/// slot default among several matching versions.
-pub fn installed<'a>(
-    index: &'a Index,
-    spelling: &str,
-) -> Result<(&'a str, &'a Installation), AppError> {
-    let requested = qualified_ref(spelling)?;
-    let group = requested
-        .group
-        .as_ref()
-        .map(ToString::to_string)
-        .unwrap_or_default();
-    let candidates: Vec<(&String, &Installation)> = index
-        .installations
-        .iter()
-        .filter(|(_, record)| {
-            record.package.group == group
-                && record.package.name == requested.name.as_str()
-                && semver::Version::parse(&record.package.version)
-                    .is_ok_and(|version| requested.version.matches(&version))
-        })
-        .collect();
-    // `pkg@1.0.0` is a caret requirement to the package grammar, but an
-    // installed version spelled out literally is what the user means.
-    let literal = spelling
-        .rsplit_once('@')
-        .map(|(_, version)| version.trim_start_matches('='));
-    if let Some((key, record)) = candidates
-        .iter()
-        .find(|(_, record)| Some(record.package.version.as_str()) == literal)
-    {
-        return Ok((key.as_str(), record));
-    }
-    let defaults: Vec<&(&String, &Installation)> = candidates
-        .iter()
-        .filter(|(key, record)| index.default_of(&record.slot) == Some(key.as_str()))
-        .collect();
-    match (candidates.as_slice(), defaults.as_slice()) {
-        ([], _) => Err(AppError::NotInstalled {
-            package: spelling.into(),
-        }),
-        ([(key, record)], _) | (_, [(key, record)]) => Ok((key.as_str(), record)),
-        _ => Err(AppError::AmbiguousInstallation {
-            package: spelling.into(),
-        }),
-    }
+/// The flags of `uninstall` (`PROP-065#uninstall-tree`).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree")]
+pub struct RemoveRequest {
+    /// Run the forced variants of the recorded uninstall commands.
+    pub force: bool,
+    /// Remove the runtime dependents too instead of refusing.
+    pub cascade: bool,
+    /// Remove the orphans this removal leaves.
+    pub autoremove: bool,
+    /// Show the removal as a plan and change nothing.
+    pub plan_only: bool,
 }
 
-/// Remove exactly one installation: run the recorded uninstall commands in
-/// reverse step order (with `--force`, their forced variants), then delete
-/// an owned payload directory unconditionally; never touch an external
-/// root.
+/// What a removal did or would do: the outcome of the named installation
+/// (absent for a plan or `autoremove`) and the whole removal document.
+#[derive(Debug, Clone, PartialEq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree")]
+pub struct Removal {
+    pub outcome: Option<Outcome>,
+    pub report: wire::ApplicationRemoval,
+}
+
+/// Remove exactly the installation `spelling` names — with `cascade` its
+/// runtime dependents first — then list (or with `autoremove` remove) the
+/// auto installations nothing requires any more. `plan_only` changes
+/// nothing and reports the plan.
 pub fn uninstall(
     ctx: &OperationContext<'_>,
     spelling: &str,
+    request: &RemoveRequest,
+) -> Result<Removal, AppError> {
+    let _lock = ctx.settings.lock()?;
+    let index = Index::load(ctx.settings)?;
+    let storage = Storage::load(ctx.settings)?;
+    let (key, _) = installed(&index, spelling)?;
+    let key = key.to_owned();
+    let order = tree::removal_order(&index, &key, request.cascade)?;
+    let mut after = index.clone();
+    for (doomed, _) in &order {
+        after.installations.remove(doomed);
+    }
+    let orphans = tree::orphans(&after);
+    let mut planned = order.clone();
+    if request.autoremove {
+        planned.extend(tree::autoremove_order(&after));
+    }
+    if request.plan_only {
+        return Ok(Removal {
+            outcome: None,
+            report: report(&index, &storage, &planned, &orphans, request),
+        });
+    }
+    let mut outcome = None;
+    for (doomed, _) in &planned {
+        let removed = remove_locked(ctx, doomed, request.force)?;
+        if *doomed == key {
+            outcome = Some(removed);
+        }
+    }
+    let left = if request.autoremove {
+        Vec::new()
+    } else {
+        orphans
+    };
+    let mut outcome = outcome.ok_or_else(|| AppError::NotInstalled {
+        package: key.clone(),
+    })?;
+    let others: Vec<&str> = planned
+        .iter()
+        .filter(|(doomed, _)| *doomed != key)
+        .map(|(doomed, _)| doomed.as_str())
+        .collect();
+    if !others.is_empty() {
+        outcome
+            .message
+            .push_str(&format!("; also removed {}", others.join(", ")));
+    }
+    if !left.is_empty() {
+        outcome.message.push_str(&format!(
+            "; orphans nothing requires any more: {} (remove them with --autoremove or `vibe app autoremove`)",
+            left.join(", ")
+        ));
+    }
+    Ok(Removal {
+        outcome: Some(outcome),
+        report: report(&index, &storage, &planned, &left, request),
+    })
+}
+
+/// Remove every auto installation nothing requires any more and every kept
+/// previous installation (`PROP-065#uninstall-tree`,
+/// `#update-and-rollback`); a manual installation is never removed.
+pub fn autoremove(ctx: &OperationContext<'_>, plan_only: bool) -> Result<Removal, AppError> {
+    let _lock = ctx.settings.lock()?;
+    let index = Index::load(ctx.settings)?;
+    let storage = Storage::load(ctx.settings)?;
+    let planned = tree::autoremove_order(&index);
+    let request = RemoveRequest {
+        plan_only,
+        autoremove: true,
+        ..RemoveRequest::default()
+    };
+    if !plan_only {
+        for (doomed, _) in &planned {
+            remove_locked(ctx, doomed, false)?;
+        }
+    }
+    Ok(Removal {
+        outcome: None,
+        report: report(&index, &storage, &planned, &[], &request),
+    })
+}
+
+fn report(
+    index: &Index,
+    storage: &Storage,
+    planned: &[(String, Reason)],
+    orphans: &[String],
+    request: &RemoveRequest,
+) -> wire::ApplicationRemoval {
+    wire::ApplicationRemoval {
+        protocol: "vibe-app-removal/1".into(),
+        plan_only: request.plan_only,
+        installations: planned
+            .iter()
+            .filter_map(|(key, reason)| {
+                let record = index.installations.get(key)?;
+                Some(tree::plan_entry(index, storage, key, record, *reason))
+            })
+            .collect(),
+        orphans: orphans.to_vec(),
+    }
+}
+
+/// Remove exactly one installation under the held lock: its authored
+/// removal, then the record (the slot default passes on), then the owned
+/// payload, then the proxies. An external root is never deleted.
+pub(crate) fn remove_locked(
+    ctx: &OperationContext<'_>,
+    key: &str,
     force: bool,
 ) -> Result<Outcome, AppError> {
-    let _lock = ctx.settings.lock()?;
     let mut index = Index::load(ctx.settings)?;
     let storage = Storage::load(ctx.settings)?;
-    let (key, installation) = installed(&index, spelling)?;
+    let installation =
+        index
+            .installations
+            .get(key)
+            .cloned()
+            .ok_or_else(|| AppError::NotInstalled {
+                package: key.to_owned(),
+            })?;
     let key = key.to_owned();
-    let installation = installation.clone();
     let root = match &installation.location {
         Location::Owned { library, .. } => match storage.availability(library) {
             Availability::Available => launch::app_root(&installation, &storage).ok(),
@@ -93,42 +191,30 @@ pub fn uninstall(
         },
         Location::External { app_root } => Some(app_root.clone()),
     };
-    // The method form keeps its commands in `commands`; step forms record
-    // them per step. Both run last step first.
-    let recorded: Vec<(&str, &AuthoredCommands)> =
-        std::iter::once(("uninstall", &installation.commands))
-            .chain(
-                installation
-                    .steps
-                    .iter()
-                    .rev()
-                    .map(|step| (step.id.as_str(), &step.uninstall)),
-            )
-            .filter(|(_, commands)| commands.has_uninstall())
-            .collect();
+    let undo = tree::authored_removal(&installation);
+    let scripts: Vec<&AuthoredCommands> = undo
+        .iter()
+        .filter_map(|item| match item {
+            Undo::Script { commands, .. } => Some(*commands),
+            Undo::Env { .. } => None,
+        })
+        .collect();
     let external = matches!(installation.location, Location::External { .. });
     if force
         && external
-        && (recorded.is_empty()
-            || recorded
+        && (scripts.is_empty()
+            || scripts
                 .iter()
-                .any(|(_, commands)| commands.force_uninstall.is_none()))
+                .any(|commands| commands.force_uninstall.is_none()))
     {
         return Err(AppError::ForceUnsupported {
             key,
             reason: "the installation declares no force_uninstall",
         });
     }
-    let scripts: Vec<(&str, &str, &AuthoredCommands)> = recorded
+    let ran_scripts = scripts
         .iter()
-        .filter_map(|(id, commands)| {
-            let script = match (force, &commands.force_uninstall) {
-                (true, Some(forced)) => Some(forced),
-                _ => commands.uninstall.as_ref(),
-            };
-            script.map(|script| (*id, script.as_str(), *commands))
-        })
-        .collect();
+        .any(|commands| script_of(commands, force).is_some());
     let mut record = RunRecord::open(
         ctx.settings,
         &installation.package,
@@ -136,8 +222,8 @@ pub fn uninstall(
         &installation.option,
         None,
     )?;
-    if let Some(root) = root.as_deref().filter(|_| !scripts.is_empty()) {
-        run_uninstalls(ctx, &installation, &scripts, root, &mut record)?;
+    if let Some(root) = root.as_deref() {
+        undo_authored(ctx, &installation, &undo, force, root, &mut record)?;
     }
     record.close(RunOutcome::Done);
     let mut doomed = None;
@@ -150,7 +236,7 @@ pub fn uninstall(
         (Location::Owned { .. }, _) => {
             format!("removed {key}; its payload directory was already gone")
         }
-        (Location::External { app_root }, _) if scripts.is_empty() => format!(
+        (Location::External { app_root }, _) if !ran_scripts => format!(
             "removed {key}; no uninstall is authored, so `{}` stays in place",
             app_root.display()
         ),
@@ -163,7 +249,9 @@ pub fn uninstall(
         let ready: Vec<&String> = index
             .installations
             .iter()
-            .filter(|(_, record)| record.slot == slot && is_ready(record, &storage))
+            .filter(|(_, record)| {
+                record.slot == slot && !record.lifecycle.hidden && is_ready(record, &storage)
+            })
             .map(|(key, _)| key)
             .collect();
         let next = match ready.as_slice() {
@@ -182,6 +270,11 @@ pub fn uninstall(
         fs::remove_dir_all(&directory)
             .map_err(|source| installer::io("removing", &directory, source))?;
     }
+    let _ = fs::remove_dir_all(
+        ctx.settings
+            .app_proxies_dir()
+            .join(installation.package.directory_name()),
+    );
     proxies::sync(
         ctx.settings,
         &reserved,
@@ -199,22 +292,61 @@ pub fn uninstall(
     })
 }
 
-/// Run the recorded uninstall commands, each teed into the run record and
-/// observed as one task; the first failure stops them.
-fn run_uninstalls(
+/// Roll back `entries` of `key` through the caller's user environment.
+pub(crate) fn rollback_env(
+    ctx: &OperationContext<'_>,
+    key: &str,
+    step: &str,
+    entries: &[EnvEntry],
+) -> Result<(), AppError> {
+    if entries.is_empty() {
+        return Ok(());
+    }
+    let environment = ctx
+        .environment
+        .ok_or_else(|| LifecycleError::NoEnvironment {
+            key: key.into(),
+            step: step.into(),
+        })?;
+    environment.remove(key, entries).map_err(|reason| {
+        LifecycleError::Environment {
+            key: key.into(),
+            step: step.into(),
+            reason,
+        }
+        .into()
+    })
+}
+
+/// Run the authored removal in order, each script teed into the run record
+/// and observed as one task; the first failure stops it.
+pub(crate) fn undo_authored(
     ctx: &OperationContext<'_>,
     installation: &Installation,
-    scripts: &[(&str, &str, &AuthoredCommands)],
+    undo: &[Undo<'_>],
+    force: bool,
     root: &Path,
     record: &mut RunRecord,
 ) -> Result<(), AppError> {
+    let key = installation.package.key();
     let mut state = StepsFile {
         package: installation.package.clone(),
         option: installation.option.clone(),
         features: installation.features.clone(),
         steps: Vec::new(),
     };
-    for (id, script, commands) in scripts {
+    for item in undo {
+        let (id, commands) = match item {
+            Undo::Env { step, entries } => {
+                let owned: Vec<EnvEntry> = entries.iter().map(|entry| (*entry).clone()).collect();
+                rollback_env(ctx, &key, step, &owned)?;
+                continue;
+            }
+            Undo::Script { step, commands } => (*step, *commands),
+        };
+        let Some(script) = script_of(commands, force) else {
+            continue;
+        };
         let task = ctx.progress.task(format!("{id}: uninstall"));
         let log = record.log(id);
         let observe = ChildIo {
@@ -248,7 +380,7 @@ fn run_uninstalls(
             }
         };
         state.record(StepState {
-            id: (*id).into(),
+            id: id.into(),
             kind: "shell".into(),
             outcome,
             reason: result.as_ref().err().map(ToString::to_string),
@@ -256,6 +388,7 @@ fn run_uninstalls(
             finished: Some(chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)),
             uninstall: AuthoredCommands::default(),
             agent: None,
+            env: Vec::new(),
         });
         record.steps(&state);
         if let Err(error) = result {
@@ -270,56 +403,4 @@ fn run_uninstalls(
 
 fn is_ready(installation: &Installation, storage: &Storage) -> bool {
     launch::app_root(installation, storage).is_ok_and(|root| root.is_dir())
-}
-
-/// Every installation with its status and whether it is its slot's default.
-pub fn list(settings: &SettingsRoot) -> Result<wire::ApplicationList, AppError> {
-    let index = Index::load(settings)?;
-    let storage = Storage::load(settings)?;
-    let installations = index
-        .installations
-        .iter()
-        .map(|(key, record)| {
-            let root = launch::app_root(record, &storage);
-            let reason = launch::unavailable_reason(&root);
-            wire::Installation {
-                key: key.clone(),
-                slot: record.slot.clone(),
-                package: wire::Package {
-                    group: record.package.group.clone(),
-                    name: record.package.name.clone(),
-                    version: record.package.version.clone(),
-                },
-                method: record.method.as_str().into(),
-                status: if reason.is_none() {
-                    wire::Status::Ready
-                } else {
-                    wire::Status::Unavailable
-                },
-                reason,
-                library: match &record.location {
-                    Location::Owned { library, .. } => Some(library.clone()),
-                    Location::External { .. } => None,
-                },
-                icon: match (&record.location, &record.icon, &root) {
-                    (Location::Owned { .. }, Some(icon), Ok(root)) => {
-                        Some(root.join(icon)).filter(|path| path.is_file())
-                    }
-                    _ => None,
-                }
-                .map(|path| path_text(&path)),
-                app_root: root.ok().map(|root| path_text(&root)),
-                portable: record.portable,
-                default: index.default_of(&record.slot) == Some(key.as_str()),
-            }
-        })
-        .collect();
-    Ok(wire::ApplicationList {
-        protocol: "vibe-app-list/1".into(),
-        installations,
-    })
-}
-
-fn path_text(path: &Path) -> String {
-    path.display().to_string()
 }

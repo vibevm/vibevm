@@ -21,12 +21,19 @@ pub struct RunRecord {
     pub finished: Option<String>,
 
     pub outcome: Outcome,
+
+    /// The installation key an update replaced (PROP-065#update-and-rollback).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub replaces: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Command {
     #[serde(rename = "install")]
     Install,
+
+    #[serde(rename = "modify")]
+    Modify,
 
     #[serde(rename = "uninstall")]
     Uninstall,

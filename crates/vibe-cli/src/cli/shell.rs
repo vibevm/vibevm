@@ -11,6 +11,9 @@ pub(super) const LONG_ABOUT: &str = "Start an interactive shell with installed a
     reserved application command has its proxy there. Each --use SLOT=KEY selects a\n\
     provider for this shell only, through VIBE_APP_USE; an inherited VIBE_APP_USE\n\
     is kept and a later choice wins per slot. The global default is untouched.\n\
+    Each --with PKG[@REQ] puts an installed (typically hidden) application's\n\
+    commands first on this shell's PATH through the same VIBE_APP_USE choice.\n\
+    The environment entries installed applications recorded are applied at once.\n\
     \n\
     The shell is the parent bash or zsh (Linux/macOS) or cmd, Windows PowerShell\n\
     or PowerShell (Windows); otherwise /bin/sh on Linux, /bin/zsh on macOS and\n\
@@ -27,4 +30,9 @@ pub struct ShellArgs {
     /// Choose the provider of one slot for this shell; may repeat.
     #[arg(long = "use", value_name = "SLOT=KEY")]
     pub uses: Vec<String>,
+
+    /// Put an installed application, hidden ones included, on this shell's
+    /// PATH only (PROP-059 `#hidden-installations`); may repeat.
+    #[arg(long = "with", value_name = "PKG[@REQ]")]
+    pub with: Vec<String>,
 }

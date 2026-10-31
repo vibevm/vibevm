@@ -61,8 +61,9 @@ pub use package::application::{
     AgentMode, ArchiveFormatDecl, ChoiceDecl, Condition, ExternalResult, FeatureDecl,
     InstallerMethod, InstallerOptionDecl, LauncherDecl, LicenseDecl, NativeFormatDecl, Need,
     OwnedWord, ParamEquals, ParameterDecl, ParameterType, ParameterValue, ProfileDecl,
-    PublicCommandDecl, RecipeDecl, ResultDecl, ShellInterpreter, SourceInputDecl, StepDecl,
-    StepKind, StepOrigin, StepPhase, StepVar, expand_step_template, result_of, steps_of,
+    PublicCommandDecl, RecipeDecl, RequirementDecl, RequirementScope, RequirementTable, ResultDecl,
+    ShellInterpreter, SourceInputDecl, StepDecl, StepKind, StepOrigin, StepPhase, StepVar,
+    expand_step_template, result_of, steps_of,
 };
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, Authorship, BinaryDecl,

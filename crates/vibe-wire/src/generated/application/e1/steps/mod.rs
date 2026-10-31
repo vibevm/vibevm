@@ -63,6 +63,39 @@ pub enum AgentStatus {
     Parked,
 }
 
+/// One durable environment change an env step applied (PROP-065#env-step).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EnvEntry {
+    pub step: String,
+
+    pub op: EnvOp,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub value: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub previous: Option<String>,
+
+    #[serde(rename = "previousKind")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub previous_kind: Option<ValueKind>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum EnvOp {
+    #[serde(rename = "path_prepend")]
+    PathPrepend,
+
+    #[serde(rename = "set")]
+    Set,
+
+    #[serde(rename = "unset")]
+    Unset,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Interpreter {
     #[serde(rename = "posix_sh")]
@@ -133,4 +166,16 @@ pub struct Step {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub agent: Option<AgentRun>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub env: Vec<EnvEntry>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ValueKind {
+    #[serde(rename = "expand_string")]
+    ExpandString,
+
+    #[serde(rename = "string")]
+    String,
 }

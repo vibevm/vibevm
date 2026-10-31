@@ -330,3 +330,77 @@ fn non_portable_and_external_installations_refuse_to_move() {
     assert!(!usb.join("apps/ext").exists(), "no copy");
     assert!(external_root.join("bin/tool").is_file());
 }
+
+/// PROP-059 `#hidden-installations`: a hidden installation is a whole
+/// installation (payload, record, movable) that exposes nothing, and it
+/// stays hidden through a move and an update.
+#[test]
+fn a_hidden_installation_moves_and_updates_without_being_exposed() {
+    let registry = Registry::new();
+    let user = UserScratch::new();
+    registry.zip_package("tool", "");
+    let usb = registry.root.path().join("usb");
+    ok(&registry.vibe(
+        &user,
+        &["storage", "add", usb.to_str().unwrap(), "--id", "usb"],
+    ));
+
+    let report = json(&registry.install(&user, "org.example/tool", &["--hidden", "--json"]));
+    assert_eq!(
+        report["slotDefault"],
+        Value::Null,
+        "a hidden installation is never the default"
+    );
+    assert!(report["message"].as_str().unwrap().contains("hidden"));
+    let row = listed(&registry, &user, TOOL);
+    assert_eq!(row["hidden"], true);
+    assert_eq!(row["default"], false);
+    assert!(!user.settings.join("opt/bin/tool").exists(), "no proxy");
+    let refused = failed(&registry.vibe(&user, &["app", "alternatives", "tool"]));
+    assert!(refused.contains("has no installed provider"), "{refused}");
+    let text = ok(&registry.vibe(&user, &["app", "list"]));
+    assert!(
+        text.contains("hidden installation(s):\n  tool: org.example/tool@1.0.0"),
+        "{text}"
+    );
+
+    ok(&registry.vibe(&user, &["storage", "move", TOOL, "--to", "usb"]));
+    let row = listed(&registry, &user, TOOL);
+    assert_eq!(
+        (row["library"].as_str(), row["hidden"].as_bool()),
+        (Some("usb"), Some(true))
+    );
+    let registry_path = registry.path();
+    ok(&registry.vibe(
+        &user,
+        &[
+            "update",
+            "-g",
+            "org.example/tool",
+            "--registry",
+            registry_path.to_str().unwrap(),
+        ],
+    ));
+    assert_eq!(
+        listed(&registry, &user, TOOL)["hidden"],
+        true,
+        "update keeps the hidden state"
+    );
+    assert!(!user.settings.join("opt/bin/tool").exists());
+
+    let exposed = json(&registry.vibe(&user, &["app", "expose", "org.example/tool", "--json"]));
+    assert_eq!(exposed["command"], "expose");
+    assert_eq!(
+        exposed["slotDefault"], TOOL,
+        "an empty slot gains it as its default"
+    );
+    assert!(user.settings.join("opt/bin/tool").is_file());
+    assert_ne!(listed(&registry, &user, TOOL)["hidden"], true);
+    let hidden = json(&registry.vibe(&user, &["app", "hide", "org.example/tool", "--json"]));
+    assert_eq!(
+        hidden["slotDefault"],
+        Value::Null,
+        "the default is released"
+    );
+    assert!(!user.settings.join("opt/bin/tool").exists());
+}

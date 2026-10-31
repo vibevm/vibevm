@@ -40,6 +40,7 @@ fn base_args() -> InstallArgs {
         library: None,
         steps: Default::default(),
         plan_only: false,
+        hidden: false,
         path: PathBuf::from("."),
         registry: None,
         assume_yes: false,

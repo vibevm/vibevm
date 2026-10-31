@@ -7,8 +7,8 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#describe");
 
 use vibe_core::manifest::{
-    Condition, InstallerOptionDecl, ParameterType, ShellInterpreter, StepDecl, StepKind,
-    StepOrigin, StepPhase, result_of, steps_of,
+    Condition, InstallerOptionDecl, ParameterType, RequirementDecl, RequirementScope,
+    ShellInterpreter, StepDecl, StepKind, StepOrigin, StepPhase, result_of, steps_of,
 };
 use vibe_wire::generated::application_describe as wire;
 
@@ -153,8 +153,23 @@ fn describe_option(
             file: resolved.root.join(&license.file).display().to_string(),
             name: license.name.clone(),
         }),
+        requires: requirements(&option.requires, RequirementScope::Runtime),
         steps: steps_of(option).iter().map(describe_step).collect(),
     }
+}
+
+/// Requirements with their effective scope (`PROP-065#app-dependencies`).
+fn requirements(declared: &[RequirementDecl], default: RequirementScope) -> Vec<wire::Requirement> {
+    declared
+        .iter()
+        .map(|requirement| wire::Requirement {
+            package: requirement.package().into(),
+            scope: match requirement.scope_or(default) {
+                RequirementScope::Build => wire::Scope::Build,
+                RequirementScope::Runtime => wire::Scope::Runtime,
+            },
+        })
+        .collect()
 }
 
 fn condition(condition: &Condition) -> wire::Condition {
@@ -235,8 +250,27 @@ fn describe_step(step: &StepDecl) -> wire::Step {
         prompt_file: None,
         mode: None,
         required: None,
+        set: Vec::new(),
+        unset: Vec::new(),
+        path_prepend: Vec::new(),
+        requires: requirements(&step.requires, RequirementScope::Build),
     };
     match &step.kind {
+        StepKind::Env {
+            set,
+            unset,
+            path_prepend,
+        } => {
+            row.set = set
+                .iter()
+                .map(|(name, value)| wire::EnvSet {
+                    name: name.clone(),
+                    value: value.clone(),
+                })
+                .collect();
+            row.unset = unset.clone();
+            row.path_prepend = path_prepend.clone();
+        }
         StepKind::Sources { sources } => {
             row.sources = sources
                 .iter()

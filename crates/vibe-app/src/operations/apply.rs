@@ -15,10 +15,10 @@ use vibe_core::manifest::{InstallerMethod, InstallerOptionDecl};
 
 use crate::agents::AgentError;
 use crate::error::AppError;
-use crate::index::{AcceptedLicense, AuthoredCommands, Installation, Location, Method};
+use crate::index::{AcceptedLicense, AuthoredCommands, Installation, Lifecycle, Location, Method};
 use crate::installer;
 use crate::resolve::{ResolvedPackage, strip_verbatim};
-use crate::steps::{Plan, Run, RunFlags, Start};
+use crate::steps::{Plan, Run, RunFlags, Start, StepPaths};
 use crate::storage::{DEFAULT_LIBRARY, Storage};
 
 use super::{Command, OperationContext};
@@ -48,6 +48,10 @@ pub(super) struct Selected<'a> {
     pub mode: Mode,
     pub start: &'a Start,
     pub command: Command,
+    /// The key an update replaces, named in the run record.
+    pub replaces: Option<String>,
+    /// The requirements' PATH entries per step.
+    pub paths: StepPaths,
 }
 
 pub(super) fn apply(
@@ -79,6 +83,8 @@ pub(super) fn apply(
             start: selected.start.clone(),
             force: selected.force,
             update_in_place,
+            replaces: selected.replaces.clone(),
+            paths: selected.paths.clone(),
         },
     )?;
     run.admit_agents()?;
@@ -102,6 +108,7 @@ pub(super) fn apply(
         retired.push(run.work().to_path_buf());
     }
     let mut steps = run.records();
+    let env = run.env_entries();
     let commands = match &option.installation {
         Some(InstallerMethod::Shell {
             uninstall,
@@ -180,6 +187,10 @@ pub(super) fn apply(
                 .as_ref()
                 .map(|icon| icon.to_string_lossy().into_owned()),
             steps,
+            lifecycle: Lifecycle {
+                env,
+                ..Lifecycle::default()
+            },
         },
         retired,
         finish_failure,

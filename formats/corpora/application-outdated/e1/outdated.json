@@ -1,0 +1,36 @@
+{
+  "protocol": "vibe-app-outdated/1",
+  "installations": [
+    {
+      "key": "org.example/editor@1.2.0",
+      "slot": "editor",
+      "package": { "group": "org.example", "name": "editor", "version": "1.2.0" },
+      "installed": "1.2.0",
+      "latest": "1.3.0",
+      "status": "outdated",
+      "held": false,
+      "hidden": false
+    },
+    {
+      "key": "org.example/gcc@13.2.0",
+      "slot": "gcc",
+      "package": { "group": "org.example", "name": "gcc", "version": "13.2.0" },
+      "installed": "13.2.0",
+      "latest": "14.1.0",
+      "status": "held",
+      "held": true,
+      "hidden": true
+    },
+    {
+      "key": "org.example/viewer@2.0.0",
+      "slot": "viewer",
+      "package": { "group": "org.example", "name": "viewer", "version": "2.0.0" },
+      "installed": "2.0.0",
+      "latest": null,
+      "status": "unknown",
+      "held": false,
+      "hidden": false,
+      "reason": "no configured registry offers the package"
+    }
+  ]
+}
