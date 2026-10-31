@@ -86964,6 +86964,303 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#changelog"
     },
     {
+      "anchor": "root",
+      "content_hash": "sha256:13bc078b5250a7b6796dbc57534e43a881cbca09e043c8872a8de8bfc2ac18d4",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "PROP-065 — Structured installation: features, steps, conditions, plan, resume",
+      "line": 3,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#root"
+    },
+    {
+      "anchor": "purpose",
+      "content_hash": "sha256:b71fbdf0bd36c19297e6872593075c36baf12d96002e1f1652acd98f30b317c4",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "An installer option is an ordered list of steps a reader follows top to bottom: what is fetched, what is built or copied, which command or agent runs, under which condition, with which user-selectable features. The single-method form of `PROP-059#installer-separation` stays as the short spelling of a one-step list. The same declaration is what a planner prints before running, what a graphical editor edits, and what an agent reads to understand an installation without executing it. @status:spec/done",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#purpose"
+    },
+    {
+      "anchor": "principle",
+      "content_hash": "sha256:f1b1626c53e30b52c495b13922c4ef511fc6ab2ceab95815f02fdb6db4042bdf",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "Everything is data. Steps have a closed set of kinds, conditions have a closed vocabulary, and every step can be answered \"will it run, and what does it need\" before a byte is downloaded. There is no expression language, no scripting of the installer itself (a script is the content of one step, never the structure), and no transaction: a failed step stops the sequence with its work kept, the index untouched, and a resume point. @status:spec/done",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#principle"
+    },
+    {
+      "anchor": "features",
+      "content_hash": "sha256:da1d2bcabbf7d679be9bbae39c806de255bff9847d90c93c991d4c6d02ab1544",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`[[installer_options.features]]` rows (`id`, `name`, optional `description`, `default` boolean) are what a user selects: `--feature ID` / `--no-feature ID` on install, a multi-choice question in an attended terminal when a package declares features and none were named, the defaults unattended. Features change nothing by themselves; steps refer to them through conditions. A feature list may be a tree with relations and named profiles (`#feature-tree`, `#profiles`). The chosen set is recorded with the installation and reused by `update` unless named again. @status:spec/done",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#features"
+    },
+    {
+      "anchor": "steps",
+      "content_hash": "sha256:d1de95720470778cf468f0e153e4fa11b0f3b84a740cf4a47677ab6803d55ed7",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`[[installer_options.steps]]` rows run in file order. Every step has a stable `id`, a human `title`, a `kind`, an optional `description`, optional `when` / `unless` conditions, optional `needs`, an optional `phase` (`prepare`, the default, or `finish`), an optional `optional` boolean, and the fields of its kind. `installation` and `steps` are mutually exclusive in one option; `pre_install` / `post_install` keep working as a leading `prepare` shell step and a leading `finish` shell step respectively. @status:spec/done",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#steps"
+    },
+    {
+      "anchor": "kinds",
+      "content_hash": "sha256:13011889d00cf773be1b218f8b45cf819c7d23c4779c3fc7924da418540305d6",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "The kinds are: `sources` (fetch, verify and lay out `[[sources]]` as `PROP-059#source-build` does); `archive` (fetch, verify and extract one `zip` / `tar_gz` into `$VIBE_OUT`, with `payload_root`); `recipe` (run a package-relative script under an interpreter in `$VIBE_WORK`); `shell` (run one authored command string under an interpreter, with optional `uninstall`, `force_install`, `force_uninstall`, `update` as today); `native` (run a verified `exe` / `msi` with arguments, Windows only, with the same optional uninstall fields); `copy` (copy package-relative files or directories into `$VIBE_OUT/<destination>`); `agent` (`PROP-064`). A kind outside this list is a manifest error naming the step. @status:spec/done",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#kinds"
+    },
+    {
+      "anchor": "result",
+      "content_hash": "sha256:e12828e80684e6c66ee4f4117c4f1bd12d621e48f64b3d441e1925363557f6ec",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "An option declares what the steps produce: `result = \"owned\"` (the default when any step writes `$VIBE_OUT`: the non-empty `$VIBE_OUT` is placed as the owned payload, exactly as an archive or a recipe is today) or `result = { external = \"<app_root template>\" }` (the steps install outside vibe and the root is registered, as a shell or native method is today). Launchers, public commands and portability are per option as before. A `finish` step runs after placement or registration with `VIBE_APP_ROOT` set and the payload as its working directory. @status:spec/done",
+      "line": 11,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#result"
+    },
+    {
+      "anchor": "conditions",
+      "content_hash": "sha256:305ce8def93d90ff941fc8c87f67359a1fcced244baa058d56aaaf071cc0c85e",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`when` and `unless` take one condition table or an array of them (`when`: all must hold; `unless`: none may hold). The vocabulary is closed: `feature = \"ID\"`; `param = \"ID\"`; `param_equals = { id = \"ID\", value = \"V\" }`; `command_present = \"NAME\"` (found on PATH); `file_present = \"<template path>\"`; `env_present = \"NAME\"`; `agent_configured = true`; `offline = true`. Every condition is evaluated at planning time from facts the planner already has; a step whose condition is false is reported `skip` with the condition that decided it. No condition reads a file's contents, runs a program or asks a question. @status:spec/done",
+      "line": 12,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#conditions"
+    },
+    {
+      "anchor": "needs",
+      "content_hash": "sha256:2c85dec0bb628eb6ed19450f5f6ce25bbe831be5d3d721290c15229965d6913d",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`needs` names what a step requires before anything starts: `\"network\"`, `\"command:NAME\"`, `\"agent\"`, `\"terminal\"`. The planner checks them for every step that will run and refuses the whole installation up front, naming the step and the missing need; `--offline` turns a `network` need of a step without a cache hit into a refusal rather than a late failure. An `optional` step with an unmet need is skipped and reported instead. @status:spec/done",
+      "line": 13,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#needs"
+    },
+    {
+      "anchor": "templates",
+      "content_hash": "sha256:fb58d609467d1eac5ff110e1598ef102ffb27ef7721f28386ee9aa74c360e9a2",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "Step strings that name paths (`file_present`, `copy` destinations, the `external` root, agent prompts) use the one-pass grammar of `PROP-059#launcher-paths` extended with `$work`, `$sources`, `$out`, `$package` and `$feature:ID` (`true` / `false`); `$$` is a literal dollar. Expansion never evaluates a shell. `shell` and `recipe` text is not expanded: it receives the same values as environment variables (`VIBE_WORK`, `VIBE_SOURCES`, `VIBE_OUT`, `VIBE_PACKAGE`, `VIBE_PLATFORM`, `VIBE_ARCH`, `VIBE_APP_ROOT`, and `VIBE_FEATURE_<ID>` / `VIBE_PARAM_<ID>`), so an authored command keeps its own shell syntax. @status:spec/done",
+      "line": 14,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#templates"
+    },
+    {
+      "anchor": "plan",
+      "content_hash": "sha256:774f28bdfd64a2f9abde105e385defc5bea5b6d47a43d0ecfe5964825b6fee33",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`vibe app plan PACKAGE [selection flags]` resolves the option, the features and every condition and need, and prints the step list as `run` / `skip (reason)` with each step's kind, title, needs and the chosen result, without downloading or running anything (`vibe-app-plan/1` under `--json`). Install, update and project materialisation compute the same plan first and show it before the first step; `--plan-only` on `install` is the same as `plan`. A plan that admits no step producing the declared result is refused. @status:spec/done",
+      "line": 15,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan"
+    },
+    {
+      "anchor": "execution",
+      "content_hash": "sha256:5fdb84b9b90e1e3632e04a49ec63b852188f09bbc0ab451f848ab38c11e1f81e",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "Steps run one at a time in the work directory `<cache>/app-work/<key>/` with `steps.json` (`vibe-app-steps/1`) updated after each step: id, kind, outcome (`done` / `skipped` / `failed` / `delegated`), reason, started and finished times, and for shell / native steps the recorded uninstall data. Output of every child streams live; under `--json` child stdout is relayed to stderr. The work directory is deleted after success and after a `finish`-phase failure (the installation is already recorded), and kept after a `prepare`-phase failure or a delegation. @status:spec/done",
+      "line": 16,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#execution"
+    },
+    {
+      "anchor": "resume",
+      "content_hash": "sha256:ca1800ce70e16820639f0fd6058522b179cce18a6ea36a20f8727fe64df37511",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`install` / `update` with `--resume` reopens the kept work directory of the key, verifies that the package coordinate, option and chosen features match, and continues from the first step that is not `done`; `--from-step ID` restarts at a named step instead. Without a kept work directory `--resume` is a clear error. A resume never re-fetches an input whose verified file is still in place. @status:spec/done",
+      "line": 17,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#resume"
+    },
+    {
+      "anchor": "failure",
+      "content_hash": "sha256:87dc4f4fd70a375489a9c2fd1dd47756bb954d8881d97fc7a84f2faa7760d9fc",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "A failed step ends the sequence: nothing after it runs, no payload is placed, no root is registered, the index is untouched, and the message names the step, its kind, the work directory and `--resume`. An `optional` step that fails is recorded `failed` and the sequence continues. A failed `finish` step leaves the placed payload or registered root in place and the index written, reports the step, and `uninstall` remains available. @status:spec/done",
+      "line": 18,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#failure"
+    },
+    {
+      "anchor": "record",
+      "content_hash": "sha256:4be36a0174f0bbedac1393f381aeafab7d79f36a6c3a93d3faac016b90a63d8f",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "The index record of an installation keeps the chosen features and the step outcomes (`id`, `kind`, `outcome`), plus the uninstall data recorded by shell and native steps. `uninstall` runs the recorded uninstall commands in reverse step order before deleting an owned payload or leaving an external root; `--force` selects the forced variants as today. `vibe app steps PACKAGE` prints the declared steps and features of a package as written, for editors and agents. @status:spec/done",
+      "line": 19,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#record"
+    },
+    {
+      "anchor": "describe",
+      "content_hash": "sha256:8f2a95e3fd063a0be2e8f4bb330127cd10cbc857e682a222d23d76ffcda0fc2f",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`vibe app describe PACKAGE --json` is the one document a graphical tool or an agent needs to build the whole choice: the package identity, every installer option with its platform, architecture, result, portability, launchers and public commands, the option's features with their defaults, and its steps as declared (`vibe-app-describe/1`). It resolves nothing and runs nothing; `plan` is the resolved view for one chosen option and feature set, and `install` consumes the same flags the two documents name. Features are reported with their tree, relations and profiles (`#feature-tree`, `#profiles`). @status:spec/done",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#describe"
+    },
+    {
+      "anchor": "sugar",
+      "content_hash": "sha256:42d452bea9f33ab912ea92e08a4697bdb51df548f14f4d0538c233af4b575a25",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "The method forms map to steps exactly: `zip` / `tar_gz` → one `archive` step; `shell` → one `shell` step with `result = { external }`; `exe` / `msi` → one `native` step with `result = { external }`; `source_build` → one `sources` step then one `recipe` step. A package may switch from `installation` to `steps` without any change in behaviour. @status:spec/done",
+      "line": 21,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#sugar"
+    },
+    {
+      "anchor": "feature-tree",
+      "content_hash": "sha256:96d8bc06db4a1698ac8458903345a34a31b704b51c8e04b681ff63b3edc3b79a",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "Features may form a tree and carry relations, all as data on the `[[installer_options.features]]` row: `parent = \"ID\"` (any depth, no cycles), `required = true` (cannot be deselected while its parent is selected; a root marked required is always selected), `requires = [\"ID\", …]` (selecting this feature selects those), and `exclusive_group = \"NAME\"` (exactly one feature of a group is selected; the group's default is the member whose `default` is true, exactly one per group). Selection is resolved by one deterministic rule set applied to the explicit choices (`--feature`, `--no-feature`, a profile, or the terminal's checkboxes) over the defaults: selecting a feature selects its ancestors and its `requires`; deselecting a feature deselects its descendants; a `required` child of a selected parent and a feature another selected feature requires cannot be deselected and a request to do so is a planning refusal naming the reason; an exclusive group with two explicit selections is a refusal. The closed set is what conditions see; `describe` reports the tree, the relations and the resolved default set; `plan` reports the resolved set and which features were implied by which rule. A console asks with an indented multi-select; a graphical tool draws the tree. @status:spec/done",
+      "line": 22,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#feature-tree"
+    },
+    {
+      "anchor": "profiles",
+      "content_hash": "sha256:23904aad57bf2182c22ae1104639f3e0ab7270c6118e408baaa0b3f8ab5ea3dd",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`[[installer_options.profiles]]` rows (`id`, `name`, optional `description`, `features = [...]`, `default` boolean, at most one default) are named feature sets, the \"typical / complete / custom\" of classic installers. `--profile ID` selects one and then resolves exactly as explicit choices do; `--feature` / `--no-feature` apply on top of it. Without a profile and without choices the feature defaults apply. An attended terminal offers the profiles first and \"custom\" opens the tree; a graphical tool does the same on its first page. @status:spec/done",
+      "line": 23,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#profiles"
+    },
+    {
+      "anchor": "parameters",
+      "content_hash": "sha256:736db5662ea57c83d5ab2e519ff7d7b1477441639a986197c9a25d4cda54d06d",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`[[installer_options.parameters]]` rows are the typed questions a wizard asks: `id`, `name`, optional `description`, `type` one of `string`, `bool`, `integer`, `choice`, `path`, optional `default`, `required` (default false), for `integer` optional `min` / `max`, for `choice` a `choices` array of `{ value, name }`, for `path` optional `must_exist`. Values arrive as `--set ID=VALUE` (repeatable), from an attended terminal as typed prompts, otherwise from `default`; a required parameter with no value is a planning refusal. Values are validated at planning time against the type, never later. Steps read them as `$param:ID` in templates and as `VIBE_PARAM_<ID>` (upper-cased, `-` to `_`) in the environment; a condition may test `param = \"ID\"` (a `bool` true or a non-empty value) or `param_equals = { id = \"ID\", value = \"V\" }`. Chosen values are recorded with the installation (never for a parameter marked `secret = true`, which is passed to children and not written anywhere). @status:spec/done",
+      "line": 24,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#parameters"
+    },
+    {
+      "anchor": "license",
+      "content_hash": "sha256:ef7da18f9d75420dd3fda7cd88795af243ce55afdf3e86573468fbf3a115b98d",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "A package may declare `[installer_options.license]` with `file` (package-relative text) and `name`. When present, installation needs explicit acceptance: `--accept-license` on the command line, or a yes in an attended terminal after the text is shown; unattended without the flag is a planning refusal. `describe` reports the file and name; the acceptance is recorded with the installation. Nothing is downloaded before acceptance. @status:spec/done",
+      "line": 25,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#license"
+    },
+    {
+      "anchor": "sizes",
+      "content_hash": "sha256:0d0631d86b8063684d0818bdca6ea44ed3ac904f86929ed8e5a9b16a1cc48ddc",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "A `sources` input and an `archive` step may declare `size` (bytes) beside `sha256`. The planner sums the sizes of the inputs that will be fetched and reports `download_bytes` with a flag for inputs of unknown size; a cache hit counts zero. The runner reports fetched bytes against the declared size as progress and refuses an input that exceeds its declared size. @status:spec/done",
+      "line": 26,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#sizes"
+    },
+    {
+      "anchor": "icon",
+      "content_hash": "sha256:da89d3783a82ba06612579218bd6243f22d30ba3c5661d0e6b9146632380529b",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`[application] icon` names a package-relative image for the application as a whole (a launcher's `icon` stays the launcher's own). `describe` reports its absolute path in the resolved package tree; an installed owned payload keeps it at the same relative path, and `app list --json` reports it when present. @status:spec/done",
+      "line": 27,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#icon"
+    },
+    {
+      "anchor": "runs",
+      "content_hash": "sha256:64fdb408fc5ab9b04e0e13c3eda1ef9f779879ab8ae9fb80dce39f288474a658",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "Every run of an installation (install, update, resume, uninstall) writes `<home>/cache/app-runs/<key>/<timestamp>/` with `steps.json`, the plan, and one `steps/<id>/output.log` per executed step holding that step's child output (and, for agent steps, the envelope of `PROP-064#envelope`); the work directory's own copy is what resume uses. `vibe app runs PACKAGE [--json]` lists the records newest first with outcome and path; `vibe app runs PACKAGE --prune N` keeps the newest N. A graphical tool shows a run's log from this path; vibe never truncates a log it is writing. @status:spec/done",
+      "line": 28,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#runs"
+    },
+    {
+      "anchor": "cancellation",
+      "content_hash": "sha256:f2b97374c5273638c087e01bc1c7653af994d69b00df6746dd26133a6ce25178",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "An interrupted command (Ctrl-C, `SIGTERM`, a console control event, a closed controlling process) stops the running step: the signal is forwarded to the child, vibe waits for it, records the step `interrupted` in `steps.json`, keeps the work directory and exits with the step failure code. The next `--resume` continues from that step. No step is marked `done` by an interrupted exit, and an owned payload is never placed by one. @status:spec/done",
+      "line": 29,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#cancellation"
+    },
+    {
+      "anchor": "events",
+      "content_hash": "sha256:3406c794bb972e095880619bb8bafbf49de015f41af9fa6cf6ff2f7264b89a6b",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`--progress-format json` (global flag, also `VIBE_PROGRESS_FORMAT=json`) makes every progress observation of `PROP-060` a JSON line on stderr (`vibe-progress-event/1`: sequence, timestamp, task id, parent, kind `start` | `measurement` | `detail` | `diagnostic` | `finish` | `skip` | `fail`, label, completed / total / unit when measured, message). Step execution emits one task per step labelled with the step id and title, a `measurement` per fetched input, and the child output as `detail` lines; agent steps emit `start`, consent, delivery and `finish`. `--json` keeps the final envelope on stdout; the two streams never mix. This is the one live channel a graphical tool consumes. @status:spec/done",
+      "line": 30,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#events"
+    },
+    {
+      "anchor": "error-codes",
+      "content_hash": "sha256:7097f291809ed811e3f1d943b4c4f79b151e064972381d82a1da8bb9dda88d29",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "The JSON error envelope carries `code`: a stable snake_case identifier of the refusal or failure (`not_installed`, `selection_required`, `locked`, `need_unmet`, `plan_refused`, `license_required`, `parameter_invalid`, `step_failed`, `agent_missing`, `consent_required`, `unavailable`, …) beside the human `error` text, plus `step` when a step is responsible and `work` when a work directory is kept. Human output keeps the text. Codes are the application subsystem's error variants in snake_case and are listed by `vibe app errors --json`. @status:spec/done",
+      "line": 31,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#error-codes"
+    },
+    {
+      "anchor": "exit-codes",
+      "content_hash": "sha256:43ba8d0a25005db5d3a6b8338bba8f2e41d42000b378e902cf7443774b5fa849",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "Exit status: `0` success; `1` a step failed or the installation was interrupted (resumable; `work` names where); `2` the request was refused before any effect (usage, planning refusal, unmet need, missing consent or license, invalid parameter, locked); `75` the run is parked for a hosting agent (`PROP-064#parking`). A launcher's or proxy's own exit status passes through unchanged. @status:spec/done",
+      "line": 32,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#exit-codes"
+    },
+    {
+      "anchor": "reconfigure",
+      "content_hash": "sha256:ef713a4727cd9d2074d771666919b0345f1e2adb93a14b3c8a2e258a108e4cad",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "An installed application can be changed in place, the \"modify\" of classic maintenance mode. `vibe app reconfigure PACKAGE [--installer ID] [--profile ID] [--feature …] [--set …] [--accept-license]` takes the installed record, plans the new choice against the same package version (a new installer option, a new feature set or new parameter values; nothing named keeps its recorded value), shows what the old choice recorded as uninstall data and what the new plan will run, then runs the recorded uninstall commands of the old steps in reverse order, installs the new choice through the ordinary engine, and rewrites the record while keeping the slot, its default and its public commands. An owned payload of the old choice is deleted after the new one is placed. In an attended terminal without flags it asks the wizard's questions with the recorded values preselected. `--force` is the \"repair\" of the same vocabulary and remains `install -g --force`; `uninstall -g` is \"remove\". @status:spec/done",
+      "line": 33,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#reconfigure"
+    },
+    {
+      "anchor": "outdated",
+      "content_hash": "sha256:e7c48ec0c42dd3af892a4415577515a165a1f3dcb2b301fb83739829230ea34c",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "`vibe app outdated [--json]` reports, for every installed application, its installed version and the newest version the configured registries offer for the same package (`vibe-app-outdated/1`), without changing anything; `--offline` answers from the registry cache only. `update -g` is the action; no automatic or scheduled update exists in vibe, a graphical tool or a scheduler polls `outdated` and calls `update`. @status:spec/done",
+      "line": 34,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#outdated"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:578d4762585b8bacec02fc89bf35ecfeea25e7cd9606137733863b7e97a1864e",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "Public Linux fixtures: a four-step owned option (`sources` → optional `agent` under `when = { feature }` → `recipe` → `copy`) with `plan` showing run / skip, an unmet `command:` need refused before download, a failing middle step keeping the work directory and `--resume` finishing without re-fetching, `--from-step`, features chosen by flag and by default, a `finish` step seeing `VIBE_APP_ROOT`, uninstall running recorded shell uninstalls in reverse; every existing method fixture unchanged through the sugar mapping. The Vim bridge and the documentation site are rewritten as step lists and installed on this host. @status:spec/done",
+      "line": 35,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#acceptance"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:10db06ac8ed962c65ed975ab94a4f9d567588fcd888900c4e8c98022b4c632e9",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "Decision: features separate from steps, conditions as data, a closed kind set, a planner, a kept work directory and a resume point. Why: MSI's features / actions / conditions and Inno's uninstall-run tables are the parts of classic installers that survived thirty years; their custom actions and condition expression strings are the parts that did not. Rejected: a transactional engine with rollback (the October prototype), an expression language for conditions (unvalidatable, unrenderable), steps that spawn steps. Revisit when a real package cannot be expressed in the closed vocabulary; add a kind or a condition then, never an escape to scripting the installer. @status:spec/done",
+      "line": 36,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#decisions"
+    },
+    {
+      "anchor": "changelog",
+      "content_hash": "sha256:23b7d7e8500560aac8bc10dcd8c71a1aa153e8d208588675c61766fec9975694",
+      "doc_path": "common/PROP-065",
+      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "heading": "2026-10-31: added `#reconfigure` (modify in place: another installer option, features or parameters) and `#outdated`. 2026-10-31: added `#feature-tree` and `#profiles` on the owner's decision. 2026-10-31: added `#parameters`, `#license`, `#sizes`, `#icon`, `#runs`, `#cancellation`, `#events`, `#error-codes`, `#exit-codes` and `#describe` for the graphical wizard the owner is about to build. 2026-10-31: adopted. @status:spec/done",
+      "line": 37,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#changelog"
+    },
+    {
       "anchor": "genre-definition",
       "content_hash": "sha256:f0d43088fbe4d452eaadeef5ac8818562d5fddb734c3dfd99f990a565c791bc1",
       "doc_path": "design/README",
@@ -136644,7 +136941,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:606b3c3d3998abacd4fd22d3c379044925536115929d223d0583afcab30da9b7",
+      "content_hash": "sha256:837e59128ca57f059b01a46a667ddb0485b3500790e002e98c0c3adc827a8e31",
       "doc_path": "terraforms/APP-STEPS-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/APP-STEPS-CAMPAIGN-v0.1.xml",
       "heading": "APP-STEPS campaign v0.1 — structured installation with agent steps",
@@ -136725,10 +137022,10 @@
     },
     {
       "anchor": "phase-q3",
-      "content_hash": "sha256:61f9c13617840581d527086884050b6dddaa4032c62d239b65e4f7334d72b33a",
+      "content_hash": "sha256:860dfa4fd4c75098115bf93d7c2eb6611f903c1baf330c490f7e5c12e942ccc8",
       "doc_path": "terraforms/APP-STEPS-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/APP-STEPS-CAMPAIGN-v0.1.xml",
-      "heading": "Q3 — packages and close-out: the Vim bridge and the documentation site rewritten as step lists (Vim with an optional agent step under a feature), documentation, changelog, full gate, audit entry, report. @status:impl/planned",
+      "heading": "Q3 — maintenance verbs, packages and close-out: `vibe app reconfigure` and `vibe app outdated` (`PROP-065#reconfigure`, `#outdated`, owner question of 2026-10-31 on switching between a source build and a binary of the same package); the Vim bridge and the documentation site rewritten as step lists (Vim with an optional agent step under a feature), documentation, changelog, full gate, audit entry, report. @status:impl/planned",
       "line": 13,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/APP-STEPS-CAMPAIGN-v0.1#phase-q3"
     },
@@ -141767,64 +142064,10 @@
   "suspects": [],
   "warnings": [
     {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/describe.rs",
-      "line": 5,
-      "message": "edge `vibe_app::describe` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#describe`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/error.rs",
-      "line": 230,
-      "message": "edge `vibe_app::error::StepError` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#plan`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/error.rs",
-      "line": 231,
-      "message": "edge `vibe_app::error::StepError` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#execution`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/index.rs",
-      "line": 93,
-      "message": "edge `vibe_app::index::StepOutcome` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#execution`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/index.rs",
-      "line": 115,
-      "message": "edge `vibe_app::index::StepRecord` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#record`: no spec unit carries this anchor"
-    },
-    {
       "code": "overloaded-item",
       "file": "crates/vibe-app/src/operations/apply.rs",
       "line": 7,
       "message": "`vibe_app::operations::apply` realises 3 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/operations/apply.rs",
-      "line": 9,
-      "message": "edge `vibe_app::operations::apply` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#result`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/kinds.rs",
-      "line": 4,
-      "message": "edge `vibe_app::steps::kinds` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#kinds`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/mod.rs",
-      "line": 6,
-      "message": "edge `vibe_app::steps` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#principle`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/plan.rs",
-      "line": 4,
-      "message": "edge `vibe_app::steps::plan` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#plan`: no spec unit carries this anchor"
     },
     {
       "code": "overloaded-item",
@@ -141833,202 +142076,10 @@
       "message": "`vibe_app::steps::plan` realises 4 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
     },
     {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/plan.rs",
-      "line": 5,
-      "message": "edge `vibe_app::steps::plan` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#conditions`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/plan.rs",
-      "line": 6,
-      "message": "edge `vibe_app::steps::plan` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#needs`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/plan.rs",
-      "line": 7,
-      "message": "edge `vibe_app::steps::plan` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#features`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/plan.rs",
-      "line": 33,
-      "message": "edge `vibe_app::steps::plan::HostFacts` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#conditions`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/plan.rs",
-      "line": 57,
-      "message": "edge `vibe_app::steps::plan::FeatureRequest` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#features`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/plan.rs",
-      "line": 85,
-      "message": "edge `vibe_app::steps::plan::PlannedStep` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#plan`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/plan.rs",
-      "line": 94,
-      "message": "edge `vibe_app::steps::plan::Plan` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#plan`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/run.rs",
-      "line": 4,
-      "message": "edge `vibe_app::steps::run` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#execution`: no spec unit carries this anchor"
-    },
-    {
       "code": "overloaded-item",
       "file": "crates/vibe-app/src/steps/run.rs",
       "line": 4,
       "message": "`vibe_app::steps::run` realises 3 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/run.rs",
-      "line": 5,
-      "message": "edge `vibe_app::steps::run` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#failure`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/run.rs",
-      "line": 6,
-      "message": "edge `vibe_app::steps::run` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#resume`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/state.rs",
-      "line": 4,
-      "message": "edge `vibe_app::steps::state` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#execution`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/state.rs",
-      "line": 19,
-      "message": "edge `vibe_app::steps::state::Start` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#resume`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-app/src/steps/template.rs",
-      "line": 3,
-      "message": "edge `vibe_app::steps::template` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#templates`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-cli/src/commands/app/describe.rs",
-      "line": 5,
-      "message": "edge `vibe_cli::commands::app::describe` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#describe`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-cli/src/commands/app/facts.rs",
-      "line": 5,
-      "message": "edge `vibe_cli::commands::app::facts` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#conditions`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/step_validation.rs",
-      "line": 4,
-      "message": "edge `vibe_core::manifest::package::application::step_validation` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#steps`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 5,
-      "message": "edge `vibe_core::manifest::package::application::steps` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#steps`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 16,
-      "message": "edge `vibe_core::manifest::package::application::steps::FeatureDecl` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#features`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 29,
-      "message": "edge `vibe_core::manifest::package::application::steps::StepPhase` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#result`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 52,
-      "message": "edge `vibe_core::manifest::package::application::steps::Condition` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#conditions`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 78,
-      "message": "edge `vibe_core::manifest::package::application::steps::Need` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#needs`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 126,
-      "message": "edge `vibe_core::manifest::package::application::steps::ArchiveFormatDecl` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#kinds`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 135,
-      "message": "edge `vibe_core::manifest::package::application::steps::NativeFormatDecl` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#kinds`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 156,
-      "message": "edge `vibe_core::manifest::package::application::steps::StepKind` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#kinds`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 246,
-      "message": "edge `vibe_core::manifest::package::application::steps::StepOrigin` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#sugar`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 256,
-      "message": "edge `vibe_core::manifest::package::application::steps::StepDecl` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#steps`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 320,
-      "message": "edge `vibe_core::manifest::package::application::steps::ResultDecl` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#result`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 355,
-      "message": "edge `vibe_core::manifest::package::application::steps::OwnedWord` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#result`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
-      "line": 363,
-      "message": "edge `vibe_core::manifest::package::application::steps::ExternalResult` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#result`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/sugar.rs",
-      "line": 4,
-      "message": "edge `vibe_core::manifest::package::application::sugar` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#sugar`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/template.rs",
-      "line": 6,
-      "message": "edge `vibe_core::manifest::package::application::template` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#templates`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-core/src/manifest/package/application/template.rs",
-      "line": 9,
-      "message": "edge `vibe_core::manifest::package::application::template::StepVar` --documents--> `spec://org.vibevm.core/vibevm/common/PROP-065#templates`: no spec unit carries this anchor"
     },
     {
       "code": "overloaded-item",
@@ -142115,24 +142166,6 @@
       "message": "edge `vibe_workspace::install::bootgen::hybrid_emit::verify_fingerprints` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
     },
     {
-      "code": "dangling-edge",
-      "file": "schemas/application/e1/steps.jtd.json",
-      "line": 1,
-      "message": "edge `steps` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#execution`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "schemas/application_describe.jtd.json",
-      "line": 1,
-      "message": "edge `application_describe` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#describe`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "schemas/application_plan.jtd.json",
-      "line": 1,
-      "message": "edge `application_plan` --implements--> `spec://org.vibevm.core/vibevm/common/PROP-065#plan`: no spec unit carries this anchor"
-    },
-    {
       "code": "stale-exclude",
       "file": "specmap.toml",
       "line": 0,
@@ -142167,12 +142200,6 @@
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "line": 362,
       "message": "section `5.1 Closed schema-1 shape` spans 144 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
-    },
-    {
-      "code": "xml-dialect",
-      "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
-      "line": 14,
-      "message": "ill-formed XML: ill-formed document: expected `</ID>`, but `</templates>` was found"
     },
     {
       "code": "long-section",
