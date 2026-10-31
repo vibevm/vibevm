@@ -46,6 +46,25 @@ pub(crate) fn promoted_env_names() -> &'static BTreeSet<String> {
 }
 
 fn main() -> ExitCode {
+    // clap's derived builders keep every subcommand's temporaries in one
+    // frame, and a debug build of a CLI this wide needs more than the 1 MiB
+    // a Windows main thread owns: `vibe --version` overflowed there the day
+    // the launcher catalog added its verbs (2026-10-31), while Linux's 8 MiB
+    // hid it. The work runs on a thread sized for it, as rustc does; the
+    // main thread only waits, so nothing observes the environment while
+    // `promote_user_config_env` sets it.
+    const STACK: usize = 32 << 20;
+    let worker = std::thread::Builder::new()
+        .name("vibe".into())
+        .stack_size(STACK)
+        .spawn(run);
+    match worker {
+        Ok(handle) => handle.join().unwrap_or_else(|_| ExitCode::from(101)),
+        Err(_) => run(),
+    }
+}
+
+fn run() -> ExitCode {
     let cli = match Cli::try_parse() {
         Ok(cli) => cli,
         Err(e) => {
@@ -459,8 +478,9 @@ fn main() -> ExitCode {
 #[specmark::spec(
     deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "unsafe-gate: startup env promotion runs at the top of main, \
-              before the dispatcher and before any thread exists — set_var's \
-              race is with concurrent readers, and none can be observing yet; \
+              before the dispatcher, on the one working thread while the \
+              main thread only waits in `join` — set_var's race is with \
+              concurrent readers, and none can be observing yet; \
               the env-audit crate is test infrastructure and a mutate-anytime \
               safe production API would advertise soundness it cannot prove"
 )]
@@ -488,11 +508,11 @@ fn promote_user_config_env() {
             // Live env wins — leave it alone.
             continue;
         }
-        // SAFETY: vibe is a single-threaded CLI binary. Promotion
-        // happens at the very top of `main`, before the dispatcher
-        // selects a subcommand and well before any thread is
-        // spawned (rayon, reqwest's tokio internals when present,
-        // etc.). The Rust 1.85+ `unsafe` marker on `set_var` exists
+        // SAFETY: vibe runs on one working thread (`main` only waits
+        // for it). Promotion happens at the very top of `run`, before
+        // the dispatcher selects a subcommand and well before any
+        // further thread is spawned (rayon, reqwest's tokio internals
+        // when present, etc.). The Rust 1.85+ `unsafe` marker on `set_var` exists
         // to flag mid-execution multi-threaded mutation, which we
         // are not doing here. No other thread can be observing the
         // environment variables at this point.
