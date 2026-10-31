@@ -25,6 +25,24 @@ fn stamp_app_error(payload: &mut Value, err: &anyhow::Error) {
     if let Some(work) = error.work() {
         map.insert("work".into(), Value::String(work.into()));
     }
+    // A parked agent step (PROP-064 `#parking`): the task files and the
+    // command the hosting agent re-invokes after answering.
+    if let vibe_app::AppError::Agent(vibe_app::AgentError::Parked(parked)) = error {
+        let vibe_app::ParkedStep {
+            run_id,
+            run,
+            task_files,
+            resume,
+            ..
+        } = parked.as_ref();
+        map.insert("run_id".into(), Value::String(run_id.clone()));
+        map.insert("run".into(), Value::String(run.clone()));
+        map.insert(
+            "tasks".into(),
+            Value::Array(task_files.iter().cloned().map(Value::String).collect()),
+        );
+        map.insert("resume".into(), Value::String(resume.clone()));
+    }
 }
 
 /// When the anyhow chain carries a known structured error variant,

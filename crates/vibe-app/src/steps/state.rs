@@ -10,6 +10,7 @@ use specmark::spec;
 use vibe_core::manifest::ShellInterpreter;
 use vibe_wire::generated::application::e1::steps as wire;
 
+use crate::agents::RunMode;
 use crate::error::{AppError, StepError};
 use crate::index::{AuthoredCommands, PackageCoordinate, StepOutcome};
 use crate::settings::write_atomic;
@@ -37,6 +38,29 @@ pub(crate) struct StepState {
     pub started: Option<String>,
     pub finished: Option<String>,
     pub uninstall: AuthoredCommands,
+    /// The agent run of an `agent` step (`PROP-064#record`).
+    pub agent: Option<AgentRun>,
+}
+
+/// How an agent step's agent ended.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum AgentStatus {
+    Ok,
+    Fail,
+    /// Handed to the hosting agent (`PROP-064#parking`).
+    Parked,
+}
+
+/// The agent, mode, envelope and answer of one agent step.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct AgentRun {
+    pub agent: String,
+    pub mode: RunMode,
+    /// The step's run directory holding the envelope.
+    pub envelope: String,
+    pub duration_ms: Option<u32>,
+    pub status: Option<AgentStatus>,
+    pub message: Option<String>,
 }
 
 /// The whole `steps.json`.
@@ -127,6 +151,21 @@ impl StepsFile {
                         ShellInterpreter::WindowsCmd => wire::Interpreter::WindowsCmd,
                         ShellInterpreter::WindowsPowershell => wire::Interpreter::WindowsPowershell,
                     }),
+                    agent: step.agent.as_ref().map(|run| wire::AgentRun {
+                        agent: run.agent.clone(),
+                        mode: match run.mode {
+                            RunMode::Interactive => wire::AgentMode::Interactive,
+                            RunMode::Unattended => wire::AgentMode::Unattended,
+                        },
+                        envelope: run.envelope.clone(),
+                        duration_ms: run.duration_ms,
+                        status: run.status.map(|status| match status {
+                            AgentStatus::Ok => wire::AgentStatus::Ok,
+                            AgentStatus::Fail => wire::AgentStatus::Fail,
+                            AgentStatus::Parked => wire::AgentStatus::Parked,
+                        }),
+                        message: run.message.clone(),
+                    }),
                 })
                 .collect(),
         }
@@ -169,6 +208,21 @@ impl StepsFile {
                             }
                         }),
                     },
+                    agent: step.agent.map(|run| AgentRun {
+                        agent: run.agent,
+                        mode: match run.mode {
+                            wire::AgentMode::Interactive => RunMode::Interactive,
+                            wire::AgentMode::Unattended => RunMode::Unattended,
+                        },
+                        envelope: run.envelope,
+                        duration_ms: run.duration_ms,
+                        status: run.status.map(|status| match status {
+                            wire::AgentStatus::Ok => AgentStatus::Ok,
+                            wire::AgentStatus::Fail => AgentStatus::Fail,
+                            wire::AgentStatus::Parked => AgentStatus::Parked,
+                        }),
+                        message: run.message,
+                    }),
                 })
                 .collect(),
         }
@@ -207,6 +261,18 @@ mod tests {
             outcome: StepOutcome::Done,
             reason: None,
             ..state.get("build").unwrap().clone()
+        });
+        state.record(StepState {
+            outcome: StepOutcome::Delegated,
+            agent: Some(AgentRun {
+                agent: "claude-code".into(),
+                mode: RunMode::Unattended,
+                envelope: "/w/steps/fix".into(),
+                duration_ms: None,
+                status: Some(AgentStatus::Parked),
+                message: None,
+            }),
+            ..state.get("fix").unwrap().clone()
         });
         state.save(dir.path()).unwrap();
         let loaded = StepsFile::load(dir.path()).unwrap().unwrap();

@@ -23,7 +23,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "outcome": {
-      "enum": ["running", "done", "failed", "interrupted"],
+      "enum": ["running", "done", "failed", "interrupted", "delegated"],
       "metadata": { "x-vocabulary": "closed" }
     }
   }

@@ -51,6 +51,12 @@ impl InstallerOptionDecl {
                     step.kind.name()
                 ));
             }
+            if step.optional && matches!(step.kind, StepKind::Agent { required: true, .. }) {
+                return Err(format!(
+                    "{table} cannot be both optional and required; an optional agent step is skipped without an agent, \
+                     a required one refuses the installation (PROP-064#selection)"
+                ));
+            }
             validate_kind(&step.kind, &names, &table)?;
         }
         match result_of(self) {
@@ -112,6 +118,25 @@ fn validate_template(
             "{table}.{field} must not contain control characters"
         ));
     }
+    expand_names(value, names, table, field)
+}
+
+/// An inline agent prompt is prose: line breaks and tabs are allowed, other
+/// control characters are not (`PROP-064#envelope`).
+fn validate_prompt(value: &str, names: &Names<'_>, table: &str) -> Result<(), String> {
+    if value
+        .chars()
+        .any(|ch| ch.is_control() && !matches!(ch, '\n' | '\r' | '\t'))
+    {
+        return Err(format!(
+            "{table}.prompt must not contain control characters other than line breaks and tabs"
+        ));
+    }
+    expand_names(value, names, table, "prompt")
+}
+
+/// The variables a template names exist: features and parameters declared.
+fn expand_names(value: &str, names: &Names<'_>, table: &str, field: &str) -> Result<(), String> {
     expand_step_template(value, &mut |var| match var {
         StepVar::Feature(id) if !names.features.contains(id) => {
             Err(format!("`$feature:{id}` names an undeclared feature"))
@@ -218,7 +243,7 @@ fn validate_kind(kind: &StepKind, names: &Names<'_>, table: &str) -> Result<(), 
             ..
         } => match (prompt, prompt_file) {
             (Some(prompt), None) if !prompt.trim().is_empty() => {
-                validate_template(prompt, names, table, "prompt")
+                validate_prompt(prompt, names, table)
             }
             (None, Some(file)) => declarant_path(file).map(|_| ()).map_err(|fault| {
                 format!(

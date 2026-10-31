@@ -18,6 +18,7 @@ use vibe_core::PackageKind;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest};
 use vibe_workspace::vibedeps;
 
+use super::agents::{AgentSetup, report_parked};
 use super::global::{self, Observation};
 use super::home;
 use crate::cli::{InstallArgs, UninstallArgs, UpdateArgs};
@@ -191,6 +192,7 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
     let request = &flags.request;
     let show = global::plan_printer(ctx);
     let observe = Observation::new(ctx, true)?;
+    let agents = AgentSetup::new(ctx, None, flags.consent)?;
     for package in &pending {
         let resolved = from_slot(flags.root, package)?;
         let previous = Index::load(&settings)?
@@ -198,19 +200,25 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
             .values()
             .any(|record| record.package.same_package(&resolved.package));
         let outcome = ctx.suspend_progress(|| {
-            let operation = global::operation(
+            let operation = OperationContext {
+                agent: agents.hooks(),
+                ..global::operation(
+                    ctx,
+                    &settings,
+                    flags.offline,
+                    &proxy_image,
+                    Some(&show),
+                    &observe,
+                )
+            };
+            report_parked(
                 ctx,
-                &settings,
-                flags.offline,
-                &proxy_image,
-                Some(&show),
-                &observe,
-            );
-            if previous {
-                vibe_app::update(&operation, &resolved, request)
-            } else {
-                vibe_app::install(&operation, &resolved, request)
-            }
+                if previous {
+                    vibe_app::update(&operation, &resolved, request)
+                } else {
+                    vibe_app::install(&operation, &resolved, request)
+                },
+            )
         })?;
         ctx.summary(&format!(
             "vibe {}: application `{}` — {} in the project home `{}`",

@@ -13,6 +13,7 @@ use std::path::{Component, Path, PathBuf};
 
 use vibe_core::manifest::{InstallerMethod, InstallerOptionDecl};
 
+use crate::agents::AgentError;
 use crate::error::AppError;
 use crate::index::{AcceptedLicense, AuthoredCommands, Installation, Location, Method};
 use crate::installer;
@@ -80,6 +81,7 @@ pub(super) fn apply(
             update_in_place,
         },
     )?;
+    run.admit_agents()?;
     let placed = match plan.result.external_root() {
         None => place_owned(storage, selected, &mut run),
         Some(template) => run_external(ctx, selected, template, &mut run).map(|(root, failure)| {
@@ -95,7 +97,10 @@ pub(super) fn apply(
         Ok((_, _, Some(failure))) | Err(failure) => Some(failure),
     });
     let (location, mut retired, finish_failure) = placed?;
-    retired.push(run.work().to_path_buf());
+    // A parked finish step keeps the work directory for `--resume`.
+    if !matches!(finish_failure, Some(AppError::Agent(AgentError::Parked(_)))) {
+        retired.push(run.work().to_path_buf());
+    }
     let mut steps = run.records();
     let commands = match &option.installation {
         Some(InstallerMethod::Shell {
@@ -218,17 +223,20 @@ fn place_owned(
     fs::create_dir_all(&staging).map_err(|source| installer::io("creating", &staging, source))?;
     let payload = staging.join("payload");
     let previous = staging.join("previous");
-    let placed = run
-        .prepare(&target)
-        .and_then(|()| run.take_out(&payload))
-        .and_then(|()| {
-            if target.exists() {
-                fs::rename(&target, &previous)
-                    .map_err(|source| installer::io("moving aside", &target, source))?;
-            }
-            fs::rename(&payload, &target)
-                .map_err(|source| installer::io("placing", &target, source).into())
-        });
+    // Resuming a parked finish step: the payload is already in place.
+    let placed_before = run.resumes_finish() && owned_by_record && target.is_dir();
+    let placed = run.prepare(&target).and_then(|()| {
+        if placed_before {
+            return Ok(());
+        }
+        run.take_out(&payload)?;
+        if target.exists() {
+            fs::rename(&target, &previous)
+                .map_err(|source| installer::io("moving aside", &target, source))?;
+        }
+        fs::rename(&payload, &target)
+            .map_err(|source| installer::io("placing", &target, source).into())
+    });
     if let Err(error) = placed {
         restore(&target, &previous);
         let _ = fs::remove_dir_all(&staging);

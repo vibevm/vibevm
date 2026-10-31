@@ -1,8 +1,10 @@
 //! The host facts of step conditions and needs (PROP-065 `#conditions`,
 //! `#needs`): PATH and environment lookups made exactly here, at the CLI
-//! boundary, and handed to `vibe-app` as functions.
+//! boundary, and handed to `vibe-app` as functions; the external agent
+//! registration (PROP-064) is read here for the same reason.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#conditions");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#external-registration");
 
 /// Whether `name` is a file on PATH (with the usual Windows extensions).
 pub(super) fn command_on_path(name: &str) -> bool {
@@ -33,4 +35,15 @@ pub(super) fn absolute_path(value: &str) -> std::path::PathBuf {
         return path;
     }
     std::env::current_dir().map_or(path.clone(), |cwd| cwd.join(path))
+}
+
+/// The external agent registration of the invoking program
+/// (PROP-064 `#external-registration`): `VIBE_AGENT_COMMAND` and the JSON
+/// array `VIBE_AGENT_ARGS`, read exactly here.
+pub(crate) fn external_agent() -> Result<Option<vibe_app::ExternalAgent>, vibe_app::AgentError> {
+    let read = |name: &str| std::env::var(name).ok();
+    vibe_app::ExternalAgent::from_values(
+        read("VIBE_AGENT_COMMAND").as_deref(),
+        read("VIBE_AGENT_ARGS").as_deref(),
+    )
 }

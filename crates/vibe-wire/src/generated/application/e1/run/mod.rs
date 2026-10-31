@@ -37,6 +37,9 @@ pub enum Command {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Outcome {
+    #[serde(rename = "delegated")]
+    Delegated,
+
     #[serde(rename = "done")]
     Done,
 

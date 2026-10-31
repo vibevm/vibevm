@@ -190,8 +190,8 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
             let to = template::expand(to, &cx.vars, &step.id, "to")?;
             copy(cx.package_root, from, base, &to, &step.id)?;
         }
-        // Agent delivery is PROP-064 (Q2); the planner skips every agent
-        // step while no agent is configured.
+        // The runner delivers agent steps itself (`super::agent`,
+        // `PROP-064`): they need the plan, the hooks and the run record.
         StepKind::Agent { .. } => {}
     }
     Ok(AuthoredCommands::default())

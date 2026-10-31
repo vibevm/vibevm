@@ -19,11 +19,15 @@
 /// two stay in lockstep in both directions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FormatId {
+    ApplicationAgentHook,
+    ApplicationAgentHookResult,
     ApplicationIndex,
     ApplicationRun,
     ApplicationSteps,
     ArtifactRecord,
     BootArtifactTransaction,
+    CliAgentList,
+    CliAgentPresets,
     CliApplicationAlternatives,
     CliApplicationDescribe,
     CliApplicationErrors,

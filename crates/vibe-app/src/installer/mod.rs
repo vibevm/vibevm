@@ -22,7 +22,7 @@ use vibe_core::progress::ProgressTask;
 use crate::error::InstallerError;
 
 pub use child::Interrupt;
-pub(crate) use child::{ChildIo, Relay, run_child};
+pub(crate) use child::{ChildIo, Relay, run_attached, run_child};
 
 /// What one fetch reports and refuses (`PROP-065#sizes`): the declared
 /// size, the step task its byte measurements go to, and the interrupt it

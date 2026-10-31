@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "description": "The answer result.json an agent may write into the step's run directory (vibe-agent-hook-result/1): ok or fail, a message shown to the user and kept in the step outcome, and optionally the files the agent changed.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-064#answer" },
+    "rustOptions": { "package": "vibe_wire::application::e1::agent_hook_result" },
+    "x-rust-type": "AgentHookResult",
+    "x-wire-order": ["protocol", "status", "message", "files_changed"]
+  },
+  "properties": {
+    "status": { "ref": "status" }
+  },
+  "optionalProperties": {
+    "protocol": { "type": "string", "metadata": { "x-default": null } },
+    "message": { "type": "string", "metadata": { "x-default": null } },
+    "files_changed": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } }
+  },
+  "definitions": {
+    "status": {
+      "enum": ["ok", "fail"],
+      "metadata": { "x-vocabulary": "closed" }
+    }
+  }
+}

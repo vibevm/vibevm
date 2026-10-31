@@ -106,7 +106,17 @@ impl Fixture {
     fn vibe(&self, user: &UserScratch, args: &[&str]) -> Output {
         let mut command = user.vibe();
         command.current_dir(self.root.path()).args(args);
-        for variable in ["HTTP_PROXY", "http_proxy", "ALL_PROXY", "all_proxy"] {
+        // An agent posture of the caller would deliver the agent step
+        // (PROP-064); these proofs run without one.
+        for variable in [
+            "HTTP_PROXY",
+            "http_proxy",
+            "ALL_PROXY",
+            "all_proxy",
+            "VIBE_AGENT_COMMAND",
+            "VIBE_AGENT_ARGS",
+            "VIBE_INVOKED_BY",
+        ] {
             command.env_remove(variable);
         }
         command.output().unwrap()

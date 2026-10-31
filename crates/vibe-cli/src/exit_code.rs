@@ -66,12 +66,18 @@ impl InstallError {
     }
 }
 
+/// PROP-065 `#exit-codes`: the run is parked for a hosting agent
+/// (PROP-064 `#parking`); the same command with `--resume` continues it.
+pub const DELEGATED: u8 = 75;
+
 /// The exit status of an application error (PROP-065 `#exit-codes`): `2`
-/// for a refusal before any effect, `1` for a failed or interrupted step.
+/// for a refusal before any effect, `1` for a failed or interrupted step,
+/// `75` for a run parked for a hosting agent.
 pub fn app_exit_code(class: vibe_app::ErrorClass) -> u8 {
     match class {
         vibe_app::ErrorClass::Refusal => USAGE,
         vibe_app::ErrorClass::Failure => GENERAL,
+        vibe_app::ErrorClass::Delegated => DELEGATED,
     }
 }
 

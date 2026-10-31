@@ -131,7 +131,9 @@ env_roots = [
     # Step conditions and needs of an application installer (PROP-065
     # `#conditions`): `command_present` / `command:NAME` read $PATH and
     # `env_present` reads one variable exactly here; `vibe-app` receives the
-    # lookups as functions and reads no environment itself.
+    # lookups as functions and reads no environment itself. The external
+    # agent registration of PROP-064 (`VIBE_AGENT_COMMAND`,
+    # `VIBE_AGENT_ARGS`) is read here for the same reason.
     "crates/vibe-cli/src/commands/app/facts.rs",
     # `vibe aiui` reads the settings dir ($VIBE_SETTINGS / $HOME) to find `~/.vibe/aiui/` — vibeterm's
     # control-session discovery directory (PROP-042 §4).

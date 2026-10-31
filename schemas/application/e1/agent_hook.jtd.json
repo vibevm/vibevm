@@ -1,0 +1,58 @@
+{
+  "metadata": {
+    "description": "The context file context.json of one agent hook run (vibe-agent-hook/1), written into the step's run directory <work>/steps/<step-id>/ beside prompt.md: the vibe version, the package coordinate, installer option, step id and mode, the envelope paths, the chosen features and the outcomes of the earlier steps.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-064#envelope" },
+    "rustOptions": { "package": "vibe_wire::application::e1::agent_hook" },
+    "x-rust-type": "AgentHook",
+    "x-wire-order": ["protocol", "vibe", "package", "option", "step", "mode", "paths", "features", "steps"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "vibe": { "type": "string" },
+    "package": { "ref": "package" },
+    "option": { "type": "string" },
+    "step": { "type": "string" },
+    "mode": { "ref": "mode" },
+    "paths": { "ref": "paths" },
+    "features": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "steps": { "elements": { "ref": "earlier" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "package": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "mode": {
+      "enum": ["interactive", "unattended"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "paths": {
+      "metadata": { "x-wire-order": ["run", "prompt_file", "context_file", "result_file", "work", "sources", "out", "package", "app_root"] },
+      "properties": {
+        "run": { "type": "string" },
+        "prompt_file": { "type": "string" },
+        "context_file": { "type": "string" },
+        "result_file": { "type": "string" },
+        "work": { "type": "string" },
+        "sources": { "type": "string" },
+        "out": { "type": "string" },
+        "package": { "type": "string" }
+      },
+      "optionalProperties": {
+        "app_root": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "earlier": {
+      "metadata": { "x-wire-order": ["id", "kind", "outcome"] },
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string" },
+        "outcome": { "type": "string" }
+      }
+    }
+  }
+}

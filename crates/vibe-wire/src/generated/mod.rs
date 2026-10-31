@@ -9,6 +9,8 @@
 // every other submodule re-exports its types (`pub use`) instead
 // of carrying its own copies — one type per name, emitted once.
 
+pub mod agent_list;
+pub mod agent_presets;
 pub mod application;
 pub mod application_alternatives;
 pub mod application_describe;

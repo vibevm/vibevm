@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "description": "Version 1 listing of the configured agent hooks from vibe agent list --json: the default definition, the trusted groups, every definition of <settings>/agents.toml merged with its preset, and the external registration of this process when one is set.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-064#presets" },
+    "rustOptions": { "package": "vibe_wire::agent_list" },
+    "x-rust-type": "AgentList",
+    "x-wire-order": ["protocol", "path", "default", "trusted_groups", "agents", "external"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "path": { "type": "string" },
+    "agents": { "elements": { "ref": "agent" }, "metadata": { "x-empty": "emit" } }
+  },
+  "optionalProperties": {
+    "default": { "type": "string", "metadata": { "x-default": null } },
+    "trusted_groups": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+    "external": { "ref": "external", "metadata": { "x-default": null } }
+  },
+  "definitions": {
+    "agent": {
+      "metadata": { "x-wire-order": ["name", "preset", "command", "interactive", "unattended", "cwd", "env", "extra_args", "default", "problem"] },
+      "properties": {
+        "name": { "type": "string" },
+        "interactive": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "unattended": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "default": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "preset": { "type": "string", "metadata": { "x-default": null } },
+        "command": { "type": "string", "metadata": { "x-default": null } },
+        "cwd": { "type": "string", "metadata": { "x-default": null } },
+        "env": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "extra_args": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "problem": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "external": {
+      "metadata": { "x-wire-order": ["command", "args"] },
+      "properties": {
+        "command": { "type": "string" },
+        "args": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      }
+    }
+  }
+}

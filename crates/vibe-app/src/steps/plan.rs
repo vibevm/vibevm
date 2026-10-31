@@ -12,10 +12,11 @@ use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use vibe_core::manifest::{
-    Condition, FeatureDecl, InstallerOptionDecl, Need, ResultDecl, StepDecl, StepKind, StepPhase,
-    result_of, steps_of,
+    AgentMode, Condition, FeatureDecl, InstallerOptionDecl, Need, ResultDecl, StepDecl, StepKind,
+    StepPhase, result_of, steps_of,
 };
 
+use crate::agents::AgentHooks;
 use crate::error::{AppError, StepError};
 use crate::index::PackageCoordinate;
 use crate::resolve::ResolvedPackage;
@@ -99,6 +100,9 @@ pub(crate) struct PlanInput<'a> {
     pub offline: bool,
     pub attended: bool,
     pub prompts: Prompts<'a>,
+    /// The chosen agent and whether `vibe` runs inside a hosting agent
+    /// (`PROP-064#selection`, `#parking`).
+    pub agent: AgentHooks<'a>,
 }
 
 /// One step and whether it runs.
@@ -139,8 +143,9 @@ pub(crate) fn work_dir(settings: &SettingsRoot, package: &PackageCoordinate) -> 
 }
 
 /// Compute the plan; refuse a missing license, an invalid feature choice
-/// or parameter, an unmet need, a required agent step without an agent, or
-/// a plan in which nothing produces the declared result.
+/// or parameter, an unmet need, a required agent step without an agent, an
+/// interactive agent step without a terminal, or a plan in which nothing
+/// produces the declared result.
 pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
     let package = &input.resolved.package;
     let key = package.key();
@@ -248,20 +253,34 @@ fn decide(
             return Ok((false, Some(format!("unless `{condition}` holds"))));
         }
     }
-    if let StepKind::Agent { required, .. } = &step.kind {
-        // Q1: no agent configuration exists yet (`PROP-064#selection`).
-        if *required {
-            return Err(StepError::AgentRequired {
+    if let StepKind::Agent { required, mode, .. } = &step.kind {
+        // `PROP-064#selection`: no agent means skip, unless the step is
+        // required; `#modes`: interactive needs a terminal unless parked.
+        if !input.agent.available() {
+            if *required {
+                return Err(StepError::AgentRequired {
+                    key: key.into(),
+                    step: step.id.clone(),
+                    reason: step
+                        .description
+                        .clone()
+                        .unwrap_or_else(|| step.title.clone()),
+                }
+                .into());
+            }
+            return Ok((false, Some(NO_AGENT.into())));
+        }
+        if *mode == Some(AgentMode::Interactive) && !input.attended && !input.agent.hosted {
+            if step.optional {
+                return Ok((false, Some("unmet need `terminal`".into())));
+            }
+            return Err(StepError::UnmetNeed {
                 key: key.into(),
                 step: step.id.clone(),
-                reason: step
-                    .description
-                    .clone()
-                    .unwrap_or_else(|| step.title.clone()),
+                need: Need::Terminal.to_string(),
             }
             .into());
         }
-        return Ok((false, Some(NO_AGENT.into())));
     }
     for need in &step.needs {
         if need_met(input, need, step, work) {
@@ -294,7 +313,7 @@ fn holds(
         }
         Condition::CommandPresent(name) => (input.facts.command_present)(name),
         Condition::EnvPresent(name) => (input.facts.env_present)(name),
-        Condition::AgentConfigured(value) => !*value,
+        Condition::AgentConfigured(value) => input.agent.available() == *value,
         Condition::Offline(value) => input.offline == *value,
         Condition::FilePresent(path) => {
             let expanded = template::expand(path, vars, &step.id, "file_present")?;
@@ -307,7 +326,7 @@ fn holds(
 fn need_met(input: &PlanInput<'_>, need: &Need, step: &StepDecl, work: &Path) -> bool {
     match need {
         Need::Command(name) => (input.facts.command_present)(name),
-        Need::Agent => false,
+        Need::Agent => input.agent.available(),
         Need::Terminal => input.attended,
         Need::Network if !input.offline => true,
         Need::Network => match &step.kind {

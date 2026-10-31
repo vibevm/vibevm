@@ -8,6 +8,7 @@ use vibe_core::manifest::Manifest;
 
 use super::features::FeatureRequest;
 use super::plan::{FeatureChooser, HostFacts, PlanInput, Previous, Prompts, plan};
+use crate::agents::{AgentHooks, AgentsConfig, SelectedAgent, select_agent};
 use crate::error::{AppError, StepError};
 use crate::index::PackageCoordinate;
 use crate::resolve::{ResolvedPackage, from_manifest};
@@ -61,6 +62,8 @@ struct Host {
     attended: bool,
     request: FeatureRequest,
     previous: Option<Vec<String>>,
+    agent: Option<SelectedAgent>,
+    hosted: bool,
 }
 
 fn host() -> Host {
@@ -69,6 +72,8 @@ fn host() -> Host {
         attended: false,
         request: FeatureRequest::default(),
         previous: None,
+        agent: None,
+        hosted: false,
     }
 }
 
@@ -102,6 +107,11 @@ fn run(
         prompts: Prompts {
             features: chooser,
             ..Prompts::default()
+        },
+        agent: AgentHooks {
+            selected: host.agent.as_ref(),
+            hosted: host.hosted,
+            ..AgentHooks::default()
         },
     })
 }
@@ -255,6 +265,58 @@ fn agents_are_skipped_with_one_warning_unless_required_and_the_result_must_be_pr
         run(dir.path(), &resolved, &host(), None),
         Err(AppError::Step(StepError::NoResultStep { .. }))
     ));
+}
+
+#[test]
+fn a_chosen_or_hosting_agent_runs_agent_steps_and_interactive_ones_need_a_terminal() {
+    let dir = tempfile::tempdir().unwrap();
+    let steps = format!(
+        "[[installer_options.steps]]\nid = \"fix\"\ntitle = \"Fix\"\nkind = \"agent\"\nprompt = \"port\"\nmode = \"interactive\"\n\
+         [[installer_options.steps]]\nid = \"tidy\"\ntitle = \"Tidy\"\nkind = \"shell\"\ncommand = \"x\"\nneeds = [\"agent\"]\n\
+         when = {{ agent_configured = true }}\n{BUILD}"
+    );
+    let resolved = package(dir.path(), &steps);
+    let none = run(dir.path(), &resolved, &host(), None).unwrap();
+    assert_eq!(
+        actions(&none)[..2],
+        [
+            ("fix".into(), false, Some("no agent configured".into())),
+            (
+                "tidy".into(),
+                false,
+                Some("when `agent_configured = true` does not hold".into())
+            )
+        ]
+    );
+    let chosen = select_agent(&AgentsConfig::default(), Some("codex"), None).unwrap();
+    let attended = Host {
+        attended: true,
+        agent: chosen.clone(),
+        ..host()
+    };
+    let plan = run(dir.path(), &resolved, &attended, None).unwrap();
+    assert!(
+        plan.steps.iter().all(|step| step.run),
+        "{:?}",
+        actions(&plan)
+    );
+    assert!(plan.warnings.is_empty());
+    let headless = Host {
+        agent: chosen,
+        ..host()
+    };
+    match run(dir.path(), &resolved, &headless, None) {
+        Err(AppError::Step(StepError::UnmetNeed { step, need, .. })) => {
+            assert_eq!((step.as_str(), need.as_str()), ("fix", "terminal"));
+        }
+        other => panic!("{other:?}"),
+    }
+    let hosted = Host {
+        hosted: true,
+        ..host()
+    };
+    let plan = run(dir.path(), &resolved, &hosted, None).unwrap();
+    assert!(plan.steps.iter().all(|step| step.run), "parked steps run");
 }
 
 #[test]

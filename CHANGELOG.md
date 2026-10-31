@@ -30,6 +30,21 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
   `[[installer_options]]` instead.
 - `org.vibevm.doc/web` installs through a source-build recipe and puts
   `vibevm-doc` on PATH.
+- **Agent hooks (PROP-064).** An installer step of kind `agent` hands a
+  package-authored prompt to a coding agent the user chooses: `--agent NAME`,
+  else a command an invoking program registers through `VIBE_AGENT_COMMAND` /
+  `VIBE_AGENT_ARGS`, else `default` in `~/.vibe/agents.toml`. Six presets
+  (Claude Code, Codex, OpenCode, Qwen Code, Gemini, Cursor) are data that a
+  definition may override, so a wrapper launcher is one `command` line;
+  `vibe agent list | presets | use | add | remove` edits the registry. vibe
+  shows every prompt and asks before any step runs (`--assume-yes`, or a
+  trusted group, skips the question), writes `prompt.md` and `context.json`
+  into the step's run directory, runs the agent interactively or in print
+  mode, and maps its exit and optional `result.json` to the step outcome; the
+  run record keeps the envelope and transcript. Without an agent, agent
+  steps are skipped with one warning at planning time; inside a hosting
+  agent the step is parked as an outbox task, the command exits 75, and the
+  same command with `--resume` continues once the answer is written.
 
 ## [1.0.7] — 2026-10-04
 
