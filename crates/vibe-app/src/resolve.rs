@@ -64,10 +64,12 @@ pub fn local_registry_carries(
     spelling: &str,
 ) -> Result<bool, ResolveError> {
     let requested = qualified_ref(spelling)?;
-    let group = requested
-        .group
-        .as_ref()
-        .expect("qualified_ref guarantees a group");
+    let Some(group) = requested.group.as_ref() else {
+        return Err(ResolveError::Coordinate {
+            spelling: spelling.into(),
+            reason: "the package must be fully qualified as <group>/<name>".into(),
+        });
+    };
     match registry.list_versions(group, requested.name.as_str()) {
         Ok(versions) => Ok(!versions.is_empty()),
         Err(vibe_registry::RegistryError::UnknownPackage { .. }) => Ok(false),
