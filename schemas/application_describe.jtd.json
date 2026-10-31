@@ -1,0 +1,159 @@
+{
+  "metadata": {
+    "description": "Version 1 description of an application package from vibe app describe --json: its identity and every installer option with result, portability, launchers, public commands, features and steps as declared after the sugar mapping. Nothing is resolved or run.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#describe" },
+    "rustOptions": { "package": "vibe_wire::application_describe" },
+    "x-rust-type": "ApplicationDescribe",
+    "x-wire-order": ["protocol", "package", "application", "options"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "package": { "ref": "package" },
+    "application": { "ref": "application" },
+    "options": { "elements": { "ref": "installer_option" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "package": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "application": {
+      "metadata": { "x-wire-order": ["id", "portable"] },
+      "properties": {
+        "id": { "type": "string" },
+        "portable": { "type": "boolean" }
+      }
+    },
+    "form": {
+      "enum": ["installation", "steps"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "result": {
+      "enum": ["owned", "external"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "phase": {
+      "enum": ["prepare", "finish"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "installer_option": {
+      "metadata": { "x-wire-order": ["id", "name", "platform", "platformName", "arch", "archName", "form", "result", "appRoot", "portable", "launchers", "publicCommands", "features", "steps"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "platform": { "type": "string" },
+        "platformName": { "type": "string" },
+        "arch": { "type": "string" },
+        "form": { "ref": "form" },
+        "result": { "ref": "result" },
+        "portable": { "type": "boolean" },
+        "launchers": { "elements": { "ref": "launcher" }, "metadata": { "x-empty": "emit" } },
+        "publicCommands": { "elements": { "ref": "public_command" }, "metadata": { "x-empty": "emit" } },
+        "features": { "elements": { "ref": "feature" }, "metadata": { "x-empty": "emit" } },
+        "steps": { "elements": { "ref": "step" }, "metadata": { "x-empty": "emit" } }
+      },
+      "optionalProperties": {
+        "archName": { "type": "string", "metadata": { "x-default": null } },
+        "appRoot": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "launcher": {
+      "metadata": { "x-wire-order": ["id", "name", "description", "executable", "args", "workingDirectory", "icon", "terminal", "default"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "executable": { "type": "string" },
+        "args": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "terminal": { "type": "boolean" },
+        "default": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "description": { "type": "string", "metadata": { "x-default": null } },
+        "workingDirectory": { "type": "string", "metadata": { "x-default": null } },
+        "icon": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "public_command": {
+      "metadata": { "x-wire-order": ["name", "launcher"] },
+      "properties": {
+        "name": { "type": "string" },
+        "launcher": { "type": "string" }
+      }
+    },
+    "feature": {
+      "metadata": { "x-wire-order": ["id", "name", "description", "default"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "default": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "description": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "condition": {
+      "metadata": { "x-wire-order": ["feature", "commandPresent", "filePresent", "envPresent", "agentConfigured", "offline"] },
+      "optionalProperties": {
+        "feature": { "type": "string", "metadata": { "x-default": null } },
+        "commandPresent": { "type": "string", "metadata": { "x-default": null } },
+        "filePresent": { "type": "string", "metadata": { "x-default": null } },
+        "envPresent": { "type": "string", "metadata": { "x-default": null } },
+        "agentConfigured": { "type": "boolean", "metadata": { "x-default": null } },
+        "offline": { "type": "boolean", "metadata": { "x-default": null } }
+      }
+    },
+    "source_input": {
+      "metadata": { "x-wire-order": ["name", "url", "path", "sha256", "extract"] },
+      "properties": {
+        "name": { "type": "string" },
+        "sha256": { "type": "string" }
+      },
+      "optionalProperties": {
+        "url": { "type": "string", "metadata": { "x-default": null } },
+        "path": { "type": "string", "metadata": { "x-default": null } },
+        "extract": { "type": "boolean", "metadata": { "x-default": null } }
+      }
+    },
+    "step": {
+      "metadata": { "x-wire-order": ["id", "title", "kind", "description", "phase", "optional", "hook", "when", "unless", "needs", "sources", "format", "source", "sha256", "payloadRoot", "interpreter", "script", "command", "forceInstall", "update", "uninstall", "forceUninstall", "arguments", "forceArguments", "from", "to", "prompt", "promptFile", "mode", "required"] },
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "kind": { "type": "string" },
+        "phase": { "ref": "phase" },
+        "optional": { "type": "boolean" },
+        "when": { "elements": { "ref": "condition" }, "metadata": { "x-empty": "emit" } },
+        "unless": { "elements": { "ref": "condition" }, "metadata": { "x-empty": "emit" } },
+        "needs": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      },
+      "optionalProperties": {
+        "description": { "type": "string", "metadata": { "x-default": null } },
+        "hook": { "type": "string", "metadata": { "x-default": null } },
+        "sources": { "elements": { "ref": "source_input" }, "metadata": { "x-empty": "omit" } },
+        "format": { "type": "string", "metadata": { "x-default": null } },
+        "source": { "type": "string", "metadata": { "x-default": null } },
+        "sha256": { "type": "string", "metadata": { "x-default": null } },
+        "payloadRoot": { "type": "string", "metadata": { "x-default": null } },
+        "interpreter": { "type": "string", "metadata": { "x-default": null } },
+        "script": { "type": "string", "metadata": { "x-default": null } },
+        "command": { "type": "string", "metadata": { "x-default": null } },
+        "forceInstall": { "type": "string", "metadata": { "x-default": null } },
+        "update": { "type": "string", "metadata": { "x-default": null } },
+        "uninstall": { "type": "string", "metadata": { "x-default": null } },
+        "forceUninstall": { "type": "string", "metadata": { "x-default": null } },
+        "arguments": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "forceArguments": { "elements": { "type": "string" }, "metadata": { "x-empty": "preserve" } },
+        "from": { "type": "string", "metadata": { "x-default": null } },
+        "to": { "type": "string", "metadata": { "x-default": null } },
+        "prompt": { "type": "string", "metadata": { "x-default": null } },
+        "promptFile": { "type": "string", "metadata": { "x-default": null } },
+        "mode": { "type": "string", "metadata": { "x-default": null } },
+        "required": { "type": "boolean", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}

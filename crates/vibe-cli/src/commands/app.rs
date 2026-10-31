@@ -6,6 +6,8 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations");
 
 mod alternatives;
+mod describe;
+mod facts;
 pub(crate) mod global;
 pub(crate) mod home;
 pub(crate) mod project;
@@ -46,6 +48,64 @@ pub fn run(
             } else {
                 print_installers(&listing, &package, ctx.is_quiet());
             }
+            Ok(None)
+        }
+        AppCommand::Plan {
+            package,
+            registry,
+            platform,
+            arch,
+            installer,
+            feature,
+            no_feature,
+        } => {
+            let settings = global::settings_root()?;
+            let resolved = global::resolve_package(
+                &settings,
+                registry.as_deref(),
+                embedded_root,
+                &package,
+                offline,
+            )?;
+            let proxy_image = global::proxy_image()?;
+            let operation =
+                global::operation(ctx, app_home.settings(), offline, &proxy_image, None);
+            let plan = vibe_app::plan(
+                &operation,
+                &resolved,
+                &vibe_app::InstallChoice {
+                    platform,
+                    arch,
+                    installer,
+                },
+                &vibe_app::FeatureRequest {
+                    enable: feature,
+                    disable: no_feature,
+                },
+            )?;
+            global::render_plan(ctx, &plan)?;
+            Ok(None)
+        }
+        AppCommand::Steps { package, registry } => {
+            describe::show(
+                ctx,
+                registry.as_deref(),
+                embedded_root,
+                &package,
+                offline,
+                true,
+            )?;
+            Ok(None)
+        }
+        AppCommand::Describe { package, registry } => {
+            describe::show(
+                ctx,
+                registry.as_deref(),
+                embedded_root,
+                &package,
+                offline,
+                false,
+            )?;
             Ok(None)
         }
         AppCommand::Launchers { package } => {

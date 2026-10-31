@@ -98,6 +98,8 @@ impl LifecycleArgs {
             arch: None,
             installer: None,
             library: None,
+            steps: Default::default(),
+            plan_only: false,
             path: self.path.clone(),
             registry: self.registry.clone(),
             assume_yes: self.assume_yes,

@@ -99,10 +99,12 @@ impl SettingsRoot {
         self.cache.join("app-sources")
     }
 
-    /// `<settings>/cache/app-build`: `source_build` work directories; a
-    /// failed build leaves its directory here for inspection.
-    pub fn app_build_dir(&self) -> PathBuf {
-        self.cache.join("app-build")
+    /// `<home>/cache/app-work` (a project home keeps its own work directories;
+    /// only the sources cache is shared): one step work directory per
+    /// installation key (`PROP-065#execution`); a failed sequence leaves
+    /// its directory and `steps.json` here for inspection and `--resume`.
+    pub fn app_work_dir(&self) -> PathBuf {
+        self.root.join("cache").join("app-work")
     }
 
     /// Take the `applications/.mutation.lock` exclusive lock, creating the

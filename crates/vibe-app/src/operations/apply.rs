@@ -1,49 +1,51 @@
-//! Running one selected installer option: hooks, the installer child or the
-//! owned placement of an archive or source-build payload, and the resulting
-//! installation record. Nothing here writes the index; a failure leaves at
-//! most an orphan directory (or a failed build's work directory).
+//! Running one selected installer option through the step engine: the
+//! prepare steps, the owned placement of `$VIBE_OUT` or the registration of
+//! an external root, the finish steps, and the resulting installation
+//! record. Nothing here writes the index; a failure leaves at most an orphan
+//! directory and the kept work directory.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#force-and-hooks");
-specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#source-build");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#result");
 
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 
-use vibe_core::manifest::{InstallerMethod, InstallerOptionDecl, ShellInterpreter};
+use vibe_core::manifest::{InstallerMethod, InstallerOptionDecl};
 
 use crate::error::AppError;
 use crate::index::{AuthoredCommands, Installation, Location, Method};
-use crate::installer::archive::{self, ArchiveFormat};
-use crate::installer::hooks::{self, Hook};
-use crate::installer::native::{self, NativeKind};
-use crate::installer::source_build::{self, SourceBuild};
-use crate::installer::{self, shell};
+use crate::installer;
 use crate::resolve::{ResolvedPackage, strip_verbatim};
+use crate::steps::{Plan, Run, RunFlags, Start};
 use crate::storage::{DEFAULT_LIBRARY, Storage};
 
 use super::OperationContext;
 
-/// Which authored command an external shell method runs.
+/// Which authored command an external shell step runs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(super) enum Mode {
     Install,
     Update,
 }
 
-/// The new record plus directories to delete once the index is written.
+/// The new record, directories to delete once the index is written, and a
+/// failed authored finish step to report after that.
 pub(super) struct Applied {
     pub installation: Installation,
     pub retired: Vec<PathBuf>,
+    pub finish_failure: Option<AppError>,
 }
 
 pub(super) struct Selected<'a> {
     pub resolved: &'a ResolvedPackage,
     pub option: &'a InstallerOptionDecl,
+    pub plan: &'a Plan,
     pub prior: Option<&'a Installation>,
     pub library: Option<&'a str>,
     pub force: bool,
     pub mode: Mode,
+    pub start: &'a Start,
 }
 
 pub(super) fn apply(
@@ -52,231 +54,115 @@ pub(super) fn apply(
     selected: &Selected<'_>,
 ) -> Result<Applied, AppError> {
     let option = selected.option;
-    let method = Method::of(&option.installation);
-    if selected.library.is_some() && !method.is_owned() {
+    let plan = selected.plan;
+    let method = Method::of(option);
+    let owned = plan.result.is_owned();
+    if selected.library.is_some() && !owned {
         return Err(AppError::LibraryForExternal {
             key: selected.resolved.package.key(),
             method: method.as_str(),
         });
     }
-    let record = |location: Location, commands: AuthoredCommands| Installation {
-        slot: selected.resolved.application.id.clone(),
-        package: selected.resolved.package.clone(),
-        option: option.id.clone(),
-        platform: option.platform.clone(),
-        arch: option.arch.clone(),
-        method,
-        portable: method.is_owned()
-            && selected.resolved.application.portable
-            && option.portable.unwrap_or(true),
-        location,
-        launchers: option.launchers.clone(),
-        public_commands: option.public_commands.clone(),
-        commands,
+    let update_in_place = selected.mode == Mode::Update
+        && !owned
+        && selected
+            .prior
+            .is_some_and(|prior| matches!(prior.location, Location::External { .. }));
+    let mut run = Run::new(
+        ctx,
+        selected.resolved,
+        plan,
+        RunFlags {
+            start: selected.start.clone(),
+            force: selected.force,
+            update_in_place,
+        },
+    )?;
+    let (location, mut retired, finish_failure) = match plan.result.external_root() {
+        None => place_owned(storage, selected, &mut run)?,
+        Some(template) => {
+            let (root, failure) = run_external(ctx, selected, template, &mut run)?;
+            (
+                Location::External { app_root: root },
+                retired_owned(storage, selected.prior),
+                failure,
+            )
+        }
     };
-    match &option.installation {
-        InstallerMethod::SourceBuild { sources, recipe } => {
-            let resolved = selected.resolved;
-            let cache_root = ctx.settings.app_sources_cache();
-            let work = ctx.settings.app_build_dir().join(format!(
-                "{}-{}",
-                resolved.package.directory_name(),
-                std::process::id()
-            ));
-            let build = SourceBuild {
-                sources,
-                recipe,
-                package_root: &resolved.root,
-                cache_root: &cache_root,
-                work: &work,
-                platform: &option.platform,
-                arch: &option.arch,
-                offline: ctx.offline,
-                json: ctx.json,
-            };
-            let mut work_created = false;
-            let placed = place_owned(ctx, storage, selected, &mut |_, payload| {
-                Ok(source_build::produce(&build, payload, &mut work_created)?)
-            });
-            match placed {
-                Ok((location, retired)) => {
-                    let _ = fs::remove_dir_all(&work);
-                    Ok(Applied {
-                        installation: record(location, AuthoredCommands::default()),
-                        retired,
-                    })
-                }
-                Err(error) if work_created => Err(AppError::SourceBuild {
-                    key: resolved.package.key(),
-                    work: work.display().to_string(),
-                    source: Box::new(error),
-                }),
-                Err(error) => Err(error),
-            }
-        }
-        InstallerMethod::Zip {
-            source,
-            sha256,
-            payload_root,
-        }
-        | InstallerMethod::TarGz {
-            source,
-            sha256,
-            payload_root,
-        } => {
-            let format = if method == Method::Zip {
-                ArchiveFormat::Zip
-            } else {
-                ArchiveFormat::TarGz
-            };
-            let package_root = &selected.resolved.root;
-            let (location, retired) =
-                place_owned(ctx, storage, selected, &mut |staging, payload| {
-                    let artifact = staging.join("artifact");
-                    installer::fetch_verified(
-                        source,
-                        sha256,
-                        package_root,
-                        &artifact,
-                        ctx.offline,
-                    )?;
-                    Ok(archive::extract(
-                        &artifact,
-                        format,
-                        payload_root.as_deref(),
-                        payload,
-                    )?)
-                })?;
-            Ok(Applied {
-                installation: record(location, AuthoredCommands::default()),
-                retired,
-            })
-        }
-        InstallerMethod::Shell {
-            app_root,
-            install,
-            force_install,
+    retired.push(run.work().to_path_buf());
+    let mut steps = run.records();
+    let commands = match &option.installation {
+        Some(InstallerMethod::Shell {
+            uninstall,
+            force_uninstall,
             update,
-            uninstall,
-            force_uninstall,
             interpreter,
-        } => {
-            let script = if selected.force {
-                force_install.as_str()
-            } else if selected.mode == Mode::Update
-                && selected
-                    .prior
-                    .is_some_and(|prior| prior.method == Method::Shell)
-            {
-                update.as_deref().ok_or_else(|| AppError::MissingUpdate {
-                    key: selected.resolved.package.key(),
-                })?
-            } else {
-                install.as_str()
-            };
-            let installer = External::Shell {
-                script,
-                interpreter: *interpreter,
-            };
-            let root = run_external(ctx, selected, app_root, *interpreter, &installer)?;
-            Ok(Applied {
-                installation: record(
-                    Location::External { app_root: root },
-                    AuthoredCommands {
-                        uninstall: Some(uninstall.clone()),
-                        force_uninstall: Some(force_uninstall.clone()),
-                        update: update.clone(),
-                        interpreter: *interpreter,
-                    },
-                ),
-                retired: retired_owned(storage, selected.prior),
-            })
-        }
-        InstallerMethod::Exe {
-            source,
-            sha256,
-            app_root,
-            arguments,
-            force_arguments,
-            uninstall,
-            force_uninstall,
-        }
-        | InstallerMethod::Msi {
-            source,
-            sha256,
-            app_root,
-            arguments,
-            force_arguments,
-            uninstall,
-            force_uninstall,
-        } => {
-            let kind = if method == Method::Exe {
-                NativeKind::Exe
-            } else {
-                NativeKind::Msi
-            };
-            let arguments = match (selected.force, force_arguments) {
-                (false, _) => arguments.as_slice(),
-                (true, Some(forced)) => forced.as_slice(),
-                (true, None) => {
-                    return Err(AppError::ForceUnsupported {
-                        key: selected.resolved.package.key(),
-                        reason: "the native installer declares no force_arguments",
-                    });
-                }
-            };
-            let installer = External::Native {
-                kind,
-                source,
-                sha256,
-                arguments,
-            };
-            let root = run_external(ctx, selected, app_root, None, &installer)?;
-            Ok(Applied {
-                installation: record(
-                    Location::External { app_root: root },
-                    AuthoredCommands {
-                        uninstall: uninstall.clone(),
-                        force_uninstall: force_uninstall.clone(),
-                        update: None,
-                        interpreter: None,
-                    },
-                ),
-                retired: retired_owned(storage, selected.prior),
-            })
+            ..
+        }) => AuthoredCommands {
+            uninstall: Some(uninstall.clone()),
+            force_uninstall: Some(force_uninstall.clone()),
+            update: update.clone(),
+            interpreter: *interpreter,
+        },
+        Some(
+            InstallerMethod::Exe {
+                uninstall,
+                force_uninstall,
+                ..
+            }
+            | InstallerMethod::Msi {
+                uninstall,
+                force_uninstall,
+                ..
+            },
+        ) => AuthoredCommands {
+            uninstall: uninstall.clone(),
+            force_uninstall: force_uninstall.clone(),
+            update: None,
+            interpreter: None,
+        },
+        _ => AuthoredCommands::default(),
+    };
+    if option.installation.is_some() {
+        // The method form keeps its uninstall data in `commands`, as before.
+        for step in &mut steps {
+            step.uninstall = AuthoredCommands::default();
         }
     }
+    Ok(Applied {
+        installation: Installation {
+            slot: selected.resolved.application.id.clone(),
+            package: selected.resolved.package.clone(),
+            option: option.id.clone(),
+            platform: option.platform.clone(),
+            arch: option.arch.clone(),
+            method,
+            portable: owned
+                && selected.resolved.application.portable
+                && option.portable.unwrap_or(true),
+            location,
+            launchers: option.launchers.clone(),
+            public_commands: option.public_commands.clone(),
+            commands,
+            features: plan.features.clone(),
+            steps,
+        },
+        retired,
+        finish_failure,
+    })
 }
 
-/// Writes a new payload directory at its second argument, using the
-/// staging directory (first argument) for scratch files.
-type Produce<'p> = dyn FnMut(&Path, &Path) -> Result<(), AppError> + 'p;
+type Placed = (Location, Vec<PathBuf>, Option<AppError>);
 
-enum External<'a> {
-    Shell {
-        script: &'a str,
-        interpreter: Option<ShellInterpreter>,
-    },
-    Native {
-        kind: NativeKind,
-        source: &'a str,
-        sha256: &'a str,
-        arguments: &'a [String],
-    },
-}
-
-/// Produce an owned payload (an extracted archive or a recipe's `VIBE_OUT`)
-/// and place it at `<library>/apps/<slot>/<dir>`, replacing the same key in
-/// place without inspecting the old payload; a failing producer or
-/// post-hook moves the previous payload back. `pre_install` runs before the
-/// producer, `post_install` after placement.
+/// Run the prepare steps, then place `$VIBE_OUT` at
+/// `<library>/apps/<slot>/<dir>`, replacing the same key in place without
+/// inspecting the old payload; a failing step or hook moves the previous
+/// payload back. The finish steps run against the placed payload.
 fn place_owned(
-    ctx: &OperationContext<'_>,
     storage: &Storage,
     selected: &Selected<'_>,
-    produce: &mut Produce<'_>,
-) -> Result<(Location, Vec<PathBuf>), AppError> {
-    let key = selected.resolved.package.key();
+    run: &mut Run<'_>,
+) -> Result<Placed, AppError> {
     let prior_owned = selected.prior.and_then(|prior| match &prior.location {
         Location::Owned { library, directory } => Some((library.as_str(), directory.as_str())),
         Location::External { .. } => None,
@@ -295,21 +181,6 @@ fn place_owned(
             path: target.display().to_string(),
         });
     }
-    let package_root = &selected.resolved.root;
-    let hook_failed = |hook: Hook, error: crate::error::InstallerError| AppError::Hook {
-        hook: hook.as_str(),
-        key: key.clone(),
-        reason: error.to_string(),
-    };
-    hooks::run(
-        Hook::PreInstall,
-        selected.option.pre_install.as_deref(),
-        None,
-        package_root,
-        &target,
-        ctx.json,
-    )
-    .map_err(|error| hook_failed(Hook::PreInstall, error))?;
     let staging = library_root.join(format!(
         "apps/{slot}/.staging-{}-{}",
         selected.resolved.package.directory_name(),
@@ -318,32 +189,33 @@ fn place_owned(
     fs::create_dir_all(&staging).map_err(|source| installer::io("creating", &staging, source))?;
     let payload = staging.join("payload");
     let previous = staging.join("previous");
-    let placed = produce(&staging, &payload).and_then(|()| {
-        if target.exists() {
-            fs::rename(&target, &previous)
-                .map_err(|source| installer::io("moving aside", &target, source))?;
-        }
-        fs::rename(&payload, &target)
-            .map_err(|source| installer::io("placing", &target, source).into())
-    });
+    let placed = run
+        .prepare(&target)
+        .and_then(|()| run.take_out(&payload))
+        .and_then(|()| {
+            if target.exists() {
+                fs::rename(&target, &previous)
+                    .map_err(|source| installer::io("moving aside", &target, source))?;
+            }
+            fs::rename(&payload, &target)
+                .map_err(|source| installer::io("placing", &target, source).into())
+        });
     if let Err(error) = placed {
         restore(&target, &previous);
         let _ = fs::remove_dir_all(&staging);
         return Err(error);
     }
-    if let Err(error) = hooks::run(
-        Hook::PostInstall,
-        selected.option.post_install.as_deref(),
-        None,
-        package_root,
-        &target,
-        ctx.json,
-    ) {
-        let _ = fs::remove_dir_all(&target);
-        restore(&target, &previous);
-        let _ = fs::remove_dir_all(&staging);
-        return Err(hook_failed(Hook::PostInstall, error));
-    }
+    let finish_failure = match run.finish(&target) {
+        Ok(failure) => failure,
+        Err(error) => {
+            // Keep the payload for `--resume` when it can move back.
+            let _ = fs::rename(&target, run.out());
+            let _ = fs::remove_dir_all(&target);
+            restore(&target, &previous);
+            let _ = fs::remove_dir_all(&staging);
+            return Err(error);
+        }
+    };
     let mut retired = vec![staging];
     if let Some((prior_library, prior_directory)) = prior_owned
         && (prior_library != library || prior_directory != directory)
@@ -357,6 +229,7 @@ fn place_owned(
             directory,
         },
         retired,
+        finish_failure,
     ))
 }
 
@@ -366,14 +239,14 @@ fn restore(target: &Path, previous: &Path) {
     }
 }
 
-/// Run an external installer and register the `app_root` it produced.
+/// Run the prepare steps and register the `app_root` they produced, then
+/// the finish steps against it.
 fn run_external(
     ctx: &OperationContext<'_>,
     selected: &Selected<'_>,
     app_root_template: &str,
-    interpreter: Option<ShellInterpreter>,
-    installer: &External<'_>,
-) -> Result<PathBuf, AppError> {
+    run: &mut Run<'_>,
+) -> Result<(PathBuf, Option<AppError>), AppError> {
     let key = selected.resolved.package.key();
     let expected = expand_app_root(app_root_template, ctx.settings.path()).map_err(|reason| {
         AppError::MissingAppRoot {
@@ -382,57 +255,7 @@ fn run_external(
             reason,
         }
     })?;
-    let package_root = &selected.resolved.root;
-    let hook_failed = |hook: Hook, error: crate::error::InstallerError| AppError::Hook {
-        hook: hook.as_str(),
-        key: key.clone(),
-        reason: error.to_string(),
-    };
-    hooks::run(
-        Hook::PreInstall,
-        selected.option.pre_install.as_deref(),
-        interpreter,
-        package_root,
-        &expected,
-        ctx.json,
-    )
-    .map_err(|error| hook_failed(Hook::PreInstall, error))?;
-    match installer {
-        External::Shell {
-            script,
-            interpreter,
-        } => shell::run(
-            *interpreter,
-            script,
-            package_root,
-            &expected,
-            "shell installer",
-            ctx.json,
-        )?,
-        External::Native {
-            kind,
-            source,
-            sha256,
-            arguments,
-        } => {
-            if !cfg!(windows) {
-                return Err(crate::error::InstallerError::WindowsOnly {
-                    method: kind.as_str(),
-                }
-                .into());
-            }
-            let file = ctx.settings.applications_dir().join(format!(
-                ".installer-{}.{}",
-                std::process::id(),
-                kind.as_str()
-            ));
-            let result =
-                installer::fetch_verified(source, sha256, package_root, &file, ctx.offline)
-                    .and_then(|()| native::run(*kind, &file, arguments, package_root, ctx.json));
-            let _ = fs::remove_file(&file);
-            result?;
-        }
-    }
+    run.prepare(&expected)?;
     let root = fs::symlink_metadata(&expected)
         .ok()
         .filter(|metadata| metadata.is_dir())
@@ -443,19 +266,11 @@ fn run_external(
             path: expected.display().to_string(),
             reason: "it is not a real directory after the installer finished".into(),
         })?;
-    hooks::run(
-        Hook::PostInstall,
-        selected.option.post_install.as_deref(),
-        interpreter,
-        package_root,
-        &root,
-        ctx.json,
-    )
-    .map_err(|error| hook_failed(Hook::PostInstall, error))?;
-    Ok(root)
+    let failure = run.finish(&root)?;
+    Ok((root, failure))
 }
 
-/// An owned directory of the same key that an external method supersedes.
+/// An owned directory of the same key that an external result supersedes.
 fn retired_owned(storage: &Storage, prior: Option<&Installation>) -> Vec<PathBuf> {
     match prior.map(|prior| &prior.location) {
         Some(Location::Owned {

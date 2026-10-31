@@ -6,7 +6,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#installer-separa
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#child-output");
 
 pub mod archive;
-pub mod hooks;
 pub mod native;
 pub mod shell;
 pub mod source_build;

@@ -7,7 +7,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use serde_json::{Value, json};
 use specmark::spec;
-use vibe_core::manifest::InstallerOptionDecl;
+use vibe_core::manifest::{InstallerOptionDecl, steps_of};
 
 use crate::error::ResolveError;
 
@@ -257,6 +257,7 @@ pub fn options_listing(package: &str, options: &[InstallerOptionDecl]) -> Value 
                 "name": option.name,
                 "portable": option.portable,
                 "installation": option.installation,
+                "step_ids": steps_of(option).iter().map(|step| step.id.as_str()).collect::<Vec<_>>(),
                 "pre_install": option.pre_install,
                 "post_install": option.post_install,
                 "launchers": option.launchers,
@@ -316,7 +317,7 @@ mod tests {
             portable: None,
             pre_install: None,
             post_install: None,
-            installation: InstallerMethod::Shell {
+            installation: Some(InstallerMethod::Shell {
                 app_root: "/tmp/demo".into(),
                 install: "echo install".into(),
                 force_install: "echo force install".into(),
@@ -324,7 +325,10 @@ mod tests {
                 uninstall: "echo uninstall".into(),
                 force_uninstall: "echo force uninstall".into(),
                 interpreter: None,
-            },
+            }),
+            result: None,
+            features: Vec::new(),
+            steps: Vec::new(),
             launchers: Vec::new(),
             public_commands: Vec::new(),
         }

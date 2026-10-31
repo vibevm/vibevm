@@ -11,8 +11,8 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use vibe_app::{
-    Index, InstallChoice, InstallRequest, OperationContext, PackageCoordinate, ResolvedPackage,
-    SettingsRoot,
+    FeatureRequest, Index, InstallChoice, InstallRequest, OperationContext, PackageCoordinate,
+    ResolvedPackage, SettingsRoot, Start,
 };
 use vibe_core::PackageKind;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest};
@@ -32,6 +32,8 @@ const ALLOW_LISTED_GROUP: &str = "org.vibevm";
 struct Materialise<'a> {
     verb: &'static str,
     choice: InstallChoice,
+    features: FeatureRequest,
+    start: Start,
     force: bool,
     consent: bool,
     offline: bool,
@@ -55,6 +57,7 @@ pub(crate) fn install(
     let (force, consent) = (args.force, args.assume_yes || ctx.is_unattended());
     let offline = root_offline || args.offline;
     let path = args.path.clone();
+    let (features, start) = global::step_flags(&args.steps);
     install::run_direct(ctx, args, embedded_root, root_offline)?;
     let Some(root) = home::project_at(&path)? else {
         return Ok(());
@@ -64,6 +67,8 @@ pub(crate) fn install(
         &Materialise {
             verb: "install",
             choice,
+            features,
+            start,
             force,
             consent,
             offline,
@@ -83,6 +88,7 @@ pub(crate) fn update(
     root: &Path,
 ) -> Result<()> {
     home::refuse_library(args.library.as_deref())?;
+    let (features, start) = global::step_flags(&args.steps);
     let flags = Materialise {
         verb: "update",
         choice: InstallChoice {
@@ -90,6 +96,8 @@ pub(crate) fn update(
             arch: args.arch.clone(),
             installer: args.installer.clone(),
         },
+        features,
+        start,
         force: args.force,
         consent: args.assume_yes || ctx.is_unattended(),
         offline: root_offline,
@@ -114,11 +122,9 @@ pub(crate) fn uninstall(
     if !installed.is_empty() {
         let proxy_image = global::proxy_image()?;
         let operation = OperationContext {
-            settings: &settings,
-            json: ctx.is_json(),
-            offline: root_offline,
             chooser: None,
-            proxy_image: &proxy_image,
+            feature_chooser: None,
+            ..global::operation(ctx, &settings, root_offline, &proxy_image, None)
         };
         for exact in &installed {
             outcomes
@@ -193,7 +199,10 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
         choice: flags.choice.clone(),
         library: None,
         force: flags.force,
+        features: flags.features.clone(),
+        start: flags.start.clone(),
     };
+    let show = global::plan_printer(ctx);
     for package in &pending {
         let resolved = from_slot(flags.root, package)?;
         let previous = Index::load(&settings)?
@@ -201,13 +210,8 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
             .values()
             .any(|record| record.package.same_package(&resolved.package));
         let outcome = ctx.suspend_progress(|| {
-            let operation = OperationContext {
-                settings: &settings,
-                json: ctx.is_json(),
-                offline: flags.offline,
-                chooser: global::attended(ctx).then_some(&global::chooser as vibe_app::Chooser<'_>),
-                proxy_image: &proxy_image,
-            };
+            let operation =
+                global::operation(ctx, &settings, flags.offline, &proxy_image, Some(&show));
             if previous {
                 vibe_app::update(&operation, &resolved, &request)
             } else {

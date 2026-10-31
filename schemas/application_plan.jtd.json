@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "description": "Version 1 installation plan from vibe app plan --json and vibe install --plan-only --json: the chosen option, result and features and every step as run or skip with its reason, computed without downloading or running anything.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#plan" },
+    "rustOptions": { "package": "vibe_wire::application_plan" },
+    "x-rust-type": "ApplicationPlan",
+    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "features", "steps", "warnings"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "package": { "ref": "package" },
+    "option": { "type": "string" },
+    "platform": { "type": "string" },
+    "arch": { "type": "string" },
+    "result": { "ref": "result" },
+    "features": { "elements": { "ref": "feature" }, "metadata": { "x-empty": "emit" } },
+    "steps": { "elements": { "ref": "step" }, "metadata": { "x-empty": "emit" } },
+    "warnings": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+  },
+  "optionalProperties": {
+    "appRoot": { "type": "string", "metadata": { "x-default": null } }
+  },
+  "definitions": {
+    "package": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "result": {
+      "enum": ["owned", "external"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "action": {
+      "enum": ["run", "skip"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "phase": {
+      "enum": ["prepare", "finish"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "feature": {
+      "metadata": { "x-wire-order": ["id", "name", "default", "chosen"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "default": { "type": "boolean" },
+        "chosen": { "type": "boolean" }
+      }
+    },
+    "step": {
+      "metadata": { "x-wire-order": ["id", "title", "kind", "phase", "needs", "optional", "action", "reason"] },
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "kind": { "type": "string" },
+        "phase": { "ref": "phase" },
+        "needs": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "optional": { "type": "boolean" },
+        "action": { "ref": "action" }
+      },
+      "optionalProperties": {
+        "reason": { "type": "string", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}

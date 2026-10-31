@@ -30,6 +30,8 @@ pub(super) fn install_args_from(args: &UpdateArgs) -> InstallArgs {
         arch: None,
         installer: None,
         library: None,
+        steps: Default::default(),
+        plan_only: false,
         path: args.path.clone(),
         registry: None,
         assume_yes: args.assume_yes,

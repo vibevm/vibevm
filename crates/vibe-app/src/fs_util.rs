@@ -1,5 +1,5 @@
-//! The one recursive directory copy, shared by a cross-filesystem
-//! `source_build` payload move and a `vibe storage move`.
+//! The one recursive directory copy, shared by a cross-filesystem payload
+//! move and a `vibe storage move`, and the merging copy of a `copy` step.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#move");
 
@@ -46,6 +46,26 @@ pub(crate) fn copy_tree(from: &Path, to: &Path) -> Result<(), CopyFailure> {
         .map_err(failed("reading", from))?
         .permissions();
     fs::set_permissions(to, permissions).map_err(failed("copying", from))
+}
+
+/// Copy a file or a directory tree to `to`, creating parents and merging
+/// into existing directories; an existing file is overwritten.
+pub(crate) fn copy_into(from: &Path, to: &Path) -> Result<(), CopyFailure> {
+    let kind = fs::symlink_metadata(from).map_err(failed("reading", from))?;
+    if !kind.is_dir() {
+        if let Some(parent) = to.parent() {
+            fs::create_dir_all(parent).map_err(failed("creating", parent))?;
+        }
+        return fs::copy(from, to)
+            .map(|_| ())
+            .map_err(failed("copying", from));
+    }
+    fs::create_dir_all(to).map_err(failed("creating", to))?;
+    for entry in fs::read_dir(from).map_err(failed("reading", from))? {
+        let entry = entry.map_err(failed("reading", from))?;
+        copy_into(&entry.path(), &to.join(entry.file_name()))?;
+    }
+    Ok(())
 }
 
 #[cfg(unix)]

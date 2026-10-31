@@ -149,7 +149,8 @@ pub struct Installer {
 
     pub id: String,
 
-    pub installation: Installation,
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub installation: Option<Installation>,
 
     pub launchers: Vec<Launcher>,
 
@@ -165,6 +166,9 @@ pub struct Installer {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub portable: Option<bool>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub step_ids: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

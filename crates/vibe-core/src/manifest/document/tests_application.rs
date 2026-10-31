@@ -139,14 +139,14 @@ executable = "bin/demo"
     );
     assert!(matches!(
         manifest.installer_options[0].installation,
-        InstallerMethod::Shell {
+        Some(InstallerMethod::Shell {
             interpreter: Some(ShellInterpreter::PosixSh),
             ..
-        }
+        })
     ));
     assert!(matches!(
         manifest.installer_options[1].installation,
-        InstallerMethod::Zip { .. }
+        Some(InstallerMethod::Zip { .. })
     ));
     assert_eq!(manifest.installer_options[1].portable, Some(false));
     assert_eq!(manifest.installer_options[0].portable, None);
@@ -520,7 +520,7 @@ script = "recipes/build.sh"
 "#
     );
     let manifest = Manifest::parse_str(&base).unwrap();
-    let InstallerMethod::SourceBuild { sources, recipe } =
+    let Some(InstallerMethod::SourceBuild { sources, recipe }) =
         &manifest.installer_options[0].installation
     else {
         panic!("source_build expected");
@@ -528,7 +528,12 @@ script = "recipes/build.sh"
     assert_eq!(sources.len(), 2);
     assert_eq!(sources[1].extract, Some(false));
     assert_eq!(recipe.interpreter, Some(ShellInterpreter::PosixSh));
-    assert!(manifest.installer_options[0].installation.is_owned());
+    assert!(
+        manifest.installer_options[0]
+            .installation
+            .as_ref()
+            .is_some_and(InstallerMethod::is_owned)
+    );
     assert_eq!(
         Manifest::parse_str(&toml::to_string(&manifest).unwrap()).unwrap(),
         manifest
@@ -578,7 +583,8 @@ script = "recipes/build.sh"
         + "sources = []\n[installer_options.installation.recipe]\nscript = \"build.sh\"\n";
     // No sources: the package tree itself is the input (PROP-059#source-build).
     let manifest = Manifest::parse_str(&empty).unwrap();
-    let InstallerMethod::SourceBuild { sources, .. } = &manifest.installer_options[0].installation
+    let Some(InstallerMethod::SourceBuild { sources, .. }) =
+        &manifest.installer_options[0].installation
     else {
         panic!("source_build expected");
     };

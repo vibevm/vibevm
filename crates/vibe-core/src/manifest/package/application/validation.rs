@@ -51,11 +51,14 @@ impl InstallerOptionDecl {
                 self.id
             ));
         }
-        if matches!(
+        let native = matches!(
             self.installation,
-            InstallerMethod::Exe { .. } | InstallerMethod::Msi { .. }
-        ) && self.platform != "windows"
-        {
+            Some(InstallerMethod::Exe { .. } | InstallerMethod::Msi { .. })
+        ) || self
+            .steps
+            .iter()
+            .any(|step| matches!(step.kind, StepKind::Native { .. }));
+        if native && self.platform != "windows" {
             return Err(format!(
                 "[[installer_options]] `{}` exe/msi methods require platform = windows",
                 self.id
@@ -67,7 +70,31 @@ impl InstallerOptionDecl {
         if let Some(command) = &self.post_install {
             validate_shell_command(command, "[[installer_options]]", "post_install")?;
         }
-        self.installation.validate()?;
+        match (&self.installation, self.steps.is_empty()) {
+            (Some(method), true) => {
+                if self.result.is_some() || !self.features.is_empty() {
+                    return Err(format!(
+                        "[[installer_options]] `{}` declares result or features, which apply only to [[steps]]",
+                        self.id
+                    ));
+                }
+                method.validate()?;
+            }
+            (None, false) => {}
+            (Some(_), false) => {
+                return Err(format!(
+                    "[[installer_options]] `{}` declares both installation and [[steps]]; they are mutually exclusive",
+                    self.id
+                ));
+            }
+            (None, true) => {
+                return Err(format!(
+                    "[[installer_options]] `{}` declares neither installation nor [[steps]]",
+                    self.id
+                ));
+            }
+        }
+        self.validate_steps()?;
         let mut public_names = BTreeSet::new();
         for command in &self.public_commands {
             if !is_portable_token(&command.name) || command.name == "vibe" {
@@ -205,7 +232,7 @@ impl InstallerMethod {
     }
 }
 
-fn validate_shell_command(value: &str, table: &str, field: &str) -> Result<(), String> {
+pub(super) fn validate_shell_command(value: &str, table: &str, field: &str) -> Result<(), String> {
     if value.trim().is_empty() || value.chars().any(char::is_control) {
         return Err(format!(
             "{table}.{field} must be a nonempty shell command without control characters"
@@ -214,7 +241,7 @@ fn validate_shell_command(value: &str, table: &str, field: &str) -> Result<(), S
     Ok(())
 }
 
-fn validate_source(value: &str, table: &str) -> Result<(), String> {
+pub(super) fn validate_source(value: &str, table: &str) -> Result<(), String> {
     if value.starts_with("https://") {
         if !credential_free_https(value) {
             return Err(format!("{table}.source must be credential-free HTTPS"));
@@ -230,7 +257,7 @@ fn validate_source(value: &str, table: &str) -> Result<(), String> {
     Ok(())
 }
 
-fn validate_sha256(value: &str, table: &str) -> Result<(), String> {
+pub(super) fn validate_sha256(value: &str, table: &str) -> Result<(), String> {
     if value.len() != 64 || !value.bytes().all(|byte| byte.is_ascii_hexdigit()) {
         return Err(format!(
             "{table}.sha256 must be a 64-digit hexadecimal digest"
@@ -239,7 +266,7 @@ fn validate_sha256(value: &str, table: &str) -> Result<(), String> {
     Ok(())
 }
 
-fn validate_command_root(value: &str, table: &str) -> Result<(), String> {
+pub(super) fn validate_command_root(value: &str, table: &str) -> Result<(), String> {
     if value.trim().is_empty() || value.chars().any(char::is_control) {
         return Err(format!("{table}.app_root must be a nonempty path template"));
     }
@@ -391,6 +418,18 @@ fn credential_free_https(value: &str) -> bool {
 /// executes the declaration this accepts.
 fn validate_source_build(sources: &[SourceInputDecl], recipe: &RecipeDecl) -> Result<(), String> {
     let table = "[installer_options.installation]";
+    validate_sources(sources, table)?;
+    declarant_path(&recipe.script).map_err(|fault| {
+        format!(
+            "{table}.recipe.script must be a package-relative file: {}",
+            fault.reason()
+        )
+    })?;
+    Ok(())
+}
+
+/// The `[[sources]]` inputs of a `source_build` method or a `sources` step.
+pub(super) fn validate_sources(sources: &[SourceInputDecl], table: &str) -> Result<(), String> {
     // No sources is valid: the package tree itself is then the only input.
     let mut names = BTreeSet::new();
     for source in sources {
@@ -439,16 +478,10 @@ fn validate_source_build(sources: &[SourceInputDecl], recipe: &RecipeDecl) -> Re
         }
         validate_sha256(&source.sha256, table)?;
     }
-    declarant_path(&recipe.script).map_err(|fault| {
-        format!(
-            "{table}.recipe.script must be a package-relative file: {}",
-            fault.reason()
-        )
-    })?;
     Ok(())
 }
 
-fn credential_free_http(value: &str) -> bool {
+pub(super) fn credential_free_http(value: &str) -> bool {
     match value.strip_prefix("http://") {
         Some(rest) => credential_free_https(&format!("https://{rest}")),
         None => credential_free_https(value),

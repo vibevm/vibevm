@@ -280,7 +280,7 @@ fn source_build_installs_runs_caches_fails_visibly_and_uninstalls() {
         .join(format!("cache/app-sources/{url_sha}/tool-src.tar.gz"));
     assert!(cached.is_file(), "the URL source is cached by digest");
     assert!(
-        entries(&user.settings.join("cache/app-build")).is_empty(),
+        entries(&user.settings.join("cache/app-work")).is_empty(),
         "a successful build deletes its work directory"
     );
     assert_eq!(hits.load(Ordering::SeqCst), 1);
@@ -316,13 +316,10 @@ fn source_build_installs_runs_caches_fails_visibly_and_uninstalls() {
     let error = failed(&fixture.install(&user, &[]));
     assert!(error.contains("exited with code 3"), "{error}");
     assert!(error.contains("kept for inspection"), "{error}");
-    let build_root = user.settings.join("cache/app-build");
+    let build_root = user.settings.join("cache/app-work");
     let kept = entries(&build_root);
     assert_eq!(kept.len(), 1, "{kept:?}");
-    assert!(
-        kept[0].starts_with("org.example.built-app@1.0.0-"),
-        "{kept:?}"
-    );
+    assert_eq!(kept[0], "org.example.built-app@1.0.0", "{kept:?}");
     assert!(
         error.contains(&kept[0]),
         "the error names the work directory"

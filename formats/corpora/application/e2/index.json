@@ -41,7 +41,19 @@
         "forceUninstall": "sudo apt-get purge editor",
         "update": "sudo apt-get install --only-upgrade editor",
         "interpreter": "posix_sh"
-      }
+      },
+      "features": ["docs"],
+      "steps": [
+        { "id": "install", "kind": "shell", "outcome": "done" },
+        {
+          "id": "register",
+          "kind": "shell",
+          "outcome": "done",
+          "uninstall": "editor-register --remove",
+          "interpreter": "posix_sh"
+        },
+        { "id": "fix", "kind": "agent", "outcome": "skipped" }
+      ]
     }
   },
   "slots": {

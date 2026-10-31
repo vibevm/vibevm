@@ -28,6 +28,9 @@ pub enum ApplicationReportSelectedMode {
     #[serde(rename = "source_build")]
     SourceBuild,
 
+    #[serde(rename = "steps")]
+    Steps,
+
     #[serde(rename = "tar_gz")]
     TarGz,
 
