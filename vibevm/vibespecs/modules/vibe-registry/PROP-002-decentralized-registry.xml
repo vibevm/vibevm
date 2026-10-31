@@ -34,7 +34,7 @@
         <EFF-MIRROR-SUBSTITUTION fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">a compromised mirror cannot silently substitute content — the mismatch triggers hard fail before any write;</EFF-MIRROR-SUBSTITUTION>
         <EFF-FORCE-PUSH-CAUGHT fact="true" status="impl/done" action="continue" actionstage="doc" audience="user,author">a force-pushed tag upstream is caught by the same machinery on the next install.</EFF-FORCE-PUSH-CAUGHT>
       </facts>
-      <p><TRUST-MIRROR-HATCH fact="true" status="spec/done">Escape hatch for legitimate mirror-vs-upstream divergence (e.g. during an upstream outage): a `--trust-mirror` flag on `vibe install` / `vibe update`. Never silent; always operator-initiated. **Specified, not shipped** — the CLI carries `--trust-redirect` (a different hatch, for redirect chains) and no mirror equivalent; an operator hitting mirror divergence today has no flag.</TRUST-MIRROR-HATCH></p>
+      <p><TRUST-MIRROR-HATCH fact="true" status="spec/done">Escape hatch for legitimate mirror-vs-upstream divergence (e.g. during an upstream outage): a `--trust-mirror` flag on `vibe install` / `vibe update`. Never silent; always operator-initiated. **Specified, not shipped** — the CLI carries `--trust-redirect` (a different hatch, for redirect chains) and no mirror equivalent; an operator hitting mirror divergence today has no flag. **Withdrawn 2026-10-31 by PROP-066:** a remap never accepts bytes that differ from the recorded digest (`spec://org.vibevm.core/vibevm/common/PROP-066#principle`); divergence is answered by a `[[remap]]` row pointing at a source that holds the recorded bytes, and `vibe remap explain` shows why a fetch went where it went. No `--trust-mirror` flag will ship.</TRUST-MIRROR-HATCH></p>
     </identity>
     <registry-model title="2.2 Registry model: `[[registry]]` array, priority-ordered">
       <p><registry-model-req fact="true" status="impl/done">`req r1`</registry-model-req></p>
@@ -382,7 +382,7 @@ overridden      = false</fence>
           <td><ROW-CMP-LIFETIME-OVERRIDE fact="true" status="impl/done">Short-lived (awaiting upstream PR / hotfix)</ROW-CMP-LIFETIME-OVERRIDE></td>
         </tr>
         <tr>
-          <td><ROW-CMP-LIST fact="true" status="spec/done">`vibe list --overrides` (specified, not shipped)</ROW-CMP-LIST></td>
+          <td><ROW-CMP-LIST fact="true" status="spec/done">`vibe list --overrides` (specified, not shipped; superseded 2026-10-31 by `vibe remap list`, which shows `[[override]]` and `[[mirror]]` rows as the local layer — `spec://org.vibevm.core/vibevm/common/PROP-066#layers`)</ROW-CMP-LIST></td>
           <td><ROW-CMP-LIST-REQUIRES-PACKAGES-GIT-SO fact="true" status="spec/done">Not surfaced (it is a normal dependency) @status:impl/done</ROW-CMP-LIST-REQUIRES-PACKAGES-GIT-SO></td>
           <td><ROW-CMP-LIST-OVERRIDE fact="true" status="spec/done">Surfaced via the lockfile's `overridden` field @status:impl/done</ROW-CMP-LIST-OVERRIDE></td>
         </tr>
