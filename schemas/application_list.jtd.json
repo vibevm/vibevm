@@ -30,7 +30,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "installation": {
-      "metadata": { "x-wire-order": ["key", "slot", "package", "method", "status", "reason", "library", "app_root", "portable", "default", "icon", "hidden", "mark", "held", "superseded_by", "requires", "required_by", "env"] },
+      "metadata": { "x-wire-order": ["key", "slot", "package", "method", "status", "reason", "library", "app_root", "portable", "default", "icon", "icon_set", "menu_group", "categories", "keywords", "launchers", "hidden", "mark", "held", "superseded_by", "requires", "required_by", "env"] },
       "properties": {
         "key": { "type": "string" },
         "slot": { "type": "string" },
@@ -45,6 +45,11 @@
       },
       "optionalProperties": {
         "icon": { "type": "string", "metadata": { "x-default": null } },
+        "icon_set": { "ref": "icon_set", "metadata": { "x-default": null } },
+        "menu_group": { "type": "string", "metadata": { "x-default": null } },
+        "categories": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "keywords": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "launchers": { "elements": { "ref": "launcher" }, "metadata": { "x-empty": "omit" } },
         "hidden": { "type": "boolean", "metadata": { "x-default": false } },
         "mark": { "ref": "mark", "metadata": { "x-default": null } },
         "held": { "type": "boolean", "metadata": { "x-default": false } },
@@ -52,6 +57,69 @@
         "requires": { "elements": { "ref": "requirement" }, "metadata": { "x-empty": "omit" } },
         "required_by": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
         "env": { "elements": { "ref": "env_entry" }, "metadata": { "x-empty": "omit" } }
+      }
+    },
+    "icon_slot": {
+      "enum": ["svg", "png", "ico", "icns", "symbolic"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "icon_file": {
+      "metadata": { "x-wire-order": ["slot", "size", "template", "path"] },
+      "properties": {
+        "slot": { "ref": "icon_slot" },
+        "template": { "type": "string" }
+      },
+      "optionalProperties": {
+        "size": { "type": "uint32", "metadata": { "x-default": null } },
+        "path": { "type": "string", "metadata": { "x-default": null, "description": "The absolute path of the file in the installed payload, when it exists." } }
+      }
+    },
+    "icon_set": {
+      "metadata": { "x-wire-order": ["maskable", "files"] },
+      "properties": {
+        "maskable": { "type": "boolean" },
+        "files": { "elements": { "ref": "icon_file" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "launcher_kind": {
+      "enum": ["gui", "tui", "command"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "launcher_source": {
+      "enum": ["authored", "desktop-entry"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "launcher": {
+      "metadata": { "x-wire-order": ["id", "name", "kind", "menu", "default", "source", "categories", "keywords", "generic_name", "names", "descriptions", "window_class", "mime_types", "actions", "icon_set"], "description": "One launch point with its menu and desktop-entry metadata (PROP-059#menu, #desktop-entries); vibe app launchers adds the resolved executable, arguments and availability." },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "kind": { "ref": "launcher_kind" },
+        "menu": { "type": "boolean" },
+        "default": { "type": "boolean" },
+        "source": { "ref": "launcher_source" }
+      },
+      "optionalProperties": {
+        "categories": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "keywords": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "generic_name": { "type": "string", "metadata": { "x-default": null } },
+        "names": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "descriptions": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "window_class": { "type": "string", "metadata": { "x-default": null } },
+        "mime_types": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "actions": { "elements": { "ref": "launcher_action" }, "metadata": { "x-empty": "omit" } },
+        "icon_set": { "ref": "icon_set", "metadata": { "x-default": null } }
+      }
+    },
+    "launcher_action": {
+      "metadata": { "x-wire-order": ["id", "name", "args", "icon_set"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "optionalProperties": {
+        "args": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "icon_set": { "ref": "icon_set", "metadata": { "x-default": null } }
       }
     },
     "mark": {

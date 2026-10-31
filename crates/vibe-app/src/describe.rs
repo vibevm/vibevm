@@ -6,12 +6,16 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#describe");
 
+use std::path::Path;
+
 use vibe_core::manifest::{
-    Condition, InstallerOptionDecl, ParameterType, RequirementDecl, RequirementScope,
-    ShellInterpreter, StepDecl, StepKind, StepOrigin, StepPhase, result_of, steps_of,
+    Condition, IconDecl, InstallerOptionDecl, LauncherDecl, LauncherKind, ParameterType,
+    RequirementDecl, RequirementScope, ShellInterpreter, StepDecl, StepKind, StepOrigin, StepPhase,
+    result_of, steps_of,
 };
 use vibe_wire::generated::application_describe as wire;
 
+use crate::icons::{ResolvedIcon, wire_shape};
 use crate::installer::shell::interpreter_name;
 use crate::resolve::ResolvedPackage;
 use crate::steps::{FeatureRequest, resolve_features};
@@ -28,11 +32,18 @@ pub fn describe(resolved: &ResolvedPackage) -> wire::ApplicationDescribe {
         application: wire::Application {
             id: resolved.application.id.clone(),
             portable: resolved.application.portable,
-            icon: resolved
+            icon: match &resolved.application.icon {
+                Some(IconDecl::Path(icon)) => Some(resolved.root.join(icon).display().to_string()),
+                _ => None,
+            },
+            icon_set: resolved
                 .application
                 .icon
                 .as_ref()
-                .map(|icon| resolved.root.join(icon).display().to_string()),
+                .and_then(|icon| package_icon(&resolved.root, icon)),
+            menu_group: resolved.application.menu_group.clone(),
+            categories: resolved.application.categories.clone(),
+            keywords: resolved.application.keywords.clone(),
         },
         options: resolved
             .options
@@ -68,20 +79,11 @@ fn describe_option(
         portable: result.is_owned()
             && resolved.application.portable
             && option.portable.unwrap_or(true),
+        launchers_from: option.launchers_from.clone(),
         launchers: option
             .launchers
             .iter()
-            .map(|launcher| wire::Launcher {
-                id: launcher.id.clone(),
-                name: launcher.name.clone(),
-                description: launcher.description.clone(),
-                executable: launcher.executable.clone(),
-                args: launcher.args.clone(),
-                working_directory: launcher.working_directory.clone(),
-                icon: launcher.icon.clone(),
-                terminal: launcher.terminal,
-                default: launcher.default,
-            })
+            .map(|launcher| describe_launcher(&resolved.root, launcher))
             .collect(),
         public_commands: option
             .public_commands
@@ -155,6 +157,70 @@ fn describe_option(
         }),
         requires: requirements(&option.requires, RequirementScope::Runtime),
         steps: steps_of(option).iter().map(describe_step).collect(),
+    }
+}
+
+/// An icon set as written, each package-relative file resolved to its
+/// absolute path in the package tree when it exists; a template naming the
+/// installed payload has no path before installation (`PROP-059#menu`).
+fn package_icon(root: &Path, icon: &IconDecl) -> Option<wire::IconSet> {
+    let resolved = ResolvedIcon::resolve(icon, |template| {
+        if template.starts_with('$') {
+            Err("the file is in the installed payload".into())
+        } else {
+            Ok(root.join(template))
+        }
+    });
+    wire_shape(&resolved)
+}
+
+/// One launcher row as declared (`PROP-059#launch-points`, `#menu`,
+/// `#desktop-entries`).
+fn describe_launcher(root: &Path, launcher: &LauncherDecl) -> wire::Launcher {
+    wire::Launcher {
+        id: launcher.id.clone(),
+        name: launcher.name.clone(),
+        description: launcher.description.clone(),
+        executable: launcher.executable.clone(),
+        args: launcher.args.clone(),
+        working_directory: launcher.working_directory.clone(),
+        icon: match &launcher.icon {
+            Some(IconDecl::Path(icon)) => Some(icon.clone()),
+            _ => None,
+        },
+        icon_set: launcher
+            .icon
+            .as_ref()
+            .and_then(|icon| package_icon(root, icon)),
+        terminal: launcher.is_terminal(),
+        default: launcher.default,
+        kind: launcher.kind.map(|kind| match kind {
+            LauncherKind::Gui => wire::LauncherKind::Gui,
+            LauncherKind::Tui => wire::LauncherKind::Tui,
+            LauncherKind::Command => wire::LauncherKind::Command,
+        }),
+        menu: launcher.shows_in_menu(),
+        source: wire::LauncherSource::Authored,
+        categories: launcher.categories.clone(),
+        keywords: launcher.keywords.clone(),
+        generic_name: launcher.generic_name.clone(),
+        window_class: launcher.window_class.clone(),
+        mime_types: launcher.mime_types.clone(),
+        names: launcher.names.clone(),
+        descriptions: launcher.descriptions.clone(),
+        actions: launcher
+            .actions
+            .iter()
+            .map(|action| wire::LauncherAction {
+                id: action.id.clone(),
+                name: action.name.clone(),
+                args: action.args.clone(),
+                icon_set: action
+                    .icon
+                    .as_ref()
+                    .and_then(|icon| package_icon(root, icon)),
+            })
+            .collect(),
     }
 }
 

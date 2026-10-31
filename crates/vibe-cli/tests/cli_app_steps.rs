@@ -223,6 +223,7 @@ command = "echo \"$VIBE_APP_ROOT\" > root.txt && echo FINISH >> '{log}'"
 id = "main"
 name = "Tool"
 executable = "$app_bin/tool"
+kind = "command"
 default = true
 "#
         ),

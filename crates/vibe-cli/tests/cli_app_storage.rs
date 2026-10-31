@@ -58,7 +58,7 @@ impl Registry {
                  [application]\nid = \"{name}\"\n{application}\n\
                  [[installer_options]]\nid = \"main\"\nname = \"Main\"\nplatform = \"linux\"\nplatform_name = \"Linux\"\narch = \"{arch}\"\n\n\
                  [installer_options.installation]\n{installation}\n\
-                 [[installer_options.launchers]]\nid = \"main\"\nname = \"Tool\"\nexecutable = \"$app_bin/tool\"\nargs = [\"fixed\"]\ndefault = true\n\n\
+                 [[installer_options.launchers]]\nid = \"main\"\nname = \"Tool\"\nexecutable = \"$app_bin/tool\"\nkind = \"command\"\nargs = [\"fixed\"]\ndefault = true\n\n\
                  [[installer_options.public_commands]]\nname = \"{name}\"\nlauncher = \"main\"\n",
                 arch = std::env::consts::ARCH,
             ),

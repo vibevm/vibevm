@@ -24,12 +24,15 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#library-first");
 mod agents;
 mod alternatives;
 mod codes;
+mod derive;
 mod describe;
+mod desktop;
 mod environment;
 mod error;
 mod error_lifecycle;
 mod exposure;
 mod fs_util;
+mod icons;
 mod index;
 mod installer;
 mod launch;
@@ -52,22 +55,26 @@ pub use alternatives::{
     DefaultChange, listing as alternatives_listing, reserved_commands, set_default,
 };
 pub use codes::{ErrorClass, ErrorCode, error_codes};
+pub use derive::{derive_launchers, hicolor as hicolor_icon_set, import_desktop};
 pub use describe::describe;
+pub use desktop::{DesktopFile, exec_words};
 pub use environment::{ProfileEnvironment, UserEnvironment, recorded_environment};
 pub use error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,
 };
 pub use error_lifecycle::LifecycleError;
 pub use exposure::{Exposure, expose_for_session};
+pub use icons::{ResolvedIcon, ResolvedIconFile};
 pub use index::{
-    AcceptedLicense, AuthoredCommands, EnvEntry, EnvOp, INDEX_PROTOCOL, Index, Installation,
-    Lifecycle, Location, Mark, Method, PackageCoordinate, Requirement, StepOutcome, StepRecord,
-    ValueKind,
+    AcceptedLicense, ApplicationMenu, AuthoredCommands, EnvEntry, EnvOp, INDEX_PROTOCOL, Index,
+    Installation, Lifecycle, Location, Mark, Method, PackageCoordinate, Requirement, StepOutcome,
+    StepRecord, ValueKind,
 };
 pub use installer::Interrupt;
 pub use launch::{
     LaunchRequest, ResolvedLauncher, TemplateVars, app_root, exit_code, expand_template,
-    listing as launcher_listing, resolve as resolve_launcher, run as run_launcher,
+    icon_choice, launch_arguments, listing as launcher_listing,
+    listing_all as launcher_listing_all, resolve as resolve_launcher, run as run_launcher,
 };
 pub use operations::{
     Change, ChangeVerb, Command, InstallRequest, ModifyRequest, OperationContext, Outcome,

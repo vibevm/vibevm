@@ -58,6 +58,7 @@ interpreter = "posix_sh"
 id = "main"
 name = "Main"
 executable = "$app_bin/tool"
+kind = "command"
 default = true
 [[installer_options.public_commands]]
 name = "choice"

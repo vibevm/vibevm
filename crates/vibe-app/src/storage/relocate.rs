@@ -289,6 +289,7 @@ pub(crate) mod tests {
             parameters: Default::default(),
             license: None,
             icon: None,
+            menu: Default::default(),
             steps: Vec::new(),
             lifecycle: crate::index::Lifecycle::default(),
         }

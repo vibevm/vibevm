@@ -7,10 +7,11 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installat
 
 use std::path::Path;
 
-use vibe_core::manifest::RequirementScope;
+use vibe_core::manifest::{IconDecl, LauncherKind, LauncherSource, RequirementScope};
 use vibe_wire::generated::application_list as wire;
 
 use crate::error::AppError;
+use crate::icons::wire_shape;
 use crate::index::{EnvOp, Index, Installation, Location, Mark};
 use crate::launch;
 use crate::resolve::qualified_ref;
@@ -86,7 +87,7 @@ pub fn list(settings: &SettingsRoot) -> Result<wire::ApplicationList, AppError> 
     let installations = index
         .installations
         .iter()
-        .map(|(key, record)| row(&index, &storage, key, record))
+        .map(|(key, record)| row(&index, &storage, settings.path(), key, record))
         .collect();
     Ok(wire::ApplicationList {
         protocol: "vibe-app-list/1".into(),
@@ -94,7 +95,13 @@ pub fn list(settings: &SettingsRoot) -> Result<wire::ApplicationList, AppError> 
     })
 }
 
-fn row(index: &Index, storage: &Storage, key: &str, record: &Installation) -> wire::Installation {
+fn row(
+    index: &Index,
+    storage: &Storage,
+    vibe_home: &Path,
+    key: &str,
+    record: &Installation,
+) -> wire::Installation {
     let root = launch::app_root(record, storage);
     let reason = launch::unavailable_reason(&root);
     let lifecycle = &record.lifecycle;
@@ -118,12 +125,17 @@ fn row(index: &Index, storage: &Storage, key: &str, record: &Installation) -> wi
             Location::External { .. } => None,
         },
         icon: match (&record.location, &record.icon, &root) {
-            (Location::Owned { .. }, Some(icon), Ok(root)) => {
+            (Location::Owned { .. }, Some(IconDecl::Path(icon)), Ok(root)) => {
                 Some(root.join(icon)).filter(|path| path.is_file())
             }
             _ => None,
         }
         .map(|path| path_text(&path)),
+        icon_set: launch::application_icon(record, &root).and_then(|icon| wire_shape(&icon)),
+        menu_group: record.menu.menu_group.clone(),
+        categories: record.menu.categories.clone(),
+        keywords: record.menu.keywords.clone(),
+        launchers: launcher_rows(record, storage, vibe_home),
         app_root: root.ok().map(|root| path_text(&root)),
         portable: record.portable,
         default: index.default_of(&record.slot) == Some(key),
@@ -161,6 +173,54 @@ fn row(index: &Index, storage: &Storage, key: &str, record: &Installation) -> wi
             })
             .collect(),
     }
+}
+
+/// A summary of each launch point with its effective categories and
+/// keywords and its icon set resolved under the payload (`PROP-059#menu`).
+fn launcher_rows(
+    record: &Installation,
+    storage: &Storage,
+    vibe_home: &Path,
+) -> Vec<wire::Launcher> {
+    let full = launch::listing(record, storage, vibe_home, None);
+    record
+        .launchers
+        .iter()
+        .zip(full.launchers)
+        .map(|(launcher, row)| wire::Launcher {
+            id: launcher.id.clone(),
+            name: launcher.name.clone(),
+            kind: match launcher.effective_kind() {
+                LauncherKind::Gui => wire::LauncherKind::Gui,
+                LauncherKind::Tui => wire::LauncherKind::Tui,
+                LauncherKind::Command => wire::LauncherKind::Command,
+            },
+            menu: launcher.shows_in_menu(),
+            default: launcher.default,
+            source: match launcher.source {
+                LauncherSource::Authored => wire::LauncherSource::Authored,
+                LauncherSource::DesktopEntry => wire::LauncherSource::DesktopEntry,
+            },
+            categories: row.categories,
+            keywords: row.keywords,
+            generic_name: row.generic_name,
+            names: row.names,
+            descriptions: row.descriptions,
+            window_class: row.window_class,
+            mime_types: row.mime_types,
+            actions: row
+                .actions
+                .into_iter()
+                .map(|action| wire::LauncherAction {
+                    id: action.id,
+                    name: action.name,
+                    args: action.args.template,
+                    icon_set: action.icon_set.and_then(|icon| wire_shape(&icon)),
+                })
+                .collect(),
+            icon_set: row.icon_set.and_then(|icon| wire_shape(&icon)),
+        })
+        .collect()
 }
 
 fn scope(value: RequirementScope) -> wire::Scope {

@@ -54,7 +54,7 @@ id = "vibevm-doc"
 name = "vibevm.org local site"
 description = "Serves the site on http://127.0.0.1:4322/"
 executable = "bin/vibevm-doc"
-terminal = true
+kind = "command"
 default = true
 
 [[installer_options.public_commands]]
@@ -81,7 +81,7 @@ id = "vibevm-doc"
 name = "vibevm.org local site"
 description = "Serves the site on http://127.0.0.1:4322/"
 executable = "bin/vibevm-doc"
-terminal = true
+kind = "command"
 default = true
 
 [[installer_options.public_commands]]
@@ -108,7 +108,7 @@ id = "vibevm-doc"
 name = "vibevm.org local site"
 description = "Serves the site on http://127.0.0.1:4322/"
 executable = "bin/vibevm-doc"
-terminal = true
+kind = "command"
 default = true
 
 [[installer_options.public_commands]]
@@ -135,7 +135,7 @@ id = "vibevm-doc"
 name = "vibevm.org local site"
 description = "Serves the site on http://127.0.0.1:4322/"
 executable = "bin/vibevm-doc"
-terminal = true
+kind = "command"
 default = true
 
 [[installer_options.public_commands]]
@@ -162,7 +162,7 @@ id = "vibevm-doc"
 name = "vibevm.org local site"
 description = "Serves the site on http://127.0.0.1:4322/"
 executable = "bin/vibevm-doc.cmd"
-terminal = true
+kind = "command"
 default = true
 
 [[installer_options.public_commands]]

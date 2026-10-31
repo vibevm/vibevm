@@ -13,6 +13,7 @@ description = "User applications (PROP-059): package resolution, installer optio
 [dependencies]
 chrono.workspace = true
 flate2.workspace = true
+glob.workspace = true
 reqwest.workspace = true
 semver.workspace = true
 serde.workspace = true

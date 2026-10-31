@@ -2,6 +2,9 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 
+mod icon_files;
+mod launcher;
+mod launcher_validation;
 mod requirement;
 mod step_validation;
 mod steps;
@@ -11,6 +14,11 @@ mod validation;
 mod wizard;
 mod wizard_validation;
 
+pub use icon_files::{IconFinding, icon_findings};
+pub use launcher::{
+    ARG_PLACEHOLDERS, IconDecl, IconSet, IconSlot, LauncherActionDecl, LauncherKind,
+    LauncherSource, MENU_CATEGORIES, png_dimensions,
+};
 pub use requirement::{
     RequirementDecl, RequirementScope, RequirementTable, application_requirements,
 };
@@ -24,6 +32,7 @@ pub use wizard::{
     ChoiceDecl, LicenseDecl, ParameterDecl, ParameterType, ParameterValue, ProfileDecl,
 };
 
+use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
@@ -157,25 +166,98 @@ pub struct RecipeDecl {
 
 /// One user-facing entry of an installed application. Paths remain templates
 /// until launch, when the installed payload and optional project are known.
+///
+/// `name`, `executable` and `kind` are required, except in a row of an
+/// option with `launchers_from` that overrides a launcher derived from a
+/// desktop entry field by field (`PROP-059#desktop-entries`); an installed
+/// row is always complete.
+///
+/// ```
+/// use vibe_core::manifest::{LauncherDecl, LauncherKind};
+///
+/// let row: LauncherDecl = toml::from_str(
+///     "id = \"edit\"\nname = \"Editor\"\nexecutable = \"bin/edit\"\nkind = \"tui\"",
+/// )
+/// .unwrap();
+/// assert_eq!(row.effective_kind(), LauncherKind::Tui);
+/// assert!(row.is_terminal() && !row.shows_in_menu());
+/// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points")]
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LauncherDecl {
     pub id: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     pub name: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     pub executable: String,
+    /// `gui`, `tui` or `command`, declared and never inferred.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kind: Option<LauncherKind>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub args: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub working_directory: Option<String>,
+    /// Derived from `kind`; when spelled it must agree.
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub icon: Option<String>,
-    #[serde(default)]
-    pub terminal: bool,
+    pub terminal: Option<bool>,
     #[serde(default)]
     pub default: bool,
+    /// Listed in a graphical client's start menu (`PROP-059#menu`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub menu: Option<bool>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub categories: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub keywords: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub generic_name: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub window_class: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub mime_types: Vec<String>,
+    /// Localised names by language tag (`Name[xx]`).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub names: BTreeMap<String, String>,
+    /// Localised descriptions by language tag (`Comment[xx]`).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub descriptions: BTreeMap<String, String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<IconDecl>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub actions: Vec<LauncherActionDecl>,
+    /// Authored or derived from a desktop entry; never parsed.
+    #[serde(skip)]
+    pub source: LauncherSource,
+}
+
+impl LauncherDecl {
+    /// The declared kind, or the kind `terminal` implies for a row written
+    /// before kinds existed.
+    pub fn effective_kind(&self) -> LauncherKind {
+        self.kind
+            .unwrap_or_else(|| LauncherKind::from_terminal(self.terminal.unwrap_or(false)))
+    }
+
+    /// Whether the launcher needs a terminal: the spelled value, else the
+    /// kind's.
+    pub fn is_terminal(&self) -> bool {
+        self.terminal
+            .unwrap_or_else(|| self.effective_kind().terminal())
+    }
+
+    /// Whether the launcher appears in a graphical client's menu; `false`
+    /// unless the author opted in.
+    pub fn shows_in_menu(&self) -> bool {
+        self.menu.unwrap_or(false)
+    }
+
+    /// Whether `name`, `executable` and `kind` are all present.
+    pub fn is_complete(&self) -> bool {
+        !self.name.trim().is_empty() && !self.executable.is_empty() && self.kind.is_some()
+    }
 }
 
 /// A portable command claimed by this installer option. Its launcher is
@@ -233,6 +315,10 @@ pub struct InstallerOptionDecl {
     /// (`PROP-065#app-dependencies`); `runtime` scope unless stated.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub requires: Vec<RequirementDecl>,
+    /// Globs relative to the application root naming desktop entries the
+    /// launchers are derived from (`PROP-059#desktop-entries`).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub launchers_from: Vec<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub launchers: Vec<LauncherDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -240,7 +326,8 @@ pub struct InstallerOptionDecl {
 }
 
 /// Strict package-only `[application]` metadata: the slot name, the
-/// package-wide portability default and the application icon.
+/// package-wide portability default, the application icon and the menu
+/// defaults (`PROP-059#menu`).
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -251,10 +338,20 @@ pub struct ApplicationDecl {
         skip_serializing_if = "is_portable_default"
     )]
     pub portable: bool,
-    /// A package-relative image for the application as a whole
-    /// (`PROP-065#icon`).
+    /// The human-readable group a client shows this application's menu
+    /// entries under.
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub icon: Option<PathBuf>,
+    pub menu_group: Option<String>,
+    /// Default categories of every launcher that names none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub categories: Vec<String>,
+    /// Default keywords of every launcher that names none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub keywords: Vec<String>,
+    /// A package-relative image, or an icon set, for the application as a
+    /// whole (`PROP-065#icon`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<IconDecl>,
 }
 
 fn portable_default() -> bool {

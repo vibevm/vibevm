@@ -61,7 +61,7 @@ impl Registry {
                  [application]\nid = \"{slot}\"\n\n\
                  [[installer_options]]\nid = \"zip\"\nname = \"Zip\"\nplatform = \"linux\"\nplatform_name = \"Linux\"\narch = \"{arch}\"\n{extra}\n\
                  [installer_options.installation]\ntype = \"zip\"\nsource = \"tool.zip\"\nsha256 = \"{sha}\"\n\n\
-                 [[installer_options.launchers]]\nid = \"main\"\nname = \"Tool\"\nexecutable = \"$app_bin/tool\"\nargs = [\"fixed\"]\ndefault = true\n\n\
+                 [[installer_options.launchers]]\nid = \"main\"\nname = \"Tool\"\nexecutable = \"$app_bin/tool\"\nkind = \"command\"\nargs = [\"fixed\"]\ndefault = true\n\n\
                  [[installer_options.public_commands]]\nname = \"{command}\"\nlauncher = \"main\"\n",
                 arch = std::env::consts::ARCH,
             ),

@@ -40,6 +40,7 @@ from = "payload"
 id = "tcc"
 name = "Test compiler"
 executable = "$app_bin/vibe-test-tcc"
+kind = "command"
 
 [[installer_options.public_commands]]
 name = "vibe-test-tcc"
@@ -71,6 +72,7 @@ needs = ["command:vibe-test-tcc"]
 id = "main"
 name = "Consumer"
 executable = "$app_bin/consumer"
+kind = "command"
 "#,
     );
     std::fs::write(

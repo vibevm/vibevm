@@ -152,6 +152,7 @@ codes!(LAUNCH, LaunchError [] {
     UnknownLauncher => "unknown_launcher", Refusal, "the launcher id is not declared";
     Unavailable => "launcher_unavailable", Refusal, "the launcher cannot run here";
     Spawn => "launcher_spawn_failed", Failure, "the launched program could not be started";
+    NoIcon => "icon_unavailable", Failure, "no icon file of the launcher or application exists";
 });
 
 codes!(LIFECYCLE, LifecycleError [] {
@@ -179,6 +180,7 @@ codes!(APP, AppError [State, Storage, Resolve, Installer, Launch, Step, Agent, L
     NotProvider => "not_provider", Refusal, "the key does not provide the slot";
     ProxyImage => "proxy_image_missing", Refusal, "the PATH proxy image is missing";
     SessionChoice => "session_choice_invalid", Refusal, "a session choice is malformed";
+    Launchers => "launchers_invalid", Failure, "a launcher stays incomplete after desktop-entry derivation";
 });
 
 /// Every code of the application subsystem, grouped by enum.

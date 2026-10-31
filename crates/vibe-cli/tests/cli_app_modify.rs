@@ -61,6 +61,7 @@ uninstall = "echo undo-main >> '{log}'"
 id = "main"
 name = "Editor"
 executable = "$app_bin/editor"
+kind = "command"
 
 [[installer_options.public_commands]]
 name = "edit"
@@ -83,6 +84,7 @@ from = "payload-alt"
 id = "main"
 name = "Editor"
 executable = "$app_bin/editor"
+kind = "command"
 
 [[installer_options.public_commands]]
 name = "edit"

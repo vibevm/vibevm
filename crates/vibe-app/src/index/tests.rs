@@ -1,6 +1,8 @@
 //! Index domain/wire round trip and atomic save proofs.
 use super::*;
-use vibe_core::manifest::{RequirementScope, StepPhase};
+use vibe_core::manifest::{
+    IconSet, LauncherActionDecl, LauncherKind, LauncherSource, RequirementScope, StepPhase,
+};
 
 fn sample() -> Index {
     let owned = Installation {
@@ -22,13 +24,14 @@ fn sample() -> Index {
         launchers: vec![LauncherDecl {
             id: "main".into(),
             name: "Editor".into(),
-            description: None,
             executable: "$app_bin/editor".into(),
             args: vec!["--fixed".into()],
             working_directory: Some("$project_root".into()),
-            icon: None,
-            terminal: true,
+            kind: Some(LauncherKind::Tui),
+            terminal: Some(true),
             default: true,
+            menu: Some(false),
+            ..LauncherDecl::default()
         }],
         public_commands: vec![PublicCommandDecl {
             name: "edit".into(),
@@ -39,6 +42,7 @@ fn sample() -> Index {
         parameters: Default::default(),
         license: None,
         icon: None,
+        menu: ApplicationMenu::default(),
         steps: Vec::new(),
         lifecycle: Lifecycle::default(),
     };
@@ -55,7 +59,6 @@ fn sample() -> Index {
             app_root: PathBuf::from("/usr/lib/editor"),
         },
         portable: false,
-        launchers: Vec::new(),
         public_commands: Vec::new(),
         commands: AuthoredCommands {
             uninstall: Some("sudo apt-get remove editor".into()),
@@ -69,7 +72,47 @@ fn sample() -> Index {
             name: "Demo".into(),
             accepted_at: "2026-10-31T00:00:00Z".into(),
         }),
-        icon: Some("share/icon.png".into()),
+        icon: Some(IconDecl::Path("share/icon.png".into())),
+        menu: ApplicationMenu {
+            menu_group: Some("Editors".into()),
+            categories: vec!["Development".into()],
+            keywords: vec!["text".into()],
+        },
+        launchers: vec![LauncherDecl {
+            id: "editor-gtk".into(),
+            name: "Editor".into(),
+            description: Some("Edit text".into()),
+            executable: "$app_bin/editor".into(),
+            args: vec!["{files}".into()],
+            kind: Some(LauncherKind::Gui),
+            terminal: Some(false),
+            menu: Some(true),
+            categories: vec!["Utility".into()],
+            keywords: vec!["notes".into()],
+            generic_name: Some("Text editor".into()),
+            window_class: Some("editor-gtk".into()),
+            mime_types: vec!["text/plain".into()],
+            names: [("de".to_owned(), "Editor (de)".to_owned())].into(),
+            descriptions: [("de".to_owned(), "Text bearbeiten".to_owned())].into(),
+            icon: Some(IconDecl::Set(IconSet {
+                svg: Some("$app_root/share/icons/hicolor/scalable/apps/editor.svg".into()),
+                png: [(
+                    "48".to_owned(),
+                    "$app_root/share/icons/hicolor/48x48/apps/editor.png".to_owned(),
+                )]
+                .into(),
+                maskable: true,
+                ..IconSet::default()
+            })),
+            actions: vec![LauncherActionDecl {
+                id: "new-window".into(),
+                name: "New Window".into(),
+                args: vec!["--new-window".into()],
+                icon: None,
+            }],
+            source: LauncherSource::DesktopEntry,
+            ..LauncherDecl::default()
+        }],
         steps: vec![
             StepRecord {
                 id: "install".into(),
@@ -193,4 +236,23 @@ fn save_is_atomic_and_load_rejects_inconsistent_records() {
     let mut old = sample().to_wire();
     old.protocol = "vibe-user-applications/2".into();
     assert!(Index::from_wire(old).unwrap_err().contains("protocol"));
+}
+
+#[test]
+fn a_record_without_kinds_reads_kind_from_terminal_and_no_menu() {
+    let mut old = sample().to_wire();
+    for record in old.installations.values_mut() {
+        for launcher in &mut record.launchers {
+            launcher.kind = None;
+            launcher.menu = false;
+            launcher.source = None;
+        }
+    }
+    let index = Index::from_wire(old).unwrap();
+    let owned = &index.installations["org.example/editor@1.2.0"].launchers[0];
+    assert_eq!(owned.kind, Some(LauncherKind::Tui));
+    assert!(!owned.shows_in_menu());
+    let external = &index.installations["org.example/editor-apt@2.0.0"].launchers[0];
+    assert_eq!(external.kind, Some(LauncherKind::Gui));
+    assert_eq!(external.source, LauncherSource::Authored);
 }

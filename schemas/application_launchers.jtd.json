@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Version 1 machine list from vibe app launchers PACKAGE --json.",
+    "description": "Version 1 machine list from vibe app launchers PACKAGE --json: the launch points of one installation with their kind, menu metadata (PROP-059#menu, #desktop-entries) and resolved availability.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations"
     },
@@ -33,6 +33,20 @@
       "metadata": {
         "x-empty": "emit"
       }
+    },
+    "menu_group": {
+      "type": "string",
+      "nullable": true
+    },
+    "categories": {
+      "ref": "string_list"
+    },
+    "keywords": {
+      "ref": "string_list"
+    },
+    "icon_set": {
+      "ref": "icon_set",
+      "nullable": true
     }
   },
   "definitions": {
@@ -84,6 +98,60 @@
         },
         "reason": {
           "type": "string",
+          "nullable": true
+        },
+        "kind": {
+          "ref": "launcher_kind"
+        },
+        "menu": {
+          "type": "boolean"
+        },
+        "source": {
+          "ref": "launcher_source"
+        },
+        "categories": {
+          "ref": "string_list"
+        },
+        "keywords": {
+          "ref": "string_list"
+        },
+        "generic_name": {
+          "type": "string",
+          "nullable": true
+        },
+        "names": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "descriptions": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "window_class": {
+          "type": "string",
+          "nullable": true
+        },
+        "mime_types": {
+          "ref": "string_list"
+        },
+        "actions": {
+          "elements": {
+            "ref": "launcher_action"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "icon_set": {
+          "ref": "icon_set",
           "nullable": true
         }
       }
@@ -151,6 +219,94 @@
       },
       "metadata": {
         "x-empty": "emit"
+      }
+    },
+    "launcher_kind": {
+      "enum": [
+        "gui",
+        "tui",
+        "command"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "launcher_source": {
+      "enum": [
+        "authored",
+        "desktop-entry"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "icon_slot": {
+      "enum": [
+        "svg",
+        "png",
+        "ico",
+        "icns",
+        "symbolic"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "icon_file": {
+      "properties": {
+        "slot": {
+          "ref": "icon_slot"
+        },
+        "size": {
+          "type": "uint32",
+          "nullable": true
+        },
+        "template": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "nullable": true
+        },
+        "diagnostic": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "icon_set": {
+      "metadata": {
+        "description": "An icon set of PROP-059#menu with every file resolved to an absolute path when it exists; size is the raster's pixel size."
+      },
+      "properties": {
+        "maskable": {
+          "type": "boolean"
+        },
+        "files": {
+          "elements": {
+            "ref": "icon_file"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "launcher_action": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "args": {
+          "ref": "args_value"
+        },
+        "icon_set": {
+          "ref": "icon_set",
+          "nullable": true
+        }
       }
     }
   }

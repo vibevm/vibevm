@@ -135,6 +135,7 @@ script = "build.sh"
 id = "main"
 name = "Tool"
 executable = "$app_bin/tool"
+kind = "command"
 args = ["fixed"]
 default = true
 

@@ -95,6 +95,7 @@ impl InstallerOptionDecl {
             }
         }
         self.validate_steps()?;
+        self.validate_launchers_from()?;
         let mut public_names = BTreeSet::new();
         for command in &self.public_commands {
             if !is_command_name(&command.name) || command.name == "vibe" {
@@ -109,10 +110,13 @@ impl InstallerOptionDecl {
                     command.name, self.id
                 ));
             }
-            if !self
-                .launchers
-                .iter()
-                .any(|launcher| launcher.id == command.launcher)
+            // A launcher derived from a desktop entry exists only after
+            // installation; the engine checks such a name then.
+            if self.launchers_from.is_empty()
+                && !self
+                    .launchers
+                    .iter()
+                    .any(|launcher| launcher.id == command.launcher)
             {
                 return Err(format!(
                     "[[installer_options.public_commands]] `{}` references unknown launcher `{}` in installer option `{}`",
@@ -140,15 +144,7 @@ impl ApplicationDecl {
         if !is_portable_token(&self.id) {
             return Err("[application].id must be a portable lowercase token".into());
         }
-        if let Some(icon) = &self.icon {
-            declarant_path(icon).map_err(|fault| {
-                format!(
-                    "[application].icon must be a package-relative file: {}",
-                    fault.reason()
-                )
-            })?;
-        }
-        Ok(())
+        self.validate_menu()
     }
 }
 
@@ -304,36 +300,9 @@ pub(super) fn validate_command_root(value: &str, table: &str) -> Result<(), Stri
     Ok(())
 }
 
-impl LauncherDecl {
-    pub(crate) fn validate(&self) -> Result<(), String> {
-        if !is_portable_token(&self.id) {
-            return Err(format!(
-                "[[launchers]].id `{}` must be a portable lowercase token",
-                self.id
-            ));
-        }
-        if self.name.trim().is_empty() {
-            return Err(format!("[[launchers]] `{}` name must be nonempty", self.id));
-        }
-        validate_template(&self.executable, "executable", true)?;
-        if let Some(directory) = &self.working_directory {
-            validate_template(directory, "working_directory", true)?;
-        }
-        if let Some(icon) = &self.icon
-            && !icon.is_empty()
-        {
-            validate_template(icon, "icon", true)?;
-        }
-        for arg in &self.args {
-            validate_template(arg, "args", false)?;
-        }
-        Ok(())
-    }
-}
-
 /// Syntax-only check. Runtime resolution applies root-specific containment and
 /// file checks after substituting values from the installed application record.
-fn validate_template(value: &str, field: &str, path: bool) -> Result<(), String> {
+pub(super) fn validate_template(value: &str, field: &str, path: bool) -> Result<(), String> {
     if path && value.is_empty() {
         return Err(format!("[[launchers]].{field} must be nonempty"));
     }

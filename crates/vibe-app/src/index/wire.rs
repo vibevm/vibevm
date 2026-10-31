@@ -5,14 +5,14 @@
 
 use std::path::PathBuf;
 
-use vibe_core::manifest::{
-    LauncherDecl, PublicCommandDecl, RequirementScope, ShellInterpreter, StepPhase,
-};
+use vibe_core::manifest::{PublicCommandDecl, RequirementScope, ShellInterpreter, StepPhase};
 use vibe_wire::generated::application::e2::index as wire;
 
+use super::launcher_wire::{icon_from_wire, icon_to_wire, launcher_from_wire, launcher_to_wire};
 use super::{
-    AcceptedLicense, AuthoredCommands, EnvEntry, EnvOp, Index, Installation, Lifecycle, Location,
-    Mark, Method, PackageCoordinate, Requirement, StepOutcome, StepRecord, ValueKind,
+    AcceptedLicense, ApplicationMenu, AuthoredCommands, EnvEntry, EnvOp, Index, Installation,
+    Lifecycle, Location, Mark, Method, PackageCoordinate, Requirement, StepOutcome, StepRecord,
+    ValueKind,
 };
 
 pub(super) fn installation_to_wire(
@@ -26,6 +26,7 @@ pub(super) fn installation_to_wire(
         }
         Location::External { app_root } => (None, None, Some(path_text(app_root))),
     };
+    let (icon, icon_set) = icon_to_wire(value.icon.as_ref());
     wire::Installation {
         slot: value.slot.clone(),
         package: wire::Package {
@@ -49,21 +50,7 @@ pub(super) fn installation_to_wire(
         directory,
         app_root,
         portable: value.portable,
-        launchers: value
-            .launchers
-            .iter()
-            .map(|launcher| wire::Launcher {
-                id: launcher.id.clone(),
-                name: launcher.name.clone(),
-                description: launcher.description.clone(),
-                executable: launcher.executable.clone(),
-                args: launcher.args.clone(),
-                working_directory: launcher.working_directory.clone(),
-                icon: launcher.icon.clone(),
-                terminal: launcher.terminal,
-                default: launcher.default,
-            })
-            .collect(),
+        launchers: value.launchers.iter().map(launcher_to_wire).collect(),
         public_commands: value
             .public_commands
             .iter()
@@ -84,7 +71,11 @@ pub(super) fn installation_to_wire(
             name: license.name.clone(),
             accepted_at: license.accepted_at.clone(),
         }),
-        icon: value.icon.clone(),
+        icon,
+        icon_set,
+        menu_group: value.menu.menu_group.clone(),
+        categories: value.menu.categories.clone(),
+        keywords: value.menu.keywords.clone(),
         steps: value
             .steps
             .iter()
@@ -243,17 +234,7 @@ pub(super) fn installation_from_wire(record: wire::Installation) -> Result<Insta
         launchers: record
             .launchers
             .into_iter()
-            .map(|launcher| LauncherDecl {
-                id: launcher.id,
-                name: launcher.name,
-                description: launcher.description,
-                executable: launcher.executable,
-                args: launcher.args,
-                working_directory: launcher.working_directory,
-                icon: launcher.icon,
-                terminal: launcher.terminal,
-                default: launcher.default,
-            })
+            .map(launcher_from_wire)
             .collect(),
         public_commands: record
             .public_commands
@@ -275,7 +256,12 @@ pub(super) fn installation_from_wire(record: wire::Installation) -> Result<Insta
             name: license.name,
             accepted_at: license.accepted_at,
         }),
-        icon: record.icon,
+        icon: icon_from_wire(record.icon, record.icon_set),
+        menu: ApplicationMenu {
+            menu_group: record.menu_group,
+            categories: record.categories,
+            keywords: record.keywords,
+        },
         steps: record
             .steps
             .into_iter()

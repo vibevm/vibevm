@@ -417,6 +417,11 @@ pub enum LaunchError {
          fix: check that the resolved executable runs on this platform)"
     )]
     Spawn { id: String, reason: String },
+    #[error(
+        "icon_unavailable: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#menu; \
+         fix: inspect `vibe app launchers PACKAGE --json` for the icon set and the files that exist)"
+    )]
+    NoIcon { reason: String },
 }
 
 /// Install, update, uninstall and inventory operations.
@@ -536,4 +541,9 @@ pub enum AppError {
          (violates spec://org.vibevm.core/vibevm/common/PROP-059#session-selection; fix: correct VIBE_APP_USE or the --use argument)"
     )]
     SessionChoice { entry: String },
+    #[error(
+        "the launchers of `{key}` are incomplete: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#desktop-entries; \
+         fix: make every launcher row complete, or ship the desktop entry its override row and public commands name)"
+    )]
+    Launchers { key: String, reason: String },
 }

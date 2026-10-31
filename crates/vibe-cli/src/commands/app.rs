@@ -1,5 +1,6 @@
 //! CLI adapter for installed applications: `vibe app installers`,
-//! `launchers`, `run`, `start`, `list`, `use` and `alternatives` over the
+//! `launchers`, `icon`, `import-desktop`, `run`, `start`, `list`, `use` and
+//! `alternatives` over the
 //! `vibe-app` library. This adapter parses, chooses an ID in an attended
 //! terminal and renders.
 
@@ -14,6 +15,7 @@ pub(crate) mod global;
 pub(crate) mod home;
 mod interrupt;
 mod lifecycle;
+mod menu;
 pub(crate) mod project;
 mod records;
 mod report;
@@ -234,13 +236,38 @@ pub fn run(
             )?;
             Ok(None)
         }
-        AppCommand::Launchers { package } => {
+        AppCommand::Launchers { package, all, menu } => {
+            if all {
+                menu::all(ctx, &app_home, project_root.as_deref(), menu)?;
+                return Ok(None);
+            }
+            let package = package.unwrap_or_default();
             let listing = launcher_listing(&app_home, &package, project_root.as_deref())?;
             if ctx.is_json() {
                 ctx.emit_json(&listing)?;
             } else {
                 print_listing(&listing, ctx.is_quiet());
             }
+            Ok(None)
+        }
+        AppCommand::Icon {
+            package,
+            launcher,
+            size,
+            prefer,
+        } => {
+            menu::icon(
+                ctx,
+                &app_home,
+                &package,
+                launcher.as_deref(),
+                size,
+                prefer.map(|prefer| prefer.slot()),
+            )?;
+            Ok(None)
+        }
+        AppCommand::ImportDesktop { files, app_root } => {
+            menu::import_desktop(&files, app_root.as_deref())?;
             Ok(None)
         }
         AppCommand::List => {

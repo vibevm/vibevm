@@ -60,11 +60,12 @@ use specmark::spec;
 pub mod checks;
 
 pub use checks::{
-    ActivationConflictCheck, BootDirectoryCheck, BridgeProvenanceCheck, DocMediaCheck,
-    DocPackageContractCheck, DocTranslationCheck, FactsSyncCheck, FeaturesGraphCheck,
-    I18nCoverageCheck, LocalSourceFreshnessCheck, LockfileFilesCheck, ManifestEpochCheck,
-    ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck, SnippetPresuppositionCheck,
-    SubskillStructureCheck, VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck,
+    ActivationConflictCheck, ApplicationIconsCheck, BootDirectoryCheck, BridgeProvenanceCheck,
+    DocMediaCheck, DocPackageContractCheck, DocTranslationCheck, FactsSyncCheck,
+    FeaturesGraphCheck, I18nCoverageCheck, LocalSourceFreshnessCheck, LockfileFilesCheck,
+    ManifestEpochCheck, ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck,
+    SnippetPresuppositionCheck, SubskillStructureCheck, VisibilityHygieneCheck, WalFreshnessCheck,
+    WalWellformedCheck,
 };
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
@@ -147,6 +148,10 @@ pub enum CheckId {
     /// JPEG or WebP signature (SVG is refused — it can carry script),
     /// and fits its role's proportions and byte ceiling.
     DocMedia,
+    /// PROP-059 `#menu` — every icon file an application package names
+    /// exists in its tree, a PNG is square and matches its listed size,
+    /// and a `menu = true` launcher has an SVG or a PNG of 256 pixels.
+    ApplicationIcons,
     /// PROP-038 §3 — every per-unit boot artifact's recorded fingerprint
     /// matches a fresh recomputation (the hybrid linker's dirty-subgraph is
     /// consistent); a stale artifact warns to `vibe reinstall`.
@@ -176,6 +181,7 @@ impl CheckId {
             CheckId::DocPackageContract => "doc_package_contract",
             CheckId::DocTranslation => "doc_translation",
             CheckId::DocMedia => "doc_media",
+            CheckId::ApplicationIcons => "application_icons",
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
         }
     }
@@ -206,6 +212,7 @@ impl CheckId {
             CheckId::DocPackageContract,
             CheckId::DocTranslation,
             CheckId::DocMedia,
+            CheckId::ApplicationIcons,
         ]
     }
 }
@@ -429,7 +436,7 @@ pub trait Check {
 /// use vibe_check::{CheckId, all_checks};
 ///
 /// let checks = all_checks();
-/// assert_eq!(checks.len(), 20);
+/// assert_eq!(checks.len(), 21);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
 pub fn all_checks() -> Vec<Box<dyn Check>> {
@@ -454,6 +461,7 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
         Box::new(DocPackageContractCheck),
         Box::new(DocTranslationCheck),
         Box::new(DocMediaCheck),
+        Box::new(ApplicationIconsCheck),
     ]
 }
 
@@ -564,6 +572,7 @@ mod tests {
                 CheckId::DocPackageContract,
                 CheckId::DocTranslation,
                 CheckId::DocMedia,
+                CheckId::ApplicationIcons,
             ]
         );
     }

@@ -161,3 +161,21 @@ fn caller_arguments_follow_the_launcher_arguments_literally() {
     assert!(!root.path().join("unsafe").exists());
     assert_eq!(execute(&launch, &[]).unwrap(), 0);
 }
+
+#[test]
+fn placeholders_take_the_caller_arguments() {
+    let caller = [OsString::from("a.txt"), OsString::from("b.txt")];
+    let files = vec!["--new".to_owned(), "{files}".to_owned()];
+    assert_eq!(
+        super::resolve::operands(&files, &caller),
+        ["--new", "a.txt", "b.txt"]
+    );
+    let file = vec!["--open={file}".to_owned()];
+    assert_eq!(super::resolve::operands(&file, &caller), ["--open=a.txt"]);
+    assert_eq!(super::resolve::operands(&files, &[]), ["--new"]);
+    let plain = vec!["--x".to_owned()];
+    assert_eq!(
+        super::resolve::operands(&plain, &caller),
+        ["--x", "a.txt", "b.txt"]
+    );
+}

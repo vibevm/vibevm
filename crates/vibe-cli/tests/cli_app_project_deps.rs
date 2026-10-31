@@ -39,6 +39,7 @@ from = "payload"
 id = "tcc"
 name = "Test compiler"
 executable = "$app_bin/vibe-test-tcc"
+kind = "command"
 
 [[installer_options.public_commands]]
 name = "vibe-test-tcc"
@@ -64,6 +65,7 @@ needs = ["command:vibe-test-tcc"]
 id = "main"
 name = "App"
 executable = "$app_bin/app"
+kind = "command"
 "#,
     );
     fs::write(

@@ -19,7 +19,8 @@
           "args": ["--fixed"],
           "workingDirectory": "$project_root",
           "terminal": true,
-          "default": true
+          "default": true,
+          "kind": "tui"
         }
       ],
       "publicCommands": [{ "name": "edit", "launcher": "main" }],
@@ -35,7 +36,33 @@
       "method": "shell",
       "appRoot": "/usr/lib/editor",
       "portable": false,
-      "launchers": [],
+      "launchers": [
+        {
+          "id": "editor-gtk",
+          "name": "Editor",
+          "description": "Edit text",
+          "executable": "$app_bin/editor",
+          "args": ["{files}"],
+          "iconSet": {
+            "svg": "$app_root/share/icons/hicolor/scalable/apps/editor.svg",
+            "png": { "48": "$app_root/share/icons/hicolor/48x48/apps/editor.png" },
+            "maskable": true
+          },
+          "terminal": false,
+          "default": false,
+          "kind": "gui",
+          "menu": true,
+          "categories": ["Utility"],
+          "keywords": ["notes"],
+          "genericName": "Text editor",
+          "windowClass": "editor-gtk",
+          "mimeTypes": ["text/plain"],
+          "names": { "de": "Editor (de)" },
+          "descriptions": { "de": "Text bearbeiten" },
+          "actions": [{ "id": "new-window", "name": "New Window", "args": ["--new-window"] }],
+          "source": "desktop-entry"
+        }
+      ],
       "publicCommands": [],
       "commands": {
         "uninstall": "sudo apt-get remove editor",
@@ -47,6 +74,9 @@
       "parameters": { "port": "8080" },
       "license": { "name": "Demo", "acceptedAt": "2026-10-31T00:00:00Z" },
       "icon": "share/icon.png",
+      "menuGroup": "Editors",
+      "categories": ["Development"],
+      "keywords": ["text"],
       "steps": [
         { "id": "install", "kind": "shell", "outcome": "done" },
         {

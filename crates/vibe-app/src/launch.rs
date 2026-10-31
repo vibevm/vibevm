@@ -10,8 +10,7 @@ use std::path::{Component, Path, PathBuf};
 use std::process::{Command, ExitStatus, Stdio};
 
 use specmark::spec;
-use vibe_core::manifest::LauncherDecl;
-use vibe_wire::generated::application_launchers as wire;
+use vibe_core::manifest::{ARG_PLACEHOLDERS, IconDecl, LauncherDecl, LauncherKind};
 
 use crate::error::LaunchError;
 use crate::index::{Installation, Location};
@@ -27,7 +26,7 @@ pub struct TemplateVars {
     pub project_root: Option<PathBuf>,
 }
 
-const PROJECT_REQUIRED: &str = "project_required";
+pub(crate) const PROJECT_REQUIRED: &str = "project_required";
 
 /// Expand `$app_root`, `$app_bin`, `$project_root`, `$vibe_home` (braced or
 /// not) and `$$` in one pass; never shell evaluation.
@@ -182,15 +181,16 @@ pub fn resolve(launcher: &LauncherDecl, vars: &TemplateVars) -> Result<ResolvedL
         .iter()
         .map(|arg| expand_template(arg, &vars))
         .collect::<Result<Vec<_>, _>>()?;
-    let (icon, icon_diagnostic) = match launcher.icon.as_deref().filter(|icon| !icon.is_empty()) {
+    let short_form = match &launcher.icon {
+        Some(IconDecl::Path(template)) if !template.is_empty() => Some(template.as_str()),
+        _ => None,
+    };
+    let (icon, icon_diagnostic) = match short_form {
         None => (None, None),
-        Some(template) => {
-            match template_path(template, &vars).and_then(|path| canonical(&path, "icon", false)) {
-                Ok(path) if path.starts_with(&root) => (Some(path), None),
-                Ok(_) => (None, Some("icon escapes app_root".into())),
-                Err(reason) => (None, Some(reason)),
-            }
-        }
+        Some(template) => match locate_icon(template, &vars) {
+            Ok(path) => (Some(path), None),
+            Err(reason) => (None, Some(reason)),
+        },
     };
     Ok(ResolvedLauncher {
         executable,
@@ -199,6 +199,17 @@ pub fn resolve(launcher: &LauncherDecl, vars: &TemplateVars) -> Result<ResolvedL
         icon,
         icon_diagnostic,
     })
+}
+
+/// One icon file of a launcher under the canonical `app_root` of `vars`:
+/// the file exists and stays inside the root.
+pub(crate) fn locate_icon(template: &str, vars: &TemplateVars) -> Result<PathBuf, String> {
+    let root = canonical(&vars.app_root, "app_root", true)?;
+    match template_path(template, vars).and_then(|path| canonical(&path, "icon", false)) {
+        Ok(path) if path.starts_with(&root) => Ok(path),
+        Ok(_) => Err("icon escapes app_root".into()),
+        Err(reason) => Err(reason),
+    }
 }
 
 fn template_path(template: &str, vars: &TemplateVars) -> Result<PathBuf, String> {
@@ -260,89 +271,6 @@ fn runnable(executable: &Path) -> Result<(), String> {
     Ok(())
 }
 
-/// The `vibe-app-launchers/1` listing of one installation.
-pub fn listing(
-    installation: &Installation,
-    storage: &Storage,
-    vibe_home: &Path,
-    project_root: Option<&Path>,
-) -> wire::ApplicationLaunchers {
-    let root = app_root(installation, storage);
-    let launchers = installation
-        .launchers
-        .iter()
-        .map(|launcher| {
-            let outcome = match &root {
-                Ok(root) => resolve(
-                    launcher,
-                    &TemplateVars {
-                        app_root: root.clone(),
-                        vibe_home: vibe_home.to_path_buf(),
-                        project_root: project_root.map(Path::to_path_buf),
-                    },
-                ),
-                Err(reason) => Err(reason.clone()),
-            };
-            let (status, reason, resolved) = match outcome {
-                Ok(resolved) => (wire::LauncherStatus::Available, None, Some(resolved)),
-                Err(reason) if reason == PROJECT_REQUIRED => {
-                    (wire::LauncherStatus::RequiresProject, Some(reason), None)
-                }
-                Err(reason) => (wire::LauncherStatus::Unavailable, Some(reason), None),
-            };
-            let text = |path: &PathBuf| path.display().to_string();
-            wire::Launcher {
-                id: launcher.id.clone(),
-                name: launcher.name.clone(),
-                description: launcher.description.clone(),
-                default: launcher.default,
-                terminal: launcher.terminal,
-                executable: wire::PathValue {
-                    template: Some(launcher.executable.clone()),
-                    base: "app_root".into(),
-                    resolved: resolved.as_ref().map(|value| text(&value.executable)),
-                },
-                args: wire::ArgsValue {
-                    template: launcher.args.clone(),
-                    resolved: resolved.as_ref().map(|value| value.args.clone()),
-                },
-                working_directory: wire::PathValue {
-                    template: launcher.working_directory.clone(),
-                    base: "app_root".into(),
-                    resolved: resolved
-                        .as_ref()
-                        .and_then(|value| value.working_directory.as_ref().map(text)),
-                },
-                icon: wire::IconValue {
-                    template: launcher.icon.clone(),
-                    resolved: resolved
-                        .as_ref()
-                        .and_then(|value| value.icon.as_ref().map(text)),
-                    diagnostic: resolved.and_then(|value| value.icon_diagnostic),
-                },
-                status,
-                reason,
-            }
-        })
-        .collect();
-    wire::ApplicationLaunchers {
-        protocol: "vibe-app-launchers/1".into(),
-        application_id: installation.slot.clone(),
-        package: wire::PackageIdentity {
-            group: installation.package.group.clone(),
-            name: installation.package.name.clone(),
-            version: installation.package.version.clone(),
-        },
-        default_launcher_id: installation
-            .launchers
-            .iter()
-            .find(|launcher| launcher.default)
-            .map(|launcher| launcher.id.clone()),
-        app_root: root.ok().map(|path| path.display().to_string()),
-        launchers,
-    }
-}
-
 /// Everything one launch needs besides the installation itself.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations")]
@@ -378,13 +306,14 @@ pub fn run(
         },
     )
     .map_err(unavailable)?;
-    if launcher.terminal && !request.attended_terminal {
+    // A full-screen terminal program needs the caller's terminal; a
+    // `command` reads arguments and prints, so a pipe serves it as well.
+    if launcher.effective_kind() == LauncherKind::Tui && !request.attended_terminal {
         return Err(unavailable("terminal_required".into()));
     }
     let mut command = Command::new(&resolved.executable);
     command
-        .args(&resolved.args)
-        .args(request.extra_args)
+        .args(with_operands(&resolved.args, request.extra_args))
         .stdin(Stdio::inherit())
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit());
@@ -396,6 +325,55 @@ pub fn run(
         reason: error.to_string(),
     })?;
     Ok(exit_code(status))
+}
+
+/// The argument array of one launch: `{file}` / `{url}` take the first
+/// extra argument, `{files}` / `{urls}` all of them, an unfilled placeholder
+/// argument is dropped, and extra arguments no placeholder took follow.
+///
+/// ```
+/// use std::ffi::OsString;
+/// use vibe_app::launch_arguments;
+///
+/// let extra = [OsString::from("a.txt"), OsString::from("b.txt")];
+/// let args = ["--new".to_owned(), "{files}".to_owned()];
+/// assert_eq!(launch_arguments(&args, &extra), ["--new", "a.txt", "b.txt"]);
+/// assert_eq!(launch_arguments(&args, &[]), ["--new"]);
+/// assert_eq!(launch_arguments(&["--x".to_owned()], &extra), ["--x", "a.txt", "b.txt"]);
+/// ```
+pub fn launch_arguments(args: &[String], extra: &[OsString]) -> Vec<OsString> {
+    with_operands(args, extra)
+}
+
+fn with_operands(args: &[String], extra: &[OsString]) -> Vec<OsString> {
+    let mut consumed = false;
+    let mut out = Vec::new();
+    for arg in args {
+        let single = ["{file}", "{url}"]
+            .into_iter()
+            .find(|placeholder| arg.contains(placeholder));
+        if arg == "{files}" || arg == "{urls}" {
+            out.extend(extra.iter().cloned());
+            consumed = true;
+        } else if let Some(placeholder) = single {
+            consumed = true;
+            match extra.first() {
+                Some(first) => out.push(OsString::from(
+                    arg.replace(placeholder, &first.to_string_lossy()),
+                )),
+                None if arg == placeholder => {}
+                None => out.push(OsString::from(arg.replace(placeholder, ""))),
+            }
+        } else if ARG_PLACEHOLDERS.contains(&arg.as_str()) {
+            consumed = true;
+        } else {
+            out.push(OsString::from(arg));
+        }
+    }
+    if !consumed {
+        out.extend(extra.iter().cloned());
+    }
+    out
 }
 
 /// The native exit status; a POSIX signal maps to `128 + signal`.
@@ -413,6 +391,12 @@ pub fn exit_code(status: ExitStatus) -> i32 {
     1
 }
 
+#[path = "launch/listing.rs"]
+mod listing_form;
+
+pub(crate) use listing_form::application_icon;
+pub use listing_form::{icon_choice, listing, listing_all};
+
 #[cfg(all(test, unix))]
 mod tests {
     use super::*;
@@ -421,13 +405,13 @@ mod tests {
         LauncherDecl {
             id: "main".into(),
             name: "Main".into(),
-            description: None,
             executable: executable.into(),
             args: vec!["${app_root}".into(), "$$x".into()],
             working_directory: Some(".".into()),
-            icon: Some("missing.png".into()),
-            terminal: false,
+            icon: Some(IconDecl::Path("missing.png".into())),
+            kind: Some(LauncherKind::Gui),
             default: true,
+            ..LauncherDecl::default()
         }
     }
 

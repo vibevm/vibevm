@@ -41,7 +41,7 @@ fn install_waiter(root: &Path, user: &UserScratch) {
              [application]\nid = \"waiter\"\n\n\
              [[installer_options]]\nid = \"zip\"\nname = \"Zip\"\nplatform = \"linux\"\nplatform_name = \"Linux\"\narch = \"{arch}\"\n\n\
              [installer_options.installation]\ntype = \"zip\"\nsource = \"waiter.zip\"\nsha256 = \"{sha}\"\n\n\
-             [[installer_options.launchers]]\nid = \"main\"\nname = \"Waiter\"\nexecutable = \"$app_bin/waiter\"\ndefault = true\n\n\
+             [[installer_options.launchers]]\nid = \"main\"\nname = \"Waiter\"\nexecutable = \"$app_bin/waiter\"\nkind = \"command\"\ndefault = true\n\n\
              [[installer_options.public_commands]]\nname = \"waiter\"\nlauncher = \"main\"\n",
             arch = std::env::consts::ARCH,
         ),

@@ -173,7 +173,7 @@ impl Manifest {
             let mut has_default = false;
             for launcher in &option.launchers {
                 launcher
-                    .validate()
+                    .validate(!option.launchers_from.is_empty())
                     .map_err(|reason| Error::InvalidManifest {
                         reason: format!("[[installer_options]] `{}`: {reason}", option.id),
                     })?;

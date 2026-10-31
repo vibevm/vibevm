@@ -95,8 +95,21 @@ fn print_outline(document: &ApplicationDescribe) {
                 step.title
             );
         }
+        for pattern in &option.launchers_from {
+            println!("    launchers from {pattern}");
+        }
         for launcher in &option.launchers {
-            println!("    launcher {}: {}", launcher.id, launcher.executable);
+            let menu = if launcher.menu { ", menu" } else { "" };
+            let kind = launcher
+                .kind
+                .as_ref()
+                .and_then(|kind| serde_json::to_value(kind).ok())
+                .and_then(|kind| kind.as_str().map(str::to_owned))
+                .unwrap_or_else(|| "override".into());
+            println!(
+                "    launcher {} ({kind}{menu}): {}",
+                launcher.id, launcher.executable
+            );
         }
         for command in &option.public_commands {
             println!("    command {} → {}", command.name, command.launcher);
