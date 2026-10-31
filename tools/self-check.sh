@@ -27,7 +27,7 @@ done
 
 cd "$(dirname "$0")/.." || exit 2
 
-STEP_TOTAL=7
+STEP_TOTAL=8
 STEP_NO=0
 OVERALL=0
 
@@ -107,6 +107,13 @@ run_step "cargo clippy --workspace --all-targets -- -D warnings" \
   cargo clippy --workspace --all-targets --quiet -- -D warnings || OVERALL=$?
 run_step "vibe check --path . --quiet" \
   cargo run --quiet -p vibe-cli -- check --path . --quiet || OVERALL=$?
+# A Windows main thread owns 1 MiB of stack and a Linux one 8 MiB, so a debug
+# build that grows past the smaller limit at startup (clap's derived builders
+# did on 2026-10-31) passes every step above and dies on `vibe --version`
+# over there. Start the binary under the Windows limit here, on a subshell
+# whose ulimit does not leak into the steps that follow.
+run_step "vibe --version under a 1 MiB stack" \
+  bash -c 'ulimit -s 1024 && exec target/debug/vibe --version' || OVERALL=$?
 run_step "cargo xtask conform check" \
   cargo xtask conform check || OVERALL=$?
 run_step "cargo xtask check-codegen" \
