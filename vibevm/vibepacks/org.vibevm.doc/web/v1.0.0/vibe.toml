@@ -30,7 +30,7 @@ requires_kinds = []
 [application]
 id = "vibevm-doc"
 
-# Every platform installs the same way: a source build with no sources, so
+# Every platform installs the same way: one recipe step with no sources, so
 # the package tree itself is the input (VIBE_PACKAGE); the recipe copies it
 # without build output and writes a relocatable `bin/vibevm-doc` wrapper
 # (spec://org.vibevm.core/vibevm/common/PROP-059#source-build).
@@ -42,10 +42,10 @@ platform_name = "Linux"
 arch = "x86_64"
 arch_name = "Intel/AMD 64-bit"
 
-[installer_options.installation]
-type = "source_build"
-
-[installer_options.installation.recipe]
+[[installer_options.steps]]
+id = "install"
+title = "Copy the site tree and write the relocatable launcher"
+kind = "recipe"
 interpreter = "posix_sh"
 script = "tooling/local-site/install.sh"
 
@@ -69,10 +69,10 @@ platform_name = "Linux"
 arch = "aarch64"
 arch_name = "ARM 64-bit"
 
-[installer_options.installation]
-type = "source_build"
-
-[installer_options.installation.recipe]
+[[installer_options.steps]]
+id = "install"
+title = "Copy the site tree and write the relocatable launcher"
+kind = "recipe"
 interpreter = "posix_sh"
 script = "tooling/local-site/install.sh"
 
@@ -96,10 +96,10 @@ platform_name = "macOS"
 arch = "aarch64"
 arch_name = "Apple silicon"
 
-[installer_options.installation]
-type = "source_build"
-
-[installer_options.installation.recipe]
+[[installer_options.steps]]
+id = "install"
+title = "Copy the site tree and write the relocatable launcher"
+kind = "recipe"
 interpreter = "posix_sh"
 script = "tooling/local-site/install.sh"
 
@@ -123,10 +123,10 @@ platform_name = "macOS"
 arch = "x86_64"
 arch_name = "Intel 64-bit"
 
-[installer_options.installation]
-type = "source_build"
-
-[installer_options.installation.recipe]
+[[installer_options.steps]]
+id = "install"
+title = "Copy the site tree and write the relocatable launcher"
+kind = "recipe"
 interpreter = "posix_sh"
 script = "tooling/local-site/install.sh"
 
