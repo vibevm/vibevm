@@ -2492,3 +2492,13 @@ structure, and it goes when the file does.
 | @fact:B227-SEVERITY **severity** | P3 — the TTL bounds the staleness; a client can wait or clear `<home>/registries/`. |
 | @fact:B227-DISPOSITION **disposition** | `candidate` — needs the owner's yes; the same pass should wire the publish index hook so `vibe registry publish` updates `vibespecs/index` instead of a manual `vibe-index reindex`, and make the index client check a `by-name` file against `repomd.json` (a CDN served the old `by-name/vim.json` for about ten minutes after the push, so a fresh home chose `1.1.1` whose manifest this version refuses) and fall back to tag enumeration on a mismatch. |
 | @fact:B227-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
+
+## B-228 — the application mutation lock leaks into a forked child for an instant {#b-228}
+
+| field | value |
+|---|---|
+| @fact:B228-WHAT **what** | `SettingsRoot::lock()` (`vibe-app` `settings.rs`) takes `applications/.mutation.lock` with `File::try_lock`, an open-file-description lock. A child spawned while the lock is held shares that description between `fork` and `exec` (the descriptor is close-on-exec, so the window closes at `exec`), and a second lock attempt in that window is refused as `locked` although the holder has already released it. One vibe process takes the lock once, so the CLI never observes it; a test process that locks the same home twice around a child spawn does. |
+| @fact:B228-EVIDENCE **evidence** | `steps/work.rs` unit tests, 2026-10-31: two `clean_work` calls on one home intermittently returned `locked` while a sibling test's child was being spawned; the test now uses one home per lock acquisition and says why. |
+| @fact:B228-SEVERITY **severity** | P3 — no user-visible effect today; a hazard for any future in-process second acquisition (a long-lived desktop client, a daemon). |
+| @fact:B228-DISPOSITION **disposition** | `candidate` — options: retry the acquisition for a bounded few milliseconds before refusing, or spawn children through a path that never inherits the lock description (`posix_spawn` with the descriptor closed in the child's file actions); the owner picks. |
+| @fact:B228-FILED **filed by** | kept-work-directories change (`c22f72bb8`), 2026-10-31. |
