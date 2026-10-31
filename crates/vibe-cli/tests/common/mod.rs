@@ -19,6 +19,8 @@ use std::path::{Path, PathBuf};
 
 /// The loopback provider oracle the create-phase e2e binaries share.
 pub mod agent_provider;
+/// Local application registries of the PROP-065 lifecycle fixtures.
+pub mod app_registry;
 /// The fake coding agent of the PROP-064 agent-hook fixture.
 pub mod fake_agent;
 pub mod hook_slot;

@@ -8,17 +8,15 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use dialoguer::{Confirm, Input, MultiSelect, Password, Select};
 use vibe_app::{
-    Command as AppCommand, FeatureRequest, HostFacts, InstallChoice, InstallRequest, Interrupt,
-    OperationContext, Outcome, Plan, ResolvedPackage, SettingsRoot, Start,
+    FeatureRequest, HostFacts, InstallChoice, InstallRequest, Interrupt, OperationContext, Plan,
+    RemoveRequest, ResolvedPackage, SettingsRoot, Start, UserEnvironment,
 };
 use vibe_core::manifest::{ParameterDecl, ParameterType};
 use vibe_core::progress::Progress;
-use vibe_wire::generated::application_report::{
-    ApplicationReport, ApplicationReportCommand, ApplicationReportSelectedMode,
-};
 
 use super::agents::{AgentSetup, report_parked};
 use super::interrupt::Signals;
+use super::report::{render, render_removal};
 use crate::cli::{AppChoiceArgs, AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
 
@@ -54,6 +52,35 @@ pub(crate) fn resolve_package(
         return Ok(vibe_app::from_local_registry(&local, root, spelling)?);
     }
     Ok(vibe_app::from_global(settings.path(), spelling, offline)?)
+}
+
+/// The package resolver of one command: the same explicit (or embedded)
+/// registry as the requested package, otherwise the configured registries
+/// (PROP-065 `#app-dependencies`: requirements resolve like any package).
+pub(crate) struct Packages {
+    pub(crate) settings: SettingsRoot,
+    pub(crate) registry: Option<PathBuf>,
+    pub(crate) embedded: Option<PathBuf>,
+    pub(crate) offline: bool,
+}
+
+impl Packages {
+    pub(crate) fn resolve(&self, spelling: &str) -> Result<ResolvedPackage, vibe_app::AppError> {
+        resolve_package(
+            &self.settings,
+            self.registry.as_deref(),
+            self.embedded.as_deref(),
+            spelling,
+            self.offline,
+        )
+        .map_err(|error| {
+            vibe_app::ResolveError::Registry {
+                spelling: spelling.into(),
+                reason: format!("{error:#}"),
+            }
+            .into()
+        })
+    }
 }
 
 pub(super) fn chooser(
@@ -166,6 +193,10 @@ pub(crate) fn host_facts() -> HostFacts<'static> {
 pub(crate) struct Observation {
     pub(crate) progress: Progress,
     pub(crate) signals: Option<Signals>,
+    /// The durable user environment env steps change (PROP-065 `#env-step`).
+    pub(crate) environment: Option<Box<dyn UserEnvironment>>,
+    /// The caller's PATH, behind the requirements a step sees first.
+    pub(crate) search_path: Option<std::ffi::OsString>,
 }
 
 impl Observation {
@@ -182,6 +213,11 @@ impl Observation {
             } else {
                 None
             },
+            environment: super::environment::for_host(
+                settings_root()?.path(),
+                super::facts::user_home().as_deref(),
+            ),
+            search_path: super::facts::search_path(),
         })
     }
 
@@ -218,6 +254,9 @@ pub(super) fn operation<'a>(
         quiet_children: ctx.is_machine_progress(),
         interrupt: observe.interrupt(),
         agent: vibe_app::AgentHooks::default(),
+        resolver: None,
+        environment: observe.environment.as_deref(),
+        search_path: observe.search_path.as_deref(),
     }
 }
 
@@ -265,6 +304,7 @@ pub(super) fn plan_request(choice: InstallChoice, answers: &AppChoiceArgs) -> In
         parameters: answers.set.clone(),
         accept_license: answers.accept_license,
         start: Start::Fresh,
+        ..InstallRequest::default()
     }
 }
 
@@ -325,12 +365,23 @@ pub fn install(
         arch: args.arch,
         installer: args.installer,
     };
-    let request = request(choice, args.library, args.force, &args.steps);
+    let request = InstallRequest {
+        hidden: args.hidden,
+        ..request(choice, args.library, args.force, &args.steps)
+    };
     let agents = AgentSetup::new(ctx, args.agent.as_deref(), args.assume_yes)?;
+    let packages = Packages {
+        settings: settings.clone(),
+        registry: args.registry.clone(),
+        embedded: embedded_root.clone(),
+        offline,
+    };
+    let resolver = |spelling: &str| packages.resolve(spelling);
     if args.plan_only {
         let observe = Observation::new(ctx, false)?;
         let operation = OperationContext {
             agent: agents.hooks(),
+            resolver: Some(&resolver),
             ..operation(ctx, &settings, offline, &proxy_image, None, &observe)
         };
         let plan = vibe_app::plan(&operation, &resolved, &request)?;
@@ -341,6 +392,7 @@ pub fn install(
     let outcome = ctx.suspend_progress(|| {
         let operation = OperationContext {
             agent: agents.hooks(),
+            resolver: Some(&resolver),
             ..operation(ctx, &settings, offline, &proxy_image, Some(&show), &observe)
         };
         report_parked(ctx, vibe_app::install(&operation, &resolved, &request))
@@ -354,14 +406,16 @@ pub fn update(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
 ) -> Result<()> {
+    if args.all && args.packages.is_empty() {
+        return super::lifecycle::update_all(ctx, args, embedded_root, root_offline);
+    }
     if args.packages.len() != 1 || args.all {
-        bail!("global update requires exactly one fully qualified application package");
+        bail!("global update requires exactly one fully qualified application package, or --all");
     }
     if args.path != Path::new(".") || args.exact || args.auth_required || args.trace_compile {
         bail!("global update received project-only package flags");
     }
     let settings = settings_root()?;
-    let proxy_image = proxy_image()?;
     let resolved = resolve_package(
         &settings,
         args.registry.as_deref(),
@@ -369,18 +423,44 @@ pub fn update(
         &args.packages[0],
         root_offline,
     )?;
+    let outcome = update_one(ctx, &args, embedded_root, root_offline, &resolved)?;
+    render(ctx, &outcome)
+}
+
+/// One application update with the flags of `args` (PROP-065
+/// `#update-and-rollback`): requirements resolve through the same registry.
+pub(crate) fn update_one(
+    ctx: &output::Context,
+    args: &UpdateArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    resolved: &ResolvedPackage,
+) -> Result<vibe_app::Outcome> {
+    let settings = settings_root()?;
+    let proxy_image = proxy_image()?;
     let choice = InstallChoice {
-        platform: args.platform,
-        arch: args.arch,
-        installer: args.installer,
+        platform: args.platform.clone(),
+        arch: args.arch.clone(),
+        installer: args.installer.clone(),
     };
-    let request = request(choice, args.library, args.force, &args.steps);
+    let request = InstallRequest {
+        purge_previous: args.purge_previous,
+        ..request(choice, args.library.clone(), args.force, &args.steps)
+    };
     let agents = AgentSetup::new(ctx, args.agent.as_deref(), args.assume_yes)?;
+    let packages = Packages {
+        settings: settings.clone(),
+        registry: args.registry.clone(),
+        embedded: embedded_root,
+        offline: root_offline,
+    };
+    let resolver = |spelling: &str| packages.resolve(spelling);
     let show = plan_printer(ctx);
     let observe = Observation::new(ctx, true)?;
-    let outcome = ctx.suspend_progress(|| {
+    ctx.suspend_progress(|| {
         let operation = OperationContext {
             agent: agents.hooks(),
+            resolver: Some(&resolver),
             ..operation(
                 ctx,
                 &settings,
@@ -390,9 +470,19 @@ pub fn update(
                 &observe,
             )
         };
-        report_parked(ctx, vibe_app::update(&operation, &resolved, &request))
-    })?;
-    render(ctx, &outcome)
+        report_parked(ctx, vibe_app::update(&operation, resolved, &request))
+    })
+    .map_err(Into::into)
+}
+
+/// The tree-removal flags of `uninstall` (PROP-065 `#uninstall-tree`).
+pub(crate) fn remove_request(args: &UninstallArgs) -> RemoveRequest {
+    RemoveRequest {
+        force: args.force,
+        cascade: args.cascade,
+        autoremove: args.autoremove,
+        plan_only: args.plan_only,
+    }
 }
 
 pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool) -> Result<()> {
@@ -403,54 +493,13 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
     let settings = settings_root()?;
     let proxy_image = proxy_image()?;
     let observe = Observation::new(ctx, true)?;
-    let outcome = ctx.suspend_progress(|| {
+    let removal = ctx.suspend_progress(|| {
         let operation = OperationContext {
             chooser: None,
             feature_chooser: None,
             ..operation(ctx, &settings, root_offline, &proxy_image, None, &observe)
         };
-        vibe_app::uninstall(&operation, &args.package, args.force)
+        vibe_app::uninstall(&operation, &args.package, &remove_request(&args))
     })?;
-    render(ctx, &outcome)
-}
-
-fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
-    let command = match outcome.command {
-        AppCommand::Install => "install",
-        AppCommand::Update => "update",
-        AppCommand::Uninstall => "uninstall",
-    };
-    if ctx.is_json() {
-        return ctx.emit_json(&ApplicationReport {
-            protocol: "vibe-application-command-report/2".into(),
-            ok: true,
-            command: match outcome.command {
-                AppCommand::Install => ApplicationReportCommand::Install,
-                AppCommand::Update => ApplicationReportCommand::Update,
-                AppCommand::Uninstall => ApplicationReportCommand::Uninstall,
-            },
-            application_id: outcome.slot.clone(),
-            installation: outcome.key.clone(),
-            message: outcome.message.clone(),
-            slot_default: outcome.slot_default.clone(),
-            app_root: outcome
-                .app_root
-                .as_deref()
-                .map(vibe_core::machine_json_path),
-            selected_mode: Some(match outcome.method {
-                vibe_app::Method::Shell => ApplicationReportSelectedMode::Shell,
-                vibe_app::Method::Zip => ApplicationReportSelectedMode::Zip,
-                vibe_app::Method::TarGz => ApplicationReportSelectedMode::TarGz,
-                vibe_app::Method::Exe => ApplicationReportSelectedMode::Exe,
-                vibe_app::Method::Msi => ApplicationReportSelectedMode::Msi,
-                vibe_app::Method::SourceBuild => ApplicationReportSelectedMode::SourceBuild,
-                vibe_app::Method::Steps => ApplicationReportSelectedMode::Steps,
-            }),
-        });
-    }
-    ctx.summary(&format!(
-        "vibe {command} -g: application `{}` — {}",
-        outcome.slot, outcome.message
-    ));
-    Ok(())
+    render_removal(ctx, &removal)
 }

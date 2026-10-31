@@ -15,7 +15,7 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
 use anyhow::{Context, Result, bail};
-use vibe_app::{SESSION_VARIABLE, SessionChoices};
+use vibe_app::{EnvOp, SESSION_VARIABLE, SessionChoices, SettingsRoot};
 
 use crate::cli::ShellArgs;
 use crate::commands::app::{global, home};
@@ -31,7 +31,26 @@ pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
     // `Auto` scope puts an existing project home ahead of the user home;
     // `-g` selects the user home alone.
     let project = home::project_at(&std::env::current_dir()?)?;
-    let bins = home::shell_bins(args.global, project.as_deref(), &global::settings_root()?);
+    let user = global::settings_root()?;
+    let homes = session_homes(args.global, project.as_deref(), &user);
+    let mut bins = Vec::new();
+    let mut with_choices = Vec::new();
+    for spelling in &args.with {
+        let exposure = expose(&homes, spelling)?;
+        bins.push(exposure.proxies.clone());
+        with_choices.push(exposure.choice());
+    }
+    bins.extend(home::shell_bins(args.global, project.as_deref(), &user));
+    let mut recorded = Vec::new();
+    for settings in &homes {
+        recorded.extend(vibe_app::recorded_environment(settings)?);
+    }
+    bins.extend(
+        recorded
+            .iter()
+            .filter(|entry| entry.op == EnvOp::PathPrepend)
+            .filter_map(|entry| entry.value.as_deref().map(PathBuf::from)),
+    );
     let (inherited_path, inherited_use) = inherited();
     let mut choices = match inherited_use {
         Some(value) => SessionChoices::parse(
@@ -41,7 +60,7 @@ pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
         )?,
         None => SessionChoices::default(),
     };
-    for entry in &args.uses {
+    for entry in with_choices.iter().chain(&args.uses) {
         choices.apply(entry)?;
     }
     let path = compose_path(&bins, inherited_path.as_deref())?;
@@ -52,12 +71,58 @@ pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
         .stdin(Stdio::inherit())
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit());
+    for entry in &recorded {
+        match (entry.op, &entry.value) {
+            (EnvOp::Set, Some(value)) => {
+                command.env(&entry.name, value);
+            }
+            (EnvOp::Unset, _) => {
+                command.env_remove(&entry.name);
+            }
+            _ => {}
+        }
+    }
     if choices.is_empty() {
         command.env_remove(SESSION_VARIABLE);
     } else {
         command.env(SESSION_VARIABLE, choices.render());
     }
     launch(command, &shell)
+}
+
+/// The application homes of the session in priority order: the project
+/// home when it exists and the scope is not `-g`, then the user home.
+fn session_homes(
+    global_scope: bool,
+    project: Option<&Path>,
+    user: &SettingsRoot,
+) -> Vec<SettingsRoot> {
+    let mut homes = Vec::new();
+    if let (false, Some(root)) = (global_scope, project) {
+        let settings = SettingsRoot::project(root, user);
+        if settings.path().is_dir() {
+            homes.push(settings);
+        }
+    }
+    homes.push(user.clone());
+    homes
+}
+
+/// Expose `spelling` from the first home that has it installed
+/// (PROP-059 `#hidden-installations`, `#session-selection`).
+fn expose(homes: &[SettingsRoot], spelling: &str) -> Result<vibe_app::Exposure> {
+    let image = global::proxy_image()?;
+    let mut last = None;
+    for settings in homes {
+        match vibe_app::expose_for_session(settings, spelling, &image) {
+            Ok(exposure) => return Ok(exposure),
+            Err(error) if error.code() == "not_installed" => last = Some(error),
+            Err(error) => return Err(error.into()),
+        }
+    }
+    Err(last
+        .map(anyhow::Error::from)
+        .unwrap_or_else(|| anyhow::anyhow!("`{spelling}` is not installed")))
 }
 
 /// The caller's `PATH` and `VIBE_APP_USE`, read once at this process

@@ -4,7 +4,7 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#plan" },
     "rustOptions": { "package": "vibe_wire::application_plan" },
     "x-rust-type": "ApplicationPlan",
-    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "profile", "features", "parameters", "license", "downloadBytes", "unknownSizes", "steps", "warnings"]
+    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "profile", "features", "parameters", "license", "downloadBytes", "unknownSizes", "dependencies", "steps", "warnings"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -21,6 +21,7 @@
     "warnings": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
   },
   "optionalProperties": {
+    "dependencies": { "elements": { "ref": "dependency" }, "metadata": { "x-empty": "omit", "description": "The required application packages (PROP-065#app-dependencies), each ahead of the step that needs it; an entry without `step` is required by the option and precedes every step." } },
     "appRoot": { "type": "string", "metadata": { "x-default": null } },
     "profile": { "type": "string", "metadata": { "x-default": null } },
     "license": { "ref": "license", "metadata": { "x-default": null } }
@@ -95,6 +96,28 @@
       "metadata": {
         "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
         "x-rust-type": "u64"
+      }
+    },
+    "scope": {
+      "enum": ["build", "runtime"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "dependency_action": {
+      "enum": ["use", "install"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "dependency": {
+      "metadata": { "x-wire-order": ["package", "key", "scope", "step", "action", "hidden", "commands"] },
+      "properties": {
+        "package": { "type": "string" },
+        "key": { "type": "string" },
+        "scope": { "ref": "scope" },
+        "action": { "ref": "dependency_action" },
+        "hidden": { "type": "boolean" },
+        "commands": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      },
+      "optionalProperties": {
+        "step": { "type": "string", "metadata": { "x-default": null } }
       }
     },
     "step": {

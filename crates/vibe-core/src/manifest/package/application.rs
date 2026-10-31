@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 
+mod requirement;
 mod step_validation;
 mod steps;
 mod sugar;
@@ -10,6 +11,7 @@ mod validation;
 mod wizard;
 mod wizard_validation;
 
+pub use requirement::{RequirementDecl, RequirementScope, RequirementTable};
 pub use steps::{
     AgentMode, ArchiveFormatDecl, Condition, ExternalResult, FeatureDecl, NativeFormatDecl, Need,
     OwnedWord, ParamEquals, ResultDecl, StepDecl, StepKind, StepOrigin, StepPhase,
@@ -225,6 +227,10 @@ pub struct InstallerOptionDecl {
     pub license: Option<LicenseDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub steps: Vec<StepDecl>,
+    /// Application packages the installed option needs
+    /// (`PROP-065#app-dependencies`); `runtime` scope unless stated.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub requires: Vec<RequirementDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub launchers: Vec<LauncherDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]

@@ -45,6 +45,28 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
   steps are skipped with one warning at planning time; inside a hosting
   agent the step is parked as an outbox task, the command exits 75, and the
   same command with `--resume` continues once the answer is written.
+- **Application lifecycle (PROP-065, PROP-059).** An installer step of kind
+  `env` sets, unsets and prepends to PATH in the user's durable environment —
+  `HKCU\Environment` on Windows (value kinds kept, change broadcast), a
+  managed `~/.vibe/env.sh` / `env.fish` plus one managed block in the shell
+  startup files elsewhere — and uninstall removes exactly what it applied;
+  `vibe shell` applies the recorded entries at once. An installer option or a
+  single step may `requires = ["group/name@req"]` other application packages:
+  the planner shows them as `dependency` entries ahead of the needing step,
+  resolves them from the home's index first and then through the same
+  registries as the package, installs build-scope requirements hidden and
+  runtime-scope ones exposed, and puts their commands on the needing step's
+  PATH. `vibe install --hidden` installs without exposure; `vibe app expose |
+  hide` change it; `vibe shell --with PKG` reaches a hidden installation for
+  one session. Every installation carries a manual/auto mark (`vibe app mark`);
+  `uninstall` lists orphans, `--autoremove` and `vibe app autoremove` remove
+  them, a runtime dependent refuses removal unless `--cascade`, and
+  `--plan-only` prints the removal plan. `vibe app modify` changes the
+  installer option, features, profile or parameters of an installed version
+  in place. `vibe app outdated [--json]` compares installed versions with the
+  registries. `vibe app update` keeps the replaced version hidden until the
+  next update (`vibe app rollback`, `--purge-previous`), and `vibe app hold |
+  unhold` keep a version out of `vibe update -g --all`.
 
 ## [1.0.7] — 2026-10-04
 

@@ -11,7 +11,8 @@ use std::path::PathBuf;
 
 use specmark::spec;
 use vibe_core::manifest::{
-    InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl, ShellInterpreter,
+    InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl, RequirementScope,
+    ShellInterpreter, StepPhase,
 };
 use vibe_wire::generated::application::e2::index as wire;
 
@@ -128,6 +129,9 @@ pub struct AcceptedLicense {
 pub struct StepRecord {
     pub id: String,
     pub kind: String,
+    /// The phase the step ran in; removal undoes `finish` steps first
+    /// (`PROP-065#uninstall-tree`).
+    pub phase: StepPhase,
     pub outcome: StepOutcome,
     /// `uninstall`, `force_uninstall` and `interpreter`; `update` unused.
     pub uninstall: AuthoredCommands,
@@ -185,6 +189,107 @@ pub struct Installation {
     pub icon: Option<String>,
     /// Step outcomes in step order (`PROP-065#record`).
     pub steps: Vec<StepRecord>,
+    /// Exposure, marks, requirements, environment and update state.
+    pub lifecycle: Lifecycle,
+}
+
+/// Why an installation exists (`PROP-065#uninstall-tree`).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree")]
+pub enum Mark {
+    /// The user asked for it by name (`install`, `expose`, `app mark manual`).
+    #[default]
+    Manual,
+    /// A requirement pulled it in; autoremove may remove it once nothing
+    /// requires it.
+    Auto,
+}
+
+impl Mark {
+    /// The stable spelling (`manual`, `auto`).
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Manual => "manual",
+            Self::Auto => "auto",
+        }
+    }
+}
+
+/// One application package an installation requires
+/// (`PROP-065#app-dependencies`).
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies")]
+pub struct Requirement {
+    /// The authored `group/name@requirement`.
+    pub package: String,
+    /// The installation key it resolved to.
+    pub key: String,
+    pub scope: RequirementScope,
+    /// The step that asked for it; `None` for an option-level requirement.
+    pub step: Option<String>,
+}
+
+/// The operation of one durable environment change (`PROP-065#env-step`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
+pub enum EnvOp {
+    Set,
+    Unset,
+    PathPrepend,
+}
+
+impl EnvOp {
+    /// The stable spelling (`set`, `unset`, `path_prepend`).
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Set => "set",
+            Self::Unset => "unset",
+            Self::PathPrepend => "path_prepend",
+        }
+    }
+}
+
+/// The registry kind of a Windows value an env step replaced.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
+pub enum ValueKind {
+    String,
+    ExpandString,
+}
+
+/// One applied environment change, recorded so that `uninstall` and
+/// `modify` remove exactly it (`PROP-065#env-step`).
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
+pub struct EnvEntry {
+    pub step: String,
+    pub op: EnvOp,
+    pub name: String,
+    /// The expanded value; absent for `unset`.
+    pub value: Option<String>,
+    /// A Windows value this change replaced, restored on removal.
+    pub previous: Option<String>,
+    pub previous_kind: Option<ValueKind>,
+}
+
+/// The lifecycle state of an installation beyond its payload: hidden
+/// exposure (`PROP-059#hidden-installations`), the manual/auto mark and
+/// requirements (`PROP-065#uninstall-tree`, `#app-dependencies`), applied
+/// environment entries (`#env-step`), and the hold / kept-previous state
+/// of updates (`#update-and-rollback`).
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations")]
+pub struct Lifecycle {
+    pub hidden: bool,
+    pub mark: Mark,
+    pub requires: Vec<Requirement>,
+    pub env: Vec<EnvEntry>,
+    pub held: bool,
+    /// The key this installation's update replaced.
+    pub replaced: Option<String>,
+    /// Kept hidden after an update until the next successful update of
+    /// its slot; names the key that replaced it.
+    pub superseded_by: Option<String>,
 }
 
 /// The whole inventory: installations by key and each slot's default key.
@@ -243,13 +348,30 @@ impl Index {
         self.slots.get(slot).and_then(|value| value.as_deref())
     }
 
+    /// The keys of the installations whose recorded requirements name
+    /// `key`, with the scope of each requirement (`PROP-065#uninstall-tree`).
+    pub fn required_by(&self, key: &str) -> Vec<(&str, RequirementScope)> {
+        let mut found: Vec<(&str, RequirementScope)> = Vec::new();
+        for (owner, record) in &self.installations {
+            for requirement in &record.lifecycle.requires {
+                if requirement.key == key && owner != key {
+                    match found.iter_mut().find(|(seen, _)| *seen == owner.as_str()) {
+                        Some((_, scope)) => *scope = (*scope).max(requirement.scope),
+                        None => found.push((owner.as_str(), requirement.scope)),
+                    }
+                }
+            }
+        }
+        found
+    }
+
     pub fn to_wire(&self) -> wire::ApplicationIndex {
         wire::ApplicationIndex {
             protocol: INDEX_PROTOCOL.into(),
             installations: self
                 .installations
                 .iter()
-                .map(|(key, value)| (key.clone(), installation_to_wire(value)))
+                .map(|(key, value)| (key.clone(), installation_to_wire(self, key, value)))
                 .collect(),
             slots: self
                 .slots
@@ -305,224 +427,10 @@ impl Index {
     }
 }
 
-fn installation_to_wire(value: &Installation) -> wire::Installation {
-    let (library, directory, app_root) = match &value.location {
-        Location::Owned { library, directory } => {
-            (Some(library.clone()), Some(directory.clone()), None)
-        }
-        Location::External { app_root } => (None, None, Some(path_text(app_root))),
-    };
-    wire::Installation {
-        slot: value.slot.clone(),
-        package: wire::Package {
-            group: value.package.group.clone(),
-            name: value.package.name.clone(),
-            version: value.package.version.clone(),
-        },
-        option: value.option.clone(),
-        platform: value.platform.clone(),
-        arch: value.arch.clone(),
-        method: match value.method {
-            Method::Shell => wire::Method::Shell,
-            Method::Zip => wire::Method::Zip,
-            Method::TarGz => wire::Method::TarGz,
-            Method::Exe => wire::Method::Exe,
-            Method::Msi => wire::Method::Msi,
-            Method::SourceBuild => wire::Method::SourceBuild,
-            Method::Steps => wire::Method::Steps,
-        },
-        library,
-        directory,
-        app_root,
-        portable: value.portable,
-        launchers: value
-            .launchers
-            .iter()
-            .map(|launcher| wire::Launcher {
-                id: launcher.id.clone(),
-                name: launcher.name.clone(),
-                description: launcher.description.clone(),
-                executable: launcher.executable.clone(),
-                args: launcher.args.clone(),
-                working_directory: launcher.working_directory.clone(),
-                icon: launcher.icon.clone(),
-                terminal: launcher.terminal,
-                default: launcher.default,
-            })
-            .collect(),
-        public_commands: value
-            .public_commands
-            .iter()
-            .map(|command| wire::PublicCommand {
-                name: command.name.clone(),
-                launcher: command.launcher.clone(),
-            })
-            .collect(),
-        commands: wire::AuthoredCommands {
-            uninstall: value.commands.uninstall.clone(),
-            force_uninstall: value.commands.force_uninstall.clone(),
-            update: value.commands.update.clone(),
-            interpreter: value.commands.interpreter.map(interpreter_to_wire),
-        },
-        features: value.features.clone(),
-        parameters: value.parameters.clone(),
-        license: value.license.as_ref().map(|license| wire::AcceptedLicense {
-            name: license.name.clone(),
-            accepted_at: license.accepted_at.clone(),
-        }),
-        icon: value.icon.clone(),
-        steps: value
-            .steps
-            .iter()
-            .map(|step| wire::StepRecord {
-                id: step.id.clone(),
-                kind: step.kind.clone(),
-                outcome: match step.outcome {
-                    StepOutcome::Done => wire::Outcome::Done,
-                    StepOutcome::Skipped => wire::Outcome::Skipped,
-                    StepOutcome::Failed => wire::Outcome::Failed,
-                    StepOutcome::Delegated => wire::Outcome::Delegated,
-                    StepOutcome::Interrupted => wire::Outcome::Interrupted,
-                },
-                uninstall: step.uninstall.uninstall.clone(),
-                force_uninstall: step.uninstall.force_uninstall.clone(),
-                interpreter: step.uninstall.interpreter.map(interpreter_to_wire),
-            })
-            .collect(),
-    }
-}
+#[path = "index/wire.rs"]
+mod wire_form;
 
-fn interpreter_to_wire(value: ShellInterpreter) -> wire::Interpreter {
-    match value {
-        ShellInterpreter::PosixSh => wire::Interpreter::PosixSh,
-        ShellInterpreter::WindowsCmd => wire::Interpreter::WindowsCmd,
-        ShellInterpreter::WindowsPowershell => wire::Interpreter::WindowsPowershell,
-    }
-}
-
-fn interpreter_from_wire(value: wire::Interpreter) -> ShellInterpreter {
-    match value {
-        wire::Interpreter::PosixSh => ShellInterpreter::PosixSh,
-        wire::Interpreter::WindowsCmd => ShellInterpreter::WindowsCmd,
-        wire::Interpreter::WindowsPowershell => ShellInterpreter::WindowsPowershell,
-    }
-}
-
-fn installation_from_wire(record: wire::Installation) -> Result<Installation, String> {
-    let method = match record.method {
-        wire::Method::Shell => Method::Shell,
-        wire::Method::Zip => Method::Zip,
-        wire::Method::TarGz => Method::TarGz,
-        wire::Method::Exe => Method::Exe,
-        wire::Method::Msi => Method::Msi,
-        wire::Method::SourceBuild => Method::SourceBuild,
-        wire::Method::Steps => Method::Steps,
-    };
-    let owned = match method {
-        Method::Zip | Method::TarGz | Method::SourceBuild => Some(true),
-        Method::Shell | Method::Exe | Method::Msi => Some(false),
-        Method::Steps => None,
-    };
-    let location = match (owned, record.library, record.directory, record.app_root) {
-        (Some(true) | None, Some(library), Some(directory), None) => {
-            if directory
-                .split('/')
-                .any(|part| part.is_empty() || part == "..")
-            {
-                return Err(format!("directory `{directory}` is not library-relative"));
-            }
-            Location::Owned { library, directory }
-        }
-        (Some(false) | None, None, None, Some(app_root)) => {
-            let app_root = PathBuf::from(app_root);
-            if !app_root.is_absolute() {
-                return Err("external appRoot is not absolute".into());
-            }
-            Location::External { app_root }
-        }
-        _ => {
-            return Err(
-                "owned methods need library and directory; external methods need only appRoot"
-                    .into(),
-            );
-        }
-    };
-    Ok(Installation {
-        slot: record.slot,
-        package: PackageCoordinate {
-            group: record.package.group,
-            name: record.package.name,
-            version: record.package.version,
-        },
-        option: record.option,
-        platform: record.platform,
-        arch: record.arch,
-        method,
-        location,
-        portable: record.portable,
-        launchers: record
-            .launchers
-            .into_iter()
-            .map(|launcher| LauncherDecl {
-                id: launcher.id,
-                name: launcher.name,
-                description: launcher.description,
-                executable: launcher.executable,
-                args: launcher.args,
-                working_directory: launcher.working_directory,
-                icon: launcher.icon,
-                terminal: launcher.terminal,
-                default: launcher.default,
-            })
-            .collect(),
-        public_commands: record
-            .public_commands
-            .into_iter()
-            .map(|command| PublicCommandDecl {
-                name: command.name,
-                launcher: command.launcher,
-            })
-            .collect(),
-        commands: AuthoredCommands {
-            uninstall: record.commands.uninstall,
-            force_uninstall: record.commands.force_uninstall,
-            update: record.commands.update,
-            interpreter: record.commands.interpreter.map(interpreter_from_wire),
-        },
-        features: record.features,
-        parameters: record.parameters,
-        license: record.license.map(|license| AcceptedLicense {
-            name: license.name,
-            accepted_at: license.accepted_at,
-        }),
-        icon: record.icon,
-        steps: record
-            .steps
-            .into_iter()
-            .map(|step| StepRecord {
-                id: step.id,
-                kind: step.kind,
-                outcome: match step.outcome {
-                    wire::Outcome::Done => StepOutcome::Done,
-                    wire::Outcome::Skipped => StepOutcome::Skipped,
-                    wire::Outcome::Failed => StepOutcome::Failed,
-                    wire::Outcome::Delegated => StepOutcome::Delegated,
-                    wire::Outcome::Interrupted => StepOutcome::Interrupted,
-                },
-                uninstall: AuthoredCommands {
-                    uninstall: step.uninstall,
-                    force_uninstall: step.force_uninstall,
-                    update: None,
-                    interpreter: step.interpreter.map(interpreter_from_wire),
-                },
-            })
-            .collect(),
-    })
-}
-
-fn path_text(path: &std::path::Path) -> String {
-    path.to_string_lossy().into_owned()
-}
+use wire_form::{installation_from_wire, installation_to_wire};
 
 #[cfg(test)]
 #[path = "index/tests.rs"]

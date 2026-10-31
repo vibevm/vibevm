@@ -8,12 +8,18 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operati
 pub(crate) mod agents;
 mod alternatives;
 mod describe;
+mod environment;
 mod facts;
 pub(crate) mod global;
 pub(crate) mod home;
 mod interrupt;
+mod lifecycle;
 pub(crate) mod project;
 mod records;
+mod report;
+mod views;
+
+use views::{launcher_field, print_installers, print_list, print_listing};
 
 use std::ffi::OsString;
 use std::io::IsTerminal;
@@ -73,8 +79,16 @@ pub fn run(
             let proxy_image = global::proxy_image()?;
             let observe = global::Observation::new(ctx, false)?;
             let agents = agents::AgentSetup::new(ctx, agent.as_deref(), false)?;
+            let packages = global::Packages {
+                settings: settings.clone(),
+                registry: registry.clone(),
+                embedded: embedded_root.map(Path::to_path_buf),
+                offline,
+            };
+            let resolver = |spelling: &str| packages.resolve(spelling);
             let operation = vibe_app::OperationContext {
                 agent: agents.hooks(),
+                resolver: Some(&resolver),
                 ..global::operation(
                     ctx,
                     app_home.settings(),
@@ -102,6 +116,100 @@ pub fn run(
         }
         AppCommand::Errors => {
             records::errors(ctx)?;
+            Ok(None)
+        }
+        AppCommand::Modify {
+            package,
+            registry,
+            installer,
+            choice,
+            agent,
+        } => {
+            lifecycle::modify(
+                ctx,
+                app_home.settings(),
+                lifecycle::ModifyArgs {
+                    package: &package,
+                    registry: registry.as_deref(),
+                    installer,
+                    choice: &choice,
+                    agent: agent.as_deref(),
+                },
+                embedded_root,
+                offline,
+            )?;
+            Ok(None)
+        }
+        AppCommand::Outdated { registry } => {
+            lifecycle::outdated(
+                ctx,
+                app_home.settings(),
+                registry.as_deref(),
+                embedded_root,
+                offline,
+            )?;
+            Ok(None)
+        }
+        AppCommand::Expose { package } => {
+            lifecycle::change(
+                ctx,
+                app_home.settings(),
+                &package,
+                lifecycle::StateVerb::Expose,
+            )?;
+            Ok(None)
+        }
+        AppCommand::Hide { package } => {
+            lifecycle::change(
+                ctx,
+                app_home.settings(),
+                &package,
+                lifecycle::StateVerb::Hide,
+            )?;
+            Ok(None)
+        }
+        AppCommand::Mark { mark, package } => {
+            let mark = match mark {
+                crate::cli::MarkArg::Manual => vibe_app::Mark::Manual,
+                crate::cli::MarkArg::Auto => vibe_app::Mark::Auto,
+            };
+            lifecycle::change(
+                ctx,
+                app_home.settings(),
+                &package,
+                lifecycle::StateVerb::Mark(mark),
+            )?;
+            Ok(None)
+        }
+        AppCommand::Hold { package } => {
+            lifecycle::change(
+                ctx,
+                app_home.settings(),
+                &package,
+                lifecycle::StateVerb::Hold(true),
+            )?;
+            Ok(None)
+        }
+        AppCommand::Unhold { package } => {
+            lifecycle::change(
+                ctx,
+                app_home.settings(),
+                &package,
+                lifecycle::StateVerb::Hold(false),
+            )?;
+            Ok(None)
+        }
+        AppCommand::Rollback { package } => {
+            lifecycle::change(
+                ctx,
+                app_home.settings(),
+                &package,
+                lifecycle::StateVerb::Rollback,
+            )?;
+            Ok(None)
+        }
+        AppCommand::Autoremove { plan_only } => {
+            lifecycle::autoremove(ctx, app_home.settings(), plan_only, offline)?;
             Ok(None)
         }
         AppCommand::Steps { package, registry } => {
@@ -226,187 +334,12 @@ fn run_launcher(
     Ok(vibe_app::run_launcher(installation, &storage, &request)?)
 }
 
-fn print_list(listing: &Value, quiet: bool) {
-    let installations = listing
-        .get("installations")
-        .and_then(Value::as_array)
-        .map(Vec::as_slice)
-        .unwrap_or(&[]);
-    println!("{} installed application(s)", installations.len());
-    if quiet {
-        return;
-    }
-    for entry in installations {
-        let key = launcher_field(entry, "key");
-        let slot = launcher_field(entry, "slot");
-        let method = launcher_field(entry, "method");
-        let status = launcher_field(entry, "status");
-        let default = if entry.get("default").and_then(Value::as_bool) == Some(true) {
-            " [default]"
-        } else {
-            ""
-        };
-        match entry.get("reason").and_then(Value::as_str) {
-            Some(reason) => println!("  {slot}: {key} ({method}, {status}: {reason}){default}"),
-            None => println!("  {slot}: {key} ({method}, {status}){default}"),
-        }
-    }
-}
-
 fn launchers(listing: &Value) -> Result<&[Value]> {
     listing
         .get("launchers")
         .and_then(Value::as_array)
         .map(Vec::as_slice)
         .ok_or_else(|| anyhow::anyhow!("application launcher listing has no launchers array"))
-}
-
-fn launcher_field<'a>(launcher: &'a Value, field: &str) -> &'a str {
-    launcher.get(field).and_then(Value::as_str).unwrap_or("")
-}
-
-fn print_installers(listing: &Value, package: &str, quiet: bool) {
-    let platforms = listing
-        .get("platforms")
-        .and_then(Value::as_array)
-        .map(Vec::as_slice)
-        .unwrap_or(&[]);
-    let installer_count: usize = platforms
-        .iter()
-        .flat_map(|platform| {
-            platform
-                .get("architectures")
-                .and_then(Value::as_array)
-                .into_iter()
-                .flatten()
-        })
-        .map(|arch| {
-            arch.get("installers")
-                .and_then(Value::as_array)
-                .map_or(0, Vec::len)
-        })
-        .sum();
-    println!("{package}: {installer_count} installer(s)");
-    if quiet {
-        return;
-    }
-    if let (Some(platform), Some(arch)) = (
-        listing
-            .pointer("/detected/platform")
-            .and_then(Value::as_str),
-        listing.pointer("/detected/arch").and_then(Value::as_str),
-    ) {
-        println!("Detected: {platform}/{arch}");
-    }
-    for platform in platforms {
-        let platform_id = launcher_field(platform, "id");
-        let platform_name = launcher_field(platform, "name");
-        let detected = if platform.get("detected").and_then(Value::as_bool) == Some(true) {
-            " [detected]"
-        } else {
-            ""
-        };
-        println!("  {platform_name} ({platform_id}){detected}");
-        let Some(architectures) = platform.get("architectures").and_then(Value::as_array) else {
-            continue;
-        };
-        for arch in architectures {
-            let arch_id = launcher_field(arch, "id");
-            let arch_name = launcher_field(arch, "name");
-            let detected = if arch.get("detected").and_then(Value::as_bool) == Some(true) {
-                " [detected]"
-            } else {
-                ""
-            };
-            println!("    {arch_name} ({arch_id}){detected}");
-            let Some(installers) = arch.get("installers").and_then(Value::as_array) else {
-                continue;
-            };
-            for installer in installers {
-                let id = launcher_field(installer, "id");
-                let name = launcher_field(installer, "name");
-                println!("      {id}: {name}");
-                if let Some(installation) = installer.get("installation") {
-                    for field in [
-                        "type",
-                        "source",
-                        "sha256",
-                        "payload_root",
-                        "app_root",
-                        "install",
-                        "force_install",
-                        "update",
-                        "uninstall",
-                        "force_uninstall",
-                        "arguments",
-                        "force_arguments",
-                        "interpreter",
-                        "sources",
-                        "recipe",
-                    ] {
-                        if let Some(value) =
-                            installation.get(field).filter(|value| !value.is_null())
-                        {
-                            println!("        {field}: {value}");
-                        }
-                    }
-                }
-                for field in ["portable", "pre_install", "post_install", "launchers"] {
-                    if let Some(value) = installer.get(field).filter(|value| !value.is_null()) {
-                        println!("        {field}: {value}");
-                    }
-                }
-            }
-        }
-    }
-}
-
-fn print_listing(listing: &Value, quiet: bool) {
-    let group = listing.pointer("/package/group").and_then(Value::as_str);
-    let name = listing.pointer("/package/name").and_then(Value::as_str);
-    let version = listing.pointer("/package/version").and_then(Value::as_str);
-    let package = match (group, name, version) {
-        (Some(group), Some(name), Some(version)) => format!("{group}/{name}@{version}"),
-        _ => "application".to_owned(),
-    };
-    let default = listing.get("default_launcher_id").and_then(Value::as_str);
-    let Some(launchers) = listing.get("launchers").and_then(Value::as_array) else {
-        return;
-    };
-    if quiet {
-        println!("{package}: {} launcher(s)", launchers.len());
-        return;
-    }
-    println!("{package}: {} launcher(s)", launchers.len());
-    for launcher in launchers {
-        let id = launcher_field(launcher, "id");
-        let name = launcher_field(launcher, "name");
-        let status = launcher_field(launcher, "status");
-        let marker = if default == Some(id) {
-            " [default]"
-        } else {
-            ""
-        };
-        let reason = launcher_field(launcher, "reason");
-        if reason.is_empty() {
-            println!("  {id}{marker}: {name} ({status})");
-        } else {
-            println!("  {id}{marker}: {name} ({status}: {reason})");
-        }
-        if let Some(description) = launcher.get("description").and_then(Value::as_str) {
-            println!("    {description}");
-        }
-        let terminal = launcher
-            .get("terminal")
-            .and_then(Value::as_bool)
-            .unwrap_or(false);
-        println!("    terminal: {terminal}");
-        for field in ["executable", "args", "working_directory", "icon"] {
-            if let Some(value) = launcher.get(field) {
-                println!("    {field}: {value}");
-            }
-        }
-    }
 }
 
 fn choose_launcher(listing: &Value, ctx: &output::Context) -> Result<Option<String>> {

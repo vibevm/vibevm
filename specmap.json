@@ -10,6 +10,102 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e1/agent_hook.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "agent_hook",
+      "end_line": 58
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/agent_hook.jtd.json",
+      "item_kind": "schema-def",
+      "line": 49,
+      "symbol": "agent_hook::earlier",
+      "end_line": 56
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/agent_hook.jtd.json",
+      "item_kind": "schema-def",
+      "line": 29,
+      "symbol": "agent_hook::mode",
+      "end_line": 32
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/agent_hook.jtd.json",
+      "item_kind": "schema-def",
+      "line": 21,
+      "symbol": "agent_hook::package",
+      "end_line": 28
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/agent_hook.jtd.json",
+      "item_kind": "schema-def",
+      "line": 33,
+      "symbol": "agent_hook::paths",
+      "end_line": 48
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/agent_hook_result.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "agent_hook_result",
+      "end_line": 23
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/agent_hook_result.jtd.json",
+      "item_kind": "schema-def",
+      "line": 18,
+      "symbol": "agent_hook_result::status",
+      "end_line": 21
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/agent_list.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "agent_list",
+      "end_line": 45
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/agent_list.jtd.json",
+      "item_kind": "schema-def",
+      "line": 20,
+      "symbol": "agent_list::agent",
+      "end_line": 36
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/agent_list.jtd.json",
+      "item_kind": "schema-def",
+      "line": 37,
+      "symbol": "agent_list::external",
+      "end_line": 43
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/agent_presets.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "agent_presets",
+      "end_line": 26
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/agent_presets.jtd.json",
+      "item_kind": "schema-def",
+      "line": 15,
+      "symbol": "agent_presets::preset",
+      "end_line": 24
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/llm/openai_compatible/e1/agent_result.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -134,7 +230,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "application_describe",
-      "end_line": 243
+      "end_line": 269
     },
     {
       "crate_name": "<schema>",
@@ -148,33 +244,41 @@
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 164,
+      "line": 186,
       "symbol": "application_describe::byte_count",
-      "end_line": 170
+      "end_line": 192
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 132,
+      "line": 154,
       "symbol": "application_describe::choice",
-      "end_line": 138
+      "end_line": 160
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 178,
+      "line": 200,
       "symbol": "application_describe::condition",
-      "end_line": 190
+      "end_line": 212
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 94,
+      "line": 86,
+      "symbol": "application_describe::env_set",
+      "end_line": 92
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_describe.jtd.json",
+      "item_kind": "schema-def",
+      "line": 116,
       "symbol": "application_describe::feature",
-      "end_line": 108
+      "end_line": 130
     },
     {
       "crate_name": "<schema>",
@@ -190,31 +294,31 @@
       "item_kind": "schema-def",
       "line": 46,
       "symbol": "application_describe::installer_option",
-      "end_line": 70
+      "end_line": 71
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 125,
+      "line": 147,
       "symbol": "application_describe::integer",
-      "end_line": 131
+      "end_line": 153
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 71,
+      "line": 93,
       "symbol": "application_describe::launcher",
-      "end_line": 86
+      "end_line": 108
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 157,
+      "line": 179,
       "symbol": "application_describe::license",
-      "end_line": 163
+      "end_line": 185
     },
     {
       "crate_name": "<schema>",
@@ -228,25 +332,25 @@
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 171,
+      "line": 193,
       "symbol": "application_describe::param_equals",
-      "end_line": 177
+      "end_line": 199
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 139,
+      "line": 161,
       "symbol": "application_describe::parameter",
-      "end_line": 156
+      "end_line": 178
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 121,
+      "line": 143,
       "symbol": "application_describe::parameter_type",
-      "end_line": 124
+      "end_line": 146
     },
     {
       "crate_name": "<schema>",
@@ -260,17 +364,25 @@
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 109,
+      "line": 131,
       "symbol": "application_describe::profile",
-      "end_line": 120
+      "end_line": 142
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 87,
+      "line": 109,
       "symbol": "application_describe::public_command",
-      "end_line": 93
+      "end_line": 115
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_describe.jtd.json",
+      "item_kind": "schema-def",
+      "line": 76,
+      "symbol": "application_describe::requirement",
+      "end_line": 85
     },
     {
       "crate_name": "<schema>",
@@ -284,17 +396,25 @@
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 191,
-      "symbol": "application_describe::source_input",
-      "end_line": 203
+      "line": 72,
+      "symbol": "application_describe::scope",
+      "end_line": 75
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 204,
+      "line": 213,
+      "symbol": "application_describe::source_input",
+      "end_line": 225
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_describe.jtd.json",
+      "item_kind": "schema-def",
+      "line": 226,
       "symbol": "application_describe::step",
-      "end_line": 241
+      "end_line": 267
     },
     {
       "crate_name": "<schema>",
@@ -470,7 +590,23 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "application_list",
-      "end_line": 51
+      "end_line": 92
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_list.jtd.json",
+      "item_kind": "schema-def",
+      "line": 80,
+      "symbol": "application_list::env_entry",
+      "end_line": 90
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_list.jtd.json",
+      "item_kind": "schema-def",
+      "line": 76,
+      "symbol": "application_list::env_op",
+      "end_line": 79
     },
     {
       "crate_name": "<schema>",
@@ -478,7 +614,15 @@
       "item_kind": "schema-def",
       "line": 32,
       "symbol": "application_list::installation",
-      "end_line": 49
+      "end_line": 56
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_list.jtd.json",
+      "item_kind": "schema-def",
+      "line": 57,
+      "symbol": "application_list::mark",
+      "end_line": 60
     },
     {
       "crate_name": "<schema>",
@@ -492,9 +636,57 @@
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
+      "line": 65,
+      "symbol": "application_list::requirement",
+      "end_line": 75
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_list.jtd.json",
+      "item_kind": "schema-def",
+      "line": 61,
+      "symbol": "application_list::scope",
+      "end_line": 64
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_list.jtd.json",
+      "item_kind": "schema-def",
       "line": 28,
       "symbol": "application_list::status",
       "end_line": 31
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_outdated.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "application_outdated",
+      "end_line": 43
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_outdated.jtd.json",
+      "item_kind": "schema-def",
+      "line": 26,
+      "symbol": "application_outdated::installation",
+      "end_line": 41
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_outdated.jtd.json",
+      "item_kind": "schema-def",
+      "line": 14,
+      "symbol": "application_outdated::package",
+      "end_line": 21
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_outdated.jtd.json",
+      "item_kind": "schema-def",
+      "line": 22,
+      "symbol": "application_outdated::status",
+      "end_line": 25
     },
     {
       "crate_name": "<schema>",
@@ -502,95 +694,159 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "application_plan",
-      "end_line": 116
+      "end_line": 139
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 41,
+      "line": 42,
       "symbol": "application_plan::action",
+      "end_line": 45
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 94,
+      "symbol": "application_plan::byte_count",
+      "end_line": 100
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 109,
+      "symbol": "application_plan::dependency",
+      "end_line": 122
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 105,
+      "symbol": "application_plan::dependency_action",
+      "end_line": 108
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 50,
+      "symbol": "application_plan::feature",
+      "end_line": 62
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 67,
+      "symbol": "application_plan::implication",
+      "end_line": 75
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 86,
+      "symbol": "application_plan::license",
+      "end_line": 93
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 30,
+      "symbol": "application_plan::package",
+      "end_line": 37
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 76,
+      "symbol": "application_plan::parameter",
+      "end_line": 85
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 46,
+      "symbol": "application_plan::phase",
+      "end_line": 49
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 38,
+      "symbol": "application_plan::result",
+      "end_line": 41
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 63,
+      "symbol": "application_plan::rule",
+      "end_line": 66
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 101,
+      "symbol": "application_plan::scope",
+      "end_line": 104
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 123,
+      "symbol": "application_plan::step",
+      "end_line": 137
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_removal.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "application_removal",
       "end_line": 44
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/application_plan.jtd.json",
+      "file": "schemas/application_removal.jtd.json",
       "item_kind": "schema-def",
-      "line": 93,
-      "symbol": "application_plan::byte_count",
-      "end_line": 99
+      "line": 24,
+      "symbol": "application_removal::action",
+      "end_line": 33
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/application_plan.jtd.json",
+      "file": "schemas/application_removal.jtd.json",
       "item_kind": "schema-def",
-      "line": 49,
-      "symbol": "application_plan::feature",
-      "end_line": 61
+      "line": 20,
+      "symbol": "application_removal::action_kind",
+      "end_line": 23
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/application_plan.jtd.json",
+      "file": "schemas/application_removal.jtd.json",
       "item_kind": "schema-def",
-      "line": 66,
-      "symbol": "application_plan::implication",
-      "end_line": 74
+      "line": 34,
+      "symbol": "application_removal::installation",
+      "end_line": 42
     },
     {
       "crate_name": "<schema>",
-      "file": "schemas/application_plan.jtd.json",
+      "file": "schemas/application_removal.jtd.json",
       "item_kind": "schema-def",
-      "line": 85,
-      "symbol": "application_plan::license",
-      "end_line": 92
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/application_plan.jtd.json",
-      "item_kind": "schema-def",
-      "line": 29,
-      "symbol": "application_plan::package",
-      "end_line": 36
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/application_plan.jtd.json",
-      "item_kind": "schema-def",
-      "line": 75,
-      "symbol": "application_plan::parameter",
-      "end_line": 84
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/application_plan.jtd.json",
-      "item_kind": "schema-def",
-      "line": 45,
-      "symbol": "application_plan::phase",
-      "end_line": 48
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/application_plan.jtd.json",
-      "item_kind": "schema-def",
-      "line": 37,
-      "symbol": "application_plan::result",
-      "end_line": 40
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/application_plan.jtd.json",
-      "item_kind": "schema-def",
-      "line": 62,
-      "symbol": "application_plan::rule",
-      "end_line": 65
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/application_plan.jtd.json",
-      "item_kind": "schema-def",
-      "line": 100,
-      "symbol": "application_plan::step",
-      "end_line": 114
+      "line": 16,
+      "symbol": "application_removal::reason",
+      "end_line": 19
     },
     {
       "crate_name": "<schema>",
@@ -2238,7 +2494,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "index",
-      "end_line": 125
+      "end_line": 184
     },
     {
       "crate_name": "<schema>",
@@ -2268,17 +2524,33 @@
       "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
-      "line": 90,
+      "line": 141,
       "symbol": "index::authored_commands",
-      "end_line": 98
+      "end_line": 149
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
-      "line": 99,
+      "line": 88,
+      "symbol": "index::env_entry",
+      "end_line": 103
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 80,
+      "symbol": "index::env_op",
+      "end_line": 83
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 150,
       "symbol": "index::installation",
-      "end_line": 123
+      "end_line": 182
     },
     {
       "crate_name": "<schema>",
@@ -2308,9 +2580,17 @@
       "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
-      "line": 67,
+      "line": 118,
       "symbol": "index::launcher",
-      "end_line": 82
+      "end_line": 133
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 58,
+      "symbol": "index::mark",
+      "end_line": 61
     },
     {
       "crate_name": "<schema>",
@@ -2332,9 +2612,9 @@
       "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
-      "line": 53,
+      "line": 104,
       "symbol": "index::package",
-      "end_line": 60
+      "end_line": 111
     },
     {
       "crate_name": "<schema>",
@@ -2362,6 +2642,14 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e2/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 54,
+      "symbol": "index::phase",
+      "end_line": 57
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/compiler_trace_index/e1/index.jtd.json",
       "item_kind": "schema-def",
       "line": 45,
@@ -2372,9 +2660,17 @@
       "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
-      "line": 83,
+      "line": 134,
       "symbol": "index::public_command",
-      "end_line": 89
+      "end_line": 140
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 66,
+      "symbol": "index::requirement",
+      "end_line": 79
     },
     {
       "crate_name": "<schema>",
@@ -2383,6 +2679,14 @@
       "line": 41,
       "symbol": "index::run_status",
       "end_line": 44
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 62,
+      "symbol": "index::scope",
+      "end_line": 65
     },
     {
       "crate_name": "<schema>",
@@ -2412,9 +2716,9 @@
       "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
-      "line": 61,
+      "line": 112,
       "symbol": "index::slot",
-      "end_line": 66
+      "end_line": 117
     },
     {
       "crate_name": "<schema>",
@@ -2422,7 +2726,15 @@
       "item_kind": "schema-def",
       "line": 40,
       "symbol": "index::step_record",
-      "end_line": 52
+      "end_line": 53
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 84,
+      "symbol": "index::value_kind",
+      "end_line": 87
     },
     {
       "crate_name": "<schema>",
@@ -4988,23 +5300,23 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "run",
-      "end_line": 30
+      "end_line": 31
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application/e1/run.jtd.json",
       "item_kind": "schema-def",
-      "line": 21,
+      "line": 22,
       "symbol": "run::command",
-      "end_line": 24
+      "end_line": 25
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application/e1/run.jtd.json",
       "item_kind": "schema-def",
-      "line": 25,
+      "line": 26,
       "symbol": "run::outcome",
-      "end_line": 28
+      "end_line": 29
     },
     {
       "crate_name": "<schema>",
@@ -5052,7 +5364,47 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "steps",
-      "end_line": 50
+      "end_line": 100
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 75,
+      "symbol": "steps::agent_mode",
+      "end_line": 78
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 83,
+      "symbol": "steps::agent_run",
+      "end_line": 98
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 79,
+      "symbol": "steps::agent_status",
+      "end_line": 82
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 59,
+      "symbol": "steps::env_entry",
+      "end_line": 74
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 51,
+      "symbol": "steps::env_op",
+      "end_line": 54
     },
     {
       "crate_name": "<schema>",
@@ -5084,7 +5436,15 @@
       "item_kind": "schema-def",
       "line": 33,
       "symbol": "steps::step",
-      "end_line": 48
+      "end_line": 50
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 55,
+      "symbol": "steps::value_kind",
+      "end_line": 58
     },
     {
       "crate_name": "<schema>",
@@ -5514,504 +5874,513 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 297,
+      "line": 222,
+      "symbol": "vibe agent",
+      "end_line": 224,
+      "fingerprint": "tok1:b52810476dea6808ace44a50ef8abe55dd01759b4bedbd9bae736bc6b0958123"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli.rs",
+      "item_kind": "command",
+      "line": 303,
       "symbol": "vibe agentic",
-      "end_line": 302,
+      "end_line": 308,
       "fingerprint": "tok1:38d2c7c84dbc9027225d4def9f39afe3748240181c35a687610f0482adf04d8e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 274,
+      "line": 280,
       "symbol": "vibe aiui",
-      "end_line": 278,
+      "end_line": 284,
       "fingerprint": "tok1:55e1694e709d4faadda95473101940a572d1d6169ceb282b3d53349b7c70303a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 208,
+      "line": 210,
       "symbol": "vibe app",
-      "end_line": 209,
+      "end_line": 211,
       "fingerprint": "tok1:832c4677397777af538526d7519112905b1a970612102f891e1e72b0537cf16a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 409,
+      "line": 415,
       "symbol": "vibe bin",
-      "end_line": 416,
+      "end_line": 422,
       "fingerprint": "tok1:fa28839d0a2d9eb3130cab2ea9b2eeda91b18d37bd59b58be3537b394d89a27f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 199,
+      "line": 201,
       "symbol": "vibe build",
-      "end_line": 200,
+      "end_line": 202,
       "fingerprint": "tok1:036e0d456e8801b9e1808068561b822e3e3e531d1975155a1106a1ff15cb332a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 375,
+      "line": 381,
       "symbol": "vibe cache",
-      "end_line": 383,
+      "end_line": 389,
       "fingerprint": "tok1:6a35c24edfa5b22c29374adab93625e3ea8ff7ed571b18a3f8f4b9207329b57b"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 322,
+      "line": 328,
       "symbol": "vibe check",
-      "end_line": 323,
+      "end_line": 329,
       "fingerprint": "tok1:38fcbbc45c7ad30c975d15d0086afc07aa2e4fca1dfdf72c62f969ca46df6118"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 244,
+      "line": 250,
       "symbol": "vibe clean",
-      "end_line": 247,
+      "end_line": 253,
       "fingerprint": "tok1:7bf42926379ba9585e9243cf398ebd32009a780f9c096b7047560fc39870f92b"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 304,
+      "line": 310,
       "symbol": "vibe command",
-      "end_line": 310,
+      "end_line": 316,
       "fingerprint": "tok1:ef53bda5ded39eceee051d99ca027cdb39dced3df83fea0808f23940514540d6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 220,
+      "line": 226,
       "symbol": "vibe create",
-      "end_line": 221,
+      "end_line": 227,
       "fingerprint": "tok1:c97d95a2578610ca645757ca375a39adb3befa95173ae403b170df0158120648"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 229,
+      "line": 235,
       "symbol": "vibe deploy",
-      "end_line": 232,
+      "end_line": 238,
       "fingerprint": "tok1:a2a8795ee83b3e1f14e6353bece4fa926223886ef4ff9599303b5d370bda6d92"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 239,
+      "line": 245,
       "symbol": "vibe deployments",
-      "end_line": 242,
+      "end_line": 248,
       "fingerprint": "tok1:1114054625d7b16a5b378ebe5407f019bc431f093b30b767d997b6074cc814d6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 325,
+      "line": 331,
       "symbol": "vibe doc",
-      "end_line": 328,
+      "end_line": 334,
       "fingerprint": "tok1:221d1b929fa4a18986ff257db4cf3b0159acf0102dae72f0d72f4abc41622091"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 418,
+      "line": 424,
       "symbol": "vibe explain",
-      "end_line": 425,
+      "end_line": 431,
       "fingerprint": "tok1:58c34bfb60261b47d8861f07462898d5ae5c28a9d44f2ae4624b8ed1a0bfe1f7"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 187,
+      "line": 189,
       "symbol": "vibe extensions",
-      "end_line": 188,
+      "end_line": 190,
       "fingerprint": "tok1:acbe42bbe60139be195063d1143d208e86c1e59261c8f788fd6cd8cfabf63b86"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 330,
+      "line": 336,
       "symbol": "vibe facts",
-      "end_line": 331,
+      "end_line": 337,
       "fingerprint": "tok1:d7dd96f48f6f2689d1d7d87f56e3424ef5f2b265c027a14946dbe1d337f92213"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 285,
+      "line": 291,
       "symbol": "vibe frame",
-      "end_line": 288,
+      "end_line": 294,
       "fingerprint": "tok1:4985ceaa5272c36e1c73077f882fc30a4aec1244e308099d8257582bec0f79a8"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 349,
+      "line": 355,
       "symbol": "vibe friends",
-      "end_line": 353,
+      "end_line": 359,
       "fingerprint": "tok1:655f25b8fc752269ccab00637c8a5cfe5797e8321bfe2ac6cc626c64419f9073"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 196,
+      "line": 198,
       "symbol": "vibe generate",
-      "end_line": 197,
+      "end_line": 199,
       "fingerprint": "tok1:67fd0ea725b8ab727bad0f4ff416b00a7152ee9a3cce69d9ead43f0fc4f868e9"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 181,
+      "line": 183,
       "symbol": "vibe init",
-      "end_line": 182,
+      "end_line": 184,
       "fingerprint": "tok1:3d6986e0bcb4fb0c21b909f29fd453a077247d5b2361712ab268652df5294764"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 193,
+      "line": 195,
       "symbol": "vibe install",
-      "end_line": 194,
+      "end_line": 196,
       "fingerprint": "tok1:b38bd68a6fe42780d421692d2536b0c9df5b559fe60377adc411ac362e06b30f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 184,
+      "line": 186,
       "symbol": "vibe list",
-      "end_line": 185,
+      "end_line": 187,
       "fingerprint": "tok1:2a1bcc9e9b5c5335104e94830edba85a9d3d095e366088576450e1ab3fe90946"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 267,
+      "line": 273,
       "symbol": "vibe mcp",
-      "end_line": 272,
+      "end_line": 278,
       "fingerprint": "tok1:f37a9c7d50509325b588f478574f851ff11d7bdafae86f5d4cef35c487b4cb73"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 253,
+      "line": 259,
       "symbol": "vibe outdated",
-      "end_line": 257,
+      "end_line": 263,
       "fingerprint": "tok1:d1073beb727d86daaab1588ec6deaaf7fc97e4a3df0fdb2548587e350480885a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 226,
+      "line": 232,
       "symbol": "vibe package",
-      "end_line": 227,
+      "end_line": 233,
       "fingerprint": "tok1:90b8ba854977ebf8e07a82d54538ce18cd1b49dd71b5a36624e529c2e156b1b6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 358,
+      "line": 364,
       "symbol": "vibe prefs",
-      "end_line": 362,
+      "end_line": 368,
       "fingerprint": "tok1:c37b655b66cbc0af9ccfdabf5d84ba9d067cbea39dd9d1c89b5e4a77f79d4009"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 479,
+      "line": 485,
       "symbol": "vibe progress",
-      "end_line": 482,
+      "end_line": 488,
       "fingerprint": "tok1:0343b59ebde2d3646b75f27f0c451ee131c5f3f4a2415b9d79ab4ef092fca9c0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 427,
+      "line": 433,
       "symbol": "vibe query",
-      "end_line": 436,
+      "end_line": 442,
       "fingerprint": "tok1:36680144f94d98e3b9a8bd38c89c746ee621dbdfadb21422f0ff7bffe4c1e069"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 346,
+      "line": 352,
       "symbol": "vibe refactor",
-      "end_line": 347,
+      "end_line": 353,
       "fingerprint": "tok1:c3af138c24767234b956446b0d4e040f1941d8052390ceaf2883c8f1618c5d83"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 372,
+      "line": 378,
       "symbol": "vibe registry",
-      "end_line": 373,
+      "end_line": 379,
       "fingerprint": "tok1:510e526eda2f3774a369c2ecad541147e0de8643662891a8c9e2dd3af384f70e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 318,
+      "line": 324,
       "symbol": "vibe reinstall",
-      "end_line": 320,
+      "end_line": 326,
       "fingerprint": "tok1:6e67dfc6071d8f65b58e5ff6a848695dc0f1da97f80ed1c92bf8f1f409d0f755"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 333,
+      "line": 339,
       "symbol": "vibe requirements",
-      "end_line": 339,
+      "end_line": 345,
       "fingerprint": "tok1:ebb51eed8e04d814f77c6aa6f3d641730cd72e3bdd9c3f2bd127b9a3c840e47d"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 205,
+      "line": 207,
       "symbol": "vibe run",
-      "end_line": 206,
+      "end_line": 208,
       "fingerprint": "tok1:f112b98299825c28687506debff1be6aaf89213f46b0869892749831239c73df"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 249,
+      "line": 255,
       "symbol": "vibe scrape",
-      "end_line": 251,
+      "end_line": 257,
       "fingerprint": "tok1:840261b1822a74c1ef6916714171118ae0bdc76bd3fda49a6a0ab4a7135eda22"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 259,
+      "line": 265,
       "symbol": "vibe search",
-      "end_line": 265,
+      "end_line": 271,
       "fingerprint": "tok1:b47b591a719431fd92337bfb669e9141237a1180367223d594d4c2e9aa549524"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 438,
+      "line": 444,
       "symbol": "vibe select",
-      "end_line": 449,
+      "end_line": 455,
       "fingerprint": "tok1:16e391d4035c196770cac77470dedaa7ff004a71e0a48dc88ecc3b5aeccda1b1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 391,
+      "line": 397,
       "symbol": "vibe self",
-      "end_line": 397,
+      "end_line": 403,
       "fingerprint": "tok1:3587ac93f410662938dfdb2e5a411a952a847f14338cd21bc4aaff4b1b1cdd23"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 211,
+      "line": 213,
       "symbol": "vibe shell",
-      "end_line": 214,
+      "end_line": 216,
       "fingerprint": "tok1:fd012421d62c5223bbb0d2f9d4ca08833c4c2828f42a1ce0c291efdd878268f4"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 355,
+      "line": 361,
       "symbol": "vibe show",
-      "end_line": 356,
+      "end_line": 362,
       "fingerprint": "tok1:12c7f4b09b59503b8a56b9c4b3965d3f73e0e62f78a2df10a7b4425c94c89cf5"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 290,
+      "line": 296,
       "symbol": "vibe skill",
-      "end_line": 295,
+      "end_line": 301,
       "fingerprint": "tok1:0f2269b52a3046796d5ce3c6c1633b17564ae4fa4b4a5f91d478e0f5404476ee"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 451,
+      "line": 457,
       "symbol": "vibe specmap",
-      "end_line": 459,
+      "end_line": 465,
       "fingerprint": "tok1:95fe1742b042d98c18fa9ddca05706d6b6a8129fb78a25ee827349929b9ba012"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 216,
+      "line": 218,
       "symbol": "vibe storage",
-      "end_line": 218,
+      "end_line": 220,
       "fingerprint": "tok1:dfe821c878b425a2ccac683e661bcd4a4ebdd7af7fb59c1d34492207a950276a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 280,
+      "line": 286,
       "symbol": "vibe term",
-      "end_line": 283,
+      "end_line": 289,
       "fingerprint": "tok1:6de072333697fa577d56d6b6437e4be14b04ef83495a35d0db8c1a234077b846"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 202,
+      "line": 204,
       "symbol": "vibe test",
-      "end_line": 203,
+      "end_line": 205,
       "fingerprint": "tok1:76357bfd53419ff32fc4070f68158c8d995aa77f44462753716378614f721a6a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 399,
+      "line": 405,
       "symbol": "vibe tools",
-      "end_line": 407,
+      "end_line": 413,
       "fingerprint": "tok1:160baa5bced8144814d419728f9e456b1d4c9648edb498bb5b94cfcce812b2e0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 461,
+      "line": 467,
       "symbol": "vibe trace",
-      "end_line": 470,
+      "end_line": 476,
       "fingerprint": "tok1:f3b1c393c3e385763d9a81c5ad9f9f19d6c16d2a1a2c0bbdad8db90494f7af9a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 364,
+      "line": 370,
       "symbol": "vibe tree",
-      "end_line": 370,
+      "end_line": 376,
       "fingerprint": "tok1:8027f7f6f7878e12ba2eb4bfdc137ac5c46f0d31af6015ecbd40d91d439a5f12"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 234,
+      "line": 240,
       "symbol": "vibe undeploy",
-      "end_line": 237,
+      "end_line": 243,
       "fingerprint": "tok1:de1e98b07e4f8e5b89e54c20f6629912cc395f86380f39c4d5f513fe9d1ae233"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 312,
+      "line": 318,
       "symbol": "vibe uninstall",
-      "end_line": 313,
+      "end_line": 319,
       "fingerprint": "tok1:e7544f7fabc8952fa2a094e32d923d60121a134be5aca63306fdadd16b5a585f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 315,
+      "line": 321,
       "symbol": "vibe update",
-      "end_line": 316,
+      "end_line": 322,
       "fingerprint": "tok1:14a6b49ed5a4cc88ad74c7c738b1db06604785819538b588a78d124d9b87f362"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 190,
+      "line": 192,
       "symbol": "vibe validate",
-      "end_line": 191,
+      "end_line": 193,
       "fingerprint": "tok1:8cca275e78ec883e3f4609d448d5485777b55b8e3d75938f647a20f71d1c5d33"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 472,
+      "line": 478,
       "symbol": "vibe vars",
-      "end_line": 477,
+      "end_line": 483,
       "fingerprint": "tok1:af6c5c4b0395cb84cb619b17b19d77a249e673553a62f01587ef9cf48dd847ae"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 223,
+      "line": 229,
       "symbol": "vibe verify",
-      "end_line": 224,
+      "end_line": 230,
       "fingerprint": "tok1:ea70875de57aa1689a45722c113d075326c04774665c7d0de1e0bff18a5e0b06"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 484,
+      "line": 490,
       "symbol": "vibe version",
-      "end_line": 485,
+      "end_line": 491,
       "fingerprint": "tok1:33315f272409a4c8ad6648ba9671fc4df16e2b163ceb37e3c58d6b44af2f16f1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 341,
+      "line": 347,
       "symbol": "vibe why",
-      "end_line": 344,
+      "end_line": 350,
       "fingerprint": "tok1:9b76974e8b4a3d3129ff66bc15a3164b1a6f812b631c52e440b5914ef53cf71e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 385,
+      "line": 391,
       "symbol": "vibe workspace",
-      "end_line": 389,
+      "end_line": 395,
       "fingerprint": "tok1:ac2163fa0ecd131bbca2d73185a0d8cbf06ae47e50276d68a969ea05ac6ee8ac"
     },
     {
@@ -6583,6 +6952,231 @@
     },
     {
       "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_app::agents",
+      "end_line": 7,
+      "fingerprint": "tok1:f589eba1c22d6c8c4fccb155bd8e83caee14e69a0bc4dd39b4ef57d4a260b365"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_app::agents",
+      "end_line": 8,
+      "fingerprint": "tok1:c4431fead711db0419fefa12aebc10dd160791b41122cecce893577dc138d653"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_app::agents",
+      "end_line": 9,
+      "fingerprint": "tok1:58d169bb8f5f498f86bba3f7f356dee49bc96ca1a2471232ec2b1e0a10a4871f"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "enum",
+      "line": 27,
+      "symbol": "vibe_app::agents::AgentSource",
+      "end_line": 37,
+      "fingerprint": "tok1:655529f661f4444928640cfe037797f81f04733bf94a3fa3307b9c16ddccfd2c"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "enum",
+      "line": 97,
+      "symbol": "vibe_app::agents::Delivery",
+      "end_line": 105,
+      "fingerprint": "tok1:fdc4fe221c553881140dcbf1faf4625a09f55d8659bd5a4e3c4793615ef9f5e6"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "struct",
+      "line": 55,
+      "symbol": "vibe_app::agents::ExternalAgent",
+      "end_line": 63,
+      "fingerprint": "tok1:88b3ba8590a91b7186af2c89686ecb8312d78b3b7802059402b7a13253c68fd6"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "struct",
+      "line": 145,
+      "symbol": "vibe_app::agents::Invocation",
+      "end_line": 153,
+      "fingerprint": "tok1:20d89bdeb19709025f80afb7d31eb991feb44c8efe765f4fb7520a6a36658300"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "struct",
+      "line": 135,
+      "symbol": "vibe_app::agents::Placeholders",
+      "end_line": 143,
+      "fingerprint": "tok1:38c7b780c2ea4b6c9345d535d57de8353e29c84fee21d8c9149fef68f7c1cfea"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "struct",
+      "line": 39,
+      "symbol": "vibe_app::agents::ResolvedAgent",
+      "end_line": 53,
+      "fingerprint": "tok1:cd2a9c49ecd7fa28f6e9355caec5b178f4e0c0ff93f1feadf9ea54cf29280256"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "enum",
+      "line": 117,
+      "symbol": "vibe_app::agents::RunMode",
+      "end_line": 124,
+      "fingerprint": "tok1:91d12f2dc8b058c8aba669f9b67091f14b36ae1d9c31f8f26bb15b916e54ebf0"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "item_kind": "struct",
+      "line": 107,
+      "symbol": "vibe_app::agents::SelectedAgent",
+      "end_line": 115,
+      "fingerprint": "tok1:3f4cd84ffb59f3001d198853f93efdb449924b834a6fbaa33138748f1471c38b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/config.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_app::agents::config",
+      "end_line": 6,
+      "fingerprint": "tok1:fdb597d9289bdd82641e1865920f870f950ee5c8897155d8a99e5fa7a0993db6"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/config.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_app::agents::config",
+      "end_line": 7,
+      "fingerprint": "tok1:3fdc7020ec4430506aa2175cca9d46f4f6ad9e285b6627eb8c2d335e60eff908"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/config.rs",
+      "item_kind": "struct",
+      "line": 22,
+      "symbol": "vibe_app::agents::config::AgentDefinition",
+      "end_line": 41,
+      "fingerprint": "tok1:c167e861f4c04856a28fb04a366b88384ca7bd105817475f6b1a1b07e92f8869"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/config.rs",
+      "item_kind": "struct",
+      "line": 43,
+      "symbol": "vibe_app::agents::config::AgentsConfig",
+      "end_line": 68,
+      "fingerprint": "tok1:81bf344a04fd69c993731cacefc0dd2a77029c5e6ba48d90a692b2fefc88006b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/error.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_app::agents::error",
+      "end_line": 3,
+      "fingerprint": "tok1:c4431fead711db0419fefa12aebc10dd160791b41122cecce893577dc138d653"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/error.rs",
+      "item_kind": "enum",
+      "line": 8,
+      "symbol": "vibe_app::agents::error::AgentError",
+      "end_line": 76,
+      "fingerprint": "tok1:a0ff43969f0acc9c817c6c3a0e3f324b4a843c585fed1bd037874c938f2dd8dc"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/error.rs",
+      "item_kind": "struct",
+      "line": 78,
+      "symbol": "vibe_app::agents::error::ParkedStep",
+      "end_line": 94,
+      "fingerprint": "tok1:cd41f63de149312f44f85b2f987aebe1485c4e11de679e75d8ee4dc637b52b6a"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/hooks.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_app::agents::hooks",
+      "end_line": 5,
+      "fingerprint": "tok1:92d6dbd81dfc518e825f87e0bbe54fe7f11a65a4d9732a55177b10214b69da05"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/hooks.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_app::agents::hooks",
+      "end_line": 6,
+      "fingerprint": "tok1:6dbc27ebb3ee4065f32f83cf275c61c201430d466ef615dce64c1f811e9aeeab"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/hooks.rs",
+      "item_kind": "struct",
+      "line": 43,
+      "symbol": "vibe_app::agents::hooks::AgentHooks",
+      "end_line": 62,
+      "fingerprint": "tok1:352c6dd2f19b411150f93b07d0c24719f1e3ac666e0868465f0b17f6addd3e81"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/hooks.rs",
+      "item_kind": "enum",
+      "line": 26,
+      "symbol": "vibe_app::agents::hooks::AgentNotice",
+      "end_line": 38,
+      "fingerprint": "tok1:dfd1959b64b7a5caf01da407346efb0f2175be814cbe43fb411cc116c12aacc6"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/hooks.rs",
+      "item_kind": "struct",
+      "line": 12,
+      "symbol": "vibe_app::agents::hooks::AgentPrompt",
+      "end_line": 24,
+      "fingerprint": "tok1:71bb2e65a7d1e3b218d8e9e7f9f64cbea2b43cb19ebdb0eaeb886cd0fb315975"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/presets.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_app::agents::presets",
+      "end_line": 7,
+      "fingerprint": "tok1:3fdc7020ec4430506aa2175cca9d46f4f6ad9e285b6627eb8c2d335e60eff908"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/agents/presets.rs",
+      "item_kind": "struct",
+      "line": 11,
+      "symbol": "vibe_app::agents::presets::Preset",
+      "end_line": 24,
+      "fingerprint": "tok1:ed10090063ef2220805a4c1187303d110d3b6d9751c1eeec8bc94d225b316faf"
+    },
+    {
+      "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/alternatives.rs",
       "item_kind": "mod",
       "line": 5,
@@ -6594,9 +7188,9 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/alternatives.rs",
       "item_kind": "struct",
-      "line": 72,
+      "line": 78,
       "symbol": "vibe_app::alternatives::DefaultChange",
-      "end_line": 79,
+      "end_line": 85,
       "fingerprint": "tok1:4e7b8aa44e898feb324c6b86a82c8876dde47522ff17ef8c48fbbff42dc1daa1"
     },
     {
@@ -6612,18 +7206,18 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/codes.rs",
       "item_kind": "enum",
-      "line": 15,
+      "line": 17,
       "symbol": "vibe_app::codes::ErrorClass",
-      "end_line": 26,
-      "fingerprint": "tok1:ad7ade859331ac201d9a5796ae63971c5b3c94b26549baee6d0eabb873b8d084"
+      "end_line": 31,
+      "fingerprint": "tok1:36ef6253d1370357d00d67e3021229972845282840cc4c8f9544f3ed594637dc"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/codes.rs",
       "item_kind": "struct",
-      "line": 28,
+      "line": 33,
       "symbol": "vibe_app::codes::ErrorCode",
-      "end_line": 37,
+      "end_line": 42,
       "fingerprint": "tok1:599e9653ceb427ce3d5b106f6683cd4e56c7fe0404afe7881e30c66f4ed1181f"
     },
     {
@@ -6634,6 +7228,33 @@
       "symbol": "vibe_app::describe",
       "end_line": 7,
       "fingerprint": "tok1:cc18e131195afa6d10134709e3811c669f626b9ac8cf206a1e592f710b406228"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/environment.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_app::environment",
+      "end_line": 9,
+      "fingerprint": "tok1:fef5eef1e52c940a054feaafe888ee383d384249a36422a6a0e3b76fdf62fdad"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/environment.rs",
+      "item_kind": "struct",
+      "line": 62,
+      "symbol": "vibe_app::environment::ProfileEnvironment",
+      "end_line": 92,
+      "fingerprint": "tok1:6fa175c9ac2e41b5822ac0eca9fde8d36b8fa4acc4bbb6f4c15164a95003c1c8"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/environment.rs",
+      "item_kind": "trait",
+      "line": 21,
+      "symbol": "vibe_app::environment::UserEnvironment",
+      "end_line": 60,
+      "fingerprint": "tok1:d072b25f535afa274280decba91d5177389304a5c50e1c70cc43193f2e6794b8"
     },
     {
       "crate_name": "vibe-app",
@@ -6650,8 +7271,8 @@
       "item_kind": "enum",
       "line": 422,
       "symbol": "vibe_app::error::AppError",
-      "end_line": 535,
-      "fingerprint": "tok1:655d136fb68dfc7447542749a130a858d8726bb96c954d1600042b0e9ee06eb2"
+      "end_line": 539,
+      "fingerprint": "tok1:a2084c9c03637567b42be7e9a64e86f5f1190c24f3ba290e6d69682cd84eaf37"
     },
     {
       "crate_name": "vibe-app",
@@ -6709,6 +7330,51 @@
     },
     {
       "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/error_lifecycle.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_app::error_lifecycle",
+      "end_line": 6,
+      "fingerprint": "tok1:64e669b18c34397b41f1817644f769efd44b91b96d6dd163c805f5865b82e30b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/error_lifecycle.rs",
+      "item_kind": "enum",
+      "line": 11,
+      "symbol": "vibe_app::error_lifecycle::LifecycleError",
+      "end_line": 56,
+      "fingerprint": "tok1:0777d6ae866d48c9de8cbf8ade08085716f61b8b1d013fdf5161d80d7674c94f"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/exposure.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_app::exposure",
+      "end_line": 7,
+      "fingerprint": "tok1:35d8a868eacfbc0e73baa025fb961a443183db9ec47754be09ff1ed54f1e1f57"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/exposure.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_app::exposure",
+      "end_line": 8,
+      "fingerprint": "tok1:eacacddc7c6f33ef3310223f1dd4a6ed10cea8022105ed4dd43063018a0399d1"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/exposure.rs",
+      "item_kind": "struct",
+      "line": 23,
+      "symbol": "vibe_app::exposure::Exposure",
+      "end_line": 34,
+      "fingerprint": "tok1:1751c78bbbd800ca7b77531eee72a9c5f9ddc2545315bf1d276dbd189c7348f8"
+    },
+    {
+      "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/fs_util.rs",
       "item_kind": "mod",
       "line": 4,
@@ -6738,82 +7404,136 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/index.rs",
       "item_kind": "struct",
-      "line": 115,
+      "line": 116,
       "symbol": "vibe_app::index::AcceptedLicense",
-      "end_line": 122,
+      "end_line": 123,
       "fingerprint": "tok1:439d57df1a4cc73ff71fc58a88408b4eea03d620cd8556240d124cb36276d233"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/index.rs",
       "item_kind": "struct",
-      "line": 152,
+      "line": 156,
       "symbol": "vibe_app::index::AuthoredCommands",
-      "end_line": 160,
+      "end_line": 164,
       "fingerprint": "tok1:f2fda16346d0588be54ef51b087a48af35c71d7a42e7305b88b6ccf714a7ba67"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/index.rs",
       "item_kind": "struct",
-      "line": 190,
+      "line": 260,
+      "symbol": "vibe_app::index::EnvEntry",
+      "end_line": 273,
+      "fingerprint": "tok1:84d71e948d625e9c86d0fba4ca0cac7b0772af902257380d00c5f9e9dbe8dfda"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/index.rs",
+      "item_kind": "enum",
+      "line": 232,
+      "symbol": "vibe_app::index::EnvOp",
+      "end_line": 239,
+      "fingerprint": "tok1:0577b336e82f9d6f4a668b2f93237b21f247ef781ad8c36b0a336bee1871e66a"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/index.rs",
+      "item_kind": "struct",
+      "line": 295,
       "symbol": "vibe_app::index::Index",
-      "end_line": 208,
+      "end_line": 313,
       "fingerprint": "tok1:eff529e2f59409dda0e7ed3426fcb5bfa200045ea30b6d3f91638d6817a61f25"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/index.rs",
       "item_kind": "struct",
-      "line": 162,
+      "line": 166,
       "symbol": "vibe_app::index::Installation",
-      "end_line": 188,
-      "fingerprint": "tok1:c8ff05ef8b7644125cf0fe29f3f806f58fcca345cebfb51107ef5b8e335558d5"
+      "end_line": 194,
+      "fingerprint": "tok1:d06e01af99c0cee25d33fad6279074daa57d7efae5f442af6797223d4e855cc7"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/index.rs",
+      "item_kind": "struct",
+      "line": 275,
+      "symbol": "vibe_app::index::Lifecycle",
+      "end_line": 293,
+      "fingerprint": "tok1:b6d90fd1c26edc9a123d7ff7a95e9246ef5eb32de9a9da829323662e802a8c17"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/index.rs",
       "item_kind": "enum",
-      "line": 143,
+      "line": 147,
       "symbol": "vibe_app::index::Location",
-      "end_line": 150,
+      "end_line": 154,
       "fingerprint": "tok1:77dd4ee42515890050dc65bc29f4ac36e8a3462173fff9a1875b3d2cca917ae8"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/index.rs",
       "item_kind": "enum",
-      "line": 49,
+      "line": 196,
+      "symbol": "vibe_app::index::Mark",
+      "end_line": 206,
+      "fingerprint": "tok1:8fd7b3d3493ee9ec5ef258aec254bc46f8378afcbd585c3c353d9d1701b97859"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/index.rs",
+      "item_kind": "enum",
+      "line": 50,
       "symbol": "vibe_app::index::Method",
-      "end_line": 62,
+      "end_line": 63,
       "fingerprint": "tok1:1b03f9331c2fa27b4c7cd2adeb633e9bcfeb1c4e17ab2e2a380e8724b9071a75"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/index.rs",
       "item_kind": "struct",
-      "line": 24,
+      "line": 25,
       "symbol": "vibe_app::index::PackageCoordinate",
-      "end_line": 31,
+      "end_line": 32,
       "fingerprint": "tok1:f0afcbec1025664beaf0de853fa04ce6f35e87a936d5d33a8a6ad83476d3cc15"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/index.rs",
+      "item_kind": "struct",
+      "line": 218,
+      "symbol": "vibe_app::index::Requirement",
+      "end_line": 230,
+      "fingerprint": "tok1:d04ffb5b95a4c3b33672e9919ef35c209182e800afa801531b96418a4fd151b3"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/index.rs",
       "item_kind": "enum",
-      "line": 91,
+      "line": 92,
       "symbol": "vibe_app::index::StepOutcome",
-      "end_line": 101,
+      "end_line": 102,
       "fingerprint": "tok1:f0be66c8a8721c71c0bed9716e127470624f0ae54d4d892a7d51cfafb687fc97"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/index.rs",
       "item_kind": "struct",
-      "line": 124,
+      "line": 125,
       "symbol": "vibe_app::index::StepRecord",
-      "end_line": 134,
-      "fingerprint": "tok1:7e20e2a90b3d5f8e40d7aca197da2e310bbd0d5ef48c454a10ae11fc4440a9d0"
+      "end_line": 138,
+      "fingerprint": "tok1:920dd0b5c77eead91188581d9932d80ed271ffe4b973cd1c6e90f9678a067e31"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/index.rs",
+      "item_kind": "enum",
+      "line": 252,
+      "symbol": "vibe_app::index::ValueKind",
+      "end_line": 258,
+      "fingerprint": "tok1:490121af7f00ec685675b925aa81c9ac7efd7ce5cfda6ba35e7ee650ee3d3e20"
     },
     {
       "crate_name": "vibe-app",
@@ -6981,36 +7701,36 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/mod.rs",
       "item_kind": "enum",
-      "line": 97,
+      "line": 134,
       "symbol": "vibe_app::operations::Command",
-      "end_line": 104,
-      "fingerprint": "tok1:d0371882dd32cb1d00823b88503b9aa60857a51c3564ab004fd129682a2f4fbb"
+      "end_line": 143,
+      "fingerprint": "tok1:4fc34953fecb0bc8dd1380838609199e2c8b9e727f516d22a92c8728e4371230"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/mod.rs",
       "item_kind": "struct",
-      "line": 80,
+      "line": 110,
       "symbol": "vibe_app::operations::InstallRequest",
-      "end_line": 95,
-      "fingerprint": "tok1:706efc37a245f3b0e33798b9350b62a3389bfe5c8112249bc0ded32a4e976247"
+      "end_line": 132,
+      "fingerprint": "tok1:176b7639ac4f89d8a225c398a4be15b9b4b00f71ec45c940bc852cd030ffd084"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/mod.rs",
       "item_kind": "struct",
-      "line": 36,
+      "line": 51,
       "symbol": "vibe_app::operations::OperationContext",
-      "end_line": 66,
-      "fingerprint": "tok1:764b10d5d92cbb2cda5cb2b298e2c98e9380d49df4ce7d42f25c6e00eebbe244"
+      "end_line": 93,
+      "fingerprint": "tok1:4053f1901eae5fad24c37b1389530bd34e9edc5f6ca91f9f49be202dbde434b6"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/mod.rs",
       "item_kind": "struct",
-      "line": 106,
+      "line": 145,
       "symbol": "vibe_app::operations::Outcome",
-      "end_line": 117,
+      "end_line": 156,
       "fingerprint": "tok1:1fe8dda11a8d4084682e42d80248f6b54eccb64a686cfa46614428248e2b6c1f"
     },
     {
@@ -7042,21 +7762,156 @@
     },
     {
       "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/deps.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_app::operations::deps",
+      "end_line": 7,
+      "fingerprint": "tok1:d74dde92b350bd2fdd91db8b1cd18a82d63e96527b3a8622a0892f6f16a950fc"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/lifecycle.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_app::operations::lifecycle",
+      "end_line": 7,
+      "fingerprint": "tok1:35d8a868eacfbc0e73baa025fb961a443183db9ec47754be09ff1ed54f1e1f57"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/lifecycle.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_app::operations::lifecycle",
+      "end_line": 8,
+      "fingerprint": "tok1:ff79a53dfae23ffd2beb12638891bfc55dcc528b1a10cf4f069b1c605fad1b2e"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/lifecycle.rs",
+      "item_kind": "struct",
+      "line": 36,
+      "symbol": "vibe_app::operations::lifecycle::Change",
+      "end_line": 45,
+      "fingerprint": "tok1:36b7ec0900790e75cb0d57edf7ad6cdacd996397f5f71b6422e873bc7dab3832"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/lifecycle.rs",
+      "item_kind": "enum",
+      "line": 24,
+      "symbol": "vibe_app::operations::lifecycle::ChangeVerb",
+      "end_line": 34,
+      "fingerprint": "tok1:830901a7d62f34248f6562fb53d0748af393ae8d8e6985dfa61d658409b943de"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/listing.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_app::operations::listing",
+      "end_line": 5,
+      "fingerprint": "tok1:f9a0251427f8737aa9943568873e0ff99d4ab32827a7af5c09f91a35536eba28"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/listing.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_app::operations::listing",
+      "end_line": 6,
+      "fingerprint": "tok1:35d8a868eacfbc0e73baa025fb961a443183db9ec47754be09ff1ed54f1e1f57"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/modify.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_app::operations::modify",
+      "end_line": 8,
+      "fingerprint": "tok1:edcbf77b0c118195acfd46eb907efeb6a4bfe9fa36db7f85aa47e526b698957b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/modify.rs",
+      "item_kind": "struct",
+      "line": 30,
+      "symbol": "vibe_app::operations::modify::ModifyRequest",
+      "end_line": 42,
+      "fingerprint": "tok1:11345f1483e9a0051a05d8797c6b95fb39f384844ed4260f6017f57f5665bff4"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/outdated.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_app::operations::outdated",
+      "end_line": 6,
+      "fingerprint": "tok1:ff7a3c01392a9700f57f18e03434a14680fd5e75adfea761fea3836a14f035c8"
+    },
+    {
+      "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/remove.rs",
       "item_kind": "mod",
-      "line": 3,
+      "line": 7,
       "symbol": "vibe_app::operations::remove",
-      "end_line": 3,
+      "end_line": 7,
       "fingerprint": "tok1:da6379df018c4d1ace99c7b0e52aec81f5be7f91bd97af66de8626bb04bcee36"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/remove.rs",
       "item_kind": "mod",
-      "line": 4,
+      "line": 8,
       "symbol": "vibe_app::operations::remove",
-      "end_line": 4,
+      "end_line": 8,
       "fingerprint": "tok1:e7f9e487daa92d22001a7d4ca058b4a3a8aba3ce79c3d337e6108227ad6b5989"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/remove.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_app::operations::remove",
+      "end_line": 9,
+      "fingerprint": "tok1:64e669b18c34397b41f1817644f769efd44b91b96d6dd163c805f5865b82e30b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/remove.rs",
+      "item_kind": "struct",
+      "line": 45,
+      "symbol": "vibe_app::operations::remove::Removal",
+      "end_line": 52,
+      "fingerprint": "tok1:52e7b6c9d5f5a66982ad99a2491ee5ab810894458691317f67d268790b464ac7"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/remove.rs",
+      "item_kind": "struct",
+      "line": 31,
+      "symbol": "vibe_app::operations::remove::RemoveRequest",
+      "end_line": 43,
+      "fingerprint": "tok1:d77969ee1461485fac144e064fc794e29269964601701ca195a503476ed30de3"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/tree.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_app::operations::tree",
+      "end_line": 6,
+      "fingerprint": "tok1:64e669b18c34397b41f1817644f769efd44b91b96d6dd163c805f5865b82e30b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/update.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_app::operations::update",
+      "end_line": 6,
+      "fingerprint": "tok1:ff79a53dfae23ffd2beb12638891bfc55dcc528b1a10cf4f069b1c605fad1b2e"
     },
     {
       "crate_name": "vibe-app",
@@ -7183,6 +8038,87 @@
       "symbol": "vibe_app::steps",
       "end_line": 7,
       "fingerprint": "tok1:cd727de93d075ea521a88054296363d96437bd19854a99e0796d09ca6ea89733"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/agent.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_app::steps::agent",
+      "end_line": 6,
+      "fingerprint": "tok1:92d6dbd81dfc518e825f87e0bbe54fe7f11a65a4d9732a55177b10214b69da05"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/agent.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_app::steps::agent",
+      "end_line": 7,
+      "fingerprint": "tok1:731938b24000038824a9d4283a7d6f7ef369f22fc08ac14ecb62d7cbb352c0ee"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/agent.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_app::steps::agent",
+      "end_line": 8,
+      "fingerprint": "tok1:6dbc27ebb3ee4065f32f83cf275c61c201430d466ef615dce64c1f811e9aeeab"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/agent.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_app::steps::agent",
+      "end_line": 9,
+      "fingerprint": "tok1:ed77c9d3012872564280eabdd1ccc2705f1de826b562e41f76985b48b85b7a70"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/env.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_app::steps::env",
+      "end_line": 6,
+      "fingerprint": "tok1:fef5eef1e52c940a054feaafe888ee383d384249a36422a6a0e3b76fdf62fdad"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/env.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_app::steps::env",
+      "end_line": 7,
+      "fingerprint": "tok1:d74dde92b350bd2fdd91db8b1cd18a82d63e96527b3a8622a0892f6f16a950fc"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/envelope.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_app::steps::envelope",
+      "end_line": 7,
+      "fingerprint": "tok1:f1246822040d216f7fca3f969c5b3547fade2ed5a9a25692703ceec3599ebe3f"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/envelope.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_app::steps::envelope",
+      "end_line": 8,
+      "fingerprint": "tok1:7a9e520c64843afdb5dfd3db310b5e1f7035921a2274416416e7b48b515fef08"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/envelope.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_app::steps::envelope",
+      "end_line": 9,
+      "fingerprint": "tok1:4b3daa6c2e7cb77b4d719d6f76f9bf36d595b2d39b66605235eaab402dfa195c"
     },
     {
       "crate_name": "vibe-app",
@@ -7323,27 +8259,36 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 38,
+      "line": 40,
       "symbol": "vibe_app::steps::plan::HostFacts",
-      "end_line": 48,
+      "end_line": 50,
       "fingerprint": "tok1:50ba09ef7bdf41f9812a2d4f13ce7d9f4689e6ef2aa9d75a9982094430a57e4e"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 113,
+      "line": 154,
       "symbol": "vibe_app::steps::plan::Plan",
-      "end_line": 134,
-      "fingerprint": "tok1:02a3f8c04f6a438ed3a2f60c7e105222b145d2fa779345bc58bafa1bb265138b"
+      "end_line": 178,
+      "fingerprint": "tok1:c89fb6bb3a360f54c9965786f00443d1333f5a5a21fa2be177ff2bab9201efae"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 104,
-      "symbol": "vibe_app::steps::plan::PlannedStep",
+      "line": 88,
+      "symbol": "vibe_app::steps::plan::PlannedDependency",
       "end_line": 111,
+      "fingerprint": "tok1:96184ebc938e56499cd5ef9da324c7d2ab7d97bbbe948f420a2f6cccffb1b7b5"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/plan.rs",
+      "item_kind": "struct",
+      "line": 145,
+      "symbol": "vibe_app::steps::plan::PlannedStep",
+      "end_line": 152,
       "fingerprint": "tok1:9ddac5b3cdf9543ffb9c9736299746722f94cd4b31cf4004b9785b904e269edb"
     },
     {
@@ -7354,6 +8299,15 @@
       "symbol": "vibe_app::steps::plan_view",
       "end_line": 4,
       "fingerprint": "tok1:238f2419cd67e488da785ddd615c7e405f932b3208e3742f2b5fcbbf5a6bea0d"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/resume.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_app::steps::resume",
+      "end_line": 8,
+      "fingerprint": "tok1:1254c57d4d4c2ee3f678c9c3d9461a3ff620c36917af7fcc2ab05d9a49d24d0b"
     },
     {
       "crate_name": "vibe-app",
@@ -7413,9 +8367,9 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/state.rs",
       "item_kind": "enum",
-      "line": 17,
+      "line": 18,
       "symbol": "vibe_app::steps::state::Start",
-      "end_line": 28,
+      "end_line": 29,
       "fingerprint": "tok1:831ab96c23f2fafeed07a239ba9d537934ec3e3653bfaa502ca7d40f198cd24f"
     },
     {
@@ -7861,6 +8815,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/agent.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_cli::cli::agent",
+      "end_line": 4,
+      "fingerprint": "tok1:3fdc7020ec4430506aa2175cca9d46f4f6ad9e285b6627eb8c2d335e60eff908"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli/agentic.rs",
       "item_kind": "mod",
       "line": 9,
@@ -8158,6 +9121,24 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/agent.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_cli::commands::agent",
+      "end_line": 5,
+      "fingerprint": "tok1:fdb597d9289bdd82641e1865920f870f950ee5c8897155d8a99e5fa7a0993db6"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/agent.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::agent",
+      "end_line": 6,
+      "fingerprint": "tok1:3fdc7020ec4430506aa2175cca9d46f4f6ad9e285b6627eb8c2d335e60eff908"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/agentic/mod.rs",
       "item_kind": "mod",
       "line": 14,
@@ -8221,6 +9202,33 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/agents.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::app::agents",
+      "end_line": 6,
+      "fingerprint": "tok1:c4431fead711db0419fefa12aebc10dd160791b41122cecce893577dc138d653"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/agents.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_cli::commands::app::agents",
+      "end_line": 7,
+      "fingerprint": "tok1:92d6dbd81dfc518e825f87e0bbe54fe7f11a65a4d9732a55177b10214b69da05"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/agents.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_cli::commands::app::agents",
+      "end_line": 8,
+      "fingerprint": "tok1:6dbc27ebb3ee4065f32f83cf275c61c201430d466ef615dce64c1f811e9aeeab"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/app/alternatives.rs",
       "item_kind": "mod",
       "line": 4,
@@ -8239,12 +9247,30 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/environment.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_cli::commands::app::environment",
+      "end_line": 7,
+      "fingerprint": "tok1:fef5eef1e52c940a054feaafe888ee383d384249a36422a6a0e3b76fdf62fdad"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/app/facts.rs",
       "item_kind": "mod",
-      "line": 5,
+      "line": 6,
       "symbol": "vibe_cli::commands::app::facts",
-      "end_line": 5,
+      "end_line": 6,
       "fingerprint": "tok1:8c70aeecf4a54cbe4089f6e1437e1260bdf72b31d4ac38e203666c8139ad70a8"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/facts.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_cli::commands::app::facts",
+      "end_line": 7,
+      "fingerprint": "tok1:58d169bb8f5f498f86bba3f7f356dee49bc96ca1a2471232ec2b1e0a10a4871f"
     },
     {
       "crate_name": "vibe-cli",
@@ -8311,6 +9337,24 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/lifecycle.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_cli::commands::app::lifecycle",
+      "end_line": 7,
+      "fingerprint": "tok1:edcbf77b0c118195acfd46eb907efeb6a4bfe9fa36db7f85aa47e526b698957b"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/lifecycle.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_cli::commands::app::lifecycle",
+      "end_line": 8,
+      "fingerprint": "tok1:ff7a3c01392a9700f57f18e03434a14680fd5e75adfea761fea3836a14f035c8"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/app/project.rs",
       "item_kind": "mod",
       "line": 8,
@@ -8326,6 +9370,24 @@
       "symbol": "vibe_cli::commands::app::records",
       "end_line": 5,
       "fingerprint": "tok1:16edf885d1b348c101dfab8179ac88c45531bdae46d708494ae0f54b11398dbd"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/report.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::app::report",
+      "end_line": 6,
+      "fingerprint": "tok1:da6379df018c4d1ace99c7b0e52aec81f5be7f91bd97af66de8626bb04bcee36"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/views.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_cli::commands::app::views",
+      "end_line": 5,
+      "fingerprint": "tok1:f9a0251427f8737aa9943568873e0ff99d4ab32827a7af5c09f91a35536eba28"
     },
     {
       "crate_name": "vibe-cli",
@@ -9006,18 +10068,18 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 71,
+      "line": 72,
       "symbol": "vibe_cli::commands::install::flag_tests::empty_manifest",
-      "end_line": 85,
+      "end_line": 86,
       "fingerprint": "tok1:b53d8f0ac303dd7c44e1fa8246df9329f0fce41bf9b9e028a906cd2472dc3731"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 122,
+      "line": 123,
       "symbol": "vibe_cli::commands::install::flag_tests::the_projection_copies_exactly_the_ten_builder_fields",
-      "end_line": 163,
+      "end_line": 164,
       "fingerprint": "tok1:7b11c92ca946ba2b0b9401d4789d38b25393affd8d619e579b4cefa706e29e62"
     },
     {
@@ -10041,9 +11103,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/shell/mod.rs",
       "item_kind": "fn",
-      "line": 63,
+      "line": 128,
       "symbol": "vibe_cli::commands::shell::inherited",
-      "end_line": 71,
+      "end_line": 136,
       "fingerprint": "tok1:2fce6a653c38ce02df745deec05a46649d44bc6cceae4d2ad958c41d7cc74da3"
     },
     {
@@ -12084,9 +13146,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 409,
+      "line": 410,
       "symbol": "vibe_cli::promote_user_config_env",
-      "end_line": 534,
+      "end_line": 535,
       "fingerprint": "tok1:f0612709ef928387b8644bab2915337cbcfbcc54cff8d3f3609c9fbc229d5ebd"
     },
     {
@@ -14415,73 +15477,109 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 234,
+      "line": 240,
       "symbol": "vibe_core::manifest::package::application::ApplicationDecl",
-      "end_line": 250,
+      "end_line": 256,
       "fingerprint": "tok1:23f2197df2719f811b81deb45180d42a4a24748f626dab194d03e6004726dce6"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "enum",
-      "line": 40,
+      "line": 42,
       "symbol": "vibe_core::manifest::package::application::InstallerMethod",
-      "end_line": 100,
+      "end_line": 102,
       "fingerprint": "tok1:fb798e45d6fe23688550080e70f18af3a69a086bdd05ad6daedfc681826bd9b8"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 188,
+      "line": 190,
       "symbol": "vibe_core::manifest::package::application::InstallerOptionDecl",
-      "end_line": 232,
-      "fingerprint": "tok1:0451a33e5078730fa13b6aa594488d99ad1398bfa5ced93f0818f1854ceed740"
+      "end_line": 238,
+      "fingerprint": "tok1:909dddf0a9b506500c95df736d7ee281f3e7fc184f5993bd7ae1c23c3c1bc8f7"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 154,
+      "line": 156,
       "symbol": "vibe_core::manifest::package::application::LauncherDecl",
-      "end_line": 175,
+      "end_line": 177,
       "fingerprint": "tok1:4dbf31cee6f52557a2fd79be47e110132676f3ef14d6183392537075a079ed54"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 177,
+      "line": 179,
       "symbol": "vibe_core::manifest::package::application::PublicCommandDecl",
-      "end_line": 186,
+      "end_line": 188,
       "fingerprint": "tok1:04f03af3cd491eb9368dd0a32d7f7ad6e85b58c533d90605eb54289f482e0937"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 143,
+      "line": 145,
       "symbol": "vibe_core::manifest::package::application::RecipeDecl",
-      "end_line": 152,
+      "end_line": 154,
       "fingerprint": "tok1:205f67efe04cd404d78f701ae49ab918b10127f21110c98d9d6b4c3cee85e001"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "enum",
-      "line": 28,
+      "line": 30,
       "symbol": "vibe_core::manifest::package::application::ShellInterpreter",
-      "end_line": 38,
+      "end_line": 40,
       "fingerprint": "tok1:2711ee004e3a114ad01b3d8afabb4626408e64ddcd5a7e84bf3903dba5a048fa"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 125,
+      "line": 127,
       "symbol": "vibe_core::manifest::package::application::SourceInputDecl",
-      "end_line": 141,
+      "end_line": 143,
       "fingerprint": "tok1:83360791a84751d5773a9c676f858dc57ca6d8686ebb9feb7559e2a78a9320df"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/application/requirement.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_core::manifest::package::application::requirement",
+      "end_line": 6,
+      "fingerprint": "tok1:d74dde92b350bd2fdd91db8b1cd18a82d63e96527b3a8622a0892f6f16a950fc"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/application/requirement.rs",
+      "item_kind": "enum",
+      "line": 45,
+      "symbol": "vibe_core::manifest::package::application::requirement::RequirementDecl",
+      "end_line": 64,
+      "fingerprint": "tok1:fc9da80526b2260384906f4ef42364be273f47e0ff14c85c977904e9f3609432"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/application/requirement.rs",
+      "item_kind": "enum",
+      "line": 11,
+      "symbol": "vibe_core::manifest::package::application::requirement::RequirementScope",
+      "end_line": 23,
+      "fingerprint": "tok1:8b1b7293904b1af0b3958463bfd9436173688c62aef6e94ffc468e4ba3fc0276"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/application/requirement.rs",
+      "item_kind": "struct",
+      "line": 35,
+      "symbol": "vibe_core::manifest::package::application::requirement::RequirementTable",
+      "end_line": 43,
+      "fingerprint": "tok1:4261b3ed0e08c9ca6eca4d1154572325f50e8b6d34491acbfde1b66fd31b1684"
     },
     {
       "crate_name": "vibe-core",
@@ -14505,126 +15603,126 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "enum",
-      "line": 178,
+      "line": 179,
       "symbol": "vibe_core::manifest::package::application::steps::AgentMode",
-      "end_line": 187,
+      "end_line": 188,
       "fingerprint": "tok1:aecefe793f50e52ef68befb1c65c852488d1868b3b950032b1212ea6e1bf5d80"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "enum",
-      "line": 160,
+      "line": 161,
       "symbol": "vibe_core::manifest::package::application::steps::ArchiveFormatDecl",
-      "end_line": 167,
+      "end_line": 168,
       "fingerprint": "tok1:1f7668d2f867c58e4e74adc828ce1c5c04095bf321a1877955f8901c22571914"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "enum",
-      "line": 66,
+      "line": 67,
       "symbol": "vibe_core::manifest::package::application::steps::Condition",
-      "end_line": 82,
+      "end_line": 83,
       "fingerprint": "tok1:7a00c4d569f00c17363d3baaee98b20398a55eaae023a66c078622396ed51c93"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "struct",
-      "line": 400,
+      "line": 417,
       "symbol": "vibe_core::manifest::package::application::steps::ExternalResult",
-      "end_line": 406,
+      "end_line": 423,
       "fingerprint": "tok1:3f39832e18001b7972520ad9266bfccf771d8513f4910a27b8cbf345b0e39637"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "struct",
-      "line": 15,
+      "line": 16,
       "symbol": "vibe_core::manifest::package::application::steps::FeatureDecl",
-      "end_line": 41,
+      "end_line": 42,
       "fingerprint": "tok1:ddb4eacbe56c4ed553bde46d4043a937ae70048c64b70f32e2ed2e835697817c"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "enum",
-      "line": 169,
+      "line": 170,
       "symbol": "vibe_core::manifest::package::application::steps::NativeFormatDecl",
-      "end_line": 176,
+      "end_line": 177,
       "fingerprint": "tok1:dcf807894d45eee257aab64cd038ac07ca06af3ac6fc791f7e448ceea1bedfbf"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "enum",
-      "line": 112,
+      "line": 113,
       "symbol": "vibe_core::manifest::package::application::steps::Need",
-      "end_line": 121,
+      "end_line": 122,
       "fingerprint": "tok1:62284963ebf138e8e4d2f9ce5ce69fedc25b1ef830e87c49d130259007eb6672"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "enum",
-      "line": 392,
+      "line": 409,
       "symbol": "vibe_core::manifest::package::application::steps::OwnedWord",
-      "end_line": 398,
+      "end_line": 415,
       "fingerprint": "tok1:a97b9252d9630091c8fd70bc49c7b761aa604b5a149bd0fe6a37449113e40466"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "struct",
-      "line": 103,
+      "line": 104,
       "symbol": "vibe_core::manifest::package::application::steps::ParamEquals",
-      "end_line": 110,
+      "end_line": 111,
       "fingerprint": "tok1:191ac4fcc8be03ba81d18d4e4576c6b96f041bcf295085d18edaaa5baab5cd16"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "enum",
-      "line": 357,
+      "line": 374,
       "symbol": "vibe_core::manifest::package::application::steps::ResultDecl",
-      "end_line": 366,
+      "end_line": 383,
       "fingerprint": "tok1:89c373879bc5665a05e96e4d8fd5e119a685a83174fff2df402f2e6f32d81c4f"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "struct",
-      "line": 293,
+      "line": 305,
       "symbol": "vibe_core::manifest::package::application::steps::StepDecl",
-      "end_line": 323,
-      "fingerprint": "tok1:dc604d64c827a71060d9ad8c7ffc32f270009008794dcc9f31da7d2982d954a6"
+      "end_line": 339,
+      "fingerprint": "tok1:da354a50be402325712dd858366a799a5000b0db881b92f147ba776b758f8288"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "enum",
-      "line": 189,
+      "line": 190,
       "symbol": "vibe_core::manifest::package::application::steps::StepKind",
-      "end_line": 255,
-      "fingerprint": "tok1:8e608c9bc34fe55631b0f38b11535616b678876ed4568a583592a8cdc7712799"
+      "end_line": 266,
+      "fingerprint": "tok1:22c83a9e28ee45439a6da02dbceefd1ad63ffb5612e82d8a20923cfea6ccca09"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "enum",
-      "line": 280,
+      "line": 292,
       "symbol": "vibe_core::manifest::package::application::steps::StepOrigin",
-      "end_line": 291,
+      "end_line": 303,
       "fingerprint": "tok1:ad2ee58725a26a9fb25cc49b233517bed85e2f5fe07af490c9fa1b88b99bdc86"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "item_kind": "enum",
-      "line": 43,
+      "line": 44,
       "symbol": "vibe_core::manifest::package::application::steps::StepPhase",
-      "end_line": 51,
+      "end_line": 52,
       "fingerprint": "tok1:52e3e905c44b628bbdece0dd2976ed24d720eb41ef40f5b2a181e40bc17dbb88"
     },
     {
@@ -35510,6 +36608,38 @@
   ],
   "edges": [
     {
+      "file": "schemas/application/e1/agent_hook.jtd.json",
+      "from_symbol": "agent_hook",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#envelope",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/application/e1/agent_hook_result.jtd.json",
+      "from_symbol": "agent_hook_result",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#answer",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/agent_list.jtd.json",
+      "from_symbol": "agent_list",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#presets",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/agent_presets.jtd.json",
+      "from_symbol": "agent_presets",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#presets",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/llm/openai_compatible/e1/agent_result.jtd.json",
       "from_symbol": "agent_result",
       "line": 1,
@@ -35574,11 +36704,27 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/application_outdated.jtd.json",
+      "from_symbol": "application_outdated",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#outdated",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/application_plan.jtd.json",
       "from_symbol": "application_plan",
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/application_removal.jtd.json",
+      "from_symbol": "application_removal",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree",
       "verb": "implements"
     },
     {
@@ -36866,6 +38012,214 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#external-registration",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#selection",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents::AgentSource",
+      "line": 29,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#selection",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents::Delivery",
+      "line": 99,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#selection",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents::ExternalAgent",
+      "line": 58,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#external-registration",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents::Invocation",
+      "line": 147,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#external-registration",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents::Placeholders",
+      "line": 137,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents::ResolvedAgent",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents::RunMode",
+      "line": 120,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#modes",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "from_symbol": "vibe_app::agents::SelectedAgent",
+      "line": 109,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#selection",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/config.rs",
+      "from_symbol": "vibe_app::agents::config",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/config.rs",
+      "from_symbol": "vibe_app::agents::config",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#presets",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/config.rs",
+      "from_symbol": "vibe_app::agents::config::AgentDefinition",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/config.rs",
+      "from_symbol": "vibe_app::agents::config::AgentsConfig",
+      "line": 58,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/error.rs",
+      "from_symbol": "vibe_app::agents::error",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#selection",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/error.rs",
+      "from_symbol": "vibe_app::agents::error::AgentError",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#selection",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/error.rs",
+      "from_symbol": "vibe_app::agents::error::AgentError",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#consent",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/error.rs",
+      "from_symbol": "vibe_app::agents::error::ParkedStep",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#parking",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/hooks.rs",
+      "from_symbol": "vibe_app::agents::hooks",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#consent",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/hooks.rs",
+      "from_symbol": "vibe_app::agents::hooks",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#parking",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/hooks.rs",
+      "from_symbol": "vibe_app::agents::hooks::AgentHooks",
+      "line": 45,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#selection",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/hooks.rs",
+      "from_symbol": "vibe_app::agents::hooks::AgentNotice",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#answer",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/hooks.rs",
+      "from_symbol": "vibe_app::agents::hooks::AgentPrompt",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#consent",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/presets.rs",
+      "from_symbol": "vibe_app::agents::presets",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#presets",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/agents/presets.rs",
+      "from_symbol": "vibe_app::agents::presets::Preset",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#presets",
+      "verb": "documents"
+    },
+    {
       "file": "crates/vibe-app/src/alternatives.rs",
       "from_symbol": "vibe_app::alternatives",
       "line": 5,
@@ -36876,7 +38230,7 @@
     {
       "file": "crates/vibe-app/src/alternatives.rs",
       "from_symbol": "vibe_app::alternatives::DefaultChange",
-      "line": 74,
+      "line": 80,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#alternatives",
       "verb": "documents"
@@ -36892,7 +38246,7 @@
     {
       "file": "crates/vibe-app/src/codes.rs",
       "from_symbol": "vibe_app::codes::ErrorClass",
-      "line": 18,
+      "line": 20,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#exit-codes",
       "verb": "documents"
@@ -36900,7 +38254,7 @@
     {
       "file": "crates/vibe-app/src/codes.rs",
       "from_symbol": "vibe_app::codes::ErrorCode",
-      "line": 30,
+      "line": 35,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#error-codes",
       "verb": "documents"
@@ -36912,6 +38266,30 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#describe",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/environment.rs",
+      "from_symbol": "vibe_app::environment",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#env-step",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/environment.rs",
+      "from_symbol": "vibe_app::environment::ProfileEnvironment",
+      "line": 88,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#env-step",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/environment.rs",
+      "from_symbol": "vibe_app::environment::UserEnvironment",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#env-step",
+      "verb": "documents"
     },
     {
       "file": "crates/vibe-app/src/error.rs",
@@ -37034,6 +38412,54 @@
       "verb": "documents"
     },
     {
+      "file": "crates/vibe-app/src/error_lifecycle.rs",
+      "from_symbol": "vibe_app::error_lifecycle",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/error_lifecycle.rs",
+      "from_symbol": "vibe_app::error_lifecycle::LifecycleError",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/error_lifecycle.rs",
+      "from_symbol": "vibe_app::error_lifecycle::LifecycleError",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/exposure.rs",
+      "from_symbol": "vibe_app::exposure",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/exposure.rs",
+      "from_symbol": "vibe_app::exposure",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#session-selection",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/exposure.rs",
+      "from_symbol": "vibe_app::exposure::Exposure",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations",
+      "verb": "documents"
+    },
+    {
       "file": "crates/vibe-app/src/fs_util.rs",
       "from_symbol": "vibe_app::fs_util",
       "line": 4,
@@ -37060,7 +38486,7 @@
     {
       "file": "crates/vibe-app/src/index.rs",
       "from_symbol": "vibe_app::index::AcceptedLicense",
-      "line": 117,
+      "line": 118,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#license",
       "verb": "documents"
@@ -37068,15 +38494,31 @@
     {
       "file": "crates/vibe-app/src/index.rs",
       "from_symbol": "vibe_app::index::AuthoredCommands",
-      "line": 154,
+      "line": 158,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "documents"
     },
     {
       "file": "crates/vibe-app/src/index.rs",
+      "from_symbol": "vibe_app::index::EnvEntry",
+      "line": 263,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#env-step",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/index.rs",
+      "from_symbol": "vibe_app::index::EnvOp",
+      "line": 234,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#env-step",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/index.rs",
       "from_symbol": "vibe_app::index::Index",
-      "line": 204,
+      "line": 309,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "documents"
@@ -37084,23 +38526,39 @@
     {
       "file": "crates/vibe-app/src/index.rs",
       "from_symbol": "vibe_app::index::Installation",
-      "line": 164,
+      "line": 168,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "documents"
     },
     {
       "file": "crates/vibe-app/src/index.rs",
+      "from_symbol": "vibe_app::index::Lifecycle",
+      "line": 281,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/index.rs",
       "from_symbol": "vibe_app::index::Location",
-      "line": 146,
+      "line": 150,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#ownership",
       "verb": "documents"
     },
     {
       "file": "crates/vibe-app/src/index.rs",
+      "from_symbol": "vibe_app::index::Mark",
+      "line": 198,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/index.rs",
       "from_symbol": "vibe_app::index::Method",
-      "line": 51,
+      "line": 52,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation",
       "verb": "documents"
@@ -37108,15 +38566,23 @@
     {
       "file": "crates/vibe-app/src/index.rs",
       "from_symbol": "vibe_app::index::PackageCoordinate",
-      "line": 26,
+      "line": 27,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "documents"
     },
     {
       "file": "crates/vibe-app/src/index.rs",
+      "from_symbol": "vibe_app::index::Requirement",
+      "line": 221,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/index.rs",
       "from_symbol": "vibe_app::index::StepOutcome",
-      "line": 93,
+      "line": 94,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#execution",
       "verb": "documents"
@@ -37124,9 +38590,17 @@
     {
       "file": "crates/vibe-app/src/index.rs",
       "from_symbol": "vibe_app::index::StepRecord",
-      "line": 127,
+      "line": 128,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#record",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/index.rs",
+      "from_symbol": "vibe_app::index::ValueKind",
+      "line": 254,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#env-step",
       "verb": "documents"
     },
     {
@@ -37276,7 +38750,7 @@
     {
       "file": "crates/vibe-app/src/operations/mod.rs",
       "from_symbol": "vibe_app::operations::Command",
-      "line": 99,
+      "line": 136,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "documents"
@@ -37284,7 +38758,7 @@
     {
       "file": "crates/vibe-app/src/operations/mod.rs",
       "from_symbol": "vibe_app::operations::InstallRequest",
-      "line": 82,
+      "line": 112,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "documents"
@@ -37292,7 +38766,7 @@
     {
       "file": "crates/vibe-app/src/operations/mod.rs",
       "from_symbol": "vibe_app::operations::OperationContext",
-      "line": 38,
+      "line": 53,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "documents"
@@ -37300,7 +38774,7 @@
     {
       "file": "crates/vibe-app/src/operations/mod.rs",
       "from_symbol": "vibe_app::operations::Outcome",
-      "line": 108,
+      "line": 147,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "documents"
@@ -37330,9 +38804,89 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-app/src/operations/deps.rs",
+      "from_symbol": "vibe_app::operations::deps",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/lifecycle.rs",
+      "from_symbol": "vibe_app::operations::lifecycle",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/lifecycle.rs",
+      "from_symbol": "vibe_app::operations::lifecycle",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#update-and-rollback",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/lifecycle.rs",
+      "from_symbol": "vibe_app::operations::lifecycle::Change",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/lifecycle.rs",
+      "from_symbol": "vibe_app::operations::lifecycle::ChangeVerb",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/listing.rs",
+      "from_symbol": "vibe_app::operations::listing",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/listing.rs",
+      "from_symbol": "vibe_app::operations::listing",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/modify.rs",
+      "from_symbol": "vibe_app::operations::modify",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#modify",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/modify.rs",
+      "from_symbol": "vibe_app::operations::modify::ModifyRequest",
+      "line": 33,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#modify",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/outdated.rs",
+      "from_symbol": "vibe_app::operations::outdated",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#outdated",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-app/src/operations/remove.rs",
       "from_symbol": "vibe_app::operations::remove",
-      "line": 3,
+      "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "implements"
@@ -37340,9 +38894,49 @@
     {
       "file": "crates/vibe-app/src/operations/remove.rs",
       "from_symbol": "vibe_app::operations::remove",
-      "line": 4,
+      "line": 8,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#ownership",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/remove.rs",
+      "from_symbol": "vibe_app::operations::remove",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/remove.rs",
+      "from_symbol": "vibe_app::operations::remove::Removal",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/remove.rs",
+      "from_symbol": "vibe_app::operations::remove::RemoveRequest",
+      "line": 33,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/tree.rs",
+      "from_symbol": "vibe_app::operations::tree",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/update.rs",
+      "from_symbol": "vibe_app::operations::update",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#update-and-rollback",
       "verb": "implements"
     },
     {
@@ -37455,6 +39049,78 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#principle",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/agent.rs",
+      "from_symbol": "vibe_app::steps::agent",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#consent",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/agent.rs",
+      "from_symbol": "vibe_app::steps::agent",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#modes",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/agent.rs",
+      "from_symbol": "vibe_app::steps::agent",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#never",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/agent.rs",
+      "from_symbol": "vibe_app::steps::agent",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#parking",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/env.rs",
+      "from_symbol": "vibe_app::steps::env",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/env.rs",
+      "from_symbol": "vibe_app::steps::env",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#env-step",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/envelope.rs",
+      "from_symbol": "vibe_app::steps::envelope",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#answer",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/envelope.rs",
+      "from_symbol": "vibe_app::steps::envelope",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#envelope",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/envelope.rs",
+      "from_symbol": "vibe_app::steps::envelope",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#record",
       "verb": "implements"
     },
     {
@@ -37580,7 +39246,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::HostFacts",
-      "line": 40,
+      "line": 42,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#conditions",
       "verb": "documents"
@@ -37588,15 +39254,23 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::Plan",
-      "line": 115,
+      "line": 156,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
       "verb": "documents"
     },
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
+      "from_symbol": "vibe_app::steps::plan::PlannedDependency",
+      "line": 90,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::PlannedStep",
-      "line": 106,
+      "line": 147,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
       "verb": "documents"
@@ -37607,6 +39281,14 @@
       "line": 4,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/resume.rs",
+      "from_symbol": "vibe_app::steps::resume",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#resume",
       "verb": "implements"
     },
     {
@@ -37660,7 +39342,7 @@
     {
       "file": "crates/vibe-app/src/steps/state.rs",
       "from_symbol": "vibe_app::steps::state::Start",
-      "line": 19,
+      "line": 20,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#resume",
       "verb": "documents"
@@ -38064,6 +39746,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/cli/agent.rs",
+      "from_symbol": "vibe_cli::cli::agent",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#presets",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/cli/agentic.rs",
       "from_symbol": "vibe_cli::cli::agentic",
       "line": 9,
@@ -38328,6 +40018,22 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/agent.rs",
+      "from_symbol": "vibe_cli::commands::agent",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#agent-definition",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/agent.rs",
+      "from_symbol": "vibe_cli::commands::agent",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#presets",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/agentic/mod.rs",
       "from_symbol": "vibe_cli::commands::agentic",
       "line": 14,
@@ -38384,6 +40090,30 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/app/agents.rs",
+      "from_symbol": "vibe_cli::commands::app::agents",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#consent",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/agents.rs",
+      "from_symbol": "vibe_cli::commands::app::agents",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#parking",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/agents.rs",
+      "from_symbol": "vibe_cli::commands::app::agents",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#selection",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/app/alternatives.rs",
       "from_symbol": "vibe_cli::commands::app::alternatives",
       "line": 4,
@@ -38400,9 +40130,25 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/app/environment.rs",
+      "from_symbol": "vibe_cli::commands::app::environment",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#env-step",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/app/facts.rs",
       "from_symbol": "vibe_cli::commands::app::facts",
-      "line": 5,
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#external-registration",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/facts.rs",
+      "from_symbol": "vibe_cli::commands::app::facts",
+      "line": 6,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#conditions",
       "verb": "implements"
@@ -38468,6 +40214,22 @@
       "reason": "unsafe-gate: SetConsoleCtrlHandler requires a system-ABI callback; this one only records Ctrl-C / Ctrl-Break in a static flag (spec://org.vibevm.core/vibevm/common/PROP-065#cancellation)."
     },
     {
+      "file": "crates/vibe-cli/src/commands/app/lifecycle.rs",
+      "from_symbol": "vibe_cli::commands::app::lifecycle",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#modify",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/lifecycle.rs",
+      "from_symbol": "vibe_cli::commands::app::lifecycle",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#outdated",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/app/project.rs",
       "from_symbol": "vibe_cli::commands::app::project",
       "line": 8,
@@ -38481,6 +40243,22 @@
       "line": 5,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#runs",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/report.rs",
+      "from_symbol": "vibe_cli::commands::app::report",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/views.rs",
+      "from_symbol": "vibe_cli::commands::app::views",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations",
       "verb": "implements"
     },
     {
@@ -39086,7 +40864,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::empty_manifest",
-      "line": 74,
+      "line": 75,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -39095,7 +40873,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::the_projection_copies_exactly_the_ten_builder_fields",
-      "line": 126,
+      "line": 127,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "verifies"
@@ -40007,7 +41785,7 @@
     {
       "file": "crates/vibe-cli/src/commands/shell/mod.rs",
       "from_symbol": "vibe_cli::commands::shell::inherited",
-      "line": 65,
+      "line": 130,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -41873,7 +43651,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 487,
+      "line": 488,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -44039,7 +45817,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::ApplicationDecl",
-      "line": 236,
+      "line": 242,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
       "verb": "documents"
@@ -44047,7 +45825,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::InstallerMethod",
-      "line": 42,
+      "line": 44,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation",
       "verb": "documents"
@@ -44055,7 +45833,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::InstallerOptionDecl",
-      "line": 190,
+      "line": 192,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options",
       "verb": "documents"
@@ -44063,7 +45841,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::LauncherDecl",
-      "line": 156,
+      "line": 158,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points",
       "verb": "documents"
@@ -44071,7 +45849,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::PublicCommandDecl",
-      "line": 180,
+      "line": 182,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points",
       "verb": "documents"
@@ -44079,7 +45857,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::RecipeDecl",
-      "line": 145,
+      "line": 147,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#source-build",
       "verb": "documents"
@@ -44087,7 +45865,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::ShellInterpreter",
-      "line": 33,
+      "line": 35,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation",
       "verb": "documents"
@@ -44095,9 +45873,41 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::SourceInputDecl",
-      "line": 126,
+      "line": 128,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#source-build",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/application/requirement.rs",
+      "from_symbol": "vibe_core::manifest::package::application::requirement",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/application/requirement.rs",
+      "from_symbol": "vibe_core::manifest::package::application::requirement::RequirementDecl",
+      "line": 58,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/application/requirement.rs",
+      "from_symbol": "vibe_core::manifest::package::application::requirement::RequirementScope",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/application/requirement.rs",
+      "from_symbol": "vibe_core::manifest::package::application::requirement::RequirementTable",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
       "verb": "documents"
     },
     {
@@ -44119,7 +45929,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::AgentMode",
-      "line": 179,
+      "line": 180,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-064#modes",
       "verb": "documents"
@@ -44127,7 +45937,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::ArchiveFormatDecl",
-      "line": 161,
+      "line": 162,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#kinds",
       "verb": "documents"
@@ -44135,7 +45945,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::Condition",
-      "line": 67,
+      "line": 68,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#conditions",
       "verb": "documents"
@@ -44143,7 +45953,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::ExternalResult",
-      "line": 401,
+      "line": 418,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#result",
       "verb": "documents"
@@ -44151,7 +45961,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::FeatureDecl",
-      "line": 18,
+      "line": 19,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#feature-tree",
       "verb": "documents"
@@ -44159,7 +45969,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::FeatureDecl",
-      "line": 17,
+      "line": 18,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#features",
       "verb": "documents"
@@ -44167,7 +45977,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::NativeFormatDecl",
-      "line": 170,
+      "line": 171,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#kinds",
       "verb": "documents"
@@ -44175,7 +45985,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::Need",
-      "line": 113,
+      "line": 114,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#needs",
       "verb": "documents"
@@ -44183,7 +45993,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::OwnedWord",
-      "line": 393,
+      "line": 410,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#result",
       "verb": "documents"
@@ -44191,7 +46001,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::ParamEquals",
-      "line": 104,
+      "line": 105,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#parameters",
       "verb": "documents"
@@ -44199,7 +46009,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::ResultDecl",
-      "line": 358,
+      "line": 375,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#result",
       "verb": "documents"
@@ -44207,7 +46017,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::StepDecl",
-      "line": 294,
+      "line": 306,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#steps",
       "verb": "documents"
@@ -44215,7 +46025,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::StepKind",
-      "line": 191,
+      "line": 192,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#kinds",
       "verb": "documents"
@@ -44223,7 +46033,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::StepOrigin",
-      "line": 284,
+      "line": 296,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#sugar",
       "verb": "documents"
@@ -44231,7 +46041,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application/steps.rs",
       "from_symbol": "vibe_core::manifest::package::application::steps::StepPhase",
-      "line": 44,
+      "line": 45,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#result",
       "verb": "documents"
@@ -101715,12 +103525,30 @@
       "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#EXP-8"
     },
     {
+      "anchor": "STEP-9-REQUIREMENT",
+      "content_hash": "sha256:10c0ad93b8ee78d985977a67be58b8d1996be9c6886ea983446646103c1b0467",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**A source build that requires a toolchain package (PROP-065 `#app-dependencies`, `#uninstall-tree`).** The Vim bridge's `windows-source` option declares `requires = [\"org.vibevm.apps/mingw-w64@13\"]` on its build step and `needs = [\"command:gcc\"]`; the host has no `gcc` on PATH. @status:impl/work",
+      "line": 83,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#STEP-9-REQUIREMENT"
+    },
+    {
+      "anchor": "EXP-9",
+      "content_hash": "sha256:b21aa6c0fc9b499790e4b1aacfc8aa8c1aac18706369f7c1a1280c56f48fe418",
+      "doc_path": "manual-tests/MT-04-app-windows",
+      "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
+      "heading": "**Expected.** The plan shows `dependency: install org.vibevm.apps/mingw-w64@13.… (build, hidden)` ahead of the build step and does not refuse the `command:gcc` need. The install first installs MinGW hidden (no `gcc.exe` in `opt\\bin`, `app list` shows it under \"hidden installation(s)\" marked `[auto]` and required by Vim), then runs the build with MinGW's `bin` and `gcc` first on the build step's PATH, and leaves only `vim.exe` / `gvim.exe` in `opt\\bin`. `vibe shell --with` puts `gcc` on that session's PATH only. Uninstalling Vim lists MinGW as an orphan without removing it; `app autoremove` removes it with its payload. @status:impl/work",
+      "line": 92,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#EXP-9"
+    },
+    {
       "anchor": "pass-criteria",
       "content_hash": "sha256:07685ec4864fd103fda19745ad95e4a203341044236caefa34201406c35d9386",
       "doc_path": "manual-tests/MT-04-app-windows",
       "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
       "heading": "Every step reads as described on a real Windows host: ZIP install, direct native launch of gVim, console Vim through the `.exe` proxy with Ctrl+C handled by Vim, `vibe shell` reusing each of the three parent shells, the session variable, the removable-drive library with unavailability and moves, and a clean uninstall. The owner signs the date below. @status:impl/work",
-      "line": 84,
+      "line": 95,
       "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#pass-criteria"
     },
     {
@@ -101729,7 +103557,7 @@
       "doc_path": "manual-tests/MT-04-app-windows",
       "file": "vibevm/vibespecs/manual-tests/MT-04-app-windows.xml",
       "heading": "[ ] Owner sign-off on native Windows (date / initials): ______ @status:impl/work",
-      "line": 88,
+      "line": 99,
       "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-04-app-windows#SIGNOFF-OWNER"
     },
     {
@@ -101913,12 +103741,30 @@
       "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#EXP-7"
     },
     {
+      "anchor": "STEP-REQUIREMENT",
+      "content_hash": "sha256:0b7a73e45d1e1cccc104602cd78f20ff93233f9047b71f2d9a1a18aeb7c22410",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**The MinGW requirement seen from macOS (PROP-065 `#app-dependencies`).** The Vim bridge's `windows-source` option requires `org.vibevm.apps/mingw-w64@13` on its build step. A requirement is installed on the host that runs the installation, so on macOS it is described and refused, never installed. @status:impl/work",
+      "line": 71,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#STEP-REQUIREMENT"
+    },
+    {
+      "anchor": "EXP-REQUIREMENT",
+      "content_hash": "sha256:5d969add445ee41723a380050af986b222ef412e6ed990d1d5023f8374871bcf",
+      "doc_path": "manual-tests/MT-05-app-macos",
+      "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
+      "heading": "**Expected.** `describe` names the build step with `requires: [{package: \"org.vibevm.apps/mingw-w64@13\", scope: \"build\"}]` without resolving anything. The plan is refused before any download with exit 2 and the error code `requirement_unresolved`, naming `org.vibevm.apps/mingw-w64@13` and the absence of an installer option for this host; `$VIBE_SETTINGS` gains no `applications/index.json`. @status:impl/work",
+      "line": 75,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#EXP-REQUIREMENT"
+    },
+    {
       "anchor": "pass-criteria",
       "content_hash": "sha256:98e046e6f4feb8688bfe5fe372e86ed409b91d13bfa2c8a37c97555d990752c7",
       "doc_path": "manual-tests/MT-05-app-macos",
       "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
       "heading": "Every step reads as described on a real Mac: detection, the source build with the Xcode tools, the relocated runtime, signals through the proxy, `vibe shell` for zsh, bash and the fallback, the external-volume library with unavailability and moves, the offline rebuild and a clean uninstall. The owner signs the date below. @status:impl/work",
-      "line": 72,
+      "line": 78,
       "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#pass-criteria"
     },
     {
@@ -101927,8 +103773,188 @@
       "doc_path": "manual-tests/MT-05-app-macos",
       "file": "vibevm/vibespecs/manual-tests/MT-05-app-macos.xml",
       "heading": "[ ] Owner sign-off on native macOS (date / initials): ______ @status:impl/work",
-      "line": 76,
+      "line": 82,
       "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-05-app-macos#SIGNOFF-OWNER"
+    },
+    {
+      "anchor": "purpose",
+      "content_hash": "sha256:ebffbc81d98e6e2907ccfb1caf36093e18b306877a2b740fd0368a9e64594d2c",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Purpose.** The Linux fixture `crates/vibe-cli/tests/cli_app_agents.rs` proves the hook contract with a fake agent. What it cannot prove is that a real harness, started from the presets as data, reads the prompt, works in the step's directory and answers: an attended Claude Code session in the terminal, the same harness in print mode, and the consent question a person actually answers. The owner proves these here with `~/opt/bin/claude-codex`, a launcher that starts Claude Code against another gateway and passes every argument through unchanged, so it is the `claude-code` preset with a different `command` (`PROP-064#acceptance`). @status:impl/work",
+      "line": 4,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#purpose"
+    },
+    {
+      "anchor": "isolation-note",
+      "content_hash": "sha256:945347fe346f8b6bf3c8173147692c0f3c561d48adfc0419384f700cac1b73be",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "Every step runs against an isolated settings root (`VIBE_SETTINGS`) and a throw-away local registry. The agent runs with the user's authority in the installation work directory under that root; the demo prompt only writes one file there. @status:impl/work",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#isolation-note"
+    },
+    {
+      "anchor": "PRE-HOST",
+      "content_hash": "sha256:b509e3444193840509d9368adaea09ce6ba182a784c3285ea293d8f73522910f",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "Linux with an interactive terminal; `~/opt/bin/claude-codex` runs and reaches its gateway (`~/opt/bin/claude-codex -p \"say hi\"` prints an answer). @status:impl/work",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#PRE-HOST"
+    },
+    {
+      "anchor": "PRE-BINARIES",
+      "content_hash": "sha256:369d44f4794b2a0327e9cb872688278c1bb74a416df8817615aa657b0ee41f93",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "`cargo build -p vibe-cli --bins`: `target/debug/vibe` and `target/debug/vibe-app-proxy` beside it. @status:impl/work",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#PRE-BINARIES"
+    },
+    {
+      "anchor": "STEP-1-NONE",
+      "content_hash": "sha256:9c1c1ac0e743547d91c21f14eae7044404f68ad5dcdf4e6ce7fc1a0d01141bcb",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Without an agent the step is skipped and announced.** @status:impl/work",
+      "line": 55,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#STEP-1-NONE"
+    },
+    {
+      "anchor": "EXP-1",
+      "content_hash": "sha256:8e9c7d727c77b0f602ff8ddf6dcddcc355230cb2f879f4ddbd89e18be1771793",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Expected.** Step 2 reads `skip (no agent configured) fix (agent)` and a closing `warning:` line names `fix` and the three ways to provide an agent (`--agent NAME`, `VIBE_AGENT_COMMAND`, `default` in agents.toml). @status:impl/work",
+      "line": 58,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#EXP-1"
+    },
+    {
+      "anchor": "STEP-2-REGISTER",
+      "content_hash": "sha256:c099b14725b1f3816fa3a122222083801a90cbae590eeb4787499b7a68645080",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**The wrapper is registered as a `claude-code` preset with its own command.** @status:impl/work",
+      "line": 60,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#STEP-2-REGISTER"
+    },
+    {
+      "anchor": "EXP-2",
+      "content_hash": "sha256:cd2ddefc83bd240563fcfc9f6ec103129eef1974c81d883ae42f73b25a36e156",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Expected.** `presets` lists the six harnesses with their two templates. `list` shows `claude-codex [default] (preset claude-code)` with `interactive: …/claude-codex {prompt}` and `unattended: …/claude-codex -p {prompt}`; `agents.toml` starts with `default = \"claude-codex\"` and holds an `[agent.claude-codex]` table. The plan now reads `run fix (agent)` without a warning. @status:impl/work",
+      "line": 66,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#EXP-2"
+    },
+    {
+      "anchor": "STEP-3-DECLINE",
+      "content_hash": "sha256:d3308424b597e59171caaa7db75f0f937ef0791d98a458d27feba227bcd20aab",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Declining the prompt runs nothing.** @status:impl/work",
+      "line": 68,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#STEP-3-DECLINE"
+    },
+    {
+      "anchor": "EXP-3",
+      "content_hash": "sha256:9a894ef5e1ec13f3bbcda06df69439ee406a132e2b992130aa8d6ad14097d0b1",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Expected.** Before any step, the terminal shows `agent step `fix` (…) will run agent `claude-codex``, the command line with `{prompt}` and the full expanded prompt (with the real `$out` path), then asks `Run agent `claude-codex` with the prompt of step `fix`?`. Answering no ends with `needs consent` and exit 2; no work directory exists. @status:impl/work",
+      "line": 72,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#EXP-3"
+    },
+    {
+      "anchor": "STEP-4-INTERACTIVE",
+      "content_hash": "sha256:0babaa19f8cba3598c6466a6e941ad9cec0ba4e5ce199d997106979b5fddb7db",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Interactive: the harness takes over the terminal.** @status:impl/work",
+      "line": 74,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#STEP-4-INTERACTIVE"
+    },
+    {
+      "anchor": "EXP-4",
+      "content_hash": "sha256:8864dc06ce12473a897bfb1918678df0196048c6074afd6ac686d7d78b8fc069",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Expected.** Claude Code opens in the terminal with the prompt already submitted, working in `…/cache/app-work/org.example.hooked@1.0.0`. After it writes the note and `result.json` and the session is closed, vibe prints `agent step `fix`: ok — note written`, places the payload and exits 0. `bin/NOTE.txt` is in the installed payload. Ctrl-C during the session ends it and the step is recorded `interrupted` (rerun with `--resume`). @status:impl/work",
+      "line": 78,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#EXP-4"
+    },
+    {
+      "anchor": "STEP-5-UNATTENDED",
+      "content_hash": "sha256:9cb4994cc3efd1cf9b5779c98461d2be2d088d58089512b1a7bd744810503236",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Unattended: print mode, streamed and transcribed.** @status:impl/work",
+      "line": 80,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#STEP-5-UNATTENDED"
+    },
+    {
+      "anchor": "EXP-5",
+      "content_hash": "sha256:129443c1957d54453cadd92a93e575a4a505baa25468cc2d4b882b04f9fdfaf9",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Expected.** The prompt is shown but no question is asked (`--unattended` implies `--assume-yes`); `claude-codex -p …` output streams live; the install exits 0. The newest run record's `steps/fix/` holds `prompt.md`, `context.json` (`\"protocol\": \"vibe-agent-hook/1\"`, `\"mode\": \"unattended\"`), `transcript.log` with the harness's answer, `result.json` and `output.log`; its `steps.json` records the step `done` with `\"agent\": {\"agent\": \"claude-codex\", \"mode\": \"unattended\", \"status\": \"ok\", …}`. @status:impl/work",
+      "line": 85,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#EXP-5"
+    },
+    {
+      "anchor": "STEP-6-PARK",
+      "content_hash": "sha256:e20023e29e857e46ba3949d41f17a865de6cc93832a00203946dc38fa7e4dc20",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Inside a hosting agent the task is parked, then resumed.** Run this from a terminal session of the hosting harness itself, or force it with `--agent-mode agent`. @status:impl/work",
+      "line": 87,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#STEP-6-PARK"
+    },
+    {
+      "anchor": "EXP-6",
+      "content_hash": "sha256:97c36a738149ca9babb678d88791194d89a51ecf475b58070389738b94ac2b15",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Expected.** The first command starts no agent, prints one fenced `vibe-agent-tasks` block naming the run, the task file `…/agentic/outbox/<run>/fix.md` and the exact `resume:` command, and exits 75. The task file holds the prompt, the context and the answer contract. After the answer is written, `--resume` validates it, skips the already done `payload` step, finishes and exits 0. @status:impl/work",
+      "line": 95,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#EXP-6"
+    },
+    {
+      "anchor": "STEP-7-EXTERNAL",
+      "content_hash": "sha256:116a3a012853a08ab60388b5acc0f348d0d3de3d42b4c7a8b5728fccb1a7e7b5",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**An external registration wins over the default; `--agent` wins over both.** @status:impl/work",
+      "line": 97,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#STEP-7-EXTERNAL"
+    },
+    {
+      "anchor": "EXP-7",
+      "content_hash": "sha256:129273ade9c245e3e13c71d76bca35e5241b2d67cffe679bea9387d889ba4332",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "**Expected.** The first run shows agent `external` and prints `registered --hook fix --mode unattended --prompt-file … --context-file … --work …` (`echo` exits 0 and writes no result, so the step is done without a message). The second run uses `claude-codex` again. @status:impl/work",
+      "line": 101,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#EXP-7"
+    },
+    {
+      "anchor": "pass-criteria",
+      "content_hash": "sha256:3899e43089f29820abb3d28314d9954c96dccd1e7d9129f054f31d225828d4d6",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "Every step reads as described with the real wrapper: the announced skip, registration over a preset, the declined prompt with nothing run, an attended Claude Code session that answers through `result.json`, print mode with the transcript in the run record, parking with exit 75 and a validated `--resume`, and the selection order. The owner signs the date below. @status:impl/work",
+      "line": 104,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#pass-criteria"
+    },
+    {
+      "anchor": "SIGNOFF-OWNER",
+      "content_hash": "sha256:cd7efff3ef769d5ba7dde6dd79e3f03fe8fc6cd21ad7871e771111b1390b3c7f",
+      "doc_path": "manual-tests/MT-06-agent-hooks",
+      "file": "vibevm/vibespecs/manual-tests/MT-06-agent-hooks.xml",
+      "heading": "[ ] Owner sign-off with ~/opt/bin/claude-codex (date / initials): ______ @status:impl/work",
+      "line": 108,
+      "uri": "spec://org.vibevm.core/vibevm/manual-tests/MT-06-agent-hooks#SIGNOFF-OWNER"
     },
     {
       "anchor": "modules-purpose",
@@ -137850,7 +139876,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d202cbbdf48b7a9740c120bcd203829e5da8df1be6aa22c4a84c51b7ea059174",
+      "content_hash": "sha256:00c3d006987bb5b833dec9944a1b33bdb073ba97327fa80e1759453e47933ea4",
       "doc_path": "terraforms/APP-STEPS-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/APP-STEPS-CAMPAIGN-v0.1.xml",
       "heading": "APP-STEPS campaign v0.1 — structured installation with agent steps",
@@ -137913,19 +139939,19 @@
     },
     {
       "anchor": "phase-q1b",
-      "content_hash": "sha256:021a6c4121beefc401b3c575595de6afde47c83618ba72177fe2b7150a87b892",
+      "content_hash": "sha256:2f80161baefc8d7556140b894925a4bcc49df0017d978f8e8add35b41809cefc",
       "doc_path": "terraforms/APP-STEPS-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/APP-STEPS-CAMPAIGN-v0.1.xml",
-      "heading": "Q1b — the wizard surface (owner, 2026-10-31: «подумай ещё что может не хватать графическому мастеру от нашего движка, всё реализуй»): `describe`, the feature tree with relations and profiles (`--profile`, resolution rules, indented multi-select), parameters with `--set` and typed prompts, license acceptance, declared input sizes with plan totals and byte progress, the application icon, run records with per-step logs and `vibe app runs`, cancellation that forwards the signal and leaves a resume point, the JSON progress stream (`PROP-060#MACHINE-STREAM`), error codes in the JSON envelope and `vibe app errors`, the exit-code table. Gate: a fixture driving the engine the way a tool would — `describe` → `plan` with `--set` and `--feature` → `install --json --progress-format json --assume-yes --accept-license` parsing the event stream → a killed install recorded `interrupted` and resumed → `runs` listing the log. @status:impl/planned",
+      "heading": "Q1b — the wizard surface (owner, 2026-10-31: «подумай ещё что может не хватать графическому мастеру от нашего движка, всё реализуй»): `describe`, the feature tree with relations and profiles (`--profile`, resolution rules, indented multi-select), parameters with `--set` and typed prompts, license acceptance, declared input sizes with plan totals and byte progress, the application icon, run records with per-step logs and `vibe app runs`, cancellation that forwards the signal and leaves a resume point, the JSON progress stream (`PROP-060#MACHINE-STREAM`), error codes in the JSON envelope and `vibe app errors`, the exit-code table. Gate: a fixture driving the engine the way a tool would — `describe` → `plan` with `--set` and `--feature` → `install --json --progress-format json --assume-yes --accept-license` parsing the event stream → a killed install recorded `interrupted` and resumed → `runs` listing the log. @status:impl/done",
       "line": 11,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/APP-STEPS-CAMPAIGN-v0.1#phase-q1b"
     },
     {
       "anchor": "phase-q2",
-      "content_hash": "sha256:3a63cdea0ea3e7d96da96b11970a44787cab7caa5a36cb52e8bb010a717a27a4",
+      "content_hash": "sha256:7798db6d9aa023e0193b0e0b11a18033da59ef06eec1ef5157fa1be4536a6829",
       "doc_path": "terraforms/APP-STEPS-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/APP-STEPS-CAMPAIGN-v0.1.xml",
-      "heading": "Q2 (after Q1b) — agent hooks: `agents.toml`, presets, selection order, external registration, modes, consent, envelope, answer, parking and resume, transcript record, `vibe agent list|presets`, `vibe app hooks`. Gate: PROP-064 acceptance fixture with a fake agent executable; MT-06 with the owner's `claude-codex` wrapper. @status:impl/planned",
+      "heading": "Q2 (after Q1b) — agent hooks: `agents.toml`, presets, selection order, external registration, modes, consent, envelope, answer, parking and resume, transcript record, `vibe agent list|presets`, `vibe app hooks`. Gate: PROP-064 acceptance fixture with a fake agent executable; MT-06 with the owner's `claude-codex` wrapper. @status:impl/done",
       "line": 12,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/APP-STEPS-CAMPAIGN-v0.1#phase-q2"
     },
@@ -137966,12 +139992,30 @@
       "uri": "spec://org.vibevm.core/vibevm/terraforms/APP-STEPS-CAMPAIGN-v0.1#phase-r"
     },
     {
+      "anchor": "ledger-q1b",
+      "content_hash": "sha256:50aba7289c5ceee88bf1380aa9ca56511285b804dd4e65a872302254369cb0d5",
+      "doc_path": "terraforms/APP-STEPS-CAMPAIGN-v0.1",
+      "file": "vibevm/vibespecs/terraforms/APP-STEPS-CAMPAIGN-v0.1.xml",
+      "heading": "Q1b landed as `507542530` (87 files, +7809/-1047). Review: feature resolution records which rule implied each feature; the error-code table is macro-generated with an exhaustive match; signal handling carries documented unsafe gates on both unix and Windows; the JSON renderer never writes stdout. Boss fixes: the tee test asserted an order between stdout and stderr that two pump threads do not guarantee; `tests_application.rs` had crossed the 600-line cap by the boss's own earlier commit. Gate on the committed tree: fmt, `cargo test --workspace` (after the fix), clippy `-D warnings`, `vibe check` (0 errors), conform (0 new), check-codegen clean, wire-diff green with 7 shifted paths under the pre-publication regime. Deviations the worker named (profile replaces defaults; license asked first; CLI `bail!` argument errors still exit 1; no step tasks in the interactive renderer because of a suspend_progress deadlock risk) are accepted as the simplest readings. @status:impl/done",
+      "line": 17,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/APP-STEPS-CAMPAIGN-v0.1#ledger-q1b"
+    },
+    {
+      "anchor": "ledger-q2",
+      "content_hash": "sha256:d7240d082a315465ba791c209b9dd53189fb6422d81fd3a9f4bc9b2dd529a009",
+      "doc_path": "terraforms/APP-STEPS-CAMPAIGN-v0.1",
+      "file": "vibevm/vibespecs/terraforms/APP-STEPS-CAMPAIGN-v0.1.xml",
+      "heading": "Q2 landed as `b5c978a12` (68 files, +4434/-170). The worker followed PROP-064 over the packet where they differed (agents.toml layout with `default` and per-agent tables, envelope under `steps/<id>/`, result vocabulary `ok|fail`, no hook timeouts, parking of every agent step inside a hosting agent, agent events as detail lines of the existing vocabulary) — accepted. Readings accepted: consent collected after planning and before the first step; a hosting agent counts as a configured agent; `--agent` only with `-g`; parked tasks in `<home>/agentic/outbox/`. Gate on the tree: fmt, workspace tests (1527 s), clippy, `vibe check`, conform 0 new, wire-diff green (steps schema shifted); check-codegen clean once committed. Live evidence: MT-06 steps 1–5 ran with `~/opt/bin/claude-codex` in unattended mode on 2026-10-31 — NOTE.txt written with the date, result.json `ok`, install finished in 22 s; the interactive step 4 remains a manual check. @status:impl/done",
+      "line": 18,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/APP-STEPS-CAMPAIGN-v0.1#ledger-q2"
+    },
+    {
       "anchor": "ledger",
       "content_hash": "sha256:41bfd9e97881494491f9fe4e8a948830bc59415a35d53cdc0eb315dcf045092f",
       "doc_path": "terraforms/APP-STEPS-CAMPAIGN-v0.1",
       "file": "vibevm/vibespecs/terraforms/APP-STEPS-CAMPAIGN-v0.1.xml",
       "heading": "2026-10-31: PROP-064 and PROP-065 written, campaign opened, Q1 dispatched. Later the same day: the wizard-surface anchors added to PROP-065 and PROP-060 and phase Q1b inserted before Q2. @status:impl/in-progress",
-      "line": 17,
+      "line": 19,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/APP-STEPS-CAMPAIGN-v0.1#ledger"
     },
     {
@@ -143001,9 +145045,33 @@
   "warnings": [
     {
       "code": "overloaded-item",
+      "file": "crates/vibe-app/src/agents/mod.rs",
+      "line": 7,
+      "message": "`vibe_app::agents` realises 3 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
+    },
+    {
+      "code": "overloaded-item",
       "file": "crates/vibe-app/src/operations/apply.rs",
       "line": 7,
       "message": "`vibe_app::operations::apply` realises 3 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
+    },
+    {
+      "code": "overloaded-item",
+      "file": "crates/vibe-app/src/operations/remove.rs",
+      "line": 7,
+      "message": "`vibe_app::operations::remove` realises 3 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
+    },
+    {
+      "code": "overloaded-item",
+      "file": "crates/vibe-app/src/steps/agent.rs",
+      "line": 6,
+      "message": "`vibe_app::steps::agent` realises 4 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
+    },
+    {
+      "code": "overloaded-item",
+      "file": "crates/vibe-app/src/steps/envelope.rs",
+      "line": 7,
+      "message": "`vibe_app::steps::envelope` realises 3 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
     },
     {
       "code": "overloaded-item",
@@ -143016,6 +145084,12 @@
       "file": "crates/vibe-app/src/steps/run.rs",
       "line": 4,
       "message": "`vibe_app::steps::run` realises 3 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
+    },
+    {
+      "code": "overloaded-item",
+      "file": "crates/vibe-cli/src/commands/app/agents.rs",
+      "line": 6,
+      "message": "`vibe_cli::commands::app::agents` realises 3 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
     },
     {
       "code": "overloaded-item",

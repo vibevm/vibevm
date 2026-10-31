@@ -124,6 +124,13 @@ pub struct InstallArgs {
     #[arg(long, requires = "global")]
     pub plan_only: bool,
 
+    /// Install an application without exposing it: no proxy, no place among
+    /// its slot's alternatives, never the default (PROP-059
+    /// `#hidden-installations`); `vibe shell --with` or `vibe app expose`
+    /// reach it.
+    #[arg(long)]
+    pub hidden: bool,
+
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
@@ -457,6 +464,12 @@ pub struct UpdateArgs {
     #[arg(long)]
     pub force: bool,
 
+    /// Remove the replaced application installation at once instead of
+    /// keeping it hidden for `vibe app rollback` (PROP-065
+    /// `#update-and-rollback`).
+    #[arg(long)]
+    pub purge_previous: bool,
+
     /// The agent that runs the agent steps of a global application
     /// installer: a definition of agents.toml or a built-in preset (PROP-064).
     #[arg(long, value_name = "NAME", requires = "global")]
@@ -541,6 +554,19 @@ pub struct UninstallArgs {
     /// Ask the selected application installer to force its uninstall operation.
     #[arg(long)]
     pub force: bool,
+
+    /// Also remove the applications that require this one at runtime, after
+    /// reviewing them with --plan-only (PROP-065 `#uninstall-tree`).
+    #[arg(long)]
+    pub cascade: bool,
+
+    /// Also remove the auto-installed applications nothing requires any more.
+    #[arg(long)]
+    pub autoremove: bool,
+
+    /// Print the application removal plan and change nothing.
+    #[arg(long)]
+    pub plan_only: bool,
 
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]

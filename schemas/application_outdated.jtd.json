@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "description": "Version 1 report from vibe app outdated --json: every installed application with its installed version and the newest version the configured registries offer for the same package, without changing anything.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#outdated" },
+    "rustOptions": { "package": "vibe_wire::application_outdated" },
+    "x-rust-type": "ApplicationOutdated",
+    "x-wire-order": ["protocol", "installations"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "installations": { "elements": { "ref": "installation" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "package": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "status": {
+      "enum": ["current", "outdated", "held", "unknown"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "installation": {
+      "metadata": { "x-wire-order": ["key", "slot", "package", "installed", "latest", "status", "held", "hidden", "reason"] },
+      "properties": {
+        "key": { "type": "string" },
+        "slot": { "type": "string" },
+        "package": { "ref": "package" },
+        "installed": { "type": "string" },
+        "latest": { "type": "string", "nullable": true },
+        "status": { "ref": "status" },
+        "held": { "type": "boolean" },
+        "hidden": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "reason": { "type": "string", "metadata": { "x-default": null, "description": "Why no newest version is known (status unknown)." } }
+      }
+    }
+  }
+}

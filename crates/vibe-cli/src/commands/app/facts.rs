@@ -47,3 +47,19 @@ pub(crate) fn external_agent() -> Result<Option<vibe_app::ExternalAgent>, vibe_a
         read("VIBE_AGENT_ARGS").as_deref(),
     )
 }
+
+/// The caller's PATH, behind the requirements of an installer step
+/// (PROP-065 `#app-dependencies`), read exactly here.
+pub(crate) fn search_path() -> Option<std::ffi::OsString> {
+    std::env::var_os("PATH")
+}
+
+/// The user's home directory holding the shell startup files an env step's
+/// managed block goes into (PROP-065 `#env-step`): `HOME`, or
+/// `USERPROFILE` on Windows.
+pub(crate) fn user_home() -> Option<std::path::PathBuf> {
+    let name = if cfg!(windows) { "USERPROFILE" } else { "HOME" };
+    std::env::var_os(name)
+        .filter(|value| !value.is_empty())
+        .map(std::path::PathBuf::from)
+}

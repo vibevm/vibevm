@@ -25,7 +25,10 @@ mod agents;
 mod alternatives;
 mod codes;
 mod describe;
+mod environment;
 mod error;
+mod error_lifecycle;
+mod exposure;
 mod fs_util;
 mod index;
 mod installer;
@@ -50,12 +53,16 @@ pub use alternatives::{
 };
 pub use codes::{ErrorClass, ErrorCode, error_codes};
 pub use describe::describe;
+pub use environment::{ProfileEnvironment, UserEnvironment, recorded_environment};
 pub use error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,
 };
+pub use error_lifecycle::LifecycleError;
+pub use exposure::{Exposure, expose_for_session};
 pub use index::{
-    AcceptedLicense, AuthoredCommands, INDEX_PROTOCOL, Index, Installation, Location, Method,
-    PackageCoordinate, StepOutcome, StepRecord,
+    AcceptedLicense, AuthoredCommands, EnvEntry, EnvOp, INDEX_PROTOCOL, Index, Installation,
+    Lifecycle, Location, Mark, Method, PackageCoordinate, Requirement, StepOutcome, StepRecord,
+    ValueKind,
 };
 pub use installer::Interrupt;
 pub use launch::{
@@ -63,8 +70,9 @@ pub use launch::{
     listing as launcher_listing, resolve as resolve_launcher, run as run_launcher,
 };
 pub use operations::{
-    Command, InstallRequest, OperationContext, Outcome, install, installed, list, plan, uninstall,
-    update,
+    Change, ChangeVerb, Command, InstallRequest, ModifyRequest, OperationContext, Outcome,
+    PackageResolver, Removal, RemoveRequest, autoremove, expose, hide, hold, install, installed,
+    list, mark, modify, outdated, plan, rollback, uninstall, update,
 };
 pub use proxies::{proxy_file_name, sync as sync_proxies};
 pub use resolve::{
@@ -77,8 +85,8 @@ pub use session::{SESSION_VARIABLE, SessionChoices};
 pub use settings::{MutationLock, PROJECT_HOME, SettingsRoot};
 pub use steps::{
     FeatureChooser, FeatureRequest, FeatureResolution, HostFacts, Implied, ImpliedRule,
-    LicensePrompt, ParamValue, ParameterPrompt, Plan, PlanLicense, PlannedStep, Start, prune_runs,
-    resolve_features, runs, step_env_name,
+    LicensePrompt, ParamValue, ParameterPrompt, Plan, PlanLicense, PlannedDependency, PlannedStep,
+    Start, prune_runs, resolve_features, runs, step_env_name,
 };
 pub use storage::{
     Availability, DEFAULT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker, Moved, Storage,

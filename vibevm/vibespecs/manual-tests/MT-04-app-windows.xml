@@ -79,6 +79,17 @@ vim --version; $LASTEXITCODE
     <fence>&amp; $vibe uninstall -g org.vibevm.apps/vim@1.1.0
 Get-ChildItem "$env:VIBE_SETTINGS\opt\bin"; Get-ChildItem "$env:VIBE_SETTINGS\opt\apps\vim"</fence>
     <p><EXP-8 fact="true" status="impl/work">**Expected.** The payload directory is deleted; with another provider still installed the slot default moves to it and the proxies stay; after the last provider is removed `opt\bin\vim.exe` and `gvim.exe` are gone and `opt\bin` keeps any unrelated file (the version-manager shims).</EXP-8></p>
+    <facts ordered="true">
+      <STEP-9-REQUIREMENT fact="true" status="impl/work">**A source build that requires a toolchain package (PROP-065 `#app-dependencies`, `#uninstall-tree`).** The Vim bridge's `windows-source` option declares `requires = ["org.vibevm.apps/mingw-w64@13"]` on its build step and `needs = ["command:gcc"]`; the host has no `gcc` on PATH.</STEP-9-REQUIREMENT>
+    </facts>
+    <fence>&amp; $vibe app plan org.vibevm.apps/vim --installer windows-source
+&amp; $vibe install -g org.vibevm.apps/vim --installer windows-source --unattended
+Get-ChildItem "$env:VIBE_SETTINGS\opt\bin"
+&amp; $vibe app list
+&amp; $vibe shell --with org.vibevm.apps/mingw-w64     # inside: gcc --version; exit
+&amp; $vibe uninstall -g org.vibevm.apps/vim@1.1.0
+&amp; $vibe app autoremove</fence>
+    <p><EXP-9 fact="true" status="impl/work">**Expected.** The plan shows `dependency: install org.vibevm.apps/mingw-w64@13.… (build, hidden)` ahead of the build step and does not refuse the `command:gcc` need. The install first installs MinGW hidden (no `gcc.exe` in `opt\bin`, `app list` shows it under "hidden installation(s)" marked `[auto]` and required by Vim), then runs the build with MinGW's `bin` and `gcc` first on the build step's PATH, and leaves only `vim.exe` / `gvim.exe` in `opt\bin`. `vibe shell --with` puts `gcc` on that session's PATH only. Uninstalling Vim lists MinGW as an orphan without removing it; `app autoremove` removes it with its payload.</EXP-9></p>
   </section>
   <section title="Pass">
     <p><pass-criteria fact="true" status="impl/work">Every step reads as described on a real Windows host: ZIP install, direct native launch of gVim, console Vim through the `.exe` proxy with Ctrl+C handled by Vim, `vibe shell` reusing each of the three parent shells, the session variable, the removable-drive library with unavailability and moves, and a clean uninstall. The owner signs the date below.</pass-criteria></p>

@@ -41,6 +41,41 @@ pub struct AuthoredCommands {
     pub interpreter: Option<Interpreter>,
 }
 
+/// One applied durable environment change of an env step (PROP-065#env-step),
+/// removed exactly by uninstall and modify. `previous` / `previousKind` keep a
+/// Windows value the change replaced.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EnvEntry {
+    pub step: String,
+
+    pub op: EnvOp,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub value: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub previous: Option<String>,
+
+    #[serde(rename = "previousKind")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub previous_kind: Option<ValueKind>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum EnvOp {
+    #[serde(rename = "path_prepend")]
+    PathPrepend,
+
+    #[serde(rename = "set")]
+    Set,
+
+    #[serde(rename = "unset")]
+    Unset,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Installation {
@@ -89,6 +124,42 @@ pub struct Installation {
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub steps: Vec<StepRecord>,
+
+    /// Installed without exposure (PROP-059#hidden-installations): no proxy, no
+    /// alternative, never the default.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub hidden: bool,
+
+    /// manual when the user asked for it by name, auto when a requirement
+    /// pulled it in (PROP-065#uninstall-tree); absent means manual.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mark: Option<Mark>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub requires: Vec<Requirement>,
+
+    /// The installation keys whose recorded requirements name this one.
+    #[serde(rename = "requiredBy")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub required_by: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub env: Vec<EnvEntry>,
+
+    /// Skipped by a bulk update and reported as held by outdated (PROP-
+    /// 065#update-and-rollback).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub held: bool,
+
+    /// The installation key this update replaced.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub replaced: Option<String>,
+
+    /// A previous installation kept hidden after an update until the next
+    /// successful update of its slot; names the key that replaced it.
+    #[serde(rename = "supersededBy")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub superseded_by: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -127,6 +198,15 @@ pub struct Launcher {
     pub terminal: bool,
 
     pub default: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Mark {
+    #[serde(rename = "auto")]
+    Auto,
+
+    #[serde(rename = "manual")]
+    Manual,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -182,11 +262,46 @@ pub struct Package {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Phase {
+    #[serde(rename = "finish")]
+    Finish,
+
+    #[serde(rename = "prepare")]
+    Prepare,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PublicCommand {
     pub name: String,
 
     pub launcher: String,
+}
+
+/// One application package this installation requires (PROP-065#app-
+/// dependencies): the authored spelling, the installation key it resolved
+/// to, its scope and the step that asked for it (absent for an option-level
+/// requirement).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Requirement {
+    pub package: String,
+
+    pub key: String,
+
+    pub scope: Scope,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub step: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Scope {
+    #[serde(rename = "build")]
+    Build,
+
+    #[serde(rename = "runtime")]
+    Runtime,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -203,6 +318,9 @@ pub struct StepRecord {
 
     pub kind: String,
 
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub phase: Option<Phase>,
+
     pub outcome: Outcome,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -214,4 +332,13 @@ pub struct StepRecord {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub interpreter: Option<Interpreter>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ValueKind {
+    #[serde(rename = "expand_string")]
+    ExpandString,
+
+    #[serde(rename = "string")]
+    String,
 }

@@ -11,6 +11,7 @@ use crate::error::{AppError, StepError};
 use super::params::ParamValue;
 
 /// What `$work`, `$sources`, `$out`, `$package`, `$vibe_home`, `$app_root`,
+/// `$app_bin`,
 /// `$feature:ID` and `$param:ID` stand for.
 pub(crate) struct Vars<'a> {
     pub work: PathBuf,
@@ -58,6 +59,10 @@ pub(crate) fn expand(
         StepVar::Named("app_root") => match vars.app_root {
             Some(root) => path(root.to_path_buf()),
             None => Err("`$app_root` is known only to finish steps".into()),
+        },
+        StepVar::Named("app_bin") => match vars.app_root {
+            Some(root) => path(root.join("bin")),
+            None => Err("`$app_bin` is known only to finish steps".into()),
         },
         StepVar::Feature(id) => Ok(vars.features.iter().any(|f| f == id).to_string()),
         StepVar::Param(id) => vars

@@ -18,7 +18,8 @@ use crate::proxies;
 use crate::settings::SettingsRoot;
 use crate::storage::Storage;
 
-/// Every reserved command name with the slot that reserves it.
+/// Every exposed command name with the slot that reserves it; a hidden
+/// installation (`PROP-059#hidden-installations`) has no proxy.
 ///
 /// ```
 /// let index = vibe_app::Index::default();
@@ -26,7 +27,11 @@ use crate::storage::Storage;
 /// ```
 pub fn reserved_commands(index: &Index) -> BTreeMap<String, String> {
     let mut reserved = BTreeMap::new();
-    for record in index.installations.values() {
+    for record in index
+        .installations
+        .values()
+        .filter(|record| !record.lifecycle.hidden)
+    {
         for command in &record.public_commands {
             reserved
                 .entry(command.name.clone())
@@ -42,7 +47,8 @@ pub(crate) fn reserved_names(index: &Index) -> BTreeSet<String> {
 }
 
 /// Refuse an installation whose public commands another slot reserves. The
-/// records named in `replacing` are about to be replaced and do not count.
+/// records named in `replacing` are about to be replaced and do not count;
+/// hidden installations count, so exposing one later never collides.
 pub(crate) fn check_reservation(
     index: &Index,
     replacing: &[&str],
@@ -120,7 +126,8 @@ pub fn set_default(
 }
 
 /// The `vibe-app-alternatives/1` listing of one slot: providers with their
-/// status, the default, and which providers offer each command.
+/// status, the default, and which providers offer each command. Hidden
+/// installations have no place among the alternatives.
 pub fn listing(
     settings: &SettingsRoot,
     slot: &str,
@@ -185,7 +192,7 @@ fn providers<'a>(
     let providers: Vec<_> = index
         .installations
         .iter()
-        .filter(|(_, record)| record.slot == slot)
+        .filter(|(_, record)| record.slot == slot && !record.lifecycle.hidden)
         .map(|(key, record)| (key.as_str(), record))
         .collect();
     if providers.is_empty() {
@@ -231,6 +238,7 @@ mod tests {
             license: None,
             icon: None,
             steps: Vec::new(),
+            lifecycle: crate::index::Lifecycle::default(),
         }
     }
 

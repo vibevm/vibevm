@@ -1,5 +1,6 @@
 //! Index domain/wire round trip and atomic save proofs.
 use super::*;
+use vibe_core::manifest::{RequirementScope, StepPhase};
 
 fn sample() -> Index {
     let owned = Installation {
@@ -39,6 +40,7 @@ fn sample() -> Index {
         license: None,
         icon: None,
         steps: Vec::new(),
+        lifecycle: Lifecycle::default(),
     };
     let external = Installation {
         package: PackageCoordinate {
@@ -72,12 +74,14 @@ fn sample() -> Index {
             StepRecord {
                 id: "install".into(),
                 kind: "shell".into(),
+                phase: StepPhase::Prepare,
                 outcome: StepOutcome::Done,
                 uninstall: AuthoredCommands::default(),
             },
             StepRecord {
                 id: "register".into(),
                 kind: "shell".into(),
+                phase: StepPhase::Prepare,
                 outcome: StepOutcome::Done,
                 uninstall: AuthoredCommands {
                     uninstall: Some("editor-register --remove".into()),
@@ -88,10 +92,50 @@ fn sample() -> Index {
             StepRecord {
                 id: "fix".into(),
                 kind: "agent".into(),
+                phase: StepPhase::Finish,
                 outcome: StepOutcome::Skipped,
                 uninstall: AuthoredCommands::default(),
             },
         ],
+        lifecycle: Lifecycle {
+            hidden: true,
+            mark: Mark::Auto,
+            requires: vec![
+                Requirement {
+                    package: "org.example/editor@1".into(),
+                    key: "org.example/editor@1.2.0".into(),
+                    scope: RequirementScope::Runtime,
+                    step: None,
+                },
+                Requirement {
+                    package: "org.example/gcc@13".into(),
+                    key: "org.example/gcc@13.2.0".into(),
+                    scope: RequirementScope::Build,
+                    step: Some("register".into()),
+                },
+            ],
+            env: vec![
+                EnvEntry {
+                    step: "fix".into(),
+                    op: EnvOp::Set,
+                    name: "EDITOR_HOME".into(),
+                    value: Some("/usr/lib/editor".into()),
+                    previous: None,
+                    previous_kind: None,
+                },
+                EnvEntry {
+                    step: "fix".into(),
+                    op: EnvOp::PathPrepend,
+                    name: "PATH".into(),
+                    value: Some("/usr/lib/editor/bin".into()),
+                    previous: Some(r"%USERPROFILE%\bin".into()),
+                    previous_kind: Some(ValueKind::ExpandString),
+                },
+            ],
+            held: true,
+            replaced: Some("org.example/editor-apt@1.9.0".into()),
+            superseded_by: None,
+        },
         ..owned.clone()
     };
     let mut index = Index::default();

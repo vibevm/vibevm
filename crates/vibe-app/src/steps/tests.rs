@@ -95,6 +95,7 @@ fn run(
             features,
             parameters: &parameters,
             license: None,
+            ask: false,
         }),
         settings: &settings,
         facts: HostFacts {
@@ -113,6 +114,7 @@ fn run(
             hosted: host.hosted,
             ..AgentHooks::default()
         },
+        requirements: None,
     })
 }
 

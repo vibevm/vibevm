@@ -17,8 +17,17 @@ pub enum StepVar<'a> {
     Param(&'a str),
 }
 
-/// The plain variable names a step template may reference.
-const STEP_VARIABLES: [&str; 6] = ["work", "sources", "out", "package", "vibe_home", "app_root"];
+/// The plain variable names a step template may reference; `$app_bin` is
+/// `$app_root/bin`, known like `$app_root` only to `finish` steps.
+const STEP_VARIABLES: [&str; 7] = [
+    "work",
+    "sources",
+    "out",
+    "package",
+    "vibe_home",
+    "app_root",
+    "app_bin",
+];
 
 /// Expand `template` in one pass: `$name`, `${name}`, `$feature:ID`,
 /// `${feature:ID}`, `$param:ID`, `${param:ID}` and `$$` for a literal

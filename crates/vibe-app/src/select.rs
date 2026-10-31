@@ -332,6 +332,7 @@ mod tests {
             parameters: Vec::new(),
             license: None,
             steps: Vec::new(),
+            requires: Vec::new(),
             launchers: Vec::new(),
             public_commands: Vec::new(),
         }

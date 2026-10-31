@@ -306,8 +306,10 @@ fn ps_quote(value: &str) -> String {
     value.replace('\'', "''")
 }
 
+/// The kind of a raw `HKCU\Environment` value; also used by application
+/// env steps (PROP-065 `#env-step`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum RegistryValueKind {
+pub(crate) enum RegistryValueKind {
     String,
     ExpandString,
 }
@@ -329,10 +331,11 @@ impl RegistryValueKind {
     }
 }
 
+/// One raw `HKCU\Environment` value, read without expanding `%VAR%`.
 #[derive(Debug)]
-struct RawUserVar {
-    value: String,
-    kind: RegistryValueKind,
+pub(crate) struct RawUserVar {
+    pub(crate) value: String,
+    pub(crate) kind: RegistryValueKind,
 }
 
 #[derive(serde::Deserialize)]
@@ -342,7 +345,8 @@ struct RawUserVarJson {
     kind: Option<String>,
 }
 
-fn ps_set_user_var_raw(name: &str, value: &str, kind: RegistryValueKind) -> Result<()> {
+/// Write one raw `HKCU\Environment` value with its kind, then broadcast.
+pub(crate) fn ps_set_user_var_raw(name: &str, value: &str, kind: RegistryValueKind) -> Result<()> {
     let script = format!(
         r#"
 $key = [Microsoft.Win32.Registry]::CurrentUser.CreateSubKey('Environment', $true)
@@ -374,7 +378,8 @@ public static class VvmEnvironmentBroadcast {{
     Ok(())
 }
 
-fn ps_get_user_var_raw(name: &str) -> Result<Option<RawUserVar>> {
+/// Read one raw `HKCU\Environment` value; `None` when it is absent.
+pub(crate) fn ps_get_user_var_raw(name: &str) -> Result<Option<RawUserVar>> {
     let script = format!(
         r#"
 $key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment', $false)
@@ -419,9 +424,63 @@ try {{
 /// `None` means the raw value already has the canonical result. A version
 /// manager's shim dir must take precedence over any other `vibe` on PATH, so
 /// it is prepended, not appended.
-fn path_with_prefix(current: &str, target: &str) -> Option<String> {
+pub(crate) fn path_with_prefix(current: &str, target: &str) -> Option<String> {
     let cwd = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
     path_with_prefix_core(current, target, &cwd, |name| std::env::var(name).ok())
+}
+
+/// Remove every normalized equivalent of `target` from a `;`-separated
+/// PATH, keeping every other entry byte-for-byte; `None` when nothing
+/// matches. The exact inverse of [`path_with_prefix`] for application env
+/// steps (PROP-065 `#env-step`).
+pub(crate) fn path_without(current: &str, target: &str) -> Option<String> {
+    let cwd = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
+    path_without_core(current, target, &cwd, |name| std::env::var(name).ok())
+}
+
+fn path_without_core(
+    current: &str,
+    target: &str,
+    cwd: &Path,
+    lookup: impl Fn(&str) -> Option<String>,
+) -> Option<String> {
+    let target_normal = normalize_windows_path(target, cwd, &lookup);
+    let kept: Vec<&str> = current
+        .split(';')
+        .filter(|part| !paths_equal(&normalize_windows_path(part, cwd, &lookup), &target_normal))
+        .collect();
+    let next = kept.join(";");
+    (next != current).then_some(next)
+}
+
+/// Delete one `HKCU\Environment` value, then broadcast the change.
+pub(crate) fn ps_delete_user_var_raw(name: &str) -> Result<()> {
+    let script = format!(
+        r#"
+$key = [Microsoft.Win32.Registry]::CurrentUser.CreateSubKey('Environment', $true)
+try {{
+    if ($key.GetValueNames() -contains '{name}') {{ $key.DeleteValue('{name}') }}
+}} finally {{
+    if ($null -ne $key) {{ $key.Dispose() }}
+}}
+Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public static class VvmEnvironmentBroadcast {{
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    public static extern IntPtr SendMessageTimeout(
+        IntPtr hWnd, uint msg, UIntPtr wParam, string lParam,
+        uint flags, uint timeout, out UIntPtr result);
+}}
+'@
+[UIntPtr]$result = [UIntPtr]::Zero
+[void][VvmEnvironmentBroadcast]::SendMessageTimeout(
+    [IntPtr]0xffff, 0x001A, [UIntPtr]::Zero, 'Environment', 0x0002, 5000, [ref]$result)
+"#,
+        name = ps_quote(name),
+    );
+    run_powershell(&script)?;
+    Ok(())
 }
 
 fn path_with_prefix_core(

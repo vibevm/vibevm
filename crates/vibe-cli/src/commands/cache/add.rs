@@ -380,6 +380,7 @@ fn stub_install_args(path: PathBuf) -> InstallArgs {
         library: None,
         steps: Default::default(),
         plan_only: false,
+        hidden: false,
         path,
         registry: None,
         assume_yes: true,

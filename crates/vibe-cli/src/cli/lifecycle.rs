@@ -100,6 +100,7 @@ impl LifecycleArgs {
             library: None,
             steps: Default::default(),
             plan_only: false,
+            hidden: false,
             path: self.path.clone(),
             registry: self.registry.clone(),
             assume_yes: self.assume_yes,

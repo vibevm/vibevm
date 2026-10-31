@@ -42,3 +42,23 @@ fn registry_exposes_the_epoch_two_index() {
         UnknownFields::Deny
     );
 }
+
+/// `vibe app outdated --json` (`vibe-app-outdated/1`, PROP-065
+/// `#outdated`) reads and round-trips its corpus, `latest: null` included.
+#[test]
+fn application_outdated_reads_and_round_trips_its_corpus() {
+    use vibe_wire::generated::application_outdated::{ApplicationOutdated, Status};
+    let bytes = std::fs::read(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../..")
+            .join("formats/corpora/application-outdated/e1/outdated.json"),
+    )
+    .unwrap();
+    let authored: Value = serde_json::from_slice(&bytes).unwrap();
+    let decoded: ApplicationOutdated = serde_json::from_slice(&bytes).unwrap();
+    assert_eq!(decoded.protocol, "vibe-app-outdated/1");
+    assert_eq!(decoded.installations[1].status, Status::Held);
+    assert_eq!(decoded.installations[2].latest, None);
+    assert_eq!(serde_json::to_value(decoded).unwrap(), authored);
+    assert_eq!(FormatId::CliApplicationOutdated.epoch(), 1);
+}

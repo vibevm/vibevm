@@ -290,6 +290,7 @@ pub(crate) mod tests {
             license: None,
             icon: None,
             steps: Vec::new(),
+            lifecycle: crate::index::Lifecycle::default(),
         }
     }
 

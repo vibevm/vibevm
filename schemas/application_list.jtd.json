@@ -30,7 +30,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "installation": {
-      "metadata": { "x-wire-order": ["key", "slot", "package", "method", "status", "reason", "library", "app_root", "portable", "default", "icon"] },
+      "metadata": { "x-wire-order": ["key", "slot", "package", "method", "status", "reason", "library", "app_root", "portable", "default", "icon", "hidden", "mark", "held", "superseded_by", "requires", "required_by", "env"] },
       "properties": {
         "key": { "type": "string" },
         "slot": { "type": "string" },
@@ -44,7 +44,48 @@
         "default": { "type": "boolean" }
       },
       "optionalProperties": {
-        "icon": { "type": "string", "metadata": { "x-default": null } }
+        "icon": { "type": "string", "metadata": { "x-default": null } },
+        "hidden": { "type": "boolean", "metadata": { "x-default": false } },
+        "mark": { "ref": "mark", "metadata": { "x-default": null } },
+        "held": { "type": "boolean", "metadata": { "x-default": false } },
+        "superseded_by": { "type": "string", "metadata": { "x-default": null } },
+        "requires": { "elements": { "ref": "requirement" }, "metadata": { "x-empty": "omit" } },
+        "required_by": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "env": { "elements": { "ref": "env_entry" }, "metadata": { "x-empty": "omit" } }
+      }
+    },
+    "mark": {
+      "enum": ["manual", "auto"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "scope": {
+      "enum": ["build", "runtime"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "requirement": {
+      "metadata": { "x-wire-order": ["package", "key", "scope", "step"] },
+      "properties": {
+        "package": { "type": "string" },
+        "key": { "type": "string" },
+        "scope": { "ref": "scope" }
+      },
+      "optionalProperties": {
+        "step": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "env_op": {
+      "enum": ["set", "unset", "path_prepend"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "env_entry": {
+      "metadata": { "x-wire-order": ["step", "op", "name", "value"] },
+      "properties": {
+        "step": { "type": "string" },
+        "op": { "ref": "env_op" },
+        "name": { "type": "string" }
+      },
+      "optionalProperties": {
+        "value": { "type": "string", "metadata": { "x-default": null } }
       }
     }
   }

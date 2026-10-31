@@ -71,11 +71,13 @@ impl RunRecord {
                     Command::Install => record::Command::Install,
                     Command::Update => record::Command::Update,
                     Command::Uninstall => record::Command::Uninstall,
+                    Command::Modify => record::Command::Modify,
                 },
                 option: option.into(),
                 started: now(),
                 finished: None,
                 outcome: record::Outcome::Running,
+                replaces: None,
             },
             closed: false,
         };
@@ -97,6 +99,13 @@ impl RunRecord {
         })?;
         bytes.push(b'\n');
         Ok(write_atomic(&path, &bytes)?)
+    }
+
+    /// Name the installation key an update replaces
+    /// (`PROP-065#update-and-rollback`) and rewrite `run.json`.
+    pub fn replaces(&mut self, key: &str) {
+        self.record.replaces = Some(key.to_owned());
+        let _ = self.write_json("run.json", &self.record);
     }
 
     /// `steps/<id>/output.log` of one step.
@@ -296,6 +305,7 @@ mod tests {
                 finished: None,
                 uninstall: Default::default(),
                 agent: None,
+                env: Vec::new(),
             }],
         });
         first.close(RunOutcome::Interrupted);

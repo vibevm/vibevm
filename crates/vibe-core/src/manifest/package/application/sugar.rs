@@ -55,7 +55,13 @@ pub fn steps_of(option: &InstallerOptionDecl) -> Vec<StepDecl> {
     }
     match &option.installation {
         Some(method) => method_steps(method, &mut steps),
-        None => steps.extend(option.steps.iter().cloned()),
+        // An env step always runs in the finish phase (`PROP-065#env-step`).
+        None => steps.extend(option.steps.iter().cloned().map(|mut step| {
+            if matches!(step.kind, StepKind::Env { .. }) {
+                step.phase = StepPhase::Finish;
+            }
+            step
+        })),
     }
     if let Some(command) = &option.post_install {
         // A leading finish step: before every authored finish step.

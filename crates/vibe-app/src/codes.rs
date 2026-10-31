@@ -12,6 +12,7 @@ use crate::agents::AgentError;
 use crate::error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,
 };
+use crate::error_lifecycle::LifecycleError;
 
 /// Whether an error refused the request before any effect, or a started
 /// operation failed (`PROP-065#exit-codes`).
@@ -153,7 +154,16 @@ codes!(LAUNCH, LaunchError [] {
     Spawn => "launcher_spawn_failed", Failure, "the launched program could not be started";
 });
 
-codes!(APP, AppError [State, Storage, Resolve, Installer, Launch, Step, Agent] {
+codes!(LIFECYCLE, LifecycleError [] {
+    RequirementUnresolved => "requirement_unresolved", Refusal, "a required application package cannot be resolved";
+    RequirementCycle => "requirement_cycle", Refusal, "application requirements form a cycle";
+    Dependents => "dependents_block", Refusal, "another installation requires this one at runtime scope";
+    NoPrevious => "no_previous", Refusal, "no kept previous installation exists to roll back to";
+    Environment => "environment_failed", Failure, "an env step could not change the user environment";
+    NoEnvironment => "environment_unavailable", Refusal, "no user environment is available to an env step";
+});
+
+codes!(APP, AppError [State, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle] {
     NotInstalled => "not_installed", Refusal, "the application is not installed";
     AmbiguousInstallation => "ambiguous_installation", Refusal, "several installed versions match";
     ForceUnsupported => "force_unsupported", Refusal, "--force has no authored variant to run";
@@ -178,7 +188,10 @@ codes!(APP, AppError [State, Storage, Resolve, Installer, Launch, Step, Agent] {
 /// assert!(codes.iter().any(|row| row.code == "need_unmet"));
 /// ```
 pub fn error_codes() -> Vec<ErrorCode> {
-    [STATE, STORAGE, RESOLVE, INSTALLER, STEP, AGENT, LAUNCH, APP].concat()
+    [
+        STATE, STORAGE, RESOLVE, INSTALLER, STEP, AGENT, LIFECYCLE, LAUNCH, APP,
+    ]
+    .concat()
 }
 
 impl AppError {

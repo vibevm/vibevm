@@ -548,6 +548,9 @@ mod tests_glossary;
 #[path = "document/tests_mechanism_grammar.rs"]
 mod tests_mechanism_grammar;
 #[cfg(test)]
+#[path = "document/tests_requires.rs"]
+mod tests_requires;
+#[cfg(test)]
 #[path = "document/tests_run_commands.rs"]
 mod tests_run_commands;
 #[cfg(test)]

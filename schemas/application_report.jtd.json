@@ -16,7 +16,7 @@
       "type": "boolean"
     },
     "command": {
-      "enum": ["install", "update", "uninstall"],
+      "enum": ["install", "update", "uninstall", "modify", "rollback", "expose", "hide", "mark", "hold", "unhold"],
       "metadata": {
         "x-vocabulary": "closed"
       }

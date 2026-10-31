@@ -31,7 +31,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "step": {
-      "metadata": { "x-wire-order": ["id", "kind", "outcome", "reason", "started", "finished", "uninstall", "forceUninstall", "interpreter", "agent"] },
+      "metadata": { "x-wire-order": ["id", "kind", "outcome", "reason", "started", "finished", "uninstall", "forceUninstall", "interpreter", "agent", "env"] },
       "properties": {
         "id": { "type": "string" },
         "kind": { "type": "string" },
@@ -44,7 +44,32 @@
         "uninstall": { "type": "string", "metadata": { "x-default": null } },
         "forceUninstall": { "type": "string", "metadata": { "x-default": null } },
         "interpreter": { "ref": "interpreter", "metadata": { "x-default": null } },
-        "agent": { "ref": "agent_run", "metadata": { "x-default": null } }
+        "agent": { "ref": "agent_run", "metadata": { "x-default": null } },
+        "env": { "elements": { "ref": "env_entry" }, "metadata": { "x-empty": "omit" } }
+      }
+    },
+    "env_op": {
+      "enum": ["set", "unset", "path_prepend"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "value_kind": {
+      "enum": ["string", "expand_string"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "env_entry": {
+      "metadata": {
+        "description": "One durable environment change an env step applied (PROP-065#env-step).",
+        "x-wire-order": ["step", "op", "name", "value", "previous", "previousKind"]
+      },
+      "properties": {
+        "step": { "type": "string" },
+        "op": { "ref": "env_op" },
+        "name": { "type": "string" }
+      },
+      "optionalProperties": {
+        "value": { "type": "string", "metadata": { "x-default": null } },
+        "previous": { "type": "string", "metadata": { "x-default": null } },
+        "previousKind": { "ref": "value_kind", "metadata": { "x-default": null } }
       }
     },
     "agent_mode": {

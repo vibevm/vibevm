@@ -162,8 +162,17 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | crate::cli::AppCommand::Describe { .. }
             | crate::cli::AppCommand::Runs { .. }
             | crate::cli::AppCommand::Errors
+            | crate::cli::AppCommand::Outdated { .. }
             | crate::cli::AppCommand::Alternatives { .. } => FastMetadata,
             crate::cli::AppCommand::Use { .. } => FiniteFallback("Command app use"),
+            crate::cli::AppCommand::Modify { .. } => FiniteFallback("Command app modify"),
+            crate::cli::AppCommand::Expose { .. }
+            | crate::cli::AppCommand::Hide { .. }
+            | crate::cli::AppCommand::Mark { .. }
+            | crate::cli::AppCommand::Hold { .. }
+            | crate::cli::AppCommand::Unhold { .. }
+            | crate::cli::AppCommand::Rollback { .. } => FiniteFallback("Command app state"),
+            crate::cli::AppCommand::Autoremove { .. } => FiniteFallback("Command app autoremove"),
             crate::cli::AppCommand::Run { .. } | crate::cli::AppCommand::Start { .. } => {
                 TerminalPassthrough
             }

@@ -191,8 +191,9 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
             copy(cx.package_root, from, base, &to, &step.id)?;
         }
         // The runner delivers agent steps itself (`super::agent`,
-        // `PROP-064`): they need the plan, the hooks and the run record.
-        StepKind::Agent { .. } => {}
+        // `PROP-064`): they need the plan, the hooks and the run record;
+        // env steps (`super::env`) need the user environment and the key.
+        StepKind::Agent { .. } | StepKind::Env { .. } => {}
     }
     Ok(AuthoredCommands::default())
 }

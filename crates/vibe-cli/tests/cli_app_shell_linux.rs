@@ -219,6 +219,78 @@ fn json_and_non_terminal_use_are_refused() {
     );
 }
 
+/// PROP-059 `#hidden-installations`, `#session-selection`: `--with` puts a
+/// hidden installation on one shell's PATH through the same `VIBE_APP_USE`
+/// choice `--use` makes; outside the shell nothing changed.
+#[test]
+fn with_exposes_a_hidden_installation_for_one_session() {
+    let root = tempfile::tempdir().unwrap();
+    let user = UserScratch::new();
+    let registry = root.path().join("registry");
+    for (name, extra) in [("alpha", None), ("beta", Some("--hidden"))] {
+        package(&registry, name);
+        let mut command = user.vibe();
+        command
+            .args([
+                "install",
+                "-g",
+                &format!("org.example/{name}"),
+                "--registry",
+            ])
+            .arg(&registry);
+        if let Some(extra) = extra {
+            command.arg(extra);
+        }
+        let output = command.output().unwrap();
+        assert!(output.status.success(), "{}", text(&output));
+    }
+    let alternatives = user
+        .vibe()
+        .args(["app", "alternatives", "tool", "--json"])
+        .output()
+        .unwrap();
+    let listing: serde_json::Value = serde_json::from_slice(&alternatives.stdout).unwrap();
+    assert_eq!(
+        listing["providers"].as_array().unwrap().len(),
+        1,
+        "a hidden installation has no place among the alternatives"
+    );
+    let runner = pty_runner(root.path());
+    let home = tempfile::tempdir().unwrap();
+    let output = in_pty(
+        &runner,
+        &user,
+        home.path(),
+        &[vibe(), "shell", "-g", "--with", "org.example/beta"],
+        "printf 'PATH_VALUE=<%s>\\n' \"$PATH\"\nprintf 'USE_VALUE=<%s>\\n' \"$VIBE_APP_USE\"\ntool session\nexit 3\n",
+    )
+    .env_remove("VIBE_APP_USE")
+    .output()
+    .unwrap();
+    assert_eq!(output.status.code(), Some(3), "{}", text(&output));
+    let stdout = text(&output);
+    let session = user
+        .settings
+        .join("cache/app-proxies/org.example.beta@1.0.0/bin");
+    assert!(
+        stdout.contains(&format!("PATH_VALUE=<{}:", session.display())),
+        "{stdout}"
+    );
+    assert!(
+        stdout.contains("USE_VALUE=<tool=org.example/beta@1.0.0>"),
+        "{stdout}"
+    );
+    assert!(stdout.contains("BETA_RAN session"), "{stdout}");
+    let global = Command::new(user.settings.join("opt/bin/tool"))
+        .env_remove("VIBE_APP_USE")
+        .output()
+        .unwrap();
+    assert!(
+        text(&global).contains("ALPHA_RAN"),
+        "the default is untouched"
+    );
+}
+
 fn text(output: &Output) -> String {
     format!(
         "stdout:\n{}\nstderr:\n{}",

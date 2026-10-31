@@ -37,6 +37,11 @@ struct Materialise<'a> {
     consent: bool,
     offline: bool,
     root: &'a Path,
+    /// `group/name` of the packages `--hidden` names (PROP-059
+    /// `#hidden-installations`).
+    hidden: Vec<(String, String)>,
+    /// The explicit registry requirements resolve from besides the lockfile.
+    registry: Option<PathBuf>,
 }
 
 /// `vibe install [PACKAGE…]` inside a project: the ordinary project install,
@@ -57,6 +62,18 @@ pub(crate) fn install(
     let offline = root_offline || args.offline;
     let path = args.path.clone();
     let request = global::request(choice, None, args.force, &args.steps);
+    let hidden = if args.hidden {
+        args.packages
+            .iter()
+            .filter_map(|spelling| vibe_app::qualified_ref(spelling).ok())
+            .filter_map(|reference| {
+                Some((reference.group?.to_string(), reference.name.to_string()))
+            })
+            .collect()
+    } else {
+        Vec::new()
+    };
+    let registry = args.registry.clone();
     install::run_direct(ctx, args, embedded_root, root_offline)?;
     let Some(root) = home::project_at(&path)? else {
         return Ok(());
@@ -69,6 +86,8 @@ pub(crate) fn install(
             consent,
             offline,
             root: &root,
+            hidden,
+            registry,
         },
     )
 }
@@ -91,10 +110,15 @@ pub(crate) fn update(
     };
     let flags = Materialise {
         verb: "update",
-        request: global::request(choice, None, args.force, &args.steps),
+        request: InstallRequest {
+            purge_previous: args.purge_previous,
+            ..global::request(choice, None, args.force, &args.steps)
+        },
         consent: args.assume_yes || ctx.is_unattended(),
         offline: root_offline,
         root,
+        hidden: Vec::new(),
+        registry: args.registry.clone(),
     };
     project_update::run(ctx, args, embedded_root, root_offline)?;
     materialise(ctx, &flags)
@@ -120,9 +144,14 @@ pub(crate) fn uninstall(
             feature_chooser: None,
             ..global::operation(ctx, &settings, root_offline, &proxy_image, None, &observe)
         };
+        let request = global::remove_request(&args);
         for exact in &installed {
-            outcomes
-                .push(ctx.suspend_progress(|| vibe_app::uninstall(&operation, exact, args.force))?);
+            let removal =
+                ctx.suspend_progress(|| vibe_app::uninstall(&operation, exact, &request))?;
+            match removal.outcome {
+                Some(outcome) => outcomes.push(outcome),
+                None => return super::report::render_removal(ctx, &removal),
+            }
         }
     }
     project_uninstall::run(ctx, args)?;
@@ -189,12 +218,45 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
             .with_context(|| format!("ignoring `{entry}` in the project's .gitignore"))?;
     }
     let proxy_image = global::proxy_image()?;
-    let request = &flags.request;
     let show = global::plan_printer(ctx);
     let observe = Observation::new(ctx, true)?;
     let agents = AgentSetup::new(ctx, None, flags.consent)?;
+    let packages = global::Packages {
+        settings: global::settings_root()?,
+        registry: flags.registry.clone(),
+        embedded: None,
+        offline: flags.offline,
+    };
+    let locked = app_dependencies(flags.root)?;
+    // A requirement the lockfile records materialises from that record;
+    // anything else resolves like the package itself (PROP-065
+    // `#app-dependencies`).
+    let resolver = |spelling: &str| -> std::result::Result<ResolvedPackage, vibe_app::AppError> {
+        let requested = vibe_app::qualified_ref(spelling)?;
+        let row = locked.iter().find(|package| {
+            requested.group.as_ref() == Some(&package.group)
+                && requested.name == package.name
+                && requested.version.matches(&package.version)
+        });
+        match row {
+            Some(package) => from_slot(flags.root, package).map_err(|error| {
+                vibe_app::ResolveError::Registry {
+                    spelling: spelling.into(),
+                    reason: format!("{error:#}"),
+                }
+                .into()
+            }),
+            None => packages.resolve(spelling),
+        }
+    };
     for package in &pending {
         let resolved = from_slot(flags.root, package)?;
+        let request = &InstallRequest {
+            hidden: flags.hidden.iter().any(|(group, name)| {
+                *group == resolved.package.group && *name == resolved.package.name
+            }),
+            ..flags.request.clone()
+        };
         let previous = Index::load(&settings)?
             .installations
             .values()
@@ -202,6 +264,7 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
         let outcome = ctx.suspend_progress(|| {
             let operation = OperationContext {
                 agent: agents.hooks(),
+                resolver: Some(&resolver),
                 ..global::operation(
                     ctx,
                     &settings,

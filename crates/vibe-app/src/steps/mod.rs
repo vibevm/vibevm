@@ -7,6 +7,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#principle");
 
 mod agent;
+mod env;
 mod envelope;
 mod features;
 mod kinds;
@@ -20,10 +21,11 @@ mod sizes;
 mod state;
 mod template;
 
+pub(crate) use env::StepPaths;
 pub use features::{FeatureRequest, FeatureResolution, Implied, ImpliedRule, resolve_features};
 pub use params::{LicensePrompt, ParamValue, ParameterPrompt, PlanLicense, step_env_name};
-pub use plan::{FeatureChooser, HostFacts, Plan, PlannedStep};
-pub(crate) use plan::{PlanInput, Previous, Prompts, plan};
+pub use plan::{FeatureChooser, HostFacts, Plan, PlannedDependency, PlannedStep};
+pub(crate) use plan::{PlanInput, Previous, Prompts, RequirementResolver, plan};
 pub(crate) use run::{Run, RunFlags};
 pub(crate) use runs::{RunOutcome, RunRecord};
 pub use runs::{prune_runs, runs};

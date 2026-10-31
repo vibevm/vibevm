@@ -19,6 +19,9 @@ impl InstallerOptionDecl {
     pub(super) fn validate_steps(&self) -> Result<(), String> {
         let option = &self.id;
         let names = self.validate_wizard()?;
+        for requirement in &self.requires {
+            requirement.validate(&format!("[[installer_options]] `{option}`"))?;
+        }
         let steps = steps_of(self);
         let mut step_ids = BTreeSet::new();
         for step in &steps {
@@ -43,11 +46,14 @@ impl InstallerOptionDecl {
             if step.phase == StepPhase::Finish
                 && !matches!(
                     step.kind,
-                    StepKind::Shell { .. } | StepKind::Agent { .. } | StepKind::Copy { .. }
+                    StepKind::Shell { .. }
+                        | StepKind::Agent { .. }
+                        | StepKind::Copy { .. }
+                        | StepKind::Env { .. }
                 )
             {
                 return Err(format!(
-                    "{table} of kind `{}` cannot run in the finish phase; only shell, agent and copy steps can",
+                    "{table} of kind `{}` cannot run in the finish phase; only shell, agent, copy and env steps can",
                     step.kind.name()
                 ));
             }
@@ -56,6 +62,9 @@ impl InstallerOptionDecl {
                     "{table} cannot be both optional and required; an optional agent step is skipped without an agent, \
                      a required one refuses the installation (PROP-064#selection)"
                 ));
+            }
+            for requirement in &step.requires {
+                requirement.validate(&table)?;
             }
             validate_kind(&step.kind, &names, &table)?;
         }
@@ -150,8 +159,66 @@ fn expand_names(value: &str, names: &Names<'_>, table: &str, field: &str) -> Res
     .map_err(|reason| format!("{table}.{field}: {reason}"))
 }
 
+/// An environment variable name an env step may set or unset: a portable
+/// identifier, never `PATH` (`PROP-065#env-step`: PATH only through
+/// `path_prepend`).
+fn validate_env_name(name: &str, table: &str, field: &str) -> Result<(), String> {
+    let mut chars = name.chars();
+    let portable = chars
+        .next()
+        .is_some_and(|first| first.is_ascii_alphabetic() || first == '_')
+        && chars.all(|ch| ch.is_ascii_alphanumeric() || ch == '_');
+    if !portable {
+        return Err(format!(
+            "{table}.{field} name `{name}` must be a letter or `_` followed by letters, digits or `_`"
+        ));
+    }
+    if name.eq_ignore_ascii_case("PATH") {
+        return Err(format!(
+            "{table}.{field} cannot name PATH; PATH is only edited through path_prepend"
+        ));
+    }
+    Ok(())
+}
+
+fn validate_env(
+    set: &std::collections::BTreeMap<String, String>,
+    unset: &[String],
+    path_prepend: &[String],
+    names: &Names<'_>,
+    table: &str,
+) -> Result<(), String> {
+    if set.is_empty() && unset.is_empty() && path_prepend.is_empty() {
+        return Err(format!(
+            "{table} of kind `env` must declare set, unset or path_prepend"
+        ));
+    }
+    for (name, value) in set {
+        validate_env_name(name, table, "set")?;
+        validate_template(value, names, table, "set")?;
+    }
+    for name in unset {
+        validate_env_name(name, table, "unset")?;
+        if set.contains_key(name) {
+            return Err(format!("{table} both sets and unsets `{name}`"));
+        }
+    }
+    for entry in path_prepend {
+        if entry.trim().is_empty() {
+            return Err(format!("{table}.path_prepend entries must be nonempty"));
+        }
+        validate_template(entry, names, table, "path_prepend")?;
+    }
+    Ok(())
+}
+
 fn validate_kind(kind: &StepKind, names: &Names<'_>, table: &str) -> Result<(), String> {
     match kind {
+        StepKind::Env {
+            set,
+            unset,
+            path_prepend,
+        } => validate_env(set, unset, path_prepend, names, table),
         StepKind::Sources { sources } => validate_sources(sources, table),
         StepKind::Archive {
             source,

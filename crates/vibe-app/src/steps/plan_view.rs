@@ -3,11 +3,11 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#plan");
 
-use vibe_core::manifest::StepPhase;
+use vibe_core::manifest::{RequirementScope, StepPhase};
 use vibe_wire::generated::application_plan as wire;
 
 use super::features::ImpliedRule;
-use super::plan::Plan;
+use super::plan::{Plan, PlannedDependency};
 
 impl Plan {
     /// The `vibe-app-plan/1` document; secret parameter values are omitted.
@@ -69,6 +69,26 @@ impl Plan {
             }),
             download_bytes: self.download_bytes,
             unknown_sizes: self.unknown_sizes,
+            dependencies: self
+                .dependencies
+                .iter()
+                .map(|dependency| wire::Dependency {
+                    package: dependency.package.clone(),
+                    key: dependency.key.clone(),
+                    scope: match dependency.scope {
+                        RequirementScope::Build => wire::Scope::Build,
+                        RequirementScope::Runtime => wire::Scope::Runtime,
+                    },
+                    step: dependency.step.clone(),
+                    action: if dependency.installed {
+                        wire::DependencyAction::Use
+                    } else {
+                        wire::DependencyAction::Install
+                    },
+                    hidden: dependency.hidden,
+                    commands: dependency.commands.clone(),
+                })
+                .collect(),
             steps: self
                 .steps
                 .iter()
@@ -104,7 +124,7 @@ impl Plan {
     ///     option: "src".into(), platform: "linux".into(), arch: "x86_64".into(),
     ///     result: ResultDecl::owned(), declared: vec![], profile: None, features: vec![],
     ///     implied: vec![], parameters: vec![], license: None, download_bytes: 0, unknown_sizes: 0,
-    ///     steps: vec![], warnings: vec![],
+    ///     dependencies: vec![], steps: vec![], warnings: vec![],
     /// };
     /// assert!(plan.render().starts_with("plan for org.example/tool@1.0.0"));
     /// ```
@@ -168,8 +188,18 @@ impl Plan {
                 self.download_bytes
             ));
         }
+        for dependency in self.dependencies.iter().filter(|d| d.step.is_none()) {
+            text.push_str(&dependency_line(dependency));
+        }
         for (index, planned) in self.steps.iter().enumerate() {
             let step = &planned.step;
+            for dependency in self
+                .dependencies
+                .iter()
+                .filter(|dependency| dependency.step.as_deref() == Some(step.id.as_str()))
+            {
+                text.push_str(&dependency_line(dependency));
+            }
             let action = match &planned.reason {
                 Some(reason) => format!("skip ({reason})"),
                 None => "run".into(),
@@ -199,4 +229,25 @@ impl Plan {
         }
         text
     }
+}
+
+/// One `dependency` entry of the text plan, shown ahead of the step that
+/// needs it (`PROP-065#app-dependencies`).
+fn dependency_line(dependency: &PlannedDependency) -> String {
+    let action = if dependency.installed {
+        "use"
+    } else {
+        "install"
+    };
+    let exposure = if dependency.hidden { ", hidden" } else { "" };
+    let target = match &dependency.step {
+        Some(step) => format!(" for step `{step}`"),
+        None => String::new(),
+    };
+    format!(
+        "  dependency: {action} {} ({}{exposure}) for `{}`{target}\n",
+        dependency.key,
+        dependency.scope.as_str(),
+        dependency.package
+    )
 }

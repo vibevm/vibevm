@@ -6,21 +6,35 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#alternatives");
 
 mod apply;
+mod deps;
+mod lifecycle;
+mod listing;
+mod modify;
+mod outdated;
 mod remove;
+mod tree;
+mod update;
 
-pub use remove::{installed, list, uninstall};
+pub use lifecycle::{Change, ChangeVerb, expose, hide, hold, mark, rollback};
+pub use listing::{installed, list};
+pub use modify::{ModifyRequest, modify};
+pub use outdated::outdated;
+pub use remove::{Removal, RemoveRequest, autoremove, uninstall};
+pub use update::update;
 
+use std::ffi::OsStr;
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use specmark::spec;
-use vibe_core::manifest::{InstallerOptionDecl, result_of};
+use vibe_core::manifest::InstallerOptionDecl;
 use vibe_core::progress::Progress;
 
 use crate::agents::AgentHooks;
 use crate::alternatives::{check_reservation, reserved_names};
+use crate::environment::UserEnvironment;
 use crate::error::{AppError, ResolveError};
-use crate::index::{Index, Location, Method};
+use crate::index::{Index, Installation, Lifecycle, Location, Mark, Method};
 use crate::installer::Interrupt;
 use crate::proxies;
 use crate::resolve::ResolvedPackage;
@@ -28,7 +42,7 @@ use crate::select::{Chooser, InstallChoice, select_option};
 use crate::settings::SettingsRoot;
 use crate::steps::{
     self, FeatureChooser, FeatureRequest, HostFacts, LicensePrompt, ParameterPrompt, Plan,
-    PlanInput, Previous, Prompts, Start,
+    PlanInput, Previous, Prompts, RequirementResolver, Start,
 };
 use crate::storage::{Availability, Storage};
 
@@ -66,7 +80,20 @@ pub struct OperationContext<'a> {
     pub interrupt: Option<&'a dyn Interrupt>,
     /// The agent of `agent` steps, consent and parking (`PROP-064`).
     pub agent: AgentHooks<'a>,
+    /// Resolves a required application package by its `group/name@req`
+    /// spelling through the same registries as the requiring package
+    /// (`PROP-065#app-dependencies`); absent, only installed requirements
+    /// are usable.
+    pub resolver: Option<PackageResolver<'a>>,
+    /// The durable user environment env steps change (`PROP-065#env-step`).
+    pub environment: Option<&'a dyn UserEnvironment>,
+    /// The caller's PATH, behind the requirements a step's child sees
+    /// first (`PROP-065#app-dependencies`).
+    pub search_path: Option<&'a OsStr>,
 }
+
+/// Resolves one application package spelling to its package tree.
+pub type PackageResolver<'a> = &'a dyn Fn(&str) -> Result<ResolvedPackage, AppError>;
 
 impl OperationContext<'_> {
     /// Where child output goes besides the run log.
@@ -95,6 +122,13 @@ pub struct InstallRequest {
     pub accept_license: bool,
     /// `--resume` / `--from-step`.
     pub start: Start,
+    /// `--hidden`: install without exposure (`PROP-059#hidden-installations`).
+    pub hidden: bool,
+    /// `manual` for a package named by the user, `auto` for a requirement.
+    pub mark: Mark,
+    /// `update --purge-previous`: remove the replaced installation at once
+    /// instead of keeping it hidden (`PROP-065#update-and-rollback`).
+    pub purge_previous: bool,
 }
 
 /// The command an outcome reports.
@@ -104,6 +138,8 @@ pub enum Command {
     Install,
     Update,
     Uninstall,
+    /// Another choice for an installed package (`PROP-065#modify`).
+    Modify,
 }
 
 /// The result of one operation, for the caller to render.
@@ -119,14 +155,39 @@ pub struct Outcome {
     pub message: String,
 }
 
-/// Install one app package into the current user's settings root.
+/// Install one app package into the current user's settings root: its
+/// requirements first (`PROP-065#app-dependencies`), then the package.
 pub fn install(
     ctx: &OperationContext<'_>,
     resolved: &ResolvedPackage,
     request: &InstallRequest,
 ) -> Result<Outcome, AppError> {
     let _lock = ctx.settings.lock()?;
-    let mut index = Index::load(ctx.settings)?;
+    install_locked(ctx, resolved, request, &mut Vec::new())
+}
+
+/// [`install`] under the held lock; `stack` names the installations in
+/// progress further up, so a requirement cycle is refused.
+fn install_locked(
+    ctx: &OperationContext<'_>,
+    resolved: &ResolvedPackage,
+    request: &InstallRequest,
+    stack: &mut Vec<String>,
+) -> Result<Outcome, AppError> {
+    let key = resolved.package.key();
+    deps::enter(stack, &key)?;
+    let result = install_entered(ctx, resolved, request, stack);
+    stack.pop();
+    result
+}
+
+fn install_entered(
+    ctx: &OperationContext<'_>,
+    resolved: &ResolvedPackage,
+    request: &InstallRequest,
+    stack: &mut Vec<String>,
+) -> Result<Outcome, AppError> {
+    let index = Index::load(ctx.settings)?;
     let storage = Storage::load(ctx.settings)?;
     let option = choose(ctx, resolved, &request.choice)?;
     let key = resolved.package.key();
@@ -135,7 +196,8 @@ pub fn install(
     if let Some(prior) = &prior {
         ensure_available(&key, prior, &storage)?;
     }
-    let plan = plan_option(ctx, resolved, &option, request, None)?;
+    let plan = plan_option(ctx, resolved, &option, request, None, &index)?;
+    let paths = deps::install_required(ctx, &plan, stack)?;
     let mut applied = apply::apply(
         ctx,
         &storage,
@@ -149,130 +211,73 @@ pub fn install(
             mode: Mode::Install,
             start: &request.start,
             command: Command::Install,
+            replaces: None,
+            paths,
         },
     )?;
+    let kept = prior.as_ref().map(|prior| &prior.lifecycle);
+    applied.installation.lifecycle = Lifecycle {
+        hidden: request.hidden,
+        mark: match (request.mark, kept.map(|kept| kept.mark)) {
+            (Mark::Auto, Some(Mark::Manual)) => Mark::Manual,
+            (mark, _) => mark,
+        },
+        requires: deps::recorded(&plan),
+        env: std::mem::take(&mut applied.installation.lifecycle.env),
+        held: kept.is_some_and(|kept| kept.held),
+        replaced: None,
+        superseded_by: None,
+    };
+    if let Some(prior) = &prior {
+        retire_env(ctx, &key, prior, &applied.installation)?;
+    }
     let replaced = prior.is_some();
     let finish_failure = applied.finish_failure.take();
-    let outcome = commit(ctx, &storage, &mut index, applied, None, Command::Install)?;
+    let mut index = Index::load(ctx.settings)?;
+    let outcome = commit(
+        ctx,
+        &storage,
+        &mut index,
+        applied,
+        None,
+        None,
+        Command::Install,
+    )?;
     if let Some(failure) = finish_failure {
         return Err(failure);
     }
     Ok(Outcome {
         message: format!(
-            "{} {} via installer `{}`",
+            "{} {}{} via installer `{}`",
             if replaced { "replaced" } else { "installed" },
             outcome.key,
+            if request.hidden { " hidden" } else { "" },
             option.id
         ),
         ..outcome
     })
 }
 
-/// Update one installed app package to the newest resolved version.
-pub fn update(
+/// Remove the environment entries the previous record of the same key
+/// applied and the new one no longer does (`PROP-065#env-step`).
+fn retire_env(
     ctx: &OperationContext<'_>,
-    resolved: &ResolvedPackage,
-    request: &InstallRequest,
-) -> Result<Outcome, AppError> {
-    let _lock = ctx.settings.lock()?;
-    let mut index = Index::load(ctx.settings)?;
-    let storage = Storage::load(ctx.settings)?;
-    let prior_key = previous_installation(&index, resolved)?;
-    let prior = index
-        .installations
-        .get(&prior_key)
+    key: &str,
+    prior: &Installation,
+    next: &Installation,
+) -> Result<(), AppError> {
+    let stale: Vec<_> = prior
+        .lifecycle
+        .env
+        .iter()
+        .filter(|entry| {
+            !next.lifecycle.env.iter().any(|kept| {
+                kept.step == entry.step && kept.op == entry.op && kept.name == entry.name
+            })
+        })
         .cloned()
-        .ok_or_else(|| AppError::NotInstalled {
-            package: prior_key.clone(),
-        })?;
-    if prior.slot != resolved.application.id {
-        return Err(AppError::SlotChanged {
-            key: prior_key,
-            from: prior.slot,
-            to: resolved.application.id.clone(),
-        });
-    }
-    ensure_available(&prior_key, &prior, &storage)?;
-    let explicit = request.choice != InstallChoice::default();
-    let choice = if explicit {
-        request.choice.clone()
-    } else {
-        InstallChoice {
-            platform: Some(prior.platform.clone()),
-            arch: Some(prior.arch.clone()),
-            installer: Some(prior.option.clone()),
-        }
-    };
-    let option = choose(ctx, resolved, &choice)?;
-    let key = resolved.package.key();
-    admit(
-        ctx,
-        &index,
-        &[key.as_str(), prior_key.as_str()],
-        resolved,
-        &option,
-    )?;
-    let owned = result_of(&option).is_owned();
-    let same_key = index.installations.get(&key).cloned();
-    if let Some(existing) = &same_key {
-        ensure_available(&key, existing, &storage)?;
-    }
-    let (target_prior, library, replaces) = if owned {
-        let library = request.library.clone().or(match &prior.location {
-            Location::Owned { library, .. } => Some(library.clone()),
-            Location::External { .. } => None,
-        });
-        (same_key, library, None)
-    } else if matches!(prior.location, Location::Owned { .. }) {
-        (same_key, request.library.clone(), None)
-    } else {
-        (
-            Some(prior.clone()),
-            request.library.clone(),
-            Some(prior_key.clone()),
-        )
-    };
-    let previous = Previous {
-        features: &prior.features,
-        parameters: &prior.parameters,
-        license: prior.license.as_ref().map(|license| license.name.as_str()),
-    };
-    let plan = plan_option(ctx, resolved, &option, request, Some(previous))?;
-    let mut applied = apply::apply(
-        ctx,
-        &storage,
-        &Selected {
-            resolved,
-            option: &option,
-            plan: &plan,
-            prior: target_prior.as_ref(),
-            library: library.as_deref(),
-            force: request.force,
-            mode: Mode::Update,
-            start: &request.start,
-            command: Command::Update,
-        },
-    )?;
-    let finish_failure = applied.finish_failure.take();
-    let outcome = commit(
-        ctx,
-        &storage,
-        &mut index,
-        applied,
-        replaces,
-        Command::Update,
-    )?;
-    if let Some(failure) = finish_failure {
-        return Err(failure);
-    }
-    Ok(Outcome {
-        message: if prior_key == key {
-            format!("refreshed {key} in place")
-        } else {
-            format!("updated {prior_key} to {key}")
-        },
-        ..outcome
-    })
+        .collect();
+    remove::rollback_env(ctx, key, "env", &stale)
 }
 
 /// Plan one installation without downloading or running anything
@@ -284,7 +289,8 @@ pub fn plan(
     request: &InstallRequest,
 ) -> Result<Plan, AppError> {
     let option = choose(ctx, resolved, &request.choice)?;
-    plan_option(ctx, resolved, &option, request, None)
+    let index = Index::load(ctx.settings)?;
+    plan_option(ctx, resolved, &option, request, None, &index)
 }
 
 /// Compute the plan of the selected option and show it.
@@ -294,7 +300,12 @@ fn plan_option(
     option: &InstallerOptionDecl,
     request: &InstallRequest,
     previous: Option<Previous<'_>>,
+    index: &Index,
 ) -> Result<Plan, AppError> {
+    let owner = resolved.package.key();
+    let requirements = |spelling: &str, scope, step: Option<&str>| {
+        deps::resolve_requirement(ctx, index, &owner, spelling, scope, step)
+    };
     let plan = steps::plan(&PlanInput {
         resolved,
         option,
@@ -313,6 +324,7 @@ fn plan_option(
             license: ctx.license_prompt,
         },
         agent: ctx.agent,
+        requirements: Some(&requirements as RequirementResolver<'_>),
     })?;
     if let Some(show) = ctx.on_plan {
         show(&plan);
@@ -328,6 +340,7 @@ fn commit(
     index: &mut Index,
     applied: Applied,
     replaces: Option<String>,
+    supersede: Option<String>,
     command: Command,
 ) -> Result<Outcome, AppError> {
     let reserved = reserved_names(index);
@@ -340,15 +353,25 @@ fn commit(
             index.slots.insert(slot.clone(), Some(key.clone()));
         }
     }
+    if let Some(old) = supersede.filter(|old| old != &key)
+        && let Some(record) = index.installations.get_mut(&old)
+    {
+        record.lifecycle.hidden = true;
+        record.lifecycle.superseded_by = Some(key.clone());
+        if index.default_of(&slot) == Some(old.as_str()) && !installation.lifecycle.hidden {
+            index.slots.insert(slot.clone(), Some(key.clone()));
+        }
+    }
     let current_default = index
         .default_of(&slot)
         .and_then(|default| index.installations.get(default))
         .map(|record| record.package.clone());
-    let take_default = match (&current_default, command) {
-        (None, _) => true,
-        (Some(package), Command::Update) => package.same_package(&installation.package),
-        _ => false,
-    };
+    let take_default = !installation.lifecycle.hidden
+        && match (&current_default, command) {
+            (None, _) => true,
+            (Some(package), Command::Update) => package.same_package(&installation.package),
+            _ => false,
+        };
     let method = installation.method;
     let app_root = crate::launch::app_root(&installation, storage).ok();
     index.installations.insert(key.clone(), installation);
@@ -418,7 +441,10 @@ fn previous_installation(index: &Index, resolved: &ResolvedPackage) -> Result<St
     let mut candidates: Vec<(&String, semver::Version)> = index
         .installations
         .iter()
-        .filter(|(_, record)| record.package.same_package(&resolved.package))
+        .filter(|(_, record)| {
+            record.package.same_package(&resolved.package)
+                && record.lifecycle.superseded_by.is_none()
+        })
         .map(|(key, record)| {
             let version = semver::Version::parse(&record.package.version)
                 .unwrap_or_else(|_| semver::Version::new(0, 0, 0));
@@ -445,7 +471,7 @@ fn previous_installation(index: &Index, resolved: &ResolvedPackage) -> Result<St
 /// An installation whose library is unavailable is never replaced.
 fn ensure_available(
     key: &str,
-    installation: &crate::index::Installation,
+    installation: &Installation,
     storage: &Storage,
 ) -> Result<(), AppError> {
     if let Location::Owned { library, .. } = &installation.location
@@ -459,7 +485,8 @@ fn ensure_available(
     Ok(())
 }
 
-/// Drop dangling defaults and slots that have no installation left.
+/// Drop dangling and hidden defaults and slots that have no installation
+/// left.
 fn normalize_slots(index: &mut Index) {
     let installations = &index.installations;
     index
@@ -469,7 +496,7 @@ fn normalize_slots(index: &mut Index) {
         if default.as_ref().is_some_and(|key| {
             installations
                 .get(key)
-                .is_none_or(|record| &record.slot != slot)
+                .is_none_or(|record| &record.slot != slot || record.lifecycle.hidden)
         }) {
             *default = None;
         }
