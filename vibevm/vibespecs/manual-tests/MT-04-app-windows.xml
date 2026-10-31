@@ -90,6 +90,13 @@ Get-ChildItem "$env:VIBE_SETTINGS\opt\bin"
 &amp; $vibe uninstall -g org.vibevm.apps/vim@1.1.0
 &amp; $vibe app autoremove</fence>
     <p><EXP-9 fact="true" status="impl/work">**Expected.** The plan shows `dependency: install org.vibevm.apps/mingw-w64@15.2.0 (build, hidden)` ahead of the build step and does not refuse the `command:gcc` need. The install first installs MinGW hidden (no `gcc.exe` in `opt\bin`, `app list` shows it under "hidden installation(s)" marked `[auto]` and required by Vim), then runs the build with MinGW's `bin` and `gcc` first on the build step's PATH, and leaves only `vim.exe` / `gvim.exe` in `opt\bin`. `vibe shell --with` puts `gcc` on that session's PATH only. Uninstalling Vim lists MinGW as an orphan without removing it; `app autoremove` removes it with its payload.</EXP-9></p>
+    <facts ordered="true">
+      <STEP-10-MENU fact="true" status="impl/work">**Start-menu metadata and icons (PROP-059 `#menu`).** With `org.vibevm.apps/vim@1.1.2` installed through `windows-zip`:</STEP-10-MENU>
+    </facts>
+    <fence>&amp; $vibe app launchers -g --all --menu --json
+&amp; $vibe app icon -g org.vibevm.apps/vim --launcher gvim --size 48
+&amp; $vibe app icon -g org.vibevm.apps/vim --launcher gvim --size 256 --prefer svg</fence>
+    <p><EXP-10 fact="true" status="impl/done">**Expected.** The listing names the group `Vim`, categories `Utility` and `Development`, two launchers opted into the menu — `gvim` of kind `gui` and `vim` of kind `tui` — each with an icon set holding the payload's `vim92\vim.ico` and the package SVG copied under `$env:VIBE_SETTINGS\applications\icons\org.vibevm.apps.vim@1.1.2\icons\vim.svg`; `app icon --size 48` prints the `.ico` path, `--prefer svg` the SVG; nothing is written to the Start menu itself.</EXP-10></p>
   </section>
   <section title="Pass">
     <p><pass-criteria fact="true" status="impl/work">Every step reads as described on a real Windows host: ZIP install, direct native launch of gVim, console Vim through the `.exe` proxy with Ctrl+C handled by Vim, `vibe shell` reusing each of the three parent shells, the session variable, the removable-drive library with unavailability and moves, and a clean uninstall. The owner signs the date below.</pass-criteria></p>
