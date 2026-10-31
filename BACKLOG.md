@@ -2462,3 +2462,13 @@ structure, and it goes when the file does.
 | @fact:B224-SEVERITY **severity** | P2 — blocks the owner's desktop client from presenting installed applications well; no correctness defect. |
 | @fact:B224-DISPOSITION **disposition** | `accepted` — the owner specified the three decisions on 2026-10-31 and then ordered it into 1.0.8 ("сними тэг 1.0.8 и доделай это"); the icon-set shape (SVG source, PNG by pixel size, `ico` / `icns` containers, `symbolic`, `maskable`, client-side size choice, launcher → application → client fallback, `vibe check` rules) is specified in PROP-059 `#menu`; APP-STEPS phase Q5: PROP-059 `#launch-points` amendment, manifest fields with validation (`kind`, `menu`, `menu_group`, `categories`, `keywords`, icon set), `application_launchers` / `application_list` / `application_describe` schemas and codegen, `--all`, tests, Vim and documentation-site manifests updated (console Vim: `kind = "tui"`, gVim: `kind = "gui"`, `menu = true`; group "Vim"). |
 | @fact:B224-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
+
+## B-225 — lifecycle verbs have no `-g` and misname the home they searched {#b-225}
+
+| field | value |
+|---|---|
+| @fact:B225-WHAT **what** | `vibe app hold \| unhold \| rollback \| expose \| hide \| mark \| modify \| autoremove \| outdated \| runs` select the project home when the working directory is a project and the user home otherwise, like `app list`, but unlike `app list` they offer no `-g` / `--global` to choose; inside a project, a verb aimed at a globally installed application fails with `not_installed: global application … is not installed`, which names the wrong home. |
+| @fact:B225-EVIDENCE **evidence** | MT-05 Q4 scenario on `flash`, 2026-10-31: `vibe app hold org.vibevm.apps/vim` from `~/git/vibevm-app` refused with that message while `app list -g` showed the installation; the same command from `~` succeeded. `crates/vibe-cli/src/commands/app/lifecycle.rs` resolves the home through the project-or-user rule; the error text is fixed to "global". |
+| @fact:B225-SEVERITY **severity** | P2 — a desktop client or a script running inside a project cannot reach the user's applications with these verbs. |
+| @fact:B225-DISPOSITION **disposition** | `accepted` — fix in APP-STEPS before 1.0.8: every application verb that selects a home takes `-g` / `--global` with the `app list` semantics, and `not_installed` names the home it searched (`user home` / `project home <path>`) and hints at `-g`. |
+| @fact:B225-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
