@@ -72,7 +72,7 @@ pub use launch::{
 pub use operations::{
     Change, ChangeVerb, Command, InstallRequest, ModifyRequest, OperationContext, Outcome,
     PackageResolver, Removal, RemoveRequest, autoremove, expose, hide, hold, install, installed,
-    list, mark, modify, outdated, plan, rollback, uninstall, update,
+    list, mark, modify, outdated, plan, remove_unrecorded, rollback, uninstall, update,
 };
 pub use proxies::{proxy_file_name, sync as sync_proxies};
 pub use resolve::{

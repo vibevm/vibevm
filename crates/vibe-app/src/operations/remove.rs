@@ -7,17 +7,22 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#ownership");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#uninstall-tree");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#project-scope");
 
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::Path;
 
 use specmark::spec;
+use vibe_core::manifest::RequirementScope;
 use vibe_wire::generated::application_removal as wire;
 
 use crate::alternatives::reserved_names;
 use crate::error::{AppError, InstallerError};
 use crate::error_lifecycle::LifecycleError;
-use crate::index::{AuthoredCommands, EnvEntry, Index, Installation, Location, StepOutcome};
+use crate::index::{
+    AuthoredCommands, EnvEntry, Index, Installation, Location, PackageCoordinate, StepOutcome,
+};
 use crate::installer::{self, ChildIo, shell};
 use crate::launch;
 use crate::proxies;
@@ -140,6 +145,58 @@ pub fn autoremove(ctx: &OperationContext<'_>, plan_only: bool) -> Result<Removal
         outcome: None,
         report: report(&index, &storage, &planned, &[], &request),
     })
+}
+
+/// Remove every installation of a project home that its lockfile no
+/// longer records (`PROP-059#project-scope`: the lockfile is the record;
+/// `PROP-065#uninstall-tree`: deleting the dependency row leads to the
+/// same removal, orphans included). `recorded` answers whether a package
+/// coordinate has a lock row. A kept previous installation stays, and so
+/// does whatever a staying installation requires at runtime; dependents
+/// are removed before what they require.
+pub fn remove_unrecorded(
+    ctx: &OperationContext<'_>,
+    recorded: &dyn Fn(&PackageCoordinate) -> bool,
+) -> Result<Vec<Outcome>, AppError> {
+    let _lock = ctx.settings.lock()?;
+    let index = Index::load(ctx.settings)?;
+    let mut doomed: BTreeSet<String> = index
+        .installations
+        .iter()
+        .filter(|(_, record)| {
+            record.lifecycle.superseded_by.is_none() && !recorded(&record.package)
+        })
+        .map(|(key, _)| key.clone())
+        .collect();
+    loop {
+        let held: Vec<String> = doomed
+            .iter()
+            .filter(|key| {
+                index.required_by(key).iter().any(|(owner, scope)| {
+                    *scope == RequirementScope::Runtime && !doomed.contains(*owner)
+                })
+            })
+            .cloned()
+            .collect();
+        if held.is_empty() {
+            break;
+        }
+        for key in held {
+            doomed.remove(&key);
+        }
+    }
+    let mut order: Vec<String> = Vec::new();
+    for key in &doomed {
+        for (next, _) in tree::removal_order(&index, key, true)? {
+            if doomed.contains(&next) && !order.contains(&next) {
+                order.push(next);
+            }
+        }
+    }
+    order
+        .iter()
+        .map(|key| remove_locked(ctx, key, false))
+        .collect()
 }
 
 fn report(

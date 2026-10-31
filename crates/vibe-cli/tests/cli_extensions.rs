@@ -35,6 +35,7 @@ fn locked(group: &str, name: &str, kind: PackageKind, version: &str, hash: &str)
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: Vec::new(),
+        required_by: Vec::new(),
         admitted_by: None,
         via_override: None,
         overridden: false,

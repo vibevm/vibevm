@@ -230,6 +230,10 @@ pub enum SourceKind {
 mod embedded_source;
 pub use embedded_source::LockedEmbeddedSource;
 
+#[path = "lockfile/requirers.rs"]
+mod requirers;
+pub use requirers::LockedRequirer;
+
 /// One installed package, as it appears in the lockfile.
 ///
 /// ```
@@ -333,6 +337,13 @@ pub struct LockedPackage {
     /// Empty for pre-resolver installs and v1 lockfiles.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub dependencies: Vec<PackageRef>,
+
+    /// The locked application packages whose installer options or steps
+    /// require this one, each with the requirement's scope
+    /// (PROP-065 `#app-dependencies`). Empty for every other row; absent
+    /// from locks written before the field, which load unchanged.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub required_by: Vec<LockedRequirer>,
 
     /// Visibility rule that admitted this package into the effective set.
     #[serde(default, skip_serializing_if = "Option::is_none")]

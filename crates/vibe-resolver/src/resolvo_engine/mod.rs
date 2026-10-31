@@ -207,7 +207,7 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
                             .and_then(|r| r.kind);
                         assert_kind_matches(requested, actual, &format!("{group}/{name}"))?;
                     }
-                    let direct_deps = manifest.requires.packages.clone();
+                    let direct_deps = manifest.resolution_requires();
                     // `[obsoletes]` → drop the superseded node from the
                     // output, mirroring the naive cell (PROP-017 §3).
                     for ob in &manifest.obsoletes.packages {

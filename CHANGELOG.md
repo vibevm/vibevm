@@ -8,6 +8,26 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+- **Application requirements in projects (PROP-065 `#app-dependencies`).** An
+  application package that a project depends on and whose installer option or
+  steps require other application packages now pulls them into the ordinary
+  resolution: each required package is a transitive `vibe.lock` row whose new
+  `required_by` field names the requiring row and the scope (`build` /
+  `runtime`); locks without the field load unchanged. The project home installs
+  a requirement from its lock row only (offline-capable, never from a
+  registry), and removing the dependency row removes the requirer and its
+  orphaned requirements from the project home (`#uninstall-tree`).
+- **Licenses of requirements (PROP-065 `#license`).** A required package that
+  declares a license is accepted exactly like the package that requires it:
+  `--accept-license` admits it unattended, an attended terminal asks once, and
+  `--assume-yes` alone is a planning refusal naming the requirement.
+- **Agent steps see their requirements.** The child of an `agent` step receives
+  the same requirement-first PATH (and `VIBE_APP_USE`) a recipe step of the same
+  option receives (PROP-065 `#app-dependencies`, PROP-064 `#envelope`).
+- **Native payload separators (B-223).** Removal plans, uninstall summaries and
+  every other owned-payload path are joined component by component, so Windows
+  prints `opt\apps\vim\…` instead of `opt\apps/vim/…`.
+
 ## [1.0.8] — 2026-10-31
 
 - **User applications rebuilt on a clean contract (PROP-059).** `vibe install -g`

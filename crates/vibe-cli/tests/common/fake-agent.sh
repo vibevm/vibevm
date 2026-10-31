@@ -13,7 +13,7 @@ for arg in "$@"; do
 done
 : > "$record/env"
 for name in VIBE_HOOK_STEP VIBE_HOOK_RUN VIBE_HOOK_PROMPT_FILE VIBE_HOOK_CONTEXT_FILE \
-  VIBE_WORK VIBE_SOURCES VIBE_OUT VIBE_PACKAGE VIBE_APP_ROOT FAKE_AGENT_NAME; do
+  VIBE_WORK VIBE_SOURCES VIBE_OUT VIBE_PACKAGE VIBE_APP_ROOT FAKE_AGENT_NAME PATH VIBE_APP_USE; do
   printf '%s=%s\n' "$name" "$(printenv "$name")" >> "$record/env"
 done
 pwd > "$record/cwd"

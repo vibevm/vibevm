@@ -270,7 +270,9 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p, 
         };
 
         let mut requirements = Vec::new();
-        for dep in &manifest.requires.packages {
+        // `[requires.packages]` plus an application's installer
+        // requirements (PROP-065 #app-dependencies).
+        for dep in &manifest.resolution_requires() {
             let Some(dep_group) = dep.group.clone() else {
                 self.record_error(DepProviderError::Other(format!(
                     "dependency `{}` of `{group}/{name}` is not group-qualified",

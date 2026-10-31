@@ -5,6 +5,7 @@
 //! requirement on the requiring steps' PATH.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#license");
 
 use std::collections::BTreeSet;
 
@@ -16,7 +17,7 @@ use crate::exposure::exposure_of;
 use crate::index::{Index, Installation, Mark, Requirement};
 use crate::resolve::qualified_ref;
 use crate::select::{InstallChoice, select_option};
-use crate::steps::{Plan, PlannedDependency, StepPaths};
+use crate::steps::{Plan, PlannedDependency, StepPaths, admit_license};
 use crate::storage::Storage;
 
 use super::{InstallRequest, OperationContext};
@@ -24,7 +25,12 @@ use super::{InstallRequest, OperationContext};
 /// Resolve one `requires` entry of `owner`: an installed version that
 /// satisfies it is used as is (the newest one that is not a kept previous
 /// installation), otherwise the caller's resolver names the package and
-/// its installer option for this host is chosen without asking.
+/// its installer option for this host is chosen without asking. A license
+/// of a requirement to install is consented to like the owner's
+/// (`PROP-065#license`): outside an attended terminal only
+/// `accept_license` admits it, and its absence refuses the whole plan
+/// before anything is fetched; an attended terminal asks once, when the
+/// requirement itself is planned.
 pub(super) fn resolve_requirement(
     ctx: &OperationContext<'_>,
     index: &Index,
@@ -32,6 +38,7 @@ pub(super) fn resolve_requirement(
     spelling: &str,
     scope: RequirementScope,
     step: Option<&str>,
+    accept_license: bool,
 ) -> Result<PlannedDependency, AppError> {
     let unresolved = |reason: String| -> AppError {
         LifecycleError::RequirementUnresolved {
@@ -87,6 +94,16 @@ pub(super) fn resolve_requirement(
     let resolved = resolver(spelling).map_err(|error| unresolved(error.to_string()))?;
     let option = select_option(&resolved.options, &InstallChoice::default(), None)
         .map_err(|error| unresolved(error.to_string()))?;
+    if ctx.chooser.is_none() {
+        admit_license(
+            &option,
+            &resolved.package.key(),
+            &resolved.root,
+            accept_license,
+            None,
+            None,
+        )?;
+    }
     Ok(PlannedDependency {
         package: spelling.into(),
         scope,
@@ -120,10 +137,12 @@ pub(super) fn enter(stack: &mut Vec<String>, key: &str) -> Result<(), AppError> 
 
 /// Install every requirement of `plan` that is not installed yet, in plan
 /// order, hidden for build scope and exposed for runtime scope, marked
-/// `auto`; then expose each requirement for the steps that need it.
+/// `auto`, under the requiring command's `--accept-license`; then expose
+/// each requirement for the steps that need it.
 pub(super) fn install_required(
     ctx: &OperationContext<'_>,
     plan: &Plan,
+    accept_license: bool,
     stack: &mut Vec<String>,
 ) -> Result<StepPaths, AppError> {
     let mut done = BTreeSet::new();
@@ -146,6 +165,7 @@ pub(super) fn install_required(
             },
             hidden: dependency.hidden,
             mark: Mark::Auto,
+            accept_license,
             ..InstallRequest::default()
         };
         super::install_locked(ctx, resolved, &request, stack)?;

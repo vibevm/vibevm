@@ -2450,5 +2450,5 @@ structure, and it goes when the file does.
 | @fact:B223-WHAT **what** | Removal plans and uninstall summaries on Windows print the owned payload as `C:\…\opt\apps/vim/org.vibevm.apps.vim@1.1.0` — the library root with backslashes, the per-application part joined with forward slashes. The path works; the display is inconsistent with every other path vibe prints. |
 | @fact:B223-EVIDENCE **evidence** | MT-04 automated run of 2026-10-31 on `base` (`uninstall --plan-only`, `app autoremove --plan-only`, the uninstall summary line). |
 | @fact:B223-SEVERITY **severity** | P3 — cosmetic. |
-| @fact:B223-DISPOSITION **disposition** | `candidate` — normalise the joined relative part through `Path` components instead of a string join. |
+| @fact:B223-DISPOSITION **disposition** | `done` — landed in APP-STEPS Q4 (`(this wave)`): the library-relative directory is joined through `Path` one component at a time (`vibe-app` `launch::library_path`), so every platform prints native separators. |
 | @fact:B223-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |

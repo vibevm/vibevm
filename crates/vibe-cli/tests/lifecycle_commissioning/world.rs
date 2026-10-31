@@ -178,6 +178,7 @@ fn sanitize_lock(raw: &Lockfile) -> Lockfile {
                 boot_snippet: None,
                 files_written: Vec::new(),
                 dependencies: source.dependencies.clone(),
+                required_by: Vec::new(),
                 admitted_by: None,
                 via_override: None,
                 overridden: false,

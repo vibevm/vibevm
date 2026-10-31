@@ -507,6 +507,9 @@ pub(crate) fn build_resolved_graph(
                 };
             }
         }
+        // Two requirements of one package pin to the same reference.
+        let mut seen = HashSet::new();
+        node.dependencies.retain(|dep| seen.insert(dep.to_string()));
     }
 
     ResolvedGraph { packages }

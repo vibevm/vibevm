@@ -276,6 +276,7 @@ mod tests {
             boot_snippet: None,
             files_written: Vec::new(),
             dependencies: Vec::new(),
+            required_by: Vec::new(),
             admitted_by: admitted_by.map(str::to_string),
             via_override: None,
             overridden: false,

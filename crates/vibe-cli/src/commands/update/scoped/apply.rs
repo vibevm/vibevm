@@ -213,6 +213,14 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
             None => lockfile.packages.push(entry),
         }
     }
+    // Re-read the updated rows as requirers (PROP-065 `#app-dependencies`).
+    lockfile.record_app_requirements(|row| {
+        updated
+            .iter()
+            .map(|(cached, ..)| cached)
+            .find(|cached| cached.resolved.group == row.group && cached.resolved.name == row.name)
+            .map(|cached| &cached.manifest)
+    });
     lockfile.meta.generated_at = crate::commands::init::current_timestamp_utc();
     let recording = ctx.progress().task("Recording updated dependency lock");
     if let Err(error) = lockfile.write(workspace.lockfile_path()) {

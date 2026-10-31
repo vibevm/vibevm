@@ -75,7 +75,7 @@ pub fn relocate(settings: &SettingsRoot, spelling: &str, to: &str) -> Result<Mov
     if to == from {
         return Err(StorageError::SameLibrary { key, library: from }.into());
     }
-    let target = storage.usable(to)?.join(&directory);
+    let target = crate::launch::library_path(&storage.usable(to)?, &directory);
     if fs::symlink_metadata(&target).is_ok() {
         return Err(StorageError::DestinationOccupied {
             path: target.display().to_string(),

@@ -104,7 +104,7 @@ fn update_locked(
         ask: false,
     };
     let plan = plan_option(ctx, resolved, &option, request, Some(previous), &index)?;
-    let paths = deps::install_required(ctx, &plan, stack)?;
+    let paths = deps::install_required(ctx, &plan, request.accept_license, stack)?;
     let moved = prior_key != key;
     let mut applied = apply::apply(
         ctx,

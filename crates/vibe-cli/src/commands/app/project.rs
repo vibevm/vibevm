@@ -14,8 +14,8 @@ use vibe_app::{
     Index, InstallChoice, InstallRequest, OperationContext, PackageCoordinate, ResolvedPackage,
     SettingsRoot,
 };
-use vibe_core::PackageKind;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest};
+use vibe_core::{PackageKind, PackageRef};
 use vibe_workspace::vibedeps;
 
 use super::agents::{AgentSetup, report_parked};
@@ -40,8 +40,6 @@ struct Materialise<'a> {
     /// `group/name` of the packages `--hidden` names (PROP-059
     /// `#hidden-installations`).
     hidden: Vec<(String, String)>,
-    /// The explicit registry requirements resolve from besides the lockfile.
-    registry: Option<PathBuf>,
 }
 
 /// `vibe install [PACKAGE…]` inside a project: the ordinary project install,
@@ -73,7 +71,6 @@ pub(crate) fn install(
     } else {
         Vec::new()
     };
-    let registry = args.registry.clone();
     install::run_direct(ctx, args, embedded_root, root_offline)?;
     let Some(root) = home::project_at(&path)? else {
         return Ok(());
@@ -87,7 +84,6 @@ pub(crate) fn install(
             offline,
             root: &root,
             hidden,
-            registry,
         },
     )
 }
@@ -118,7 +114,6 @@ pub(crate) fn update(
         offline: root_offline,
         root,
         hidden: Vec::new(),
-        registry: args.registry.clone(),
     };
     project_update::run(ctx, args, embedded_root, root_offline)?;
     materialise(ctx, &flags)
@@ -136,9 +131,9 @@ pub(crate) fn uninstall(
     let settings = SettingsRoot::project(root, &global::settings_root()?);
     let installed = installed_app_dependency(root, &settings, &args.package)?;
     let mut outcomes = Vec::new();
+    let observe = Observation::new(ctx, true)?;
     if !installed.is_empty() {
         let proxy_image = global::proxy_image()?;
-        let observe = Observation::new(ctx, true)?;
         let operation = OperationContext {
             chooser: None,
             feature_chooser: None,
@@ -155,6 +150,13 @@ pub(crate) fn uninstall(
         }
     }
     project_uninstall::run(ctx, args)?;
+    outcomes.extend(remove_unrecorded(
+        ctx,
+        root,
+        &settings,
+        root_offline,
+        &observe,
+    )?);
     for outcome in outcomes {
         ctx.summary(&format!(
             "vibe uninstall: application `{}` — {} in the project home `{}`",
@@ -199,19 +201,61 @@ fn installed_app_dependency(
         .collect())
 }
 
-/// Install every app dependency of the lockfile whose key the project home
-/// lacks; a key already installed is skipped.
+/// Bring the project home to the lockfile: install every app dependency
+/// it records that the home lacks (a key already installed is skipped),
+/// then remove what it no longer records. A row that only another locked
+/// application requires is installed on that requirer's behalf, from its
+/// lock row (PROP-065 `#app-dependencies`).
 fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
     let settings = SettingsRoot::project(flags.root, &global::settings_root()?);
-    let index = Index::load(&settings)?;
-    let pending: Vec<LockedPackage> = app_dependencies(flags.root)?
-        .into_iter()
-        .filter(|package| !index.installations.contains_key(&coordinate(package).key()))
+    let locked = app_dependencies(flags.root)?;
+    if locked.is_empty() && !settings.path().join("applications").exists() {
+        return Ok(());
+    }
+    let observe = Observation::new(ctx, true)?;
+    install_pending(ctx, flags, &settings, &locked, &observe)?;
+    for outcome in remove_unrecorded(ctx, flags.root, &settings, flags.offline, &observe)? {
+        ctx.summary(&format!(
+            "vibe {}: application `{}` — {} in the project home `{}` (vibe.lock no longer records it)",
+            flags.verb,
+            outcome.slot,
+            outcome.message,
+            settings.path().display()
+        ));
+    }
+    Ok(())
+}
+
+/// Install the lockfile's app dependencies the project home lacks.
+fn install_pending(
+    ctx: &output::Context,
+    flags: &Materialise<'_>,
+    settings: &SettingsRoot,
+    locked: &[LockedPackage],
+    observe: &Observation,
+) -> Result<()> {
+    let index = Index::load(settings)?;
+    let roots = root_dependencies(flags.root)?;
+    let missing =
+        |package: &&LockedPackage| !index.installations.contains_key(&coordinate(package).key());
+    let pending: Vec<&LockedPackage> = locked
+        .iter()
+        .filter(|package| !requirement_only(package, &roots))
+        .filter(missing)
         .collect();
     if pending.is_empty() {
         return Ok(());
     }
-    consent(&pending, &settings, flags)?;
+    let requirements: Vec<&LockedPackage> = locked
+        .iter()
+        .filter(|package| requirement_only(package, &roots))
+        .filter(missing)
+        .collect();
+    consent(
+        pending.iter().chain(&requirements).copied(),
+        settings,
+        flags,
+    )?;
     if !settings.path().exists() {
         let entry = vibe_app::PROJECT_HOME.join("/");
         vibedeps::ensure_gitignored(flags.root, &entry)
@@ -219,37 +263,34 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
     }
     let proxy_image = global::proxy_image()?;
     let show = global::plan_printer(ctx);
-    let observe = Observation::new(ctx, true)?;
     let agents = AgentSetup::new(ctx, None, flags.consent)?;
-    let packages = global::Packages {
-        settings: global::settings_root()?,
-        registry: flags.registry.clone(),
-        embedded: None,
-        offline: flags.offline,
-    };
-    let locked = app_dependencies(flags.root)?;
-    // A requirement the lockfile records materialises from that record;
-    // anything else resolves like the package itself (PROP-065
-    // `#app-dependencies`).
+    // A requirement materialises from its lock row, offline-capable, never
+    // from a registry (PROP-065 `#app-dependencies`).
     let resolver = |spelling: &str| -> std::result::Result<ResolvedPackage, vibe_app::AppError> {
         let requested = vibe_app::qualified_ref(spelling)?;
-        let row = locked.iter().find(|package| {
-            requested.group.as_ref() == Some(&package.group)
-                && requested.name == package.name
-                && requested.version.matches(&package.version)
-        });
-        match row {
-            Some(package) => from_slot(flags.root, package).map_err(|error| {
-                vibe_app::ResolveError::Registry {
-                    spelling: spelling.into(),
-                    reason: format!("{error:#}"),
-                }
-                .into()
-            }),
-            None => packages.resolve(spelling),
-        }
+        let unrecorded = |reason: String| -> vibe_app::AppError {
+            vibe_app::ResolveError::Registry {
+                spelling: spelling.into(),
+                reason,
+            }
+            .into()
+        };
+        let row = locked
+            .iter()
+            .find(|package| {
+                requested.group.as_ref() == Some(&package.group)
+                    && requested.name == package.name
+                    && requested.version.matches(&package.version)
+            })
+            .ok_or_else(|| {
+                unrecorded(
+                    "vibe.lock records no row satisfying it; run `vibe install` to resolve the project again"
+                        .into(),
+                )
+            })?;
+        from_slot(flags.root, row).map_err(|error| unrecorded(format!("{error:#}")))
     };
-    for package in &pending {
+    for package in pending {
         let resolved = from_slot(flags.root, package)?;
         let request = &InstallRequest {
             hidden: flags.hidden.iter().any(|(group, name)| {
@@ -257,7 +298,7 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
             }),
             ..flags.request.clone()
         };
-        let previous = Index::load(&settings)?
+        let previous = Index::load(settings)?
             .installations
             .values()
             .any(|record| record.package.same_package(&resolved.package));
@@ -267,11 +308,11 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
                 resolver: Some(&resolver),
                 ..global::operation(
                     ctx,
-                    &settings,
+                    settings,
                     flags.offline,
                     &proxy_image,
                     Some(&show),
-                    &observe,
+                    observe,
                 )
             };
             report_parked(
@@ -294,10 +335,50 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
     Ok(())
 }
 
+/// Remove every project-home installation the lockfile no longer records
+/// (PROP-065 `#uninstall-tree`: deleting the dependency row leads to the
+/// same removal in the project home, orphans included).
+fn remove_unrecorded(
+    ctx: &output::Context,
+    root: &Path,
+    settings: &SettingsRoot,
+    offline: bool,
+    observe: &Observation,
+) -> Result<Vec<vibe_app::Outcome>> {
+    if !settings.path().join("applications").exists() {
+        return Ok(Vec::new());
+    }
+    let locked = app_dependencies(root)?;
+    let proxy_image = global::proxy_image()?;
+    let recorded = |package: &PackageCoordinate| {
+        locked
+            .iter()
+            .any(|row| coordinate(row).key() == package.key())
+    };
+    let outcomes = ctx.suspend_progress(|| {
+        let operation = OperationContext {
+            chooser: None,
+            feature_chooser: None,
+            ..global::operation(ctx, settings, offline, &proxy_image, None, observe)
+        };
+        vibe_app::remove_unrecorded(&operation, &recorded)
+    })?;
+    Ok(outcomes)
+}
+
+/// A lock row that another locked application requires and the project
+/// does not name itself: it is installed only through its requirer.
+fn requirement_only(package: &LockedPackage, roots: &[PackageRef]) -> bool {
+    !package.required_by.is_empty()
+        && !roots
+            .iter()
+            .any(|root| root.group.as_ref() == Some(&package.group) && root.name == package.name)
+}
+
 /// Installers run package-authored code: like `vibe bin build`, only the
 /// allow-listed group proceeds without `--assume-yes` (or `--unattended`).
-fn consent(
-    pending: &[LockedPackage],
+fn consent<'p>(
+    pending: impl Iterator<Item = &'p LockedPackage>,
     settings: &SettingsRoot,
     flags: &Materialise<'_>,
 ) -> Result<()> {
@@ -305,7 +386,6 @@ fn consent(
         return Ok(());
     }
     let refused: Vec<String> = pending
-        .iter()
         .filter(|package| package.group.to_string() != ALLOW_LISTED_GROUP)
         .map(|package| coordinate(package).key())
         .collect();
@@ -335,6 +415,16 @@ fn app_dependencies(root: &Path) -> Result<Vec<LockedPackage>> {
         .into_iter()
         .filter(|package| package.kind == PackageKind::App)
         .collect())
+}
+
+/// The project's direct dependencies as the lockfile records them.
+fn root_dependencies(root: &Path) -> Result<Vec<PackageRef>> {
+    let path = root.join(Lockfile::FILENAME);
+    if !path.is_file() {
+        return Ok(Vec::new());
+    }
+    let lock = Lockfile::read(&path).with_context(|| format!("reading `{}`", path.display()))?;
+    Ok(lock.meta.root_dependencies)
 }
 
 fn coordinate(package: &LockedPackage) -> PackageCoordinate {

@@ -11,7 +11,9 @@ mod validation;
 mod wizard;
 mod wizard_validation;
 
-pub use requirement::{RequirementDecl, RequirementScope, RequirementTable};
+pub use requirement::{
+    RequirementDecl, RequirementScope, RequirementTable, application_requirements,
+};
 pub use steps::{
     AgentMode, ArchiveFormatDecl, Condition, ExternalResult, FeatureDecl, NativeFormatDecl, Need,
     OwnedWord, ParamEquals, ResultDecl, StepDecl, StepKind, StepOrigin, StepPhase,

@@ -68,7 +68,7 @@ pub(crate) fn prescan<P: VersionEnumerator>(provider: &P, roots: &[PackageRef]) 
                     provided_version: capability_version_for_provider(cap, &v),
                 });
             }
-            for d in &manifest.requires.packages {
+            for d in &manifest.resolution_requires() {
                 if let Some(g) = d.group.clone() {
                     queue.push_back((g, d.name.to_string()));
                 }

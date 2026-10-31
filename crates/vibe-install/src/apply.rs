@@ -31,7 +31,8 @@ use crate::lifecycle::{
 use crate::plan::PlannedInstall;
 use crate::record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, locked_package_from_fetched,
-    merge_manifest_requires, merge_root_dependencies, replace_root_dependencies,
+    merge_manifest_requires, merge_root_dependencies, record_app_requirements,
+    replace_root_dependencies,
 };
 use crate::slot_verify::RegistrySlotVerifier;
 
@@ -533,6 +534,7 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
             resolved_language.as_deref(),
         ));
     }
+    record_app_requirements(&mut lockfile, &fetched);
     lockfile.meta.generated_at = vibe_core::timestamp::now_utc();
     if !language_chain.is_empty() && language_chain != ["en"] {
         lockfile.meta.language_chain = language_chain.clone();
