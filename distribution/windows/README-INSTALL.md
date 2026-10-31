@@ -1,6 +1,6 @@
-# vibe 1.0.7 for Windows x86_64
+# vibe 1.0.8 for Windows x86_64
 
-This zip is the Windows x86_64 distribution of `vibe` 1.0.7.
+This zip is the Windows x86_64 distribution of `vibe` 1.0.8.
 
 ## Install
 
@@ -14,7 +14,7 @@ This zip is the Windows x86_64 distribution of `vibe` 1.0.7.
    ```
 
 The installer verifies `vibe.exe` against `SHA256SUMS.txt`, imports the
-release into `%USERPROFILE%\.vibe\opt`, activates `tag:1.0.7`, writes stable
+release into `%USERPROFILE%\.vibe\opt`, activates `tag:1.0.8`, writes stable
 shims under `%USERPROFILE%\.vibe\opt\bin`, and safely ensures that shim
 directory is at the front of the user `PATH`. Open a new terminal after the
 install so it inherits the updated `PATH`.
@@ -49,8 +49,8 @@ vibe self which
 vibe self ls
 ```
 
-The version command must print `vibe 1.0.7`, and the active line must begin
-with `tag:1.0.7` (the following `#N` is the immutable instance number).
+The version command must print `vibe 1.0.8`, and the active line must begin
+with `tag:1.0.8` (the following `#N` is the immutable instance number).
 
 `SHA256SUMS.txt` detects accidental corruption only. It is not a signature or
 proof of authenticity.

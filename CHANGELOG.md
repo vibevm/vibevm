@@ -8,6 +8,8 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+## [1.0.8] — 2026-10-31
+
 - **User applications rebuilt on a clean contract (PROP-059).** `vibe install -g`
   installs an app package through its author-declared platform / architecture /
   installer options — shell commands, ZIP and tar.gz payloads, Windows EXE and
