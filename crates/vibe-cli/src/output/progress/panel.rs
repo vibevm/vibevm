@@ -9,6 +9,7 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
+use super::vocabulary::TreeGlyphs;
 use super::{InteractiveRenderer, InteractiveTask, ProgressRenderer, Renderer};
 
 /// How often a step panel's fold is rewritten (PROP-060 `#COST`: a chatty
@@ -120,6 +121,7 @@ impl InteractiveRenderer {
 /// is new.
 pub(super) fn push_tail(
     multi: &MultiProgress,
+    tree: &TreeGlyphs,
     task: &mut InteractiveTask,
     line: &str,
     panel: &Panel,
@@ -141,7 +143,9 @@ pub(super) fn push_tail(
         bar.set_style(tail_style());
         task.tail_bars.push(bar);
     }
-    let indent = "  ".repeat(task.depth + 1);
+    // Under the step's own vertical, so a folded line starts in the
+    // step's label column (PROP-065 `#display`).
+    let indent = tree.under(task.depth);
     for (bar, line) in task.tail_bars.iter().zip(&task.tail) {
         bar.set_message(format!("{indent}{line}"));
     }

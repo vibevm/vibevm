@@ -23,8 +23,11 @@ use serde_json::Value;
 fn without_an_agent_the_step_is_skipped_and_announced_before_anything_runs() {
     let fixture = Fixture::new("");
     let plan = ok(&run(fixture.app(&["app", "plan"], &[])));
+    // A tree node per step, the reason on a continuation line under it
+    // (PROP-065 `#plan`).
     assert!(
-        plan.contains("skip  fix (agent)") && plan.contains("skipped: no agent configured"),
+        plan.contains("\u{251c}\u{2500}  2. skip  fix (agent)")
+            && plan.contains("\u{2502}            skipped: no agent configured"),
         "{plan}"
     );
     assert!(

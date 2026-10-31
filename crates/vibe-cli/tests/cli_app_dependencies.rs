@@ -127,9 +127,11 @@ fn a_build_requirement_is_installed_hidden_exposed_to_its_step_and_autoremoved()
         "the requirement is resolved and met the step's command need"
     );
     let text = ok(&apps.app(&["app", "plan"], "org.example/consumer", &[]));
-    let dependency = text
-        .find("requires install org.example/toolchain@1.0.0 (build, hidden)")
-        .unwrap_or_else(|| panic!("{text}"));
+    // The requirement is a child node of the step that names it, with no
+    // `installed` word because it will be installed first
+    // (PROP-065 `#plan`).
+    let marker = "\u{2514}\u{2500} requires org.example/toolchain@1.0.0 (build, hidden) for `org";
+    let dependency = text.find(marker).unwrap_or_else(|| panic!("{text}"));
     let step = text
         .find("1. run   build")
         .unwrap_or_else(|| panic!("{text}"));

@@ -26,7 +26,7 @@ pub(crate) use env::StepPaths;
 pub use features::{FeatureRequest, FeatureResolution, Implied, ImpliedRule, resolve_features};
 pub(crate) use params::admit_license;
 pub use params::{LicensePrompt, ParamValue, ParameterPrompt, PlanLicense, step_env_name};
-pub use plan::{FeatureChooser, HostFacts, Plan, PlannedDependency, PlannedStep};
+pub use plan::{FeatureChooser, HostFacts, Plan, PlannedDependency, PlannedStep, RequiredBy};
 pub(crate) use plan::{PlanInput, Previous, Prompts, RequirementResolver, plan};
 pub(crate) use run::{Run, RunFlags};
 pub(crate) use runs::{RunOutcome, RunRecord};

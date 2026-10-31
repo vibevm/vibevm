@@ -400,6 +400,24 @@ fn a_tool_drives_describe_plan_install_runs_cancel_and_errors() {
     );
     assert_eq!(plan["license"]["accepted"], true);
     assert_eq!(plan["steps"][3]["action"], "run");
+    // The tree belongs to the text plan alone: `vibe-app-plan/1` keeps
+    // its flat step array (PROP-065 `#plan`).
+    let document = fixture.run(&args);
+    assert!(
+        !String::from_utf8_lossy(&document.stdout).contains('\u{251c}'),
+        "the JSON plan carries no tree glyph"
+    );
+    let mut text_args = vec!["app", "plan", NAME, "--accept-license"];
+    text_args.extend_from_slice(&choice);
+    let text = String::from_utf8(fixture.run(&text_args).stdout).unwrap();
+    assert!(
+        text.lines()
+            .any(|line| line.starts_with("    \u{251c}\u{2500} "))
+            && text
+                .lines()
+                .any(|line| line.starts_with("    \u{2514}\u{2500} ")),
+        "the text plan draws its steps as a tree: {text}"
+    );
 
     // plan refusals: exit 2 with a stable code, nothing downloaded.
     let mut met = Vec::new();

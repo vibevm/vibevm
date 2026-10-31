@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-060#DISPLAY");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#display");
 
+use console::Style;
 use indicatif::{MultiProgress, ProgressBar, ProgressDrawTarget};
 use std::collections::BTreeMap;
 use std::io::{self, Write};
@@ -20,9 +21,12 @@ use sanitize::MAX_MESSAGE_CHARS;
 use sanitize::sanitize;
 pub(crate) use sanitize::sanitize_progress_text;
 use vocabulary::{
-    bar_style, bytes_bar_style, bytes_spinner_style, diagnostic_marker, diagnostic_word,
-    format_elapsed, human_bytes, indent_label, measured_spinner_style, spinner_style,
+    TreeGlyphs, bar_style, bytes_bar_style, bytes_spinner_style, diagnostic_marker,
+    diagnostic_word, format_elapsed, human_bytes, measured_spinner_style, spinner_style,
 };
+
+/// The marker of a step nothing ran on; its whole row is dim.
+const SKIPPED: &str = "•";
 
 const PLAIN_UPDATE_INTERVAL: Duration = Duration::from_secs(1);
 const WAIT_INTERVAL: Duration = Duration::from_secs(15);
@@ -53,6 +57,9 @@ struct InteractiveRenderer {
     tasks: Mutex<BTreeMap<TaskId, InteractiveTask>>,
     /// Set while an application step panel renders (PROP-065 `#display`).
     panel: Mutex<Option<Panel>>,
+    /// The glyphs nested tasks are drawn with, decided once (PROP-060
+    /// `#DISPLAY`).
+    tree: TreeGlyphs,
 }
 
 struct InteractiveTask {
@@ -109,6 +116,7 @@ impl ProgressRenderer {
                 multi,
                 tasks: Mutex::new(BTreeMap::new()),
                 panel: Mutex::new(None),
+                tree: TreeGlyphs::detect(),
             }),
             verbose,
         }
@@ -121,6 +129,7 @@ impl ProgressRenderer {
                 multi: MultiProgress::with_draw_target(target),
                 tasks: Mutex::new(BTreeMap::new()),
                 panel: Mutex::new(None),
+                tree: TreeGlyphs::detect(),
             }),
             verbose,
         })
@@ -188,7 +197,7 @@ impl InteractiveRenderer {
                     .unwrap_or(0);
                 let bar = self.multi.add(ProgressBar::new_spinner());
                 bar.set_style(spinner_style());
-                bar.set_message(indent_label(depth, &label));
+                bar.set_message(self.tree.label(depth, &label));
                 bar.enable_steady_tick(Duration::from_millis(120));
                 tasks.insert(
                     event.task_id,
@@ -242,12 +251,12 @@ impl InteractiveRenderer {
                     if panel.expanded.load(Ordering::SeqCst) {
                         let _ = self.multi.println(line);
                     } else if let Some(task) = tasks.get_mut(&event.task_id) {
-                        push_tail(&self.multi, task, &line, &panel);
+                        push_tail(&self.multi, &self.tree, task, &line, &panel);
                     }
                 } else if verbose && let Some(task) = tasks.get(&event.task_id) {
                     let _ = self.multi.println(format!(
                         "{}· {}: {}",
-                        "  ".repeat(task.depth + 1),
+                        self.tree.under(task.depth),
                         task.label,
                         sanitize(&message)
                     ));
@@ -257,7 +266,7 @@ impl InteractiveRenderer {
                 if let Some(task) = tasks.get(&event.task_id) {
                     let _ = self.multi.println(format!(
                         "{}{} {}: {}",
-                        "  ".repeat(task.depth + 1),
+                        self.tree.under(task.depth),
                         diagnostic_marker(level),
                         task.label,
                         sanitize(&message)
@@ -265,33 +274,23 @@ impl InteractiveRenderer {
                 }
             }
             ProgressEventKind::Finished => {
-                finish_interactive(
-                    &self.multi,
-                    &mut tasks,
-                    event.task_id,
-                    "✓",
-                    None,
-                    event.elapsed,
-                );
+                self.terminal_row(&mut tasks, event.task_id, "✓", None, event.elapsed);
             }
-            ProgressEventKind::Skipped { reason } => finish_interactive(
-                &self.multi,
+            ProgressEventKind::Skipped { reason } => self.terminal_row(
                 &mut tasks,
                 event.task_id,
-                "•",
+                SKIPPED,
                 Some(&sanitize(&reason)),
                 event.elapsed,
             ),
-            ProgressEventKind::Failed { message } => finish_interactive(
-                &self.multi,
+            ProgressEventKind::Failed { message } => self.terminal_row(
                 &mut tasks,
                 event.task_id,
                 "✗",
                 Some(&sanitize(&message)),
                 event.elapsed,
             ),
-            ProgressEventKind::Stopped => finish_interactive(
-                &self.multi,
+            ProgressEventKind::Stopped => self.terminal_row(
                 &mut tasks,
                 event.task_id,
                 "!",
@@ -300,31 +299,37 @@ impl InteractiveRenderer {
             ),
         }
     }
-}
 
-fn finish_interactive(
-    multi: &MultiProgress,
-    tasks: &mut BTreeMap<TaskId, InteractiveTask>,
-    id: TaskId,
-    marker: &str,
-    detail: Option<&str>,
-    elapsed: Duration,
-) {
-    let Some(mut task) = tasks.remove(&id) else {
-        return;
-    };
-    clear_tail(multi, &mut task);
-    task.bar.disable_steady_tick();
-    task.bar.finish_and_clear();
-    let detail = detail.map(|text| format!(" — {text}")).unwrap_or_default();
-    let _ = multi.println(format!(
-        "{}{} {}{} [{}]",
-        "  ".repeat(task.depth),
-        marker,
-        task.label,
-        detail,
-        format_elapsed(elapsed)
-    ));
+    /// The record one task leaves behind: its marker in the gutter every
+    /// row starts with, then its own place in the tree. A skipped row is
+    /// dim, because nothing happened on it.
+    fn terminal_row(
+        &self,
+        tasks: &mut BTreeMap<TaskId, InteractiveTask>,
+        id: TaskId,
+        marker: &str,
+        detail: Option<&str>,
+        elapsed: Duration,
+    ) {
+        let Some(mut task) = tasks.remove(&id) else {
+            return;
+        };
+        clear_tail(&self.multi, &mut task);
+        task.bar.disable_steady_tick();
+        task.bar.finish_and_clear();
+        let detail = detail.map(|text| format!(" — {text}")).unwrap_or_default();
+        let row = format!(
+            "{marker} {}{detail} [{}]",
+            self.tree.label(task.depth, &task.label),
+            format_elapsed(elapsed)
+        );
+        let row = if marker == SKIPPED {
+            Style::new().for_stderr().dim().apply_to(row).to_string()
+        } else {
+            row
+        };
+        let _ = self.multi.println(row);
+    }
 }
 
 impl PlainRenderer {

@@ -7,7 +7,28 @@ use vibe_core::manifest::{RequirementScope, StepPhase};
 use vibe_wire::generated::application_plan as wire;
 
 use super::features::ImpliedRule;
-use super::plan::{Plan, PlannedDependency};
+use super::plan::{Plan, PlannedDependency, PlannedStep};
+
+/// The glyphs the text plan draws its step tree with (`PROP-065#plan`).
+///
+/// Unconditional: unlike the renderer's own vocabulary, which falls back
+/// to ASCII on the one terminal family `console` reports as having no
+/// vocabulary at all, `vibe-app` consults no host fact — a plan is a
+/// document the caller prints, and the caller's terminal is not this
+/// library's to ask about.
+mod glyph {
+    /// A step that has siblings below it.
+    pub(super) const BRANCH: &str = "├─ ";
+    /// The last step of the tree.
+    pub(super) const LAST: &str = "└─ ";
+    /// Under a step that has siblings below it.
+    pub(super) const STEM: &str = "│  ";
+    /// Under the last step: its own children still need the width.
+    pub(super) const GAP: &str = "   ";
+}
+
+/// How far the tree is indented under the `steps` row.
+const TREE: &str = "    ";
 
 impl Plan {
     /// The `vibe-app-plan/1` document; secret parameter values are omitted.
@@ -114,9 +135,12 @@ impl Plan {
         }
     }
 
-    /// The plan as text: the package, its fields aligned, then one
-    /// numbered step per block with its title, reason, needs and
-    /// requirements on indented lines.
+    /// The plan as text: the package, its fields aligned, then the steps
+    /// as a tree — one node per step carrying its number, its `run` /
+    /// `skip` word, its `id (kind)` and its title in their own columns,
+    /// with the reason and the needs on continuation lines under the
+    /// label column and each requirement as a child node
+    /// (`PROP-065#plan`).
     ///
     /// ```
     /// # use vibe_app::{Plan, PackageCoordinate};
@@ -126,7 +150,7 @@ impl Plan {
     ///     option: "src".into(), platform: "linux".into(), arch: "x86_64".into(),
     ///     result: ResultDecl::owned(), declared: vec![], profile: None, features: vec![],
     ///     implied: vec![], parameters: vec![], license: None, download_bytes: 0, unknown_sizes: 0,
-    ///     dependencies: vec![], steps: vec![], warnings: vec![],
+    ///     dependencies: vec![], steps: vec![], warnings: vec![], required_by: None,
     /// };
     /// assert!(plan.render().starts_with("plan for org.example/tool@1.0.0"));
     /// ```
@@ -135,7 +159,16 @@ impl Plan {
             Some(root) => format!("external `{root}`"),
             None => "owned".into(),
         };
-        let mut text = format!("plan for {}\n", self.package.key());
+        // A requirement's own plan is printed between the requiring plan
+        // and its first step, so the header says whose it is.
+        let whose = match &self.required_by {
+            Some(owner) => match &owner.step {
+                Some(step) => format!("  (required by {} for step {step})", owner.package),
+                None => format!("  (required by {})", owner.package),
+            },
+            None => String::new(),
+        };
+        let mut text = format!("plan for {}{whose}\n", self.package.key());
         let field = |text: &mut String, name: &str, value: &str| {
             text.push_str(&format!("  {name:<10} {value}\n"));
         };
@@ -206,24 +239,46 @@ impl Plan {
         if !self.steps.is_empty() {
             text.push_str("  steps\n");
         }
-        for (index, planned) in self.steps.iter().enumerate() {
-            let step = &planned.step;
-            let action = if planned.run { "run " } else { "skip" };
-            let phase = if step.phase == StepPhase::Finish {
+        // The number column carries the `--from-step` ordinal. It stays
+        // before the `run` / `skip` word rather than moving behind the
+        // title: a fixed-width cell aligns there whatever the titles do,
+        // and a `#N` after a title would align only by padding the last
+        // column of every row in the tree.
+        let ordinals = self.steps.len().to_string().chars().count().max(2);
+        let identity = |planned: &PlannedStep| {
+            let phase = if planned.step.phase == StepPhase::Finish {
                 " [finish]"
             } else {
                 ""
             };
-            text.push_str(&format!(
-                "    {:>2}. {action}  {} ({}){phase}\n",
+            format!("{} ({}){phase}", planned.step.id, planned.step.kind.name())
+        };
+        let width = self
+            .steps
+            .iter()
+            .map(|planned| identity(planned).chars().count())
+            .max()
+            .unwrap_or(0);
+        // Where a continuation line starts: past the number cell, the
+        // action word and the gap before the identity column.
+        let column = ordinals + 2 + 4 + 2;
+        for (index, planned) in self.steps.iter().enumerate() {
+            let step = &planned.step;
+            let last = index + 1 == self.steps.len();
+            let branch = if last { glyph::LAST } else { glyph::BRANCH };
+            let under = if last { glyph::GAP } else { glyph::STEM };
+            let action = if planned.run { "run " } else { "skip" };
+            let node = format!(
+                "{TREE}{branch}{:>ordinals$}. {action}  {:<width$}  {}",
                 index + 1,
-                step.id,
-                step.kind.name()
-            ));
+                identity(planned),
+                step.title
+            );
+            text.push_str(node.trim_end());
+            text.push('\n');
             let detail = |text: &mut String, line: &str| {
-                text.push_str(&format!("              {line}\n"));
+                text.push_str(&format!("{TREE}{under}{:column$}{line}\n", ""));
             };
-            detail(&mut text, &step.title);
             if let Some(reason) = &planned.reason {
                 detail(&mut text, &format!("skipped: {reason}"));
             }
@@ -231,15 +286,21 @@ impl Plan {
                 let needs: Vec<String> = step.needs.iter().map(ToString::to_string).collect();
                 detail(&mut text, &format!("needs {}", needs.join(", ")));
             }
-            for dependency in self
+            let required: Vec<&PlannedDependency> = self
                 .dependencies
                 .iter()
                 .filter(|dependency| dependency.step.as_deref() == Some(step.id.as_str()))
-            {
-                detail(
-                    &mut text,
-                    &format!("requires {}", dependency_text(dependency)),
-                );
+                .collect();
+            for (place, dependency) in required.iter().enumerate() {
+                let child = if place + 1 == required.len() {
+                    glyph::LAST
+                } else {
+                    glyph::BRANCH
+                };
+                text.push_str(&format!(
+                    "{TREE}{under}{child}requires {}\n",
+                    dependency_text(dependency)
+                ));
             }
         }
         for warning in &self.warnings {
@@ -249,18 +310,22 @@ impl Plan {
     }
 }
 
-/// One requirement of the text plan: `install|use <key> (<scope>[, hidden])
-/// for \`<requirement>\``, shown under the step that needs it or among the
-/// plan's fields when no step does (`PROP-065#app-dependencies`).
+/// One requirement of the text plan: `<key> (<scope>[, hidden]) for
+/// \`<requirement>\``, a child node of the step that needs it or a field
+/// row when no step does (`PROP-065#app-dependencies`).
+///
+/// A requirement already installed says `installed`; one with no such
+/// word is installed first, and its own plan is printed on its own —
+/// headed `required by` — when that install reaches its planner.
 fn dependency_text(dependency: &PlannedDependency) -> String {
-    let action = if dependency.installed {
-        "use"
-    } else {
-        "install"
-    };
     let exposure = if dependency.hidden { ", hidden" } else { "" };
+    let state = if dependency.installed {
+        "  installed"
+    } else {
+        ""
+    };
     format!(
-        "{action} {} ({}{exposure}) for `{}`",
+        "{} ({}{exposure}) for `{}`{state}",
         dependency.key,
         dependency.scope.as_str(),
         dependency.package

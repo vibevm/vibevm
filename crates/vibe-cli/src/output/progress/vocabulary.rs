@@ -40,8 +40,69 @@ pub(super) fn bytes_spinner_style() -> ProgressStyle {
         .unwrap_or_else(|_| ProgressStyle::default_spinner())
 }
 
-pub(super) fn indent_label(depth: usize, label: &str) -> String {
-    format!("{}{}", "  ".repeat(depth), label)
+/// The width of the spinner-or-marker column every row starts with, so a
+/// tree keeps its columns across live, finished and folded lines.
+const GUTTER: &str = "  ";
+
+/// The glyphs nested tasks are drawn with (PROP-060 `#DISPLAY`).
+///
+/// The decision is the renderer's one glyph decision, shared with the
+/// prompt theme of `output::prompts`: redirected output keeps the glyphs
+/// and loses only its colour, and `TermFamily::Dummy` is the one family
+/// `console` reports as having no terminal vocabulary at all.
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-060#DISPLAY")]
+pub(super) struct TreeGlyphs {
+    /// A child with siblings still to come.
+    branch: &'static str,
+    /// The vertical that carries past a child, and a continuation line.
+    stem: &'static str,
+}
+
+impl TreeGlyphs {
+    pub(super) const fn unicode() -> Self {
+        Self {
+            branch: "├─ ",
+            stem: "│  ",
+        }
+    }
+
+    /// Three columns wide like the Unicode set, so a tree keeps its
+    /// columns whichever vocabulary draws it.
+    pub(super) const fn ascii() -> Self {
+        Self {
+            branch: "|- ",
+            stem: "|  ",
+        }
+    }
+
+    pub(super) fn detect() -> Self {
+        match console::Term::stderr().features().family() {
+            console::TermFamily::Dummy => Self::ascii(),
+            _ => Self::unicode(),
+        }
+    }
+
+    /// One task's row: the verticals of its ancestors, then its own
+    /// branch. A root carries none.
+    ///
+    /// The last child of a parent would read `└─`, but a row is printed
+    /// the moment the task ends and nothing then knows whether a sibling
+    /// follows; every child therefore branches, and the parent's own
+    /// terminal row closes the group.
+    pub(super) fn label(&self, depth: usize, label: &str) -> String {
+        match depth {
+            0 => label.to_owned(),
+            depth => format!("{}{}{label}", self.stem.repeat(depth - 1), self.branch),
+        }
+    }
+
+    /// A line that belongs to a task without being a task of its own — a
+    /// folded child-output line, a diagnostic, a verbose detail: the
+    /// task's own verticals, so the line starts in the task's label
+    /// column.
+    pub(super) fn under(&self, depth: usize) -> String {
+        format!("{GUTTER}{}", self.stem.repeat(depth))
+    }
 }
 
 pub(super) fn diagnostic_marker(level: ProgressDiagnosticLevel) -> &'static str {

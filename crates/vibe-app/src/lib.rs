@@ -109,7 +109,8 @@ pub use settings::{MutationLock, PROJECT_HOME, SettingsRoot};
 pub use steps::{
     FeatureChooser, FeatureRequest, FeatureResolution, HostFacts, Implied, ImpliedRule,
     LicensePrompt, ParamValue, ParameterPrompt, Plan, PlanLicense, PlannedDependency, PlannedStep,
-    Start, clean_work, human_bytes, prune_runs, resolve_features, runs, step_env_name, work,
+    RequiredBy, Start, clean_work, human_bytes, prune_runs, resolve_features, runs, step_env_name,
+    work,
 };
 pub use storage::{
     Availability, DEFAULT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker, Moved, Storage,
