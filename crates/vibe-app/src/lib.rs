@@ -23,12 +23,14 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#library-first");
 
 mod agents;
 mod alternatives;
+mod catalog;
 mod codes;
 mod derive;
 mod describe;
 mod desktop;
 mod environment;
 mod error;
+mod error_catalog;
 mod error_lifecycle;
 mod exposure;
 mod fs_util;
@@ -54,6 +56,16 @@ pub use agents::{
 pub use alternatives::{
     DefaultChange, listing as alternatives_listing, reserved_commands, set_default,
 };
+pub use catalog::{
+    LAUNCHER_KEY_SEPARATOR, LauncherCatalog, LauncherChange, LauncherUsage, PinTarget,
+    StartRequest, USER_LAUNCHERS_PROTOCOL, Usage, UserCollection, UserLauncher, UserLaunchers,
+    UserPins, bump_revision, collection_add as app_collection_add,
+    collection_create as app_collection_create, collection_delete as app_collection_delete,
+    collection_order as app_collection_order, collection_remove as app_collection_remove,
+    collection_rename as app_collection_rename, collections, drop_package, launcher_key,
+    launcher_override, pin as app_pin, revision as catalog_revision, revision_document,
+    seed_package, split_launcher_key, start as start_launcher, unpin as app_unpin,
+};
 pub use codes::{ErrorClass, ErrorCode, error_codes};
 pub use derive::{derive_launchers, hicolor as hicolor_icon_set, import_desktop};
 pub use describe::describe;
@@ -62,6 +74,7 @@ pub use environment::{ProfileEnvironment, UserEnvironment, recorded_environment}
 pub use error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,
 };
+pub use error_catalog::CatalogError;
 pub use error_lifecycle::LifecycleError;
 pub use exposure::{Exposure, expose_for_session};
 pub use icons::{ResolvedIcon, ResolvedIconFile};

@@ -1,0 +1,137 @@
+{
+  "metadata": {
+    "description": "Version 1 of the user layer over the launcher catalog from vibe app collection|pin|unpin|launcher --json: the named ordered collections of launcher keys, the ordered pinned lists, the per-launcher overrides and the catalog revision the edit produced (PROP-059#launcher-catalog). It is the whole layer of one home, so a client that edited one collection still sees what the edit did to the rest.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_collections"
+    },
+    "x-rust-type": "ApplicationCollections",
+    "x-wire-order": [
+      "protocol",
+      "home",
+      "revision",
+      "collections",
+      "pins",
+      "overrides"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "home": {
+      "type": "string"
+    },
+    "revision": {
+      "ref": "count"
+    },
+    "collections": {
+      "elements": {
+        "ref": "collection"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "pins": {
+      "ref": "pins"
+    },
+    "overrides": {
+      "elements": {
+        "ref": "override"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "count": {
+      "metadata": {
+        "description": "An exact non-negative count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      },
+      "type": "float64"
+    },
+    "collection": {
+      "metadata": {
+        "description": "One named, ordered list of launcher keys. `seeded` marks a collection a package's menu_group created rather than the user; `removed` keeps the keys the user took out, so seeding never puts them back.",
+        "x-wire-order": [
+          "name",
+          "icon",
+          "seeded",
+          "launchers",
+          "removed"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string",
+          "nullable": true
+        },
+        "seeded": {
+          "type": "boolean"
+        },
+        "launchers": {
+          "ref": "string_list"
+        },
+        "removed": {
+          "ref": "string_list"
+        }
+      }
+    },
+    "pins": {
+      "metadata": {
+        "description": "The ordered pinned lists; a repeated pin moves its key to the end rather than duplicating it."
+      },
+      "properties": {
+        "taskbar": {
+          "ref": "string_list"
+        },
+        "favorites": {
+          "ref": "string_list"
+        }
+      }
+    },
+    "override": {
+      "metadata": {
+        "description": "One user override of a launcher: hidden from the client's menus, a name of the user's own, an icon file of the user's own. It survives update and reinstall and `--reset` removes the whole row.",
+        "x-wire-order": [
+          "key",
+          "hidden",
+          "name",
+          "icon"
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string",
+          "nullable": true
+        },
+        "icon": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "string_list": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  }
+}

@@ -7,14 +7,15 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#menu");
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
-use vibe_app::{Index, Storage};
+use vibe_app::{Index, LauncherCatalog, Storage};
 
 use super::home::AppHome;
 use super::views::print_listing;
 use crate::output;
 
-/// `vibe app launchers --all [--menu]`: every ready, exposed installation of
-/// the selected home.
+/// `vibe app launchers --all [--menu]`: the catalog — every ready, exposed
+/// installation of the selected home with the revision a client compares
+/// (PROP-059 `#launcher-catalog`).
 pub(super) fn all(
     ctx: &output::Context,
     app_home: &AppHome,
@@ -24,8 +25,9 @@ pub(super) fn all(
     let settings = app_home.settings();
     let index = Index::load(settings)?;
     let storage = Storage::load(settings)?;
+    let catalog = LauncherCatalog::load(settings)?;
     let listing =
-        vibe_app::launcher_listing_all(&index, &storage, settings.path(), project_root, menu_only);
+        vibe_app::launcher_listing_all(&index, &storage, &catalog, project_root, menu_only);
     let value = serde_json::to_value(&listing)?;
     if ctx.is_json() {
         return ctx.emit_json(&value);
@@ -35,7 +37,11 @@ pub(super) fn all(
         .and_then(serde_json::Value::as_array)
         .map(Vec::as_slice)
         .unwrap_or(&[]);
-    println!("{} installation(s)", installations.len());
+    println!(
+        "{} installation(s) at revision {}",
+        installations.len(),
+        listing.revision
+    );
     for installation in installations {
         if let Some(group) = installation
             .get("menu_group")

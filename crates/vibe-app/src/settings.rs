@@ -114,6 +114,27 @@ impl SettingsRoot {
         self.applications_dir().join("index.json")
     }
 
+    /// `<home>/applications/launchers.toml`: the user's own arrangement over
+    /// the launcher catalog — collections, pins and per-launcher overrides
+    /// (`PROP-059#launcher-catalog`). Commands write it; no client does.
+    pub fn user_launchers_path(&self) -> PathBuf {
+        self.applications_dir().join("launchers.toml")
+    }
+
+    /// `<home>/applications/revision`: the catalog counter a client compares
+    /// instead of refetching the whole document
+    /// (`PROP-059#launcher-catalog`).
+    pub fn revision_path(&self) -> PathBuf {
+        self.applications_dir().join("revision")
+    }
+
+    /// `<home>/applications/usage.json`: `starts` and `last_started` per
+    /// launcher key. Its own file, so a start never rewrites the index
+    /// (`PROP-059#launcher-catalog`).
+    pub fn usage_path(&self) -> PathBuf {
+        self.applications_dir().join("usage.json")
+    }
+
     pub fn storage_path(&self) -> PathBuf {
         self.root.join("storage.toml")
     }

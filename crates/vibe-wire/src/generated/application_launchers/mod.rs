@@ -3,9 +3,11 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
-/// Version 1 machine list from vibe app launchers PACKAGE --json: the launch
-/// points of one installation with their kind, menu metadata (PROP-059#menu,
-/// #desktop-entries) and resolved availability.
+/// Version 2 machine list from vibe app launchers PACKAGE --json: the launch
+/// points of one installation with their stable launcher key, kind, menu
+/// metadata (PROP-059#menu, #desktop-entries), the user layer of PROP-
+/// 059#launcher-catalog (collections, pins, overrides, hidden_by), the usage
+/// facts, the installation state and resolved availability.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ApplicationLaunchers {
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
@@ -31,6 +33,8 @@ pub struct ApplicationLaunchers {
     pub package: PackageIdentity,
 
     pub protocol: String,
+
+    pub state: InstallationState,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -39,6 +43,18 @@ pub struct ArgsValue {
     pub resolved: Option<StringList>,
 
     pub template: Vec<String>,
+}
+
+/// An exact non-negative count. JTD has no uint64 form, so generated Rust
+/// narrows the numeric form to u64.
+pub type Count = u64;
+
+/// Who hid the launcher: only the user can, and a package that declares menu =
+/// false is not hidden but simply not in a menu.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum HiddenBy {
+    #[serde(rename = "user")]
+    User,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -96,6 +112,19 @@ pub struct IconValue {
     pub template: Option<String>,
 }
 
+/// The state of the installation a launcher belongs to: hidden exposure, an
+/// update hold, and whether a newer version is available — null when answering
+/// that would need a registry call.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InstallationState {
+    pub held: bool,
+
+    pub hidden: bool,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub update_available: Option<bool>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Launcher {
     pub actions: Vec<LauncherAction>,
@@ -104,6 +133,8 @@ pub struct Launcher {
 
     pub categories: StringList,
 
+    pub collections: StringList,
+
     pub default: bool,
 
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
@@ -111,10 +142,18 @@ pub struct Launcher {
 
     pub descriptions: BTreeMap<String, String>,
 
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub display_icon: Option<String>,
+
+    pub display_name: String,
+
     pub executable: PathValue,
 
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub generic_name: Option<String>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub hidden_by: Option<HiddenBy>,
 
     pub icon: IconValue,
 
@@ -122,6 +161,8 @@ pub struct Launcher {
     pub icon_set: Option<IconSet>,
 
     pub id: String,
+
+    pub key: String,
 
     pub keywords: StringList,
 
@@ -135,6 +176,8 @@ pub struct Launcher {
 
     pub names: BTreeMap<String, String>,
 
+    pub pinned: Vec<PinTarget>,
+
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub reason: Option<String>,
 
@@ -143,6 +186,8 @@ pub struct Launcher {
     pub status: LauncherStatus,
 
     pub terminal: bool,
+
+    pub usage: LauncherUsage,
 
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub window_class: Option<String>,
@@ -195,6 +240,16 @@ pub enum LauncherStatus {
     Unavailable,
 }
 
+/// What the home recorded about starts of this launcher through vibe (PROP-
+/// 059#launcher-catalog); last_started is RFC 3339.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct LauncherUsage {
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub last_started: Option<String>,
+
+    pub starts: Count,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PackageIdentity {
     pub group: String,
@@ -213,6 +268,15 @@ pub struct PathValue {
 
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub template: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PinTarget {
+    #[serde(rename = "favorites")]
+    Favorites,
+
+    #[serde(rename = "taskbar")]
+    Taskbar,
 }
 
 pub type StringList = Vec<String>;

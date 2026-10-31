@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Version 1 machine list from vibe app launchers PACKAGE --json: the launch points of one installation with their kind, menu metadata (PROP-059#menu, #desktop-entries) and resolved availability.",
+    "description": "Version 2 machine list from vibe app launchers PACKAGE --json: the launch points of one installation with their stable launcher key, kind, menu metadata (PROP-059#menu, #desktop-entries), the user layer of PROP-059#launcher-catalog (collections, pins, overrides, hidden_by), the usage facts, the installation state and resolved availability.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations"
     },
@@ -47,6 +47,9 @@
     "icon_set": {
       "ref": "icon_set",
       "nullable": true
+    },
+    "state": {
+      "ref": "installation_state"
     }
   },
   "definitions": {
@@ -153,6 +156,34 @@
         "icon_set": {
           "ref": "icon_set",
           "nullable": true
+        },
+        "key": {
+          "type": "string"
+        },
+        "collections": {
+          "ref": "string_list"
+        },
+        "pinned": {
+          "elements": {
+            "ref": "pin_target"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "hidden_by": {
+          "ref": "hidden_by",
+          "nullable": true
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "display_icon": {
+          "type": "string",
+          "nullable": true
+        },
+        "usage": {
+          "ref": "launcher_usage"
         }
       }
     },
@@ -305,6 +336,62 @@
         },
         "icon_set": {
           "ref": "icon_set",
+          "nullable": true
+        }
+      }
+    },
+    "count": {
+      "metadata": {
+        "description": "An exact non-negative count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      },
+      "type": "float64"
+    },
+    "pin_target": {
+      "enum": [
+        "taskbar",
+        "favorites"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "hidden_by": {
+      "metadata": {
+        "description": "Who hid the launcher: only the user can, and a package that declares menu = false is not hidden but simply not in a menu.",
+        "x-vocabulary": "closed"
+      },
+      "enum": [
+        "user"
+      ]
+    },
+    "launcher_usage": {
+      "metadata": {
+        "description": "What the home recorded about starts of this launcher through vibe (PROP-059#launcher-catalog); last_started is RFC 3339."
+      },
+      "properties": {
+        "starts": {
+          "ref": "count"
+        },
+        "last_started": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "installation_state": {
+      "metadata": {
+        "description": "The state of the installation a launcher belongs to: hidden exposure, an update hold, and whether a newer version is available — null when answering that would need a registry call."
+      },
+      "properties": {
+        "hidden": {
+          "type": "boolean"
+        },
+        "held": {
+          "type": "boolean"
+        },
+        "update_available": {
+          "type": "boolean",
           "nullable": true
         }
       }

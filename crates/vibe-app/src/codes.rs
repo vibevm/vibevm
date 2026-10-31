@@ -12,6 +12,7 @@ use crate::agents::AgentError;
 use crate::error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,
 };
+use crate::error_catalog::CatalogError;
 use crate::error_lifecycle::LifecycleError;
 
 /// Whether an error refused the request before any effect, or a started
@@ -71,6 +72,7 @@ codes!(STATE, StateError [] {
     Locked => "locked", Refusal, "another vibe command holds the application mutation lock";
     Index => "index_invalid", Failure, "the application index is unreadable";
     Storage => "storage_config_invalid", Failure, "storage.toml is invalid";
+    UserLaunchers => "user_launchers_invalid", Failure, "the user launcher layer launchers.toml is invalid";
     UnknownLibrary => "unknown_library", Refusal, "the named storage library is not configured";
     LibraryUnavailable => "library_unavailable", Refusal, "the storage library is not attached";
 });
@@ -149,6 +151,12 @@ codes!(AGENT, AgentError [] {
     Io => "agent_io", Failure, "writing the agent envelope failed";
 });
 
+codes!(CATALOG, CatalogError [] {
+    LauncherMissing => "launcher_missing", Refusal, "the key names no launcher of this home";
+    CollectionMissing => "collection_missing", Refusal, "the named launcher collection does not exist";
+    CollectionExists => "collection_exists", Refusal, "a launcher collection of that name already exists";
+});
+
 codes!(LAUNCH, LaunchError [] {
     UnknownLauncher => "unknown_launcher", Refusal, "the launcher id is not declared";
     Unavailable => "launcher_unavailable", Refusal, "the launcher cannot run here";
@@ -165,7 +173,7 @@ codes!(LIFECYCLE, LifecycleError [] {
     NoEnvironment => "environment_unavailable", Refusal, "no user environment is available to an env step";
 });
 
-codes!(APP, AppError [State, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle] {
+codes!(APP, AppError [State, Catalog, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle] {
     NotInstalled => "not_installed", Refusal, "the application is not installed";
     AmbiguousInstallation => "ambiguous_installation", Refusal, "several installed versions match";
     ForceUnsupported => "force_unsupported", Refusal, "--force has no authored variant to run";
@@ -192,7 +200,7 @@ codes!(APP, AppError [State, Storage, Resolve, Installer, Launch, Step, Agent, L
 /// ```
 pub fn error_codes() -> Vec<ErrorCode> {
     [
-        STATE, STORAGE, RESOLVE, INSTALLER, STEP, AGENT, LIFECYCLE, LAUNCH, APP,
+        STATE, STORAGE, RESOLVE, INSTALLER, STEP, AGENT, LIFECYCLE, LAUNCH, CATALOG, APP,
     ]
     .concat()
 }
