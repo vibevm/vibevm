@@ -2412,3 +2412,33 @@ structure, and it goes when the file does.
 | @fact:B219-SEVERITY **severity** | P2 — the release gate goes red from an ordinary developer action; the fixtures themselves are correct. |
 | @fact:B219-DISPOSITION **disposition** | `open` — make the lookup deterministic (prefer `deps/`, or the newest artifact) in the shared fixture helper instead of asserting uniqueness; until then, delete `target/debug/libvibe_native_loader_*fixture.so` before `cargo test --workspace`. |
 | @fact:B219-FILED **filed by** | APP-CLEAN campaign close-out, 2026-10-31. |
+
+## B-220 — hold a global application at its version {#b-220}
+
+| field | value |
+|---|---|
+| @fact:B220-WHAT **what** | `vibe app update` and `vibe app outdated` (PROP-065 `#outdated`) follow the registry; there is no way to say "keep Vim at 9.2.1167 until I say otherwise" the way `apt-mark hold` or `brew pin` do. A held installation would be reported by `outdated` as held, skipped by a bulk update, and updated only by naming it explicitly. |
+| @fact:B220-EVIDENCE **evidence** | Owner question of 2026-10-31 ("мы что-то еще забыли обсудить?"), answered during the APP-STEPS campaign; not in PROP-059 or PROP-065. |
+| @fact:B220-SEVERITY **severity** | P3 — a convenience over the existing per-version installation keys. |
+| @fact:B220-DISPOSITION **disposition** | `candidate` — `vibe app hold PKG` / `vibe app unhold PKG`, a `held` flag in the index record; needs the owner's yes. |
+| @fact:B220-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
+
+## B-221 — keep the previous version hidden for rollback {#b-221}
+
+| field | value |
+|---|---|
+| @fact:B221-WHAT **what** | An application update installs the new version and removes the old one. With hidden installations (PROP-059 `#hidden-installations`) the old version could instead stay hidden for one update cycle, so `vibe app rollback PKG` is just `expose` of the previous key plus `app use`, with no download and no rebuild. The next successful update would remove it. |
+| @fact:B221-EVIDENCE **evidence** | Owner question of 2026-10-31; the index already keys installations by exact version, and alternatives already let two versions coexist. |
+| @fact:B221-SEVERITY **severity** | P3 — source builds taking minutes make rollback-by-reinstall expensive, but nothing is wrong today. |
+| @fact:B221-DISPOSITION **disposition** | `candidate` — `--keep-previous` on update (or a user default), `vibe app rollback`; needs the owner's yes. |
+| @fact:B221-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
+
+## B-222 — export and import the set of global applications {#b-222}
+
+| field | value |
+|---|---|
+| @fact:B222-WHAT **what** | A project records its applications in `vibe.toml` / `vibe.lock`, but the global home has no portable description of "what I have installed, with which installer option, features and parameters". A Brewfile-like `vibe app export > apps.toml` and `vibe app import apps.toml` would move a user's toolset to another machine through the ordinary registry resolution, choosing the matching platform rows. |
+| @fact:B222-EVIDENCE **evidence** | Owner question of 2026-10-31; the index record already holds every field such an export needs. |
+| @fact:B222-SEVERITY **severity** | P3 — convenience; the project scope covers the reproducible case today. |
+| @fact:B222-DISPOSITION **disposition** | `candidate` — needs the owner's yes. |
+| @fact:B222-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
