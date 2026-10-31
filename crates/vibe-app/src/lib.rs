@@ -84,7 +84,8 @@ pub use operations::{
 };
 pub use proxies::{proxy_file_name, sync as sync_proxies};
 pub use resolve::{
-    ResolvedPackage, from_global, from_local_registry, from_manifest, qualified_ref,
+    ResolvedPackage, from_global, from_local_registry, from_manifest, local_registry_carries,
+    qualified_ref,
 };
 pub use select::{
     Chooser, InstallChoice, detected_arch, detected_platform, options_listing, select_option,

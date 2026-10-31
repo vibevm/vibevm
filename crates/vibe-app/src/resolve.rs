@@ -49,6 +49,35 @@ pub fn qualified_ref(spelling: &str) -> Result<PackageRef, ResolveError> {
     Ok(requested)
 }
 
+/// Whether a local directory registry carries any version of the package
+/// `spelling` names (PROP-030 `#precedence`: a developer's embedded
+/// registry is first in the chain, not the whole chain — a package it does
+/// not carry falls through to the declared registries).
+///
+/// ```
+/// let tmp = tempfile::tempdir().unwrap();
+/// let registry = vibe_registry::LocalRegistry::new(tmp.path().to_path_buf()).unwrap();
+/// assert!(!vibe_app::local_registry_carries(&registry, "org.example/demo").unwrap());
+/// ```
+pub fn local_registry_carries(
+    registry: &LocalRegistry,
+    spelling: &str,
+) -> Result<bool, ResolveError> {
+    let requested = qualified_ref(spelling)?;
+    let group = requested
+        .group
+        .as_ref()
+        .expect("qualified_ref guarantees a group");
+    match registry.list_versions(group, requested.name.as_str()) {
+        Ok(versions) => Ok(!versions.is_empty()),
+        Err(vibe_registry::RegistryError::UnknownPackage { .. }) => Ok(false),
+        Err(error) => Err(ResolveError::Registry {
+            spelling: spelling.into(),
+            reason: error.to_string(),
+        }),
+    }
+}
+
 /// Resolve from a local directory registry the caller constructed.
 pub fn from_local_registry(
     registry: &LocalRegistry,
@@ -181,5 +210,26 @@ pub(crate) fn strip_verbatim(path: PathBuf) -> PathBuf {
     match text.strip_prefix(r"\\?\") {
         Some(rest) if !rest.starts_with("UNC\\") => PathBuf::from(rest.to_string()),
         _ => path,
+    }
+}
+
+#[cfg(test)]
+mod carries_tests {
+    use super::*;
+
+    #[test]
+    fn an_absent_package_is_not_carried_and_a_present_one_is() {
+        let tmp = tempfile::tempdir().unwrap();
+        let registry = LocalRegistry::new(tmp.path().to_path_buf()).unwrap();
+        assert!(!local_registry_carries(&registry, "org.example/demo").unwrap());
+        let version = tmp.path().join("org.example").join("demo").join("v1.0.0");
+        fs::create_dir_all(&version).unwrap();
+        fs::write(
+            version.join("vibe.toml"),
+            "[package]\nname = \"demo\"\ngroup = \"org.example\"\nkind = \"app\"\nversion = \"1.0.0\"\nepoch = 1\nformat = \"normal\"\nauthors = [\"t\"]\nlicense = \"UPL-1.0\"\ndescription = \"d\"\nkeywords = []\n\n[compatibility]\nmin_vibe_version = \"1.0.8\"\nrequires_kinds = []\n\n[application]\nid = \"demo\"\n",
+        )
+        .unwrap();
+        assert!(local_registry_carries(&registry, "org.example/demo").unwrap());
+        assert!(local_registry_carries(&registry, "demo").is_err());
     }
 }
