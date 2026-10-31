@@ -139,6 +139,51 @@ impl IconPreference {
     }
 }
 
+/// Which ordered pinned list `vibe app pin` and `unpin` mean
+/// (PROP-059 `#launcher-catalog`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum PinArg {
+    Taskbar,
+    Favorites,
+}
+
+/// The edits of one collection (PROP-059 `#launcher-catalog`).
+#[derive(Debug, clap::Subcommand)]
+pub enum CollectionCommand {
+    /// Create an empty collection.
+    Create {
+        name: String,
+        /// An icon file for the collection itself.
+        #[arg(long, value_name = "PATH")]
+        icon: Option<std::path::PathBuf>,
+    },
+    /// Rename one; it keeps its keys, and stops counting as seeded.
+    Rename { old: String, new: String },
+    /// Delete one; the launchers themselves stay installed.
+    Delete { name: String },
+    /// Append the launcher keys it does not hold yet.
+    Add {
+        name: String,
+        #[arg(required = true, value_name = "KEY")]
+        keys: Vec<String>,
+    },
+    /// Take launcher keys out and remember that you did, so an install of
+    /// the same `menu_group` does not put them back.
+    Remove {
+        name: String,
+        #[arg(required = true, value_name = "KEY")]
+        keys: Vec<String>,
+    },
+    /// The full order: the collection becomes exactly this sequence.
+    Order {
+        name: String,
+        #[arg(required = true, value_name = "KEY")]
+        keys: Vec<String>,
+    },
+    /// Show every collection, both pinned lists and every override.
+    List,
+}
+
 #[derive(Debug, clap::Subcommand)]
 pub enum AppCommand {
     /// List every installed application with its status and slot default.
@@ -295,18 +340,76 @@ pub enum AppCommand {
     /// and hide the newer one (PROP-065 `#update-and-rollback`).
     Rollback { package: String },
 
-    /// List launchers of an installed application, or with `--all` of every
-    /// ready, exposed installation of the home (PROP-059 `#menu`).
+    /// List launchers of an installed application, or with `--all` the whole
+    /// launcher catalog of the home — every ready, exposed installation with
+    /// its keys, collections, pins, overrides and usage facts
+    /// (PROP-059 `#menu`, `#launcher-catalog`).
     Launchers {
-        /// The installed package; omitted with `--all`.
-        #[arg(required_unless_present = "all", conflicts_with = "all")]
+        /// The installed package; omitted with `--all` or `--revision`.
+        #[arg(
+            required_unless_present_any = ["all", "revision"],
+            conflicts_with_all = ["all", "revision"]
+        )]
         package: Option<String>,
         /// List every ready, exposed installation in one answer.
-        #[arg(long)]
+        #[arg(long, conflicts_with = "revision")]
         all: bool,
         /// With `--all`, only the launchers whose author set `menu = true`.
         #[arg(long, requires = "all")]
         menu: bool,
+        /// Print only the catalog revision, the one number a client compares
+        /// instead of refetching the catalog.
+        #[arg(long)]
+        revision: bool,
+    },
+
+    /// Arrange the launcher catalog into named, ordered collections of
+    /// launcher keys — a game library's shelves (PROP-059
+    /// `#launcher-catalog`).
+    Collection {
+        #[command(subcommand)]
+        command: CollectionCommand,
+    },
+
+    /// Pin one launcher key to an ordered list a client draws; a repeated
+    /// pin moves it to the end (PROP-059 `#launcher-catalog`).
+    Pin {
+        /// `<group>/<name>@<version>#<launcher id>`, as the catalog spells it.
+        key: String,
+        #[arg(long, value_enum, default_value_t = PinArg::Taskbar)]
+        to: PinArg,
+    },
+
+    /// Take one launcher key off a pinned list.
+    Unpin {
+        key: String,
+        #[arg(long, value_enum, default_value_t = PinArg::Taskbar)]
+        from: PinArg,
+    },
+
+    /// Override one launcher for this user: hide it from a client's menus
+    /// while it stays in the catalog, give it a name or an icon of your own
+    /// that survives update and reinstall, or reset it to the package's
+    /// declaration (PROP-059 `#launcher-catalog`).
+    #[command(group = clap::ArgGroup::new("override").required(true).multiple(false))]
+    Launcher {
+        key: String,
+        /// Keep it out of a client's menus; it stays in the catalog marked
+        /// `hidden_by: "user"`.
+        #[arg(long, group = "override")]
+        hide: bool,
+        /// Undo a hide.
+        #[arg(long, group = "override")]
+        show: bool,
+        /// A name of your own.
+        #[arg(long, value_name = "NAME", group = "override")]
+        name: Option<String>,
+        /// An icon file of your own.
+        #[arg(long, value_name = "PATH", group = "override")]
+        icon: Option<std::path::PathBuf>,
+        /// Forget the whole override row.
+        #[arg(long, group = "override")]
+        reset: bool,
     },
 
     /// Print the path of the best existing icon file of an installed
@@ -352,7 +455,12 @@ pub enum AppCommand {
     Alternatives { slot: String },
 
     /// Run the declared default launcher, or ask in an interactive terminal.
+    /// With `--json` the launcher is started detached and the answer names
+    /// its process id, command line and log instead of waiting for it
+    /// (PROP-059 `#launcher-catalog`).
     Start {
+        /// The installed package, or a launcher key whose `#<launcher id>`
+        /// selects the launch point.
         package: String,
         #[arg(long)]
         launcher: Option<String>,

@@ -176,6 +176,11 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | crate::cli::AppCommand::Errors
             | crate::cli::AppCommand::Outdated { .. }
             | crate::cli::AppCommand::Alternatives { .. } => FastMetadata,
+            // One file of the home is read or replaced; nothing to show.
+            crate::cli::AppCommand::Collection { .. }
+            | crate::cli::AppCommand::Pin { .. }
+            | crate::cli::AppCommand::Unpin { .. }
+            | crate::cli::AppCommand::Launcher { .. } => FastMetadata,
             crate::cli::AppCommand::Use { .. } => FiniteFallback("Command app use"),
             crate::cli::AppCommand::Modify { .. } => FiniteFallback("Command app modify"),
             crate::cli::AppCommand::Expose { .. }

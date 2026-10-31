@@ -345,7 +345,9 @@ impl Index {
         Self::from_wire(document).map_err(invalid)
     }
 
-    /// Replace the index atomically (write a sibling, rename over it).
+    /// Replace the index atomically (write a sibling, rename over it) and
+    /// increment the catalog revision, so a client that compares one number
+    /// never misses a change to the inventory (`PROP-059#launcher-catalog`).
     pub fn save(&self, settings: &SettingsRoot) -> Result<(), StateError> {
         let path = settings.index_path();
         let mut bytes =
@@ -354,7 +356,8 @@ impl Index {
                 reason: error.to_string(),
             })?;
         bytes.push(b'\n');
-        write_atomic(&path, &bytes)
+        write_atomic(&path, &bytes)?;
+        crate::catalog::bump_revision(settings).map(|_| ())
     }
 
     pub fn default_of(&self, slot: &str) -> Option<&str> {

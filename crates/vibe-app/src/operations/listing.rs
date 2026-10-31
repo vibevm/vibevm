@@ -10,6 +10,7 @@ use std::path::Path;
 use vibe_core::manifest::{IconDecl, LauncherKind, LauncherSource, RequirementScope};
 use vibe_wire::generated::application_list as wire;
 
+use crate::catalog::LauncherCatalog;
 use crate::error::AppError;
 use crate::icons::wire_shape;
 use crate::index::{EnvOp, Index, Installation, Location, Mark};
@@ -84,10 +85,11 @@ pub fn installed<'a>(
 pub fn list(settings: &SettingsRoot) -> Result<wire::ApplicationList, AppError> {
     let index = Index::load(settings)?;
     let storage = Storage::load(settings)?;
+    let catalog = LauncherCatalog::load(settings)?;
     let installations = index
         .installations
         .iter()
-        .map(|(key, record)| row(&index, &storage, settings.path(), key, record))
+        .map(|(key, record)| row(&index, &storage, &catalog, key, record))
         .collect();
     Ok(wire::ApplicationList {
         protocol: "vibe-app-list/1".into(),
@@ -98,13 +100,13 @@ pub fn list(settings: &SettingsRoot) -> Result<wire::ApplicationList, AppError> 
 fn row(
     index: &Index,
     storage: &Storage,
-    vibe_home: &Path,
+    catalog: &LauncherCatalog,
     key: &str,
     record: &Installation,
 ) -> wire::Installation {
     let root = launch::app_root(record, storage);
     let reason = launch::unavailable_reason(&root);
-    let places = launch::IconPlaces::new(vibe_home, None, record, &root);
+    let places = launch::IconPlaces::new(catalog.home(), None, record, &root);
     let lifecycle = &record.lifecycle;
     wire::Installation {
         key: key.to_owned(),
@@ -134,7 +136,7 @@ fn row(
         menu_group: record.menu.menu_group.clone(),
         categories: record.menu.categories.clone(),
         keywords: record.menu.keywords.clone(),
-        launchers: launcher_rows(record, storage, vibe_home),
+        launchers: launcher_rows(record, storage, catalog),
         app_root: root.ok().map(|root| path_text(&root)),
         portable: record.portable,
         default: index.default_of(&record.slot) == Some(key),
@@ -179,9 +181,9 @@ fn row(
 fn launcher_rows(
     record: &Installation,
     storage: &Storage,
-    vibe_home: &Path,
+    catalog: &LauncherCatalog,
 ) -> Vec<wire::Launcher> {
-    let full = launch::listing(record, storage, vibe_home, None);
+    let full = launch::listing(record, storage, catalog, None);
     record
         .launchers
         .iter()

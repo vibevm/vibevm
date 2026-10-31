@@ -412,6 +412,11 @@ fn commit(
     }
     normalize_slots(index);
     index.save(ctx.settings)?;
+    // The user layer follows the inventory: the collection this package's
+    // `menu_group` names gains its menu launchers (`PROP-059#launcher-catalog`).
+    if let Some(record) = index.installations.get(&key) {
+        crate::catalog::seed_package(ctx.settings, record)?;
+    }
     for directory in applied.retired {
         let _ = fs::remove_dir_all(directory);
     }

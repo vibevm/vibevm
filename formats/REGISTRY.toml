@@ -54,11 +54,42 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
-# `vibe app launchers --all [--menu] --json` (PROP-059 `#menu`): one answer
-# over every ready, exposed installation for a graphical start menu.
+# `vibe app launchers --all [--menu] --json` (PROP-059 `#launcher-catalog`):
+# the catalog a graphical client draws its start menu, its collections, its
+# taskbar and its recent list from.
 [format.cli-application-launchers-all]
 epoch = 1
 schema = "schemas/application_launchers_all.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# The user layer over that catalog (PROP-059 `#launcher-catalog`): the answer
+# of every `vibe app collection|pin|unpin|launcher --json` edit.
+[format.cli-application-collections]
+epoch = 1
+schema = "schemas/application_collections.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe app launchers --revision --json` (PROP-059 `#launcher-catalog`): the
+# one counter a client polls instead of refetching the catalog.
+[format.cli-application-revision]
+epoch = 1
+schema = "schemas/application_revision.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe app start KEY --json` (PROP-059 `#launcher-catalog`): the detached
+# child's process id, command line and log path.
+[format.cli-application-start]
+epoch = 1
+schema = "schemas/application_start.jtd.json"
 recoverable = true
 foreign_parsers = "many"
 corpus = "none"

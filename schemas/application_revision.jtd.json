@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "description": "Version 1 answer of vibe app launchers --revision --json (PROP-059#launcher-catalog): the one counter a client compares instead of refetching the whole catalog. The home increments it on every change to its installations, its user layer or its usage facts.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_revision"
+    },
+    "x-rust-type": "ApplicationRevision",
+    "x-wire-order": [
+      "protocol",
+      "revision"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "revision": {
+      "ref": "count"
+    }
+  },
+  "definitions": {
+    "count": {
+      "metadata": {
+        "description": "An exact non-negative count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      },
+      "type": "float64"
+    }
+  }
+}

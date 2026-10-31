@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operati
 
 pub(crate) mod agents;
 mod alternatives;
+mod catalog;
 mod describe;
 pub(crate) mod display;
 mod environment;
@@ -15,6 +16,7 @@ mod facts;
 pub(crate) mod global;
 pub(crate) mod home;
 mod interrupt;
+mod launch;
 mod lifecycle;
 mod menu;
 pub(crate) mod project;
@@ -22,16 +24,12 @@ mod records;
 mod report;
 mod views;
 
-use views::{launcher_field, print_installers, print_list, print_listing};
+use launch::{launcher_listing, run_launcher};
+use views::{print_installers, print_list, print_listing};
 
-use std::ffi::OsString;
-use std::io::IsTerminal;
 use std::path::Path;
 
-use anyhow::{Result, bail};
-use dialoguer::Select;
-use serde_json::Value;
-use vibe_app::{Index, LaunchRequest, Storage};
+use anyhow::Result;
 
 use crate::cli::{AppArgs, AppCommand};
 use crate::output;
@@ -246,7 +244,16 @@ pub fn run(
             )?;
             Ok(None)
         }
-        AppCommand::Launchers { package, all, menu } => {
+        AppCommand::Launchers {
+            package,
+            all,
+            menu,
+            revision,
+        } => {
+            if revision {
+                catalog::revision(ctx, &app_home)?;
+                return Ok(None);
+            }
             if all {
                 menu::all(ctx, &app_home, project_root.as_deref(), menu)?;
                 return Ok(None);
@@ -313,195 +320,64 @@ pub fn run(
             })?;
             Ok(Some(code))
         }
+        AppCommand::Collection { command } => {
+            catalog::collection(ctx, &app_home, command)?;
+            Ok(None)
+        }
+        AppCommand::Pin { key, to } => {
+            catalog::pin(ctx, &app_home, &key, to, true)?;
+            Ok(None)
+        }
+        AppCommand::Unpin { key, from } => {
+            catalog::pin(ctx, &app_home, &key, from, false)?;
+            Ok(None)
+        }
+        AppCommand::Launcher {
+            key,
+            hide,
+            show,
+            name,
+            icon,
+            reset,
+        } => {
+            let change = catalog::launcher_change(hide, show, name, icon, reset)?;
+            catalog::launcher(ctx, &app_home, &key, change)?;
+            Ok(None)
+        }
         AppCommand::Start {
             package,
             launcher,
             args,
         } => {
-            let id = match launcher {
-                Some(id) => id,
-                None => {
-                    let listing = launcher_listing(&app_home, &package, project_root.as_deref())?;
-                    let Some(id) = choose_launcher(&listing, ctx)? else {
-                        return Ok(None);
-                    };
-                    id
-                }
+            let (package, launcher) = catalog::start_target(&package, launcher)?;
+            let Some(id) = catalog::start_launcher_id(
+                ctx,
+                &app_home,
+                &package,
+                launcher,
+                project_root.as_deref(),
+            )?
+            else {
+                return Ok(None);
             };
+            // `--json` answers a process id and a log instead of a status:
+            // a client drawing a start menu is not blocked by the program
+            // it launched (PROP-059 `#launcher-catalog`).
+            if ctx.is_json() {
+                catalog::start_detached(
+                    ctx,
+                    &app_home,
+                    &package,
+                    &id,
+                    &args,
+                    project_root.as_deref(),
+                )?;
+                return Ok(None);
+            }
             let code = ctx.suspend_progress(|| {
                 run_launcher(&app_home, &package, &id, &args, project_root.as_deref())
             })?;
             Ok(Some(code))
         }
-    }
-}
-
-fn launcher_listing(
-    app_home: &home::AppHome,
-    package: &str,
-    project_root: Option<&Path>,
-) -> Result<Value> {
-    let settings = app_home.settings();
-    let index = Index::load(settings)?;
-    let storage = Storage::load(settings)?;
-    let (_, installation) = vibe_app::installed(settings, &index, package)?;
-    let listing = vibe_app::launcher_listing(installation, &storage, settings.path(), project_root);
-    Ok(serde_json::to_value(listing)?)
-}
-
-fn run_launcher(
-    app_home: &home::AppHome,
-    package: &str,
-    launcher_id: &str,
-    args: &[String],
-    project_root: Option<&Path>,
-) -> Result<i32> {
-    let settings = app_home.settings();
-    let index = Index::load(settings)?;
-    let storage = Storage::load(settings)?;
-    let (_, installation) = vibe_app::installed(settings, &index, package)?;
-    let extra_args: Vec<OsString> = args.iter().map(OsString::from).collect();
-    let request = LaunchRequest {
-        launcher_id,
-        extra_args: &extra_args,
-        vibe_home: settings.path(),
-        project_root,
-        attended_terminal: std::io::stdin().is_terminal() && std::io::stdout().is_terminal(),
-    };
-    Ok(vibe_app::run_launcher(installation, &storage, &request)?)
-}
-
-fn launchers(listing: &Value) -> Result<&[Value]> {
-    listing
-        .get("launchers")
-        .and_then(Value::as_array)
-        .map(Vec::as_slice)
-        .ok_or_else(|| anyhow::anyhow!("application launcher listing has no launchers array"))
-}
-
-fn choose_launcher(listing: &Value, ctx: &output::Context) -> Result<Option<String>> {
-    let launchers = launchers(listing)?;
-    if launchers.is_empty() {
-        bail!("no_launchers: installed application declares no launchers");
-    }
-    if let Some(default) = listing.get("default_launcher_id").and_then(Value::as_str) {
-        return Ok(Some(default.to_owned()));
-    }
-
-    let options = launchers
-        .iter()
-        .filter_map(|launcher| {
-            let id = launcher.get("id")?.as_str()?;
-            let name = launcher_field(launcher, "name");
-            let status = launcher_field(launcher, "status");
-            let reason = launcher_field(launcher, "reason");
-            Some((
-                id.to_owned(),
-                name.to_owned(),
-                status.to_owned(),
-                reason.to_owned(),
-            ))
-        })
-        .collect::<Vec<_>>();
-    let available = options
-        .iter()
-        .filter(|(_, _, status, _)| status == "available")
-        .count();
-    if available == 0 {
-        let reasons = options
-            .iter()
-            .map(|(id, _, status, reason)| format!("{id}: {status} {reason}"))
-            .collect::<Vec<_>>();
-        bail!("launcher_unavailable: {}", reasons.join("; "));
-    }
-
-    let interactive = !ctx.is_json()
-        && !ctx.is_unattended()
-        && std::io::stdin().is_terminal()
-        && std::io::stderr().is_terminal();
-    if !interactive {
-        let ids = options
-            .iter()
-            .map(|(id, _, _, _)| id.as_str())
-            .collect::<Vec<_>>();
-        bail!(
-            "selection_required: specify --launcher or use `vibe app run PACKAGE ID`; available IDs: {}",
-            ids.join(", ")
-        );
-    }
-
-    let labels = options
-        .iter()
-        .map(|(id, name, status, reason)| {
-            if status == "available" {
-                format!("{name} ({id})")
-            } else {
-                format!("{name} ({id}) — {status}: {reason}")
-            }
-        })
-        .collect::<Vec<_>>();
-    let first_available = options
-        .iter()
-        .position(|(_, _, status, _)| status == "available")
-        .ok_or_else(|| anyhow::anyhow!("launcher_unavailable: no available launchers"))?;
-    let selected = Select::new()
-        .with_prompt("Select application launcher")
-        .items(&labels)
-        .default(first_available)
-        .interact_opt()?;
-    let Some(index) = selected else {
-        return Ok(None);
-    };
-    let (id, _, status, reason) = &options[index];
-    if status != "available" {
-        bail!("launcher_unavailable: `{id}`: {status}: {reason}");
-    }
-    Ok(Some(id.clone()))
-}
-
-#[cfg(test)]
-mod tests {
-    use serde_json::json;
-
-    use super::{choose_launcher, launchers};
-    use crate::cli::AgentModeArg;
-    use crate::output::Context;
-
-    fn unattended_context() -> Context {
-        Context::from_flags(false, false, None, true, AgentModeArg::Auto)
-    }
-
-    #[test]
-    fn listing_reader_preserves_explicit_empty_launchers() {
-        assert!(launchers(&json!({"launchers": []})).unwrap().is_empty());
-        assert!(launchers(&json!({})).is_err());
-    }
-
-    #[test]
-    fn explicit_default_wins_even_when_unavailable() {
-        let listing = json!({
-            "default_launcher_id": "editor",
-            "launchers": [
-                {"id": "editor", "name": "Editor", "status": "requires_project"},
-                {"id": "console", "name": "Console", "status": "available"},
-            ],
-        });
-        assert_eq!(
-            choose_launcher(&listing, &unattended_context()).unwrap(),
-            Some("editor".into())
-        );
-    }
-
-    #[test]
-    fn one_non_default_launcher_still_requires_selection_unattended() {
-        let listing = json!({
-            "default_launcher_id": null,
-            "launchers": [{"id": "only", "name": "Only", "status": "available"}],
-        });
-        let error = choose_launcher(&listing, &unattended_context())
-            .unwrap_err()
-            .to_string();
-        assert!(error.contains("selection_required"), "{error}");
-        assert!(error.contains("only"), "{error}");
     }
 }

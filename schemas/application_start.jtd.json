@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "description": "Version 1 answer of vibe app start KEY --json (PROP-059#launcher-catalog): the launcher key that was started, the process id of the detached child, the command and argument array it was started with, its working directory and the log file capturing its stdout and stderr.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_start"
+    },
+    "x-rust-type": "ApplicationStart",
+    "x-wire-order": [
+      "protocol",
+      "key",
+      "pid",
+      "command",
+      "args",
+      "cwd",
+      "log"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    },
+    "pid": {
+      "ref": "count"
+    },
+    "command": {
+      "type": "string"
+    },
+    "args": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "cwd": {
+      "type": "string",
+      "nullable": true
+    },
+    "log": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "count": {
+      "metadata": {
+        "description": "An exact non-negative count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      },
+      "type": "float64"
+    }
+  }
+}

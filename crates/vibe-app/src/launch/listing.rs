@@ -1,9 +1,12 @@
-//! The launcher views (`PROP-059#launcher-operations`, `#menu`): `vibe app
-//! launchers PACKAGE` for one installation, `--all [--menu]` over every
-//! ready, exposed installation of a home, and the `vibe app icon` choice.
+//! The launcher views (`PROP-059#launcher-operations`, `#menu`,
+//! `#launcher-catalog`): `vibe app launchers PACKAGE` for one installation,
+//! `--all [--menu]` — the catalog a graphical client draws a desktop from —
+//! over every ready, exposed installation of a home, and the `vibe app icon`
+//! choice.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#menu");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog");
 
 use std::path::{Path, PathBuf};
 
@@ -14,6 +17,7 @@ use vibe_wire::generated::{
 };
 
 use super::{PROJECT_REQUIRED, TemplateVars, app_root, locate_icon, resolve, unavailable_reason};
+use crate::catalog::LauncherCatalog;
 use crate::error::LaunchError;
 use crate::icons::{ResolvedIcon, copies_dir, is_package_relative, join_relative, wire_shape};
 use crate::index::{Index, Installation};
@@ -95,15 +99,18 @@ fn or_default(own: &[String], fallback: &[String]) -> Vec<String> {
     if own.is_empty() { fallback } else { own }.to_vec()
 }
 
-/// The `vibe-app-launchers/1` listing of one installation. `vibe_home` is
-/// the application home: `$vibe_home` of the templates, and the home whose
-/// `applications/icons` keeps the package-relative icon files.
+/// The `vibe-app-launchers/2` listing of one installation. `catalog` carries
+/// the application home — `$vibe_home` of the templates, and the home whose
+/// `applications/icons` keeps the package-relative icon files — together
+/// with the user layer and the usage facts every row quotes
+/// (`PROP-059#launcher-catalog`).
 pub fn listing(
     installation: &Installation,
     storage: &Storage,
-    vibe_home: &Path,
+    catalog: &LauncherCatalog,
     project_root: Option<&Path>,
 ) -> wire::ApplicationLaunchers {
+    let vibe_home = catalog.home();
     let root = app_root(installation, storage);
     let vars = root.as_ref().ok().map(|root| TemplateVars {
         app_root: root.clone(),
@@ -114,11 +121,19 @@ pub fn listing(
     let launchers = installation
         .launchers
         .iter()
-        .map(|launcher| row(installation, launcher, &root, vars.as_ref(), &places))
+        .map(|launcher| Row {
+            installation,
+            launcher,
+            root: &root,
+            vars: vars.as_ref(),
+            places: &places,
+            catalog,
+        })
+        .map(row)
         .collect();
     let menu = &installation.menu;
     wire::ApplicationLaunchers {
-        protocol: "vibe-app-launchers/1".into(),
+        protocol: "vibe-app-launchers/2".into(),
         application_id: installation.slot.clone(),
         package: wire::PackageIdentity {
             group: installation.package.group.clone(),
@@ -135,16 +150,32 @@ pub fn listing(
         keywords: menu.keywords.clone(),
         icon_set: application_icon(installation, &places).and_then(|icon| wire_shape(&icon)),
         app_root: root.as_ref().ok().map(|path| path.display().to_string()),
+        state: LauncherCatalog::state(installation),
         launchers,
     }
 }
 
+/// One row's inputs: the installation it belongs to, its declaration, the
+/// derived `app_root`, the template values, the icon places and the catalog
+/// state the user layer and the usage facts come from.
+struct Row<'a> {
+    installation: &'a Installation,
+    launcher: &'a LauncherDecl,
+    root: &'a Result<PathBuf, String>,
+    vars: Option<&'a TemplateVars>,
+    places: &'a IconPlaces,
+    catalog: &'a LauncherCatalog,
+}
+
 fn row(
-    installation: &Installation,
-    launcher: &LauncherDecl,
-    root: &Result<PathBuf, String>,
-    vars: Option<&TemplateVars>,
-    places: &IconPlaces,
+    Row {
+        installation,
+        launcher,
+        root,
+        vars,
+        places,
+        catalog,
+    }: Row<'_>,
 ) -> wire::Launcher {
     let outcome = match (root, vars) {
         (Ok(_), Some(vars)) => resolve(launcher, vars),
@@ -167,6 +198,14 @@ fn row(
         .as_deref()
         .filter(|template| !template.is_empty())
         .map(|template| places.locate(template));
+    let resolved_icon = located
+        .as_ref()
+        .and_then(|value| value.as_ref().ok().map(text));
+    let fields = catalog.fields(
+        &installation.package.key(),
+        launcher,
+        resolved_icon.as_deref(),
+    );
     let menu = &installation.menu;
     wire::Launcher {
         id: launcher.id.clone(),
@@ -232,23 +271,30 @@ fn row(
         },
         icon: wire::IconValue {
             template: short_form,
-            resolved: located
-                .as_ref()
-                .and_then(|value| value.as_ref().ok().map(text)),
+            resolved: resolved_icon.clone(),
             diagnostic: located.and_then(Result::err),
         },
         status,
         reason,
+        key: fields.key,
+        collections: fields.collections,
+        pinned: fields.pinned,
+        hidden_by: fields.hidden_by,
+        display_name: fields.display_name,
+        display_icon: fields.display_icon,
+        usage: fields.usage,
     }
 }
 
-/// `vibe app launchers --all [--menu]`: every ready, exposed installation
-/// of the home in one answer, with only the `menu = true` launchers (and
-/// only installations that have one) when `menu_only`.
+/// `vibe app launchers --all [--menu]`: the catalog — every ready, exposed
+/// installation of the home in one answer, with only the `menu = true`
+/// launchers (and only installations that have one) when `menu_only`, and
+/// the home and the revision a client compares instead of refetching it
+/// (`PROP-059#launcher-catalog`).
 pub fn listing_all(
     index: &Index,
     storage: &Storage,
-    vibe_home: &Path,
+    catalog: &LauncherCatalog,
     project_root: Option<&Path>,
     menu_only: bool,
 ) -> all_wire::ApplicationLaunchersAll {
@@ -258,7 +304,7 @@ pub fn listing_all(
         .filter(|(_, record)| !record.lifecycle.hidden)
         .filter(|(_, record)| unavailable_reason(&app_root(record, storage)).is_none())
         .filter_map(|(key, record)| {
-            let mut document = listing(record, storage, vibe_home, project_root);
+            let mut document = listing(record, storage, catalog, project_root);
             if menu_only {
                 document.launchers.retain(|launcher| launcher.menu);
                 if document.launchers.is_empty() {
@@ -277,8 +323,10 @@ pub fn listing_all(
         })
         .collect();
     all_wire::ApplicationLaunchersAll {
-        protocol: "vibe-app-launchers-all/1".into(),
+        protocol: "vibe-app-launchers-all/2".into(),
         menu_only,
+        home: catalog.home().display().to_string(),
+        revision: catalog.revision(),
         installations,
     }
 }

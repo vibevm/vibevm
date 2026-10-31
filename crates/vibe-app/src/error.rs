@@ -38,6 +38,11 @@ pub enum StateError {
     )]
     Storage { path: String, reason: String },
     #[error(
+        "user launcher layer `{path}` is invalid: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog; \
+         fix: edit it through `vibe app collection`, `vibe app pin` and `vibe app launcher`, or remove the file to start an empty arrangement)"
+    )]
+    UserLaunchers { path: String, reason: String },
+    #[error(
         "storage library `{id}` is not configured (violates spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries; \
          fix: use `default` or a library listed in storage.toml)"
     )]
@@ -440,6 +445,8 @@ pub enum LaunchError {
 pub enum AppError {
     #[error(transparent)]
     State(#[from] StateError),
+    #[error(transparent)]
+    Catalog(#[from] crate::error_catalog::CatalogError),
     #[error(transparent)]
     Storage(#[from] StorageError),
     #[error(transparent)]
