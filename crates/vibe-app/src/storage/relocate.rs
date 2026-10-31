@@ -285,6 +285,8 @@ pub(crate) mod tests {
             launchers: Vec::new(),
             public_commands: Vec::new(),
             commands: AuthoredCommands::default(),
+            features: Vec::new(),
+            steps: Vec::new(),
         }
     }
 

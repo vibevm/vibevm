@@ -90,7 +90,8 @@
           "type": "string"
         },
         "installation": {
-          "ref": "installation"
+          "ref": "installation",
+          "nullable": true
         },
         "launchers": {
           "elements": {
@@ -125,6 +126,14 @@
           "type": "boolean",
           "metadata": {
             "x-default": null
+          }
+        },
+        "step_ids": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
           }
         }
       }

@@ -62,6 +62,22 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+[format.cli-application-plan]
+epoch = 1
+schema = "schemas/application_plan.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-application-describe]
+epoch = 1
+schema = "schemas/application_describe.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-application-alternatives]
 epoch = 1
 schema = "schemas/application_alternatives.jtd.json"
@@ -102,6 +118,17 @@ recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/application/e2"
+sunset = "none"
+
+# The kept work directory's step state (PROP-065 `#execution`): rebuildable
+# by restarting the installation, read only by vibe.
+[format.application-steps]
+epoch = 1
+schema = "schemas/application/e1/steps.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
 sunset = "none"
 
 [format.cli-extensions-report]

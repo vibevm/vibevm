@@ -19,12 +19,29 @@
   },
   "definitions": {
     "method": {
-      "enum": ["shell", "zip", "tar_gz", "exe", "msi", "source_build"],
+      "enum": ["shell", "zip", "tar_gz", "exe", "msi", "source_build", "steps"],
       "metadata": { "x-vocabulary": "closed" }
     },
     "interpreter": {
       "enum": ["posix_sh", "windows_cmd", "windows_powershell"],
       "metadata": { "x-vocabulary": "closed" }
+    },
+    "outcome": {
+      "enum": ["done", "skipped", "failed", "delegated"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "step_record": {
+      "metadata": { "x-wire-order": ["id", "kind", "outcome", "uninstall", "forceUninstall", "interpreter"] },
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string" },
+        "outcome": { "ref": "outcome" }
+      },
+      "optionalProperties": {
+        "uninstall": { "type": "string", "metadata": { "x-default": null } },
+        "forceUninstall": { "type": "string", "metadata": { "x-default": null } },
+        "interpreter": { "ref": "interpreter", "metadata": { "x-default": null } }
+      }
     },
     "package": {
       "metadata": { "x-wire-order": ["group", "name", "version"] },
@@ -73,7 +90,7 @@
       }
     },
     "installation": {
-      "metadata": { "x-wire-order": ["slot", "package", "option", "platform", "arch", "method", "library", "directory", "appRoot", "portable", "launchers", "publicCommands", "commands"] },
+      "metadata": { "x-wire-order": ["slot", "package", "option", "platform", "arch", "method", "library", "directory", "appRoot", "portable", "launchers", "publicCommands", "commands", "features", "steps"] },
       "properties": {
         "slot": { "type": "string" },
         "package": { "ref": "package" },
@@ -89,7 +106,9 @@
       "optionalProperties": {
         "library": { "type": "string", "metadata": { "x-default": null } },
         "directory": { "type": "string", "metadata": { "x-default": null } },
-        "appRoot": { "type": "string", "metadata": { "x-default": null } }
+        "appRoot": { "type": "string", "metadata": { "x-default": null } },
+        "features": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "steps": { "elements": { "ref": "step_record" }, "metadata": { "x-empty": "omit" } }
       }
     }
   }

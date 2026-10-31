@@ -43,7 +43,7 @@
       }
     },
     "selectedMode": {
-      "enum": ["shell", "zip", "tar_gz", "exe", "msi", "source_build"],
+      "enum": ["shell", "zip", "tar_gz", "exe", "msi", "source_build", "steps"],
       "metadata": {
         "x-vocabulary": "closed",
         "x-default": null

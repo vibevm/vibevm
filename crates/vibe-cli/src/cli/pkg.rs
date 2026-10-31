@@ -111,6 +111,15 @@ pub struct InstallArgs {
     #[arg(long, value_name = "ID")]
     pub library: Option<String>,
 
+    /// Application feature, resume and step flags (PROP-065).
+    #[command(flatten)]
+    pub steps: AppStepArgs,
+
+    /// Print the application installation plan and stop, as `vibe app plan`
+    /// does (PROP-065 `#plan`).
+    #[arg(long, requires = "global")]
+    pub plan_only: bool,
+
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
@@ -295,6 +304,28 @@ pub struct InstallArgs {
     pub trace_compile: bool,
 }
 
+/// The structured-installation flags of an application install or update
+/// (PROP-065 `#features`, `#resume`).
+#[derive(Debug, Clone, Default, clap::Args)]
+pub struct AppStepArgs {
+    /// Choose an application installer feature by ID; repeatable.
+    #[arg(long = "feature", value_name = "ID")]
+    pub feature: Vec<String>,
+
+    /// Leave an application installer feature unchosen; repeatable.
+    #[arg(long = "no-feature", value_name = "ID")]
+    pub no_feature: Vec<String>,
+
+    /// Continue the kept application work directory from its first step
+    /// that is not done.
+    #[arg(long, conflicts_with = "from_step")]
+    pub resume: bool,
+
+    /// Restart the kept application work directory at the named step.
+    #[arg(long, value_name = "ID")]
+    pub from_step: Option<String>,
+}
+
 #[derive(Debug, clap::Args)]
 pub struct OutdatedArgs {
     /// Project root with `vibe.toml`. Defaults to current directory.
@@ -418,6 +449,10 @@ pub struct UpdateArgs {
     /// `<settings>/opt`; refused for a project home.
     #[arg(long, value_name = "ID")]
     pub library: Option<String>,
+
+    /// Application feature, resume and step flags (PROP-065).
+    #[command(flatten)]
+    pub steps: AppStepArgs,
 
     /// Explicit local source registry for a global application update.
     #[arg(long)]

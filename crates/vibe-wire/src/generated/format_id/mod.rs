@@ -20,12 +20,15 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FormatId {
     ApplicationIndex,
+    ApplicationSteps,
     ArtifactRecord,
     BootArtifactTransaction,
     CliApplicationAlternatives,
+    CliApplicationDescribe,
     CliApplicationInstallerOptions,
     CliApplicationLaunchers,
     CliApplicationList,
+    CliApplicationPlan,
     CliApplicationReport,
     CliApplicationStorageGc,
     CliApplicationStorageList,

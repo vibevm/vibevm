@@ -65,6 +65,12 @@ pub struct Installation {
     pub public_commands: Vec<PublicCommand>,
 
     pub commands: AuthoredCommands,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub features: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub steps: Vec<StepRecord>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -119,11 +125,29 @@ pub enum Method {
     #[serde(rename = "source_build")]
     SourceBuild,
 
+    #[serde(rename = "steps")]
+    Steps,
+
     #[serde(rename = "tar_gz")]
     TarGz,
 
     #[serde(rename = "zip")]
     Zip,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Outcome {
+    #[serde(rename = "delegated")]
+    Delegated,
+
+    #[serde(rename = "done")]
+    Done,
+
+    #[serde(rename = "failed")]
+    Failed,
+
+    #[serde(rename = "skipped")]
+    Skipped,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -149,4 +173,24 @@ pub struct PublicCommand {
 pub struct Slot {
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub default: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct StepRecord {
+    pub id: String,
+
+    pub kind: String,
+
+    pub outcome: Outcome,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub uninstall: Option<String>,
+
+    #[serde(rename = "forceUninstall")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub force_uninstall: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub interpreter: Option<Interpreter>,
 }

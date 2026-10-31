@@ -14,7 +14,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use specmark::spec;
-use vibe_core::manifest::InstallerOptionDecl;
+use vibe_core::manifest::{InstallerOptionDecl, result_of};
 
 use crate::alternatives::{check_reservation, reserved_names};
 use crate::error::{AppError, ResolveError};
@@ -23,6 +23,7 @@ use crate::proxies;
 use crate::resolve::ResolvedPackage;
 use crate::select::{Chooser, InstallChoice, select_option};
 use crate::settings::SettingsRoot;
+use crate::steps::{self, FeatureChooser, FeatureRequest, HostFacts, Plan, PlanInput, Start};
 use crate::storage::{Availability, Storage};
 
 use apply::{Applied, Mode, Selected};
@@ -40,6 +41,12 @@ pub struct OperationContext<'a> {
     /// The `vibe-app-proxy` image copied into `opt/bin` for every reserved
     /// command; the caller locates it beside its own executable.
     pub proxy_image: &'a Path,
+    /// PATH and environment lookups for conditions and needs.
+    pub facts: HostFacts<'a>,
+    /// The attended feature question (`PROP-065#features`).
+    pub feature_chooser: Option<FeatureChooser<'a>>,
+    /// Shown the plan before the first step runs (`PROP-065#plan`).
+    pub on_plan: Option<&'a dyn Fn(&Plan)>,
 }
 
 /// The selection and placement flags of `install -g` / `update -g`.
@@ -49,6 +56,10 @@ pub struct InstallRequest {
     pub choice: InstallChoice,
     pub library: Option<String>,
     pub force: bool,
+    /// `--feature` / `--no-feature`.
+    pub features: FeatureRequest,
+    /// `--resume` / `--from-step`.
+    pub start: Start,
 }
 
 /// The command an outcome reports.
@@ -89,20 +100,27 @@ pub fn install(
     if let Some(prior) = &prior {
         ensure_available(&key, prior, &storage)?;
     }
-    let applied = apply::apply(
+    let plan = plan_option(ctx, resolved, &option, &request.features, None)?;
+    let mut applied = apply::apply(
         ctx,
         &storage,
         &Selected {
             resolved,
             option: &option,
+            plan: &plan,
             prior: prior.as_ref(),
             library: request.library.as_deref(),
             force: request.force,
             mode: Mode::Install,
+            start: &request.start,
         },
     )?;
     let replaced = prior.is_some();
+    let finish_failure = applied.finish_failure.take();
     let outcome = commit(ctx, &storage, &mut index, applied, None, Command::Install)?;
+    if let Some(failure) = finish_failure {
+        return Err(failure);
+    }
     Ok(Outcome {
         message: format!(
             "{} {} via installer `{}`",
@@ -158,7 +176,7 @@ pub fn update(
         resolved,
         &option,
     )?;
-    let owned = Method::of(&option.installation).is_owned();
+    let owned = result_of(&option).is_owned();
     let same_key = index.installations.get(&key).cloned();
     if let Some(existing) = &same_key {
         ensure_available(&key, existing, &storage)?;
@@ -169,7 +187,7 @@ pub fn update(
             Location::External { .. } => None,
         });
         (same_key, library, None)
-    } else if prior.method.is_owned() {
+    } else if matches!(prior.location, Location::Owned { .. }) {
         (same_key, request.library.clone(), None)
     } else {
         (
@@ -178,18 +196,26 @@ pub fn update(
             Some(prior_key.clone()),
         )
     };
-    let applied = apply::apply(
+    let previous = request
+        .features
+        .is_empty()
+        .then_some(prior.features.as_slice());
+    let plan = plan_option(ctx, resolved, &option, &request.features, previous)?;
+    let mut applied = apply::apply(
         ctx,
         &storage,
         &Selected {
             resolved,
             option: &option,
+            plan: &plan,
             prior: target_prior.as_ref(),
             library: library.as_deref(),
             force: request.force,
             mode: Mode::Update,
+            start: &request.start,
         },
     )?;
+    let finish_failure = applied.finish_failure.take();
     let outcome = commit(
         ctx,
         &storage,
@@ -198,6 +224,9 @@ pub fn update(
         replaces,
         Command::Update,
     )?;
+    if let Some(failure) = finish_failure {
+        return Err(failure);
+    }
     Ok(Outcome {
         message: if prior_key == key {
             format!("refreshed {key} in place")
@@ -206,6 +235,43 @@ pub fn update(
         },
         ..outcome
     })
+}
+
+/// Plan one installation without downloading or running anything
+/// (`vibe app plan`, `install --plan-only`).
+pub fn plan(
+    ctx: &OperationContext<'_>,
+    resolved: &ResolvedPackage,
+    choice: &InstallChoice,
+    features: &FeatureRequest,
+) -> Result<Plan, AppError> {
+    let option = choose(ctx, resolved, choice)?;
+    plan_option(ctx, resolved, &option, features, None)
+}
+
+/// Compute the plan of the selected option and show it.
+fn plan_option(
+    ctx: &OperationContext<'_>,
+    resolved: &ResolvedPackage,
+    option: &InstallerOptionDecl,
+    features: &FeatureRequest,
+    previous: Option<&[String]>,
+) -> Result<Plan, AppError> {
+    let plan = steps::plan(&PlanInput {
+        resolved,
+        option,
+        request: features,
+        previous,
+        settings: ctx.settings,
+        facts: ctx.facts,
+        offline: ctx.offline,
+        attended: ctx.chooser.is_some(),
+        chooser: ctx.feature_chooser,
+    })?;
+    if let Some(show) = ctx.on_plan {
+        show(&plan);
+    }
+    Ok(plan)
 }
 
 /// Record an applied installation, apply the slot default rules, write the

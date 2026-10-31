@@ -1,0 +1,39 @@
+{
+  "protocol": "vibe-app-steps/1",
+  "package": { "group": "org.example", "name": "tool", "version": "1.0.0" },
+  "option": "src",
+  "features": ["docs"],
+  "steps": [
+    {
+      "id": "fetch",
+      "kind": "sources",
+      "outcome": "done",
+      "started": "2026-10-31T10:00:00Z",
+      "finished": "2026-10-31T10:00:02Z"
+    },
+    {
+      "id": "fix",
+      "kind": "agent",
+      "outcome": "skipped",
+      "reason": "no agent configured"
+    },
+    {
+      "id": "register",
+      "kind": "shell",
+      "outcome": "done",
+      "started": "2026-10-31T10:00:02Z",
+      "finished": "2026-10-31T10:00:03Z",
+      "uninstall": "rm -f /tmp/tool.registered",
+      "forceUninstall": "rm -rf /tmp/tool.registered",
+      "interpreter": "posix_sh"
+    },
+    {
+      "id": "build",
+      "kind": "recipe",
+      "outcome": "failed",
+      "reason": "recipe exited with code 3",
+      "started": "2026-10-31T10:00:03Z",
+      "finished": "2026-10-31T10:00:09Z"
+    }
+  ]
+}

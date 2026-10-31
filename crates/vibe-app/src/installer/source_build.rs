@@ -1,8 +1,8 @@
-//! The `source_build` recipe runner: fetch and verify every declared input
-//! (URL downloads cached by digest under `cache/app-sources/`), lay them out
-//! in a fresh work directory under `cache/app-build/`, run the authored
-//! script, and hand back a non-empty `VIBE_OUT` as the payload. A failed
-//! build keeps its work directory for inspection; nothing else is recorded.
+//! The parts of a source build the `sources` and `recipe` steps reuse:
+//! fetch and verify one declared input (URL downloads cached by digest
+//! under `cache/app-sources/`), lay inputs out as `<work>/sources/<name>/`,
+//! build the child that runs a package-relative script, and move a
+//! finished `VIBE_OUT` into place.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#source-build");
 
@@ -12,8 +12,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use sha2::{Digest, Sha256};
-use specmark::spec;
-use vibe_core::manifest::{RecipeDecl, ShellInterpreter, SourceInputDecl};
+use vibe_core::manifest::{ShellInterpreter, SourceInputDecl};
 
 use crate::error::InstallerError;
 use crate::resolve::strip_verbatim;
@@ -21,50 +20,13 @@ use crate::resolve::strip_verbatim;
 use super::archive::{self, ArchiveFormat};
 use super::shell;
 
-/// Everything one build needs, threaded in by the caller.
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#source-build")]
-pub struct SourceBuild<'a> {
-    pub sources: &'a [SourceInputDecl],
-    pub recipe: &'a RecipeDecl,
-    /// The resolved package tree (`VIBE_PACKAGE`).
-    pub package_root: &'a Path,
-    /// `<settings>/cache/app-sources`.
-    pub cache_root: &'a Path,
-    /// `<settings>/cache/app-build/<group>.<name>@<version>-<pid>`.
-    pub work: &'a Path,
-    pub platform: &'a str,
-    pub arch: &'a str,
-    pub offline: bool,
-    pub json: bool,
-}
-
 /// One verified input, ready to be laid out as `sources/<name>/`.
 #[derive(Debug)]
-struct Fetched {
+pub(crate) struct Fetched {
     name: String,
-    file: PathBuf,
+    pub(crate) file: PathBuf,
     filename: String,
     extract: Option<ArchiveFormat>,
-}
-
-/// Fetch every input, then build into a fresh work directory and move
-/// `VIBE_OUT` to `payload`. `work_created` turns true once the work
-/// directory exists, so the caller knows a failure left it behind.
-pub fn produce(
-    build: &SourceBuild<'_>,
-    payload: &Path,
-    work_created: &mut bool,
-) -> Result<(), InstallerError> {
-    let fetched = build
-        .sources
-        .iter()
-        .map(|source| fetch(build, source))
-        .collect::<Result<Vec<_>, _>>()?;
-    fresh_work(build.work)?;
-    *work_created = true;
-    lay_out(build.work, &fetched)?;
-    let out = run_recipe(build)?;
-    move_payload(&out, payload)
 }
 
 /// The file name a source keeps: the last URL path segment (`source` when
@@ -127,16 +89,21 @@ fn extraction(
 /// A URL input comes from `<cache>/<sha256>/<filename>` when the cached
 /// file still matches its digest, otherwise from the network into the
 /// cache; a path input is the verified package file itself.
-fn fetch(build: &SourceBuild<'_>, source: &SourceInputDecl) -> Result<Fetched, InstallerError> {
+pub(crate) fn fetch(
+    cache_root: &Path,
+    package_root: &Path,
+    source: &SourceInputDecl,
+    offline: bool,
+) -> Result<Fetched, InstallerError> {
     let filename = source_filename(source)?;
     let extract = extraction(source, &filename)?;
     let sha256 = source.sha256.to_ascii_lowercase();
     let file = match (&source.url, &source.path) {
         (Some(url), _) => {
-            let directory = build.cache_root.join(&sha256);
+            let directory = cache_root.join(&sha256);
             let cached = directory.join(&filename);
             if digest_of(&cached).ok().as_deref() != Some(sha256.as_str()) {
-                if build.offline {
+                if offline {
                     return Err(InstallerError::Offline {
                         source_ref: url.clone(),
                     });
@@ -144,7 +111,7 @@ fn fetch(build: &SourceBuild<'_>, source: &SourceInputDecl) -> Result<Fetched, I
                 fs::create_dir_all(&directory)
                     .map_err(|source| super::io("creating", &directory, source))?;
                 let partial = directory.join(format!(".{filename}.{}.part", std::process::id()));
-                super::fetch_verified(url, &sha256, build.package_root, &partial, false)?;
+                super::fetch_verified(url, &sha256, package_root, &partial, false)?;
                 fs::rename(&partial, &cached).map_err(|source| {
                     let _ = fs::remove_file(&partial);
                     super::io("caching", &cached, source)
@@ -154,7 +121,7 @@ fn fetch(build: &SourceBuild<'_>, source: &SourceInputDecl) -> Result<Fetched, I
         }
         (None, Some(path)) => {
             let relative = path.to_string_lossy();
-            let file = super::package_file(build.package_root, &relative).map_err(|reason| {
+            let file = super::package_file(package_root, &relative).map_err(|reason| {
                 InstallerError::Fetch {
                     source_ref: relative.clone().into_owned(),
                     reason,
@@ -183,23 +150,16 @@ fn fetch(build: &SourceBuild<'_>, source: &SourceInputDecl) -> Result<Fetched, I
     })
 }
 
-/// Create `<work>/sources` and an empty `<work>/out`, replacing a stale
-/// directory of the same name.
-fn fresh_work(work: &Path) -> Result<(), InstallerError> {
-    if work.exists() {
-        fs::remove_dir_all(work).map_err(|source| super::io("clearing", work, source))?;
-    }
-    for directory in [work.join("sources"), work.join("out")] {
-        fs::create_dir_all(&directory)
-            .map_err(|source| super::io("creating", &directory, source))?;
-    }
-    Ok(())
-}
-
-/// `sources/<name>/` holds the extracted archive or the file itself.
-fn lay_out(work: &Path, fetched: &[Fetched]) -> Result<(), InstallerError> {
+/// `<sources>/<name>/` holds the extracted archive or the file itself; a
+/// stale directory of the same name is replaced.
+pub(crate) fn lay_out(sources: &Path, fetched: &[Fetched]) -> Result<(), InstallerError> {
+    fs::create_dir_all(sources).map_err(|source| super::io("creating", sources, source))?;
     for input in fetched {
-        let destination = work.join("sources").join(&input.name);
+        let destination = sources.join(&input.name);
+        if destination.exists() {
+            fs::remove_dir_all(&destination)
+                .map_err(|source| super::io("clearing", &destination, source))?;
+        }
         match input.extract {
             Some(format) => archive::extract(&input.file, format, None, &destination)?,
             None => {
@@ -214,35 +174,20 @@ fn lay_out(work: &Path, fetched: &[Fetched]) -> Result<(), InstallerError> {
     Ok(())
 }
 
-/// Run the recipe script in `<work>` and return `VIBE_OUT` when the child
-/// exits 0 and left a non-empty directory there.
-fn run_recipe(build: &SourceBuild<'_>) -> Result<PathBuf, InstallerError> {
-    let relative = build.recipe.script.to_string_lossy();
-    let script = super::package_file(build.package_root, &relative)
+/// The child that runs a package-relative recipe script.
+pub(crate) fn script_command(
+    interpreter: Option<ShellInterpreter>,
+    package_root: &Path,
+    relative: &Path,
+) -> Result<Command, InstallerError> {
+    let relative = relative.to_string_lossy();
+    let script = super::package_file(package_root, &relative)
         .map(strip_verbatim)
         .map_err(|reason| InstallerError::Fetch {
             source_ref: relative.into_owned(),
             reason,
         })?;
-    let work = build.work;
-    let out = work.join("out");
-    let mut command = recipe_command(build.recipe.interpreter, &script)?;
-    command
-        .current_dir(work)
-        .env("VIBE_SOURCES", work.join("sources"))
-        .env("VIBE_WORK", work)
-        .env("VIBE_OUT", &out)
-        .env("VIBE_PACKAGE", build.package_root)
-        .env("VIBE_PLATFORM", build.platform)
-        .env("VIBE_ARCH", build.arch);
-    super::run_child(&mut command, "source_build recipe", build.json)?;
-    let populated = fs::read_dir(&out).is_ok_and(|mut entries| entries.next().is_some());
-    if !out.is_dir() || !populated {
-        return Err(InstallerError::EmptyOutput {
-            path: out.display().to_string(),
-        });
-    }
-    Ok(out)
+    recipe_command(interpreter, &script)
 }
 
 /// The recipe child: `/bin/sh <script>`, `cmd.exe /D /S /C <script>` or
@@ -281,7 +226,7 @@ fn recipe_command(
 }
 
 /// Move `VIBE_OUT` to `payload`; across filesystems, copy it instead.
-fn move_payload(out: &Path, payload: &Path) -> Result<(), InstallerError> {
+pub(crate) fn move_payload(out: &Path, payload: &Path) -> Result<(), InstallerError> {
     if fs::rename(out, payload).is_ok() {
         return Ok(());
     }
@@ -289,7 +234,7 @@ fn move_payload(out: &Path, payload: &Path) -> Result<(), InstallerError> {
         .map_err(|failure| super::io(failure.action, &failure.path, failure.source))
 }
 
-fn digest_of(path: &Path) -> io::Result<String> {
+pub(crate) fn digest_of(path: &Path) -> io::Result<String> {
     let mut file = File::open(path)?;
     let mut hash = Sha256::new();
     let mut buffer = [0u8; 64 * 1024];
@@ -310,6 +255,12 @@ fn layout(name: &str, reason: String) -> InstallerError {
     }
 }
 
+/// The hex digest of `bytes`, for tests elsewhere in the crate.
+#[cfg(test)]
+pub(crate) fn tests_digest(bytes: &[u8]) -> String {
+    super::hex(&Sha256::digest(bytes))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -326,44 +277,6 @@ mod tests {
 
     fn sha(bytes: &[u8]) -> String {
         super::super::hex(&Sha256::digest(bytes))
-    }
-
-    struct Tree {
-        _dir: tempfile::TempDir,
-        package: PathBuf,
-        cache: PathBuf,
-        work: PathBuf,
-        recipe: RecipeDecl,
-    }
-
-    fn tree() -> Tree {
-        let dir = tempfile::tempdir().unwrap();
-        let package = dir.path().join("package");
-        fs::create_dir_all(&package).unwrap();
-        Tree {
-            package,
-            cache: dir.path().join("cache/app-sources"),
-            work: dir.path().join("cache/app-build/org.example.demo@1.0.0-1"),
-            recipe: RecipeDecl {
-                interpreter: None,
-                script: PathBuf::from("build.sh"),
-            },
-            _dir: dir,
-        }
-    }
-
-    fn build<'a>(tree: &'a Tree, sources: &'a [SourceInputDecl], offline: bool) -> SourceBuild<'a> {
-        SourceBuild {
-            sources,
-            recipe: &tree.recipe,
-            package_root: &tree.package,
-            cache_root: &tree.cache,
-            work: &tree.work,
-            platform: "linux",
-            arch: "x86_64",
-            offline,
-            json: true,
-        }
     }
 
     #[test]
@@ -395,106 +308,71 @@ mod tests {
 
     #[test]
     fn url_sources_are_cached_by_digest_and_offline_needs_a_hit() {
-        let tree = tree();
+        let dir = tempfile::tempdir().unwrap();
+        let (package, cache) = (dir.path().join("package"), dir.path().join("cache"));
         let digest = sha(b"upstream");
-        let url = "http://127.0.0.1:9/dist/upstream.txt";
-        let sources = [input("up", Some(url), None, &digest)];
-        let missing = fetch(&build(&tree, &sources, true), &sources[0]).unwrap_err();
+        let source = input(
+            "up",
+            Some("http://127.0.0.1:9/dist/upstream.txt"),
+            None,
+            &digest,
+        );
+        let missing = fetch(&cache, &package, &source, true).unwrap_err();
         assert!(
             matches!(missing, InstallerError::Offline { .. }),
             "{missing}"
         );
-
-        let cached = tree.cache.join(&digest).join("upstream.txt");
+        let cached = cache.join(&digest).join("upstream.txt");
         fs::create_dir_all(cached.parent().unwrap()).unwrap();
         fs::write(&cached, b"tampered").unwrap();
-        let stale = fetch(&build(&tree, &sources, true), &sources[0]).unwrap_err();
+        let stale = fetch(&cache, &package, &source, true).unwrap_err();
         assert!(matches!(stale, InstallerError::Offline { .. }), "{stale}");
-
         fs::write(&cached, b"upstream").unwrap();
-        let hit = fetch(&build(&tree, &sources, true), &sources[0]).unwrap();
+        let hit = fetch(&cache, &package, &source, true).unwrap();
         assert_eq!(hit.file, cached);
-        assert_eq!(hit.filename, "upstream.txt");
         assert_eq!(hit.extract, None);
     }
 
     #[test]
-    fn path_sources_are_verified_and_laid_out_without_a_cache() {
-        let tree = tree();
-        fs::write(tree.package.join("fix.patch"), b"patch").unwrap();
-        let wrong = [input("fix", None, Some("fix.patch"), &"0".repeat(64))];
-        let mut created = false;
-        let refused = produce(&build(&tree, &wrong, false), &tree.work, &mut created);
-        assert!(matches!(refused, Err(InstallerError::Digest { .. })));
-        assert!(!created && !tree.work.exists(), "refused before any work");
-
-        let sources = [input("fix", None, Some("fix.patch"), &sha(b"patch"))];
-        let fetched = fetch(&build(&tree, &sources, true), &sources[0]).unwrap();
-        fresh_work(&tree.work).unwrap();
-        lay_out(&tree.work, &[fetched]).unwrap();
-        assert_eq!(
-            fs::read(tree.work.join("sources/fix/fix.patch")).unwrap(),
-            b"patch"
-        );
-        assert!(!tree.cache.exists(), "path inputs are never cached");
+    fn path_sources_are_verified_and_laid_out_replacing_stale_ones() {
+        let dir = tempfile::tempdir().unwrap();
+        let (package, cache) = (dir.path().join("package"), dir.path().join("cache"));
+        fs::create_dir_all(&package).unwrap();
+        fs::write(package.join("fix.patch"), b"patch").unwrap();
+        let wrong = input("fix", None, Some("fix.patch"), &"0".repeat(64));
+        assert!(matches!(
+            fetch(&cache, &package, &wrong, false),
+            Err(InstallerError::Digest { .. })
+        ));
+        let right = input("fix", None, Some("fix.patch"), &sha(b"patch"));
+        let sources = dir.path().join("work/sources");
+        fs::create_dir_all(sources.join("fix")).unwrap();
+        fs::write(sources.join("fix/stale"), b"old").unwrap();
+        let fetched = fetch(&cache, &package, &right, true).unwrap();
+        lay_out(&sources, &[fetched]).unwrap();
+        assert_eq!(fs::read(sources.join("fix/fix.patch")).unwrap(), b"patch");
+        assert!(!sources.join("fix/stale").exists());
+        assert!(!cache.exists(), "path inputs are never cached");
     }
 
     #[cfg(unix)]
     #[test]
-    fn an_empty_out_fails_and_keeps_the_work_directory() {
-        let tree = tree();
-        fs::write(tree.package.join("data.txt"), b"data").unwrap();
+    fn a_script_runs_contained_and_its_out_moves_into_place() {
+        let dir = tempfile::tempdir().unwrap();
+        let package = dir.path().join("package");
+        fs::create_dir_all(&package).unwrap();
         fs::write(
-            tree.package.join("build.sh"),
-            "test \"$PWD\" = \"$VIBE_WORK\"\n",
+            package.join("build.sh"),
+            "mkdir -p \"$OUT/bin\" && echo hi > \"$OUT/bin/x\"\n",
         )
         .unwrap();
-        let sources = [input("data", None, Some("data.txt"), &sha(b"data"))];
-        let payload = tree.package.join("payload");
-        let mut created = false;
-        let error = produce(&build(&tree, &sources, true), &payload, &mut created).unwrap_err();
-        assert!(
-            matches!(error, InstallerError::EmptyOutput { .. }),
-            "{error}"
-        );
-        assert!(created);
-        assert!(tree.work.join("sources/data/data.txt").is_file());
-        assert!(!payload.exists());
-    }
-
-    #[cfg(unix)]
-    #[test]
-    fn a_recipe_sees_its_variables_and_its_out_becomes_the_payload() {
-        let tree = tree();
-        let archive = tree.package.join("src.zip");
-        let mut zip = zip::ZipWriter::new(File::create(&archive).unwrap());
-        zip.start_file("hello.txt", zip::write::SimpleFileOptions::default())
-            .unwrap();
-        io::Write::write_all(&mut zip, b"hello").unwrap();
-        zip.finish().unwrap();
-        fs::write(
-            tree.package.join("build.sh"),
-            "set -e\nmkdir \"$VIBE_OUT/bin\"\ncat \"$VIBE_SOURCES/src/hello.txt\" > \"$VIBE_OUT/bin/hello\"\n\
-             echo \"$VIBE_PLATFORM/$VIBE_ARCH\" > \"$VIBE_OUT/target\"\ntest -f \"$VIBE_PACKAGE/build.sh\"\n",
-        )
-        .unwrap();
-        let sources = [input(
-            "src",
-            None,
-            Some("src.zip"),
-            &digest_of(&archive).unwrap(),
-        )];
-        let payload = tree.package.join("payload");
-        let mut created = false;
-        produce(&build(&tree, &sources, true), &payload, &mut created).unwrap();
-        assert_eq!(fs::read(payload.join("bin/hello")).unwrap(), b"hello");
-        assert_eq!(
-            fs::read_to_string(payload.join("target")).unwrap(),
-            "linux/x86_64\n"
-        );
-
-        let copied = tree.package.join("copied");
-        crate::fs_util::copy_tree(&payload, &copied).unwrap();
-        assert_eq!(fs::read(copied.join("bin/hello")).unwrap(), b"hello");
+        let out = dir.path().join("out");
+        let mut command = script_command(None, &package, Path::new("build.sh")).unwrap();
+        command.env("OUT", &out);
+        super::super::run_child(&mut command, "recipe", true).unwrap();
+        let payload = dir.path().join("payload");
+        move_payload(&out, &payload).unwrap();
+        assert_eq!(fs::read(payload.join("bin/x")).unwrap(), b"hi\n");
+        assert!(script_command(None, &package, Path::new("../escape.sh")).is_err());
     }
 }

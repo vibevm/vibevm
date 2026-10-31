@@ -38,6 +38,8 @@ fn base_args() -> InstallArgs {
         arch: None,
         installer: None,
         library: None,
+        steps: Default::default(),
+        plan_only: false,
         path: PathBuf::from("."),
         registry: None,
         assume_yes: false,

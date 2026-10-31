@@ -128,6 +128,11 @@ env_roots = [
     # and the resolved value travels down as data. The resolution itself is a
     # pure function over injected directories; only these two reads are ambient.
     "crates/vibe-cli/src/commands/deploy/clients.rs",
+    # Step conditions and needs of an application installer (PROP-065
+    # `#conditions`): `command_present` / `command:NAME` read $PATH and
+    # `env_present` reads one variable exactly here; `vibe-app` receives the
+    # lookups as functions and reads no environment itself.
+    "crates/vibe-cli/src/commands/app/facts.rs",
     # `vibe aiui` reads the settings dir ($VIBE_SETTINGS / $HOME) to find `~/.vibe/aiui/` — vibeterm's
     # control-session discovery directory (PROP-042 §4).
     "crates/vibe-cli/src/commands/aiui/control.rs",

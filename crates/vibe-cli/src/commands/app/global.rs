@@ -6,16 +6,16 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use dialoguer::Select;
+use dialoguer::{MultiSelect, Select};
 use vibe_app::{
-    Command as AppCommand, InstallChoice, InstallRequest, OperationContext, Outcome,
-    ResolvedPackage, SettingsRoot,
+    Command as AppCommand, FeatureRequest, HostFacts, InstallChoice, InstallRequest,
+    OperationContext, Outcome, Plan, ResolvedPackage, SettingsRoot, Start,
 };
 use vibe_wire::generated::application_report::{
     ApplicationReport, ApplicationReportCommand, ApplicationReportSelectedMode,
 };
 
-use crate::cli::{InstallArgs, UninstallArgs, UpdateArgs};
+use crate::cli::{AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
 
 /// The current user's settings root, resolved once at this boundary.
@@ -68,6 +68,84 @@ pub(super) fn attended(ctx: &output::Context) -> bool {
     !ctx.is_json() && !ctx.is_unattended() && console::user_attended()
 }
 
+fn feature_chooser(
+    prompt: &str,
+    items: &[String],
+    defaults: &[bool],
+) -> std::result::Result<Option<Vec<usize>>, String> {
+    MultiSelect::new()
+        .with_prompt(prompt)
+        .items(items)
+        .defaults(defaults)
+        .interact_opt()
+        .map_err(|error| error.to_string())
+}
+
+/// PATH and environment facts for step conditions and needs.
+pub(crate) fn host_facts() -> HostFacts<'static> {
+    HostFacts {
+        command_present: &super::facts::command_on_path,
+        env_present: &super::facts::env_set,
+    }
+}
+
+/// Every application mutation's context: attended prompts only in an
+/// attended terminal, the plan shown through `show`.
+pub(super) fn operation<'a>(
+    ctx: &output::Context,
+    settings: &'a SettingsRoot,
+    offline: bool,
+    proxy_image: &'a Path,
+    show: Option<&'a dyn Fn(&Plan)>,
+) -> OperationContext<'a> {
+    let attended = attended(ctx);
+    OperationContext {
+        settings,
+        json: ctx.is_json(),
+        offline,
+        chooser: attended.then_some(&chooser as vibe_app::Chooser<'_>),
+        proxy_image,
+        facts: host_facts(),
+        feature_chooser: attended.then_some(&feature_chooser as vibe_app::FeatureChooser<'_>),
+        on_plan: show,
+    }
+}
+
+/// Print the plan before the first step runs (stderr, so `--json` stays
+/// one envelope).
+pub(super) fn plan_printer(ctx: &output::Context) -> impl Fn(&Plan) + '_ {
+    move |plan: &Plan| {
+        if !ctx.is_quiet() {
+            eprint!("{}", plan.render());
+        }
+    }
+}
+
+/// `--feature` / `--no-feature` and `--resume` / `--from-step`.
+pub(super) fn step_flags(steps: &AppStepArgs) -> (FeatureRequest, Start) {
+    let start = match (&steps.from_step, steps.resume) {
+        (Some(step), _) => Start::FromStep(step.clone()),
+        (None, true) => Start::Resume,
+        (None, false) => Start::Fresh,
+    };
+    (
+        FeatureRequest {
+            enable: steps.feature.clone(),
+            disable: steps.no_feature.clone(),
+        },
+        start,
+    )
+}
+
+/// `vibe app plan` and `install --plan-only`: JSON or text on stdout.
+pub(crate) fn render_plan(ctx: &output::Context, plan: &Plan) -> Result<()> {
+    if ctx.is_json() {
+        return ctx.emit_json(&plan.to_wire());
+    }
+    print!("{}", plan.render());
+    Ok(())
+}
+
 pub fn install(
     ctx: &output::Context,
     args: InstallArgs,
@@ -112,6 +190,7 @@ pub fn install(
         &args.packages[0],
         offline,
     )?;
+    let (features, start) = step_flags(&args.steps);
     let request = InstallRequest {
         choice: InstallChoice {
             platform: args.platform,
@@ -120,16 +199,17 @@ pub fn install(
         },
         library: args.library,
         force: args.force,
+        features,
+        start,
     };
+    if args.plan_only {
+        let operation = operation(ctx, &settings, offline, &proxy_image, None);
+        let plan = vibe_app::plan(&operation, &resolved, &request.choice, &request.features)?;
+        return render_plan(ctx, &plan);
+    }
+    let show = plan_printer(ctx);
     let outcome = ctx.suspend_progress(|| {
-        let attended = attended(ctx);
-        let operation = OperationContext {
-            settings: &settings,
-            json: ctx.is_json(),
-            offline,
-            chooser: attended.then_some(&chooser as vibe_app::Chooser<'_>),
-            proxy_image: &proxy_image,
-        };
+        let operation = operation(ctx, &settings, offline, &proxy_image, Some(&show));
         vibe_app::install(&operation, &resolved, &request)
     })?;
     render(ctx, &outcome)
@@ -156,6 +236,7 @@ pub fn update(
         &args.packages[0],
         root_offline,
     )?;
+    let (features, start) = step_flags(&args.steps);
     let request = InstallRequest {
         choice: InstallChoice {
             platform: args.platform,
@@ -164,16 +245,12 @@ pub fn update(
         },
         library: args.library,
         force: args.force,
+        features,
+        start,
     };
+    let show = plan_printer(ctx);
     let outcome = ctx.suspend_progress(|| {
-        let attended = attended(ctx);
-        let operation = OperationContext {
-            settings: &settings,
-            json: ctx.is_json(),
-            offline: root_offline,
-            chooser: attended.then_some(&chooser as vibe_app::Chooser<'_>),
-            proxy_image: &proxy_image,
-        };
+        let operation = operation(ctx, &settings, root_offline, &proxy_image, Some(&show));
         vibe_app::update(&operation, &resolved, &request)
     })?;
     render(ctx, &outcome)
@@ -188,11 +265,9 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
     let proxy_image = proxy_image()?;
     let outcome = ctx.suspend_progress(|| {
         let operation = OperationContext {
-            settings: &settings,
-            json: ctx.is_json(),
-            offline: root_offline,
             chooser: None,
-            proxy_image: &proxy_image,
+            feature_chooser: None,
+            ..operation(ctx, &settings, root_offline, &proxy_image, None)
         };
         vibe_app::uninstall(&operation, &args.package, args.force)
     })?;
@@ -229,6 +304,7 @@ fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
                 vibe_app::Method::Exe => ApplicationReportSelectedMode::Exe,
                 vibe_app::Method::Msi => ApplicationReportSelectedMode::Msi,
                 vibe_app::Method::SourceBuild => ApplicationReportSelectedMode::SourceBuild,
+                vibe_app::Method::Steps => ApplicationReportSelectedMode::Steps,
             }),
         });
     }

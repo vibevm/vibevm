@@ -10,7 +10,9 @@ use std::fs;
 use std::path::PathBuf;
 
 use specmark::spec;
-use vibe_core::manifest::{InstallerMethod, LauncherDecl, PublicCommandDecl, ShellInterpreter};
+use vibe_core::manifest::{
+    InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl, ShellInterpreter,
+};
 use vibe_wire::generated::application::e2::index as wire;
 
 use crate::error::StateError;
@@ -54,17 +56,22 @@ pub enum Method {
     Exe,
     Msi,
     SourceBuild,
+    /// An option declared as `[[steps]]` (`PROP-065#steps`); its ownership
+    /// follows the declared result.
+    Steps,
 }
 
 impl Method {
-    pub fn of(installation: &InstallerMethod) -> Self {
-        match installation {
-            InstallerMethod::Shell { .. } => Self::Shell,
-            InstallerMethod::Zip { .. } => Self::Zip,
-            InstallerMethod::TarGz { .. } => Self::TarGz,
-            InstallerMethod::Exe { .. } => Self::Exe,
-            InstallerMethod::Msi { .. } => Self::Msi,
-            InstallerMethod::SourceBuild { .. } => Self::SourceBuild,
+    /// The method an option records: its `installation.type`, or `steps`.
+    pub fn of(option: &InstallerOptionDecl) -> Self {
+        match &option.installation {
+            Some(InstallerMethod::Shell { .. }) => Self::Shell,
+            Some(InstallerMethod::Zip { .. }) => Self::Zip,
+            Some(InstallerMethod::TarGz { .. }) => Self::TarGz,
+            Some(InstallerMethod::Exe { .. }) => Self::Exe,
+            Some(InstallerMethod::Msi { .. }) => Self::Msi,
+            Some(InstallerMethod::SourceBuild { .. }) => Self::SourceBuild,
+            None => Self::Steps,
         }
     }
 
@@ -76,11 +83,48 @@ impl Method {
             Self::Exe => "exe",
             Self::Msi => "msi",
             Self::SourceBuild => "source_build",
+            Self::Steps => "steps",
         }
     }
+}
 
-    pub fn is_owned(self) -> bool {
-        matches!(self, Self::Zip | Self::TarGz | Self::SourceBuild)
+/// The outcome of one step (`PROP-065#execution`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#execution")]
+pub enum StepOutcome {
+    Done,
+    Skipped,
+    Failed,
+    Delegated,
+}
+
+impl StepOutcome {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Done => "done",
+            Self::Skipped => "skipped",
+            Self::Failed => "failed",
+            Self::Delegated => "delegated",
+        }
+    }
+}
+
+/// One step outcome kept with an installation, with the uninstall data a
+/// shell or native step recorded (`PROP-065#record`).
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#record")]
+pub struct StepRecord {
+    pub id: String,
+    pub kind: String,
+    pub outcome: StepOutcome,
+    /// `uninstall`, `force_uninstall` and `interpreter`; `update` unused.
+    pub uninstall: AuthoredCommands,
+}
+
+impl AuthoredCommands {
+    /// Whether an uninstall command of either variant is recorded.
+    pub fn has_uninstall(&self) -> bool {
+        self.uninstall.is_some() || self.force_uninstall.is_some()
     }
 }
 
@@ -117,7 +161,12 @@ pub struct Installation {
     pub portable: bool,
     pub launchers: Vec<LauncherDecl>,
     pub public_commands: Vec<PublicCommandDecl>,
+    /// The authored commands of a method-form option.
     pub commands: AuthoredCommands,
+    /// The chosen features (`PROP-065#features`).
+    pub features: Vec<String>,
+    /// Step outcomes in step order (`PROP-065#record`).
+    pub steps: Vec<StepRecord>,
 }
 
 /// The whole inventory: installations by key and each slot's default key.
@@ -262,6 +311,7 @@ fn installation_to_wire(value: &Installation) -> wire::Installation {
             Method::Exe => wire::Method::Exe,
             Method::Msi => wire::Method::Msi,
             Method::SourceBuild => wire::Method::SourceBuild,
+            Method::Steps => wire::Method::Steps,
         },
         library,
         directory,
@@ -294,12 +344,42 @@ fn installation_to_wire(value: &Installation) -> wire::Installation {
             uninstall: value.commands.uninstall.clone(),
             force_uninstall: value.commands.force_uninstall.clone(),
             update: value.commands.update.clone(),
-            interpreter: value.commands.interpreter.map(|value| match value {
-                ShellInterpreter::PosixSh => wire::Interpreter::PosixSh,
-                ShellInterpreter::WindowsCmd => wire::Interpreter::WindowsCmd,
-                ShellInterpreter::WindowsPowershell => wire::Interpreter::WindowsPowershell,
-            }),
+            interpreter: value.commands.interpreter.map(interpreter_to_wire),
         },
+        features: value.features.clone(),
+        steps: value
+            .steps
+            .iter()
+            .map(|step| wire::StepRecord {
+                id: step.id.clone(),
+                kind: step.kind.clone(),
+                outcome: match step.outcome {
+                    StepOutcome::Done => wire::Outcome::Done,
+                    StepOutcome::Skipped => wire::Outcome::Skipped,
+                    StepOutcome::Failed => wire::Outcome::Failed,
+                    StepOutcome::Delegated => wire::Outcome::Delegated,
+                },
+                uninstall: step.uninstall.uninstall.clone(),
+                force_uninstall: step.uninstall.force_uninstall.clone(),
+                interpreter: step.uninstall.interpreter.map(interpreter_to_wire),
+            })
+            .collect(),
+    }
+}
+
+fn interpreter_to_wire(value: ShellInterpreter) -> wire::Interpreter {
+    match value {
+        ShellInterpreter::PosixSh => wire::Interpreter::PosixSh,
+        ShellInterpreter::WindowsCmd => wire::Interpreter::WindowsCmd,
+        ShellInterpreter::WindowsPowershell => wire::Interpreter::WindowsPowershell,
+    }
+}
+
+fn interpreter_from_wire(value: wire::Interpreter) -> ShellInterpreter {
+    match value {
+        wire::Interpreter::PosixSh => ShellInterpreter::PosixSh,
+        wire::Interpreter::WindowsCmd => ShellInterpreter::WindowsCmd,
+        wire::Interpreter::WindowsPowershell => ShellInterpreter::WindowsPowershell,
     }
 }
 
@@ -311,14 +391,15 @@ fn installation_from_wire(record: wire::Installation) -> Result<Installation, St
         wire::Method::Exe => Method::Exe,
         wire::Method::Msi => Method::Msi,
         wire::Method::SourceBuild => Method::SourceBuild,
+        wire::Method::Steps => Method::Steps,
     };
-    let location = match (
-        method.is_owned(),
-        record.library,
-        record.directory,
-        record.app_root,
-    ) {
-        (true, Some(library), Some(directory), None) => {
+    let owned = match method {
+        Method::Zip | Method::TarGz | Method::SourceBuild => Some(true),
+        Method::Shell | Method::Exe | Method::Msi => Some(false),
+        Method::Steps => None,
+    };
+    let location = match (owned, record.library, record.directory, record.app_root) {
+        (Some(true) | None, Some(library), Some(directory), None) => {
             if directory
                 .split('/')
                 .any(|part| part.is_empty() || part == "..")
@@ -327,7 +408,7 @@ fn installation_from_wire(record: wire::Installation) -> Result<Installation, St
             }
             Location::Owned { library, directory }
         }
-        (false, None, None, Some(app_root)) => {
+        (Some(false) | None, None, None, Some(app_root)) => {
             let app_root = PathBuf::from(app_root);
             if !app_root.is_absolute() {
                 return Err("external appRoot is not absolute".into());
@@ -381,12 +462,29 @@ fn installation_from_wire(record: wire::Installation) -> Result<Installation, St
             uninstall: record.commands.uninstall,
             force_uninstall: record.commands.force_uninstall,
             update: record.commands.update,
-            interpreter: record.commands.interpreter.map(|value| match value {
-                wire::Interpreter::PosixSh => ShellInterpreter::PosixSh,
-                wire::Interpreter::WindowsCmd => ShellInterpreter::WindowsCmd,
-                wire::Interpreter::WindowsPowershell => ShellInterpreter::WindowsPowershell,
-            }),
+            interpreter: record.commands.interpreter.map(interpreter_from_wire),
         },
+        features: record.features,
+        steps: record
+            .steps
+            .into_iter()
+            .map(|step| StepRecord {
+                id: step.id,
+                kind: step.kind,
+                outcome: match step.outcome {
+                    wire::Outcome::Done => StepOutcome::Done,
+                    wire::Outcome::Skipped => StepOutcome::Skipped,
+                    wire::Outcome::Failed => StepOutcome::Failed,
+                    wire::Outcome::Delegated => StepOutcome::Delegated,
+                },
+                uninstall: AuthoredCommands {
+                    uninstall: step.uninstall,
+                    force_uninstall: step.force_uninstall,
+                    update: None,
+                    interpreter: step.interpreter.map(interpreter_from_wire),
+                },
+            })
+            .collect(),
     })
 }
 
@@ -395,120 +493,5 @@ fn path_text(path: &std::path::Path) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    fn sample() -> Index {
-        let owned = Installation {
-            slot: "editor".into(),
-            package: PackageCoordinate {
-                group: "org.example".into(),
-                name: "editor".into(),
-                version: "1.2.0".into(),
-            },
-            option: "linux-zip".into(),
-            platform: "linux".into(),
-            arch: "x86_64".into(),
-            method: Method::Zip,
-            location: Location::Owned {
-                library: "default".into(),
-                directory: "apps/editor/org.example.editor@1.2.0".into(),
-            },
-            portable: true,
-            launchers: vec![LauncherDecl {
-                id: "main".into(),
-                name: "Editor".into(),
-                description: None,
-                executable: "$app_bin/editor".into(),
-                args: vec!["--fixed".into()],
-                working_directory: Some("$project_root".into()),
-                icon: None,
-                terminal: true,
-                default: true,
-            }],
-            public_commands: vec![PublicCommandDecl {
-                name: "edit".into(),
-                launcher: "main".into(),
-            }],
-            commands: AuthoredCommands::default(),
-        };
-        let external = Installation {
-            package: PackageCoordinate {
-                group: "org.example".into(),
-                name: "editor-apt".into(),
-                version: "2.0.0".into(),
-            },
-            option: "ubuntu-apt".into(),
-            platform: "ubuntu".into(),
-            method: Method::Shell,
-            location: Location::External {
-                app_root: PathBuf::from("/usr/lib/editor"),
-            },
-            portable: false,
-            launchers: Vec::new(),
-            public_commands: Vec::new(),
-            commands: AuthoredCommands {
-                uninstall: Some("sudo apt-get remove editor".into()),
-                force_uninstall: Some("sudo apt-get purge editor".into()),
-                update: Some("sudo apt-get install --only-upgrade editor".into()),
-                interpreter: Some(ShellInterpreter::PosixSh),
-            },
-            ..owned.clone()
-        };
-        let mut index = Index::default();
-        index
-            .installations
-            .insert(owned.package.key(), owned.clone());
-        index.installations.insert(external.package.key(), external);
-        index
-            .slots
-            .insert("editor".into(), Some(owned.package.key()));
-        index
-    }
-
-    #[test]
-    fn domain_and_wire_round_trip_the_corpus() {
-        let corpus = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("../../formats/corpora/application/e2/index.json");
-        let document: wire::ApplicationIndex =
-            serde_json::from_slice(&fs::read(corpus).unwrap()).unwrap();
-        let index = Index::from_wire(document.clone()).unwrap();
-        assert_eq!(index, sample());
-        assert_eq!(index.to_wire(), document);
-    }
-
-    #[test]
-    fn save_is_atomic_and_load_rejects_inconsistent_records() {
-        let dir = tempfile::tempdir().unwrap();
-        let settings = SettingsRoot::new(dir.path());
-        sample().save(&settings).unwrap();
-        assert_eq!(Index::load(&settings).unwrap(), sample());
-        let leftovers: Vec<_> = fs::read_dir(settings.applications_dir())
-            .unwrap()
-            .filter_map(Result::ok)
-            .filter(|entry| entry.file_name().to_string_lossy().ends_with(".tmp"))
-            .collect();
-        assert!(leftovers.is_empty());
-
-        let mut broken = sample().to_wire();
-        broken.slots.insert(
-            "other".into(),
-            wire::Slot {
-                default: Some("org.example/editor@1.2.0".into()),
-            },
-        );
-        assert!(
-            Index::from_wire(broken)
-                .unwrap_err()
-                .contains("not an installation")
-        );
-        let mut wrong = sample().to_wire();
-        for record in wrong.installations.values_mut() {
-            record.app_root = Some("/also".into());
-        }
-        assert!(Index::from_wire(wrong).is_err());
-        let mut old = sample().to_wire();
-        old.protocol = "vibe-user-applications/2".into();
-        assert!(Index::from_wire(old).unwrap_err().contains("protocol"));
-    }
-}
+#[path = "index/tests.rs"]
+mod tests;

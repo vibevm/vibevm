@@ -378,6 +378,8 @@ fn stub_install_args(path: PathBuf) -> InstallArgs {
         arch: None,
         installer: None,
         library: None,
+        steps: Default::default(),
+        plan_only: false,
         path,
         registry: None,
         assume_yes: true,

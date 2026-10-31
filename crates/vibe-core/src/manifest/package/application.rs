@@ -2,7 +2,18 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 
+mod step_validation;
+mod steps;
+mod sugar;
+mod template;
 mod validation;
+
+pub use steps::{
+    AgentMode, ArchiveFormatDecl, Condition, ExternalResult, FeatureDecl, NativeFormatDecl, Need,
+    OwnedWord, ResultDecl, StepDecl, StepKind, StepOrigin, StepPhase,
+};
+pub use sugar::{result_of, steps_of};
+pub use template::{StepVar, expand_step_template};
 
 use std::path::PathBuf;
 
@@ -185,7 +196,17 @@ pub struct InstallerOptionDecl {
     pub pre_install: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub post_install: Option<String>,
-    pub installation: InstallerMethod,
+    /// The single-method short spelling (`PROP-065#sugar`); exclusive with
+    /// `steps`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub installation: Option<InstallerMethod>,
+    /// What the steps produce (`PROP-065#result`); only with `steps`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub result: Option<ResultDecl>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub features: Vec<FeatureDecl>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub steps: Vec<StepDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub launchers: Vec<LauncherDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]

@@ -214,11 +214,6 @@ pub enum InstallerError {
     )]
     SourceLayout { name: String, reason: String },
     #[error(
-        "the source_build recipe exited 0 but VIBE_OUT `{path}` is not a non-empty directory (violates spec://org.vibevm.core/vibevm/common/PROP-059#source-build; \
-         fix: make the recipe write the installed payload into $VIBE_OUT)"
-    )]
-    EmptyOutput { path: String },
-    #[error(
         "{action} `{path}` failed: {source} (violates spec://org.vibevm.core/vibevm/common/PROP-059#ownership; \
          fix: check the permissions and free space of the storage library)"
     )]
@@ -227,6 +222,115 @@ pub enum InstallerError {
         path: String,
         #[source]
         source: std::io::Error,
+    },
+}
+
+/// Planning and running the steps of an installer option (`PROP-065`).
+#[derive(Debug, Error)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#execution")]
+pub enum StepError {
+    #[error(
+        "feature `{feature}` is not declared by installer option `{option}`; declared: {declared} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#features; fix: name a declared feature with --feature / --no-feature)"
+    )]
+    UnknownFeature {
+        option: String,
+        feature: String,
+        declared: String,
+    },
+    #[error(
+        "feature selection failed: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-065#features; \
+         fix: pass --feature / --no-feature explicitly)"
+    )]
+    FeaturePrompt { reason: String },
+    #[error(
+        "step `{step}` of `{key}` needs `{need}`, which this host does not provide; nothing was downloaded or run \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#needs; fix: provide `{need}` and retry, or select another installer option)"
+    )]
+    UnmetNeed {
+        key: String,
+        step: String,
+        need: String,
+    },
+    #[error(
+        "agent step `{step}` of `{key}` is required but no agent is configured: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-064#selection; fix: configure an agent with --agent NAME, \
+         the VIBE_AGENT_COMMAND registration or `default` in agents.toml, or select another installer option)"
+    )]
+    AgentRequired {
+        key: String,
+        step: String,
+        reason: String,
+    },
+    #[error(
+        "installer option `{option}` of `{key}` declares an owned result, but with the chosen features and this host \
+         no running step writes $VIBE_OUT (violates spec://org.vibevm.core/vibevm/common/PROP-065#plan; \
+         fix: choose the features whose steps produce the payload, or select another installer option)"
+    )]
+    NoResultStep { key: String, option: String },
+    #[error(
+        "{field} of step `{step}` cannot be expanded: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-065#templates; \
+         fix: correct the template in the package)"
+    )]
+    Template {
+        step: String,
+        field: &'static str,
+        reason: String,
+    },
+    #[error(
+        "copy step `{step}` is unsafe: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-065#kinds; \
+         fix: copy a package-relative file or directory to a destination inside the payload)"
+    )]
+    Copy { step: String, reason: String },
+    #[error(
+        "step `{step}` ({kind}) of `{key}` failed; nothing was placed or registered and the index is unchanged; \
+         its work directory `{work}` is kept for inspection (violates spec://org.vibevm.core/vibevm/common/PROP-065#failure; \
+         fix: correct the cause below, then rerun with --resume, or with --from-step ID to restart at a named step)"
+    )]
+    Failed {
+        key: String,
+        step: String,
+        kind: &'static str,
+        work: String,
+        #[source]
+        source: Box<AppError>,
+    },
+    #[error(
+        "the steps of `{key}` finished but $VIBE_OUT `{path}` is not a non-empty directory; its work directory is kept \
+         for inspection (violates spec://org.vibevm.core/vibevm/common/PROP-065#result; fix: make a step write the payload into $VIBE_OUT)"
+    )]
+    EmptyResult { key: String, path: String },
+    #[error(
+        "finish step `{step}` ({kind}) of `{key}` failed; the payload or root stays in place, the installation is recorded \
+         and `vibe uninstall` remains available (violates spec://org.vibevm.core/vibevm/common/PROP-065#failure; \
+         fix: correct the cause below and install again)"
+    )]
+    FinishFailed {
+        key: String,
+        step: String,
+        kind: &'static str,
+        #[source]
+        source: Box<AppError>,
+    },
+    #[error(
+        "--resume found no kept work directory `{work}` for `{key}` (violates spec://org.vibevm.core/vibevm/common/PROP-065#resume; \
+         fix: install without --resume)"
+    )]
+    NothingToResume { key: String, work: String },
+    #[error(
+        "the kept work directory `{work}` cannot be resumed: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-065#resume; \
+         fix: rerun with the original option and features, or install without --resume)"
+    )]
+    ResumeMismatch { work: String, reason: String },
+    #[error(
+        "--from-step `{step}` names no step of installer option `{option}`; steps: {steps} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#resume; fix: name a listed step id)"
+    )]
+    UnknownStep {
+        option: String,
+        step: String,
+        steps: String,
     },
 }
 
@@ -267,6 +371,8 @@ pub enum AppError {
     Installer(#[from] InstallerError),
     #[error(transparent)]
     Launch(#[from] LaunchError),
+    #[error(transparent)]
+    Step(#[from] StepError),
     #[error(
         "not_installed: global application `{package}` is not installed (violates spec://org.vibevm.core/vibevm/common/PROP-059#commands; \
          fix: check `vibe app list` for the installed keys)"
@@ -277,17 +383,6 @@ pub enum AppError {
          fix: name one exactly as <group>/<name>@=<version>)"
     )]
     AmbiguousInstallation { package: String },
-    #[error(
-        "source_build of `{key}` failed; its work directory `{work}` is kept for inspection \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-059#source-build; fix: inspect and then delete the directory, \
-         correct the cause below and install again)"
-    )]
-    SourceBuild {
-        key: String,
-        work: String,
-        #[source]
-        source: Box<AppError>,
-    },
     #[error(
         "--force is unsupported for `{key}`: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#force-and-hooks; \
          fix: run without --force or select an option that declares the forced variant)"

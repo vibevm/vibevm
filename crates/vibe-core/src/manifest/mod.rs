@@ -58,8 +58,10 @@ pub use mechanism::{
     ProviderPin, ProviderPinParseError, is_portable_token,
 };
 pub use package::application::{
-    InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl, RecipeDecl,
-    ShellInterpreter, SourceInputDecl,
+    AgentMode, ArchiveFormatDecl, Condition, ExternalResult, FeatureDecl, InstallerMethod,
+    InstallerOptionDecl, LauncherDecl, NativeFormatDecl, Need, OwnedWord, PublicCommandDecl,
+    RecipeDecl, ResultDecl, ShellInterpreter, SourceInputDecl, StepDecl, StepKind, StepOrigin,
+    StepPhase, StepVar, expand_step_template, result_of, steps_of,
 };
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, Authorship, BinaryDecl,

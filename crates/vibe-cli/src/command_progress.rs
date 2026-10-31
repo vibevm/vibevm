@@ -155,6 +155,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             crate::cli::AppCommand::Installers { .. }
             | crate::cli::AppCommand::Launchers { .. }
             | crate::cli::AppCommand::List
+            | crate::cli::AppCommand::Plan { .. }
+            | crate::cli::AppCommand::Steps { .. }
+            | crate::cli::AppCommand::Describe { .. }
             | crate::cli::AppCommand::Alternatives { .. } => FastMetadata,
             crate::cli::AppCommand::Use { .. } => FiniteFallback("Command app use"),
             crate::cli::AppCommand::Run { .. } | crate::cli::AppCommand::Start { .. } => {

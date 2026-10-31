@@ -551,5 +551,8 @@ mod tests_mechanism_grammar;
 #[path = "document/tests_run_commands.rs"]
 mod tests_run_commands;
 #[cfg(test)]
+#[path = "document/tests_steps.rs"]
+mod tests_steps;
+#[cfg(test)]
 #[path = "document/tests_visibility.rs"]
 mod tests_visibility;

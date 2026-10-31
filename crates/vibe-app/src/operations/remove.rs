@@ -10,7 +10,7 @@ use vibe_wire::generated::application_list as wire;
 
 use crate::alternatives::reserved_names;
 use crate::error::AppError;
-use crate::index::{Index, Installation, Location};
+use crate::index::{AuthoredCommands, Index, Installation, Location};
 use crate::installer::{self, shell};
 use crate::launch;
 use crate::proxies;
@@ -68,9 +68,10 @@ pub fn installed<'a>(
     }
 }
 
-/// Remove exactly one installation: delete an owned payload directory
-/// unconditionally, or run the authored uninstall of an external one (with
-/// `--force`, its `force_uninstall`); never touch an external root.
+/// Remove exactly one installation: run the recorded uninstall commands in
+/// reverse step order (with `--force`, their forced variants), then delete
+/// an owned payload directory unconditionally; never touch an external
+/// root.
 pub fn uninstall(
     ctx: &OperationContext<'_>,
     spelling: &str,
@@ -82,57 +83,72 @@ pub fn uninstall(
     let (key, installation) = installed(&index, spelling)?;
     let key = key.to_owned();
     let installation = installation.clone();
+    let root = match &installation.location {
+        Location::Owned { library, .. } => match storage.availability(library) {
+            Availability::Available => launch::app_root(&installation, &storage).ok(),
+            Availability::Unavailable(reason) => {
+                return Err(AppError::Unavailable { key, reason });
+            }
+        },
+        Location::External { app_root } => Some(app_root.clone()),
+    };
+    // The method form keeps its commands in `commands`; step forms record
+    // them per step. Both run last step first.
+    let recorded: Vec<&AuthoredCommands> = std::iter::once(&installation.commands)
+        .chain(installation.steps.iter().rev().map(|step| &step.uninstall))
+        .filter(|commands| commands.has_uninstall())
+        .collect();
+    let external = matches!(installation.location, Location::External { .. });
+    if force
+        && external
+        && (recorded.is_empty()
+            || recorded
+                .iter()
+                .any(|commands| commands.force_uninstall.is_none()))
+    {
+        return Err(AppError::ForceUnsupported {
+            key,
+            reason: "the installation declares no force_uninstall",
+        });
+    }
+    let scripts: Vec<(&str, &AuthoredCommands)> = recorded
+        .iter()
+        .filter_map(|commands| {
+            let script = match (force, &commands.force_uninstall) {
+                (true, Some(forced)) => Some(forced),
+                _ => commands.uninstall.as_ref(),
+            };
+            script.map(|script| (script.as_str(), *commands))
+        })
+        .collect();
+    if let Some(root) = root.as_deref().filter(|_| !scripts.is_empty()) {
+        for (script, commands) in &scripts {
+            shell::run(
+                commands.interpreter,
+                script,
+                ctx.settings.path(),
+                root,
+                "authored uninstall",
+                ctx.json,
+            )?;
+        }
+    }
     let mut doomed = None;
-    let mut message =
-        match &installation.location {
-            Location::Owned { library, directory } => {
-                let root = match storage.availability(library) {
-                    Availability::Available => storage.path_of(library),
-                    Availability::Unavailable(reason) => {
-                        return Err(AppError::Unavailable { key, reason });
-                    }
-                };
-                let directory = root.map(|root| root.join(directory));
-                if let Some(directory) = directory.filter(|directory| directory.exists()) {
-                    let text = format!("removed {key} and its payload `{}`", directory.display());
-                    doomed = Some(directory);
-                    text
-                } else {
-                    format!("removed {key}; its payload directory was already gone")
-                }
-            }
-            Location::External { app_root } => {
-                let commands = &installation.commands;
-                let script =
-                    if force {
-                        Some(commands.force_uninstall.as_deref().ok_or(
-                            AppError::ForceUnsupported {
-                                key: key.clone(),
-                                reason: "the installation declares no force_uninstall",
-                            },
-                        )?)
-                    } else {
-                        commands.uninstall.as_deref()
-                    };
-                match script {
-                    Some(script) => {
-                        shell::run(
-                            commands.interpreter,
-                            script,
-                            ctx.settings.path(),
-                            app_root,
-                            "authored uninstall",
-                            ctx.json,
-                        )?;
-                        format!("ran the authored uninstall of {key}")
-                    }
-                    None => format!(
-                        "removed {key}; no uninstall is authored, so `{}` stays in place",
-                        app_root.display()
-                    ),
-                }
-            }
-        };
+    let mut message = match (&installation.location, root) {
+        (Location::Owned { .. }, Some(directory)) if directory.exists() => {
+            let text = format!("removed {key} and its payload `{}`", directory.display());
+            doomed = Some(directory);
+            text
+        }
+        (Location::Owned { .. }, _) => {
+            format!("removed {key}; its payload directory was already gone")
+        }
+        (Location::External { app_root }, _) if scripts.is_empty() => format!(
+            "removed {key}; no uninstall is authored, so `{}` stays in place",
+            app_root.display()
+        ),
+        (Location::External { .. }, _) => format!("ran the authored uninstall of {key}"),
+    };
     let slot = installation.slot.clone();
     let reserved = reserved_names(&index);
     index.installations.remove(&key);

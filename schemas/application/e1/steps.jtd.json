@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "description": "The step state of one installation work directory, rewritten after each step: the package coordinate, option and features it belongs to and the outcome of every step reached.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#execution" },
+    "rustOptions": { "package": "vibe_wire::application::e1::steps" },
+    "x-rust-type": "StepsFile",
+    "x-wire-order": ["protocol", "package", "option", "features", "steps"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "package": { "ref": "package" },
+    "option": { "type": "string" },
+    "features": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "steps": { "elements": { "ref": "step" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "package": {
+      "metadata": { "x-wire-order": ["group", "name", "version"] },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "outcome": {
+      "enum": ["done", "skipped", "failed", "delegated"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "interpreter": {
+      "enum": ["posix_sh", "windows_cmd", "windows_powershell"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "step": {
+      "metadata": { "x-wire-order": ["id", "kind", "outcome", "reason", "started", "finished", "uninstall", "forceUninstall", "interpreter"] },
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string" },
+        "outcome": { "ref": "outcome" }
+      },
+      "optionalProperties": {
+        "reason": { "type": "string", "metadata": { "x-default": null } },
+        "started": { "type": "string", "metadata": { "x-default": null } },
+        "finished": { "type": "string", "metadata": { "x-default": null } },
+        "uninstall": { "type": "string", "metadata": { "x-default": null } },
+        "forceUninstall": { "type": "string", "metadata": { "x-default": null } },
+        "interpreter": { "ref": "interpreter", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}
