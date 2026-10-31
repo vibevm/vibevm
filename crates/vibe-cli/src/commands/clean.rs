@@ -106,7 +106,7 @@ pub(crate) fn confirm_wipe(
         );
     } else {
         ctx.suspend_progress(|| {
-            Confirm::new()
+            Confirm::with_theme(&crate::output::prompt_theme())
                 .with_prompt(format!(
                     "Remove {} dependency slot(s) and {} generated boot artifact(s)?",
                     plan.slot_count,

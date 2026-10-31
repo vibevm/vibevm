@@ -357,8 +357,8 @@ fn features_come_from_flags_then_the_question_then_defaults_and_update_reuses_th
     };
     assert_eq!(chosen(&update, None).unwrap(), ["fixes"]);
     let asked = RefCell::new(Vec::new());
-    let chooser = |_: &str, labels: &[String], defaults: &[bool]| {
-        asked.borrow_mut().push((labels.len(), defaults.to_vec()));
+    let chooser = |_: &str, rows: &[crate::select::Choice], defaults: &[bool]| {
+        asked.borrow_mut().push((rows.len(), defaults.to_vec()));
         Ok(Some(vec![0, 1]))
     };
     let attended = Host {
@@ -370,6 +370,6 @@ fn features_come_from_flags_then_the_question_then_defaults_and_update_reuses_th
         ["fixes", "docs"]
     );
     assert_eq!(asked.borrow().as_slice(), [(2, vec![false, true])]);
-    let cancel = |_: &str, _: &[String], _: &[bool]| Ok(None);
+    let cancel = |_: &str, _: &[crate::select::Choice], _: &[bool]| Ok(None);
     assert!(chosen(&attended, Some(&cancel)).is_err());
 }

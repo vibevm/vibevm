@@ -20,7 +20,7 @@ pub(super) fn interactive_ask_scope(path: &Path) -> Result<Scope> {
     } else {
         "Where to install? (vibe.toml not found — defaulting to user-level)"
     };
-    let chosen = dialoguer::Select::new()
+    let chosen = dialoguer::Select::with_theme(&crate::output::prompt_theme())
         .with_prompt(prompt)
         .items([
             "Project-level — per-project files committed to git",
@@ -41,7 +41,7 @@ pub(super) fn interactive_ask_what() -> Result<What> {
     if !stdin_is_tty() {
         return Ok(What::Both);
     }
-    let chosen = dialoguer::Select::new()
+    let chosen = dialoguer::Select::with_theme(&crate::output::prompt_theme())
         .with_prompt("What to install?")
         .items([
             "Both MCP server config and SKILL.md (recommended)",
@@ -84,7 +84,7 @@ pub(super) fn interactive_select_agents(detected: &[Agent], force: bool) -> Resu
         })
         .collect();
     let defaults: Vec<bool> = pool.iter().map(|a| detected.contains(a)).collect();
-    let chosen = dialoguer::MultiSelect::new()
+    let chosen = dialoguer::MultiSelect::with_theme(&crate::output::prompt_theme())
         .with_prompt("Which agents? (space to toggle, enter to confirm)")
         .items(&labels)
         .defaults(&defaults)

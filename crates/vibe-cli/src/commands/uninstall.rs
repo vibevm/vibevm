@@ -127,7 +127,7 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
             );
         }
         ctx.suspend_progress(|| {
-            Confirm::new()
+            Confirm::with_theme(&crate::output::prompt_theme())
                 .with_prompt(format!(
                     "Remove declaration {group}/{} and {} packages ({intended}){retention}?{}",
                     pkgref.name,

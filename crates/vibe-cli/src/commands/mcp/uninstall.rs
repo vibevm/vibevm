@@ -84,7 +84,7 @@ pub(super) fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Re
                         .iter()
                         .filter(|r| r.status == "would-remove")
                         .count();
-                Confirm::new()
+                Confirm::with_theme(&crate::output::prompt_theme())
                     .with_prompt(format!(
                         "Remove {to_remove} entr{}?",
                         if to_remove == 1 { "y" } else { "ies" }
@@ -201,7 +201,7 @@ fn run_selected_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Resu
                 row.status, row.agent, row.scope, row.config_path
             ));
         }
-        if !Confirm::new()
+        if !Confirm::with_theme(&crate::output::prompt_theme())
             .with_prompt("Remove these MCP registrations?")
             .default(false)
             .interact()?

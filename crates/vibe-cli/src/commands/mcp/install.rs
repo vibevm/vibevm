@@ -212,7 +212,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
                 .iter()
                 .filter(|r| matches!(r.status, "would-create" | "would-update"))
                 .count();
-            Confirm::new()
+            Confirm::with_theme(&crate::output::prompt_theme())
                 .with_prompt(format!(
                     "Apply this plan? ({mcp_count} MCP entr{}, {skill_count} SKILL.md file{})",
                     if mcp_count == 1 { "y" } else { "ies" },
@@ -364,7 +364,7 @@ fn run_selected_install(ctx: &output::Context, args: McpInstallArgs) -> Result<(
                 row.status, row.agent, row.scope, row.config_path
             ));
         }
-        if !Confirm::new()
+        if !Confirm::with_theme(&crate::output::prompt_theme())
             .with_prompt("Register these MCP servers?")
             .default(false)
             .interact()?

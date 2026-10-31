@@ -16,11 +16,13 @@ use crate::cli::AgentModeArg;
 mod machine;
 mod panel;
 mod progress;
+pub(crate) mod prompts;
 mod structured;
 use machine::MachineRenderer;
 pub(crate) use panel::ProgressPanel;
 use progress::ProgressRenderer;
 pub(crate) use progress::{ProgressMode, sanitize_progress_text};
+pub(crate) use prompts::prompt_theme;
 pub(crate) use structured::app_error;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

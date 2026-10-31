@@ -21,7 +21,7 @@ use crate::error::{AppError, StepError};
 use crate::error_lifecycle::LifecycleError;
 use crate::index::PackageCoordinate;
 use crate::resolve::ResolvedPackage;
-use crate::select::Chooser;
+use crate::select::{Choice, Chooser};
 use crate::settings::SettingsRoot;
 
 use super::features::{FeatureRequest, FeatureResolution, Implied, resolve_features, tree_order};
@@ -32,10 +32,10 @@ use super::params::{
 use super::sizes::{downloads, input_local, source_cached};
 use super::template::{self, Vars};
 
-/// An attended multi-choice prompt: `prompt`, the labels and which are
+/// An attended multi-choice prompt: `prompt`, the rows and which are
 /// preselected; returns the chosen indexes or `None` when cancelled.
 pub type FeatureChooser<'a> =
-    &'a dyn Fn(&str, &[String], &[bool]) -> Result<Option<Vec<usize>>, String>;
+    &'a dyn Fn(&str, &[Choice], &[bool]) -> Result<Option<Vec<usize>>, String>;
 
 /// Host facts the caller looks up; `vibe-app` reads no environment.
 #[derive(Clone, Copy)]
@@ -488,19 +488,27 @@ fn choose_features(input: &PlanInput<'_>) -> Result<(Option<String>, FeatureReso
         if let (false, Some(chooser)) = (option.profiles.is_empty(), input.prompts.chooser) {
             let mut ordered: Vec<_> = option.profiles.iter().collect();
             ordered.sort_by_key(|profile| !profile.default);
-            let mut labels: Vec<String> = ordered
+            let mut choices: Vec<Choice> = ordered
                 .iter()
-                .map(|profile| match &profile.description {
-                    Some(text) => format!("{} — {text}", profile.name),
-                    None => profile.name.clone(),
+                .map(|profile| Choice {
+                    name: profile.name.clone(),
+                    description: profile.description.clone(),
+                    ..Choice::default()
                 })
                 .collect();
-            labels.push("Custom — choose the features one by one".into());
-            let picked = chooser(&format!("Setup type of installer `{}`", option.id), &labels)
-                .map_err(|reason| StepError::FeaturePrompt { reason })?
-                .ok_or_else(|| StepError::FeaturePrompt {
-                    reason: "the selection was cancelled".into(),
-                })?;
+            choices.push(Choice {
+                name: "Custom".into(),
+                description: Some("choose the features one by one".into()),
+                ..Choice::default()
+            });
+            let picked = chooser(
+                &format!("Setup type of installer `{}`", option.id),
+                &choices,
+            )
+            .map_err(|reason| StepError::FeaturePrompt { reason })?
+            .ok_or_else(|| StepError::FeaturePrompt {
+                reason: "the selection was cancelled".into(),
+            })?;
             if let Some(chosen) = ordered.get(picked) {
                 profile = Some(*chosen);
                 custom = false;
@@ -509,14 +517,14 @@ fn choose_features(input: &PlanInput<'_>) -> Result<(Option<String>, FeatureReso
         if custom {
             let defaults = resolve_features(option, None, &FeatureRequest::default(), None, None)?;
             let order = tree_order(&option.features);
-            let labels: Vec<String> = order
+            let choices: Vec<Choice> = order
                 .iter()
-                .map(|(depth, feature)| {
-                    let indent = "  ".repeat(*depth);
-                    match &feature.description {
-                        Some(text) => format!("{indent}{} ({}) — {text}", feature.name, feature.id),
-                        None => format!("{indent}{} ({})", feature.name, feature.id),
-                    }
+                .map(|(depth, feature)| Choice {
+                    name: feature.name.clone(),
+                    id: Some(feature.id.clone()),
+                    description: feature.description.clone(),
+                    depth: *depth,
+                    ..Choice::default()
                 })
                 .collect();
             let chosen = match previous {
@@ -529,7 +537,7 @@ fn choose_features(input: &PlanInput<'_>) -> Result<(Option<String>, FeatureReso
                 .collect();
             let picked = features(
                 &format!("Select features of installer `{}`", option.id),
-                &labels,
+                &choices,
                 &preselected,
             )
             .map_err(|reason| StepError::FeaturePrompt { reason })?

@@ -88,7 +88,7 @@ pub(super) fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result
                         .iter()
                         .filter(|r| r.status == "would-update")
                         .count();
-                Confirm::new()
+                Confirm::with_theme(&crate::output::prompt_theme())
                     .with_prompt(format!(
                         "Refresh {stale} stale entr{}?",
                         if stale == 1 { "y" } else { "ies" }

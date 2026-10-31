@@ -101,7 +101,7 @@ pub(super) fn prompt_fields(
 }
 
 pub(super) fn text(label: &str, default: &str, empty: bool) -> Result<String> {
-    Ok(Input::<String>::new()
+    Ok(Input::<String>::with_theme(&crate::output::prompt_theme())
         .with_prompt(label)
         .default(default.to_string())
         .show_default(true)
@@ -110,7 +110,7 @@ pub(super) fn text(label: &str, default: &str, empty: bool) -> Result<String> {
 }
 
 fn choice(label: &str, items: &[&str], default: &str) -> Result<String> {
-    let selected = Select::new()
+    let selected = Select::with_theme(&crate::output::prompt_theme())
         .with_prompt(label)
         .items(items)
         .default(items.iter().position(|item| *item == default).unwrap_or(0))

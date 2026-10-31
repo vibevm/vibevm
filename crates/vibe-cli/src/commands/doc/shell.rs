@@ -287,7 +287,7 @@ fn consent(
              fix: `vibe doc shell install --assume-yes`, or keep the bare shell)"
             );
         }
-        let approved = dialoguer::Confirm::new()
+        let approved = dialoguer::Confirm::with_theme(&crate::output::prompt_theme())
             .with_prompt("Download the documentation shell?")
             .default(false)
             .interact()

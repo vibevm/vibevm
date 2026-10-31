@@ -60,7 +60,7 @@ fn confirm_apply(ctx: &output::Context, yes: bool) -> Result<bool> {
              to apply this plan non-interactively"
         );
     }
-    Ok(Confirm::new()
+    Ok(Confirm::with_theme(&crate::output::prompt_theme())
         .with_prompt("Apply this skill plan?")
         .default(true)
         .interact()

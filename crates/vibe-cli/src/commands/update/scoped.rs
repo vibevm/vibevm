@@ -434,7 +434,7 @@ fn confirm(ctx: &output::Context, args: &crate::cli::UpdateArgs, total: usize) -
         );
     }
     ctx.suspend_progress(|| {
-        Confirm::new()
+        Confirm::with_theme(&crate::output::prompt_theme())
             .with_prompt(format!(
                 "Re-materialise {total} package{} into vibedeps/ and regenerate boot?",
                 if total == 1 { "" } else { "s" },

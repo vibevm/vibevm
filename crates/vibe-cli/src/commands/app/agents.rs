@@ -138,7 +138,7 @@ fn show(notice: &AgentNotice<'_>) {
 /// The attended consent question (PROP-064 `#consent`).
 fn confirm(prompt: &AgentPrompt<'_>) -> std::result::Result<bool, String> {
     asking(|| {
-        Confirm::new()
+        Confirm::with_theme(&crate::output::prompt_theme())
             .with_prompt(format!(
                 "Run agent `{}` with the prompt of step `{}`?",
                 prompt.agent, prompt.step

@@ -63,7 +63,7 @@ fn clean_all(ctx: &output::Context, assume_yes: bool, root: &std::path::Path) ->
         );
     } else {
         ctx.suspend_progress(|| {
-            Confirm::new()
+            Confirm::with_theme(&crate::output::prompt_theme())
                 .with_prompt(format!(
                     "Remove EVERY package entry under {}? Re-fetching them needs the network.",
                     root.display()

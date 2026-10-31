@@ -456,7 +456,7 @@ fn gc_menu(ctx: &output::Context) -> Result<GcAction> {
         "Clean the Rust build cache (the shared --target-dir)",
         "Prune all instances except active, immediate rollback, and running",
     ];
-    let sel = Select::new()
+    let sel = Select::with_theme(&crate::output::prompt_theme())
         .with_prompt("vibe self gc")
         .items(items)
         .default(0)
