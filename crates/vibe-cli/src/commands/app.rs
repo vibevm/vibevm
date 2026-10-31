@@ -9,6 +9,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operati
 pub(crate) mod agents;
 mod alternatives;
 mod describe;
+pub(crate) mod display;
 mod environment;
 mod facts;
 pub(crate) mod global;
@@ -79,7 +80,8 @@ pub fn run(
                 offline,
             )?;
             let proxy_image = global::proxy_image()?;
-            let observe = global::Observation::new(ctx, false)?;
+            let flat = display::StepDisplay::flat();
+            let observe = global::Observation::new(ctx, false, &flat)?;
             let agents = agents::AgentSetup::new(ctx, agent.as_deref(), false)?;
             let packages = global::Packages {
                 settings: settings.clone(),

@@ -35,7 +35,7 @@ use crate::alternatives::{check_reservation, reserved_names};
 use crate::environment::UserEnvironment;
 use crate::error::{AppError, ResolveError};
 use crate::index::{Index, Installation, Lifecycle, Location, Mark, Method};
-use crate::installer::Interrupt;
+use crate::installer::{Interrupt, StepLogs, StepPanel};
 use crate::proxies;
 use crate::resolve::ResolvedPackage;
 use crate::select::{Chooser, InstallChoice, select_option};
@@ -79,6 +79,14 @@ pub struct OperationContext<'a> {
     pub progress: &'a Progress,
     /// Child output reaches only the run log and the progress stream.
     pub quiet_children: bool,
+    /// The caller draws a step panel over this run (`PROP-065#display`):
+    /// children get no terminal of their own and their output reaches only
+    /// the run log and the progress stream, and the panel is released
+    /// around a child that takes the terminal.
+    pub panel: Option<&'a dyn StepPanel>,
+    /// Told the output log of each step that runs a child, before it starts
+    /// (`PROP-065#display`): the caller names it or shows its tail.
+    pub on_step_log: Option<&'a dyn StepLogs>,
     /// Signals the caller received (`PROP-065#cancellation`).
     pub interrupt: Option<&'a dyn Interrupt>,
     /// The agent of `agent` steps, consent and parking (`PROP-064`).
@@ -102,7 +110,7 @@ impl OperationContext<'_> {
     /// Where child output goes besides the run log.
     pub(crate) fn relay(&self) -> crate::installer::Relay {
         use crate::installer::Relay;
-        match (self.quiet_children, self.json) {
+        match (self.quiet_children || self.panel.is_some(), self.json) {
             (true, _) => Relay::Quiet,
             (false, true) => Relay::Stderr,
             (false, false) => Relay::Live,

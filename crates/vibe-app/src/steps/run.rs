@@ -4,6 +4,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#execution");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#failure");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#resume");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#display");
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -28,6 +29,26 @@ use super::runs::{RunOutcome, RunRecord};
 use super::state::{Start, StepState, StepsFile};
 use super::template::Vars;
 use super::work::{human_bytes, tree_bytes};
+
+/// The task label of one step (`PROP-065#display`): its id, its kind and
+/// its title, the same row a step panel and the event stream carry. A
+/// renderer collapses the column gap along with every other run of
+/// whitespace it sanitises away.
+pub(crate) fn step_label(step: &vibe_core::manifest::StepDecl) -> String {
+    format!("{} ({})  {}", step.id, step.kind.name(), step.title)
+}
+
+/// The step kinds that run a child of their own, and therefore write the
+/// output log a failure's tail comes from (`PROP-065#display`).
+fn writes_log(kind: &StepKind) -> bool {
+    matches!(
+        kind,
+        StepKind::Recipe { .. }
+            | StepKind::Shell { .. }
+            | StepKind::Native { .. }
+            | StepKind::Agent { .. }
+    )
+}
 
 /// The flags one run applies to every step.
 pub(crate) struct RunFlags {
@@ -344,7 +365,7 @@ impl<'a> Run<'a> {
             if step.phase != phase {
                 continue;
             }
-            let task = progress.task(format!("{}: {}", step.id, step.title));
+            let task = progress.task(step_label(step));
             if self.kept(index) {
                 task.skip("done before --resume");
                 continue;
@@ -445,12 +466,19 @@ impl<'a> Run<'a> {
         let cache_root = settings.app_sources_cache();
         let log = self.record.as_ref().map(|record| record.log(&step.id));
         let ctx = self.ctx;
+        if let (Some(told), Some(path)) = (ctx.on_step_log, log.as_deref())
+            && writes_log(&step.kind)
+        {
+            told.opening(&step.id, path);
+        }
         let io = ChildIo {
             relay: ctx.relay(),
             log: log.as_deref(),
             stdout_log: None,
             task: Some(task),
             interrupt: ctx.interrupt,
+            stdin_null: ctx.panel.is_some(),
+            panel: ctx.panel,
         };
         if matches!(step.kind, StepKind::Env { .. }) {
             let result = self.env_step(step, app_root);

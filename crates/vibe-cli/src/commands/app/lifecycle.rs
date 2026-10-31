@@ -13,6 +13,7 @@ use anyhow::Result;
 use vibe_app::{FeatureRequest, Index, Mark, ModifyRequest, OperationContext, SettingsRoot};
 
 use super::agents::{AgentSetup, report_parked};
+use super::display::StepDisplay;
 use super::global::{self, Observation, Packages};
 use super::report::{render, render_change, render_outdated, render_removal};
 use crate::cli::{AppChoiceArgs, UpdateArgs};
@@ -62,15 +63,17 @@ pub(crate) fn modify(
     let agents = AgentSetup::new(ctx, args.agent, false)?;
     let resolver = |spelling: &str| packages.resolve(spelling);
     let show = global::plan_printer(ctx);
-    let observe = Observation::new(ctx, true)?;
-    let outcome = ctx.suspend_progress(|| {
+    let flat = StepDisplay::flat();
+    let observe = Observation::new(ctx, true, &flat)?;
+    let outcome = flat.around(ctx, || {
         let operation = OperationContext {
             agent: agents.hooks(),
             resolver: Some(&resolver),
             ..global::operation(ctx, home, offline, &proxy_image, Some(&show), &observe)
         };
         report_parked(ctx, vibe_app::modify(&operation, &resolved, &request))
-    })?;
+    });
+    let outcome = flat.report(ctx, outcome)?;
     render(ctx, &outcome)
 }
 
@@ -133,8 +136,9 @@ pub(crate) fn autoremove(
     offline: bool,
 ) -> Result<()> {
     let proxy_image = global::proxy_image()?;
-    let observe = Observation::new(ctx, true)?;
-    let removal = ctx.suspend_progress(|| {
+    let flat = StepDisplay::flat();
+    let observe = Observation::new(ctx, true, &flat)?;
+    let removal = flat.around(ctx, || {
         let operation = OperationContext {
             chooser: None,
             feature_chooser: None,

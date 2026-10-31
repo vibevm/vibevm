@@ -410,6 +410,8 @@ pub(crate) fn undo_authored(
             stdout_log: None,
             task: Some(&task),
             interrupt: ctx.interrupt,
+            stdin_null: ctx.panel.is_some(),
+            panel: ctx.panel,
         };
         let started = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
         let result = shell::run(

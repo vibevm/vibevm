@@ -1,21 +1,28 @@
 //! The CLI projection of `vibe_core::progress` observations.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-060#DISPLAY");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#display");
 
-use indicatif::{MultiProgress, ProgressBar, ProgressDrawTarget, ProgressStyle};
+use indicatif::{MultiProgress, ProgressBar, ProgressDrawTarget};
 use std::collections::BTreeMap;
 use std::io::{self, Write};
+use std::sync::atomic::Ordering;
 use std::sync::{Arc, Mutex, Weak};
 use std::time::{Duration, Instant};
-use vibe_core::progress::{
-    ProgressDiagnosticLevel, ProgressEvent, ProgressEventKind, ProgressObserver, TaskId,
-};
+use vibe_core::progress::{ProgressEvent, ProgressEventKind, ProgressObserver, TaskId};
 
+mod panel;
 mod sanitize;
+mod vocabulary;
+use panel::{Panel, clear_tail, push_tail};
 #[cfg(test)]
 use sanitize::MAX_MESSAGE_CHARS;
 use sanitize::sanitize;
 pub(crate) use sanitize::sanitize_progress_text;
+use vocabulary::{
+    bar_style, bytes_bar_style, bytes_spinner_style, diagnostic_marker, diagnostic_word,
+    format_elapsed, human_bytes, indent_label, measured_spinner_style, spinner_style,
+};
 
 const PLAIN_UPDATE_INTERVAL: Duration = Duration::from_secs(1);
 const WAIT_INTERVAL: Duration = Duration::from_secs(15);
@@ -44,12 +51,19 @@ enum Renderer {
 struct InteractiveRenderer {
     multi: MultiProgress,
     tasks: Mutex<BTreeMap<TaskId, InteractiveTask>>,
+    /// Set while an application step panel renders (PROP-065 `#display`).
+    panel: Mutex<Option<Panel>>,
 }
 
 struct InteractiveTask {
     label: String,
     depth: usize,
     bar: ProgressBar,
+    /// The folded child-output lines of a step panel, newest last, the
+    /// bars that draw them under `bar`, and when they were last rewritten.
+    tail: Vec<String>,
+    tail_bars: Vec<ProgressBar>,
+    tail_drawn: Instant,
 }
 
 struct PlainRenderer {
@@ -94,6 +108,7 @@ impl ProgressRenderer {
             renderer: Renderer::Interactive(InteractiveRenderer {
                 multi,
                 tasks: Mutex::new(BTreeMap::new()),
+                panel: Mutex::new(None),
             }),
             verbose,
         }
@@ -105,6 +120,7 @@ impl ProgressRenderer {
             renderer: Renderer::Interactive(InteractiveRenderer {
                 multi: MultiProgress::with_draw_target(target),
                 tasks: Mutex::new(BTreeMap::new()),
+                panel: Mutex::new(None),
             }),
             verbose,
         })
@@ -129,6 +145,11 @@ impl ProgressRenderer {
             Renderer::Interactive(interactive) => interactive.multi.suspend(render),
             Renderer::Plain(plain) => plain.suspend(render),
         }
+    }
+
+    /// Whether this invocation draws cursor-managed bars.
+    pub(super) fn is_interactive(&self) -> bool {
+        matches!(self.renderer, Renderer::Interactive(_))
     }
 
     #[cfg(test)]
@@ -169,7 +190,17 @@ impl InteractiveRenderer {
                 bar.set_style(spinner_style());
                 bar.set_message(indent_label(depth, &label));
                 bar.enable_steady_tick(Duration::from_millis(120));
-                tasks.insert(event.task_id, InteractiveTask { label, depth, bar });
+                tasks.insert(
+                    event.task_id,
+                    InteractiveTask {
+                        label,
+                        depth,
+                        bar,
+                        tail: Vec::new(),
+                        tail_bars: Vec::new(),
+                        tail_drawn: Instant::now(),
+                    },
+                );
             }
             ProgressEventKind::Progress {
                 completed,
@@ -179,9 +210,9 @@ impl InteractiveRenderer {
                 let Some(task) = tasks.get(&event.task_id) else {
                     return;
                 };
+                // The style is chosen before the measurement, so the one
+                // draw the measurement triggers already carries the bar.
                 if let Some(total) = total {
-                    task.bar.set_length(total);
-                    task.bar.set_position(completed.min(total));
                     if unit.eq_ignore_ascii_case("bytes") {
                         task.bar.set_prefix(String::new());
                         task.bar.set_style(bytes_bar_style());
@@ -189,8 +220,9 @@ impl InteractiveRenderer {
                         task.bar.set_prefix(sanitize(&unit));
                         task.bar.set_style(bar_style());
                     }
+                    task.bar.set_length(total);
+                    task.bar.set_position(completed.min(total));
                 } else {
-                    task.bar.set_position(completed);
                     if unit.eq_ignore_ascii_case("bytes") {
                         task.bar.set_prefix(String::new());
                         task.bar.set_style(bytes_spinner_style());
@@ -198,10 +230,21 @@ impl InteractiveRenderer {
                         task.bar.set_prefix(sanitize(&unit));
                         task.bar.set_style(measured_spinner_style());
                     }
+                    task.bar.set_position(completed);
                 }
             }
             ProgressEventKind::Detail { message } => {
-                if verbose && let Some(task) = tasks.get(&event.task_id) {
+                // A step panel owns child output: folded under its step, or
+                // streamed above the bars while the fold is open
+                // (PROP-065 `#display`).
+                if let Some(panel) = self.panel.lock().ok().and_then(|panel| panel.clone()) {
+                    let line = sanitize(&message);
+                    if panel.expanded.load(Ordering::SeqCst) {
+                        let _ = self.multi.println(line);
+                    } else if let Some(task) = tasks.get_mut(&event.task_id) {
+                        push_tail(&self.multi, task, &line, &panel);
+                    }
+                } else if verbose && let Some(task) = tasks.get(&event.task_id) {
                     let _ = self.multi.println(format!(
                         "{}· {}: {}",
                         "  ".repeat(task.depth + 1),
@@ -267,9 +310,10 @@ fn finish_interactive(
     detail: Option<&str>,
     elapsed: Duration,
 ) {
-    let Some(task) = tasks.remove(&id) else {
+    let Some(mut task) = tasks.remove(&id) else {
         return;
     };
+    clear_tail(multi, &mut task);
     task.bar.disable_steady_tick();
     task.bar.finish_and_clear();
     let detail = detail.map(|text| format!(" — {text}")).unwrap_or_default();
@@ -290,6 +334,18 @@ impl PlainRenderer {
         }
         let _guard = PlainSuspendGuard { renderer: self };
         render()
+    }
+
+    /// The unscoped half of [`Self::suspend`], for a caller whose release
+    /// and reclaim are separate events.
+    fn set_suspended(&self, suspended: bool) {
+        if let Ok(mut emission) = self.emission.lock() {
+            emission.suspended = if suspended {
+                emission.suspended.saturating_add(1)
+            } else {
+                emission.suspended.saturating_sub(1)
+            };
+        }
     }
 
     fn observe(&self, event: ProgressEvent, verbose: bool) {
@@ -484,82 +540,6 @@ fn spawn_wait_reporter(renderer: Weak<PlainRenderer>) {
                 renderer.waiting();
             }
         });
-}
-
-fn spinner_style() -> ProgressStyle {
-    ProgressStyle::with_template("{spinner:.cyan} {wide_msg} [{elapsed_precise}]")
-        .unwrap_or_else(|_| ProgressStyle::default_spinner())
-        .tick_strings(&["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"])
-}
-
-fn bar_style() -> ProgressStyle {
-    ProgressStyle::with_template(
-        "{bar:16.cyan/blue} {pos}/{len} {prefix} {wide_msg} [{elapsed_precise}]",
-    )
-    .unwrap_or_else(|_| ProgressStyle::default_bar())
-    .progress_chars("=>-")
-}
-
-fn bytes_bar_style() -> ProgressStyle {
-    ProgressStyle::with_template(
-        "{bar:16.cyan/blue} {bytes}/{total_bytes} {wide_msg} [{elapsed_precise}]",
-    )
-    .unwrap_or_else(|_| ProgressStyle::default_bar())
-    .progress_chars("=>-")
-}
-
-fn measured_spinner_style() -> ProgressStyle {
-    ProgressStyle::with_template("{spinner:.cyan} {pos} {prefix} {wide_msg} [{elapsed_precise}]")
-        .unwrap_or_else(|_| ProgressStyle::default_spinner())
-}
-
-fn bytes_spinner_style() -> ProgressStyle {
-    ProgressStyle::with_template("{spinner:.cyan} {bytes} {wide_msg} [{elapsed_precise}]")
-        .unwrap_or_else(|_| ProgressStyle::default_spinner())
-}
-
-fn indent_label(depth: usize, label: &str) -> String {
-    format!("{}{}", "  ".repeat(depth), label)
-}
-
-fn diagnostic_marker(level: ProgressDiagnosticLevel) -> &'static str {
-    match level {
-        ProgressDiagnosticLevel::Warning => "warning:",
-        ProgressDiagnosticLevel::Error => "error:",
-    }
-}
-
-fn diagnostic_word(level: ProgressDiagnosticLevel) -> &'static str {
-    match level {
-        ProgressDiagnosticLevel::Warning => "warning",
-        ProgressDiagnosticLevel::Error => "error",
-    }
-}
-
-fn format_elapsed(elapsed: Duration) -> String {
-    let seconds = elapsed.as_secs();
-    if seconds >= 60 {
-        format!("{}m {:02}s", seconds / 60, seconds % 60)
-    } else if seconds > 0 {
-        format!("{seconds}s")
-    } else {
-        format!("{}ms", elapsed.as_millis())
-    }
-}
-
-fn human_bytes(bytes: u64) -> String {
-    const UNITS: [&str; 5] = ["B", "KiB", "MiB", "GiB", "TiB"];
-    let mut value = bytes as f64;
-    let mut unit = 0;
-    while value >= 1024.0 && unit < UNITS.len() - 1 {
-        value /= 1024.0;
-        unit += 1;
-    }
-    if unit == 0 {
-        format!("{bytes} {}", UNITS[unit])
-    } else {
-        format!("{value:.1} {}", UNITS[unit])
-    }
 }
 
 #[cfg(test)]

@@ -22,7 +22,7 @@ use crate::agents::{
     SelectedAgent,
 };
 use crate::error::{AppError, InstallerError, StepError};
-use crate::installer::{ChildIo, run_attached, run_child};
+use crate::installer::{ChildIo, Released, run_attached, run_child};
 
 use super::envelope::{self, ContextFacts, Envelope};
 use super::plan::{Plan, PlannedStep};
@@ -345,7 +345,13 @@ fn spawn(
     }
     let what = format!("agent `{}` of step `{}`", agent.id, step.id);
     match mode {
-        RunMode::Interactive => run_attached(&mut command, &what, cx.io.interrupt),
+        RunMode::Interactive => {
+            // An interactive agent owns the terminal: the caller's panel
+            // stops drawing and reading keys for as long as it runs, and is
+            // given back on every exit path (`PROP-065#display`).
+            let _released = cx.io.panel.map(Released::hold);
+            run_attached(&mut command, &what, cx.io.interrupt)
+        }
         RunMode::Unattended => run_child(
             &mut command,
             &what,

@@ -1,6 +1,7 @@
 //! Installer children: authored shell commands, verified archives, Windows
 //! native installers and hooks. Children inherit stdin and stream their
-//! output live; in JSON mode child stdout is relayed to stderr.
+//! output live; in JSON mode child stdout is relayed to stderr, and under a
+//! step panel they get neither (`PROP-065#display`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#child-output");
@@ -22,8 +23,8 @@ use vibe_core::progress::ProgressTask;
 
 use crate::error::InstallerError;
 
-pub use child::Interrupt;
-pub(crate) use child::{ChildIo, Relay, run_attached, run_child};
+pub(crate) use child::{ChildIo, Relay, Released, run_attached, run_child};
+pub use child::{Interrupt, StepLogs, StepPanel};
 
 /// What one fetch reports and refuses (`PROP-065#sizes`): the declared
 /// size, the step task its byte measurements go to, and the interrupt it
@@ -53,7 +54,9 @@ pub(crate) fn fetch_verified(
         source_ref: source.into(),
         reason,
     };
-    let mut input: Box<dyn Read> =
+    // An undeclared size still gives a bar when the server announces one
+    // (`PROP-065#display`); only the declared size refuses a download.
+    let (mut input, announced): (Box<dyn Read>, Option<u64>) =
         if source.starts_with("https://") || source.starts_with("http://") {
             if offline {
                 return Err(InstallerError::Offline {
@@ -66,11 +69,14 @@ pub(crate) fn fetch_verified(
                 .and_then(|client| client.get(source).send())
                 .and_then(reqwest::blocking::Response::error_for_status)
                 .map_err(|error| fetch_error(error.to_string()))?;
-            Box::new(response)
+            let announced = response.content_length();
+            (Box::new(response), announced)
         } else {
             let path = package_file(package_root, source).map_err(fetch_error)?;
-            Box::new(File::open(&path).map_err(|error| fetch_error(error.to_string()))?)
+            let file = File::open(&path).map_err(|error| fetch_error(error.to_string()))?;
+            (Box::new(file), None)
         };
+    let reported = watch.size.or(announced);
     let mut output =
         File::create(destination).map_err(|source| io("creating", destination, source))?;
     let mut hash = Sha256::new();
@@ -109,12 +115,12 @@ pub(crate) fn fetch_verified(
         if let Some(task) = watch.task
             && total - measured >= MEASURE_EVERY
         {
-            task.set_progress(total, watch.size, "bytes");
+            task.set_progress(total, reported, "bytes");
             measured = total;
         }
     }
     if let Some(task) = watch.task {
-        task.set_progress(total, watch.size, "bytes");
+        task.set_progress(total, reported, "bytes");
     }
     output
         .sync_all()

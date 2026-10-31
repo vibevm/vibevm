@@ -15,6 +15,7 @@ use vibe_core::manifest::{ParameterDecl, ParameterType};
 use vibe_core::progress::Progress;
 
 use super::agents::{AgentSetup, report_parked};
+use super::display::{StepDisplay, asking};
 use super::interrupt::Signals;
 use super::report::{render, render_removal};
 use crate::cli::{AppChoiceArgs, AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
@@ -99,12 +100,14 @@ pub(super) fn chooser(
     prompt: &str,
     items: &[String],
 ) -> std::result::Result<Option<usize>, String> {
-    Select::new()
-        .with_prompt(prompt)
-        .items(items)
-        .default(0)
-        .interact_opt()
-        .map_err(|error| error.to_string())
+    asking(|| {
+        Select::new()
+            .with_prompt(prompt)
+            .items(items)
+            .default(0)
+            .interact_opt()
+            .map_err(|error| error.to_string())
+    })
 }
 
 pub(super) fn attended(ctx: &output::Context) -> bool {
@@ -116,12 +119,14 @@ fn feature_chooser(
     items: &[String],
     defaults: &[bool],
 ) -> std::result::Result<Option<Vec<usize>>, String> {
-    MultiSelect::new()
-        .with_prompt(prompt)
-        .items(items)
-        .defaults(defaults)
-        .interact_opt()
-        .map_err(|error| error.to_string())
+    asking(|| {
+        MultiSelect::new()
+            .with_prompt(prompt)
+            .items(items)
+            .defaults(defaults)
+            .interact_opt()
+            .map_err(|error| error.to_string())
+    })
 }
 
 /// A typed parameter question (PROP-065 `#parameters`): a confirmation, a
@@ -135,7 +140,7 @@ fn parameter_prompt(
         None => format!("{} ({})", parameter.name, parameter.id),
     };
     let failed = |error: dialoguer::Error| error.to_string();
-    match parameter.kind {
+    asking(|| match parameter.kind {
         ParameterType::Bool => Confirm::new()
             .with_prompt(label)
             .default(preset == Some("true"))
@@ -177,17 +182,19 @@ fn parameter_prompt(
                 .map(|text| Some(text).filter(|text| !text.is_empty()))
                 .map_err(failed)
         }
-    }
+    })
 }
 
 /// Show the license text, then ask (PROP-065 `#license`).
 fn license_prompt(name: &str, text: &str) -> std::result::Result<bool, String> {
-    eprintln!("{text}");
-    Confirm::new()
-        .with_prompt(format!("Accept the license `{name}`?"))
-        .default(false)
-        .interact()
-        .map_err(|error| error.to_string())
+    asking(|| {
+        eprintln!("{text}");
+        Confirm::new()
+            .with_prompt(format!("Accept the license `{name}`?"))
+            .default(false)
+            .interact()
+            .map_err(|error| error.to_string())
+    })
 }
 
 /// PATH and environment facts for step conditions and needs.
@@ -205,7 +212,7 @@ type Notice = Box<dyn Fn(&str)>;
 /// What one operation observes: the progress handle (the machine stream
 /// only; the human renderer keeps showing child output as before) and the
 /// caught signals of a mutating command.
-pub(crate) struct Observation {
+pub(crate) struct Observation<'d> {
     pub(crate) progress: Progress,
     pub(crate) signals: Option<Signals>,
     /// The durable user environment env steps change (PROP-065 `#env-step`).
@@ -215,13 +222,22 @@ pub(crate) struct Observation {
     /// One-line run notices on stderr, so `--json` stays one envelope
     /// (PROP-065 `#work`); absent when the caller asked for quiet.
     notice: Option<Notice>,
+    /// What this run shows of its children (PROP-065 `#display`); the flat
+    /// display of a command that runs no panel.
+    display: &'d StepDisplay,
 }
 
-impl Observation {
+impl<'d> Observation<'d> {
     /// `mutating` operations catch Ctrl-C / SIGTERM (PROP-065 `#cancellation`).
-    pub(crate) fn new(ctx: &output::Context, mutating: bool) -> Result<Self> {
+    pub(crate) fn new(
+        ctx: &output::Context,
+        mutating: bool,
+        display: &'d StepDisplay,
+    ) -> Result<Self> {
         Ok(Self {
-            progress: if ctx.is_machine_progress() {
+            // A panel renders the step tasks itself; a flat run keeps the
+            // live child stream and observes nothing but the machine stream.
+            progress: if ctx.is_machine_progress() || display.renders_steps() {
                 ctx.progress()
             } else {
                 Progress::default()
@@ -236,7 +252,9 @@ impl Observation {
                 super::facts::user_home().as_deref(),
             ),
             search_path: super::facts::search_path(),
-            notice: (!ctx.is_quiet()).then(|| Box::new(|text: &str| eprintln!("{text}")) as Notice),
+            notice: (!ctx.is_quiet())
+                .then(|| Box::new(|text: &str| asking(|| eprintln!("{text}"))) as Notice),
+            display,
         })
     }
 
@@ -259,7 +277,7 @@ pub(super) fn operation<'a>(
     offline: bool,
     proxy_image: &'a Path,
     show: Option<&'a dyn Fn(&Plan)>,
-    observe: &'a Observation,
+    observe: &'a Observation<'a>,
 ) -> OperationContext<'a> {
     let attended = attended(ctx);
     OperationContext {
@@ -275,7 +293,9 @@ pub(super) fn operation<'a>(
         on_plan: show,
         on_notice: observe.notice(),
         progress: &observe.progress,
-        quiet_children: ctx.is_machine_progress(),
+        quiet_children: ctx.is_machine_progress() || observe.display.quiet_children(),
+        panel: observe.display.panel(),
+        on_step_log: Some(observe.display as &dyn vibe_app::StepLogs),
         interrupt: observe.interrupt(),
         agent: vibe_app::AgentHooks::default(),
         resolver: None,
@@ -289,7 +309,7 @@ pub(super) fn operation<'a>(
 pub(super) fn plan_printer(ctx: &output::Context) -> impl Fn(&Plan) + '_ {
     move |plan: &Plan| {
         if !ctx.is_quiet() && !ctx.is_machine_progress() {
-            eprint!("\n{}\n", plan.render());
+            asking(|| eprint!("\n{}\n", plan.render()));
         }
     }
 }
@@ -403,7 +423,8 @@ pub fn install(
     };
     let resolver = |spelling: &str| packages.resolve(spelling);
     if args.plan_only {
-        let observe = Observation::new(ctx, false)?;
+        let flat = StepDisplay::flat();
+        let observe = Observation::new(ctx, false, &flat)?;
         let operation = OperationContext {
             agent: agents.hooks(),
             resolver: Some(&resolver),
@@ -413,15 +434,17 @@ pub fn install(
         return render_plan(ctx, &plan);
     }
     let show = plan_printer(ctx);
-    let observe = Observation::new(ctx, true)?;
-    let outcome = ctx.suspend_progress(|| {
+    let display = StepDisplay::open(ctx, &args.steps);
+    let observe = Observation::new(ctx, true, &display)?;
+    let outcome = display.around(ctx, || {
         let operation = OperationContext {
             agent: agents.hooks(),
             resolver: Some(&resolver),
             ..operation(ctx, &settings, offline, &proxy_image, Some(&show), &observe)
         };
         report_parked(ctx, vibe_app::install(&operation, &resolved, &request))
-    })?;
+    });
+    let outcome = display.report(ctx, outcome)?;
     render(ctx, &outcome)
 }
 
@@ -481,8 +504,9 @@ pub(crate) fn update_one(
     };
     let resolver = |spelling: &str| packages.resolve(spelling);
     let show = plan_printer(ctx);
-    let observe = Observation::new(ctx, true)?;
-    ctx.suspend_progress(|| {
+    let display = StepDisplay::open(ctx, &args.steps);
+    let observe = Observation::new(ctx, true, &display)?;
+    let outcome = display.around(ctx, || {
         let operation = OperationContext {
             agent: agents.hooks(),
             resolver: Some(&resolver),
@@ -496,8 +520,8 @@ pub(crate) fn update_one(
             )
         };
         report_parked(ctx, vibe_app::update(&operation, resolved, &request))
-    })
-    .map_err(Into::into)
+    });
+    display.report(ctx, outcome).map_err(Into::into)
 }
 
 /// The tree-removal flags of `uninstall` (PROP-065 `#uninstall-tree`).
@@ -517,8 +541,9 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
     }
     let settings = settings_root()?;
     let proxy_image = proxy_image()?;
-    let observe = Observation::new(ctx, true)?;
-    let removal = ctx.suspend_progress(|| {
+    let flat = StepDisplay::flat();
+    let observe = Observation::new(ctx, true, &flat)?;
+    let removal = flat.around(ctx, || {
         let operation = OperationContext {
             chooser: None,
             feature_chooser: None,

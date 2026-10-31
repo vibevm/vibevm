@@ -70,8 +70,8 @@ pub use index::{
     Installation, Lifecycle, Location, Mark, Method, PackageCoordinate, Requirement, StepOutcome,
     StepRecord, ValueKind,
 };
-pub use installer::Interrupt;
 pub use installer::programs::{windows_cmd, windows_powershell, windows_system_program};
+pub use installer::{Interrupt, StepLogs, StepPanel};
 pub use launch::{
     LaunchRequest, ResolvedLauncher, TemplateVars, app_root, exit_code, expand_template,
     icon_choice, launch_arguments, listing as launcher_listing,
