@@ -2482,3 +2482,13 @@ structure, and it goes when the file does.
 | @fact:B226-SEVERITY **severity** | P3 — correctness is restored by the path fix; this is robustness and speed. |
 | @fact:B226-DISPOSITION **disposition** | `candidate` — needs the owner's yes; adds a `windows-sys` dependency to `vibe-cli` (registry and user32 features) with the pure PATH transformation tests unchanged and a Windows-only integration test behind an opt-in environment variable. |
 | @fact:B226-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
+
+## B-227 — refresh the registry cache for the user home {#b-227}
+
+| field | value |
+|---|---|
+| @fact:B227-WHAT **what** | `vibe registry sync` refreshes the clones a project's `vibe.lock` references and refuses outside a project ("no `vibe.toml`"). A user who installs applications globally has no way to refresh the registry cache under the user settings root before the implicit-pull TTL (one hour) expires, and a desktop client has no "refresh catalog" verb. `vibe registry sync -g` (or `sync` outside a project) should refresh the user home's cached clones and the index handshake. |
+| @fact:B227-EVIDENCE **evidence** | MT-04 / MT-05 runs of 2026-10-31 right after publishing `vim@1.1.2`: a fresh home resolved `1.1.1` from a stale index copy, and `vibe registry sync` could not be used from the home directory. |
+| @fact:B227-SEVERITY **severity** | P3 — the TTL bounds the staleness; a client can wait or clear `<home>/registries/`. |
+| @fact:B227-DISPOSITION **disposition** | `candidate` — needs the owner's yes; the same pass should wire the publish index hook so `vibe registry publish` updates `vibespecs/index` instead of a manual `vibe-index reindex`. |
+| @fact:B227-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
