@@ -446,10 +446,15 @@ pub enum AppError {
     #[error(transparent)]
     Lifecycle(#[from] crate::error_lifecycle::LifecycleError),
     #[error(
-        "not_installed: global application `{package}` is not installed (violates spec://org.vibevm.core/vibevm/common/PROP-059#commands; \
-         fix: check `vibe app list` for the installed keys)"
+        "not_installed: application `{package}` is not installed in {home} (violates spec://org.vibevm.core/vibevm/common/PROP-059#commands; \
+         fix: {fix})"
     )]
-    NotInstalled { package: String },
+    NotInstalled {
+        package: String,
+        /// `the user home` or `the project home <path>`.
+        home: String,
+        fix: String,
+    },
     #[error(
         "selection_required: several installed versions of `{package}` match (violates spec://org.vibevm.core/vibevm/common/PROP-059#commands; \
          fix: name one exactly as <group>/<name>@=<version>)"
@@ -546,4 +551,20 @@ pub enum AppError {
          fix: make every launcher row complete, or ship the desktop entry its override row and public commands name)"
     )]
     Launchers { key: String, reason: String },
+}
+
+impl AppError {
+    /// `not_installed` for `package` in `home`, naming the home searched and,
+    /// for a project home, pointing at `-g` (`PROP-059#project-scope`).
+    pub fn not_installed(home: &crate::settings::SettingsRoot, package: impl Into<String>) -> Self {
+        Self::NotInstalled {
+            package: package.into(),
+            home: home.home_name(),
+            fix: if home.is_project() {
+                "use -g for the user home, or check `vibe app list` for the installed keys".into()
+            } else {
+                "check `vibe app list` for the installed keys".into()
+            },
+        }
+    }
 }

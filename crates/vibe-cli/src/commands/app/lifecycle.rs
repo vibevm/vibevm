@@ -38,7 +38,7 @@ pub(crate) fn modify(
 ) -> Result<()> {
     let user = global::settings_root()?;
     let index = Index::load(home)?;
-    let (_, record) = vibe_app::installed(&index, args.package)?;
+    let (_, record) = vibe_app::installed(home, &index, args.package)?;
     let package = &record.package;
     let exact = format!("{}/{}@={}", package.group, package.name, package.version);
     let packages = Packages {

@@ -61,7 +61,7 @@ pub(super) fn icon(
     let settings = app_home.settings();
     let index = Index::load(settings)?;
     let storage = Storage::load(settings)?;
-    let (_, installation) = vibe_app::installed(&index, package)?;
+    let (_, installation) = vibe_app::installed(settings, &index, package)?;
     let chosen = vibe_app::icon_choice(
         installation,
         &storage,

@@ -6,7 +6,8 @@
 //! registry version, `hold` makes it report held and a bulk update skip
 //! it; an update keeps the previous version hidden, `rollback` swaps them
 //! back, `autoremove` and `--purge-previous` remove the kept version, and
-//! the update's run record names the key it replaced.
+//! the update's run record names the key it replaced. Inside a project,
+//! `-g` reaches the user home and a miss names the home it searched.
 
 #![cfg(target_os = "linux")]
 
@@ -14,7 +15,7 @@ mod common;
 
 use std::fs;
 
-use common::app_registry::{AppRegistry, json, ok};
+use common::app_registry::{AppRegistry, failed, json, ok};
 
 const V1: &str = "org.example/editor@1.0.0";
 const V2: &str = "org.example/editor@2.0.0";
@@ -292,4 +293,42 @@ fn purge_previous_removes_the_replaced_version_at_once() {
     let error =
         String::from_utf8_lossy(&apps.vibe(&["app", "rollback", "-g", NAME]).stderr).into_owned();
     assert!(error.contains("no kept previous installation"), "{error}");
+}
+
+/// Inside a project directory a verb acts on the project home; `-g` reaches
+/// the user home, and a miss names the project home and points at `-g`
+/// (B-225, PROP-059 `#project-scope`).
+#[test]
+fn inside_a_project_g_reaches_the_user_home_and_a_miss_names_the_home() {
+    let apps = fixture();
+    ok(&apps.app(
+        &["install", "-g"],
+        "org.example/editor@=1.0.0",
+        &["--installer", "main"],
+    ));
+    let project = apps.root.path().join("project");
+    fs::create_dir_all(&project).unwrap();
+    fs::write(project.join("vibe.toml"), "[project]\nname = \"demo\"\n").unwrap();
+
+    ok(&apps.vibe_in(&project, &["app", "hold", "-g", NAME]));
+    assert_eq!(apps.listed(V1)["held"], true);
+    ok(&apps.vibe_in(&project, &["app", "unhold", "--global", NAME]));
+    assert_ne!(apps.listed(V1)["held"], true);
+
+    let error = failed(&apps.vibe_in(&project, &["app", "hold", NAME]));
+    assert!(error.contains("not_installed"), "{error}");
+    assert!(
+        error.contains("is not installed in the project home "),
+        "{error}"
+    );
+    assert!(error.contains("vibeopt"), "{error}");
+    assert!(error.contains("use -g for the user home"), "{error}");
+    assert_ne!(apps.listed(V1)["held"], true, "nothing changed");
+
+    let error = failed(&apps.vibe(&["app", "hold", "-g", "org.example/absent"]));
+    assert!(
+        error.contains("is not installed in the user home"),
+        "{error}"
+    );
+    assert!(!error.contains("use -g"), "{error}");
 }

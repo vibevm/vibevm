@@ -25,7 +25,12 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
   --all [--menu]`, `vibe app icon PKG --size N [--prefer …]`, `vibe app
   import-desktop FILE…`, and the `application_icons` check of `vibe check`.
   `describe`, `app list --json` and `app launchers --json` carry the new fields
-  with icon files resolved to absolute paths.
+  with icon files resolved to absolute paths. A package-relative icon (of
+  `[application] icon` or of a launcher, not `$`-templated) is a file of the
+  package tree: install copies it into `<home>/applications/icons/<key>/`
+  keeping its relative path, for owned and external results alike, and the
+  listings resolve it there; `modify`, update and reinstall refresh the copies,
+  `uninstall` removes them, and `storage move` leaves them with the home.
 - **Application requirements in projects (PROP-065 `#app-dependencies`).** An
   application package that a project depends on and whose installer option or
   steps require other application packages now pulls them into the ordinary
@@ -44,7 +49,14 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
   option receives (PROP-065 `#app-dependencies`, PROP-064 `#envelope`).
 - **Native payload separators (B-223).** Removal plans, uninstall summaries and
   every other owned-payload path are joined component by component, so Windows
-  prints `opt\apps\vim\…` instead of `opt\apps/vim/…`.
+  prints `opt\apps\vim\…` instead of `opt\apps/vim/…`. Every `vibe app` verb
+  that selects a home takes `-g` / `--global` with the `app list` semantics, and
+  `not_installed` names the home it searched (`the user home` or `the project
+  home <path>`) and, for a project home, hints `use -g for the user home`
+  (B-225).
+- **Busy handler executables are retried.** A lifecycle handler whose spawn
+  hits `ETXTBSY` (a just-written script still open in a concurrently forked
+  child) is retried up to 20 times, 25 ms apart, before the spawn is reported.
 
 ## [1.0.8] — 2026-10-31
 

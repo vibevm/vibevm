@@ -36,6 +36,9 @@ pub(super) enum Mode {
 /// failed authored finish step to report after that.
 pub(super) struct Applied {
     pub installation: Installation,
+    /// The resolved package tree its package-relative icons are copied
+    /// from (`PROP-059#menu`).
+    pub package_root: PathBuf,
     pub retired: Vec<PathBuf>,
     pub finish_failure: Option<AppError>,
 }
@@ -198,6 +201,7 @@ pub(super) fn apply(
                 ..Lifecycle::default()
             },
         },
+        package_root: selected.resolved.root.clone(),
         retired,
         finish_failure,
     })

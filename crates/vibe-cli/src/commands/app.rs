@@ -334,7 +334,7 @@ fn launcher_listing(
     let settings = app_home.settings();
     let index = Index::load(settings)?;
     let storage = Storage::load(settings)?;
-    let (_, installation) = vibe_app::installed(&index, package)?;
+    let (_, installation) = vibe_app::installed(settings, &index, package)?;
     let listing = vibe_app::launcher_listing(installation, &storage, settings.path(), project_root);
     Ok(serde_json::to_value(listing)?)
 }
@@ -349,7 +349,7 @@ fn run_launcher(
     let settings = app_home.settings();
     let index = Index::load(settings)?;
     let storage = Storage::load(settings)?;
-    let (_, installation) = vibe_app::installed(&index, package)?;
+    let (_, installation) = vibe_app::installed(settings, &index, package)?;
     let extra_args: Vec<OsString> = args.iter().map(OsString::from).collect();
     let request = LaunchRequest {
         launcher_id,

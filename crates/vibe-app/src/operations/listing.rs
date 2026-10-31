@@ -18,9 +18,11 @@ use crate::resolve::qualified_ref;
 use crate::settings::SettingsRoot;
 use crate::storage::Storage;
 
-/// Find the one installed record a coordinate names: an exact match, or the
-/// slot default among several matching versions.
+/// Find the one installed record a coordinate names in the index of `home`:
+/// an exact match, or the slot default among several matching versions; a
+/// miss names `home` (`PROP-059#project-scope`).
 pub fn installed<'a>(
+    home: &SettingsRoot,
     index: &'a Index,
     spelling: &str,
 ) -> Result<(&'a str, &'a Installation), AppError> {
@@ -66,9 +68,7 @@ pub fn installed<'a>(
         defaults.as_slice(),
         current.as_slice(),
     ) {
-        ([], _, _) => Err(AppError::NotInstalled {
-            package: spelling.into(),
-        }),
+        ([], _, _) => Err(AppError::not_installed(home, spelling)),
         ([(key, record)], _, _) | (_, [(key, record)], _) | (_, _, [(key, record)]) => {
             Ok((key.as_str(), record))
         }
@@ -104,6 +104,7 @@ fn row(
 ) -> wire::Installation {
     let root = launch::app_root(record, storage);
     let reason = launch::unavailable_reason(&root);
+    let places = launch::IconPlaces::new(vibe_home, None, record, &root);
     let lifecycle = &record.lifecycle;
     wire::Installation {
         key: key.to_owned(),
@@ -124,14 +125,12 @@ fn row(
             Location::Owned { library, .. } => Some(library.clone()),
             Location::External { .. } => None,
         },
-        icon: match (&record.location, &record.icon, &root) {
-            (Location::Owned { .. }, Some(IconDecl::Path(icon)), Ok(root)) => {
-                Some(root.join(icon)).filter(|path| path.is_file())
-            }
+        icon: match &record.icon {
+            Some(IconDecl::Path(icon)) if !icon.is_empty() => places.locate(icon).ok(),
             _ => None,
         }
         .map(|path| path_text(&path)),
-        icon_set: launch::application_icon(record, &root).and_then(|icon| wire_shape(&icon)),
+        icon_set: launch::application_icon(record, &places).and_then(|icon| wire_shape(&icon)),
         menu_group: record.menu.menu_group.clone(),
         categories: record.menu.categories.clone(),
         keywords: record.menu.keywords.clone(),
