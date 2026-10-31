@@ -194,6 +194,14 @@ name = "demo"
 launcher = "main"
 "#;
     assert!(Manifest::parse_str(base).is_ok());
+    // Toolchain spellings are commands too.
+    for name in ["g++", "clang++", "python3.12", "x86_64-w64-mingw32-gcc"] {
+        let extra = format!(
+            "[[installer_options.public_commands]]\nname = \"{name}\"\nlauncher = \"main\"\n"
+        );
+        let parsed = Manifest::parse_str(&format!("{base}{extra}"));
+        assert!(parsed.is_ok(), "{name}: {:?}", parsed.err());
+    }
     for (extra, expected) in [
         (
             "[[installer_options.public_commands]]\nname = \"demo\"\nlauncher = \"main\"\n",
@@ -205,7 +213,11 @@ launcher = "main"
         ),
         (
             "[[installer_options.public_commands]]\nname = \"bad name\"\nlauncher = \"main\"\n",
-            "portable lowercase token",
+            "command name",
+        ),
+        (
+            "[[installer_options.public_commands]]\nname = \"+g\"\nlauncher = \"main\"\n",
+            "command name",
         ),
         (
             "[[installer_options.public_commands]]\nname = \"other\"\nlauncher = \"missing\"\n",
