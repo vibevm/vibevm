@@ -2420,7 +2420,7 @@ structure, and it goes when the file does.
 | @fact:B220-WHAT **what** | `vibe app update` and `vibe app outdated` (PROP-065 `#outdated`) follow the registry; there is no way to say "keep Vim at 9.2.1167 until I say otherwise" the way `apt-mark hold` or `brew pin` do. A held installation would be reported by `outdated` as held, skipped by a bulk update, and updated only by naming it explicitly. |
 | @fact:B220-EVIDENCE **evidence** | Owner question of 2026-10-31 ("мы что-то еще забыли обсудить?"), answered during the APP-STEPS campaign; not in PROP-059 or PROP-065. |
 | @fact:B220-SEVERITY **severity** | P3 — a convenience over the existing per-version installation keys. |
-| @fact:B220-DISPOSITION **disposition** | `accepted` — the owner's standing grant of 2026-10-31 (add what is foundational); specified in PROP-065 `#update-and-rollback`, implemented in APP-STEPS Q3. |
+| @fact:B220-DISPOSITION **disposition** | `done` — the owner's standing grant of 2026-10-31 (add what is foundational); specified in PROP-065 `#update-and-rollback`, landed in APP-STEPS Q3 (`50a6685cc`: `vibe app hold | unhold`, `outdated` reports held, `vibe update -g --all` skips held). |
 | @fact:B220-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
 
 ## B-221 — keep the previous version hidden for rollback {#b-221}
@@ -2430,7 +2430,7 @@ structure, and it goes when the file does.
 | @fact:B221-WHAT **what** | An application update installs the new version and removes the old one. With hidden installations (PROP-059 `#hidden-installations`) the old version could instead stay hidden for one update cycle, so `vibe app rollback PKG` is just `expose` of the previous key plus `app use`, with no download and no rebuild. The next successful update would remove it. |
 | @fact:B221-EVIDENCE **evidence** | Owner question of 2026-10-31; the index already keys installations by exact version, and alternatives already let two versions coexist. |
 | @fact:B221-SEVERITY **severity** | P3 — source builds taking minutes make rollback-by-reinstall expensive, but nothing is wrong today. |
-| @fact:B221-DISPOSITION **disposition** | `accepted` — the owner's standing grant of 2026-10-31; the previous version is kept hidden by default, PROP-065 `#update-and-rollback`, implemented in APP-STEPS Q3. |
+| @fact:B221-DISPOSITION **disposition** | `done` — the owner's standing grant of 2026-10-31; the previous version is kept hidden by default, PROP-065 `#update-and-rollback`, landed in APP-STEPS Q3 (`50a6685cc`: `vibe app rollback`, `--purge-previous`, autoremove of kept versions). |
 | @fact:B221-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
 
 ## B-222 — export and import the set of global applications {#b-222}
@@ -2442,3 +2442,13 @@ structure, and it goes when the file does.
 | @fact:B222-SEVERITY **severity** | P3 — convenience; the project scope covers the reproducible case today. |
 | @fact:B222-DISPOSITION **disposition** | `candidate` — needs the owner's yes. |
 | @fact:B222-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
+
+## B-223 — payload paths print with mixed separators on Windows {#b-223}
+
+| field | value |
+|---|---|
+| @fact:B223-WHAT **what** | Removal plans and uninstall summaries on Windows print the owned payload as `C:\…\opt\apps/vim/org.vibevm.apps.vim@1.1.0` — the library root with backslashes, the per-application part joined with forward slashes. The path works; the display is inconsistent with every other path vibe prints. |
+| @fact:B223-EVIDENCE **evidence** | MT-04 automated run of 2026-10-31 on `base` (`uninstall --plan-only`, `app autoremove --plan-only`, the uninstall summary line). |
+| @fact:B223-SEVERITY **severity** | P3 — cosmetic. |
+| @fact:B223-DISPOSITION **disposition** | `candidate` — normalise the joined relative part through `Path` components instead of a string join. |
+| @fact:B223-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
