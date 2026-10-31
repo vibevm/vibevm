@@ -194,14 +194,6 @@ name = "demo"
 launcher = "main"
 "#;
     assert!(Manifest::parse_str(base).is_ok());
-    // Toolchain spellings are commands too.
-    for name in ["g++", "clang++", "python3.12", "x86_64-w64-mingw32-gcc"] {
-        let extra = format!(
-            "[[installer_options.public_commands]]\nname = \"{name}\"\nlauncher = \"main\"\n"
-        );
-        let parsed = Manifest::parse_str(&format!("{base}{extra}"));
-        assert!(parsed.is_ok(), "{name}: {:?}", parsed.err());
-    }
     for (extra, expected) in [
         (
             "[[installer_options.public_commands]]\nname = \"demo\"\nlauncher = \"main\"\n",

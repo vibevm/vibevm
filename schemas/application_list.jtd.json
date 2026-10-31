@@ -30,7 +30,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "installation": {
-      "metadata": { "x-wire-order": ["key", "slot", "package", "method", "status", "reason", "library", "app_root", "portable", "default"] },
+      "metadata": { "x-wire-order": ["key", "slot", "package", "method", "status", "reason", "library", "app_root", "portable", "default", "icon"] },
       "properties": {
         "key": { "type": "string" },
         "slot": { "type": "string" },
@@ -42,6 +42,9 @@
         "app_root": { "type": "string", "nullable": true },
         "portable": { "type": "boolean" },
         "default": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "icon": { "type": "string", "metadata": { "x-default": null } }
       }
     }
   }

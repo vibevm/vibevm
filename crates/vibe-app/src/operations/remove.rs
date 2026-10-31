@@ -9,13 +9,14 @@ use std::path::Path;
 use vibe_wire::generated::application_list as wire;
 
 use crate::alternatives::reserved_names;
-use crate::error::AppError;
-use crate::index::{AuthoredCommands, Index, Installation, Location};
-use crate::installer::{self, shell};
+use crate::error::{AppError, InstallerError};
+use crate::index::{AuthoredCommands, Index, Installation, Location, StepOutcome};
+use crate::installer::{self, ChildIo, shell};
 use crate::launch;
 use crate::proxies;
 use crate::resolve::qualified_ref;
 use crate::settings::SettingsRoot;
+use crate::steps::{RunOutcome, RunRecord, StepState, StepsFile};
 use crate::storage::{Availability, Storage};
 
 use super::{Command, OperationContext, Outcome, normalize_slots};
@@ -94,45 +95,51 @@ pub fn uninstall(
     };
     // The method form keeps its commands in `commands`; step forms record
     // them per step. Both run last step first.
-    let recorded: Vec<&AuthoredCommands> = std::iter::once(&installation.commands)
-        .chain(installation.steps.iter().rev().map(|step| &step.uninstall))
-        .filter(|commands| commands.has_uninstall())
-        .collect();
+    let recorded: Vec<(&str, &AuthoredCommands)> =
+        std::iter::once(("uninstall", &installation.commands))
+            .chain(
+                installation
+                    .steps
+                    .iter()
+                    .rev()
+                    .map(|step| (step.id.as_str(), &step.uninstall)),
+            )
+            .filter(|(_, commands)| commands.has_uninstall())
+            .collect();
     let external = matches!(installation.location, Location::External { .. });
     if force
         && external
         && (recorded.is_empty()
             || recorded
                 .iter()
-                .any(|commands| commands.force_uninstall.is_none()))
+                .any(|(_, commands)| commands.force_uninstall.is_none()))
     {
         return Err(AppError::ForceUnsupported {
             key,
             reason: "the installation declares no force_uninstall",
         });
     }
-    let scripts: Vec<(&str, &AuthoredCommands)> = recorded
+    let scripts: Vec<(&str, &str, &AuthoredCommands)> = recorded
         .iter()
-        .filter_map(|commands| {
+        .filter_map(|(id, commands)| {
             let script = match (force, &commands.force_uninstall) {
                 (true, Some(forced)) => Some(forced),
                 _ => commands.uninstall.as_ref(),
             };
-            script.map(|script| (script.as_str(), *commands))
+            script.map(|script| (*id, script.as_str(), *commands))
         })
         .collect();
+    let mut record = RunRecord::open(
+        ctx.settings,
+        &installation.package,
+        Command::Uninstall,
+        &installation.option,
+        None,
+    )?;
     if let Some(root) = root.as_deref().filter(|_| !scripts.is_empty()) {
-        for (script, commands) in &scripts {
-            shell::run(
-                commands.interpreter,
-                script,
-                ctx.settings.path(),
-                root,
-                "authored uninstall",
-                ctx.json,
-            )?;
-        }
+        run_uninstalls(ctx, &installation, &scripts, root, &mut record)?;
     }
+    record.close(RunOutcome::Done);
     let mut doomed = None;
     let mut message = match (&installation.location, root) {
         (Location::Owned { .. }, Some(directory)) if directory.exists() => {
@@ -192,6 +199,73 @@ pub fn uninstall(
     })
 }
 
+/// Run the recorded uninstall commands, each teed into the run record and
+/// observed as one task; the first failure stops them.
+fn run_uninstalls(
+    ctx: &OperationContext<'_>,
+    installation: &Installation,
+    scripts: &[(&str, &str, &AuthoredCommands)],
+    root: &Path,
+    record: &mut RunRecord,
+) -> Result<(), AppError> {
+    let mut state = StepsFile {
+        package: installation.package.clone(),
+        option: installation.option.clone(),
+        features: installation.features.clone(),
+        steps: Vec::new(),
+    };
+    for (id, script, commands) in scripts {
+        let task = ctx.progress.task(format!("{id}: uninstall"));
+        let log = record.log(id);
+        let observe = ChildIo {
+            relay: ctx.relay(),
+            log: Some(&log),
+            task: Some(&task),
+            interrupt: ctx.interrupt,
+        };
+        let started = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
+        let result = shell::run(
+            commands.interpreter,
+            script,
+            ctx.settings.path(),
+            root,
+            "authored uninstall",
+            &observe,
+        );
+        let outcome = match &result {
+            Ok(()) => {
+                task.finish();
+                StepOutcome::Done
+            }
+            Err(InstallerError::Interrupted { .. }) => {
+                task.fail("interrupted");
+                StepOutcome::Interrupted
+            }
+            Err(error) => {
+                task.fail(error.to_string());
+                StepOutcome::Failed
+            }
+        };
+        state.record(StepState {
+            id: (*id).into(),
+            kind: "shell".into(),
+            outcome,
+            reason: result.as_ref().err().map(ToString::to_string),
+            started: Some(started),
+            finished: Some(chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)),
+            uninstall: AuthoredCommands::default(),
+        });
+        record.steps(&state);
+        if let Err(error) = result {
+            if outcome == StepOutcome::Interrupted {
+                record.close(RunOutcome::Interrupted);
+            }
+            return Err(error.into());
+        }
+    }
+    Ok(())
+}
+
 fn is_ready(installation: &Installation, storage: &Storage) -> bool {
     launch::app_root(installation, storage).is_ok_and(|root| root.is_dir())
 }
@@ -225,6 +299,13 @@ pub fn list(settings: &SettingsRoot) -> Result<wire::ApplicationList, AppError> 
                     Location::Owned { library, .. } => Some(library.clone()),
                     Location::External { .. } => None,
                 },
+                icon: match (&record.location, &record.icon, &root) {
+                    (Location::Owned { .. }, Some(icon), Ok(root)) => {
+                        Some(root.join(icon)).filter(|path| path.is_file())
+                    }
+                    _ => None,
+                }
+                .map(|path| path_text(&path)),
                 app_root: root.ok().map(|root| path_text(&root)),
                 portable: record.portable,
                 default: index.default_of(&record.slot) == Some(key.as_str()),

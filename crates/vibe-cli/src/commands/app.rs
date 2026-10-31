@@ -10,7 +10,9 @@ mod describe;
 mod facts;
 pub(crate) mod global;
 pub(crate) mod home;
+mod interrupt;
 pub(crate) mod project;
+mod records;
 
 use std::ffi::OsString;
 use std::io::IsTerminal;
@@ -56,8 +58,7 @@ pub fn run(
             platform,
             arch,
             installer,
-            feature,
-            no_feature,
+            choice,
         } => {
             let settings = global::settings_root()?;
             let resolved = global::resolve_package(
@@ -68,22 +69,33 @@ pub fn run(
                 offline,
             )?;
             let proxy_image = global::proxy_image()?;
-            let operation =
-                global::operation(ctx, app_home.settings(), offline, &proxy_image, None);
-            let plan = vibe_app::plan(
-                &operation,
-                &resolved,
-                &vibe_app::InstallChoice {
+            let observe = global::Observation::new(ctx, false)?;
+            let operation = global::operation(
+                ctx,
+                app_home.settings(),
+                offline,
+                &proxy_image,
+                None,
+                &observe,
+            );
+            let request = global::plan_request(
+                vibe_app::InstallChoice {
                     platform,
                     arch,
                     installer,
                 },
-                &vibe_app::FeatureRequest {
-                    enable: feature,
-                    disable: no_feature,
-                },
-            )?;
+                &choice,
+            );
+            let plan = ctx.suspend_progress(|| vibe_app::plan(&operation, &resolved, &request))?;
             global::render_plan(ctx, &plan)?;
+            Ok(None)
+        }
+        AppCommand::Runs { package, prune } => {
+            records::runs(ctx, app_home.settings(), &package, prune)?;
+            Ok(None)
+        }
+        AppCommand::Errors => {
+            records::errors(ctx)?;
             Ok(None)
         }
         AppCommand::Steps { package, registry } => {

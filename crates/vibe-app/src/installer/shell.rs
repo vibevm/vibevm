@@ -75,10 +75,10 @@ pub fn run(
     current_dir: &Path,
     app_root: &Path,
     what: &str,
-    json: bool,
+    observe: &super::ChildIo<'_>,
 ) -> Result<(), InstallerError> {
     let mut child = command(interpreter, script, current_dir, app_root)?;
-    super::run_child(&mut child, what, json)
+    super::run_child(&mut child, what, observe)
 }
 
 #[cfg(all(test, unix))]
@@ -94,7 +94,7 @@ mod tests {
             dir.path(),
             dir.path(),
             "test command",
-            false,
+            &super::super::ChildIo::plain(false),
         )
         .unwrap();
         assert!(dir.path().join("marker").is_file());
@@ -104,7 +104,7 @@ mod tests {
             dir.path(),
             dir.path(),
             "failing command",
-            true,
+            &super::super::ChildIo::plain(true),
         )
         .unwrap_err()
         .to_string();

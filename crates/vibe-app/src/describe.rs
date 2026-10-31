@@ -1,17 +1,20 @@
 //! `vibe app describe` (`PROP-065#describe`): the whole choice of a package
-//! as one document — every option with its result, launchers, features and
-//! steps after the sugar mapping. Nothing is resolved or run.
+//! as one document — the application icon, every option with its result,
+//! launchers, feature tree, profiles, parameters, license and steps after
+//! the sugar mapping. Nothing is resolved or run except the default
+//! feature set, which is pure data.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#describe");
 
 use vibe_core::manifest::{
-    Condition, InstallerOptionDecl, ShellInterpreter, StepDecl, StepKind, StepOrigin, StepPhase,
-    result_of, steps_of,
+    Condition, InstallerOptionDecl, ParameterType, ShellInterpreter, StepDecl, StepKind,
+    StepOrigin, StepPhase, result_of, steps_of,
 };
 use vibe_wire::generated::application_describe as wire;
 
 use crate::installer::shell::interpreter_name;
 use crate::resolve::ResolvedPackage;
+use crate::steps::{FeatureRequest, resolve_features};
 
 /// The `vibe-app-describe/1` document of a resolved package.
 pub fn describe(resolved: &ResolvedPackage) -> wire::ApplicationDescribe {
@@ -25,6 +28,11 @@ pub fn describe(resolved: &ResolvedPackage) -> wire::ApplicationDescribe {
         application: wire::Application {
             id: resolved.application.id.clone(),
             portable: resolved.application.portable,
+            icon: resolved
+                .application
+                .icon
+                .as_ref()
+                .map(|icon| resolved.root.join(icon).display().to_string()),
         },
         options: resolved
             .options
@@ -91,8 +99,60 @@ fn describe_option(
                 name: feature.name.clone(),
                 description: feature.description.clone(),
                 default: feature.default,
+                parent: feature.parent.clone(),
+                required: feature.required,
+                requires: feature.requires.clone(),
+                exclusive_group: feature.exclusive_group.clone(),
             })
             .collect(),
+        default_features: resolve_features(option, None, &FeatureRequest::default(), None, None)
+            .map(|resolved| resolved.selected)
+            .unwrap_or_default(),
+        profiles: option
+            .profiles
+            .iter()
+            .map(|profile| wire::Profile {
+                id: profile.id.clone(),
+                name: profile.name.clone(),
+                description: profile.description.clone(),
+                features: profile.features.clone(),
+                default: profile.default,
+            })
+            .collect(),
+        parameters: option
+            .parameters
+            .iter()
+            .map(|parameter| wire::Parameter {
+                id: parameter.id.clone(),
+                name: parameter.name.clone(),
+                description: parameter.description.clone(),
+                type_: match parameter.kind {
+                    ParameterType::String => wire::ParameterType::String,
+                    ParameterType::Bool => wire::ParameterType::Bool,
+                    ParameterType::Integer => wire::ParameterType::Integer,
+                    ParameterType::Choice => wire::ParameterType::Choice,
+                    ParameterType::Path => wire::ParameterType::Path,
+                },
+                default: parameter.default.as_ref().map(ToString::to_string),
+                required: parameter.required,
+                min: parameter.min,
+                max: parameter.max,
+                choices: parameter
+                    .choices
+                    .iter()
+                    .map(|choice| wire::Choice {
+                        value: choice.value.clone(),
+                        name: choice.name.clone(),
+                    })
+                    .collect(),
+                must_exist: parameter.must_exist,
+                secret: parameter.secret,
+            })
+            .collect(),
+        license: option.license.as_ref().map(|license| wire::License {
+            file: resolved.root.join(&license.file).display().to_string(),
+            name: license.name.clone(),
+        }),
         steps: steps_of(option).iter().map(describe_step).collect(),
     }
 }
@@ -100,6 +160,8 @@ fn describe_option(
 fn condition(condition: &Condition) -> wire::Condition {
     let mut row = wire::Condition {
         feature: None,
+        param: None,
+        param_equals: None,
         command_present: None,
         file_present: None,
         env_present: None,
@@ -108,6 +170,13 @@ fn condition(condition: &Condition) -> wire::Condition {
     };
     match condition {
         Condition::Feature(id) => row.feature = Some(id.clone()),
+        Condition::Param(id) => row.param = Some(id.clone()),
+        Condition::ParamEquals(test) => {
+            row.param_equals = Some(wire::ParamEquals {
+                id: test.id.clone(),
+                value: test.value.clone(),
+            });
+        }
         Condition::CommandPresent(name) => row.command_present = Some(name.clone()),
         Condition::FilePresent(path) => row.file_present = Some(path.clone()),
         Condition::EnvPresent(name) => row.env_present = Some(name.clone()),
@@ -149,6 +218,7 @@ fn describe_step(step: &StepDecl) -> wire::Step {
         format: None,
         source: None,
         sha256: None,
+        size: None,
         payload_root: None,
         interpreter: None,
         script: None,
@@ -175,6 +245,7 @@ fn describe_step(step: &StepDecl) -> wire::Step {
                     url: source.url.clone(),
                     path: source.path.as_deref().and_then(text),
                     sha256: source.sha256.clone(),
+                    size: source.size,
                     extract: source.extract,
                 })
                 .collect();
@@ -183,11 +254,13 @@ fn describe_step(step: &StepDecl) -> wire::Step {
             format,
             source,
             sha256,
+            size,
             payload_root,
         } => {
             row.format = to_value(format);
             row.source = Some(source.clone());
             row.sha256 = Some(sha256.clone());
+            row.size = *size;
             row.payload_root = payload_root.as_deref().and_then(text);
         }
         StepKind::Recipe {

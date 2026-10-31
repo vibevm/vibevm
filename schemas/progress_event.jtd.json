@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "description": "One progress observation of an invocation as a JSON line on stderr under --progress-format json: emission sequence, timestamp, task identity and parent, the closed event kind, the task label and the measurement or message the kind carries.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-060#MACHINE-STREAM" },
+    "rustOptions": { "package": "vibe_wire::progress_event" },
+    "x-rust-type": "ProgressEvent",
+    "x-wire-order": ["protocol", "seq", "at", "task", "parent", "kind", "label", "completed", "total", "unit", "level", "message"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "seq": { "ref": "count" },
+    "at": { "type": "string" },
+    "task": { "ref": "count" },
+    "kind": { "ref": "kind" }
+  },
+  "optionalProperties": {
+    "parent": { "ref": "count", "metadata": { "x-default": null } },
+    "label": { "type": "string", "metadata": { "x-default": null } },
+    "completed": { "ref": "count", "metadata": { "x-default": null } },
+    "total": { "ref": "count", "metadata": { "x-default": null } },
+    "unit": { "type": "string", "metadata": { "x-default": null } },
+    "level": { "ref": "level", "metadata": { "x-default": null } },
+    "message": { "type": "string", "metadata": { "x-default": null } }
+  },
+  "definitions": {
+    "count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      }
+    },
+    "kind": {
+      "enum": ["start", "measurement", "detail", "diagnostic", "finish", "skip", "fail"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "level": {
+      "enum": ["warning", "error"],
+      "metadata": { "x-vocabulary": "closed" }
+    }
+  }
+}

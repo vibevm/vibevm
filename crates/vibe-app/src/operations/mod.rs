@@ -15,15 +15,20 @@ use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use vibe_core::manifest::{InstallerOptionDecl, result_of};
+use vibe_core::progress::Progress;
 
 use crate::alternatives::{check_reservation, reserved_names};
 use crate::error::{AppError, ResolveError};
 use crate::index::{Index, Location, Method};
+use crate::installer::Interrupt;
 use crate::proxies;
 use crate::resolve::ResolvedPackage;
 use crate::select::{Chooser, InstallChoice, select_option};
 use crate::settings::SettingsRoot;
-use crate::steps::{self, FeatureChooser, FeatureRequest, HostFacts, Plan, PlanInput, Start};
+use crate::steps::{
+    self, FeatureChooser, FeatureRequest, HostFacts, LicensePrompt, ParameterPrompt, Plan,
+    PlanInput, Previous, Prompts, Start,
+};
 use crate::storage::{Availability, Storage};
 
 use apply::{Applied, Mode, Selected};
@@ -45,8 +50,31 @@ pub struct OperationContext<'a> {
     pub facts: HostFacts<'a>,
     /// The attended feature question (`PROP-065#features`).
     pub feature_chooser: Option<FeatureChooser<'a>>,
+    /// The attended typed parameter questions (`PROP-065#parameters`).
+    pub parameter_prompt: Option<ParameterPrompt<'a>>,
+    /// The attended license question (`PROP-065#license`).
+    pub license_prompt: Option<LicensePrompt<'a>>,
     /// Shown the plan before the first step runs (`PROP-065#plan`).
     pub on_plan: Option<&'a dyn Fn(&Plan)>,
+    /// Step tasks, fetched bytes and child output lines are observed here
+    /// (`PROP-065#events`).
+    pub progress: &'a Progress,
+    /// Child output reaches only the run log and the progress stream.
+    pub quiet_children: bool,
+    /// Signals the caller received (`PROP-065#cancellation`).
+    pub interrupt: Option<&'a dyn Interrupt>,
+}
+
+impl OperationContext<'_> {
+    /// Where child output goes besides the run log.
+    pub(crate) fn relay(&self) -> crate::installer::Relay {
+        use crate::installer::Relay;
+        match (self.quiet_children, self.json) {
+            (true, _) => Relay::Quiet,
+            (false, true) => Relay::Stderr,
+            (false, false) => Relay::Live,
+        }
+    }
 }
 
 /// The selection and placement flags of `install -g` / `update -g`.
@@ -56,8 +84,12 @@ pub struct InstallRequest {
     pub choice: InstallChoice,
     pub library: Option<String>,
     pub force: bool,
-    /// `--feature` / `--no-feature`.
+    /// `--profile`, `--feature` / `--no-feature`.
     pub features: FeatureRequest,
+    /// `--set ID=VALUE` (`PROP-065#parameters`).
+    pub parameters: Vec<(String, String)>,
+    /// `--accept-license` (`PROP-065#license`).
+    pub accept_license: bool,
     /// `--resume` / `--from-step`.
     pub start: Start,
 }
@@ -100,7 +132,7 @@ pub fn install(
     if let Some(prior) = &prior {
         ensure_available(&key, prior, &storage)?;
     }
-    let plan = plan_option(ctx, resolved, &option, &request.features, None)?;
+    let plan = plan_option(ctx, resolved, &option, request, None)?;
     let mut applied = apply::apply(
         ctx,
         &storage,
@@ -113,6 +145,7 @@ pub fn install(
             force: request.force,
             mode: Mode::Install,
             start: &request.start,
+            command: Command::Install,
         },
     )?;
     let replaced = prior.is_some();
@@ -196,11 +229,12 @@ pub fn update(
             Some(prior_key.clone()),
         )
     };
-    let previous = request
-        .features
-        .is_empty()
-        .then_some(prior.features.as_slice());
-    let plan = plan_option(ctx, resolved, &option, &request.features, previous)?;
+    let previous = Previous {
+        features: &prior.features,
+        parameters: &prior.parameters,
+        license: prior.license.as_ref().map(|license| license.name.as_str()),
+    };
+    let plan = plan_option(ctx, resolved, &option, request, Some(previous))?;
     let mut applied = apply::apply(
         ctx,
         &storage,
@@ -213,6 +247,7 @@ pub fn update(
             force: request.force,
             mode: Mode::Update,
             start: &request.start,
+            command: Command::Update,
         },
     )?;
     let finish_failure = applied.finish_failure.take();
@@ -238,15 +273,15 @@ pub fn update(
 }
 
 /// Plan one installation without downloading or running anything
-/// (`vibe app plan`, `install --plan-only`).
+/// (`vibe app plan`, `install --plan-only`): the choice, features,
+/// parameters and license acceptance of `request`.
 pub fn plan(
     ctx: &OperationContext<'_>,
     resolved: &ResolvedPackage,
-    choice: &InstallChoice,
-    features: &FeatureRequest,
+    request: &InstallRequest,
 ) -> Result<Plan, AppError> {
-    let option = choose(ctx, resolved, choice)?;
-    plan_option(ctx, resolved, &option, features, None)
+    let option = choose(ctx, resolved, &request.choice)?;
+    plan_option(ctx, resolved, &option, request, None)
 }
 
 /// Compute the plan of the selected option and show it.
@@ -254,19 +289,26 @@ fn plan_option(
     ctx: &OperationContext<'_>,
     resolved: &ResolvedPackage,
     option: &InstallerOptionDecl,
-    features: &FeatureRequest,
-    previous: Option<&[String]>,
+    request: &InstallRequest,
+    previous: Option<Previous<'_>>,
 ) -> Result<Plan, AppError> {
     let plan = steps::plan(&PlanInput {
         resolved,
         option,
-        request: features,
+        request: &request.features,
+        parameters: &request.parameters,
+        accept_license: request.accept_license,
         previous,
         settings: ctx.settings,
         facts: ctx.facts,
         offline: ctx.offline,
         attended: ctx.chooser.is_some(),
-        chooser: ctx.feature_chooser,
+        prompts: Prompts {
+            chooser: ctx.chooser,
+            features: ctx.feature_chooser,
+            parameter: ctx.parameter_prompt,
+            license: ctx.license_prompt,
+        },
     })?;
     if let Some(show) = ctx.on_plan {
         show(&plan);

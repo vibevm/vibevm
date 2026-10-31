@@ -22,10 +22,13 @@
       }
     },
     "application": {
-      "metadata": { "x-wire-order": ["id", "portable"] },
+      "metadata": { "x-wire-order": ["id", "portable", "icon"] },
       "properties": {
         "id": { "type": "string" },
         "portable": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "icon": { "type": "string", "metadata": { "x-default": null } }
       }
     },
     "form": {
@@ -41,7 +44,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "installer_option": {
-      "metadata": { "x-wire-order": ["id", "name", "platform", "platformName", "arch", "archName", "form", "result", "appRoot", "portable", "launchers", "publicCommands", "features", "steps"] },
+      "metadata": { "x-wire-order": ["id", "name", "platform", "platformName", "arch", "archName", "form", "result", "appRoot", "portable", "launchers", "publicCommands", "features", "defaultFeatures", "profiles", "parameters", "license", "steps"] },
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
@@ -54,11 +57,15 @@
         "launchers": { "elements": { "ref": "launcher" }, "metadata": { "x-empty": "emit" } },
         "publicCommands": { "elements": { "ref": "public_command" }, "metadata": { "x-empty": "emit" } },
         "features": { "elements": { "ref": "feature" }, "metadata": { "x-empty": "emit" } },
+        "defaultFeatures": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "profiles": { "elements": { "ref": "profile" }, "metadata": { "x-empty": "emit" } },
+        "parameters": { "elements": { "ref": "parameter" }, "metadata": { "x-empty": "emit" } },
         "steps": { "elements": { "ref": "step" }, "metadata": { "x-empty": "emit" } }
       },
       "optionalProperties": {
         "archName": { "type": "string", "metadata": { "x-default": null } },
-        "appRoot": { "type": "string", "metadata": { "x-default": null } }
+        "appRoot": { "type": "string", "metadata": { "x-default": null } },
+        "license": { "ref": "license", "metadata": { "x-default": null } }
       }
     },
     "launcher": {
@@ -85,20 +92,95 @@
       }
     },
     "feature": {
-      "metadata": { "x-wire-order": ["id", "name", "description", "default"] },
+      "metadata": { "x-wire-order": ["id", "name", "description", "default", "parent", "required", "requires", "exclusiveGroup"] },
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
+        "default": { "type": "boolean" },
+        "required": { "type": "boolean" },
+        "requires": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      },
+      "optionalProperties": {
+        "description": { "type": "string", "metadata": { "x-default": null } },
+        "parent": { "type": "string", "metadata": { "x-default": null } },
+        "exclusiveGroup": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "profile": {
+      "metadata": { "x-wire-order": ["id", "name", "description", "features", "default"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "features": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
         "default": { "type": "boolean" }
       },
       "optionalProperties": {
         "description": { "type": "string", "metadata": { "x-default": null } }
       }
     },
+    "parameter_type": {
+      "enum": ["string", "bool", "integer", "choice", "path"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "integer": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact signed integer. JTD has no int64 form, so generated Rust narrows the numeric form to i64.",
+        "x-rust-type": "i64"
+      }
+    },
+    "choice": {
+      "metadata": { "x-wire-order": ["value", "name"] },
+      "properties": {
+        "value": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "parameter": {
+      "metadata": { "x-wire-order": ["id", "name", "description", "type", "default", "required", "min", "max", "choices", "mustExist", "secret"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "ref": "parameter_type" },
+        "required": { "type": "boolean" },
+        "choices": { "elements": { "ref": "choice" }, "metadata": { "x-empty": "emit" } },
+        "mustExist": { "type": "boolean" },
+        "secret": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "description": { "type": "string", "metadata": { "x-default": null } },
+        "default": { "type": "string", "metadata": { "x-default": null } },
+        "min": { "ref": "integer", "metadata": { "x-default": null } },
+        "max": { "ref": "integer", "metadata": { "x-default": null } }
+      }
+    },
+    "license": {
+      "metadata": { "x-wire-order": ["file", "name"] },
+      "properties": {
+        "file": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "byte_count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      }
+    },
+    "param_equals": {
+      "metadata": { "x-wire-order": ["id", "value"] },
+      "properties": {
+        "id": { "type": "string" },
+        "value": { "type": "string" }
+      }
+    },
     "condition": {
-      "metadata": { "x-wire-order": ["feature", "commandPresent", "filePresent", "envPresent", "agentConfigured", "offline"] },
+      "metadata": { "x-wire-order": ["feature", "param", "paramEquals", "commandPresent", "filePresent", "envPresent", "agentConfigured", "offline"] },
       "optionalProperties": {
         "feature": { "type": "string", "metadata": { "x-default": null } },
+        "param": { "type": "string", "metadata": { "x-default": null } },
+        "paramEquals": { "ref": "param_equals", "metadata": { "x-default": null } },
         "commandPresent": { "type": "string", "metadata": { "x-default": null } },
         "filePresent": { "type": "string", "metadata": { "x-default": null } },
         "envPresent": { "type": "string", "metadata": { "x-default": null } },
@@ -107,19 +189,20 @@
       }
     },
     "source_input": {
-      "metadata": { "x-wire-order": ["name", "url", "path", "sha256", "extract"] },
+      "metadata": { "x-wire-order": ["name", "url", "path", "sha256", "size", "extract"] },
       "properties": {
         "name": { "type": "string" },
         "sha256": { "type": "string" }
       },
       "optionalProperties": {
+        "size": { "ref": "byte_count", "metadata": { "x-default": null } },
         "url": { "type": "string", "metadata": { "x-default": null } },
         "path": { "type": "string", "metadata": { "x-default": null } },
         "extract": { "type": "boolean", "metadata": { "x-default": null } }
       }
     },
     "step": {
-      "metadata": { "x-wire-order": ["id", "title", "kind", "description", "phase", "optional", "hook", "when", "unless", "needs", "sources", "format", "source", "sha256", "payloadRoot", "interpreter", "script", "command", "forceInstall", "update", "uninstall", "forceUninstall", "arguments", "forceArguments", "from", "to", "prompt", "promptFile", "mode", "required"] },
+      "metadata": { "x-wire-order": ["id", "title", "kind", "description", "phase", "optional", "hook", "when", "unless", "needs", "sources", "format", "source", "sha256", "size", "payloadRoot", "interpreter", "script", "command", "forceInstall", "update", "uninstall", "forceUninstall", "arguments", "forceArguments", "from", "to", "prompt", "promptFile", "mode", "required"] },
       "properties": {
         "id": { "type": "string" },
         "title": { "type": "string" },
@@ -137,6 +220,7 @@
         "format": { "type": "string", "metadata": { "x-default": null } },
         "source": { "type": "string", "metadata": { "x-default": null } },
         "sha256": { "type": "string", "metadata": { "x-default": null } },
+        "size": { "ref": "byte_count", "metadata": { "x-default": null } },
         "payloadRoot": { "type": "string", "metadata": { "x-default": null } },
         "interpreter": { "type": "string", "metadata": { "x-default": null } },
         "script": { "type": "string", "metadata": { "x-default": null } },

@@ -12,9 +12,11 @@ use specmark::spec;
 
 use super::{ShellInterpreter, SourceInputDecl};
 
-/// One `[[installer_options.features]]` row a user selects.
+/// One `[[installer_options.features]]` row a user selects, with its place
+/// in the feature tree and its relations (`PROP-065#feature-tree`).
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#features")]
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#feature-tree")]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct FeatureDecl {
     pub id: String,
@@ -23,6 +25,19 @@ pub struct FeatureDecl {
     pub description: Option<String>,
     #[serde(default)]
     pub default: bool,
+    /// The parent feature; absent for a root.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub parent: Option<String>,
+    /// Cannot be deselected while its parent is selected; a required root
+    /// is always selected.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub required: bool,
+    /// Features this one selects.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub requires: Vec<String>,
+    /// Exactly one member of a group is selected.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub exclusive_group: Option<String>,
 }
 
 /// When a step runs relative to placement or registration.
@@ -54,6 +69,11 @@ impl StepPhase {
 #[serde(rename_all = "snake_case", deny_unknown_fields)]
 pub enum Condition {
     Feature(String),
+    /// A `bool` parameter that is true, or any parameter with a non-empty
+    /// value (`PROP-065#parameters`).
+    Param(String),
+    /// A parameter whose value equals `value`.
+    ParamEquals(ParamEquals),
     CommandPresent(String),
     FilePresent(String),
     EnvPresent(String),
@@ -65,6 +85,12 @@ impl fmt::Display for Condition {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Feature(id) => write!(f, "feature = \"{id}\""),
+            Self::Param(id) => write!(f, "param = \"{id}\""),
+            Self::ParamEquals(test) => write!(
+                f,
+                "param_equals = {{ id = \"{}\", value = \"{}\" }}",
+                test.id, test.value
+            ),
             Self::CommandPresent(name) => write!(f, "command_present = \"{name}\""),
             Self::FilePresent(path) => write!(f, "file_present = \"{path}\""),
             Self::EnvPresent(name) => write!(f, "env_present = \"{name}\""),
@@ -72,6 +98,15 @@ impl fmt::Display for Condition {
             Self::Offline(value) => write!(f, "offline = {value}"),
         }
     }
+}
+
+/// The table of a `param_equals` condition.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#parameters")]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ParamEquals {
+    pub id: String,
+    pub value: String,
 }
 
 /// What a step requires before anything starts.
@@ -165,6 +200,9 @@ pub enum StepKind {
         format: ArchiveFormatDecl,
         source: String,
         sha256: String,
+        /// The declared size in bytes (`PROP-065#sizes`).
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        size: Option<u64>,
         #[serde(default, skip_serializing_if = "Option::is_none")]
         payload_root: Option<PathBuf>,
     },

@@ -11,14 +11,15 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use vibe_app::{
-    FeatureRequest, Index, InstallChoice, InstallRequest, OperationContext, PackageCoordinate,
-    ResolvedPackage, SettingsRoot, Start,
+    Index, InstallChoice, InstallRequest, OperationContext, PackageCoordinate, ResolvedPackage,
+    SettingsRoot,
 };
 use vibe_core::PackageKind;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest};
 use vibe_workspace::vibedeps;
 
-use super::{global, home};
+use super::global::{self, Observation};
+use super::home;
 use crate::cli::{InstallArgs, UninstallArgs, UpdateArgs};
 use crate::commands::{install, uninstall as project_uninstall, update as project_update};
 use crate::output;
@@ -31,10 +32,7 @@ const ALLOW_LISTED_GROUP: &str = "org.vibevm";
 /// dependency it installs.
 struct Materialise<'a> {
     verb: &'static str,
-    choice: InstallChoice,
-    features: FeatureRequest,
-    start: Start,
-    force: bool,
+    request: InstallRequest,
     consent: bool,
     offline: bool,
     root: &'a Path,
@@ -54,10 +52,10 @@ pub(crate) fn install(
         arch: args.arch.clone(),
         installer: args.installer.clone(),
     };
-    let (force, consent) = (args.force, args.assume_yes || ctx.is_unattended());
+    let consent = args.assume_yes || ctx.is_unattended();
     let offline = root_offline || args.offline;
     let path = args.path.clone();
-    let (features, start) = global::step_flags(&args.steps);
+    let request = global::request(choice, None, args.force, &args.steps);
     install::run_direct(ctx, args, embedded_root, root_offline)?;
     let Some(root) = home::project_at(&path)? else {
         return Ok(());
@@ -66,10 +64,7 @@ pub(crate) fn install(
         ctx,
         &Materialise {
             verb: "install",
-            choice,
-            features,
-            start,
-            force,
+            request,
             consent,
             offline,
             root: &root,
@@ -88,17 +83,14 @@ pub(crate) fn update(
     root: &Path,
 ) -> Result<()> {
     home::refuse_library(args.library.as_deref())?;
-    let (features, start) = global::step_flags(&args.steps);
+    let choice = InstallChoice {
+        platform: args.platform.clone(),
+        arch: args.arch.clone(),
+        installer: args.installer.clone(),
+    };
     let flags = Materialise {
         verb: "update",
-        choice: InstallChoice {
-            platform: args.platform.clone(),
-            arch: args.arch.clone(),
-            installer: args.installer.clone(),
-        },
-        features,
-        start,
-        force: args.force,
+        request: global::request(choice, None, args.force, &args.steps),
         consent: args.assume_yes || ctx.is_unattended(),
         offline: root_offline,
         root,
@@ -121,10 +113,11 @@ pub(crate) fn uninstall(
     let mut outcomes = Vec::new();
     if !installed.is_empty() {
         let proxy_image = global::proxy_image()?;
+        let observe = Observation::new(ctx, true)?;
         let operation = OperationContext {
             chooser: None,
             feature_chooser: None,
-            ..global::operation(ctx, &settings, root_offline, &proxy_image, None)
+            ..global::operation(ctx, &settings, root_offline, &proxy_image, None, &observe)
         };
         for exact in &installed {
             outcomes
@@ -195,14 +188,9 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
             .with_context(|| format!("ignoring `{entry}` in the project's .gitignore"))?;
     }
     let proxy_image = global::proxy_image()?;
-    let request = InstallRequest {
-        choice: flags.choice.clone(),
-        library: None,
-        force: flags.force,
-        features: flags.features.clone(),
-        start: flags.start.clone(),
-    };
+    let request = &flags.request;
     let show = global::plan_printer(ctx);
+    let observe = Observation::new(ctx, true)?;
     for package in &pending {
         let resolved = from_slot(flags.root, package)?;
         let previous = Index::load(&settings)?
@@ -210,12 +198,18 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
             .values()
             .any(|record| record.package.same_package(&resolved.package));
         let outcome = ctx.suspend_progress(|| {
-            let operation =
-                global::operation(ctx, &settings, flags.offline, &proxy_image, Some(&show));
+            let operation = global::operation(
+                ctx,
+                &settings,
+                flags.offline,
+                &proxy_image,
+                Some(&show),
+                &observe,
+            );
             if previous {
-                vibe_app::update(&operation, &resolved, &request)
+                vibe_app::update(&operation, &resolved, request)
             } else {
-                vibe_app::install(&operation, &resolved, &request)
+                vibe_app::install(&operation, &resolved, request)
             }
         })?;
         ctx.summary(&format!(

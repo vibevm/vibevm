@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "description": "Version 1 listing of the run records of one application package from vibe app runs --json, newest first: each record's timestamp, command, outcome, directory and per-step logs.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#runs" },
+    "rustOptions": { "package": "vibe_wire::application_runs" },
+    "x-rust-type": "ApplicationRuns",
+    "x-wire-order": ["protocol", "package", "runs", "pruned"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "package": { "type": "string" },
+    "runs": { "elements": { "ref": "run" }, "metadata": { "x-empty": "emit" } }
+  },
+  "optionalProperties": {
+    "pruned": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } }
+  },
+  "definitions": {
+    "log": {
+      "metadata": { "x-wire-order": ["step", "path"] },
+      "properties": {
+        "step": { "type": "string" },
+        "path": { "type": "string" }
+      }
+    },
+    "run": {
+      "metadata": { "x-wire-order": ["timestamp", "key", "command", "outcome", "started", "finished", "path", "logs"] },
+      "properties": {
+        "timestamp": { "type": "string" },
+        "key": { "type": "string" },
+        "command": { "type": "string" },
+        "outcome": { "type": "string" },
+        "started": { "type": "string" },
+        "path": { "type": "string" },
+        "logs": { "elements": { "ref": "log" }, "metadata": { "x-empty": "emit" } }
+      },
+      "optionalProperties": {
+        "finished": { "type": "string", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}

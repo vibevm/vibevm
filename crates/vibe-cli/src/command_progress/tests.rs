@@ -211,3 +211,25 @@ fn documented_opt_out_accepts_only_truthy_values_and_overrides_verbose_rendering
         ProgressMode::Disabled
     );
 }
+
+#[test]
+fn the_machine_format_comes_from_the_flag_then_the_environment() {
+    assert!(machine_format(Some(ProgressFormat::Json), None));
+    assert!(!machine_format(Some(ProgressFormat::Human), Some("json")));
+    assert!(machine_format(None, Some(" JSON ")));
+    assert!(!machine_format(None, Some("human")));
+    assert!(!machine_format(None, None));
+    let cli = Cli::try_parse_from(["vibe", "--progress-format", "json", "--json", "app", "list"])
+        .unwrap();
+    assert_eq!(cli.progress_format, Some(ProgressFormat::Json));
+    let (ctx, _activity) = configure_context(
+        Context::from_flags(false, true, None, false, crate::cli::AgentModeArg::Auto),
+        &cli.command,
+        false,
+        false,
+        false,
+        false,
+        true,
+    );
+    assert!(ctx.is_machine_progress() && ctx.is_json());
+}

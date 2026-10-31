@@ -17,7 +17,6 @@ use thiserror::Error;
 #[allow(dead_code)]
 pub const OK: u8 = 0;
 pub const GENERAL: u8 = 1;
-#[allow(dead_code)]
 pub const USAGE: u8 = 2;
 pub const PACKAGE_CONFLICT: u8 = 3;
 pub const TYPE_MISMATCH: u8 = 4;
@@ -67,9 +66,21 @@ impl InstallError {
     }
 }
 
+/// The exit status of an application error (PROP-065 `#exit-codes`): `2`
+/// for a refusal before any effect, `1` for a failed or interrupted step.
+pub fn app_exit_code(class: vibe_app::ErrorClass) -> u8 {
+    match class {
+        vibe_app::ErrorClass::Refusal => USAGE,
+        vibe_app::ErrorClass::Failure => GENERAL,
+    }
+}
+
 pub fn as_exit_code(err: &anyhow::Error) -> ExitCode {
     if let Some(install_err) = err.downcast_ref::<InstallError>() {
         return ExitCode::from(install_err.exit_code());
+    }
+    if let Some(app_err) = crate::output::app_error(err) {
+        return ExitCode::from(app_exit_code(app_err.class()));
     }
     // A malformed `<vibevm>` block (PROP-012 §2.3) is conflict-shaped —
     // vibevm and the instruction file disagree on the managed region.
@@ -165,6 +176,21 @@ mod tests {
             },
         ));
         assert_eq!(as_exit_code(&err), ExitCode::from(PACKAGE_CONFLICT));
+    }
+
+    #[test]
+    fn application_refusals_map_to_two_and_failures_to_one() {
+        let locked = anyhow::Error::from(vibe_app::AppError::from(vibe_app::StateError::Locked {
+            path: "lock".into(),
+        }));
+        assert_eq!(as_exit_code(&locked), ExitCode::from(USAGE));
+        let failed = anyhow::Error::from(vibe_app::AppError::Hook {
+            hook: "pre_install",
+            key: "k".into(),
+            reason: "r".into(),
+        })
+        .context("installing");
+        assert_eq!(as_exit_code(&failed), ExitCode::from(GENERAL));
     }
 
     #[test]

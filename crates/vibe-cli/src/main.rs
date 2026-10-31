@@ -84,17 +84,18 @@ fn main() -> ExitCode {
         cli.verbose,
         std::io::stdout().is_terminal(),
         progress_interactive,
-        cli.no_progress,
-        read_env_opt("VIBE_NO_PROGRESS").as_deref(),
+        command_progress::progress_disabled(
+            cli.no_progress,
+            read_env_opt("VIBE_NO_PROGRESS").as_deref(),
+        ),
+        command_progress::machine_format(
+            cli.progress_format,
+            read_env_opt("VIBE_PROGRESS_FORMAT").as_deref(),
+        ),
     );
 
-    // Ensure `~/.vibe/registry.toml` exists with the default pair (vibespecs
-    // GitHub + GitVerse) on any registry-needing command. A fresh checkout on
-    // a new machine resolves packages out of the box without a manual
-    // `vibe registry add`. Never overwrites an existing file — user edits are
-    // preserved. Soft-warns on failure (the global layer is optional).
-    // Skipped when VIBE_NO_DEFAULT_REGISTRY is set (tests, CI, or explicit
-    // opt-out).
+    // Seed `~/.vibe/registry.toml` with the default pair on registry-needing
+    // commands; never overwrites, soft-warns, skipped by VIBE_NO_DEFAULT_REGISTRY.
     if needs_global_registry(&cli.command)
         && read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_none()
         && let Err(e) = vibe_core::ensure_default_global_registry()
@@ -102,13 +103,10 @@ fn main() -> ExitCode {
         eprintln!("vibe: warning: could not seed ~/.vibe/registry.toml: {e}");
     }
 
-    // PROP-030: the embedded registry belongs to a source-*installed* `vibe` —
-    // one whose `current_exe` sits under a VVM install slot, so `derive_self`
-    // resolves it (`self_loc`). A `cargo run` binary or a test harness is not
-    // installed: it has no embedded registry and must NOT pick up the
-    // developer's `~/.vibe/opt` one. Gate discovery on the running install and read
-    // its active record's source path through that install's own root. Shared
-    // by the install-family commands (install / update / reinstall).
+    // PROP-030: the embedded registry belongs to a source-*installed* `vibe`
+    // (`derive_self` resolves its VVM slot); a `cargo run` binary or a test
+    // harness has none and must NOT pick up the developer's `~/.vibe/opt` one.
+    // Shared by the install-family commands (install / update / reinstall).
     let discover_embedded_root = || -> Option<PathBuf> {
         // PROP-030 §5 (CI-off): CI resolves from declared registries only, so a
         // machine-local embedded lock cannot silently pass there.

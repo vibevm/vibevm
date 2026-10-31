@@ -78,6 +78,32 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+[format.cli-application-runs]
+epoch = 1
+schema = "schemas/application_runs.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-application-errors]
+epoch = 1
+schema = "schemas/application_errors.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# The machine progress stream (PROP-060 `#MACHINE-STREAM`): one JSON line per
+# observation on stderr under --progress-format json.
+[format.cli-progress-event]
+epoch = 1
+schema = "schemas/progress_event.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-application-alternatives]
 epoch = 1
 schema = "schemas/application_alternatives.jtd.json"
@@ -129,6 +155,16 @@ recoverable = true
 foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/application/e1"
+sunset = "none"
+
+# The summary of one run record directory (PROP-065 `#runs`): read by
+# `vibe app runs` and by graphical tools showing a run's logs.
+[format.application-run]
+epoch = 1
+schema = "schemas/application/e1/run.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
 sunset = "none"
 
 [format.cli-extensions-report]

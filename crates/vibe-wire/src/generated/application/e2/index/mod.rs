@@ -17,6 +17,15 @@ pub struct ApplicationIndex {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct AcceptedLicense {
+    pub name: String,
+
+    #[serde(rename = "acceptedAt")]
+    pub accepted_at: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct AuthoredCommands {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub uninstall: Option<String>,
@@ -68,6 +77,15 @@ pub struct Installation {
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub features: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub parameters: BTreeMap<String, String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub license: Option<AcceptedLicense>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub steps: Vec<StepRecord>,
@@ -145,6 +163,9 @@ pub enum Outcome {
 
     #[serde(rename = "failed")]
     Failed,
+
+    #[serde(rename = "interrupted")]
+    Interrupted,
 
     #[serde(rename = "skipped")]
     Skipped,

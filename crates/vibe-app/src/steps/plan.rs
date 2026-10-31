@@ -1,11 +1,13 @@
-//! The planner (`PROP-065#plan`): features, conditions and needs resolved
-//! from facts the caller supplies, before anything is downloaded or run.
+//! The planner (`PROP-065#plan`): license, features, parameters,
+//! conditions, needs and download sizes resolved from facts the caller
+//! supplies, before anything is downloaded or run.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#plan");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#conditions");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#needs");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#features");
 
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use specmark::spec;
@@ -13,14 +15,19 @@ use vibe_core::manifest::{
     Condition, FeatureDecl, InstallerOptionDecl, Need, ResultDecl, StepDecl, StepKind, StepPhase,
     result_of, steps_of,
 };
-use vibe_wire::generated::application_plan as wire;
 
 use crate::error::{AppError, StepError};
 use crate::index::PackageCoordinate;
-use crate::installer::source_build::digest_of;
 use crate::resolve::ResolvedPackage;
+use crate::select::Chooser;
 use crate::settings::SettingsRoot;
 
+use super::features::{FeatureRequest, FeatureResolution, Implied, resolve_features, tree_order};
+use super::params::{
+    LicensePrompt, ParamValue, ParameterPrompt, PlanLicense, admit_license, param_equals,
+    param_holds, resolve_parameters,
+};
+use super::sizes::{downloads, input_local, source_cached};
 use super::template::{self, Vars};
 
 /// An attended multi-choice prompt: `prompt`, the labels and which are
@@ -36,34 +43,46 @@ pub struct HostFacts<'a> {
     pub command_present: &'a dyn Fn(&str) -> bool,
     /// Whether an environment variable is set.
     pub env_present: &'a dyn Fn(&str) -> bool,
+    /// The absolute form of a `path` parameter value (`PROP-065#parameters`).
+    pub resolve_path: &'a dyn Fn(&str) -> PathBuf,
 }
 
 fn absent(_: &str) -> bool {
     false
 }
 
+fn as_given(path: &str) -> PathBuf {
+    PathBuf::from(path)
+}
+
 impl Default for HostFacts<'static> {
-    /// A host on which no command and no variable is present.
+    /// A host on which no command and no variable is present and every
+    /// path is taken as given.
     fn default() -> Self {
         Self {
             command_present: &absent,
             env_present: &absent,
+            resolve_path: &as_given,
         }
     }
 }
 
-/// `--feature ID` / `--no-feature ID`.
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#features")]
-pub struct FeatureRequest {
-    pub enable: Vec<String>,
-    pub disable: Vec<String>,
+/// The attended questions of a plan; all absent unattended.
+#[derive(Clone, Copy, Default)]
+pub(crate) struct Prompts<'a> {
+    /// The profile question (profiles first, then "custom").
+    pub chooser: Option<Chooser<'a>>,
+    pub features: Option<FeatureChooser<'a>>,
+    pub parameter: Option<ParameterPrompt<'a>>,
+    pub license: Option<LicensePrompt<'a>>,
 }
 
-impl FeatureRequest {
-    pub fn is_empty(&self) -> bool {
-        self.enable.is_empty() && self.disable.is_empty()
-    }
+/// What the installation an update starts from recorded.
+#[derive(Clone, Copy)]
+pub(crate) struct Previous<'a> {
+    pub features: &'a [String],
+    pub parameters: &'a BTreeMap<String, String>,
+    pub license: Option<&'a str>,
 }
 
 /// Everything one plan is computed from.
@@ -71,13 +90,15 @@ pub(crate) struct PlanInput<'a> {
     pub resolved: &'a ResolvedPackage,
     pub option: &'a InstallerOptionDecl,
     pub request: &'a FeatureRequest,
-    /// The features recorded by the installation an update starts from.
-    pub previous: Option<&'a [String]>,
+    /// `--set ID=VALUE`.
+    pub parameters: &'a [(String, String)],
+    pub accept_license: bool,
+    pub previous: Option<Previous<'a>>,
     pub settings: &'a SettingsRoot,
     pub facts: HostFacts<'a>,
     pub offline: bool,
     pub attended: bool,
-    pub chooser: Option<FeatureChooser<'a>>,
+    pub prompts: Prompts<'a>,
 }
 
 /// One step and whether it runs.
@@ -89,7 +110,7 @@ pub struct PlannedStep {
     pub reason: Option<String>,
 }
 
-/// The resolved view of one option and feature set.
+/// The resolved view of one option, feature set and parameter values.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
 pub struct Plan {
@@ -99,7 +120,15 @@ pub struct Plan {
     pub arch: String,
     pub result: ResultDecl,
     pub declared: Vec<FeatureDecl>,
+    pub profile: Option<String>,
     pub features: Vec<String>,
+    pub implied: Vec<Implied>,
+    pub parameters: Vec<ParamValue>,
+    pub license: Option<PlanLicense>,
+    /// Declared bytes of the inputs that will be fetched (`PROP-065#sizes`).
+    pub download_bytes: u64,
+    /// Inputs that will be fetched without a declared size.
+    pub unknown_sizes: u32,
     pub steps: Vec<PlannedStep>,
     pub warnings: Vec<String>,
 }
@@ -109,22 +138,40 @@ pub(crate) fn work_dir(settings: &SettingsRoot, package: &PackageCoordinate) -> 
     settings.app_work_dir().join(package.directory_name())
 }
 
-/// Compute the plan; refuse an unmet need, a required agent step without
-/// an agent, or a plan in which nothing produces the declared result.
+/// Compute the plan; refuse a missing license, an invalid feature choice
+/// or parameter, an unmet need, a required agent step without an agent, or
+/// a plan in which nothing produces the declared result.
 pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
     let package = &input.resolved.package;
     let key = package.key();
-    let features = choose_features(input)?;
+    let option = input.option;
+    let license = admit_license(
+        option,
+        &key,
+        &input.resolved.root,
+        input.accept_license,
+        input.previous.and_then(|previous| previous.license),
+        input.prompts.license.filter(|_| input.attended),
+    )?;
+    let (profile, resolution) = choose_features(input)?;
+    let parameters = resolve_parameters(
+        option,
+        input.parameters,
+        input.previous.map(|previous| previous.parameters),
+        input.facts,
+        input.prompts.parameter.filter(|_| input.attended),
+    )?;
     let work = work_dir(input.settings, package);
     let vars = Vars::planning(
         &work,
         &input.resolved.root,
         input.settings.path(),
-        &features,
+        &resolution.selected,
+        &parameters,
     );
     let mut steps = Vec::new();
     let mut skipped_agents = Vec::new();
-    for step in steps_of(input.option) {
+    for step in steps_of(option) {
         let (run, reason) = decide(input, &step, &vars, &work, &key)?;
         if !run
             && matches!(step.kind, StepKind::Agent { .. })
@@ -134,14 +181,14 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         }
         steps.push(PlannedStep { step, run, reason });
     }
-    let result = result_of(input.option);
+    let result = result_of(option);
     let produces = steps.iter().any(|planned| {
         planned.run && planned.step.phase == StepPhase::Prepare && planned.step.kind.writes_out()
     });
     if result.is_owned() && !produces {
         return Err(StepError::NoResultStep {
             key,
-            option: input.option.id.clone(),
+            option: option.id.clone(),
         }
         .into());
     }
@@ -154,14 +201,28 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
             skipped_agents.join(", ")
         )]
     };
+    let fetched = downloads(
+        steps
+            .iter()
+            .filter(|planned| planned.run)
+            .map(|planned| &planned.step),
+        input.settings,
+        &work,
+    );
     Ok(Plan {
         package: package.clone(),
-        option: input.option.id.clone(),
-        platform: input.option.platform.clone(),
-        arch: input.option.arch.clone(),
+        option: option.id.clone(),
+        platform: option.platform.clone(),
+        arch: option.arch.clone(),
         result,
-        declared: input.option.features.clone(),
-        features,
+        declared: option.features.clone(),
+        profile,
+        features: resolution.selected,
+        implied: resolution.implied,
+        parameters,
+        license,
+        download_bytes: fetched.bytes,
+        unknown_sizes: fetched.unknown,
         steps,
         warnings,
     })
@@ -227,6 +288,10 @@ fn holds(
 ) -> Result<bool, AppError> {
     Ok(match condition {
         Condition::Feature(id) => vars.features.iter().any(|chosen| chosen == id),
+        Condition::Param(id) => param_holds(input.option, vars.params, id),
+        Condition::ParamEquals(test) => {
+            param_equals(input.option, vars.params, &test.id, &test.value)
+        }
         Condition::CommandPresent(name) => (input.facts.command_present)(name),
         Condition::EnvPresent(name) => (input.facts.env_present)(name),
         Condition::AgentConfigured(value) => !*value,
@@ -246,214 +311,100 @@ fn need_met(input: &PlanInput<'_>, need: &Need, step: &StepDecl, work: &Path) ->
         Need::Terminal => input.attended,
         Need::Network if !input.offline => true,
         Need::Network => match &step.kind {
-            StepKind::Sources { sources } => sources.iter().all(|source| match &source.url {
-                None => true,
-                Some(url) => {
-                    let name = url.rsplit('/').next().unwrap_or_default();
-                    let sha = source.sha256.to_ascii_lowercase();
-                    let cached = input.settings.app_sources_cache().join(&sha).join(name);
-                    digest_of(&cached).is_ok_and(|actual| actual == sha)
-                }
-            }),
+            StepKind::Sources { sources } => sources
+                .iter()
+                .all(|source| source.url.is_none() || source_cached(input.settings, source)),
             StepKind::Archive { source, sha256, .. } | StepKind::Native { source, sha256, .. } => {
-                !source.contains("://")
-                    || digest_of(&super::kinds::input_file(work, step))
-                        .is_ok_and(|actual| actual == sha256.to_ascii_lowercase())
+                input_local(work, step, source, sha256)
             }
             _ => false,
         },
     }
 }
 
-/// Flags, then an attended question, then the defaults; an update reuses
-/// the recorded set unless flags name features again.
-fn choose_features(input: &PlanInput<'_>) -> Result<Vec<String>, AppError> {
-    let declared = &input.option.features;
-    let known = |id: &String| declared.iter().any(|feature| &feature.id == id);
-    for id in input.request.enable.iter().chain(&input.request.disable) {
-        if !known(id) {
-            return Err(StepError::UnknownFeature {
-                option: input.option.id.clone(),
-                feature: id.clone(),
-                declared: declared
+/// The profile and the resolved feature set: flags (with a profile) as
+/// named, else the recorded set of an update, else an attended question
+/// (the profiles first, "custom" opening the tree), else the defaults.
+fn choose_features(input: &PlanInput<'_>) -> Result<(Option<String>, FeatureResolution), AppError> {
+    let option = input.option;
+    let request = input.request;
+    let find = |id: &str| {
+        option
+            .profiles
+            .iter()
+            .find(|profile| profile.id == id)
+            .ok_or_else(|| StepError::UnknownProfile {
+                option: option.id.clone(),
+                profile: id.into(),
+                declared: option
+                    .profiles
                     .iter()
-                    .map(|feature| feature.id.as_str())
+                    .map(|profile| profile.id.as_str())
                     .collect::<Vec<_>>()
                     .join(", "),
-            }
-            .into());
-        }
-    }
-    let defaults = || -> Vec<bool> { declared.iter().map(|feature| feature.default).collect() };
-    let chosen: Vec<bool> = if !input.request.is_empty() {
-        declared
-            .iter()
-            .zip(defaults())
-            .map(|(feature, default)| {
-                (default || input.request.enable.contains(&feature.id))
-                    && !input.request.disable.contains(&feature.id)
             })
-            .collect()
-    } else if let Some(previous) = input.previous {
-        declared
-            .iter()
-            .map(|feature| previous.contains(&feature.id))
-            .collect()
-    } else if let (Some(chooser), true, false) =
-        (input.chooser, input.attended, declared.is_empty())
-    {
-        let labels: Vec<String> = declared
-            .iter()
-            .map(|feature| match &feature.description {
-                Some(description) => format!("{} ({}) — {description}", feature.name, feature.id),
-                None => format!("{} ({})", feature.name, feature.id),
-            })
-            .collect();
-        let picked = chooser(
-            &format!("Select features of installer `{}`", input.option.id),
-            &labels,
-            &defaults(),
-        )
-        .map_err(|reason| StepError::FeaturePrompt { reason })?
-        .ok_or_else(|| StepError::FeaturePrompt {
-            reason: "the selection was cancelled".into(),
-        })?;
-        (0..declared.len())
-            .map(|index| picked.contains(&index))
-            .collect()
-    } else {
-        defaults()
     };
-    Ok(declared
-        .iter()
-        .zip(chosen)
-        .filter(|(_, chosen)| *chosen)
-        .map(|(feature, _)| feature.id.clone())
-        .collect())
-}
-
-impl Plan {
-    /// The `vibe-app-plan/1` document.
-    pub fn to_wire(&self) -> wire::ApplicationPlan {
-        wire::ApplicationPlan {
-            protocol: "vibe-app-plan/1".into(),
-            package: wire::Package {
-                group: self.package.group.clone(),
-                name: self.package.name.clone(),
-                version: self.package.version.clone(),
-            },
-            option: self.option.clone(),
-            platform: self.platform.clone(),
-            arch: self.arch.clone(),
-            result: if self.result.is_owned() {
-                wire::Result::Owned
-            } else {
-                wire::Result::External
-            },
-            app_root: self.result.external_root().map(str::to_owned),
-            features: self
-                .declared
+    let mut profile = request.profile.as_deref().map(find).transpose()?;
+    let previous = input.previous.map(|previous| previous.features);
+    let mut prompted = None;
+    let ask = request.is_empty() && previous.is_none() && input.attended;
+    if let (true, Some(features)) = (ask && !option.features.is_empty(), input.prompts.features) {
+        let mut custom = true;
+        if let (false, Some(chooser)) = (option.profiles.is_empty(), input.prompts.chooser) {
+            let mut ordered: Vec<_> = option.profiles.iter().collect();
+            ordered.sort_by_key(|profile| !profile.default);
+            let mut labels: Vec<String> = ordered
                 .iter()
-                .map(|feature| wire::Feature {
-                    id: feature.id.clone(),
-                    name: feature.name.clone(),
-                    default: feature.default,
-                    chosen: self.features.contains(&feature.id),
-                })
-                .collect(),
-            steps: self
-                .steps
-                .iter()
-                .map(|planned| wire::Step {
-                    id: planned.step.id.clone(),
-                    title: planned.step.title.clone(),
-                    kind: planned.step.kind.name().into(),
-                    phase: match planned.step.phase {
-                        StepPhase::Prepare => wire::Phase::Prepare,
-                        StepPhase::Finish => wire::Phase::Finish,
-                    },
-                    needs: planned.step.needs.iter().map(ToString::to_string).collect(),
-                    optional: planned.step.optional,
-                    action: if planned.run {
-                        wire::Action::Run
-                    } else {
-                        wire::Action::Skip
-                    },
-                    reason: planned.reason.clone(),
-                })
-                .collect(),
-            warnings: self.warnings.clone(),
-        }
-    }
-
-    /// The plan as text, one line per step.
-    ///
-    /// ```
-    /// # use vibe_app::{Plan, PackageCoordinate};
-    /// # use vibe_core::manifest::ResultDecl;
-    /// let plan = Plan {
-    ///     package: PackageCoordinate { group: "org.example".into(), name: "tool".into(), version: "1.0.0".into() },
-    ///     option: "src".into(), platform: "linux".into(), arch: "x86_64".into(),
-    ///     result: ResultDecl::owned(), declared: vec![], features: vec![], steps: vec![], warnings: vec![],
-    /// };
-    /// assert!(plan.render().starts_with("plan for org.example/tool@1.0.0"));
-    /// ```
-    pub fn render(&self) -> String {
-        let result = match self.result.external_root() {
-            Some(root) => format!("external `{root}`"),
-            None => "owned".into(),
-        };
-        let mut text = format!(
-            "plan for {}: installer `{}` ({}/{}), result {result}\n",
-            self.package.key(),
-            self.option,
-            self.platform,
-            self.arch
-        );
-        if !self.declared.is_empty() {
-            let features: Vec<String> = self
-                .declared
-                .iter()
-                .map(|feature| {
-                    let mark = if self.features.contains(&feature.id) {
-                        "x"
-                    } else {
-                        " "
-                    };
-                    format!("[{mark}] {}", feature.id)
+                .map(|profile| match &profile.description {
+                    Some(text) => format!("{} — {text}", profile.name),
+                    None => profile.name.clone(),
                 })
                 .collect();
-            text.push_str(&format!("  features: {}\n", features.join(" ")));
+            labels.push("Custom — choose the features one by one".into());
+            let picked = chooser(&format!("Setup type of installer `{}`", option.id), &labels)
+                .map_err(|reason| StepError::FeaturePrompt { reason })?
+                .ok_or_else(|| StepError::FeaturePrompt {
+                    reason: "the selection was cancelled".into(),
+                })?;
+            if let Some(chosen) = ordered.get(picked) {
+                profile = Some(*chosen);
+                custom = false;
+            }
         }
-        for (index, planned) in self.steps.iter().enumerate() {
-            let step = &planned.step;
-            let action = match &planned.reason {
-                Some(reason) => format!("skip ({reason})"),
-                None => "run".into(),
-            };
-            let needs = if step.needs.is_empty() {
-                String::new()
-            } else {
-                let needs: Vec<String> = step.needs.iter().map(ToString::to_string).collect();
-                format!(" [needs {}]", needs.join(", "))
-            };
-            let phase = if step.phase == StepPhase::Finish {
-                " [finish]"
-            } else {
-                ""
-            };
-            text.push_str(&format!(
-                "  {}. {} {} ({}): {}{phase}{needs}\n",
-                index + 1,
-                action,
-                step.id,
-                step.kind.name(),
-                step.title
-            ));
+        if custom {
+            let defaults = resolve_features(option, None, &FeatureRequest::default(), None, None)?;
+            let order = tree_order(&option.features);
+            let labels: Vec<String> = order
+                .iter()
+                .map(|(depth, feature)| {
+                    let indent = "  ".repeat(*depth);
+                    match &feature.description {
+                        Some(text) => format!("{indent}{} ({}) — {text}", feature.name, feature.id),
+                        None => format!("{indent}{} ({})", feature.name, feature.id),
+                    }
+                })
+                .collect();
+            let preselected: Vec<bool> = order
+                .iter()
+                .map(|(_, feature)| defaults.selected.contains(&feature.id))
+                .collect();
+            let picked = features(
+                &format!("Select features of installer `{}`", option.id),
+                &labels,
+                &preselected,
+            )
+            .map_err(|reason| StepError::FeaturePrompt { reason })?
+            .ok_or_else(|| StepError::FeaturePrompt {
+                reason: "the selection was cancelled".into(),
+            })?;
+            prompted = Some(
+                picked
+                    .iter()
+                    .filter_map(|index| order.get(*index).map(|(_, f)| f.id.clone()))
+                    .collect::<Vec<_>>(),
+            );
         }
-        for warning in &self.warnings {
-            text.push_str(&format!("warning: {warning}\n"));
-        }
-        text
     }
+    let resolution = resolve_features(option, profile, request, previous, prompted.as_deref())?;
+    Ok((profile.map(|profile| profile.id.clone()), resolution))
 }

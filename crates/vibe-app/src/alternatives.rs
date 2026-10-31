@@ -227,6 +227,9 @@ mod tests {
                 .collect(),
             commands: AuthoredCommands::default(),
             features: Vec::new(),
+            parameters: Default::default(),
+            license: None,
+            icon: None,
             steps: Vec::new(),
         }
     }

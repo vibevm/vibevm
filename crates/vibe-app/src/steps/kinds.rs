@@ -16,7 +16,7 @@ use crate::index::AuthoredCommands;
 use crate::installer::archive::{self, ArchiveFormat};
 use crate::installer::native::{self, NativeKind};
 use crate::installer::source_build::{self, digest_of};
-use crate::installer::{self, io, run_child, shell};
+use crate::installer::{self, ChildIo, FetchWatch, io, run_child, shell};
 
 use super::template::{self, Vars};
 
@@ -33,9 +33,22 @@ pub(crate) struct StepContext<'a> {
     pub app_root: &'a Path,
     pub phase: StepPhase,
     pub offline: bool,
-    pub json: bool,
     pub force: bool,
     pub update_in_place: bool,
+    /// The step's run log, progress task, relay and interrupt.
+    pub io: ChildIo<'a>,
+    /// `VIBE_FEATURE_<ID>` and `VIBE_PARAM_<ID>` (`PROP-065#templates`).
+    pub env: &'a [(String, String)],
+}
+
+impl StepContext<'_> {
+    fn watch(&self, size: Option<u64>) -> FetchWatch<'_> {
+        FetchWatch {
+            size,
+            task: self.io.task,
+            interrupt: self.io.interrupt,
+        }
+    }
 }
 
 /// The kept verified input of an `archive` or `native` step.
@@ -67,7 +80,13 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
             let fetched = sources
                 .iter()
                 .map(|source| {
-                    source_build::fetch(cx.cache_root, cx.package_root, source, cx.offline)
+                    source_build::fetch(
+                        cx.cache_root,
+                        cx.package_root,
+                        source,
+                        cx.offline,
+                        &cx.watch(None),
+                    )
                 })
                 .collect::<Result<Vec<_>, _>>()?;
             source_build::lay_out(&cx.work.join("sources"), &fetched)?;
@@ -76,9 +95,10 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
             format,
             source,
             sha256,
+            size,
             payload_root,
         } => {
-            let file = verified_input(cx, step, source, sha256)?;
+            let file = verified_input(cx, step, source, sha256, *size)?;
             let format = match format {
                 ArchiveFormatDecl::Zip => ArchiveFormat::Zip,
                 ArchiveFormatDecl::TarGz => ArchiveFormat::TarGz,
@@ -99,7 +119,7 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
             let mut command = source_build::script_command(*interpreter, cx.package_root, script)?;
             command.current_dir(cx.work);
             environment(cx, &mut command);
-            run_child(&mut command, &what, cx.json)?;
+            run_child(&mut command, &what, &cx.io)?;
         }
         StepKind::Shell {
             command,
@@ -122,7 +142,7 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
             };
             let mut child = shell::command(*interpreter, script, current_dir, cx.app_root)?;
             environment(cx, &mut child);
-            run_child(&mut child, &what, cx.json)?;
+            run_child(&mut child, &what, &cx.io)?;
             return Ok(AuthoredCommands {
                 uninstall: uninstall.clone(),
                 force_uninstall: force_uninstall.clone(),
@@ -149,12 +169,12 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
                 }
                 .into());
             }
-            let file = verified_input(cx, step, source, sha256)?;
+            let file = verified_input(cx, step, source, sha256, None)?;
             let arguments = match (cx.force, force_arguments) {
                 (true, Some(forced)) => forced.as_slice(),
                 _ => arguments.as_slice(),
             };
-            native::run(kind, &file, arguments, cx.package_root, cx.json)?;
+            native::run(kind, &file, arguments, cx.package_root, &cx.io)?;
             return Ok(AuthoredCommands {
                 uninstall: uninstall.clone(),
                 force_uninstall: force_uninstall.clone(),
@@ -178,7 +198,8 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
 }
 
 /// `VIBE_WORK`, `VIBE_SOURCES`, `VIBE_OUT`, `VIBE_PACKAGE`, `VIBE_PLATFORM`,
-/// `VIBE_ARCH`, and `VIBE_APP_ROOT` for a finish step.
+/// `VIBE_ARCH`, `VIBE_FEATURE_<ID>`, `VIBE_PARAM_<ID>`, and `VIBE_APP_ROOT`
+/// for a finish step.
 fn environment(cx: &StepContext<'_>, command: &mut Command) {
     command
         .env("VIBE_WORK", cx.work)
@@ -186,7 +207,8 @@ fn environment(cx: &StepContext<'_>, command: &mut Command) {
         .env("VIBE_OUT", cx.work.join("out"))
         .env("VIBE_PACKAGE", cx.package_root)
         .env("VIBE_PLATFORM", cx.platform)
-        .env("VIBE_ARCH", cx.arch);
+        .env("VIBE_ARCH", cx.arch)
+        .envs(cx.env.iter().map(|(name, value)| (name, value)));
     if cx.phase == StepPhase::Finish {
         command.env("VIBE_APP_ROOT", cx.app_root);
     }
@@ -199,10 +221,18 @@ fn verified_input(
     step: &StepDecl,
     source: &str,
     sha256: &str,
+    size: Option<u64>,
 ) -> Result<PathBuf, AppError> {
     let file = input_file(cx.work, step);
     if digest_of(&file).ok().as_deref() != Some(sha256.to_ascii_lowercase().as_str()) {
-        installer::fetch_verified(source, sha256, cx.package_root, &file, cx.offline)?;
+        installer::fetch_verified(
+            source,
+            sha256,
+            cx.package_root,
+            &file,
+            cx.offline,
+            &cx.watch(size),
+        )?;
     }
     Ok(file)
 }

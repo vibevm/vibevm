@@ -72,9 +72,9 @@ impl InstallerOptionDecl {
         }
         match (&self.installation, self.steps.is_empty()) {
             (Some(method), true) => {
-                if self.result.is_some() || !self.features.is_empty() {
+                if self.result.is_some() || !self.features.is_empty() || !self.profiles.is_empty() {
                     return Err(format!(
-                        "[[installer_options]] `{}` declares result or features, which apply only to [[steps]]",
+                        "[[installer_options]] `{}` declares result, features or profiles, which apply only to [[steps]]",
                         self.id
                     ));
                 }
@@ -139,6 +139,14 @@ impl ApplicationDecl {
     pub(crate) fn validate(&self) -> Result<(), String> {
         if !is_portable_token(&self.id) {
             return Err("[application].id must be a portable lowercase token".into());
+        }
+        if let Some(icon) = &self.icon {
+            declarant_path(icon).map_err(|fault| {
+                format!(
+                    "[application].icon must be a package-relative file: {}",
+                    fault.reason()
+                )
+            })?;
         }
         Ok(())
     }

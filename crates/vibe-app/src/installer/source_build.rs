@@ -31,7 +31,7 @@ pub(crate) struct Fetched {
 
 /// The file name a source keeps: the last URL path segment (`source` when
 /// empty) or the file name of its package path.
-fn source_filename(source: &SourceInputDecl) -> Result<String, InstallerError> {
+pub(crate) fn source_filename(source: &SourceInputDecl) -> Result<String, InstallerError> {
     let raw = match (&source.url, &source.path) {
         (Some(url), _) => {
             let rest = url.split_once("://").map_or(url.as_str(), |(_, rest)| rest);
@@ -94,6 +94,7 @@ pub(crate) fn fetch(
     package_root: &Path,
     source: &SourceInputDecl,
     offline: bool,
+    watch: &super::FetchWatch<'_>,
 ) -> Result<Fetched, InstallerError> {
     let filename = source_filename(source)?;
     let extract = extraction(source, &filename)?;
@@ -111,7 +112,11 @@ pub(crate) fn fetch(
                 fs::create_dir_all(&directory)
                     .map_err(|source| super::io("creating", &directory, source))?;
                 let partial = directory.join(format!(".{filename}.{}.part", std::process::id()));
-                super::fetch_verified(url, &sha256, package_root, &partial, false)?;
+                let watch = super::FetchWatch {
+                    size: source.size,
+                    ..*watch
+                };
+                super::fetch_verified(url, &sha256, package_root, &partial, false, &watch)?;
                 fs::rename(&partial, &cached).map_err(|source| {
                     let _ = fs::remove_file(&partial);
                     super::io("caching", &cached, source)
@@ -271,6 +276,7 @@ mod tests {
             url: url.map(Into::into),
             path: path.map(PathBuf::from),
             sha256: sha256.into(),
+            size: None,
             extract: None,
         }
     }
@@ -317,7 +323,7 @@ mod tests {
             None,
             &digest,
         );
-        let missing = fetch(&cache, &package, &source, true).unwrap_err();
+        let missing = fetch(&cache, &package, &source, true, &Default::default()).unwrap_err();
         assert!(
             matches!(missing, InstallerError::Offline { .. }),
             "{missing}"
@@ -325,10 +331,10 @@ mod tests {
         let cached = cache.join(&digest).join("upstream.txt");
         fs::create_dir_all(cached.parent().unwrap()).unwrap();
         fs::write(&cached, b"tampered").unwrap();
-        let stale = fetch(&cache, &package, &source, true).unwrap_err();
+        let stale = fetch(&cache, &package, &source, true, &Default::default()).unwrap_err();
         assert!(matches!(stale, InstallerError::Offline { .. }), "{stale}");
         fs::write(&cached, b"upstream").unwrap();
-        let hit = fetch(&cache, &package, &source, true).unwrap();
+        let hit = fetch(&cache, &package, &source, true, &Default::default()).unwrap();
         assert_eq!(hit.file, cached);
         assert_eq!(hit.extract, None);
     }
@@ -341,14 +347,14 @@ mod tests {
         fs::write(package.join("fix.patch"), b"patch").unwrap();
         let wrong = input("fix", None, Some("fix.patch"), &"0".repeat(64));
         assert!(matches!(
-            fetch(&cache, &package, &wrong, false),
+            fetch(&cache, &package, &wrong, false, &Default::default()),
             Err(InstallerError::Digest { .. })
         ));
         let right = input("fix", None, Some("fix.patch"), &sha(b"patch"));
         let sources = dir.path().join("work/sources");
         fs::create_dir_all(sources.join("fix")).unwrap();
         fs::write(sources.join("fix/stale"), b"old").unwrap();
-        let fetched = fetch(&cache, &package, &right, true).unwrap();
+        let fetched = fetch(&cache, &package, &right, true, &Default::default()).unwrap();
         lay_out(&sources, &[fetched]).unwrap();
         assert_eq!(fs::read(sources.join("fix/fix.patch")).unwrap(), b"patch");
         assert!(!sources.join("fix/stale").exists());
@@ -369,7 +375,8 @@ mod tests {
         let out = dir.path().join("out");
         let mut command = script_command(None, &package, Path::new("build.sh")).unwrap();
         command.env("OUT", &out);
-        super::super::run_child(&mut command, "recipe", true).unwrap();
+        super::super::run_child(&mut command, "recipe", &super::super::ChildIo::plain(true))
+            .unwrap();
         let payload = dir.path().join("payload");
         move_payload(&out, &payload).unwrap();
         assert_eq!(fs::read(payload.join("bin/x")).unwrap(), b"hi\n");

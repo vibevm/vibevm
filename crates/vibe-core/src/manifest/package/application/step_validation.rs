@@ -18,27 +18,7 @@ impl InstallerOptionDecl {
     /// Every rule of `PROP-065` that can be checked without the host.
     pub(super) fn validate_steps(&self) -> Result<(), String> {
         let option = &self.id;
-        let mut feature_ids = BTreeSet::new();
-        for feature in &self.features {
-            if !is_portable_token(&feature.id) {
-                return Err(format!(
-                    "[[installer_options.features]].id `{}` must be a portable lowercase token",
-                    feature.id
-                ));
-            }
-            if !feature_ids.insert(feature.id.as_str()) {
-                return Err(format!(
-                    "[[installer_options.features]].id `{}` is duplicated in installer option `{option}`",
-                    feature.id
-                ));
-            }
-            if feature.name.trim().is_empty() {
-                return Err(format!(
-                    "[[installer_options.features]] `{}` name must be nonempty",
-                    feature.id
-                ));
-            }
-        }
+        let names = self.validate_wizard()?;
         let steps = steps_of(self);
         let mut step_ids = BTreeSet::new();
         for step in &steps {
@@ -58,7 +38,7 @@ impl InstallerOptionDecl {
                 return Err(format!("{table} title must be nonempty"));
             }
             for condition in step.when.iter().chain(&step.unless) {
-                validate_condition(condition, &feature_ids, &table)?;
+                validate_condition(condition, &names, &table)?;
             }
             if step.phase == StepPhase::Finish
                 && !matches!(
@@ -71,7 +51,7 @@ impl InstallerOptionDecl {
                     step.kind.name()
                 ));
             }
-            validate_kind(&step.kind, &feature_ids, &table)?;
+            validate_kind(&step.kind, &names, &table)?;
         }
         match result_of(self) {
             ResultDecl::External(external) if self.installation.is_none() => {
@@ -93,20 +73,29 @@ impl InstallerOptionDecl {
     }
 }
 
-fn validate_condition(
-    condition: &Condition,
-    features: &BTreeSet<&str>,
-    table: &str,
-) -> Result<(), String> {
+/// The feature and parameter ids conditions and templates may name.
+pub(super) struct Names<'a> {
+    pub features: BTreeSet<&'a str>,
+    pub params: BTreeSet<&'a str>,
+}
+
+fn validate_condition(condition: &Condition, names: &Names<'_>, table: &str) -> Result<(), String> {
     let word = |value: &str| !value.is_empty() && !value.chars().any(|ch| ch.is_whitespace());
     match condition {
-        Condition::Feature(id) if !features.contains(id.as_str()) => Err(format!(
+        Condition::Feature(id) if !names.features.contains(id.as_str()) => Err(format!(
             "{table} condition `{condition}` names an undeclared feature"
         )),
+        Condition::Param(id) | Condition::ParamEquals(ParamEquals { id, .. })
+            if !names.params.contains(id.as_str()) =>
+        {
+            Err(format!(
+                "{table} condition `{condition}` names an undeclared parameter"
+            ))
+        }
         Condition::CommandPresent(name) | Condition::EnvPresent(name) if !word(name) => Err(
             format!("{table} condition `{condition}` needs a nonempty name without whitespace"),
         ),
-        Condition::FilePresent(path) => validate_template(path, features, table, "file_present"),
+        Condition::FilePresent(path) => validate_template(path, names, table, "file_present"),
         _ => Ok(()),
     }
 }
@@ -114,7 +103,7 @@ fn validate_condition(
 /// Syntax of one template field: known variables and declared features.
 fn validate_template(
     value: &str,
-    features: &BTreeSet<&str>,
+    names: &Names<'_>,
     table: &str,
     field: &str,
 ) -> Result<(), String> {
@@ -124,8 +113,11 @@ fn validate_template(
         ));
     }
     expand_step_template(value, &mut |var| match var {
-        StepVar::Feature(id) if !features.contains(id) => {
+        StepVar::Feature(id) if !names.features.contains(id) => {
             Err(format!("`$feature:{id}` names an undeclared feature"))
+        }
+        StepVar::Param(id) if !names.params.contains(id) => {
+            Err(format!("`$param:{id}` names an undeclared parameter"))
         }
         _ => Ok("x".into()),
     })
@@ -133,7 +125,7 @@ fn validate_template(
     .map_err(|reason| format!("{table}.{field}: {reason}"))
 }
 
-fn validate_kind(kind: &StepKind, features: &BTreeSet<&str>, table: &str) -> Result<(), String> {
+fn validate_kind(kind: &StepKind, names: &Names<'_>, table: &str) -> Result<(), String> {
     match kind {
         StepKind::Sources { sources } => validate_sources(sources, table),
         StepKind::Archive {
@@ -212,7 +204,7 @@ fn validate_kind(kind: &StepKind, features: &BTreeSet<&str>, table: &str) -> Res
                     fault.reason()
                 )
             })?;
-            validate_template(to, features, table, "to")?;
+            validate_template(to, names, table, "to")?;
             if Path::new(to).is_absolute() || to.split(['/', '\\']).any(|part| part == "..") {
                 return Err(format!(
                     "{table}.to must be relative to the payload without `..`"
@@ -226,7 +218,7 @@ fn validate_kind(kind: &StepKind, features: &BTreeSet<&str>, table: &str) -> Res
             ..
         } => match (prompt, prompt_file) {
             (Some(prompt), None) if !prompt.trim().is_empty() => {
-                validate_template(prompt, features, table, "prompt")
+                validate_template(prompt, names, table, "prompt")
             }
             (None, Some(file)) => declarant_path(file).map(|_| ()).map_err(|fault| {
                 format!(
