@@ -116,6 +116,14 @@ pub fn run(
             records::runs(ctx, app_home.settings(), &package, prune)?;
             Ok(None)
         }
+        AppCommand::Work {
+            package,
+            clean,
+            all: _,
+        } => {
+            records::work(ctx, app_home.settings(), package.as_deref(), clean)?;
+            Ok(None)
+        }
         AppCommand::Errors => {
             records::errors(ctx)?;
             Ok(None)

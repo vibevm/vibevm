@@ -377,10 +377,14 @@ pub enum StepError {
         work: String,
     },
     #[error(
-        "--resume found no kept work directory `{work}` for `{key}` (violates spec://org.vibevm.core/vibevm/common/PROP-065#resume; \
-         fix: install without --resume)"
+        "--resume has nothing to continue for `{key}`: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-065#resume; \
+         fix: install without --resume, or restart a kept work directory at one of its steps with --from-step ID)"
     )]
-    NothingToResume { key: String, work: String },
+    NothingToResume {
+        key: String,
+        work: String,
+        reason: String,
+    },
     #[error(
         "the kept work directory `{work}` cannot be resumed: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-065#resume; \
          fix: rerun with the original option and features, or install without --resume)"
@@ -395,6 +399,11 @@ pub enum StepError {
         step: String,
         steps: String,
     },
+    #[error(
+        "no kept work directory of `{package}` is in `{home}` (violates spec://org.vibevm.core/vibevm/common/PROP-065#work; \
+         fix: list the kept directories with `vibe app work`, or install with --keep-work to keep one)"
+    )]
+    WorkMissing { package: String, home: String },
 }
 
 /// Launch-point resolution and native program execution.

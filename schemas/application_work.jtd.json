@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "description": "Version 1 listing of the kept application work directories of one home from vibe app work --json: each directory's package key, path, state, change time and size by part, and the paths a --clean removed with the bytes it freed.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#work" },
+    "rustOptions": { "package": "vibe_wire::application_work" },
+    "x-rust-type": "ApplicationWork",
+    "x-wire-order": ["protocol", "home", "entries", "removed", "freed"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "home": { "type": "string" },
+    "entries": { "elements": { "ref": "entry" }, "metadata": { "x-empty": "emit" } },
+    "freed": { "ref": "byte_count" }
+  },
+  "optionalProperties": {
+    "removed": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } }
+  },
+  "definitions": {
+    "byte_count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      }
+    },
+    "parts": {
+      "metadata": { "x-wire-order": ["sources", "out", "inputs", "other"] },
+      "properties": {
+        "sources": { "ref": "byte_count" },
+        "out": { "ref": "byte_count" },
+        "inputs": { "ref": "byte_count" },
+        "other": { "ref": "byte_count" }
+      }
+    },
+    "entry": {
+      "metadata": { "x-wire-order": ["key", "path", "state", "step", "changed", "bytes", "parts"] },
+      "properties": {
+        "key": { "type": "string" },
+        "path": { "type": "string" },
+        "state": {
+          "enum": ["done", "failed", "interrupted", "delegated", "unknown"],
+          "metadata": { "x-vocabulary": "closed" }
+        },
+        "changed": { "type": "string" },
+        "bytes": { "ref": "byte_count" },
+        "parts": { "ref": "parts" }
+      },
+      "optionalProperties": {
+        "step": { "type": "string", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}

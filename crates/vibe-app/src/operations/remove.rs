@@ -343,6 +343,7 @@ pub(crate) fn remove_locked(
         method: installation.method,
         app_root: launch::app_root(&installation, &storage).ok(),
         message,
+        work: None,
     })
 }
 

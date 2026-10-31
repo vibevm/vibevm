@@ -86,4 +86,9 @@ pub struct ApplicationReport {
     #[serde(rename = "selectedMode")]
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub selected_mode: Option<ApplicationReportSelectedMode>,
+
+    /// The work directory an install or update kept because --keep-work was
+    /// given (PROP-065#work); absent when it was deleted.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub work: Option<String>,
 }

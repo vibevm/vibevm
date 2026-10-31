@@ -105,6 +105,16 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `vibe app work [PACKAGE] [--clean] --json` (PROP-065 `#work`): the kept
+# work directories of one home, their sizes and what a clean removed.
+[format.cli-application-work]
+epoch = 1
+schema = "schemas/application_work.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # `vibe app outdated --json` (PROP-065 `#outdated`): polled by graphical
 # tools and schedulers that then call `update`.
 [format.cli-application-outdated]

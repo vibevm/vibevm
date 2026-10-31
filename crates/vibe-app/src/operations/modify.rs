@@ -179,6 +179,7 @@ pub fn modify(
             start: &install_request.start,
             command: Command::Modify,
             replaces: None,
+            keep_work: install_request.keep_work,
             paths,
         },
     )?;

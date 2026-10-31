@@ -118,6 +118,7 @@ fn update_locked(
             start: &request.start,
             command: Command::Update,
             replaces: moved.then(|| prior_key.clone()),
+            keep_work: request.keep_work,
             paths,
         },
     )?;

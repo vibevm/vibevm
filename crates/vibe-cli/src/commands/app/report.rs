@@ -37,6 +37,7 @@ pub(crate) fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
                 .app_root
                 .as_deref()
                 .map(vibe_core::machine_json_path),
+            work: outcome.work.as_deref().map(vibe_core::machine_json_path),
             selected_mode: Some(match outcome.method {
                 vibe_app::Method::Shell => ApplicationReportSelectedMode::Shell,
                 vibe_app::Method::Zip => ApplicationReportSelectedMode::Zip,
@@ -52,6 +53,9 @@ pub(crate) fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
         "vibe {verb}: application `{}` — {}",
         outcome.slot, outcome.message
     ));
+    if let Some(work) = &outcome.work {
+        ctx.summary(&format!("work directory kept: {}", work.display()));
+    }
     Ok(())
 }
 
@@ -75,6 +79,7 @@ pub(crate) fn render_change(ctx: &output::Context, change: &Change) -> Result<()
             message: change.message.clone(),
             slot_default: change.slot_default.clone(),
             app_root: None,
+            work: None,
             selected_mode: None,
         });
     }

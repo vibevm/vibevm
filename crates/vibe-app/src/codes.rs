@@ -134,6 +134,7 @@ codes!(STEP, StepError [] {
     NothingToResume => "nothing_to_resume", Refusal, "--resume found no kept work directory";
     ResumeMismatch => "resume_mismatch", Refusal, "the kept work directory belongs to another choice";
     UnknownStep => "unknown_step", Refusal, "--from-step names no step";
+    WorkMissing => "work_missing", Refusal, "no kept work directory matches the named package";
 });
 
 codes!(AGENT, AgentError [] {
@@ -275,6 +276,7 @@ mod tests {
             "consent_required",
             "unavailable",
             "interrupted",
+            "work_missing",
         ] {
             assert!(seen.contains(named), "PROP-065#error-codes names `{named}`");
         }
