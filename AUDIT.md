@@ -1339,3 +1339,21 @@ error text and the changelog. What the gate cannot see and this run
 checked by hand: the first real source build (Vim 9.2.1167 from its GitHub
 tarball) exposed PAX headers and a baked-in prefix, both fixed before
 close-out and recorded in the plan.
+
+## Audit run — 2026-10-31 (APP-STEPS campaign close-out)
+
+The close-out sweep of the APP-STEPS campaign (PROP-065 structured
+installation, PROP-064 agent hooks, PROP-059 hidden installations; plan
+`vibevm/vibespecs/terraforms/APP-STEPS-CAMPAIGN-v0.1.xml`). Scope: the
+phases Q1 … Q3 landed in `a435a9abf..50a6685cc`, the full seven-step gate on
+`50a6685cc`, the native runs on `base` and `flash` recorded in MT-04 / MT-05,
+and the publication of `org.vibevm.apps/mingw-w64@15.2.0` and
+`org.vibevm.apps/vim@1.1.0`.
+
+**3 findings** — 0 P1, 0 P2, 3 P3. Disposition: 1 filed, 1 re-opened, 1 open.
+
+| id | cat | sev | finding | disposition |
+|---|---|---|---|---|
+| 2026-10-31-06 | A2 | P3 | `vibe-lifecycle` `apply_rechecks_opencode_occupancy_after_a_clean_plan` failed once under the parallel workspace run with `Text file busy (os error 26)` spawning a just-written fixture executable, and passed three times alone — the family of 2026-10-31-02. | re-opened as the same row; re-check next run |
+| 2026-10-31-07 | C | P3 | Windows removal plans print the owned payload with mixed separators (`opt\apps/vim/…`). | filed — BACKLOG B-223 |
+| 2026-10-31-08 | C | P3 | Requirements between application packages are recorded in the home's index but not yet in a project's `vibe.lock`; `--accept-license` is not forwarded to a requirement; agent steps do not see the requirement PATH. | open — named in the campaign ledger (Q3) for the next wave |
