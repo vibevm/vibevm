@@ -14,13 +14,13 @@ use std::path::{Component, Path, PathBuf};
 use vibe_core::manifest::{InstallerMethod, InstallerOptionDecl};
 
 use crate::error::AppError;
-use crate::index::{AuthoredCommands, Installation, Location, Method};
+use crate::index::{AcceptedLicense, AuthoredCommands, Installation, Location, Method};
 use crate::installer;
 use crate::resolve::{ResolvedPackage, strip_verbatim};
 use crate::steps::{Plan, Run, RunFlags, Start};
 use crate::storage::{DEFAULT_LIBRARY, Storage};
 
-use super::OperationContext;
+use super::{Command, OperationContext};
 
 /// Which authored command an external shell step runs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -46,6 +46,7 @@ pub(super) struct Selected<'a> {
     pub force: bool,
     pub mode: Mode,
     pub start: &'a Start,
+    pub command: Command,
 }
 
 pub(super) fn apply(
@@ -73,22 +74,27 @@ pub(super) fn apply(
         selected.resolved,
         plan,
         RunFlags {
+            command: selected.command,
             start: selected.start.clone(),
             force: selected.force,
             update_in_place,
         },
     )?;
-    let (location, mut retired, finish_failure) = match plan.result.external_root() {
-        None => place_owned(storage, selected, &mut run)?,
-        Some(template) => {
-            let (root, failure) = run_external(ctx, selected, template, &mut run)?;
+    let placed = match plan.result.external_root() {
+        None => place_owned(storage, selected, &mut run),
+        Some(template) => run_external(ctx, selected, template, &mut run).map(|(root, failure)| {
             (
                 Location::External { app_root: root },
                 retired_owned(storage, selected.prior),
                 failure,
             )
-        }
+        }),
     };
+    run.close(match &placed {
+        Ok((_, _, None)) => None,
+        Ok((_, _, Some(failure))) | Err(failure) => Some(failure),
+    });
+    let (location, mut retired, finish_failure) = placed?;
     retired.push(run.work().to_path_buf());
     let mut steps = run.records();
     let commands = match &option.installation {
@@ -145,6 +151,29 @@ pub(super) fn apply(
             public_commands: option.public_commands.clone(),
             commands,
             features: plan.features.clone(),
+            parameters: plan
+                .parameters
+                .iter()
+                .filter(|param| !param.secret)
+                .map(|param| (param.id.clone(), param.value.clone()))
+                .collect(),
+            license: plan.license.as_ref().map(|license| {
+                let kept = selected
+                    .prior
+                    .and_then(|prior| prior.license.clone())
+                    .filter(|prior| prior.name == license.name);
+                kept.unwrap_or_else(|| AcceptedLicense {
+                    name: license.name.clone(),
+                    accepted_at: chrono::Utc::now()
+                        .to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+                })
+            }),
+            icon: selected
+                .resolved
+                .application
+                .icon
+                .as_ref()
+                .map(|icon| icon.to_string_lossy().into_owned()),
             steps,
         },
         retired,

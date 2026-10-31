@@ -42,6 +42,9 @@ pub enum Outcome {
     #[serde(rename = "failed")]
     Failed,
 
+    #[serde(rename = "interrupted")]
+    Interrupted,
+
     #[serde(rename = "skipped")]
     Skipped,
 }

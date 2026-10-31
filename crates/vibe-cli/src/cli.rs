@@ -98,6 +98,13 @@ pub struct Cli {
     #[arg(long, global = true)]
     pub no_progress: bool,
 
+    /// `json` writes every progress observation as one
+    /// `vibe-progress-event/1` line on stderr, unthrottled and combinable
+    /// with `--json` (PROP-060 `#MACHINE-STREAM`); `VIBE_PROGRESS_FORMAT`
+    /// provides the same choice.
+    #[arg(long, global = true, value_name = "FORMAT", value_enum)]
+    pub progress_format: Option<ProgressFormat>,
+
     /// Identifier of the agent or harness invoking this command. Free-form
     /// string; conventional values are `claude-code`, `claude-desktop`,
     /// `cursor`, `opencode`, `codex`. When set, the value is stamped onto
@@ -158,6 +165,15 @@ pub struct Cli {
 
     #[command(subcommand)]
     pub command: Command,
+}
+
+/// The renderer family `--progress-format` selects.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum ProgressFormat {
+    /// The terminal renderer of PROP-060 `#DISPLAY`.
+    Human,
+    /// One JSON line per observation on stderr.
+    Json,
 }
 
 #[derive(Debug, Subcommand)]

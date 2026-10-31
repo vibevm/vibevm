@@ -6,16 +6,19 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use dialoguer::{MultiSelect, Select};
+use dialoguer::{Confirm, Input, MultiSelect, Password, Select};
 use vibe_app::{
-    Command as AppCommand, FeatureRequest, HostFacts, InstallChoice, InstallRequest,
+    Command as AppCommand, FeatureRequest, HostFacts, InstallChoice, InstallRequest, Interrupt,
     OperationContext, Outcome, Plan, ResolvedPackage, SettingsRoot, Start,
 };
+use vibe_core::manifest::{ParameterDecl, ParameterType};
+use vibe_core::progress::Progress;
 use vibe_wire::generated::application_report::{
     ApplicationReport, ApplicationReportCommand, ApplicationReportSelectedMode,
 };
 
-use crate::cli::{AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
+use super::interrupt::Signals;
+use crate::cli::{AppChoiceArgs, AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
 
 /// The current user's settings root, resolved once at this boundary.
@@ -81,11 +84,110 @@ fn feature_chooser(
         .map_err(|error| error.to_string())
 }
 
+/// A typed parameter question (PROP-065 `#parameters`): a confirmation, a
+/// list, a hidden entry for a secret, otherwise a line of text.
+fn parameter_prompt(
+    parameter: &ParameterDecl,
+    preset: Option<&str>,
+) -> std::result::Result<Option<String>, String> {
+    let label = match &parameter.description {
+        Some(text) => format!("{} ({}) — {text}", parameter.name, parameter.id),
+        None => format!("{} ({})", parameter.name, parameter.id),
+    };
+    let failed = |error: dialoguer::Error| error.to_string();
+    match parameter.kind {
+        ParameterType::Bool => Confirm::new()
+            .with_prompt(label)
+            .default(preset == Some("true"))
+            .interact_opt()
+            .map(|answer| answer.map(|yes| yes.to_string()))
+            .map_err(failed),
+        ParameterType::Choice => {
+            let names: Vec<&str> = parameter.choices.iter().map(|c| c.name.as_str()).collect();
+            let default = parameter
+                .choices
+                .iter()
+                .position(|choice| Some(choice.value.as_str()) == preset)
+                .unwrap_or(0);
+            Select::new()
+                .with_prompt(label)
+                .items(&names)
+                .default(default)
+                .interact_opt()
+                .map(|picked| {
+                    picked
+                        .and_then(|i| parameter.choices.get(i))
+                        .map(|c| c.value.clone())
+                })
+                .map_err(failed)
+        }
+        _ if parameter.secret => Password::new()
+            .with_prompt(label)
+            .allow_empty_password(!parameter.required)
+            .interact()
+            .map(|text| Some(text).filter(|text| !text.is_empty()))
+            .map_err(failed),
+        _ => {
+            let mut input = Input::<String>::new().with_prompt(label).allow_empty(true);
+            if let Some(preset) = preset {
+                input = input.default(preset.to_owned());
+            }
+            input
+                .interact_text()
+                .map(|text| Some(text).filter(|text| !text.is_empty()))
+                .map_err(failed)
+        }
+    }
+}
+
+/// Show the license text, then ask (PROP-065 `#license`).
+fn license_prompt(name: &str, text: &str) -> std::result::Result<bool, String> {
+    eprintln!("{text}");
+    Confirm::new()
+        .with_prompt(format!("Accept the license `{name}`?"))
+        .default(false)
+        .interact()
+        .map_err(|error| error.to_string())
+}
+
 /// PATH and environment facts for step conditions and needs.
 pub(crate) fn host_facts() -> HostFacts<'static> {
     HostFacts {
         command_present: &super::facts::command_on_path,
         env_present: &super::facts::env_set,
+        resolve_path: &super::facts::absolute_path,
+    }
+}
+
+/// What one operation observes: the progress handle (the machine stream
+/// only; the human renderer keeps showing child output as before) and the
+/// caught signals of a mutating command.
+pub(crate) struct Observation {
+    pub(crate) progress: Progress,
+    pub(crate) signals: Option<Signals>,
+}
+
+impl Observation {
+    /// `mutating` operations catch Ctrl-C / SIGTERM (PROP-065 `#cancellation`).
+    pub(crate) fn new(ctx: &output::Context, mutating: bool) -> Result<Self> {
+        Ok(Self {
+            progress: if ctx.is_machine_progress() {
+                ctx.progress()
+            } else {
+                Progress::default()
+            },
+            signals: if mutating {
+                Some(Signals::install().context("catching interrupt signals")?)
+            } else {
+                None
+            },
+        })
+    }
+
+    fn interrupt(&self) -> Option<&dyn Interrupt> {
+        self.signals
+            .as_ref()
+            .map(|signals| signals as &dyn Interrupt)
     }
 }
 
@@ -97,6 +199,7 @@ pub(super) fn operation<'a>(
     offline: bool,
     proxy_image: &'a Path,
     show: Option<&'a dyn Fn(&Plan)>,
+    observe: &'a Observation,
 ) -> OperationContext<'a> {
     let attended = attended(ctx);
     OperationContext {
@@ -107,34 +210,60 @@ pub(super) fn operation<'a>(
         proxy_image,
         facts: host_facts(),
         feature_chooser: attended.then_some(&feature_chooser as vibe_app::FeatureChooser<'_>),
+        parameter_prompt: attended.then_some(&parameter_prompt as vibe_app::ParameterPrompt<'_>),
+        license_prompt: attended.then_some(&license_prompt as vibe_app::LicensePrompt<'_>),
         on_plan: show,
+        progress: &observe.progress,
+        quiet_children: ctx.is_machine_progress(),
+        interrupt: observe.interrupt(),
     }
 }
 
 /// Print the plan before the first step runs (stderr, so `--json` stays
-/// one envelope).
+/// one envelope); the machine stream carries no prose.
 pub(super) fn plan_printer(ctx: &output::Context) -> impl Fn(&Plan) + '_ {
     move |plan: &Plan| {
-        if !ctx.is_quiet() {
+        if !ctx.is_quiet() && !ctx.is_machine_progress() {
             eprint!("{}", plan.render());
         }
     }
 }
 
-/// `--feature` / `--no-feature` and `--resume` / `--from-step`.
-pub(super) fn step_flags(steps: &AppStepArgs) -> (FeatureRequest, Start) {
+/// The selection, wizard answers and resume point of an install or update.
+pub(super) fn request(
+    choice: InstallChoice,
+    library: Option<String>,
+    force: bool,
+    steps: &AppStepArgs,
+) -> InstallRequest {
     let start = match (&steps.from_step, steps.resume) {
         (Some(step), _) => Start::FromStep(step.clone()),
         (None, true) => Start::Resume,
         (None, false) => Start::Fresh,
     };
-    (
-        FeatureRequest {
-            enable: steps.feature.clone(),
-            disable: steps.no_feature.clone(),
-        },
+    InstallRequest {
+        library,
+        force,
         start,
-    )
+        ..plan_request(choice, &steps.choice)
+    }
+}
+
+/// The selection and wizard answers of `vibe app plan`.
+pub(super) fn plan_request(choice: InstallChoice, answers: &AppChoiceArgs) -> InstallRequest {
+    InstallRequest {
+        choice,
+        library: None,
+        force: false,
+        features: FeatureRequest {
+            enable: answers.feature.clone(),
+            disable: answers.no_feature.clone(),
+            profile: answers.profile.clone(),
+        },
+        parameters: answers.set.clone(),
+        accept_license: answers.accept_license,
+        start: Start::Fresh,
+    }
 }
 
 /// `vibe app plan` and `install --plan-only`: JSON or text on stdout.
@@ -190,26 +319,22 @@ pub fn install(
         &args.packages[0],
         offline,
     )?;
-    let (features, start) = step_flags(&args.steps);
-    let request = InstallRequest {
-        choice: InstallChoice {
-            platform: args.platform,
-            arch: args.arch,
-            installer: args.installer,
-        },
-        library: args.library,
-        force: args.force,
-        features,
-        start,
+    let choice = InstallChoice {
+        platform: args.platform,
+        arch: args.arch,
+        installer: args.installer,
     };
+    let request = request(choice, args.library, args.force, &args.steps);
     if args.plan_only {
-        let operation = operation(ctx, &settings, offline, &proxy_image, None);
-        let plan = vibe_app::plan(&operation, &resolved, &request.choice, &request.features)?;
+        let observe = Observation::new(ctx, false)?;
+        let operation = operation(ctx, &settings, offline, &proxy_image, None, &observe);
+        let plan = vibe_app::plan(&operation, &resolved, &request)?;
         return render_plan(ctx, &plan);
     }
     let show = plan_printer(ctx);
+    let observe = Observation::new(ctx, true)?;
     let outcome = ctx.suspend_progress(|| {
-        let operation = operation(ctx, &settings, offline, &proxy_image, Some(&show));
+        let operation = operation(ctx, &settings, offline, &proxy_image, Some(&show), &observe);
         vibe_app::install(&operation, &resolved, &request)
     })?;
     render(ctx, &outcome)
@@ -236,21 +361,23 @@ pub fn update(
         &args.packages[0],
         root_offline,
     )?;
-    let (features, start) = step_flags(&args.steps);
-    let request = InstallRequest {
-        choice: InstallChoice {
-            platform: args.platform,
-            arch: args.arch,
-            installer: args.installer,
-        },
-        library: args.library,
-        force: args.force,
-        features,
-        start,
+    let choice = InstallChoice {
+        platform: args.platform,
+        arch: args.arch,
+        installer: args.installer,
     };
+    let request = request(choice, args.library, args.force, &args.steps);
     let show = plan_printer(ctx);
+    let observe = Observation::new(ctx, true)?;
     let outcome = ctx.suspend_progress(|| {
-        let operation = operation(ctx, &settings, root_offline, &proxy_image, Some(&show));
+        let operation = operation(
+            ctx,
+            &settings,
+            root_offline,
+            &proxy_image,
+            Some(&show),
+            &observe,
+        );
         vibe_app::update(&operation, &resolved, &request)
     })?;
     render(ctx, &outcome)
@@ -263,11 +390,12 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
     }
     let settings = settings_root()?;
     let proxy_image = proxy_image()?;
+    let observe = Observation::new(ctx, true)?;
     let outcome = ctx.suspend_progress(|| {
         let operation = OperationContext {
             chooser: None,
             feature_chooser: None,
-            ..operation(ctx, &settings, root_offline, &proxy_image, None)
+            ..operation(ctx, &settings, root_offline, &proxy_image, None, &observe)
         };
         vibe_app::uninstall(&operation, &args.package, args.force)
     })?;

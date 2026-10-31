@@ -6,7 +6,8 @@ use std::path::Path;
 
 use vibe_core::manifest::Manifest;
 
-use super::plan::{FeatureChooser, FeatureRequest, HostFacts, PlanInput, plan};
+use super::features::FeatureRequest;
+use super::plan::{FeatureChooser, HostFacts, PlanInput, Previous, Prompts, plan};
 use crate::error::{AppError, StepError};
 use crate::index::PackageCoordinate;
 use crate::resolve::{ResolvedPackage, from_manifest};
@@ -78,19 +79,30 @@ fn run(
     chooser: Option<FeatureChooser<'_>>,
 ) -> Result<super::Plan, AppError> {
     let settings = SettingsRoot::new(&dir.join("settings"));
+    let parameters = Default::default();
     plan(&PlanInput {
         resolved,
         option: &resolved.options[0],
         request: &host.request,
-        previous: host.previous.as_deref(),
+        parameters: &[],
+        accept_license: false,
+        previous: host.previous.as_deref().map(|features| Previous {
+            features,
+            parameters: &parameters,
+            license: None,
+        }),
         settings: &settings,
         facts: HostFacts {
             command_present: &on_path,
             env_present: &env,
+            ..HostFacts::default()
         },
         offline: host.offline,
         attended: host.attended,
-        chooser,
+        prompts: Prompts {
+            features: chooser,
+            ..Prompts::default()
+        },
     })
 }
 
@@ -257,6 +269,7 @@ fn features_come_from_flags_then_the_question_then_defaults_and_update_reuses_th
         request: FeatureRequest {
             enable: vec!["fixes".into()],
             disable: vec!["docs".into()],
+            profile: None,
         },
         previous: Some(vec!["docs".into()]),
         ..host()
@@ -266,6 +279,7 @@ fn features_come_from_flags_then_the_question_then_defaults_and_update_reuses_th
         request: FeatureRequest {
             enable: vec!["gpu".into()],
             disable: Vec::new(),
+            profile: None,
         },
         ..host()
     };

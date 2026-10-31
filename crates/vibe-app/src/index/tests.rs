@@ -35,6 +35,9 @@ fn sample() -> Index {
         }],
         commands: AuthoredCommands::default(),
         features: Vec::new(),
+        parameters: Default::default(),
+        license: None,
+        icon: None,
         steps: Vec::new(),
     };
     let external = Installation {
@@ -59,6 +62,12 @@ fn sample() -> Index {
             interpreter: Some(ShellInterpreter::PosixSh),
         },
         features: vec!["docs".into()],
+        parameters: [("port".to_owned(), "8080".to_owned())].into(),
+        license: Some(crate::index::AcceptedLicense {
+            name: "Demo".into(),
+            accepted_at: "2026-10-31T00:00:00Z".into(),
+        }),
+        icon: Some("share/icon.png".into()),
         steps: vec![
             StepRecord {
                 id: "install".into(),

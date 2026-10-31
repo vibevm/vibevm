@@ -107,6 +107,12 @@ impl SettingsRoot {
         self.root.join("cache").join("app-work")
     }
 
+    /// `<home>/cache/app-runs`: one directory per installation key holding
+    /// a record per run, newest last (`PROP-065#runs`).
+    pub fn app_runs_dir(&self) -> PathBuf {
+        self.root.join("cache").join("app-runs")
+    }
+
     /// Take the `applications/.mutation.lock` exclusive lock, creating the
     /// state directory on first use. A held lock is refused, never awaited.
     pub fn lock(&self) -> Result<MutationLock, StateError> {

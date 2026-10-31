@@ -1,5 +1,6 @@
 //! The `vibe app` argument surface (PROP-059 `#launcher-operations`,
-//! PROP-065 `#plan`, `#describe`).
+//! PROP-065 `#plan`, `#describe`, `#runs`, `#error-codes`) and the
+//! structured-installation flags of `install` / `update`.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations");
 
@@ -19,6 +20,57 @@ pub struct AppArgs {
     /// Act on the user settings root even inside a project.
     #[arg(short = 'g', long, global = true)]
     pub global: bool,
+}
+
+/// `ID=VALUE` of `--set`.
+fn parameter_value(text: &str) -> Result<(String, String), String> {
+    match text.split_once('=') {
+        Some((id, value)) if !id.trim().is_empty() => Ok((id.trim().to_owned(), value.to_owned())),
+        _ => Err(format!("`{text}` is not ID=VALUE")),
+    }
+}
+
+/// The wizard answers shared by `install`, `update` and `app plan`
+/// (PROP-065 `#features`, `#profiles`, `#parameters`, `#license`).
+#[derive(Debug, Clone, Default, clap::Args)]
+pub struct AppChoiceArgs {
+    /// Choose an application installer feature by ID; repeatable.
+    #[arg(long = "feature", value_name = "ID")]
+    pub feature: Vec<String>,
+
+    /// Leave an application installer feature unchosen; repeatable.
+    #[arg(long = "no-feature", value_name = "ID")]
+    pub no_feature: Vec<String>,
+
+    /// Choose a named feature profile of the installer; `--feature` and
+    /// `--no-feature` apply on top of it.
+    #[arg(long, value_name = "ID")]
+    pub profile: Option<String>,
+
+    /// Give an installer parameter a value; repeatable.
+    #[arg(long = "set", value_name = "ID=VALUE", value_parser = parameter_value)]
+    pub set: Vec<(String, String)>,
+
+    /// Accept the installer's declared license without being asked.
+    #[arg(long)]
+    pub accept_license: bool,
+}
+
+/// The structured-installation flags of an application install or update
+/// (PROP-065 `#features`, `#resume`).
+#[derive(Debug, Clone, Default, clap::Args)]
+pub struct AppStepArgs {
+    #[command(flatten)]
+    pub choice: AppChoiceArgs,
+
+    /// Continue the kept application work directory from its first step
+    /// that is not done.
+    #[arg(long, conflicts_with = "from_step")]
+    pub resume: bool,
+
+    /// Restart the kept application work directory at the named step.
+    #[arg(long, value_name = "ID")]
+    pub from_step: Option<String>,
 }
 
 #[derive(Debug, clap::Subcommand)]
@@ -51,12 +103,8 @@ pub enum AppCommand {
         /// Select one application installer option by its stable ID.
         #[arg(long, value_name = "ID")]
         installer: Option<String>,
-        /// Choose a feature by ID; repeatable.
-        #[arg(long = "feature", value_name = "ID")]
-        feature: Vec<String>,
-        /// Leave a feature unchosen; repeatable.
-        #[arg(long = "no-feature", value_name = "ID")]
-        no_feature: Vec<String>,
+        #[command(flatten)]
+        choice: AppChoiceArgs,
     },
 
     /// Print the declared features and steps of every installer option of a
@@ -77,6 +125,21 @@ pub enum AppCommand {
         #[arg(long)]
         registry: Option<std::path::PathBuf>,
     },
+
+    /// List the run records of an application package newest first, with
+    /// their outcome, directory and per-step logs (PROP-065 `#runs`).
+    Runs {
+        package: String,
+        /// Keep only the newest N records and delete the rest.
+        #[arg(long, value_name = "N")]
+        prune: Option<usize>,
+    },
+
+    /// List the stable error codes of application commands with their
+    /// meaning and exit status (PROP-065 `#error-codes`, `#exit-codes`):
+    /// 0 success, 1 a failed or interrupted step, 2 a refusal before any
+    /// effect.
+    Errors,
 
     /// List launchers of an installed application.
     Launchers { package: String },

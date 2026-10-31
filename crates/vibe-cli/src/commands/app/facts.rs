@@ -24,3 +24,13 @@ pub(super) fn command_on_path(name: &str) -> bool {
 pub(super) fn env_set(name: &str) -> bool {
     std::env::var_os(name).is_some()
 }
+
+/// A `path` parameter value made absolute against the working directory
+/// (PROP-065 `#parameters`).
+pub(super) fn absolute_path(value: &str) -> std::path::PathBuf {
+    let path = std::path::PathBuf::from(value);
+    if path.is_absolute() {
+        return path;
+    }
+    std::env::current_dir().map_or(path.clone(), |cwd| cwd.join(path))
+}

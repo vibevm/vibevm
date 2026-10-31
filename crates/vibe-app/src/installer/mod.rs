@@ -6,6 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#installer-separa
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#child-output");
 
 pub mod archive;
+mod child;
 pub mod native;
 pub mod shell;
 pub mod source_build;
@@ -13,64 +14,39 @@ pub mod source_build;
 use std::fs::{self, File};
 use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
 use std::time::Duration;
 
 use sha2::{Digest, Sha256};
+use vibe_core::progress::ProgressTask;
 
 use crate::error::InstallerError;
 
-/// Run one child to completion, streaming its output; non-zero is an error.
-pub fn run_child(command: &mut Command, what: &str, json: bool) -> Result<(), InstallerError> {
-    command.stdin(Stdio::inherit()).stderr(Stdio::inherit());
-    let spawn_error = |error: io::Error| InstallerError::Spawn {
-        what: what.into(),
-        reason: error.to_string(),
-    };
-    let status = if json {
-        let mut child = command
-            .stdout(Stdio::piped())
-            .spawn()
-            .map_err(spawn_error)?;
-        if let Some(mut stdout) = child.stdout.take() {
-            let mut stderr = io::stderr().lock();
-            let mut buffer = [0u8; 8192];
-            loop {
-                let read = stdout.read(&mut buffer).map_err(spawn_error)?;
-                if read == 0 {
-                    break;
-                }
-                let _ = stderr.write_all(&buffer[..read]);
-                let _ = stderr.flush();
-            }
-        }
-        child.wait().map_err(spawn_error)?
-    } else {
-        command
-            .stdout(Stdio::inherit())
-            .status()
-            .map_err(spawn_error)?
-    };
-    if status.success() {
-        return Ok(());
-    }
-    Err(InstallerError::Exited {
-        what: what.into(),
-        code: status.code().map_or_else(
-            || "without a code".into(),
-            |code| format!("with code {code}"),
-        ),
-    })
+pub use child::Interrupt;
+pub(crate) use child::{ChildIo, Relay, run_child};
+
+/// What one fetch reports and refuses (`PROP-065#sizes`): the declared
+/// size, the step task its byte measurements go to, and the interrupt it
+/// stops on between chunks.
+#[derive(Clone, Copy, Default)]
+pub(crate) struct FetchWatch<'a> {
+    pub size: Option<u64>,
+    pub task: Option<&'a ProgressTask>,
+    pub interrupt: Option<&'a dyn Interrupt>,
 }
 
+/// Bytes between two measurements of one fetch.
+const MEASURE_EVERY: u64 = 1 << 20;
+
 /// Copy a declared installer source into `destination`, verifying its
-/// SHA-256. A source is an `https://` URL or a path under `package_root`.
-pub fn fetch_verified(
+/// SHA-256 and its declared size. A source is an `https://` URL or a path
+/// under `package_root`.
+pub(crate) fn fetch_verified(
     source: &str,
     sha256: &str,
     package_root: &Path,
     destination: &Path,
     offline: bool,
+    watch: &FetchWatch<'_>,
 ) -> Result<(), InstallerError> {
     let fetch_error = |reason: String| InstallerError::Fetch {
         source_ref: source.into(),
@@ -98,17 +74,46 @@ pub fn fetch_verified(
         File::create(destination).map_err(|source| io("creating", destination, source))?;
     let mut hash = Sha256::new();
     let mut buffer = [0u8; 64 * 1024];
+    let (mut total, mut measured) = (0u64, 0u64);
+    let stop = |error: InstallerError| {
+        let _ = fs::remove_file(destination);
+        error
+    };
     loop {
+        if watch
+            .interrupt
+            .is_some_and(|interrupt| interrupt.poll(None))
+        {
+            return Err(stop(InstallerError::Interrupted {
+                what: format!("fetching `{source}`"),
+            }));
+        }
         let read = input
             .read(&mut buffer)
-            .map_err(|error| fetch_error(error.to_string()))?;
+            .map_err(|error| stop(fetch_error(error.to_string())))?;
         if read == 0 {
             break;
+        }
+        total += read as u64;
+        if let Some(declared) = watch.size.filter(|declared| total > *declared) {
+            return Err(stop(InstallerError::Oversize {
+                source_ref: source.into(),
+                declared,
+            }));
         }
         hash.update(&buffer[..read]);
         output
             .write_all(&buffer[..read])
             .map_err(|source| io("writing", destination, source))?;
+        if let Some(task) = watch.task
+            && total - measured >= MEASURE_EVERY
+        {
+            task.set_progress(total, watch.size, "bytes");
+            measured = total;
+        }
+    }
+    if let Some(task) = watch.task {
+        task.set_progress(total, watch.size, "bytes");
     }
     output
         .sync_all()
@@ -162,16 +167,65 @@ mod tests {
         fs::write(dir.path().join("outside.bin"), b"payload").unwrap();
         let digest = hex(&Sha256::digest(b"payload"));
         let out = dir.path().join("out");
-        fetch_verified("payload.bin", &digest, &package, &out, true).unwrap();
+        let watch = FetchWatch::default();
+        fetch_verified("payload.bin", &digest, &package, &out, true, &watch).unwrap();
         assert_eq!(fs::read(&out).unwrap(), b"payload");
         assert!(matches!(
-            fetch_verified("payload.bin", &"0".repeat(64), &package, &out, true),
+            fetch_verified("payload.bin", &"0".repeat(64), &package, &out, true, &watch),
             Err(InstallerError::Digest { .. })
         ));
-        assert!(fetch_verified("../outside.bin", &digest, &package, &out, true).is_err());
+        assert!(fetch_verified("../outside.bin", &digest, &package, &out, true, &watch).is_err());
         assert!(matches!(
-            fetch_verified("https://example.invalid/x", &digest, &package, &out, true),
+            fetch_verified(
+                "https://example.invalid/x",
+                &digest,
+                &package,
+                &out,
+                true,
+                &watch
+            ),
             Err(InstallerError::Offline { .. })
         ));
+    }
+
+    #[test]
+    fn a_declared_size_is_measured_and_never_exceeded() {
+        use std::sync::{Arc, Mutex};
+        use vibe_core::progress::{Progress, ProgressEvent, ProgressEventKind, ProgressObserver};
+
+        struct Bytes(Mutex<Vec<(u64, Option<u64>)>>);
+        impl ProgressObserver for Bytes {
+            fn observe(&self, event: ProgressEvent) {
+                if let ProgressEventKind::Progress {
+                    completed, total, ..
+                } = event.kind
+                {
+                    self.0.lock().unwrap().push((completed, total));
+                }
+            }
+        }
+        let dir = tempfile::tempdir().unwrap();
+        fs::write(dir.path().join("payload.bin"), b"payload").unwrap();
+        let digest = hex(&Sha256::digest(b"payload"));
+        let out = dir.path().join("out");
+        let bytes = Arc::new(Bytes(Mutex::new(Vec::new())));
+        let task = Progress::new(bytes.clone()).task("fetch");
+        let exact = FetchWatch {
+            size: Some(7),
+            task: Some(&task),
+            interrupt: None,
+        };
+        fetch_verified("payload.bin", &digest, dir.path(), &out, true, &exact).unwrap();
+        assert_eq!(bytes.0.lock().unwrap().as_slice(), [(7, Some(7))]);
+        let small = FetchWatch {
+            size: Some(6),
+            ..exact
+        };
+        let error = fetch_verified("payload.bin", &digest, dir.path(), &out, true, &small);
+        assert!(matches!(
+            error,
+            Err(InstallerError::Oversize { declared: 6, .. })
+        ));
+        assert!(!out.exists(), "an oversize download is not kept");
     }
 }

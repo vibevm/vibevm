@@ -4,9 +4,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-060#COMMAND-COVERAGE
 
 use crate::cli::{
     AgenticSubcommand, AiuiSubcommand, BinCmd, CacheSubcommand, Command, DocCommand,
-    DocShellCommand, ExtensionsCommand, McpSubcommand, PrefsSubcommand, ProgressSubcommand,
-    RegistryRemoveTarget, RegistrySubcommand, ScrapeCommand, ScrapeContractCommand, ShowSubcommand,
-    SkillSubcommand, StorageCommand, VvmSubcommand, WorkspaceSubcommand,
+    DocShellCommand, ExtensionsCommand, McpSubcommand, PrefsSubcommand, ProgressFormat,
+    ProgressSubcommand, RegistryRemoveTarget, RegistrySubcommand, ScrapeCommand,
+    ScrapeContractCommand, ShowSubcommand, SkillSubcommand, StorageCommand, VvmSubcommand,
+    WorkspaceSubcommand,
 };
 use crate::commands::facts::FactsSubcommand;
 use crate::commands::refactor::RefactorCommand;
@@ -158,6 +159,8 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | crate::cli::AppCommand::Plan { .. }
             | crate::cli::AppCommand::Steps { .. }
             | crate::cli::AppCommand::Describe { .. }
+            | crate::cli::AppCommand::Runs { .. }
+            | crate::cli::AppCommand::Errors
             | crate::cli::AppCommand::Alternatives { .. } => FastMetadata,
             crate::cli::AppCommand::Use { .. } => FiniteFallback("Command app use"),
             crate::cli::AppCommand::Run { .. } | crate::cli::AppCommand::Start { .. } => {
@@ -362,21 +365,34 @@ pub(crate) fn progress_disabled(flag: bool, environment: Option<&str>) -> bool {
     })
 }
 
+/// Resolve `--progress-format` over `VIBE_PROGRESS_FORMAT`: whether the
+/// machine renderer is selected (PROP-060 `#MACHINE-STREAM`).
+pub(crate) fn machine_format(flag: Option<ProgressFormat>, environment: Option<&str>) -> bool {
+    match flag {
+        Some(format) => format == ProgressFormat::Json,
+        None => environment.is_some_and(|value| value.trim().eq_ignore_ascii_case("json")),
+    }
+}
+
 /// Configure the invocation renderer and establish any finite fallback root.
 /// Ambient terminal/environment reads are resolved by `main` and arrive here
-/// only as values.
+/// only as values. The machine renderer replaces the human one in every
+/// output mode unless progress is explicitly disabled.
 pub(crate) fn configure_context(
     root: Context,
     command: &Command,
     verbose: bool,
     stdout_interactive: bool,
     stderr_interactive: bool,
-    disable_flag: bool,
-    disable_environment: Option<&str>,
+    disabled: bool,
+    machine: bool,
 ) -> (Context, CommandActivity) {
     let policy = policy(command, stdout_interactive);
-    let disabled = progress_disabled(disable_flag, disable_environment);
-    let root = root.with_progress(verbose, policy.progress_mode(stderr_interactive, disabled));
+    let root = if machine && !disabled {
+        root.with_machine_progress()
+    } else {
+        root.with_progress(verbose, policy.progress_mode(stderr_interactive, disabled))
+    };
     let activity = CommandActivity::start(&root, policy);
     let scoped = activity.scoped_context(&root);
     (scoped, activity)

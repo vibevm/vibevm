@@ -7,13 +7,18 @@ mod steps;
 mod sugar;
 mod template;
 mod validation;
+mod wizard;
+mod wizard_validation;
 
 pub use steps::{
     AgentMode, ArchiveFormatDecl, Condition, ExternalResult, FeatureDecl, NativeFormatDecl, Need,
-    OwnedWord, ResultDecl, StepDecl, StepKind, StepOrigin, StepPhase,
+    OwnedWord, ParamEquals, ResultDecl, StepDecl, StepKind, StepOrigin, StepPhase,
 };
 pub use sugar::{result_of, steps_of};
 pub use template::{StepVar, expand_step_template};
+pub use wizard::{
+    ChoiceDecl, LicenseDecl, ParameterDecl, ParameterType, ParameterValue, ProfileDecl,
+};
 
 use std::path::PathBuf;
 
@@ -128,6 +133,9 @@ pub struct SourceInputDecl {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<PathBuf>,
     pub sha256: String,
+    /// The declared size in bytes (`PROP-065#sizes`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub size: Option<u64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub extract: Option<bool>,
 }
@@ -205,6 +213,16 @@ pub struct InstallerOptionDecl {
     pub result: Option<ResultDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub features: Vec<FeatureDecl>,
+    /// Named feature sets (`PROP-065#profiles`); only with `steps`.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub profiles: Vec<ProfileDecl>,
+    /// Typed questions (`PROP-065#parameters`).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub parameters: Vec<ParameterDecl>,
+    /// A license the user accepts before anything is fetched
+    /// (`PROP-065#license`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub license: Option<LicenseDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub steps: Vec<StepDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -213,8 +231,8 @@ pub struct InstallerOptionDecl {
     pub public_commands: Vec<PublicCommandDecl>,
 }
 
-/// Strict package-only `[application]` metadata: the slot name and the
-/// package-wide portability default.
+/// Strict package-only `[application]` metadata: the slot name, the
+/// package-wide portability default and the application icon.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -225,6 +243,10 @@ pub struct ApplicationDecl {
         skip_serializing_if = "is_portable_default"
     )]
     pub portable: bool,
+    /// A package-relative image for the application as a whole
+    /// (`PROP-065#icon`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<PathBuf>,
 }
 
 fn portable_default() -> bool {

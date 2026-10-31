@@ -10,19 +10,25 @@ use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{StepKind, StepOrigin, StepPhase};
 
-use crate::error::{AppError, StepError};
+use vibe_core::progress::ProgressTask;
+
+use crate::error::{AppError, InstallerError, StepError};
 use crate::index::{AuthoredCommands, StepOutcome, StepRecord};
-use crate::installer::{io, source_build};
-use crate::operations::OperationContext;
+use crate::installer::{ChildIo, io, source_build};
+use crate::operations::{Command, OperationContext};
 use crate::resolve::ResolvedPackage;
 
 use super::kinds::{self, StepContext};
+use super::params::step_env_name;
 use super::plan::{Plan, PlannedStep, work_dir};
+use super::runs::{RunOutcome, RunRecord};
 use super::state::{Start, StepState, StepsFile};
 use super::template::Vars;
 
 /// The flags one run applies to every step.
 pub(crate) struct RunFlags {
+    /// The command the run record names (`PROP-065#runs`).
+    pub command: Command,
     pub start: Start,
     pub force: bool,
     /// An update re-running external steps in place: shell steps run their
@@ -43,6 +49,10 @@ pub(crate) struct Run<'a> {
     opened: bool,
     force: bool,
     update_in_place: bool,
+    command: Command,
+    record: Option<RunRecord>,
+    /// `VIBE_FEATURE_<ID>` and `VIBE_PARAM_<ID>` of every child.
+    env: Vec<(String, String)>,
 }
 
 impl<'a> Run<'a> {
@@ -147,6 +157,22 @@ impl<'a> Run<'a> {
         if flags.update_in_place && !flags.force && !shells.is_empty() && !shells.contains(&true) {
             return Err(AppError::MissingUpdate { key });
         }
+        let env = plan
+            .declared
+            .iter()
+            .map(|feature| {
+                let chosen = plan.features.contains(&feature.id);
+                (
+                    step_env_name("VIBE_FEATURE_", &feature.id),
+                    if chosen { "1" } else { "0" }.to_owned(),
+                )
+            })
+            .chain(
+                plan.parameters
+                    .iter()
+                    .map(|param| (step_env_name("VIBE_PARAM_", &param.id), param.value.clone())),
+            )
+            .collect();
         Ok(Self {
             ctx,
             resolved,
@@ -158,6 +184,9 @@ impl<'a> Run<'a> {
             opened: false,
             force: flags.force,
             update_in_place: flags.update_in_place,
+            command: flags.command,
+            record: None,
+            env,
         })
     }
 
@@ -190,14 +219,81 @@ impl<'a> Run<'a> {
             .steps
             .retain(|step| !again.contains(&step.id.as_str()));
         self.opened = true;
+        self.record = Some(RunRecord::open(
+            self.ctx.settings,
+            &self.plan.package,
+            self.command,
+            &self.plan.option,
+            Some(self.plan),
+        )?);
+        self.save()
+    }
+
+    /// Rewrite `steps.json` in the work directory and the run record.
+    fn save(&self) -> Result<(), AppError> {
+        if let Some(record) = &self.record {
+            record.steps(&self.state);
+        }
         self.state.save(&self.work)
+    }
+
+    /// Record how the run ended: done without an error, otherwise
+    /// interrupted or failed.
+    pub fn close(&mut self, error: Option<&AppError>) {
+        let outcome = match error {
+            None => RunOutcome::Done,
+            Some(AppError::Step(StepError::Interrupted { .. })) => RunOutcome::Interrupted,
+            Some(_) => RunOutcome::Failed,
+        };
+        if let Some(record) = &mut self.record {
+            record.close(outcome);
+        }
+    }
+
+    /// Stop before the next step (or placement) when an interrupt arrived
+    /// while no child was running; the step is recorded `interrupted`.
+    fn check_interrupt(&mut self, next: Option<&PlannedStep>) -> Result<(), AppError> {
+        if !self
+            .ctx
+            .interrupt
+            .is_some_and(|interrupt| interrupt.poll(None))
+        {
+            return Ok(());
+        }
+        if let Some(planned) = next {
+            self.state.record(StepState {
+                id: planned.step.id.clone(),
+                kind: planned.step.kind.name().into(),
+                outcome: StepOutcome::Interrupted,
+                reason: Some("interrupted before it started".into()),
+                started: None,
+                finished: None,
+                uninstall: AuthoredCommands::default(),
+            });
+            self.save()?;
+        }
+        Err(self.interrupted(next.map(|planned| planned.step.id.clone())))
+    }
+
+    fn interrupted(&self, step: Option<String>) -> AppError {
+        StepError::Interrupted {
+            key: self.plan.package.key(),
+            during: match &step {
+                Some(id) => format!("during step `{id}`"),
+                None => "before the payload was placed".into(),
+            },
+            step,
+            work: self.work.display().to_string(),
+        }
+        .into()
     }
 
     /// Run every `prepare` step; `app_root` is the root the installation is
     /// meant to get (`VIBE_APP_ROOT` of shell steps).
     pub fn prepare(&mut self, app_root: &Path) -> Result<(), AppError> {
         self.open()?;
-        self.phase(StepPhase::Prepare, app_root).map(|_| ())
+        self.phase(StepPhase::Prepare, app_root)?;
+        self.check_interrupt(None)
     }
 
     /// Move a non-empty `$VIBE_OUT` to `payload` (`PROP-065#result`).
@@ -225,52 +321,83 @@ impl<'a> Run<'a> {
 
     fn phase(&mut self, phase: StepPhase, app_root: &Path) -> Result<Option<AppError>, AppError> {
         let plan = self.plan;
+        let progress = self.ctx.progress;
         for (index, planned) in plan.steps.iter().enumerate() {
-            if planned.step.phase != phase || index < self.first {
+            let step = &planned.step;
+            if step.phase != phase {
                 continue;
             }
-            if let Err(error) = self.step(planned, app_root) {
-                let step = &planned.step;
-                if step.optional {
-                    continue;
+            let task = progress.task(format!("{}: {}", step.id, step.title));
+            if index < self.first {
+                task.skip("done before --resume");
+                continue;
+            }
+            if let Err(error) = self.check_interrupt(Some(planned)) {
+                task.fail("interrupted");
+                return match phase {
+                    StepPhase::Prepare => Err(error),
+                    StepPhase::Finish => Ok(Some(error)),
+                };
+            }
+            let Err(error) = self.step(planned, app_root, &task) else {
+                continue;
+            };
+            let key = plan.package.key();
+            let kind = step.kind.name();
+            if matches!(
+                error,
+                AppError::Installer(InstallerError::Interrupted { .. })
+            ) {
+                task.fail("interrupted");
+                let error = self.interrupted(Some(step.id.clone()));
+                return match phase {
+                    StepPhase::Prepare => Err(error),
+                    StepPhase::Finish => Ok(Some(error)),
+                };
+            }
+            task.fail(error.to_string());
+            if step.optional {
+                continue;
+            }
+            return match (step.origin, phase) {
+                (StepOrigin::PreInstall | StepOrigin::PostInstall, _) => Err(AppError::Hook {
+                    hook: if step.origin == StepOrigin::PreInstall {
+                        "pre_install"
+                    } else {
+                        "post_install"
+                    },
+                    key,
+                    reason: error.to_string(),
+                }),
+                (_, StepPhase::Prepare) => Err(StepError::Failed {
+                    key,
+                    step: step.id.clone(),
+                    kind,
+                    work: self.work.display().to_string(),
+                    source: Box::new(error),
                 }
-                let key = plan.package.key();
-                let kind = step.kind.name();
-                return match (step.origin, phase) {
-                    (StepOrigin::PreInstall | StepOrigin::PostInstall, _) => Err(AppError::Hook {
-                        hook: if step.origin == StepOrigin::PreInstall {
-                            "pre_install"
-                        } else {
-                            "post_install"
-                        },
-                        key,
-                        reason: error.to_string(),
-                    }),
-                    (_, StepPhase::Prepare) => Err(StepError::Failed {
+                .into()),
+                (_, StepPhase::Finish) => Ok(Some(
+                    StepError::FinishFailed {
                         key,
                         step: step.id.clone(),
                         kind,
-                        work: self.work.display().to_string(),
                         source: Box::new(error),
                     }
-                    .into()),
-                    (_, StepPhase::Finish) => Ok(Some(
-                        StepError::FinishFailed {
-                            key,
-                            step: step.id.clone(),
-                            kind,
-                            source: Box::new(error),
-                        }
-                        .into(),
-                    )),
-                };
-            }
+                    .into(),
+                )),
+            };
         }
         Ok(None)
     }
 
     /// Run or skip one step and record its outcome.
-    fn step(&mut self, planned: &PlannedStep, app_root: &Path) -> Result<(), AppError> {
+    fn step(
+        &mut self,
+        planned: &PlannedStep,
+        app_root: &Path,
+        task: &ProgressTask,
+    ) -> Result<(), AppError> {
         let step = &planned.step;
         let now = || chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
         let mut state = StepState {
@@ -283,12 +410,15 @@ impl<'a> Run<'a> {
             uninstall: AuthoredCommands::default(),
         };
         if !planned.run {
+            task.skip(planned.reason.clone().unwrap_or_default());
             self.state.record(state);
-            return self.state.save(&self.work);
+            return self.save();
         }
         state.started = Some(now());
         let settings = self.ctx.settings;
         let cache_root = settings.app_sources_cache();
+        let log = self.record.as_ref().map(|record| record.log(&step.id));
+        let ctx = self.ctx;
         let cx = StepContext {
             work: &self.work,
             package_root: &self.resolved.root,
@@ -299,32 +429,47 @@ impl<'a> Run<'a> {
                 vibe_home: settings.path(),
                 app_root: (step.phase == StepPhase::Finish).then_some(app_root),
                 features: &self.plan.features,
+                params: &self.plan.parameters,
             },
             platform: &self.plan.platform,
             arch: &self.plan.arch,
             app_root,
             phase: step.phase,
-            offline: self.ctx.offline,
-            json: self.ctx.json,
+            offline: ctx.offline,
             force: self.force,
             update_in_place: self.update_in_place,
+            io: ChildIo {
+                relay: ctx.relay(),
+                log: log.as_deref(),
+                task: Some(task),
+                interrupt: ctx.interrupt,
+            },
+            env: &self.env,
         };
         let result = kinds::run(&cx, step);
         state.finished = Some(now());
         let outcome = match result {
             Ok(uninstall) => {
+                task.finish();
                 state.outcome = StepOutcome::Done;
                 state.uninstall = uninstall;
                 Ok(())
             }
             Err(error) => {
-                state.outcome = StepOutcome::Failed;
+                state.outcome = if matches!(
+                    error,
+                    AppError::Installer(InstallerError::Interrupted { .. })
+                ) {
+                    StepOutcome::Interrupted
+                } else {
+                    StepOutcome::Failed
+                };
                 state.reason = Some(error.to_string());
                 Err(error)
             }
         };
         self.state.record(state);
-        self.state.save(&self.work)?;
+        self.save()?;
         outcome
     }
 

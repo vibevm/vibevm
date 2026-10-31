@@ -4,7 +4,7 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#plan" },
     "rustOptions": { "package": "vibe_wire::application_plan" },
     "x-rust-type": "ApplicationPlan",
-    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "features", "steps", "warnings"]
+    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "profile", "features", "parameters", "license", "downloadBytes", "unknownSizes", "steps", "warnings"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -14,11 +14,16 @@
     "arch": { "type": "string" },
     "result": { "ref": "result" },
     "features": { "elements": { "ref": "feature" }, "metadata": { "x-empty": "emit" } },
+    "parameters": { "elements": { "ref": "parameter" }, "metadata": { "x-empty": "emit" } },
+    "downloadBytes": { "ref": "byte_count" },
+    "unknownSizes": { "type": "uint32" },
     "steps": { "elements": { "ref": "step" }, "metadata": { "x-empty": "emit" } },
     "warnings": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
   },
   "optionalProperties": {
-    "appRoot": { "type": "string", "metadata": { "x-default": null } }
+    "appRoot": { "type": "string", "metadata": { "x-default": null } },
+    "profile": { "type": "string", "metadata": { "x-default": null } },
+    "license": { "ref": "license", "metadata": { "x-default": null } }
   },
   "definitions": {
     "package": {
@@ -42,12 +47,54 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "feature": {
-      "metadata": { "x-wire-order": ["id", "name", "default", "chosen"] },
+      "metadata": { "x-wire-order": ["id", "name", "default", "chosen", "parent", "implied"] },
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
         "default": { "type": "boolean" },
         "chosen": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "parent": { "type": "string", "metadata": { "x-default": null } },
+        "implied": { "ref": "implication", "metadata": { "x-default": null } }
+      }
+    },
+    "rule": {
+      "enum": ["parent", "requires", "required", "exclusive_default"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "implication": {
+      "metadata": { "x-wire-order": ["rule", "by"] },
+      "properties": {
+        "rule": { "ref": "rule" }
+      },
+      "optionalProperties": {
+        "by": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "parameter": {
+      "metadata": { "x-wire-order": ["id", "value", "secret"] },
+      "properties": {
+        "id": { "type": "string" },
+        "secret": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "value": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "license": {
+      "metadata": { "x-wire-order": ["name", "file", "accepted"] },
+      "properties": {
+        "name": { "type": "string" },
+        "file": { "type": "string" },
+        "accepted": { "type": "boolean" }
+      }
+    },
+    "byte_count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
       }
     },
     "step": {

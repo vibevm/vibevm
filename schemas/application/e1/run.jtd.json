@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "description": "The summary of one run record directory <home>/cache/app-runs/<key>/<timestamp>/: which command ran for which installation key and installer option, when, and how it ended. Rewritten when the run ends.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#runs" },
+    "rustOptions": { "package": "vibe_wire::application::e1::run" },
+    "x-rust-type": "RunRecord",
+    "x-wire-order": ["protocol", "key", "command", "option", "started", "finished", "outcome"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "key": { "type": "string" },
+    "command": { "ref": "command" },
+    "option": { "type": "string" },
+    "started": { "type": "string" },
+    "outcome": { "ref": "outcome" }
+  },
+  "optionalProperties": {
+    "finished": { "type": "string", "metadata": { "x-default": null } }
+  },
+  "definitions": {
+    "command": {
+      "enum": ["install", "update", "uninstall"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "outcome": {
+      "enum": ["running", "done", "failed", "interrupted"],
+      "metadata": { "x-vocabulary": "closed" }
+    }
+  }
+}

@@ -556,3 +556,6 @@ mod tests_steps;
 #[cfg(test)]
 #[path = "document/tests_visibility.rs"]
 mod tests_visibility;
+#[cfg(test)]
+#[path = "document/tests_wizard.rs"]
+mod tests_wizard;

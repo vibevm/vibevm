@@ -33,7 +33,7 @@ pub fn run(
     file: &Path,
     arguments: &[String],
     current_dir: &Path,
-    json: bool,
+    observe: &super::ChildIo<'_>,
 ) -> Result<(), InstallerError> {
     if !cfg!(windows) {
         return Err(InstallerError::WindowsOnly {
@@ -49,5 +49,9 @@ pub fn run(
         }
     };
     command.args(arguments).current_dir(current_dir);
-    super::run_child(&mut command, &format!("{} installer", kind.as_str()), json)
+    super::run_child(
+        &mut command,
+        &format!("{} installer", kind.as_str()),
+        observe,
+    )
 }

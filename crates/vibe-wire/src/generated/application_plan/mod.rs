@@ -24,7 +24,21 @@ pub struct ApplicationPlan {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub app_root: Option<String>,
 
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub profile: Option<String>,
+
     pub features: Vec<Feature>,
+
+    pub parameters: Vec<Parameter>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub license: Option<License>,
+
+    #[serde(rename = "downloadBytes")]
+    pub download_bytes: ByteCount,
+
+    #[serde(rename = "unknownSizes")]
+    pub unknown_sizes: u32,
 
     pub steps: Vec<Step>,
 
@@ -40,6 +54,10 @@ pub enum Action {
     Skip,
 }
 
+/// An exact non-negative byte count. JTD has no uint64 form, so generated Rust
+/// narrows the numeric form to u64.
+pub type ByteCount = u64;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Feature {
     pub id: String,
@@ -49,6 +67,29 @@ pub struct Feature {
     pub default: bool,
 
     pub chosen: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub parent: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub implied: Option<Implication>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Implication {
+    pub rule: Rule,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub by: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct License {
+    pub name: String,
+
+    pub file: String,
+
+    pub accepted: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -58,6 +99,16 @@ pub struct Package {
     pub name: String,
 
     pub version: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Parameter {
+    pub id: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub value: Option<String>,
+
+    pub secret: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -76,6 +127,21 @@ pub enum Result {
 
     #[serde(rename = "owned")]
     Owned,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Rule {
+    #[serde(rename = "exclusive_default")]
+    ExclusiveDefault,
+
+    #[serde(rename = "parent")]
+    Parent,
+
+    #[serde(rename = "required")]
+    Required,
+
+    #[serde(rename = "requires")]
+    Requires,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

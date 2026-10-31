@@ -507,3 +507,24 @@ pub fn is_command_name(value: &str) -> bool {
         .iter()
         .all(|byte| edge_ok(*byte) || matches!(byte, b'-' | b'_' | b'.' | b'+'))
 }
+
+#[cfg(test)]
+mod command_name_tests {
+    use super::is_command_name;
+
+    #[test]
+    fn toolchain_spellings_are_commands_and_ids_are_not_widened() {
+        for name in [
+            "g++",
+            "clang++",
+            "python3.12",
+            "x86_64-w64-mingw32-gcc",
+            "c++",
+        ] {
+            assert!(is_command_name(name), "{name}");
+        }
+        for name in ["", "+g", "Gcc", "a..b", "bad name", "-x", "x-"] {
+            assert!(!is_command_name(name), "{name}");
+        }
+    }
+}

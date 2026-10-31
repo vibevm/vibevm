@@ -34,6 +34,9 @@ pub struct Installation {
     pub portable: bool,
 
     pub default: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

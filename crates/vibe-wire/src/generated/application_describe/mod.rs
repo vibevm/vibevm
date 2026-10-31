@@ -22,12 +22,33 @@ pub struct Application {
     pub id: String,
 
     pub portable: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<String>,
+}
+
+/// An exact non-negative byte count. JTD has no uint64 form, so generated Rust
+/// narrows the numeric form to u64.
+pub type ByteCount = u64;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Choice {
+    pub value: String,
+
+    pub name: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Condition {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub feature: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub param: Option<String>,
+
+    #[serde(rename = "paramEquals")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub param_equals: Option<ParamEquals>,
 
     #[serde(rename = "commandPresent")]
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -59,6 +80,17 @@ pub struct Feature {
     pub description: Option<String>,
 
     pub default: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub parent: Option<String>,
+
+    pub required: bool,
+
+    pub requires: Vec<String>,
+
+    #[serde(rename = "exclusiveGroup")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub exclusive_group: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -104,8 +136,22 @@ pub struct InstallerOption {
 
     pub features: Vec<Feature>,
 
+    #[serde(rename = "defaultFeatures")]
+    pub default_features: Vec<String>,
+
+    pub profiles: Vec<Profile>,
+
+    pub parameters: Vec<Parameter>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub license: Option<License>,
+
     pub steps: Vec<Step>,
 }
+
+/// An exact signed integer. JTD has no int64 form, so generated Rust narrows
+/// the numeric form to i64.
+pub type Integer = i64;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Launcher {
@@ -133,6 +179,13 @@ pub struct Launcher {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct License {
+    pub file: String,
+
+    pub name: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Package {
     pub group: String,
 
@@ -142,12 +195,82 @@ pub struct Package {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ParamEquals {
+    pub id: String,
+
+    pub value: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Parameter {
+    pub id: String,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    #[serde(rename = "type")]
+    pub type_: ParameterType,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default: Option<String>,
+
+    pub required: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub min: Option<Integer>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub max: Option<Integer>,
+
+    pub choices: Vec<Choice>,
+
+    #[serde(rename = "mustExist")]
+    pub must_exist: bool,
+
+    pub secret: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ParameterType {
+    #[serde(rename = "bool")]
+    Bool,
+
+    #[serde(rename = "choice")]
+    Choice,
+
+    #[serde(rename = "integer")]
+    Integer,
+
+    #[serde(rename = "path")]
+    Path,
+
+    #[serde(rename = "string")]
+    String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Phase {
     #[serde(rename = "finish")]
     Finish,
 
     #[serde(rename = "prepare")]
     Prepare,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Profile {
+    pub id: String,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    pub features: Vec<String>,
+
+    pub default: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -177,6 +300,9 @@ pub struct SourceInput {
     pub path: Option<String>,
 
     pub sha256: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub size: Option<ByteCount>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub extract: Option<bool>,
@@ -217,6 +343,9 @@ pub struct Step {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sha256: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub size: Option<ByteCount>,
 
     #[serde(rename = "payloadRoot")]
     #[serde(default, skip_serializing_if = "Option::is_none")]

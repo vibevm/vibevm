@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "description": "Version 1 table of the stable error codes of the application subsystem from vibe app errors --json: each code with the error enum it belongs to, a one-line meaning and the process exit status it maps to.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#error-codes" },
+    "rustOptions": { "package": "vibe_wire::application_errors" },
+    "x-rust-type": "ApplicationErrors",
+    "x-wire-order": ["protocol", "codes"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "codes": { "elements": { "ref": "code" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "code": {
+      "metadata": { "x-wire-order": ["code", "enum", "meaning", "exit"] },
+      "properties": {
+        "code": { "type": "string" },
+        "enum": { "type": "string" },
+        "meaning": { "type": "string" },
+        "exit": { "type": "uint8" }
+      }
+    }
+  }
+}

@@ -8,8 +8,10 @@ use vibe_core::manifest::{StepVar, expand_step_template};
 
 use crate::error::{AppError, StepError};
 
-/// What `$work`, `$sources`, `$out`, `$package`, `$vibe_home`, `$app_root`
-/// and `$feature:ID` stand for.
+use super::params::ParamValue;
+
+/// What `$work`, `$sources`, `$out`, `$package`, `$vibe_home`, `$app_root`,
+/// `$feature:ID` and `$param:ID` stand for.
 pub(crate) struct Vars<'a> {
     pub work: PathBuf,
     pub package: &'a Path,
@@ -17,6 +19,7 @@ pub(crate) struct Vars<'a> {
     /// Known only to `finish` steps.
     pub app_root: Option<&'a Path>,
     pub features: &'a [String],
+    pub params: &'a [ParamValue],
 }
 
 impl<'a> Vars<'a> {
@@ -25,6 +28,7 @@ impl<'a> Vars<'a> {
         package: &'a Path,
         vibe_home: &'a Path,
         features: &'a [String],
+        params: &'a [ParamValue],
     ) -> Self {
         Self {
             work: work.to_path_buf(),
@@ -32,6 +36,7 @@ impl<'a> Vars<'a> {
             vibe_home,
             app_root: None,
             features,
+            params,
         }
     }
 }
@@ -55,6 +60,12 @@ pub(crate) fn expand(
             None => Err("`$app_root` is known only to finish steps".into()),
         },
         StepVar::Feature(id) => Ok(vars.features.iter().any(|f| f == id).to_string()),
+        StepVar::Param(id) => vars
+            .params
+            .iter()
+            .find(|param| param.id == id)
+            .map(|param| param.value.clone())
+            .ok_or_else(|| format!("parameter `{id}` has no value")),
         StepVar::Named(other) => Err(format!("unknown template variable `${other}`")),
     })
     .map_err(|reason| {

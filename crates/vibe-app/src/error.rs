@@ -223,6 +223,16 @@ pub enum InstallerError {
         #[source]
         source: std::io::Error,
     },
+    #[error(
+        "installer source `{source_ref}` is larger than its declared size of {declared} bytes; the download was stopped \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#sizes; fix: correct the declared size in the package or the published file)"
+    )]
+    Oversize { source_ref: String, declared: u64 },
+    #[error(
+        "{what} was interrupted; the signal reached the child and vibe waited for it to stop \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#cancellation; fix: rerun with --resume)"
+    )]
+    Interrupted { what: String },
 }
 
 /// Planning and running the steps of an installer option (`PROP-065`).
@@ -244,6 +254,48 @@ pub enum StepError {
          fix: pass --feature / --no-feature explicitly)"
     )]
     FeaturePrompt { reason: String },
+    #[error(
+        "profile `{profile}` is not declared by installer option `{option}`; declared: {declared} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#profiles; fix: name a declared profile with --profile)"
+    )]
+    UnknownProfile {
+        option: String,
+        profile: String,
+        declared: String,
+    },
+    #[error(
+        "the feature choice of installer option `{option}` cannot be honoured: {reason}; nothing was downloaded or run \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#feature-tree; fix: drop or change the conflicting --feature / --no-feature / --profile)"
+    )]
+    FeatureConflict { option: String, reason: String },
+    #[error(
+        "parameter `{parameter}` of installer option `{option}` is invalid: {reason}; nothing was downloaded or run \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#parameters; fix: pass a valid value with --set {parameter}=VALUE)"
+    )]
+    ParameterInvalid {
+        option: String,
+        parameter: String,
+        reason: String,
+    },
+    #[error(
+        "installing `{key}` needs acceptance of the license `{license}` ({file}); nothing was downloaded or run \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#license; fix: read the license and pass --accept-license, \
+         or accept it in an attended terminal)"
+    )]
+    LicenseRequired {
+        key: String,
+        license: String,
+        file: String,
+    },
+    #[error(
+        "the license file `{file}` of `{key}` cannot be read: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-065#license; \
+         fix: ship the declared license file in the package)"
+    )]
+    LicenseUnreadable {
+        key: String,
+        file: String,
+        reason: String,
+    },
     #[error(
         "step `{step}` of `{key}` needs `{need}`, which this host does not provide; nothing was downloaded or run \
          (violates spec://org.vibevm.core/vibevm/common/PROP-065#needs; fix: provide `{need}` and retry, or select another installer option)"
@@ -312,6 +364,17 @@ pub enum StepError {
         kind: &'static str,
         #[source]
         source: Box<AppError>,
+    },
+    #[error(
+        "the installation of `{key}` was interrupted {during}; no step is marked done by the interruption, no payload \
+         was placed and the index is unchanged; its work directory `{work}` is kept \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#cancellation; fix: rerun the same command with --resume)"
+    )]
+    Interrupted {
+        key: String,
+        during: String,
+        step: Option<String>,
+        work: String,
     },
     #[error(
         "--resume found no kept work directory `{work}` for `{key}` (violates spec://org.vibevm.core/vibevm/common/PROP-065#resume; \

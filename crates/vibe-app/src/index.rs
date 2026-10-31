@@ -96,6 +96,8 @@ pub enum StepOutcome {
     Skipped,
     Failed,
     Delegated,
+    /// Stopped by a signal (`PROP-065#cancellation`); resumable.
+    Interrupted,
 }
 
 impl StepOutcome {
@@ -105,8 +107,18 @@ impl StepOutcome {
             Self::Skipped => "skipped",
             Self::Failed => "failed",
             Self::Delegated => "delegated",
+            Self::Interrupted => "interrupted",
         }
     }
+}
+
+/// A license accepted for an installation (`PROP-065#license`).
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#license")]
+pub struct AcceptedLicense {
+    pub name: String,
+    /// RFC 3339 time of the acceptance.
+    pub accepted_at: String,
 }
 
 /// One step outcome kept with an installation, with the uninstall data a
@@ -165,6 +177,12 @@ pub struct Installation {
     pub commands: AuthoredCommands,
     /// The chosen features (`PROP-065#features`).
     pub features: Vec<String>,
+    /// Chosen parameter values, never a secret one (`PROP-065#parameters`).
+    pub parameters: BTreeMap<String, String>,
+    /// The accepted license, when the option declares one.
+    pub license: Option<AcceptedLicense>,
+    /// The package-relative application icon (`PROP-065#icon`).
+    pub icon: Option<String>,
     /// Step outcomes in step order (`PROP-065#record`).
     pub steps: Vec<StepRecord>,
 }
@@ -347,6 +365,12 @@ fn installation_to_wire(value: &Installation) -> wire::Installation {
             interpreter: value.commands.interpreter.map(interpreter_to_wire),
         },
         features: value.features.clone(),
+        parameters: value.parameters.clone(),
+        license: value.license.as_ref().map(|license| wire::AcceptedLicense {
+            name: license.name.clone(),
+            accepted_at: license.accepted_at.clone(),
+        }),
+        icon: value.icon.clone(),
         steps: value
             .steps
             .iter()
@@ -358,6 +382,7 @@ fn installation_to_wire(value: &Installation) -> wire::Installation {
                     StepOutcome::Skipped => wire::Outcome::Skipped,
                     StepOutcome::Failed => wire::Outcome::Failed,
                     StepOutcome::Delegated => wire::Outcome::Delegated,
+                    StepOutcome::Interrupted => wire::Outcome::Interrupted,
                 },
                 uninstall: step.uninstall.uninstall.clone(),
                 force_uninstall: step.uninstall.force_uninstall.clone(),
@@ -465,6 +490,12 @@ fn installation_from_wire(record: wire::Installation) -> Result<Installation, St
             interpreter: record.commands.interpreter.map(interpreter_from_wire),
         },
         features: record.features,
+        parameters: record.parameters,
+        license: record.license.map(|license| AcceptedLicense {
+            name: license.name,
+            accepted_at: license.accepted_at,
+        }),
+        icon: record.icon,
         steps: record
             .steps
             .into_iter()
@@ -476,6 +507,7 @@ fn installation_from_wire(record: wire::Installation) -> Result<Installation, St
                     wire::Outcome::Skipped => StepOutcome::Skipped,
                     wire::Outcome::Failed => StepOutcome::Failed,
                     wire::Outcome::Delegated => StepOutcome::Delegated,
+                    wire::Outcome::Interrupted => StepOutcome::Interrupted,
                 },
                 uninstall: AuthoredCommands {
                     uninstall: step.uninstall,

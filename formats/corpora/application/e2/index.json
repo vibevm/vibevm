@@ -43,6 +43,9 @@
         "interpreter": "posix_sh"
       },
       "features": ["docs"],
+      "parameters": { "port": "8080" },
+      "license": { "name": "Demo", "acceptedAt": "2026-10-31T00:00:00Z" },
+      "icon": "share/icon.png",
       "steps": [
         { "id": "install", "kind": "shell", "outcome": "done" },
         {

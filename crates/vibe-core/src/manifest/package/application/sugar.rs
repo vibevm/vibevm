@@ -194,6 +194,7 @@ fn archive(
             format,
             source: source.into(),
             sha256: sha256.into(),
+            size: None,
             payload_root: payload_root.clone(),
         },
     )

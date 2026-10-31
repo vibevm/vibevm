@@ -22,6 +22,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#library-first");
 
 mod alternatives;
+mod codes;
 mod describe;
 mod error;
 mod fs_util;
@@ -40,14 +41,16 @@ mod storage;
 pub use alternatives::{
     DefaultChange, listing as alternatives_listing, reserved_commands, set_default,
 };
+pub use codes::{ErrorClass, ErrorCode, error_codes};
 pub use describe::describe;
 pub use error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,
 };
 pub use index::{
-    AuthoredCommands, INDEX_PROTOCOL, Index, Installation, Location, Method, PackageCoordinate,
-    StepOutcome, StepRecord,
+    AcceptedLicense, AuthoredCommands, INDEX_PROTOCOL, Index, Installation, Location, Method,
+    PackageCoordinate, StepOutcome, StepRecord,
 };
+pub use installer::Interrupt;
 pub use launch::{
     LaunchRequest, ResolvedLauncher, TemplateVars, app_root, exit_code, expand_template,
     listing as launcher_listing, resolve as resolve_launcher, run as run_launcher,
@@ -65,7 +68,11 @@ pub use select::{
 };
 pub use session::{SESSION_VARIABLE, SessionChoices};
 pub use settings::{MutationLock, PROJECT_HOME, SettingsRoot};
-pub use steps::{FeatureChooser, FeatureRequest, HostFacts, Plan, PlannedStep, Start};
+pub use steps::{
+    FeatureChooser, FeatureRequest, FeatureResolution, HostFacts, Implied, ImpliedRule,
+    LicensePrompt, ParamValue, ParameterPrompt, Plan, PlanLicense, PlannedStep, Start, prune_runs,
+    resolve_features, runs, step_env_name,
+};
 pub use storage::{
     Availability, DEFAULT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker, Moved, Storage,
     StorageConfig, add as storage_add, attach as storage_attach, create_library,

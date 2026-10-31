@@ -13,9 +13,13 @@ use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use crate::cli::AgentModeArg;
 
+mod machine;
 mod progress;
+mod structured;
+use machine::MachineRenderer;
 use progress::ProgressRenderer;
 pub(crate) use progress::{ProgressMode, sanitize_progress_text};
+pub(crate) use structured::app_error;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Mode {
@@ -180,6 +184,8 @@ pub struct Context {
     /// The one renderer for this invocation. Kept beside `progress` so
     /// ordinary output and prompts can suspend interactive bars safely.
     progress_renderer: Option<Arc<ProgressRenderer>>,
+    /// `--progress-format json`: `progress` feeds the machine renderer.
+    machine_progress: bool,
     pub(crate) agent_user_dirs: vibe_agent_projection::agents::AgentUserDirectories,
     /// Detailed rendering policy belongs only to the CLI composition root.
     #[cfg(test)]
@@ -220,6 +226,7 @@ impl Context {
             agent_mode,
             progress: Progress::default(),
             progress_renderer: None,
+            machine_progress: false,
             agent_user_dirs: vibe_agent_projection::agents::AgentUserDirectories::ambient(),
             #[cfg(test)]
             verbose: false,
@@ -245,6 +252,22 @@ impl Context {
         self
     }
 
+    /// Selects the machine renderer (PROP-060 `#MACHINE-STREAM`) in every
+    /// output mode; nothing suspends it and it never writes stdout.
+    pub fn with_machine_progress(mut self) -> Self {
+        if !self.suppress_output {
+            self.progress = Progress::new(Arc::new(MachineRenderer::stderr()));
+            self.progress_renderer = None;
+            self.machine_progress = true;
+        }
+        self
+    }
+
+    /// Whether observations go to the machine renderer.
+    pub fn is_machine_progress(&self) -> bool {
+        self.machine_progress
+    }
+
     /// Returns the current progress scope for explicitly threaded library
     /// work. Cloning it is an `Arc` clone.
     pub fn progress(&self) -> Progress {
@@ -255,7 +278,7 @@ impl Context {
     /// Rendering policy stays invocation-owned and is not reconstructed.
     pub fn with_progress_scope(&self, progress: Progress) -> Self {
         let mut scoped = self.clone();
-        scoped.progress = if scoped.progress_renderer.is_some() {
+        scoped.progress = if scoped.progress_renderer.is_some() || scoped.machine_progress {
             progress
         } else {
             Progress::default()
@@ -285,6 +308,7 @@ impl Context {
         child.suppress_output = true;
         child.progress = Progress::default();
         child.progress_renderer = None;
+        child.machine_progress = false;
         child
     }
 
@@ -476,68 +500,10 @@ impl Context {
                     "ok": false,
                     "error": format!("{err:#}"),
                 });
-                self.stamp_structured_error(&mut payload, err);
+                structured::stamp_structured_error(&mut payload, err);
                 self.stamp_invoked_by(&mut payload);
                 self.stamp_unattended(&mut payload);
                 self.suspend_progress(|| eprintln!("{payload}"));
-            }
-        }
-    }
-
-    /// When the anyhow chain carries a known structured error variant,
-    /// surface its fields as machine-readable extras alongside the
-    /// stringified `error` field. Today the only well-known variant is
-    /// `DepProviderError::AggregateNotFound` (registry walk-failure
-    /// with per-registry `attempts`); future structured variants
-    /// extend this match. JSON consumers (CI, monitoring pipelines)
-    /// can branch on `error_kind` and read `attempts` without parsing
-    /// the prose.
-    fn stamp_structured_error(&self, payload: &mut Value, err: &anyhow::Error) {
-        // Walk the anyhow chain looking for a known structured error
-        // variant. Today the only match is
-        // `DepProviderError::AggregateNotFound` (registry walk
-        // failure with per-registry attempts), but it can be reached
-        // through two surfaces:
-        //
-        //   - directly as a `DepProviderError` (some call sites
-        //     return it without a `SolveError` wrapper);
-        //   - wrapped in `SolveError::Provider(...)` when the
-        //     depsolver propagates it. `#[error(transparent)]` on
-        //     that variant forwards Display but, in practice,
-        //     anyhow's `chain()` does NOT walk through the wrapper
-        //     to the inner — so we destructure manually here rather
-        //     than rely on chain depth.
-        for cause in err.chain() {
-            let candidate: Option<&vibe_resolver::DepProviderError> =
-                if let Some(d) = cause.downcast_ref::<vibe_resolver::DepProviderError>() {
-                    Some(d)
-                } else if let Some(vibe_resolver::SolveError::Provider(d)) =
-                    cause.downcast_ref::<vibe_resolver::SolveError>()
-                {
-                    Some(d)
-                } else {
-                    None
-                };
-            let Some(provider_err) = candidate else {
-                continue;
-            };
-            if let vibe_resolver::DepProviderError::AggregateNotFound {
-                group,
-                name,
-                attempts,
-                ..
-            } = provider_err
-                && let Value::Object(map) = payload
-            {
-                map.entry("error_kind".to_string())
-                    .or_insert_with(|| Value::String("package_not_found_everywhere".into()));
-                map.entry("package".to_string()).or_insert_with(
-                    || serde_json::json!({ "group": group.as_str(), "name": name }),
-                );
-                if let Ok(serialised) = serde_json::to_value(attempts) {
-                    map.entry("attempts".to_string()).or_insert(serialised);
-                }
-                return;
             }
         }
     }
