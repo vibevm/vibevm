@@ -147,7 +147,7 @@ pub(crate) fn choose_mirror(
         let items = Mirror::ALL.map(|m| m.as_str());
         let pick = ctx
             .suspend_progress(|| {
-                Select::new()
+                Select::with_theme(&crate::output::prompt_theme())
                     .with_prompt("Source mirror")
                     .items(items)
                     .default(0)

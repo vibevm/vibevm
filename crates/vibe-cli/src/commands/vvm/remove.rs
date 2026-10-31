@@ -506,7 +506,7 @@ fn pick_ids(ctx: &output::Context, state: &model::State) -> Result<Vec<VersionId
         "no version selected: pass a selector (e.g. `vibe self remove tag:1.2.3`) or `--all`",
     )?;
     let labels: Vec<String> = ids.iter().map(|i| i.to_string()).collect();
-    let chosen = MultiSelect::new()
+    let chosen = MultiSelect::with_theme(&crate::output::prompt_theme())
         .with_prompt("Select versions to remove (space toggles, enter confirms)")
         .items(&labels)
         .interact()

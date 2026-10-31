@@ -100,7 +100,7 @@ impl ConfirmGate for CliConfirmGate<'_> {
         let approved = self
             .ctx
             .suspend_progress(|| {
-                Confirm::new()
+                Confirm::with_theme(&crate::output::prompt_theme())
                     .with_prompt(self.project_prompt(packages))
                     .default(false)
                     .interact()

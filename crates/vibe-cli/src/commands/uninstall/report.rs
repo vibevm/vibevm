@@ -33,7 +33,7 @@ pub(super) fn handle_adoption_facts(
         .replace('\\', "/");
     let remove = if interactive && !assume_yes {
         ctx.suspend_progress(|| {
-            Confirm::new()
+            Confirm::with_theme(&crate::output::prompt_theme())
                 .with_prompt(format!("Remove its adoption facts ({display})?"))
                 .default(false)
                 .interact()

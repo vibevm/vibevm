@@ -127,7 +127,7 @@ pub(super) fn choose_launcher(listing: &Value, ctx: &output::Context) -> Result<
         .iter()
         .position(|(_, _, status, _)| status == "available")
         .ok_or_else(|| anyhow::anyhow!("launcher_unavailable: no available launchers"))?;
-    let selected = Select::new()
+    let selected = Select::with_theme(&crate::output::prompt_theme())
         .with_prompt("Select application launcher")
         .items(&labels)
         .default(first_available)

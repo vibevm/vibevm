@@ -11,9 +11,81 @@ use vibe_core::manifest::{InstallerOptionDecl, steps_of};
 
 use crate::error::ResolveError;
 
+/// One row of an attended question: the parts a surface may align into
+/// columns, and the flat one-line spelling every other surface reads.
+///
+/// The library builds the parts and never the presentation: a terminal
+/// adapter aligns them, a test or a plain terminal takes [`Choice::label`].
+///
+/// ```
+/// use vibe_app::Choice;
+///
+/// let host = Choice {
+///     name: "Windows".into(),
+///     id: Some("windows".into()),
+///     detected: true,
+///     ..Choice::default()
+/// };
+/// assert_eq!(host.label(), "Windows (windows)  [detected]");
+///
+/// let nested = Choice {
+///     name: "Plugins".into(),
+///     id: Some("plugins".into()),
+///     description: Some("the bundled plugin set".into()),
+///     depth: 1,
+///     ..Choice::default()
+/// };
+/// assert_eq!(nested.label(), "  Plugins (plugins) — the bundled plugin set");
+/// ```
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options")]
+pub struct Choice {
+    /// The human name — the leading column of an aligned row.
+    pub name: String,
+    /// The stable id behind the name; a setup profile and the
+    /// choose-the-features-one-by-one row carry none.
+    pub id: Option<String>,
+    /// One sentence about the row.
+    pub description: Option<String>,
+    /// Whether this row is what the host was detected to be.
+    pub detected: bool,
+    /// Nesting depth inside a tree question; indents the name.
+    pub depth: usize,
+}
+
+impl Choice {
+    /// A row that is only a name and an id.
+    ///
+    /// ```
+    /// assert_eq!(vibe_app::Choice::named("MSI", "msi").label(), "MSI (msi)");
+    /// ```
+    pub fn named(name: &str, id: &str) -> Self {
+        Self {
+            name: name.into(),
+            id: Some(id.into()),
+            ..Self::default()
+        }
+    }
+
+    /// The flat spelling of the row, with every part it carries.
+    pub fn label(&self) -> String {
+        let mut label = format!("{}{}", "  ".repeat(self.depth), self.name);
+        if let Some(id) = &self.id {
+            label.push_str(&format!(" ({id})"));
+        }
+        if self.detected {
+            label.push_str("  [detected]");
+        }
+        if let Some(description) = &self.description {
+            label.push_str(&format!(" — {description}"));
+        }
+        label
+    }
+}
+
 /// An attended-terminal prompt: show `items` under `prompt`, return the
 /// chosen index or `None` when the user cancels.
-pub type Chooser<'a> = &'a dyn Fn(&str, &[String]) -> Result<Option<usize>, String>;
+pub type Chooser<'a> = &'a dyn Fn(&str, &[Choice]) -> Result<Option<usize>, String>;
 
 /// The explicit flags of one selection; absent values are auto-detected or
 /// asked through the chooser.
@@ -58,7 +130,7 @@ fn arch_label(options: &[InstallerOptionDecl], platform: &str, arch: &str) -> St
 fn ask(
     chooser: Chooser<'_>,
     prompt: &str,
-    items: &[String],
+    items: &[Choice],
     what: &'static str,
 ) -> Result<usize, ResolveError> {
     chooser(prompt, items)
@@ -72,7 +144,7 @@ fn ordered(
     ids: Vec<String>,
     detected: Option<&str>,
     label: impl Fn(&str) -> String,
-) -> (Vec<String>, Vec<String>) {
+) -> (Vec<String>, Vec<Choice>) {
     let mut ids = ids;
     if let Some(detected) = detected
         && let Some(position) = ids.iter().position(|id| id == detected)
@@ -80,17 +152,16 @@ fn ordered(
         let id = ids.remove(position);
         ids.insert(0, id);
     }
-    let labels = ids
+    let choices = ids
         .iter()
-        .map(|id| {
-            if Some(id.as_str()) == detected {
-                format!("{} ({id})  [detected]", label(id))
-            } else {
-                format!("{} ({id})", label(id))
-            }
+        .map(|id| Choice {
+            name: label(id),
+            id: Some(id.clone()),
+            detected: Some(id.as_str()) == detected,
+            ..Choice::default()
         })
         .collect();
-    (ids, labels)
+    (ids, choices)
 }
 
 /// Select exactly one installer option: platform, then architecture, then
@@ -145,10 +216,10 @@ pub fn select_option(
     let platform = match (&choice.platform, chooser) {
         (Some(platform), _) => platform.clone(),
         (None, Some(chooser)) => {
-            let (ids, labels) = ordered(platforms.clone(), detected, |id| {
+            let (ids, choices) = ordered(platforms.clone(), detected, |id| {
                 platform_label(options, id)
             });
-            let index = ask(chooser, "Platform", &labels, "platform")?;
+            let index = ask(chooser, "Platform", &choices, "platform")?;
             ids[index].clone()
         }
         (None, None) => detected
@@ -176,11 +247,11 @@ pub fn select_option(
     let arch = match (&choice.arch, chooser) {
         (Some(arch), _) => arch.clone(),
         (None, Some(chooser)) => {
-            let (ids, labels) = ordered(arches.clone(), host_arch, |id| {
+            let (ids, choices) = ordered(arches.clone(), host_arch, |id| {
                 arch_label(options, &platform, id)
             });
             let prompt = format!("Architecture ({platform})");
-            let index = ask(chooser, &prompt, &labels, "architecture")?;
+            let index = ask(chooser, &prompt, &choices, "architecture")?;
             ids[index].clone()
         }
         (None, None) => host_arch
@@ -220,12 +291,12 @@ pub fn select_option(
                 choices: ids(many),
             }),
             Some(chooser) => {
-                let labels: Vec<String> = many
+                let choices: Vec<Choice> = many
                     .iter()
-                    .map(|option| format!("{} ({})", option.name, option.id))
+                    .map(|option| Choice::named(&option.name, &option.id))
                     .collect();
                 let prompt = format!("Installer ({platform}/{arch})");
-                let index = ask(chooser, &prompt, &labels, "installer")?;
+                let index = ask(chooser, &prompt, &choices, "installer")?;
                 Ok(many[index].clone())
             }
         },
@@ -430,7 +501,7 @@ mod tests {
             option("other", platform, "zz-cpu"),
         ];
         let prompts = std::cell::RefCell::new(Vec::new());
-        let chooser = |prompt: &str, items: &[String]| -> Result<Option<usize>, String> {
+        let chooser = |prompt: &str, items: &[Choice]| -> Result<Option<usize>, String> {
             prompts
                 .borrow_mut()
                 .push((prompt.to_owned(), items.to_vec()));
@@ -439,9 +510,10 @@ mod tests {
         let selected = select_option(&options, &InstallChoice::default(), Some(&chooser)).unwrap();
         assert_eq!(selected.id, "host");
         let prompts = prompts.borrow();
-        assert!(prompts[0].1[0].ends_with("[detected]"));
-        assert!(prompts[1].1[0].ends_with("[detected]"));
-        let cancel = |_: &str, _: &[String]| -> Result<Option<usize>, String> { Ok(None) };
+        assert!(prompts[0].1[0].detected);
+        assert!(prompts[0].1[0].label().ends_with("[detected]"));
+        assert!(prompts[1].1[0].label().ends_with("[detected]"));
+        let cancel = |_: &str, _: &[Choice]| -> Result<Option<usize>, String> { Ok(None) };
         assert!(matches!(
             select_option(&options, &InstallChoice::default(), Some(&cancel)),
             Err(ResolveError::Cancelled { what: "platform" })

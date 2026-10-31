@@ -6,18 +6,17 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use dialoguer::{Confirm, Input, MultiSelect, Password, Select};
 use vibe_app::{
     FeatureRequest, HostFacts, InstallChoice, InstallRequest, Interrupt, OperationContext, Plan,
     RemoveRequest, ResolvedPackage, SettingsRoot, Start, UserEnvironment,
 };
-use vibe_core::manifest::{ParameterDecl, ParameterType};
 use vibe_core::progress::Progress;
 
 use super::agents::{AgentSetup, report_parked};
 use super::display::{StepDisplay, asking};
 use super::interrupt::Signals;
 use super::report::{render, render_removal};
+use super::wizard::{chooser, feature_chooser, license_prompt, parameter_prompt};
 use crate::cli::{AppChoiceArgs, AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
 
@@ -96,105 +95,8 @@ impl Packages {
     }
 }
 
-pub(super) fn chooser(
-    prompt: &str,
-    items: &[String],
-) -> std::result::Result<Option<usize>, String> {
-    asking(|| {
-        Select::new()
-            .with_prompt(prompt)
-            .items(items)
-            .default(0)
-            .interact_opt()
-            .map_err(|error| error.to_string())
-    })
-}
-
 pub(super) fn attended(ctx: &output::Context) -> bool {
     !ctx.is_json() && !ctx.is_unattended() && console::user_attended()
-}
-
-fn feature_chooser(
-    prompt: &str,
-    items: &[String],
-    defaults: &[bool],
-) -> std::result::Result<Option<Vec<usize>>, String> {
-    asking(|| {
-        MultiSelect::new()
-            .with_prompt(prompt)
-            .items(items)
-            .defaults(defaults)
-            .interact_opt()
-            .map_err(|error| error.to_string())
-    })
-}
-
-/// A typed parameter question (PROP-065 `#parameters`): a confirmation, a
-/// list, a hidden entry for a secret, otherwise a line of text.
-fn parameter_prompt(
-    parameter: &ParameterDecl,
-    preset: Option<&str>,
-) -> std::result::Result<Option<String>, String> {
-    let label = match &parameter.description {
-        Some(text) => format!("{} ({}) — {text}", parameter.name, parameter.id),
-        None => format!("{} ({})", parameter.name, parameter.id),
-    };
-    let failed = |error: dialoguer::Error| error.to_string();
-    asking(|| match parameter.kind {
-        ParameterType::Bool => Confirm::new()
-            .with_prompt(label)
-            .default(preset == Some("true"))
-            .interact_opt()
-            .map(|answer| answer.map(|yes| yes.to_string()))
-            .map_err(failed),
-        ParameterType::Choice => {
-            let names: Vec<&str> = parameter.choices.iter().map(|c| c.name.as_str()).collect();
-            let default = parameter
-                .choices
-                .iter()
-                .position(|choice| Some(choice.value.as_str()) == preset)
-                .unwrap_or(0);
-            Select::new()
-                .with_prompt(label)
-                .items(&names)
-                .default(default)
-                .interact_opt()
-                .map(|picked| {
-                    picked
-                        .and_then(|i| parameter.choices.get(i))
-                        .map(|c| c.value.clone())
-                })
-                .map_err(failed)
-        }
-        _ if parameter.secret => Password::new()
-            .with_prompt(label)
-            .allow_empty_password(!parameter.required)
-            .interact()
-            .map(|text| Some(text).filter(|text| !text.is_empty()))
-            .map_err(failed),
-        _ => {
-            let mut input = Input::<String>::new().with_prompt(label).allow_empty(true);
-            if let Some(preset) = preset {
-                input = input.default(preset.to_owned());
-            }
-            input
-                .interact_text()
-                .map(|text| Some(text).filter(|text| !text.is_empty()))
-                .map_err(failed)
-        }
-    })
-}
-
-/// Show the license text, then ask (PROP-065 `#license`).
-fn license_prompt(name: &str, text: &str) -> std::result::Result<bool, String> {
-    asking(|| {
-        eprintln!("{text}");
-        Confirm::new()
-            .with_prompt(format!("Accept the license `{name}`?"))
-            .default(false)
-            .interact()
-            .map_err(|error| error.to_string())
-    })
 }
 
 /// PATH and environment facts for step conditions and needs.

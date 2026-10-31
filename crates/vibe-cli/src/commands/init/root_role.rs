@@ -111,7 +111,7 @@ impl IdentityDialogue for TerminalIdentity<'_> {
     }
 
     fn role(&mut self) -> Result<InitType> {
-        let selected = Select::new()
+        let selected = Select::with_theme(&crate::output::prompt_theme())
             .with_prompt("Root declaration")
             .items(["project", "package"])
             .default(0)

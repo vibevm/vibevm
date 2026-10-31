@@ -23,6 +23,7 @@ pub(crate) mod project;
 mod records;
 mod report;
 mod views;
+mod wizard;
 
 use launch::{launcher_listing, run_launcher};
 use views::{print_installers, print_list, print_listing};

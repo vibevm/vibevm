@@ -101,7 +101,8 @@ pub use resolve::{
     qualified_ref,
 };
 pub use select::{
-    Chooser, InstallChoice, detected_arch, detected_platform, options_listing, select_option,
+    Choice, Chooser, InstallChoice, detected_arch, detected_platform, options_listing,
+    select_option,
 };
 pub use session::{SESSION_VARIABLE, SessionChoices};
 pub use settings::{MutationLock, PROJECT_HOME, SettingsRoot};

@@ -123,7 +123,7 @@ pub(super) fn confirm(ctx: &output::Context, args: &ReinstallArgs, prompt: &str)
              non-interactively"
         );
     }
-    Confirm::new()
+    Confirm::with_theme(&crate::output::prompt_theme())
         .with_prompt(prompt)
         .default(false)
         .interact()

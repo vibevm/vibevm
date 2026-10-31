@@ -562,7 +562,7 @@ fn confirm(ctx: &output::Context, yes: bool, prompt: &str) -> Result<bool, VvmEr
             detail: "no TTY for confirmation; pass `--yes` to proceed unattended".to_string(),
         });
     }
-    Ok(Confirm::new()
+    Ok(Confirm::with_theme(&crate::output::prompt_theme())
         .with_prompt(prompt)
         .default(true)
         .interact()
