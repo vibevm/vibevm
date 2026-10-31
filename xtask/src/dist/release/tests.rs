@@ -565,3 +565,32 @@ fn finalize_downloads_and_verifies_all_target_assets() {
 
 #[path = "tests/concurrency.rs"]
 mod concurrency;
+
+#[test]
+fn a_manifest_reads_back_equal_whatever_order_its_components_were_pushed_in() {
+    // The bundle writer pushes `vibe`, `vibe-index`, `vibe-app-proxy`; the
+    // wire form sorts by name. Both sides must agree, or the writer refuses
+    // its own ZIP (the 1.0.8 release run).
+    let (fragment, _, _, _) = platform("x86_64-unknown-linux-gnu");
+    let canonical = fragment.bundle.clone();
+    let mut reversed = canonical.components.clone();
+    reversed.reverse();
+    let rebuilt = BundleDistributionManifest::new(
+        Version::parse(&canonical.version).unwrap(),
+        canonical.source_commit.clone(),
+        canonical.target.clone(),
+        reversed,
+        canonical.source_archive.clone(),
+    )
+    .unwrap();
+    assert_eq!(rebuilt, canonical);
+    let read_back =
+        BundleDistributionManifest::from_json_slice(&rebuilt.to_json_bytes().unwrap()).unwrap();
+    assert_eq!(read_back, rebuilt);
+    let names: Vec<&str> = read_back
+        .components
+        .iter()
+        .map(|component| component.name.as_str())
+        .collect();
+    assert_eq!(names, ["vibe", "vibe-app-proxy", "vibe-index"]);
+}

@@ -99,6 +99,12 @@ impl BundleDistributionManifest {
         source_archive: DistributionSourceArchive,
     ) -> Result<Self, ReleaseManifestError> {
         let version = version.to_string();
+        // The constructed value is canonical: components in the order the
+        // wire form writes them, so a manifest read back from its own JSON
+        // compares equal to the one that produced it whatever order the
+        // caller pushed the components in.
+        let mut components = components;
+        components.sort_by_key(|component| component_sort_key(&component.name));
         let manifest = Self {
             schema_version: DISTRIBUTION_SCHEMA_VERSION,
             product: DISTRIBUTION_PRODUCT.to_string(),
