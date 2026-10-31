@@ -9,6 +9,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 pub mod activation_conflict;
+pub mod application_icons;
 pub mod boot_directory;
 pub mod bridge_provenance;
 pub mod doc_media;
@@ -30,6 +31,7 @@ pub mod wal_freshness;
 pub mod wal_wellformed;
 
 pub use activation_conflict::ActivationConflictCheck;
+pub use application_icons::ApplicationIconsCheck;
 pub use boot_directory::BootDirectoryCheck;
 pub use bridge_provenance::BridgeProvenanceCheck;
 pub use doc_media::DocMediaCheck;

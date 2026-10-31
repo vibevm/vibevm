@@ -76,6 +76,30 @@ pub enum EnvOp {
     Unset,
 }
 
+/// An icon set of PROP-059#menu: path templates by slot, rasters keyed by
+/// decimal pixel size.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct IconSet {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub svg: Option<String>,
+
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub png: BTreeMap<String, String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ico: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icns: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub symbolic: Option<String>,
+
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub maskable: bool,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Installation {
@@ -121,6 +145,20 @@ pub struct Installation {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub icon: Option<String>,
+
+    #[serde(rename = "iconSet")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon_set: Option<IconSet>,
+
+    #[serde(rename = "menuGroup")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub menu_group: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub categories: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub keywords: Vec<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub steps: Vec<StepRecord>,
@@ -192,12 +230,96 @@ pub struct Launcher {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub working_directory: Option<String>,
 
+    /// The short-form icon path; absent when the launcher has an icon set.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub icon: Option<String>,
+
+    #[serde(rename = "iconSet")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon_set: Option<IconSet>,
 
     pub terminal: bool,
 
     pub default: bool,
+
+    /// Absent in a record written before kinds existed: read as tui when
+    /// terminal, otherwise gui.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kind: Option<LauncherKind>,
+
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub menu: bool,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub categories: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub keywords: Vec<String>,
+
+    #[serde(rename = "genericName")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub generic_name: Option<String>,
+
+    #[serde(rename = "windowClass")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub window_class: Option<String>,
+
+    #[serde(rename = "mimeTypes")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub mime_types: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub names: BTreeMap<String, String>,
+
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub descriptions: BTreeMap<String, String>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub actions: Vec<LauncherAction>,
+
+    /// authored, or desktop-entry for a launcher derived through launchers_from
+    /// (PROP-059#desktop-entries); absent means authored.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source: Option<LauncherSource>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LauncherAction {
+    pub id: String,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub args: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<String>,
+
+    #[serde(rename = "iconSet")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon_set: Option<IconSet>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum LauncherKind {
+    #[serde(rename = "command")]
+    Command,
+
+    #[serde(rename = "gui")]
+    Gui,
+
+    #[serde(rename = "tui")]
+    Tui,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum LauncherSource {
+    #[serde(rename = "authored")]
+    Authored,
+
+    #[serde(rename = "desktop-entry")]
+    DesktopEntry,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

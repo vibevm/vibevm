@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "description": "Version 1 answer of vibe app icon PACKAGE [--launcher ID] --size N [--prefer SLOT] --json: the best existing icon file for that size, never rasterised (PROP-059#menu).",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#menu"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_icon"
+    }
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "package": {
+      "ref": "package_identity"
+    },
+    "launcher": {
+      "type": "string",
+      "nullable": true
+    },
+    "requested_size": {
+      "type": "uint32"
+    },
+    "prefer": {
+      "ref": "icon_slot",
+      "nullable": true
+    },
+    "slot": {
+      "ref": "icon_slot"
+    },
+    "size": {
+      "type": "uint32",
+      "nullable": true
+    },
+    "path": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "package_identity": {
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "icon_slot": {
+      "enum": [
+        "svg",
+        "png",
+        "ico",
+        "icns",
+        "symbolic"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  }
+}

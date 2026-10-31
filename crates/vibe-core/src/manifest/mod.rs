@@ -58,12 +58,14 @@ pub use mechanism::{
     ProviderPin, ProviderPinParseError, is_command_name, is_portable_token,
 };
 pub use package::application::{
-    AgentMode, ArchiveFormatDecl, ChoiceDecl, Condition, ExternalResult, FeatureDecl,
-    InstallerMethod, InstallerOptionDecl, LauncherDecl, LicenseDecl, NativeFormatDecl, Need,
-    OwnedWord, ParamEquals, ParameterDecl, ParameterType, ParameterValue, ProfileDecl,
-    PublicCommandDecl, RecipeDecl, RequirementDecl, RequirementScope, RequirementTable, ResultDecl,
-    ShellInterpreter, SourceInputDecl, StepDecl, StepKind, StepOrigin, StepPhase, StepVar,
-    application_requirements, expand_step_template, result_of, steps_of,
+    ARG_PLACEHOLDERS, AgentMode, ArchiveFormatDecl, ChoiceDecl, Condition, ExternalResult,
+    FeatureDecl, IconDecl, IconFinding, IconSet, IconSlot, InstallerMethod, InstallerOptionDecl,
+    LauncherActionDecl, LauncherDecl, LauncherKind, LauncherSource, LicenseDecl, MENU_CATEGORIES,
+    NativeFormatDecl, Need, OwnedWord, ParamEquals, ParameterDecl, ParameterType, ParameterValue,
+    ProfileDecl, PublicCommandDecl, RecipeDecl, RequirementDecl, RequirementScope,
+    RequirementTable, ResultDecl, ShellInterpreter, SourceInputDecl, StepDecl, StepKind,
+    StepOrigin, StepPhase, StepVar, application_requirements, expand_step_template, icon_findings,
+    png_dimensions, result_of, steps_of,
 };
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, Authorship, BinaryDecl,

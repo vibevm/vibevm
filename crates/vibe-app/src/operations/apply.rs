@@ -11,11 +11,13 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#result");
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 
-use vibe_core::manifest::{InstallerMethod, InstallerOptionDecl};
+use vibe_core::manifest::{InstallerMethod, InstallerOptionDecl, LauncherDecl};
 
 use crate::agents::AgentError;
 use crate::error::AppError;
-use crate::index::{AcceptedLicense, AuthoredCommands, Installation, Lifecycle, Location, Method};
+use crate::index::{
+    AcceptedLicense, ApplicationMenu, AuthoredCommands, Installation, Lifecycle, Location, Method,
+};
 use crate::installer;
 use crate::resolve::{ResolvedPackage, strip_verbatim};
 use crate::steps::{Plan, Run, RunFlags, Start, StepPaths};
@@ -88,21 +90,25 @@ pub(super) fn apply(
         },
     )?;
     run.admit_agents()?;
+    let derive = |root: &Path| installed_launchers(ctx, selected, root);
     let placed = match plan.result.external_root() {
-        None => place_owned(storage, selected, &mut run),
-        Some(template) => run_external(ctx, selected, template, &mut run).map(|(root, failure)| {
-            (
-                Location::External { app_root: root },
-                retired_owned(storage, selected.prior),
-                failure,
-            )
-        }),
+        None => place_owned(storage, selected, &mut run, &derive),
+        Some(template) => run_external(ctx, selected, template, &mut run, &derive).map(
+            |(root, failure, launchers)| {
+                (
+                    Location::External { app_root: root },
+                    retired_owned(storage, selected.prior),
+                    failure,
+                    launchers,
+                )
+            },
+        ),
     };
     run.close(match &placed {
-        Ok((_, _, None)) => None,
-        Ok((_, _, Some(failure))) | Err(failure) => Some(failure),
+        Ok((_, _, None, _)) => None,
+        Ok((_, _, Some(failure), _)) | Err(failure) => Some(failure),
     });
-    let (location, mut retired, finish_failure) = placed?;
+    let (location, mut retired, finish_failure, launchers) = placed?;
     // A parked finish step keeps the work directory for `--resume`.
     if !matches!(finish_failure, Some(AppError::Agent(AgentError::Parked(_)))) {
         retired.push(run.work().to_path_buf());
@@ -159,7 +165,7 @@ pub(super) fn apply(
                 && selected.resolved.application.portable
                 && option.portable.unwrap_or(true),
             location,
-            launchers: option.launchers.clone(),
+            launchers,
             public_commands: option.public_commands.clone(),
             commands,
             features: plan.features.clone(),
@@ -180,12 +186,12 @@ pub(super) fn apply(
                         .to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
                 })
             }),
-            icon: selected
-                .resolved
-                .application
-                .icon
-                .as_ref()
-                .map(|icon| icon.to_string_lossy().into_owned()),
+            icon: selected.resolved.application.icon.clone(),
+            menu: ApplicationMenu {
+                menu_group: selected.resolved.application.menu_group.clone(),
+                categories: selected.resolved.application.categories.clone(),
+                keywords: selected.resolved.application.keywords.clone(),
+            },
             steps,
             lifecycle: Lifecycle {
                 env,
@@ -197,7 +203,46 @@ pub(super) fn apply(
     })
 }
 
-type Placed = (Location, Vec<PathBuf>, Option<AppError>);
+type Placed = (Location, Vec<PathBuf>, Option<AppError>, Vec<LauncherDecl>);
+
+/// Derives the installed launchers once the payload is at its root.
+type Derive<'a> = dyn Fn(&Path) -> Result<Vec<LauncherDecl>, AppError> + 'a;
+
+/// The launchers an installation records: the option's rows merged with
+/// those its `launchers_from` desktop entries derive under `root`, every
+/// public command naming one of them (`PROP-059#desktop-entries`).
+fn installed_launchers(
+    ctx: &OperationContext<'_>,
+    selected: &Selected<'_>,
+    root: &Path,
+) -> Result<Vec<LauncherDecl>, AppError> {
+    let option = selected.option;
+    let key = selected.resolved.package.key();
+    let derived = if option.launchers_from.is_empty() {
+        Vec::new()
+    } else {
+        crate::derive::derive_launchers(root, &option.launchers_from, ctx.search_path)
+    };
+    let launchers =
+        crate::derive::merge(&option.launchers, derived).map_err(|reason| AppError::Launchers {
+            key: key.clone(),
+            reason,
+        })?;
+    if let Some(command) = option.public_commands.iter().find(|command| {
+        !launchers
+            .iter()
+            .any(|launcher| launcher.id == command.launcher)
+    }) {
+        return Err(AppError::Launchers {
+            key,
+            reason: format!(
+                "public command `{}` names launcher `{}`, which no row declares and no desktop entry derived",
+                command.name, command.launcher
+            ),
+        });
+    }
+    Ok(launchers)
+}
 
 /// Run the prepare steps, then place `$VIBE_OUT` at
 /// `<library>/apps/<slot>/<dir>`, replacing the same key in place without
@@ -207,6 +252,7 @@ fn place_owned(
     storage: &Storage,
     selected: &Selected<'_>,
     run: &mut Run<'_>,
+    derive: &Derive<'_>,
 ) -> Result<Placed, AppError> {
     let prior_owned = selected.prior.and_then(|prior| match &prior.location {
         Location::Owned { library, directory } => Some((library.as_str(), directory.as_str())),
@@ -251,11 +297,21 @@ fn place_owned(
         fs::rename(&payload, &target)
             .map_err(|source| installer::io("placing", &target, source).into())
     });
-    if let Err(error) = placed {
-        restore(&target, &previous);
-        let _ = fs::remove_dir_all(&staging);
-        return Err(error);
-    }
+    let launchers = placed.and_then(|()| {
+        derive(&target).inspect_err(|_| {
+            // Keep the payload for `--resume`; the previous one moves back.
+            let _ = fs::rename(&target, run.out());
+            let _ = fs::remove_dir_all(&target);
+        })
+    });
+    let launchers = match launchers {
+        Ok(launchers) => launchers,
+        Err(error) => {
+            restore(&target, &previous);
+            let _ = fs::remove_dir_all(&staging);
+            return Err(error);
+        }
+    };
     let finish_failure = match run.finish(&target) {
         Ok(failure) => failure,
         Err(error) => {
@@ -281,6 +337,7 @@ fn place_owned(
         },
         retired,
         finish_failure,
+        launchers,
     ))
 }
 
@@ -297,7 +354,8 @@ fn run_external(
     selected: &Selected<'_>,
     app_root_template: &str,
     run: &mut Run<'_>,
-) -> Result<(PathBuf, Option<AppError>), AppError> {
+    derive: &Derive<'_>,
+) -> Result<(PathBuf, Option<AppError>, Vec<LauncherDecl>), AppError> {
     let key = selected.resolved.package.key();
     let expected = expand_app_root(app_root_template, ctx.settings.path()).map_err(|reason| {
         AppError::MissingAppRoot {
@@ -317,8 +375,9 @@ fn run_external(
             path: expected.display().to_string(),
             reason: "it is not a real directory after the installer finished".into(),
         })?;
+    let launchers = derive(&root)?;
     let failure = run.finish(&root)?;
-    Ok((root, failure))
+    Ok((root, failure, launchers))
 }
 
 /// An owned directory of the same key that an external result supersedes.

@@ -93,8 +93,7 @@ fn session_value() -> Result<Option<String>, String> {
 fn command_for(launch: &resolve::Launch, caller: &[OsString]) -> Command {
     let mut command = Command::new(&launch.executable);
     command
-        .args(&launch.args)
-        .args(caller)
+        .args(resolve::operands(&launch.args, caller))
         .stdin(Stdio::inherit())
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit());

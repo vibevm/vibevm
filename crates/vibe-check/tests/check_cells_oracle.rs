@@ -17,12 +17,13 @@ use std::time::{Duration, SystemTime};
 
 use tempfile::tempdir;
 use vibe_check::{
-    ActivationConflictCheck, BootDirectoryCheck, BridgeProvenanceCheck, Check, CheckId,
-    CheckOptions, CheckReport, DocMediaCheck, DocPackageContractCheck, DocTranslationCheck,
-    FactsSyncCheck, FeaturesGraphCheck, I18nCoverageCheck, LocalSourceFreshnessCheck,
-    LockfileFilesCheck, ManifestEpochCheck, ManifestValidityCheck, RedirectBlockCheck,
-    ReviewAgingCheck, Severity, SnippetPresuppositionCheck, SubskillStructureCheck,
-    VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck, all_checks, check_project,
+    ActivationConflictCheck, ApplicationIconsCheck, BootDirectoryCheck, BridgeProvenanceCheck,
+    Check, CheckId, CheckOptions, CheckReport, DocMediaCheck, DocPackageContractCheck,
+    DocTranslationCheck, FactsSyncCheck, FeaturesGraphCheck, I18nCoverageCheck,
+    LocalSourceFreshnessCheck, LockfileFilesCheck, ManifestEpochCheck, ManifestValidityCheck,
+    RedirectBlockCheck, ReviewAgingCheck, Severity, SnippetPresuppositionCheck,
+    SubskillStructureCheck, VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck,
+    all_checks, check_project,
 };
 
 /// 2026-05-04T12:00:00Z — a frozen clock, so freshness / aging math
@@ -110,6 +111,7 @@ fn each_cell_reports_its_own_check_id() {
         ),
         (Box::new(DocTranslationCheck), CheckId::DocTranslation),
         (Box::new(DocMediaCheck), CheckId::DocMedia),
+        (Box::new(ApplicationIconsCheck), CheckId::ApplicationIcons),
     ];
     assert_eq!(cells.len(), CheckId::all().len(), "one cell per CheckId");
     for (cell, expected) in &cells {
@@ -146,6 +148,7 @@ fn all_checks_registers_every_cell_in_dispatch_order() {
             CheckId::DocPackageContract,
             CheckId::DocTranslation,
             CheckId::DocMedia,
+            CheckId::ApplicationIcons,
         ]
     );
 }

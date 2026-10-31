@@ -42,6 +42,7 @@ path_prepend = ["$app_bin"]
 id = "main"
 name = "Tool"
 executable = "$app_bin/tool"
+kind = "command"
 "#,
     );
     apps.script(&package, "tool", "TOOL");

@@ -3,6 +3,7 @@
 //! template rules without depending on that crate.
 
 use std::collections::BTreeMap;
+use std::ffi::OsString;
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 
@@ -209,6 +210,39 @@ fn library_root(home: &Path, id: &str) -> Result<PathBuf, String> {
         ));
     }
     Ok(path)
+}
+
+/// The argument array of one launch, mirroring `vibe_app::launch_arguments`
+/// (PROP-059 `#desktop-entries`): `{file}` / `{url}` take the first caller
+/// argument, `{files}` / `{urls}` all of them, an unfilled placeholder
+/// argument is dropped, and caller arguments no placeholder took follow.
+pub(crate) fn operands(args: &[String], caller: &[OsString]) -> Vec<OsString> {
+    let mut consumed = false;
+    let mut out = Vec::new();
+    for arg in args {
+        let single = ["{file}", "{url}"]
+            .into_iter()
+            .find(|placeholder| arg.contains(placeholder));
+        if arg == "{files}" || arg == "{urls}" {
+            out.extend(caller.iter().cloned());
+            consumed = true;
+        } else if let Some(placeholder) = single {
+            consumed = true;
+            match caller.first() {
+                Some(first) => out.push(OsString::from(
+                    arg.replace(placeholder, &first.to_string_lossy()),
+                )),
+                None if arg == placeholder => {}
+                None => out.push(OsString::from(arg.replace(placeholder, ""))),
+            }
+        } else {
+            out.push(OsString::from(arg));
+        }
+    }
+    if !consumed {
+        out.extend(caller.iter().cloned());
+    }
+    out
 }
 
 pub(crate) struct Vars<'a> {

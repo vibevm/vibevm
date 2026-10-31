@@ -102,6 +102,7 @@ interpreter = "posix_sh"
 id = "main"
 name = "Demo"
 executable = "$app_root/bin/demo"
+kind = "gui"
 working_directory = "."
 args = ["${project_root}", "$$literal"]
 default = true
@@ -125,6 +126,7 @@ payload_root = "demo"
 id = "main"
 name = "Demo archive"
 executable = "bin/demo"
+kind = "gui"
 "#,
     )
     .unwrap();
@@ -189,6 +191,7 @@ force_uninstall = "echo force uninstall"
 id = "main"
 name = "Demo"
 executable = "bin/demo"
+kind = "gui"
 [[installer_options.public_commands]]
 name = "demo"
 launcher = "main"

@@ -4448,6 +4448,7 @@ dependencies = [
  "chrono",
  "core-ai-native-specmark",
  "flate2",
+ "glob",
  "reqwest 0.12.28",
  "semver",
  "serde",

@@ -121,7 +121,10 @@ fn the_wizard_declarations_parse() {
         .application
         .as_ref()
         .and_then(|app| app.icon.clone());
-    assert_eq!(icon.unwrap().to_str(), Some("share/demo.png"));
+    assert_eq!(
+        icon,
+        Some(crate::manifest::IconDecl::Path("share/demo.png".into()))
+    );
     let option = &manifest.installer_options[0];
     assert_eq!(option.license.as_ref().unwrap().name, "Demo License 1.0");
     assert_eq!(option.features[2].parent.as_deref(), Some("gui"));

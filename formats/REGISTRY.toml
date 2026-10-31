@@ -54,6 +54,25 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `vibe app launchers --all [--menu] --json` (PROP-059 `#menu`): one answer
+# over every ready, exposed installation for a graphical start menu.
+[format.cli-application-launchers-all]
+epoch = 1
+schema = "schemas/application_launchers_all.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe app icon PKG --size N --json` (PROP-059 `#menu`): the chosen file.
+[format.cli-application-icon]
+epoch = 1
+schema = "schemas/application_icon.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-application-list]
 epoch = 1
 schema = "schemas/application_list.jtd.json"

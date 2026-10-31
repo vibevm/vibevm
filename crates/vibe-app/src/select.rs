@@ -240,6 +240,42 @@ fn ids(options: &[&InstallerOptionDecl]) -> String {
         .join(", ")
 }
 
+/// One launcher in the shape of the installer listing: its short-form icon
+/// and the effective `terminal`; `vibe app describe` carries the rest.
+fn listed_launcher(launcher: &vibe_core::manifest::LauncherDecl) -> Value {
+    let mut row = json!({
+        "id": launcher.id,
+        "name": launcher.name,
+        "executable": launcher.executable,
+        "terminal": launcher.is_terminal(),
+        "default": launcher.default,
+    });
+    let icon = match &launcher.icon {
+        Some(vibe_core::manifest::IconDecl::Path(path)) => Some(path.clone()),
+        _ => None,
+    };
+    let optional = [
+        ("description", launcher.description.clone().map(Value::from)),
+        (
+            "working_directory",
+            launcher.working_directory.clone().map(Value::from),
+        ),
+        ("icon", icon.map(Value::from)),
+        (
+            "args",
+            (!launcher.args.is_empty()).then(|| json!(launcher.args)),
+        ),
+    ];
+    if let Some(object) = row.as_object_mut() {
+        for (key, value) in optional {
+            if let Some(value) = value {
+                object.insert(key.into(), value);
+            }
+        }
+    }
+    row
+}
+
 /// The `vibe-application-install-options/1` listing of every option, grouped
 /// by platform and architecture with the detected entries first.
 pub fn options_listing(package: &str, options: &[InstallerOptionDecl]) -> Value {
@@ -260,7 +296,7 @@ pub fn options_listing(package: &str, options: &[InstallerOptionDecl]) -> Value 
                 "step_ids": steps_of(option).iter().map(|step| step.id.as_str()).collect::<Vec<_>>(),
                 "pre_install": option.pre_install,
                 "post_install": option.post_install,
-                "launchers": option.launchers,
+                "launchers": option.launchers.iter().map(listed_launcher).collect::<Vec<_>>(),
                 "public_commands": option.public_commands,
                 "detected": Some(option.platform.as_str()) == host_platform && option.arch == host_arch,
             }));
@@ -333,6 +369,7 @@ mod tests {
             license: None,
             steps: Vec::new(),
             requires: Vec::new(),
+            launchers_from: Vec::new(),
             launchers: Vec::new(),
             public_commands: Vec::new(),
         }

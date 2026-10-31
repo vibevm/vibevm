@@ -210,7 +210,15 @@ pub(super) fn print_listing(listing: &Value, quiet: bool) {
             .get("terminal")
             .and_then(Value::as_bool)
             .unwrap_or(false);
-        println!("    terminal: {terminal}");
+        let menu = launcher
+            .get("menu")
+            .and_then(Value::as_bool)
+            .unwrap_or(false);
+        println!(
+            "    kind: {}, terminal: {terminal}, menu: {menu}, source: {}",
+            launcher_field(launcher, "kind"),
+            launcher_field(launcher, "source")
+        );
         for field in ["executable", "args", "working_directory", "icon"] {
             if let Some(value) = launcher.get(field) {
                 println!("    {field}: {value}");

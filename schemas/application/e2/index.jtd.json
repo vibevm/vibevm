@@ -115,8 +115,39 @@
         "default": { "type": "string", "nullable": true }
       }
     },
+    "launcher_kind": {
+      "enum": ["gui", "tui", "command"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "launcher_source": {
+      "enum": ["authored", "desktop-entry"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "icon_set": {
+      "metadata": { "x-wire-order": ["svg", "png", "ico", "icns", "symbolic", "maskable"], "description": "An icon set of PROP-059#menu: path templates by slot, rasters keyed by decimal pixel size." },
+      "optionalProperties": {
+        "svg": { "type": "string", "metadata": { "x-default": null } },
+        "png": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "ico": { "type": "string", "metadata": { "x-default": null } },
+        "icns": { "type": "string", "metadata": { "x-default": null } },
+        "symbolic": { "type": "string", "metadata": { "x-default": null } },
+        "maskable": { "type": "boolean", "metadata": { "x-default": false } }
+      }
+    },
+    "launcher_action": {
+      "metadata": { "x-wire-order": ["id", "name", "args", "icon", "iconSet"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "optionalProperties": {
+        "args": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "icon": { "type": "string", "metadata": { "x-default": null } },
+        "iconSet": { "ref": "icon_set", "metadata": { "x-default": null } }
+      }
+    },
     "launcher": {
-      "metadata": { "x-wire-order": ["id", "name", "description", "executable", "args", "workingDirectory", "icon", "terminal", "default"] },
+      "metadata": { "x-wire-order": ["id", "name", "description", "executable", "args", "workingDirectory", "icon", "iconSet", "terminal", "default", "kind", "menu", "categories", "keywords", "genericName", "windowClass", "mimeTypes", "names", "descriptions", "actions", "source"] },
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
@@ -128,7 +159,19 @@
       "optionalProperties": {
         "description": { "type": "string", "metadata": { "x-default": null } },
         "workingDirectory": { "type": "string", "metadata": { "x-default": null } },
-        "icon": { "type": "string", "metadata": { "x-default": null } }
+        "icon": { "type": "string", "metadata": { "x-default": null, "description": "The short-form icon path; absent when the launcher has an icon set." } },
+        "iconSet": { "ref": "icon_set", "metadata": { "x-default": null } },
+        "kind": { "ref": "launcher_kind", "metadata": { "x-default": null, "description": "Absent in a record written before kinds existed: read as tui when terminal, otherwise gui." } },
+        "menu": { "type": "boolean", "metadata": { "x-default": false } },
+        "categories": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "keywords": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "genericName": { "type": "string", "metadata": { "x-default": null } },
+        "windowClass": { "type": "string", "metadata": { "x-default": null } },
+        "mimeTypes": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "names": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "descriptions": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "actions": { "elements": { "ref": "launcher_action" }, "metadata": { "x-empty": "omit" } },
+        "source": { "ref": "launcher_source", "metadata": { "x-default": null, "description": "authored, or desktop-entry for a launcher derived through launchers_from (PROP-059#desktop-entries); absent means authored." } }
       }
     },
     "public_command": {
@@ -148,7 +191,7 @@
       }
     },
     "installation": {
-      "metadata": { "x-wire-order": ["slot", "package", "option", "platform", "arch", "method", "library", "directory", "appRoot", "portable", "launchers", "publicCommands", "commands", "features", "parameters", "license", "icon", "steps", "hidden", "mark", "requires", "requiredBy", "env", "held", "replaced", "supersededBy"] },
+      "metadata": { "x-wire-order": ["slot", "package", "option", "platform", "arch", "method", "library", "directory", "appRoot", "portable", "launchers", "publicCommands", "commands", "features", "parameters", "license", "icon", "iconSet", "menuGroup", "categories", "keywords", "steps", "hidden", "mark", "requires", "requiredBy", "env", "held", "replaced", "supersededBy"] },
       "properties": {
         "slot": { "type": "string" },
         "package": { "ref": "package" },
@@ -169,6 +212,10 @@
         "parameters": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
         "license": { "ref": "accepted_license", "metadata": { "x-default": null } },
         "icon": { "type": "string", "metadata": { "x-default": null } },
+        "iconSet": { "ref": "icon_set", "metadata": { "x-default": null } },
+        "menuGroup": { "type": "string", "metadata": { "x-default": null } },
+        "categories": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "keywords": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
         "steps": { "elements": { "ref": "step_record" }, "metadata": { "x-empty": "omit" } },
         "hidden": { "type": "boolean", "metadata": { "x-default": false, "description": "Installed without exposure (PROP-059#hidden-installations): no proxy, no alternative, never the default." } },
         "mark": { "ref": "mark", "metadata": { "x-default": null, "description": "manual when the user asked for it by name, auto when a requirement pulled it in (PROP-065#uninstall-tree); absent means manual." } },

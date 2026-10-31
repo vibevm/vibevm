@@ -75,7 +75,7 @@ fn option_header(id: &str) -> String {
     )
 }
 
-const LAUNCHER: &str = "[[installer_options.launchers]]\nid = \"main\"\nname = \"Tool\"\nexecutable = \"$app_bin/tool\"\nargs = [\"fixed\"]\ndefault = true\n\n[[installer_options.public_commands]]\nname = \"tool\"\nlauncher = \"main\"\n";
+const LAUNCHER: &str = "[[installer_options.launchers]]\nid = \"main\"\nname = \"Tool\"\nexecutable = \"$app_bin/tool\"\nkind = \"command\"\nargs = [\"fixed\"]\ndefault = true\n\n[[installer_options.public_commands]]\nname = \"tool\"\nlauncher = \"main\"\n";
 
 fn ok(output: &Output) -> String {
     assert!(

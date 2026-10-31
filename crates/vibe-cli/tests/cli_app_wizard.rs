@@ -197,6 +197,7 @@ when = {{ param_equals = {{ id = "lang", value = "ru" }} }}
 id = "main"
 name = "Wizard"
 executable = "$app_bin/wizard"
+kind = "command"
 default = true
 "#,
             arch = std::env::consts::ARCH,

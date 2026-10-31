@@ -156,6 +156,8 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::App(args) => match &args.command {
             crate::cli::AppCommand::Installers { .. }
             | crate::cli::AppCommand::Launchers { .. }
+            | crate::cli::AppCommand::Icon { .. }
+            | crate::cli::AppCommand::ImportDesktop { .. }
             | crate::cli::AppCommand::List
             | crate::cli::AppCommand::Plan { .. }
             | crate::cli::AppCommand::Steps { .. }

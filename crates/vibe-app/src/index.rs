@@ -11,8 +11,8 @@ use std::path::PathBuf;
 
 use specmark::spec;
 use vibe_core::manifest::{
-    InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl, RequirementScope,
-    ShellInterpreter, StepPhase,
+    IconDecl, InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl,
+    RequirementScope, ShellInterpreter, StepPhase,
 };
 use vibe_wire::generated::application::e2::index as wire;
 
@@ -185,12 +185,25 @@ pub struct Installation {
     pub parameters: BTreeMap<String, String>,
     /// The accepted license, when the option declares one.
     pub license: Option<AcceptedLicense>,
-    /// The package-relative application icon (`PROP-065#icon`).
-    pub icon: Option<String>,
+    /// The package-relative application icon or icon set (`PROP-065#icon`).
+    pub icon: Option<IconDecl>,
+    /// The application's menu group and default categories and keywords
+    /// (`PROP-059#menu`).
+    pub menu: ApplicationMenu,
     /// Step outcomes in step order (`PROP-065#record`).
     pub steps: Vec<StepRecord>,
     /// Exposure, marks, requirements, environment and update state.
     pub lifecycle: Lifecycle,
+}
+
+/// The `[application]` menu metadata an installation keeps after its package
+/// is gone (`PROP-059#menu`).
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
+pub struct ApplicationMenu {
+    pub menu_group: Option<String>,
+    pub categories: Vec<String>,
+    pub keywords: Vec<String>,
 }
 
 /// Why an installation exists (`PROP-065#uninstall-tree`).
@@ -427,6 +440,8 @@ impl Index {
     }
 }
 
+#[path = "index/launcher_wire.rs"]
+mod launcher_wire;
 #[path = "index/wire.rs"]
 mod wire_form;
 

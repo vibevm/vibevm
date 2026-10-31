@@ -22,13 +22,58 @@
       }
     },
     "application": {
-      "metadata": { "x-wire-order": ["id", "portable", "icon"] },
+      "metadata": { "x-wire-order": ["id", "portable", "icon", "iconSet", "menuGroup", "categories", "keywords"] },
       "properties": {
         "id": { "type": "string" },
         "portable": { "type": "boolean" }
       },
       "optionalProperties": {
-        "icon": { "type": "string", "metadata": { "x-default": null } }
+        "icon": { "type": "string", "metadata": { "x-default": null } },
+        "iconSet": { "ref": "icon_set", "metadata": { "x-default": null } },
+        "menuGroup": { "type": "string", "metadata": { "x-default": null } },
+        "categories": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "keywords": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } }
+      }
+    },
+    "icon_slot": {
+      "enum": ["svg", "png", "ico", "icns", "symbolic"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "icon_file": {
+      "metadata": { "x-wire-order": ["slot", "size", "template", "path"], "description": "One file of an icon set: a package-relative file resolved to its absolute path in the package tree; a template naming the installed payload has no path before installation." },
+      "properties": {
+        "slot": { "ref": "icon_slot" },
+        "template": { "type": "string" }
+      },
+      "optionalProperties": {
+        "size": { "type": "uint32", "metadata": { "x-default": null } },
+        "path": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "icon_set": {
+      "metadata": { "x-wire-order": ["maskable", "files"] },
+      "properties": {
+        "maskable": { "type": "boolean" },
+        "files": { "elements": { "ref": "icon_file" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "launcher_kind": {
+      "enum": ["gui", "tui", "command"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "launcher_source": {
+      "enum": ["authored", "desktop-entry"],
+      "metadata": { "x-vocabulary": "closed" }
+    },
+    "launcher_action": {
+      "metadata": { "x-wire-order": ["id", "name", "args", "iconSet"] },
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "args": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      },
+      "optionalProperties": {
+        "iconSet": { "ref": "icon_set", "metadata": { "x-default": null } }
       }
     },
     "form": {
@@ -44,7 +89,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "installer_option": {
-      "metadata": { "x-wire-order": ["id", "name", "platform", "platformName", "arch", "archName", "form", "result", "appRoot", "portable", "launchers", "publicCommands", "features", "defaultFeatures", "profiles", "parameters", "license", "requires", "steps"] },
+      "metadata": { "x-wire-order": ["id", "name", "platform", "platformName", "arch", "archName", "form", "result", "appRoot", "portable", "launchersFrom", "launchers", "publicCommands", "features", "defaultFeatures", "profiles", "parameters", "license", "requires", "steps"] },
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
@@ -65,6 +110,7 @@
       "optionalProperties": {
         "archName": { "type": "string", "metadata": { "x-default": null } },
         "appRoot": { "type": "string", "metadata": { "x-default": null } },
+        "launchersFrom": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit", "description": "Globs relative to the application root naming the desktop entries launchers are derived from after installation (PROP-059#desktop-entries)." } },
         "license": { "ref": "license", "metadata": { "x-default": null } },
         "requires": { "elements": { "ref": "requirement" }, "metadata": { "x-empty": "omit" } }
       }
@@ -91,19 +137,31 @@
       }
     },
     "launcher": {
-      "metadata": { "x-wire-order": ["id", "name", "description", "executable", "args", "workingDirectory", "icon", "terminal", "default"] },
+      "metadata": { "x-wire-order": ["id", "name", "description", "executable", "args", "workingDirectory", "icon", "iconSet", "terminal", "default", "kind", "menu", "source", "categories", "keywords", "genericName", "windowClass", "mimeTypes", "names", "descriptions", "actions"] },
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
         "executable": { "type": "string" },
         "args": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
         "terminal": { "type": "boolean" },
-        "default": { "type": "boolean" }
+        "default": { "type": "boolean" },
+        "menu": { "type": "boolean" },
+        "source": { "ref": "launcher_source", "metadata": { "description": "Always authored here: launchers derived from desktop entries exist only after installation (PROP-059#desktop-entries)." } }
       },
       "optionalProperties": {
         "description": { "type": "string", "metadata": { "x-default": null } },
         "workingDirectory": { "type": "string", "metadata": { "x-default": null } },
-        "icon": { "type": "string", "metadata": { "x-default": null } }
+        "icon": { "type": "string", "metadata": { "x-default": null } },
+        "iconSet": { "ref": "icon_set", "metadata": { "x-default": null } },
+        "kind": { "ref": "launcher_kind", "metadata": { "x-default": null, "description": "Absent only in a row overriding a launcher derived from a desktop entry." } },
+        "categories": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "keywords": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "genericName": { "type": "string", "metadata": { "x-default": null } },
+        "windowClass": { "type": "string", "metadata": { "x-default": null } },
+        "mimeTypes": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "names": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "descriptions": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "actions": { "elements": { "ref": "launcher_action" }, "metadata": { "x-empty": "omit" } }
       }
     },
     "public_command": {

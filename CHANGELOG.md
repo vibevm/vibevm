@@ -8,6 +8,24 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+- **Start-menu launchers and desktop entries (PROP-059 `#menu`,
+  `#desktop-entries`).** Every launcher now declares `kind` (`gui`, `tui` or
+  `command`); `terminal` follows from it and a disagreeing value is refused.
+  A launcher appears in a graphical client's menu only with `menu = true`;
+  `[application] menu_group`, `categories` (the freedesktop main categories)
+  and `keywords` set the group and defaults, and an icon is a PNG/SVG path or
+  an icon set (`svg`, `png` by pixel size, `ico`, `icns`, `symbolic`,
+  `maskable`). Launchers also carry `generic_name`, localised `names` and
+  `descriptions`, `window_class`, `mime_types`, `actions` and the `{file}`,
+  `{files}`, `{url}`, `{urls}` placeholders. `launchers_from` derives launchers
+  from the payload's `.desktop` files and hicolor icons after installation, an
+  authored row of the same id overrides field by field, and the index marks
+  each row `authored` or `desktop-entry`; records written before kinds load as
+  `tui`/`gui` from `terminal` with `menu = false`. New: `vibe app launchers
+  --all [--menu]`, `vibe app icon PKG --size N [--prefer …]`, `vibe app
+  import-desktop FILE…`, and the `application_icons` check of `vibe check`.
+  `describe`, `app list --json` and `app launchers --json` carry the new fields
+  with icon files resolved to absolute paths.
 - **Application requirements in projects (PROP-065 `#app-dependencies`).** An
   application package that a project depends on and whose installer option or
   steps require other application packages now pulls them into the ordinary

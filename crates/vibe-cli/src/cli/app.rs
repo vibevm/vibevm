@@ -80,6 +80,29 @@ pub enum MarkArg {
     Auto,
 }
 
+/// The icon slot `vibe app icon --prefer` takes when it has a file.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum IconPreference {
+    Png,
+    Svg,
+    Symbolic,
+    Ico,
+    Icns,
+}
+
+impl IconPreference {
+    /// The slot name the icon documents use.
+    pub fn slot(self) -> &'static str {
+        match self {
+            Self::Png => "png",
+            Self::Svg => "svg",
+            Self::Symbolic => "symbolic",
+            Self::Ico => "ico",
+            Self::Icns => "icns",
+        }
+    }
+}
+
 #[derive(Debug, clap::Subcommand)]
 pub enum AppCommand {
     /// List every installed application with its status and slot default.
@@ -219,8 +242,46 @@ pub enum AppCommand {
     /// and hide the newer one (PROP-065 `#update-and-rollback`).
     Rollback { package: String },
 
-    /// List launchers of an installed application.
-    Launchers { package: String },
+    /// List launchers of an installed application, or with `--all` of every
+    /// ready, exposed installation of the home (PROP-059 `#menu`).
+    Launchers {
+        /// The installed package; omitted with `--all`.
+        #[arg(required_unless_present = "all", conflicts_with = "all")]
+        package: Option<String>,
+        /// List every ready, exposed installation in one answer.
+        #[arg(long)]
+        all: bool,
+        /// With `--all`, only the launchers whose author set `menu = true`.
+        #[arg(long, requires = "all")]
+        menu: bool,
+    },
+
+    /// Print the path of the best existing icon file of an installed
+    /// application for a size, never rasterising (PROP-059 `#menu`).
+    Icon {
+        package: String,
+        /// The launcher whose icon set is asked for; falls back to the
+        /// application's.
+        #[arg(long, value_name = "ID")]
+        launcher: Option<String>,
+        /// The pixel size the caller needs.
+        #[arg(long, value_name = "N")]
+        size: u32,
+        /// Take a file of this slot when one exists.
+        #[arg(long, value_enum)]
+        prefer: Option<IconPreference>,
+    },
+
+    /// Print the launcher rows desktop entries derive, as manifest TOML
+    /// (PROP-059 `#desktop-entries`).
+    ImportDesktop {
+        /// The `.desktop` files to read.
+        #[arg(required = true)]
+        files: Vec<std::path::PathBuf>,
+        /// An unpacked payload to resolve `Exec` and theme icons against.
+        #[arg(long, value_name = "DIR")]
+        app_root: Option<std::path::PathBuf>,
+    },
 
     /// Run one launcher by its exact stable ID.
     Run {
