@@ -2420,7 +2420,7 @@ structure, and it goes when the file does.
 | @fact:B220-WHAT **what** | `vibe app update` and `vibe app outdated` (PROP-065 `#outdated`) follow the registry; there is no way to say "keep Vim at 9.2.1167 until I say otherwise" the way `apt-mark hold` or `brew pin` do. A held installation would be reported by `outdated` as held, skipped by a bulk update, and updated only by naming it explicitly. |
 | @fact:B220-EVIDENCE **evidence** | Owner question of 2026-10-31 ("мы что-то еще забыли обсудить?"), answered during the APP-STEPS campaign; not in PROP-059 or PROP-065. |
 | @fact:B220-SEVERITY **severity** | P3 — a convenience over the existing per-version installation keys. |
-| @fact:B220-DISPOSITION **disposition** | `candidate` — `vibe app hold PKG` / `vibe app unhold PKG`, a `held` flag in the index record; needs the owner's yes. |
+| @fact:B220-DISPOSITION **disposition** | `accepted` — the owner's standing grant of 2026-10-31 (add what is foundational); specified in PROP-065 `#update-and-rollback`, implemented in APP-STEPS Q3. |
 | @fact:B220-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
 
 ## B-221 — keep the previous version hidden for rollback {#b-221}
@@ -2430,7 +2430,7 @@ structure, and it goes when the file does.
 | @fact:B221-WHAT **what** | An application update installs the new version and removes the old one. With hidden installations (PROP-059 `#hidden-installations`) the old version could instead stay hidden for one update cycle, so `vibe app rollback PKG` is just `expose` of the previous key plus `app use`, with no download and no rebuild. The next successful update would remove it. |
 | @fact:B221-EVIDENCE **evidence** | Owner question of 2026-10-31; the index already keys installations by exact version, and alternatives already let two versions coexist. |
 | @fact:B221-SEVERITY **severity** | P3 — source builds taking minutes make rollback-by-reinstall expensive, but nothing is wrong today. |
-| @fact:B221-DISPOSITION **disposition** | `candidate` — `--keep-previous` on update (or a user default), `vibe app rollback`; needs the owner's yes. |
+| @fact:B221-DISPOSITION **disposition** | `accepted` — the owner's standing grant of 2026-10-31; the previous version is kept hidden by default, PROP-065 `#update-and-rollback`, implemented in APP-STEPS Q3. |
 | @fact:B221-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
 
 ## B-222 — export and import the set of global applications {#b-222}
