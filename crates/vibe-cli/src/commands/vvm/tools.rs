@@ -111,7 +111,7 @@ fn run_version(cmd: &[&str]) -> Option<String> {
 /// `PATHEXT` resolution; elsewhere the bare name is correct.
 fn tool_command(name: &str) -> Command {
     if cfg!(windows) {
-        let mut c = Command::new("cmd.exe");
+        let mut c = Command::new(vibe_app::windows_cmd());
         c.arg("/C").arg(name);
         c
     } else {

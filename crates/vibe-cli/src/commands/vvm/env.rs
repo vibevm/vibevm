@@ -288,7 +288,7 @@ impl EnvPersister for WindowsEnvPersister {
 }
 
 fn run_powershell(script: &str) -> Result<String> {
-    let out = Command::new("powershell")
+    let out = Command::new(vibe_app::windows_powershell())
         .args(["-NoProfile", "-NonInteractive", "-Command", script])
         .output()
         .context("spawning powershell to edit the user environment")?;
