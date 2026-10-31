@@ -205,12 +205,12 @@ fn recipe_command(
     let mut command = match interpreter {
         ShellInterpreter::PosixSh => Command::new(if cfg!(windows) { "sh" } else { "/bin/sh" }),
         ShellInterpreter::WindowsCmd if cfg!(windows) => {
-            let mut command = Command::new("cmd.exe");
+            let mut command = Command::new(crate::installer::programs::windows_cmd());
             command.args(["/D", "/S", "/C"]);
             command
         }
         ShellInterpreter::WindowsPowershell if cfg!(windows) => {
-            let mut command = Command::new("powershell.exe");
+            let mut command = Command::new(crate::installer::programs::windows_powershell());
             command.args([
                 "-NoProfile",
                 "-NonInteractive",

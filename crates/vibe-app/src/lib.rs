@@ -71,6 +71,7 @@ pub use index::{
     StepRecord, ValueKind,
 };
 pub use installer::Interrupt;
+pub use installer::programs::{windows_cmd, windows_powershell, windows_system_program};
 pub use launch::{
     LaunchRequest, ResolvedLauncher, TemplateVars, app_root, exit_code, expand_template,
     icon_choice, launch_arguments, listing as launcher_listing,

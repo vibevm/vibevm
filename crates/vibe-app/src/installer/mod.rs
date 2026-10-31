@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#child-output");
 pub mod archive;
 mod child;
 pub mod native;
+pub mod programs;
 pub mod shell;
 pub mod source_build;
 
