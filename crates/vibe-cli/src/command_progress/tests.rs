@@ -117,7 +117,7 @@ fn only_finite_fallback_starts_and_terminalizes_a_generic_activity() {
     ));
     assert!(matches!(
         &events[1].kind,
-        ProgressEventKind::Failed { message } if message == "command failed"
+        ProgressEventKind::Failed { message, .. } if message == "command failed"
     ));
 }
 

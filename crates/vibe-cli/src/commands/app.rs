@@ -22,7 +22,7 @@ mod lifecycle;
 mod menu;
 mod plan_text;
 mod portable;
-mod processes;
+pub(crate) mod processes;
 pub(crate) mod project;
 mod records;
 mod report;

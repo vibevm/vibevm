@@ -92,5 +92,8 @@ pub mod requirements_report;
 pub mod scrape;
 pub mod shared;
 pub mod slot_record;
+pub mod transfer_event;
+pub mod transfer_record;
+pub mod transfers_listing;
 pub mod uninstall_report;
 pub mod update_report;

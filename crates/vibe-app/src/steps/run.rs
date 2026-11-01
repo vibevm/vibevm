@@ -25,7 +25,7 @@ use super::kinds::{self, StepContext};
 use super::params::step_env_name;
 use super::plan::{Plan, PlannedStep, work_dir};
 use super::resume::{StartPoint, start_point};
-use super::runs::{RunOutcome, RunRecord};
+use super::runs::{RunOutcome, RunRecord, transfer_facts};
 use super::state::{Start, StepState, StepsFile};
 use super::template::Vars;
 use super::work::{human_bytes, tree_bytes};
@@ -527,6 +527,7 @@ impl<'a> Run<'a> {
         }
         let package_key = self.plan.package.key();
         let served = std::cell::RefCell::new(Vec::new());
+        let transfer = transfer_facts(self.record.as_ref(), self.command, &package_key, &step.id);
         let cx = StepContext {
             work: &self.work,
             package_root: &self.resolved.root,
@@ -551,6 +552,7 @@ impl<'a> Run<'a> {
             remap: vibe_core::remap::active(),
             package_key: &package_key,
             served: &served,
+            transfer: &transfer,
         };
         let result = kinds::run(&cx, step);
         // The candidates that served this step's inputs are part of the

@@ -8,6 +8,7 @@ use serde::Serialize;
 use serde_json::Value;
 use std::sync::Arc;
 use vibe_core::progress::Progress;
+use vibe_core::progress::transfer::Transfers;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use crate::cli::AgentModeArg;
@@ -225,6 +226,10 @@ pub struct Context {
     agent_mode: RunAgentMode,
     /// The observation handle threaded into libraries by command adapters.
     progress: Progress,
+    /// The invocation's journal, limit and verb for downloads
+    /// (`PROP-068`): every progress handle this context gives out carries
+    /// them, rendered or not.
+    transfers: Option<Transfers>,
     /// The one renderer for this invocation. Kept beside `progress` so
     /// ordinary output and prompts can suspend interactive bars safely.
     progress_renderer: Option<Arc<ProgressRenderer>>,
@@ -267,6 +272,7 @@ impl Context {
             plain: false,
             agent_mode,
             progress: Progress::default(),
+            transfers: None,
             progress_renderer: None,
             machine_progress: false,
             terminal_input: false,
@@ -314,7 +320,17 @@ impl Context {
     /// Returns the current progress scope for explicitly threaded library
     /// work. Cloning it is an `Arc` clone.
     pub fn progress(&self) -> Progress {
-        self.progress.clone()
+        self.progress.clone().with_transfers(self.transfers.clone())
+    }
+
+    /// Attach the invocation's transfers (the composition root's, once).
+    pub fn with_transfers(mut self, transfers: Transfers) -> Self {
+        self.transfers = Some(transfers);
+        self
+    }
+
+    pub fn transfers(&self) -> Option<Transfers> {
+        self.transfers.clone()
     }
 
     /// Clones this output context beneath a task-created progress scope.

@@ -134,6 +134,7 @@ fn purpose_specific_full_walk_preserves_calls_results_and_freshness() {
                 ProgressEventKind::Started {
                     label: format!("{prefix} {pkg}"),
                     requires: None,
+                    transfer: None,
                 }
             );
         }
@@ -178,6 +179,7 @@ fn public_resolve_defaults_to_version_selection_and_inert_progress_preserves_wor
                 ProgressEventKind::Started {
                     label: format!("Selecting version for {pkg}"),
                     requires: None,
+                    transfer: None,
                 }
             );
         } else {
@@ -236,13 +238,17 @@ fn metadata_exact_and_pinned_redirect_fallback_have_one_responsible_task() {
             ProgressEventKind::Started {
                 label: "Reading package metadata for org.vibevm/wal@1.0.0".into(),
                 requires: None,
+                transfer: None,
             }
         );
         assert!(!events.iter().any(|event| matches!(
             event.kind,
             ProgressEventKind::Failed { .. } | ProgressEventKind::Stopped
         )));
-        assert_eq!(events.last().unwrap().kind, ProgressEventKind::Finished);
+        assert!(matches!(
+            events.last().unwrap().kind,
+            ProgressEventKind::Finished { .. }
+        ));
         let observed_calls = backend.calls.lock().unwrap().clone();
         backend.calls.lock().unwrap().clear();
         let inert_cache = tempfile::tempdir().unwrap();
@@ -298,7 +304,7 @@ fn discovery_fallback_and_metadata_failure_keep_original_error_and_own_rows() {
                     && matches!(
                         event.kind,
                         ProgressEventKind::Failed { .. }
-                            | ProgressEventKind::Finished
+                            | ProgressEventKind::Finished { .. }
                             | ProgressEventKind::Stopped
                     )
             })

@@ -35,6 +35,9 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout");
 
+use std::io::Read;
+
+use vibe_core::progress::transfer::{Destination, Purpose, Transfer, TransferRecord};
 use vibe_wire::generated::index::e1::repomd::Repomd;
 use vibe_wire::generated::shared::VersionEntry;
 
@@ -122,11 +125,29 @@ impl IndexClient {
         if !status.is_success() {
             return Err(self.classify_failure(url.to_string(), status.as_u16()));
         }
-        let body = resp.bytes().map_err(|e| IndexError::Http {
-            url: url.to_string(),
-            message: e.to_string(),
-        })?;
-        Ok(Some(body.to_vec()))
+        // A catalog file is small, and still a download: it goes through
+        // the one wrapper so the journal sees it (`PROP-068#coverage`).
+        let record = TransferRecord::http(Purpose::IndexFile, url, Destination::Store)
+            .total(resp.content_length());
+        let transfer = match self.transfers.get() {
+            Some(transfers) => transfers.begin(record, None),
+            None => Transfer::begin(record, None, None),
+        };
+        let mut reader = transfer.reader(resp);
+        let mut body = Vec::new();
+        match reader.read_to_end(&mut body) {
+            Ok(_) => {
+                reader.finish();
+                Ok(Some(body))
+            }
+            Err(e) => {
+                reader.fail(e.to_string());
+                Err(IndexError::Http {
+                    url: url.to_string(),
+                    message: e.to_string(),
+                })
+            }
+        }
     }
 }
 

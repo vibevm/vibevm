@@ -65,6 +65,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "test",
     "tools",
     "trace",
+    "transfers",
     "tree",
     "undeploy",
     "uninstall",
@@ -385,6 +386,10 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Specmap(_) => FiniteFallback("Command specmap"),
         Command::Trace { .. } => TerminalPassthrough,
         Command::Vars(_) => FastMetadata,
+        Command::Transfers(args) => match args.command {
+            Some(crate::cli::TransfersCommand::Watch) => PersistentProtocol,
+            _ => FastMetadata,
+        },
         Command::Progress(args) => match &args.command {
             ProgressSubcommand::Scan(_)
             | ProgressSubcommand::Check(_)

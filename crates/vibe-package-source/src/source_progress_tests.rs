@@ -239,6 +239,7 @@ fn checkout_lookup_uses_checkout_purpose_on_multi_and_declared_embedded() {
             ProgressEventKind::Started {
                 label: format!("Locating in-place checkout source for {pkg}"),
                 requires: None,
+                transfer: None,
             }
         );
         assert_eq!(
@@ -304,7 +305,7 @@ fn source_lookup_failure_preserves_error_and_terminalizes_responsible_scope() {
             assert!(!events.iter().any(|event| event.task_id == row.task_id
                 && matches!(
                     event.kind,
-                    ProgressEventKind::Finished | ProgressEventKind::Stopped
+                    ProgressEventKind::Finished { .. } | ProgressEventKind::Stopped
                 )));
         }
     }

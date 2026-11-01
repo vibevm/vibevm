@@ -1,6 +1,9 @@
-//! Bounded release downloads with byte progress.
+//! Bounded release downloads with byte progress, through the transfer
+//! wrapper (`PROP-068#coverage`): a `release-bundle` transfer whose bytes
+//! land in the vibe home.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#provenance");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#coverage");
 
 use std::fs;
 use std::io::{self, Read};
@@ -13,6 +16,7 @@ use specmark::spec;
 #[cfg(test)]
 use vibe_core::progress::Progress;
 use vibe_core::progress::ProgressTask;
+use vibe_core::progress::transfer::{self, Destination, Purpose, TransferReader, TransferRecord};
 
 use super::super::store::VersionStore;
 
@@ -87,23 +91,16 @@ impl Downloader for HttpDownloader {
             .and_then(reqwest::blocking::Response::error_for_status)
             .with_context(|| format!("downloading `{url}`"))?;
         let total = expected_bytes.or_else(|| response.content_length());
-        progress.set_progress(0, total, "bytes");
-        write_download_observed(destination, maximum_bytes, &mut response, progress, total)
+        let record =
+            TransferRecord::http(Purpose::ReleaseBundle, url, Destination::Home).total(total);
+        let reader = transfer::begin(record, Some(progress)).reader(&mut response);
+        write_download_observed(destination, maximum_bytes, reader)
             .with_context(|| format!("writing download `{}`", destination.display()))?;
         Ok(())
     }
 }
 
-pub(super) fn safe_url(raw: &str) -> String {
-    let Ok(mut url) = reqwest::Url::parse(raw) else {
-        return "remote release endpoint".to_string();
-    };
-    let _ = url.set_username("");
-    let _ = url.set_password(None);
-    url.set_query(None);
-    url.set_fragment(None);
-    url.to_string()
-}
+pub(super) use transfer::safe_url;
 
 #[cfg(test)]
 pub(super) fn write_download(
@@ -112,27 +109,42 @@ pub(super) fn write_download(
     reader: &mut impl Read,
 ) -> Result<()> {
     let task = Progress::default().task("download");
-    write_download_observed(destination, maximum_bytes, reader, &task, None)
+    let record = TransferRecord::http(Purpose::ReleaseBundle, "file:///test", Destination::Home);
+    write_download_observed(
+        destination,
+        maximum_bytes,
+        transfer::begin(record, Some(&task)).reader(reader),
+    )
 }
 
-fn write_download_observed(
+/// Write a counted download to a new file and end its transfer with the
+/// outcome; a failed write leaves no file behind.
+fn write_download_observed<R: Read>(
     destination: &Path,
     maximum_bytes: u64,
-    reader: &mut impl Read,
-    progress: &ProgressTask,
-    total: Option<u64>,
+    mut reader: TransferReader<R>,
 ) -> Result<()> {
-    let mut file = fs::OpenOptions::new()
+    let mut file = match fs::OpenOptions::new()
         .write(true)
         .create_new(true)
         .open(destination)
-        .with_context(|| format!("creating `{}`", destination.display()))?;
-    let result = copy_download_observed(reader, &mut file, maximum_bytes, |copied| {
-        progress.set_progress(copied, total, "bytes");
-    });
+        .with_context(|| format!("creating `{}`", destination.display()))
+    {
+        Ok(file) => file,
+        Err(error) => {
+            // Someone else's file stands there: it is never touched.
+            reader.fail(format!("{error:#}"));
+            return Err(error);
+        }
+    };
+    let result = copy_download(&mut reader, &mut file, maximum_bytes);
     drop(file);
-    if result.is_err() {
-        let _ = fs::remove_file(destination);
+    match &result {
+        Ok(_) => reader.finish(),
+        Err(error) => {
+            reader.fail(format!("{error:#}"));
+            let _ = fs::remove_file(destination);
+        }
     }
     result.map(|_| ())
 }
@@ -141,15 +153,6 @@ pub(super) fn copy_download(
     reader: &mut impl Read,
     writer: &mut impl io::Write,
     maximum: u64,
-) -> Result<u64> {
-    copy_download_observed(reader, writer, maximum, |_| {})
-}
-
-fn copy_download_observed(
-    reader: &mut impl Read,
-    writer: &mut impl io::Write,
-    maximum: u64,
-    mut observed: impl FnMut(u64),
 ) -> Result<u64> {
     let mut reader = reader.take(maximum.saturating_add(1));
     let mut buffer = [0_u8; 64 * 1024];
@@ -161,7 +164,6 @@ fn copy_download_observed(
         }
         writer.write_all(&buffer[..read])?;
         copied += read as u64;
-        observed(copied);
     }
     if copied > maximum {
         bail!("download exceeds its {maximum}-byte limit");
@@ -193,24 +195,38 @@ mod tests {
         let task = progress.task("bundle");
         let temp = tempfile::tempdir().unwrap();
         let destination = temp.path().join("bundle.zip");
-        let mut source = std::io::Cursor::new(vec![7_u8; 150_000]);
+        let source = std::io::Cursor::new(vec![7_u8; 150_000]);
+        let record = TransferRecord::http(
+            Purpose::ReleaseBundle,
+            "https://example.test/bundle.zip",
+            Destination::Home,
+        )
+        .total(Some(150_000));
+        let reader = transfer::begin(record, Some(&task)).reader(source);
 
-        write_download_observed(&destination, 150_000, &mut source, &task, Some(150_000)).unwrap();
+        write_download_observed(&destination, 150_000, reader).unwrap();
         task.finish();
 
         let events = recorder.0.lock().unwrap();
         assert!(matches!(events[0].kind, ProgressEventKind::Started { .. }));
+        assert!(matches!(
+            &events[1].kind,
+            ProgressEventKind::Started { transfer: Some(record), .. }
+                if record.purpose == Purpose::ReleaseBundle
+        ));
         assert!(events.iter().any(|event| matches!(
             event.kind,
             ProgressEventKind::Progress {
                 completed: 150_000,
                 total: Some(150_000),
                 ref unit,
+                transfer: Some(_),
+                ..
             } if unit == "bytes"
         )));
         assert!(matches!(
             events.last().unwrap().kind,
-            ProgressEventKind::Finished
+            ProgressEventKind::Finished { .. }
         ));
         assert_eq!(std::fs::metadata(destination).unwrap().len(), 150_000);
     }

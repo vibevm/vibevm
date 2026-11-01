@@ -5,7 +5,9 @@ use serde::{Deserialize, Serialize};
 /// One progress observation of an invocation as a JSON line on stderr under
 /// --progress-format json: emission sequence, timestamp, task identity and
 /// parent, the closed event kind, the task label, the requirement a start
-/// installs and the measurement or message the kind carries.
+/// installs and the measurement or message the kind carries, and on the task
+/// of a download the transfer id, its record on the start, the rate of a
+/// measurement and the peak of an end (PROP-068#stream).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ProgressEvent {
     pub protocol: String,
@@ -44,11 +46,46 @@ pub struct ProgressEvent {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
+
+    /// The transfer id (PROP-068#stream) on the start, measurement, finish and
+    /// fail of a download's task; the journal under the settings root uses the
+    /// same id.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transfer: Option<String>,
+
+    /// Only on the start of a download's task: the transfer's record without
+    /// pid and command.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transfer_record: Option<TransferRecord>,
+
+    /// On a download's measurement: the bytes of the last second over that
+    /// second.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub rate_bps: Option<Count>,
+
+    /// On a download's finish and fail: the peak of its per-second rates.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub peak_bps: Option<Count>,
 }
 
 /// An exact non-negative count. JTD has no uint64 form, so generated Rust
 /// narrows the numeric form to u64.
 pub type Count = u64;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Destination {
+    #[serde(rename = "cache")]
+    Cache,
+
+    #[serde(rename = "home")]
+    Home,
+
+    #[serde(rename = "store")]
+    Store,
+
+    #[serde(rename = "work")]
+    Work,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Kind {
@@ -84,6 +121,39 @@ pub enum Level {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Precision {
+    #[serde(rename = "counted")]
+    Counted,
+
+    #[serde(rename = "reported")]
+    Reported,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Purpose {
+    #[serde(rename = "archive")]
+    Archive,
+
+    #[serde(rename = "index-file")]
+    IndexFile,
+
+    #[serde(rename = "native-input")]
+    NativeInput,
+
+    #[serde(rename = "other")]
+    Other,
+
+    #[serde(rename = "package-clone")]
+    PackageClone,
+
+    #[serde(rename = "package-source")]
+    PackageSource,
+
+    #[serde(rename = "release-bundle")]
+    ReleaseBundle,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Requires {
     pub key: String,
 
@@ -91,4 +161,55 @@ pub struct Requires {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub step: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum TransferKind {
+    #[serde(rename = "git")]
+    Git,
+
+    #[serde(rename = "http")]
+    Http,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TransferRecord {
+    pub id: String,
+
+    pub batch: String,
+
+    pub kind: TransferKind,
+
+    pub url: String,
+
+    pub purpose: Purpose,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub package: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub step: Option<String>,
+
+    pub destination: Destination,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub total: Option<Count>,
+
+    pub started: String,
+
+    pub precision: Precision,
+
+    pub limited: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub limit_bps: Option<Count>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub remapped_from: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resume: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub continues: Option<String>,
 }

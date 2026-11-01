@@ -122,6 +122,10 @@ struct InteractiveRenderer {
     /// row is written around them; a test's in-memory terminal takes it as
     /// one of their lines.
     stderr: bool,
+    /// The task of a download, drawn as the bytes of its step's block
+    /// rather than as a row of its own (`PROP-068#display`): the step it
+    /// belongs to, by the download's task.
+    downloads: Mutex<BTreeMap<TaskId, TaskId>>,
 }
 
 struct InteractiveTask {
@@ -163,6 +167,7 @@ impl ProgressRenderer {
                 shapes: Mutex::new(Shapes::default()),
                 panel: Mutex::new(None),
                 stderr,
+                downloads: Mutex::new(BTreeMap::new()),
             }),
             verbose,
             logs: StepLogs::default(),
@@ -235,9 +240,9 @@ impl ProgressObserver for ProgressRenderer {
 /// How a terminal event ends its task, or `None` for a live event.
 fn ending(kind: &ProgressEventKind) -> Option<End> {
     match kind {
-        ProgressEventKind::Finished => Some(End::Finished),
+        ProgressEventKind::Finished { .. } => Some(End::Finished),
         ProgressEventKind::Skipped { reason } => Some(End::Skipped(sanitize(reason))),
-        ProgressEventKind::Failed { message } => Some(End::Failed(sanitize(message))),
+        ProgressEventKind::Failed { message, .. } => Some(End::Failed(sanitize(message))),
         ProgressEventKind::Stopped => Some(End::Stopped),
         _ => None,
     }
@@ -246,6 +251,9 @@ fn ending(kind: &ProgressEventKind) -> Option<End> {
 impl InteractiveRenderer {
     fn observe(&self, event: ProgressEvent, verbose: bool, logs: &StepLogs) {
         let Ok(mut tasks) = self.tasks.lock() else {
+            return;
+        };
+        let Some(id) = self.download_step(&event) else {
             return;
         };
         if let Some(end) = ending(&event.kind) {
@@ -305,17 +313,23 @@ impl InteractiveRenderer {
                 completed,
                 total,
                 unit,
+                rate_bps,
+                ..
             } => {
-                let Some(task) = tasks.get(&event.task_id) else {
+                let Some(task) = tasks.get(&id) else {
                     return;
                 };
                 // The style is chosen before the measurement, so the one
                 // draw the measurement triggers already carries the bar.
+                // A download's rate is its sample's, over the last second
+                // (`PROP-068#stream`); nothing here computes one.
                 let bytes = unit.eq_ignore_ascii_case("bytes");
-                task.bar.set_prefix(if bytes {
-                    String::new()
-                } else {
-                    sanitize(&unit)
+                task.bar.set_prefix(match (bytes, rate_bps) {
+                    // In the bar's own units, so `12.40 MiB of 40.10 MiB`
+                    // and its rate read as one figure.
+                    (true, Some(rate)) => format!(" · {}/s", indicatif::HumanBytes(rate)),
+                    (true, None) => String::new(),
+                    (false, _) => sanitize(&unit),
                 });
                 match (total, bytes) {
                     (Some(_), true) => task.bar.set_style(bytes_bar_style()),
@@ -363,6 +377,29 @@ impl InteractiveRenderer {
             }
             _ => {}
         }
+    }
+
+    /// The task an event draws on: a download's step for the download's
+    /// own task, the task itself otherwise; `None` for a download's start
+    /// and end, which draw nothing of their own.
+    fn download_step(&self, event: &ProgressEvent) -> Option<TaskId> {
+        let mut downloads = self.downloads.lock().ok()?;
+        if let ProgressEventKind::Started {
+            transfer: Some(_), ..
+        } = &event.kind
+            && let Some(step) = event.parent_id
+        {
+            downloads.insert(event.task_id, step);
+            return None;
+        }
+        let Some(step) = downloads.get(&event.task_id).copied() else {
+            return Some(event.task_id);
+        };
+        if ending(&event.kind).is_some() {
+            downloads.remove(&event.task_id);
+            return None;
+        }
+        Some(step)
     }
 
     /// The record one task leaves behind: its collapsed block in the list

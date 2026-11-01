@@ -12,6 +12,7 @@ use std::cell::RefCell;
 use vibe_core::manifest::{
     ArchiveFormatDecl, NativeFormatDecl, StepDecl, StepKind, StepOrigin, StepPhase,
 };
+use vibe_core::progress::transfer::Purpose;
 use vibe_core::remap::{Artifact, ArtifactKind, Locator};
 
 use crate::error::{AppError, InstallerError, StepError};
@@ -19,7 +20,7 @@ use crate::index::AuthoredCommands;
 use crate::installer::archive::{self, ArchiveFormat};
 use crate::installer::native::{self, NativeKind};
 use crate::installer::source_build::{self, digest_of};
-use crate::installer::{self, ChildIo, FetchWatch, ServedBy, io, run_child, shell};
+use crate::installer::{self, ChildIo, FetchWatch, ServedBy, TransferFacts, io, run_child, shell};
 
 use super::template::{self, Vars};
 
@@ -52,6 +53,8 @@ pub(crate) struct StepContext<'a> {
     /// (`PROP-066#provenance`). The runner reads it after the step and
     /// puts it in `steps.json` and the run record.
     pub served: &'a RefCell<Vec<ServedBy>>,
+    /// What this step's downloads tell the journal (`PROP-068#transfer`).
+    pub transfer: &'a TransferFacts,
 }
 
 impl StepContext<'_> {
@@ -62,11 +65,14 @@ impl StepContext<'_> {
             .with_step(step)
     }
 
-    fn watch(&self, size: Option<u64>) -> FetchWatch<'_> {
+    fn watch(&self, size: Option<u64>, purpose: Purpose) -> FetchWatch<'_> {
         FetchWatch {
             size,
             task: self.io.task,
             interrupt: self.io.interrupt,
+            facts: Some(self.transfer),
+            purpose: Some(purpose),
+            remapped_from: None,
         }
     }
 }
@@ -105,7 +111,7 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
                         cx.package_root,
                         source,
                         cx.offline,
-                        &cx.watch(None),
+                        &cx.watch(None, Purpose::PackageSource),
                         cx.remap,
                         &cx.artifact(step.id.clone()),
                     )?;
@@ -252,6 +258,10 @@ fn verified_input(
 ) -> Result<PathBuf, AppError> {
     let file = input_file(cx.work, step);
     let digest = sha256.to_ascii_lowercase();
+    let purpose = match step.kind {
+        StepKind::Native { .. } => Purpose::NativeInput,
+        _ => Purpose::Archive,
+    };
     if digest_of(&file).ok().as_deref() == Some(digest.as_str()) {
         // A resume never re-fetches a verified input (`PROP-066#locator`).
         return Ok(file);
@@ -291,7 +301,7 @@ fn verified_input(
             cx.package_root,
             &partial,
             cx.offline,
-            &cx.watch(size),
+            &cx.watch(size, purpose),
         )?;
         fs::rename(&partial, &cached).map_err(|error| {
             let _ = fs::remove_file(&partial);

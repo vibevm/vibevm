@@ -39,6 +39,7 @@ mod skill;
 mod specmap;
 mod storage;
 mod term;
+mod transfers;
 mod vars;
 mod vvm;
 mod workspace;
@@ -74,6 +75,7 @@ pub use skill::*;
 pub use specmap::*;
 pub use storage::*;
 pub use term::*;
+pub use transfers::*;
 pub use vars::*;
 pub use vvm::*;
 pub use workspace::*;
@@ -453,6 +455,10 @@ pub enum Command {
     /// `vibe` binary manages its own versions.
     #[command(name = "self")]
     Vvm(VvmArgs),
+
+    /// The downloads of this machine: active ones with their last sample,
+    /// the history, and a live feed (PROP-068).
+    Transfers(TransfersArgs),
 
     /// The registry of what this project can invoke: every `[[binary]]` and
     /// every `[[mcp_server]]` the installed packages declare, in one table.

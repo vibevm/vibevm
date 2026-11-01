@@ -55,7 +55,7 @@ fn materialisation_names_package_children_and_marks_current_slots_skipped() {
         })
         .expect("named package child");
     assert!(events.iter().any(|event| {
-        event.task_id == child.task_id && matches!(&event.kind, ProgressEventKind::Finished)
+        event.task_id == child.task_id && matches!(&event.kind, ProgressEventKind::Finished { .. })
     }));
     drop(events);
 
