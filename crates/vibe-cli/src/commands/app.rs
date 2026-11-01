@@ -1,7 +1,7 @@
 //! CLI adapter for installed applications: `vibe app installers`,
 //! `launchers`, `icon`, `import-desktop`, `run`, `start`, `running`,
-//! `stop`, `watch`, `list`, `use` and `alternatives` over the
-//! `vibe-app` library. This adapter parses, chooses an ID in an attended
+//! `stop`, `watch`, `list`, `use`, `alternatives`, `export` and `import`
+//! over the `vibe-app` library. This adapter parses, chooses an ID in an attended
 //! terminal and renders.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations");
@@ -21,6 +21,7 @@ mod launch;
 mod lifecycle;
 mod menu;
 mod plan_text;
+mod portable;
 mod processes;
 pub(crate) mod project;
 mod records;
@@ -45,6 +46,7 @@ pub fn run(
     embedded_root: Option<&Path>,
     offline: bool,
 ) -> Result<Option<i32>> {
+    let explicit_path = args.path.is_some();
     let project_root = home::selected_project(args.path.as_deref())?;
     let app_home = home::select(args.global, project_root.as_deref())?;
     match args.command {
@@ -320,6 +322,17 @@ pub fn run(
             }
             Ok(None)
         }
+        AppCommand::Export(export) => {
+            // `-g` is implied: only an explicit `--path` exports a project home.
+            let home = if explicit_path {
+                app_home.clone()
+            } else {
+                home::AppHome::User(global::settings_root()?)
+            };
+            portable::export(ctx, home.settings(), &export)?;
+            Ok(None)
+        }
+        AppCommand::Import(import) => portable::import(ctx, &import, explicit_path, offline),
         AppCommand::Use { slot, key } => {
             alternatives::use_default(ctx, app_home.settings(), &slot, &key)?;
             Ok(None)

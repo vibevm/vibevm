@@ -173,6 +173,8 @@ codes!(LIFECYCLE, LifecycleError [] {
     NoPrevious => "no_previous", Refusal, "no kept previous installation exists to roll back to";
     Environment => "environment_failed", Failure, "an env step could not change the user environment";
     NoEnvironment => "environment_unavailable", Refusal, "no user environment is available to an env step";
+    ChoiceDiffers => "choice_differs", Refusal, "an imported application is installed with another choice";
+    PortableInvalid => "apps_file_invalid", Refusal, "the application set given to import is unreadable";
 });
 
 codes!(APP, AppError [State, Catalog, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle] {

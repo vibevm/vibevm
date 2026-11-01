@@ -194,7 +194,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             crate::cli::AppCommand::Run { .. } | crate::cli::AppCommand::Start { .. } => {
                 TerminalPassthrough
             }
-            crate::cli::AppCommand::Running => FastMetadata,
+            crate::cli::AppCommand::Running | crate::cli::AppCommand::Export(_) => FastMetadata,
+            // Each row is an ordinary `install -g` with its step panel.
+            crate::cli::AppCommand::Import(_) => InteractiveFallback("Command app import"),
             crate::cli::AppCommand::Stop { .. } => FiniteFallback("Command app stop"),
             // A line stream over stdout until stdin closes, like a protocol
             // server: nothing may draw beside it.

@@ -2440,7 +2440,7 @@ structure, and it goes when the file does.
 | @fact:B222-WHAT **what** | A project records its applications in `vibe.toml` / `vibe.lock`, but the global home has no portable description of "what I have installed, with which installer option, features and parameters". A Brewfile-like `vibe app export > apps.toml` and `vibe app import apps.toml` would move a user's toolset to another machine through the ordinary registry resolution, choosing the matching platform rows. |
 | @fact:B222-EVIDENCE **evidence** | Owner question of 2026-10-31; the index record already holds every field such an export needs. |
 | @fact:B222-SEVERITY **severity** | P3 — convenience; the project scope covers the reproducible case today. |
-| @fact:B222-DISPOSITION **disposition** | `candidate` — needs the owner's yes. |
+| @fact:B222-DISPOSITION **disposition** | `done` — landed on main 2026-11-01 as `feat(app): vibe app export and import carry the user's applications and launcher arrangement to another machine`, accepted by the owner the same day: `vibe app export` writes the `vibe-apps/1` set (installations with their installer, features, parameters, licence, mark and hold, then collections, pins and launcher overrides unless `--installations-only`); `vibe app import` installs it through the ordinary resolution and `install -g` row by row with `--dry-run`, `--registry`, `--accept-license` and `--skip-installed`, refuses per row, and answers `vibe-app-import/1`; PROP-059 `#portable-set`. |
 | @fact:B222-FILED **filed by** | APP-STEPS campaign, 2026-10-31. |
 
 ## B-223 — payload paths print with mixed separators on Windows {#b-223}

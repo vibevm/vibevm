@@ -56,8 +56,10 @@ pub use mcp::*;
 pub use pkg::*;
 
 mod app;
+mod app_portable;
 pub use agent::*;
 pub use app::*;
+pub use app_portable::*;
 pub use prefs::*;
 pub use progress::*;
 pub use query::*;

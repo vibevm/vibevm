@@ -1,0 +1,239 @@
+{
+  "metadata": {
+    "description": "Version 1 of the portable set of a home's applications (`vibe-apps/1`), written by vibe app export as TOML or, with --json, as this JSON, and read by vibe app import (PROP-059#portable-set): one row per installation with the installer option chosen on the exporting host, its features, parameters, licence acceptance, mark and hold, then the user's launcher arrangement — collections, pinned lists and per-launcher overrides — unless --installations-only dropped it. The rows name exact package keys; the importing host resolves each through its own registries and chooses its own platform row.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::apps_manifest"
+    },
+    "x-rust-type": "AppsManifest",
+    "x-wire-order": [
+      "protocol",
+      "exported",
+      "home",
+      "platform",
+      "arch",
+      "application",
+      "collection",
+      "pin",
+      "launcher"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "exported": {
+      "type": "string",
+      "metadata": {
+        "description": "RFC 3339 time of the export."
+      }
+    },
+    "home": {
+      "enum": ["user", "project"],
+      "metadata": {
+        "description": "The kind of home the set was exported from.",
+        "x-vocabulary": "closed"
+      }
+    },
+    "platform": {
+      "type": "string",
+      "metadata": {
+        "description": "The exporting host's platform id; informative, the importing host chooses its own."
+      }
+    },
+    "arch": {
+      "type": "string",
+      "metadata": {
+        "description": "The exporting host's architecture id; informative."
+      }
+    },
+    "application": {
+      "elements": {
+        "ref": "application"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "optionalProperties": {
+    "collection": {
+      "elements": {
+        "ref": "collection"
+      },
+      "metadata": {
+        "x-empty": "omit"
+      }
+    },
+    "pin": {
+      "elements": {
+        "ref": "pin"
+      },
+      "metadata": {
+        "x-empty": "omit"
+      }
+    },
+    "launcher": {
+      "elements": {
+        "ref": "launcher"
+      },
+      "metadata": {
+        "x-empty": "omit"
+      }
+    }
+  },
+  "definitions": {
+    "application": {
+      "metadata": {
+        "description": "One installation: its exact package key, the installer option id it was installed with, the chosen features and parameter values (never a secret one), whether a licence was accepted, its manual/auto mark, and whether it was held or hidden.",
+        "x-wire-order": [
+          "key",
+          "installer",
+          "features",
+          "parameters",
+          "license",
+          "mark",
+          "held",
+          "hidden"
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "installer": {
+          "type": "string"
+        },
+        "mark": {
+          "enum": ["manual", "auto"],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      },
+      "optionalProperties": {
+        "features": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "parameters": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "license": {
+          "enum": ["accepted"],
+          "metadata": {
+            "description": "Present only when the installation's licence was accepted; the importing host still asks, or takes --accept-license.",
+            "x-vocabulary": "closed",
+            "x-default": null
+          }
+        },
+        "held": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false
+          }
+        },
+        "hidden": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false
+          }
+        }
+      }
+    },
+    "collection": {
+      "metadata": {
+        "description": "One named, ordered collection of launcher keys, as `vibe app collection` keeps it.",
+        "x-wire-order": [
+          "name",
+          "launchers"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "launchers": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "pin": {
+      "metadata": {
+        "description": "One ordered pinned list, named as `vibe app pin --to` names it.",
+        "x-wire-order": [
+          "target",
+          "launchers"
+        ]
+      },
+      "properties": {
+        "target": {
+          "enum": ["taskbar", "favorites"],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "launchers": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "launcher": {
+      "metadata": {
+        "description": "One user override of a launcher with only what the user changed: a name of their own, hidden from menus, an icon file of their own.",
+        "x-wire-order": [
+          "key",
+          "name",
+          "hidden",
+          "icon"
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "name": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "hidden": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false
+          }
+        },
+        "icon": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}
