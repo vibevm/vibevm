@@ -340,7 +340,7 @@ fn display_title(name: &str) -> String {
         .join(" ")
 }
 
-fn manifest_text(
+pub(super) fn manifest_text(
     group: &str,
     name: &str,
     fields: &ProjectFields,
