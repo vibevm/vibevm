@@ -165,6 +165,21 @@ fn interactive_long_nested_label_stays_within_eighty_columns() {
 }
 
 /// The step panel of PROP-065 `#display` over an in-memory terminal.
+/// The screen once `needle` has been drawn on it. A bar's steady tick
+/// redraws from its own thread, and `InMemoryTerm` clears and rewrites a
+/// line as separate operations, so one read can land between the two and
+/// see a blank screen; waiting for the text is the only honest read.
+fn drawn(terminal: &InMemoryTerm, needle: &str) -> String {
+    let deadline = std::time::Instant::now() + Duration::from_secs(2);
+    loop {
+        let contents = terminal.contents();
+        if contents.contains(needle) || std::time::Instant::now() > deadline {
+            return contents;
+        }
+        std::thread::sleep(Duration::from_millis(5));
+    }
+}
+
 fn panelled(
     rows: u16,
     columns: u16,
@@ -438,7 +453,7 @@ fn the_panel_draws_the_steps_as_blocks_and_a_requirement_with_its_children() {
     let required_step = requirement
         .progress()
         .task("fetch (archive)  Fetch the toolchain");
-    let nested = terminal.contents();
+    let nested = drawn(&terminal, "└ fetch  Fetch the toolchain");
     assert!(
         !nested.contains("Command global install"),
         "the command's own task draws nothing: {nested:?}"
@@ -454,7 +469,7 @@ fn the_panel_draws_the_steps_as_blocks_and_a_requirement_with_its_children() {
     required_step.finish();
     requirement.finish();
     renderer.suspend(|| ());
-    let done = terminal.contents();
+    let done = drawn(&terminal, "✓ └ fetch  Fetch the toolchain · 0s");
     assert!(
         done.contains("✓ └ fetch  Fetch the toolchain · 0s"),
         "a finished child keeps its branch: {done:?}"
@@ -465,7 +480,7 @@ fn the_panel_draws_the_steps_as_blocks_and_a_requirement_with_its_children() {
     let build = steps.task("build (recipe)  Build");
     build.detail("configure: done");
     build.detail("cc main.c");
-    let folded = terminal.contents();
+    let folded = drawn(&terminal, "  │ cc main.c");
     assert!(
         folded.contains("  │ cc main.c"),
         "the fold sits at column 2 under the running block: {folded:?}"
@@ -478,7 +493,7 @@ fn the_panel_draws_the_steps_as_blocks_and_a_requirement_with_its_children() {
     build.finish();
     command.finish();
     renderer.suspend(|| ());
-    let after = terminal.contents();
+    let after = drawn(&terminal, "✓ build");
     assert!(after.contains("✓ fetch"), "{after:?}");
     assert!(after.contains("✓ build"), "{after:?}");
     assert!(
