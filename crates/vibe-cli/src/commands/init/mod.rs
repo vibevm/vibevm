@@ -10,6 +10,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#project-initialization");
 
+mod app;
 mod doc;
 mod helpers;
 mod package;
@@ -285,6 +286,11 @@ fn create_project(
                 &format!("# {}\n\n{}\n", fields.name, fields.description),
                 "package README",
             )?);
+        }
+        if package_meta.kind == vibe_core::PackageKind::App
+            && app::declares_scaffold(&plan.manifest)
+        {
+            outcomes.extend(app::create_app_files(ctx, &path, &path, &fields.name)?);
         }
     }
     outcomes.push(ensure_empty_lockfile(ctx, &path)?);

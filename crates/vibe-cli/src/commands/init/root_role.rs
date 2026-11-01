@@ -229,6 +229,9 @@ fn new_manifest(
                     ),
                 );
                 manifest.package = Some(toml::Value::Table(table).try_into()?);
+                if kind == PackageKind::App {
+                    super::app::declare_in_root(&mut manifest, &fields.name)?;
+                }
             }
         }
     }
