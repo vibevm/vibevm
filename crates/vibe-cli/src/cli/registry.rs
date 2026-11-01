@@ -17,7 +17,9 @@ pub struct RegistryArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum RegistrySubcommand {
-    /// Force a `git fetch` on the configured registry cache.
+    /// Force a `git fetch` on the configured registry cache: the clones a
+    /// project's `vibe.lock` references, or — with `-g`, or outside a
+    /// project — every cached clone of the user home's registries.
     Sync(RegistrySyncArgs),
 
     /// Publish a package directory as a tagged release in the
@@ -268,6 +270,14 @@ pub struct RegistrySyncArgs {
     /// Directory of the project (defaults to current).
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
+
+    /// Refresh the user home instead of a project: every cached package
+    /// clone of the registries in `~/.vibe/registry.toml` (the set a
+    /// global `vibe app install` resolves through), and each registry's
+    /// index handshake. `$VIBE_SETTINGS` names the home. Outside a
+    /// project this is what a plain `vibe registry sync` does.
+    #[arg(short = 'g', long = "global")]
+    pub global: bool,
 }
 
 #[derive(Debug, clap::Args)]
@@ -418,4 +428,17 @@ pub struct RegistryPublishArgs {
     /// Describe what would happen but make no API calls or pushes.
     #[arg(long = "dry-run")]
     pub dry_run: bool,
+
+    /// A local checkout of the registry's git-hosted index. After a
+    /// successful publish the pushed version is added to it, its
+    /// `repomd.json` rewritten, and the change committed as
+    /// `index: <group>/<name>@<version>`. Wins over `[index] checkout`
+    /// in `~/.vibe/registry.toml`; without either the step is skipped.
+    #[arg(long = "index-checkout", value_name = "PATH")]
+    pub index_checkout: Option<PathBuf>,
+
+    /// Push the index checkout's commit to its upstream. Without it the
+    /// commit stays local for the maintainer to review and push.
+    #[arg(long = "push-index")]
+    pub push_index: bool,
 }

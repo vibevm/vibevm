@@ -65,6 +65,11 @@ vibe-check.workspace = true
 # projection (##PROJECTION-READ).
 vibe-specdoc.workspace = true
 vibe-publish.workspace = true
+# `vibe registry publish --index-checkout` adds the version it pushed to a
+# local checkout of the git-hosted index through the index's own writer
+# (`vibe_index::cli::add::add`), so the entry is born by the code an
+# operator's `vibe-index add` runs, never by a second copy of it.
+vibe-index.workspace = true
 vibe-workspace.workspace = true
 vibe-mcp.workspace = true
 vibe-orchestrator.workspace = true

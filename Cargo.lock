@@ -4538,6 +4538,7 @@ dependencies = [
  "vibe-doc-shell",
  "vibe-facts",
  "vibe-graph",
+ "vibe-index",
  "vibe-install",
  "vibe-lifecycle",
  "vibe-llm",
