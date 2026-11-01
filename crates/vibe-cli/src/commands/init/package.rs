@@ -79,6 +79,10 @@ pub(super) fn prepare_package(
             Some(doc::resolve_translation(root, coordinate, name)?)
         }
     };
+    // The project container is created after this returns, so a manifest
+    // that would not validate must be refused here, not after the folder
+    // exists.
+    scaffold_manifest_text(group, name, "dynamic", &fields, kind, translation.as_ref())?;
     Ok(PreparedPackage {
         fields,
         kind,
@@ -199,13 +203,14 @@ fn create_package_dirs_from_fields(
     package_kind: PackageKind,
     translation: Option<&Translation>,
 ) -> Result<Vec<Outcome>> {
-    let kind = package_kind.as_str();
     let version = &fields.version;
     let pkg_dir = project_root
         .join(vibe_core::layout::current_packages_root())
         .join(group)
         .join(name)
         .join(format!("v{version}"));
+    let manifest_text =
+        scaffold_manifest_text(group, name, link, fields, package_kind, translation)?;
 
     // Documentation is not a tool package with other words in it: no
     // boot lane, no snippet, and a card its siblings do not owe.
@@ -221,7 +226,7 @@ fn create_package_dirs_from_fields(
         );
     }
 
-    let category = boot_category(package_kind);
+    let kind = package_kind.as_str();
     let mut outcomes = Vec::new();
 
     let manifest_path = pkg_dir.join(Manifest::FILENAME);
@@ -241,30 +246,6 @@ fn create_package_dirs_from_fields(
         });
     } else {
         ensure_dir(&pkg_dir)?;
-        let authors_line = if fields.authors.is_empty() {
-            String::new()
-        } else {
-            let quoted: Vec<String> = fields.authors.iter().map(|a| format!("\"{a}\"")).collect();
-            format!("authors = [{}]\n", quoted.join(", "))
-        };
-        let boot_source = display_pathbuf(
-            &vibe_core::layout::current_boot_dir().join(format!("10-{kind}-{name}.md")),
-        );
-        let manifest_text = format!(
-            "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
-             version = \"{version}\"\nepoch = 1\n{authors_line}\
-             license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\n\
-             [boot_snippet]\nsource = \"{boot_source}\"\ncategory = \"{category}\"\n\
-             link = \"{link}\"\n{application}",
-            license = fields.license,
-            description = fields.description,
-            format = fields.format,
-            application = if package_kind == PackageKind::App {
-                super::app::manifest_tail(name)
-            } else {
-                String::new()
-            },
-        );
         fs::write(&manifest_path, &manifest_text)?;
         ctx.created(&manifest_rel);
         outcomes.push(Outcome {
@@ -272,6 +253,20 @@ fn create_package_dirs_from_fields(
             action: Action::Created,
             reason: "package manifest",
         });
+    }
+
+    // A remap package carries nothing a boot lane could run
+    // (PROP-066 `#package`), so it gets no snippet at all.
+    if package_kind == PackageKind::Remap {
+        outcomes.push(write_readme(
+            ctx,
+            project_root,
+            &pkg_dir,
+            group,
+            name,
+            kind,
+        )?);
+        return Ok(outcomes);
     }
 
     // The package's boot lane, on the live layout.
@@ -304,32 +299,14 @@ fn create_package_dirs_from_fields(
         });
     }
 
-    // README.md.
-    let readme_path = pkg_dir.join("README.md");
-    let readme_rel = display_pathbuf(
-        readme_path
-            .strip_prefix(project_root)
-            .unwrap_or(&readme_path),
-    );
-    if !readme_path.exists() {
-        fs::write(
-            &readme_path,
-            format!("# {name}\n\nA `{kind}` package in group `{group}`.\n"),
-        )?;
-        ctx.created(&readme_rel);
-        outcomes.push(Outcome {
-            path: readme_rel,
-            action: Action::Created,
-            reason: "package README",
-        });
-    } else {
-        ctx.skipped(&readme_rel, "already exists");
-        outcomes.push(Outcome {
-            path: readme_rel,
-            action: Action::Kept,
-            reason: "package README",
-        });
-    }
+    outcomes.push(write_readme(
+        ctx,
+        project_root,
+        &pkg_dir,
+        group,
+        name,
+        kind,
+    )?);
 
     // An application package plans only with the recipe its manifest
     // names; the manifest text above declares it whenever it was written
@@ -342,6 +319,96 @@ fn create_package_dirs_from_fields(
             name,
         )?);
     }
+    if package_kind == PackageKind::Mcp && manifest_written {
+        outcomes.extend(super::kinds::create_mcp_files(
+            ctx,
+            project_root,
+            &pkg_dir,
+            name,
+        )?);
+    }
 
     Ok(outcomes)
+}
+
+fn write_readme(
+    ctx: &output::Context,
+    project_root: &Path,
+    pkg_dir: &Path,
+    group: &str,
+    name: &str,
+    kind: &str,
+) -> Result<Outcome> {
+    ensure_file(
+        ctx,
+        project_root,
+        &pkg_dir.join("README.md"),
+        &format!("# {name}\n\nA `{kind}` package in group `{group}`.\n"),
+        "package README",
+    )
+}
+
+/// The `vibe.toml` a nested package starts with, put through the same
+/// parse and validation `vibe check` runs. Every caller asks for it before
+/// its first write, so a refusal leaves the directory as it was.
+fn scaffold_manifest_text(
+    group: &str,
+    name: &str,
+    link: &str,
+    fields: &ProjectFields,
+    package_kind: PackageKind,
+    translation: Option<&Translation>,
+) -> Result<String> {
+    let text = if package_kind == PackageKind::Doc {
+        doc::manifest_text(group, name, fields, translation)
+    } else {
+        tool_manifest_text(group, name, link, fields, package_kind)
+    };
+    Manifest::parse_str(&text)
+        .and_then(|manifest| manifest.validate())
+        .with_context(|| {
+            format!("the vibe.toml of `{group}/{name}` would not validate, so nothing was written")
+        })?;
+    Ok(text)
+}
+
+/// The manifest of every kind but `doc`: `[package]`, the boot snippet
+/// (absent for `remap`, which may carry none), and the kind's own tables.
+fn tool_manifest_text(
+    group: &str,
+    name: &str,
+    link: &str,
+    fields: &ProjectFields,
+    package_kind: PackageKind,
+) -> String {
+    let kind = package_kind.as_str();
+    let authors_line = if fields.authors.is_empty() {
+        String::new()
+    } else {
+        let quoted: Vec<String> = fields.authors.iter().map(|a| format!("\"{a}\"")).collect();
+        format!("authors = [{}]\n", quoted.join(", "))
+    };
+    let boot_snippet = if package_kind == PackageKind::Remap {
+        String::new()
+    } else {
+        let boot_source = display_pathbuf(
+            &vibe_core::layout::current_boot_dir().join(format!("10-{kind}-{name}.md")),
+        );
+        format!(
+            "\n[boot_snippet]\nsource = \"{boot_source}\"\ncategory = \"{category}\"\n\
+             link = \"{link}\"\n",
+            category = boot_category(package_kind),
+        )
+    };
+    format!(
+        "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
+         version = \"{version}\"\nepoch = 1\n{authors_line}\
+         license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\
+         {boot_snippet}{tail}",
+        version = fields.version,
+        license = fields.license,
+        description = fields.description,
+        format = fields.format,
+        tail = super::kinds::manifest_tail(package_kind, group, name),
+    )
 }

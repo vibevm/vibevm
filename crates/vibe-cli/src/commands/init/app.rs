@@ -66,16 +66,6 @@ pub(super) fn manifest_tail(name: &str) -> String {
     )
 }
 
-/// Add the application declarations to a typed root manifest. The tail is
-/// appended to the manifest's own text and parsed back, so the root form
-/// and the nested form declare exactly the same tables.
-pub(super) fn declare_in_root(manifest: &mut Manifest, name: &str) -> Result<()> {
-    let mut text = toml::to_string_pretty(manifest)?;
-    text.push_str(&manifest_tail(name));
-    *manifest = Manifest::parse_str(&text)?;
-    Ok(())
-}
-
 /// True when the manifest's installer options run the scaffold's recipe.
 /// Re-initialising a hand-written application package must not drop a
 /// script its manifest never names.

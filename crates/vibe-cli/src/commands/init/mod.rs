@@ -13,6 +13,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#project-initializati
 mod app;
 mod doc;
 mod helpers;
+mod kinds;
 mod package;
 mod prompts;
 mod root_role;
@@ -291,6 +292,11 @@ fn create_project(
             && app::declares_scaffold(&plan.manifest)
         {
             outcomes.extend(app::create_app_files(ctx, &path, &path, &fields.name)?);
+        }
+        if package_meta.kind == vibe_core::PackageKind::Mcp
+            && kinds::declares_mcp_scaffold(&plan.manifest, &fields.name)
+        {
+            outcomes.extend(kinds::create_mcp_files(ctx, &path, &path, &fields.name)?);
         }
     }
     outcomes.push(ensure_empty_lockfile(ctx, &path)?);

@@ -220,18 +220,6 @@ fn invalid_root_identity_fails_before_scaffold_and_settings_writes() {
             "--kind",
             "bad",
         ],
-        // MCP identity is invalid without a declared server; init must not
-        // invent one or write a partial scaffold before manifest validation.
-        &[
-            "--type",
-            "package",
-            "--group",
-            "org.example",
-            "--name",
-            "demo",
-            "--kind",
-            "mcp",
-        ],
         &["--type", "unknown"],
         &["package", "org.example/demo", "--type", "package"],
         &["group", "org.example", "--type", "project"],

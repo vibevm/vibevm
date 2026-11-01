@@ -229,9 +229,7 @@ fn new_manifest(
                     ),
                 );
                 manifest.package = Some(toml::Value::Table(table).try_into()?);
-                if kind == PackageKind::App {
-                    super::app::declare_in_root(&mut manifest, &fields.name)?;
-                }
+                super::kinds::declare_in_root(&mut manifest, kind, group, &fields.name)?;
             }
         }
     }
@@ -456,6 +454,8 @@ mod tests {
             PackageKind::Lang,
             PackageKind::Doc,
             PackageKind::App,
+            PackageKind::Mcp,
+            PackageKind::Remap,
         ] {
             let manifest = new_manifest(
                 &args(),
@@ -481,16 +481,31 @@ mod tests {
     }
 
     #[test]
-    fn mcp_root_requires_server_declarations_before_scaffolding() {
-        let error = new_manifest(
+    fn row_requiring_kinds_get_the_placeholder_rows_their_validators_ask_for() {
+        let mcp = new_manifest(
             &args(),
             InitType::Package,
             Some("org.example"),
             PackageKind::Mcp,
             &fields(),
         )
-        .expect_err("an MCP package without server declarations must fail core validation");
-        assert!(error.to_string().contains("mcp_server"));
+        .unwrap();
+        assert_eq!(mcp.mcp_servers.len(), 1);
+        assert_eq!(mcp.mcp_servers[0].binary.as_deref(), Some("sample"));
+        assert_eq!(mcp.binaries[0].name, "sample");
+        let remap = new_manifest(
+            &args(),
+            InitType::Package,
+            Some("org.example"),
+            PackageKind::Remap,
+            &fields(),
+        )
+        .unwrap();
+        let [row] = remap.remap.rows.as_slice() else {
+            panic!("one remap row, got {:?}", remap.remap.rows);
+        };
+        assert_eq!(row.prefix.as_deref(), Some("https://example.org/"));
+        assert_eq!(row.url.as_deref(), Some("https://mirror.example.org/"));
     }
 
     #[test]
