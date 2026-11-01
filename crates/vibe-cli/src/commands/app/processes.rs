@@ -158,11 +158,16 @@ mod platform {
         fn FreeConsole() -> i32;
         fn AttachConsole(process_id: u32) -> i32;
         fn SetConsoleCtrlHandler(handler: Option<CtrlHandler>, add: i32) -> i32;
+        fn GetStdHandle(std_handle: u32) -> Handle;
+        fn SetStdHandle(std_handle: u32, handle: Handle) -> i32;
     }
 
     type CtrlHandler = unsafe extern "system" fn(u32) -> i32;
 
     const PROCESS_TERMINATE: u32 = 0x0001;
+    const STD_INPUT_HANDLE: u32 = 0xFFFF_FFF6; // (DWORD)-10
+    const STD_OUTPUT_HANDLE: u32 = 0xFFFF_FFF5; // (DWORD)-11
+    const STD_ERROR_HANDLE: u32 = 0xFFFF_FFF4; // (DWORD)-12
     const PROCESS_QUERY_LIMITED_INFORMATION: u32 = 0x1000;
     const STILL_ACTIVE: u32 = 259;
     /// Ctrl-C cannot be sent to a process group; Ctrl-Break can.
@@ -253,6 +258,33 @@ mod platform {
         reason = "unsafe-gate: Rust has no standard-library API for console attachment or control events; every argument is an integer or a handler function with the declared signature and static lifetime, and the console and handler are restored before returning (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
     )]
     fn break_through_console(pid: u32) -> bool {
+        // `AttachConsole` points the standard handles at the console it
+        // attaches, so a redirected stdout or stderr (the shell's pipe, a
+        // file) would be lost with the trailer: keep the three and put them
+        // back once this process is on its own console again.
+        // SAFETY: integer arguments; a handle value is only stored here.
+        let kept = unsafe {
+            [
+                (STD_INPUT_HANDLE, GetStdHandle(STD_INPUT_HANDLE)),
+                (STD_OUTPUT_HANDLE, GetStdHandle(STD_OUTPUT_HANDLE)),
+                (STD_ERROR_HANDLE, GetStdHandle(STD_ERROR_HANDLE)),
+            ]
+        };
+        let sent = break_attached(pid);
+        for (which, handle) in kept {
+            // SAFETY: restores a handle this process already owned.
+            let _ = unsafe { SetStdHandle(which, handle) };
+        }
+        sent
+    }
+
+    /// The attach, the break and the way back; the caller restores the
+    /// standard handles around it.
+    #[specmark::spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "unsafe-gate: Rust has no standard-library API for console attachment or control events; every argument is an integer or a handler function with the declared signature and static lifetime, and the console and handler are restored before returning (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
+    )]
+    fn break_attached(pid: u32) -> bool {
         // SAFETY: borrows nothing; failing without a console is harmless.
         let _ = unsafe { FreeConsole() };
         // SAFETY: an integer argument; failure is answered below.
