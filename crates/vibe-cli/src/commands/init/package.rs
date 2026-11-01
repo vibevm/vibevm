@@ -231,7 +231,8 @@ fn create_package_dirs_from_fields(
             .unwrap_or(&pkg_dir)
             .join(Manifest::FILENAME),
     );
-    if manifest_path.exists() {
+    let manifest_written = !manifest_path.exists();
+    if !manifest_written {
         ctx.skipped(&manifest_rel, "already exists");
         outcomes.push(Outcome {
             path: manifest_rel,
@@ -254,10 +255,15 @@ fn create_package_dirs_from_fields(
              version = \"{version}\"\nepoch = 1\n{authors_line}\
              license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\n\
              [boot_snippet]\nsource = \"{boot_source}\"\ncategory = \"{category}\"\n\
-             link = \"{link}\"\n",
+             link = \"{link}\"\n{application}",
             license = fields.license,
             description = fields.description,
             format = fields.format,
+            application = if package_kind == PackageKind::App {
+                super::app::manifest_tail(name)
+            } else {
+                String::new()
+            },
         );
         fs::write(&manifest_path, &manifest_text)?;
         ctx.created(&manifest_rel);
@@ -323,6 +329,18 @@ fn create_package_dirs_from_fields(
             action: Action::Kept,
             reason: "package README",
         });
+    }
+
+    // An application package plans only with the recipe its manifest
+    // names; the manifest text above declares it whenever it was written
+    // fresh, and a kept manifest is the author's to keep consistent.
+    if package_kind == PackageKind::App && manifest_written {
+        outcomes.extend(super::app::create_app_files(
+            ctx,
+            project_root,
+            &pkg_dir,
+            name,
+        )?);
     }
 
     Ok(outcomes)
