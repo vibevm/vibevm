@@ -6,6 +6,7 @@ mod icon_files;
 mod launcher;
 mod launcher_validation;
 mod requirement;
+mod site;
 mod step_validation;
 mod steps;
 mod sugar;

@@ -1312,6 +1312,8 @@ Checks performed:
 
 Output format: structured report with severity (error, warning, info) per issue, file paths and line numbers, suggested fix when possible.
 
+Under `--json` each finding is an object with `check`, `severity` and `message`, and, when the finding knows them, `path` (project-relative, `/`-separated), `line` and `column` (both 1-based) and `field` — the manifest field the finding is about, as a TOML path: table names as the manifest writes them, array elements by zero-based index, the leaf field last (`installer_options[1].steps[0].sha256`). Only manifest validity fills `field` and `column`. A refusal of a validator gives its field, and `line` / `column` locate that field in `vibe.toml`; a TOML deserialisation error gives the parser's `line` / `column`, and `field` only when the parser names a table that `vibe.toml` holds as a table outside any array — an address is never guessed. A member with nothing to say is left out. In human output the field follows the path as dim metadata (`at   vibe.toml:31 · installer_options[1].steps[0].sha256`).
+
 `vibe check --fix` attempts safe automatic fixes (e.g., removing dead anchor references). Document precisely what `--fix` is allowed to change; never autofix anything that loses information.
 
 Exit code: 0 if no errors, 1 if errors, 0 with warnings displayed if only warnings.

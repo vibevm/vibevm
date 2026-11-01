@@ -18,6 +18,7 @@ mod decor;
 mod deploy;
 mod document;
 mod extension;
+mod field_path;
 pub mod i18n;
 mod lockfile;
 mod mechanism;
@@ -48,6 +49,7 @@ pub use extension::{
     ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionIrLevel,
     ExtensionKey, ExtensionPass, ExtensionPassKind, ExtensionUse, ExtensionWhen, ExtensionsControl,
 };
+pub use field_path::{FieldError, FieldPath};
 pub use lockfile::{
     CURRENT_SCHEMA_VERSION, LockedEmbeddedSource, LockedPackage, LockedRemap, LockedRequirer,
     LockedSubskill, Lockfile, LockfileMeta, SourceKind, VirtualCapabilityRecord,

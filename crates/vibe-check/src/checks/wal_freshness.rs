@@ -56,6 +56,8 @@ impl Check for WalFreshnessCheck {
                 severity: Severity::Info,
                 path: Some(wal_rel),
                 line: None,
+                column: None,
+                field: None,
                 message: "WAL mtime is in the future relative to the current clock — possible system-clock skew"
                     .to_string(),
             });

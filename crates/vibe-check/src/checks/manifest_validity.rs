@@ -3,12 +3,13 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
+use std::fs;
 use std::path::{Path, PathBuf};
 
 use specmark::cell;
 use vibe_core::manifest::{Lockfile, Manifest};
 
-use crate::{Check, CheckId, CheckOptions, CheckReport};
+use crate::{Check, CheckId, CheckOptions, CheckReport, Finding, Severity};
 
 /// The [`CheckId::ManifestValidity`] cell.
 #[cell(seam = "Check", variant = "manifest-validity")]
@@ -38,12 +39,17 @@ impl Check for ManifestValidityCheck {
             // "failed to parse `vibe.toml`: <diagnosis> (violates …; fix: …)" —
             // so it is surfaced verbatim rather than re-wrapped (which used to
             // double the "failed to parse" framing and the filename).
-            report.err(
-                CheckId::ManifestValidity,
-                Some(PathBuf::from(Manifest::FILENAME)),
-                None,
-                format!("{e}"),
-            );
+            let source = fs::read_to_string(&manifest_path).unwrap_or_default();
+            let place = place_of(&e, &source);
+            report.push(Finding {
+                check: CheckId::ManifestValidity,
+                severity: Severity::Error,
+                path: Some(PathBuf::from(Manifest::FILENAME)),
+                line: place.line,
+                column: place.column,
+                field: place.field,
+                message: format!("{e}"),
+            });
         }
 
         let lockfile_path = project_root.join(Lockfile::FILENAME);
@@ -59,6 +65,38 @@ impl Check for ManifestValidityCheck {
                 format!("{e}"),
             );
         }
+    }
+}
+
+/// Where in `vibe.toml` a refusal points: the field and its position.
+#[derive(Default)]
+struct Place {
+    line: Option<usize>,
+    column: Option<usize>,
+    field: Option<String>,
+}
+
+/// A parse error carries its own position and may name its table; a
+/// validator's refusal carries its field, whose position is looked up in
+/// the source. Anything else points nowhere in particular.
+fn place_of(error: &vibe_core::Error, source: &str) -> Place {
+    match error {
+        vibe_core::Error::ParseToml { diagnostic, .. } => Place {
+            line: diagnostic.line(),
+            column: diagnostic.column(),
+            field: diagnostic.field(source).map(|field| field.to_string()),
+        },
+        _ => match error.manifest_field() {
+            Some(field) => {
+                let (line, column) = field.locate(source).unzip();
+                Place {
+                    line,
+                    column,
+                    field: Some(field.to_string()),
+                }
+            }
+            None => Place::default(),
+        },
     }
 }
 
@@ -148,6 +186,58 @@ mod tests {
             msg.contains("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema"),
             "REQ citation missing: {msg}"
         );
+    }
+
+    #[test]
+    fn a_refused_field_carries_its_address_and_position() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        fs::write(
+            project.path().join("vibe.toml"),
+            "[package]\nname = \"demo\"\ngroup = \"org.example\"\nkind = \"app\"\n\
+             version = \"1.0.0\"\n\n[application]\nid = \"Demo\"\n",
+        )
+        .unwrap();
+        let report = check_project(project.path(), &opts());
+        let finding = manifest_finding(&report);
+        assert_eq!(finding.field.as_deref(), Some("application.id"));
+        assert_eq!((finding.line, finding.column), (Some(8), Some(1)));
+        assert!(
+            finding
+                .message
+                .contains("[application].id must be a portable lowercase token")
+        );
+    }
+
+    #[test]
+    fn a_parse_error_carries_line_column_and_the_table_it_names() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        fs::write(
+            project.path().join("vibe.toml"),
+            "[project]\nname = \"wal\"\n",
+        )
+        .unwrap();
+        let report = check_project(project.path(), &opts());
+        let finding = manifest_finding(&report);
+        assert_eq!((finding.line, finding.column), (Some(1), Some(1)));
+        assert_eq!(finding.field.as_deref(), Some("project.version"));
+        // Every other cell leaves the address unset.
+        assert!(
+            report
+                .findings
+                .iter()
+                .filter(|f| f.check != CheckId::ManifestValidity)
+                .all(|f| f.field.is_none() && f.column.is_none())
+        );
+    }
+
+    fn manifest_finding(report: &CheckReport) -> &crate::Finding {
+        report
+            .findings
+            .iter()
+            .find(|f| f.check == CheckId::ManifestValidity)
+            .unwrap_or_else(|| panic!("no ManifestValidity finding: {:?}", report.findings))
     }
 
     /// The single `ManifestValidity` finding's message, panicking with the full

@@ -87,6 +87,8 @@ impl Check for ReviewAgingCheck {
                         severity: Severity::Info,
                         path: Some(rel.clone()),
                         line: Some(idx + 1),
+                        column: None,
+                        field: None,
                         message: "REVIEW marker date is in the future — clock skew or typo".into(),
                     });
                     continue;
