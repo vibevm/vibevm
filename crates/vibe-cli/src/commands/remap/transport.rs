@@ -292,13 +292,18 @@ fn emit_export(
     for artifact in &document.artifacts {
         ctx.created(&artifact.path);
     }
-    ctx.summary(&format!(
-        "\nWrote a `file://` registry and {} artifact(s) to {}.\n\
-         Carry the directory over, then `vibe remap import <dir>` — or install \
-         straight from it with `--registry {}`.",
+    ctx.trailer(&format!(
+        "wrote a file:// registry and {} artifact(s) to {} · carry it over, then run",
         document.artifacts.len(),
-        out.display(),
-        url
+        out.display()
+    ));
+    ctx.step(&crate::output::language::paint(
+        crate::output::language::Role::Accent,
+        &format!("vibe remap import {}", out.display()),
+    ));
+    ctx.step(&crate::output::language::paint(
+        crate::output::language::Role::Accent,
+        &format!("vibe install … --registry {url}"),
     ));
     Ok(())
 }
@@ -351,19 +356,18 @@ fn emit_import(
     for (label, reason) in &imported.refused {
         ctx.step(&format!("{label} not placed — {reason}"));
     }
-    ctx.summary(&format!(
-        "\n{} artifact(s) placed, {} already present, {} refused.{}",
+    ctx.trailer(&format!(
+        "{} artifact(s) placed · {} already present · {} refused",
         imported.placed.len(),
         imported.already.len(),
-        imported.refused.len(),
-        if state == "offered" {
-            format!(
-                "\nNothing applies yet — `vibe remap accept {}` applies the rows.",
-                offer.key
-            )
-        } else {
-            String::new()
-        }
+        imported.refused.len()
     ));
+    if state == "offered" {
+        ctx.step("Nothing applies yet; the rows apply after");
+        ctx.step(&crate::output::language::paint(
+            crate::output::language::Role::Accent,
+            &format!("vibe remap accept {}", offer.key),
+        ));
+    }
     Ok(())
 }

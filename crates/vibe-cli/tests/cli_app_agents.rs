@@ -23,15 +23,14 @@ use serde_json::Value;
 fn without_an_agent_the_step_is_skipped_and_announced_before_anything_runs() {
     let fixture = Fixture::new("");
     let plan = ok(&run(fixture.app(&["app", "plan"], &[])));
-    // A tree node per step, the reason on a continuation line under it
-    // (PROP-065 `#plan`).
+    // A row per step, a skipped one dim under `○` with its reason as its
+    // metadata (PROP-065 `#plan`, PROP-067 `#list`).
     assert!(
-        plan.contains("\u{251c}\u{2500}  2. skip  fix (agent)")
-            && plan.contains("\u{2502}            skipped: no agent configured"),
+        plan.contains("○ 2.  fix ") && plan.contains("skipped: no agent configured"),
         "{plan}"
     );
     assert!(
-        plan.contains("warning: no agent is configured, so agent step(s) `fix` will be skipped")
+        plan.contains("! no agent is configured, so agent step(s) fix will be skipped")
             && plan.contains("--agent NAME")
             && plan.contains("VIBE_AGENT_COMMAND"),
         "{plan}"
@@ -39,10 +38,7 @@ fn without_an_agent_the_step_is_skipped_and_announced_before_anything_runs() {
     let output = run(fixture.app(&["install", "-g"], &[]));
     ok(&output);
     let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(
-        stderr.contains("warning: no agent is configured"),
-        "{stderr}"
-    );
+    assert!(stderr.contains("! no agent is configured"), "{stderr}");
     assert_eq!(fixture.log(), "AFTER\n");
     assert_eq!(fixture.record.calls(), 0);
     let record = &fixture.index()["installations"][KEY];

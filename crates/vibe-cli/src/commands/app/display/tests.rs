@@ -76,6 +76,5 @@ fn a_failure_names_the_step_whose_log_tail_is_shown() {
 fn a_flat_display_draws_no_panel_and_keeps_the_live_stream() {
     let flat = StepDisplay::flat();
     assert!(flat.panel().is_none());
-    assert!(!flat.renders_steps());
     assert!(!flat.quiet_children());
 }

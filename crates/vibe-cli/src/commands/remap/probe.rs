@@ -123,7 +123,7 @@ pub(crate) fn run(
             );
         }
         if let Err(error) = record.store(&home) {
-            eprintln!("vibe: warning: the reachability record was not updated: {error}");
+            ctx.diagnostic(&format!("the reachability record was not updated: {error}"));
         }
     }
     let failure = (!unreachable.is_empty()).then(|| RemapUnreachable {
@@ -505,29 +505,48 @@ fn emit(
     if ctx.is_quiet() {
         return Ok(());
     }
+    use crate::output::language::{Block, Glyph, Line, Meta, Role};
+    let mut blocks = Vec::new();
     for probe in &document.artifacts {
-        let mark = match probe.outcome {
-            wire::Outcome::Reachable => "ok     ",
-            wire::Outcome::Unreachable => "missing",
-            wire::Outcome::Denied => "denied ",
-            wire::Outcome::Skipped => "skipped",
+        let (glyph, word) = match probe.outcome {
+            wire::Outcome::Reachable => (Glyph::Done, "reachable"),
+            wire::Outcome::Unreachable => (Glyph::Failed, "unreachable"),
+            wire::Outcome::Denied => (Glyph::Failed, "denied"),
+            wire::Outcome::Skipped => (Glyph::Skipped, "skipped"),
         };
-        println!("  {mark}  {}", probe.artifact);
+        let mut body = Vec::new();
+        let label = |name: &str, value: &str| {
+            Line::Label(
+                name.to_owned(),
+                vec![crate::output::language::LabelValue::Text(value.to_owned())],
+            )
+        };
         if let Some(target) = &probe.target {
-            println!("             to      {target}");
+            body.push(label("to", target));
         }
         if let Some(row) = &probe.row {
-            println!("             by      {row}");
+            body.push(label("by", row));
         }
         if let Some(error) = &probe.error {
-            println!("             error   {error}");
+            body.push(label("error", error));
         }
         if let Some(note) = &probe.note {
-            println!("             note    {note}");
+            body.push(label("note", note));
         }
+        let mut block = Block::new(glyph, probe.artifact.clone())
+            .with_meta(vec![Meta::State(word.to_owned())])
+            .with_body(body);
+        if glyph == Glyph::Skipped {
+            block.headline_role = Role::Dim;
+        }
+        blocks.push(block.render());
+    }
+    if !blocks.is_empty() {
+        ctx.block(&blocks.join("\n"));
     }
     if let Some(failure) = failure {
-        eprintln!("vibe: {failure}");
+        let refusal = crate::output::refusal_of(&anyhow::anyhow!(failure.to_string()));
+        ctx.block_err(&refusal.block().render());
     }
     Ok(())
 }

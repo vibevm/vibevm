@@ -4,7 +4,6 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#output-format");
 
-use console::Style;
 use serde::Serialize;
 use serde_json::Value;
 use std::sync::Arc;
@@ -13,11 +12,14 @@ use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use crate::cli::AgentModeArg;
 
+pub(crate) mod language;
+mod lines;
 mod machine;
 mod panel;
 mod progress;
 pub(crate) mod prompts;
 mod structured;
+pub(crate) use lines::refusal_of;
 use machine::MachineRenderer;
 pub(crate) use panel::ProgressPanel;
 use progress::ProgressRenderer;
@@ -76,6 +78,21 @@ pub fn env_app_log() -> Option<String> {
 /// Read the `VIBE_APP_LOG_TAIL` env-var: the fallback for `--log-tail`.
 pub fn env_app_log_tail() -> Option<String> {
     env_nonempty("VIBE_APP_LOG_TAIL")
+}
+
+/// Hand the display language this invocation's terminal (PROP-067
+/// `#palette`): attributes only where both streams reach a terminal that
+/// draws them, nobody asked for plain text and `NO_COLOR` (any nonempty
+/// value, as <https://no-color.org> defines it) is unset; the home a path
+/// is spelled `~` against.
+pub fn configure_language(both_terminals: bool, may_colour: bool) {
+    language::configure(language::Setup {
+        colour: both_terminals && may_colour && env_nonempty("NO_COLOR").is_none(),
+        one_screen: both_terminals,
+        home: env_nonempty("HOME")
+            .or_else(|| env_nonempty("USERPROFILE"))
+            .map(std::path::PathBuf::from),
+    });
 }
 
 /// One trimmed, nonempty environment value, or nothing: an exported
@@ -166,13 +183,6 @@ pub fn resolve_agent_mode(cli_flag: AgentModeArg, invoked_by: Option<&str>) -> R
 #[derive(Clone)]
 pub struct Context {
     pub mode: Mode,
-    pub tick: Style,
-    pub cross: Style,
-    #[allow(dead_code)] // used by install/uninstall (next slice)
-    pub arrow: Style,
-    pub warn: Style,
-    pub dim: Style,
-    pub bold: Style,
     /// Resolved `--invoked-by` value — `None` when neither flag nor env is set.
     invoked_by: Option<String>,
     /// Where `invoked_by` came from. Surfaced via [`Context::invoked_by_provenance`]
@@ -199,6 +209,14 @@ pub struct Context {
     /// into its parent's buffer instead of a private copy that would silently
     /// vanish.
     pending_plans: std::sync::Arc<std::sync::Mutex<Vec<Value>>>,
+    /// The trailer of a failed run, written after its refusal (PROP-067
+    /// `#trailer`); shared like `pending_plans` so a child's survives.
+    pending_trailer: std::sync::Arc<std::sync::Mutex<Option<String>>>,
+    /// When the invocation began: the trailer's time (PROP-067 `#trailer`).
+    started: std::time::Instant,
+    /// `--plain`: blocks written once, when they end, and no child stream
+    /// between them (PROP-067 `#plain`).
+    plain: bool,
     /// The resolved handler-facing agent mode for this whole invocation,
     /// decided ONCE here. Every metadata constructor — ordinary lifecycle,
     /// clean, explicit install, update, reinstall — reads this rather than
@@ -237,21 +255,16 @@ impl Context {
             (true, false) => Mode::HumanQuiet,
             (false, false) => Mode::Human,
         };
-        let color_on = matches!(mode, Mode::Human) && console::user_attended();
-        let styled = |s: Style| if color_on { s } else { Style::new() };
         Context {
             mode,
-            tick: styled(Style::new().green().bold()),
-            cross: styled(Style::new().red().bold()),
-            arrow: styled(Style::new().cyan()),
-            warn: styled(Style::new().yellow().bold()),
-            dim: styled(Style::new().dim()),
-            bold: styled(Style::new().bold()),
             invoked_by,
             invoked_by_provenance,
             unattended,
             suppress_output: false,
             pending_plans: std::sync::Arc::new(std::sync::Mutex::new(Vec::new())),
+            pending_trailer: std::sync::Arc::new(std::sync::Mutex::new(None)),
+            started: std::time::Instant::now(),
+            plain: false,
             agent_mode,
             progress: Progress::default(),
             progress_renderer: None,
@@ -427,115 +440,6 @@ impl Context {
     /// confirmation prompt and refuse to open any interactive wizard.
     pub fn is_unattended(&self) -> bool {
         self.unattended
-    }
-
-    pub fn heading(&self, text: &str) {
-        if self.is_json() || self.is_quiet() {
-            return;
-        }
-        self.suspend_progress(|| println!("{}", self.bold.apply_to(text)));
-    }
-
-    #[allow(dead_code)] // used by install
-    pub fn step(&self, text: &str) {
-        if self.is_json() || self.is_quiet() {
-            return;
-        }
-        self.suspend_progress(|| println!("  {} {}", self.arrow.apply_to("→"), text));
-    }
-
-    pub fn created(&self, path: &str) {
-        if self.is_json() || self.is_quiet() {
-            return;
-        }
-        self.suspend_progress(|| println!("  {} created  {}", self.tick.apply_to("✓"), path));
-    }
-
-    pub fn skipped(&self, path: &str, reason: &str) {
-        if self.is_json() || self.is_quiet() {
-            return;
-        }
-        self.suspend_progress(|| {
-            println!(
-                "  {} kept     {} {}",
-                self.warn.apply_to("•"),
-                path,
-                self.dim.apply_to(&format!("({reason})"))
-            )
-        });
-    }
-
-    #[allow(dead_code)] // used by uninstall
-    pub fn removed(&self, path: &str) {
-        if self.is_json() || self.is_quiet() {
-            return;
-        }
-        self.suspend_progress(|| println!("  {} removed  {}", self.cross.apply_to("-"), path));
-    }
-
-    pub fn summary(&self, text: &str) {
-        if self.suppress_output {
-            return;
-        }
-        match self.mode {
-            Mode::Human | Mode::HumanQuiet => self.suspend_progress(|| println!("{text}")),
-            Mode::Json => {}
-        }
-    }
-
-    /// A bounded diagnostic that belongs to no document.
-    ///
-    /// The one home for text a command must not lose but cannot put in a
-    /// report — a superseded predecessor's close, a report that itself failed
-    /// to render. It is stderr in EVERY mode on purpose: JSON's stdout is a
-    /// document stream and a stray object in it is a parse error for the
-    /// reader, while dropping the text in JSON mode would make the machine
-    /// path the one that silently knows less.
-    pub fn diagnostic(&self, text: &str) {
-        if self.suppress_output {
-            return;
-        }
-        self.suspend_progress(|| eprintln!("{} {text}", self.warn.apply_to("vibe: warning:")));
-    }
-
-    /// The terminal error line, with an optional compact suffix.
-    ///
-    /// The suffix exists for exactly one shape: a QUIET command that failed.
-    /// Quiet's contract is one line, and a failed command's one line is this
-    /// one — so a trace summary has nowhere else to go. Human mode already
-    /// printed a table and JSON already carries the member inside its root, so
-    /// appending there would be the second copy each of them forbids.
-    ///
-    /// `None` reproduces the old line byte for byte, which is what every
-    /// untraced command in the binary still passes.
-    pub fn error_with_suffix(&self, err: &anyhow::Error, suffix: Option<&str>) {
-        if self.suppress_output {
-            return;
-        }
-        match self.mode {
-            Mode::HumanQuiet => {
-                self.suspend_progress(|| {
-                    eprintln!(
-                        "{} {err:#}{}",
-                        self.cross.apply_to("error:"),
-                        suffix.unwrap_or_default()
-                    )
-                });
-            }
-            Mode::Human => {
-                self.suspend_progress(|| eprintln!("{} {err:#}", self.cross.apply_to("error:")));
-            }
-            Mode::Json => {
-                let mut payload = serde_json::json!({
-                    "ok": false,
-                    "error": format!("{err:#}"),
-                });
-                structured::stamp_structured_error(&mut payload, err);
-                self.stamp_invoked_by(&mut payload);
-                self.stamp_unattended(&mut payload);
-                self.suspend_progress(|| eprintln!("{payload}"));
-            }
-        }
     }
 
     /// Stamp `invoked_by` on the top-level JSON object when the

@@ -395,7 +395,7 @@ fn explain_lists_two_competing_rows_in_winning_order() {
         "{explain}"
     );
     assert!(
-        explain.contains("origin   https://github.com/vibespecs/index"),
+        explain.contains("     origin  https://github.com/vibespecs/index"),
         "{explain}"
     );
 }
@@ -492,15 +492,15 @@ fn the_two_views_print_the_one_layout() {
         "{listed}"
     );
     assert!(
-        listed.contains("to       http://10.1.0.5/gh/  [http, private]"),
+        listed.contains("     to      http://10.1.0.5/gh/  [http, private]"),
         "{listed}"
     );
     assert!(
-        listed.contains("why      the only host the proxy allows"),
+        listed.contains("     why     the only host the proxy allows"),
         "{listed}"
     );
     assert!(
-        listed.contains("note     the target is plain http"),
+        listed.contains("     note    the target is plain http"),
         "a plaintext target is called out: {listed}"
     );
     assert!(
@@ -509,7 +509,7 @@ fn the_two_views_print_the_one_layout() {
     );
     // The built-in single-file endpoints are rows too, and they are shown.
     assert!(
-        listed.contains("built-in  [user-package, unmatched = allow]"),
+        listed.contains("── built-in  user-package, unmatched = allow ─"),
         "the default raw-file rows are listed: {listed}"
     );
     assert!(

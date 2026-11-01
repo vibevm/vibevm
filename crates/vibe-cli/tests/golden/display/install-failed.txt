@@ -1,0 +1,45 @@
+── plan for org.example/broken@1.0.0 ────
+
+  installer  main (linux/x86_64) · result owned
+
+  1.  build  (recipe)  Build
+
+✗ build  Build · <time> · exit 5 · log <settings>/cache/…/output.log
+  │ NOISE line 11
+  │ NOISE line 12
+  │ NOISE line 13
+  │ NOISE line 14
+  │ NOISE line 15
+  │ NOISE line 16
+  │ NOISE line 17
+  │ NOISE line 18
+  │ NOISE line 19
+  │ NOISE line 20
+  │ NOISE line 21
+  │ NOISE line 22
+  │ NOISE line 23
+  │ NOISE line 24
+  │ NOISE line 25
+  │ NOISE line 26
+  │ NOISE line 27
+  │ NOISE line 28
+  │ NOISE line 29
+  │ NOISE line 30
+  │ NOISE line 31
+  │ NOISE line 32
+  │ NOISE line 33
+  │ NOISE line 34
+  │ NOISE line 35
+  │ NOISE line 36
+  │ NOISE line 37
+  │ NOISE line 38
+  │ NOISE line 39
+  │ NOISE line 40
+
+✗ step_failed  step `build` (recipe) of `org.example/broken@1.0.0` failed; nothing was placed or registered and the index is unchanged; its work directory `<settings>/cache/app-work/org.example.broken@1.0.0` is kept for inspection
+  why   recipe step `build` exited with code 5
+  fix   read the child output above and correct the authored command
+        correct the cause below, then rerun with --resume, or with --from-step ID to restart at a named step
+  see   spec://org.vibevm.core/vibevm/common/PROP-065#failure
+
+✻ failed at build · 1 step · <time> · log <settings>/cache/app-runs/org.example.broken@1.0.0/<stamp>

@@ -4,13 +4,18 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#display");
 
-use indicatif::{MultiProgress, ProgressBar, ProgressDrawTarget, ProgressStyle};
+use indicatif::{MultiProgress, ProgressBar, ProgressDrawTarget};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
-use super::vocabulary::TreeGlyphs;
+use super::vocabulary::line_style;
 use super::{InteractiveRenderer, InteractiveTask, ProgressRenderer, Renderer};
+use crate::output::language::{fold_line, hint, viewport};
+
+/// The hint under a fold on a terminal that takes the key (PROP-067
+/// `#fold`).
+const HINT: &str = "(l to show the live log)";
 
 /// How often a step panel's fold is rewritten (PROP-060 `#COST`: a chatty
 /// child must not repaint the panel per line).
@@ -24,18 +29,26 @@ pub(super) struct Panel {
     pub(super) tail: usize,
     pub(super) expanded: Arc<AtomicBool>,
     redraw: Duration,
+    /// Whether `l` is read, so the fold names it.
+    hint: bool,
 }
 
 impl ProgressRenderer {
     /// Start folding step child output under its step; `false` when this
     /// renderer draws no panel.
-    pub(in crate::output) fn open_panel(&self, tail: usize, expanded: bool) -> bool {
-        self.open_panel_every(tail, expanded, TAIL_REDRAW)
+    pub(in crate::output) fn open_panel(&self, tail: usize, expanded: bool, hint: bool) -> bool {
+        self.open_panel_every(tail, expanded, TAIL_REDRAW, hint)
     }
 
     /// [`Self::open_panel`] with the fold's redraw interval named, so a
     /// test reads a settled fold without waiting for one.
-    pub(super) fn open_panel_every(&self, tail: usize, expanded: bool, redraw: Duration) -> bool {
+    pub(super) fn open_panel_every(
+        &self,
+        tail: usize,
+        expanded: bool,
+        redraw: Duration,
+        hint: bool,
+    ) -> bool {
         let Renderer::Interactive(renderer) = &self.renderer else {
             return false;
         };
@@ -44,6 +57,7 @@ impl ProgressRenderer {
                 tail,
                 expanded: Arc::new(AtomicBool::new(expanded)),
                 redraw,
+                hint,
             });
         }
         true
@@ -112,7 +126,8 @@ impl InteractiveRenderer {
 }
 
 /// Add one child-output line to a step's fold, keeping the newest lines the
-/// panel asks for and one bar per kept line under the step's own bar.
+/// panel asks for and one bar per kept line under the step's own bar, then
+/// the hint (PROP-067 `#fold`).
 ///
 /// The fold is written as a whole and then drawn once: a per-bar message
 /// draws at most once per the renderer's rate-limit window, so without the
@@ -121,7 +136,6 @@ impl InteractiveRenderer {
 /// is new.
 pub(super) fn push_tail(
     multi: &MultiProgress,
-    tree: &TreeGlyphs,
     task: &mut InteractiveTask,
     line: &str,
     panel: &Panel,
@@ -140,29 +154,31 @@ pub(super) fn push_tail(
     while task.tail_bars.len() < task.tail.len() {
         let anchor = task.tail_bars.last().unwrap_or(&task.bar);
         let bar = multi.insert_after(anchor, ProgressBar::new_spinner());
-        bar.set_style(tail_style());
+        bar.set_style(line_style());
         task.tail_bars.push(bar);
     }
-    // Under the step's own vertical, so a folded line starts in the
-    // step's label column (PROP-065 `#display`).
-    let indent = tree.under(task.depth);
+    // At column 2 under the block's headline, the fold glyph and dim, never coloured
+    // by what the child wrote (its escapes are already stripped).
+    let indent = task.headline.under();
+    let width = viewport().saturating_sub(indent.chars().count() + 1);
     for (bar, line) in task.tail_bars.iter().zip(&task.tail) {
-        bar.set_message(format!("{indent}{line}"));
+        bar.set_message(format!("{indent}{}", fold_line(line, width)));
+    }
+    if panel.hint && task.hint_bar.is_none() {
+        let anchor = task.tail_bars.last().unwrap_or(&task.bar);
+        let bar = multi.insert_after(anchor, ProgressBar::new_spinner());
+        bar.set_style(line_style());
+        bar.set_message(format!("{indent}{}", hint(HINT)));
+        task.hint_bar = Some(bar);
     }
     multi.suspend(|| ());
     task.tail_drawn = Instant::now();
 }
 
 pub(super) fn clear_tail(multi: &MultiProgress, task: &mut InteractiveTask) {
-    for bar in task.tail_bars.drain(..) {
+    for bar in task.tail_bars.drain(..).chain(task.hint_bar.take()) {
         bar.finish_and_clear();
         multi.remove(&bar);
     }
     task.tail.clear();
-}
-
-/// One folded child-output line: dim, and never wider than the viewport.
-fn tail_style() -> ProgressStyle {
-    ProgressStyle::with_template("{wide_msg:.dim}")
-        .unwrap_or_else(|_| ProgressStyle::default_spinner())
 }

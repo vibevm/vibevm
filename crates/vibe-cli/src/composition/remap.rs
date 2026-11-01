@@ -306,7 +306,10 @@ pub(crate) fn install(ctx: &crate::output::Context, inputs: Inputs<'_>) -> Resul
     };
     let (locator, warnings) = build(&env)?;
     for warning in warnings {
-        eprintln!("vibe: warning: remap layer skipped: {warning}");
+        eprintln!(
+            "{}",
+            crate::output::language::warning(&format!("remap layer skipped: {warning}"))
+        );
     }
     let _ = vibe_core::remap::install(locator);
     Ok(())

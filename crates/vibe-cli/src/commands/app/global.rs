@@ -137,9 +137,10 @@ impl<'d> Observation<'d> {
         display: &'d StepDisplay,
     ) -> Result<Self> {
         Ok(Self {
-            // A panel renders the step tasks itself; a flat run keeps the
-            // live child stream and observes nothing but the machine stream.
-            progress: if ctx.is_machine_progress() || display.renders_steps() {
+            // Every human renderer draws the steps as blocks (PROP-067
+            // `#collapse`, `#plain`); a run with none observes nothing but
+            // the machine stream.
+            progress: if ctx.is_machine_progress() || ctx.draws_progress() {
                 ctx.progress()
             } else {
                 Progress::default()
@@ -155,7 +156,7 @@ impl<'d> Observation<'d> {
             ),
             search_path: super::facts::search_path(),
             notice: (!ctx.is_quiet())
-                .then(|| Box::new(|text: &str| asking(|| eprintln!("{text}"))) as Notice),
+                .then(|| Box::new(|text: &str| asking(|| notice(text))) as Notice),
             display,
         })
     }
@@ -169,6 +170,16 @@ impl<'d> Observation<'d> {
             .as_ref()
             .map(|signals| signals as &dyn Interrupt)
     }
+}
+
+/// A run notice: a dim line between blocks.
+fn notice(text: &str) {
+    use output::language::{Kind, Role, Stream, before, paint};
+    eprintln!(
+        "{}{}",
+        before(Stream::Err, Kind::Block),
+        paint(Role::Dim, text)
+    );
 }
 
 /// Every application mutation's context: attended prompts only in an
@@ -207,11 +218,14 @@ pub(super) fn operation<'a>(
 }
 
 /// Print the plan before the first step runs (stderr, so `--json` stays
-/// one envelope); the machine stream carries no prose.
+/// one envelope and still shows the plan and its warnings to whoever
+/// watches); the machine stream carries no prose.
 pub(super) fn plan_printer(ctx: &output::Context) -> impl Fn(&Plan) + '_ {
+    use output::language::{Kind, Stream, before};
     move |plan: &Plan| {
         if !ctx.is_quiet() && !ctx.is_machine_progress() {
-            asking(|| eprint!("\n{}\n", plan.render()));
+            let text = super::plan_text::render(plan, ctx.invoked_by());
+            asking(|| eprintln!("{}{text}", before(Stream::Err, Kind::Block)));
         }
     }
 }
@@ -260,7 +274,7 @@ pub(crate) fn render_plan(ctx: &output::Context, plan: &Plan) -> Result<()> {
     if ctx.is_json() {
         return ctx.emit_json(&plan.to_wire());
     }
-    print!("{}", plan.render());
+    ctx.block(&super::plan_text::render(plan, ctx.invoked_by()));
     Ok(())
 }
 

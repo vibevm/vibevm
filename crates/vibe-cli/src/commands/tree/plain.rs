@@ -80,7 +80,7 @@ fn walk(
     expanded: &mut BTreeSet<String>,
     rows: &mut Vec<Row>,
 ) {
-    // A top-level root carries no branch glyph; every child gets a `├─`/`└─`
+    // A top-level root carries no branch glyph; every child gets a branch
     // connector drawn on top of the accumulated vertical-bar prefix.
     let connector = if is_root {
         ""

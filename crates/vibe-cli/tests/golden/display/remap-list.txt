@@ -1,0 +1,18 @@
+2 remap row(s) from 2 source(s); unmatched = allow
+
+── built-in  user-package, unmatched = allow ────
+
+  1. prefix    https://github.com/
+     to      https://raw.githubusercontent.com/  [https, unknown]
+     why     built-in single-file endpoint for github.com
+     note    the target could not be classified from here
+  2. prefix    https://gitverse.ru/
+     to      https://gitverse.ru/  [https, unknown]
+     why     built-in single-file endpoint for gitverse.ru
+     note    the target could not be classified from here
+
+── [[mirror]] / [[override]]  local, unmatched = allow ────
+
+  no rows
+
+1 row → raw.githubusercontent.com (https, unknown) · 1 row → gitverse.ru (https, unknown)

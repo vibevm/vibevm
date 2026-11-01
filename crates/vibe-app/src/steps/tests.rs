@@ -173,20 +173,6 @@ fn conditions_decide_run_or_skip_with_the_deciding_condition() {
     let wire = plan.to_wire();
     assert_eq!(wire.protocol, "vibe-app-plan/1");
     assert!(wire.features[1].chosen);
-    let text = plan.render();
-    // One node per step, the columns aligned across the whole tree and
-    // the reason on a continuation line under the label column.
-    assert!(
-        text.contains("    \u{251c}\u{2500}  2. skip  fix (shell)     Fix\n")
-            && text.contains(
-                "    \u{2502}            skipped: when `feature = \"fixes\"` does not hold\n"
-            ),
-        "{text}"
-    );
-    assert!(
-        text.contains("    \u{2514}\u{2500}  6. skip  gone (shell)    Gone\n"),
-        "the last step closes the tree: {text}"
-    );
 }
 
 #[test]
@@ -383,93 +369,4 @@ fn features_come_from_flags_then_the_question_then_defaults_and_update_reuses_th
     assert_eq!(asked.borrow().as_slice(), [(2, vec![false, true])]);
     let cancel = |_: &str, _: &[crate::select::Choice], _: &[bool]| Ok(None);
     assert!(chosen(&attended, Some(&cancel)).is_err());
-}
-
-/// A requirement is a child node of the step that names it, an installed
-/// one says so, and a plan computed for a requirement says whose it is
-/// (`PROP-065#plan`, `#app-dependencies`).
-#[test]
-fn requirements_are_child_nodes_and_a_required_plan_names_its_owner() {
-    use vibe_core::manifest::{RequirementScope, ResultDecl, StepDecl, StepKind};
-
-    use super::plan::{PlannedDependency, PlannedStep, RequiredBy};
-
-    let required = |package: &str, step: Option<&str>, installed: bool| PlannedDependency {
-        package: package.into(),
-        scope: RequirementScope::Build,
-        step: step.map(str::to_owned),
-        key: format!("{package}.0"),
-        installed,
-        hidden: true,
-        commands: vec![],
-        option: None,
-        resolved: None,
-    };
-    let step = PlannedStep {
-        step: StepDecl::new(
-            "build",
-            "Build",
-            StepKind::Copy {
-                from: "payload".into(),
-                to: String::new(),
-            },
-        ),
-        run: true,
-        reason: None,
-        note: None,
-    };
-    let plan = super::Plan {
-        package: PackageCoordinate {
-            group: "org.example".into(),
-            name: "tool".into(),
-            version: "1.0.0".into(),
-        },
-        option: "main".into(),
-        platform: "linux".into(),
-        arch: "x86_64".into(),
-        result: ResultDecl::owned(),
-        declared: vec![],
-        profile: None,
-        features: vec![],
-        implied: vec![],
-        parameters: vec![],
-        license: None,
-        download_bytes: 0,
-        unknown_sizes: 0,
-        dependencies: vec![
-            required("org.example/mingw@15", Some("build"), false),
-            required("org.example/ninja@1", Some("build"), true),
-        ],
-        steps: vec![step],
-        warnings: vec![],
-        required_by: Some(RequiredBy {
-            package: "org.example/consumer@2.0.0".into(),
-            step: Some("compile".into()),
-        }),
-    };
-    let text = plan.render();
-    assert!(
-        text.starts_with(
-            "plan for org.example/tool@1.0.0  (required by org.example/consumer@2.0.0 \
-             for step compile)\n"
-        ),
-        "{text}"
-    );
-    // One child node per requirement under the only step, the last of
-    // them closing that subtree, and `installed` on the one that needs no
-    // install.
-    assert!(
-        text.contains(
-            "       \u{251c}\u{2500} requires org.example/mingw@15.0 (build, hidden) \
-             for `org.example/mingw@15`\n"
-        ),
-        "{text}"
-    );
-    assert!(
-        text.contains(
-            "       \u{2514}\u{2500} requires org.example/ninja@1.0 (build, hidden) \
-             for `org.example/ninja@1`  installed\n"
-        ),
-        "{text}"
-    );
 }

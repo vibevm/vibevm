@@ -283,30 +283,22 @@ fn a_step_list_plans_installs_fails_resumes_and_restarts() {
     );
     assert_eq!(plan["features"][1]["chosen"], true);
     let text = ok(&fixture.app(&user, &["app", "plan"], name, &["--feature", "fixes"]));
+    // A row per step; a skipped one is a dim `○` row whose reason is its
+    // metadata (PROP-065 `#plan`, PROP-067 `#list`).
     assert!(
-        text.contains("\u{251c}\u{2500}  2. skip  fix (agent)")
-            && text.contains("\u{2502}            skipped: no agent configured"),
+        text.contains("○ 2.  fix ") && text.contains("skipped: no agent configured"),
         "{text}"
     );
-    assert!(text.contains("warning: no agent is configured"), "{text}");
+    assert!(text.contains("! no agent is configured"), "{text}");
     let only = ok(&fixture.app(&user, &["install", "-g"], name, &["--plan-only"]));
-    // The step's title shares the node line, the identity column is as
-    // wide as the widest step of the whole tree, and the last step closes
-    // it (PROP-065 `#plan`).
-    let node = |ordinal: &str, identity: &str, title: &str| {
-        let branch = if ordinal == " 5" {
-            "\u{2514}"
-        } else {
-            "\u{251c}"
-        };
-        format!("    {branch}\u{2500} {ordinal}. {identity:<33}{title}\n")
-    };
+    // The columns are measured over the whole list: the number, the id,
+    // the kind as wide as the widest, then the title.
     for row in [
-        node(" 1", "run   fetch (sources)", "Fetch the sources"),
-        node(" 2", "skip  fix (agent)", "Let an agent adapt the sources"),
-        node(" 5", "run   announce (shell) [finish]", "Announce the root"),
+        "  1.  fetch     (sources)         Fetch the sources",
+        "○ 2.  fix       (agent)           Let an agent adapt the sources",
+        "  5.  announce  (shell) [finish]  Announce the root",
     ] {
-        assert!(only.contains(&row), "{row:?} missing from {only}");
+        assert!(only.contains(row), "{row:?} missing from {only}");
     }
     assert_eq!(hits.load(Ordering::SeqCst), 0, "planning downloads nothing");
     assert!(!user.settings.join("applications/index.json").exists());
@@ -424,13 +416,14 @@ fn noisy(fixture: &Fixture) -> PathBuf {
     package
 }
 
-/// The `log: <path>` line `--log quiet` prints instead of child output.
+/// The `● build · log <path>` line `--log quiet` prints instead of child
+/// output.
 fn named_log(stderr: &str) -> PathBuf {
     let line = stderr
         .lines()
-        .find(|line| line.starts_with("step `build` log: "))
+        .find(|line| line.starts_with("● build · log "))
         .unwrap_or_else(|| panic!("no step log named in {stderr}"));
-    PathBuf::from(line.trim_start_matches("step `build` log: "))
+    PathBuf::from(line.trim_start_matches("● build · log "))
 }
 
 #[test]
@@ -473,7 +466,7 @@ fn the_log_mode_decides_what_child_output_reaches_the_terminal() {
     let text = String::from_utf8_lossy(&from_env.stderr).into_owned();
     assert!(from_env.status.success(), "{text}");
     assert!(!text.contains("NOISE"), "{text}");
-    assert!(text.contains("step `build` log: "), "{text}");
+    assert!(text.contains("● build · log "), "{text}");
 
     // --log live keeps today's stream.
     let live = fixture.app(&user, &["install", "-g"], name, &["--log", "live"]);
@@ -485,18 +478,24 @@ fn the_log_mode_decides_what_child_output_reaches_the_terminal() {
     let error = failed(&failure);
     let log = named_log(&error);
     assert!(
-        error.contains(&format!("last 30 lines of {}:", log.display())),
+        error.contains("✗ build  Build · ") && error.contains(" · exit 5 · log "),
         "{error}"
     );
     assert!(error.contains("NOISE line 40"), "{error}");
     assert!(!error.contains("NOISE line 1\n"), "only the tail: {error}");
     assert!(error.contains("step `build` (recipe)"), "{error}");
     assert!(error.contains("--resume"), "{error}");
+    // The trailer is the last block and names the run record in full.
+    let run = log.ancestors().nth(3).unwrap().display().to_string();
+    assert!(
+        error.contains("✻ failed at build · 1 step · ") && error.contains(&run),
+        "{error}"
+    );
 
     // --json keeps its one envelope and says nothing of the tail.
     let envelope = fixture.app(&user, &["install", "-g"], name, &["--json"]);
     let json_error = failed(&envelope);
-    assert!(!json_error.contains("last 30 lines of"), "{json_error}");
+    assert!(!json_error.contains("✗ build"), "{json_error}");
     assert!(json_error.contains("step_failed"), "{json_error}");
 
     // An unnamed mode is refused by the argument parser.
@@ -629,7 +628,7 @@ fn keep_work_keeps_the_work_directory_for_a_later_from_step_and_app_work_cleans_
     assert_eq!(report["work"], work.display().to_string());
     let text = ok(&fixture.app(&user, &["install", "-g"], name, &["--keep-work"]));
     assert!(
-        text.contains(&format!("work directory kept: {}", work.display())),
+        text.contains(&format!("work directory kept {}", work.display())),
         "{text}"
     );
     let state: Value = serde_json::from_slice(&fs::read(work.join("steps.json")).unwrap()).unwrap();
@@ -694,7 +693,7 @@ fn keep_work_keeps_the_work_directory_for_a_later_from_step_and_app_work_cleans_
     ok(&fixture.app(&user, &["install", "-g"], name, &["--keep-work"]));
     let listed = ok(&fixture.vibe(&user, &["app", "work", "-g"]));
     assert!(listed.contains(KEY), "{listed}");
-    assert!(listed.contains("state    done"), "{listed}");
+    assert!(listed.contains(&format!("{KEY}  done · ")), "{listed}");
     let cleaned = ok(&fixture.vibe(&user, &["app", "work", "-g", name, "--clean"]));
     assert!(
         cleaned.contains(&format!("removed {}", work.display())) && cleaned.contains("freed "),

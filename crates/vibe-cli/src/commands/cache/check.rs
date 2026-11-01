@@ -35,6 +35,7 @@ use super::add::cache_resolver;
 use crate::cli::CacheCheckArgs;
 use crate::commands::install::InstallResolver;
 use crate::output;
+use crate::output::language::{self, Glyph, Role, paint};
 
 /// What the sweep concluded about one entry — and, under `--repair`,
 /// what the ladder then did with it.
@@ -456,9 +457,9 @@ fn emit(ctx: &output::Context, root: &Path, repair: bool, verdicts: &[Verdict]) 
             // The StoreEntryMismatch grammar: the entry, its path,
             // what it hashes to, what the record pins.
             println!(
-                "  {} store entry for `{}` at `{}` hashes to {computed}, but the recorded \
+                "{} store entry for {} at {} hashes to {computed}, but the recorded \
                  sidecar pins {recorded}",
-                ctx.cross.apply_to("✗"),
+                paint(Role::Alert, Glyph::Failed.text()),
                 v.identity(),
                 v.path.display()
             );
@@ -466,9 +467,11 @@ fn emit(ctx: &output::Context, root: &Path, repair: bool, verdicts: &[Verdict]) 
     }
     for identity in &unrecorded {
         println!(
-            "  {} {identity} — unrecorded (no sidecar: inserted before hash recording, \
-             or an interrupted record)",
-            ctx.warn.apply_to("•")
+            "{}",
+            language::warning(&format!(
+                "{identity} — unrecorded (no sidecar: inserted before hash recording, \
+                 or an interrupted record)"
+            ))
         );
     }
     for v in &refetched {
@@ -499,8 +502,8 @@ fn emit(ctx: &output::Context, root: &Path, repair: bool, verdicts: &[Verdict]) 
     for v in &failed {
         if let Kind::Failed { error } = &v.kind {
             println!(
-                "  {} {} — repair failed: {error}",
-                ctx.cross.apply_to("✗"),
+                "{} {} — repair failed: {error}",
+                paint(Role::Alert, Glyph::Failed.text()),
                 v.identity()
             );
         }

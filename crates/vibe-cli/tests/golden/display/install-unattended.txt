@@ -1,0 +1,8 @@
+── plan for org.example/noisy@1.0.0 ────
+
+  installer  main (linux/x86_64) · result owned
+
+  1.  build  (recipe)  Build
+
+✓ build  Build · <time> · 40 lines
+✻ installed org.example/noisy@1.0.0 via installer main · 1 step · <time> · log <settings>/cache/app-runs/org.example.noisy@1.0.0/<stamp>

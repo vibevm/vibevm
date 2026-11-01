@@ -158,7 +158,7 @@ fn execute_and_recover_without_home_refuse_bounded() {
             .arg(project.path())
             .assert()
             .failure()
-            .stderr("error: resolving user home for scrape transaction state\n");
+            .stderr("✗ resolving user home for scrape transaction state\n");
     }
 }
 

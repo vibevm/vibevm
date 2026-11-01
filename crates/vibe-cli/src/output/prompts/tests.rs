@@ -123,10 +123,9 @@ fn the_columns_survive_the_no_colour_fallback() {
 
 #[test]
 fn both_vocabularies_carry_one_column_cursors() {
-    let unicode = Glyphs::unicode();
+    let unicode = PromptGlyphs::in_set(GlyphSet::Unicode);
     assert_eq!(unicode.active, "❯");
-    assert_eq!(unicode.success, "✓");
-    let ascii = Glyphs::ascii();
+    let ascii = PromptGlyphs::in_set(GlyphSet::Ascii);
     assert_eq!(ascii.active, ">");
     assert_eq!(ascii.checked.len(), ascii.unchecked.len());
 }
@@ -138,11 +137,12 @@ fn the_theme_takes_its_glyphs_from_the_set() {
     let plain = |styled: &console::StyledObject<String>| {
         console::strip_ansi_codes(&styled.to_string()).into_owned()
     };
-    for glyphs in [Glyphs::unicode(), Glyphs::ascii()] {
-        let theme = themed(&glyphs);
+    for set in [GlyphSet::Unicode, GlyphSet::Ascii] {
+        let glyphs = PromptGlyphs::in_set(set);
+        let theme = themed(set);
         assert_eq!(plain(&theme.active_item_prefix), glyphs.active);
-        assert_eq!(plain(&theme.success_prefix), glyphs.success);
-        assert_eq!(plain(&theme.error_prefix), glyphs.error);
+        assert_eq!(plain(&theme.success_prefix), Glyph::Done.in_set(set));
+        assert_eq!(plain(&theme.error_prefix), Glyph::Failed.in_set(set));
         assert_eq!(plain(&theme.checked_item_prefix), glyphs.checked);
         assert_eq!(plain(&theme.unchecked_item_prefix), glyphs.unchecked);
         assert_eq!(
@@ -156,7 +156,7 @@ fn the_theme_takes_its_glyphs_from_the_set() {
 /// success glyph in front and nothing between the two.
 #[test]
 fn an_answer_line_is_the_prompt_then_the_value() {
-    let theme = themed(&Glyphs::unicode());
+    let theme = themed(GlyphSet::Unicode);
     let mut line = String::new();
     theme
         .format_select_prompt_selection(&mut line, "Platform", "Windows (windows)")
@@ -167,32 +167,89 @@ fn an_answer_line_is_the_prompt_then_the_value() {
     );
 }
 
-/// Every `dialoguer` question in the binary is built with the shared
-/// theme. A constructor without `.with_theme(` as its very next call is
-/// the one way `dialoguer`'s bare `SimpleTheme` comes back, so this scan
-/// is a cheap guard that the convention — the theme first in the chain —
-/// still holds.
+/// One module draws (PROP-067 `#coverage`): every `dialoguer` question is
+/// built with the shared theme, and no file outside the display language
+/// writes a style, a theme, a gutter glyph or an escape of its own.
+///
+/// A constructor without `.with_theme(` as its very next call is the one
+/// way `dialoguer`'s bare `SimpleTheme` comes back; a `console::style`, a
+/// hand-written `✓` or a raw escape is the one way a command grows a look
+/// of its own again. The full-screen interfaces (`tree`, `prefs`) are their
+/// own surface, outside a line-oriented terminal's blocks, and test modules
+/// name the glyphs they assert.
 #[test]
-fn no_prompt_is_built_without_the_shared_theme() {
+fn nothing_is_styled_outside_the_language_module() {
     let src = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
-    let cell = src.join("output").join("prompts");
-    let mut offenders = Vec::new();
+    let output = src.join("output");
+    let allowed = [
+        output.join("language"),
+        output.join("language.rs"),
+        output.join("prompts.rs"),
+        output.join("prompts"),
+        output.join("progress").join("vocabulary.rs"),
+        src.join("commands").join("tree").join("tui"),
+        src.join("commands").join("prefs").join("tui"),
+        // The terminal-title OSC of `vibe tree` inside vibeterm: a
+        // protocol message to the host, not a style.
+        src.join("commands").join("tree").join("host.rs"),
+    ];
+    const FORBIDDEN: [&str; 16] = [
+        "console::style",
+        "console::Style",
+        "Style::new()",
+        "dialoguer::theme",
+        "\x1b",
+        "\u{1b}",
+        "\u{001b}",
+        "✓",
+        "✗",
+        "●",
+        "○",
+        "✻",
+        "├",
+        "└",
+        "│",
+        "⠋",
+    ];
+    let mut prompts = Vec::new();
+    let mut styled = Vec::new();
     for file in rust_files(&src) {
-        // This cell names the constructors in its prose and in the scan.
-        if file.starts_with(&cell) || file == cell.with_extension("rs") {
+        let text = std::fs::read_to_string(&file).expect("reading a source file");
+        let cell = output.join("prompts");
+        if !(file.starts_with(&cell) || file == cell.with_extension("rs")) {
+            for end in constructors(&text) {
+                if !text[end..].trim_start().starts_with(".with_theme(") {
+                    let line = text[..end].lines().count();
+                    prompts.push(format!("{}:{line}", file.display()));
+                }
+            }
+        }
+        let name = file
+            .file_name()
+            .and_then(|name| name.to_str())
+            .unwrap_or("");
+        if allowed.iter().any(|root| file.starts_with(root))
+            || name == "tests.rs"
+            || file.components().any(|part| part.as_os_str() == "tests")
+        {
             continue;
         }
-        let text = std::fs::read_to_string(&file).expect("reading a source file");
-        for end in constructors(&text) {
-            if !text[end..].trim_start().starts_with(".with_theme(") {
-                let line = text[..end].lines().count();
-                offenders.push(format!("{}:{line}", file.display()));
+        let code = text
+            .find("#[cfg(test)]\nmod tests")
+            .map_or(text.as_str(), |end| &text[..end]);
+        for (number, line) in code.lines().enumerate() {
+            if let Some(found) = FORBIDDEN.iter().find(|needle| line.contains(**needle)) {
+                styled.push(format!("{}:{} {found}", file.display(), number + 1));
             }
         }
     }
     assert!(
-        offenders.is_empty(),
-        "these prompts are built without `output::prompt_theme()`: {offenders:?}"
+        prompts.is_empty(),
+        "these prompts are built without `output::prompt_theme()`: {prompts:?}"
+    );
+    assert!(
+        styled.is_empty(),
+        "these lines style text outside `output::language`: {styled:#?}"
     );
 }
 

@@ -1,5 +1,6 @@
 use super::*;
 use indicatif::InMemoryTerm;
+use std::io::Write;
 use std::sync::MutexGuard;
 use vibe_core::progress::{Progress, ProgressDiagnosticLevel};
 
@@ -36,15 +37,14 @@ fn plain_rendering_has_no_ansi_and_starts_before_delayed_completion() {
     let renderer = ProgressRenderer::plain(Box::new(writer.clone()), false);
     let progress = Progress::new(renderer);
     let task = progress.task("download");
-    assert_eq!(writer.text(), "[start] download\n");
-    std::thread::sleep(Duration::from_millis(10));
+    // PROP-067 `#plain`: nothing is written while a block runs.
+    assert_eq!(writer.text(), "");
     task.set_progress(250_000_000, Some(300_000_000), "bytes");
+    assert_eq!(writer.text(), "");
     task.finish();
 
     let text = writer.text();
-    assert!(text.contains("238.4 MiB/286.1 MiB"), "{text:?}");
-    assert!(!text.contains("250000000"));
-    assert!(text.contains("[done] download"));
+    assert_eq!(text, "✓ download · 0s\n");
     assert!(!text.contains('\u{1b}'));
 }
 
@@ -61,7 +61,10 @@ fn default_and_verbose_detail_are_distinct() {
     quiet_task.finish();
     let quiet_text = quiet_writer.text();
     assert!(!quiet_text.contains("registry selected"));
-    assert!(quiet_text.contains("[warning] resolve: compiler warning"));
+    assert!(
+        quiet_text.contains("! resolve: compiler warning"),
+        "{quiet_text}"
+    );
 
     let verbose_writer = SharedWriter::default();
     let verbose = Progress::new(ProgressRenderer::plain(
@@ -173,7 +176,7 @@ fn panelled(
         ProgressDrawTarget::term_like(Box::new(terminal.clone())),
         false,
     );
-    assert!(renderer.open_panel_every(tail, expanded, Duration::ZERO));
+    assert!(renderer.open_panel_every(tail, expanded, Duration::ZERO, false));
     (terminal, renderer)
 }
 
@@ -187,7 +190,7 @@ fn a_step_panel_folds_the_last_tail_lines_under_its_step_and_erases_them_on_fini
     }
 
     let folded = terminal.contents();
-    assert!(folded.contains("build (recipe)"), "{folded:?}");
+    assert!(folded.contains("build  Build"), "{folded:?}");
     for kept in ["line 3", "line 4", "line 5", "line 6", "line 7"] {
         assert!(folded.contains(kept), "{kept} missing from {folded:?}");
     }
@@ -202,7 +205,7 @@ fn a_step_panel_folds_the_last_tail_lines_under_its_step_and_erases_them_on_fini
     step.finish();
     renderer.suspend(|| ());
     let after = terminal.contents();
-    assert!(after.contains("✓ build (recipe)"), "{after:?}");
+    assert!(after.contains("✓ build  Build · 0s"), "{after:?}");
     assert!(
         !after.contains("line 7"),
         "the fold goes with its step: {after:?}"
@@ -216,7 +219,7 @@ fn a_zero_tail_draws_the_step_row_alone() {
     let step = progress.task("build (recipe)  Build");
     step.detail("not shown");
     let contents = terminal.contents();
-    assert!(contents.contains("build (recipe)"), "{contents:?}");
+    assert!(contents.contains("build  Build"), "{contents:?}");
     assert!(!contents.contains("not shown"), "{contents:?}");
     step.finish();
 }
@@ -267,7 +270,7 @@ fn a_closed_panel_restores_the_verbose_detail_record_and_plain_draws_none() {
 
     let writer = SharedWriter::default();
     assert!(
-        !ProgressRenderer::plain(Box::new(writer), false).open_panel(5, false),
+        !ProgressRenderer::plain(Box::new(writer), false).open_panel(5, false, false),
         "a plain renderer draws no fold"
     );
 }
@@ -281,10 +284,9 @@ fn a_download_with_a_known_total_draws_a_bytes_bar() {
     renderer.suspend(|| ());
     let bar = terminal.contents();
     assert!(
-        bar.contains("/10.00 MiB"),
+        bar.contains("of 10.00 MiB"),
         "a known total gives a bar: {bar:?}"
     );
-    assert!(bar.contains("----"), "{bar:?}");
     fetch.finish();
 
     let unknown = progress.task("fetch (sources)  Fetch an unsized input");
@@ -294,7 +296,7 @@ fn a_download_with_a_known_total_draws_a_bytes_bar() {
     assert!(
         spinner
             .lines()
-            .any(|line| line.contains("Fetch an unsized input") && !line.contains("----")),
+            .any(|line| line.contains("Fetch an unsized input") && !line.contains('━')),
         "an unknown total gives the bytes spinner: {spinner:?}"
     );
     unknown.finish();
@@ -313,9 +315,9 @@ fn terminal_rows_persist_in_plain_transcript_and_active_state_is_bounded() {
     second.detail("later output");
     second.finish();
     let text = writer.text();
-    assert!(text.contains("[done] first"));
+    assert!(text.contains("✓ first · 0s"), "{text}");
     assert!(text.contains("later output"));
-    assert!(text.contains("[done] second"));
+    assert!(text.contains("✓ second · 0s"), "{text}");
     assert_eq!(renderer.active_task_count(), 0);
 }
 
@@ -345,7 +347,13 @@ fn plain_suspend_blocks_due_heartbeats_and_resumes_after_nested_unwind() {
     assert_eq!(writer.text(), before);
 
     plain.waiting();
-    assert!(writer.text().contains("[wait] owned terminal"));
+    assert!(
+        writer
+            .text()
+            .contains("● owned terminal · still running · 15s"),
+        "{}",
+        writer.text()
+    );
     task.finish();
 }
 
@@ -384,64 +392,72 @@ fn plain_suspend_stays_silent_through_long_input_and_resumes_on_ok_or_error() {
         assert_eq!(writer.text(), before);
 
         plain.waiting();
-        assert!(writer.text().contains("[wait] Command init"));
+        assert!(
+            writer.text().contains("● Command init · still running"),
+            "{}",
+            writer.text()
+        );
+        let waited = writer.text();
         task.finish();
-        assert!(writer.text().contains("[done] Command init"));
+        assert_eq!(
+            writer.text(),
+            waited,
+            "the command's own task leaves no row: its summary is the trailer"
+        );
         assert_eq!(renderer.active_task_count(), 0);
     }
 }
 
 #[test]
-fn the_ascii_vocabulary_keeps_the_tree_columns_of_the_unicode_one() {
-    let unicode = TreeGlyphs::unicode();
-    let ascii = TreeGlyphs::ascii();
-    assert_eq!(unicode.label(0, "root"), "root");
-    assert_eq!(unicode.label(1, "step"), "├─ step");
-    assert_eq!(unicode.label(3, "deep"), "│  │  ├─ deep");
-    assert_eq!(ascii.label(0, "root"), "root");
-    assert_eq!(ascii.label(1, "step"), "|- step");
-    assert_eq!(ascii.label(3, "deep"), "|  |  |- deep");
-    assert_eq!(ascii.under(0), "  ");
-    assert_eq!(ascii.under(2), "  |  |  ");
-    for depth in 0..4 {
-        assert_eq!(
-            unicode.label(depth, "x").chars().count(),
-            ascii.label(depth, "x").chars().count(),
-            "both vocabularies draw the same columns"
-        );
-        assert_eq!(
-            unicode.under(depth).chars().count(),
-            ascii.under(depth).chars().count()
-        );
-    }
+fn a_step_label_reads_as_its_id_and_title_and_a_child_hangs_from_its_branch() {
+    let step = Headline::parse("build (recipe)  Build vim", 0, false);
+    assert_eq!(
+        (step.name.as_str(), step.title.as_str()),
+        ("build", "Build vim")
+    );
+    assert_eq!(step.text(7), "build    Build vim");
+    let child = Headline::parse("fetch (archive)  Fetch the toolchain", 1, false);
+    assert_eq!(child.text(7), "└ fetch  Fetch the toolchain");
+    let deeper = Headline::parse("requires org.example/tool@1.0.0 (build)", 2, false);
+    assert_eq!(
+        deeper.text(0),
+        "  └ requires org.example/tool@1.0.0 (build)"
+    );
 }
 
 #[test]
-fn the_panel_draws_the_command_its_steps_and_a_requirement_as_one_tree() {
+fn the_panel_draws_the_steps_as_blocks_and_a_requirement_with_its_children() {
     let (terminal, renderer) = panelled(16, 72, 3, false);
     let progress = Progress::new(renderer.clone());
     let command = progress.task("Command global install");
     let steps = command.progress();
 
-    // A required package's whole install is one task of its own, and its
-    // steps are its children (PROP-065 `#display`).
+    // A required package's whole install is one block of its own, and its
+    // steps are its children (PROP-067 `#children`).
     let requirement = steps.task("requires org.example/toolchain@1.0.0 (build) for step build");
     let required_step = requirement
         .progress()
         .task("fetch (archive)  Fetch the toolchain");
     let nested = terminal.contents();
     assert!(
-        nested.contains("├─ requires org.example/toolchain@1.0.0"),
+        !nested.contains("Command global install"),
+        "the command's own task draws nothing: {nested:?}"
+    );
+    assert!(
+        nested.contains("requires org.example/toolchain@1.0.0"),
         "{nested:?}"
     );
-    assert!(nested.contains("│  ├─ fetch (archive)"), "{nested:?}");
+    assert!(
+        nested.contains("└ fetch  Fetch the toolchain"),
+        "{nested:?}"
+    );
     required_step.finish();
     requirement.finish();
     renderer.suspend(|| ());
     let done = terminal.contents();
     assert!(
-        done.contains("✓ │  ├─ fetch (archive)"),
-        "a finished row keeps its place in the tree: {done:?}"
+        done.contains("✓ └ fetch  Fetch the toolchain · 0s"),
+        "a finished child keeps its branch: {done:?}"
     );
 
     let fetch = steps.task("fetch (sources)  Fetch the sources");
@@ -450,10 +466,9 @@ fn the_panel_draws_the_command_its_steps_and_a_requirement_as_one_tree() {
     build.detail("configure: done");
     build.detail("cc main.c");
     let folded = terminal.contents();
-    assert!(folded.contains("├─ build (recipe)"), "{folded:?}");
     assert!(
-        folded.contains("  │  cc main.c"),
-        "the fold hangs under the running step's own vertical: {folded:?}"
+        folded.contains("  │ cc main.c"),
+        "the fold sits at column 2 under the running block: {folded:?}"
     );
     assert!(
         folded.lines().all(|line| line.chars().count() <= 72),
@@ -464,11 +479,11 @@ fn the_panel_draws_the_command_its_steps_and_a_requirement_as_one_tree() {
     command.finish();
     renderer.suspend(|| ());
     let after = terminal.contents();
-    assert!(after.contains("✓ ├─ fetch (sources)"), "{after:?}");
-    assert!(after.contains("✓ ├─ build (recipe)"), "{after:?}");
+    assert!(after.contains("✓ fetch"), "{after:?}");
+    assert!(after.contains("✓ build"), "{after:?}");
     assert!(
-        after.contains("✓ Command global install"),
-        "the root closes the group: {after:?}"
+        !after.contains("Command global install"),
+        "the root leaves no row: {after:?}"
     );
     assert!(
         !after.contains("cc main.c"),
@@ -477,7 +492,7 @@ fn the_panel_draws_the_command_its_steps_and_a_requirement_as_one_tree() {
 }
 
 #[test]
-fn a_skipped_and_a_failed_step_keep_their_markers_and_their_place_in_the_tree() {
+fn a_skipped_and_a_failed_step_collapse_to_their_glyphs_and_metadata() {
     let terminal = InMemoryTerm::new(8, 72);
     let renderer = ProgressRenderer::interactive_target(
         ProgressDrawTarget::term_like(Box::new(terminal.clone())),
@@ -488,13 +503,13 @@ fn a_skipped_and_a_failed_step_keep_their_markers_and_their_place_in_the_tree() 
     let skipped = command.progress().task("fix (agent)  Fix");
     skipped.skip("no agent configured");
     let failed = command.progress().task("build (recipe)  Build");
-    failed.fail("exit status 1");
+    failed.fail("recipe step build exited with code 1");
     command.finish();
     renderer.suspend(|| ());
     let after = terminal.contents();
-    // `InMemoryTerm` parses the escapes away and stderr is no terminal
-    // here, so the dim of a skipped row is not observable: what is
-    // asserted is the marker and the place in the tree.
-    assert!(after.contains("• ├─ fix (agent)"), "{after:?}");
-    assert!(after.contains("✗ ├─ build (recipe)"), "{after:?}");
+    assert!(
+        after.contains("○ fix  Fix · skipped: no agent configured"),
+        "{after:?}"
+    );
+    assert!(after.contains("✗ build  Build · 0s · exit 1"), "{after:?}");
 }

@@ -2,6 +2,7 @@
 //! place (PROP-015 §2.7). Split out of the mcp god-file (§7.3d).
 
 use super::*;
+use crate::output::language::Glyph;
 
 // ---------------------------------------------------------------------------
 // upgrade — scan known places + refresh stale to current template
@@ -280,7 +281,7 @@ fn print_upgrade_results(
 ) {
     for r in results {
         let prefix = match r.status {
-            "unchanged" => "✓",
+            "unchanged" => Glyph::Done.text(),
             "would-update" | "updated" => {
                 if dry_run {
                     "would"
@@ -303,7 +304,7 @@ fn print_upgrade_results(
     }
     for r in skill_results {
         let prefix = match r.status {
-            "unchanged" => "✓",
+            "unchanged" => Glyph::Done.text(),
             "would-update" | "updated" => {
                 if dry_run {
                     "would"

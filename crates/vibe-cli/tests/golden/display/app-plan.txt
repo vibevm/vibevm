@@ -1,0 +1,5 @@
+── plan for org.example/noisy@1.0.0 ────
+
+  installer  main (linux/x86_64) · result owned
+
+  1.  build  (recipe)  Build

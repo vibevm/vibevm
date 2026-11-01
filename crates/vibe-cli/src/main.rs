@@ -83,16 +83,23 @@ fn run() -> ExitCode {
         && !commands::vvm::same_location(&env_home, &loc.home)
     {
         eprintln!(
-            "vibe: note: $VIBEVM_HOME is stale (env={env_home}); the running version is {} \
-             — open a new shell or `eval \"$(vibe self env)\"`",
-            loc.home.display()
+            "{}",
+            output::language::warning(&format!(
+                "$VIBEVM_HOME is stale (env={env_home}); the running version is {} \
+                 — open a new shell or run eval \"$(vibe self env)\"",
+                loc.home.display()
+            ))
         );
     }
 
-    let progress_interactive = std::io::stderr().is_terminal()
-        && read_env_opt("TERM")
-            .map(|term| !term.eq_ignore_ascii_case("dumb"))
-            .unwrap_or(true);
+    let terminal_vocabulary = read_env_opt("TERM")
+        .map(|term| !term.eq_ignore_ascii_case("dumb"))
+        .unwrap_or(true);
+    let progress_interactive = std::io::stderr().is_terminal() && terminal_vocabulary && !cli.plain;
+    output::configure_language(
+        std::io::stdout().is_terminal() && std::io::stderr().is_terminal(),
+        terminal_vocabulary && !cli.plain && !cli.json && !cli.quiet,
+    );
     let (ctx, command_activity) = command_progress::configure_context(
         output::Context::from_flags(
             cli.quiet,
@@ -100,7 +107,8 @@ fn run() -> ExitCode {
             cli.invoked_by.as_deref(),
             cli.unattended,
             cli.agent_mode,
-        ),
+        )
+        .with_plain(cli.plain),
         &cli.command,
         cli.verbose,
         command_progress::Streams {
@@ -133,7 +141,7 @@ fn run() -> ExitCode {
             offline: cli.offline,
         },
     ) {
-        eprintln!("vibe: {error:#}");
+        ctx.error_with_suffix(&error, None);
         return as_exit_code(&error);
     }
 
@@ -143,7 +151,7 @@ fn run() -> ExitCode {
         && read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_none()
         && let Err(e) = vibe_core::ensure_default_global_registry()
     {
-        eprintln!("vibe: warning: could not seed ~/.vibe/registry.toml: {e}");
+        ctx.diagnostic(&format!("could not seed ~/.vibe/registry.toml: {e}"));
     }
 
     // PROP-030: the embedded registry belongs to a source-*installed* `vibe`
@@ -162,7 +170,7 @@ fn run() -> ExitCode {
         if read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_none()
             && let Err(e) = vibe_core::ensure_default_global_registry()
         {
-            eprintln!("vibe: warning: could not seed ~/.vibe/registry.toml: {e}");
+            ctx.diagnostic(&format!("could not seed ~/.vibe/registry.toml: {e}"));
         }
         discover_embedded_root()
     };
@@ -519,7 +527,10 @@ fn promote_user_config_env() {
     let cfg = match UserConfig::load() {
         Ok(c) => c,
         Err(e) => {
-            eprintln!("warning: user-level config could not be read: {e}");
+            eprintln!(
+                "{}",
+                output::language::warning(&format!("user-level config could not be read: {e}"))
+            );
             let _ = PROMOTED_FROM_USER_CONFIG.set(BTreeSet::new());
             return;
         }
@@ -528,9 +539,11 @@ fn promote_user_config_env() {
     if !rejected.is_empty() {
         // Once, by name, never the value.
         eprintln!(
-            "vibe: warning: user config `[env]` may only set VIBE_* / VIBEVM_* names; \
-             ignored: {}",
-            rejected.join(", ")
+            "{}",
+            output::language::warning(&format!(
+                "user config [env] may only set VIBE_* / VIBEVM_* names; ignored: {}",
+                rejected.join(", ")
+            ))
         );
     }
     // PROP-066 `#locator`: the one `[proxy]` table reaches every reqwest
