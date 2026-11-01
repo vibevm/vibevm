@@ -40,6 +40,7 @@ mod index;
 mod installer;
 mod launch;
 mod operations;
+mod portable;
 mod proxies;
 mod resolve;
 mod select;
@@ -101,6 +102,10 @@ pub use operations::{
     Change, ChangeVerb, Command, InstallRequest, ModifyRequest, OperationContext, Outcome,
     PackageResolver, Removal, RemoveRequest, autoremove, expose, hide, hold, install, installed,
     list, mark, modify, outdated, plan, remove_unrecorded, rollback, uninstall, update,
+};
+pub use portable::{
+    APPS_PROTOCOL, IMPORT_PROTOCOL, ImportAction, ImportInstall, PortableExport, import_action,
+    parse_portable, portable_set, portable_toml, restore_arrangement,
 };
 pub use proxies::{proxy_file_name, sync as sync_proxies};
 pub use resolve::{

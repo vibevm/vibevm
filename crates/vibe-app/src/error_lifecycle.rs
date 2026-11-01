@@ -53,4 +53,19 @@ pub enum LifecycleError {
          (violates spec://org.vibevm.core/vibevm/common/PROP-065#env-step; fix: run the installation through the vibe CLI)"
     )]
     NoEnvironment { key: String, step: String },
+    #[error(
+        "`{key}` is already installed with {installed}, and the imported set asks for {wanted}; it was left as it is \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-059#portable-set; fix: change it with `vibe app modify {key}`, \
+         or import with --skip-installed to keep the installed choice)"
+    )]
+    ChoiceDiffers {
+        key: String,
+        installed: String,
+        wanted: String,
+    },
+    #[error(
+        "the application set `{file}` cannot be read: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#portable-set; \
+         fix: give a file `vibe app export` wrote, protocol `vibe-apps/1`)"
+    )]
+    PortableInvalid { file: String, reason: String },
 }

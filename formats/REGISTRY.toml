@@ -87,6 +87,28 @@ sunset = "none"
 
 # `vibe app start KEY --json` (PROP-059 `#launcher-catalog`): the detached
 # child's process id, command line and log path.
+# `vibe app export` / `vibe app import` (PROP-059 `#portable-set`): the
+# portable set of a home's applications and launcher arrangement, written as
+# TOML (or JSON with --json). It is a projection of the index and the user
+# layer, so a lost copy is exported again.
+[format.apps-manifest]
+epoch = 1
+schema = "schemas/apps_manifest.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe app import --json` (PROP-059 `#portable-set`): installed, skipped
+# and refused rows of one import.
+[format.cli-application-import]
+epoch = 1
+schema = "schemas/application_import.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-application-start]
 epoch = 1
 schema = "schemas/application_start.jtd.json"

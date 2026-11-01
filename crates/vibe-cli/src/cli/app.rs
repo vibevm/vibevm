@@ -487,6 +487,17 @@ pub enum AppCommand {
         args: Vec<String>,
     },
 
+    /// Write the portable set of the user home's applications — each
+    /// installation's installer option, features, parameters, licence,
+    /// mark and hold — and your launcher arrangement, as TOML a later
+    /// `vibe app import` reads on another machine (PROP-059 `#portable-set`).
+    Export(super::AppExportArgs),
+
+    /// Install the applications of a set `vibe app export` wrote, through
+    /// the ordinary registry resolution and this host's platform rows, then
+    /// restore its launcher arrangement (PROP-059 `#portable-set`).
+    Import(super::AppImportArgs),
+
     /// Make one installation the global default provider of its slot.
     Use { slot: String, key: String },
 

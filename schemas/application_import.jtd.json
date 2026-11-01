@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "description": "Version 1 answer of vibe app import --json (PROP-059#portable-set): the installations the import installed (or, under --dry-run, would install), the rows it skipped with the reason, and the rows it refused with the stable error code and message. A skipped row whose key carries `#` is a launcher of the arrangement that could not be restored. Any refused row makes the command exit 1.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_import"
+    },
+    "x-rust-type": "ApplicationImport",
+    "x-wire-order": [
+      "protocol",
+      "home",
+      "dry_run",
+      "installed",
+      "skipped",
+      "refused"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "home": {
+      "type": "string"
+    },
+    "dry_run": {
+      "type": "boolean"
+    },
+    "installed": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "skipped": {
+      "elements": {
+        "ref": "skipped"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "refused": {
+      "elements": {
+        "ref": "refused"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "skipped": {
+      "metadata": {
+        "x-wire-order": [
+          "key",
+          "reason"
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "refused": {
+      "metadata": {
+        "x-wire-order": [
+          "key",
+          "code",
+          "message"
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
