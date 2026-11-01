@@ -4,9 +4,10 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#index");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#project-scope");
 
-use std::fs::{self, File, OpenOptions};
+use std::fs::{self, File, OpenOptions, TryLockError};
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::time::{Duration, Instant};
 
 use specmark::spec;
 
@@ -205,8 +206,27 @@ impl SettingsRoot {
     }
 
     /// Take the `applications/.mutation.lock` exclusive lock, creating the
-    /// state directory on first use. A held lock is refused, never awaited.
+    /// state directory on first use. A lock another command holds is
+    /// refused, never awaited: only a bounded [`LOCK_RETRY_WINDOW`] passes
+    /// before the refusal.
+    ///
+    /// The window exists because the lock belongs to the open file
+    /// description, not to the descriptor. A child spawned while the lock is
+    /// held shares that description between `fork` and `exec` (the
+    /// descriptor is close-on-exec, so the share ends at `exec`), and a lock
+    /// attempt in that instant is refused although the holder has already
+    /// released it. A long-lived client that locks the same home twice
+    /// around a spawn would see `locked` for nothing. Of the two cures —
+    /// retrying briefly, or spawning children so they never inherit the
+    /// description — the retry was chosen (B-228): it covers every caller
+    /// here and leaves how children are spawned alone.
     pub fn lock(&self) -> Result<MutationLock, StateError> {
+        self.lock_within(LOCK_RETRY_WINDOW)
+    }
+
+    /// [`Self::lock`] with an explicit retry window; the tests pass zero to
+    /// show the fork window refusing without the retry.
+    pub(crate) fn lock_within(&self, window: Duration) -> Result<MutationLock, StateError> {
         let dir = self.applications_dir();
         fs::create_dir_all(&dir).map_err(|source| io("creating", &dir, source))?;
         let path = dir.join(".mutation.lock");
@@ -217,12 +237,32 @@ impl SettingsRoot {
             .write(true)
             .open(&path)
             .map_err(|source| io("opening", &path, source))?;
-        file.try_lock().map_err(|_| StateError::Locked {
-            path: path.display().to_string(),
-        })?;
-        Ok(MutationLock { _file: file })
+        let deadline = Instant::now() + window;
+        loop {
+            match file.try_lock() {
+                Ok(()) => return Ok(MutationLock { _file: file }),
+                Err(TryLockError::WouldBlock) if Instant::now() < deadline => {
+                    std::thread::sleep(LOCK_RETRY_POLL);
+                }
+                Err(_) => {
+                    return Err(StateError::Locked {
+                        path: path.display().to_string(),
+                    });
+                }
+            }
+        }
     }
 }
+
+/// How long [`SettingsRoot::lock`] keeps retrying before it refuses. A
+/// fork-to-exec window lasts microseconds, a loaded machine stretches it to
+/// a few milliseconds; 50 ms covers that and is still too short for a person
+/// to notice when a real holder makes the command refuse.
+pub(crate) const LOCK_RETRY_WINDOW: Duration = Duration::from_millis(50);
+
+/// The pause between attempts inside [`LOCK_RETRY_WINDOW`]: short against
+/// the window, long enough not to spin a core.
+pub(crate) const LOCK_RETRY_POLL: Duration = Duration::from_millis(2);
 
 pub(crate) fn io(action: &'static str, path: &Path, source: std::io::Error) -> StateError {
     StateError::Io {
@@ -250,4 +290,78 @@ pub(crate) fn write_atomic(path: &Path, bytes: &[u8]) -> Result<(), StateError> 
         let _ = fs::remove_file(&sibling);
         io("replacing", path, source)
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use std::process::{Command, Stdio};
+    use std::sync::mpsc;
+
+    use super::*;
+
+    /// `exec`, so killing the child kills the process that holds its stdin
+    /// rather than a shell whose forked `sleep` would keep holding it.
+    fn sleeper() -> Command {
+        let mut command = Command::new("sh");
+        command.args(["-c", "exec sleep 0.2"]);
+        command
+    }
+
+    /// The fork window itself lasts microseconds, so a child that took the
+    /// lock file as its stdin stands in for one caught between `fork` and
+    /// `exec`: it shares the open file description for as long as it lives.
+    #[test]
+    #[cfg_attr(
+        windows,
+        ignore = "no fork window on Windows: a spawned child inherits no lock"
+    )]
+    fn a_lock_shared_with_a_child_is_retried_rather_than_refused() {
+        let dir = tempfile::tempdir().unwrap();
+        let settings = SettingsRoot::new(dir.path());
+
+        // The ordinary shape: lock, spawn, release, lock again at once.
+        let held = settings.lock().unwrap();
+        let mut plain = sleeper().spawn().unwrap();
+        drop(held);
+        drop(settings.lock().expect("the release is seen at once"));
+        plain.wait().unwrap();
+
+        let held = settings.lock().unwrap();
+        let shared = held._file.try_clone().unwrap();
+        let mut child = sleeper().stdin(Stdio::from(shared)).spawn().unwrap();
+        drop(held);
+        assert!(
+            matches!(
+                settings.lock_within(Duration::ZERO),
+                Err(StateError::Locked { .. })
+            ),
+            "without the retry a released lock still shared by a child is refused"
+        );
+
+        // The child lets go while `lock()` is already retrying.
+        let (ready, go) = mpsc::channel();
+        let releaser = std::thread::spawn(move || {
+            go.recv().unwrap();
+            // A lag past the first attempt, so only the retry can succeed.
+            std::thread::sleep(LOCK_RETRY_POLL * 3);
+            child.kill().unwrap();
+            child.wait().unwrap();
+        });
+        ready.send(()).unwrap();
+        assert!(
+            settings.lock().is_ok(),
+            "the retry outlasts the shared instant"
+        );
+        releaser.join().unwrap();
+    }
+
+    #[test]
+    fn a_lock_still_held_after_the_window_is_refused() {
+        let dir = tempfile::tempdir().unwrap();
+        let settings = SettingsRoot::new(dir.path());
+        let _held = settings.lock().unwrap();
+        let started = Instant::now();
+        assert!(matches!(settings.lock(), Err(StateError::Locked { .. })));
+        assert!(started.elapsed() >= LOCK_RETRY_WINDOW);
+    }
 }
