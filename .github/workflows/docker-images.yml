@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: vibevm-container-images-1.0.8
+  group: vibevm-container-images-1.0.9
   cancel-in-progress: false
 
 jobs:
@@ -33,14 +33,14 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --location --retry 3 \
-            https://github.com/vibevm/vibevm/releases/download/v1.0.8/DISTRIBUTIONS.json \
+            https://github.com/vibevm/vibevm/releases/download/v1.0.9/DISTRIBUTIONS.json \
             --output "$RUNNER_TEMP/vibevm-distributions.json"
           vibe_sha="$(jq -er '.platforms[] | select(.target == "x86_64-unknown-linux-musl") | .bootstrap.digest | sub("^sha256:"; "")' "$RUNNER_TEMP/vibevm-distributions.json")"
           vibe_commit="$(jq -er '.source_commit' "$RUNNER_TEMP/vibevm-distributions.json")"
-          vibe_tag="$(git ls-remote https://github.com/vibevm/vibevm.git refs/tags/v1.0.8 | awk '{print $1}')"
+          vibe_tag="$(git ls-remote https://github.com/vibevm/vibevm.git refs/tags/v1.0.9 | awk '{print $1}')"
           test "$vibe_commit" = "$vibe_tag"
           curl --fail --location --retry 3 \
-            https://github.com/vibevm/vibevm/releases/download/v1.0.8/vibe-bootstrap-x86_64-unknown-linux-musl \
+            https://github.com/vibevm/vibevm/releases/download/v1.0.9/vibe-bootstrap-x86_64-unknown-linux-musl \
             --output docker/vibevm/vibe-bootstrap
           echo "$vibe_sha  docker/vibevm/vibe-bootstrap" | sha256sum -c -
           zap_commit="$(git ls-remote https://github.com/vibevm/zap.git refs/tags/v1.0.0 | awk '{print $1}')"
@@ -55,7 +55,7 @@ jobs:
           set -euo pipefail
           for image in vibevm vibevm-dev vibevm-zap vibevm-doc; do
             key="${image//-/_}"
-            digest="$(docker buildx imagetools inspect "vibevm/$image:1.0.8" 2>/dev/null | awk '$1 == "Digest:" { print $2; exit }' || true)"
+            digest="$(docker buildx imagetools inspect "vibevm/$image:1.0.9" 2>/dev/null | awk '$1 == "Digest:" { print $2; exit }' || true)"
             echo "$key=$digest" >> "$GITHUB_OUTPUT"
           done
 
@@ -70,24 +70,24 @@ jobs:
           set -euo pipefail
           docker build \
             --build-arg VIBE_SHA256="$VIBE_SHA" \
-            -t vibevm/vibevm:1.0.8 -t vibevm/vibevm:latest \
+            -t vibevm/vibevm:1.0.9 -t vibevm/vibevm:latest \
             -f docker/vibevm/Dockerfile docker/vibevm
           docker build \
-            --build-arg BASE_IMAGE=vibevm/vibevm:1.0.8 \
+            --build-arg BASE_IMAGE=vibevm/vibevm:1.0.9 \
             --build-arg NPM_CONFIG_REGISTRY="$NPM_REGISTRY" \
-            -t vibevm/vibevm-dev:1.0.8 -t vibevm/vibevm-dev:latest \
+            -t vibevm/vibevm-dev:1.0.9 -t vibevm/vibevm-dev:latest \
             -f docker/vibevm-dev/Dockerfile docker/vibevm-dev
           docker build \
-            --build-arg BASE_IMAGE=vibevm/vibevm:1.0.8 \
+            --build-arg BASE_IMAGE=vibevm/vibevm:1.0.9 \
             --build-arg ZAP_COMMIT="$ZAP_COMMIT" \
-            -t vibevm/vibevm-zap:1.0.8 -t vibevm/vibevm-zap:latest \
+            -t vibevm/vibevm-zap:1.0.9 -t vibevm/vibevm-zap:latest \
             -f docker/vibevm-zap/Dockerfile .
           docker build \
-            --build-arg BASE_IMAGE=vibevm/vibevm:1.0.8 \
-            --build-arg DEV_IMAGE=vibevm/vibevm-dev:1.0.8 \
+            --build-arg BASE_IMAGE=vibevm/vibevm:1.0.9 \
+            --build-arg DEV_IMAGE=vibevm/vibevm-dev:1.0.9 \
             --build-arg NPM_CONFIG_REGISTRY="$NPM_REGISTRY" \
             --build-arg UMAMI_WEBSITE_ID="$UMAMI_WEBSITE_ID" \
-            -t vibevm/vibevm-doc:1.0.8 -t vibevm/vibevm-doc:latest \
+            -t vibevm/vibevm-doc:1.0.9 -t vibevm/vibevm-doc:latest \
             -f docker/vibevm-doc/Dockerfile .
 
       - name: Smoke the unpublished images
@@ -96,11 +96,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(docker run --rm vibevm/vibevm:1.0.8 vibe --version)" = "vibe 1.0.8"
-          docker run --rm vibevm/vibevm:1.0.8 git --version
-          docker run --rm vibevm/vibevm-dev:1.0.8 sh -lc 'rustc --version && node --version && pnpm --version && vibe --version'
-          docker run -d --name zap-smoke -p 127.0.0.1:18080:8080 vibevm/vibevm-zap:1.0.8
-          docker run -d --name doc-smoke -p 127.0.0.1:18081:80 vibevm/vibevm-doc:1.0.8
+          test "$(docker run --rm vibevm/vibevm:1.0.9 vibe --version)" = "vibe 1.0.9"
+          docker run --rm vibevm/vibevm:1.0.9 git --version
+          docker run --rm vibevm/vibevm-dev:1.0.9 sh -lc 'rustc --version && node --version && pnpm --version && vibe --version'
+          docker run -d --name zap-smoke -p 127.0.0.1:18080:8080 vibevm/vibevm-zap:1.0.9
+          docker run -d --name doc-smoke -p 127.0.0.1:18081:80 vibevm/vibevm-doc:1.0.9
           trap 'docker rm -f zap-smoke doc-smoke >/dev/null 2>&1 || true' EXIT
           for _ in $(seq 1 60); do curl --fail --silent http://127.0.0.1:18080/ >/dev/null && break; sleep 1; done
           curl --fail --silent http://127.0.0.1:18080/ >/dev/null
@@ -127,7 +127,7 @@ jobs:
         run: |
           set -euo pipefail
           for image in vibevm vibevm-dev vibevm-zap vibevm-doc; do
-            docker push "vibevm/$image:1.0.8"
+            docker push "vibevm/$image:1.0.9"
             docker push "vibevm/$image:latest"
           done
 
@@ -149,7 +149,7 @@ jobs:
             image="${row%%:*}"
             old_digest="${row#*:}"
             test -n "$old_digest" || continue
-            new_digest="$(docker buildx imagetools inspect "vibevm/$image:1.0.8" | awk '$1 == "Digest:" { print $2; exit }')"
+            new_digest="$(docker buildx imagetools inspect "vibevm/$image:1.0.9" | awk '$1 == "Digest:" { print $2; exit }')"
             test "$old_digest" != "$new_digest" || continue
             if curl --fail --silent "https://hub.docker.com/v2/repositories/vibevm/$image/tags?page_size=100" \
               | jq -e --arg digest "$old_digest" '.results | any(.digest == $digest)' >/dev/null; then

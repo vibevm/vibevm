@@ -8,6 +8,31 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+## [1.0.9] — 2026-11-02
+
+**Upgrade notes.**
+- `vibe.lock` may carry a `[[remap]]` table and a `vibe.lock.provenance` sidecar
+  once a project uses a remap package (PROP-066); a lock written with remap rows
+  is refused by 1.0.8 and earlier, which read the lock with unknown fields denied.
+  A project with no remap package writes the same lock as before.
+- The user-level configuration gains `[transfer] limit` (a rate limit for HTTP
+  downloads, PROP-068) and `registry.toml` gains `[index] checkout` (the local
+  index checkout `vibe registry publish --index-checkout` writes into). Older
+  versions do not read them.
+- The settings root gains `applications/running/`, `applications/events.jsonl`,
+  `applications/exported.json`, `transfers/`, `remap/consent.json` and the
+  caches `cache/app-sources/`, `cache/app-work/`, `cache/app-runs/`; older
+  versions ignore them.
+- Every human-readable output is redrawn under the terminal display language
+  (PROP-067): scripts that read human text must move to `--json` or
+  `--progress-format json`, whose contracts are unchanged and only gained
+  members (`requires`, `transfer`, `transfer_record`, `rate_bps`, `peak_bps`
+  on the progress stream; `field` and `column` on `vibe check` findings;
+  `licenses` on `vibe app import`).
+- `vibe app stop` on Windows now reaches a `tui`/`command` launcher's console
+  and may take up to five seconds before it terminates a program that ignores
+  the break.
+
 - **A just-released application lock is no longer refused.** The mutation lock of an application home belongs to the open file, so a child spawned while it was held shared it until the child started its program, and a second lock in that instant was refused as `locked` although the holder had let go. Taking the lock now retries for at most 50 ms before refusing; a command another vibe holds the lock against is still refused, not kept waiting. The CLI takes the lock once per process and never met this; a long-lived client or daemon locking the same home repeatedly would have (B-228).
 
 - **The Windows user environment no longer spawns PowerShell.** `vibe self` activation and the application `env` step read and write `HKCU\Environment` through the registry API, keeping each value's `REG_SZ` or `REG_EXPAND_SZ` kind and never expanding `%VAR%`, and broadcast `WM_SETTINGCHANGE` with `SendMessageTimeoutW`. A value now takes microseconds instead of hundreds of milliseconds, and the edit no longer depends on finding PowerShell, its execution policy or its quoting (B-226).
