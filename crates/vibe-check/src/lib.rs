@@ -256,6 +256,8 @@ impl Severity {
 ///     severity: Severity::Warning,
 ///     path: Some(PathBuf::from("notes/old-review.md")),
 ///     line: Some(1),
+///     column: None,
+///     field: None,
 ///     message: "REVIEW marker dated 2026-04-01 is 33 days old".to_string(),
 /// };
 /// assert_eq!(finding.check.as_str(), "review_aging");
@@ -271,6 +273,13 @@ pub struct Finding {
     /// 1-based line number when the finding refers to a specific
     /// line (`ReviewAging` markers); `None` otherwise.
     pub line: Option<usize>,
+    /// 1-based column beside `line`, when the finding knows it (a manifest
+    /// that does not parse, a refused field located in the source).
+    pub column: Option<usize>,
+    /// The manifest field the finding is about, as a TOML path
+    /// (`installer_options[1].steps[0].sha256`). Only the manifest-validity
+    /// cell knows one; every other cell leaves it `None`.
+    pub field: Option<String>,
     pub message: String,
 }
 
@@ -286,6 +295,8 @@ pub struct Finding {
 ///     severity: Severity::Error,
 ///     path: None,
 ///     line: None,
+///     column: None,
+///     field: None,
 ///     message: "the boot directory is missing".to_string(),
 /// });
 /// assert!(report.has_errors());
@@ -322,6 +333,8 @@ impl CheckReport {
             severity: Severity::Error,
             path,
             line,
+            column: None,
+            field: None,
             message: msg.into(),
         });
     }
@@ -337,6 +350,8 @@ impl CheckReport {
             severity: Severity::Warning,
             path,
             line,
+            column: None,
+            field: None,
             message: msg.into(),
         });
     }
@@ -352,6 +367,8 @@ impl CheckReport {
             severity: Severity::Info,
             path,
             line,
+            column: None,
+            field: None,
             message: msg.into(),
         });
     }

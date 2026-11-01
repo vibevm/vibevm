@@ -59,6 +59,30 @@ impl SafeTomlParseError {
     pub fn column(&self) -> Option<usize> {
         self.column
     }
+
+    /// The field the parser's message is about: the table its trailing
+    /// `in \`<keys>\`` line names, with the key a `missing field` names
+    /// appended. `None` when the message names no table, or names one
+    /// `source` does not hold as a table (see [`FieldPath::from_toml_keys`]).
+    ///
+    /// [`FieldPath::from_toml_keys`]: crate::manifest::FieldPath
+    pub fn field(&self, source: &str) -> Option<crate::manifest::FieldPath> {
+        let keys = self
+            .message
+            .lines()
+            .rev()
+            .find_map(|line| line.trim().strip_prefix("in `")?.strip_suffix('`'))?;
+        let table = crate::manifest::FieldPath::from_toml_keys(keys, source)?;
+        let missing = self
+            .message
+            .strip_prefix("missing field `")
+            .and_then(|rest| rest.split_once('`'))
+            .map(|(name, _)| name);
+        Some(match missing {
+            Some(name) => table.field(name),
+            None => table,
+        })
+    }
 }
 
 impl std::fmt::Display for SafeTomlParseError {
@@ -74,7 +98,7 @@ impl std::fmt::Display for SafeTomlParseError {
 
 impl std::error::Error for SafeTomlParseError {}
 
-fn line_column(input: &str, byte_offset: usize) -> (usize, usize) {
+pub(crate) fn line_column(input: &str, byte_offset: usize) -> (usize, usize) {
     let mut offset = byte_offset.min(input.len());
     while !input.is_char_boundary(offset) {
         offset -= 1;
@@ -184,6 +208,18 @@ pub enum Error {
     )]
     InvalidManifest { reason: String },
 
+    /// An [`Error::InvalidManifest`] that knows the field it is about, so
+    /// `vibe check` can report the address beside the unchanged sentence.
+    #[error(
+        "invalid manifest: {reason} \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema; \
+          fix: correct vibe.toml against the schema)"
+    )]
+    InvalidManifestField {
+        field: crate::manifest::FieldPath,
+        reason: String,
+    },
+
     #[error(
         "unsupported vibe.lock schema version {found} — expected {expected} \
          (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#lockfile-schema; \
@@ -238,7 +274,25 @@ pub enum Error {
     SerializeToml(#[from] toml::ser::Error),
 }
 
+impl From<crate::manifest::FieldError> for Error {
+    fn from(refusal: crate::manifest::FieldError) -> Self {
+        Error::InvalidManifestField {
+            field: refusal.field,
+            reason: refusal.message,
+        }
+    }
+}
+
 impl Error {
+    /// The manifest field a refusal is about, when the validator that
+    /// refused knew it.
+    pub fn manifest_field(&self) -> Option<&crate::manifest::FieldPath> {
+        match self {
+            Error::InvalidManifestField { field, .. } => Some(field),
+            _ => None,
+        }
+    }
+
     /// Wrap a `toml::de::Error` so its own diagnosis reaches the reader and
     /// the remedy matches the failure kind.
     ///

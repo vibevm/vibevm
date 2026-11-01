@@ -5,40 +5,55 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 use std::collections::BTreeSet;
 use std::path::{Component, Path};
 
-use crate::manifest::{declarant_path, is_command_name, is_portable_token};
+use crate::manifest::{FieldError, FieldPath, declarant_path, is_command_name, is_portable_token};
 
+pub(super) use super::site::Site;
 use super::*;
 
 impl InstallerOptionDecl {
-    pub(crate) fn validate(&self) -> Result<(), String> {
+    /// Validate one option; `at` is its address, `installer_options[i]`.
+    pub(crate) fn validate(&self, at: &FieldPath) -> Result<(), FieldError> {
+        let refuse = |name: &str, message: String| FieldError::new(at.field(name), message);
         if !is_portable_token(&self.id) {
-            return Err(format!(
-                "[[installer_options]].id `{}` must be a portable lowercase token",
-                self.id
+            return Err(refuse(
+                "id",
+                format!(
+                    "[[installer_options]].id `{}` must be a portable lowercase token",
+                    self.id
+                ),
             ));
         }
         if self.name.trim().is_empty() {
-            return Err(format!(
-                "[[installer_options]] `{}` name must be nonempty",
-                self.id
+            return Err(refuse(
+                "name",
+                format!("[[installer_options]] `{}` name must be nonempty", self.id),
             ));
         }
         if !is_portable_token(&self.platform) {
-            return Err(format!(
-                "[[installer_options]] `{}` platform must be a portable lowercase token",
-                self.id
+            return Err(refuse(
+                "platform",
+                format!(
+                    "[[installer_options]] `{}` platform must be a portable lowercase token",
+                    self.id
+                ),
             ));
         }
         if self.platform_name.trim().is_empty() {
-            return Err(format!(
-                "[[installer_options]] `{}` platform_name must be nonempty",
-                self.id
+            return Err(refuse(
+                "platform_name",
+                format!(
+                    "[[installer_options]] `{}` platform_name must be nonempty",
+                    self.id
+                ),
             ));
         }
         if !valid_arch(&self.arch) {
-            return Err(format!(
-                "[[installer_options]] `{}` arch must be a portable lowercase architecture token",
-                self.id
+            return Err(refuse(
+                "arch",
+                format!(
+                    "[[installer_options]] `{}` arch must be a portable lowercase architecture token",
+                    self.id
+                ),
             ));
         }
         if self
@@ -46,9 +61,12 @@ impl InstallerOptionDecl {
             .as_ref()
             .is_some_and(|name| name.trim().is_empty())
         {
-            return Err(format!(
-                "[[installer_options]] `{}` arch_name must be nonempty when present",
-                self.id
+            return Err(refuse(
+                "arch_name",
+                format!(
+                    "[[installer_options]] `{}` arch_name must be nonempty when present",
+                    self.id
+                ),
             ));
         }
         let native = matches!(
@@ -59,55 +77,84 @@ impl InstallerOptionDecl {
             .iter()
             .any(|step| matches!(step.kind, StepKind::Native { .. }));
         if native && self.platform != "windows" {
-            return Err(format!(
-                "[[installer_options]] `{}` exe/msi methods require platform = windows",
-                self.id
+            return Err(refuse(
+                "platform",
+                format!(
+                    "[[installer_options]] `{}` exe/msi methods require platform = windows",
+                    self.id
+                ),
             ));
         }
+        let option = Site::new("[[installer_options]]", at.clone());
         if let Some(command) = &self.pre_install {
-            validate_shell_command(command, "[[installer_options]]", "pre_install")?;
+            validate_shell_command(command, &option, "pre_install")?;
         }
         if let Some(command) = &self.post_install {
-            validate_shell_command(command, "[[installer_options]]", "post_install")?;
+            validate_shell_command(command, &option, "post_install")?;
         }
         match (&self.installation, self.steps.is_empty()) {
             (Some(method), true) => {
-                if self.result.is_some() || !self.features.is_empty() || !self.profiles.is_empty() {
-                    return Err(format!(
-                        "[[installer_options]] `{}` declares result, features or profiles, which apply only to [[steps]]",
-                        self.id
+                let stray = if self.result.is_some() {
+                    Some("result")
+                } else if !self.features.is_empty() {
+                    Some("features")
+                } else if !self.profiles.is_empty() {
+                    Some("profiles")
+                } else {
+                    None
+                };
+                if let Some(stray) = stray {
+                    return Err(refuse(
+                        stray,
+                        format!(
+                            "[[installer_options]] `{}` declares result, features or profiles, which apply only to [[steps]]",
+                            self.id
+                        ),
                     ));
                 }
-                method.validate()?;
+                method.validate(&at.table("installation"))?;
             }
             (None, false) => {}
             (Some(_), false) => {
-                return Err(format!(
-                    "[[installer_options]] `{}` declares both installation and [[steps]]; they are mutually exclusive",
-                    self.id
+                return Err(refuse(
+                    "installation",
+                    format!(
+                        "[[installer_options]] `{}` declares both installation and [[steps]]; they are mutually exclusive",
+                        self.id
+                    ),
                 ));
             }
             (None, true) => {
-                return Err(format!(
-                    "[[installer_options]] `{}` declares neither installation nor [[steps]]",
-                    self.id
+                return Err(FieldError::new(
+                    at.clone(),
+                    format!(
+                        "[[installer_options]] `{}` declares neither installation nor [[steps]]",
+                        self.id
+                    ),
                 ));
             }
         }
-        self.validate_steps()?;
-        self.validate_launchers_from()?;
+        self.validate_steps(at)?;
+        self.validate_launchers_from(at)?;
         let mut public_names = BTreeSet::new();
-        for command in &self.public_commands {
+        for (index, command) in self.public_commands.iter().enumerate() {
+            let command_at = at.table("public_commands").index(index);
             if !is_command_name(&command.name) || command.name == "vibe" {
-                return Err(format!(
-                    "[[installer_options.public_commands]].name `{}` must be a command name (a lowercase letter or digit, then letters, digits, `-`, `_`, `.` or `+`, like `g++` or `python3.12`) other than `vibe`",
-                    command.name
+                return Err(FieldError::new(
+                    command_at.field("name"),
+                    format!(
+                        "[[installer_options.public_commands]].name `{}` must be a command name (a lowercase letter or digit, then letters, digits, `-`, `_`, `.` or `+`, like `g++` or `python3.12`) other than `vibe`",
+                        command.name
+                    ),
                 ));
             }
             if !public_names.insert(command.name.as_str()) {
-                return Err(format!(
-                    "[[installer_options.public_commands]].name `{}` is duplicated in installer option `{}`",
-                    command.name, self.id
+                return Err(FieldError::new(
+                    command_at.field("name"),
+                    format!(
+                        "[[installer_options.public_commands]].name `{}` is duplicated in installer option `{}`",
+                        command.name, self.id
+                    ),
                 ));
             }
             // A launcher derived from a desktop entry exists only after
@@ -118,9 +165,12 @@ impl InstallerOptionDecl {
                     .iter()
                     .any(|launcher| launcher.id == command.launcher)
             {
-                return Err(format!(
-                    "[[installer_options.public_commands]] `{}` references unknown launcher `{}` in installer option `{}`",
-                    command.name, command.launcher, self.id
+                return Err(FieldError::new(
+                    command_at.field("launcher"),
+                    format!(
+                        "[[installer_options.public_commands]] `{}` references unknown launcher `{}` in installer option `{}`",
+                        command.name, command.launcher, self.id
+                    ),
                 ));
             }
         }
@@ -140,17 +190,24 @@ fn valid_arch(value: &str) -> bool {
 }
 
 impl ApplicationDecl {
-    pub(crate) fn validate(&self) -> Result<(), String> {
+    pub(crate) fn validate(&self) -> Result<(), FieldError> {
+        let at = FieldPath::root().table("application");
         if !is_portable_token(&self.id) {
-            return Err("[application].id must be a portable lowercase token".into());
+            return Err(FieldError::new(
+                at.field("id"),
+                "[application].id must be a portable lowercase token",
+            ));
         }
-        self.validate_menu()
+        self.validate_menu(&at)
     }
 }
 
 impl InstallerMethod {
-    pub(crate) fn validate(&self) -> Result<(), String> {
+    /// Validate the shorthand method; `at` is `installer_options[i].installation`.
+    pub(crate) fn validate(&self, at: &FieldPath) -> Result<(), FieldError> {
         let table = "[installer_options.installation]";
+        let site = Site::new(table, at.clone());
+        let table = site.prose;
         match self {
             Self::Shell {
                 app_root,
@@ -161,14 +218,14 @@ impl InstallerMethod {
                 force_uninstall,
                 interpreter: _,
             } => {
-                validate_command_root(app_root, table)?;
-                validate_shell_command(install, table, "install")?;
-                validate_shell_command(force_install, table, "force_install")?;
+                validate_command_root(app_root, &site)?;
+                validate_shell_command(install, &site, "install")?;
+                validate_shell_command(force_install, &site, "force_install")?;
                 if let Some(command) = update {
-                    validate_shell_command(command, table, "update")?;
+                    validate_shell_command(command, &site, "update")?;
                 }
-                validate_shell_command(uninstall, table, "uninstall")?;
-                validate_shell_command(force_uninstall, table, "force_uninstall")?;
+                validate_shell_command(uninstall, &site, "uninstall")?;
+                validate_shell_command(force_uninstall, &site, "force_uninstall")?;
             }
             Self::Zip {
                 source,
@@ -180,14 +237,18 @@ impl InstallerMethod {
                 sha256,
                 payload_root,
             } => {
-                validate_source(source, table)?;
-                validate_sha256(sha256, table)?;
+                validate_source(source, &site)?;
+                validate_sha256(sha256, &site)?;
                 if let Some(root) = payload_root {
-                    declarant_path(root)
-                        .map_err(|fault| format!("{table}.payload_root: {}", fault.reason()))?;
+                    declarant_path(root).map_err(|fault| {
+                        site.refuse(
+                            "payload_root",
+                            format!("{table}.payload_root: {}", fault.reason()),
+                        )
+                    })?;
                 }
             }
-            Self::SourceBuild { sources, recipe } => validate_source_build(sources, recipe)?,
+            Self::SourceBuild { sources, recipe } => validate_source_build(sources, recipe, &site)?,
             Self::Exe {
                 source,
                 sha256,
@@ -206,29 +267,31 @@ impl InstallerMethod {
                 uninstall,
                 force_uninstall,
             } => {
-                validate_source(source, table)?;
-                validate_sha256(sha256, table)?;
-                validate_command_root(app_root, table)?;
+                validate_source(source, &site)?;
+                validate_sha256(sha256, &site)?;
+                validate_command_root(app_root, &site)?;
                 if arguments
                     .iter()
                     .any(|arg| arg.chars().any(char::is_control))
                 {
-                    return Err(format!(
-                        "{table}.arguments must not contain control characters"
+                    return Err(site.refuse(
+                        "arguments",
+                        format!("{table}.arguments must not contain control characters"),
                     ));
                 }
                 if force_arguments.as_ref().is_some_and(|values| {
                     values.iter().any(|arg| arg.chars().any(char::is_control))
                 }) {
-                    return Err(format!(
-                        "{table}.force_arguments must not contain control characters"
+                    return Err(site.refuse(
+                        "force_arguments",
+                        format!("{table}.force_arguments must not contain control characters"),
                     ));
                 }
                 if let Some(command) = uninstall {
-                    validate_shell_command(command, table, "uninstall")?;
+                    validate_shell_command(command, &site, "uninstall")?;
                 }
                 if let Some(command) = force_uninstall {
-                    validate_shell_command(command, table, "force_uninstall")?;
+                    validate_shell_command(command, &site, "force_uninstall")?;
                 }
             }
         }
@@ -236,43 +299,66 @@ impl InstallerMethod {
     }
 }
 
-pub(super) fn validate_shell_command(value: &str, table: &str, field: &str) -> Result<(), String> {
+pub(super) fn validate_shell_command(
+    value: &str,
+    site: &Site<'_>,
+    field: &str,
+) -> Result<(), FieldError> {
+    let table = site.prose;
     if value.trim().is_empty() || value.chars().any(char::is_control) {
-        return Err(format!(
-            "{table}.{field} must be a nonempty shell command without control characters"
+        return Err(site.refuse(
+            field,
+            format!("{table}.{field} must be a nonempty shell command without control characters"),
         ));
     }
     Ok(())
 }
 
-pub(super) fn validate_source(value: &str, table: &str) -> Result<(), String> {
+pub(super) fn validate_source(value: &str, site: &Site<'_>) -> Result<(), FieldError> {
+    let table = site.prose;
     if value.starts_with("https://") {
         if !credential_free_https(value) {
-            return Err(format!("{table}.source must be credential-free HTTPS"));
+            return Err(site.refuse(
+                "source",
+                format!("{table}.source must be credential-free HTTPS"),
+            ));
         }
     } else {
         declarant_path(Path::new(value)).map_err(|fault| {
-            format!(
-                "{table}.source must be a portable package-relative path or HTTPS URL: {}",
-                fault.reason()
+            site.refuse(
+                "source",
+                format!(
+                    "{table}.source must be a portable package-relative path or HTTPS URL: {}",
+                    fault.reason()
+                ),
             )
         })?;
     }
     Ok(())
 }
 
-pub(super) fn validate_sha256(value: &str, table: &str) -> Result<(), String> {
+pub(super) fn validate_sha256(value: &str, site: &Site<'_>) -> Result<(), FieldError> {
     if value.len() != 64 || !value.bytes().all(|byte| byte.is_ascii_hexdigit()) {
-        return Err(format!(
-            "{table}.sha256 must be a 64-digit hexadecimal digest"
+        return Err(site.refuse(
+            "sha256",
+            format!(
+                "{}.sha256 must be a 64-digit hexadecimal digest",
+                site.prose
+            ),
         ));
     }
     Ok(())
 }
 
-pub(super) fn validate_command_root(value: &str, table: &str) -> Result<(), String> {
+/// The messages always say `app_root`; a caller whose root is another
+/// field (`result.external`) passes a whole site at that field.
+pub(super) fn validate_command_root(value: &str, site: &Site<'_>) -> Result<(), FieldError> {
+    let table = site.prose;
+    let refuse = |message: String| site.refuse("app_root", message);
     if value.trim().is_empty() || value.chars().any(char::is_control) {
-        return Err(format!("{table}.app_root must be a nonempty path template"));
+        return Err(refuse(format!(
+            "{table}.app_root must be a nonempty path template"
+        )));
     }
     let template_suffix = value
         .strip_prefix("$vibe_home")
@@ -282,29 +368,40 @@ pub(super) fn validate_command_root(value: &str, table: &str) -> Result<(), Stri
             && matches!(value.as_bytes().get(2), Some(b'/' | b'\\')))
         || template_suffix.is_some();
     if !anchored {
-        return Err(format!(
+        return Err(refuse(format!(
             "{table}.app_root must be absolute or start with $vibe_home"
-        ));
+        )));
     }
     if value.split(['/', '\\']).any(|component| component == "..") {
-        return Err(format!("{table}.app_root must not traverse with `..`"));
+        return Err(refuse(format!(
+            "{table}.app_root must not traverse with `..`"
+        )));
     }
     if template_suffix.is_some_and(|suffix| {
         suffix.contains('$') || (!suffix.is_empty() && !suffix.starts_with('/'))
     }) || (template_suffix.is_none() && value.contains('$'))
     {
-        return Err(format!(
+        return Err(refuse(format!(
             "{table}.app_root permits only a leading $vibe_home variable"
-        ));
+        )));
     }
     Ok(())
 }
 
 /// Syntax-only check. Runtime resolution applies root-specific containment and
 /// file checks after substituting values from the installed application record.
-pub(super) fn validate_template(value: &str, field: &str, path: bool) -> Result<(), String> {
+///
+/// `field` is the name the message spells; `at` is the exact address of the
+/// value (an element of `args`, a slot of an icon set).
+pub(super) fn validate_template(
+    value: &str,
+    field: &str,
+    path: bool,
+    at: &FieldPath,
+) -> Result<(), FieldError> {
+    let refuse = |message: String| FieldError::new(at.clone(), message);
     if path && value.is_empty() {
-        return Err(format!("[[launchers]].{field} must be nonempty"));
+        return Err(refuse(format!("[[launchers]].{field} must be nonempty")));
     }
     if path && value == "." {
         return Ok(());
@@ -335,17 +432,17 @@ pub(super) fn validate_template(value: &str, field: &str, path: bool) -> Result<
             }
         }
         if braced && chars.next() != Some('}') {
-            return Err(format!(
+            return Err(refuse(format!(
                 "[[launchers]].{field} has an unterminated variable"
-            ));
+            )));
         }
         if !matches!(
             name.as_str(),
             "project_root" | "app_root" | "app_bin" | "vibe_home"
         ) {
-            return Err(format!(
+            return Err(refuse(format!(
                 "[[launchers]].{field} has unknown variable `${name}`"
-            ));
+            )));
         }
         rendered.push_str("placeholder");
     }
@@ -369,11 +466,11 @@ pub(super) fn validate_template(value: &str, field: &str, path: bool) -> Result<
             return Ok(());
         }
         declarant_path(Path::new(check))
-            .map_err(|fault| format!("[[launchers]].{field}: {}", fault.reason()))?;
+            .map_err(|fault| refuse(format!("[[launchers]].{field}: {}", fault.reason())))?;
         if suffix.is_none() && value.starts_with('/') {
-            return Err(format!(
+            return Err(refuse(format!(
                 "[[launchers]].{field} must be relative or start with a Vibe variable"
-            ));
+            )));
         }
     }
     Ok(())
@@ -393,23 +490,38 @@ fn credential_free_https(value: &str) -> bool {
 
 /// `source_build` model validation (`PROP-059#source-build`); `vibe-app`
 /// executes the declaration this accepts.
-fn validate_source_build(sources: &[SourceInputDecl], recipe: &RecipeDecl) -> Result<(), String> {
-    let table = "[installer_options.installation]";
-    validate_sources(sources, table)?;
+fn validate_source_build(
+    sources: &[SourceInputDecl],
+    recipe: &RecipeDecl,
+    site: &Site<'_>,
+) -> Result<(), FieldError> {
+    let table = site.prose;
+    validate_sources(sources, site)?;
     declarant_path(&recipe.script).map_err(|fault| {
-        format!(
-            "{table}.recipe.script must be a package-relative file: {}",
-            fault.reason()
+        FieldError::new(
+            site.leaf(|at| at.table("recipe").field("script")),
+            format!(
+                "{table}.recipe.script must be a package-relative file: {}",
+                fault.reason()
+            ),
         )
     })?;
     Ok(())
 }
 
 /// The `[[sources]]` inputs of a `source_build` method or a `sources` step.
-pub(super) fn validate_sources(sources: &[SourceInputDecl], table: &str) -> Result<(), String> {
+pub(super) fn validate_sources(
+    sources: &[SourceInputDecl],
+    site: &Site<'_>,
+) -> Result<(), FieldError> {
+    let table = site.prose;
     // No sources is valid: the package tree itself is then the only input.
     let mut names = BTreeSet::new();
-    for source in sources {
+    for (index, source) in sources.iter().enumerate() {
+        let row = Site {
+            at: site.leaf(|at| at.table("sources").index(index)),
+            ..site.clone()
+        };
         let single = declarant_path(Path::new(&source.name)).is_ok()
             && Path::new(&source.name).components().count() == 1
             && matches!(
@@ -417,43 +529,55 @@ pub(super) fn validate_sources(sources: &[SourceInputDecl], table: &str) -> Resu
                 Some(Component::Normal(_))
             );
         if !single {
-            return Err(format!(
-                "{table}.sources.name `{}` must be one portable directory name",
-                source.name
+            return Err(row.refuse(
+                "name",
+                format!(
+                    "{table}.sources.name `{}` must be one portable directory name",
+                    source.name
+                ),
             ));
         }
         if !names.insert(source.name.to_ascii_lowercase()) {
-            return Err(format!(
-                "{table}.sources.name `{}` is duplicated",
-                source.name
+            return Err(row.refuse(
+                "name",
+                format!("{table}.sources.name `{}` is duplicated", source.name),
             ));
         }
         match (&source.url, &source.path) {
             (Some(url), None) => {
                 if !credential_free_http(url) {
-                    return Err(format!(
-                        "{table}.sources `{}` url must be a credential-free HTTP(S) URL",
-                        source.name
+                    return Err(row.refuse(
+                        "url",
+                        format!(
+                            "{table}.sources `{}` url must be a credential-free HTTP(S) URL",
+                            source.name
+                        ),
                     ));
                 }
             }
             (None, Some(path)) => {
                 declarant_path(path).map_err(|fault| {
-                    format!(
-                        "{table}.sources `{}` path must be package-relative: {}",
-                        source.name,
-                        fault.reason()
+                    row.refuse(
+                        "path",
+                        format!(
+                            "{table}.sources `{}` path must be package-relative: {}",
+                            source.name,
+                            fault.reason()
+                        ),
                     )
                 })?;
             }
             _ => {
-                return Err(format!(
-                    "{table}.sources `{}` must declare exactly one of url or path",
-                    source.name
+                return Err(FieldError::new(
+                    row.at.clone(),
+                    format!(
+                        "{table}.sources `{}` must declare exactly one of url or path",
+                        source.name
+                    ),
                 ));
             }
         }
-        validate_sha256(&source.sha256, table)?;
+        validate_sha256(&source.sha256, &row)?;
     }
     Ok(())
 }

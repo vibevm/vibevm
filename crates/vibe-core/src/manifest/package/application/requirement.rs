@@ -81,15 +81,28 @@ impl RequirementDecl {
         }
     }
 
-    /// The spelling is a fully qualified package reference.
-    pub(super) fn validate(&self, table: &str) -> Result<(), String> {
+    /// The spelling is a fully qualified package reference. `at` is the
+    /// requirement's element; the table form names its `package` key.
+    pub(super) fn validate(
+        &self,
+        table: &str,
+        at: &crate::manifest::FieldPath,
+    ) -> Result<(), crate::manifest::FieldError> {
+        let field = match self {
+            Self::Spelled(_) => at.clone(),
+            Self::Table(_) => at.field("package"),
+        };
+        let refuse = |message: String| crate::manifest::FieldError::new(field.clone(), message);
         let spelling = self.package();
-        let requested = crate::PackageRef::parse(spelling)
-            .map_err(|error| format!("{table} requirement `{spelling}` is invalid: {error}"))?;
+        let requested = crate::PackageRef::parse(spelling).map_err(|error| {
+            refuse(format!(
+                "{table} requirement `{spelling}` is invalid: {error}"
+            ))
+        })?;
         if requested.group.is_none() {
-            return Err(format!(
+            return Err(refuse(format!(
                 "{table} requirement `{spelling}` must be fully qualified as <group>/<name>[@<requirement>]"
-            ));
+            )));
         }
         Ok(())
     }

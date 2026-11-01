@@ -38,12 +38,16 @@ impl Check for ApplicationIconsCheck {
             manifest.application.as_ref(),
             &manifest.installer_options,
         ) {
-            report.err(
-                CheckId::ApplicationIcons,
-                finding.path.map(PathBuf::from),
-                None,
-                finding.message,
-            );
+            // The icon's own field, so an editor can put the finding under it.
+            report.push(crate::Finding {
+                check: CheckId::ApplicationIcons,
+                severity: crate::Severity::Error,
+                path: finding.path.map(PathBuf::from),
+                line: None,
+                column: None,
+                field: Some(finding.field.to_string()),
+                message: finding.message,
+            });
         }
     }
 }

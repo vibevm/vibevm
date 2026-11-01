@@ -9,15 +9,28 @@ use std::path::Path;
 
 use specmark::spec;
 
+use crate::manifest::FieldPath;
+
 use super::*;
 
 /// One icon defect of a package, with the package-relative file it names
-/// when there is one.
+/// when there is one and the manifest field that names it.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#menu")]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IconFinding {
     pub path: Option<String>,
+    pub field: FieldPath,
     pub message: String,
+}
+
+/// The address of one file of an icon: the `icon` field itself for the
+/// short form, else the slot's key in the set (`icon.png.256`).
+pub(super) fn icon_slot_field(at: &FieldPath, icon: &IconDecl, slot: IconSlot) -> FieldPath {
+    match (icon, slot) {
+        (IconDecl::Path(_), _) => at.clone(),
+        (IconDecl::Set(_), IconSlot::Png(size)) => at.table("png").field(&size.to_string()),
+        (IconDecl::Set(_), slot) => at.field(slot.name()),
+    }
 }
 
 /// Check the icon files of a package rooted at `root`.
@@ -50,21 +63,32 @@ pub fn icon_findings(
     let mut findings = Vec::new();
     let application_icon = application.and_then(|application| application.icon.as_ref());
     if let Some(icon) = application_icon {
-        check_files(root, icon, "[application] icon", &mut findings);
+        let at = FieldPath::root().table("application").field("icon");
+        check_files(root, icon, "[application] icon", &at, &mut findings);
     }
-    for option in options {
-        for launcher in &option.launchers {
+    for (option_index, option) in options.iter().enumerate() {
+        for (launcher_index, launcher) in option.launchers.iter().enumerate() {
+            let launcher_at = FieldPath::root()
+                .table("installer_options")
+                .index(option_index)
+                .table("launchers")
+                .index(launcher_index);
             let table = format!(
                 "installer option `{}` launcher `{}`",
                 option.id, launcher.id
             );
             if let Some(icon) = &launcher.icon {
-                check_files(root, icon, &format!("{table} icon"), &mut findings);
+                let at = launcher_at.field("icon");
+                check_files(root, icon, &format!("{table} icon"), &at, &mut findings);
             }
-            for action in &launcher.actions {
+            for (action_index, action) in launcher.actions.iter().enumerate() {
                 if let Some(icon) = &action.icon {
                     let label = format!("{table} action `{}` icon", action.id);
-                    check_files(root, icon, &label, &mut findings);
+                    let at = launcher_at
+                        .table("actions")
+                        .index(action_index)
+                        .field("icon");
+                    check_files(root, icon, &label, &at, &mut findings);
                 }
             }
             // An override row of a derived launcher may get its icon from
@@ -75,6 +99,7 @@ pub fn icon_findings(
                 if !icon.is_some_and(|icon| menu_ready(root, icon)) {
                     findings.push(IconFinding {
                         path: None,
+                        field: launcher_at.field("menu"),
                         message: format!(
                             "{table} has menu = true but neither it nor the application names an SVG or a PNG of at least 256 pixels"
                         ),
@@ -91,7 +116,13 @@ fn in_package(value: &str) -> bool {
     !value.starts_with('$')
 }
 
-fn check_files(root: &Path, icon: &IconDecl, label: &str, findings: &mut Vec<IconFinding>) {
+fn check_files(
+    root: &Path,
+    icon: &IconDecl,
+    label: &str,
+    at: &FieldPath,
+    findings: &mut Vec<IconFinding>,
+) {
     for (slot, value) in icon.files() {
         if !in_package(value) {
             continue;
@@ -99,6 +130,7 @@ fn check_files(root: &Path, icon: &IconDecl, label: &str, findings: &mut Vec<Ico
         let path = root.join(value);
         let finding = |message: String| IconFinding {
             path: Some(value.to_owned()),
+            field: icon_slot_field(at, icon, slot),
             message,
         };
         if !path.is_file() {

@@ -9,6 +9,7 @@ use crate::manifest::package::{
     version_constraint_is_valid,
 };
 use crate::manifest::plane::validate_plane;
+use crate::manifest::{FieldError, FieldPath};
 
 use super::Manifest;
 
@@ -117,89 +118,9 @@ impl Manifest {
         }
 
         if let Some(application) = &self.application {
-            application
-                .validate()
-                .map_err(|reason| Error::InvalidManifest { reason })?;
+            application.validate()?;
         }
-        if !self.installer_options.is_empty() && self.application.is_none() {
-            return Err(Error::InvalidManifest {
-                reason: "[[installer_options]] requires [application] identity".into(),
-            });
-        }
-        if !self.installer_options.is_empty()
-            && self
-                .package
-                .as_ref()
-                .is_none_or(|package| package.kind != crate::PackageKind::App)
-        {
-            return Err(Error::InvalidManifest {
-                reason: "[[installer_options]] requires [package] kind = app".into(),
-            });
-        }
-        let mut option_ids = std::collections::BTreeSet::new();
-        let mut platform_names = std::collections::BTreeMap::<&str, &str>::new();
-        let mut arch_names = std::collections::BTreeMap::<(&str, &str), &str>::new();
-        for option in &self.installer_options {
-            option
-                .validate()
-                .map_err(|reason| Error::InvalidManifest { reason })?;
-            if !option_ids.insert(option.id.as_str()) {
-                return Err(Error::InvalidManifest {
-                    reason: format!("duplicate [[installer_options]].id `{}`", option.id),
-                });
-            }
-            if let Some(name) = platform_names.insert(&option.platform, &option.platform_name)
-                && name != option.platform_name.as_str()
-            {
-                return Err(Error::InvalidManifest {
-                    reason: format!(
-                        "[[installer_options]] platform `{}` has inconsistent platform_name",
-                        option.platform
-                    ),
-                });
-            }
-            if let Some(name) = &option.arch_name {
-                let key = (option.platform.as_str(), option.arch.as_str());
-                if let Some(existing) = arch_names.insert(key, name.as_str())
-                    && existing != name
-                {
-                    return Err(Error::InvalidManifest {
-                        reason: format!(
-                            "[[installer_options]] platform `{}` arch `{}` has inconsistent arch_name",
-                            option.platform, option.arch
-                        ),
-                    });
-                }
-            }
-            let mut launcher_ids = std::collections::BTreeSet::new();
-            let mut has_default = false;
-            for launcher in &option.launchers {
-                launcher
-                    .validate(!option.launchers_from.is_empty())
-                    .map_err(|reason| Error::InvalidManifest {
-                        reason: format!("[[installer_options]] `{}`: {reason}", option.id),
-                    })?;
-                if !launcher_ids.insert(launcher.id.as_str()) {
-                    return Err(Error::InvalidManifest {
-                        reason: format!(
-                            "[[installer_options]] `{}` has duplicate launcher id `{}`",
-                            option.id, launcher.id
-                        ),
-                    });
-                }
-                if launcher.default {
-                    if has_default {
-                        return Err(Error::InvalidManifest {
-                            reason: format!(
-                                "[[installer_options]] `{}` has more than one default launcher",
-                                option.id
-                            ),
-                        });
-                    }
-                    has_default = true;
-                }
-            }
-        }
+        self.validate_installer_options()?;
         if has_package && !self.run_commands.is_empty() {
             return Err(Error::InvalidManifest {
                 reason: "[[command]] is host-owned and cannot be declared by a publishable package"
@@ -286,6 +207,108 @@ impl Manifest {
         // Last, so every established diagnostic above still wins: a
         // manifest that was already invalid keeps the error it had.
         self.validate_remap()?;
+        Ok(())
+    }
+
+    /// The rules across `[[installer_options]]` rows; each row's own rules
+    /// are its `validate`. Every refusal names its field.
+    fn validate_installer_options(&self) -> Result<()> {
+        let options = FieldPath::root().table("installer_options");
+        if !self.installer_options.is_empty() && self.application.is_none() {
+            return Err(FieldError::new(
+                options.clone(),
+                "[[installer_options]] requires [application] identity",
+            )
+            .into());
+        }
+        if !self.installer_options.is_empty()
+            && self
+                .package
+                .as_ref()
+                .is_none_or(|package| package.kind != crate::PackageKind::App)
+        {
+            return Err(FieldError::new(
+                options.clone(),
+                "[[installer_options]] requires [package] kind = app",
+            )
+            .into());
+        }
+        let mut option_ids = std::collections::BTreeSet::new();
+        let mut platform_names = std::collections::BTreeMap::<&str, &str>::new();
+        let mut arch_names = std::collections::BTreeMap::<(&str, &str), &str>::new();
+        for (index, option) in self.installer_options.iter().enumerate() {
+            let at = options.index(index);
+            option.validate(&at)?;
+            if !option_ids.insert(option.id.as_str()) {
+                return Err(FieldError::new(
+                    at.field("id"),
+                    format!("duplicate [[installer_options]].id `{}`", option.id),
+                )
+                .into());
+            }
+            if let Some(name) = platform_names.insert(&option.platform, &option.platform_name)
+                && name != option.platform_name.as_str()
+            {
+                return Err(FieldError::new(
+                    at.field("platform_name"),
+                    format!(
+                        "[[installer_options]] platform `{}` has inconsistent platform_name",
+                        option.platform
+                    ),
+                )
+                .into());
+            }
+            if let Some(name) = &option.arch_name {
+                let key = (option.platform.as_str(), option.arch.as_str());
+                if let Some(existing) = arch_names.insert(key, name.as_str())
+                    && existing != name
+                {
+                    return Err(FieldError::new(
+                        at.field("arch_name"),
+                        format!(
+                            "[[installer_options]] platform `{}` arch `{}` has inconsistent arch_name",
+                            option.platform, option.arch
+                        ),
+                    )
+                    .into());
+                }
+            }
+            let mut launcher_ids = std::collections::BTreeSet::new();
+            let mut has_default = false;
+            for (position, launcher) in option.launchers.iter().enumerate() {
+                let launcher_at = at.table("launchers").index(position);
+                launcher
+                    .validate(!option.launchers_from.is_empty(), &launcher_at)
+                    .map_err(|refusal| {
+                        refusal.reworded(|reason| {
+                            format!("[[installer_options]] `{}`: {reason}", option.id)
+                        })
+                    })?;
+                if !launcher_ids.insert(launcher.id.as_str()) {
+                    return Err(FieldError::new(
+                        launcher_at.field("id"),
+                        format!(
+                            "[[installer_options]] `{}` has duplicate launcher id `{}`",
+                            option.id, launcher.id
+                        ),
+                    )
+                    .into());
+                }
+                if launcher.default {
+                    if has_default {
+                        return Err(FieldError::new(
+                            launcher_at.field("default"),
+                            format!(
+                                "[[installer_options]] `{}` has more than one default launcher",
+                                option.id
+                            ),
+                        )
+                        .into());
+                    }
+                    has_default = true;
+                }
+            }
+        }
         Ok(())
     }
 

@@ -557,6 +557,9 @@ mod tests_extension_controls;
 #[path = "document/tests_extensions.rs"]
 mod tests_extensions;
 #[cfg(test)]
+#[path = "document/tests_field_paths.rs"]
+mod tests_field_paths;
+#[cfg(test)]
 #[path = "document/tests_glossary.rs"]
 mod tests_glossary;
 #[cfg(test)]
