@@ -142,13 +142,12 @@ fn a_refused_init_leaves_no_folder_behind() {
     let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     for kind in ["tool", "app", "mcp", "remap", "doc"] {
-        // The nested form writes the author's description into the TOML as
-        // typed, and a bare quote does not parse: the refusal must come
-        // before the project container exists.
+        // A version that is not a version refuses in both forms; the
+        // refusal must come before the project container exists.
         let project = dir.path().join(format!("nested-{kind}"));
         user.vibe()
             .args(["init", "package", "org.example/broken", "--kind", kind])
-            .args(["--description", "a \"quoted\" word", "--path"])
+            .args(["--version", "one", "--path"])
             .arg(&project)
             .assert()
             .failure();
@@ -164,4 +163,25 @@ fn a_refused_init_leaves_no_folder_behind() {
             .failure();
         assert!(!root.exists(), "{kind}: root refusal left {root:?}");
     }
+}
+
+#[test]
+fn a_quote_in_the_description_lands_escaped_in_the_manifest() {
+    let user = UserScratch::new();
+    let dir = tempfile::tempdir().unwrap();
+    let project = dir.path().join("nested-quoted");
+    user.vibe()
+        .args(["init", "package", "org.example/quoted", "--kind", "tool"])
+        .args(["--description", "a \"quoted\" word", "--path"])
+        .arg(&project)
+        .assert()
+        .success();
+    let package = project.join(common::pack_rel("org.example/quoted/v0.1.0"));
+    let manifest = std::fs::read_to_string(package.join("vibe.toml")).unwrap();
+    let parsed: toml::Value = toml::from_str(&manifest).unwrap();
+    assert_eq!(
+        parsed["package"]["description"].as_str(),
+        Some("a \"quoted\" word"),
+        "{manifest}"
+    );
 }

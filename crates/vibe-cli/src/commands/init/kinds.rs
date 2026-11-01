@@ -148,6 +148,13 @@ pub(super) fn create_mcp_files(
     ])
 }
 
+/// A free-text field as a TOML string literal — quoted and escaped by the
+/// TOML writer, so a quote or a backslash in a description, a licence or an
+/// author's name lands in the manifest instead of breaking it.
+pub(super) fn toml_literal(text: &str) -> String {
+    toml::Value::String(text.to_owned()).to_string()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

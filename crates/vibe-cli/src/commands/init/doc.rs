@@ -349,7 +349,11 @@ pub(super) fn manifest_text(
     let authors_line = if fields.authors.is_empty() {
         String::new()
     } else {
-        let quoted: Vec<String> = fields.authors.iter().map(|a| format!("\"{a}\"")).collect();
+        let quoted: Vec<String> = fields
+            .authors
+            .iter()
+            .map(|a| super::kinds::toml_literal(a))
+            .collect();
         format!("authors = [{}]\n", quoted.join(", "))
     };
     // The language of a `doc` package IS `[i18n].canonical` — there is no
@@ -365,7 +369,7 @@ pub(super) fn manifest_text(
          # no MCP server.\n\
          [package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"doc\"\n\
          version = \"{version}\"\nepoch = 1\n{authors_line}\
-         license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\n\
+         license = {license}\ndescription = {description}\nformat = \"{format}\"\n\n\
          # The display name: what the shelves, the language selector and the page\n\
          # heading show. Identity stays the coordinate, so two manuals may share a title.\n\
          title = \"{title}\"\n\n\
@@ -380,8 +384,8 @@ pub(super) fn manifest_text(
          # this is it (spec://org.vibevm.core/vibevm/common/PROP-057#LOC-LANGUAGE-FIELD).\n\
          [i18n]\ncanonical = \"{language}\"\n",
         version = fields.version,
-        license = fields.license,
-        description = fields.description,
+        license = super::kinds::toml_literal(&fields.license),
+        description = super::kinds::toml_literal(&fields.description),
         format = fields.format,
     );
 

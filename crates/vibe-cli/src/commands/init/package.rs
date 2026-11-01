@@ -385,7 +385,11 @@ fn tool_manifest_text(
     let authors_line = if fields.authors.is_empty() {
         String::new()
     } else {
-        let quoted: Vec<String> = fields.authors.iter().map(|a| format!("\"{a}\"")).collect();
+        let quoted: Vec<String> = fields
+            .authors
+            .iter()
+            .map(|a| super::kinds::toml_literal(a))
+            .collect();
         format!("authors = [{}]\n", quoted.join(", "))
     };
     let boot_snippet = if package_kind == PackageKind::Remap {
@@ -403,11 +407,11 @@ fn tool_manifest_text(
     format!(
         "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
          version = \"{version}\"\nepoch = 1\n{authors_line}\
-         license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\
+         license = {license}\ndescription = {description}\nformat = \"{format}\"\n\
          {boot_snippet}{tail}",
         version = fields.version,
-        license = fields.license,
-        description = fields.description,
+        license = super::kinds::toml_literal(&fields.license),
+        description = super::kinds::toml_literal(&fields.description),
         format = fields.format,
         tail = super::kinds::manifest_tail(package_kind, group, name),
     )
