@@ -9,7 +9,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#activation");
 
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::process::Command;
 
 use anyhow::{Context, Result, bail};
 
@@ -22,6 +21,12 @@ use rc_io::BLOCK_BEGIN;
 #[cfg(test)]
 use rc_io::write_rc_atomic_at;
 use rc_io::{read_rc_file, rebuild, set_or_add, split_block, write_rc_atomic};
+#[path = "env_registry.rs"]
+mod registry;
+pub(crate) use registry::{
+    RawUserVar, RegistryValueKind, WindowsEnvPersister, delete_user_var_raw, get_user_var_raw,
+    set_user_var_raw,
+};
 #[path = "env_shim.rs"]
 mod shim;
 pub(crate) use shim::{shim_statuses, write_shims};
@@ -244,181 +249,6 @@ impl EnvPersister for RcFilePersister {
     }
 }
 
-/// A Windows persister: edits the raw values in `HKCU\Environment`, preserving
-/// `REG_SZ` versus `REG_EXPAND_SZ`, then broadcasts `WM_SETTINGCHANGE`.
-/// Registry I/O is never exercised by gate tests because it mutates real user
-/// state; the pure PATH transformation below carries the test coverage.
-pub(crate) struct WindowsEnvPersister;
-
-impl EnvPersister for WindowsEnvPersister {
-    fn set_vibevm_home(&self, home: &Path) -> Result<Persisted> {
-        let target = home.display().to_string();
-        let current = ps_get_user_var_raw("VIBEVM_HOME")?;
-        if current.as_ref().is_some_and(|value| value.value == target) {
-            return Ok(Persisted::Unchanged);
-        }
-        let kind = current
-            .map(|value| value.kind)
-            .unwrap_or(RegistryValueKind::String);
-        ps_set_user_var_raw("VIBEVM_HOME", &target, kind)?;
-        Ok(Persisted::Changed)
-    }
-
-    fn ensure_on_path(&self, dir: &Path) -> Result<Persisted> {
-        let current = ps_get_user_var_raw("Path")?;
-        let raw = current
-            .as_ref()
-            .map(|value| value.value.as_str())
-            .unwrap_or_default();
-        match path_with_prefix(raw, &dir.display().to_string()) {
-            None => Ok(Persisted::Unchanged),
-            Some(next) => {
-                let kind = current
-                    .map(|value| value.kind)
-                    .unwrap_or(RegistryValueKind::ExpandString);
-                ps_set_user_var_raw("Path", &next, kind)?;
-                Ok(Persisted::Changed)
-            }
-        }
-    }
-
-    fn activation_hint(&self) -> String {
-        "open a new terminal (the registry change reaches new processes)".to_string()
-    }
-}
-
-fn run_powershell(script: &str) -> Result<String> {
-    let out = Command::new(vibe_app::windows_powershell())
-        .args(["-NoProfile", "-NonInteractive", "-Command", script])
-        .output()
-        .context("spawning powershell to edit the user environment")?;
-    if !out.status.success() {
-        bail!(
-            "powershell env edit failed: {}",
-            String::from_utf8_lossy(&out.stderr).trim()
-        );
-    }
-    Ok(String::from_utf8_lossy(&out.stdout).trim().to_string())
-}
-
-/// Single-quote-escape a value for a PowerShell single-quoted string.
-fn ps_quote(value: &str) -> String {
-    value.replace('\'', "''")
-}
-
-/// The kind of a raw `HKCU\Environment` value; also used by application
-/// env steps (PROP-065 `#env-step`).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum RegistryValueKind {
-    String,
-    ExpandString,
-}
-
-impl RegistryValueKind {
-    fn powershell_name(self) -> &'static str {
-        match self {
-            RegistryValueKind::String => "String",
-            RegistryValueKind::ExpandString => "ExpandString",
-        }
-    }
-
-    fn parse(raw: &str) -> Result<Self> {
-        match raw {
-            "String" => Ok(RegistryValueKind::String),
-            "ExpandString" => Ok(RegistryValueKind::ExpandString),
-            other => bail!("unsupported HKCU\\Environment registry value kind `{other}`"),
-        }
-    }
-}
-
-/// One raw `HKCU\Environment` value, read without expanding `%VAR%`.
-#[derive(Debug)]
-pub(crate) struct RawUserVar {
-    pub(crate) value: String,
-    pub(crate) kind: RegistryValueKind,
-}
-
-#[derive(serde::Deserialize)]
-struct RawUserVarJson {
-    present: bool,
-    value: Option<String>,
-    kind: Option<String>,
-}
-
-/// Write one raw `HKCU\Environment` value with its kind, then broadcast.
-pub(crate) fn ps_set_user_var_raw(name: &str, value: &str, kind: RegistryValueKind) -> Result<()> {
-    let script = format!(
-        r#"
-$key = [Microsoft.Win32.Registry]::CurrentUser.CreateSubKey('Environment', $true)
-try {{
-    $kind = [Microsoft.Win32.RegistryValueKind]::{kind}
-    $key.SetValue('{name}', '{value}', $kind)
-}} finally {{
-    if ($null -ne $key) {{ $key.Dispose() }}
-}}
-Add-Type -TypeDefinition @'
-using System;
-using System.Runtime.InteropServices;
-public static class VvmEnvironmentBroadcast {{
-    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    public static extern IntPtr SendMessageTimeout(
-        IntPtr hWnd, uint msg, UIntPtr wParam, string lParam,
-        uint flags, uint timeout, out UIntPtr result);
-}}
-'@
-[UIntPtr]$result = [UIntPtr]::Zero
-[void][VvmEnvironmentBroadcast]::SendMessageTimeout(
-    [IntPtr]0xffff, 0x001A, [UIntPtr]::Zero, 'Environment', 0x0002, 5000, [ref]$result)
-"#,
-        name = ps_quote(name),
-        value = ps_quote(value),
-        kind = kind.powershell_name(),
-    );
-    run_powershell(&script)?;
-    Ok(())
-}
-
-/// Read one raw `HKCU\Environment` value; `None` when it is absent.
-pub(crate) fn ps_get_user_var_raw(name: &str) -> Result<Option<RawUserVar>> {
-    let script = format!(
-        r#"
-$key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment', $false)
-try {{
-    if ($null -eq $key -or -not ($key.GetValueNames() -contains '{name}')) {{
-        [pscustomobject]@{{ present = $false; value = $null; kind = $null }} |
-            ConvertTo-Json -Compress
-    }} else {{
-        $value = $key.GetValue(
-            '{name}', $null,
-            [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
-        $kind = $key.GetValueKind('{name}').ToString()
-        [pscustomobject]@{{ present = $true; value = [string]$value; kind = $kind }} |
-            ConvertTo-Json -Compress
-    }}
-}} finally {{
-    if ($null -ne $key) {{ $key.Dispose() }}
-}}
-"#,
-        name = ps_quote(name),
-    );
-    let out = run_powershell(&script)?;
-    let decoded: RawUserVarJson =
-        serde_json::from_str(&out).context("decoding raw HKCU\\Environment value")?;
-    if !decoded.present {
-        return Ok(None);
-    }
-    let kind = RegistryValueKind::parse(
-        decoded
-            .kind
-            .as_deref()
-            .context("raw registry value omitted its kind")?,
-    )?;
-    Ok(Some(RawUserVar {
-        value: decoded.value.unwrap_or_default(),
-        kind,
-    }))
-}
-
 /// Put `target` at the FRONT of a `;`-separated PATH, deduping any existing
 /// normalized equivalent while preserving every unrelated entry byte-for-byte.
 /// `None` means the raw value already has the canonical result. A version
@@ -451,36 +281,6 @@ fn path_without_core(
         .collect();
     let next = kept.join(";");
     (next != current).then_some(next)
-}
-
-/// Delete one `HKCU\Environment` value, then broadcast the change.
-pub(crate) fn ps_delete_user_var_raw(name: &str) -> Result<()> {
-    let script = format!(
-        r#"
-$key = [Microsoft.Win32.Registry]::CurrentUser.CreateSubKey('Environment', $true)
-try {{
-    if ($key.GetValueNames() -contains '{name}') {{ $key.DeleteValue('{name}') }}
-}} finally {{
-    if ($null -ne $key) {{ $key.Dispose() }}
-}}
-Add-Type -TypeDefinition @'
-using System;
-using System.Runtime.InteropServices;
-public static class VvmEnvironmentBroadcast {{
-    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    public static extern IntPtr SendMessageTimeout(
-        IntPtr hWnd, uint msg, UIntPtr wParam, string lParam,
-        uint flags, uint timeout, out UIntPtr result);
-}}
-'@
-[UIntPtr]$result = [UIntPtr]::Zero
-[void][VvmEnvironmentBroadcast]::SendMessageTimeout(
-    [IntPtr]0xffff, 0x001A, [UIntPtr]::Zero, 'Environment', 0x0002, 5000, [ref]$result)
-"#,
-        name = ps_quote(name),
-    );
-    run_powershell(&script)?;
-    Ok(())
 }
 
 fn path_with_prefix_core(

@@ -12,8 +12,8 @@ use anyhow::Result;
 use vibe_app::{EnvEntry, EnvOp, ProfileEnvironment, UserEnvironment, ValueKind};
 
 use crate::commands::vvm::env::{
-    RawUserVar, RegistryValueKind, path_with_prefix, path_without, ps_delete_user_var_raw,
-    ps_get_user_var_raw, ps_set_user_var_raw,
+    RawUserVar, RegistryValueKind, delete_user_var_raw, get_user_var_raw, path_with_prefix,
+    path_without, set_user_var_raw,
 };
 
 /// The environment of this host: the registry on Windows, otherwise the
@@ -138,8 +138,8 @@ fn registry_name(entry: &EnvEntry) -> &str {
 
 fn perform(write: &RegistryWrite) -> Result<()> {
     match &write.value {
-        Some(value) => ps_set_user_var_raw(&write.name, value, write.kind),
-        None => ps_delete_user_var_raw(&write.name),
+        Some(value) => set_user_var_raw(&write.name, value, write.kind),
+        None => delete_user_var_raw(&write.name),
     }
 }
 
@@ -147,8 +147,7 @@ impl UserEnvironment for RegistryEnvironment {
     fn apply(&self, _key: &str, entries: &[EnvEntry]) -> Result<Vec<EnvEntry>, String> {
         let mut applied = Vec::new();
         for entry in entries {
-            let current =
-                ps_get_user_var_raw(registry_name(entry)).map_err(|e| format!("{e:#}"))?;
+            let current = get_user_var_raw(registry_name(entry)).map_err(|e| format!("{e:#}"))?;
             let (write, recorded) = apply_write(entry, current.as_ref());
             if let Some(write) = write {
                 perform(&write).map_err(|error| format!("{error:#}"))?;
@@ -160,8 +159,7 @@ impl UserEnvironment for RegistryEnvironment {
 
     fn remove(&self, _key: &str, entries: &[EnvEntry]) -> Result<(), String> {
         for entry in entries.iter().rev() {
-            let current =
-                ps_get_user_var_raw(registry_name(entry)).map_err(|e| format!("{e:#}"))?;
+            let current = get_user_var_raw(registry_name(entry)).map_err(|e| format!("{e:#}"))?;
             if let Some(write) = remove_write(entry, current.as_ref()) {
                 perform(&write).map_err(|error| format!("{error:#}"))?;
             }

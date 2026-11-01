@@ -292,7 +292,9 @@ four layers:</ACTIVATION-LAW></p>
   `%USERPROFILE%\…` survives untouched), entries compared normalised
   (expand+full-path+case-insensitive) for dedup while unrelated raw entries
   are preserved byte-for-byte, and a `WM_SETTINGCHANGE` broadcast after the
-  write; the earlier `[Environment]` API form silently expanded references
+  write; the values are read, written and deleted through the registry API
+  (`RegQueryValueExW` / `RegSetValueExW` / `RegDeleteValueW`) and the broadcast
+  sent with `SendMessageTimeoutW`, with no shell or other child process; the earlier `[Environment]` API form silently expanded references
   and lost the kind. POSIX: a marked block in the detected shell's rc —
   bash/zsh/fish/`.profile`),</RULE-OS-AWARE>
         <RULE-CONSENT fact="true" status="impl/done">and **consent + honesty** (interactive maintenance uses confirm / `-y` /
