@@ -498,10 +498,21 @@ fn a_tool_drives_describe_plan_install_runs_cancel_and_errors() {
         "fetch (sources) Fetch the sources",
         "a step row names its id, its kind and its title"
     );
+    // The download is a task of its own under the step (PROP-068 `#stream`),
+    // so its measurements carry the step as their parent; the first sample
+    // is taken at zero bytes, the last one holds the total.
+    let download_tasks: Vec<serde_json::Value> = stream
+        .iter()
+        .filter(|event| event["kind"] == "start" && event["parent"] == fetch_task)
+        .map(|event| event["task"].clone())
+        .collect();
     let measured = stream
         .iter()
-        .find(|event| event["kind"] == "measurement" && event["task"] == fetch_task)
-        .unwrap();
+        .rfind(|event| {
+            event["kind"] == "measurement"
+                && (event["task"] == fetch_task || download_tasks.contains(&event["task"]))
+        })
+        .unwrap_or_else(|| panic!("no measurement under fetch in {:#?}", labels_of(&stream)));
     assert_eq!(
         (measured["completed"].as_u64(), measured["total"].as_u64()),
         (Some(size as u64), Some(size as u64))
