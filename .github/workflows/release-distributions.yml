@@ -7,7 +7,7 @@ on:
         description: Mutable product version to prepare and finalize
         required: true
         type: string
-        default: "1.0.8"
+        default: "1.0.9"
       upload:
         description: Replace the version's GitHub draft, upload all five bundles, and publish it
         required: true
