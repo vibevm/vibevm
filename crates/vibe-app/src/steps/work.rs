@@ -391,12 +391,10 @@ mod tests {
         assert!(sources.exists(), "the download cache is never touched");
         assert!(runs.exists(), "the run records are never touched");
 
-        // Another home, so each home's mutation lock is taken once: a
-        // sibling test forking a child briefly inherits an open lock file.
-        let dir = tempfile::tempdir().unwrap();
-        let settings = SettingsRoot::new(dir.path());
+        // The same home locked a second time: a sibling test forking a
+        // child can still share the first lock's file for an instant, which
+        // `lock()` rides out by retrying briefly (B-228).
         work_dir(&settings, "org.example.tool@1.0.0");
-        work_dir(&settings, "org.example.other@1.0.0");
         let all = clean_work(&settings, None).unwrap();
         assert_eq!(all.removed.len(), 2);
         assert!(work(&settings, None).unwrap().entries.is_empty());
