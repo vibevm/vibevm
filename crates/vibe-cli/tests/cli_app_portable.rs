@@ -4,7 +4,8 @@
 //! `vibe app import` reproduces them in a fresh home from the same local
 //! registry, `--dry-run` changes nothing, a missing package is one refused
 //! row and exit 1, a differing choice is refused unless `--skip-installed`,
-//! and an unattended import refuses a licence nobody accepted.
+//! an unattended import refuses a licence nobody accepted, and the answer
+//! names the licences still to accept with the path of each text.
 
 #![cfg(target_os = "linux")]
 
@@ -312,8 +313,9 @@ fn the_launcher_arrangement_travels_with_the_set() {
     );
 }
 
-#[test]
-fn an_unattended_import_refuses_a_licence_nobody_accepted() {
+/// A package whose only option declares `LICENSE.txt`, installed in the
+/// source home with `--accept-license`, so the set says `license = "accepted"`.
+fn licensed() -> AppRegistry {
     let source = AppRegistry::new();
     let licensed = source.package(
         "licensed",
@@ -329,6 +331,12 @@ fn an_unattended_import_refuses_a_licence_nobody_accepted() {
         "org.example/licensed",
         &["--accept-license"],
     ));
+    source
+}
+
+#[test]
+fn an_unattended_import_refuses_a_licence_nobody_accepted() {
+    let source = licensed();
     let (file, text) = export(&source, &[]);
     assert!(text.contains("license = \"accepted\""), "{text}");
 
@@ -346,4 +354,42 @@ fn an_unattended_import_refuses_a_licence_nobody_accepted() {
         report(&accepted)["installed"],
         value!(["org.example/licensed@1.0.0"])
     );
+}
+
+#[test]
+fn the_answer_names_the_licences_still_to_accept() {
+    let source = licensed();
+    let (file, _) = export(&source, &[]);
+    let target = AppRegistry::new();
+
+    let plan = report(&import(&target, &source, &file, &["--dry-run", "--json"]));
+    eprintln!("dry-run answer: {plan}");
+    let licenses = plan["licenses"].as_array().unwrap();
+    assert_eq!(licenses.len(), 1, "{plan}");
+    assert_eq!(licenses[0]["key"], "org.example/licensed@1.0.0");
+    assert_eq!(licenses[0]["name"], "Test License 1.0");
+    let text = Path::new(licenses[0]["file"].as_str().unwrap());
+    assert!(
+        text.is_absolute() && text.ends_with("LICENSE.txt"),
+        "{plan}"
+    );
+    assert_eq!(fs::read_to_string(text).unwrap(), "Be kind.\n");
+    let human = ok(&import(&target, &source, &file, &["--dry-run"]));
+    assert!(
+        human.contains("license  org.example/licensed@1.0.0  Test License 1.0"),
+        "{human}"
+    );
+
+    // `--accept-license` covers a row the set marks accepted, and the
+    // installation records the acceptance for this home.
+    let run = report(&import(
+        &target,
+        &source,
+        &file,
+        &["--json", "--accept-license"],
+    ));
+    assert_eq!(run["installed"], value!(["org.example/licensed@1.0.0"]));
+    assert_eq!(run["licenses"], value!([]));
+    let again = report(&import(&target, &source, &file, &["--dry-run", "--json"]));
+    assert_eq!(again["licenses"], value!([]), "{again}");
 }

@@ -105,7 +105,7 @@ pub use operations::{
 };
 pub use portable::{
     APPS_PROTOCOL, IMPORT_PROTOCOL, ImportAction, ImportInstall, PortableExport, import_action,
-    parse_portable, portable_set, portable_toml, restore_arrangement,
+    import_license, parse_portable, portable_set, portable_toml, restore_arrangement,
 };
 pub use proxies::{proxy_file_name, sync as sync_proxies};
 pub use resolve::{

@@ -15,7 +15,7 @@ use vibe_app::{
     FeatureRequest, ImportAction, ImportInstall, Index, InstallRequest, OperationContext,
     PortableExport, ResolvedPackage, SettingsRoot,
 };
-use vibe_wire::generated::application_import::{ApplicationImport, Refused, Skipped};
+use vibe_wire::generated::application_import::{ApplicationImport, License, Refused, Skipped};
 use vibe_wire::generated::apps_manifest::{ApplicationMark, AppsManifest};
 
 use super::agents::{AgentSetup, report_parked};
@@ -70,6 +70,9 @@ struct Tally {
     installed: Vec<(String, String)>,
     skipped: Vec<(String, String)>,
     refused: Vec<(String, String, String)>,
+    /// The licences of the installing rows nobody accepted yet: what a dry
+    /// run would ask, what a real run accepted or refused on.
+    licenses: Vec<License>,
 }
 
 impl Tally {
@@ -128,6 +131,15 @@ pub(super) fn import(
             ImportAction::Skip(reason) => tally.skipped.push((row.key.clone(), reason)),
             ImportAction::Refuse(error) => tally.refuse(&row.key, &error),
             ImportAction::Install(install) => {
+                if let Some(license) =
+                    vibe_app::import_license(&index, row, &install, &resolved, args.accept_license)
+                {
+                    tally.licenses.push(License {
+                        key: row.key.clone(),
+                        name: license.name,
+                        file: license.file,
+                    });
+                }
                 let using = install
                     .option
                     .clone()
@@ -285,6 +297,7 @@ fn report(
                     message: message.clone(),
                 })
                 .collect(),
+            licenses: tally.licenses.clone(),
         });
     }
     let mut lines: Vec<String> = Vec::new();
@@ -305,6 +318,15 @@ fn report(
             paint(Role::Alert, "refuse"),
             paint(Role::Dim, &format!("{code} · {}", prose(message)))
         ));
+    }
+    if dry_run {
+        for license in &tally.licenses {
+            lines.push(format!(
+                "license  {}  {}",
+                license.key,
+                paint(Role::Dim, &license.name)
+            ));
+        }
     }
     if dry_run && !(set.collection.is_empty() && set.pin.is_empty() && set.launcher.is_empty()) {
         lines.push(paint(
