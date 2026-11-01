@@ -1,0 +1,17 @@
+↑↓ move · enter choose · space toggle · esc cancel
+✓ Platform   Linux (linux)  [detected]
+✓ Architecture (linux)  x86_64 (x86_64)  [detected]
+
+── plan for org.example/noisy@1.0.0 ────
+
+  installer  main (linux/x86_64) · result owned
+
+  1.  build  (recipe)  Build
+
+⠙ build  Build · <time>
+  │ NOISE line 21
+  │ NOISE line 22
+  │ NOISE line 23
+  │ NOISE line 24
+  │ NOISE line 25
+  (l to show the live log)

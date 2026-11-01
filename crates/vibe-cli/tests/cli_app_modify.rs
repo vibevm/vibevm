@@ -147,7 +147,7 @@ fn modify_changes_features_and_installer_in_place() {
     assert_eq!(report["slotDefault"], V1, "the slot keeps its default");
     let shown = String::from_utf8_lossy(&modified.stderr);
     assert!(
-        shown.contains("modify first undoes `note` of the recorded choice: echo undo-main"),
+        shown.contains("modify first undoes note of the recorded choice: echo undo-main"),
         "{shown}"
     );
     assert!(!payload.join("share/doc").exists(), "the docs step is gone");

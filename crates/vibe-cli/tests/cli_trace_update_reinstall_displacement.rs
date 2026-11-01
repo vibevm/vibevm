@@ -12,7 +12,7 @@
 //! What that owes the operator is the ruling under test:
 //!
 //! * a CLEAN supersession says so in exactly ONE bounded stderr line —
-//!   `vibe: warning: the displaced trace run `<id>` was finalised:
+//!   `! the displaced trace run `<id>` was finalised:
 //!   superseded by a later invocation of this workspace` — after every
 //!   writer warning, with the current command's own registered root carrying
 //!   neither a `trace` nor a `notices` member (the trace-disabled wire format
@@ -220,12 +220,12 @@ fn assert_clean_root(output: &std::process::Output, family: &str) {
     assert_eq!(root["complete"], true, "{root:#?}");
 }
 
-/// Every `vibe: warning: ` line on stderr — the one diagnostic channel that
+/// Every `! ` line on stderr — the one diagnostic channel that
 /// exists in every mode and is never part of the document stream.
 fn warning_lines(stderr: &[u8]) -> Vec<String> {
     String::from_utf8_lossy(stderr)
         .lines()
-        .filter(|line| line.starts_with("vibe: warning: "))
+        .filter(|line| line.starts_with("! "))
         .map(|line| line.to_string())
         .collect()
 }
@@ -273,7 +273,7 @@ fn a_trace_disabled_update_displaces_a_parked_traced_install_cleanly() {
     );
     assert_eq!(
         warnings[0],
-        format!("vibe: warning: {}", structural_body(&parked.run_id)),
+        format!("! {}", structural_body(&parked.run_id)),
         "the exact body — fixed prose plus the run id, and nothing else",
     );
     assert!(
@@ -321,7 +321,7 @@ fn a_trace_disabled_reinstall_displaces_a_parked_traced_install_cleanly() {
     assert_eq!(warnings.len(), 1, "one structural notice: {warnings:?}");
     assert_eq!(
         warnings[0],
-        format!("vibe: warning: {}", structural_body(&parked.run_id)),
+        format!("! {}", structural_body(&parked.run_id)),
     );
     assert!(structural_body(&parked.run_id).len() <= DIAGNOSTIC_CAP_BYTES);
 
@@ -364,7 +364,7 @@ fn an_invalid_displaced_start_on_update_refuses_once_and_touches_nothing() {
     let warnings = warning_lines(&output.stderr);
     assert_eq!(warnings.len(), 1, "one bounded refusal: {warnings:?}");
     let body = warnings[0]
-        .strip_prefix("vibe: warning: ")
+        .strip_prefix("! ")
         .expect("the one warning line");
     assert!(body.contains(&parked.run_id), "it names the run: {body}");
     assert!(
@@ -415,7 +415,7 @@ fn an_invalid_displaced_start_on_reinstall_refuses_once_and_touches_nothing() {
     let warnings = warning_lines(&output.stderr);
     assert_eq!(warnings.len(), 1, "{warnings:?}");
     let body = warnings[0]
-        .strip_prefix("vibe: warning: ")
+        .strip_prefix("! ")
         .expect("the one warning line");
     assert!(body.contains(&parked.run_id));
     assert!(body.contains(BAD_START));

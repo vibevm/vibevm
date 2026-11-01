@@ -145,7 +145,7 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
             let (loaded, recovered) =
                 cache::Cache::load_tolerant(&c.join("run").join("cache.json"));
             if let Some(warning) = &recovered {
-                eprintln!("vibe progress: warning: {warning}");
+                eprintln!("{}", crate::output::language::warning(&warning.to_string()));
             }
             (loaded, recovered)
         }
@@ -159,7 +159,12 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
 
     let (files, excludes) = scope::observed_files_reported(&root, &cfg)?;
     for p in &excludes.stale {
-        eprintln!("vibe progress: warning: exclude pattern `{p}` matched no observed file");
+        eprintln!(
+            "{}",
+            crate::output::language::warning(&format!(
+                "exclude pattern {p} matched no observed file"
+            ))
+        );
     }
     // One logical document, one form (PROP-045 ##TARGET-MIXED): `X.md` and
     // `X.xml` beside each other are a split brain — parsing both would

@@ -556,21 +556,21 @@ fn quiet_and_human_projection_of_the_same_fixture_is_pinned() {
         String::from_utf8(output.stdout).unwrap()
     };
     // Flush-left on purpose: a raw string whose bytes ARE the transcript.
-    let expected_human = r#"  → will run `org.golden/golden#greet-generate` — point=phase:generate, handler=builtin:log, provider=org.golden/golden tier=host-declaration
-  → will run `org.golden/golden#greet-build` — point=phase:build, handler=builtin:log, provider=org.golden/golden tier=host-declaration
-  → log [org.golden/golden]: GOLDEN-GENERATE
-  → log [org.golden/golden]: GOLDEN-BUILD
+    let expected_human = r#"  will run `org.golden/golden#greet-generate` — point=phase:generate, handler=builtin:log, provider=org.golden/golden tier=host-declaration
+  will run `org.golden/golden#greet-build` — point=phase:build, handler=builtin:log, provider=org.golden/golden tier=host-declaration
+  log [org.golden/golden]: GOLDEN-GENERATE
+  log [org.golden/golden]: GOLDEN-BUILD
 lifecycle `deploy`:
-  → validate: ok
-  → install: fresh
-  → generate: ok
-  → build: ok
-  → test: no-op
-  → create: no-op
-  → verify: ok
-  → package: no-op
-  → deploy: no-op
-  → verification: unavailable (0 input(s), 0 artifact(s))
+  validate: ok
+  install: fresh
+  generate: ok
+  build: ok
+  test: no-op
+  create: no-op
+  verify: ok
+  package: no-op
+  deploy: no-op
+  verification: unavailable (0 input(s), 0 artifact(s))
 vibe lifecycle: deploy completed (9 phases, 2 contribution(s) selected, 2 executed, 2 ok, 0 fresh, 0 notice(s))
 "#;
     assert_eq!(

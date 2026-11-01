@@ -153,7 +153,7 @@ fn load_or_warn(path: &Path, layer: Layer, warnings: &mut Vec<String>) -> toml::
 /// modes — JSON payloads stay focused on the outcome).
 pub(super) fn warn_load_warnings(warnings: &[String]) {
     for w in warnings {
-        eprintln!("warning: {w}");
+        eprintln!("{}", crate::output::language::warning(w));
     }
 }
 

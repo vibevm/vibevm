@@ -103,16 +103,22 @@ fn decide(
         .into());
     }
     ctx.suspend_progress(|| {
-        eprintln!();
-        eprintln!("rows that would stop applying:");
-        for row in orphaned {
-            eprintln!("  {}", row.display());
-        }
+        use crate::output::language::{Block, Glyph, Kind, Line, Stream, before};
+        let group = |headline: &str, rows: &[RowIdentity]| {
+            Block::new(Glyph::Running, headline)
+                .with_body(rows.iter().map(|row| Line::Child(row.display())).collect())
+                .render()
+        };
+        eprintln!(
+            "{}{}",
+            before(Stream::Err, Kind::Block),
+            group("rows that would stop applying", orphaned)
+        );
         if !surviving.is_empty() {
-            eprintln!("rows another accepted package still offers:");
-            for row in surviving {
-                eprintln!("  {}", row.display());
-            }
+            eprintln!(
+                "\n{}",
+                group("rows another accepted package still offers", surviving)
+            );
         }
         crate::output::prompts::space_before_question();
         Confirm::with_theme(&crate::output::prompt_theme())

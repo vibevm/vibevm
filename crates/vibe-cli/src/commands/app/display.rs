@@ -75,6 +75,9 @@ pub(crate) struct StepDisplay {
     session: Mutex<Option<Arc<PanelSession>>>,
     /// The output log of every step that ran a child, newest last.
     logs: Mutex<Vec<(String, PathBuf)>>,
+    /// The invocation the step logs are reported to, so its finished
+    /// blocks count their lines; absent for a flat display.
+    ctx: Option<output::Context>,
 }
 
 impl StepDisplay {
@@ -83,14 +86,23 @@ impl StepDisplay {
         let interactive = ctx.has_interactive_progress();
         // The environment fallbacks arrive as data: `output` reads the
         // invocation's `VIBE_*` posture variables, this cell reads none.
-        let mode = log_mode(steps.log, output::env_app_log().as_deref(), interactive);
+        let mut mode = log_mode(steps.log, output::env_app_log().as_deref(), interactive);
+        // `--plain` writes blocks alone (PROP-067 `#plain`): unless a mode
+        // was named, the child's output stays in its log, whose path the
+        // finished block and the trailer print.
+        let named = steps.log.is_some() || output::env_app_log().is_some();
+        let plain = ctx.is_plain() && !named;
+        if plain {
+            mode = LogMode::Quiet;
+        }
         Self {
             mode,
             tail: tail_size(steps.log_tail, output::env_app_log_tail().as_deref()),
-            panelled: interactive && mode != LogMode::Quiet,
-            announce: mode == LogMode::Quiet && !ctx.is_json() && !ctx.is_quiet(),
+            panelled: interactive,
+            announce: mode == LogMode::Quiet && !plain && !ctx.is_json() && !ctx.is_quiet(),
             session: Mutex::new(None),
             logs: Mutex::new(Vec::new()),
+            ctx: Some(ctx.clone()),
         }
     }
 
@@ -104,6 +116,7 @@ impl StepDisplay {
             announce: false,
             session: Mutex::new(None),
             logs: Mutex::new(Vec::new()),
+            ctx: None,
         }
     }
 
@@ -119,11 +132,6 @@ impl StepDisplay {
         self.mode == LogMode::Quiet
     }
 
-    /// Whether the panel renders the step tasks itself.
-    pub(crate) fn renders_steps(&self) -> bool {
-        self.panelled
-    }
-
     /// Run the operation: under the panel when this context draws one,
     /// otherwise with progress held back exactly as before.
     pub(crate) fn around<R>(&self, ctx: &output::Context, run: impl FnOnce() -> R) -> R {
@@ -132,6 +140,12 @@ impl StepDisplay {
             .then(|| ctx.open_progress_panel(self.tail, self.mode == LogMode::Live))
             .flatten();
         let Some(panel) = panel else {
+            // A plain stream writes each block once, when it ends (PROP-067
+            // `#plain`), so it never interleaves with a live child; only
+            // cursor-managed bars must step aside for one.
+            if !ctx.has_interactive_progress() {
+                return run();
+            }
             let _held = ctx.hold_progress();
             return run();
         };
@@ -139,8 +153,11 @@ impl StepDisplay {
         run()
     }
 
-    /// The tail of the failing step's log, after the panel is gone and
-    /// before the error names the step; `--json` keeps its one envelope.
+    /// A failed run: the failed block already kept its log's tail as its
+    /// evidence (PROP-067 `#collapse`); without a renderer the tail is
+    /// printed here, before the refusal names the step. Either way the
+    /// failure trailer waits for the refusal. `--json` keeps its one
+    /// envelope.
     pub(crate) fn report<T>(
         &self,
         ctx: &output::Context,
@@ -151,9 +168,14 @@ impl StepDisplay {
         }
         if let Err(error) = &result
             && let Some(step) = failing_step(error)
-            && let Some(log) = self.log_of(step)
         {
-            print_tail(&log);
+            let log = self.log_of(step);
+            if let Some(log) = &log
+                && !ctx.draws_progress()
+            {
+                print_tail(log);
+            }
+            ctx.defer_trailer(ctx.trailer_text(false, &format!("failed at {step}")));
         }
         result
     }
@@ -179,8 +201,17 @@ impl vibe_app::StepLogs for StepDisplay {
             logs.retain(|(id, _)| id != step);
             logs.push((step.to_owned(), log.to_owned()));
         }
+        if let Some(ctx) = &self.ctx {
+            ctx.note_step_log(step, log);
+        }
         if self.announce {
-            asking(|| eprintln!("step `{step}` log: {}", log.display()));
+            let line = output::language::Block::new(output::language::Glyph::Running, step)
+                .with_meta(vec![output::language::Meta::note(format!(
+                    "log {}",
+                    log.display()
+                ))])
+                .render_at(usize::MAX);
+            asking(|| eprintln!("{line}"));
         }
     }
 }
@@ -364,10 +395,16 @@ fn print_tail(log: &Path) {
         return;
     }
     let shown = lines.len().min(FAILURE_TAIL);
-    eprintln!("last {FAILURE_TAIL} lines of {}:", log.display());
-    for line in &lines[lines.len() - shown..] {
-        eprintln!("  {}", output::sanitize_progress_text(line));
-    }
+    let body = lines[lines.len() - shown..]
+        .iter()
+        .map(|line| output::language::Line::Evidence(output::sanitize_progress_text(line)))
+        .collect();
+    let block = output::language::Block::new(
+        output::language::Glyph::Failed,
+        format!("last {FAILURE_TAIL} lines of {}", log.display()),
+    )
+    .with_body(body);
+    eprintln!("{}", block.render());
 }
 
 /// The panel's hotkey, read from the terminal in raw mode on its own

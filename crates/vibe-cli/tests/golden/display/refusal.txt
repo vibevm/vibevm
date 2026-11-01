@@ -1,0 +1,9 @@
+── plan for org.example/noisy@1.0.0 ────
+
+  installer  main (linux/x86_64) · result owned
+
+  1.  build  (recipe)  Build
+
+✗ nothing_to_resume  --resume has nothing to continue for `org.example/noisy@1.0.0`: no kept work directory `<settings>/cache/app-work/org.example.noisy@1.0.0` exists
+  fix   install without --resume, or restart a kept work directory at one of its steps with --from-step ID
+  see   spec://org.vibevm.core/vibevm/common/PROP-065#resume

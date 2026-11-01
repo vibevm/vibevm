@@ -145,10 +145,10 @@ fn report(
         return Ok(());
     }
     for (key, state) in changed {
-        ctx.step(&format!("{key} → {state}"));
+        ctx.created(&format!("{key} · {state}"));
     }
-    ctx.summary(&format!(
-        "\n{} {} package(s); {live} row(s) now apply in {}.",
+    ctx.trailer(&format!(
+        "{} {} package(s) · {live} row(s) now apply in {}",
         verb.label(),
         changed.len(),
         home.root().display()

@@ -17,6 +17,7 @@ use vibe_wire::generated::application_running::{ApplicationRunning, Ending};
 use super::home::AppHome;
 use super::processes::HostProcesses;
 use crate::output;
+use crate::output::language::{Cell, List, Meta, Role, Row, short_path};
 
 /// How often `watch` reads the journal and sweeps the running registry.
 const TICK: Duration = Duration::from_millis(250);
@@ -37,29 +38,42 @@ fn render(ctx: &output::Context, answer: &ApplicationRunning) -> Result<()> {
     if ctx.is_json() {
         return ctx.emit_json(answer);
     }
+    ctx.summary(&format!(
+        "{} launcher(s) running in {}",
+        answer.running.len(),
+        answer.home
+    ));
+    if !ctx.is_quiet() && !answer.running.is_empty() {
+        running_list(ctx, answer);
+    }
     for row in &answer.stopped {
         let how = match row.ended {
             Ending::Terminated => "ended when asked",
             Ending::Killed => "ended without asking",
             Ending::Gone => "had already exited",
         };
-        println!("stopped {} (pid {}): {how}", row.key, row.pid);
-    }
-    ctx.summary(&format!(
-        "{} launcher(s) running in {}",
-        answer.running.len(),
-        answer.home
-    ));
-    if ctx.is_quiet() {
-        return Ok(());
-    }
-    for row in &answer.running {
-        println!(
-            "  {}  pid {}  since {}  log {}",
-            row.key, row.pid, row.started, row.log
-        );
+        ctx.trailer(&format!("stopped {} (pid {}) · {how}", row.key, row.pid));
     }
     Ok(())
+}
+
+/// The running launchers as one list.
+fn running_list(ctx: &output::Context, answer: &ApplicationRunning) {
+    let rows = answer
+        .running
+        .iter()
+        .map(|row| {
+            Row::new(vec![
+                Cell::new(row.key.clone(), Role::Accent),
+                Cell::text(format!("pid {}", row.pid)),
+            ])
+            .meta(vec![
+                Meta::Note(format!("since {}", row.started)),
+                Meta::Note(format!("log {}", short_path(&row.log))),
+            ])
+        })
+        .collect();
+    ctx.block(&List::new(rows).render());
 }
 
 /// `vibe app watch`: one line per change until standard input closes or the

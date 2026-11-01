@@ -27,7 +27,7 @@ pub fn rescan_cmd(ctx: &Context, a: &ProgressRescanArgs) -> Result<()> {
     let base = Baseline::load(&a.baseline)?;
     let (crate_states, warning) = probe_crates(&g.root, &base);
     if let Some(w) = warning {
-        eprintln!("vibe progress: warning: {w}");
+        eprintln!("{}", crate::output::language::warning(&w.to_string()));
     }
     let rows = baseline::rescan(
         g.docs.iter(),

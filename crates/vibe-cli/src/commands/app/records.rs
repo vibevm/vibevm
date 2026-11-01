@@ -13,6 +13,7 @@ use vibe_wire::generated::application_work::{ApplicationWork, Entry, EntryState}
 
 use crate::exit_code::app_exit_code;
 use crate::output;
+use crate::output::language::{Cell, List, Meta, Role, Row};
 
 /// List (and with `prune`, first prune) the run records of `package`.
 pub(super) fn runs(
@@ -39,15 +40,26 @@ pub(super) fn runs(
     if ctx.is_quiet() {
         return Ok(());
     }
-    for run in &listing.runs {
-        println!(
-            "  {} {} {} ({}) {}",
-            run.timestamp, run.command, run.key, run.outcome, run.path
-        );
-        for log in &run.logs {
-            println!("    {}: {}", log.step, log.path);
-        }
-    }
+    // One row per run, newest first as the library lists them, each step
+    // log a child under it (PROP-067 `#list`, `#children`).
+    let rows = listing
+        .runs
+        .iter()
+        .map(|run| {
+            let mut row = Row::new(vec![
+                Cell::new(run.timestamp.clone(), Role::Dim),
+                Cell::text(run.command.clone()),
+                Cell::new(run.key.clone(), Role::Accent),
+                Cell::new(format!("({})", run.outcome), Role::Dim),
+            ])
+            .meta(vec![Meta::Note(run.path.clone())]);
+            for log in &run.logs {
+                row = row.child(format!("{}  {}", log.step, log.path));
+            }
+            row
+        })
+        .collect();
+    ctx.block(&List::new(rows).children_under(1).render());
     Ok(())
 }
 
@@ -83,14 +95,24 @@ pub(super) fn work(
     if ctx.is_quiet() {
         return Ok(());
     }
-    for entry in &listing.entries {
-        println!("  {}", entry.key);
-        let field = |name: &str, value: &str| println!("    {name:<8} {value}");
-        field("state", &state_text(entry));
-        field("changed", &entry.changed);
-        field("size", &size_text(entry));
-        field("path", &entry.path);
-    }
+    // One row per kept directory: its key, then how far the run got, when
+    // it changed, its size and where it is (PROP-067 `#list`, `#meta`).
+    let rows = listing
+        .entries
+        .iter()
+        .map(|entry| {
+            Row::new(vec![
+                Cell::new(entry.key.clone(), Role::Accent),
+                Cell::text(state_text(entry)),
+            ])
+            .meta(vec![
+                Meta::Note(entry.changed.clone()),
+                Meta::Count(size_text(entry)),
+                Meta::Note(entry.path.clone()),
+            ])
+        })
+        .collect();
+    ctx.block(&List::new(rows).render());
     Ok(())
 }
 
@@ -117,7 +139,7 @@ fn state_text(entry: &Entry) -> String {
         EntryState::Unknown => "unknown",
     };
     match &entry.step {
-        Some(step) => format!("{state} at step `{step}`"),
+        Some(step) => format!("{state} at step {step}"),
         None => state.to_owned(),
     }
 }

@@ -173,7 +173,7 @@ fn every_option_is_listed_grouped_with_the_detected_host_first() {
         &["app", "installers", PACKAGE, "--registry", registry],
     ));
     assert!(text.contains("choice-app: 3 installer(s)"), "{text}");
-    assert!(text.contains("other-cpu: Other CPU archive"), "{text}");
+    assert!(text.contains("other-cpu  Other CPU archive"), "{text}");
 }
 
 #[test]

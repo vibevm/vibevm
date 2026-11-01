@@ -13,16 +13,23 @@ use vibe_wire::generated::application_report::{
 };
 
 use crate::output;
+use crate::output::language::{Role, paint};
+
+/// A library sentence as human output: identifiers lose their backticks,
+/// which belong to the JSON and the logs (PROP-067 `#inline`).
+pub(crate) fn prose(message: &str) -> String {
+    message.replace('`', "")
+}
 
 const REPORT_PROTOCOL: &str = "vibe-application-command-report/2";
 
 /// The report of an install, update, uninstall or modify.
 pub(crate) fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
-    let (command, verb) = match outcome.command {
-        AppCommand::Install => (ApplicationReportCommand::Install, "install -g"),
-        AppCommand::Update => (ApplicationReportCommand::Update, "update -g"),
-        AppCommand::Uninstall => (ApplicationReportCommand::Uninstall, "uninstall -g"),
-        AppCommand::Modify => (ApplicationReportCommand::Modify, "app modify"),
+    let command = match outcome.command {
+        AppCommand::Install => ApplicationReportCommand::Install,
+        AppCommand::Update => ApplicationReportCommand::Update,
+        AppCommand::Uninstall => ApplicationReportCommand::Uninstall,
+        AppCommand::Modify => ApplicationReportCommand::Modify,
     };
     if ctx.is_json() {
         return ctx.emit_json(&ApplicationReport {
@@ -49,25 +56,25 @@ pub(crate) fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
             }),
         });
     }
-    ctx.summary(&format!(
-        "vibe {verb}: application `{}` — {}",
-        outcome.slot, outcome.message
-    ));
+    ctx.trailer(&prose(&outcome.message));
     if let Some(work) = &outcome.work {
-        ctx.summary(&format!("work directory kept: {}", work.display()));
+        ctx.summary(&format!(
+            "  work directory kept {}",
+            paint(Role::Accent, &work.display().to_string())
+        ));
     }
     Ok(())
 }
 
 /// The report of `expose`, `hide`, `mark`, `hold`, `unhold`, `rollback`.
 pub(crate) fn render_change(ctx: &output::Context, change: &Change) -> Result<()> {
-    let (command, verb) = match change.verb {
-        ChangeVerb::Expose => (ApplicationReportCommand::Expose, "expose"),
-        ChangeVerb::Hide => (ApplicationReportCommand::Hide, "hide"),
-        ChangeVerb::Mark => (ApplicationReportCommand::Mark, "mark"),
-        ChangeVerb::Hold => (ApplicationReportCommand::Hold, "hold"),
-        ChangeVerb::Unhold => (ApplicationReportCommand::Unhold, "unhold"),
-        ChangeVerb::Rollback => (ApplicationReportCommand::Rollback, "rollback"),
+    let command = match change.verb {
+        ChangeVerb::Expose => ApplicationReportCommand::Expose,
+        ChangeVerb::Hide => ApplicationReportCommand::Hide,
+        ChangeVerb::Mark => ApplicationReportCommand::Mark,
+        ChangeVerb::Hold => ApplicationReportCommand::Hold,
+        ChangeVerb::Unhold => ApplicationReportCommand::Unhold,
+        ChangeVerb::Rollback => ApplicationReportCommand::Rollback,
     };
     if ctx.is_json() {
         return ctx.emit_json(&ApplicationReport {
@@ -83,10 +90,7 @@ pub(crate) fn render_change(ctx: &output::Context, change: &Change) -> Result<()
             selected_mode: None,
         });
     }
-    ctx.summary(&format!(
-        "vibe app {verb}: application `{}` — {}",
-        change.slot, change.message
-    ));
+    ctx.trailer(&format!("{} · {}", change.slot, prose(&change.message)));
     Ok(())
 }
 

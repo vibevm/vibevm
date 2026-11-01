@@ -91,12 +91,13 @@ fn the_listing_carries_one_block_per_source_and_the_per_host_footer() {
     assert_eq!(document.hosts[1].host, "local path");
 
     let text = render::listing(&document);
-    assert!(text.contains("~/.vibe/settings.toml  [local, unmatched = allow]"));
+    assert!(text.contains("── ~/.vibe/settings.toml  local, unmatched = allow ─"));
     assert!(text.contains("1. prefix    https://github.com/"));
-    assert!(text.contains("to       https://10.1.0.5/gh/  [https, private]"));
-    assert!(text.contains("why      the only host the proxy allows"));
-    assert!(text.contains("scope    org.example/tool, step fetch"));
-    assert!(text.contains("1 row → 10.1.0.5 (https, private); 1 row → local path; 1 deny"));
+    assert!(text.contains("     to      https://10.1.0.5/gh/  [https, private]"));
+    assert!(text.contains("     why     the only host the proxy allows"));
+    assert!(text.contains("     scope   org.example/tool, step fetch"));
+    assert!(text.contains("1 row → 10.1.0.5 (https, private) · 1 row → local path · 1 deny"));
+    assert!(!text.contains('`'), "no backticks in human output: {text}");
 }
 
 #[test]
@@ -145,7 +146,7 @@ fn explain_lists_two_competing_rows_in_winning_order() {
     assert!(!document.denied);
 
     let text = render::explain(&document);
-    assert!(text.contains("origin   https://github.com/vibespecs/index"));
+    assert!(text.contains("origin  https://github.com/vibespecs/index"));
     assert!(text.contains("1. prefix    https://github.com/vibespecs/"));
     assert!(text.contains("2. prefix    https://github.com/"));
     assert!(text.contains("chosen  https://narrow.example/index"));

@@ -127,14 +127,12 @@ fn a_build_requirement_is_installed_hidden_exposed_to_its_step_and_autoremoved()
         "the requirement is resolved and met the step's command need"
     );
     let text = ok(&apps.app(&["app", "plan"], "org.example/consumer", &[]));
-    // The requirement is a child node of the step that names it, with no
-    // `installed` word because it will be installed first
-    // (PROP-065 `#plan`).
-    let marker = "\u{2514}\u{2500} requires org.example/toolchain@1.0.0 (build, hidden) for `org";
+    // The requirement is a child of the step that names it, with no
+    // `[installed]` word because it will be installed first
+    // (PROP-065 `#plan`, PROP-067 `#children`).
+    let marker = "\u{2514} requires org.example/toolchain@1.0.0 (build, hidden) for org";
     let dependency = text.find(marker).unwrap_or_else(|| panic!("{text}"));
-    let step = text
-        .find("1. run   build")
-        .unwrap_or_else(|| panic!("{text}"));
+    let step = text.find("1.  build").unwrap_or_else(|| panic!("{text}"));
     assert!(
         step < dependency,
         "the requirement is listed under its step: {text}"
@@ -172,11 +170,12 @@ fn a_build_requirement_is_installed_hidden_exposed_to_its_step_and_autoremoved()
     assert_eq!(consumer["requires"][0]["step"], "build");
     assert!(consumer.get("mark").is_none(), "named by the user: manual");
     let list = ok(&apps.vibe(&["app", "list", "-g"]));
-    let section = list.find("hidden installation(s):").unwrap();
+    let section = list.find("── hidden installations ─").unwrap();
     assert!(
-        list[section..].contains(&format!(
-            "{TOOLCHAIN} (steps, ready) [auto] required by {CONSUMER}"
-        )),
+        list[section..].lines().any(|line| line.contains(TOOLCHAIN)
+            && line.contains("(steps, ready)")
+            && line.contains(&format!("required by {CONSUMER}"))
+            && line.ends_with("[auto]")),
         "{list}"
     );
 

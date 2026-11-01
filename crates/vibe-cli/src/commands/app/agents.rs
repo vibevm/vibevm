@@ -165,6 +165,10 @@ pub(crate) fn report_parked<T>(
             &parked.task_files,
             &parked.resume,
         );
+        ctx.defer_trailer(output::language::parked_trailer(
+            &format!("parked at step {} · resume with", parked.step),
+            &parked.resume,
+        ));
     }
     result
 }

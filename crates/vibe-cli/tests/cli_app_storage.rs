@@ -360,7 +360,7 @@ fn a_hidden_installation_moves_and_updates_without_being_exposed() {
     assert!(refused.contains("has no installed provider"), "{refused}");
     let text = ok(&registry.vibe(&user, &["app", "list"]));
     assert!(
-        text.contains("hidden installation(s):\n  tool: org.example/tool@1.0.0"),
+        text.contains("hidden installations") && text.contains("  tool  org.example/tool@1.0.0"),
         "{text}"
     );
 

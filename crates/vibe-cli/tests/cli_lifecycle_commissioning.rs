@@ -56,21 +56,21 @@ fn phase_announcer_owner_scenario_is_green_end_to_end() {
     let human = String::from_utf8(first.stdout).unwrap();
     let narration = [
         format!(
-            "  → will run `{CARGO_BUILD}` — point=phase:build, handler=script, provider={STACK} tier=preset"
+            "  will run `{CARGO_BUILD}` — point=phase:build, handler=script, provider={STACK} tier=preset"
         ),
         format!(
-            "  → will run `{ANNOUNCE}` — point=phase:build, handler=builtin:log, provider={ANNOUNCER} tier=dependency"
+            "  will run `{ANNOUNCE}` — point=phase:build, handler=builtin:log, provider={ANNOUNCER} tier=dependency"
         ),
         format!(
-            "  → will run `{CARGO_TEST}` — point=phase:test, handler=script, provider={STACK} tier=preset"
+            "  will run `{CARGO_TEST}` — point=phase:test, handler=script, provider={STACK} tier=preset"
         ),
         format!(
-            "  → will run `{ANNOUNCE_TEST}` — point=phase:test, handler=builtin:log, provider={ANNOUNCER} tier=dependency"
+            "  will run `{ANNOUNCE_TEST}` — point=phase:test, handler=builtin:log, provider={ANNOUNCER} tier=dependency"
         ),
     ];
     let outcomes = [
-        format!("  → log [{ANNOUNCER}]: hello from build in {project_name} by {ANNOUNCER}"),
-        format!("  → log [{ANNOUNCER}]: hello from test in {project_name} by {ANNOUNCER}"),
+        format!("  log [{ANNOUNCER}]: hello from build in {project_name} by {ANNOUNCER}"),
+        format!("  log [{ANNOUNCER}]: hello from test in {project_name} by {ANNOUNCER}"),
     ];
     let narration_at = narration
         .each_ref()

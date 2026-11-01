@@ -94,6 +94,11 @@ pub struct Cli {
     #[arg(long, global = true, conflicts_with = "json")]
     pub quiet: bool,
 
+    /// Human output with no colour, no cursor movement and no live fold:
+    /// each block is written once, when it ends, as a log would read it.
+    #[arg(long, global = true, conflicts_with = "json")]
+    pub plain: bool,
+
     /// Show detailed progress diagnostics and child-operation output.
     /// Human progress is still suppressed by `--quiet` and `--json`.
     #[arg(short = 'v', long, global = true)]

@@ -121,7 +121,7 @@ fn run_list(
     if ctx.is_quiet() {
         return Ok(());
     }
-    print!("{}", render::listing(&document));
+    ctx.block(&render::listing(&document));
     Ok(())
 }
 
@@ -148,7 +148,7 @@ fn run_explain(
     if ctx.is_quiet() {
         return Ok(());
     }
-    print!("{}", render::explain(&document));
+    ctx.block(&render::explain(&document));
     Ok(())
 }
 

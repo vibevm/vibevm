@@ -10,12 +10,23 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#display");
 
 use vibe_wire::generated::remap_explanation as explanation;
+
+use crate::output::language::{Role, paint, rule};
 use vibe_wire::generated::remap_listing as wire;
 use vibe_wire::generated::remap_offer as offer_doc;
 
 /// The width the indented labels are padded to, so `to`, `why`, `scope`,
 /// `from` and `note` line up down the block.
-const LABEL: usize = 7;
+const LABEL: usize = 6;
+
+/// Where a row's labels start: under its key kind, past `  N. `.
+const UNDER: usize = 5;
+
+/// A library sentence as human output: identifiers lose their backticks
+/// (PROP-067 `#inline`).
+fn prose(text: &str) -> String {
+    text.replace('`', "")
+}
 
 /// `vibe remap list` (`PROP-066#display`).
 pub(super) fn listing(document: &wire::RemapListing) -> String {
@@ -23,20 +34,24 @@ pub(super) fn listing(document: &wire::RemapListing) -> String {
     if document.sources.is_empty() {
         out.push_str("no remap rows are active\n");
     }
+    // PROP-067 `#heading`: each source opens with a rule naming it, its
+    // layer, its policy and its state.
     for source in &document.sources {
-        out.push_str(&format!(
-            "{}  [{}, unmatched = {}{}]\n",
+        let state = source
+            .state
+            .as_ref()
+            .map(|state| format!(", {}", package_state(state)))
+            .unwrap_or_default();
+        let label = format!(
+            "{}  {}, unmatched = {}{state}",
             source.source,
             layer(&source.layer),
-            policy(&source.policy),
-            source
-                .state
-                .as_ref()
-                .map(|state| format!(", {}", package_state(state)))
-                .unwrap_or_default()
-        ));
+            policy(&source.policy)
+        );
+        out.push_str(&rule(&label, None));
+        out.push_str("\n\n");
         if source.rows.is_empty() {
-            out.push_str("  (no rows)\n");
+            out.push_str(&format!("  {}\n", paint(Role::Dim, "no rows")));
         }
         for row in &source.rows {
             out.push_str(&row_block(row));
@@ -44,19 +59,34 @@ pub(super) fn listing(document: &wire::RemapListing) -> String {
         out.push('\n');
     }
     out.push_str(&footer(document));
-    out
+    out.trim_end().to_owned()
+}
+
+/// A row's numbered gutter line: `N. <kind>  <what>`, the key in the
+/// accent role, a deny row's key in the alert role.
+fn numbered(number: impl std::fmt::Display, kind: &str, what: &str, deny: bool) -> String {
+    let role = if deny { Role::Alert } else { Role::Accent };
+    format!("  {number}. {kind}  {}\n", paint(role, what))
 }
 
 /// One numbered row block: `N. <key kind>  <what>`, then the indented
 /// labels the row carries.
 fn row_block(row: &wire::Row) -> String {
-    let mut out = format!("  {}. {}  {}\n", row.number, kind(&row.kind), row.what);
+    let deny = row.to == "deny";
+    let mut out = numbered(row.number, kind(&row.kind), &row.what, deny);
     out.push_str(&labelled(
         "to",
-        &format!("{}  [{}, {}]", row.to, row.scheme, reach(&row.reach)),
+        &format!(
+            "{}  {}",
+            row.to,
+            paint(
+                Role::Dim,
+                &format!("[{}, {}]", row.scheme, reach(&row.reach))
+            )
+        ),
     ));
     if let Some(why) = &row.why {
-        out.push_str(&labelled("why", why));
+        out.push_str(&labelled("why", &prose(why)));
     }
     if let Some(scope) = &row.scope {
         out.push_str(&labelled("scope", &scope_text(scope)));
@@ -65,7 +95,7 @@ fn row_block(row: &wire::Row) -> String {
         out.push_str(&labelled("from", from));
     }
     for note in &row.notes {
-        out.push_str(&labelled("note", note_text(note)));
+        out.push_str(&labelled("note", &paint(Role::Warn, note_text(note))));
     }
     // Which packages offer this row (`PROP-066#providers`): one name reads
     // differently from three, and uninstall's question is decided on
@@ -92,7 +122,7 @@ fn package_state(state: &wire::PackageState) -> &'static str {
 /// `vibe remap explain` (`PROP-066#precedence`): the declared origin, the
 /// matching rows in winning order, the chosen target and the digest.
 pub(super) fn explain(document: &explanation::RemapExplanation) -> String {
-    let mut out = format!("{} fetch\n", document.kind);
+    let mut out = format!("{}\n\n", rule(&format!("{} fetch", document.kind), None));
     out.push_str(&labelled(
         "origin",
         document.origin.as_deref().unwrap_or("(none declared)"),
@@ -107,32 +137,34 @@ pub(super) fn explain(document: &explanation::RemapExplanation) -> String {
         out.push_str("  no remap row matches this fetch\n");
     }
     for found in &document.matches {
-        out.push_str(&format!(
-            "  {}. {}  {}\n",
+        out.push_str(&numbered(
             found.order,
             explain_kind(&found.kind),
-            found.what
+            &found.what,
+            found.to == "deny",
         ));
         out.push_str(&labelled(
             "to",
             &format!(
-                "{}  [{}, {}]",
+                "{}  {}",
                 found.to,
-                found.scheme,
-                explain_reach(&found.reach)
+                paint(
+                    Role::Dim,
+                    &format!("[{}, {}]", found.scheme, explain_reach(&found.reach))
+                )
             ),
         ));
         out.push_str(&labelled(
             "from",
             &format!(
-                "row {} of `{}` ({})",
+                "row {} of {} ({})",
                 found.index + 1,
                 found.source,
                 explain_layer(&found.layer)
             ),
         ));
         if let Some(why) = &found.why {
-            out.push_str(&labelled("why", why));
+            out.push_str(&labelled("why", &prose(why)));
         }
         if let Some(scope) = &found.scope {
             out.push_str(&labelled(
@@ -144,24 +176,35 @@ pub(super) fn explain(document: &explanation::RemapExplanation) -> String {
             ));
         }
         for note in &found.notes {
-            out.push_str(&labelled("note", explain_note(note)));
+            out.push_str(&labelled("note", &paint(Role::Warn, explain_note(note))));
         }
     }
     out.push('\n');
     match (&document.chosen, document.denied) {
-        (_, true) => out.push_str("  refused before any connection (remap_denied)\n"),
-        (Some(chosen), false) => out.push_str(&format!("  chosen  {chosen}\n")),
+        (_, true) => out.push_str(&format!(
+            "  {}\n",
+            paint(Role::Alert, "refused before any connection (remap_denied)")
+        )),
+        (Some(chosen), false) => out.push_str(&format!(
+            "  {}  {}\n",
+            paint(Role::Dim, "chosen"),
+            paint(Role::Accent, chosen)
+        )),
         (None, false) => out.push_str("  nothing to fetch\n"),
     }
-    out
+    out.trim_end().to_owned()
 }
 
-/// One indented `label   value` line, with a long value wrapped under its
-/// label rather than cut.
+/// One indented `label   value` line under a row's key kind, the label
+/// dim, a long value wrapped under its label rather than cut.
 fn labelled(label: &str, value: &str) -> String {
-    let indent = " ".repeat(4 + LABEL + 2);
+    let indent = " ".repeat(UNDER + LABEL + 2);
     let wrapped = value.replace('\n', &format!("\n{indent}"));
-    format!("    {label:<LABEL$}  {wrapped}\n")
+    format!(
+        "{}{}  {wrapped}\n",
+        " ".repeat(UNDER),
+        paint(Role::Dim, &format!("{label:<LABEL$}"))
+    )
 }
 
 /// `3 rows → nexus.corp.example (https, private); 1 row → local path;
@@ -191,7 +234,7 @@ fn footer(document: &wire::RemapListing) -> String {
     if parts.is_empty() {
         return String::new();
     }
-    format!("{}\n", parts.join("; "))
+    format!("{}\n", parts.join(" · "))
 }
 
 fn scope_text(scope: &wire::Scope) -> String {
@@ -297,10 +340,10 @@ pub(super) fn offer(document: &offer_doc::RemapOffer) -> String {
     for package in &document.packages {
         out.push('\n');
         out.push_str(&format!(
-            "{}@{}  [{}]\n",
-            package.package,
+            "{}@{}  {}\n",
+            paint(Role::Accent, &package.package),
             package.version,
-            offer_state(&package.state)
+            paint(Role::Dim, &format!("[{}]", offer_state(&package.state)))
         ));
         if let Some(description) = &package.description {
             out.push_str(&labelled("about", description));
@@ -313,7 +356,7 @@ pub(super) fn offer(document: &offer_doc::RemapOffer) -> String {
         }
         out.push_str(&labelled("digest", &package.content_hash));
         if package.rows.is_empty() {
-            out.push_str("  (no rows)\n");
+            out.push_str(&format!("  {}\n", paint(Role::Dim, "no rows")));
         }
         for row in &package.rows {
             out.push_str(&offer_row_block(row));
@@ -327,29 +370,31 @@ pub(super) fn offer(document: &offer_doc::RemapOffer) -> String {
 
 /// One numbered row block of the question.
 fn offer_row_block(row: &offer_doc::OfferedRow) -> String {
-    let mut out = format!(
-        "  {}. {}  {}\n",
+    let mut out = numbered(
         row.number,
         offer_kind_label(&row.kind),
-        row.what
+        &row.what,
+        row.to == "deny",
     );
     out.push_str(&labelled(
         "to",
         &format!(
-            "{}  [{}, {}]",
+            "{}  {}",
             row.to,
-            row.scheme,
-            offer_reach_label(&row.reach)
+            paint(
+                Role::Dim,
+                &format!("[{}, {}]", row.scheme, offer_reach_label(&row.reach))
+            )
         ),
     ));
     if let Some(why) = &row.why {
-        out.push_str(&labelled("why", why));
+        out.push_str(&labelled("why", &prose(why)));
     }
     if let Some(scope) = &row.scope {
         out.push_str(&labelled("scope", scope));
     }
     for note in &row.notes {
-        out.push_str(&labelled("note", offer_note_text(note)));
+        out.push_str(&labelled("note", &paint(Role::Warn, offer_note_text(note))));
     }
     out
 }

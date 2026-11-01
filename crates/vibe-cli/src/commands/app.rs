@@ -20,6 +20,7 @@ mod interrupt;
 mod launch;
 mod lifecycle;
 mod menu;
+mod plan_text;
 mod processes;
 pub(crate) mod project;
 mod records;

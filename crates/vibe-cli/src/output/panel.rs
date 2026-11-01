@@ -61,6 +61,17 @@ impl Context {
         self
     }
 
+    /// Records `--plain` (PROP-067 `#plain`).
+    pub fn with_plain(mut self, plain: bool) -> Self {
+        self.plain = plain;
+        self
+    }
+
+    /// Whether `--plain` asked for blocks alone, with no child stream.
+    pub(crate) fn is_plain(&self) -> bool {
+        self.plain
+    }
+
     /// Whether keys may be read from standard input.
     pub(crate) fn reads_terminal_keys(&self) -> bool {
         self.terminal_input
@@ -84,8 +95,22 @@ impl Context {
             return None;
         }
         let renderer = self.progress_renderer.clone()?;
-        renderer.open_panel(tail, expanded);
+        renderer.open_panel(tail, expanded, self.terminal_input);
         Some(ProgressPanel { renderer })
+    }
+
+    /// Whether a progress renderer draws this invocation's blocks.
+    pub(crate) fn draws_progress(&self) -> bool {
+        self.progress_renderer.is_some()
+    }
+
+    /// Remember where a step writes its output, so its finished block can
+    /// count the lines and a failed one keep its tail (PROP-067
+    /// `#collapse`).
+    pub(crate) fn note_step_log(&self, step: &str, log: &std::path::Path) {
+        if let Some(renderer) = &self.progress_renderer {
+            renderer.note_log(step, log);
+        }
     }
 
     /// Hold this invocation's progress back until the guard drops, so the
