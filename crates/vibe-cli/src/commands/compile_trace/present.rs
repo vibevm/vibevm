@@ -72,7 +72,7 @@ pub(crate) fn quiet_suffix(report: &CompileTraceReport) -> String {
 
 /// One heading, one aligned timing table, every warning once.
 pub(crate) fn render_human(ctx: &output::Context, report: &CompileTraceReport) {
-    ctx.heading(&format!("\ncompile trace: {}", status(report)));
+    ctx.rule(&format!("compile trace: {}", status(report)));
     ctx.step(&format!("run {}", report.run_id));
     // No path is INVENTED for a trace that never opened; the reasons below say
     // why there is nothing to point at.
@@ -101,7 +101,7 @@ pub(crate) fn render_human(ctx: &output::Context, report: &CompileTraceReport) {
         ctx.step(&line);
     }
     for warning in &report.warnings {
-        ctx.step(&format!("warning: {warning}"));
+        ctx.diagnostic(warning);
     }
 }
 

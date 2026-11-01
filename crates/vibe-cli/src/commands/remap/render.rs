@@ -337,10 +337,14 @@ fn explain_note(note: &explanation::Note) -> &'static str {
 /// the per-host footer.
 pub(super) fn offer(document: &offer_doc::RemapOffer) -> String {
     let mut out = String::new();
-    for package in &document.packages {
-        out.push('\n');
+    for (index, package) in document.packages.iter().enumerate() {
+        // The packages are the body of the question's block (PROP-067
+        // `#question`): each one starts at column 2, a blank line apart.
+        if index > 0 {
+            out.push('\n');
+        }
         out.push_str(&format!(
-            "{}@{}  {}\n",
+            "  {}@{}  {}\n",
             paint(Role::Accent, &package.package),
             package.version,
             paint(Role::Dim, &format!("[{}]", offer_state(&package.state)))

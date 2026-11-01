@@ -5,7 +5,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE")
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
-use dialoguer::Select;
 use vibe_core::user_config::UserConfig;
 use vibe_core::{
     PackageKind,
@@ -111,11 +110,11 @@ impl IdentityDialogue for TerminalIdentity<'_> {
     }
 
     fn role(&mut self) -> Result<InitType> {
-        let selected = Select::with_theme(&crate::output::prompt_theme())
-            .with_prompt("Root declaration")
-            .items(["project", "package"])
-            .default(0)
-            .interact()?;
+        let selected = crate::output::prompts::choose(
+            "Root declaration",
+            &crate::output::prompts::named(&["project", "package"]),
+            0,
+        )?;
         Ok(if selected == 0 {
             InitType::Project
         } else {

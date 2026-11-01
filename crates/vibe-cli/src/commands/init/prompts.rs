@@ -1,12 +1,12 @@
 //! Field collection for init. Callers suspend progress around every dialogue.
 
 use crate::cli::InitArgs;
+use crate::output::prompts;
 use anyhow::Result;
-use dialoguer::{Input, Select};
 use vibe_core::{PackageKind, user_config::UserConfig};
 
 pub(super) fn identity_introduction(ctx: &crate::output::Context) {
-    ctx.summary("Ваш проект или пакет будет называться org.acme/package-name. «org.acme» называется «группой», «package-name» — это имя внутри группы.");
+    ctx.hint("Ваш проект или пакет будет называться org.acme/package-name. «org.acme» называется «группой», «package-name» — это имя внутри группы.");
 }
 
 pub(super) struct ProjectFields {
@@ -101,20 +101,15 @@ pub(super) fn prompt_fields(
 }
 
 pub(super) fn text(label: &str, default: &str, empty: bool) -> Result<String> {
-    Ok(Input::<String>::with_theme(&crate::output::prompt_theme())
-        .with_prompt(label)
-        .default(default.to_string())
-        .show_default(true)
-        .allow_empty(empty)
-        .interact_text()?)
+    Ok(prompts::text(label, default, empty)?)
 }
 
 fn choice(label: &str, items: &[&str], default: &str) -> Result<String> {
-    let selected = Select::with_theme(&crate::output::prompt_theme())
-        .with_prompt(label)
-        .items(items)
-        .default(items.iter().position(|item| *item == default).unwrap_or(0))
-        .interact()?;
+    let selected = prompts::choose(
+        label,
+        &prompts::named(items),
+        items.iter().position(|item| *item == default).unwrap_or(0),
+    )?;
     Ok(items[selected].to_string())
 }
 

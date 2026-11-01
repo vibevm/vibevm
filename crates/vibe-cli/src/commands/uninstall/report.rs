@@ -3,7 +3,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#
 use super::plan;
 use crate::output;
 use anyhow::{Context, Result, bail};
-use dialoguer::Confirm;
 use std::path::Path;
 use vibe_core::Group;
 use vibe_facts::{package_file_path, remove_package_file};
@@ -33,11 +32,11 @@ pub(super) fn handle_adoption_facts(
         .replace('\\', "/");
     let remove = if interactive && !assume_yes {
         ctx.suspend_progress(|| {
-            Confirm::with_theme(&crate::output::prompt_theme())
-                .with_prompt(format!("Remove its adoption facts ({display})?"))
-                .default(false)
-                .interact()
-                .context("reading adoption-facts confirmation")
+            crate::output::prompts::confirm(
+                &format!("Remove its adoption facts ({display})?"),
+                false,
+            )
+            .context("reading adoption-facts confirmation")
         })?
     } else {
         false
@@ -129,8 +128,16 @@ pub(super) fn emit_report(
             "adoption facts kept; run `vibe facts clean` to drop orphaned overlays",
         ),
     }
-    ctx.summary(&format!(
-        "\nUninstalled declaration {group}/{name}@{version} — {disposition}; {} packages removed, regenerated boot.", removed.len()
+    // A removed slot is what "uninstalled" already says; only a retained
+    // one needs its own word.
+    let retained = if slot.is_empty() {
+        format!(" · {disposition}")
+    } else {
+        String::new()
+    };
+    ctx.trailer(&format!(
+        "uninstalled {group}/{name}@{version}{retained} · {} packages removed · boot regenerated",
+        removed.len()
     ));
     Ok(())
 }

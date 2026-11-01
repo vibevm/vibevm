@@ -123,21 +123,20 @@ pub(super) fn report(
         return Ok(());
     }
 
-    println!();
-    ctx.summary(&format!(
-        "Done. Project `{name}`: {created} file{} created, {kept} kept.",
-        if created == 1 { "" } else { "s" }
-    ));
-    println!();
-    println!("Next:");
-    println!(
-        "  • edit {boot_core} and {specs_common} as your project takes shape",
+    // What to do next reads as remarks above the trailer, because the
+    // trailer is the last block of a command (PROP-067 `#trailer`).
+    ctx.hint(&format!(
+        "next: edit {boot_core} and {specs_common} as your project takes shape",
         boot_core =
             vibe_core::machine_json_path(&vibe_core::layout::current_boot_dir().join("00-core.md")),
         specs_common =
             vibe_core::machine_json_path(&vibe_core::layout::current_specs_root().join("common")),
-    );
-    println!("  • install packages with `vibe install <kind>:<name>` (e.g. flow:wal)");
+    ));
+    ctx.hint("next: install packages with vibe install <kind>:<name> (e.g. flow:wal)");
+    ctx.trailer(&format!(
+        "initialized {name} · {created} file{} created · {kept} kept",
+        if created == 1 { "" } else { "s" }
+    ));
     Ok(())
 }
 

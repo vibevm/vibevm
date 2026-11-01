@@ -12,7 +12,6 @@ use std::path::{Path, PathBuf};
 
 use crate::exit_code::InstallError;
 use anyhow::{Context, Result, anyhow, bail};
-use dialoguer::Confirm;
 use vibe_core::PackageRef;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::user_config::UserConfig;
@@ -97,11 +96,12 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     ));
     preflight.finish();
     if !ctx.is_json() && !ctx.is_quiet() {
-        ctx.heading(&format!(
-            "\nUninstall {group}/{}@{version} — remove {} packages: {intended}{retention}.",
+        ctx.rule(&format!(
+            "uninstall {group}/{}@{version} · remove {} packages",
             pkgref.name,
             packages.len()
         ));
+        ctx.hint(&format!("{intended}{retention}"));
     }
     let interactive = console::user_attended() && !ctx.is_json() && !ctx.is_unattended();
     let opted_in = args.assume_yes || ctx.is_unattended();
@@ -127,8 +127,8 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
             );
         }
         ctx.suspend_progress(|| {
-            Confirm::with_theme(&crate::output::prompt_theme())
-                .with_prompt(format!(
+            crate::output::prompts::confirm(
+                &format!(
                     "Remove declaration {group}/{} and {} packages ({intended}){retention}?{}",
                     pkgref.name,
                     packages.len(),
@@ -137,10 +137,10 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
                     } else {
                         ""
                     }
-                ))
-                .default(false)
-                .interact()
-                .context("reading user confirmation")
+                ),
+                false,
+            )
+            .context("reading user confirmation")
         })?
     } else {
         true

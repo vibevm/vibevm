@@ -29,43 +29,54 @@ fn presentation<'a>(scoped: bool, quiet: bool, quiet_suffix: &'a str) -> Present
 
 const TRACE_SUFFIX: &str = ", compile trace ok (7 event(s), 3 snapshot(s))";
 
-/// Trace OFF, whole graph: silence in BOTH human and quiet, exactly as
-/// `vibe update --all` has always behaved.
+fn quiet(line: &str) -> Option<Closing> {
+    Some(Closing::Quiet(line.to_owned()))
+}
+
+fn trailer(what: &str) -> Option<Closing> {
+    Some(Closing::Trailer(what.to_owned()))
+}
+
+/// Trace OFF, whole graph: quiet stays silent, exactly as `vibe update
+/// --all` has always behaved, and a human terminal gets the trailer.
 ///
 /// The failure this refuses is a real one and entirely silent: applying the
-/// scoped summary to every success adds a completion line to a command that
-/// never printed one, so a script grepping this command's stdout starts seeing
+/// scoped summary to every quiet success adds a line to a command that never
+/// printed one, so a script grepping this command's stdout starts seeing
 /// output it never saw.
 #[test]
-fn a_whole_update_with_tracing_off_prints_nothing_in_either_terminal_mode() {
-    assert_eq!(success_line(presentation(false, false, "")), None);
+fn a_whole_update_with_tracing_off_is_silent_in_quiet_and_ends_with_a_trailer() {
+    assert_eq!(
+        success_line(presentation(false, false, "")),
+        trailer("re-resolved 2 packages")
+    );
     assert_eq!(success_line(presentation(false, true, "")), None);
 }
 
-/// Trace OFF, scoped: both existing lines, byte for byte.
+/// Trace OFF, scoped: the quiet line byte for byte, the trailer for a human.
 #[test]
-fn a_scoped_update_with_tracing_off_keeps_its_exact_lines() {
+fn a_scoped_update_with_tracing_off_keeps_its_quiet_line() {
     assert_eq!(
-        success_line(presentation(true, false, "")).as_deref(),
-        Some("\nUpdated 2 packages (1 version bump)."),
+        success_line(presentation(true, false, "")),
+        trailer("updated 2 packages · 1 version bump"),
     );
     assert_eq!(
-        success_line(presentation(true, true, "")).as_deref(),
-        Some("vibe update: 2 packages re-resolved, 1 bump"),
+        success_line(presentation(true, true, "")),
+        quiet("vibe update: 2 packages re-resolved, 1 bump"),
     );
 }
 
 /// Trace ON, whole graph, quiet: EXACTLY one line, and only because the
 /// suffix needs somewhere to live.
 #[test]
-fn a_traced_whole_update_gets_one_quiet_line_and_still_no_human_summary() {
+fn a_traced_whole_update_gets_one_quiet_line_and_a_plain_trailer() {
     assert_eq!(
-        success_line(presentation(false, true, TRACE_SUFFIX)).as_deref(),
-        Some("vibe update: 2 packages re-resolved, compile trace ok (7 event(s), 3 snapshot(s))"),
+        success_line(presentation(false, true, TRACE_SUFFIX)),
+        quiet("vibe update: 2 packages re-resolved, compile trace ok (7 event(s), 3 snapshot(s))"),
     );
     assert_eq!(
         success_line(presentation(false, false, TRACE_SUFFIX)),
-        None,
+        trailer("re-resolved 2 packages"),
         "human mode reads the adapter's table, not a second account of it",
     );
 }
@@ -76,8 +87,8 @@ fn a_traced_scoped_update_appends_the_suffix_to_its_one_line() {
     let mut inputs = presentation(true, true, TRACE_SUFFIX);
     inputs.hooks = ", 1 lifecycle hook flagged";
     assert_eq!(
-        success_line(inputs).as_deref(),
-        Some(
+        success_line(inputs),
+        quiet(
             "vibe update: 2 packages re-resolved, 1 bump, 1 lifecycle hook flagged, \
              compile trace ok (7 event(s), 3 snapshot(s))"
         ),
@@ -91,8 +102,8 @@ fn the_counts_agree_with_their_nouns() {
     inputs.count = 1;
     inputs.bumps = 1;
     assert_eq!(
-        success_line(inputs).as_deref(),
-        Some("\nUpdated 1 package (1 version bump)."),
+        success_line(inputs),
+        trailer("updated 1 package · 1 version bump"),
     );
 }
 

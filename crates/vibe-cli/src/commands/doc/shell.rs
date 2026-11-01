@@ -39,6 +39,7 @@ use vibe_doc_shell::{Pin, Provenance, Shell, digest};
 use super::{DocEnv, observe};
 use crate::cli::{DocShellArgs, DocShellCommand, DocShellInstallArgs, DocShellStatusArgs};
 use crate::output;
+use crate::output::language::{Block, Glyph, Kind, LabelValue, Line, Stream, before, hint, mark};
 use fetch::{Fetcher, HttpFetcher};
 
 /// Run `vibe doc shell …`.
@@ -280,13 +281,29 @@ fn consent(
         return Ok(());
     }
     ctx.suspend_progress(|| -> Result<()> {
-        println!("The reader's shell is not on this machine.");
-        println!("  from    {base}/v{version}/{}", fetch::MANIFEST_FILENAME);
-        println!("  pinned  {}", pin.sha256);
-        println!(
-            "This is the only moment `vibe doc` uses the network. Reading documentation never \
-         does, and nothing here is sent anywhere."
+        // The question is one block (PROP-067 `#question`): what would be
+        // fetched as its body, the remark under it, then the prompt.
+        let question = Block::new(Glyph::Question, "the reader's shell is not on this machine")
+            .with_body(vec![
+                Line::Label(
+                    "from".into(),
+                    vec![LabelValue::Text(format!(
+                        "{base}/v{version}/{}",
+                        fetch::MANIFEST_FILENAME
+                    ))],
+                ),
+                Line::Label("pinned".into(), vec![LabelValue::Text(pin.sha256.clone())]),
+            ])
+            .render();
+        eprintln!(
+            "{}{question}\n  {}",
+            before(Stream::Err, Kind::Block),
+            hint(
+                "this is the only moment vibe doc uses the network; reading documentation never \
+                 does, and nothing here is sent anywhere"
+            )
         );
+        mark(Stream::Err, Kind::Row("answers"));
         if !console::user_attended() {
             bail!(
                 "no terminal to ask at; re-run with `--assume-yes` to take the download as \
@@ -295,10 +312,7 @@ fn consent(
              fix: `vibe doc shell install --assume-yes`, or keep the bare shell)"
             );
         }
-        let approved = dialoguer::Confirm::with_theme(&crate::output::prompt_theme())
-            .with_prompt("Download the documentation shell?")
-            .default(false)
-            .interact()
+        let approved = crate::output::prompts::confirm("Download the documentation shell?", false)
             .context("reading the confirmation")?;
         if !approved {
             bail!(

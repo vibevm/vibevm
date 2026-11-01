@@ -52,7 +52,9 @@ pub(super) fn run_use_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmUseArgs)
     staged(ctx, "Activating selected version", |task| {
         task.detail(format!("selector: {}", record.selector()));
         activate_record(ctx, env, &store, &record, "self:use")
-    })
+    })?;
+    activation_trailer(ctx, &store, &record, "self:use");
+    Ok(())
 }
 
 pub(super) fn run_rollback_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
@@ -67,7 +69,9 @@ pub(super) fn run_rollback_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()
     staged(ctx, "Activating rollback version", |task| {
         task.detail(format!("selector: {}", record.selector()));
         activate_record(ctx, env, &store, &record, "self:rollback")
-    })
+    })?;
+    activation_trailer(ctx, &store, &record, "self:rollback");
+    Ok(())
 }
 
 pub(super) fn ensure_activatable(
@@ -115,22 +119,45 @@ pub(super) fn activate_record(
             "advisory_home_warning": activated.advisory_home_warning,
         }));
     }
-    ctx.summary(&format!("active → {}", record.selector()));
-    ctx.summary("  switched live; the next `vibe` in this shell uses it");
+    // What the switch means for this shell, as dim remarks; the trailer the
+    // caller writes once its own progress row has finished is the last block.
+    ctx.hint("switched live; the next vibe in this shell uses it");
     if path_ready {
-        ctx.summary("  PATH is ready in this process");
+        ctx.hint("PATH is ready in this process");
     } else {
-        ctx.summary(&format!(
-            "  external tools: {}",
-            persister.activation_hint()
-        ));
+        ctx.hint(&format!("external tools: {}", persister.activation_hint()));
     }
     if let Some(warning) = activated.advisory_home_warning {
-        ctx.summary(&format!(
-            "  warning: live pointer switched; advisory VIBEVM_HOME update failed: {warning}"
+        ctx.diagnostic(&format!(
+            "live pointer switched; advisory VIBEVM_HOME update failed: {warning}"
         ));
     }
     Ok(())
+}
+
+/// The trailer of a command that left `record` active (PROP-067
+/// `#trailer`): the verb that ran, the selector, the time, and the home in
+/// full. Written after the command's last progress row, so it is the last
+/// block on the screen.
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-067#trailer")]
+pub(super) fn activation_trailer(
+    ctx: &output::Context,
+    store: &VersionStore,
+    record: &InstallRecord,
+    command: &str,
+) {
+    let verb = match command {
+        "self:install" | "self:update" => "installed",
+        "self:reinstall" => "reinstalled",
+        "self:rollback" => "rolled back to",
+        "self:import" => "imported",
+        _ => "activated",
+    };
+    let home = store.instance_dir(&record.version_id(), record.instance);
+    ctx.trailer_at(
+        &format!("{verb} {} · active", record.selector()),
+        &home.display().to_string(),
+    );
 }
 
 pub(super) fn run_env_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmEnvArgs) -> Result<()> {

@@ -506,7 +506,7 @@ fn cache_clean_package_versions_names_and_absent() {
     );
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(
-        stdout.contains("Removed 1 entry"),
+        stdout.contains("✻ removed 1 entry"),
         "the version branch must report its count; got:\n{stdout}"
     );
     assert!(!store.join("org.example/wal/v0.1.0").exists());
@@ -593,7 +593,7 @@ fn cache_clean_older_than_partitions_by_age() {
     );
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(
-        stdout.contains("Removed 0"),
+        stdout.contains("✻ removed 0"),
         "a far cutoff must remove nothing; got:\n{stdout}"
     );
     assert!(
@@ -613,7 +613,7 @@ fn cache_clean_older_than_partitions_by_age() {
     assert!(out.status.success());
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(
-        stdout.contains("Removed 4"),
+        stdout.contains("✻ removed 4"),
         "a zero cutoff must remove every seeded entry; got:\n{stdout}"
     );
     assert!(
@@ -667,7 +667,7 @@ fn cache_clean_all_is_confirm_gated_and_wipes() {
     );
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(
-        stdout.contains("Removed 4"),
+        stdout.contains("✻ removed 4"),
         "--all must report the total count; got:\n{stdout}"
     );
     assert!(store.is_dir(), "the store root itself survives");

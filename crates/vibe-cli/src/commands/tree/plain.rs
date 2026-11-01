@@ -1,4 +1,4 @@
-//! The static ASCII tree renderer — the non-tty / `--plain` fallback
+//! The static tree renderer — the non-tty / `--plain` fallback
 //! (PROP-036 §2.11 fallback).
 //!
 //! Phase 1 ships this deterministic renderer; the interactive TUI is Phase 2
@@ -12,6 +12,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui");
 use std::collections::{BTreeMap, BTreeSet};
 
 use super::model::{LoadType, Package, PackageTree};
+use crate::output::language::TreeGlyphs;
 
 /// One rendered row: the drawn name cell plus the value + checkbox columns.
 struct Row {
@@ -22,7 +23,9 @@ struct Row {
     static_md: bool,
 }
 
-/// Render the whole tree to a plain, ASCII-safe string (PROP-036 §2.11).
+/// Render the whole tree to a plain string (PROP-036 §2.11); its branches
+/// are the display language's, in ASCII where the terminal has no
+/// vocabulary (PROP-067 `#coverage`).
 pub fn render(tree: &PackageTree) -> String {
     let by_id: BTreeMap<&str, &Package> =
         tree.packages.iter().map(|p| (p.id.as_str(), p)).collect();
@@ -82,12 +85,13 @@ fn walk(
 ) {
     // A top-level root carries no branch glyph; every child gets a branch
     // connector drawn on top of the accumulated vertical-bar prefix.
+    let glyphs = TreeGlyphs::detect();
     let connector = if is_root {
         ""
     } else if is_last {
-        "\u{2514}\u{2500} "
+        glyphs.last
     } else {
-        "\u{251c}\u{2500} "
+        glyphs.branch
     };
 
     let Some(pkg) = by_id.get(id) else {
@@ -129,7 +133,7 @@ fn walk(
     } else if is_last {
         format!("{prefix}   ")
     } else {
-        format!("{prefix}\u{2502}  ")
+        format!("{prefix}{}", glyphs.through)
     };
     let deps = &pkg.dependencies;
     for (i, dep) in deps.iter().enumerate() {

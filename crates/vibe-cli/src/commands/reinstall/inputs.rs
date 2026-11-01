@@ -14,7 +14,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use dialoguer::Confirm;
 use vibe_core::manifest::Lockfile;
 use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
 use vibe_lifecycle::process::StreamMode;
@@ -123,11 +122,7 @@ pub(super) fn confirm(ctx: &output::Context, args: &ReinstallArgs, prompt: &str)
              non-interactively"
         );
     }
-    Confirm::with_theme(&crate::output::prompt_theme())
-        .with_prompt(prompt)
-        .default(false)
-        .interact()
-        .context("reading user confirmation")
+    crate::output::prompts::confirm(prompt, false).context("reading user confirmation")
 }
 
 /// Load the workspace lockfile, or an empty one when none exists yet.

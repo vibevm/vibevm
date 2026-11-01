@@ -19,11 +19,11 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#consent");
 
 use anyhow::{Context, Result};
-use dialoguer::Confirm;
 use vibe_core::remap::{OfferState, RemapPackage, RemapRow};
 use vibe_wire::generated::remap_offer as wire;
 
 use crate::output;
+use crate::output::language::{Block, Glyph, Kind, Stream, before, mark};
 
 use super::diagnostics;
 use super::home::RemapHome;
@@ -172,6 +172,12 @@ fn attended(ctx: &output::Context) -> bool {
 }
 
 /// Show one offer in the layout of `PROP-066#display` and ask.
+///
+/// The offer is a question block of PROP-067 `#question`: `? remap offer`
+/// in the gutter, the offered package with its rows as the body, the
+/// prompt under it, and the answer collapsing to `remap offer  accepted
+/// <key>` — what was decided, not a bare `yes`.
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#consent")]
 fn ask(
     ctx: &output::Context,
     offer: &RemapPackage,
@@ -179,22 +185,28 @@ fn ask(
     offline: bool,
 ) -> Result<bool> {
     let document = offer_document(std::slice::from_ref(&offer), home, offline);
+    let rows = offer.section.rows.len();
+    let plural = if rows == 1 { "" } else { "s" };
+    let head = Block::new(
+        Glyph::Question,
+        format!("remap offer  {} offers {rows} remap row{plural}", offer.key),
+    )
+    .render();
     ctx.suspend_progress(|| {
-        eprint!("{}", render::offer(&document));
-        crate::output::prompts::space_before_question();
-        Confirm::with_theme(&crate::output::prompt_theme())
-            .with_prompt(format!(
-                "apply the {} remap row{}?",
-                offer.section.rows.len(),
-                if offer.section.rows.len() == 1 {
-                    ""
-                } else {
-                    "s"
-                }
-            ))
-            .default(false)
-            .interact()
-            .context("reading the remap consent answer")
+        let gap = before(Stream::Err, Kind::Block);
+        eprintln!("{gap}{head}\n{}", render::offer(&document).trim_end());
+        // The prompt is the last line of this block, not a block of its own.
+        mark(Stream::Err, Kind::Row("answers"));
+        crate::output::prompts::confirm_then(
+            &format!("apply the {rows} remap row{plural}?"),
+            false,
+            "remap offer",
+            |accepted| {
+                let verb = if accepted { "accepted" } else { "rejected" };
+                format!("{verb} {}", offer.key)
+            },
+        )
+        .context("reading the remap consent answer")
     })
 }
 

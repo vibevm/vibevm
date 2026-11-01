@@ -14,7 +14,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-053#
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use dialoguer::Confirm;
 use vibe_workspace::Workspace;
 
 use crate::cli::CleanArgs;
@@ -106,15 +105,15 @@ pub(crate) fn confirm_wipe(
         );
     } else {
         ctx.suspend_progress(|| {
-            Confirm::with_theme(&crate::output::prompt_theme())
-                .with_prompt(format!(
+            crate::output::prompts::confirm(
+                &format!(
                     "Remove {} dependency slot(s) and {} generated boot artifact(s)?",
                     plan.slot_count,
                     plan.generated.len(),
-                ))
-                .default(false)
-                .interact()
-                .context("reading user confirmation")
+                ),
+                false,
+            )
+            .context("reading user confirmation")
         })?
     };
     if !approved {
@@ -129,7 +128,7 @@ pub(crate) fn apply_wipe(ctx: &output::Context, plan: CleanPlan) -> Result<PathB
     wipe.set_progress(0, Some(target_count as u64), "targets");
     if plan.slot_count == 0 && plan.generated.is_empty() {
         wipe.skip("nothing to clean");
-        ctx.heading("nothing to clean — no dependency slots, no generated boot artifacts");
+        ctx.summary("nothing to clean — no dependency slots, no generated boot artifacts");
     } else {
         let mut completed = 0u64;
         if plan.deps_root.exists() {
@@ -144,10 +143,10 @@ pub(crate) fn apply_wipe(ctx: &output::Context, plan: CleanPlan) -> Result<PathB
             dependencies.finish();
             completed += 1;
             wipe.set_progress(completed, Some(target_count as u64), "targets");
-            ctx.heading(&format!(
-                "cleaned {} dependency slot(s) — `{}` removed",
-                plan.slot_count,
+            ctx.removed(&format!(
+                "{} — cleaned {} dependency slot(s)",
                 vibe_core::machine_json_path(&vibe_core::layout::current_vibedeps_root()),
+                plan.slot_count,
             ));
         }
         for artifact in &plan.generated {
@@ -166,7 +165,7 @@ pub(crate) fn apply_wipe(ctx: &output::Context, plan: CleanPlan) -> Result<PathB
             removal.finish();
             completed += 1;
             wipe.set_progress(completed, Some(target_count as u64), "targets");
-            ctx.heading(&format!("cleaned generated `{}`", name));
+            ctx.removed(&name);
         }
         wipe.finish();
     }

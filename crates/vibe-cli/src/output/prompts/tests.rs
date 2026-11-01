@@ -173,8 +173,9 @@ fn an_answer_line_is_the_prompt_then_the_value() {
 ///
 /// A constructor without `.with_theme(` as its very next call is the one
 /// way `dialoguer`'s bare `SimpleTheme` comes back; a `console::style`, a
-/// hand-written `✓` or a raw escape is the one way a command grows a look
-/// of its own again. The full-screen interfaces (`tree`, `prefs`) are their
+/// hand-written `✓`, a box glyph hidden behind a `\u{25…}` escape, a raw
+/// escape or a `vibe: warning:` prefix is the one way a command grows a
+/// look of its own again. The full-screen interfaces (`tree`, `prefs`) are their
 /// own surface, outside a line-oriented terminal's blocks, and test modules
 /// name the glyphs they assert.
 #[test]
@@ -193,7 +194,7 @@ fn nothing_is_styled_outside_the_language_module() {
         // protocol message to the host, not a style.
         src.join("commands").join("tree").join("host.rs"),
     ];
-    const FORBIDDEN: [&str; 16] = [
+    const FORBIDDEN: [&str; 18] = [
         "console::style",
         "console::Style",
         "Style::new()",
@@ -210,6 +211,12 @@ fn nothing_is_styled_outside_the_language_module() {
         "└",
         "│",
         "⠋",
+        // A box-drawing glyph spelled as an escape is the same glyph hidden
+        // from the needles above.
+        "\\u{25",
+        // The old hand-made prefix of a warning, an error or a note; the
+        // language writes `!`, the refusal block and the dim hint instead.
+        "\"vibe: ",
     ];
     let mut prompts = Vec::new();
     let mut styled = Vec::new();

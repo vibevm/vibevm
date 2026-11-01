@@ -18,7 +18,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 use std::time::{Duration, SystemTime};
 
 use anyhow::{Context, Result, anyhow, bail};
-use dialoguer::Confirm;
 use vibe_core::Group;
 
 use crate::cli::CacheCleanArgs;
@@ -63,14 +62,14 @@ fn clean_all(ctx: &output::Context, assume_yes: bool, root: &std::path::Path) ->
         );
     } else {
         ctx.suspend_progress(|| {
-            Confirm::with_theme(&crate::output::prompt_theme())
-                .with_prompt(format!(
+            crate::output::prompts::confirm(
+                &format!(
                     "Remove EVERY package entry under {}? Re-fetching them needs the network.",
                     root.display()
-                ))
-                .default(false)
-                .interact()
-                .context("reading user confirmation")
+                ),
+                false,
+            )
+            .context("reading user confirmation")
         })?
     };
     if !approved {
@@ -230,8 +229,8 @@ fn emit(
     for label in labels {
         ctx.removed(label);
     }
-    ctx.summary(&format!(
-        "\nRemoved {count} entr{} from {}.",
+    ctx.trailer(&format!(
+        "removed {count} entr{} from {}",
         if count == 1 { "y" } else { "ies" },
         root.display()
     ));

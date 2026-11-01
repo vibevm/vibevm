@@ -37,7 +37,6 @@ use std::collections::HashMap;
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
-use dialoguer::Confirm;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef, VersionSpec};
@@ -434,13 +433,13 @@ fn confirm(ctx: &output::Context, args: &crate::cli::UpdateArgs, total: usize) -
         );
     }
     ctx.suspend_progress(|| {
-        Confirm::with_theme(&crate::output::prompt_theme())
-            .with_prompt(format!(
+        crate::output::prompts::confirm(
+            &format!(
                 "Re-materialise {total} package{} into vibedeps/ and regenerate boot?",
                 if total == 1 { "" } else { "s" },
-            ))
-            .default(false)
-            .interact()
+            ),
+            false,
+        )
     })
     .context("reading user confirmation")
 }

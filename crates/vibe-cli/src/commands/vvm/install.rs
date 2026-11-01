@@ -179,7 +179,7 @@ pub(crate) fn perform_install(
         && placer::matches_on_disk(store, &manifest, prev_man, prev_dir)
         && same_provenance(prev_rec, req, &out.toolchain)
     {
-        ctx.summary(&format!(
+        ctx.hint(&format!(
             "{id}#{} already up to date — reused",
             prev_rec.instance,
         ));
@@ -217,8 +217,9 @@ pub(crate) fn perform_install(
         }
 
         let inst_dir = store.instance_dir(id, instance);
+        // The trailer names the instance once activation has run; the row
+        // here is the directory the build placed.
         ctx.created(&inst_dir.display().to_string());
-        ctx.summary(&format!("installed {id}#{instance}"));
         placement.finish();
         Ok(InstallOutcome {
             record,

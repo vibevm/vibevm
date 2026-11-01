@@ -3,7 +3,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-060#INSTALL-DESTINATION");
 
 use anyhow::{Context, Result, bail};
-use dialoguer::Confirm;
 use std::path::{Path, PathBuf};
 use vibe_orchestrator::ports::ConfirmGate;
 
@@ -100,10 +99,7 @@ impl ConfirmGate for CliConfirmGate<'_> {
         let approved = self
             .ctx
             .suspend_progress(|| {
-                Confirm::with_theme(&crate::output::prompt_theme())
-                    .with_prompt(self.project_prompt(packages))
-                    .default(false)
-                    .interact()
+                crate::output::prompts::confirm(&self.project_prompt(packages), false)
             })
             .context("reading user confirmation")?;
         if approved {

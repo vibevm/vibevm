@@ -148,12 +148,12 @@ fn run_remove_mirror(ctx: &output::Context, args: RegistryRemoveMirrorArgs) -> R
         // Shouldn't happen if `set-mirror` enforces uniqueness on
         // (of, url), but if a hand-edited manifest carries duplicates
         // we drop them all and tell the user.
-        eprintln!(
-            "warning: removed {} `[[mirror]]` blocks matching of=`{}` url=`{}` (duplicates were present)",
+        ctx.diagnostic(&format!(
+            "removed {} `[[mirror]]` blocks matching of=`{}` url=`{}` (duplicates were present)",
             before - after,
             args.of,
             args.url
-        );
+        ));
     }
 
     manifest

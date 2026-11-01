@@ -1,0 +1,6 @@
+✗ consent_required  1 remap package offer(s) need(s) an answer, and this run has nobody to ask — org.corp/intranet
+  fix   vibe remap accept org.corp/intranet, or vibe remap reject org.corp/intranet; vibe remap list shows every row involved
+        vibe remap accept org.corp/intranet
+        vibe remap reject org.corp/intranet
+        vibe remap list
+  see   spec://org.vibevm.core/vibevm/common/PROP-066#consent

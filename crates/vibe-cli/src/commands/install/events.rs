@@ -61,8 +61,8 @@ impl PlanObserver for CtxObserver<'_> {
                 extras,
                 if extras == 1 { "" } else { "s" },
             )),
-            PlanEvent::FeaturesUnmatched { features } => ctx.step(&format!(
-                "warning: requested feature{} {} not declared on any root package — silently ignored",
+            PlanEvent::FeaturesUnmatched { features } => ctx.diagnostic(&format!(
+                "requested feature{} {} not declared on any root package — silently ignored",
                 if features.len() == 1 { "" } else { "s" },
                 features
                     .iter()

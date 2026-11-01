@@ -13,6 +13,7 @@ use vibe_workspace::hooks::HookReport;
 use vibe_workspace::install::ResolvedDep;
 
 use crate::output;
+use crate::output::language::{Cell, List, Role, Row};
 
 use super::WorldCallbackSummary;
 
@@ -154,17 +155,21 @@ pub(super) fn present_resolution(ctx: &output::Context, resolution: &[ResolvedDe
     if ctx.is_quiet() {
         return;
     }
-    ctx.heading(&format!(
-        "\nMaterialising {} package{} into vibedeps/:",
+    ctx.rule(&format!(
+        "materialising {} package{} into vibedeps/",
         resolution.len(),
         if resolution.len() == 1 { "" } else { "s" },
     ));
-    ctx.suspend_progress(|| {
-        for d in resolution {
-            println!("  {}/{}@{}", d.group, d.name, d.version);
-        }
-        println!();
-    });
+    let rows = resolution
+        .iter()
+        .map(|d| {
+            Row::new(vec![Cell::new(
+                format!("{}/{}@{}", d.group, d.name, d.version),
+                Role::Accent,
+            )])
+        })
+        .collect();
+    ctx.block(&List::new(rows).render());
 }
 
 pub(super) fn handoff_member(delegation: &vibe_lifecycle::Delegation) -> InstallDelegation {
@@ -222,16 +227,19 @@ pub(super) fn render_human_progress(
     trace_suffix: &str,
 ) {
     if progress.fresh {
-        ctx.summary(&format!(
-            "vibe install: vibe.lock unchanged — nothing to re-resolve ({} node{} up to date){}{trace_suffix}",
-            progress.nodes_regenerated.len(),
-            if progress.nodes_regenerated.len() == 1 {
-                ""
-            } else {
-                "s"
-            },
-            ritual_suffix(world_summary),
-        ));
+        let nodes = progress.nodes_regenerated.len();
+        let nodes = format!("{nodes} node{}", if nodes == 1 { "" } else { "s" });
+        if ctx.is_quiet() {
+            ctx.summary(&format!(
+                "vibe install: vibe.lock unchanged — nothing to re-resolve ({nodes} up to date){}{trace_suffix}",
+                ritual_suffix(world_summary),
+            ));
+        } else {
+            ctx.trailer(&format!(
+                "vibe.lock unchanged · nothing to re-resolve · {nodes} up to date{}",
+                ritual_meta(world_summary),
+            ));
+        }
         return;
     }
     let count = progress.materialised.len();
@@ -244,21 +252,33 @@ pub(super) fn render_human_progress(
         ));
         return;
     }
-    ctx.summary(&format!(
-        "\nMaterialised {count} package{plural} into vibedeps/; \
-         regenerated boot artifacts for {} node(s).",
+    hooks.render_human(ctx);
+    // The trailer is the last block (PROP-067 `#trailer`): what the run did,
+    // then the slots it left alone, then how long it took.
+    let mut what = format!(
+        "materialised {count} package{plural} into vibedeps/ · regenerated boot for {} node(s)",
         progress.nodes_regenerated.len(),
-    ));
+    );
     if !progress.skipped.is_empty() {
-        ctx.step(&format!(
-            "{} slot(s) already present — re-copy skipped (PROP-011 §2.3)",
-            progress.skipped.len(),
+        what.push_str(&format!(
+            " · {} slot(s) already present, re-copy skipped",
+            progress.skipped.len()
         ));
     }
     if !progress.pruned.is_empty() {
-        ctx.step(&format!("{} stale slot(s) pruned", progress.pruned.len()));
+        what.push_str(&format!(
+            " · {} stale slot(s) pruned",
+            progress.pruned.len()
+        ));
     }
-    hooks.render_human(ctx);
+    what.push_str(&ritual_meta(world_summary));
+    ctx.trailer(&what);
+}
+
+/// The lifecycle counts as trailer metadata, nothing when no contribution
+/// was selected.
+fn ritual_meta(summary: WorldCallbackSummary) -> String {
+    ritual_suffix(summary).replacen(", ", " · ", 1)
 }
 
 fn ritual_suffix(summary: WorldCallbackSummary) -> String {
