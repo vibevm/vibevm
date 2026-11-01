@@ -36,7 +36,8 @@
       "elapsed_ms",
       "average_bps",
       "series",
-      "bucket_seconds"
+      "bucket_seconds",
+      "written"
     ]
   },
   "properties": {
@@ -181,6 +182,13 @@
       "ref": "count",
       "metadata": {
         "x-default": null
+      }
+    },
+    "written": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null,
+        "description": "A git transfer's size on disk after the operation (the clone's .git/objects): its received bytes are reported, not counted (PROP-068#journal)."
       }
     }
   },

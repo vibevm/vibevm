@@ -18,6 +18,7 @@ use specmark::spec;
 use thiserror::Error;
 
 pub mod shell;
+pub mod transfers;
 
 pub use shell::ShellGit;
 
@@ -298,4 +299,10 @@ pub trait GitBackend: Send + Sync {
     fn anonymized_for_public(&self) -> Option<std::sync::Arc<dyn GitBackend>> {
         None
     }
+
+    /// Hand the backend the invocation's journal, limit and verb, so a
+    /// clone or fetch no observation surrounds is still journaled
+    /// (`PROP-068#git`). The first call wins, as for the index client. The
+    /// default ignores it: a test fake moves no bytes to report.
+    fn attach_transfers(&self, _transfers: &vibe_core::progress::transfer::Transfers) {}
 }

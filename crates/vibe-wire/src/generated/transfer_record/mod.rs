@@ -91,6 +91,12 @@ pub struct TransferRecord {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bucket_seconds: Option<Count>,
+
+    /// A git transfer's size on disk after the operation (the clone's
+    /// .git/objects): its received bytes are reported, not counted (PROP-
+    /// 068#journal).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub written: Option<Count>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

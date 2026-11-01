@@ -157,6 +157,11 @@ env_roots = [
     "crates/vibe-publish/src/post_hook.rs",
     "crates/vibe-publish/src/token.rs",
     "crates/vibe-registry/src/git_backend/shell.rs",
+    # The credential-silencing posture (`VIBEVM_GIT_SILENCE_HELPERS`,
+    # `VIBE_UNATTENDED`), moved out of `shell.rs` with `apply_common_env`
+    # when the git transfers pushed that file past its length budget
+    # (2026-11-01). Same functions, same variables, same reason.
+    "crates/vibe-registry/src/git_backend/shell/env.rs",
     "crates/vibe-registry/src/git_package_registry/mod.rs",
     # Index-URL discovery — `VIBEVM_INDEX_URL_<REGISTRY>`. Was
     # `index_client.rs`, then `index_client/mod.rs` (2026-08-06, the auth

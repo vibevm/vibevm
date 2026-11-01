@@ -27,263 +27,26 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#transfer");
 mod clock;
 mod journal;
 mod limit;
+mod record;
 mod sampler;
 mod watch;
 
 pub use journal::{Outcome, TransferEntry, TransferJournal};
 pub use limit::TransferLimit;
+pub use record::{
+    Destination, Precision, Purpose, TransferKind, TransferRecord, safe_remote, safe_url,
+};
 pub use sampler::{Bucket, Sample};
 pub use watch::{TransferEvent, TransferEventKind, TransferWatch, watch};
 
 use std::io::{self, Read};
 use std::sync::Arc;
-use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 
-use serde::{Deserialize, Serialize};
 use specmark::spec;
 
-use super::{ProgressEventKind, ProgressTask, TransferEnd};
+use super::{Progress, ProgressEventKind, ProgressTask, TransferEnd};
 use sampler::Sampler;
-
-/// The running count behind every transfer id of this process: the one
-/// process-wide state the wrapper keeps, since an id must be unique on the
-/// machine and the pid alone is not.
-static NEXT: AtomicU64 = AtomicU64::new(1);
-
-/// How the bytes are known: read and counted by vibe, or reported by git.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
-pub enum TransferKind {
-    Http,
-    Git,
-}
-
-/// What the bytes are for — the closed vocabulary of `PROP-068#purpose`.
-///
-/// ```
-/// use vibe_core::progress::transfer::Purpose;
-///
-/// assert_eq!(Purpose::parse("native-input"), Some(Purpose::NativeInput));
-/// assert_eq!(Purpose::ReleaseBundle.as_str(), "release-bundle");
-/// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum Purpose {
-    PackageSource,
-    Archive,
-    NativeInput,
-    PackageClone,
-    ReleaseBundle,
-    IndexFile,
-    Other,
-}
-
-impl Purpose {
-    const ALL: [Self; 7] = [
-        Self::PackageSource,
-        Self::Archive,
-        Self::NativeInput,
-        Self::PackageClone,
-        Self::ReleaseBundle,
-        Self::IndexFile,
-        Self::Other,
-    ];
-
-    pub fn as_str(self) -> &'static str {
-        match self {
-            Self::PackageSource => "package-source",
-            Self::Archive => "archive",
-            Self::NativeInput => "native-input",
-            Self::PackageClone => "package-clone",
-            Self::ReleaseBundle => "release-bundle",
-            Self::IndexFile => "index-file",
-            Self::Other => "other",
-        }
-    }
-
-    pub fn parse(text: &str) -> Option<Self> {
-        Self::ALL
-            .into_iter()
-            .find(|purpose| purpose.as_str() == text)
-    }
-}
-
-/// Where the bytes land.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
-pub enum Destination {
-    Store,
-    Cache,
-    Work,
-    Home,
-}
-
-/// `counted` when vibe counted the bytes it wrote, `reported` when it
-/// relayed git's figure.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
-pub enum Precision {
-    Counted,
-    Reported,
-}
-
-/// The identity and context of one transfer (`PROP-068#transfer`), plus
-/// the command's resume line, which its history entry names only when it
-/// was interrupted (`#pause`).
-///
-/// ```
-/// use vibe_core::progress::transfer::{Destination, Purpose, TransferRecord};
-///
-/// let record = TransferRecord::http(Purpose::Archive, "https://example.test/a.zip", Destination::Cache)
-///     .package("org.example/a@1.0.0")
-///     .step("unpack")
-///     .batch("20261101T100000.000Z");
-/// assert!(record.id.starts_with(&format!("{}:", std::process::id())));
-/// assert_eq!(record.step.as_deref(), Some("unpack"));
-/// ```
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-068#transfer")]
-pub struct TransferRecord {
-    pub id: String,
-    pub batch: String,
-    pub kind: TransferKind,
-    pub url: String,
-    pub purpose: Purpose,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub package: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub step: Option<String>,
-    pub destination: Destination,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub total: Option<u64>,
-    pub started: String,
-    pub pid: u32,
-    pub command: String,
-    pub precision: Precision,
-    pub limited: bool,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub limit_bps: Option<u64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub remapped_from: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub resume: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub continues: Option<String>,
-}
-
-impl TransferRecord {
-    /// A counted HTTP transfer from `url`, whose credentials, query and
-    /// fragment are dropped here, before anything records it.
-    pub fn http(purpose: Purpose, url: &str, destination: Destination) -> Self {
-        let pid = std::process::id();
-        Self {
-            id: format!("{pid}:{}", NEXT.fetch_add(1, Ordering::Relaxed)),
-            batch: pid.to_string(),
-            kind: TransferKind::Http,
-            url: safe_url(url),
-            purpose,
-            package: None,
-            step: None,
-            destination,
-            total: None,
-            started: clock::format_millis(clock::unix_millis()),
-            pid,
-            command: String::new(),
-            precision: Precision::Counted,
-            limited: false,
-            limit_bps: None,
-            remapped_from: None,
-            resume: None,
-            continues: None,
-        }
-    }
-
-    pub fn package(self, key: impl Into<String>) -> Self {
-        Self {
-            package: Some(key.into()),
-            ..self
-        }
-    }
-
-    pub fn step(self, id: impl Into<String>) -> Self {
-        Self {
-            step: Some(id.into()),
-            ..self
-        }
-    }
-
-    /// The run the command belongs to; the pid when there is none.
-    pub fn batch(self, batch: impl Into<String>) -> Self {
-        Self {
-            batch: batch.into(),
-            ..self
-        }
-    }
-
-    pub fn total(self, total: Option<u64>) -> Self {
-        Self { total, ..self }
-    }
-
-    /// The URL the manifest named, when a remap row fetched another.
-    pub fn remapped_from(self, declared: &str) -> Self {
-        Self {
-            remapped_from: Some(safe_url(declared)),
-            ..self
-        }
-    }
-
-    /// The command line that resumes the command if it is interrupted.
-    pub fn resume(self, line: impl Into<String>) -> Self {
-        Self {
-            resume: Some(line.into()),
-            ..self
-        }
-    }
-
-    /// `<pid>-<n>`: the id spelled for a file name.
-    pub(crate) fn file_stem(&self) -> String {
-        self.id.replace(':', "-")
-    }
-
-    /// The label of the transfer's task: the last part of the URL.
-    fn label(&self) -> String {
-        let name = self
-            .url
-            .trim_end_matches('/')
-            .rsplit('/')
-            .next()
-            .filter(|name| !name.is_empty())
-            .unwrap_or("data");
-        format!("Downloading {name}")
-    }
-}
-
-/// `user`, `password`, query and fragment removed — never a token in a
-/// record, a journal or a progress line (`PROP-068#redaction`).
-///
-/// ```
-/// use vibe_core::progress::transfer::safe_url;
-///
-/// assert_eq!(
-///     safe_url("https://name:secret@example.test/file?token=secret#fragment"),
-///     "https://example.test/file"
-/// );
-/// assert_eq!(safe_url("not a url"), "remote endpoint");
-/// ```
-pub fn safe_url(raw: &str) -> String {
-    let Ok(mut url) = url::Url::parse(raw) else {
-        return "remote endpoint".to_owned();
-    };
-    let _ = url.set_username("");
-    let _ = url.set_password(None);
-    url.set_query(None);
-    url.set_fragment(None);
-    url.to_string()
-}
 
 /// What the composition root gives every transfer of the invocation: the
 /// journal, the shared rate limit and the command's verb. It travels with
@@ -336,9 +99,31 @@ impl Transfers {
     }
 
     /// Begin `record` with this invocation's journal, limit and verb.
-    pub fn begin(&self, mut record: TransferRecord, task: Option<&ProgressTask>) -> Transfer {
+    pub fn begin(&self, record: TransferRecord, task: Option<&ProgressTask>) -> Transfer {
+        self.begin_beneath(
+            record,
+            task.map(ProgressTask::progress).as_ref(),
+            Instant::now(),
+        )
+    }
+
+    /// Begin `record`, dated from `began`, as a child of whatever task
+    /// `progress` was handed out by — the form for a reader that holds the
+    /// observation's handle rather than its task.
+    pub fn begin_beneath(
+        &self,
+        mut record: TransferRecord,
+        progress: Option<&Progress>,
+        began: Instant,
+    ) -> Transfer {
         record.command = self.0.command.clone();
-        Transfer::open(record, task, self.0.journal.clone(), self.0.limit.clone())
+        Transfer::open(
+            record,
+            progress,
+            self.0.journal.clone(),
+            self.0.limit.clone(),
+            began,
+        )
     }
 }
 
@@ -349,6 +134,41 @@ pub fn begin(record: TransferRecord, task: Option<&ProgressTask>) -> Transfer {
     match task.and_then(ProgressTask::transfers) {
         Some(transfers) => transfers.clone().begin(record, task),
         None => Transfer::begin(record, task, None),
+    }
+}
+
+/// Begin `record` beneath `progress`, with the invocation's [`Transfers`]
+/// that handle carries, or `fallback` when it carries none — a reader the
+/// composition root reached by another road than the observation (the git
+/// backend, shared by every registry of a resolver). The transfer is dated
+/// from `began`, when the bytes were first asked for: git's transfer opens
+/// only once git names a size, and dating it from then would draw the bytes
+/// before it as one burst.
+///
+/// ```
+/// use vibe_core::progress::Progress;
+/// use vibe_core::progress::transfer::{self, Destination, Purpose, TransferJournal, TransferRecord, Transfers};
+///
+/// let home = tempfile::tempdir().unwrap();
+/// let fallback = Transfers::new(Some(TransferJournal::new(home.path())), None, "cache add");
+/// let record = TransferRecord::git(Purpose::PackageClone, "file:///srv/a.git", Destination::Store);
+/// let began = std::time::Instant::now();
+/// let mut transfer = transfer::begin_beneath(record, Some(&Progress::default()), Some(&fallback), began);
+/// transfer.reported(2048, Some(2048));
+/// transfer.written(4096);
+/// transfer.finish();
+/// let entry = &fallback.journal().unwrap().history()[0];
+/// assert_eq!((entry.bytes, entry.written, entry.record.command.as_str()), (2048, Some(4096), "cache add"));
+/// ```
+pub fn begin_beneath(
+    record: TransferRecord,
+    progress: Option<&Progress>,
+    fallback: Option<&Transfers>,
+    began: Instant,
+) -> Transfer {
+    match progress.and_then(Progress::transfers).or(fallback) {
+        Some(transfers) => transfers.begin_beneath(record, progress, began),
+        None => Transfer::open(record, progress, None, None, began),
     }
 }
 
@@ -364,6 +184,7 @@ pub struct Transfer {
     sampler: Sampler,
     started: Instant,
     bytes: u64,
+    written: Option<u64>,
     ended: bool,
 }
 
@@ -375,17 +196,27 @@ impl Transfer {
         task: Option<&ProgressTask>,
         journal: Option<&TransferJournal>,
     ) -> Self {
-        Self::open(record, task, journal.cloned(), None)
+        Self::open(
+            record,
+            task.map(ProgressTask::progress).as_ref(),
+            journal.cloned(),
+            None,
+            Instant::now(),
+        )
     }
 
     fn open(
         mut record: TransferRecord,
-        task: Option<&ProgressTask>,
+        parent: Option<&Progress>,
         journal: Option<TransferJournal>,
         limit: Option<TransferLimit>,
+        began: Instant,
     ) -> Self {
-        let now = clock::unix_millis();
+        let now = clock::unix_millis().saturating_sub(began.elapsed().as_millis() as u64);
         record.started = clock::format_millis(now);
+        // Git has no portable throttle a child honours (`#limit`): its
+        // transfers are never limited, whatever the machine setting says.
+        let limit = limit.filter(|_| record.kind == TransferKind::Http);
         if let Some(limit) = &limit {
             record.limited = true;
             record.limit_bps = Some(limit.bytes_per_second());
@@ -393,19 +224,16 @@ impl Transfer {
         if let Some(journal) = &journal {
             record.continues = journal.predecessor(&record);
         }
-        let task = task.map(|parent| {
-            parent
-                .progress()
-                .task_transferring(record.label(), record.clone())
-        });
+        let task = parent.map(|parent| parent.task_transferring(record.label(), record.clone()));
         let mut transfer = Self {
             sampler: Sampler::new(now),
             record,
             task,
             journal,
             limit,
-            started: Instant::now(),
+            started: began,
             bytes: 0,
+            written: None,
             ended: false,
         };
         transfer.sample(Duration::ZERO);
@@ -453,6 +281,36 @@ impl Transfer {
         }
     }
 
+    /// Relay a cumulative figure someone else counted — git's progress
+    /// line (`#git`) — and, once it knows it, the total. Every report is a
+    /// sample: git already reports at its own cadence, and smoothing it
+    /// would show a figure git never said.
+    pub fn reported(&mut self, bytes: u64, total: Option<u64>) {
+        let grew = bytes > self.bytes;
+        let learned = total.is_some() && total != self.record.total;
+        if !grew && !learned {
+            return;
+        }
+        if learned {
+            self.record.total = total;
+        }
+        let since = self.started.elapsed();
+        if grew {
+            self.sampler.count(since, bytes - self.bytes);
+            self.bytes = bytes;
+        }
+        self.sample(since);
+        if let Some(journal) = &self.journal {
+            journal.sampled(&self.entry());
+        }
+    }
+
+    /// The size on disk the transfer left behind, for the journal's entry
+    /// of a transfer whose bytes were reported rather than counted.
+    pub fn written(&mut self, bytes: u64) {
+        self.written = Some(bytes);
+    }
+
     fn sample(&mut self, since: Duration) {
         let sample = self.sampler.take(since, self.bytes);
         if let Some(state) = self.task.as_ref().and_then(|task| task.state.as_ref())
@@ -473,6 +331,7 @@ impl Transfer {
             bytes: self.bytes,
             peak_bps: self.sampler.peak(),
             samples: self.sampler.samples(),
+            written: self.written,
             ..TransferEntry::active(self.record.clone())
         }
     }

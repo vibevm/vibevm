@@ -6,6 +6,7 @@
 //! to its commit before checkout. This module keeps those decisions beside
 //! the fetch refspecs that make them true.
 
+use super::reported::Remote;
 use super::*;
 
 pub(super) fn bootstrap(
@@ -19,7 +20,7 @@ pub(super) fn bootstrap(
     // requested name is a tag or branch. Fetch exactly one target below.
     // `--no-tags` also prevents unrelated or stale tags from affecting that
     // decision. Submodules are initialised after the target commit is known.
-    git.run(
+    git.run_transferring(
         &[
             "clone",
             "--recurse-submodules",
@@ -30,6 +31,8 @@ pub(super) fn bootstrap(
             dest_s.as_ref(),
         ],
         None,
+        Remote::Url(url),
+        dest,
     )?;
     fetch_and_checkout(git, dest, refname)?;
     sync_submodules(git, dest)
@@ -45,7 +48,7 @@ pub(super) fn bootstrap_embedded(
     dest: &Path,
 ) -> Result<(), GitError> {
     let dest_s = dest.to_string_lossy();
-    git.run(
+    git.run_transferring(
         &[
             "clone",
             "--no-checkout",
@@ -55,6 +58,8 @@ pub(super) fn bootstrap_embedded(
             dest_s.as_ref(),
         ],
         None,
+        Remote::Url(url),
+        dest,
     )?;
     fetch_and_checkout(git, dest, refname)
 }
@@ -102,9 +107,11 @@ fn fetch_tag(git: &ShellGit, dest: &Path, tag: &str) -> Result<(), GitError> {
     // immutable, but if an origin replaces one, a stale local tag must never
     // mask the new bytes (the content-hash gate above this backend still
     // decides whether those bytes are acceptable).
-    git.run(
+    git.run_transferring(
         &["fetch", "--no-tags", "--", "origin", &refspec],
         Some(dest),
+        Remote::Origin,
+        dest,
     )?;
     let commit = format!("{local_ref}^{{commit}}");
     git.run(&["checkout", "--detach", "--force", &commit], Some(dest))
@@ -115,9 +122,11 @@ fn fetch_branch(git: &ShellGit, dest: &Path, branch: &str) -> Result<(), GitErro
     let source_ref = format!("refs/heads/{branch}");
     let tracking_ref = format!("refs/remotes/origin/{branch}");
     let refspec = format!("+{source_ref}:{tracking_ref}");
-    git.run(
+    git.run_transferring(
         &["fetch", "--prune", "--no-tags", "--", "origin", &refspec],
         Some(dest),
+        Remote::Origin,
+        dest,
     )?;
     git.run(
         &["checkout", "--force", "-B", branch, &tracking_ref],
@@ -129,7 +138,12 @@ fn fetch_branch(git: &ShellGit, dest: &Path, branch: &str) -> Result<(), GitErro
 }
 
 fn fetch_commit(git: &ShellGit, dest: &Path, commit: &str) -> Result<(), GitError> {
-    git.run(&["fetch", "--no-tags", "--", "origin", commit], Some(dest))?;
+    git.run_transferring(
+        &["fetch", "--no-tags", "--", "origin", commit],
+        Some(dest),
+        Remote::Origin,
+        dest,
+    )?;
     // FETCH_HEAD is the exact object transferred by this invocation. Peeling
     // through `^{commit}` refuses blobs/trees and also handles an explicitly
     // fetched annotated object without leaving HEAD attached to a branch.

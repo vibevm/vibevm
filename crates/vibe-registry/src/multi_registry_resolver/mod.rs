@@ -195,6 +195,9 @@ impl MultiRegistryResolver {
             for client in self.registries.iter().filter_map(|r| r.index_client()) {
                 client.attach_transfers(transfers);
             }
+            // …and the clones no observation surrounds (`PROP-068#git`);
+            // the public registries' anonymous backends share its journal.
+            self.backend.attach_transfers(transfers);
         }
         self.progress = progress;
         self

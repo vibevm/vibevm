@@ -83,9 +83,15 @@ pub(super) fn run_sync_home(ctx: &output::Context, root_offline: bool) -> Result
         MultiRegistryResolver::open(&global.registries, &global.mirrors, &global.overrides)
             .context("opening the user home's registries")
             .and_then(|mrr| {
-                let walked = mrr
-                    .refresh_cached_clones()
-                    .context("refreshing the cached package clones")?;
+                // A refresh that moves bytes is a transfer of this task
+                // (`PROP-068#git`).
+                let walked = vibe_registry::git_backend::transfers::observed(
+                    Some(&task.progress()),
+                    None,
+                    None,
+                    || mrr.refresh_cached_clones(),
+                )
+                .context("refreshing the cached package clones")?;
                 Ok((walked, local_sources(&mrr)))
             });
     let (walked, locals) = match refreshed {
