@@ -316,7 +316,7 @@ fn observed_install_reports_fetch_apply_and_record_in_order() {
     let started = events
         .iter()
         .filter_map(|event| match event {
-            ProgressEventKind::Started { label } => Some(label.as_str()),
+            ProgressEventKind::Started { label, .. } => Some(label.as_str()),
             _ => None,
         })
         .collect::<Vec<_>>();

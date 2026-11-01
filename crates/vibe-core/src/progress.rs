@@ -90,6 +90,9 @@ pub struct ProgressEvent {
 pub enum ProgressEventKind {
     Started {
         label: String,
+        /// Present only on the task that installs a requirement of another
+        /// package, so a consumer keys the subtree without parsing the label.
+        requires: Option<Requires>,
     },
     Progress {
         completed: u64,
@@ -112,6 +115,28 @@ pub enum ProgressEventKind {
     },
     /// The task handle disappeared without an explicit outcome.
     Stopped,
+}
+
+/// The requirement a task installs, in the words of the plan's
+/// `dependencies[]` (PROP-065 `#plan`): the requirement's installation key,
+/// its scope (`build` or `runtime`) and the requiring step, absent when the
+/// installer option as a whole requires it.
+///
+/// ```
+/// use vibe_core::progress::Requires;
+///
+/// let requires = Requires {
+///     key: "org.example/toolchain@1.0.0".to_string(),
+///     scope: "build".to_string(),
+///     step: Some("build".to_string()),
+/// };
+/// assert_eq!(requires.scope, "build");
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Requires {
+    pub key: String,
+    pub scope: String,
+    pub step: Option<String>,
 }
 
 /// A child-operation diagnostic that remains visible in ordinary human mode.
@@ -202,6 +227,16 @@ impl Progress {
     /// Starts a task beneath this handle's parent, emitting `Started` before
     /// the handle is returned.
     pub fn task(&self, label: impl Into<String>) -> ProgressTask {
+        self.start(label.into(), None)
+    }
+
+    /// Starts a task that installs a requirement of another package; its
+    /// `Started` event carries `requires` beside the label.
+    pub fn task_requiring(&self, label: impl Into<String>, requires: Requires) -> ProgressTask {
+        self.start(label.into(), Some(requires))
+    }
+
+    fn start(&self, label: String, requires: Option<Requires>) -> ProgressTask {
         let Some(inner) = &self.inner else {
             return ProgressTask::inert();
         };
@@ -212,9 +247,7 @@ impl Progress {
             started: Instant::now(),
             terminal: AtomicU8::new(ACTIVE),
         });
-        state.emit(ProgressEventKind::Started {
-            label: label.into(),
-        });
+        state.emit(ProgressEventKind::Started { label, requires });
         ProgressTask { state: Some(state) }
     }
 }

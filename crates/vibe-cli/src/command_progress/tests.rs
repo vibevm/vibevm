@@ -113,7 +113,7 @@ fn only_finite_fallback_starts_and_terminalizes_a_generic_activity() {
     let events = recorder.0.lock().unwrap();
     assert!(matches!(
         &events[0].kind,
-        ProgressEventKind::Started { label } if label == "Command bounded-work"
+        ProgressEventKind::Started { label, .. } if label == "Command bounded-work"
     ));
     assert!(matches!(
         &events[1].kind,

@@ -165,7 +165,7 @@ fn download_lookup_follows_fetch_scope_and_preserves_dispatch_io() {
                     &resolver_events
                 };
                 let all_rows = rows(events);
-                let lookup = all_rows.iter().find(|event| matches!(&event.kind, ProgressEventKind::Started { label } if label == &format!("Locating package download source for {pkg}"))).unwrap();
+                let lookup = all_rows.iter().find(|event| matches!(&event.kind, ProgressEventKind::Started { label, .. } if label == &format!("Locating package download source for {pkg}"))).unwrap();
                 if explicit {
                     assert!(
                         resolver_events.is_empty(),
@@ -177,7 +177,7 @@ fn download_lookup_follows_fetch_scope_and_preserves_dispatch_io() {
                         caller.id()
                     };
                     assert_eq!(lookup.parent_id, Some(parent));
-                    let fetch = all_rows.iter().find(|event| matches!(&event.kind, ProgressEventKind::Started { label } if label == "Fetching org.example/tool@1.0.0")).unwrap();
+                    let fetch = all_rows.iter().find(|event| matches!(&event.kind, ProgressEventKind::Started { label, .. } if label == "Fetching org.example/tool@1.0.0")).unwrap();
                     assert_eq!(fetch.parent_id, Some(parent));
                 }
                 assert!(!events.iter().any(|event| matches!(
@@ -237,7 +237,8 @@ fn checkout_lookup_uses_checkout_purpose_on_multi_and_declared_embedded() {
         assert_eq!(
             rows(&events)[0].kind,
             ProgressEventKind::Started {
-                label: format!("Locating in-place checkout source for {pkg}")
+                label: format!("Locating in-place checkout source for {pkg}"),
+                requires: None,
             }
         );
         assert_eq!(
@@ -380,7 +381,7 @@ fn embedded_precedence_retains_local_short_circuit_and_provenance() {
         assert_eq!(result.is_embedded, first);
         assert_eq!(backend.0.lock().unwrap().is_empty(), first);
         let events = recording.0.lock().unwrap();
-        let lookup_count = rows(&events).iter().filter(|event| matches!(&event.kind, ProgressEventKind::Started { label } if label.starts_with("Locating package download source"))).count();
+        let lookup_count = rows(&events).iter().filter(|event| matches!(&event.kind, ProgressEventKind::Started { label, .. } if label.starts_with("Locating package download source"))).count();
         assert_eq!(lookup_count, usize::from(!first));
         if first {
             assert!(

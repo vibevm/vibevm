@@ -98,7 +98,9 @@ fn task_id(events: &[ProgressEvent], label: &str) -> TaskId {
     events
         .iter()
         .find_map(|event| match &event.kind {
-            ProgressEventKind::Started { label: found } if found == label => Some(event.task_id),
+            ProgressEventKind::Started { label: found, .. } if found == label => {
+                Some(event.task_id)
+            }
             _ => None,
         })
         .unwrap_or_else(|| panic!("missing progress task `{label}`"))
@@ -108,7 +110,7 @@ fn start_position(events: &[ProgressEvent], label: &str) -> usize {
     events
         .iter()
         .position(|event| {
-            matches!(&event.kind, ProgressEventKind::Started { label: found } if found == label)
+            matches!(&event.kind, ProgressEventKind::Started { label: found, .. } if found == label)
         })
         .unwrap_or_else(|| panic!("missing progress task `{label}`"))
 }
@@ -285,7 +287,7 @@ fn gc_nothing_to_prune_records_pointers_then_skips_overall() {
         ProgressEventKind::Finished
     ));
     assert!(!events.iter().any(|event| {
-        matches!(&event.kind, ProgressEventKind::Started { label } if label == "Removing unused instances")
+        matches!(&event.kind, ProgressEventKind::Started { label, .. } if label == "Removing unused instances")
     }));
     assert!(matches!(
         terminal_kind(&events, "Garbage collecting vibevm"),

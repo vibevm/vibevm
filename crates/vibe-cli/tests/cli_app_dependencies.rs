@@ -6,7 +6,9 @@
 //! step's PATH only and records the requirement both ways; uninstall lists
 //! the orphan and autoremove takes it; a runtime requirement is installed
 //! exposed and blocks the toolchain's removal unless `--cascade`, whose
-//! `--plan-only` shows dependents first; a manual mark survives autoremove.
+//! `--plan-only` shows dependents first; a manual mark survives autoremove;
+//! the machine progress stream marks the requirement's subtree with a
+//! structured `requires`.
 
 #![cfg(target_os = "linux")]
 
@@ -138,7 +140,37 @@ fn a_build_requirement_is_installed_hidden_exposed_to_its_step_and_autoremoved()
         "the requirement is listed under its step: {text}"
     );
 
-    ok(&apps.app(&["install", "-g"], "org.example/consumer", &[]));
+    let installed = apps.app(
+        &["install", "-g"],
+        "org.example/consumer",
+        &["--progress-format", "json"],
+    );
+    ok(&installed);
+    // The requirement's subtree starts with a task that names it in the
+    // plan's words, so a consumer keys it without parsing the label;
+    // no other start carries `requires` (PROP-060 `#MACHINE-STREAM`).
+    let starts: Vec<serde_json::Value> = String::from_utf8_lossy(&installed.stderr)
+        .lines()
+        .filter_map(|line| serde_json::from_str::<serde_json::Value>(line).ok())
+        .filter(|event| event["protocol"] == "vibe-progress-event/1" && event["kind"] == "start")
+        .collect();
+    let requiring: Vec<&serde_json::Value> = starts
+        .iter()
+        .filter(|event| event.get("requires").is_some())
+        .collect();
+    assert_eq!(requiring.len(), 1, "{starts:?}");
+    assert_eq!(
+        requiring[0]["requires"],
+        value!({"key": TOOLCHAIN, "scope": "build", "step": "build"})
+    );
+    assert_eq!(
+        requiring[0]["label"],
+        format!("requires {TOOLCHAIN} (build) for step build")
+    );
+    assert!(
+        starts.len() > 1,
+        "the ordinary steps start without `requires`: {starts:?}"
+    );
     let payload = apps
         .settings()
         .join("opt/apps/consumer/org.example.consumer@1.0.0");

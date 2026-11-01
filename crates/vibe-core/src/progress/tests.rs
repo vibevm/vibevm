@@ -102,3 +102,34 @@ fn child_diagnostics_keep_their_typed_severity() {
         }
     );
 }
+
+#[test]
+fn only_a_requiring_task_carries_the_requirement_on_its_start() {
+    let observer = Arc::new(RecordingObserver::default());
+    let progress = Progress::new(observer.clone());
+    let requires = Requires {
+        key: "org.example/toolchain@1.0.0".to_string(),
+        scope: "build".to_string(),
+        step: Some("build".to_string()),
+    };
+    let requirement = progress.task_requiring("requires toolchain", requires.clone());
+    let step = requirement.progress().task("fetch");
+    step.finish();
+    requirement.finish();
+
+    let events = observer.0.lock().expect("events lock");
+    assert_eq!(
+        events[0].kind,
+        ProgressEventKind::Started {
+            label: "requires toolchain".to_string(),
+            requires: Some(requires),
+        }
+    );
+    assert_eq!(
+        events[1].kind,
+        ProgressEventKind::Started {
+            label: "fetch".to_string(),
+            requires: None,
+        }
+    );
+}
