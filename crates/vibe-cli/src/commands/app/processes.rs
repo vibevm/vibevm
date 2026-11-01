@@ -2,8 +2,8 @@
 //! (PROP-059 `#launcher-runtime`): `vibe-app` decides from files, and this
 //! module answers whether a process id is alive (with its start time, so a
 //! reused id is told apart) and delivers the end — `SIGTERM` then `SIGKILL`
-//! to the launcher's process group on Unix, a console break then
-//! `TerminateProcess` on Windows — the way `interrupt.rs` forwards a signal
+//! to the launcher's process group on Unix, a console break through the
+//! launcher's own console then `TerminateProcess` on Windows — the way `interrupt.rs` forwards a signal
 //! to a step (PROP-065 `#cancellation`).
 
 #![allow(unsafe_code)]
@@ -155,13 +155,20 @@ mod platform {
         fn TerminateProcess(process: Handle, exit_code: u32) -> i32;
         fn CloseHandle(object: Handle) -> i32;
         fn GenerateConsoleCtrlEvent(ctrl_event: u32, process_group_id: u32) -> i32;
+        fn FreeConsole() -> i32;
+        fn AttachConsole(process_id: u32) -> i32;
+        fn SetConsoleCtrlHandler(handler: Option<CtrlHandler>, add: i32) -> i32;
     }
+
+    type CtrlHandler = unsafe extern "system" fn(u32) -> i32;
 
     const PROCESS_TERMINATE: u32 = 0x0001;
     const PROCESS_QUERY_LIMITED_INFORMATION: u32 = 0x1000;
     const STILL_ACTIVE: u32 = 259;
     /// Ctrl-C cannot be sent to a process group; Ctrl-Break can.
     const CTRL_BREAK_EVENT: u32 = 1;
+    /// `(DWORD)-1`: the console of the process that started this one.
+    const ATTACH_PARENT_PROCESS: u32 = u32::MAX;
 
     /// An open process handle, closed on drop.
     struct Process(Handle);
@@ -212,21 +219,63 @@ mod platform {
         ProcessState::Alive { started }
     }
 
-    /// A terminal launcher kept the console and its own process group, so a
-    /// console break reaches it when this console is the one it shares; a
-    /// window of its own has nothing to break.
-    #[specmark::spec(
-        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-        reason = "unsafe-gate: Rust has no standard-library API for generating a console control event; both arguments are integers, the group id is the launcher's own process id (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
-    )]
+    /// A terminal launcher kept a console and its own process group, so a
+    /// console break asks it to end; a window of its own has nothing to
+    /// break.
     pub(super) fn ask_to_end(pid: u32, kind: LauncherKind) -> bool {
         match kind {
             LauncherKind::Gui => false,
-            // SAFETY: the call borrows nothing.
-            LauncherKind::Tui | LauncherKind::Command => unsafe {
-                GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, pid) != 0
-            },
+            LauncherKind::Tui | LauncherKind::Command => break_through_console(pid),
         }
+    }
+
+    /// While the break is generated this process is attached to the
+    /// launcher's console; the event targets the launcher's group only, and
+    /// the handler is a guard should the console deliver it here anyway.
+    #[specmark::spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "unsafe-gate: SetConsoleCtrlHandler requires a system-ABI callback; this one touches no state and only reports the event handled (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
+    )]
+    unsafe extern "system" fn swallow(_ctrl_type: u32) -> i32 {
+        1
+    }
+
+    /// `GenerateConsoleCtrlEvent` reaches only processes sharing the
+    /// caller's console, and `vibe app stop` runs from another one, so the
+    /// plain call failed every time and the stop went straight to
+    /// `TerminateProcess`. Attaching to the launcher's console first makes
+    /// the break land. When the launcher has no console to attach to (it
+    /// freed it, or never had one), the answer is `false` and the caller's
+    /// terminate branch runs as before. No unit test can stand in for a
+    /// second console; PROP-059 `#launcher-runtime` names the manual check.
+    #[specmark::spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "unsafe-gate: Rust has no standard-library API for console attachment or control events; every argument is an integer or a handler function with the declared signature and static lifetime, and the console and handler are restored before returning (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
+    )]
+    fn break_through_console(pid: u32) -> bool {
+        // SAFETY: borrows nothing; failing without a console is harmless.
+        let _ = unsafe { FreeConsole() };
+        // SAFETY: an integer argument; failure is answered below.
+        if unsafe { AttachConsole(pid) } == 0 {
+            // SAFETY: an integer argument; without a parent console it fails
+            // and this process stays detached, as a detached start leaves it.
+            let _ = unsafe { AttachConsole(ATTACH_PARENT_PROCESS) };
+            return false;
+        }
+        // SAFETY: `swallow` is a static function of the handler signature.
+        let guarded = unsafe { SetConsoleCtrlHandler(Some(swallow), 1) } != 0;
+        // SAFETY: integer arguments; the launcher is its own process group,
+        // so its id is the group id.
+        let sent = unsafe { GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, pid) } != 0;
+        // SAFETY: borrows nothing; detaches from the launcher's console.
+        let _ = unsafe { FreeConsole() };
+        // SAFETY: an integer argument; restores the console this process had.
+        let _ = unsafe { AttachConsole(ATTACH_PARENT_PROCESS) };
+        if guarded {
+            // SAFETY: removes the handler added above.
+            let _ = unsafe { SetConsoleCtrlHandler(Some(swallow), 0) };
+        }
+        sent
     }
 
     #[specmark::spec(
