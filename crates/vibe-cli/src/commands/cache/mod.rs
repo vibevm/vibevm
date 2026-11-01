@@ -16,6 +16,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 pub(crate) mod add;
 mod check;
 mod clean;
+mod import;
 
 use anyhow::{Context, Result};
 
@@ -29,6 +30,7 @@ pub(crate) fn run(ctx: &output::Context, args: CacheArgs, root_offline: bool) ->
         CacheSubcommand::Add(args) => add::run(ctx, args, root_offline),
         CacheSubcommand::Clean(args) => clean::run(ctx, args),
         CacheSubcommand::Check(args) => check::run(ctx, args, root_offline),
+        CacheSubcommand::Import(args) => import::run(ctx, args),
     }
 }
 

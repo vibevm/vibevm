@@ -251,26 +251,58 @@ fn verified_input(
     size: Option<u64>,
 ) -> Result<PathBuf, AppError> {
     let file = input_file(cx.work, step);
-    if digest_of(&file).ok().as_deref() != Some(sha256.to_ascii_lowercase().as_str()) {
+    let digest = sha256.to_ascii_lowercase();
+    if digest_of(&file).ok().as_deref() == Some(digest.as_str()) {
+        // A resume never re-fetches a verified input (`PROP-066#locator`).
+        return Ok(file);
+    }
+    let filename = file
+        .file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or("input")
+        .to_owned();
+    // The cross-run cache `sources` inputs have always had, now shared by
+    // `archive` and `native` ones (`PROP-066#locator`): the bytes live at
+    // `<cache>/<sha256>/<filename>`, so a second install of the same
+    // package — after `app work --clean` wiped the work directory, or in
+    // another home — makes no server hit at all. The lookup comes before
+    // any candidate is tried, which is what makes that true.
+    let cached = cx.cache_root.join(&digest).join(&filename);
+    if digest_of(&cached).ok().as_deref() != Some(digest.as_str()) {
         let artifact = cx
             .artifact(step.id.clone())
             .with_digest(sha256)
             .with_url(source);
+        // The cache directory is created by whichever candidate actually
+        // writes into it, so a `deny` row leaves nothing behind: "refused
+        // before any connection" is also "refused before any file".
+        let partial = cx
+            .cache_root
+            .join(&digest)
+            .join(format!(".{filename}.{}.part", std::process::id()));
         let served = installer::fetch_located(
             &installer::Located {
                 locator: cx.remap,
                 artifact: &artifact,
                 declared: source,
                 sha256,
-                filename: file.file_name().and_then(|name| name.to_str()),
+                filename: Some(&filename),
             },
             cx.package_root,
-            &file,
+            &partial,
             cx.offline,
             &cx.watch(size),
         )?;
+        fs::rename(&partial, &cached).map_err(|error| {
+            let _ = fs::remove_file(&partial);
+            io("caching", &cached, error)
+        })?;
         cx.served.borrow_mut().push(served);
     }
+    if let Some(parent) = file.parent() {
+        fs::create_dir_all(parent).map_err(|error| io("creating", parent, error))?;
+    }
+    fs::copy(&cached, &file).map_err(|error| io("copying", &file, error))?;
     Ok(file)
 }
 

@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "description": "Version 1 report of vibe remap test --json (PROP-066#policy): every declared artifact of a project or a home, the row each one resolves to, the target that row chose, and whether that target answered without downloading anything — a HEAD for an HTTP URL, a git ls-remote for a git URL, a stat for a path. Fills the readiness panel of a graphical client, so a policy can be checked before it bites.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-066#policy" },
+    "rustOptions": { "package": "vibe_wire::remap_test" },
+    "x-rust-type": "RemapTest",
+    "x-wire-order": ["protocol", "scope", "offline", "artifacts", "reachable", "unreachable", "skipped"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "scope": { "ref": "test_scope" },
+    "offline": { "type": "boolean" },
+    "artifacts": { "elements": { "ref": "probe" }, "metadata": { "x-empty": "emit" } },
+    "reachable": { "type": "uint32" },
+    "unreachable": { "type": "uint32" },
+    "skipped": { "type": "uint32" }
+  },
+  "definitions": {
+    "test_scope": {
+      "metadata": {
+        "description": "What was walked: the lock rows and embedded sources of a project, or the installed application inputs and the distribution manifest of a home.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["project", "home"]
+    },
+    "probe_kind": {
+      "metadata": {
+        "description": "How the target was probed without downloading it.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["head", "ls_remote", "stat", "none"]
+    },
+    "outcome": {
+      "metadata": {
+        "description": "The answer: the target responded, it did not, the row refuses the fetch before any connection, or the probe was skipped (under --offline, or because the artifact has no target to probe).",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["reachable", "unreachable", "denied", "skipped"]
+    },
+    "probe": {
+      "metadata": {
+        "description": "One artifact's result: what it is, where it was declared, the row that chose its target, the target, how it was probed and what came back.",
+        "x-wire-order": ["artifact", "kind", "origin", "digest", "target", "row", "probe", "outcome", "error", "note"]
+      },
+      "properties": {
+        "artifact": { "type": "string" },
+        "kind": { "type": "string" },
+        "probe": { "ref": "probe_kind" },
+        "outcome": { "ref": "outcome" }
+      },
+      "optionalProperties": {
+        "origin": { "type": "string", "metadata": { "x-default": null } },
+        "digest": { "type": "string", "metadata": { "x-default": null } },
+        "target": { "type": "string", "metadata": { "x-default": null } },
+        "row": { "type": "string", "metadata": { "x-default": null } },
+        "error": { "type": "string", "metadata": { "x-default": null } },
+        "note": { "type": "string", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}

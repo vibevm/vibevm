@@ -121,6 +121,7 @@ impl InstallSource for TestSource {
             manifest: fixture.manifest.clone(),
             content_hash: "sha256:0123456789abcdef".to_string(),
             source_uri: "https://example.test/golden".to_string(),
+            fetched_from: None,
             registry_name: Some("golden".to_string()),
             source_ref: None,
             resolved_commit: None,

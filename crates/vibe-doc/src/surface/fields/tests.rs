@@ -69,9 +69,13 @@ fn a_required_member_does_not_hide_the_list() {
     let mut probes = 0usize;
     assert_eq!(
         accepted::<vibe_core::manifest::Lockfile>(&[], &mut probes),
-        Some(vec!["meta".to_string(), "package".to_string()]),
-        "the top level of `vibe.lock` has one required member and one optional one; \
-         the refusal must still name both"
+        Some(vec![
+            "meta".to_string(),
+            "package".to_string(),
+            "remap".to_string()
+        ]),
+        "the top level of `vibe.lock` has one required member and two optional ones; \
+         the refusal must still name all three"
     );
 }
 

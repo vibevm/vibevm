@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "description": "Version 1 MANIFEST.json of a remap transport bundle (PROP-066#transport): the remap package the bundle carries and, when it was written with --with-artifacts, every artifact the rows and the project's lock name, each by digest with the file it was written as and the origin it came from. vibe cache import reads it, verifies each digest and places the bytes into the machine store or the application download cache.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-066#transport" },
+    "rustOptions": { "package": "vibe_wire::remap_bundle" },
+    "x-rust-type": "RemapBundle",
+    "x-wire-order": ["protocol", "package", "version", "content_hash", "written", "artifacts"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "package": { "type": "string" },
+    "version": { "type": "string" },
+    "content_hash": { "type": "string" },
+    "written": { "type": "string" },
+    "artifacts": { "elements": { "ref": "bundled_artifact" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "artifact_place": {
+      "metadata": {
+        "description": "Where an imported artifact belongs: the machine package store keyed by coordinate, or the application download cache keyed by digest.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["store", "app_cache"]
+    },
+    "bundled_artifact": {
+      "metadata": {
+        "description": "One artifact in the bundle: its digest, the path inside the bundle, the declared origin it was fetched from, its size, and where an import places it.",
+        "x-wire-order": ["sha256", "path", "filename", "bytes", "place", "origin", "package", "row"]
+      },
+      "properties": {
+        "sha256": { "type": "string" },
+        "path": { "type": "string" },
+        "filename": { "type": "string" },
+        "bytes": { "type": "uint32" },
+        "place": { "ref": "artifact_place" }
+      },
+      "optionalProperties": {
+        "origin": { "type": "string", "metadata": { "x-default": null } },
+        "package": { "type": "string", "metadata": { "x-default": null } },
+        "row": { "type": "string", "metadata": { "x-default": null } }
+      }
+    }
+  }
+}

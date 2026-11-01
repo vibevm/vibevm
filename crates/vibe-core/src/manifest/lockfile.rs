@@ -83,6 +83,45 @@ pub struct Lockfile {
 
     #[serde(default, rename = "package", skip_serializing_if = "Vec::is_empty")]
     pub packages: Vec<LockedPackage>,
+
+    /// `[[remap]]` — the remap packages the project requires
+    /// (`PROP-066#layers-packages`), resolved and pinned here so every
+    /// clone of the project is offered the same rows. They are **not**
+    /// `[[package]]` rows: a remap package is never materialised into
+    /// `vibedeps/` and no package may depend on one
+    /// (`PROP-066#decisions`), so it has its own table rather than a
+    /// kind inside the dependency closure.
+    #[serde(default, rename = "remap", skip_serializing_if = "Vec::is_empty")]
+    pub remaps: Vec<LockedRemap>,
+}
+
+/// One pinned remap requirement of a project (`PROP-066#layers-packages`).
+///
+/// ```
+/// use vibe_core::manifest::LockedRemap;
+///
+/// let r: LockedRemap = toml::from_str(r#"
+///     package = "org.corp/intranet"
+///     version = "1.0.0"
+///     content_hash = "sha256:abc"
+/// "#).unwrap();
+/// assert_eq!(r.package, "org.corp/intranet");
+/// assert!(r.registry.is_none());
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LockedRemap {
+    /// `<group>/<name>` — the key the acceptance ledger names it by.
+    pub package: String,
+    /// The resolved version.
+    pub version: String,
+    /// `sha256:<hex>` over the package tree. The acceptance of
+    /// `PROP-066#consent` is bound to exactly this hash, so a clone that
+    /// resolves a different one is asked again.
+    pub content_hash: String,
+    /// The registry that served it, when one is known.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub registry: Option<String>,
 }
 
 /// `[meta]` — the lockfile's provenance header: who and when generated it,
@@ -471,6 +510,7 @@ impl Lockfile {
                 virtual_capabilities: Vec::new(),
             },
             packages: Vec::new(),
+            remaps: Vec::new(),
         }
     }
 

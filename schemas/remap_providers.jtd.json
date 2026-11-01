@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "description": "Version 1 provider map of one home (<home>/remap/providers.json): for every row any installed remap package offers, which packages offer it and which of those are accepted. Derived from the installed packages and the acceptance ledger and rebuilt whenever either changes — never the sole home of a fact. It is what uninstall consults to tell an orphaned row from one another package still offers.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-066#providers" },
+    "rustOptions": { "package": "vibe_wire::remap_providers" },
+    "x-rust-type": "RemapProviders",
+    "x-wire-order": ["protocol", "rows"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "rows": { "elements": { "ref": "provided_row" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "key_kind": {
+      "metadata": {
+        "description": "Which of the four keys of PROP-066#row the row matches on.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["sha256", "package", "registry", "prefix"]
+    },
+    "row_identity": {
+      "metadata": {
+        "description": "A row's identity for the purpose of the map: key, target and scope, and nothing else (PROP-066#providers). The reason, the package and the layer are not part of it, because a row two accepted packages both offer is one row with two providers.",
+        "x-wire-order": ["kind", "what", "to", "scope_package", "scope_step"]
+      },
+      "properties": {
+        "kind": { "ref": "key_kind" },
+        "what": { "type": "string" },
+        "to": { "type": "string" }
+      },
+      "optionalProperties": {
+        "scope_package": { "type": "string", "metadata": { "x-default": null } },
+        "scope_step": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "provided_row": {
+      "metadata": {
+        "description": "One row and every package that offers it, with the subset whose acceptance currently applies.",
+        "x-wire-order": ["row", "providers", "accepted_providers"]
+      },
+      "properties": {
+        "row": { "ref": "row_identity" },
+        "providers": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "accepted_providers": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+      }
+    }
+  }
+}

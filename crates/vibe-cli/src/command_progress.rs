@@ -341,7 +341,8 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | CacheSubcommand::List
             | CacheSubcommand::Add(_)
             | CacheSubcommand::Clean(_)
-            | CacheSubcommand::Check(_) => FiniteFallback("Command cache"),
+            | CacheSubcommand::Check(_)
+            | CacheSubcommand::Import(_) => FiniteFallback("Command cache"),
         },
         Command::Workspace(args) => match &args.command {
             WorkspaceSubcommand::Publish(_) => FiniteFallback("Command workspace publish"),

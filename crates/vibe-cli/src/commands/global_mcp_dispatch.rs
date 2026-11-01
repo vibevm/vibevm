@@ -16,7 +16,7 @@ use crate::output;
 use super::app::global as application;
 use super::app::home as application_home;
 use super::app::project as application_project;
-use super::{install, mcp, uninstall, update};
+use super::{install, mcp, remap, uninstall, update};
 
 pub(crate) fn run_install(
     ctx: &output::Context,
@@ -25,7 +25,17 @@ pub(crate) fn run_install(
     offline: bool,
 ) -> Result<()> {
     if !args.global {
-        return application_project::install(ctx, args, embedded_root, offline);
+        // PROP-066 `#layers-packages`: a project's `[requires.remaps]` is
+        // resolved and pinned in the lock like any other requirement, and
+        // recorded in this user's home as an offer — so every clone of
+        // the project sees the same list and each machine still decides.
+        // It runs after the install because the pin belongs beside the
+        // rest of the resolution, and an offer that nobody has accepted
+        // yet changes nothing about the fetches this run performed.
+        let path = args.path.clone();
+        let projected = args.clone();
+        application_project::install(ctx, args, embedded_root, offline)?;
+        return pin_project_remaps(ctx, &projected, &path, offline);
     }
     if !args
         .packages
@@ -34,6 +44,15 @@ pub(crate) fn run_install(
     {
         if args.server.is_some() {
             bail!("--server applies only to global MCP packages (`mcp:<group>/<name>`)");
+        }
+        // PROP-066 `#package`: a remap package goes into the user home as
+        // an **offer**, not into a library as an application. The kind is
+        // read from the manifest the registry would serve, so the operator
+        // writes `vibe install -g org.corp/intranet` without knowing it;
+        // a probe that cannot answer falls through, so the application
+        // path keeps producing its own errors exactly as before.
+        if let Some(refs) = remap::claims_install(&args, offline) {
+            return remap::install_packages(ctx, &args, &refs, offline);
         }
         return application::install(ctx, args, embedded_root, offline);
     }
@@ -76,6 +95,43 @@ fn install_mcp(
     result
 }
 
+/// Resolve and pin the project's `[requires.remaps]`
+/// (`PROP-066#layers-packages`).
+///
+/// A project with no such table clears the lock's `[[remap]]` rows and
+/// does nothing else, so the table and the lock cannot disagree.
+fn pin_project_remaps(
+    ctx: &output::Context,
+    args: &InstallArgs,
+    path: &std::path::Path,
+    offline: bool,
+) -> Result<()> {
+    let root = path.canonicalize().unwrap_or_else(|_| path.to_path_buf());
+    let lock_path = root.join(vibe_core::manifest::Lockfile::FILENAME);
+    let manifest_path = root.join(vibe_core::manifest::Manifest::FILENAME);
+    if !lock_path.exists() || !manifest_path.exists() {
+        return Ok(());
+    }
+    let manifest = vibe_core::manifest::Manifest::read(&manifest_path)
+        .with_context(|| format!("reading `{}`", manifest_path.display()))?;
+    let mut lockfile = vibe_core::manifest::Lockfile::read(&lock_path)
+        .with_context(|| format!("reading `{}`", lock_path.display()))?;
+    let before = lockfile.remaps.clone();
+    let count = remap::adopt_project_requirements(args, &manifest, &mut lockfile, offline)?;
+    if lockfile.remaps == before {
+        return Ok(());
+    }
+    lockfile
+        .write(&lock_path)
+        .with_context(|| format!("writing `{}`", lock_path.display()))?;
+    if count > 0 && !ctx.is_json() && !ctx.is_quiet() {
+        ctx.step(&format!(
+            "{count} remap package(s) required by this project are offered in your home —              `vibe remap list` shows their rows"
+        ));
+    }
+    Ok(())
+}
+
 pub(crate) fn run_uninstall(
     ctx: &output::Context,
     args: UninstallArgs,
@@ -88,11 +144,19 @@ pub(crate) fn run_uninstall(
         if args.package.starts_with("mcp:") {
             return uninstall::run(ctx, args);
         }
+        if remap::claims_uninstall(&args.package) {
+            return remap::run_uninstall(ctx, &args);
+        }
         return application::uninstall(ctx, args, offline);
     }
     if !args.package.starts_with("mcp:") {
         if args.agent.is_some() {
             bail!("--agent applies only to global MCP packages (`mcp:<group>/<name>`)");
+        }
+        // PROP-066 `#uninstall`: removing a remap package asks about the
+        // rows that would stop applying before anything is removed.
+        if remap::claims_uninstall(&args.package) {
+            return remap::run_uninstall(ctx, &args);
         }
         return application::uninstall(ctx, args, offline);
     }

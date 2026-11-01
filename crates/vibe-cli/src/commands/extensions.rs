@@ -349,6 +349,10 @@ fn manifest_kind(kind: EffectiveManifestKind) -> ManifestKind {
             vibe_core::PackageKind::Lang => ManifestKind::Lang,
             vibe_core::PackageKind::Doc => ManifestKind::Doc,
             vibe_core::PackageKind::App => ManifestKind::App,
+            // A `remap` package declares no `[[extension]]` — the kind
+            // refuses the table — so it never reaches an extension
+            // report as an effective manifest of its own.
+            vibe_core::PackageKind::Remap => ManifestKind::Remap,
         },
     }
 }
@@ -381,6 +385,7 @@ fn package_kind(value: vibe_core::PackageKind) -> ReportPackageKind {
         vibe_core::PackageKind::Lang => ReportPackageKind::Lang,
         vibe_core::PackageKind::Doc => ReportPackageKind::Doc,
         vibe_core::PackageKind::App => ReportPackageKind::App,
+        vibe_core::PackageKind::Remap => ReportPackageKind::Remap,
     }
 }
 

@@ -117,7 +117,15 @@ fn string_array_after(path: &str, marker: &str) -> Vec<String> {
         .find(']')
         .map(|offset| start + offset + 1)
         .unwrap_or_else(|| panic!("{path} closes the array after {marker:?}"));
-    serde_json::from_str(&tail[start..end])
+    // rustfmt leaves a trailing comma when it wraps the array over
+    // several lines, and JSON has none; the source stays rustfmt's.
+    let literal = tail[start..end]
+        .trim_end_matches(']')
+        .trim_end()
+        .trim_end_matches(',')
+        .to_owned()
+        + "]";
+    serde_json::from_str(&literal)
         .unwrap_or_else(|error| panic!("{path} array after {marker:?} parses: {error}"))
 }
 
@@ -397,7 +405,7 @@ fn package_kind_copies_match_the_declared_domain() {
         &mut drift,
         "boot core terminology list",
         "vibevm/vibespecs/boot/00-core.xml",
-        &format!("only eight installable kinds — {ticked}"),
+        &format!("only nine installable kinds — {ticked}"),
     );
 
     unordered(

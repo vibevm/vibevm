@@ -23,7 +23,9 @@ use std::path::Path;
 use super::report::Report;
 
 /// The installable kinds a reference may name (PROP-000 §4.1).
-const KINDS: &[&str] = &["flow", "feat", "stack", "tool", "mcp", "lang", "doc", "app"];
+const KINDS: &[&str] = &[
+    "flow", "feat", "stack", "tool", "mcp", "lang", "doc", "app", "remap",
+];
 
 /// Every `name = "…"` declared by a `vibe.toml` under `packages/`.
 ///

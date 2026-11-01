@@ -33,7 +33,9 @@ fn an_unfamiliar_value_survives_the_read_write_cycle() {
 /// oracles check indirectly, pinned here on the type itself.
 #[test]
 fn every_known_value_reads_named_and_writes_identical_bytes() {
-    for wire in ["app", "doc", "feat", "flow", "lang", "mcp", "stack", "tool"] {
+    for wire in [
+        "app", "doc", "feat", "flow", "lang", "mcp", "remap", "stack", "tool",
+    ] {
         let value: PackageKind =
             serde_json::from_str(&format!("\"{wire}\"")).expect("a known value parses");
         let canonical = match &value {
@@ -43,6 +45,7 @@ fn every_known_value_reads_named_and_writes_identical_bytes() {
             PackageKind::Flow => "flow",
             PackageKind::Lang => "lang",
             PackageKind::Mcp => "mcp",
+            PackageKind::Remap => "remap",
             PackageKind::Stack => "stack",
             PackageKind::Tool => "tool",
             PackageKind::Unknown(_) => {

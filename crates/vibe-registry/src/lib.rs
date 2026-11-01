@@ -189,6 +189,7 @@ pub struct ResolvedPackage {
 ///     content_hash: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 ///         .to_string(),
 ///     source_uri: "file:///registry/org.vibevm/wal/v0.2.0".to_string(),
+///     fetched_from: None,
 ///     registry_name: Some("main".to_string()),
 ///     source_ref: Some("v0.2.0".to_string()),
 ///     resolved_commit: None,
@@ -216,6 +217,15 @@ pub struct CachedPackage {
     /// Source URI recorded in the lockfile under the `source_url` field.
     /// Informational — package identity does not depend on this string.
     pub source_uri: String,
+    /// The URL or path a remap row or a `[[mirror]]` actually served these
+    /// bytes from, when it differs from `source_uri`
+    /// (`PROP-066#provenance`). `None` when the canonical origin served
+    /// it — which is the common case, and the reason this is an `Option`
+    /// rather than a copy of `source_uri`: the interesting fact is that
+    /// the bytes came from somewhere else. Nothing in a manifest or a
+    /// lock is rewritten to this URL; it is recorded beside the canonical
+    /// one so a lock stays portable between networks.
+    pub fetched_from: Option<String>,
     /// Name of the `[[registry]]` entry in `vibe.toml` that served this
     /// package. `None` for `LocalRegistry` (`--registry <path>`), the
     /// legacy monorepo `GitMonorepoRegistry`, and packages resolved through

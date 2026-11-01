@@ -121,7 +121,7 @@
       }
     },
     "step": {
-      "metadata": { "x-wire-order": ["id", "title", "kind", "phase", "needs", "optional", "action", "reason"] },
+      "metadata": { "x-wire-order": ["id", "title", "kind", "phase", "needs", "optional", "action", "reason", "note"] },
       "properties": {
         "id": { "type": "string" },
         "title": { "type": "string" },
@@ -132,7 +132,8 @@
         "action": { "ref": "action" }
       },
       "optionalProperties": {
-        "reason": { "type": "string", "metadata": { "x-default": null } }
+        "reason": { "type": "string", "metadata": { "x-default": null } },
+        "note": { "type": "string", "metadata": { "description": "What a reader has to know about a step that WILL run — today only PROP-066#not-covered's marking of a recipe step that needs the network under a `deny` policy: what such a script downloads on its own is outside vibe's fetches and outside the rows, so the reader sees it before the build starts.", "x-default": null } }
       }
     }
   }

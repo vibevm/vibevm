@@ -366,6 +366,7 @@ fn row(key: RemapKey, target: RemapTarget, reason: Option<String>, from: Provena
         target,
         scope: None,
         reason,
+        from_package: None,
         from,
         target_ref: None,
     }

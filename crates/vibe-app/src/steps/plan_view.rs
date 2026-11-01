@@ -129,6 +129,7 @@ impl Plan {
                         wire::Action::Skip
                     },
                     reason: planned.reason.clone(),
+                    note: planned.note.clone(),
                 })
                 .collect(),
             warnings: self.warnings.clone(),
@@ -281,6 +282,9 @@ impl Plan {
             };
             if let Some(reason) = &planned.reason {
                 detail(&mut text, &format!("skipped: {reason}"));
+            }
+            if let Some(note) = &planned.note {
+                detail(&mut text, note);
             }
             if !step.needs.is_empty() {
                 let needs: Vec<String> = step.needs.iter().map(ToString::to_string).collect();

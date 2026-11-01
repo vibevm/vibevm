@@ -185,6 +185,9 @@ pub enum ManifestKind {
     #[serde(rename = "project")]
     Project,
 
+    #[serde(rename = "remap")]
+    Remap,
+
     #[serde(rename = "stack")]
     Stack,
 
@@ -236,6 +239,9 @@ pub enum PackageKind {
 
     #[serde(rename = "mcp")]
     Mcp,
+
+    #[serde(rename = "remap")]
+    Remap,
 
     #[serde(rename = "stack")]
     Stack,

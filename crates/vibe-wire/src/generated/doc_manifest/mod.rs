@@ -482,6 +482,9 @@ pub enum PackageKind {
     #[serde(rename = "mcp")]
     Mcp,
 
+    #[serde(rename = "remap")]
+    Remap,
+
     #[serde(rename = "stack")]
     Stack,
 

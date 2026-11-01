@@ -29,6 +29,31 @@ pub enum RemapCommand {
     /// matching row in winning order, the chosen target and the digest
     /// that will be checked.
     Explain(RemapExplainArgs),
+    /// Accept a remap package's offer: record it against the package's
+    /// current content hash so its rows apply from now on. A later version
+    /// of the package is a new offer.
+    Accept(RemapPackagesArgs),
+    /// Refuse a remap package's offer, so the question is not asked again.
+    Reject(RemapPackagesArgs),
+    /// Switch an accepted remap package back on without re-accepting it.
+    Enable(RemapPackagesArgs),
+    /// Switch an accepted remap package off without forgetting the
+    /// acceptance or removing the package.
+    Disable(RemapPackagesArgs),
+    /// Resolve every artifact this project or home declares through the
+    /// active rows and ask each winning target whether it answers —
+    /// without downloading anything. Exits 1 when any target is
+    /// unreachable.
+    Test(RemapTestArgs),
+    /// Write a remap package, and optionally the artifacts its rows and
+    /// this project's lock name, into a directory that is both a
+    /// `file://` registry and an artifact tree — for carrying into a
+    /// closed network.
+    Export(RemapExportArgs),
+    /// Install a remap package from a directory written by `export` as an
+    /// offer, and place its artifacts into the machine store and the
+    /// application download cache.
+    Import(RemapImportArgs),
 }
 
 #[derive(Debug, Args)]
@@ -60,4 +85,54 @@ pub struct RemapExplainArgs {
     /// layout.
     #[arg(long)]
     pub json: bool,
+}
+
+#[derive(Debug, Args)]
+pub struct RemapPackagesArgs {
+    /// One or more installed remap packages, as `<group>/<name>`.
+    #[arg(value_name = "PACKAGE", required = true)]
+    pub packages: Vec<String>,
+}
+
+#[derive(Debug, Args)]
+pub struct RemapTestArgs {
+    /// Directory of the project whose lock and embedded sources are
+    /// walked. Without a `vibe.lock` there the home's installed
+    /// application inputs and the distribution manifest are walked
+    /// instead.
+    #[arg(long, default_value = ".")]
+    pub path: std::path::PathBuf,
+
+    /// Emit the `vibe-remap-test/1` report instead of the human layout.
+    #[arg(long)]
+    pub json: bool,
+}
+
+#[derive(Debug, Args)]
+pub struct RemapExportArgs {
+    /// The installed remap package to write out, as `<group>/<name>`.
+    #[arg(value_name = "PACKAGE")]
+    pub package: String,
+
+    /// The directory to write. It becomes a `file://` registry holding the
+    /// package, so `vibe install --registry <dir>` reads it unchanged.
+    #[arg(long, value_name = "DIR")]
+    pub out: std::path::PathBuf,
+
+    /// Also write every artifact the rows and this project's lock name,
+    /// laid out as `<dir>/artifacts/<sha256>/<filename>` with a
+    /// `MANIFEST.json` listing them. `vibe cache import <dir>` places them.
+    #[arg(long)]
+    pub with_artifacts: bool,
+
+    /// Directory of the project whose lock names the artifacts to carry.
+    #[arg(long, default_value = ".")]
+    pub path: std::path::PathBuf,
+}
+
+#[derive(Debug, Args)]
+pub struct RemapImportArgs {
+    /// A directory written by `vibe remap export`.
+    #[arg(value_name = "DIR")]
+    pub dir: std::path::PathBuf,
 }

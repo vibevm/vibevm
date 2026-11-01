@@ -565,6 +565,9 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     }
 
     lockfile.write(workspace.lockfile_path())?;
+    // PROP-066 `#provenance`: where the bytes actually came from, beside
+    // the lock rather than inside it (see `record::fetch_provenance`).
+    crate::record::fetch_provenance(&fetched).write_beside(&workspace.lockfile_path())?;
     record_task.finish();
 
     // 11. PROP-020 §2.1 — post-install hooks run once the package is durable

@@ -175,9 +175,11 @@ Use these terms and only these terms in code, in documentation, in error message
 
 ### 4.1 The installable kinds {#four-installable-kinds}
 
-vibevm packages come in eight kinds. A user installs them with `vibe install <kind>:<name>`. The kind set is a closed register that grows only by an owner-sanctioned amendment to this section — it is terminology discipline, not an architectural ceiling (the `PackageKind` enum's own documentation records that extending it is a spec change, not a design change).
+vibevm packages come in nine kinds. A user installs them with `vibe install <kind>:<name>`. The kind set is a closed register that grows only by an owner-sanctioned amendment to this section — it is terminology discipline, not an architectural ceiling (the `PackageKind` enum's own documentation records that extending it is a spec change, not a design change).
 
 *Amendment, owner ruling of 2026-08-06 (recorded on his instruction): `lang` is added as the sixth kind. The register was five until that date.*
+
+*Amendment, 2026-11-01, prepared by the remap campaign under the owner's instruction to make every artifact source replaceable: `remap` is added as the ninth kind. The register was eight until that date. Normative spec: PROP-066.*
 
 *Amendment, 2026-09-12, prepared by the docs-2026-09 campaign under the owner's session goal «документация сделана и задеплоена» and pending his ratification at the merge of the campaign branch: `doc` and `app` are added as the seventh and eighth kinds. The register was six until that date. Normative spec: PROP-057.*
 
@@ -202,6 +204,8 @@ vibevm packages come in eight kinds. A user installs them with `vibe install <ki
 **`doc`** — Documentation as a package. A `doc` package documents one or more other packages (its *subjects*, named in `[[documents]]`), carries a human-readable `title` and `abstract`, and is read, never executed: it may not declare a boot snippet, an MCP server or a binary, `vibe install` refuses it, and `vibe cache add` warms it into the machine store for the local reader, the site and the agent skill. Its translations are separate `doc` packages, one per language. Examples: `org.vibevm.core/vibevm-docs`, `org.vibevm.world/multi-user-planning-docs`. Normative spec: PROP-057.
 
 **`app`** — A standalone product with its own deployment profile in the build, package and deploy planes of PROP-054. The boundary with `tool` is mechanical: a `tool` lives in a project and runs through `vibe bin exec` by the lock file; an `app` runs in no consumer project and is built and deployed on its own. Example: `org.vibevm.doc/web`, the documentation site. Normative spec: PROP-057.
+
+**`remap`** — Where artifacts may be fetched from, as data. A `remap` package carries `[[remap]]` rows (what each one matches, what it redirects to, where it applies), the optional `[remap]` table describing the offer, an optional `[policy]`, and nothing else — no binary, no boot snippet, no MCP server, no dependency, because accepting a redirection must never be a way to run someone's code. It is installed into a user home with `vibe install -g` or required by a project through `[requires.remaps]`, and its rows are an **offer**: nothing applies until that user accepts it. No package may depend on one — policy belongs to the user and the project, never to a dependency. Example: an architect's list of the one artifact store a corporate network allows. Normative spec: PROP-066.
 
 ### 4.2 The directory layout {#directory-layout}
 
@@ -556,7 +560,7 @@ A package's identity is the tuple `(group, name, version, content_hash)`:
 - `version` — a semver string.
 - `content_hash` — the sha256 over the package's file tree (§7.4; [PROP-002 §2.1](spec/modules/vibe-registry/PROP-002-decentralized-registry.md)).
 
-`kind` (`flow` / `feat` / `stack` / `tool` / `mcp` / `lang` / `doc` / `app`) stays a **mandatory `[package]` field**, but it is **metadata, not identity** — it places content (`spec/flows/` vs `spec/feats/`), drives the `--kind` filter on `vibe list` / `vibe search`, and is a UX signal in a kind-prefixed pkgref. It identifies nothing and names nothing.
+`kind` (`flow` / `feat` / `stack` / `tool` / `mcp` / `lang` / `doc` / `app` / `remap`) stays a **mandatory `[package]` field**, but it is **metadata, not identity** — it places content (`spec/flows/` vs `spec/feats/`), drives the `--kind` filter on `vibe list` / `vibe search`, and is a UX signal in a kind-prefixed pkgref. It identifies nothing and names nothing.
 
 A **pkgref** (package reference) is:
 
@@ -621,7 +625,7 @@ role**, carrying `[project]` instead.
 [package]
 name = "wal"                        # without the group / kind prefix
 group = "org.vibevm"                # reverse-FQDN qualifier — mandatory; (group, name) is identity
-kind = "flow"                       # one of: flow, feat, stack, tool, mcp, lang, doc, app — metadata, not identity
+kind = "flow"                       # one of: flow, feat, stack, tool, mcp, lang, doc, app, remap — metadata, not identity
 version = "0.3.0"
 authors = ["Oleg Chirukhin <oleg@example.com>"]
 license = "EULA"
@@ -1511,7 +1515,7 @@ Terms used throughout this document, in alphabetical order. When in doubt, refer
 - **Flow.** An installable kind: a process discipline that modifies how the human-AI development workflow operates.
 - **Head.** The human developer's memory; not vibevm's concern but acknowledged in design.
 - **Install.** The workflow that resolves, fetches, reviews, plans, confirms, and applies a package.
-- **Kind.** One of `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`, `doc`, `app`. The category of a package.
+- **Kind.** One of `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`, `doc`, `app`, `remap`. The category of a package.
 - **Lifecycle.** An ordered phase table; VibeVM's exact default and clean lifecycles are defined by PROP-054.
 - **Lockfile.** `vibe.lock` at project root, the source of truth for what is installed at exact versions.
 - **LLM provider.** A configured backend that vibevm calls to invoke a language model (Anthropic, OpenAI, etc.).

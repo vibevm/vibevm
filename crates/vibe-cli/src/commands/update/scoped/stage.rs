@@ -138,6 +138,10 @@ pub(super) fn stage(
             manifest: placed.manifest,
             content_hash: placed.content_hash,
             source_uri: placed.source_uri,
+            // An in-place slot is placed through the same clone chain as
+            // any other fetch; which candidate served it is recorded by
+            // that chain, not re-derived here (`PROP-066#provenance`).
+            fetched_from: None,
             registry_name: p.registry,
             source_ref: Some(placed.source_ref),
             resolved_commit: placed.resolved_commit,

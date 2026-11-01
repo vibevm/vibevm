@@ -85,6 +85,25 @@ pub fn as_exit_code(err: &anyhow::Error) -> ExitCode {
     if let Some(install_err) = err.downcast_ref::<InstallError>() {
         return ExitCode::from(install_err.exit_code());
     }
+    // PROP-066 `#consent` / `#policy`: a refusal before any effect — an
+    // unanswered remap offer with nobody to ask, a named remap package the
+    // home does not have, a declared artifact with no reachable source.
+    // Every one of them is a refusal, which is exit `2` (VIBEVM-SPEC §9.4)
+    // and the same class `remap_denied` already carries.
+    for cause in err.chain() {
+        if cause
+            .downcast_ref::<crate::commands::remap::ConsentRequired>()
+            .is_some()
+            || cause
+                .downcast_ref::<crate::commands::remap::RemapPackageMissing>()
+                .is_some()
+            || cause
+                .downcast_ref::<crate::commands::remap::RemapUnreachable>()
+                .is_some()
+        {
+            return ExitCode::from(USAGE);
+        }
+    }
     if let Some(app_err) = crate::output::app_error(err) {
         return ExitCode::from(app_exit_code(app_err.class()));
     }

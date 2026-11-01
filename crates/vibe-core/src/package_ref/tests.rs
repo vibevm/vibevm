@@ -21,9 +21,27 @@ fn kind_names_doc_and_app() {
     assert_eq!("app".parse::<PackageKind>().unwrap(), PackageKind::App);
     assert_eq!(PackageKind::Doc.as_str(), "doc");
     assert_eq!(PackageKind::App.as_str(), "app");
-    assert_eq!(PackageKind::ALL.len(), 8);
+    assert_eq!(PackageKind::ALL.len(), 9);
     assert!(PackageKind::ALL.contains(&PackageKind::Doc));
     assert!(PackageKind::ALL.contains(&PackageKind::App));
+}
+
+/// The kind admitted by the 2026-11-01 register amendment (VIBEVM-SPEC
+/// §4.1, PROP-066 `#package`): a package whose deliverable is remap rows.
+/// It joins the closed set, and it is the one kind that carries policy
+/// rather than content — so no other package may depend on one
+/// (`PROP-066#decisions`).
+#[test]
+fn kind_names_remap() {
+    assert_eq!("remap".parse::<PackageKind>().unwrap(), PackageKind::Remap);
+    assert_eq!(PackageKind::Remap.as_str(), "remap");
+    assert!(PackageKind::ALL.contains(&PackageKind::Remap));
+    assert!(PackageKind::Remap.is_remap());
+    for kind in PackageKind::ALL {
+        if kind != PackageKind::Remap {
+            assert!(!kind.is_remap(), "`{kind}` is not a remap package");
+        }
+    }
 }
 
 /// `doc` is the one kind that is read instead of installed

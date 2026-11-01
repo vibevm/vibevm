@@ -87,3 +87,23 @@ pub(crate) fn vvm_offline(cli_offline: bool) -> bool {
 #[cfg(test)]
 #[path = "main_tests.rs"]
 mod tests;
+
+/// Whether a command touches the registry layer (and thus benefits from the
+/// default `~/.vibe/registry.toml` being seeded). Commands like `version` /
+/// `vars` / `tree` / `term` don't resolve packages, so they skip the seed
+/// check. This is advisory — `ensure_default_global_registry` is a cheap
+/// file-existence check regardless.
+pub(crate) fn needs_global_registry(cmd: &crate::cli::Command) -> bool {
+    use crate::cli::Command;
+    matches!(
+        cmd,
+        Command::Init(_)
+            | Command::Install(_)
+            | Command::Update(_)
+            | Command::Reinstall(_)
+            | Command::Outdated(_)
+            | Command::Search(_)
+            | Command::Registry(_)
+            | Command::Cache(_)
+    )
+}

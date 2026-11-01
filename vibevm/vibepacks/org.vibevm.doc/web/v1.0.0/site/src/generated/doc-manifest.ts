@@ -542,6 +542,7 @@ export const PackageKind = {
   Flow: "flow",
   Lang: "lang",
   Mcp: "mcp",
+  Remap: "remap",
   Stack: "stack",
   Tool: "tool",
 } as const;

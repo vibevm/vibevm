@@ -97,6 +97,16 @@ impl From<Requires> for RequiresWire {
         RequiresWire {
             packages,
             capabilities: r.capabilities,
+            remaps: r
+                .remaps
+                .iter()
+                .map(|p| {
+                    (
+                        wire_key(p.kind, p.group.as_ref(), p.name.as_str()),
+                        version_spec_to_constraint_str(&p.version),
+                    )
+                })
+                .collect(),
         }
     }
 }
@@ -192,9 +202,18 @@ impl TryFrom<RequiresWire> for Requires {
                 return Err(format!("dependency `{label}` declared more than once"));
             }
         }
+        let mut remaps: Vec<PackageRef> = Vec::new();
+        for (key, constraint) in w.remaps {
+            let (kind, group, name) = parse_pkgref_key(&key).map_err(|e| e.to_string())?;
+            let version = VersionSpec::parse(&constraint).map_err(|e| e.to_string())?;
+            remaps.push(
+                PackageRef::new(kind, Some(group), name, version).map_err(|e| e.to_string())?,
+            );
+        }
         Ok(Requires {
             packages,
             capabilities: w.capabilities,
+            remaps,
             git_packages,
             path_packages,
             var_packages,

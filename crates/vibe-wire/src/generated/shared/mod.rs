@@ -2059,6 +2059,7 @@ pub enum PackageKind {
     Flow,
     Lang,
     Mcp,
+    Remap,
     Stack,
     Tool,
     /// A value this build does not know. The string is preserved
@@ -2080,6 +2081,7 @@ impl Serialize for PackageKind {
             PackageKind::Flow => "flow",
             PackageKind::Lang => "lang",
             PackageKind::Mcp => "mcp",
+            PackageKind::Remap => "remap",
             PackageKind::Stack => "stack",
             PackageKind::Tool => "tool",
             PackageKind::Unknown(value) => value.as_str(),
@@ -2101,6 +2103,7 @@ impl<'de> Deserialize<'de> for PackageKind {
             "flow" => PackageKind::Flow,
             "lang" => PackageKind::Lang,
             "mcp" => PackageKind::Mcp,
+            "remap" => PackageKind::Remap,
             "stack" => PackageKind::Stack,
             "tool" => PackageKind::Tool,
             _ => PackageKind::Unknown(wire),

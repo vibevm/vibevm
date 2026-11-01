@@ -57,7 +57,7 @@ fn locator() -> Locator {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-066#display")]
 fn the_listing_carries_one_block_per_source_and_the_per_host_footer() {
-    let document = listing(&locator(), true);
+    let document = listing(&locator(), None, true);
     assert_eq!(document.protocol, "vibe-remap/1");
     // The strictest policy of the layers is the document's.
     assert_eq!(document.policy, wire::UnmatchedPolicy::Deny);
@@ -186,7 +186,7 @@ fn a_digest_question_is_asked_about_the_digest_and_a_url_about_the_url() {
 
 #[test]
 fn an_empty_locator_lists_nothing_and_says_so() {
-    let document = listing(&Locator::default(), true);
+    let document = listing(&Locator::default(), None, true);
     assert!(document.sources.is_empty() && document.hosts.is_empty());
     assert_eq!(document.denies, 0);
     assert!(render::listing(&document).contains("no remap rows are active"));

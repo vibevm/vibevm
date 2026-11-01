@@ -75,12 +75,6 @@ fn run() -> ExitCode {
 
     promote_user_config_env();
     init_tracing();
-    composition::remap::install(
-        &cli.remap,
-        read_env_opt(vibe_core::remap::REMAP_ENV),
-        read_env_opt(composition::remap::RELEASE_ORIGIN_ENV),
-    );
-
     // VVM: derive the running version from the binary's own path, and warn
     // when the inherited $VIBEVM_HOME is stale (PROP-019 §2.5).
     let self_loc = commands::vvm::derive_self(std::env::current_exe().ok().as_deref());
@@ -124,9 +118,28 @@ fn run() -> ExitCode {
         ),
     );
 
+    // PROP-066 `#locator`: this invocation's one Locator, built and
+    // installed before any command — it is write-once — and after the
+    // context, because `#consent`'s question needs to know whether anyone
+    // is there to answer it. A refusal stops the run here.
+    if let Err(error) = composition::remap::install(
+        &ctx,
+        composition::remap::Inputs {
+            flags: &cli.remap,
+            env_list: read_env_opt(vibe_core::remap::REMAP_ENV),
+            release_origin: read_env_opt(composition::remap::RELEASE_ORIGIN_ENV),
+            consent: commands::remap::ConsentFlags::from_args(&cli.accept_remap, cli.reject_remap),
+            command: &cli.command,
+            offline: cli.offline,
+        },
+    ) {
+        eprintln!("vibe: {error:#}");
+        return as_exit_code(&error);
+    }
+
     // Seed `~/.vibe/registry.toml` with the default pair on registry-needing
     // commands; never overwrites, soft-warns, skipped by VIBE_NO_DEFAULT_REGISTRY.
-    if needs_global_registry(&cli.command)
+    if composition::needs_global_registry(&cli.command)
         && read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_none()
         && let Err(e) = vibe_core::ensure_default_global_registry()
     {
@@ -311,9 +324,19 @@ fn run() -> ExitCode {
         Command::Prefs(args) => commands::prefs::run(&ctx, args),
         Command::Tree(args) => commands::tree::run(&ctx, args),
         Command::Registry(args) => commands::registry::run(&ctx, args),
-        Command::Remap(args) => {
-            commands::remap::run(&ctx, args, composition::vvm_offline(cli.offline))
-        }
+        // `remap test` answers with a status (PROP-066 `#policy`).
+        Command::Remap(args) => match commands::remap::dispatch(
+            &ctx,
+            args,
+            composition::vvm_offline(cli.offline),
+            !cli.accept_remap.is_empty(),
+        ) {
+            Ok(Some(code)) => {
+                return ExitCode::from(u8::try_from(code.clamp(0, 255)).unwrap_or(1));
+            }
+            Ok(None) => Ok(()),
+            Err(error) => Err(error),
+        },
         Command::Cache(args) => commands::cache::run(&ctx, args, cli.offline),
         Command::Workspace(args) => commands::workspace::run(&ctx, args),
         Command::Vvm(args) => {
@@ -557,24 +580,4 @@ fn init_tracing() {
 /// by the Phase-5 `ambient-env` rule.
 fn read_env_opt(name: &str) -> Option<String> {
     std::env::var(name).ok().filter(|s| !s.trim().is_empty())
-}
-
-/// Whether a command touches the registry layer (and thus benefits from the
-/// default `~/.vibe/registry.toml` being seeded). Commands like `version` /
-/// `vars` / `tree` / `term` don't resolve packages, so they skip the seed
-/// check. This is advisory — `ensure_default_global_registry` is a cheap
-/// file-existence check regardless.
-fn needs_global_registry(cmd: &cli::Command) -> bool {
-    use cli::Command;
-    matches!(
-        cmd,
-        Command::Init(_)
-            | Command::Install(_)
-            | Command::Update(_)
-            | Command::Reinstall(_)
-            | Command::Outdated(_)
-            | Command::Search(_)
-            | Command::Registry(_)
-            | Command::Cache(_)
-    )
 }

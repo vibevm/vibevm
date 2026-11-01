@@ -82,7 +82,7 @@ pub use workspace::*;
     version = env!("CARGO_PKG_VERSION"),
     about = "The disciplined runtime for spec-driven vibecoding.",
     long_about = "vibevm: a CLI software project manager for spec-driven AI-assisted development.\n\
-                  Manages installable building blocks — flow, feat, stack, tool, mcp, lang, doc, app — and assembles\n\
+                  Manages installable building blocks — flow, feat, stack, tool, mcp, lang, doc, app, remap — and assembles\n\
                   them into project-level spec content that AI agents read at session boot."
 )]
 pub struct Cli {
@@ -182,6 +182,29 @@ pub struct Cli {
     /// the chain for one fetch.
     #[arg(long = "remap", global = true, value_name = "FILE")]
     pub remap: Vec<PathBuf>,
+
+    /// PROP-066 `#consent`: accept the remap packages this run meets.
+    /// Bare (`--accept-remap`) accepts every offer the run would apply;
+    /// with a value (`--accept-remap org.corp/intranet`, repeatable)
+    /// only the named ones. An acceptance is recorded against the
+    /// package's current content hash, so a later version of it is a new
+    /// offer. Without this flag an attended terminal is asked and an
+    /// unattended run refuses with `consent_required`.
+    #[arg(
+        long = "accept-remap",
+        global = true,
+        value_name = "PACKAGE",
+        num_args = 0..=1,
+        default_missing_value = "",
+        action = clap::ArgAction::Append,
+    )]
+    pub accept_remap: Vec<String>,
+
+    /// PROP-066 `#consent`: refuse every unanswered remap offer for THIS
+    /// run and record nothing — the rows do not apply and the next run
+    /// asks again. `vibe remap reject <package>` is the permanent answer.
+    #[arg(long = "reject-remap", global = true)]
+    pub reject_remap: bool,
 
     #[command(subcommand)]
     pub command: Command,

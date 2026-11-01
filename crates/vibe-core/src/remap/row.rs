@@ -230,6 +230,11 @@ pub struct RemapRow {
     pub reason: Option<String>,
     /// Which layer, file and position produced it.
     pub from: Provenance,
+    /// `from = "<package>@<version>"` — the remap package a kept row
+    /// outlived (`PROP-066#uninstall`). Written into the user's local
+    /// layer when an uninstall copies an orphaned row there, so `list`
+    /// still says where the row came from after the package is gone.
+    pub from_package: Option<String>,
     /// The git ref a `[[override]]` pinned alongside its `source_url`
     /// (`PROP-066#layers` reads an override as a `package` → `url` row and
     /// carries its `ref` here). No TOML `[[remap]]` row sets it: the key
@@ -246,6 +251,7 @@ impl RemapRow {
         let mut decl = RowDecl {
             scope: self.scope.clone(),
             reason: self.reason.clone(),
+            from: self.from_package.clone(),
             ..RowDecl::default()
         };
         match &self.key {
@@ -314,6 +320,12 @@ pub struct RowDecl {
     /// `reason = "…"`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub reason: Option<String>,
+    /// `from = "<package>@<version>"` — present on a row an uninstall
+    /// copied out of a remap package into the local layer
+    /// (`PROP-066#uninstall`). Read here as well as written, because a
+    /// settings file carrying one has to keep parsing.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub from: Option<String>,
 }
 
 impl RowDecl {
@@ -363,6 +375,7 @@ impl RowDecl {
             target: targets.remove(0),
             scope: self.scope,
             reason: self.reason,
+            from_package: self.from,
             from,
             target_ref: None,
         })
@@ -411,7 +424,9 @@ impl UnmatchedPolicy {
 ///
 /// let p: PolicySection = toml::from_str("unmatched = \"deny\"").unwrap();
 /// assert_eq!(p.unmatched, UnmatchedPolicy::Deny);
+/// assert!(!p.is_default());
 /// assert_eq!(PolicySection::default().unmatched, UnmatchedPolicy::Allow);
+/// assert!(PolicySection::default().is_default());
 /// ```
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -419,6 +434,14 @@ pub struct PolicySection {
     /// What to do with a fetch no row matched.
     #[serde(default)]
     pub unmatched: UnmatchedPolicy,
+}
+
+impl PolicySection {
+    /// `true` when the table says nothing — lets a serializer skip it on a
+    /// manifest that declared no policy at all.
+    pub fn is_default(&self) -> bool {
+        self.unmatched == UnmatchedPolicy::Allow
+    }
 }
 
 /// A whole remap file: `[[remap]]` rows and an optional `[policy]` table.

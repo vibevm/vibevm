@@ -437,6 +437,12 @@ fn glyph_at(kind: PackageKind, ink: Rgb, x: f64, y: f64, side: f64) -> Vec<Shape
         ],
         // An application: a window with its own title bar.
         PackageKind::App => vec![bar(0.08, 0.16, 0.84, 0.16), bar(0.08, 0.36, 0.84, 0.48)],
+        // A remap: one arrow, from where the bytes were declared to where
+        // they are actually looked for.
+        PackageKind::Remap => vec![
+            bar(0.08, 0.46, 0.60, 0.08),
+            place(&[(0.68, 0.34), (0.94, 0.50), (0.68, 0.66)]),
+        ],
     }
 }
 

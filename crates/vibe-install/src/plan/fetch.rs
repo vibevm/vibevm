@@ -147,6 +147,10 @@ pub(super) fn try_in_place_incremental(
         // resolved commit (PROP-022 §2.5).
         content_hash: old.content_hash.as_str().to_string(),
         source_uri: old.source_url.as_str().to_string(),
+        // The provisional describes the slot as the lock left it, and the
+        // lock never carries the remapped URL (`PROP-066#provenance`): the
+        // incremental fetch below records where these bytes came from.
+        fetched_from: None,
         registry_name: old.registry.clone(),
         source_ref: old.source_ref.clone(),
         resolved_commit: old.resolved_commit.clone(),

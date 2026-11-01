@@ -125,7 +125,9 @@ pub(super) fn prompt_kind(args: &InitArgs) -> Result<PackageKind> {
     use std::str::FromStr;
     Ok(PackageKind::from_str(&choice(
         "Package kind",
-        &["tool", "flow", "feat", "stack", "mcp", "lang", "doc", "app"],
+        &[
+            "tool", "flow", "feat", "stack", "mcp", "lang", "doc", "app", "remap",
+        ],
         "tool",
     )?)?)
 }

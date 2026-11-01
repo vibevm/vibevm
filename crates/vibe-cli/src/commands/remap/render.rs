@@ -11,6 +11,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#display");
 
 use vibe_wire::generated::remap_explanation as explanation;
 use vibe_wire::generated::remap_listing as wire;
+use vibe_wire::generated::remap_offer as offer_doc;
 
 /// The width the indented labels are padded to, so `to`, `why`, `scope`,
 /// `from` and `note` line up down the block.
@@ -24,10 +25,15 @@ pub(super) fn listing(document: &wire::RemapListing) -> String {
     }
     for source in &document.sources {
         out.push_str(&format!(
-            "{}  [{}, unmatched = {}]\n",
+            "{}  [{}, unmatched = {}{}]\n",
             source.source,
             layer(&source.layer),
-            policy(&source.policy)
+            policy(&source.policy),
+            source
+                .state
+                .as_ref()
+                .map(|state| format!(", {}", package_state(state)))
+                .unwrap_or_default()
         ));
         if source.rows.is_empty() {
             out.push_str("  (no rows)\n");
@@ -61,7 +67,26 @@ fn row_block(row: &wire::Row) -> String {
     for note in &row.notes {
         out.push_str(&labelled("note", note_text(note)));
     }
+    // Which packages offer this row (`PROP-066#providers`): one name reads
+    // differently from three, and uninstall's question is decided on
+    // exactly this list.
+    if !row.providers.is_empty() {
+        out.push_str(&labelled("by", &row.providers.join(", ")));
+    }
+    if let Some(probed) = &row.probed {
+        out.push_str(&labelled("probed", probed));
+    }
     out
+}
+
+/// The word a package source's state prints as.
+fn package_state(state: &wire::PackageState) -> &'static str {
+    match state {
+        wire::PackageState::Offered => "offered",
+        wire::PackageState::Accepted => "accepted",
+        wire::PackageState::Rejected => "rejected",
+        wire::PackageState::Disabled => "disabled",
+    }
 }
 
 /// `vibe remap explain` (`PROP-066#precedence`): the declared origin, the
@@ -259,5 +284,141 @@ fn explain_note(note: &explanation::Note) -> &'static str {
         }
         explanation::Note::Broad => "a prefix row over a public host rewrites every URL under it",
         explanation::Note::Unknown => "the target could not be classified from here",
+    }
+}
+
+/// The consent question and the offer document, in the same layout and
+/// the same field order as `list` (`PROP-066#display`,
+/// `PROP-066#display-packages`): a header block carrying the package's
+/// key, version, description and state, one numbered block per row, and
+/// the per-host footer.
+pub(super) fn offer(document: &offer_doc::RemapOffer) -> String {
+    let mut out = String::new();
+    for package in &document.packages {
+        out.push('\n');
+        out.push_str(&format!(
+            "{}@{}  [{}]\n",
+            package.package,
+            package.version,
+            offer_state(&package.state)
+        ));
+        if let Some(description) = &package.description {
+            out.push_str(&labelled("about", description));
+        }
+        if let Some(registry) = &package.registry {
+            out.push_str(&labelled("from", registry));
+        }
+        if let Some(policy) = &package.policy {
+            out.push_str(&labelled("policy", &format!("unmatched = {policy}")));
+        }
+        out.push_str(&labelled("digest", &package.content_hash));
+        if package.rows.is_empty() {
+            out.push_str("  (no rows)\n");
+        }
+        for row in &package.rows {
+            out.push_str(&offer_row_block(row));
+        }
+        if !package.hosts.is_empty() {
+            out.push_str(&format!("  {}\n", package.hosts.join("; ")));
+        }
+    }
+    out
+}
+
+/// One numbered row block of the question.
+fn offer_row_block(row: &offer_doc::OfferedRow) -> String {
+    let mut out = format!(
+        "  {}. {}  {}\n",
+        row.number,
+        offer_kind_label(&row.kind),
+        row.what
+    );
+    out.push_str(&labelled(
+        "to",
+        &format!(
+            "{}  [{}, {}]",
+            row.to,
+            row.scheme,
+            offer_reach_label(&row.reach)
+        ),
+    ));
+    if let Some(why) = &row.why {
+        out.push_str(&labelled("why", why));
+    }
+    if let Some(scope) = &row.scope {
+        out.push_str(&labelled("scope", scope));
+    }
+    for note in &row.notes {
+        out.push_str(&labelled("note", offer_note_text(note)));
+    }
+    out
+}
+
+/// The offer document's own spelling of a key kind — the same four words
+/// `list` prints, in the vocabulary the offer schema generated.
+pub(super) fn offer_kind(key: &vibe_core::remap::RemapKey) -> offer_doc::KeyKind {
+    use vibe_core::remap::RemapKey;
+    match key {
+        RemapKey::Sha256(_) => offer_doc::KeyKind::Sha256,
+        RemapKey::Package(_) => offer_doc::KeyKind::Package,
+        RemapKey::Registry(_) => offer_doc::KeyKind::Registry,
+        RemapKey::Prefix(_) => offer_doc::KeyKind::Prefix,
+    }
+}
+
+/// The offer document's spelling of a reach.
+pub(super) fn offer_reach(reach: wire::Reach) -> offer_doc::Reach {
+    match reach {
+        wire::Reach::Local => offer_doc::Reach::Local,
+        wire::Reach::Private => offer_doc::Reach::Private,
+        wire::Reach::Public => offer_doc::Reach::Public,
+        wire::Reach::Unknown => offer_doc::Reach::Unknown,
+    }
+}
+
+/// The offer document's spelling of a note.
+pub(super) fn offer_note(note: wire::Note) -> offer_doc::Note {
+    match note {
+        wire::Note::Unencrypted => offer_doc::Note::Unencrypted,
+        wire::Note::Broad => offer_doc::Note::Broad,
+        wire::Note::Unknown => offer_doc::Note::Unknown,
+    }
+}
+
+fn offer_kind_label(kind: &offer_doc::KeyKind) -> &'static str {
+    match kind {
+        offer_doc::KeyKind::Sha256 => "sha256  ",
+        offer_doc::KeyKind::Package => "package ",
+        offer_doc::KeyKind::Registry => "registry",
+        offer_doc::KeyKind::Prefix => "prefix  ",
+    }
+}
+
+fn offer_reach_label(reach: &offer_doc::Reach) -> &'static str {
+    match reach {
+        offer_doc::Reach::Local => "local",
+        offer_doc::Reach::Private => "private",
+        offer_doc::Reach::Public => "public",
+        offer_doc::Reach::Unknown => "unknown",
+    }
+}
+
+fn offer_note_text(note: &offer_doc::Note) -> &'static str {
+    match note {
+        offer_doc::Note::Unencrypted => {
+            "the target is plain http — bytes cross the network unencrypted"
+        }
+        offer_doc::Note::Broad => "a prefix row over a public host rewrites every URL under it",
+        offer_doc::Note::Unknown => "the target could not be classified from here",
+    }
+}
+
+/// The word an offer's state prints as.
+pub(super) fn offer_state(state: &offer_doc::OfferState) -> &'static str {
+    match state {
+        offer_doc::OfferState::Offered => "offered",
+        offer_doc::OfferState::Accepted => "accepted",
+        offer_doc::OfferState::Rejected => "rejected",
+        offer_doc::OfferState::Disabled => "disabled",
     }
 }

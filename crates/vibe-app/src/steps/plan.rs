@@ -32,6 +32,10 @@ use super::params::{
 use super::sizes::{downloads, input_local, source_cached};
 use super::template::{self, Vars};
 
+#[path = "plan/remap_note.rs"]
+mod remap_note;
+use remap_note::unremappable_network;
+
 /// An attended multi-choice prompt: `prompt`, the rows and which are
 /// preselected; returns the chosen indexes or `None` when cancelled.
 pub type FeatureChooser<'a> =
@@ -163,6 +167,13 @@ pub struct PlannedStep {
     pub step: StepDecl,
     pub run: bool,
     pub reason: Option<String>,
+    /// What a reader has to know about a step that WILL run
+    /// (`PROP-066#not-covered`): today only the marking of a `recipe`
+    /// step that declares `needs = "network"` while the active remap
+    /// policy is `unmatched = "deny"`. What such a script downloads on
+    /// its own is outside vibe's fetches and outside the rows, so the
+    /// reader sees it before the build starts rather than after it fails.
+    pub note: Option<String>,
 }
 
 /// The resolved view of one option, feature set and parameter values.
@@ -256,7 +267,13 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         {
             skipped_agents.push(format!("`{}`", step.id));
         }
-        steps.push(PlannedStep { step, run, reason });
+        let note = unremappable_network(run, &step);
+        steps.push(PlannedStep {
+            step,
+            run,
+            reason,
+            note,
+        });
     }
     let result = result_of(option);
     let produces = steps.iter().any(|planned| {

@@ -59,7 +59,7 @@ pub struct InitArgs {
     pub no_registry: bool,
 
     // --- Package creation flags (for `vibe init package` and project+pkg forms) ---
-    /// Package kind: flow, feat, stack, tool, mcp, lang, doc, app. Default: tool.
+    /// Package kind: flow, feat, stack, tool, mcp, lang, doc, app, remap. Default: tool.
     #[arg(long)]
     pub kind: Option<String>,
 

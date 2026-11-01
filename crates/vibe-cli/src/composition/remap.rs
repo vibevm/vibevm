@@ -16,9 +16,12 @@
 //!    bootstrap agrees with them), then `--remap <file>` (repeatable) and
 //!    `VIBE_REMAP=<file>[,<file>]`.
 //!
-//! The two package layers of `PROP-066#layers` are ranked by the layer
-//! enum and produced by nothing: remap packages, their offers and the
-//! consent that activates them are R-2.
+//! Beneath the local layer sit the two package layers of
+//! `PROP-066#layers`: the remap packages this user accepted in their home,
+//! and the ones the project requires and the lock pins. They are the
+//! weakest rows that are not built in, so anything a developer wrote on
+//! this machine still wins — and they are produced only after the
+//! acceptance ledger says yes, which is what makes an offer an offer.
 //!
 //! A malformed or missing *settings* file is a warning and an absent
 //! layer, the way every optional configuration layer behaves. A malformed
@@ -52,6 +55,11 @@ pub(crate) const RELEASE_ORIGIN_ENV: &str = "VIBEVM_RELEASE_ORIGIN";
 /// parameters, so the CLI's one sanctioned ambient-env root keeps every
 /// `env::var`; the rest are paths this module resolves.
 pub(crate) struct RemapEnv {
+    /// The remap packages whose rows this run carries, lowest layer
+    /// first: the user home's accepted offers, then the ones the project
+    /// requires (`PROP-066#layers`). Empty until consent says otherwise,
+    /// which is what makes an offer an offer.
+    pub accepted: Vec<(Layer, vibe_core::remap::RemapPackage)>,
     /// `--remap <file>`, in the order given.
     pub flags: Vec<PathBuf>,
     /// The raw `VIBE_REMAP` value, if the variable is set and non-empty.
@@ -79,6 +87,22 @@ pub(crate) fn build(env: &RemapEnv) -> Result<(Locator, Vec<String>)> {
         rows: default_raw_file_rows(&vibe_registry::git_backend::shell::raw_http::default_bases()),
         policy: Default::default(),
     }];
+
+    // The two package layers, beneath everything a user wrote themselves:
+    // a package's rows are the weakest thing that is not built in, so a
+    // local row or a `--remap` file always wins over an offer
+    // (`PROP-066#layers`).
+    for (layer, package) in &env.accepted {
+        match package.loaded(*layer) {
+            Ok(loaded) => sources.push(loaded),
+            // A malformed row inside an accepted package is a warning and
+            // an absent layer, not a dead command: `vibe check` is where
+            // a package's rows are judged, and refusing every install
+            // over one bad row in an accepted offer would be worse than
+            // the row.
+            Err(error) => warnings.push(format!("`{}`: {error}", package.label())),
+        }
+    }
 
     let (registries, mirrors, overrides) = registry_tables(env, &mut warnings);
     sources.push(LoadedSource {
@@ -115,6 +139,7 @@ pub(crate) fn build(env: &RemapEnv) -> Result<(Locator, Vec<String>)> {
             scope: None,
             reason: Some(format!("${RELEASE_ORIGIN_ENV}")),
             from: vibe_core::remap::Provenance::new(Layer::Invocation, RELEASE_ORIGIN_ENV, 0),
+            from_package: None,
             target_ref: None,
         };
         sources.push(LoadedSource {
@@ -267,29 +292,196 @@ fn registry_tables(
 /// layer; a `--remap` file that cannot be read is fatal, because the
 /// operator named it on this command line and a run that quietly fetched
 /// from the public hosts instead would be the worst possible answer.
-pub(crate) fn install(flags: &[PathBuf], env_list: Option<String>, release_origin: Option<String>) {
+pub(crate) fn install(ctx: &crate::output::Context, inputs: Inputs<'_>) -> Result<()> {
+    let project_root = std::env::current_dir().ok();
+    let accepted = accepted_offers(ctx, &inputs, project_root.as_deref())?;
     let env = RemapEnv {
-        flags: flags.to_vec(),
-        env: env_list,
+        accepted,
+        flags: inputs.flags.to_vec(),
+        env: inputs.env_list,
         user_settings: vibe_core::settings::settings_toml_path(),
-        project_root: std::env::current_dir().ok(),
+        project_root,
         global_registry: vibe_core::settings::registry_config_path(),
-        release_origin,
+        release_origin: inputs.release_origin,
     };
-    match build(&env) {
-        Ok((locator, warnings)) => {
-            for warning in warnings {
-                eprintln!("vibe: warning: remap layer skipped: {warning}");
-            }
-            let _ = vibe_core::remap::install(locator);
+    let (locator, warnings) = build(&env)?;
+    for warning in warnings {
+        eprintln!("vibe: warning: remap layer skipped: {warning}");
+    }
+    let _ = vibe_core::remap::install(locator);
+    Ok(())
+}
+
+/// What the composition root hands this module: the invocation's flags,
+/// the two environment values, and whether this verb resolves artifacts at
+/// all.
+pub(crate) struct Inputs<'a> {
+    /// `--remap <file>`, in the order given.
+    pub flags: &'a [PathBuf],
+    /// The raw `VIBE_REMAP` value.
+    pub env_list: Option<String>,
+    /// `$VIBEVM_RELEASE_ORIGIN`.
+    pub release_origin: Option<String>,
+    /// How this run answers an unanswered offer.
+    pub consent: crate::commands::remap::ConsentFlags,
+    /// The verb this invocation runs. Whether an unanswered offer is a
+    /// question at all depends on it (`PROP-066#consent`), and the
+    /// decision is taken here rather than at the composition root
+    /// because the cheap half of it — "is there a pending offer?" —
+    /// has to come first.
+    pub command: &'a crate::cli::Command,
+    /// The run's network posture, for the diagnostics the question shows.
+    pub offline: bool,
+}
+
+/// The accepted offers of this run, per layer, asking or refusing as
+/// `PROP-066#consent` requires.
+///
+/// A verb that resolves no artifact reads the ledger and asks nothing: the
+/// rows of an already accepted package still apply (nothing about this run
+/// changes what the user agreed to), and an unanswered one stays
+/// unanswered.
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#layers-packages")]
+fn accepted_offers(
+    ctx: &crate::output::Context,
+    inputs: &Inputs<'_>,
+    project_root: Option<&Path>,
+) -> Result<Vec<(Layer, vibe_core::remap::RemapPackage)>> {
+    let mut home = match crate::commands::remap::RemapHome::open() {
+        Ok(home) => home,
+        // No resolvable home is no accepted package, which is the
+        // pre-PROP-066 behaviour exactly; a command that needs the home
+        // (`remap accept`) reports the missing home itself.
+        Err(_) => return Ok(Vec::new()),
+    };
+    let accepted = if asks_about_offers(&home, inputs) {
+        crate::commands::remap::resolve_consent(ctx, &mut home, &inputs.consent, inputs.offline)?
+    } else {
+        // A verb that applies no offer asks nothing and refuses nothing:
+        // the rows of an already accepted package still apply (this run
+        // changes nothing about what the user agreed to), and an
+        // unanswered one stays unanswered for the run that would use it.
+        home.accepted()
+    };
+    // A package the project requires is the higher of the two package
+    // layers (`PROP-066#layers`), and the lock is what says which ones
+    // those are — pinned there so every clone of the project is offered
+    // the same list.
+    let required = project_required(project_root);
+    Ok(accepted
+        .into_iter()
+        .map(|package| {
+            let layer = if required.iter().any(|key| key == &package.key) {
+                Layer::ProjectPackage
+            } else {
+                Layer::UserPackage
+            };
+            (layer, package)
+        })
+        .collect())
+}
+
+/// The remap packages the project's lock pins (`PROP-066#layers-packages`).
+fn project_required(project_root: Option<&Path>) -> Vec<String> {
+    let Some(root) = project_root else {
+        return Vec::new();
+    };
+    let lock = root.join(vibe_core::manifest::Lockfile::FILENAME);
+    if !lock.exists() {
+        return Vec::new();
+    }
+    vibe_core::manifest::Lockfile::read(&lock)
+        .map(|lockfile| lockfile.remaps.into_iter().map(|row| row.package).collect())
+        .unwrap_or_default()
+}
+
+/// Whether an unanswered remap offer is a question for this run
+/// (`PROP-066#consent`).
+///
+/// Three tests, cheapest first, because the third costs a resolution: the
+/// verb has to resolve artifacts at all; there has to be an offer nobody
+/// has answered; and the verb must not be one that only records or
+/// retires an offer. The order is what keeps the probe off every ordinary
+/// run — a home with nothing pending never reaches it.
+fn asks_about_offers(home: &crate::commands::remap::RemapHome, inputs: &Inputs<'_>) -> bool {
+    resolves_artifacts(inputs.command)
+        && !home.pending().is_empty()
+        && !only_records_remap_offers(inputs.command, inputs.offline)
+}
+
+/// Whether this verb resolves artifacts, and therefore whether an
+/// unanswered remap offer is a question for it (PROP-066 `#consent`).
+///
+/// The list is the one `#consent` names — `install`, `update`,
+/// `uninstall`, `app plan`, `cache add`, `self update` — plus every other
+/// verb that reaches a fetch path: the lifecycle phases, `reinstall`,
+/// `outdated`, `search`, `doc`, `skill`, `mcp`. The verbs left out are the
+/// ones that must never ask: `remap` itself (the operator is in the middle
+/// of answering), and everything that reads only local state.
+fn resolves_artifacts(cmd: &crate::cli::Command) -> bool {
+    use crate::cli::AppCommand;
+    use crate::cli::CacheSubcommand;
+    use crate::cli::Command;
+    // `vibe app launchers --json` and `vibe cache check` read local state
+    // only; a desktop shell polls them, and a pending offer must not turn
+    // every poll into a question (or, unattended, into `consent_required`).
+    if let Command::App(args) = cmd {
+        return matches!(
+            args.command,
+            AppCommand::Plan { .. }
+                | AppCommand::Modify { .. }
+                | AppCommand::Outdated { .. }
+                | AppCommand::Rollback { .. }
+        );
+    }
+    if let Command::Cache(args) = cmd {
+        return matches!(args.command, CacheSubcommand::Add(_));
+    }
+    matches!(
+        cmd,
+        Command::Install(_)
+            | Command::Update(_)
+            | Command::Uninstall(_)
+            | Command::Reinstall(_)
+            | Command::Outdated(_)
+            | Command::Search(_)
+            | Command::Doc(_)
+            | Command::Skill(_)
+            | Command::Mcp(_)
+            | Command::Vvm(_)
+            | Command::Validate(_)
+            | Command::Generate(_)
+            | Command::Build(_)
+            | Command::Test(_)
+            | Command::Create(_)
+            | Command::Verify(_)
+            | Command::Package(_)
+            | Command::Deploy(_)
+    )
+}
+
+/// Whether this run only RECORDS remap offers rather than applying any
+/// (PROP-066 `#consent`).
+///
+/// Installing a remap package, or removing one, applies no row: the first
+/// writes an offer nobody has answered yet and the second asks its own
+/// question (`#uninstall`). Neither may be blocked by a *different*
+/// unanswered offer, or a home with one pending offer could never install
+/// a second remap package without first answering the first.
+///
+/// The kind is read from the manifest the registry would serve, through
+/// the consent-free layers — an unaccepted row must not be used to fetch
+/// anything, so resolving the probe without it is not a loss. A probe that
+/// cannot answer says `false`, which only means the run asks its question
+/// as any other install does.
+fn only_records_remap_offers(cmd: &crate::cli::Command, offline: bool) -> bool {
+    match cmd {
+        crate::cli::Command::Install(args) if args.global => {
+            crate::commands::remap::claims_install(args, offline).is_some()
         }
-        Err(error) => {
-            eprintln!("vibe: {error:#}");
-            // A named remap file that cannot be read leaves the Locator
-            // uninstalled, so `active()` is the empty one and the run
-            // would fetch from the declared origins — exactly what the
-            // file existed to prevent. The process stops instead.
-            std::process::exit(crate::exit_code::USAGE as i32);
+        crate::cli::Command::Uninstall(args) => {
+            crate::commands::remap::claims_uninstall(&args.package)
         }
+        _ => false,
     }
 }

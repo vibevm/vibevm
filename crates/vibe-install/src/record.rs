@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+use vibe_core::lock_provenance::{FetchedFrom, LockProvenance};
 use vibe_core::manifest::{GitPackageDep, LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::{ContentHash, PackageName, PackageRef, SourceUrl, VersionSpec};
 use vibe_resolver::ResolvedNode;
@@ -244,6 +245,42 @@ pub(crate) fn record_app_requirements(lockfile: &mut Lockfile, fetched: &[Fetche
             .find(|f| f.cached.resolved.group == row.group && f.cached.resolved.name == row.name)
             .map(|f| &f.cached.manifest)
     });
+}
+
+/// Where the bytes of each locked package actually came from
+/// (`PROP-066#provenance`).
+///
+/// `fetched_from` was to sit on the `[[package]]` row beside the canonical
+/// `source_url`, on the understanding that an older vibe ignores a field
+/// it does not know. It does not: every lockfile struct carries
+/// `deny_unknown_fields`, so the extra key would make an older binary
+/// unable to read the lock at all — the one file a project cannot afford
+/// to make unreadable. The PROP's own fallback applies, and the fact goes
+/// into the sidecar `vibe.lock.provenance`, which an older vibe never
+/// opens, is regenerated on every install, and is resolved from by
+/// nothing: deleting it loses a record and changes nothing about what is
+/// installed. A run where every package came from its canonical origin
+/// records nothing, and the sidecar is then removed rather than written
+/// empty.
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
+pub(crate) fn fetch_provenance(fetched: &[Fetched]) -> LockProvenance {
+    LockProvenance {
+        packages: fetched
+            .iter()
+            .filter_map(|f| {
+                Some(FetchedFrom {
+                    package: format!(
+                        "{}/{}",
+                        f.cached.resolved.group.as_str(),
+                        f.cached.resolved.name
+                    ),
+                    version: f.cached.resolved.version.to_string(),
+                    fetched_from: f.cached.fetched_from.clone()?,
+                    row: None,
+                })
+            })
+            .collect(),
+    }
 }
 
 #[cfg(test)]

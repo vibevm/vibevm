@@ -381,6 +381,13 @@ pub(crate) struct ManifestWire {
     artifacts: Option<ArtifactsWire>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     deploy: Option<DeploySectionWire>,
+    #[serde(default, skip_serializing_if = "crate::remap::RemapSection::is_empty")]
+    remap: crate::remap::RemapSection,
+    #[serde(
+        default,
+        skip_serializing_if = "crate::remap::PolicySection::is_default"
+    )]
+    policy: crate::remap::PolicySection,
     #[serde(default, skip_serializing_if = "Compatibility::is_empty")]
     compatibility: Compatibility,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -479,6 +486,8 @@ impl TryFrom<ManifestWire> for Manifest {
             mechanism_routes,
             artifacts,
             deploy,
+            remap: wire.remap,
+            policy: wire.policy,
             compatibility: wire.compatibility,
             boot_snippet: wire.boot_snippet,
             features: wire.features,
@@ -563,6 +572,8 @@ impl TryFrom<Manifest> for ManifestWire {
             mechanism_routes,
             artifacts,
             deploy,
+            remap: manifest.remap,
+            policy: manifest.policy,
             compatibility: manifest.compatibility,
             boot_snippet: manifest.boot_snippet,
             features: manifest.features,

@@ -204,4 +204,12 @@ pub struct Step {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub reason: Option<String>,
+
+    /// What a reader has to know about a step that WILL run — today only PROP-
+    /// 066#not-covered's marking of a recipe step that needs the network under
+    /// a `deny` policy: what such a script downloads on its own is outside
+    /// vibe's fetches and outside the rows, so the reader sees it before the
+    /// build starts.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub note: Option<String>,
 }

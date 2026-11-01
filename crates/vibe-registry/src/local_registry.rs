@@ -223,6 +223,8 @@ impl LocalRegistry {
             manifest,
             content_hash,
             source_uri,
+            // Nothing redirected this fetch (`PROP-066#provenance`).
+            fetched_from: None,
             // `LocalRegistry` (`--registry <path>`) is the M0-shape and
             // does not participate in the per-package / multi-registry
             // model; it leaves the lockfile-v2 provenance fields blank.
