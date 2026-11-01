@@ -51,6 +51,9 @@ use std::sync::Once;
 use serde::{Deserialize, Serialize};
 use specmark::spec;
 
+mod transfer;
+pub use transfer::TransferConfig;
+
 /// Parsed `<settings-dir>/config.toml` (canonical `~/.vibe/config.toml`).
 ///
 /// ```
@@ -110,6 +113,10 @@ pub struct UserConfig {
     /// `git` reads (`PROP-066#locator`).
     #[serde(default, skip_serializing_if = "ProxyConfig::is_default")]
     pub proxy: ProxyConfig,
+
+    /// `[transfer]` — the download rate limit (`PROP-068#limit`).
+    #[serde(default, skip_serializing_if = "TransferConfig::is_default")]
+    pub transfer: TransferConfig,
 }
 
 /// `[proxy]` section — the one place a proxy is configured

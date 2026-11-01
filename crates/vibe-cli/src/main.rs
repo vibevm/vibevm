@@ -73,7 +73,7 @@ fn run() -> ExitCode {
         }
     };
 
-    promote_user_config_env();
+    let transfer_config = promote_user_config_env();
     init_tracing();
     // VVM: derive the running version from the binary's own path, and warn
     // when the inherited $VIBEVM_HOME is stale (PROP-019 §2.5).
@@ -125,6 +125,7 @@ fn run() -> ExitCode {
             read_env_opt("VIBE_PROGRESS_FORMAT").as_deref(),
         ),
     );
+    let ctx = composition::transfers::attach(ctx, &transfer_config);
 
     // PROP-066 `#locator`: this invocation's one Locator, built and
     // installed before any command — it is write-once — and after the
@@ -376,6 +377,7 @@ fn run() -> ExitCode {
             cli.invoked_by.as_deref(),
         ),
         Command::Progress(args) => commands::progress::run(&ctx, args),
+        Command::Transfers(args) => commands::transfers::run(&ctx, args),
         Command::Tools { json } => {
             let cwd = std::env::current_dir().unwrap_or_else(|_| ".".into());
             commands::tools::run(&ctx, &cwd, json)
@@ -523,7 +525,7 @@ fn run() -> ExitCode {
               the env-audit crate is test infrastructure and a mutate-anytime \
               safe production API would advertise soundness it cannot prove"
 )]
-fn promote_user_config_env() {
+fn promote_user_config_env() -> vibe_core::user_config::TransferConfig {
     let cfg = match UserConfig::load() {
         Ok(c) => c,
         Err(e) => {
@@ -532,7 +534,7 @@ fn promote_user_config_env() {
                 output::language::warning(&format!("user-level config could not be read: {e}"))
             );
             let _ = PROMOTED_FROM_USER_CONFIG.set(BTreeSet::new());
-            return;
+            return Default::default();
         }
     };
     let (admitted, rejected) = partition_env_promotions(&cfg.env);
@@ -576,6 +578,7 @@ fn promote_user_config_env() {
         promoted.insert(name.to_string());
     }
     let _ = PROMOTED_FROM_USER_CONFIG.set(promoted);
+    cfg.transfer
 }
 
 fn init_tracing() {

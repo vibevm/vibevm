@@ -188,6 +188,14 @@ impl MultiRegistryResolver {
 
     /// Attach the invocation-owned progress tree used by registry operations.
     pub fn with_progress(mut self, progress: vibe_core::progress::Progress) -> Self {
+        // The index clients were built by the probe, before this call; the
+        // invocation's journal reaches their catalog downloads from here
+        // (`PROP-068#coverage`).
+        if let Some(transfers) = progress.transfers() {
+            for client in self.registries.iter().filter_map(|r| r.index_client()) {
+                client.attach_transfers(transfers);
+            }
+        }
         self.progress = progress;
         self
     }

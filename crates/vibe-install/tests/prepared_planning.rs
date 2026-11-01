@@ -239,7 +239,7 @@ fn progress_starts_before_the_resolver_blocks_and_fails_honestly() {
     ));
     assert!(matches!(
         events.last(),
-        Some(ProgressEventKind::Failed { message }) if message == "dependency resolution failed"
+        Some(ProgressEventKind::Failed { message, .. }) if message == "dependency resolution failed"
     ));
 }
 

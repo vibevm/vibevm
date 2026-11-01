@@ -1,0 +1,285 @@
+{
+  "metadata": {
+    "description": "Version 1 of one transfer as the journal under the settings root keeps it (PROP-068#journal): transfers/active/<pid>-<n>.json while it runs (the record, bytes and peak so far, the samples of the last five minutes) and one line of transfers/history.jsonl after it (the record, the outcome with its message, the totals and the per-second series). The record names the process and the command's verb, what the bytes are for, where they land and the run they belong to.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-068#schemas"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::transfer_record"
+    },
+    "x-rust-type": "TransferRecord",
+    "x-wire-order": [
+      "id",
+      "batch",
+      "kind",
+      "url",
+      "purpose",
+      "package",
+      "step",
+      "destination",
+      "total",
+      "started",
+      "pid",
+      "command",
+      "precision",
+      "limited",
+      "limit_bps",
+      "remapped_from",
+      "resume",
+      "continues",
+      "bytes",
+      "peak_bps",
+      "samples",
+      "last",
+      "outcome",
+      "message",
+      "elapsed_ms",
+      "average_bps",
+      "series",
+      "bucket_seconds"
+    ]
+  },
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "batch": {
+      "type": "string"
+    },
+    "kind": {
+      "ref": "transfer_kind"
+    },
+    "url": {
+      "type": "string"
+    },
+    "purpose": {
+      "ref": "purpose"
+    },
+    "destination": {
+      "ref": "destination"
+    },
+    "started": {
+      "type": "string"
+    },
+    "precision": {
+      "ref": "precision"
+    },
+    "limited": {
+      "type": "boolean"
+    },
+    "pid": {
+      "ref": "count"
+    },
+    "command": {
+      "type": "string"
+    },
+    "bytes": {
+      "ref": "count"
+    },
+    "peak_bps": {
+      "ref": "count"
+    }
+  },
+  "optionalProperties": {
+    "package": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "step": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "total": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null,
+        "description": "The size when the server announced it or the manifest declared it; absent otherwise."
+      }
+    },
+    "limit_bps": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null,
+        "description": "The rate limit in force when limited is true (PROP-068#limit)."
+      }
+    },
+    "remapped_from": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "The URL the manifest named when a remap row fetched another (PROP-066)."
+      }
+    },
+    "resume": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "The command line that resumes an interrupted command (PROP-068#pause)."
+      }
+    },
+    "continues": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "The id of the interrupted transfer this one continues."
+      }
+    },
+    "samples": {
+      "elements": {
+        "ref": "sample"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "An active file's samples of the last five minutes."
+      }
+    },
+    "last": {
+      "ref": "sample",
+      "metadata": {
+        "x-default": null,
+        "description": "The last sample of an active transfer, in a listing."
+      }
+    },
+    "outcome": {
+      "ref": "outcome",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "message": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "elapsed_ms": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "average_bps": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "series": {
+      "elements": {
+        "ref": "bucket"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Per-second buckets from start to end, at most 3600; bucket_seconds says how wide."
+      }
+    },
+    "bucket_seconds": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  },
+  "definitions": {
+    "count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      }
+    },
+    "transfer_kind": {
+      "enum": [
+        "http",
+        "git"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "purpose": {
+      "enum": [
+        "package-source",
+        "archive",
+        "native-input",
+        "package-clone",
+        "release-bundle",
+        "index-file",
+        "other"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "destination": {
+      "enum": [
+        "store",
+        "cache",
+        "work",
+        "home"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "precision": {
+      "enum": [
+        "counted",
+        "reported"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "outcome": {
+      "enum": [
+        "finished",
+        "failed",
+        "interrupted"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "sample": {
+      "metadata": {
+        "x-wire-order": [
+          "at",
+          "bytes",
+          "rate_bps"
+        ]
+      },
+      "properties": {
+        "at": {
+          "type": "string"
+        },
+        "bytes": {
+          "ref": "count"
+        },
+        "rate_bps": {
+          "ref": "count"
+        }
+      }
+    },
+    "bucket": {
+      "metadata": {
+        "x-wire-order": [
+          "second",
+          "bytes"
+        ]
+      },
+      "properties": {
+        "second": {
+          "ref": "count"
+        },
+        "bytes": {
+          "ref": "count"
+        }
+      }
+    }
+  }
+}

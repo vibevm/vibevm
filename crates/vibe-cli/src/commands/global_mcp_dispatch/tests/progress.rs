@@ -66,11 +66,13 @@ fn global_install_reports_nested_typed_stages_and_terminal_success() {
             events
                 .iter()
                 .skip(started + 1)
-                .any(|event| event.task_id == task && event.kind == ProgressEventKind::Finished),
+                .any(|event| event.task_id == task
+                    && matches!(event.kind, ProgressEventKind::Finished { .. })),
             "unfinished {label}"
         );
     }
-    assert!(events.iter().any(|event| event.task_id == root.task_id && event.kind == ProgressEventKind::Finished));
+    assert!(events.iter().any(|event| event.task_id == root.task_id
+        && matches!(event.kind, ProgressEventKind::Finished { .. })));
     assert!(!events.iter().any(|event| matches!(
         event.kind,
         ProgressEventKind::Failed { .. } | ProgressEventKind::Stopped
@@ -109,7 +111,8 @@ fn global_registration_failure_has_failed_root_without_finished_root() {
         .unwrap();
     assert!(events.iter().any(|event| event.task_id == root.task_id
         && matches!(event.kind, ProgressEventKind::Failed { .. })));
-    assert!(!events.iter().any(|event| event.task_id == root.task_id && event.kind == ProgressEventKind::Finished));
+    assert!(!events.iter().any(|event| event.task_id == root.task_id
+        && matches!(event.kind, ProgressEventKind::Finished { .. })));
 }
 
 #[test]

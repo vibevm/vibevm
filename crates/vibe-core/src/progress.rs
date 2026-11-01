@@ -21,6 +21,8 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-060#OBSERVATION");
 
+pub mod transfer;
+
 use std::fmt;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU8, AtomicU64, Ordering};
@@ -93,11 +95,17 @@ pub enum ProgressEventKind {
         /// Present only on the task that installs a requirement of another
         /// package, so a consumer keys the subtree without parsing the label.
         requires: Option<Requires>,
+        /// Present only on the task of a download (`PROP-068#stream`).
+        transfer: Option<Box<transfer::TransferRecord>>,
     },
     Progress {
         completed: u64,
         total: Option<u64>,
         unit: String,
+        /// The transfer id and the rate over the last second, on the
+        /// samples of a download (`PROP-068#stream`).
+        transfer: Option<String>,
+        rate_bps: Option<u64>,
     },
     Detail {
         message: String,
@@ -106,12 +114,17 @@ pub enum ProgressEventKind {
         level: ProgressDiagnosticLevel,
         message: String,
     },
-    Finished,
+    Finished {
+        /// The final figures of a download.
+        transfer: Option<TransferEnd>,
+    },
     Skipped {
         reason: String,
     },
     Failed {
         message: String,
+        /// How far a download got.
+        transfer: Option<TransferEnd>,
     },
     /// The task handle disappeared without an explicit outcome.
     Stopped,
@@ -137,6 +150,23 @@ pub struct Requires {
     pub key: String,
     pub scope: String,
     pub step: Option<String>,
+}
+
+/// The final figures of a download's task (`PROP-068#stream`): its id, the
+/// bytes counted, the size when known and the peak of its per-second rates.
+///
+/// ```
+/// use vibe_core::progress::TransferEnd;
+///
+/// let end = TransferEnd { id: "7:1".into(), bytes: 10, total: Some(10), peak_bps: 40 };
+/// assert_eq!(end.total, Some(end.bytes));
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TransferEnd {
+    pub id: String,
+    pub bytes: u64,
+    pub total: Option<u64>,
+    pub peak_bps: u64,
 }
 
 /// A child-operation diagnostic that remains visible in ordinary human mode.
@@ -200,6 +230,9 @@ struct ProgressInner {
 pub struct Progress {
     inner: Option<Arc<ProgressInner>>,
     parent_id: Option<TaskId>,
+    /// The invocation's journal, limit and verb for downloads; carried even
+    /// by an inert handle, since a run nobody watches is still journaled.
+    transfers: Option<transfer::Transfers>,
 }
 
 impl fmt::Debug for Progress {
@@ -221,24 +254,50 @@ impl Progress {
                 next_id: AtomicU64::new(1),
             })),
             parent_id: None,
+            transfers: None,
         }
+    }
+
+    /// Attach the invocation's [`transfer::Transfers`]; every task started
+    /// beneath this handle carries them.
+    pub fn with_transfers(self, transfers: Option<transfer::Transfers>) -> Self {
+        Self { transfers, ..self }
+    }
+
+    pub fn transfers(&self) -> Option<&transfer::Transfers> {
+        self.transfers.as_ref()
     }
 
     /// Starts a task beneath this handle's parent, emitting `Started` before
     /// the handle is returned.
     pub fn task(&self, label: impl Into<String>) -> ProgressTask {
-        self.start(label.into(), None)
+        self.start(label.into(), None, None)
     }
 
     /// Starts a task that installs a requirement of another package; its
     /// `Started` event carries `requires` beside the label.
     pub fn task_requiring(&self, label: impl Into<String>, requires: Requires) -> ProgressTask {
-        self.start(label.into(), Some(requires))
+        self.start(label.into(), Some(requires), None)
     }
 
-    fn start(&self, label: String, requires: Option<Requires>) -> ProgressTask {
+    /// Starts the task of a download; its `Started` event carries the
+    /// transfer's record (`PROP-068#stream`).
+    pub fn task_transferring(
+        &self,
+        label: impl Into<String>,
+        record: transfer::TransferRecord,
+    ) -> ProgressTask {
+        self.start(label.into(), None, Some(Box::new(record)))
+    }
+
+    fn start(
+        &self,
+        label: String,
+        requires: Option<Requires>,
+        transfer: Option<Box<transfer::TransferRecord>>,
+    ) -> ProgressTask {
         let Some(inner) = &self.inner else {
-            return ProgressTask::inert();
+            return ProgressTask::inert(self.transfers.clone());
         };
         let state = Arc::new(TaskState {
             inner: Arc::clone(inner),
@@ -247,8 +306,15 @@ impl Progress {
             started: Instant::now(),
             terminal: AtomicU8::new(ACTIVE),
         });
-        state.emit(ProgressEventKind::Started { label, requires });
-        ProgressTask { state: Some(state) }
+        state.emit(ProgressEventKind::Started {
+            label,
+            requires,
+            transfer,
+        });
+        ProgressTask {
+            state: Some(state),
+            transfers: self.transfers.clone(),
+        }
     }
 }
 
@@ -301,6 +367,7 @@ impl TaskState {
 #[must_use = "dropping an unfinished progress task reports it as stopped"]
 pub struct ProgressTask {
     state: Option<Arc<TaskState>>,
+    transfers: Option<transfer::Transfers>,
 }
 
 impl fmt::Debug for ProgressTask {
@@ -313,8 +380,11 @@ impl fmt::Debug for ProgressTask {
 }
 
 impl ProgressTask {
-    fn inert() -> Self {
-        Self { state: None }
+    fn inert(transfers: Option<transfer::Transfers>) -> Self {
+        Self {
+            state: None,
+            transfers,
+        }
     }
 
     /// Returns the task's invocation-local identity.
@@ -327,12 +397,19 @@ impl ProgressTask {
     /// Returns a progress handle whose new tasks are children of this task.
     pub fn progress(&self) -> Progress {
         let Some(state) = &self.state else {
-            return Progress::default();
+            return Progress::default().with_transfers(self.transfers.clone());
         };
         Progress {
             inner: Some(Arc::clone(&state.inner)),
             parent_id: Some(state.id),
+            transfers: self.transfers.clone(),
         }
+    }
+
+    /// The invocation's journal, limit and verb for downloads, when the
+    /// composition root attached them.
+    pub fn transfers(&self) -> Option<&transfer::Transfers> {
+        self.transfers.as_ref()
     }
 
     /// Reports a measurement obtained from work the operation already needs.
@@ -344,6 +421,8 @@ impl ProgressTask {
                 completed,
                 total,
                 unit: unit.to_owned(),
+                transfer: None,
+                rate_bps: None,
             });
         }
     }
@@ -375,7 +454,7 @@ impl ProgressTask {
     /// Marks the task successful.
     pub fn finish(&self) {
         if let Some(state) = &self.state {
-            state.terminate(ProgressEventKind::Finished);
+            state.terminate(ProgressEventKind::Finished { transfer: None });
         }
     }
 
@@ -393,6 +472,7 @@ impl ProgressTask {
         if let Some(state) = &self.state {
             state.terminate(ProgressEventKind::Failed {
                 message: message.into(),
+                transfer: None,
             });
         }
     }

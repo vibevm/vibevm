@@ -9,8 +9,10 @@ use std::collections::BTreeMap;
 use std::io::{self, Write};
 use std::sync::Mutex;
 
+use vibe_core::progress::transfer::TransferRecord;
 use vibe_core::progress::{
     ProgressDiagnosticLevel, ProgressEvent, ProgressEventKind, ProgressObserver, TaskId,
+    TransferEnd,
 };
 use vibe_wire::generated::progress_event as wire;
 
@@ -62,17 +64,29 @@ impl ProgressObserver for MachineRenderer {
             unit: None,
             level: None,
             message: None,
+            transfer: None,
+            transfer_record: None,
+            rate_bps: None,
+            peak_bps: None,
         };
         let terminal = matches!(
             event.kind,
-            ProgressEventKind::Finished
+            ProgressEventKind::Finished { .. }
                 | ProgressEventKind::Skipped { .. }
                 | ProgressEventKind::Failed { .. }
                 | ProgressEventKind::Stopped
         );
         match event.kind {
-            ProgressEventKind::Started { label, requires } => {
+            ProgressEventKind::Started {
+                label,
+                requires,
+                transfer,
+            } => {
                 line.kind = wire::Kind::Start;
+                if let Some(record) = transfer {
+                    line.transfer = Some(record.id.clone());
+                    line.transfer_record = wire_record(*record);
+                }
                 line.requires = requires.map(|requires| wire::Requires {
                     key: requires.key,
                     scope: requires.scope,
@@ -86,11 +100,15 @@ impl ProgressObserver for MachineRenderer {
                 completed,
                 total,
                 unit,
+                transfer,
+                rate_bps,
             } => {
                 line.kind = wire::Kind::Measurement;
                 line.completed = Some(completed);
                 line.total = total;
                 line.unit = Some(unit);
+                line.transfer = transfer;
+                line.rate_bps = rate_bps;
             }
             ProgressEventKind::Detail { message } => {
                 line.message = Some(sanitize_progress_text(&message));
@@ -103,14 +121,18 @@ impl ProgressObserver for MachineRenderer {
                 });
                 line.message = Some(sanitize_progress_text(&message));
             }
-            ProgressEventKind::Finished => line.kind = wire::Kind::Finish,
+            ProgressEventKind::Finished { transfer } => {
+                line.kind = wire::Kind::Finish;
+                end_figures(&mut line, transfer);
+            }
             ProgressEventKind::Skipped { reason } => {
                 line.kind = wire::Kind::Skip;
                 line.message = Some(sanitize_progress_text(&reason));
             }
-            ProgressEventKind::Failed { message } => {
+            ProgressEventKind::Failed { message, transfer } => {
                 line.kind = wire::Kind::Fail;
                 line.message = Some(sanitize_progress_text(&message));
+                end_figures(&mut line, transfer);
             }
             ProgressEventKind::Stopped => {
                 line.kind = wire::Kind::Fail;
@@ -126,6 +148,29 @@ impl ProgressObserver for MachineRenderer {
             let _ = writeln!(state.writer, "{text}").and_then(|()| state.writer.flush());
         }
     }
+}
+
+/// The final figures of a download on its `finish` or `fail` line.
+fn end_figures(line: &mut wire::ProgressEvent, transfer: Option<TransferEnd>) {
+    if let Some(end) = transfer {
+        line.completed = Some(end.bytes);
+        line.total = end.total;
+        line.unit = Some("bytes".into());
+        line.transfer = Some(end.id);
+        line.peak_bps = Some(end.peak_bps);
+    }
+}
+
+/// A transfer's record as the stream carries it: everything but the
+/// process and the verb, which the stream's reader already knows
+/// (`PROP-068#stream`). The vocabularies are the same words on both
+/// sides, so the record crosses as JSON.
+fn wire_record(record: TransferRecord) -> Option<wire::TransferRecord> {
+    let mut value = serde_json::to_value(record).ok()?;
+    let object = value.as_object_mut()?;
+    object.remove("pid");
+    object.remove("command");
+    serde_json::from_value(value).ok()
 }
 
 #[cfg(test)]

@@ -123,7 +123,7 @@ fn terminal_kind<'a>(events: &'a [ProgressEvent], label: &str) -> &'a ProgressEv
             event.task_id == id
                 && matches!(
                     event.kind,
-                    ProgressEventKind::Finished
+                    ProgressEventKind::Finished { .. }
                         | ProgressEventKind::Skipped { .. }
                         | ProgressEventKind::Failed { .. }
                         | ProgressEventKind::Stopped
@@ -179,6 +179,7 @@ fn gc_progress_preflights_before_effects_and_counts_known_instances() {
                     completed: 0,
                     total: Some(1),
                     unit,
+                    ..
                 } if unit == "instances"
             )
     }));
@@ -190,12 +191,13 @@ fn gc_progress_preflights_before_effects_and_counts_known_instances() {
                     completed: 1,
                     total: Some(1),
                     unit,
+                    ..
                 } if unit == "instances"
             )
     }));
     assert!(matches!(
         terminal_kind(&events, "Removing tag:1.0.0#1"),
-        ProgressEventKind::Finished
+        ProgressEventKind::Finished { .. }
     ));
     assert!(!store.instance_dir(&id, 1).exists());
     assert!(!store.build_dir().exists());
@@ -225,11 +227,11 @@ fn gc_build_cache_reports_the_guarded_component() {
     assert_eq!(outcome, GcOutcome::Finished);
     assert!(matches!(
         terminal_kind(&events, "Preflighting Rust build cache"),
-        ProgressEventKind::Finished
+        ProgressEventKind::Finished { .. }
     ));
     assert!(matches!(
         terminal_kind(&events, "Removing Rust build cache"),
-        ProgressEventKind::Finished
+        ProgressEventKind::Finished { .. }
     ));
     assert!(!store.build_dir().exists());
 }
@@ -284,7 +286,7 @@ fn gc_nothing_to_prune_records_pointers_then_skips_overall() {
     assert_eq!(outcome, GcOutcome::Skipped("nothing to prune"));
     assert!(matches!(
         terminal_kind(&events, "Recording activation pointers"),
-        ProgressEventKind::Finished
+        ProgressEventKind::Finished { .. }
     ));
     assert!(!events.iter().any(|event| {
         matches!(&event.kind, ProgressEventKind::Started { label, .. } if label == "Removing unused instances")

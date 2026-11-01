@@ -272,6 +272,29 @@ fn read_run(dir: &Path) -> Option<listing::Run> {
     })
 }
 
+/// What one step's downloads tell the journal (`PROP-068#transfer`): the
+/// run record's id is their batch, and the line `PROP-065#cancellation`'s
+/// refusal names is their resume line (`PROP-068#pause`).
+pub(crate) fn transfer_facts(
+    record: Option<&RunRecord>,
+    command: Command,
+    key: &str,
+    step: &str,
+) -> crate::installer::TransferFacts {
+    let verb = match command {
+        Command::Install => Some("install -g"),
+        Command::Update => Some("update -g"),
+        Command::Modify => Some("app modify"),
+        Command::Uninstall => None,
+    };
+    crate::installer::TransferFacts {
+        package: key.to_owned(),
+        step: step.to_owned(),
+        batch: record.map(RunRecord::id),
+        resume: verb.map(|verb| format!("vibe {verb} {key} --resume")),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

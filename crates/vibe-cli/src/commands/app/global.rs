@@ -143,7 +143,8 @@ impl<'d> Observation<'d> {
             progress: if ctx.is_machine_progress() || ctx.draws_progress() {
                 ctx.progress()
             } else {
-                Progress::default()
+                // Unrendered, still journaled (`PROP-068#journal`).
+                Progress::default().with_transfers(ctx.transfers())
             },
             signals: if mutating {
                 Some(Signals::install().context("catching interrupt signals")?)

@@ -81,6 +81,10 @@ pub struct IndexClient {
     /// Boxed: the manifest is large beside the rest of the client, which
     /// travels by value inside `ProbeOutcome::Found`.
     repomd: OnceLock<Option<Box<Repomd>>>,
+    /// The invocation's journal and limit for downloads (`PROP-068`),
+    /// attached once the resolver that holds this client is given the
+    /// invocation's progress — after the probe built the client.
+    transfers: OnceLock<vibe_core::progress::transfer::Transfers>,
 }
 
 #[derive(Debug, Error)]
@@ -203,6 +207,7 @@ impl IndexClient {
                         file_client: OnceLock::new(),
                         server_client: OnceLock::new(),
                         repomd: OnceLock::new(),
+                        transfers: OnceLock::new(),
                     });
                 }
                 handshake::HandshakeProbe::Refused { reason } => {
@@ -226,6 +231,7 @@ impl IndexClient {
                         file_client: OnceLock::new(),
                         server_client: OnceLock::new(),
                         repomd: OnceLock::new(),
+                        transfers: OnceLock::new(),
                     });
                 }
                 Ok(resp) => {
@@ -283,11 +289,19 @@ impl IndexClient {
             file_client: OnceLock::new(),
             server_client: OnceLock::new(),
             repomd: OnceLock::new(),
+            transfers: OnceLock::new(),
         }
     }
 
     pub fn file_base(&self) -> &str {
         &self.file_base
+    }
+
+    /// Journal this client's catalog downloads with the invocation's
+    /// [`Transfers`](vibe_core::progress::transfer::Transfers); the first
+    /// attachment wins.
+    pub fn attach_transfers(&self, transfers: &vibe_core::progress::transfer::Transfers) {
+        let _ = self.transfers.set(transfers.clone());
     }
 
     pub fn server_base(&self) -> &str {

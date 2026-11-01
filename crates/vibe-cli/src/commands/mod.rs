@@ -76,6 +76,7 @@ pub mod storage;
 pub mod term;
 pub mod tools;
 pub mod trace;
+pub mod transfers;
 pub mod tree;
 pub mod uninstall;
 pub mod update;

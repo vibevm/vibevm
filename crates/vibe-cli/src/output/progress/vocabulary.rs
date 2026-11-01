@@ -40,7 +40,8 @@ pub(super) fn bar_style() -> ProgressStyle {
 }
 
 pub(super) fn bytes_bar_style() -> ProgressStyle {
-    with_elapsed("{spinner} {msg} {bar:16} {bytes} of {total_bytes}{t}").progress_chars("━╸ ")
+    with_elapsed("{spinner} {msg} {bar:16} {bytes} of {total_bytes}{prefix}{t}")
+        .progress_chars("━╸ ")
 }
 
 pub(super) fn measured_spinner_style() -> ProgressStyle {
@@ -48,7 +49,7 @@ pub(super) fn measured_spinner_style() -> ProgressStyle {
 }
 
 pub(super) fn bytes_spinner_style() -> ProgressStyle {
-    with_elapsed("{spinner} {msg} · {bytes}{t}")
+    with_elapsed("{spinner} {msg} · {bytes}{prefix}{t}")
 }
 
 /// A fold or hint line under a running block: drawn as composed, never

@@ -317,6 +317,47 @@ fn a_download_with_a_known_total_draws_a_bytes_bar() {
     unknown.finish();
 }
 
+/// A download is the running block of its step (`PROP-068#stream`): its
+/// samples draw the step's bytes bar with the sample's rate, and its own
+/// task leaves no row.
+#[test]
+fn a_download_draws_on_its_step_with_the_samples_rate() {
+    use std::io::Read;
+    use vibe_core::progress::transfer::{Destination, Purpose, Transfer, TransferRecord};
+
+    let (terminal, renderer) = panelled(8, 80, 5, false);
+    let progress = Progress::new(renderer.clone());
+    let fetch = progress.task("fetch (sources)  Fetch the sources");
+    let record = TransferRecord::http(
+        Purpose::PackageSource,
+        "https://example.test/tool.tar.gz",
+        Destination::Cache,
+    )
+    .total(Some(10 * 1024 * 1024));
+    let body = vec![0u8; 5 * 1024 * 1024];
+    let mut reader = Transfer::begin(record, Some(&fetch), None).reader(&body[..]);
+    std::io::copy(
+        &mut reader.by_ref().take(5 * 1024 * 1024),
+        &mut std::io::sink(),
+    )
+    .unwrap();
+    renderer.suspend(|| ());
+    let running = terminal.contents();
+    assert!(
+        running.contains("Fetch the sources") && running.contains("of 10.00 MiB · "),
+        "the step's bar carries the bytes and the rate: {running:?}"
+    );
+    assert!(running.contains("/s"), "{running:?}");
+    assert!(
+        !running.contains("Downloading"),
+        "no row of its own: {running:?}"
+    );
+    reader.finish();
+    fetch.finish();
+    renderer.suspend(|| ());
+    assert!(!terminal.contents().contains("Downloading"));
+}
+
 #[test]
 fn terminal_rows_persist_in_plain_transcript_and_active_state_is_bounded() {
     let writer = SharedWriter::default();

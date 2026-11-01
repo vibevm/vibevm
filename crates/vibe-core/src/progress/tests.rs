@@ -31,6 +31,8 @@ fn hierarchy_and_explicit_parent_counting_are_observable() {
             completed: 3,
             total: Some(7),
             unit: "files".to_string(),
+            transfer: None,
+            rate_bps: None,
         }
     );
     assert_eq!(events[4].task_id, parent.id());
@@ -40,6 +42,8 @@ fn hierarchy_and_explicit_parent_counting_are_observable() {
             completed: 1,
             total: Some(1),
             unit: "packages".to_string(),
+            transfer: None,
+            rate_bps: None,
         }
     );
 }
@@ -59,7 +63,7 @@ fn dropped_task_is_stopped_and_never_finished() {
     assert!(
         !events
             .iter()
-            .any(|event| event.kind == ProgressEventKind::Finished)
+            .any(|event| matches!(event.kind, ProgressEventKind::Finished { .. }))
     );
 }
 
@@ -123,6 +127,7 @@ fn only_a_requiring_task_carries_the_requirement_on_its_start() {
         ProgressEventKind::Started {
             label: "requires toolchain".to_string(),
             requires: Some(requires),
+            transfer: None,
         }
     );
     assert_eq!(
@@ -130,6 +135,7 @@ fn only_a_requiring_task_carries_the_requirement_on_its_start() {
         ProgressEventKind::Started {
             label: "fetch".to_string(),
             requires: None,
+            transfer: None,
         }
     );
 }
