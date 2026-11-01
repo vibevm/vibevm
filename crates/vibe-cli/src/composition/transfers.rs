@@ -26,7 +26,13 @@ pub(crate) fn attach(ctx: output::Context, config: &TransferConfig) -> output::C
     });
     let journal = vibe_core::settings::settings_dir().map(|root| TransferJournal::new(&root));
     let verb = verb(std::env::args_os());
-    ctx.with_transfers(Transfers::new(journal, limit, verb))
+    let transfers = Transfers::new(journal, limit, verb);
+    // Every clone of the invocation is journaled, whether or not the path
+    // that makes it threads the observation (`PROP-068#git`).
+    vibe_registry::git_backend::transfers::observe_by_default(
+        vibe_core::progress::Progress::default().with_transfers(Some(transfers.clone())),
+    );
+    ctx.with_transfers(transfers)
 }
 
 /// The command line's verb as the journal names it: the subcommand path
@@ -51,6 +57,10 @@ fn verb(args: impl IntoIterator<Item = std::ffi::OsString>) -> String {
     }
     words.join(" ")
 }
+
+#[cfg(test)]
+#[path = "transfers/coverage_tests.rs"]
+mod coverage_tests;
 
 #[cfg(test)]
 mod tests {

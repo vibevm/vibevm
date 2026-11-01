@@ -1,11 +1,15 @@
-//! Transfers (PROP-068 `#acceptance`, minus git): a loopback server serves
+//! Transfers (PROP-068 `#acceptance`): a loopback server serves
 //! a throttled 16 MiB `[[sources]]` body to `vibe install -g` under
 //! `--progress-format json`; the stream carries the transfer on its start,
 //! its samples and its final figures; another process lists it active and
 //! watches its samples while it runs; the history keeps one entry whose
 //! series sums to its bytes; a killed install leaves an active file the
 //! next listing turns into an `interrupted` entry; `[transfer] limit` holds
-//! the average; and a run that downloads nothing leaves no journal.
+//! the average; and a run that downloads nothing leaves no journal. The
+//! git half (`#acceptance-git`): `vibe cache add` from a `git+file://`
+//! per-package registry streams the clone as a `reported` transfer of the
+//! package's row, its history entry names what the clone left on disk, and
+//! a second warm-up, whose fetch moves nothing, adds no transfer.
 
 #![cfg(target_os = "linux")]
 
@@ -400,4 +404,158 @@ fn a_run_that_downloads_nothing_leaves_no_journal() {
         !user.settings.join("transfers").exists(),
         "a listing creates nothing"
     );
+}
+
+/// A per-package registry under `root` (`<group>.<name>.git`, the default
+/// `fqdn` naming) carrying `org.example/blob@0.1.0` with a few hundred KiB
+/// of incompressible bytes, so git measures a throughput and names a size.
+fn git_registry(root: &std::path::Path) -> String {
+    let source = root.join("blob-source");
+    let spec = source.join(common::spec_rel("flows/blob"));
+    fs::create_dir_all(&spec).unwrap();
+    common::run_git(&source, &["init", "--initial-branch=main"]);
+    fs::write(
+        source.join("vibe.toml"),
+        "[package]\ngroup = \"org.example\"\nname = \"blob\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+    )
+    .unwrap();
+    fs::write(spec.join("BLOB.md"), "# blob\n").unwrap();
+    let mut state = 0x9e37_79b9_7f4a_7c15_u64;
+    let noise: Vec<u8> = (0..400_000)
+        .map(|_| {
+            state ^= state << 13;
+            state ^= state >> 7;
+            state ^= state << 17;
+            state as u8
+        })
+        .collect();
+    fs::write(spec.join("noise.bin"), noise).unwrap();
+    common::run_git(&source, &["add", "-A"]);
+    common::run_git(
+        &source,
+        &[
+            "-c",
+            "user.email=f@example.test",
+            "-c",
+            "user.name=F",
+            "commit",
+            "-m",
+            "blob",
+        ],
+    );
+    common::run_git(&source, &["tag", "v0.1.0"]);
+    let org = root.join("org");
+    fs::create_dir_all(&org).unwrap();
+    let bare = org.join("org.example.blob.git");
+    common::run_git(
+        root,
+        &[
+            "clone",
+            "--bare",
+            source.to_str().unwrap(),
+            bare.to_str().unwrap(),
+        ],
+    );
+    format!("git+file://{}", org.to_string_lossy())
+}
+
+/// `vibe cache add` of the git fixture under the machine stream: its lines.
+fn warm(user: &UserScratch, root: &std::path::Path, project: &std::path::Path) -> Vec<Value> {
+    let output = vibe(user, root)
+        .args(["cache", "add", "org.example/blob@0.1.0", "--path"])
+        .arg(project)
+        .args(["--json", "--progress-format", "json"])
+        .stdin(Stdio::null())
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(output.status.success(), "{stderr}");
+    stderr
+        .lines()
+        .filter_map(|line| serde_json::from_str(line).ok())
+        .collect()
+}
+
+#[test]
+fn a_package_clone_is_a_reported_transfer_of_its_row() {
+    if !common::git_available() {
+        eprintln!("skipping: git not on PATH");
+        return;
+    }
+    let user = UserScratch::new();
+    let root = tempfile::tempdir().unwrap();
+    let registry = git_registry(root.path());
+    let project = root.path().join("project");
+    fs::create_dir_all(&project).unwrap();
+    common::write_project_with_per_package_registry(&project, &registry);
+
+    let seen = warm(&user, root.path(), &project);
+    let start = seen
+        .iter()
+        .find(|line| line["transfer_record"]["kind"] == "git")
+        .unwrap_or_else(|| panic!("no git transfer started: {seen:?}"));
+    let id = start["transfer"].as_str().unwrap();
+    let record = &start["transfer_record"];
+    assert_eq!(record["precision"], "reported");
+    assert_eq!(record["purpose"], "package-clone");
+    assert_eq!(record["package"], "org.example/blob");
+    assert_eq!(record["destination"], "store");
+    assert_eq!(record["limited"], false);
+    assert!(
+        record["url"]
+            .as_str()
+            .unwrap()
+            .ends_with("org.example.blob.git")
+    );
+    // The transfer is a child of the package's own row.
+    let parent = seen
+        .iter()
+        .find(|line| line["kind"] == "start" && line["task"] == start["parent"])
+        .expect("the transfer's parent task is on the stream");
+    assert!(
+        parent["label"]
+            .as_str()
+            .unwrap()
+            .contains("org.example/blob@0.1.0")
+    );
+    let measurements: Vec<&Value> = seen
+        .iter()
+        .filter(|line| line["kind"] == "measurement" && line["transfer"] == id)
+        .collect();
+    assert!(measurements.iter().all(|line| line["rate_bps"].is_u64()));
+    assert!(
+        measurements
+            .iter()
+            .any(|line| line["completed"].as_u64() > Some(0))
+    );
+    let finish = seen
+        .iter()
+        .find(|line| line["kind"] == "finish" && line["transfer"] == id)
+        .expect("the transfer finished on the stream");
+    assert!(finish["completed"].as_u64() > Some(100_000), "{finish}");
+    assert_eq!(finish["total"], finish["completed"]);
+    eprintln!("GIT START {start}");
+    for line in measurements.iter().take(2) {
+        eprintln!("GIT MEASUREMENT {line}");
+    }
+    eprintln!("GIT FINISH {finish}");
+
+    let kept = history(&user);
+    let entry = kept
+        .iter()
+        .find(|entry| entry["id"] == id)
+        .expect("the clone is journaled");
+    assert_eq!(entry["kind"], "git");
+    assert_eq!(entry["precision"], "reported");
+    assert_eq!(entry["outcome"], "finished");
+    assert_eq!(entry["command"], "cache add");
+    assert_eq!(entry["bytes"], finish["completed"]);
+    assert!(entry["written"].as_u64() > Some(0), "{entry}");
+    let clones = |kept: &[Value]| kept.iter().filter(|entry| entry["kind"] == "git").count();
+    assert_eq!(clones(&kept), 1);
+
+    // The clone is there and up to date: a second warm-up moves nothing.
+    let again = warm(&user, root.path(), &project);
+    assert!(again.iter().all(|line| line["transfer_record"].is_null()));
+    assert_eq!(clones(&history(&user)), 1);
 }

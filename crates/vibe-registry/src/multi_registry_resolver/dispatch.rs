@@ -73,7 +73,15 @@ impl MultiRegistryResolver {
         } else if let Some(registry) = resolution.registry_name.as_deref() {
             task.detail(format!("Git fetch from registry {registry}"));
         }
-        let result = self.fetch_with_expected_hash_inner(resolution, store_root, expected_hash);
+        // The clone this fetch makes is a transfer of this task, for this
+        // package (`PROP-068#git`).
+        let package = format!("{}/{}", resolution.resolved.group, resolution.resolved.name);
+        let result = crate::git_backend::transfers::observed(
+            Some(&task.progress()),
+            Some(&package),
+            Some(vibe_core::progress::transfer::Purpose::PackageClone),
+            || self.fetch_with_expected_hash_inner(resolution, store_root, expected_hash),
+        );
         match &result {
             Ok(_) if resolution.from_store => task.skip("already cached"),
             Ok(_) => task.finish(),

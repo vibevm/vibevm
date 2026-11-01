@@ -32,7 +32,8 @@ pub(super) fn versions(
     ) -> Result<Vec<semver::Version>, RegistryError>,
 ) -> Result<Vec<semver::Version>, RegistryError> {
     let task = progress.task(format!("Discovering versions for {group}/{name}"));
-    let result = operation(&task);
+    let package = format!("{group}/{name}");
+    let result = observed(&task, &package, || operation(&task));
     match &result {
         Ok(versions) => {
             task.detail(format!("{} version(s) available", versions.len()));
@@ -55,7 +56,8 @@ pub(super) fn resolution(
         ResolutionPurpose::CheckoutSource => "Locating in-place checkout source for",
     };
     let task = progress.task(format!("{operation_label} {pkgref}"));
-    let result = operation(&task);
+    let package = pkgref.qualified_name();
+    let result = observed(&task, &package, || operation(&task));
     match &result {
         Ok(resolution) => {
             task.detail(format!(
@@ -84,12 +86,23 @@ pub(super) fn manifest(
     let task = progress.task(format!(
         "Reading package metadata for {group}/{name}@{version}"
     ));
-    let result = operation(&task);
+    let package = format!("{group}/{name}");
+    let result = observed(&task, &package, || operation(&task));
     match &result {
         Ok(_) => task.finish(),
         Err(_) => task.fail("package metadata read failed"),
     }
     result
+}
+
+/// A clone the walk falls back to is a transfer of the observing task, for
+/// the package it walks (`PROP-068#git`).
+fn observed<T>(
+    task: &vibe_core::progress::ProgressTask,
+    package: &str,
+    operation: impl FnOnce() -> T,
+) -> T {
+    crate::git_backend::transfers::observed(Some(&task.progress()), Some(package), None, operation)
 }
 
 impl MultiRegistryResolver {

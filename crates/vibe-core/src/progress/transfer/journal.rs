@@ -80,6 +80,11 @@ pub struct TransferEntry {
     pub series: Vec<Bucket>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bucket_seconds: Option<u64>,
+    /// A git transfer's size on disk after the operation: its bytes are
+    /// git's report, not a count of what vibe wrote, so the journal keeps
+    /// the figure a disk-usage reader would see beside it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub written: Option<u64>,
 }
 
 impl TransferEntry {
@@ -97,6 +102,7 @@ impl TransferEntry {
             average_bps: None,
             series: Vec::new(),
             bucket_seconds: None,
+            written: None,
         }
     }
 

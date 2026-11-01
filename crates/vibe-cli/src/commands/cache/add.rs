@@ -194,8 +194,15 @@ fn warm_with_progress(
             // bytes stay untouched.
             let was_present =
                 vibe_registry::lookup(&node.group, &node.name, &node.version).is_some();
+            // Beneath the package's own task, so the clone that brings it
+            // is a transfer of this row (`PROP-068#git`).
             if let Err(error) = resolver
-                .resolve_and_fetch(&exact_pinned_pkgref(node), store_root, None)
+                .resolve_and_fetch_with_progress(
+                    &exact_pinned_pkgref(node),
+                    store_root,
+                    None,
+                    &package.progress(),
+                )
                 .with_context(|| format!("fetching {label} into the machine store"))
             {
                 package.fail("package fetch failed");
