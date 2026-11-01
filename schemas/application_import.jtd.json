@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Version 1 answer of vibe app import --json (PROP-059#portable-set): the installations the import installed (or, under --dry-run, would install), the rows it skipped with the reason, and the rows it refused with the stable error code and message. A skipped row whose key carries `#` is a launcher of the arrangement that could not be restored. Any refused row makes the command exit 1.",
+    "description": "Version 1 answer of vibe app import --json (PROP-059#portable-set): the installations the import installed (or, under --dry-run, would install), the rows it skipped with the reason, the rows it refused with the stable error code and message, and the licences the rows it installs (or would install) still need accepted, with the absolute path of each text so a caller shows it before the run. A skipped row whose key carries `#` is a launcher of the arrangement that could not be restored. Any refused row makes the command exit 1.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set"
     },
@@ -14,7 +14,8 @@
       "dry_run",
       "installed",
       "skipped",
-      "refused"
+      "refused",
+      "licenses"
     ]
   },
   "properties": {
@@ -46,6 +47,14 @@
     "refused": {
       "elements": {
         "ref": "refused"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "licenses": {
+      "elements": {
+        "ref": "license"
       },
       "metadata": {
         "x-empty": "emit"
@@ -85,6 +94,26 @@
           "type": "string"
         },
         "message": {
+          "type": "string"
+        }
+      }
+    },
+    "license": {
+      "metadata": {
+        "x-wire-order": [
+          "key",
+          "name",
+          "file"
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "file": {
           "type": "string"
         }
       }

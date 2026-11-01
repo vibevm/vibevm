@@ -25,8 +25,10 @@ use crate::catalog::UserLaunchers;
 use crate::error::AppError;
 use crate::error_lifecycle::LifecycleError;
 use crate::index::{Index, Installation, Mark};
+use crate::resolve::ResolvedPackage;
 use crate::select::{InstallChoice, detected_arch, detected_platform, select_option};
 use crate::settings::SettingsRoot;
+use crate::steps::PlanLicense;
 
 #[path = "portable/arrangement.rs"]
 mod arrangement;
@@ -266,6 +268,43 @@ pub fn import_action(
         }
         .into(),
     )
+}
+
+/// The licence an imported row still needs accepted, so a caller can show
+/// its text before the run instead of meeting a `license_required` refusal
+/// (`PROP-065#license`). `None` when the option the row installs with
+/// declares none, when this home already accepted that licence for the key
+/// (the plan admits it on its own), or when `--accept-license` meets a row
+/// that says the licence was accepted where the set was exported. `file` is
+/// the absolute path of the text in the resolved package, as `describe`
+/// reports it.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set")]
+pub fn import_license(
+    index: &Index,
+    row: &wire::Application,
+    install: &ImportInstall,
+    resolved: &ResolvedPackage,
+    accept_license: bool,
+) -> Option<PlanLicense> {
+    if accept_license && matches!(row.license, Some(wire::ApplicationLicense::Accepted)) {
+        return None;
+    }
+    // The same choice `import_action` made, so the licence is the one of the
+    // option the install will plan with.
+    let option = select_option(&resolved.options, &install.choice, None).ok()?;
+    let license = option.license.as_ref()?;
+    let accepted_here = index
+        .installations
+        .get(&row.key)
+        .and_then(|record| record.license.as_ref())
+        .is_some_and(|accepted| accepted.name == license.name);
+    if accepted_here {
+        return None;
+    }
+    Some(PlanLicense {
+        name: license.name.clone(),
+        file: resolved.root.join(&license.file).display().to_string(),
+    })
 }
 
 /// The wizard answers of a row. When the host's option is known, features
