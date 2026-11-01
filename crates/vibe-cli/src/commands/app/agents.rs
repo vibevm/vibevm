@@ -8,7 +8,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#consent");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#parking");
 
 use anyhow::Result;
-use dialoguer::Confirm;
 use vibe_app::{
     AgentError, AgentHooks, AgentNotice, AgentPrompt, AgentsConfig, AppError, SelectedAgent,
 };
@@ -138,14 +137,14 @@ fn show(notice: &AgentNotice<'_>) {
 /// The attended consent question (PROP-064 `#consent`).
 fn confirm(prompt: &AgentPrompt<'_>) -> std::result::Result<bool, String> {
     asking(|| {
-        Confirm::with_theme(&crate::output::prompt_theme())
-            .with_prompt(format!(
+        crate::output::prompts::confirm(
+            &format!(
                 "Run agent `{}` with the prompt of step `{}`?",
                 prompt.agent, prompt.step
-            ))
-            .default(false)
-            .interact()
-            .map_err(|error| error.to_string())
+            ),
+            false,
+        )
+        .map_err(|error| error.to_string())
     })
 }
 

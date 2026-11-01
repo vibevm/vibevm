@@ -362,20 +362,6 @@ impl InstallRecord {
             Origin::Binary => "local-import",
         }
     }
-
-    /// One compact provenance-rich line used by human `ls`/`current` output;
-    /// its first token is always directly copyable back into selector verbs.
-    pub fn human_identity(&self) -> String {
-        format!(
-            "{}  origin={} source={:?} commit={} sha256={} profile={}",
-            self.selector(),
-            self.origin.as_str(),
-            self.source_label(),
-            self.commit,
-            self.payload_sha256.as_deref().unwrap_or("-"),
-            self.profile.as_str(),
-        )
-    }
 }
 
 /// The on-disk inventory at `<root>/vibevm/state.toml` (PROP-019 §2.4).
@@ -521,12 +507,7 @@ origin = "binary"
         };
         assert_eq!(record.selector().to_string(), "tag:1.2.3#9");
         assert_eq!(record.source_label(), "local-import");
-        let identity = record.human_identity();
-        assert!(identity.starts_with("tag:1.2.3#9 "));
-        assert!(identity.contains("origin=binary"));
-        assert!(identity.contains("source=\"local-import\""));
-        assert!(identity.contains("commit=abc"));
-        assert!(identity.contains("sha256=feedface"));
+        assert_eq!(record.origin.as_str(), "binary");
     }
 
     #[test]

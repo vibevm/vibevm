@@ -413,6 +413,17 @@ pub fn run(
             let code = ctx.suspend_progress(|| {
                 run_launcher(&app_home, &package, &id, &args, project_root.as_deref())
             })?;
+            // The program's lines are not blocks of ours, but the trailer
+            // still stands off them by the usual blank line.
+            output::language::mark(output::language::Stream::Err, output::language::Kind::Block);
+            ctx.trailer_on(
+                output::language::Stream::Err,
+                code == 0,
+                &format!(
+                    "exited {} · exit {code}",
+                    vibe_app::launcher_key(&package, &id)
+                ),
+            );
             Ok(Some(code))
         }
     }

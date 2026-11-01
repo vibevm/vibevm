@@ -17,7 +17,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#uninstall");
 
 use anyhow::{Context, Result};
-use dialoguer::Confirm;
 use vibe_core::remap::{KeptRow, RowIdentity};
 
 use crate::cli::UninstallArgs;
@@ -120,12 +119,11 @@ fn decide(
                 group("rows another accepted package still offers", surviving)
             );
         }
-        crate::output::prompts::space_before_question();
-        Confirm::with_theme(&crate::output::prompt_theme())
-            .with_prompt(format!("keep these {} rows as local rows?", orphaned.len()))
-            .default(true)
-            .interact()
-            .context("reading the kept-rows answer")
+        crate::output::prompts::confirm(
+            &format!("keep these {} rows as local rows?", orphaned.len()),
+            true,
+        )
+        .context("reading the kept-rows answer")
     })
 }
 

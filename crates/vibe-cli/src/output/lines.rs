@@ -162,6 +162,13 @@ impl Context {
     /// how many blocks its list holds, how long it took and the run record
     /// in full.
     pub(crate) fn trailer_text(&self, ok: bool, what: &str) -> String {
+        self.trailer_text_at(ok, what, None)
+    }
+
+    /// The trailer text with `record` — an installed home, a store path —
+    /// as the place the run left its result, written in full where the run
+    /// directory of a step log would otherwise stand.
+    fn trailer_text_at(&self, ok: bool, what: &str, record: Option<&str>) -> String {
         let (rows, run) = self
             .progress_renderer
             .as_ref()
@@ -173,6 +180,10 @@ impl Context {
             meta.push(Meta::Note(format!("{rows} {unit}")));
         }
         meta.push(Meta::Time(self.started.elapsed()));
+        if let Some(record) = record {
+            meta.push(Meta::note(record));
+            return language::trailer(ok, what, meta, None);
+        }
         let run = run.map(|run| run.display().to_string());
         language::trailer(ok, what, meta, run.as_deref())
     }
@@ -180,16 +191,54 @@ impl Context {
     /// Write the trailer of a command that did its work: the last block,
     /// and in quiet mode the one line.
     pub(crate) fn trailer(&self, what: &str) {
+        self.trailer_on(Stream::Out, true, what);
+    }
+
+    /// The trailer of a run that ended with a verdict of its own — a
+    /// program's exit status — on `stream`: stderr when stdout belongs to
+    /// the program that ran, so a pipe reading it gets the program's bytes
+    /// alone.
+    pub(crate) fn trailer_on(&self, stream: Stream, ok: bool, what: &str) {
+        self.write_trailer(stream, self.trailer_text(ok, what));
+    }
+
+    /// The trailer of a run whose result is a place on disk, written last
+    /// and in full (`installed branch:main#106 · 2 steps · 41s · <home>`).
+    pub(crate) fn trailer_at(&self, what: &str, record: &str) {
+        self.write_trailer(Stream::Out, self.trailer_text_at(true, what, Some(record)));
+    }
+
+    fn write_trailer(&self, stream: Stream, text: String) {
         if self.suppress_output || self.is_json() {
             return;
         }
-        let text = self.trailer_text(true, what);
         let gap = if self.is_quiet() {
             ""
         } else {
-            language::before(Stream::Out, Kind::Block)
+            language::before(stream, Kind::Block)
         };
-        self.suspend_progress(|| println!("{gap}{text}"));
+        self.suspend_progress(|| match stream {
+            Stream::Out => println!("{gap}{text}"),
+            Stream::Err => eprintln!("{gap}{text}"),
+        });
+    }
+
+    /// The rule that opens a section (PROP-067 `#heading`), as a block of
+    /// its own on stdout.
+    pub(crate) fn rule(&self, label: &str) {
+        self.block(&language::rule(label, None));
+    }
+
+    /// A remark that is neither a warning nor a step (the `note:` lines of
+    /// old): a dim line at column 2. Consecutive remarks touch, as the rows
+    /// of one list, and the group stands off its neighbours.
+    pub(crate) fn hint(&self, text: &str) {
+        if !self.draws() {
+            return;
+        }
+        let gap = language::before(Stream::Out, Kind::Row("hints"));
+        let line = format!("  {}", language::hint(text));
+        self.suspend_progress(|| println!("{gap}{line}"));
     }
 
     /// Hold the trailer of a failed run until its refusal is written: the

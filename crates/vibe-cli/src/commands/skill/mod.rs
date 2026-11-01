@@ -11,7 +11,6 @@ use std::io::IsTerminal;
 use std::path::Path;
 
 use anyhow::{Result, bail};
-use dialoguer::Confirm;
 use vibe_agent_projection::agents::Scope;
 use vibe_agent_projection::pkgskill::{
     DeclaredSkillFilter, PackageSkillReport, collect_declared_skills,
@@ -60,11 +59,7 @@ fn confirm_apply(ctx: &output::Context, yes: bool) -> Result<bool> {
              to apply this plan non-interactively"
         );
     }
-    Ok(Confirm::with_theme(&crate::output::prompt_theme())
-        .with_prompt("Apply this skill plan?")
-        .default(true)
-        .interact()
-        .unwrap_or(false))
+    Ok(crate::output::prompts::confirm("Apply this skill plan?", true).unwrap_or(false))
 }
 
 fn emit_reports(
@@ -165,7 +160,7 @@ fn run_install(ctx: &output::Context, args: SkillInstallArgs, offline: bool) -> 
         DeclaredSkillFilter::new(&args.skills, args.agent.as_deref()).with_offline(offline);
     let plan = prepare_declared_skill_projection(&project_root, &filter, scope)?;
 
-    ctx.heading("Skill install plan:");
+    ctx.rule("skill install plan");
     let previews = plan.install(true)?;
     for r in &previews {
         render(ctx, r);
@@ -198,7 +193,7 @@ fn run_uninstall(ctx: &output::Context, args: SkillUninstallArgs, offline: bool)
         DeclaredSkillFilter::new(&args.skills, args.agent.as_deref()).with_offline(offline);
     let plan = prepare_declared_skill_projection(&project_root, &filter, scope)?;
 
-    ctx.heading("Skill uninstall plan:");
+    ctx.rule("skill uninstall plan");
     let previews = plan.uninstall(true)?;
     for r in &previews {
         render(ctx, r);

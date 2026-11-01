@@ -65,7 +65,7 @@ pub(crate) fn run(ctx: &output::Context, args: CacheImportArgs) -> Result<()> {
         ));
         return Ok(());
     }
-    ctx.heading(&format!("Importing {}", dir.display()));
+    ctx.rule(&format!("importing {}", dir.display()));
     for label in &imported.placed {
         ctx.created(label);
     }
@@ -75,10 +75,11 @@ pub(crate) fn run(ctx: &output::Context, args: CacheImportArgs) -> Result<()> {
     // A refused entry is said out loud rather than counted: a digest that
     // does not match is the one thing a bundle must never place quietly.
     for (label, reason) in &imported.refused {
-        ctx.step(&format!("{label} not placed — {reason}"));
+        ctx.diagnostic(&format!("{label} not placed — {reason}"));
     }
-    ctx.summary(&format!(
-        "\n{} placed, {} already present, {} refused.",
+    ctx.trailer(&format!(
+        "imported {} · {} placed · {} already present · {} refused",
+        dir.display(),
         imported.placed.len(),
         imported.already.len(),
         imported.refused.len()

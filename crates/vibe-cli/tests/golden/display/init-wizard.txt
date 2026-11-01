@@ -1,0 +1,17 @@
+── initializing project demo in demo ────
+
+✓ created  vibevm/vibespecs/boot/00-core.md
+✓ created  vibevm/vibespecs/boot/90-user.md
+✓ created  vibe.toml
+✓ created  vibe.lock
+✓ created  .vibe/.gitignore
+✓ created  .gitignore
+✓ created  vibevm/vibespecs/boot/INDEX.md
+✓ created  CLAUDE.md
+✓ created  AGENTS.md
+✓ created  GEMINI.md
+
+  next: edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
+  next: install packages with vibe install <kind>:<name> (e.g. flow:wal)
+
+✻ initialized demo · 10 files created · 0 kept · <time>

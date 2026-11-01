@@ -218,8 +218,8 @@ fn create_project(
     let fields = plan.fields;
     prompts::maybe_save_author(user_config, &fields.authors);
 
-    ctx.heading(&format!(
-        "Initializing {} `{}` in `{display_root}`",
+    ctx.rule(&format!(
+        "initializing {} {} in {display_root}",
         if plan.role == crate::cli::InitType::Package {
             "package"
         } else {

@@ -1,0 +1,4 @@
+2 instance(s) installed
+
+  tag:1.0.7#2    binary    9c1d0e77aa  release  local-import · sha256 feedface  [active]
+  branch:main#1  external  4f2a91c0de  debug    /src/vibevm

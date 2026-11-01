@@ -55,7 +55,6 @@ use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use dialoguer::Confirm;
 use serde::Serialize;
 use vibe_core::machine_json_path;
 use vibe_core::manifest::Manifest;

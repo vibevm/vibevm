@@ -1,0 +1,8 @@
+── uninstall org.test/a@1.0.0 · remove 2 packages ────
+
+  org.test/a@1.0.0, org.test/b@1.0.0
+
+✓ removed  vibevm/vibedeps/org.test.a/1.0.0
+✓ removed  vibevm/vibedeps/org.test.b/1.0.0
+
+✻ uninstalled org.test/a@1.0.0 · 2 packages removed · boot regenerated · 3 steps · <time>

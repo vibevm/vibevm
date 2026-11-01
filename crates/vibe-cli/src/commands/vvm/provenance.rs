@@ -8,7 +8,7 @@ use vibe_core::progress::ProgressTask;
 use super::error::VvmError;
 use super::model::{InstallRecord, Origin};
 use super::store::{INDEX_BINARY_NAME, VersionStore};
-use super::{VvmEnv, git, selfloc, source};
+use super::{VvmEnv, git, listing, selfloc, source};
 use crate::cli::VvmWhichArgs;
 use crate::output;
 
@@ -35,17 +35,6 @@ pub(super) struct SourceExecution {
     pub executable: PathBuf,
     pub source: PathBuf,
     pub commit: String,
-}
-
-impl SourceExecution {
-    fn human_identity(&self) -> String {
-        format!(
-            "source origin=external source={:?} executable={:?} commit={} sha256=- selector=-",
-            self.source.display().to_string(),
-            self.executable.display().to_string(),
-            self.commit
-        )
-    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -146,21 +135,15 @@ fn same_record(left: &InstallRecord, right: &InstallRecord) -> bool {
     left.version_id() == right.version_id() && left.instance == right.instance
 }
 
-fn markers(
+fn marks(
     record: &InstallRecord,
     active: Option<&InstallRecord>,
     running: Option<&InstallRecord>,
-) -> String {
-    match (
-        active.is_some_and(|item| same_record(item, record)),
-        running.is_some_and(|item| same_record(item, record)),
-    ) {
-        (true, true) => "*>",
-        (true, false) => "*",
-        (false, true) => ">",
-        (false, false) => " ",
+) -> listing::Marks {
+    listing::Marks {
+        active: active.is_some_and(|item| same_record(item, record)),
+        running: running.is_some_and(|item| same_record(item, record)),
     }
-    .to_string()
 }
 
 fn running_json(identity: Option<&RunningIdentity>) -> serde_json::Value {
@@ -240,20 +223,22 @@ pub(super) fn run_ls_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
     }
 
     if state.installs.is_empty() && running.is_none() {
-        ctx.summary("(no versions installed — run `vibe self install`)");
+        ctx.summary("no versions installed; vibe self install installs one");
         return Ok(());
     }
-    for record in &state.installs {
-        ctx.step(&format!(
-            "{} {}",
-            markers(record, active.as_ref(), installed_running),
-            record.human_identity()
-        ));
-    }
-    if let Some(RunningIdentity::Source(source)) = running {
-        ctx.step(&format!(" > {}", source.human_identity()));
-    }
-    ctx.summary(&format!("{} instance(s) installed.", state.installs.len()));
+    ctx.summary(&format!("{} instance(s) installed", state.installs.len()));
+    let rows = state
+        .installs
+        .iter()
+        .map(|record| {
+            listing::record_row(record, marks(record, active.as_ref(), installed_running))
+        })
+        .collect();
+    let source = match running.as_ref() {
+        Some(RunningIdentity::Source(source)) => Some(source),
+        _ => None,
+    };
+    ctx.block(&listing::render(rows, source));
     Ok(())
 }
 
@@ -278,31 +263,47 @@ pub(super) fn run_current_cmd(ctx: &output::Context, env: &VvmEnv) -> Result<()>
         }));
     }
 
+    let mut rows = Vec::new();
+    let mut source = None;
     match running.as_ref() {
-        Some(RunningIdentity::Installed(record))
-            if active
-                .as_ref()
-                .is_some_and(|active| same_record(active, record)) =>
-        {
-            ctx.summary(&format!("*> {}", record.human_identity()));
-        }
         Some(RunningIdentity::Installed(record)) => {
-            if let Some(active) = active.as_ref() {
-                ctx.summary(&format!("*  {}", active.human_identity()));
+            if let Some(active) = active
+                .as_ref()
+                .filter(|active| !same_record(active, record))
+            {
+                rows.push(listing::record_row(
+                    active,
+                    marks(active, Some(active), None),
+                ));
             }
-            ctx.summary(&format!(" > {}", record.human_identity()));
+            rows.push(listing::record_row(
+                record,
+                marks(record, active.as_ref(), Some(record)),
+            ));
         }
-        Some(RunningIdentity::Source(source)) => {
+        Some(RunningIdentity::Source(running)) => {
             if let Some(active) = active.as_ref() {
-                ctx.summary(&format!("*  {}", active.human_identity()));
+                rows.push(listing::record_row(
+                    active,
+                    marks(active, Some(active), None),
+                ));
             }
-            ctx.summary(&format!(" > {}", source.human_identity()));
+            source = Some(running);
         }
-        None => match active {
-            Some(record) => ctx.summary(&format!("*  {}", record.human_identity())),
-            None => ctx.summary("(no active or identified running version)"),
-        },
+        None => {
+            if let Some(active) = active.as_ref() {
+                rows.push(listing::record_row(
+                    active,
+                    marks(active, Some(active), None),
+                ));
+            }
+        }
     }
+    if rows.is_empty() && source.is_none() {
+        ctx.summary("no active or identified running version");
+        return Ok(());
+    }
+    ctx.block(&listing::render(rows, source));
     Ok(())
 }
 
@@ -538,9 +539,13 @@ mod tests {
         let active = record(Origin::Binary, None);
         let mut running = active.clone();
         running.instance += 1;
-        assert_eq!(markers(&active, Some(&active), Some(&running)), "*");
-        assert_eq!(markers(&running, Some(&active), Some(&running)), ">");
-        assert_eq!(markers(&active, Some(&active), Some(&active)), "*>");
+        let states = |record: &InstallRecord, running: &InstallRecord| {
+            let marks = marks(record, Some(&active), Some(running));
+            (marks.active, marks.running)
+        };
+        assert_eq!(states(&active, &running), (true, false));
+        assert_eq!(states(&running, &running), (false, true));
+        assert_eq!(states(&active, &active), (true, true));
     }
 
     #[test]

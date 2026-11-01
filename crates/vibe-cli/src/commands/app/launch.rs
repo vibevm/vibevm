@@ -10,7 +10,6 @@ use std::io::IsTerminal;
 use std::path::Path;
 
 use anyhow::{Result, bail};
-use dialoguer::Select;
 use serde_json::Value;
 use vibe_app::{Index, LaunchRequest, LauncherCatalog, Storage};
 
@@ -113,25 +112,24 @@ pub(super) fn choose_launcher(listing: &Value, ctx: &output::Context) -> Result<
         );
     }
 
-    let labels = options
+    // An unavailable launcher stays in the list with its reason as the
+    // row's sentence, so the reader sees why it cannot be chosen.
+    let choices = options
         .iter()
-        .map(|(id, name, status, reason)| {
-            if status == "available" {
-                format!("{name} ({id})")
-            } else {
-                format!("{name} ({id}) — {status}: {reason}")
-            }
+        .map(|(id, name, status, reason)| vibe_app::Choice {
+            description: (status != "available").then(|| format!("{status}: {reason}")),
+            ..vibe_app::Choice::named(name, id)
         })
         .collect::<Vec<_>>();
     let first_available = options
         .iter()
         .position(|(_, _, status, _)| status == "available")
         .ok_or_else(|| anyhow::anyhow!("launcher_unavailable: no available launchers"))?;
-    let selected = Select::with_theme(&crate::output::prompt_theme())
-        .with_prompt("Select application launcher")
-        .items(&labels)
-        .default(first_available)
-        .interact_opt()?;
+    let selected = crate::output::prompts::choose_opt(
+        "Select application launcher",
+        &choices,
+        first_available,
+    )?;
     let Some(index) = selected else {
         return Ok(None);
     };

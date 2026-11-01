@@ -17,6 +17,7 @@ mod error;
 mod git;
 mod import;
 mod install;
+mod listing;
 mod model;
 mod placer;
 mod provenance;
@@ -31,7 +32,6 @@ use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
-use dialoguer::Confirm;
 use vibe_core::progress::Progress;
 
 use crate::{
@@ -189,6 +189,9 @@ pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
                 Ok(remove::GcOutcome::Skipped(reason)) => task.skip(*reason),
                 Err(_) => task.fail("garbage collection failed"),
             }
+            if let Ok(outcome) = &result {
+                remove::gc_trailer(ctx, outcome);
+            }
             result.map(|_| ())
         }
         VvmSubcommand::Env(a) => run_env_cmd(ctx, &env, a),
@@ -240,6 +243,7 @@ fn run_import_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmImportArgs) -> R
             ensure_activatable(&store, &outcome.record)?;
             activate_record(ctx, env, &store, &outcome.record, "self:import")
         })?;
+        activation::activation_trailer(ctx, &store, &outcome.record, "self:import");
     }
     Ok(())
 }
@@ -399,6 +403,7 @@ fn run_install_cmd(
     let result = activate_record(ctx, env, &store, &outcome.record, command);
     if result.is_ok() {
         task.finish();
+        activation::activation_trailer(ctx, &store, &outcome.record, command);
     } else {
         task.fail("activation failed");
     }
@@ -563,11 +568,7 @@ fn confirm(ctx: &output::Context, yes: bool, prompt: &str) -> Result<bool, VvmEr
             detail: "no TTY for confirmation; pass `--yes` to proceed unattended".to_string(),
         });
     }
-    Ok(Confirm::with_theme(&crate::output::prompt_theme())
-        .with_prompt(prompt)
-        .default(true)
-        .interact()
-        .unwrap_or(false))
+    Ok(crate::output::prompts::confirm(prompt, true).unwrap_or(false))
 }
 
 /// Require an interactive TTY for a prompt that has no `--yes` bypass (the

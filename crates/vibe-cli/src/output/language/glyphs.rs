@@ -131,3 +131,41 @@ impl PromptGlyphs {
         }
     }
 }
+
+/// The branches of `vibe tree`'s plain view (PROP-067 `#coverage`): the
+/// one listing that keeps a full tree of `├`/`└`, because its rows are all
+/// known before the first is written and a reader follows the edges of a
+/// dependency graph down them. They live at column 0 of a tree that has no
+/// gutter, so they are named here rather than in the gutter set.
+pub(crate) struct TreeGlyphs {
+    /// Before a child that has a sibling after it.
+    pub(crate) branch: &'static str,
+    /// Before the last child of its parent.
+    pub(crate) last: &'static str,
+    /// The prefix under a child that has a sibling after it.
+    pub(crate) through: &'static str,
+}
+
+impl TreeGlyphs {
+    /// The set this process draws with.
+    pub(crate) fn detect() -> Self {
+        Self::in_set(GlyphSet::detect())
+    }
+
+    /// The branches of a named set; every spelling is three columns wide,
+    /// so a deeper row stays under its parent in both.
+    pub(crate) fn in_set(set: GlyphSet) -> Self {
+        match set {
+            GlyphSet::Unicode => Self {
+                branch: "├─ ",
+                last: "└─ ",
+                through: "│  ",
+            },
+            GlyphSet::Ascii => Self {
+                branch: "|- ",
+                last: "`- ",
+                through: "|  ",
+            },
+        }
+    }
+}

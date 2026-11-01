@@ -381,8 +381,8 @@ fn disabled_human_and_quiet_surfaces_are_unchanged() {
             .unwrap(),
     );
     assert!(
-        !human_update.contains("Updated 0 packages"),
-        "nor a human one: {human_update:?}",
+        !human_update.contains("Updated 0 packages") && human_update.contains("✻ re-resolved"),
+        "a human one ends with the trailer, not the scoped summary: {human_update:?}",
     );
 
     let reinstalled = tempfile::tempdir().unwrap();

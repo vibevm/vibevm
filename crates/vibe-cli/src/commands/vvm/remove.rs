@@ -9,7 +9,6 @@ use std::fmt;
 use std::fs;
 
 use anyhow::{Context, Result};
-use dialoguer::MultiSelect;
 use vibe_publish::release_manifest::DISTRIBUTION_SOURCE_ARCHIVE_FILENAME;
 
 use super::model::{self, InstallRecord, InstanceId, Selector, VersionId};
@@ -22,7 +21,7 @@ use crate::output;
 #[path = "remove_guard.rs"]
 mod guard;
 use guard::{
-    RemovalEffects, guard_remove_targets, remove_mirror_after, removes_last_managed,
+    RemovalEffects, RemovalNote, guard_remove_targets, remove_mirror_after, removes_last_managed,
     scoped_removal_notes,
 };
 
@@ -30,7 +29,7 @@ use guard::{
 mod gc;
 #[cfg(test)]
 use gc::gc_protected;
-pub(super) use gc::{GcOutcome, run_gc_cmd};
+pub(super) use gc::{GcOutcome, gc_trailer, run_gc_cmd};
 
 /// What `self remove` deletes for a version (PROP-019 §2.9).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -143,7 +142,10 @@ fn remove_target(
                             true
                         }
                         Err(error) => {
-                            ctx.summary(&format!("skipped {} (in use?): {error}", home.display()));
+                            ctx.diagnostic(&format!(
+                                "skipped {} (in use?): {error}",
+                                home.display()
+                            ));
                             effects.failed = true;
                             false
                         }
@@ -285,12 +287,12 @@ pub(super) fn run_remove_cmd(
             && protection_blocks(reason, args.force)
         {
             if reason == "running" {
-                ctx.summary(&format!(
+                ctx.diagnostic(&format!(
                     "skipped running {} — the executing instance cannot remove itself",
                     record.selector()
                 ));
             } else {
-                ctx.summary(&format!(
+                ctx.diagnostic(&format!(
                     "skipped active {} — use --force to remove it",
                     record.selector()
                 ));
@@ -423,10 +425,16 @@ pub(super) fn run_remove_cmd(
             selected_binary,
             mirror_candidate,
         ) {
-            ctx.summary(note);
+            match note {
+                RemovalNote::Warning(text) => ctx.diagnostic(text),
+                RemovalNote::Remark(text) => ctx.hint(text),
+            }
         }
+        ctx.trailer(&format!(
+            "removed {} of {selected_count} selected target(s)",
+            effective.len()
+        ));
     }
-    ctx.summary("done.");
     Ok(())
 }
 
@@ -506,11 +514,17 @@ fn pick_ids(ctx: &output::Context, state: &model::State) -> Result<Vec<VersionId
         "no version selected: pass a selector (e.g. `vibe self remove tag:1.2.3`) or `--all`",
     )?;
     let labels: Vec<String> = ids.iter().map(|i| i.to_string()).collect();
-    let chosen = MultiSelect::with_theme(&crate::output::prompt_theme())
-        .with_prompt("Select versions to remove (space toggles, enter confirms)")
-        .items(&labels)
-        .interact()
-        .unwrap_or_default();
+    let names: Vec<&str> = labels.iter().map(String::as_str).collect();
+    let none = vec![false; names.len()];
+    // The key legend above the list names space and enter.
+    let chosen = crate::output::prompts::choose_many(
+        "Select versions to remove",
+        &crate::output::prompts::named(&names),
+        &none,
+    )
+    .ok()
+    .flatten()
+    .unwrap_or_default();
     Ok(chosen.into_iter().map(|i| ids[i].clone()).collect())
 }
 

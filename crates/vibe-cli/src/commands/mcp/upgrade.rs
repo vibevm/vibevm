@@ -89,14 +89,14 @@ pub(super) fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result
                         .iter()
                         .filter(|r| r.status == "would-update")
                         .count();
-                Confirm::with_theme(&crate::output::prompt_theme())
-                    .with_prompt(format!(
+                crate::output::prompts::confirm(
+                    &format!(
                         "Refresh {stale} stale entr{}?",
                         if stale == 1 { "y" } else { "ies" }
-                    ))
-                    .default(false)
-                    .interact()
-                    .context("reading user confirmation")?
+                    ),
+                    false,
+                )
+                .context("reading user confirmation")?
             };
         if !approved {
             return Err(InstallError::UserDeclined.into());

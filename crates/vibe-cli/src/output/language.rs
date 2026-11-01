@@ -22,7 +22,7 @@ mod width;
 pub(crate) use block::{
     Block, LabelValue, Line, Refusal, fold_line, hint, parked_trailer, trailer, warning,
 };
-pub(crate) use glyphs::{Glyph, GlyphSet, PromptGlyphs, spinner_frames};
+pub(crate) use glyphs::{Glyph, GlyphSet, PromptGlyphs, TreeGlyphs, spinner_frames};
 pub(crate) use list::{Cell, List, Row};
 pub(crate) use meta::{Meta, bytes, elapsed, join_meta, short_path};
 pub(crate) use page::{Kind, Stream, before, mark};

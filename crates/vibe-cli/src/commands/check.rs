@@ -16,6 +16,7 @@ use vibe_workspace::install::verify_boot_graph;
 
 use crate::cli::CheckArgs;
 use crate::output;
+use crate::output::language::{Block, Glyph, LabelValue, Line, Role, paint};
 
 pub fn run(ctx: &output::Context, args: CheckArgs) -> Result<()> {
     let locate = ctx.progress().task("Locating project checks");
@@ -133,23 +134,26 @@ fn emit_report(
 
     if report.findings.is_empty() {
         ctx.summary(&format!(
-            "vibe check: clean — every check passed against `{}`",
+            "vibe check: clean — every check passed against {}",
             project_root.display()
         ));
         return Ok(());
     }
 
-    ctx.heading(&format!(
-        "vibe check: {} finding{} in `{}`",
+    ctx.rule(&format!(
+        "{} finding{} in {}",
         report.findings.len(),
         if report.findings.len() == 1 { "" } else { "s" },
         project_root.display()
     ));
-    ctx.suspend_progress(|| {
-        for finding in &report.findings {
-            render_finding(finding);
-        }
-    });
+    let blocks: Vec<String> = report
+        .findings
+        .iter()
+        .map(|finding| finding_block(finding).render())
+        .collect();
+    ctx.block(&blocks.join("\n"));
+    // `vibe check` only reports, so its count is a summary, not a trailer
+    // (PROP-067 `#trailer`); an error count also ends in the refusal below.
     ctx.summary(&format!(
         "\n{errors} error{}, {warnings} warning{}, {infos} info",
         if errors == 1 { "" } else { "s" },
@@ -158,24 +162,36 @@ fn emit_report(
     Ok(())
 }
 
-fn render_finding(f: &Finding) {
-    let sigil = match f.severity {
-        Severity::Error => "[E]",
-        Severity::Warning => "[W]",
-        Severity::Info => "[i]",
+/// One finding as a block of the findings list (PROP-067 `#block`,
+/// `#list`): the severity in the gutter, the check id in the accent role,
+/// the message, and where it was found as the `at` line under it.
+///
+/// ```text
+/// x redirect-block  CLAUDE.md has an opening <vibevm> marker and no closing one
+///   at   CLAUDE.md:3
+/// ```
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-067#block")]
+fn finding_block(f: &Finding) -> Block {
+    let glyph = match f.severity {
+        Severity::Error => Glyph::Failed,
+        Severity::Warning => Glyph::Warning,
+        Severity::Info => Glyph::Done,
     };
-    let path_part = match (&f.path, f.line) {
-        (Some(p), Some(line)) => {
-            format!("{}:{line}", p.to_string_lossy().replace('\\', "/"))
-        }
-        (Some(p), None) => p.to_string_lossy().replace('\\', "/"),
-        (None, _) => "-".to_string(),
-    };
-    println!(
-        "  {sigil}  [{check}] {path_part} — {msg}",
-        check = f.check.as_str(),
-        msg = f.message
+    let headline = format!(
+        "{}  {}",
+        paint(Role::Accent, f.check.as_str()),
+        f.message.replace('`', "")
     );
+    let mut block = Block::new(glyph, headline);
+    let at = match (&f.path, f.line) {
+        (Some(p), Some(line)) => Some(format!("{}:{line}", p.to_string_lossy().replace('\\', "/"))),
+        (Some(p), None) => Some(p.to_string_lossy().replace('\\', "/")),
+        (None, _) => None,
+    };
+    if let Some(at) = at {
+        block = block.with_body(vec![Line::Label("at".into(), vec![LabelValue::Text(at)])]);
+    }
+    block
 }
 
 fn resolve_project_root(path: &Path) -> Result<PathBuf> {

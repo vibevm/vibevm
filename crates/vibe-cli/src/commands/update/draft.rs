@@ -200,7 +200,7 @@ impl UpdateDraft {
             }
         }
         let hooks = LifecycleHookView::new(&rows);
-        if let Some(line) = success_line(Presentation {
+        match success_line(Presentation {
             scoped,
             quiet,
             count,
@@ -208,7 +208,9 @@ impl UpdateDraft {
             hooks: &HookReportPresentation::quiet_suffix(&hooks),
             quiet_suffix,
         }) {
-            ctx.summary(&line);
+            Some(Closing::Quiet(line)) => ctx.summary(&line),
+            Some(Closing::Trailer(what)) => ctx.trailer(&what),
+            None => {}
         }
         Ok(())
     }
@@ -224,28 +226,34 @@ struct Presentation<'a> {
     quiet_suffix: &'a str,
 }
 
-/// What a SUCCESSFUL update prints on a terminal — `None` where it has always
-/// printed nothing.
+/// How a successful update closes: quiet mode's one line, or the trailer
+/// of PROP-067 `#trailer` on a human terminal.
+#[derive(Debug, PartialEq, Eq)]
+enum Closing {
+    Quiet(String),
+    Trailer(String),
+}
+
+/// What a SUCCESSFUL update prints on a terminal — `None` where it prints
+/// nothing.
 ///
-/// The policy is a table rather than a fall-through because the two scopes
-/// really do differ, and defaulting one to the other changes bytes an operator
-/// or a script already depends on:
+/// The policy is a table rather than a fall-through because quiet mode's
+/// one line is a contract scripts read, and the two scopes differ there:
 ///
 /// ```text
-/// scoped, human   →  "\nUpdated N package(s) (M version bump(s))."
+/// scoped, human   →  trailer "updated N package(s) · M version bump(s)"
 /// scoped, quiet   →  one line, with the hook and trace suffixes
-/// all,    human   →  nothing — the substrate already narrated, and this
-///                    command has never added a completion summary
+/// all,    human   →  trailer "re-resolved N package(s)"
 /// all,    quiet   →  nothing, UNLESS a trace suffix exists
 /// ```
 ///
-/// That last exception is the narrowest one that makes the new feature
-/// observable at all. A whole update's compile-trace summary has nowhere else
-/// to go in quiet mode: human mode prints the adapter's table and JSON carries
-/// the member, while quiet's entire contract is a single line. With tracing off
-/// the suffix is empty, no line is printed, and the trace-disabled bytes are
-/// exactly what they were.
-fn success_line(inputs: Presentation<'_>) -> Option<String> {
+/// A human terminal gets the trailer in both scopes because every command
+/// that did work ends with one. Quiet mode's whole-update exception is the
+/// narrowest one that makes the compile trace observable at all: its
+/// summary has nowhere else to go, while human mode prints the adapter's
+/// table and JSON carries the member. With tracing off the suffix is empty,
+/// no line is printed, and the trace-disabled bytes are what they were.
+fn success_line(inputs: Presentation<'_>) -> Option<Closing> {
     let Presentation {
         scoped,
         quiet,
@@ -255,24 +263,23 @@ fn success_line(inputs: Presentation<'_>) -> Option<String> {
         quiet_suffix,
     } = inputs;
     let packages = if count == 1 { "" } else { "s" };
-    if !scoped {
-        if !quiet || quiet_suffix.is_empty() {
-            return None;
-        }
-        return Some(format!(
-            "vibe update: {count} package{packages} re-resolved{quiet_suffix}"
-        ));
-    }
     let moved = if bumps == 1 { "" } else { "s" };
-    if quiet {
-        return Some(format!(
+    match (scoped, quiet) {
+        (false, false) => Some(Closing::Trailer(format!(
+            "re-resolved {count} package{packages}"
+        ))),
+        (false, true) if quiet_suffix.is_empty() => None,
+        (false, true) => Some(Closing::Quiet(format!(
+            "vibe update: {count} package{packages} re-resolved{quiet_suffix}"
+        ))),
+        (true, true) => Some(Closing::Quiet(format!(
             "vibe update: {count} package{packages} re-resolved, {bumps} \
              bump{moved}{hooks}{quiet_suffix}"
-        ));
+        ))),
+        (true, false) => Some(Closing::Trailer(format!(
+            "updated {count} package{packages} · {bumps} version bump{moved}"
+        ))),
     }
-    Some(format!(
-        "\nUpdated {count} package{packages} ({bumps} version bump{moved})."
-    ))
 }
 
 fn handoff_member(delegation: &vibe_lifecycle::Delegation) -> UpdateDelegation {

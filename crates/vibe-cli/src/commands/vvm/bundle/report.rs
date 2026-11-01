@@ -25,30 +25,28 @@ pub(super) fn emit_outcome(
     if ctx.is_json() {
         return ctx.emit_json(&outcome_json(command, outcome, activation, true));
     }
-    ctx.summary(
-        "note: a running `vibe-index serve` keeps its old process; restart it to use this instance.",
-    );
+    ctx.hint("a running vibe-index serve keeps its old process; restart it to use this instance");
     if activation.path_on_current_process {
-        ctx.summary("PATH is ready in this process.");
+        ctx.hint("PATH is ready in this process");
     } else if activation.durable_path_changed {
-        ctx.summary("durable PATH updated; reopen the shell to resolve the stable shims.");
+        ctx.hint("durable PATH updated; reopen the shell to resolve the stable shims");
     } else {
-        ctx.summary("durable PATH was already configured; reopen this shell to pick it up.");
+        ctx.hint("durable PATH was already configured; reopen this shell to pick it up");
     }
     if let Some(warning) = &activation.advisory_home_warning {
-        ctx.summary(&format!(
-            "warning: active pointer switched, but advisory VIBEVM_HOME was not updated: {warning}"
+        ctx.diagnostic(&format!(
+            "active pointer switched, but advisory VIBEVM_HOME was not updated: {warning}"
         ));
     }
-    ctx.summary(&format!(
-        "{} {} — active",
-        if outcome.reused {
-            "reused"
-        } else {
-            "installed"
-        },
-        outcome.record.selector()
-    ));
+    let verb = match (outcome.reused, command) {
+        (true, _) => "reused",
+        (false, "self:reinstall") => "reinstalled",
+        (false, _) => "installed",
+    };
+    ctx.trailer_at(
+        &format!("{verb} {} · active", outcome.record.selector()),
+        &outcome.home.display().to_string(),
+    );
     Ok(())
 }
 

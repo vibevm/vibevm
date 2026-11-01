@@ -8,7 +8,6 @@ use std::fs;
 use std::io::{self, IsTerminal};
 use std::path::{Path, PathBuf};
 
-use dialoguer::Select;
 use specmark::spec;
 use thiserror::Error;
 use vibe_core::progress::Progress;
@@ -162,11 +161,11 @@ pub(crate) fn choose_mirror(
         let items = Mirror::ALL.map(|m| m.as_str());
         let pick = ctx
             .suspend_progress(|| {
-                Select::with_theme(&crate::output::prompt_theme())
-                    .with_prompt("Source mirror")
-                    .items(items)
-                    .default(0)
-                    .interact()
+                crate::output::prompts::choose(
+                    "Source mirror",
+                    &crate::output::prompts::named(&items),
+                    0,
+                )
             })
             .unwrap_or(0);
         return Ok(Mirror::ALL[pick]);

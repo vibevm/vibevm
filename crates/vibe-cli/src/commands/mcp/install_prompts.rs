@@ -20,15 +20,15 @@ pub(super) fn interactive_ask_scope(path: &Path) -> Result<Scope> {
     } else {
         "Where to install? (vibe.toml not found — defaulting to user-level)"
     };
-    let chosen = dialoguer::Select::with_theme(&crate::output::prompt_theme())
-        .with_prompt(prompt)
-        .items([
-            "Project-level — per-project files committed to git",
-            "User-level    — global home/config dirs, works everywhere",
-            "Both          — project AND user simultaneously",
-        ])
-        .default(default_idx)
-        .interact()?;
+    let chosen = crate::output::prompts::choose(
+        prompt,
+        &[
+            described("Project-level", "per-project files committed to git"),
+            described("User-level", "global home/config dirs, works everywhere"),
+            described("Both", "project AND user simultaneously"),
+        ],
+        default_idx,
+    )?;
     Ok(match chosen {
         0 => Scope::Project,
         1 => Scope::User,
@@ -41,15 +41,15 @@ pub(super) fn interactive_ask_what() -> Result<What> {
     if !stdin_is_tty() {
         return Ok(What::Both);
     }
-    let chosen = dialoguer::Select::with_theme(&crate::output::prompt_theme())
-        .with_prompt("What to install?")
-        .items([
+    let chosen = crate::output::prompts::choose(
+        "What to install?",
+        &crate::output::prompts::named(&[
             "Both MCP server config and SKILL.md (recommended)",
             "MCP server only",
             "SKILL.md only",
-        ])
-        .default(0)
-        .interact()?;
+        ]),
+        0,
+    )?;
     Ok(match chosen {
         0 => What::Both,
         1 => What::Mcp,
@@ -72,22 +72,29 @@ pub(super) fn interactive_select_agents(detected: &[Agent], force: bool) -> Resu
     // anyway when chosen — but visually they're always pickable.
     let _ = force; // currently informational only at the wizard layer
     let pool: Vec<Agent> = Agent::ALL.to_vec();
-    let labels: Vec<String> = pool
+    // A detected agent carries the list's own `[detected]` column; the rest
+    // stay pickable without a badge of their own.
+    let choices: Vec<vibe_app::Choice> = pool
         .iter()
-        .map(|a| {
-            let badge = if detected.contains(a) {
-                ""
-            } else {
-                "  (not detected)"
-            };
-            format!("{}{}", a.as_str(), badge)
+        .map(|a| vibe_app::Choice {
+            name: a.as_str().to_owned(),
+            detected: detected.contains(a),
+            ..vibe_app::Choice::default()
         })
         .collect();
     let defaults: Vec<bool> = pool.iter().map(|a| detected.contains(a)).collect();
-    let chosen = dialoguer::MultiSelect::with_theme(&crate::output::prompt_theme())
-        .with_prompt("Which agents? (space to toggle, enter to confirm)")
-        .items(&labels)
-        .defaults(&defaults)
-        .interact()?;
+    // The key legend above the list names space and enter, so the prompt
+    // no longer repeats them.
+    let chosen = crate::output::prompts::choose_many("Which agents?", &choices, &defaults)?
+        .unwrap_or_default();
     Ok(chosen.into_iter().map(|i| pool[i]).collect())
+}
+
+/// A row with a name and the sentence after it.
+fn described(name: &str, description: &str) -> vibe_app::Choice {
+    vibe_app::Choice {
+        name: name.to_owned(),
+        description: Some(description.to_owned()),
+        ..vibe_app::Choice::default()
+    }
 }

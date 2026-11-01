@@ -1,14 +1,14 @@
 //! The attended questions of an application install or update (PROP-065
 //! `#plan`, `#features`, `#parameters`, `#license`).
 //!
-//! Each question is built with the shared prompt theme
-//! ([`crate::output::prompt_theme`]) and draws the library's structured
-//! rows as aligned columns, so the wizard reads like the step panel that
-//! follows it instead of like `dialoguer`'s bare default.
+//! Each question is asked through the shared helpers of
+//! [`crate::output::prompts`], which every other command's questions use
+//! too, and draws the library's structured rows as aligned columns, so the
+//! wizard reads like the step panel that follows it.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#display");
 
-use dialoguer::{Confirm, Input, MultiSelect, Password, Select};
+use dialoguer::{Confirm, Input, Password};
 use vibe_app::Choice;
 use vibe_core::manifest::{ParameterDecl, ParameterType};
 
@@ -20,24 +20,7 @@ pub(super) fn chooser(
     prompt: &str,
     items: &[Choice],
 ) -> std::result::Result<Option<usize>, String> {
-    asking(|| {
-        let theme = output::prompt_theme();
-        prompts::space_before_question();
-        prompts::key_legend();
-        let picked = Select::with_theme(&theme)
-            .with_prompt(prompt)
-            .items(prompts::column_items(items, &prompts::ItemStyles::stderr()))
-            .default(0)
-            // The answer line is printed from the flat label below, not
-            // echoed from the aligned row the list drew.
-            .report(false)
-            .interact_opt()
-            .map_err(|error| error.to_string())?;
-        if let Some(chosen) = picked.and_then(|index| items.get(index)) {
-            prompts::answer(&theme, prompt, &chosen.label());
-        }
-        Ok(picked)
-    })
+    asking(|| prompts::choose_opt(prompt, items, 0).map_err(|error| error.to_string()))
 }
 
 pub(super) fn feature_chooser(
@@ -45,28 +28,7 @@ pub(super) fn feature_chooser(
     items: &[Choice],
     defaults: &[bool],
 ) -> std::result::Result<Option<Vec<usize>>, String> {
-    asking(|| {
-        let theme = output::prompt_theme();
-        prompts::space_before_question();
-        prompts::key_legend();
-        let picked = MultiSelect::with_theme(&theme)
-            .with_prompt(prompt)
-            .items(prompts::column_items(items, &prompts::ItemStyles::stderr()))
-            .defaults(defaults)
-            .report(false)
-            .interact_opt()
-            .map_err(|error| error.to_string())?;
-        if let Some(indexes) = &picked {
-            let labels: Vec<String> = indexes
-                .iter()
-                .filter_map(|index| items.get(*index))
-                .map(Choice::label)
-                .collect();
-            let borrowed: Vec<&str> = labels.iter().map(String::as_str).collect();
-            prompts::answers(&theme, prompt, &borrowed);
-        }
-        Ok(picked)
-    })
+    asking(|| prompts::choose_many(prompt, items, defaults).map_err(|error| error.to_string()))
 }
 
 /// A typed parameter question (PROP-065 `#parameters`): a confirmation, a
@@ -101,20 +63,7 @@ pub(super) fn parameter_prompt(
                     .iter()
                     .position(|choice| Some(choice.value.as_str()) == preset)
                     .unwrap_or(0);
-                prompts::key_legend();
-                let picked = Select::with_theme(&theme)
-                    .with_prompt(&label)
-                    .items(prompts::column_items(
-                        &choices,
-                        &prompts::ItemStyles::stderr(),
-                    ))
-                    .default(default)
-                    .report(false)
-                    .interact_opt()
-                    .map_err(failed)?;
-                if let Some(chosen) = picked.and_then(|index| choices.get(index)) {
-                    prompts::answer(&theme, &label, &chosen.label());
-                }
+                let picked = prompts::choose_opt(&label, &choices, default).map_err(failed)?;
                 Ok(picked
                     .and_then(|index| parameter.choices.get(index))
                     .map(|choice| choice.value.clone()))
@@ -146,10 +95,7 @@ pub(super) fn license_prompt(name: &str, text: &str) -> std::result::Result<bool
     asking(|| {
         prompts::space_before_question();
         eprintln!("{text}");
-        Confirm::with_theme(&output::prompt_theme())
-            .with_prompt(format!("Accept the license `{name}`?"))
-            .default(false)
-            .interact()
+        prompts::confirm(&format!("Accept the license `{name}`?"), false)
             .map_err(|error| error.to_string())
     })
 }

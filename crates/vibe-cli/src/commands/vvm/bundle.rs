@@ -309,18 +309,16 @@ fn move_to_newest_release(
     let platform = select_platform(&aggregate, &newest.to_string(), current_target()?)?;
     let release_base = located_distribution(&format!("{GITHUB_RELEASE_ROOT}/v{newest}"))?.0;
     if newest > installed {
-        remote
-            .ctx
-            .summary(&format!("updating {installed} → {newest}"));
+        remote.ctx.hint(&format!("updating {installed} → {newest}"));
         install_selected(remote, platform, &release_base, force)?;
         return Ok(());
     }
-    let reused = install_selected(remote, platform, &release_base, force)?;
-    if !reused {
-        remote.ctx.summary(&format!(
-            "newest release is still {newest}, rebuilt since this install — reinstalled"
-        ));
-    }
+    // Said before the install, because its trailer is the last block: it
+    // reads `reused` when nothing was rebuilt and `installed` when it was.
+    remote.ctx.hint(&format!(
+        "newest release is still {newest}; reinstalled only if it was rebuilt since this install"
+    ));
+    install_selected(remote, platform, &release_base, force)?;
     Ok(())
 }
 

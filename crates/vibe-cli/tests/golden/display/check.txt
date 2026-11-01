@@ -1,0 +1,6 @@
+── 1 finding in <project> ────
+
+✗ redirect_block  CLAUDE.md has a malformed <vibevm> block: expected zero markers or exactly one <vibevm> … </vibevm> pair, found 1 <vibevm> marker line(s) at line(s) 3 and 0 </vibevm> marker line(s)
+  at   CLAUDE.md
+
+1 error, 0 warnings, 0 info

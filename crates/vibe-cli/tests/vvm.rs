@@ -75,7 +75,8 @@ fn ls_on_a_fresh_root_still_identifies_the_direct_source_execution() {
         .args(["self", "ls"])
         .assert()
         .success()
-        .stdout(predicates::str::contains("> source origin=external"))
+        .stdout(predicates::str::contains("── running from a source tree"))
+        .stdout(predicates::str::is_match(r"source +external .*\[running\]").unwrap())
         .stdout(predicates::str::contains("0 instance(s) installed"));
 }
 
@@ -164,7 +165,7 @@ fn install_builds_publishes_and_records_under_the_temp_root() {
         .args(["self", "ls"])
         .assert()
         .success()
-        .stdout(predicates::str::contains("* branch:main"));
+        .stdout(predicates::str::is_match(r"branch:main#\d+ .*\[active\]").unwrap());
 }
 
 #[test]
@@ -187,7 +188,7 @@ fn update_builds_and_activates_latest_like_install() {
         .args(["self", "ls"])
         .assert()
         .success()
-        .stdout(predicates::str::contains("* branch:main"));
+        .stdout(predicates::str::is_match(r"branch:main#\d+ .*\[active\]").unwrap());
 }
 
 /// Write a minimal, dependency-free vibevm-shaped source tree (a cargo

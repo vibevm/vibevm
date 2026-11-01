@@ -212,15 +212,15 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
                 .iter()
                 .filter(|r| matches!(r.status, "would-create" | "would-update"))
                 .count();
-            Confirm::with_theme(&crate::output::prompt_theme())
-                .with_prompt(format!(
+            crate::output::prompts::confirm(
+                &format!(
                     "Apply this plan? ({mcp_count} MCP entr{}, {skill_count} SKILL.md file{})",
                     if mcp_count == 1 { "y" } else { "ies" },
                     if skill_count == 1 { "" } else { "s" },
-                ))
-                .default(false)
-                .interact()
-                .context("reading user confirmation")?
+                ),
+                false,
+            )
+            .context("reading user confirmation")?
         };
         if !approved {
             return Err(InstallError::UserDeclined.into());
@@ -364,11 +364,7 @@ fn run_selected_install(ctx: &output::Context, args: McpInstallArgs) -> Result<(
                 row.status, row.agent, row.scope, row.config_path
             ));
         }
-        if !Confirm::with_theme(&crate::output::prompt_theme())
-            .with_prompt("Register these MCP servers?")
-            .default(false)
-            .interact()?
-        {
+        if !crate::output::prompts::confirm("Register these MCP servers?", false)? {
             return Err(InstallError::UserDeclined.into());
         }
     }

@@ -115,9 +115,10 @@ fn failed_managed_instance_removal_retains_the_shared_mirror() {
         mixed_absent_binary,
         vec![
             "no instance-owned binary source was present to remove.",
-            "warning: shared managed source was removed; retained binaries no longer have managed source provenance.",
+            "shared managed source was removed; retained binaries no longer have managed source provenance.",
         ]
     );
+    assert!(matches!(mixed_absent_binary[1], RemovalNote::Warning(_)));
     let mixed_present = scoped_removal_notes(
         RemoveScope::Src,
         RemovalEffects {

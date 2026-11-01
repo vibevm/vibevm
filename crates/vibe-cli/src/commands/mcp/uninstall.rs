@@ -84,14 +84,14 @@ pub(super) fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Re
                         .iter()
                         .filter(|r| r.status == "would-remove")
                         .count();
-                Confirm::with_theme(&crate::output::prompt_theme())
-                    .with_prompt(format!(
+                crate::output::prompts::confirm(
+                    &format!(
                         "Remove {to_remove} entr{}?",
                         if to_remove == 1 { "y" } else { "ies" }
-                    ))
-                    .default(false)
-                    .interact()
-                    .context("reading user confirmation")?
+                    ),
+                    false,
+                )
+                .context("reading user confirmation")?
             };
         if !approved {
             return Err(InstallError::UserDeclined.into());
@@ -201,11 +201,7 @@ fn run_selected_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Resu
                 row.status, row.agent, row.scope, row.config_path
             ));
         }
-        if !Confirm::with_theme(&crate::output::prompt_theme())
-            .with_prompt("Remove these MCP registrations?")
-            .default(false)
-            .interact()?
-        {
+        if !crate::output::prompts::confirm("Remove these MCP registrations?", false)? {
             return Err(InstallError::UserDeclined.into());
         }
     }

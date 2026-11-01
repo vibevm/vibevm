@@ -5,7 +5,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-060#GC-STAGES");
 use std::fs;
 
 use anyhow::{Context, Result};
-use dialoguer::Select;
 use vibe_core::progress::{Progress, ProgressTask};
 
 use super::*;
@@ -118,7 +117,7 @@ fn clean_build_cache(
     match fs::remove_dir_all(&dir).with_context(|| format!("removing `{}`", dir.display())) {
         Ok(()) => {
             removal.finish();
-            ctx.summary("cleaned the Rust build cache.");
+            ctx.hint(&format!("cleaned the Rust build cache {}", dir.display()));
             Ok(GcOutcome::Finished)
         }
         Err(error) => {
@@ -250,7 +249,7 @@ fn prune_others(
                 }
                 Err(error) => {
                     component.fail(format!("retained for later retry: {error}"));
-                    ctx.summary(&format!("skipped {} (in use?): {error}", dir.display()));
+                    ctx.diagnostic(&format!("skipped {} (in use?): {error}", dir.display()));
                     retained += 1;
                     false
                 }
@@ -278,9 +277,8 @@ fn prune_others(
     remove_unused_mirror(store, &state, remove_mirror, progress)?;
     let build_cache_failed = clean_pruned_build_cache(store, &build_dir, progress)?;
 
-    ctx.summary(&format!(
-        "pruned {} instance(s); kept active, immediate rollback, and running.",
-        pruned
+    ctx.hint(&format!(
+        "pruned {pruned} instance(s); kept active, immediate rollback, and running"
     ));
     Ok(prune_outcome(retained, build_cache_failed))
 }
@@ -429,6 +427,18 @@ fn clean_pruned_build_cache(
     })
 }
 
+/// The trailer of a collection, written after its root row so it is the
+/// last block; a collection that only found nothing to do has none.
+pub(in crate::commands::vvm) fn gc_trailer(ctx: &output::Context, outcome: &GcOutcome) {
+    match outcome {
+        GcOutcome::Finished => ctx.trailer("garbage collected"),
+        GcOutcome::Skipped(reason @ "completed with retained items") => {
+            ctx.trailer(&format!("garbage collected · {reason}"))
+        }
+        GcOutcome::Skipped(_) => {}
+    }
+}
+
 fn prune_outcome(retained: usize, build_cache_failed: bool) -> GcOutcome {
     if retained > 0 || build_cache_failed {
         GcOutcome::Skipped("completed with retained items")
@@ -456,12 +466,13 @@ fn gc_menu(ctx: &output::Context) -> Result<GcAction> {
         "Clean the Rust build cache (the shared --target-dir)",
         "Prune all instances except active, immediate rollback, and running",
     ];
-    let sel = Select::with_theme(&crate::output::prompt_theme())
-        .with_prompt("vibe self gc")
-        .items(items)
-        .default(0)
-        .interact()
-        .ok();
+    let sel = crate::output::prompts::choose_opt(
+        "vibe self gc",
+        &crate::output::prompts::named(&items),
+        0,
+    )
+    .ok()
+    .flatten();
     Ok(match sel {
         Some(0) => GcAction::Build,
         Some(1) => GcAction::Prune,
