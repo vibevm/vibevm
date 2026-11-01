@@ -156,6 +156,7 @@ codes!(CATALOG, CatalogError [] {
     LauncherMissing => "launcher_missing", Refusal, "the key names no launcher of this home";
     CollectionMissing => "collection_missing", Refusal, "the named launcher collection does not exist";
     CollectionExists => "collection_exists", Refusal, "a launcher collection of that name already exists";
+    NotRunning => "not_running", Refusal, "no launcher started through vibe is running as the named key or process id";
 });
 
 codes!(LAUNCH, LaunchError [] {

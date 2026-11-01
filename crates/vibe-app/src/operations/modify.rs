@@ -39,6 +39,9 @@ pub struct ModifyRequest {
     /// `--set ID=VALUE`.
     pub parameters: Vec<(String, String)>,
     pub accept_license: bool,
+    /// `--keep-work`: keep the work directory of a successful run, as
+    /// `install` does (`PROP-065#work`).
+    pub keep_work: bool,
 }
 
 impl ModifyRequest {
@@ -101,6 +104,7 @@ pub fn modify(
         features: keep_recorded(&option, &recorded, &request.features),
         parameters: request.parameters.clone(),
         accept_license: request.accept_license,
+        keep_work: request.keep_work,
         ..InstallRequest::default()
     };
     let previous = Previous {

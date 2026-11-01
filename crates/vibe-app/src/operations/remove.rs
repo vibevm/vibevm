@@ -318,12 +318,18 @@ pub(crate) fn remove_locked(
         });
     }
     normalize_slots(&mut index);
-    index.save(ctx.settings)?;
+    index.save(
+        ctx.settings,
+        &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Removed, key.clone()),
+    )?;
     // The user layer follows the inventory: this package's keys leave every
     // collection, both pinned lists, the overrides and the usage facts, and
     // a seeded collection the removal emptied goes with them
     // (`PROP-059#launcher-catalog`).
     crate::catalog::drop_package(ctx.settings, &installation)?;
+    // The system entries an export wrote for it go with it
+    // (`PROP-059#launcher-runtime`).
+    crate::export::forget_installation(ctx.settings, &installation)?;
     if let Some(directory) = doomed {
         fs::remove_dir_all(&directory)
             .map_err(|source| installer::io("removing", &directory, source))?;

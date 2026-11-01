@@ -97,6 +97,30 @@ Get-ChildItem "$env:VIBE_SETTINGS\opt\bin"
 &amp; $vibe app icon -g org.vibevm.apps/vim --launcher gvim --size 48
 &amp; $vibe app icon -g org.vibevm.apps/vim --launcher gvim --size 256 --prefer svg</fence>
     <p><EXP-10 fact="true" status="impl/done">**Expected.** The listing names the group `Vim`, categories `Utility` and `Development`, two launchers opted into the menu — `gvim` of kind `gui` and `vim` of kind `tui` — each with an icon set holding the payload's `vim92\vim.ico` and the package SVG copied under `$env:VIBE_SETTINGS\applications\icons\org.vibevm.apps.vim@1.1.2\icons\vim.svg`; `app icon --size 48` prints the SVG copy (an SVG outranks an `.ico` container, which only answers when no raster or SVG exists), `--prefer ico` the payload `.ico`; nothing is written to the Start menu itself. **Observed 2026-10-31 on `base` (vibe `eb2686a2e`, published registry):** `windows-zip` installed in 7 s; the listing showed group `Vim`, `gvim` (`gui`) and `vim` (`tui`) both `menu = true`, each with the SVG copy under `applications\icons\org.vibevm.apps.vim@1.1.2\icons\vim.svg` and the payload `vim92\vim.ico`; `app icon --size 48` printed the SVG copy; uninstall removed the copies. The same day `windows-source` from the published registry pulled `mingw-w64@15.2.1` hidden and `auto`, built Vim in 167 s and `uninstall --autoremove` removed both; the `env` step of a test package wrote `ENVDEMO_HOME` and a PATH prefix into `HKCU\Environment`, listed them in the index, showed their rollback in `uninstall --plan-only` and restored the registry on uninstall (after `eb2686a2e`; before it the step failed under a reduced PATH with `powershell … program not found`).</EXP-10></p>
+    <facts ordered="true">
+      <STEP-11-PROJECTION fact="true" status="impl/work">**Start Menu shortcuts as a projection (PROP-059 `#launcher-runtime`).** With `org.vibevm.apps/vim@1.1.2` installed through `windows-zip`:</STEP-11-PROJECTION>
+    </facts>
+    <fence>&amp; $vibe app launchers -g --export-system --dry-run
+&amp; $vibe app launchers -g --export-system --json
+Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Vim"
+&amp; $vibe app launcher -g org.vibevm.apps/vim@1.1.2#vim --hide
+&amp; $vibe app launchers -g --export-system
+&amp; $vibe app launchers -g --remove-system</fence>
+    <p><EXP-11 fact="true" status="impl/work">**Expected.** The dry run lists `…\Start Menu\Programs\Vim\gVim.lnk` and `…\Vim\Vim.lnk` (the launchers' display names) and writes nothing. The export saves both shortcuts through Windows PowerShell's `WScript.Shell`; each targets this `vibe.exe` with arguments `app start -g --json org.vibevm.apps/vim#gvim` (detached and recorded, so `app running` lists a gVim started from the menu) or `app start -g org.vibevm.apps/vim#vim` (attached to the console Windows opens for it), shows the payload's `vim92\vim.ico`, and starts gVim (or console Vim in a new console) from the Start menu; `$env:VIBE_SETTINGS\applications\exported.json` names both paths. After the hide, the second export removes `Vim.lnk` and keeps `gVim.lnk`; `--remove-system` removes the rest and the empty `Vim` folder. An `uninstall -g` after an export removes the shortcuts too.</EXP-11></p>
+    <facts ordered="true">
+      <STEP-12-STOP fact="true" status="impl/work">**Running and stopping launchers (PROP-059 `#launcher-runtime`).** In one PowerShell window run `$vibe app watch -g`; in a second one:</STEP-12-STOP>
+    </facts>
+    <fence>&amp; $vibe app start -g org.vibevm.apps/vim@1.1.2#gvim --json
+&amp; $vibe app start -g org.vibevm.apps/vim@1.1.2#vim --json
+&amp; $vibe app running -g
+&amp; $vibe app stop -g org.vibevm.apps/vim@1.1.2#gvim --json
+&amp; $vibe app stop -g org.vibevm.apps/vim@1.1.2#vim --json
+&amp; $vibe app running -g --json</fence>
+    <p><EXP-12 fact="true" status="impl/work">**Expected.** Both starts answer at once with a process id; `running` lists both with their start times. Stopping gVim (a window of its own, no console to break) ends it at once with `"ended": "killed"` through `TerminateProcess`; stopping console Vim, which kept the console of the second window, first sends a console break (`GenerateConsoleCtrlEvent`) and reports `terminated` when Vim ends on it, else `killed` after five seconds. The last `running` is empty. The watch window printed a `started` line per start and an `exited` line with the process id per stop; closing its input (Ctrl+Z, Enter) ends it.</EXP-12></p>
+    <facts ordered="true">
+      <STEP-13-HOTKEY fact="true" status="impl/work">**The step panel's `l` hotkey on Windows (PROP-065 `#display`).** Install a package with a long build step in Windows Terminal — `&amp; $vibe install -g org.vibevm.apps/vim --installer windows-source` — and press `l` twice while the build runs, then Ctrl+C.</STEP-13-HOTKEY>
+    </facts>
+    <p><EXP-13 fact="true" status="impl/work">**Expected.** The first `l` unfolds the build output above the panel, the second folds it back to the last lines under the running step; nothing typed is echoed. Ctrl+C still interrupts: the build child stops, the step is recorded `interrupted`, and the console is back in its normal mode afterwards (typed characters echo, Enter submits).</EXP-13></p>
   </section>
   <section title="Pass">
     <p><pass-criteria fact="true" status="impl/work">Every step reads as described on a real Windows host: ZIP install, direct native launch of gVim, console Vim through the `.exe` proxy with Ctrl+C handled by Vim, `vibe shell` reusing each of the three parent shells, the session variable, the removable-drive library with unavailability and moves, and a clean uninstall. The owner signs the date below.</pass-criteria></p>

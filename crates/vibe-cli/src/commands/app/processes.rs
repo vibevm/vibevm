@@ -1,0 +1,259 @@
+//! The host's process calls behind `vibe app running`, `stop` and `watch`
+//! (PROP-059 `#launcher-runtime`): `vibe-app` decides from files, and this
+//! module answers whether a process id is alive (with its start time, so a
+//! reused id is told apart) and delivers the end — `SIGTERM` then `SIGKILL`
+//! to the launcher's process group on Unix, a console break then
+//! `TerminateProcess` on Windows — the way `interrupt.rs` forwards a signal
+//! to a step (PROP-065 `#cancellation`).
+
+#![allow(unsafe_code)]
+
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime");
+
+use vibe_app::{ProcessState, ProcessTable};
+use vibe_core::manifest::LauncherKind;
+
+/// The running system's processes.
+pub(crate) struct HostProcesses;
+
+impl ProcessTable for HostProcesses {
+    fn probe(&self, pid: u32) -> ProcessState {
+        platform::probe(pid)
+    }
+
+    fn ask_to_end(&self, pid: u32, kind: LauncherKind) -> bool {
+        platform::ask_to_end(pid, kind)
+    }
+
+    fn force_end(&self, pid: u32) -> bool {
+        platform::force_end(pid)
+    }
+}
+
+#[cfg(unix)]
+mod platform {
+    use signal_hook::consts::{SIGKILL, SIGTERM};
+    use vibe_app::ProcessState;
+    use vibe_core::manifest::LauncherKind;
+
+    unsafe extern "C" {
+        fn kill(pid: i32, signal: i32) -> i32;
+    }
+
+    /// `EPERM`: the process exists and belongs to someone else.
+    const NOT_PERMITTED: i32 = 1;
+
+    #[specmark::spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "unsafe-gate: Rust has no standard-library API for signalling a process it did not spawn in this run; the id comes from the home's running registry, whose liveness check precedes every call, and the signal is a signal-hook platform constant or 0 (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
+    )]
+    fn signal(pid: i32, signal: i32) -> Result<(), i32> {
+        // SAFETY: `kill` borrows nothing; `pid` and `signal` are plain
+        // integers and a stale id fails with ESRCH rather than misbehaving.
+        if unsafe { kill(pid, signal) } == 0 {
+            Ok(())
+        } else {
+            Err(std::io::Error::last_os_error().raw_os_error().unwrap_or(0))
+        }
+    }
+
+    fn positive(pid: u32) -> Option<i32> {
+        i32::try_from(pid).ok().filter(|pid| *pid > 0)
+    }
+
+    /// The launcher's process group first: a detached start made the child
+    /// the leader of its own group, and a shell launcher's children belong
+    /// to it too. The process alone when it left the group.
+    fn deliver(pid: u32, which: i32) -> bool {
+        let Some(pid) = positive(pid) else {
+            return false;
+        };
+        signal(-pid, which).is_ok() || signal(pid, which).is_ok()
+    }
+
+    fn exists(pid: u32) -> bool {
+        positive(pid).is_some_and(|pid| match signal(pid, 0) {
+            Ok(()) => true,
+            Err(errno) => errno == NOT_PERMITTED,
+        })
+    }
+
+    /// On Linux `/proc/<pid>/stat` answers both questions: a zombie (`Z`) or
+    /// dead (`X`) state is gone, and field 22 is the start time in clock
+    /// ticks since boot — fixed for the life of the process.
+    #[cfg(target_os = "linux")]
+    pub(super) fn probe(pid: u32) -> ProcessState {
+        match std::fs::read_to_string(format!("/proc/{pid}/stat")) {
+            Ok(stat) => {
+                let Some((_, rest)) = stat.rsplit_once(')') else {
+                    return ProcessState::Gone;
+                };
+                let fields: Vec<&str> = rest.split_whitespace().collect();
+                match fields.first() {
+                    Some(&("Z" | "X")) | None => ProcessState::Gone,
+                    Some(_) => ProcessState::Alive {
+                        started: fields.get(19).map(|ticks| (*ticks).to_owned()),
+                    },
+                }
+            }
+            Err(_) if std::path::Path::new("/proc/self").exists() => ProcessState::Gone,
+            Err(_) => fallback(pid),
+        }
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    pub(super) fn probe(pid: u32) -> ProcessState {
+        fallback(pid)
+    }
+
+    /// Without `/proc` the platform gives no start time this module reads,
+    /// so liveness alone answers.
+    fn fallback(pid: u32) -> ProcessState {
+        if exists(pid) {
+            ProcessState::Alive { started: None }
+        } else {
+            ProcessState::Gone
+        }
+    }
+
+    pub(super) fn ask_to_end(pid: u32, _kind: LauncherKind) -> bool {
+        deliver(pid, SIGTERM)
+    }
+
+    pub(super) fn force_end(pid: u32) -> bool {
+        deliver(pid, SIGKILL)
+    }
+}
+
+#[cfg(windows)]
+mod platform {
+    use std::ffi::c_void;
+
+    use vibe_app::ProcessState;
+    use vibe_core::manifest::LauncherKind;
+
+    type Handle = *mut c_void;
+
+    #[repr(C)]
+    #[derive(Clone, Copy, Default)]
+    struct FileTime {
+        low: u32,
+        high: u32,
+    }
+
+    #[link(name = "kernel32")]
+    unsafe extern "system" {
+        fn OpenProcess(desired_access: u32, inherit_handle: i32, process_id: u32) -> Handle;
+        fn GetExitCodeProcess(process: Handle, exit_code: *mut u32) -> i32;
+        fn GetProcessTimes(
+            process: Handle,
+            creation: *mut FileTime,
+            exit: *mut FileTime,
+            kernel: *mut FileTime,
+            user: *mut FileTime,
+        ) -> i32;
+        fn TerminateProcess(process: Handle, exit_code: u32) -> i32;
+        fn CloseHandle(object: Handle) -> i32;
+        fn GenerateConsoleCtrlEvent(ctrl_event: u32, process_group_id: u32) -> i32;
+    }
+
+    const PROCESS_TERMINATE: u32 = 0x0001;
+    const PROCESS_QUERY_LIMITED_INFORMATION: u32 = 0x1000;
+    const STILL_ACTIVE: u32 = 259;
+    /// Ctrl-C cannot be sent to a process group; Ctrl-Break can.
+    const CTRL_BREAK_EVENT: u32 = 1;
+
+    /// An open process handle, closed on drop.
+    struct Process(Handle);
+
+    impl Process {
+        #[specmark::spec(
+            deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+            reason = "unsafe-gate: Rust has no standard-library API for opening a process it did not spawn in this run; the handle is checked for null and owned by the returned guard (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
+        )]
+        fn open(pid: u32, access: u32) -> Option<Self> {
+            // SAFETY: plain integer arguments; a null result is refused.
+            let handle = unsafe { OpenProcess(access, 0, pid) };
+            (!handle.is_null()).then_some(Self(handle))
+        }
+    }
+
+    impl Drop for Process {
+        #[specmark::spec(
+            deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+            reason = "unsafe-gate: closes the handle this guard owns, exactly once (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
+        )]
+        fn drop(&mut self) {
+            // SAFETY: the handle came from OpenProcess and is closed once.
+            let _ = unsafe { CloseHandle(self.0) };
+        }
+    }
+
+    /// A live process answers its creation time, fixed for its life.
+    #[specmark::spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "unsafe-gate: GetExitCodeProcess and GetProcessTimes write into locals this function owns, through a handle the guard keeps open (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
+    )]
+    pub(super) fn probe(pid: u32) -> ProcessState {
+        let Some(process) = Process::open(pid, PROCESS_QUERY_LIMITED_INFORMATION) else {
+            return ProcessState::Gone;
+        };
+        let mut code = 0u32;
+        // SAFETY: a live handle and a pointer to a local.
+        if unsafe { GetExitCodeProcess(process.0, &mut code) } == 0 || code != STILL_ACTIVE {
+            return ProcessState::Gone;
+        }
+        let mut times = [FileTime::default(); 4];
+        let [creation, exit, kernel, user] = &mut times;
+        // SAFETY: a live handle and four pointers to locals.
+        let read = unsafe { GetProcessTimes(process.0, creation, exit, kernel, user) } != 0;
+        let started =
+            read.then(|| ((u64::from(times[0].high) << 32) | u64::from(times[0].low)).to_string());
+        ProcessState::Alive { started }
+    }
+
+    /// A terminal launcher kept the console and its own process group, so a
+    /// console break reaches it when this console is the one it shares; a
+    /// window of its own has nothing to break.
+    #[specmark::spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "unsafe-gate: Rust has no standard-library API for generating a console control event; both arguments are integers, the group id is the launcher's own process id (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
+    )]
+    pub(super) fn ask_to_end(pid: u32, kind: LauncherKind) -> bool {
+        match kind {
+            LauncherKind::Gui => false,
+            // SAFETY: the call borrows nothing.
+            LauncherKind::Tui | LauncherKind::Command => unsafe {
+                GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, pid) != 0
+            },
+        }
+    }
+
+    #[specmark::spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "unsafe-gate: TerminateProcess through a handle the guard keeps open; Rust can only kill a Child it spawned in this run (spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime)."
+    )]
+    pub(super) fn force_end(pid: u32) -> bool {
+        Process::open(pid, PROCESS_TERMINATE)
+            // SAFETY: a live handle opened with PROCESS_TERMINATE.
+            .is_some_and(|process| unsafe { TerminateProcess(process.0, 1) } != 0)
+    }
+}
+
+#[cfg(not(any(unix, windows)))]
+mod platform {
+    use vibe_app::ProcessState;
+    use vibe_core::manifest::LauncherKind;
+
+    pub(super) fn probe(_pid: u32) -> ProcessState {
+        ProcessState::Gone
+    }
+
+    pub(super) fn ask_to_end(_pid: u32, _kind: LauncherKind) -> bool {
+        false
+    }
+
+    pub(super) fn force_end(_pid: u32) -> bool {
+        false
+    }
+}

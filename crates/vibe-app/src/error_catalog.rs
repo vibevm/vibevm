@@ -1,6 +1,7 @@
 //! Errors of the user layer over the launcher catalog
 //! (`PROP-059#launcher-catalog`): a key that names no launcher of the home,
-//! and the two refusals about a collection's name.
+//! the two refusals about a collection's name, and a stop of something that
+//! is not running (`PROP-059#launcher-runtime`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog");
 
@@ -32,4 +33,9 @@ pub enum CatalogError {
          fix: add to it with `vibe app collection add`, or choose another name)"
     )]
     CollectionExists { name: String },
+    #[error(
+        "not_running: no launcher started through vibe in {home} is running as `{target}` (violates spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime; \
+         fix: take a `key` or `pid` from `vibe app running --json`)"
+    )]
+    NotRunning { target: String, home: String },
 }

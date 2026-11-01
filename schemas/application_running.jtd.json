@@ -1,0 +1,125 @@
+{
+  "metadata": {
+    "description": "Version 1 answer of vibe app running --json and vibe app stop KEY|PID --json (PROP-059#launcher-runtime): the launchers started detached through vibe that are still alive, each with its launcher key, process id, start time, command and log, and for stop the processes that call ended and how. A record whose process is gone is pruned from the home's running registry before the answer, so `running` lists only live processes.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_running"
+    },
+    "x-rust-type": "ApplicationRunning",
+    "x-wire-order": [
+      "protocol",
+      "home",
+      "running",
+      "stopped"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "home": {
+      "type": "string"
+    },
+    "running": {
+      "elements": {
+        "ref": "running_launcher"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "stopped": {
+      "elements": {
+        "ref": "stopped_launcher"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "count": {
+      "metadata": {
+        "description": "An exact non-negative count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      },
+      "type": "float64"
+    },
+    "running_launcher": {
+      "metadata": {
+        "description": "One live process a detached start recorded: the launcher key, the process id, the RFC 3339 time of the start, the launcher kind, the command it runs and the log capturing its output.",
+        "x-wire-order": [
+          "key",
+          "pid",
+          "started",
+          "kind",
+          "command",
+          "log"
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "pid": {
+          "ref": "count"
+        },
+        "started": {
+          "type": "string"
+        },
+        "kind": {
+          "ref": "launcher_kind"
+        },
+        "command": {
+          "type": "string"
+        },
+        "log": {
+          "type": "string"
+        }
+      }
+    },
+    "stopped_launcher": {
+      "metadata": {
+        "description": "One process a stop call ended: `terminated` when it ended after the polite request (SIGTERM, a console break), `killed` when the bounded wait ran out and it was ended without asking, `gone` when it had already exited.",
+        "x-wire-order": [
+          "key",
+          "pid",
+          "ended"
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "pid": {
+          "ref": "count"
+        },
+        "ended": {
+          "ref": "ending"
+        }
+      }
+    },
+    "ending": {
+      "enum": [
+        "terminated",
+        "killed",
+        "gone"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "launcher_kind": {
+      "enum": [
+        "gui",
+        "tui",
+        "command"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  }
+}

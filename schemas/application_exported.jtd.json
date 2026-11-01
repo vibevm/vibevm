@@ -1,0 +1,86 @@
+{
+  "metadata": {
+    "description": "Version 1 of the system projection of the launcher catalog (PROP-059#launcher-runtime): the answer of vibe app launchers --export-system|--remove-system --json and the home's own record applications/exported.json of every file and bundle an export wrote, so a later export prunes and an uninstall or --remove-system removes exactly what was written. `dry_run` answers what would be written without writing it.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_exported"
+    },
+    "x-rust-type": "ApplicationExported",
+    "x-wire-order": [
+      "protocol",
+      "home",
+      "platform",
+      "dry_run",
+      "entries",
+      "removed"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "home": {
+      "type": "string"
+    },
+    "platform": {
+      "ref": "system_platform"
+    },
+    "dry_run": {
+      "type": "boolean"
+    },
+    "entries": {
+      "elements": {
+        "ref": "entry"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "removed": {
+      "ref": "string_list"
+    }
+  },
+  "definitions": {
+    "entry": {
+      "metadata": {
+        "description": "The system files of one launcher: its launcher key, the name the system shows, and every absolute path written for it (the entry first, then its icon files).",
+        "x-wire-order": [
+          "key",
+          "name",
+          "paths"
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "paths": {
+          "ref": "string_list"
+        }
+      }
+    },
+    "system_platform": {
+      "enum": [
+        "linux",
+        "windows",
+        "macos"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "string_list": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  }
+}

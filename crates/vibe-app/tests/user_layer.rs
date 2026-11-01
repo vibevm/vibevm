@@ -78,7 +78,12 @@ fn home(dir: &Path) -> SettingsRoot {
         },
     );
     index.slots.insert("editor".into(), Some(package.key()));
-    index.save(&settings).unwrap();
+    index
+        .save(
+            &settings,
+            &vibe_app::HomeEvent::new(vibe_app::EventKind::Installed),
+        )
+        .unwrap();
     settings
 }
 

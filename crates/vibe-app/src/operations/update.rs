@@ -145,6 +145,11 @@ fn update_locked(
         supersede.clone(),
         Command::Update,
     )?;
+    // The user's collections, pins, overrides and counts follow the
+    // launchers to the new key (`PROP-059#launcher-runtime`).
+    if moved && let Some(record) = index.installations.get(&key) {
+        crate::catalog::carry_over(ctx.settings, &prior, record)?;
+    }
     let mut message = if moved {
         format!("updated {prior_key} to {key}")
     } else {

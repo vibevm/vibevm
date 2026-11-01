@@ -146,6 +146,9 @@ pub(super) fn start_detached(
             launcher_id,
             extra_args: &extra,
             project_root,
+            // Recorded in the running registry, so `running`, `stop` and
+            // `watch` know it (PROP-059 `#launcher-runtime`).
+            processes: Some(&super::processes::HostProcesses),
         },
     )?;
     ctx.emit_json(&answer)

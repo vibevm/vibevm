@@ -12,6 +12,7 @@ use std::path::Path;
 use specmark::spec;
 use vibe_wire::generated::application_collections as wire;
 
+use super::events::{EventKind, HomeEvent};
 use super::user::{UserCollection, UserLauncher, UserLaunchers};
 use crate::error::AppError;
 use crate::error_catalog::CatalogError;
@@ -57,11 +58,24 @@ fn edit(
     settings: &SettingsRoot,
     change: impl FnOnce(&mut UserLaunchers, &Index) -> Result<(), AppError>,
 ) -> Result<wire::ApplicationCollections, AppError> {
+    edit_as(
+        settings,
+        &HomeEvent::new(EventKind::CollectionsChanged),
+        change,
+    )
+}
+
+/// [`edit`] recording another event than a change of the arrangement.
+fn edit_as(
+    settings: &SettingsRoot,
+    event: &HomeEvent,
+    change: impl FnOnce(&mut UserLaunchers, &Index) -> Result<(), AppError>,
+) -> Result<wire::ApplicationCollections, AppError> {
     let _lock = settings.lock()?;
     let index = Index::load(settings)?;
     let mut layer = UserLaunchers::load(settings)?;
     change(&mut layer, &index)?;
-    layer.save(settings)?;
+    layer.save(settings, event)?;
     Ok(layer.to_wire(settings))
 }
 
@@ -273,33 +287,37 @@ pub fn launcher_override(
     key: &str,
     change: LauncherChange,
 ) -> Result<wire::ApplicationCollections, AppError> {
-    edit(settings, |layer, index| {
-        known(index, settings, &[key.to_owned()])?;
-        if change == LauncherChange::Reset {
-            layer.launchers.retain(|row| row.key != key);
-            return Ok(());
-        }
-        let position = match layer.launchers.iter().position(|row| row.key == key) {
-            Some(position) => position,
-            None => {
-                layer.launchers.push(UserLauncher {
-                    key: key.to_owned(),
-                    ..Default::default()
-                });
-                layer.launchers.len() - 1
+    edit_as(
+        settings,
+        &HomeEvent::about(EventKind::LaunchersChanged, key),
+        |layer, index| {
+            known(index, settings, &[key.to_owned()])?;
+            if change == LauncherChange::Reset {
+                layer.launchers.retain(|row| row.key != key);
+                return Ok(());
             }
-        };
-        let row = &mut layer.launchers[position];
-        match change {
-            LauncherChange::Hide => row.hidden = true,
-            LauncherChange::Show => row.hidden = false,
-            LauncherChange::Name(name) => row.name = Some(name),
-            LauncherChange::Icon(path) => row.icon = Some(path),
-            LauncherChange::Reset => unreachable!("handled above"),
-        }
-        if row.is_empty() {
-            layer.launchers.retain(|row| row.key != key);
-        }
-        Ok(())
-    })
+            let position = match layer.launchers.iter().position(|row| row.key == key) {
+                Some(position) => position,
+                None => {
+                    layer.launchers.push(UserLauncher {
+                        key: key.to_owned(),
+                        ..Default::default()
+                    });
+                    layer.launchers.len() - 1
+                }
+            };
+            let row = &mut layer.launchers[position];
+            match change {
+                LauncherChange::Hide => row.hidden = true,
+                LauncherChange::Show => row.hidden = false,
+                LauncherChange::Name(name) => row.name = Some(name),
+                LauncherChange::Icon(path) => row.icon = Some(path),
+                LauncherChange::Reset => unreachable!("handled above"),
+            }
+            if row.is_empty() {
+                layer.launchers.retain(|row| row.key != key);
+            }
+            Ok(())
+        },
+    )
 }

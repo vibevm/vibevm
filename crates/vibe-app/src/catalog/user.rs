@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use specmark::spec;
 use vibe_wire::generated::application_collections as wire;
 
+use super::events::HomeEvent;
 use crate::error::StateError;
 use crate::settings::{SettingsRoot, io, write_atomic};
 
@@ -124,7 +125,9 @@ fn is_false(value: &bool) -> bool {
 ///     launchers: vec!["org.example/doom@1.0.0#doom".into()],
 ///     ..Default::default()
 /// });
-/// layer.save(&settings).unwrap();
+/// layer
+///     .save(&settings, &vibe_app::HomeEvent::new(vibe_app::EventKind::CollectionsChanged))
+///     .unwrap();
 /// assert_eq!(UserLaunchers::load(&settings).unwrap(), layer);
 /// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -152,16 +155,22 @@ impl UserLaunchers {
         }
     }
 
-    /// Replace the layer atomically and increment the catalog revision; the
-    /// caller holds the home's mutation lock.
-    pub fn save(&self, settings: &SettingsRoot) -> Result<u64, StateError> {
+    /// Replace the layer atomically and increment the catalog revision with
+    /// `event`; the caller holds the home's mutation lock.
+    pub fn save(&self, settings: &SettingsRoot, event: &HomeEvent) -> Result<u64, StateError> {
+        self.write(settings)?;
+        super::bump_revision(settings, event)
+    }
+
+    /// Replace the layer without a revision of its own, for a change that
+    /// bumps once for several files.
+    pub(crate) fn write(&self, settings: &SettingsRoot) -> Result<(), StateError> {
         let path = settings.user_launchers_path();
         let body = toml::to_string(self).map_err(|error| StateError::UserLaunchers {
             path: path.display().to_string(),
             reason: error.to_string(),
         })?;
-        write_atomic(&path, format!("{HEADER}{body}").as_bytes())?;
-        super::bump_revision(settings)
+        write_atomic(&path, format!("{HEADER}{body}").as_bytes())
     }
 
     /// The collection of that name, by exact spelling.
@@ -294,7 +303,12 @@ mod tests {
         let settings = SettingsRoot::new(dir.path());
         let layer = layer();
         assert_eq!(
-            layer.save(&settings).unwrap(),
+            layer
+                .save(
+                    &settings,
+                    &HomeEvent::new(super::super::events::EventKind::CollectionsChanged)
+                )
+                .unwrap(),
             1,
             "a save bumps the revision"
         );

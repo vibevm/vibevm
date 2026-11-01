@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "description": "Version 1 of one line of vibe app watch --json and of the home's events journal applications/events.jsonl (PROP-059#launcher-runtime): what changed, the catalog revision after the change, the key the change is about when there is one (a package key for installed, updated and removed, a launcher key for started and exited and for an override of one launcher), the process id of a started or exited launcher, and the RFC 3339 time.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_events"
+    },
+    "x-rust-type": "ApplicationEvent",
+    "x-wire-order": [
+      "protocol",
+      "event",
+      "revision",
+      "key",
+      "pid",
+      "at"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "event": {
+      "ref": "event_kind"
+    },
+    "revision": {
+      "ref": "count"
+    },
+    "key": {
+      "type": "string",
+      "nullable": true
+    },
+    "pid": {
+      "ref": "count",
+      "nullable": true
+    },
+    "at": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "count": {
+      "metadata": {
+        "description": "An exact non-negative count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      },
+      "type": "float64"
+    },
+    "event_kind": {
+      "enum": [
+        "installed",
+        "updated",
+        "removed",
+        "launchers-changed",
+        "collections-changed",
+        "started",
+        "exited"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  }
+}

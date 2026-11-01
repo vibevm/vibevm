@@ -20,6 +20,7 @@ use specmark::spec;
 use vibe_core::manifest::LauncherKind;
 use vibe_wire::generated::application_start as wire;
 
+use super::running::{ProcessTable, register};
 use super::usage::Usage;
 use crate::error::{AppError, LaunchError};
 use crate::index::Installation;
@@ -37,6 +38,10 @@ pub struct StartRequest<'a> {
     pub launcher_id: &'a str,
     pub extra_args: &'a [OsString],
     pub project_root: Option<&'a Path>,
+    /// The platform's process calls; with them the start is recorded in the
+    /// running registry (`PROP-059#launcher-runtime`), without them it is
+    /// only started.
+    pub processes: Option<&'a dyn ProcessTable>,
 }
 
 /// Start one launch point detached and answer `vibe-app-start/1`: the
@@ -98,7 +103,7 @@ pub fn start(
         id: launcher.id.clone(),
         reason: error.to_string(),
     })?;
-    Ok(wire::ApplicationStart {
+    let answer = wire::ApplicationStart {
         protocol: "vibe-app-start/1".into(),
         key,
         pid: u64::from(child.id()),
@@ -112,7 +117,14 @@ pub fn start(
             .as_ref()
             .map(|path| path.display().to_string()),
         log: log.display().to_string(),
-    })
+    };
+    if let Some(processes) = request.processes {
+        // The child runs whatever happens here: a registry that cannot be
+        // written costs `running` and `stop` this one launcher, never the
+        // start the user asked for.
+        let _ = register(settings, &answer, launcher.effective_kind(), processes);
+    }
+    Ok(answer)
 }
 
 /// `<home>/cache/app-runs/<group>.<name>@<version>/start-<launcher>-<ts>.log`:

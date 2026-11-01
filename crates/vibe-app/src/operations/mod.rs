@@ -416,7 +416,16 @@ fn commit(
         index.slots.insert(slot.clone(), Some(key.clone()));
     }
     normalize_slots(index);
-    index.save(ctx.settings)?;
+    let changed = match command {
+        Command::Install => crate::catalog::EventKind::Installed,
+        Command::Update | Command::Modify | Command::Uninstall => {
+            crate::catalog::EventKind::Updated
+        }
+    };
+    index.save(
+        ctx.settings,
+        &crate::catalog::HomeEvent::about(changed, key.clone()),
+    )?;
     // The user layer follows the inventory: the collection this package's
     // `menu_group` names gains its menu launchers (`PROP-059#launcher-catalog`).
     if let Some(record) = index.installations.get(&key) {

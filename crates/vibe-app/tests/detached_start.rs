@@ -68,7 +68,12 @@ fn home(dir: &Path) -> SettingsRoot {
         },
     );
     index.slots.insert("editor".into(), Some(package.key()));
-    index.save(&settings).unwrap();
+    index
+        .save(
+            &settings,
+            &vibe_app::HomeEvent::new(vibe_app::EventKind::Installed),
+        )
+        .unwrap();
 
     let root = settings
         .default_library_path()
@@ -97,6 +102,7 @@ fn a_detached_start_answers_a_pid_a_log_and_one_counted_start() {
             launcher_id: "edit",
             extra_args: &extra,
             project_root: None,
+            processes: None,
         },
     )
     .unwrap();
@@ -152,6 +158,7 @@ fn an_unknown_launcher_is_refused_before_anything_starts() {
             launcher_id: "ghost",
             extra_args: &[],
             project_root: None,
+            processes: None,
         },
     )
     .unwrap_err();

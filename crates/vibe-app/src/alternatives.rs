@@ -116,7 +116,10 @@ pub fn set_default(
     let previous = index.default_of(slot).map(str::to_owned);
     let reserved = reserved_names(&index);
     index.slots.insert(slot.to_owned(), Some(key.to_owned()));
-    index.save(settings)?;
+    index.save(
+        settings,
+        &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Updated, key),
+    )?;
     proxies::sync(settings, &reserved, &reserved_names(&index), proxy_image)?;
     Ok(DefaultChange {
         slot: slot.to_owned(),
@@ -294,7 +297,12 @@ mod tests {
         start
             .slots
             .insert("tool".into(), Some("org.example/alpha@1.0.0".into()));
-        start.save(&settings).unwrap();
+        start
+            .save(
+                &settings,
+                &crate::catalog::HomeEvent::new(crate::catalog::EventKind::Updated),
+            )
+            .unwrap();
 
         let change = set_default(&settings, "tool", "org.example/beta@1.0.0", &image).unwrap();
         assert_eq!(change.previous.as_deref(), Some("org.example/alpha@1.0.0"));
