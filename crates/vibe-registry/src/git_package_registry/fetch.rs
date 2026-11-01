@@ -361,6 +361,11 @@ impl GitPerPackageRegistry {
                     manifest,
                     content_hash: content_hash.clone(),
                     source_uri: canonical_url.clone(),
+                    // The URL this attempt actually read, recorded even
+                    // on a drifting source: the reader of the refusal
+                    // wants to know which mirror served the other bytes
+                    // (`PROP-066#provenance`).
+                    fetched_from: (url != &canonical_url).then(|| url.to_string()),
                     registry_name: Some(self.name.clone()),
                     source_ref: Some(tag.clone()),
                     resolved_commit,
@@ -440,6 +445,12 @@ impl GitPerPackageRegistry {
                 manifest,
                 content_hash,
                 source_uri: canonical_url.clone(),
+                // The candidate that served the bytes, when it was not
+                // the canonical origin (`PROP-066#provenance`). The
+                // manifest and the lock keep the canonical URL, so a
+                // lock stays portable between networks and the place the
+                // bytes came from is still recoverable.
+                fetched_from: (url != &canonical_url).then(|| url.to_string()),
                 registry_name: Some(self.name.clone()),
                 source_ref: Some(tag.clone()),
                 resolved_commit,

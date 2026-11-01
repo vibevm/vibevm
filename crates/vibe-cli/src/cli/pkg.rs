@@ -13,7 +13,7 @@ use super::AppStepArgs;
 
 #[derive(Debug, clap::Args)]
 pub struct ListArgs {
-    /// Filter by package kind (flow, feat, stack, tool, mcp, lang, doc, app).
+    /// Filter by package kind (flow, feat, stack, tool, mcp, lang, doc, app, remap).
     #[arg(long)]
     pub kind: Option<String>,
 
@@ -361,7 +361,7 @@ pub struct SearchArgs {
     #[arg(long)]
     pub purl: Option<String>,
 
-    /// Restrict results to a single package kind (`flow`, `feat`, `stack`, `tool`, `mcp`, `lang`, `doc`, `app`).
+    /// Restrict results to a single package kind (`flow`, `feat`, `stack`, `tool`, `mcp`, `lang`, `doc`, `app`, `remap`).
     /// Applies only to free-text search; PURL
     /// lookup ignores it.
     #[arg(long)]
@@ -575,4 +575,18 @@ pub struct UninstallArgs {
     /// Skip the interactive confirmation prompt.
     #[arg(long, alias = "yes")]
     pub assume_yes: bool,
+
+    /// PROP-066 `#uninstall`: when the package being removed offers
+    /// accepted remap rows no other accepted package offers, copy those
+    /// rows into this user home's own `[[remap]]` table — with
+    /// `from = "<package>@<version>"` and the original reason — so the
+    /// machine keeps fetching from the same places. Answers the question
+    /// without a terminal; mutually exclusive with `--drop-remap`.
+    #[arg(long, conflicts_with = "drop_remap")]
+    pub keep_remap: bool,
+
+    /// PROP-066 `#uninstall`: drop the orphaned remap rows with the
+    /// package. Answers the question without a terminal.
+    #[arg(long)]
+    pub drop_remap: bool,
 }

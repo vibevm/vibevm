@@ -416,6 +416,7 @@ fn requirements_are_child_nodes_and_a_required_plan_names_its_owner() {
         ),
         run: true,
         reason: None,
+        note: None,
     };
     let plan = super::Plan {
         package: PackageCoordinate {

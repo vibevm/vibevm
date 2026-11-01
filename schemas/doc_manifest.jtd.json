@@ -71,7 +71,7 @@
       }
     },
     "package_kind": {
-      "enum": ["flow", "feat", "stack", "tool", "mcp", "lang", "doc", "app"],
+      "enum": ["flow", "feat", "stack", "tool", "mcp", "lang", "doc", "app", "remap"],
       "metadata": {
         "x-vocabulary": "closed",
         "description": "What kind of package this rendering came from, in the word the package's own `[package].kind` spells (PROP-000 `##KIND-SET`, whose register is `VIBEVM-SPEC.md` §4.1). The eight are the whole vocabulary and a ninth is an amendment to the specification rather than a value a manifest may invent, which is why a word outside the list reads as absent rather than as itself: a level-0 render of a package that declared no kind writes the neutral `pack`, and `pack` is not a kind. Carried named because the shell parses nothing and computes nothing (`##PIPE-SHELL-PARSES-NOTHING`) — before it was carried, a card could mark documentation and nothing else, because `doc` was the only kind «not a projection» could be read back out of."

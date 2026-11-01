@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "description": "Version 1 offer document carried by the consent_required envelope (PROP-066#consent, PROP-066#client): the remap package a run would apply, its description and state, every row it carries with the locally computed diagnostics of the target, and the command that answers the question. This is the question a graphical client renders and answers with vibe remap accept or reject.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-066#consent" },
+    "rustOptions": { "package": "vibe_wire::remap_offer" },
+    "x-rust-type": "RemapOffer",
+    "x-wire-order": ["protocol", "packages", "accept_command", "reject_command"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "packages": { "elements": { "ref": "offered_package" }, "metadata": { "x-empty": "emit" } },
+    "accept_command": { "type": "string" },
+    "reject_command": { "type": "string" }
+  },
+  "definitions": {
+    "offer_state": {
+      "metadata": {
+        "description": "The state of the offer (PROP-066#consent).",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["offered", "accepted", "rejected", "disabled"]
+    },
+    "reach": {
+      "metadata": {
+        "description": "Where the target lives, computed and never trusted from the row (PROP-066#diagnostics).",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["local", "private", "public", "unknown"]
+    },
+    "note": {
+      "metadata": {
+        "description": "A reason the reader should look twice (PROP-066#diagnostics).",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["unencrypted", "broad", "unknown"]
+    },
+    "key_kind": {
+      "metadata": {
+        "description": "Which of the four keys of PROP-066#row the row matches on.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["sha256", "package", "registry", "prefix"]
+    },
+    "offered_row": {
+      "metadata": {
+        "description": "One numbered row block of the question, in the field order of PROP-066#display so a client renders the same blocks as vibe remap list.",
+        "x-wire-order": ["number", "kind", "what", "to", "deny", "scheme", "reach", "host", "why", "scope", "notes"]
+      },
+      "properties": {
+        "number": { "type": "uint32" },
+        "kind": { "ref": "key_kind" },
+        "what": { "type": "string" },
+        "to": { "type": "string" },
+        "deny": { "type": "boolean" },
+        "scheme": { "type": "string" },
+        "reach": { "ref": "reach" }
+      },
+      "optionalProperties": {
+        "host": { "type": "string", "metadata": { "x-default": null } },
+        "why": { "type": "string", "metadata": { "x-default": null } },
+        "scope": { "type": "string", "metadata": { "x-default": null } },
+        "notes": { "elements": { "ref": "note" }, "metadata": { "x-empty": "omit" } }
+      }
+    },
+    "offered_package": {
+      "metadata": {
+        "description": "One package's header block and rows: its key and version, the description it carries, the content hash the acceptance would be bound to, its current state, and the host footer of PROP-066#display.",
+        "x-wire-order": ["package", "version", "content_hash", "state", "description", "registry", "policy", "rows", "hosts"]
+      },
+      "properties": {
+        "package": { "type": "string" },
+        "version": { "type": "string" },
+        "content_hash": { "type": "string" },
+        "state": { "ref": "offer_state" },
+        "rows": { "elements": { "ref": "offered_row" }, "metadata": { "x-empty": "emit" } }
+      },
+      "optionalProperties": {
+        "description": { "type": "string", "metadata": { "x-default": null } },
+        "registry": { "type": "string", "metadata": { "x-default": null } },
+        "policy": { "type": "string", "metadata": { "x-default": null } },
+        "hosts": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } }
+      }
+    }
+  }
+}

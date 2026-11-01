@@ -49,8 +49,8 @@ pub use extension::{
     ExtensionKey, ExtensionPass, ExtensionPassKind, ExtensionUse, ExtensionWhen, ExtensionsControl,
 };
 pub use lockfile::{
-    CURRENT_SCHEMA_VERSION, LockedEmbeddedSource, LockedPackage, LockedRequirer, LockedSubskill,
-    Lockfile, LockfileMeta, SourceKind, VirtualCapabilityRecord,
+    CURRENT_SCHEMA_VERSION, LockedEmbeddedSource, LockedPackage, LockedRemap, LockedRequirer,
+    LockedSubskill, Lockfile, LockfileMeta, SourceKind, VirtualCapabilityRecord,
 };
 pub use mechanism::{
     HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,

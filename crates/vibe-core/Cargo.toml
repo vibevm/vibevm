@@ -15,6 +15,9 @@ specmark.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true
 serde.workspace = true
+# The remap acceptance ledger and provider map of PROP-066 `#consent` /
+# `#providers` are `.json` documents of one home, read and written here.
+serde_json.workspace = true
 toml.workspace = true
 toml_edit.workspace = true
 semver.workspace = true
@@ -25,4 +28,3 @@ url.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
-serde_json.workspace = true

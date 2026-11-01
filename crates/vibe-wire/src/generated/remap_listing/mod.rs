@@ -79,6 +79,25 @@ pub enum Note {
     Unknown,
 }
 
+/// The state of a remap package whose rows this source carries (PROP-
+/// 066#consent): offered and unanswered, accepted, rejected, or accepted-and-
+/// switched-off. Absent on a source that is not a package — a settings file,
+/// the invocation, the built-in endpoints.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PackageState {
+    #[serde(rename = "accepted")]
+    Accepted,
+
+    #[serde(rename = "disabled")]
+    Disabled,
+
+    #[serde(rename = "offered")]
+    Offered,
+
+    #[serde(rename = "rejected")]
+    Rejected,
+}
+
 /// Where the target lives, computed and never trusted from the row (PROP-
 /// 066#diagnostics): a local file or path, a private address, a public one, or
 /// a host this run could not classify.
@@ -130,6 +149,12 @@ pub struct Row {
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub notes: Vec<Note>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub providers: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub probed: Option<String>,
 }
 
 /// The installation, or the one step, a row is limited to.
@@ -150,6 +175,9 @@ pub struct Source {
     pub layer: Layer,
 
     pub policy: UnmatchedPolicy,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub state: Option<PackageState>,
 
     pub rows: Vec<Row>,
 }

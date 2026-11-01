@@ -42,6 +42,13 @@
       },
       "enum": ["unencrypted", "broad", "unknown"]
     },
+    "package_state": {
+      "metadata": {
+        "description": "The state of a remap package whose rows this source carries (PROP-066#consent): offered and unanswered, accepted, rejected, or accepted-and-switched-off. Absent on a source that is not a package — a settings file, the invocation, the built-in endpoints.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["offered", "accepted", "rejected", "disabled"]
+    },
     "key_kind": {
       "metadata": {
         "description": "Which of the four keys of PROP-066#row the row matches on.",
@@ -64,7 +71,7 @@
     "row": {
       "metadata": {
         "description": "One numbered row block of PROP-066#display: what it matches, what it redirects to, the computed diagnostics of that target, and the reason, scope and provenance when the row carries them.",
-        "x-wire-order": ["number", "kind", "what", "to", "deny", "scheme", "reach", "host", "why", "scope", "from", "notes"]
+        "x-wire-order": ["number", "kind", "what", "to", "deny", "scheme", "reach", "host", "why", "scope", "from", "notes", "providers", "probed"]
       },
       "properties": {
         "number": { "type": "uint32" },
@@ -80,19 +87,24 @@
         "why": { "type": "string", "metadata": { "x-default": null } },
         "scope": { "ref": "scope", "metadata": { "x-default": null } },
         "from": { "type": "string", "metadata": { "x-default": null } },
-        "notes": { "elements": { "ref": "note" }, "metadata": { "x-empty": "omit" } }
+        "notes": { "elements": { "ref": "note" }, "metadata": { "x-empty": "omit" } },
+        "providers": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+        "probed": { "type": "string", "metadata": { "x-default": null } }
       }
     },
     "source": {
       "metadata": {
         "description": "One header block of PROP-066#display: the file or package the rows came from, its layer, the policy it declared, and its rows in declaration order.",
-        "x-wire-order": ["source", "layer", "policy", "rows"]
+        "x-wire-order": ["source", "layer", "policy", "state", "rows"]
       },
       "properties": {
         "source": { "type": "string" },
         "layer": { "ref": "layer" },
         "policy": { "ref": "unmatched_policy" },
         "rows": { "elements": { "ref": "row" }, "metadata": { "x-empty": "emit" } }
+      },
+      "optionalProperties": {
+        "state": { "ref": "package_state", "metadata": { "x-default": null } }
       }
     },
     "host_summary": {

@@ -226,6 +226,8 @@ impl MultiRegistryResolver {
             manifest,
             content_hash,
             source_uri: url.clone(),
+            // Nothing redirected this fetch (`PROP-066#provenance`).
+            fetched_from: None,
             registry_name: None,
             source_ref: Some(refname),
             resolved_commit: None,

@@ -39,6 +39,7 @@ use specmark::spec;
 
 use crate::error::{Error, Result};
 use crate::package_ref::PackageRef;
+use crate::remap::{PolicySection, RemapSection};
 
 use super::InstallerOptionDecl;
 use super::artifact::ArtifactsSection;
@@ -250,6 +251,20 @@ pub struct Manifest {
     /// `[deploy]` — deploy targets and named destination profiles.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub deploy: Option<DeploySection>,
+
+    /// `[[remap]]` rows, or the `[remap]` table carrying the offer's
+    /// `description` and `priority` above them (PROP-066 `#package`).
+    /// Legal on every role: a user's own rows live in settings, a
+    /// package's rows are an offer, and a project's `vibe.toml` may carry
+    /// neither without the consent of `#consent`.
+    #[serde(default, skip_serializing_if = "RemapSection::is_empty")]
+    pub remap: RemapSection,
+
+    /// `[policy]` — what happens to a fetch no remap row matched
+    /// (PROP-066 `#policy`). The strictest policy of every active layer
+    /// applies.
+    #[serde(default, skip_serializing_if = "PolicySection::is_default")]
+    pub policy: PolicySection,
 
     /// `[compatibility]` — minimum vibe version, required kinds (package-role).
     #[serde(default, skip_serializing_if = "Compatibility::is_empty")]

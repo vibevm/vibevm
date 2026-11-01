@@ -518,19 +518,20 @@ fn the_two_views_print_the_one_layout() {
     );
 }
 
+/// `PROP-066#commands`: a verb vibe cannot honour does not appear in its
+/// help — and now that every verb of `#commands-packages` is honoured,
+/// every one of them does.
 #[test]
-fn the_absent_verbs_of_r2_are_not_offered() {
+fn the_whole_remap_surface_is_offered() {
     let fixture = Fixture::new("https://example.invalid/a", &"ab".repeat(32));
     let user = UserScratch::new();
     let help = ok(&fixture.vibe(&user, &["remap", "--help"]));
     for verb in [
-        "accept", "reject", "test", "enable", "disable", "export", "import",
+        "list", "explain", "accept", "reject", "enable", "disable", "test", "export", "import",
     ] {
         assert!(
-            !help.contains(&format!("  {verb}")),
-            "`remap {verb}` is not built yet and must not appear in the help:\n{help}"
+            help.contains(&format!("  {verb}")),
+            "`remap {verb}` is built and must appear in the help:\n{help}"
         );
     }
-    assert!(help.contains("list"), "{help}");
-    assert!(help.contains("explain"), "{help}");
 }

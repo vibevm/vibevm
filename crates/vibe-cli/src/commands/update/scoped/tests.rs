@@ -44,6 +44,7 @@ fn cached(group: &str, name: &str, version: &str) -> CachedPackage {
         manifest: package_manifest(group, name, version),
         content_hash: format!("sha256:{}", "0".repeat(64)),
         source_uri: "file:///fixture".into(),
+        fetched_from: None,
         registry_name: None,
         source_ref: None,
         resolved_commit: None,

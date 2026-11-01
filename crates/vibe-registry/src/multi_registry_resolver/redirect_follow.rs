@@ -311,6 +311,8 @@ impl MultiRegistryResolver {
             manifest,
             content_hash,
             source_uri: plain_url,
+            // Nothing redirected this fetch (`PROP-066#provenance`).
+            fetched_from: None,
             // Lockfile records the stub registry's name so the entry
             // is associated with the registry the consumer's
             // `vibe.toml` named.

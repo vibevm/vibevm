@@ -18,6 +18,8 @@ mod glossary;
 mod mcp;
 #[path = "validation/navigation.rs"]
 mod navigation;
+#[path = "validation/remap.rs"]
+mod remap;
 
 impl Manifest {
     /// Enforce the role rules: `[project]` ⊕ `[package]`; at least one role
@@ -281,6 +283,9 @@ impl Manifest {
         validate_plane(self).map_err(|reason| Error::InvalidManifest { reason })?;
         self.validate_mcp_kind()?;
         self.validate_documentation()?;
+        // Last, so every established diagnostic above still wins: a
+        // manifest that was already invalid keeps the error it had.
+        self.validate_remap()?;
         Ok(())
     }
 

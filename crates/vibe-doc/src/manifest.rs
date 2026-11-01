@@ -421,6 +421,7 @@ fn package_kind(word: &str) -> Option<PackageKind> {
         "lang" => Some(PackageKind::Lang),
         DOC_KIND => Some(PackageKind::Doc),
         "app" => Some(PackageKind::App),
+        "remap" => Some(PackageKind::Remap),
         _ => None,
     }
 }

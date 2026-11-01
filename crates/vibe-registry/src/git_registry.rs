@@ -226,6 +226,8 @@ impl Registry for GitMonorepoRegistry {
             manifest,
             content_hash,
             source_uri,
+            // Nothing redirected this fetch (`PROP-066#provenance`).
+            fetched_from: None,
             // The legacy monorepo registry pre-dates the per-package /
             // multi-registry / override schema; lockfile-v2 provenance
             // fields stay blank for content fetched through this path.

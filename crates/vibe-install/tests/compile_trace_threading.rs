@@ -68,6 +68,7 @@ impl InstallSource for FixtureSource {
             manifest,
             content_hash,
             source_uri: "https://example.test/bootlib.git".to_string(),
+            fetched_from: None,
             registry_name: Some("test".to_string()),
             source_ref: Some("v1.0.0".to_string()),
             resolved_commit: None,

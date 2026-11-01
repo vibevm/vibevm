@@ -136,8 +136,6 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
-# `vibe app work [PACKAGE] [--clean] --json` (PROP-065 `#work`): the kept
-# work directories of one home, their sizes and what a clean removed.
 # `vibe remap list --json` (PROP-066 `#display`): the rows active for one
 # invocation, with the locally computed diagnostics of every target. The
 # only interface a graphical client needs to draw the catalog.
@@ -160,6 +158,61 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `<home>/remap/consent.json` (PROP-066 `#consent`): what this machine
+# agreed to apply, bound to the content hash it was shown.
+[format.remap-consent]
+epoch = 1
+schema = "schemas/remap_consent.jtd.json"
+recoverable = true
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
+# The `consent_required` envelope's offer document (PROP-066 `#consent`,
+# `#client`): the question a graphical client renders and answers with
+# `vibe remap accept` or `reject`.
+[format.cli-remap-offer]
+epoch = 1
+schema = "schemas/remap_offer.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `<home>/remap/providers.json` (PROP-066 `#providers`): which accepted
+# packages offer which row. Derived, rebuilt under the home lock.
+[format.remap-providers]
+epoch = 1
+schema = "schemas/remap_providers.jtd.json"
+recoverable = true
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
+# `vibe remap test --json` (PROP-066 `#policy`): whether every declared
+# artifact's winning target answers, without downloading anything. Fills
+# a client's readiness panel.
+[format.cli-remap-test]
+epoch = 1
+schema = "schemas/remap_test.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# The `MANIFEST.json` of a remap transport bundle (PROP-066
+# `#transport`): what `vibe remap export --with-artifacts` wrote and
+# `vibe cache import` verifies and places.
+[format.remap-bundle]
+epoch = 1
+schema = "schemas/remap_bundle.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe app work [PACKAGE] [--clean] --json` (PROP-065 `#work`): the kept
+# work directories of one home, their sizes and what a clean removed.
 [format.cli-application-work]
 epoch = 1
 schema = "schemas/application_work.jtd.json"

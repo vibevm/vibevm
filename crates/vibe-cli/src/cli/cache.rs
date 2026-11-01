@@ -54,6 +54,23 @@ pub enum CacheSubcommand {
     /// (`REPAIR-DOES-NOT-PULL` — never advanced, that is `vibe
     /// update`'s job).
     Check(CacheCheckArgs),
+
+    /// Place the artifacts of a transport bundle written by
+    /// `vibe remap export --with-artifacts` (PROP-066 `#transport`):
+    /// every entry's digest is verified, then it is placed where the
+    /// fetch paths already look — the machine store by coordinate, the
+    /// application download cache by digest. An entry that already
+    /// verifies is never overwritten. The "the network cannot reach the
+    /// sources, the bytes arrived on a disk" counterpart of `add`.
+    Import(CacheImportArgs),
+}
+
+#[derive(Debug, clap::Args)]
+pub struct CacheImportArgs {
+    /// A directory written by `vibe remap export --with-artifacts`,
+    /// carrying a `MANIFEST.json`.
+    #[arg(value_name = "DIR")]
+    pub dir: std::path::PathBuf,
 }
 
 #[derive(Debug, clap::Args)]

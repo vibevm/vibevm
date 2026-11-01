@@ -73,6 +73,15 @@ pub struct Requires {
     pub packages: Vec<PackageRef>,
     /// Abstract capability requirements (RPM-family `Requires:` semantics).
     pub capabilities: Vec<CapabilityRef>,
+    /// `[requires.remaps]` — the remap packages this project asks every
+    /// clone of itself to be offered (PROP-066 `#layers-packages`).
+    /// Resolved and locked like any other requirement, and applied on each
+    /// machine only after that user accepts the offer, so a project can
+    /// name the network it expects without deciding for the developer.
+    /// Its own bucket because a remap package is never materialised into
+    /// `vibedeps/` and never a dependency another package may pull
+    /// (`PROP-066#decisions`).
+    pub remaps: Vec<PackageRef>,
     /// Git-source package dependencies — one git repository = one package
     /// (PROP-002 §2.4.1). Stored separately from `packages` so code that
     /// iterates registry-resolved roots stays untouched; resolver and CLI
@@ -112,6 +121,7 @@ impl Requires {
     pub fn is_empty(&self) -> bool {
         self.packages.is_empty()
             && self.capabilities.is_empty()
+            && self.remaps.is_empty()
             && self.git_packages.is_empty()
             && self.path_packages.is_empty()
             && self.var_packages.is_empty()

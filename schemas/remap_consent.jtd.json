@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "description": "Version 1 acceptance ledger of one home (<home>/remap/consent.json): per remap package the content hash the user answered about, what they answered, when, and whether an accepted package is currently switched on. Acceptance is bound to the content hash, so a new version of an accepted package is a new offer.",
+    "metadata_note": "Written by vibe remap accept/reject/enable/disable and by the consent question of any verb that resolves artifacts; a graphical client never reads or writes it.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-066#consent" },
+    "rustOptions": { "package": "vibe_wire::remap_consent" },
+    "x-rust-type": "RemapConsent",
+    "x-wire-order": ["protocol", "packages"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "packages": { "elements": { "ref": "answer" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "offer_state": {
+      "metadata": {
+        "description": "What the user answered about one package (PROP-066#consent): nothing yet, accepted and switched on, refused so the question is not asked again, or accepted once and switched off.",
+        "x-vocabulary": "closed"
+      },
+      "enum": ["offered", "accepted", "rejected", "disabled"]
+    },
+    "answer": {
+      "metadata": {
+        "description": "One package's record: the key, the content hash the answer was given about, the state it resolves to, and when it was recorded.",
+        "x-wire-order": ["package", "content_hash", "state", "answered"]
+      },
+      "properties": {
+        "package": { "type": "string" },
+        "content_hash": { "type": "string" },
+        "state": { "ref": "offer_state" },
+        "answered": { "type": "string" }
+      }
+    }
+  }
+}

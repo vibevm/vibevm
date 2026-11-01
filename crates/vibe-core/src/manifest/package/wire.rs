@@ -146,6 +146,12 @@ pub(in crate::manifest::package) struct RequiresWire {
     packages: BTreeMap<String, RequiresPackageEntryWire>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     capabilities: Vec<CapabilityRef>,
+    /// `[requires.remaps]` — a pkgref key per remap package, with the
+    /// bare constraint string every such requirement takes. A remap
+    /// package carries no features, no link type and no visibility edge,
+    /// so the inline form has nothing to say here.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    remaps: BTreeMap<String, String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

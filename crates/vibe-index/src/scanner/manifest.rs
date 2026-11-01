@@ -80,6 +80,7 @@ pub fn package_kind(kind: CorePackageKind) -> PackageKind {
         CorePackageKind::Lang => PackageKind::Lang,
         CorePackageKind::Doc => PackageKind::Doc,
         CorePackageKind::App => PackageKind::App,
+        CorePackageKind::Remap => PackageKind::Remap,
     }
 }
 

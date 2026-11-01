@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::error::{Error, Result};
 
-/// One of the eight installable package kinds.
+/// One of the nine installable package kinds.
 ///
 /// Spec: `VIBEVM-SPEC.md` §4.1. This enum is closed; admitting another kind
 /// is a spec change the owner makes in the register, not a code change —
@@ -86,6 +86,22 @@ pub enum PackageKind {
     /// by owner amendment 2026-09-12 (VIBEVM-SPEC §4.1); semantics:
     /// PROP-057 `##KIND-APP-VS-TOOL`.
     App,
+    /// A package whose deliverable is remap rows: where artifacts may be
+    /// fetched from, as data (PROP-066 `#package`).
+    ///
+    /// It carries `[[remap]]` rows, an optional `[remap]` description and
+    /// priority, an optional `[policy]`, and **nothing executable** —
+    /// `validate` refuses every other table in this kind. It is not
+    /// materialised into a consumer's dependency root: it is installed
+    /// into a user home with `vibe install -g`, or required by a project
+    /// through `[requires.remaps]`, and its rows apply only after that
+    /// user accepts them (`PROP-066#consent`). A package author must not
+    /// be able to redirect another person's downloads by being installed,
+    /// which is why no other package may depend on one.
+    ///
+    /// Admitted by owner amendment 2026-11-01 (VIBEVM-SPEC §4.1);
+    /// semantics: PROP-066 `#package`.
+    Remap,
 }
 
 impl PackageKind {
@@ -99,10 +115,11 @@ impl PackageKind {
             PackageKind::Lang => "lang",
             PackageKind::Doc => "doc",
             PackageKind::App => "app",
+            PackageKind::Remap => "remap",
         }
     }
 
-    pub const ALL: [PackageKind; 8] = [
+    pub const ALL: [PackageKind; 9] = [
         PackageKind::Flow,
         PackageKind::Feat,
         PackageKind::Stack,
@@ -111,7 +128,15 @@ impl PackageKind {
         PackageKind::Lang,
         PackageKind::Doc,
         PackageKind::App,
+        PackageKind::Remap,
     ];
+
+    /// `true` for the one kind whose deliverable is policy rather than
+    /// content: a remap package is an offer a user accepts, never a
+    /// dependency another package may pull (`PROP-066#decisions`).
+    pub const fn is_remap(self) -> bool {
+        matches!(self, PackageKind::Remap)
+    }
 
     /// `true` for the one kind that is read instead of installed.
     ///
@@ -142,6 +167,7 @@ impl FromStr for PackageKind {
             "lang" => Ok(PackageKind::Lang),
             "doc" => Ok(PackageKind::Doc),
             "app" => Ok(PackageKind::App),
+            "remap" => Ok(PackageKind::Remap),
             other => Err(Error::BadPackageKind(other.to_owned())),
         }
     }
