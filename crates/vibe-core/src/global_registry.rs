@@ -17,6 +17,7 @@ use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 use specmark::spec;
 
+use crate::index_checkout::IndexCheckoutSection;
 use crate::manifest::{Manifest, MirrorSection, OverrideSection, RegistrySection};
 
 /// Parsed `~/.vibe/registry.toml`. Same section shapes as a project
@@ -46,6 +47,9 @@ pub struct GlobalRegistryConfig {
     /// `[[override]]` — source pins, project-first deduped by `pkgref`.
     #[serde(default, rename = "override", skip_serializing_if = "Vec::is_empty")]
     pub overrides: Vec<OverrideSection>,
+    /// `[index]` — a maintainer's local checkout of the git-hosted index.
+    #[serde(default, skip_serializing_if = "IndexCheckoutSection::is_unset")]
+    pub index: IndexCheckoutSection,
 }
 
 impl GlobalRegistryConfig {
@@ -147,8 +151,7 @@ pub fn ensure_default_global_registry() -> Result<(), GlobalRegistryError> {
     }
     let seeded = GlobalRegistryConfig {
         registries: default_registries(),
-        mirrors: Vec::new(),
-        overrides: Vec::new(),
+        ..GlobalRegistryConfig::default()
     };
     seeded.write_to(&path)
 }
@@ -546,8 +549,10 @@ mod tests {
         let p = dir.path().join("registry.toml");
         let cfg = GlobalRegistryConfig {
             registries: default_registries(),
-            mirrors: Vec::new(),
-            overrides: Vec::new(),
+            index: IndexCheckoutSection {
+                checkout: Some(PathBuf::from("/srv/index")),
+            },
+            ..GlobalRegistryConfig::default()
         };
         cfg.write_to(&p).unwrap();
         let loaded = GlobalRegistryConfig::load_from(&p).unwrap();

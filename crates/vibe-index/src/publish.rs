@@ -32,30 +32,46 @@ use crate::scanner::git_cli::{binary, is_git_dir};
 /// operator learns the configuration is unsafe *before* the first
 /// mutation ships a token, not after.
 pub fn preflight(data_dir: &Path) -> crate::error::Result<()> {
+    preflight_for(data_dir, "`--auto-commit-push` is set", "enabling the flag")
+}
+
+/// The same two refusals for an index checkout another tool commits into
+/// — `vibe registry publish --index-checkout` — worded for that caller.
+/// The checks are the server's, unchanged: a checkout that is not a
+/// working copy has nothing to commit into, and one whose `state/` is not
+/// ignored would stage whatever a local server left there.
+pub fn preflight_checkout(data_dir: &Path) -> crate::error::Result<()> {
+    preflight_for(
+        data_dir,
+        "an index checkout is configured",
+        "publishing into it",
+    )
+}
+
+fn preflight_for(data_dir: &Path, who: &str, before: &str) -> crate::error::Result<()> {
     // Р3 — there must be a working copy to commit into.
     if !is_git_dir(data_dir) {
         return Err(Error::InvalidInput(format!(
-            "`--auto-commit-push` is set but the data directory `{}` is not a git working copy \
+            "{who} but the data directory `{}` is not a git working copy \
              (no `.git`): the index publishes itself by committing the data directory, so there is \
              nothing to commit. `git init` the data directory and configure a remote before \
-             enabling the flag",
+             {before}",
             data_dir.display()
         )));
     }
     // Р2 — `git add -A` must not stage the bearer tokens.
     match ignored(data_dir, "state/admin.tokens") {
         Ok(true) => Ok(()),
-        Ok(false) => Err(Error::InvalidInput(
-            "`--auto-commit-push` is set but `state/` is not gitignored. `git add -A` would stage \
+        Ok(false) => Err(Error::InvalidInput(format!(
+            "{who} but `state/` is not gitignored. `git add -A` would stage \
              the bearer tokens at `state/admin.tokens` and push them to the remote — a credential \
              leak. Add `/state/` to the data directory's `.gitignore` (`vibe-index init` writes \
-             one) before enabling the flag"
-                .to_string(),
-        )),
+             one) before {before}"
+        ))),
         Err(reason) => Err(Error::InvalidInput(format!(
-            "`--auto-commit-push` is set but could not confirm `state/` is gitignored \
+            "{who} but could not confirm `state/` is gitignored \
              (git check-ignore failed: {reason}). Ensure git is on PATH and `/state/` is in the \
-             data directory's `.gitignore` before enabling the flag"
+             data directory's `.gitignore` before {before}"
         ))),
     }
 }
@@ -73,6 +89,17 @@ pub fn preflight(data_dir: &Path) -> crate::error::Result<()> {
 /// and stays on disk, and a later successful push carries the queued
 /// commit forward.
 pub fn commit_and_push(data_dir: &Path, message: &str) -> Result<PublishOutcome, PublishError> {
+    if commit(data_dir, message)? == PublishOutcome::NothingToCommit {
+        return Ok(PublishOutcome::NothingToCommit);
+    }
+    push(data_dir)?;
+    Ok(PublishOutcome::Published)
+}
+
+/// The commit half of [`commit_and_push`], for a caller that pushes only
+/// when asked (`vibe registry publish --push-index`). `Published` here
+/// means «committed»; an empty diff is `NothingToCommit`, success (Р6).
+pub fn commit(data_dir: &Path, message: &str) -> Result<PublishOutcome, PublishError> {
     // Stage every change in the working copy. `state/` is gitignored, so
     // tokens stay out — preflight guarantees it before we ever get here.
     run_git(data_dir, &["add", "-A"])?;
@@ -81,9 +108,13 @@ pub fn commit_and_push(data_dir: &Path, message: &str) -> Result<PublishOutcome,
         return Ok(PublishOutcome::NothingToCommit);
     }
     run_git(data_dir, &["commit", "--quiet", "-m", message])?;
-    // Р1 — push the working copy's branch to its configured upstream.
-    run_git(data_dir, &["push", "--quiet"])?;
     Ok(PublishOutcome::Published)
+}
+
+/// The push half of [`commit_and_push`]: Р1 — the working copy's branch
+/// to its configured upstream, no refspec of ours.
+pub fn push(data_dir: &Path) -> Result<(), PublishError> {
+    run_git(data_dir, &["push", "--quiet"])
 }
 
 /// Outcome of [`commit_and_push`].

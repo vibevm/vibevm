@@ -52,6 +52,20 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
+    let entry = add(args)?;
+    println!(
+        "added {}:{}/{} @ {} ({})",
+        entry.kind, entry.group, entry.name, entry.version, entry.content_hash
+    );
+    Ok(())
+}
+
+/// The whole of `add` without its line of output, for a caller that
+/// reports in its own words — `vibe registry publish` adds the version it
+/// has just pushed to a local index checkout through this, in process, so
+/// the entry is born by the same code as one an operator adds by hand.
+/// Returns the entry as it went into the journal.
+pub fn add(args: Args) -> Result<VersionEntry> {
     // F2-1 — the clock enters here, once per command: the same `at`
     // stamps the entry's `indexed_at` and the written manifest, so two
     // records born of one command never differ by a millisecond.
@@ -139,10 +153,6 @@ pub fn run(args: Args) -> Result<()> {
         indexed_by: format!("vibe-index {}", env!("CARGO_PKG_VERSION")),
     };
 
-    println!(
-        "adding {}:{}/{} @ {} ({})",
-        entry.kind, entry.group, entry.name, entry.version, entry.content_hash
-    );
     // Truth first (PROP-044 `##LAW-NO-UNRECOVERABLE`), the `init`
     // order: the fact lands in the journal before the derived catalog
     // is written, so a failed `write_to` leaves a journal without a
@@ -152,13 +162,13 @@ pub fn run(args: Args) -> Result<()> {
         at,
         actor: default_generator(),
         event: Event::Published {
-            entry: Box::new(entry),
+            entry: Box::new(entry.clone()),
         },
     };
     append(&journal_dir, &record)?;
     records.push(record);
     project(records)?.write_to(&args.data_dir, &WriteCtx { at })?;
-    Ok(())
+    Ok(entry)
 }
 
 fn compose_default_repo_url(

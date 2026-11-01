@@ -331,7 +331,7 @@ fn run() -> ExitCode {
         Command::Show(args) => commands::show::run(&ctx, args, cli.offline),
         Command::Prefs(args) => commands::prefs::run(&ctx, args),
         Command::Tree(args) => commands::tree::run(&ctx, args),
-        Command::Registry(args) => commands::registry::run(&ctx, args),
+        Command::Registry(args) => commands::registry::run(&ctx, args, cli.offline),
         // `remap test` answers with a status (PROP-066 `#policy`).
         Command::Remap(args) => match commands::remap::dispatch(
             &ctx,

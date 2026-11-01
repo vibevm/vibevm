@@ -1,12 +1,13 @@
 //! `vibe registry sync` — refresh the per-package clones referenced by
-//! the lockfile.
+//! the lockfile, or, with `-g` or outside a project, the user home's
+//! cached clones (`sync_home`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
-use anyhow::{Context, Result, bail};
+use anyhow::{Context, Result};
 use serde::Serialize;
 use vibe_core::manifest::{Lockfile, Manifest};
-use vibe_registry::{MultiRegistryResolver, RefreshedVia};
+use vibe_registry::{MultiRegistryResolver, RefreshedEntry, RefreshedVia};
 
 use crate::cli::RegistrySyncArgs;
 use crate::output;
@@ -22,22 +23,40 @@ struct SyncReport {
 }
 
 #[derive(Debug, Serialize)]
-struct RefreshedReportEntry {
-    group: String,
-    name: String,
+pub(super) struct RefreshedReportEntry {
+    pub(super) group: String,
+    pub(super) name: String,
     via: String, // "registry:<name>" or "override"
     #[serde(rename = "ref")]
-    refname: String,
+    pub(super) refname: String,
 }
 
-pub(super) fn run_sync(ctx: &output::Context, args: RegistrySyncArgs) -> Result<()> {
+impl RefreshedReportEntry {
+    pub(super) fn from_entry(e: &RefreshedEntry) -> Self {
+        RefreshedReportEntry {
+            group: e.group.as_str().to_string(),
+            name: e.name.clone(),
+            via: match &e.via {
+                RefreshedVia::Registry(n) => format!("registry:{n}"),
+                RefreshedVia::Override => "override".to_string(),
+            },
+            refname: e.refname.clone(),
+        }
+    }
+}
+
+pub(super) fn run_sync(
+    ctx: &output::Context,
+    args: RegistrySyncArgs,
+    root_offline: bool,
+) -> Result<()> {
+    // Outside a project there is no lockfile to walk, and the clones a
+    // user can mean are the home's: the plain form refreshes those rather
+    // than refusing, the way `-g` asks for them explicitly.
     let project_root = resolve_project_root(&args.path)?;
     let manifest_path = project_root.join(Manifest::FILENAME);
-    if !manifest_path.exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            project_root.display()
-        );
+    if args.global || !manifest_path.exists() {
+        return super::sync_home::run_sync_home(ctx, root_offline);
     }
     let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
@@ -129,15 +148,7 @@ pub(super) fn run_sync(ctx: &output::Context, args: RegistrySyncArgs) -> Result<
     let json_refreshed: Vec<RefreshedReportEntry> = report
         .refreshed
         .iter()
-        .map(|e| RefreshedReportEntry {
-            group: e.group.as_str().to_string(),
-            name: e.name.clone(),
-            via: match &e.via {
-                RefreshedVia::Registry(n) => format!("registry:{n}"),
-                RefreshedVia::Override => "override".to_string(),
-            },
-            refname: e.refname.clone(),
-        })
+        .map(RefreshedReportEntry::from_entry)
         .collect();
     let json_skipped: Vec<SkippedReportEntry> = report
         .skipped

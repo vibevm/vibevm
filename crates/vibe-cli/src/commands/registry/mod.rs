@@ -11,13 +11,17 @@
 //! `__overrides__/<kind>-<name>/clone/` subtree. Local-directory
 //! registries (`--registry <path>`) and legacy v1 entries are reported
 //! as skipped — there is no per-package clone to refresh for them.
+//! `vibe registry sync -g` (or the plain form outside a project) walks the
+//! user home's registry cache instead (`sync_home`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 mod config;
+mod index_step;
 mod publish;
 mod redirect;
 mod sync;
+mod sync_home;
 mod vendor;
 
 use std::path::{Path, PathBuf};
@@ -28,9 +32,11 @@ use serde::Serialize;
 use crate::cli::{RegistryArgs, RegistrySubcommand};
 use crate::output;
 
-pub fn run(ctx: &output::Context, args: RegistryArgs) -> Result<()> {
+/// `root_offline` is the root `--offline` flag; the commands that reach
+/// the network resolve the rest of the ladder themselves.
+pub fn run(ctx: &output::Context, args: RegistryArgs, root_offline: bool) -> Result<()> {
     match args.command {
-        RegistrySubcommand::Sync(sub) => sync::run_sync(ctx, sub),
+        RegistrySubcommand::Sync(sub) => sync::run_sync(ctx, sub, root_offline),
         RegistrySubcommand::Publish(sub) => publish::run_publish(ctx, sub),
         RegistrySubcommand::List(sub) => config::run_list(ctx, sub),
         RegistrySubcommand::Add(sub) => config::run_add(ctx, sub),

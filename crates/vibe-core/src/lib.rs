@@ -20,6 +20,7 @@ pub mod content_hash;
 pub mod error;
 pub mod global_registry;
 pub mod host_owner;
+pub mod index_checkout;
 pub mod layout;
 pub mod lifecycle;
 pub mod lock_provenance;
@@ -43,6 +44,7 @@ pub use global_registry::{
     ensure_default_global_registry, merge_effective, url_is_local,
 };
 pub use host_owner::{HOST_OWNER, HostOwner, HostSegmentError};
+pub use index_checkout::IndexCheckoutSection;
 pub use package_ref::{Group, PackageKind, PackageName, PackageRef, VersionSpec};
 pub use provenance::{SourceUrl, TraceId};
 pub use rel_path::{RelPath, machine_json_path};

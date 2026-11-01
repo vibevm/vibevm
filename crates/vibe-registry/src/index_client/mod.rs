@@ -23,6 +23,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http");
 
 mod auth;
+mod by_name;
 mod catalog;
 mod handshake;
 mod locate;
@@ -40,13 +41,12 @@ pub use wire::{
 use std::sync::OnceLock;
 use std::time::Duration;
 
-use semver::Version;
 use specmark::spec;
 use thiserror::Error;
-use vibe_core::{Group, PackageKind};
+use vibe_core::PackageKind;
+use vibe_wire::generated::index::e1::repomd::Repomd;
 
 use auth::refusal_reason;
-use wire::NameEntryView;
 
 const PROBE_TIMEOUT_SECS: u64 = 5;
 const FETCH_TIMEOUT_SECS: u64 = 10;
@@ -75,6 +75,12 @@ pub struct IndexClient {
     auth: IndexAuth,
     file_client: OnceLock<Result<reqwest::blocking::Client, String>>,
     server_client: OnceLock<Result<reqwest::blocking::Client, String>>,
+    /// `repomd.json` as first read in this invocation — the yardstick a
+    /// `by-name` file is checked against (`by_name`). `None` inside means
+    /// the manifest could not be read, which leaves the check silent.
+    /// Boxed: the manifest is large beside the rest of the client, which
+    /// travels by value inside `ProbeOutcome::Found`.
+    repomd: OnceLock<Option<Box<Repomd>>>,
 }
 
 #[derive(Debug, Error)]
@@ -196,6 +202,7 @@ impl IndexClient {
                         auth,
                         file_client: OnceLock::new(),
                         server_client: OnceLock::new(),
+                        repomd: OnceLock::new(),
                     });
                 }
                 handshake::HandshakeProbe::Refused { reason } => {
@@ -218,6 +225,7 @@ impl IndexClient {
                         auth,
                         file_client: OnceLock::new(),
                         server_client: OnceLock::new(),
+                        repomd: OnceLock::new(),
                     });
                 }
                 Ok(resp) => {
@@ -274,6 +282,7 @@ impl IndexClient {
             auth,
             file_client: OnceLock::new(),
             server_client: OnceLock::new(),
+            repomd: OnceLock::new(),
         }
     }
 
@@ -288,118 +297,6 @@ impl IndexClient {
     /// The [`IndexAuth`] plan this client authenticates with.
     pub fn auth(&self) -> &IndexAuth {
         &self.auth
-    }
-
-    /// Fetch the `by-name/<name>.json` candidate set and return the
-    /// versions of the `(group, name)` package in ascending semver
-    /// order — the capability-declaration half of each record dropped.
-    /// The version selector must not use this (it would be
-    /// capability-blind, B-080); it asks
-    /// [`IndexClient::list_version_entries`] instead. Kept for the
-    /// enumeration surfaces that genuinely want every version listed.
-    ///
-    /// Returns `Ok(None)` when the file is absent (404) **or** the
-    /// candidate set carries no package for `group` — both mean
-    /// "fall through to `git ls-remote`". `Ok(Some(versions))` on a
-    /// hit; `Err(...)` for any other failure.
-    pub fn list_versions(
-        &self,
-        group: &Group,
-        name: &str,
-    ) -> Result<Option<Vec<Version>>, IndexError> {
-        Ok(self
-            .list_version_entries(group, name)?
-            .map(|entries| entries.into_iter().map(|e| e.version).collect()))
-    }
-
-    /// [`IndexClient::list_versions`] without the blindness: each
-    /// returned [`IndexVersion`] carries the `must_understand`
-    /// declarations its record states on the wire (PROP-044 §4.5), so
-    /// the caller can skip versions this reader must quarantine.
-    /// Ordering and the `Ok(None)` fall-through contract are exactly
-    /// `list_versions`'s.
-    ///
-    /// The `by-name/` layer is keyed by bare `name` and holds the whole
-    /// candidate set — every group that publishes a package of that
-    /// name (PROP-008 §2.8). The lookup selects the candidate whose
-    /// `group` matches the requested `(group, name)` identity.
-    pub fn list_version_entries(
-        &self,
-        group: &Group,
-        name: &str,
-    ) -> Result<Option<Vec<IndexVersion>>, IndexError> {
-        let url = format!("{}/by-name/{}.json", self.file_base, name);
-        let client = self.file_client().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
-        let resp = client.get(&url).send().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
-        let status = resp.status();
-        if status.as_u16() == 404 {
-            return Ok(None);
-        }
-        if !status.is_success() {
-            return Err(self.classify_failure(url, status.as_u16()));
-        }
-        let body = resp.bytes().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
-        let parsed: NameEntryView =
-            serde_json::from_slice(&body).map_err(|e| IndexError::Malformed {
-                url: url.clone(),
-                message: e.to_string(),
-            })?;
-        let Some(pkg) = parsed.packages.into_iter().find(|p| &p.group == group) else {
-            return Ok(None);
-        };
-        let mut versions: Vec<IndexVersion> = pkg.versions.into_iter().map(Into::into).collect();
-        versions.sort_by(|a, b| a.version.cmp(&b.version));
-        Ok(Some(versions))
-    }
-
-    /// Fetch the `by-name/<name>.json` candidate set and return every
-    /// `group` that publishes a package of this bare name (PROP-008
-    /// §2.8). This is the primitive index-backed short-name resolution
-    /// (PROP-008 §2.6) walks: one GET per registry enumerates the
-    /// `(*, name)` candidates, so a collision (PROP-008 §2.7) — two
-    /// groups under one bare name — is visible at once.
-    ///
-    /// `Ok(vec![])` when the file is absent (404) — the name is simply
-    /// not carried by this index. `Err(...)` for any other failure;
-    /// the caller decides whether to treat it as fatal or skip the
-    /// registry. Groups are returned in on-disk order; de-duplication
-    /// and sorting are the caller's job (it unions across registries).
-    pub fn name_candidates(&self, name: &str) -> Result<Vec<Group>, IndexError> {
-        let url = format!("{}/by-name/{}.json", self.file_base, name);
-        let client = self.file_client().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
-        let resp = client.get(&url).send().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
-        let status = resp.status();
-        if status.as_u16() == 404 {
-            return Ok(Vec::new());
-        }
-        if !status.is_success() {
-            return Err(self.classify_failure(url, status.as_u16()));
-        }
-        let body = resp.bytes().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
-        let parsed: NameEntryView =
-            serde_json::from_slice(&body).map_err(|e| IndexError::Malformed {
-                url: url.clone(),
-                message: e.to_string(),
-            })?;
-        Ok(parsed.packages.into_iter().map(|p| p.group).collect())
     }
 
     /// Direct PURL lookup against the live-server route

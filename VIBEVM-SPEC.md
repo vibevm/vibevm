@@ -986,7 +986,7 @@ The per-user registry cache is organized by **canonical registry URL**, not by m
 
 - `<canonical-url-hash>` = lowercase hex of the first 16 bytes of `sha256(normalize(canonical_registry_url))`. Full hash in the outer `meta.toml` for audit.
 - A given installation fetches **only the package repos it actually needs** — never a whole organization. Fetching is lazy and per-pkgref.
-- Freshness TTL per package repo is 1 hour by default (matches [PROP-001 §2.5](spec/modules/vibe-registry/PROP-001-git-backend.md#freshness)); `vibe registry sync` force-refreshes every clone referenced by the current lockfile.
+- Freshness TTL per package repo is 1 hour by default (matches [PROP-001 §2.5](spec/modules/vibe-registry/PROP-001-git-backend.md#freshness)); `vibe registry sync` force-refreshes every clone referenced by the current lockfile; `vibe registry sync -g` — and the plain form run outside a project — force-refreshes the user home instead: every clone cached for the registries of `~/.vibe/registry.toml` (the set a global install resolves through), brought to its newest release tag, plus each registry's index handshake, under the settings root `$VIBE_SETTINGS` names. It refuses under the offline posture.
 - Per-project package cache (`<project>/.vibe/cache/<kind>/<name>/<version>/`) is unchanged from M0.
 
 Transport-level optimisations used where they reduce work:
@@ -1058,6 +1058,7 @@ vibe show graph [<workflow-name>]                      # Print task graph (M1)
 vibe show node <node-name>                             # Print node details (M1)
 vibe show plan <workflow-name> [args...]               # Print what would happen, don't execute (M1)
 vibe registry sync                                     # Force-refresh the registry cache (M1)
+vibe registry sync -g                                  # Force-refresh the user home's registry cache
 vibe help [<command>]                                  # Help text
 vibe version                                           # Version info
 ```
@@ -1574,6 +1575,7 @@ Before declaring any milestone complete, verify every item in its section.
 - [ ] `vibe install` resolves packages from a git registry per `vibe.toml`'s `[[registry]]` configuration (priority-ordered).
 - [ ] Registry cache lives at `~/.vibe/registries/<canonical-url-hash>/packages/<kind>-<name>/` — per-package, not per-monorepo.
 - [ ] `vibe registry sync` refreshes every package clone referenced by the current lockfile.
+- [ ] `vibe registry sync -g` refreshes every package clone cached for the user home's registries and reports `scope: "user"`.
 - [ ] `vibe update <pkgref>` re-fetches and applies changes with diff display; integrity check rejects content_hash drift.
 - [ ] `vibe update --all` updates every installed package.
 - [ ] `vibe install` drives **transitive** dependency resolution through the `resolvo` depsolver; capability-based `[requires]`, `[[requires_any]]`, `[obsoletes]`, `[conflicts]` are honoured.

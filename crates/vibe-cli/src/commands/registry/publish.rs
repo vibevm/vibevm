@@ -16,6 +16,7 @@ use vibe_publish::{
 use crate::cli::RegistryPublishArgs;
 use crate::output;
 
+use super::index_step::{self, IndexCheckoutReport, Release};
 use super::{observed_stage, resolve_project_root};
 
 #[derive(Debug, Serialize)]
@@ -36,6 +37,9 @@ struct PublishReport {
     /// dormant (no env config) and the operator wanted no index update.
     #[serde(skip_serializing_if = "Option::is_none")]
     index_hook: Option<vibe_publish::HookReport>,
+    /// The local checkout of the git-hosted index this publish added the
+    /// release to (PROP-005 `##INT-PUBLISH-INDEX-CHECKOUT`).
+    index_checkout: IndexCheckoutReport,
 }
 
 /// Envelope emitted when the operator targets a host whose publish path
@@ -69,6 +73,7 @@ struct DirectPublishReport {
     tag: String,
     dry_run: bool,
     submodules: Vec<vibe_publish::git_publish::SubmoduleProvenance>,
+    index_checkout: IndexCheckoutReport,
 }
 
 pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
@@ -82,6 +87,9 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
     }
     let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
+    // Read before anything is pushed, so a malformed user registry file
+    // stops the run while there is still nothing to undo.
+    let index_checkout = index_step::configured_checkout(args.index_checkout.as_deref())?;
 
     // `--repo-url <url>`: bypass registries, host adapters, tokens, and
     // every host API. Operator supplied an SSH/HTTPS URL pointing at an
@@ -91,7 +99,7 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
     // is consulted; `vibe.toml` need only exist (asserted above so the
     // command behaves consistently w.r.t. project-root lookup).
     if let Some(direct_url) = args.repo_url.as_deref() {
-        return run_publish_direct(ctx, &args, direct_url);
+        return run_publish_direct(ctx, &args, direct_url, index_checkout);
     }
 
     if manifest.registries.is_empty() {
@@ -229,6 +237,17 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
         }
         report
     };
+    let index_report = index_step::run(
+        ctx,
+        index_checkout,
+        args.push_index,
+        &Release {
+            source_dir: &source_dir,
+            repo_url: &outcome.repo_url,
+            tag: &outcome.tag,
+            dry_run: outcome.dry_run,
+        },
+    );
 
     if ctx.is_json() {
         ctx.emit_json(&PublishReport {
@@ -243,6 +262,7 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
             dry_run: outcome.dry_run,
             submodules: outcome.submodules.clone(),
             index_hook: Some(hook_report),
+            index_checkout: index_report,
         })?;
         return Ok(());
     }
@@ -272,6 +292,7 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
         action_verb, outcome.repo_name, outcome.host
     ));
     report_flattened_submodules(ctx, &outcome.submodules);
+    index_step::draw(ctx, &index_report);
     if outcome.dry_run {
         ctx.summary(&format!(
             "\nvibe registry publish [dry-run]: would push to `{}` and tag `{}`. \
@@ -297,6 +318,7 @@ fn run_publish_direct(
     ctx: &output::Context,
     args: &RegistryPublishArgs,
     direct_url: &str,
+    index_checkout: Option<std::path::PathBuf>,
 ) -> Result<()> {
     let url = direct_url.trim();
     if url.is_empty() {
@@ -335,6 +357,20 @@ fn run_publish_direct(
             .publish(&config)
             .map_err(|e| anyhow!("{e}"))
     })?;
+    // The checkout carries its own registry identity, so unlike the HTTP
+    // hook (keyed by a `[[registry]]` name this path does not have) the
+    // step runs here too; the entry records the URL without credentials.
+    let index_report = index_step::run(
+        ctx,
+        index_checkout,
+        args.push_index,
+        &Release {
+            source_dir: &source_dir,
+            repo_url: &display_url,
+            tag: &outcome.tag,
+            dry_run: outcome.dry_run,
+        },
+    );
 
     if ctx.is_json() {
         ctx.emit_json(&DirectPublishReport {
@@ -347,11 +383,13 @@ fn run_publish_direct(
             tag: outcome.tag.clone(),
             dry_run: outcome.dry_run,
             submodules: outcome.submodules.clone(),
+            index_checkout: index_report,
         })?;
         return Ok(());
     }
 
     report_flattened_submodules(ctx, &outcome.submodules);
+    index_step::draw(ctx, &index_report);
     if outcome.dry_run {
         ctx.summary(&format!(
             "\nvibe registry publish [dry-run]: would push `{}:{}` @ {} → `{}` (tag `{}`). \

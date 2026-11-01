@@ -57,6 +57,7 @@ use crate::{
 mod attempt;
 mod clone_chain;
 mod dispatch;
+mod home_refresh;
 mod offline;
 mod override_resolve;
 mod redirect_follow;
@@ -68,6 +69,7 @@ mod walk;
 
 pub use attempt::{RegistryWalkAttempt, WalkAttemptStatus};
 pub(crate) use clone_chain::clone_chain;
+pub use home_refresh::RegistryRefresh;
 pub use refresh::{RefreshReport, RefreshedEntry, RefreshedVia, SkippedEntry};
 pub use resolution::{MultiResolution, ResolvedPathDep};
 pub use source::{LocalRegistrySource, RegistrySource};
