@@ -76,8 +76,12 @@ impl AppRegistry {
         fs::create_dir_all(&bin).unwrap();
         let path = bin.join(command);
         fs::write(&path, format!("#!/bin/sh\necho \"{marker} $*\"\n")).unwrap();
-        use std::os::unix::fs::PermissionsExt;
-        fs::set_permissions(&path, fs::Permissions::from_mode(0o755)).unwrap();
+        // Windows has no execute bit; the script only has to exist there.
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            fs::set_permissions(&path, fs::Permissions::from_mode(0o755)).unwrap();
+        }
     }
 
     /// Run `vibe args…` in the registry root with the scratch HOME.

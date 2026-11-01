@@ -128,6 +128,15 @@ wayland-backend.workspace = true
 [target.'cfg(target_os = "macos")'.dependencies]
 libc.workspace = true
 
+# `HKCU\Environment` read and written through the registry API, and the
+# `WM_SETTINGCHANGE` broadcast after it, with no PowerShell child (B-226).
+[target.'cfg(windows)'.dependencies]
+windows-sys = { workspace = true, features = [
+    "Win32_Foundation",
+    "Win32_System_Registry",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
 [dev-dependencies]
 flate2.workspace = true
 tar.workspace = true

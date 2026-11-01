@@ -194,6 +194,10 @@ tree-sitter = "=0.27.0"
 tree-sitter-typescript = "=0.23.2"
 tree-sitter-go = "=0.25.0"
 libc = "0.2"
+# The Windows user environment (`HKCU\Environment`) is edited through the
+# registry API instead of a PowerShell child (B-226). MIT/Apache-2.0 dual.
+# The version already locked transitively; each consumer names its features.
+windows-sys = { version = "0.61.2", default-features = false }
 libloading = "0.9"
 winapi-util = "0.1.11"
 # Capability-relative filesystem access for the package-skill receipt

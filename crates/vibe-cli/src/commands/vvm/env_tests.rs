@@ -310,19 +310,6 @@ fn path_core_compares_full_lexical_paths_and_keeps_expandable_text_raw() {
 }
 
 #[test]
-fn registry_value_kind_accepts_only_string_forms() {
-    assert_eq!(
-        RegistryValueKind::parse("String").unwrap(),
-        RegistryValueKind::String
-    );
-    assert_eq!(
-        RegistryValueKind::parse("ExpandString").unwrap(),
-        RegistryValueKind::ExpandString
-    );
-    assert!(RegistryValueKind::parse("Binary").is_err());
-}
-
-#[test]
 fn path_without_removes_only_the_equivalent_entry_and_keeps_raw_text() {
     let cwd = Path::new(if cfg!(windows) { r"C:\work" } else { "/work" });
     let lookup = |name: &str| (name == "TOOLS").then(|| "/opt/tools".to_string());

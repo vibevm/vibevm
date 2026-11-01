@@ -164,7 +164,9 @@ pub(crate) struct ChildIo<'a> {
     pub panel: Option<&'a dyn StepPanel>,
 }
 
-#[cfg(test)]
+// The tests that spawn a child through it are Unix-only (`sh -c`), so a
+// Windows test build would otherwise flag it unused.
+#[cfg(all(test, unix))]
 impl ChildIo<'static> {
     /// Live (or, for `json`, stderr-relayed) output with nothing else.
     pub(crate) fn plain(json: bool) -> Self {
