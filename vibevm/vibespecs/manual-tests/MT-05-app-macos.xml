@@ -79,6 +79,15 @@ ls "$VIBE_SETTINGS/opt/bin" "$VIBE_SETTINGS/opt/apps/vim" 2&gt;&amp;1</fence>
     <fence>"$vibe" app launchers -g --all --menu --json
 "$vibe" app icon -g org.vibevm.apps/vim --size 48</fence>
     <p><EXP-MENU fact="true" status="impl/done">**Observed 2026-10-31 on `flash` (vibe `eb2686a2e`, published registry):** exactly this — one `tui` entry under `Vim` with categories `Utility`, `Development`; the icon resolved to `…/applications/icons/org.vibevm.apps.vim@1.1.2/icons/vim.svg` (234 bytes), survived `storage move` to `~/opt/vibe-apps-menu`, and was gone after `uninstall`. **Expected.** One menu entry, the `tui` launcher `vim` under group `Vim`, whose icon set names the package SVG copied under `$VIBE_SETTINGS/applications/icons/org.vibevm.apps.vim@1.1.2/icons/vim.svg`; `app icon --size 48` prints that path (no raster exists, so the SVG answers); a graphical client opens the entry through a terminal because the kind is `tui`.</EXP-MENU></p>
+    <facts ordered="true">
+      <STEP-PROJECTION fact="true" status="impl/work">**`.app` wrappers as a projection (PROP-059 `#launcher-runtime`).** With `org.vibevm.apps/vim@1.1.2` installed from sources:</STEP-PROJECTION>
+    </facts>
+    <fence>"$vibe" app launchers -g --export-system --dry-run
+"$vibe" app launchers -g --export-system --json
+ls ~/Applications/Vim.app/Contents/*
+open ~/Applications/Vim.app
+"$vibe" app launchers -g --remove-system</fence>
+    <p><EXP-PROJECTION fact="true" status="impl/work">**Expected.** The dry run lists `~/Applications/Vim.app` and writes nothing. The export writes the wrapper: `Contents/Info.plist` with `CFBundleExecutable` `vibe-launcher` and the marker key `VibeKey` holding `org.vibevm.apps/vim@1.1.2#vim`, an executable `Contents/MacOS/vibe-launcher` that, Vim being a `tui` launcher, asks Terminal to run the `start.command` beside it, which runs `exec env VIBE_SETTINGS=… …/vibe app start -g org.vibevm.apps/vim#vim`, and `Contents/Resources/icon.icns` when the package ships an `.icns`. Opening it from Finder or Launchpad opens a Terminal window with Vim in it. A `gui` launcher's wrapper instead runs `app start -g --json …` itself, detached and recorded: `running` lists it and `stop` ends it (`SIGTERM` to its process group, `SIGKILL` after five seconds). `--remove-system` removes the bundle and `applications/exported.json`.</EXP-PROJECTION></p>
   </section>
   <section title="Pass">
     <p><pass-criteria fact="true" status="impl/work">Every step reads as described on a real Mac: detection, the source build with the Xcode tools, the relocated runtime, signals through the proxy, `vibe shell` for zsh, bash and the fallback, the external-volume library with unavailability and moves, the offline rebuild and a clean uninstall. The owner signs the date below.</pass-criteria></p>

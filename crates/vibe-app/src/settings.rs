@@ -135,6 +135,27 @@ impl SettingsRoot {
         self.applications_dir().join("usage.json")
     }
 
+    /// `<home>/applications/events.jsonl`: one `vibe-app-events/1` line per
+    /// change of the home, appended under the mutation lock beside every
+    /// revision bump and tailed by `vibe app watch`
+    /// (`PROP-059#launcher-runtime`).
+    pub fn events_path(&self) -> PathBuf {
+        self.applications_dir().join("events.jsonl")
+    }
+
+    /// `<home>/applications/running`: one `<pid>.json` per launcher a
+    /// detached start left running (`PROP-059#launcher-runtime`).
+    pub fn running_dir(&self) -> PathBuf {
+        self.applications_dir().join("running")
+    }
+
+    /// `<home>/applications/exported.json`: every system file an export of
+    /// the catalog wrote, so a later export prunes and an uninstall removes
+    /// exactly those (`PROP-059#launcher-runtime`).
+    pub fn exported_path(&self) -> PathBuf {
+        self.applications_dir().join("exported.json")
+    }
+
     pub fn storage_path(&self) -> PathBuf {
         self.root.join("storage.toml")
     }

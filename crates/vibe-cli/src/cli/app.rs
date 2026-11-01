@@ -290,6 +290,10 @@ pub enum AppCommand {
         /// The agent that runs the installer's agent steps (PROP-064).
         #[arg(long, value_name = "NAME")]
         agent: Option<String>,
+        /// Keep the application work directory after a successful run, as
+        /// `install --keep-work` does (PROP-065 `#work`).
+        #[arg(long)]
+        keep_work: bool,
     },
 
     /// Report every installed application with its installed version and
@@ -345,23 +349,58 @@ pub enum AppCommand {
     /// its keys, collections, pins, overrides and usage facts
     /// (PROP-059 `#menu`, `#launcher-catalog`).
     Launchers {
-        /// The installed package; omitted with `--all` or `--revision`.
+        /// The installed package; omitted with `--all`, `--revision`,
+        /// `--export-system` or `--remove-system`.
         #[arg(
-            required_unless_present_any = ["all", "revision"],
-            conflicts_with_all = ["all", "revision"]
+            required_unless_present_any = ["all", "revision", "export_system", "remove_system"],
+            conflicts_with_all = ["all", "revision", "export_system", "remove_system"]
         )]
         package: Option<String>,
         /// List every ready, exposed installation in one answer.
-        #[arg(long, conflicts_with = "revision")]
+        #[arg(long, conflicts_with_all = ["revision", "export_system", "remove_system"])]
         all: bool,
         /// With `--all`, only the launchers whose author set `menu = true`.
         #[arg(long, requires = "all")]
         menu: bool,
         /// Print only the catalog revision, the one number a client compares
         /// instead of refetching the catalog.
-        #[arg(long)]
+        #[arg(long, conflicts_with_all = ["export_system", "remove_system"])]
         revision: bool,
+        /// Write the platform's own menu entries (`.desktop` files and icon
+        /// copies, Start Menu shortcuts, `.app` wrappers) for the launchers
+        /// with `menu = true` you have not hidden; a later export rewrites
+        /// and prunes them (PROP-059 `#launcher-runtime`).
+        #[arg(long, conflicts_with = "remove_system")]
+        export_system: bool,
+        /// With `--export-system`, only the launchers of this collection.
+        #[arg(long, value_name = "NAME", requires = "export_system")]
+        collection: Option<String>,
+        /// Remove every system entry an export wrote.
+        #[arg(long)]
+        remove_system: bool,
+        /// With `--export-system` or `--remove-system`, list the paths and
+        /// change nothing.
+        #[arg(long)]
+        dry_run: bool,
     },
+
+    /// List the launchers started detached through vibe that are still
+    /// running, with their process ids and start times (PROP-059
+    /// `#launcher-runtime`).
+    Running,
+
+    /// End a launcher started through vibe: ask it to end, wait, then end
+    /// it without asking (PROP-059 `#launcher-runtime`).
+    Stop {
+        /// A launcher key, a package key, or a process id from `running`.
+        target: String,
+    },
+
+    /// Print one line per change of the home — installed, updated, removed,
+    /// launchers-changed, collections-changed, started, exited — until
+    /// standard input closes or you interrupt it (PROP-059
+    /// `#launcher-runtime`).
+    Watch,
 
     /// Arrange the launcher catalog into named, ordered collections of
     /// launcher keys — a game library's shelves (PROP-059

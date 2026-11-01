@@ -194,6 +194,11 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             crate::cli::AppCommand::Run { .. } | crate::cli::AppCommand::Start { .. } => {
                 TerminalPassthrough
             }
+            crate::cli::AppCommand::Running => FastMetadata,
+            crate::cli::AppCommand::Stop { .. } => FiniteFallback("Command app stop"),
+            // A line stream over stdout until stdin closes, like a protocol
+            // server: nothing may draw beside it.
+            crate::cli::AppCommand::Watch => PersistentProtocol,
         },
         Command::Create(_) => FiniteFallback("Command create"),
         Command::Verify(_) => FiniteFallback("Command verify"),

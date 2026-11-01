@@ -95,6 +95,36 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `vibe app running --json` and `vibe app stop KEY|PID --json` (PROP-059
+# `#launcher-runtime`): the live detached launchers and what a stop ended.
+[format.cli-application-running]
+epoch = 1
+schema = "schemas/application_running.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# One line of `vibe app watch --json` and of the home's events journal
+# (PROP-059 `#launcher-runtime`).
+[format.cli-application-events]
+epoch = 1
+schema = "schemas/application_events.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe app launchers --export-system|--remove-system --json` and the home's
+# `applications/exported.json` (PROP-059 `#launcher-runtime`).
+[format.cli-application-exported]
+epoch = 1
+schema = "schemas/application_exported.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # `vibe app icon PKG --size N --json` (PROP-059 `#menu`): the chosen file.
 [format.cli-application-icon]
 epoch = 1

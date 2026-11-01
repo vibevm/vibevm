@@ -32,6 +32,7 @@ mod environment;
 mod error;
 mod error_catalog;
 mod error_lifecycle;
+mod export;
 mod exposure;
 mod fs_util;
 mod icons;
@@ -57,14 +58,16 @@ pub use alternatives::{
     DefaultChange, listing as alternatives_listing, reserved_commands, set_default,
 };
 pub use catalog::{
-    LAUNCHER_KEY_SEPARATOR, LauncherCatalog, LauncherChange, LauncherUsage, PinTarget,
-    StartRequest, USER_LAUNCHERS_PROTOCOL, Usage, UserCollection, UserLauncher, UserLaunchers,
-    UserPins, bump_revision, collection_add as app_collection_add,
+    ApplicationEvent, EVENTS_PROTOCOL, EventKind, EventTail, HomeEvent, LAUNCHER_KEY_SEPARATOR,
+    LauncherCatalog, LauncherChange, LauncherUsage, PinTarget, ProcessState, ProcessTable,
+    RUNNING_PROTOCOL, StartRequest, USER_LAUNCHERS_PROTOCOL, Usage, UserCollection, UserLauncher,
+    UserLaunchers, UserPins, WatchRequest, bump_revision, collection_add as app_collection_add,
     collection_create as app_collection_create, collection_delete as app_collection_delete,
     collection_order as app_collection_order, collection_remove as app_collection_remove,
     collection_rename as app_collection_rename, collections, drop_package, launcher_key,
-    launcher_override, pin as app_pin, revision as catalog_revision, revision_document,
-    seed_package, split_launcher_key, start as start_launcher, unpin as app_unpin,
+    launcher_override, pin as app_pin, record_event, revision as catalog_revision,
+    revision_document, running, seed_package, split_launcher_key, start as start_launcher,
+    stop_launcher, unpin as app_unpin, watch,
 };
 pub use codes::{ErrorClass, ErrorCode, error_codes};
 pub use derive::{derive_launchers, hicolor as hicolor_icon_set, import_desktop};
@@ -76,6 +79,10 @@ pub use error::{
 };
 pub use error_catalog::CatalogError;
 pub use error_lifecycle::LifecycleError;
+pub use export::{
+    ApplicationExported, EXPORTED_PROTOCOL, ExportRequest, SystemPlatform, SystemTargets,
+    export_system, remove_system,
+};
 pub use exposure::{Exposure, expose_for_session};
 pub use icons::{ResolvedIcon, ResolvedIconFile};
 pub use index::{

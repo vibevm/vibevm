@@ -26,6 +26,7 @@ pub(crate) struct ModifyArgs<'a> {
     pub installer: Option<String>,
     pub choice: &'a AppChoiceArgs,
     pub agent: Option<&'a str>,
+    pub keep_work: bool,
 }
 
 /// `vibe app modify PKG`: the same version, another choice (PROP-065
@@ -58,6 +59,7 @@ pub(crate) fn modify(
         },
         parameters: args.choice.set.clone(),
         accept_license: args.choice.accept_license,
+        keep_work: args.keep_work,
     };
     let proxy_image = global::proxy_image()?;
     let agents = AgentSetup::new(ctx, args.agent, false)?;

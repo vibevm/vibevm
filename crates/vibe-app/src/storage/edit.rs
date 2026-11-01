@@ -394,7 +394,12 @@ mod tests {
         index
             .installations
             .insert("org.example/a@1.0.0".into(), record);
-        index.save(&settings).unwrap();
+        index
+            .save(
+                &settings,
+                &crate::catalog::HomeEvent::new(crate::catalog::EventKind::Updated),
+            )
+            .unwrap();
 
         let listed = listing(&settings).unwrap();
         let ids: Vec<&str> = listed.libraries.iter().map(|row| row.id.as_str()).collect();

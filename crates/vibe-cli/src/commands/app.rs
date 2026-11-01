@@ -1,6 +1,6 @@
 //! CLI adapter for installed applications: `vibe app installers`,
-//! `launchers`, `icon`, `import-desktop`, `run`, `start`, `list`, `use` and
-//! `alternatives` over the
+//! `launchers`, `icon`, `import-desktop`, `run`, `start`, `running`,
+//! `stop`, `watch`, `list`, `use` and `alternatives` over the
 //! `vibe-app` library. This adapter parses, chooses an ID in an attended
 //! terminal and renders.
 
@@ -12,6 +12,7 @@ mod catalog;
 mod describe;
 pub(crate) mod display;
 mod environment;
+mod export;
 mod facts;
 pub(crate) mod global;
 pub(crate) mod home;
@@ -19,9 +20,11 @@ mod interrupt;
 mod launch;
 mod lifecycle;
 mod menu;
+mod processes;
 pub(crate) mod project;
 mod records;
 mod report;
+mod runtime;
 mod views;
 mod wizard;
 
@@ -135,6 +138,7 @@ pub fn run(
             installer,
             choice,
             agent,
+            keep_work,
         } => {
             lifecycle::modify(
                 ctx,
@@ -145,6 +149,7 @@ pub fn run(
                     installer,
                     choice: &choice,
                     agent: agent.as_deref(),
+                    keep_work,
                 },
                 embedded_root,
                 offline,
@@ -250,7 +255,24 @@ pub fn run(
             all,
             menu,
             revision,
+            export_system,
+            collection,
+            remove_system,
+            dry_run,
         } => {
+            if export_system || remove_system {
+                export::system(
+                    ctx,
+                    &app_home,
+                    export::Selection {
+                        remove: remove_system,
+                        collection: collection.as_deref(),
+                        project_root: project_root.as_deref(),
+                        dry_run,
+                    },
+                )?;
+                return Ok(None);
+            }
             if revision {
                 catalog::revision(ctx, &app_home)?;
                 return Ok(None);
@@ -320,6 +342,18 @@ pub fn run(
                 )
             })?;
             Ok(Some(code))
+        }
+        AppCommand::Running => {
+            runtime::running(ctx, &app_home)?;
+            Ok(None)
+        }
+        AppCommand::Stop { target } => {
+            runtime::stop(ctx, &app_home, &target)?;
+            Ok(None)
+        }
+        AppCommand::Watch => {
+            runtime::watch(ctx, &app_home)?;
+            Ok(None)
         }
         AppCommand::Collection { command } => {
             catalog::collection(ctx, &app_home, command)?;

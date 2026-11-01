@@ -53,6 +53,18 @@ fn edit(
     verb: ChangeVerb,
     apply: impl FnOnce(&mut Index, &str) -> Result<String, AppError>,
 ) -> Result<Change, AppError> {
+    edit_then(settings, proxy_image, spelling, verb, apply, |_, _| Ok(()))
+}
+
+/// [`edit`] with `after` run on the saved index, still under the lock.
+fn edit_then(
+    settings: &SettingsRoot,
+    proxy_image: &Path,
+    spelling: &str,
+    verb: ChangeVerb,
+    apply: impl FnOnce(&mut Index, &str) -> Result<String, AppError>,
+    after: impl FnOnce(&Index, &str) -> Result<(), AppError>,
+) -> Result<Change, AppError> {
     let _lock = settings.lock()?;
     let mut index = Index::load(settings)?;
     let (key, record) = installed(settings, &index, spelling)?;
@@ -60,7 +72,11 @@ fn edit(
     let reserved = reserved_names(&index);
     let message = apply(&mut index, &key)?;
     normalize_slots(&mut index);
-    index.save(settings)?;
+    index.save(
+        settings,
+        &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Updated, key.clone()),
+    )?;
+    after(&index, &key)?;
     proxies::sync(settings, &reserved, &reserved_names(&index), proxy_image)?;
     Ok(Change {
         verb,
@@ -204,7 +220,7 @@ pub fn rollback(
     spelling: &str,
     proxy_image: &Path,
 ) -> Result<Change, AppError> {
-    edit(
+    edit_then(
         settings,
         proxy_image,
         spelling,
@@ -240,6 +256,20 @@ pub fn rollback(
             Ok(format!(
                 "rolled back {key} to {previous}; {key} is kept hidden until the next update"
             ))
+        },
+        // The arrangement goes back with the version, the way an update
+        // carried it forward (`PROP-059#launcher-runtime`).
+        |index, key| {
+            let current = &index.installations[key];
+            let previous = current
+                .lifecycle
+                .superseded_by
+                .as_deref()
+                .and_then(|previous| index.installations.get(previous));
+            if let Some(previous) = previous {
+                crate::catalog::carry_over(settings, current, previous)?;
+            }
+            Ok(())
         },
     )
 }

@@ -5,6 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#conditions");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#external-registration");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime");
 
 /// Whether `name` is a file on PATH (with the usual Windows extensions).
 pub(super) fn command_on_path(name: &str) -> bool {
@@ -62,4 +63,31 @@ pub(crate) fn user_home() -> Option<std::path::PathBuf> {
     std::env::var_os(name)
         .filter(|value| !value.is_empty())
         .map(std::path::PathBuf::from)
+}
+
+/// Where the platform keeps the current user's menu entries
+/// (PROP-059 `#launcher-runtime`), read exactly here: `$XDG_DATA_HOME` (else
+/// `~/.local/share`) on Linux and other Unix, `%APPDATA%\Microsoft\Windows\Start
+/// Menu\Programs` on Windows, `~/Applications` on macOS.
+pub(crate) fn system_entries_root() -> Option<std::path::PathBuf> {
+    let read = |name: &str| {
+        std::env::var_os(name)
+            .filter(|value| !value.is_empty())
+            .map(std::path::PathBuf::from)
+    };
+    if cfg!(windows) {
+        return read("APPDATA").map(|appdata| {
+            appdata
+                .join("Microsoft")
+                .join("Windows")
+                .join("Start Menu")
+                .join("Programs")
+        });
+    }
+    if cfg!(target_os = "macos") {
+        return user_home().map(|home| home.join("Applications"));
+    }
+    read("XDG_DATA_HOME")
+        .filter(|path| path.is_absolute())
+        .or_else(|| user_home().map(|home| home.join(".local").join("share")))
 }

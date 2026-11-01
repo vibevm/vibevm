@@ -13,6 +13,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog
 
 use specmark::spec;
 
+use super::events::{EventKind, HomeEvent};
 use super::usage::Usage;
 use super::user::{UserCollection, UserLaunchers};
 use crate::error::StateError;
@@ -65,7 +66,7 @@ pub fn seed_package(
         changed = true;
     }
     if changed {
-        layer.save(settings)?;
+        layer.save(settings, &HomeEvent::new(EventKind::CollectionsChanged))?;
     }
     Ok(())
 }
@@ -94,13 +95,16 @@ pub fn drop_package(
         .collections
         .retain(|collection| !untouched_and_empty(collection));
     if layer != before {
-        layer.save(settings)?;
+        layer.save(settings, &HomeEvent::new(EventKind::CollectionsChanged))?;
     }
     let mut usage = Usage::load(settings)?;
     let counts = usage.launchers.len();
     usage.forget(&keys);
     if usage.launchers.len() != counts {
-        usage.save(settings)?;
+        usage.save(
+            settings,
+            &HomeEvent::about(EventKind::LaunchersChanged, package.clone()),
+        )?;
     }
     Ok(())
 }

@@ -98,7 +98,10 @@ pub fn relocate(settings: &SettingsRoot, spelling: &str, to: &str) -> Result<Mov
             directory,
         };
     }
-    index.save(settings)?;
+    index.save(
+        settings,
+        &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Updated, key.clone()),
+    )?;
     let mut message = format!("moved {key} from library `{from}` to `{to}`");
     if let Err(error) = fs::remove_dir_all(&source) {
         message.push_str(&format!(
@@ -309,7 +312,12 @@ pub(crate) mod tests {
         std::os::unix::fs::symlink("tool", payload.join("alias")).unwrap();
         let mut index = Index::default();
         index.installations.insert(KEY.into(), record);
-        index.save(&settings).unwrap();
+        index
+            .save(
+                &settings,
+                &crate::catalog::HomeEvent::new(crate::catalog::EventKind::Updated),
+            )
+            .unwrap();
         (dir, settings)
     }
 
@@ -361,7 +369,12 @@ pub(crate) mod tests {
         };
         let mut index = Index::default();
         index.installations.insert(KEY.into(), external);
-        index.save(&settings).unwrap();
+        index
+            .save(
+                &settings,
+                &crate::catalog::HomeEvent::new(crate::catalog::EventKind::Updated),
+            )
+            .unwrap();
         assert!(matches!(
             relocate(&settings, KEY, DEFAULT_LIBRARY),
             Err(AppError::Storage(StorageError::NotPortable { .. }))
@@ -371,7 +384,12 @@ pub(crate) mod tests {
         index
             .installations
             .insert(KEY.into(), owned_record("usb", "apps/tool/a"));
-        index.save(&settings).unwrap();
+        index
+            .save(
+                &settings,
+                &crate::catalog::HomeEvent::new(crate::catalog::EventKind::Updated),
+            )
+            .unwrap();
         assert!(matches!(
             relocate(&settings, KEY, "nowhere"),
             Err(AppError::State(

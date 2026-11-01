@@ -308,14 +308,14 @@ pub struct Lifecycle {
 /// The whole inventory: installations by key and each slot's default key.
 ///
 /// ```
-/// use vibe_app::{Index, SettingsRoot};
+/// use vibe_app::{EventKind, HomeEvent, Index, SettingsRoot};
 ///
 /// let dir = tempfile::tempdir().unwrap();
 /// let settings = SettingsRoot::new(dir.path());
 /// let mut index = Index::load(&settings).unwrap();
 /// assert!(index.installations.is_empty());
 /// index.slots.insert("editor".into(), None);
-/// index.save(&settings).unwrap();
+/// index.save(&settings, &HomeEvent::new(EventKind::Updated)).unwrap();
 /// assert_eq!(Index::load(&settings).unwrap(), index);
 /// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -346,9 +346,15 @@ impl Index {
     }
 
     /// Replace the index atomically (write a sibling, rename over it) and
-    /// increment the catalog revision, so a client that compares one number
-    /// never misses a change to the inventory (`PROP-059#launcher-catalog`).
-    pub fn save(&self, settings: &SettingsRoot) -> Result<(), StateError> {
+    /// increment the catalog revision with `event`, so a client that
+    /// compares one number never misses a change to the inventory
+    /// (`PROP-059#launcher-catalog`) and a watcher sees what it was
+    /// (`PROP-059#launcher-runtime`).
+    pub fn save(
+        &self,
+        settings: &SettingsRoot,
+        event: &crate::catalog::HomeEvent,
+    ) -> Result<(), StateError> {
         let path = settings.index_path();
         let mut bytes =
             serde_json::to_vec_pretty(&self.to_wire()).map_err(|error| StateError::Index {
@@ -357,7 +363,7 @@ impl Index {
             })?;
         bytes.push(b'\n');
         write_atomic(&path, &bytes)?;
-        crate::catalog::bump_revision(settings).map(|_| ())
+        crate::catalog::bump_revision(settings, event).map(|_| ())
     }
 
     pub fn default_of(&self, slot: &str) -> Option<&str> {

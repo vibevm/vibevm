@@ -11,6 +11,7 @@ use std::fs;
 use serde::{Deserialize, Serialize};
 use specmark::spec;
 
+use super::events::{EventKind, HomeEvent};
 use crate::error::StateError;
 use crate::settings::{SettingsRoot, io, write_atomic};
 
@@ -74,16 +75,22 @@ impl Usage {
     }
 
     /// Replace the usage facts atomically and increment the catalog
-    /// revision; the caller holds the home's mutation lock.
-    pub fn save(&self, settings: &SettingsRoot) -> Result<u64, StateError> {
+    /// revision with `event`; the caller holds the home's mutation lock.
+    pub fn save(&self, settings: &SettingsRoot, event: &HomeEvent) -> Result<u64, StateError> {
+        self.write(settings)?;
+        super::bump_revision(settings, event)
+    }
+
+    /// Replace the facts without a revision of their own, for a change that
+    /// bumps once for several files.
+    pub(crate) fn write(&self, settings: &SettingsRoot) -> Result<(), StateError> {
         let path = settings.usage_path();
         let mut bytes = serde_json::to_vec_pretty(self).map_err(|error| StateError::Index {
             path: path.display().to_string(),
             reason: error.to_string(),
         })?;
         bytes.push(b'\n');
-        write_atomic(&path, &bytes)?;
-        super::bump_revision(settings)
+        write_atomic(&path, &bytes)
     }
 
     /// The facts of one launcher key; a key never started has none.
@@ -103,7 +110,7 @@ impl Usage {
         entry.last_started =
             Some(chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true));
         let recorded = entry.clone();
-        usage.save(settings)?;
+        usage.save(settings, &HomeEvent::about(EventKind::Started, key))?;
         Ok(recorded)
     }
 
@@ -137,7 +144,9 @@ mod tests {
             },
         );
         assert_eq!(
-            usage.save(&settings).unwrap(),
+            usage
+                .save(&settings, &HomeEvent::new(EventKind::LaunchersChanged))
+                .unwrap(),
             1,
             "a save bumps the revision"
         );

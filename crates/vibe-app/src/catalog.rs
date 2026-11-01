@@ -20,8 +20,14 @@ use crate::error::StateError;
 use crate::index::Index;
 use crate::settings::{SettingsRoot, io, write_atomic};
 
+#[path = "catalog/carry.rs"]
+mod carry;
 #[path = "catalog/edit.rs"]
 mod edit;
+#[path = "catalog/events.rs"]
+mod events;
+#[path = "catalog/running.rs"]
+mod running;
 #[path = "catalog/seed.rs"]
 mod seed;
 #[path = "catalog/start.rs"]
@@ -32,17 +38,25 @@ mod usage;
 mod user;
 #[path = "catalog/view.rs"]
 mod view;
+#[path = "catalog/watch.rs"]
+mod watch;
 
+pub(crate) use carry::carry_over;
 pub use edit::{
     LauncherChange, PinTarget, collection_add, collection_create, collection_delete,
     collection_order, collection_remove, collection_rename, collections, launcher_override, pin,
     unpin,
 };
+pub use events::{
+    ApplicationEvent, EVENTS_PROTOCOL, EventKind, EventTail, HomeEvent, record_event,
+};
+pub use running::{ProcessState, ProcessTable, RUNNING_PROTOCOL, running, stop as stop_launcher};
 pub use seed::{drop_package, seed_package};
 pub use start::{StartRequest, start};
 pub use usage::{LauncherUsage, Usage};
 pub use user::{USER_LAUNCHERS_PROTOCOL, UserCollection, UserLauncher, UserLaunchers, UserPins};
 pub use view::LauncherCatalog;
+pub use watch::{WatchRequest, watch};
 
 /// The separator between a package key and a launcher id in a launcher key.
 pub const LAUNCHER_KEY_SEPARATOR: char = '#';
@@ -95,26 +109,33 @@ pub fn revision(settings: &SettingsRoot) -> u64 {
         .unwrap_or(0)
 }
 
-/// Increment the revision of a home and return the new value. Every change to
-/// `index.json`, `launchers.toml` or `usage.json` calls this, so a client
-/// comparing one number never misses one of the three
-/// (`PROP-059#launcher-catalog`). The caller holds the home's mutation lock.
+/// Increment the revision of a home, append `event` to its journal at the
+/// new revision and return the new value. Every change to `index.json`,
+/// `launchers.toml` or `usage.json` calls this, so a client comparing one
+/// number never misses one of the three (`PROP-059#launcher-catalog`) and
+/// `vibe app watch` sees each of them as one line
+/// (`PROP-059#launcher-runtime`). The caller holds the home's mutation lock.
 ///
 /// ```
+/// use vibe_app::{EventKind, HomeEvent};
+///
 /// let dir = tempfile::tempdir().unwrap();
 /// let settings = vibe_app::SettingsRoot::new(dir.path());
+/// let changed = HomeEvent::new(EventKind::CollectionsChanged);
 /// assert_eq!(vibe_app::catalog_revision(&settings), 0);
-/// assert_eq!(vibe_app::bump_revision(&settings).unwrap(), 1);
-/// assert_eq!(vibe_app::bump_revision(&settings).unwrap(), 2);
+/// assert_eq!(vibe_app::bump_revision(&settings, &changed).unwrap(), 1);
+/// assert_eq!(vibe_app::bump_revision(&settings, &changed).unwrap(), 2);
 /// assert_eq!(vibe_app::catalog_revision(&settings), 2);
 /// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog")]
-pub fn bump_revision(settings: &SettingsRoot) -> Result<u64, StateError> {
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-runtime")]
+pub fn bump_revision(settings: &SettingsRoot, event: &HomeEvent) -> Result<u64, StateError> {
     let next = revision(settings).saturating_add(1);
     let path = settings.revision_path();
     let dir = settings.applications_dir();
     fs::create_dir_all(&dir).map_err(|source| io("creating", &dir, source))?;
     write_atomic(&path, format!("{next}\n").as_bytes())?;
+    events::append(settings, event, next)?;
     Ok(next)
 }
 
@@ -208,7 +229,8 @@ mod tests {
         fs::create_dir_all(settings.applications_dir()).unwrap();
         fs::write(settings.revision_path(), "not a number").unwrap();
         assert_eq!(revision(&settings), 0, "a change hint never refuses");
-        assert_eq!(bump_revision(&settings).unwrap(), 1);
+        let changed = HomeEvent::new(EventKind::CollectionsChanged);
+        assert_eq!(bump_revision(&settings, &changed).unwrap(), 1);
         assert_eq!(revision_document(&settings).revision, 1);
 
         let key = launcher_key("org.example/editor@1.0.0", "edit");

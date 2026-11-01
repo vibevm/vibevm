@@ -207,7 +207,12 @@ fn domain_and_wire_round_trip_the_corpus() {
 fn save_is_atomic_and_load_rejects_inconsistent_records() {
     let dir = tempfile::tempdir().unwrap();
     let settings = SettingsRoot::new(dir.path());
-    sample().save(&settings).unwrap();
+    sample()
+        .save(
+            &settings,
+            &crate::catalog::HomeEvent::new(crate::catalog::EventKind::Updated),
+        )
+        .unwrap();
     assert_eq!(Index::load(&settings).unwrap(), sample());
     let leftovers: Vec<_> = fs::read_dir(settings.applications_dir())
         .unwrap()
