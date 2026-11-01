@@ -73,7 +73,7 @@ impl PlainRenderer {
             return;
         }
         match event.kind {
-            ProgressEventKind::Started { label } => {
+            ProgressEventKind::Started { label, .. } => {
                 let Ok(mut shapes) = self.shapes.lock() else {
                     return;
                 };

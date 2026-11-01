@@ -44,14 +44,14 @@ fn materialisation_names_package_children_and_marks_current_slots_skipped() {
     let parent = events
         .iter()
         .find(|event| {
-            matches!(&event.kind, ProgressEventKind::Started { label } if label == "Materialising dependency slots")
+            matches!(&event.kind, ProgressEventKind::Started { label, .. } if label == "Materialising dependency slots")
         })
         .expect("materialisation parent");
     let child = events
         .iter()
         .find(|event| {
             event.parent_id == Some(parent.task_id)
-                && matches!(&event.kind, ProgressEventKind::Started { label } if label == "Materialising org.vibevm/wal@0.3.0")
+                && matches!(&event.kind, ProgressEventKind::Started { label, .. } if label == "Materialising org.vibevm/wal@0.3.0")
         })
         .expect("named package child");
     assert!(events.iter().any(|event| {

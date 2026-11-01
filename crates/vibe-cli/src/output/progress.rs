@@ -253,7 +253,7 @@ impl InteractiveRenderer {
             return;
         }
         match event.kind {
-            ProgressEventKind::Started { label } => {
+            ProgressEventKind::Started { label, .. } => {
                 let (headline, width) = match self.shapes.lock() {
                     Ok(mut shapes) => {
                         let headline = shapes.start(event.task_id, event.parent_id, &label);

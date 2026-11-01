@@ -10,6 +10,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#license");
 use std::collections::BTreeSet;
 
 use vibe_core::manifest::RequirementScope;
+use vibe_core::progress::Requires;
 
 use crate::error::AppError;
 use crate::error_lifecycle::LifecycleError;
@@ -176,7 +177,17 @@ pub(super) fn install_required(
         // step panel draws its steps as a subtree of the requirement
         // instead of mixing them in among the requiring package's own
         // (`PROP-065#display`).
-        let task = ctx.progress.task(requirement_label(dependency));
+        // The structured `requires` lets a consumer of the machine stream key
+        // the subtree against the plan's `dependencies[]` without parsing
+        // the label (PROP-060 `#MACHINE-STREAM`).
+        let task = ctx.progress.task_requiring(
+            requirement_label(dependency),
+            Requires {
+                key: dependency.key.clone(),
+                scope: dependency.scope.as_str().to_owned(),
+                step: dependency.step.clone(),
+            },
+        );
         let progress = task.progress();
         let nested = OperationContext {
             progress: &progress,

@@ -56,6 +56,7 @@ impl ProgressObserver for MachineRenderer {
             parent: event.parent_id.map(TaskId::get),
             kind: wire::Kind::Detail,
             label: None,
+            requires: None,
             completed: None,
             total: None,
             unit: None,
@@ -70,8 +71,13 @@ impl ProgressObserver for MachineRenderer {
                 | ProgressEventKind::Stopped
         );
         match event.kind {
-            ProgressEventKind::Started { label } => {
+            ProgressEventKind::Started { label, requires } => {
                 line.kind = wire::Kind::Start;
+                line.requires = requires.map(|requires| wire::Requires {
+                    key: requires.key,
+                    scope: requires.scope,
+                    step: requires.step,
+                });
                 state
                     .labels
                     .insert(event.task_id, sanitize_progress_text(&label));
@@ -152,6 +158,15 @@ mod tests {
         step.detail("line\u{1b}[31m");
         step.finish();
         root.skip("nothing else");
+        let requirement = progress.task_requiring(
+            "requires org.example/tcc@1.0.0 (runtime)",
+            vibe_core::progress::Requires {
+                key: "org.example/tcc@1.0.0".into(),
+                scope: "runtime".into(),
+                step: None,
+            },
+        );
+        requirement.finish();
         let text = String::from_utf8(sink.0.lock().unwrap().clone()).unwrap();
         let lines: Vec<serde_json::Value> = text
             .lines()
@@ -160,14 +175,32 @@ mod tests {
         let kinds: Vec<&str> = lines.iter().map(|l| l["kind"].as_str().unwrap()).collect();
         assert_eq!(
             kinds,
-            ["start", "start", "measurement", "detail", "finish", "skip"]
+            [
+                "start",
+                "start",
+                "measurement",
+                "detail",
+                "finish",
+                "skip",
+                "start",
+                "finish"
+            ]
+        );
+        assert!(lines[..6].iter().all(|l| l.get("requires").is_none()));
+        assert_eq!(
+            lines[6]["requires"],
+            serde_json::json!({"key": "org.example/tcc@1.0.0", "scope": "runtime"})
+        );
+        assert!(
+            lines[7].get("requires").is_none(),
+            "only the start carries it"
         );
         assert_eq!(lines[1]["parent"], lines[0]["task"]);
         assert_eq!(lines[2]["total"], 20);
         assert_eq!(lines[4]["label"], "fetch: Fetch");
         assert!(!lines[3]["message"].as_str().unwrap().contains('\u{1b}'));
         let seqs: Vec<u64> = lines.iter().map(|l| l["seq"].as_u64().unwrap()).collect();
-        assert_eq!(seqs, [1, 2, 3, 4, 5, 6]);
+        assert_eq!(seqs, [1, 2, 3, 4, 5, 6, 7, 8]);
         assert!(
             lines
                 .iter()

@@ -235,7 +235,7 @@ fn progress_starts_before_the_resolver_blocks_and_fails_honestly() {
     let events = recorder.events.lock().unwrap();
     assert!(matches!(
         events.first(),
-        Some(ProgressEventKind::Started { label }) if label == "Resolving dependencies"
+        Some(ProgressEventKind::Started { label, .. }) if label == "Resolving dependencies"
     ));
     assert!(matches!(
         events.last(),

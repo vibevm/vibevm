@@ -132,7 +132,8 @@ fn purpose_specific_full_walk_preserves_calls_results_and_freshness() {
             assert_eq!(
                 row.kind,
                 ProgressEventKind::Started {
-                    label: format!("{prefix} {pkg}")
+                    label: format!("{prefix} {pkg}"),
+                    requires: None,
                 }
             );
         }
@@ -175,7 +176,8 @@ fn public_resolve_defaults_to_version_selection_and_inert_progress_preserves_wor
             assert_eq!(
                 started(&events)[0].kind,
                 ProgressEventKind::Started {
-                    label: format!("Selecting version for {pkg}")
+                    label: format!("Selecting version for {pkg}"),
+                    requires: None,
                 }
             );
         } else {
@@ -232,7 +234,8 @@ fn metadata_exact_and_pinned_redirect_fallback_have_one_responsible_task() {
         assert_eq!(
             rows[0].kind,
             ProgressEventKind::Started {
-                label: "Reading package metadata for org.vibevm/wal@1.0.0".into()
+                label: "Reading package metadata for org.vibevm/wal@1.0.0".into(),
+                requires: None,
             }
         );
         assert!(!events.iter().any(|event| matches!(

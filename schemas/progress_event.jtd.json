@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "description": "One progress observation of an invocation as a JSON line on stderr under --progress-format json: emission sequence, timestamp, task identity and parent, the closed event kind, the task label and the measurement or message the kind carries.",
+    "description": "One progress observation of an invocation as a JSON line on stderr under --progress-format json: emission sequence, timestamp, task identity and parent, the closed event kind, the task label, the requirement a start installs and the measurement or message the kind carries.",
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-060#MACHINE-STREAM" },
     "rustOptions": { "package": "vibe_wire::progress_event" },
     "x-rust-type": "ProgressEvent",
-    "x-wire-order": ["protocol", "seq", "at", "task", "parent", "kind", "label", "completed", "total", "unit", "level", "message"]
+    "x-wire-order": ["protocol", "seq", "at", "task", "parent", "kind", "label", "requires", "completed", "total", "unit", "level", "message"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -16,6 +16,7 @@
   "optionalProperties": {
     "parent": { "ref": "count", "metadata": { "x-default": null } },
     "label": { "type": "string", "metadata": { "x-default": null } },
+    "requires": { "ref": "requires", "metadata": { "x-default": null, "description": "Only on the start of a task that installs a requirement of another package (PROP-065#app-dependencies), in the words of the plan's dependencies[]." } },
     "completed": { "ref": "count", "metadata": { "x-default": null } },
     "total": { "ref": "count", "metadata": { "x-default": null } },
     "unit": { "type": "string", "metadata": { "x-default": null } },
@@ -23,6 +24,16 @@
     "message": { "type": "string", "metadata": { "x-default": null } }
   },
   "definitions": {
+    "requires": {
+      "metadata": { "x-wire-order": ["key", "scope", "step"] },
+      "properties": {
+        "key": { "type": "string" },
+        "scope": { "type": "string" }
+      },
+      "optionalProperties": {
+        "step": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
     "count": {
       "type": "float64",
       "metadata": {

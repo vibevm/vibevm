@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 
 /// One progress observation of an invocation as a JSON line on stderr under
 /// --progress-format json: emission sequence, timestamp, task identity and
-/// parent, the closed event kind, the task label and the measurement or message
-/// the kind carries.
+/// parent, the closed event kind, the task label, the requirement a start
+/// installs and the measurement or message the kind carries.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ProgressEvent {
     pub protocol: String,
@@ -23,6 +23,12 @@ pub struct ProgressEvent {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub label: Option<String>,
+
+    /// Only on the start of a task that installs a requirement of another
+    /// package (PROP-065#app-dependencies), in the words of the plan's
+    /// dependencies[].
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub requires: Option<Requires>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub completed: Option<Count>,
@@ -75,4 +81,14 @@ pub enum Level {
 
     #[serde(rename = "warning")]
     Warning,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Requires {
+    pub key: String,
+
+    pub scope: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub step: Option<String>,
 }

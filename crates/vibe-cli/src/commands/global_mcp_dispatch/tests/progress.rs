@@ -41,7 +41,7 @@ fn global_install_reports_nested_typed_stages_and_terminal_success() {
         .iter()
         .find(|event| {
             matches!(&event.kind,
-        ProgressEventKind::Started { label } if label == "Installing global MCP package")
+        ProgressEventKind::Started { label, .. } if label == "Installing global MCP package")
         })
         .unwrap();
     for label in [
@@ -57,7 +57,7 @@ fn global_install_reports_nested_typed_stages_and_terminal_success() {
             .iter()
             .position(|event| {
                 matches!(&event.kind,
-            ProgressEventKind::Started { label: actual } if actual == label)
+            ProgressEventKind::Started { label: actual, .. } if actual == label)
             })
             .unwrap_or_else(|| panic!("missing {label}: {events:?}"));
         let task = events[started].task_id;
@@ -104,7 +104,7 @@ fn global_registration_failure_has_failed_root_without_finished_root() {
         .iter()
         .find(|event| {
             matches!(&event.kind,
-        ProgressEventKind::Started { label } if label == "Installing global MCP package")
+        ProgressEventKind::Started { label, .. } if label == "Installing global MCP package")
         })
         .unwrap();
     assert!(events.iter().any(|event| event.task_id == root.task_id
