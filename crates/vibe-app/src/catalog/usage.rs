@@ -127,10 +127,8 @@ mod tests {
 
     const KEY: &str = "org.example/editor@1.0.0#edit";
 
-    /// `record_start` takes the home's mutation lock, so what it counts is
-    /// proved in `tests/user_layer.rs`, a test binary that forks no child:
-    /// a child of a sibling test in this process briefly inherits every
-    /// open lock file, which makes a second lock in one test flaky.
+    /// The stored file only; what `record_start` counts is proved through
+    /// the public API in `tests/user_layer.rs`, so it is not repeated here.
     #[test]
     fn a_saved_count_round_trips_a_damaged_file_starts_over_and_keys_are_forgotten() {
         let dir = tempfile::tempdir().unwrap();

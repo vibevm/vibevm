@@ -265,19 +265,6 @@ fn check_unlisted(storage: &Storage, path: &Path) -> Result<(), StorageError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::storage::relocate::tests::retry_locked;
-
-    fn add(settings: &SettingsRoot, path: &Path, id: Option<&str>) -> Result<Library, AppError> {
-        retry_locked(|| super::add(settings, path, id))
-    }
-
-    fn attach(settings: &SettingsRoot, path: &Path) -> Result<Library, AppError> {
-        retry_locked(|| super::attach(settings, path))
-    }
-
-    fn detach(settings: &SettingsRoot, id: &str) -> Result<Library, AppError> {
-        retry_locked(|| super::detach(settings, id))
-    }
 
     #[test]
     fn add_derives_or_takes_an_id_and_refuses_bad_targets() {

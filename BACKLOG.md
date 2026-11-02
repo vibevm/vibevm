@@ -2400,7 +2400,7 @@ structure, and it goes when the file does.
 | @fact:B218-WHAT **what** | `SettingsRoot::lock` takes a `try_lock` on `applications/.mutation.lock` and refuses when held. In one test process, a child spawned by another thread inherits the lock file descriptor between `fork` and `exec` (the descriptor is close-on-exec, the lock is per open-file-description), so a back-to-back `lock()` in a different test can see a stale holder for a few milliseconds. The `vibe-app` storage unit tests retry only that refusal; product code never retries. |
 | @fact:B218-EVIDENCE **evidence** | P4 executor report, 2026-10-30: intermittent `Locked` in `storage` unit tests, 25/25 green with the test-only retry; `crates/vibe-app/src/storage/relocate.rs::tests::retry_locked`. |
 | @fact:B218-SEVERITY **severity** | P3 — test-only; a real second `vibe` process holding the lock is refused correctly. |
-| @fact:B218-DISPOSITION **disposition** | `open` — a bounded product-side retry (a few hundred milliseconds) would remove the test helper and absorb the same race between two real `vibe` processes; decide whether the contract's "a held lock is refused, never awaited" admits it. |
+| @fact:B218-DISPOSITION **disposition** | `done` — closed on main 2026-11-02 by `fix(app): the mutation lock waits out a child's fork window`. `ae9a782d4` gives `SettingsRoot::lock` a 50 ms retry window (the owner's B-228 choice, recorded in PROP-059 `#index`), and this change removes the test-only `retry_locked` helper and the "one mutation per test" split it forced in the `vibe-app` unit tests. |
 | @fact:B218-FILED **filed by** | APP-CLEAN campaign, 2026-10-31. |
 
 ## B-219 — native-fixture tests fail after a `cargo build --workspace` {#b-219}
