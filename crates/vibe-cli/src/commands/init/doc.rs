@@ -372,7 +372,7 @@ pub(super) fn manifest_text(
          license = {license}\ndescription = {description}\nformat = \"{format}\"\n\n\
          # The display name: what the shelves, the language selector and the page\n\
          # heading show. Identity stays the coordinate, so two manuals may share a title.\n\
-         title = \"{title}\"\n\n\
+         title = {title}\n\n\
          {ABSTRACT_TEMPLATE}\
          abstract = \"\"\"\n\
          What it covers: …\n\
@@ -387,6 +387,7 @@ pub(super) fn manifest_text(
         license = super::kinds::toml_literal(&fields.license),
         description = super::kinds::toml_literal(&fields.description),
         format = fields.format,
+        title = super::kinds::toml_literal(&title),
     );
 
     text.push_str(
@@ -399,8 +400,12 @@ pub(super) fn manifest_text(
         // copied rather than stubbed — the gate compares the two sets.
         Some(source) if !source.documents.is_empty() => {
             for (package, version) in &source.documents {
+                // Copied from another manifest, so written through the
+                // TOML writer rather than trusted to need no escaping.
                 text.push_str(&format!(
-                    "[[documents]]\npackage = \"{package}\"\nversion = \"{version}\"\n"
+                    "[[documents]]\npackage = {}\nversion = {}\n",
+                    super::kinds::toml_literal(package),
+                    super::kinds::toml_literal(version),
                 ));
             }
         }
@@ -414,9 +419,11 @@ pub(super) fn manifest_text(
             "\n# The documentation this package adapts. Its pages mirror the source file\n\
              # for file; examples are not re-authored but referenced by id\n\
              # (spec://org.vibevm.core/vibevm/common/PROP-057#LOC-EXAMPLE-REF).\n\
-             [translates]\npackage = \"{coordinate}\"\nversion = \"{constraint}\"\n",
-            coordinate = source.coordinate,
-            constraint = source.constraint,
+             [translates]\npackage = {coordinate}\nversion = {constraint}\n",
+            // `--translates` is only split on `/`, never parsed as a
+            // coordinate, so it goes through the TOML writer too.
+            coordinate = super::kinds::toml_literal(&source.coordinate),
+            constraint = super::kinds::toml_literal(&source.constraint),
         ));
     }
 

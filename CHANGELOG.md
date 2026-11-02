@@ -8,6 +8,8 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+- **A nested documentation scaffold escapes its title and translation fields.** `vibe init package --kind doc` now writes `title`, `[translates]` and the `[[documents]]` it copies from a source through the TOML writer, as it already did description, licence and authors, so a quote in a `--translates` spelling is written as text instead of ending the string (B-214).
+
 ## [1.0.9] — 2026-11-02
 
 **Upgrade notes.**
