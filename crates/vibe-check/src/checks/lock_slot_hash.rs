@@ -88,6 +88,7 @@ impl Check for LockSlotHashCheck {
                         .field("content_hash")
                         .to_string(),
                 ),
+                package: Some(format!("{}/{}@{}", pkg.group, pkg.name, pkg.version)),
                 message: format!(
                     "package {group}/{name}@{version}: the installed slot holds source \
                      {slot_hash}, but vibe.lock pins {locked} — run \

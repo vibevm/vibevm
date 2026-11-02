@@ -48,6 +48,7 @@ impl Check for ManifestValidityCheck {
                 line: place.line,
                 column: place.column,
                 field: place.field,
+                package: None,
                 message: format!("{e}"),
             });
         }

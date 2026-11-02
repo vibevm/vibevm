@@ -88,6 +88,7 @@ fn a_slot_that_disagrees_with_its_lock_row_is_one_error() {
         .replace('\\', "/");
     assert!(path.ends_with("org.example.second/0.1.0"), "{path}");
     assert_eq!(finding.field.as_deref(), Some("package[1].content_hash"));
+    assert_eq!(finding.package.as_deref(), Some("org.example/second@0.1.0"));
     assert!(finding.message.contains(LOCKED) && finding.message.contains(OTHER));
     assert!(finding.message.contains("`vibe update org.example/second`"));
 }

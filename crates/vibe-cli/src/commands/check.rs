@@ -92,6 +92,10 @@ struct CheckJsonFinding<'a> {
     /// finding under that field without reading the message.
     #[serde(skip_serializing_if = "Option::is_none")]
     field: Option<&'a str>,
+    /// The package the finding is about (`group/name@version`), so a
+    /// reader can offer `vibe update` without decoding the slot path.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    package: Option<&'a str>,
     message: &'a str,
 }
 
@@ -114,6 +118,7 @@ fn emit_report(
                 line: f.line,
                 column: f.column,
                 field: f.field.as_deref(),
+                package: f.package.as_deref(),
                 message: f.message.as_str(),
             })
             .collect();
@@ -246,6 +251,7 @@ fn append_boot_graph_findings(project_root: &Path, report: &mut CheckReport) {
             line: None,
             column: None,
             field: None,
+            package: None,
             message: format!(
                 "stale boot artifact for {group}/{name} — its fingerprint is out of date; run `vibe reinstall`"
             ),

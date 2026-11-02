@@ -286,6 +286,10 @@ pub struct Finding {
     /// (`installer_options[1].steps[0].sha256`). Only the manifest-validity
     /// cell knows one; every other cell leaves it `None`.
     pub field: Option<String>,
+    /// The package the finding is about, as its key `group/name@version`,
+    /// when a cell knows one — so a reader can offer `vibe update` for it
+    /// without decoding a slot path. Only `lock_slot_hash` sets it today.
+    pub package: Option<String>,
     pub message: String,
 }
 
@@ -341,6 +345,7 @@ impl CheckReport {
             line,
             column: None,
             field: None,
+            package: None,
             message: msg.into(),
         });
     }
@@ -358,6 +363,7 @@ impl CheckReport {
             line,
             column: None,
             field: None,
+            package: None,
             message: msg.into(),
         });
     }
@@ -375,6 +381,7 @@ impl CheckReport {
             line,
             column: None,
             field: None,
+            package: None,
             message: msg.into(),
         });
     }
