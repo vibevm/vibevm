@@ -113,6 +113,15 @@ mod unix {
     )]
     fn signal_child(pid: u32, signal: i32) -> io::Result<()> {
         let pid = i32::try_from(pid).map_err(io::Error::other)?;
+        // A captured child leads a process group of its own, so the whole
+        // group is signalled: the shell and whatever it is waiting on. A
+        // child that stayed in vibe's group (an attached one) has no group
+        // of that id, and is signalled alone.
+        // SAFETY: `-pid` names the group the live child `Child::id` leads,
+        // and `signal` is a signal-hook platform constant.
+        if unsafe { kill(-pid, signal) } == 0 {
+            return Ok(());
+        }
         // SAFETY: `pid` is the live child returned by `Child::id`, and
         // `signal` is a signal-hook platform constant.
         if unsafe { kill(pid, signal) } == -1 {

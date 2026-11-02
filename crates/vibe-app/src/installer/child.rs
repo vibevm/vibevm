@@ -215,6 +215,7 @@ pub(crate) fn run_child(
         })
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
+    own_process_group(command, observe.stdin_null);
     let mut child = command.spawn().map_err(spawn_error)?;
     let pid = child.id();
     let (lines, received) = mpsc::channel::<String>();
@@ -290,6 +291,27 @@ fn verdict(
         ),
     })
 }
+
+/// Put a captured child that does not read the terminal into a process
+/// group of its own, so an interrupt reaches everything it started
+/// (`PROP-065#cancellation`). A recipe's shell waiting on `sleep` or a
+/// compiler does not stop when only the shell is signalled — bash, which is
+/// `/bin/sh` on macOS, carries on with the script, and any shell leaves its
+/// foreground child running with the step's pipes open. The forwarder
+/// signals the group when there is one. A child that may read the terminal
+/// stays in the foreground group: a background group reading it would be
+/// stopped by `SIGTTIN`, and the terminal's own Ctrl-C already reaches it.
+#[cfg(unix)]
+fn own_process_group(command: &mut Command, stdin_null: bool) {
+    use std::io::IsTerminal;
+    use std::os::unix::process::CommandExt;
+    if stdin_null || !io::stdin().is_terminal() {
+        command.process_group(0);
+    }
+}
+
+#[cfg(not(unix))]
+fn own_process_group(_command: &mut Command, _stdin_null: bool) {}
 
 /// Run one child attached to the terminal: every standard stream is
 /// inherited, nothing is captured (an interactive agent session,
