@@ -314,9 +314,16 @@ mod tests {
                 .join(proxies::proxy_file_name("tool"))
                 .is_file()
         );
-        // One mutation per test: a second lock right after the first can race
-        // a child another test thread forks while the first lock is held. The
-        // refusal of a foreign provider is proven by the public CLI fixture.
+        // A second mutation right after the first: a provider of another
+        // slot is refused and the default stays where the switch put it.
+        assert!(matches!(
+            set_default(&settings, "tool", "org.example/gamma@1.0.0", &image),
+            Err(AppError::NotProvider { .. })
+        ));
+        assert_eq!(
+            Index::load(&settings).unwrap().default_of("tool"),
+            Some("org.example/beta@1.0.0")
+        );
 
         let listed = listing(&settings, "tool").unwrap();
         assert_eq!(listed.default.as_deref(), Some("org.example/beta@1.0.0"));

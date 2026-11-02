@@ -225,48 +225,11 @@ fn io(action: &'static str, path: &Path, source: std::io::Error) -> StorageError
 
 #[cfg(test)]
 pub(crate) mod tests {
-    use std::time::Duration;
-
     use super::*;
-    use crate::error::StateError;
     use crate::index::{AuthoredCommands, Installation, Method, PackageCoordinate};
-    use crate::storage::{DEFAULT_LIBRARY, Library, create_library};
+    use crate::storage::{DEFAULT_LIBRARY, add, create_library, detach};
 
     const KEY: &str = "org.example/a@1.0.0";
-
-    /// These tests share a process with tests that spawn children. A child
-    /// forked by another thread holds a copy of this thread's lock-file
-    /// descriptor until it execs, so a back-to-back `lock()` can see a stale
-    /// holder; only that refusal is retried.
-    pub(crate) fn retry_locked<T>(
-        mut operation: impl FnMut() -> Result<T, AppError>,
-    ) -> Result<T, AppError> {
-        for _ in 0..200 {
-            match operation() {
-                Err(AppError::State(StateError::Locked { .. })) => {
-                    std::thread::sleep(Duration::from_millis(5));
-                }
-                other => return other,
-            }
-        }
-        operation()
-    }
-
-    fn add(settings: &SettingsRoot, path: &Path, id: Option<&str>) -> Result<Library, AppError> {
-        retry_locked(|| crate::storage::add(settings, path, id))
-    }
-
-    fn detach(settings: &SettingsRoot, id: &str) -> Result<Library, AppError> {
-        retry_locked(|| crate::storage::detach(settings, id))
-    }
-
-    fn relocate(settings: &SettingsRoot, spelling: &str, to: &str) -> Result<Moved, AppError> {
-        retry_locked(|| super::relocate(settings, spelling, to))
-    }
-
-    fn gc(settings: &SettingsRoot, delete: bool) -> Result<wire::ApplicationStorageGc, AppError> {
-        retry_locked(|| super::gc(settings, delete))
-    }
 
     pub(crate) fn owned_record(library: &str, directory: &str) -> Installation {
         Installation {
