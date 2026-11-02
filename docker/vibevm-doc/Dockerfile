@@ -10,7 +10,14 @@ COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/package.json \
      vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/pnpm-workspace.yaml /web/
 COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/design/package.json /web/design/
 COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/site/package.json /web/site/
-RUN cd /web && pnpm install --frozen-lockfile
+# The committed lockfile pins every tarball to the GitVerse npm mirror, which
+# CI runners outside Russia cannot always reach. npm tarballs are byte-identical
+# on every registry and the lockfile keeps their integrity hashes, so the image
+# fetches the same bytes from the build's own registry.
+RUN cd /web \
+    && registry="${NPM_CONFIG_REGISTRY%/}" \
+    && sed -i "s#https://npm-mirror.gitverse.ru/repository/registry_npmjs_org/#${registry}/#g" pnpm-lock.yaml \
+    && pnpm install --frozen-lockfile
 
 COPY vibevm/vibepacks/org.vibevm.doc/web/v1.0.0/ /web/
 COPY . /checkout
