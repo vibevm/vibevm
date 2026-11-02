@@ -8,6 +8,8 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+- **An interrupt stops what a step started, not only its shell.** Ctrl-C (or `SIGTERM`) during an application install now reaches the step's whole process group on Unix: a recipe whose shell waits on a compiler or a `sleep` stops at once, where before the child kept running — on macOS, whose `/bin/sh` is bash, the recipe even ran to its end — and vibe waited for it. A step child that may read the terminal stays in the foreground group, as before.
+
 ## [1.0.10] — 2026-11-02
 
 **Upgrade notes.**
