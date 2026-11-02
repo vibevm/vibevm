@@ -43,27 +43,26 @@ jobs:
             https://github.com/vibevm/vibevm/releases/download/v1.0.9/vibe-bootstrap-x86_64-unknown-linux-musl \
             --output docker/vibevm/vibe-bootstrap
           echo "$vibe_sha  docker/vibevm/vibe-bootstrap" | sha256sum -c -
-          zap_commit="$(git ls-remote https://github.com/vibevm/zap.git refs/tags/v1.0.0 | awk '{print $1}')"
-          test -n "$zap_commit"
           echo "vibe_sha=$vibe_sha" >> "$GITHUB_OUTPUT"
-          echo "zap_commit=$zap_commit" >> "$GITHUB_OUTPUT"
 
       - name: Remember the currently tagged image generations
         id: previous
         shell: bash
         run: |
           set -euo pipefail
-          for image in vibevm vibevm-dev vibevm-zap vibevm-doc; do
+          for image in vibevm vibevm-dev vibevm-doc; do
             key="${image//-/_}"
             digest="$(docker buildx imagetools inspect "vibevm/$image:1.0.9" 2>/dev/null | awk '$1 == "Digest:" { print $2; exit }' || true)"
             echo "$key=$digest" >> "$GITHUB_OUTPUT"
           done
 
-      - name: Build all four images locally
+      # `vibevm/vibevm-zap` is not built here: its Zap source is a private
+      # repository this workflow cannot read anonymously. Build it by hand
+      # from `docker/vibevm-zap/Dockerfile` with access to that repository.
+      - name: Build all three images locally
         env:
           NPM_REGISTRY: ${{ inputs.npm_registry || vars.NPM_CONFIG_REGISTRY || 'https://registry.npmjs.org' }}
           VIBE_SHA: ${{ steps.release.outputs.vibe_sha }}
-          ZAP_COMMIT: ${{ steps.release.outputs.zap_commit }}
           UMAMI_WEBSITE_ID: ${{ vars.UMAMI_WEBSITE_ID }}
         shell: bash
         run: |
@@ -77,11 +76,6 @@ jobs:
             --build-arg NPM_CONFIG_REGISTRY="$NPM_REGISTRY" \
             -t vibevm/vibevm-dev:1.0.9 -t vibevm/vibevm-dev:latest \
             -f docker/vibevm-dev/Dockerfile docker/vibevm-dev
-          docker build \
-            --build-arg BASE_IMAGE=vibevm/vibevm:1.0.9 \
-            --build-arg ZAP_COMMIT="$ZAP_COMMIT" \
-            -t vibevm/vibevm-zap:1.0.9 -t vibevm/vibevm-zap:latest \
-            -f docker/vibevm-zap/Dockerfile .
           docker build \
             --build-arg BASE_IMAGE=vibevm/vibevm:1.0.9 \
             --build-arg DEV_IMAGE=vibevm/vibevm-dev:1.0.9 \
@@ -99,11 +93,9 @@ jobs:
           test "$(docker run --rm vibevm/vibevm:1.0.9 vibe --version)" = "vibe 1.0.9"
           docker run --rm vibevm/vibevm:1.0.9 git --version
           docker run --rm vibevm/vibevm-dev:1.0.9 sh -lc 'rustc --version && node --version && pnpm --version && vibe --version'
-          docker run -d --name zap-smoke -p 127.0.0.1:18080:8080 vibevm/vibevm-zap:1.0.9
           docker run -d --name doc-smoke -p 127.0.0.1:18081:80 vibevm/vibevm-doc:1.0.9
-          trap 'docker rm -f zap-smoke doc-smoke >/dev/null 2>&1 || true' EXIT
-          for _ in $(seq 1 60); do curl --fail --silent http://127.0.0.1:18080/ >/dev/null && break; sleep 1; done
-          curl --fail --silent http://127.0.0.1:18080/ >/dev/null
+          trap 'docker rm -f doc-smoke >/dev/null 2>&1 || true' EXIT
+          for _ in $(seq 1 60); do curl --fail --silent http://127.0.0.1:18081/ >/dev/null && break; sleep 1; done
           curl --fail --silent http://127.0.0.1:18081/ >/dev/null
           curl --fail --silent http://127.0.0.1:18081/doc/ >/dev/null
           curl --fail --silent http://127.0.0.1:18081/doc/org.vibevm.core/vibevm-docs/latest/ >/dev/null
@@ -126,7 +118,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for image in vibevm vibevm-dev vibevm-zap vibevm-doc; do
+          for image in vibevm vibevm-dev vibevm-doc; do
             docker push "vibevm/$image:1.0.9"
             docker push "vibevm/$image:latest"
           done
@@ -137,14 +129,12 @@ jobs:
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
           OLD_VIBEVM: ${{ steps.previous.outputs.vibevm }}
           OLD_VIBEVM_DEV: ${{ steps.previous.outputs.vibevm_dev }}
-          OLD_VIBEVM_ZAP: ${{ steps.previous.outputs.vibevm_zap }}
           OLD_VIBEVM_DOC: ${{ steps.previous.outputs.vibevm_doc }}
         run: |
           set -euo pipefail
           for row in \
             "vibevm:$OLD_VIBEVM" \
             "vibevm-dev:$OLD_VIBEVM_DEV" \
-            "vibevm-zap:$OLD_VIBEVM_ZAP" \
             "vibevm-doc:$OLD_VIBEVM_DOC"; do
             image="${row%%:*}"
             old_digest="${row#*:}"
