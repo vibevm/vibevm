@@ -102,3 +102,23 @@ fn nothing_to_compare_is_nothing_to_report() {
     write_lock(project.path(), OTHER);
     assert!(run(project.path()).findings.is_empty());
 }
+
+#[test]
+fn an_in_tree_source_that_moved_on_is_a_warning() {
+    // A `local` row: the source lives in the working tree and changes as
+    // people edit it, so the drift is reported but does not fail the check.
+    let project = tempdir().unwrap();
+    write_minimal_project(project.path());
+    write_lock(project.path(), LOCKED);
+    let lock = project.path().join("vibe.lock");
+    let text = fs::read_to_string(&lock).unwrap().replace(
+        "name = \"second\"\n",
+        "name = \"second\"\nsource_kind = \"local\"\n",
+    );
+    fs::write(&lock, text).unwrap();
+    write_slot(project.path(), "first", LOCKED);
+    write_slot(project.path(), "second", OTHER);
+    let report = run(project.path());
+    assert_eq!(report.findings.len(), 1, "{:?}", report.findings);
+    assert_eq!(report.findings[0].severity, Severity::Warning);
+}

@@ -19,7 +19,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 use std::path::{Path, PathBuf};
 
 use specmark::cell;
-use vibe_core::manifest::{FieldPath, Lockfile};
+use vibe_core::manifest::{FieldPath, Lockfile, SourceKind};
 use vibe_workspace::vibedeps::{SLOT_RECORD_FILENAME, read_slot_record, slot_rel_path};
 
 use crate::{Check, CheckId, CheckOptions, CheckReport, Finding, Severity};
@@ -59,9 +59,22 @@ impl Check for LockSlotHashCheck {
             if slot_hash == locked {
                 continue;
             }
+            // Bytes a registry, a git source or an override pins are an
+            // integrity record: disagreement is an error. A source that lives
+            // in a working tree (`local`, `path`, `embedded`) changes as people
+            // edit it, and `vibe install` re-records it on purpose — the same
+            // drift `local_source_freshness` already reports as a warning.
+            let in_tree = matches!(
+                pkg.source_kind,
+                Some(SourceKind::Local | SourceKind::Path | SourceKind::Embedded)
+            );
             report.push(Finding {
                 check: CheckId::LockSlotHash,
-                severity: Severity::Error,
+                severity: if in_tree {
+                    Severity::Warning
+                } else {
+                    Severity::Error
+                },
                 path: Some(PathBuf::from(&slot_rel)),
                 line: None,
                 column: None,
