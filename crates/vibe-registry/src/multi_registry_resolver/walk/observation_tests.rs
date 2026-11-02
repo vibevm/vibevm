@@ -312,6 +312,8 @@ fn discovery_fallback_and_metadata_failure_keep_original_error_and_own_rows() {
         assert_eq!(outcomes.len(), 1);
         assert!(matches!(outcomes[0].kind, ProgressEventKind::Failed { .. }));
     }
-    // Missing-package discovery still enumerates and probes, metadata still tries exact then latest.
-    assert_eq!(backend.calls.lock().unwrap().len(), 4);
+    // Discovery, its probe, and metadata's exact and latest reads all walk
+    // the remote, but it answered «not here» on the first and is not asked
+    // again in this run (B-199).
+    assert_eq!(backend.calls.lock().unwrap().len(), 1);
 }

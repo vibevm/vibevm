@@ -144,6 +144,10 @@ pub struct MultiRegistryResolver {
     /// Invocation-owned observation tree. Default is inert; construction
     /// roots opt in with [`Self::with_progress`].
     progress: vibe_core::progress::Progress,
+    /// Remote registries' «not here» answers, replayed for the rest of
+    /// this resolver's run so a package is asked of each remote once
+    /// (PROP-002 `#registry-model`, B-199).
+    misses: walk::RemoteMisses,
 }
 
 impl MultiRegistryResolver {
@@ -183,6 +187,7 @@ impl MultiRegistryResolver {
             store_root: None,
             locked: HashMap::new(),
             progress: vibe_core::progress::Progress::default(),
+            misses: walk::RemoteMisses::default(),
         }
     }
 

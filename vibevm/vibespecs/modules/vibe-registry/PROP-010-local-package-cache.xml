@@ -84,6 +84,7 @@
         <OFFLINE-NO-DEGRADE fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">`--offline` never silently degrades to a partial result.</OFFLINE-NO-DEGRADE>
       </facts>
       <p><ONLINE-DEFAULT fact="true" status="impl/done">Online remains the default and is unchanged: it walks the network for freshness and populates the cache as it goes. `--offline` is purely additive.</ONLINE-DEFAULT></p>
+      <p><ONLINE-MISS-MEMORY fact="true" status="impl/done">Online, the only answers kept across the walks of one run are the remote registries' «not here» (PROP-002 `##REGISTRY-WALK-ORDER`). They live in the resolver, never on disk, and die with the run: the next invocation asks again, so a package published in between is found.</ONLINE-MISS-MEMORY></p>
     </offline>
     <resolution title="2.6 Offline resolution">
       <p><RESOLVER-OFFLINE-MODE fact="true" status="impl/done">**Decision.** The resolver gains an offline mode — `MultiRegistryResolver::with_offline(true)`, a builder method beside the existing `with_strict_auth`. Offline resolution reads version lists and manifests from the cache, addressed by package identity (§2.3), and never runs `git fetch` / `git ls-remote` / archive fetch.</RESOLVER-OFFLINE-MODE></p>
@@ -242,6 +243,7 @@
       <HISTORY-DRAFT-2 fact="true" status="spec/done">**2026-05-21 — draft 2.** The owner adopted two draft-1 open questions as decisions: the cache is keyed by PROP-008 qualified package identity (§2.3), making it registry-config-independent; and a user-level default registry configuration (§2.4) seeds new projects and supplies project-less invocations. The keying decision sequences PROP-010 implementation after PROP-008 (M1.19) so the cache is identity-keyed from the start. Five open questions remain — cache layout, command namespace, staleness signalling, eviction, scaffolding UX — for a follow-up owner design session. Not yet implementation-ready.</HISTORY-DRAFT-2>
       <HISTORY-B227 fact="true" status="spec/done">**2026-11-01 — B-227.** §2.6 gained the user home's refresh companion, `vibe registry sync -g` (`##SYNC-HOME-COMPANION`).</HISTORY-B227>
       <HISTORY-B196 fact="true" status="spec/done">**2026-11-02 — B-196.** §2.3's integrity gate now names the reproducing refetch: `vibe reinstall --force` refuses bytes the lock does not pin, on every source kind (`##HASH-INTEGRITY-GATE`).</HISTORY-B196>
+      <HISTORY-B199 fact="true" status="spec/done">**2026-11-02 — B-199.** §2.5 states that a remote's «not here» is remembered for the run only, in memory (`##ONLINE-MISS-MEMORY`).</HISTORY-B199>
     </facts>
   </history>
 </spec>

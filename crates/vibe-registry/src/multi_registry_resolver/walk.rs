@@ -11,8 +11,10 @@ use super::redirect_follow::try_fetch_redirect;
 use super::*;
 
 mod local;
+mod negative;
 mod observation;
 use local::read_local_dep_manifest;
+pub(super) use negative::RemoteMisses;
 pub use observation::ResolutionPurpose;
 
 impl MultiRegistryResolver {
@@ -69,8 +71,9 @@ impl MultiRegistryResolver {
             for src in offline_sources {
                 match src {
                     super::RegistrySource::Git(reg) => {
-                        task.detail(format!("checking remote registry {}", reg.name()));
-                        match reg.list_versions(group, name) {
+                        match self
+                            .ask_remote(reg, group, name, task, || reg.list_versions(group, name))
+                        {
                             Ok(versions) if !versions.is_empty() => return Ok(versions),
                             Ok(_) => continue,
                             Err(RegistryError::UnknownPackage { .. }) => continue,
@@ -198,8 +201,9 @@ impl MultiRegistryResolver {
         for src in &self.sources {
             match src {
                 RegistrySource::Git(reg) => {
-                    task.detail(format!("checking remote registry {}", reg.name()));
-                    match reg.resolve(pkgref) {
+                    match self.ask_remote(reg, group, pkgref.name.as_str(), task, || {
+                        reg.resolve(pkgref)
+                    }) {
                         Ok(resolved) => {
                             let stub_tag = format!("v{}", resolved.version);
                             // Step 2a: redirect probe (PROP-002 §2.4.2). The

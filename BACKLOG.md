@@ -2210,7 +2210,7 @@ structure, and it goes when the file does.
 | @fact:B199-WHAT **what** | A package that only a local `file:///` registry holds still costs a round trip to each remote registry the walk meets first: 5.9 s with the local entry last in `~/.vibe/registry.toml`, 1.4 s with it first, 0.15 s with `--offline`. Re-resolving an in-tree package made nine resolver calls of about half a second each; with `--offline` each took no time. |
 | @fact:B199-EVIDENCE **evidence** | 2026-09-27, the sandbox walk of `DOCS-OBSIDIAN-TUTORIAL`, steps 3 and 4c. |
 | @fact:B199-SEVERITY **severity** | P3 — seconds per install, and a network dependency for work that needs none. |
-| @fact:B199-DISPOSITION **disposition** | `open` — consult local registries before remote ones whatever their order, or cache the «not here» answers of a public registry for the run. The tutorial puts the local entry first. |
+| @fact:B199-DISPOSITION **disposition** | `done — landed on main 2026-11-02 as perf(registry): ask each remote registry about a package once per run` — a per-run negative cache in the resolver: a remote's «not here» (missing package, or a walked-past public 401 / 403) is replayed for the rest of the run. Local-first was ruled out: PROP-002 `##REGISTRY-WALK-ORDER` makes array order absolute. The tutorial still puts the local entry first, which skips the remotes entirely. |
 | @fact:B199-FILED **filed by** | DOCS-OBSIDIAN-TUTORIAL (M-051), 2026-09-27. |
 
 ## B-200 — publishing: a rehearsal that needs a token, and a GitVerse the CLI does not publish to {#b-200}
