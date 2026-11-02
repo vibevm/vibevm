@@ -42,6 +42,7 @@ use crate::output;
 use super::continuation;
 use super::draft::{ReinstallDraft, ReinstallIdentity, regenerated};
 use super::inputs::{confirm, exact_pkgref, reinstall_stream_mode, resolver_args};
+use super::pin;
 
 struct SourceHashes(HashMap<(Group, String), String>);
 
@@ -138,8 +139,9 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
 
     // Re-fetch every locked package at its exact pinned version — no
     // re-resolution, the lockfile decides the version. The recorded
-    // `content_hash` is forwarded so a source serving disagreeing bytes
-    // is rejected: `vibe reinstall` reproduces the lock, never drifts it.
+    // `content_hash` is forwarded so a mirror walk can prefer agreeing
+    // bytes, but most sources ignore it; `pin::require_locked_bytes` below
+    // is what makes `vibe reinstall` reproduce the lock and never drift it.
     //
     // The old "wipe the project cache so every fetch re-downloads" step
     // (PROP-009 §2.10) retired with the project cache itself: payload now lands
@@ -175,6 +177,13 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
                 return Err(error);
             }
         };
+        // The bytes are in the machine store and nowhere else yet: this is
+        // the last point at which refusing leaves `vibedeps/` untouched.
+        if let Err(mismatch) = pin::require_locked_bytes(locked, &cached) {
+            package.fail("source no longer matches the lock");
+            fetching.fail("locked package refetch failed");
+            return Err(mismatch);
+        }
         source_hashes.insert(
             (cached.resolved.group.clone(), cached.resolved.name.clone()),
             cached.content_hash.clone(),

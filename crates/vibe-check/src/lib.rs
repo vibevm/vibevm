@@ -7,7 +7,7 @@
 //! and (when applicable) the offending file path / line.
 //!
 //! The cell roster has grown far past the v0 six — `run_all` is the
-//! authoritative inventory (17 cells today); the numbered list below
+//! authoritative inventory (22 cells today); the numbered list below
 //! is the founding six of [`VIBEVM-SPEC.md` §12](../../../VIBEVM-SPEC.md),
 //! kept as orientation, not as the census:
 //!
@@ -62,10 +62,10 @@ pub mod checks;
 pub use checks::{
     ActivationConflictCheck, ApplicationIconsCheck, BootDirectoryCheck, BridgeProvenanceCheck,
     DocMediaCheck, DocPackageContractCheck, DocTranslationCheck, FactsSyncCheck,
-    FeaturesGraphCheck, I18nCoverageCheck, LocalSourceFreshnessCheck, LockfileFilesCheck,
-    ManifestEpochCheck, ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck,
-    SnippetPresuppositionCheck, SubskillStructureCheck, VisibilityHygieneCheck, WalFreshnessCheck,
-    WalWellformedCheck,
+    FeaturesGraphCheck, I18nCoverageCheck, LocalSourceFreshnessCheck, LockSlotHashCheck,
+    LockfileFilesCheck, ManifestEpochCheck, ManifestValidityCheck, RedirectBlockCheck,
+    ReviewAgingCheck, SnippetPresuppositionCheck, SubskillStructureCheck, VisibilityHygieneCheck,
+    WalFreshnessCheck, WalWellformedCheck,
 };
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
@@ -156,6 +156,10 @@ pub enum CheckId {
     /// matches a fresh recomputation (the hybrid linker's dirty-subgraph is
     /// consistent); a stale artifact warns to `vibe reinstall`.
     BootGraphIntegrity,
+    /// B-196 — an installed slot's recorded `source_hash` disagrees with
+    /// its package's `content_hash` in `vibe.lock`: the project describes
+    /// two different payloads. Error; remedy `vibe update <group>/<name>`.
+    LockSlotHash,
 }
 
 impl CheckId {
@@ -183,6 +187,7 @@ impl CheckId {
             CheckId::DocMedia => "doc_media",
             CheckId::ApplicationIcons => "application_icons",
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
+            CheckId::LockSlotHash => "lock_slot_hash",
         }
     }
 
@@ -213,6 +218,7 @@ impl CheckId {
             CheckId::DocTranslation,
             CheckId::DocMedia,
             CheckId::ApplicationIcons,
+            CheckId::LockSlotHash,
         ]
     }
 }
@@ -453,7 +459,7 @@ pub trait Check {
 /// use vibe_check::{CheckId, all_checks};
 ///
 /// let checks = all_checks();
-/// assert_eq!(checks.len(), 21);
+/// assert_eq!(checks.len(), 22);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
 pub fn all_checks() -> Vec<Box<dyn Check>> {
@@ -479,6 +485,7 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
         Box::new(DocTranslationCheck),
         Box::new(DocMediaCheck),
         Box::new(ApplicationIconsCheck),
+        Box::new(LockSlotHashCheck),
     ]
 }
 
@@ -536,61 +543,5 @@ pub(crate) fn unix_now_utc() -> u64 {
 pub(crate) mod test_support;
 
 #[cfg(test)]
-mod tests {
-    use super::test_support::{opts, write_minimal_project};
-    use super::*;
-
-    use tempfile::tempdir;
-
-    #[test]
-    fn clean_minimal_project_has_no_findings() {
-        let project = tempdir().unwrap();
-        write_minimal_project(project.path());
-        let report = check_project(project.path(), &opts());
-        assert!(
-            !report.has_errors(),
-            "expected no errors; got: {:?}",
-            report.findings
-        );
-        // WAL freshness may surface a warning since we set a future
-        // `now` but the WAL was just written. Should be 0d old →
-        // safely under the 24h threshold.
-        assert_eq!(report.findings.len(), 0, "got: {:?}", report.findings);
-    }
-
-    #[test]
-    fn registration_matches_the_historical_dispatch_order() {
-        // The seam refactor must not reorder findings: the report's
-        // emission order is observable output, pinned to the order
-        // `check_project` hardcoded before `all_checks` existed. A new
-        // cell is APPENDED — never inserted — so the pin grows at its
-        // tail and every existing position is untouched.
-        let ids: Vec<CheckId> = all_checks().iter().map(|c| c.id()).collect();
-        assert_eq!(
-            ids,
-            vec![
-                CheckId::ManifestValidity,
-                CheckId::WalFreshness,
-                CheckId::WalWellformed,
-                CheckId::BootDirectory,
-                CheckId::RedirectBlock,
-                CheckId::LockfileFiles,
-                CheckId::ReviewAging,
-                CheckId::FeaturesGraph,
-                CheckId::SubskillStructure,
-                CheckId::I18nCoverage,
-                CheckId::ActivationConflict,
-                CheckId::LocalSourceFreshness,
-                CheckId::ManifestEpoch,
-                CheckId::FactsSync,
-                CheckId::SnippetPresupposition,
-                CheckId::VisibilityHygiene,
-                CheckId::BridgeProvenance,
-                CheckId::DocPackageContract,
-                CheckId::DocTranslation,
-                CheckId::DocMedia,
-                CheckId::ApplicationIcons,
-            ]
-        );
-    }
-}
+#[path = "lib_tests.rs"]
+mod tests;

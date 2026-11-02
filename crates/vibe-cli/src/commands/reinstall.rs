@@ -46,10 +46,12 @@ mod continuation;
 mod draft;
 mod force;
 mod inputs;
+mod pin;
 mod prepare;
 mod regenerate;
 
 pub(crate) use draft::{ReinstallDraft, ReinstallIdentity};
+pub(crate) use pin::LockHashMismatch;
 
 use std::path::{Path, PathBuf};
 
@@ -138,6 +140,8 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
     let cached = resolver
         .resolve_and_fetch(&pkgref, &store_root, Some(&locked.content_hash))
         .with_context(|| format!("re-fetching `{package}` for point re-derivation"))?;
+    // A repair re-derives the bytes the lock pins, never newer ones.
+    pin::require_locked_bytes(locked, &cached)?;
     let mode = match cached
         .manifest
         .package

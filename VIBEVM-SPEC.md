@@ -718,7 +718,7 @@ version = "0.1.0"
 # ... etc
 ```
 
-**Identity is `(group, name, version, content_hash)`**, not the URL. `source_url` is informational — which URL answered the fetch on this particular install. A reinstall through a mirror with a different URL but the same `content_hash` is a no-op; a mismatched `content_hash` is a fatal error (integrity violation). This makes mirror-switching and host-migration invisible to the lockfile — the exact property whose absence turned Nix into a hostage of a single hosting provider.
+**Identity is `(group, name, version, content_hash)`**, not the URL. `source_url` is informational — which URL answered the fetch on this particular install. A reinstall through a mirror with a different URL but the same `content_hash` is a no-op; a mismatched `content_hash` is a fatal error (integrity violation). So `vibe reinstall --force` reproduces the lock and never re-records it: when a source now serves bytes that hash to anything other than the pinned `content_hash`, it refuses with `lock_hash_mismatch` before anything is copied into `vibedeps/`, and `vibe update <group>/<name>` is the command that re-resolves and records the new hash. This makes mirror-switching and host-migration invisible to the lockfile — the exact property whose absence turned Nix into a hostage of a single hosting provider.
 
 **`source_kind`** records which resolution path produced the entry — `registry` (the `[[registry]]` walk), `git` (a `[requires.packages]` git-source), `override` (a `[[override]]` pin), or `path` (a `[requires.packages]` path-source — typically a sibling workspace member, PROP-007 §2.5). For a `path` entry `source_url` is not a URL: it is the member's directory **relative to the workspace root**, so the lockfile stays portable across machines.
 
@@ -1307,7 +1307,7 @@ Checks performed:
 5. **WAL freshness.** `spec/WAL.md` modification timestamp is less than 24 hours old; warn if older.
 6. **WAL well-formedness.** WAL has the required sections (Current Phase, Constraints, Done, Next, Issues).
 7. **Boot directory consistency.** `spec/boot/` exists and holds only markdown files; the generated `INDEX.md` / `INLINE.md` are recognised artifacts. The retired `NN-` filename prefix is not enforced. The `<vibevm>` block in `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is well-formed — at most one ordered `<vibevm>` … `</vibevm>` pair.
-8. **Lockfile consistency.** Every package in `vibe.lock` has a materialised `vibedeps/` slot, and `vibedeps/` carries no slot absent from the lockfile.
+8. **Lockfile consistency.** Every package in `vibe.lock` has a materialised `vibedeps/` slot, and `vibedeps/` carries no slot absent from the lockfile; a slot whose record names a `source_hash` other than its lock row's `content_hash` is an error (`lock_slot_hash`).
 9. **REVIEW marker aging.** Any `<!-- REVIEW: ... -->` older than configured threshold (default 14 days) is reported.
 10. **Implementation coverage.** For each feat with a `build` history, files generated from it should have `Implements: spec://...` markers. Report missing markers.
 

@@ -45,6 +45,31 @@ fn stamp_app_error(payload: &mut Value, err: &anyhow::Error) {
     }
 }
 
+/// A forced reinstall refused because a source no longer serves the bytes
+/// the lock pins: the code, the package and both hashes, so a script can
+/// tell this refusal from a failed fetch without reading the prose.
+fn stamp_lock_hash_mismatch(payload: &mut Value, err: &anyhow::Error) {
+    let found = err
+        .chain()
+        .find_map(|cause| cause.downcast_ref::<crate::commands::reinstall::LockHashMismatch>());
+    let (Some(mismatch), Value::Object(map)) = (found, payload) else {
+        return;
+    };
+    map.insert(
+        "code".into(),
+        Value::String(crate::commands::reinstall::LockHashMismatch::CODE.into()),
+    );
+    map.insert(
+        "package".into(),
+        serde_json::json!({ "group": mismatch.group, "name": mismatch.name }),
+    );
+    map.insert(
+        "locked_hash".into(),
+        Value::String(mismatch.expected.clone()),
+    );
+    map.insert("source_hash".into(), Value::String(mismatch.actual.clone()));
+}
+
 /// When the anyhow chain carries a known structured error variant,
 /// surface its fields as machine-readable extras alongside the
 /// stringified `error` field. Today the only well-known variant is
@@ -55,6 +80,7 @@ fn stamp_app_error(payload: &mut Value, err: &anyhow::Error) {
 /// the prose.
 pub(super) fn stamp_structured_error(payload: &mut Value, err: &anyhow::Error) {
     stamp_app_error(payload, err);
+    stamp_lock_hash_mismatch(payload, err);
     // Walk the anyhow chain looking for a known structured error
     // variant. Today the only match is
     // `DepProviderError::AggregateNotFound` (registry walk

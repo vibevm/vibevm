@@ -2180,7 +2180,7 @@ structure, and it goes when the file does.
 | @fact:B196-WHAT **what** | After a package's source changed, `vibe reinstall --force --assume-yes` copies the new bytes into `vibevm/vibedeps/` and updates the slot's `source_hash`, but `vibe.lock` keeps the old `content_hash`. The project then holds two records that disagree, and `vibe check` and `vibe validate` are both clean. A later verified install from the lock would meet a fingerprint that no longer matches. |
 | @fact:B196-EVIDENCE **evidence** | 2026-09-27, the sandbox walk of `DOCS-OBSIDIAN-TUTORIAL`, steps 4d and 6 (the lock still `f5199e11…`, the slot `43239f8a…`). |
 | @fact:B196-SEVERITY **severity** | P2 — a lock that no longer describes what is installed, reported by nothing. |
-| @fact:B196-DISPOSITION **disposition** | `open` — have a forced reinstall re-record the hash, or refuse to change bytes the lock pins; have `vibe check` compare the slot's hash with the lock. The Obsidian tutorial teaches `vibe update` instead. |
+| @fact:B196-DISPOSITION **disposition** | `done — landed on main 2026-11-02 as fix(reinstall): a forced reinstall refuses bytes the lock does not pin` — the lock pins bytes: `vibe reinstall --force` refuses with `lock_hash_mismatch` when a refetch, from any source kind, hashes to anything but the locked `content_hash`, before anything reaches `vibedeps/`; `vibe update` is what re-records. `vibe check` gains the `lock_slot_hash` error for a slot record that disagrees with its lock row. |
 | @fact:B196-FILED **filed by** | DOCS-OBSIDIAN-TUTORIAL (M-051), 2026-09-27. |
 
 ## B-197 — a user-scope skill install writes into the real home on Windows, whatever `HOME` says {#b-197}
