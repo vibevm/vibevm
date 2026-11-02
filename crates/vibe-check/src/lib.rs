@@ -264,6 +264,7 @@ impl Severity {
 ///     line: Some(1),
 ///     column: None,
 ///     field: None,
+///     package: None,
 ///     message: "REVIEW marker dated 2026-04-01 is 33 days old".to_string(),
 /// };
 /// assert_eq!(finding.check.as_str(), "review_aging");
@@ -307,6 +308,7 @@ pub struct Finding {
 ///     line: None,
 ///     column: None,
 ///     field: None,
+///     package: None,
 ///     message: "the boot directory is missing".to_string(),
 /// });
 /// assert!(report.has_errors());
