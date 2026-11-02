@@ -13,6 +13,7 @@ use super::ir::{
 use super::pass::{Pass, PassName};
 
 pub(crate) mod attribution;
+mod continued_headings;
 mod digest;
 pub(crate) use digest::bytes_digest as emitted_bytes_digest;
 pub(crate) mod framing;
@@ -246,6 +247,7 @@ fn prepare_target(
                     #[cfg(test)]
                     static_xml::record_pivot_call();
                     let markdown = xml_markdown(chunks);
+                    let markdown = continued_headings::continue_repeated_headings(&markdown);
                     Some(vibe_specdoc::from_markdown(&markdown).map_err(|error| {
                         BackendError::Emit {
                             backend: backend.as_str().to_string(),

@@ -148,6 +148,16 @@ pub enum Error {
     #[error(transparent)]
     Workspace(#[from] vibe_workspace::WorkspaceError),
 
+    /// The apply failed before `vibe.lock` was written and could not put the
+    /// dependency tree back as it was. `primary` stopped the install;
+    /// `reason` is the first undo step that failed, the path to inspect.
+    #[error(
+        "{primary}; restoring the dependency tree afterwards also failed: {reason} \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail; \
+          fix: inspect that path, then run `vibe install` again)"
+    )]
+    RollbackFailed { primary: Box<Error>, reason: String },
+
     /// The workspace mutation lease refused — pass-through BY VALUE, never
     /// re-stringified: the lease's own typed vocabulary (Busy, an unpinnable
     /// root, a root disagreement) already speaks the product grammar with

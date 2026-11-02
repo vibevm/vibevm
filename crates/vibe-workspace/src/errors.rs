@@ -183,15 +183,30 @@ pub enum WorkspaceError {
     )]
     IndexRender { reason: String },
 
-    /// Compiling the inline boot lane (PROP-035 §8) failed — an `#embed`
-    /// directive in an inline contribution could not be resolved. The
-    /// contribution is malformed; `reason` names the offending address.
+    /// Compiling a static boot lane (PROP-035 §8) failed — a directive in a
+    /// static contribution could not be resolved, or the selected target
+    /// refused the compiled lane. `lane` is the artifact being compiled, the
+    /// same project-relative path the emitter writes (`STATIC.md` or
+    /// `STATIC.xml` under the boot directory, per the selected spec format);
+    /// `reason` names the offending address or construct.
     #[error(
-        "compiling {inline} failed: {reason} \
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#embed)",
-        inline = crate::layout_paths::boot("INLINE.md")
+        "compiling {lane} failed: {reason} \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#embed)"
     )]
-    InlineCompile { reason: String },
+    InlineCompile { lane: String, reason: String },
+
+    /// A failed install could not put the project back as it was. `primary`
+    /// is the failure that stopped the install; `reason` is the first undo
+    /// step that failed, so the operator knows which path to inspect.
+    #[error(
+        "{primary}; restoring the dependency tree afterwards also failed: {reason} \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail; \
+         fix: inspect that path, then run `vibe install` again)"
+    )]
+    InstallRollback {
+        primary: Box<WorkspaceError>,
+        reason: String,
+    },
 
     /// A boot contribution's TYPED provenance could not be built: a
     /// coordinate component the install model still carries as a bare string

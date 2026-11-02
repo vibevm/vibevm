@@ -171,7 +171,7 @@ fn render_static_errors_when_a_simple_contribution_carries_an_as_clause() {
     );
     let b = boot(vec![entry(&p, LinkType::Static, "org.demo/bad")]);
     let err = render_static(&b, ws.path(), &coord()).unwrap_err();
-    let WorkspaceError::InlineCompile { reason } = err else {
+    let WorkspaceError::InlineCompile { reason, .. } = err else {
         panic!("expected InlineCompile, got {err:?}");
     };
     assert!(reason.contains("alias machinery"), "{reason}");
@@ -189,7 +189,7 @@ fn render_static_errors_when_a_simple_contribution_carries_at_bang() {
     );
     let b = boot(vec![entry(&p, LinkType::Static, "org.demo/bad2")]);
     let err = render_static(&b, ws.path(), &coord()).unwrap_err();
-    let WorkspaceError::InlineCompile { reason } = err else {
+    let WorkspaceError::InlineCompile { reason, .. } = err else {
         panic!("expected InlineCompile, got {err:?}");
     };
     assert!(reason.contains("alias machinery"), "{reason}");

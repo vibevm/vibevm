@@ -30,6 +30,7 @@ fn observed_materialise(
             slot_verifier: None,
             lifecycle: MaterialiseLifecycle::None,
             progress: Progress::new(log),
+            rollback: None,
         },
     )
 }

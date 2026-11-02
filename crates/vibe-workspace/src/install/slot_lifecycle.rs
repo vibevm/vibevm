@@ -108,6 +108,16 @@ pub(super) enum MaterialiseLifecycle<'a> {
     Callback(&'a dyn SlotLifecycle),
 }
 
+impl<'a> MaterialiseLifecycle<'a> {
+    /// The callback observer, which must hear about a slot an undo removes.
+    pub(super) fn callback(&self) -> Option<&'a dyn SlotLifecycle> {
+        match self {
+            Self::Callback(callback) => Some(*callback),
+            Self::None | Self::LegacyHooks { .. } => None,
+        }
+    }
+}
+
 pub(super) fn run_pre_slot_lifecycle(
     lifecycle: &MaterialiseLifecycle<'_>,
     dep: &ResolvedDep,

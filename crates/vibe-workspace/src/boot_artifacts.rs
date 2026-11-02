@@ -284,6 +284,7 @@ pub(crate) fn render_static_observed(
         .map(|compiled| {
             String::from_utf8(compiled.artifact.into_bytes()).map_err(|error| {
                 WorkspaceError::InlineCompile {
+                    lane: static_path(spec_format).to_string(),
                     reason: format!(
                         "the built-in STATIC backend returned non-UTF-8 bytes: {error}"
                     ),
@@ -344,7 +345,12 @@ fn compile_static_artifact_with_plans(
     if entries.is_empty() {
         return Ok(None);
     }
-    let (inputs, providers) = inputs::build_with_providers(entries, workspace_root, self_coord)?;
+    let (inputs, providers) = inputs::build_with_providers(
+        entries,
+        workspace_root,
+        self_coord,
+        static_path(spec_format),
+    )?;
     let target = if matches!(spec_format, SpecFormat::Xml) {
         ArtifactTarget::StaticXml
     } else {
@@ -358,6 +364,7 @@ fn compile_static_artifact_with_plans(
             inputs,
         )
         .map_err(|error| WorkspaceError::InlineCompile {
+            lane: static_path(spec_format).to_string(),
             reason: error.to_string(),
         })?,
     );
@@ -400,7 +407,10 @@ fn compile_static_artifact_with_plans(
                 }
                 error => error.to_string(),
             };
-            Err(WorkspaceError::InlineCompile { reason })
+            Err(WorkspaceError::InlineCompile {
+                lane: static_path(spec_format).to_string(),
+                reason,
+            })
         }
     }
 }

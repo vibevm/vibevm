@@ -255,9 +255,30 @@ pub struct InstallOutcome {
     /// `skipped-needs-consent`; the CLI renders them so a skipped hook is
     /// surfaced, never silent.
     pub hook_reports: Vec<HookReport>,
+    /// The undo log of this apply's slot changes, held until the caller has
+    /// made the install durable. `None` once committed or undone.
+    pub(super) rollback: Option<super::InstallRollback>,
 }
 
 impl InstallOutcome {
+    /// Undo every dependency-slot change this apply made — placed slots
+    /// removed, reconciled and pruned slots put back — for a caller whose
+    /// later step (the lock write) failed. `observer` learns each undone
+    /// slot through [`super::SlotLifecycle::rolled_back`]. The `Err` names the
+    /// first undo step that failed; every other step was still attempted.
+    pub fn roll_back(&mut self, observer: Option<&dyn super::SlotLifecycle>) -> Result<(), String> {
+        match self.rollback.take() {
+            Some(mut rollback) => rollback.restore(observer, &self.materialised),
+            None => Ok(()),
+        }
+    }
+
+    /// Keep this apply's slot changes and release what [`Self::roll_back`]
+    /// would have needed. Dropping the outcome does the same.
+    pub fn commit(&mut self) {
+        self.rollback = None;
+    }
+
     /// Take the post-install plan produced by this install, at most once.
     ///
     /// `None` means either no dependency changed eligible payload or the plan
