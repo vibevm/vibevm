@@ -2502,3 +2502,13 @@ structure, and it goes when the file does.
 | @fact:B228-SEVERITY **severity** | P3 — no user-visible effect today; a hazard for any future in-process second acquisition (a long-lived desktop client, a daemon). |
 | @fact:B228-DISPOSITION **disposition** | `done` — landed on `main` 2026-11-02 as `fix(app): the mutation lock waits out a child's fork window`. The owner chose the retry (2026-11-01): `SettingsRoot::lock()` retries `try_lock` every 2 ms for at most 50 ms before refusing `locked`; how children are spawned is unchanged. A `settings.rs` test keeps a child holding the lock's file, shows that a zero window refuses and that the retry succeeds, and the `clean_work` test locks one home twice again. |
 | @fact:B228-FILED **filed by** | kept-work-directories change (`c22f72bb8`), 2026-10-31. |
+
+## B-229 — a translated doc scaffold writes the source's name unescaped into its README and XML example {#b-229}
+
+| field | value |
+|---|---|
+| @fact:B229-WHAT **what** | `vibe init package … --kind doc --translates <group>/<name>@<version>` only splits `--translates` on `/` and never parses it as a coordinate, so the source's name reaches the scaffold's title. Since `8ca42c901` the TOML values go through the TOML writer, but the same title is still pasted as written into the generated README and into the XML example page, where a quote or an angle bracket breaks the page. |
+| @fact:B229-EVIDENCE **evidence** | Review of `crates/vibe-cli/src/commands/init/doc.rs` during the B-214 close-out, 2026-11-02. Reaching the writer needs a readable source directory under that name, so ordinary use is unaffected. |
+| @fact:B229-SEVERITY **severity** | P3 — needs a source package whose directory name carries the character; a broken example page, nothing else. |
+| @fact:B229-DISPOSITION **disposition** | `open` — parse `--translates` as a package coordinate (refusing what does not parse), and escape the title in the README and the XML page. |
+| @fact:B229-FILED **filed by** | installer-package wave close-out (H-1), 2026-11-02. |
