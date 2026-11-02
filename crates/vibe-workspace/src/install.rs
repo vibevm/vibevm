@@ -47,7 +47,14 @@ use placement::{copy_mode_for, is_in_place, required_source_hash};
 mod hook_output;
 mod hooks_run;
 pub mod model;
+mod rollback;
 mod slot_lifecycle;
+mod subtree;
+use rollback::InstallRollback;
+pub use subtree::{
+    materialise_subtree, materialise_subtree_with_spec_format,
+    materialise_subtree_with_spec_format_and_slot_lifecycle,
+};
 
 mod bootgen;
 /// B-006 (lane dedup) — de-substitute covered unit-STATIC entries. Public so
@@ -196,6 +203,9 @@ struct MaterialiseOptions<'a> {
     slot_verifier: Option<&'a dyn SlotVerifier>,
     lifecycle: MaterialiseLifecycle<'a>,
     progress: vibe_core::progress::Progress,
+    /// The apply's undo log, when the caller can still undo the slots it
+    /// places; `None` for a scoped update, which has no later step to fail.
+    rollback: Option<&'a mut InstallRollback>,
 }
 
 #[cfg(test)]
@@ -224,6 +234,7 @@ fn materialise_resolution(
                 None => MaterialiseLifecycle::None,
             },
             progress: vibe_core::progress::Progress::default(),
+            rollback: None,
         },
     )
 }
@@ -245,6 +256,7 @@ fn materialise_resolution_with_spec_format(
         slot_verifier,
         lifecycle,
         progress,
+        mut rollback,
     } = options;
     let mut materialised = Vec::new();
     let mut skipped = Vec::new();
@@ -294,6 +306,10 @@ fn materialise_resolution_with_spec_format(
             }
             if !already_placed {
                 required_source_hash(dep)?;
+                if let Some(rollback) = rollback.as_deref_mut() {
+                    rollback.before_replace(&slot_abs)?;
+                    rollback.before_rewrite(&workspace_root.join(".gitignore"))?;
+                }
                 vibedeps::materialise_in_place(
                     workspace_root,
                     &dep.group,
@@ -394,6 +410,9 @@ fn materialise_resolution_with_spec_format(
             continue;
         }
         let source_hash = required_source_hash(dep)?;
+        if let Some(rollback) = rollback.as_deref_mut() {
+            rollback.before_reconcile(&slot_abs)?;
+        }
         let materialise_report = vibedeps::materialise_with_spec_format_report(
             workspace_root,
             &dep.group,
@@ -423,112 +442,6 @@ fn materialise_resolution_with_spec_format(
         skipped,
         integrity_warnings,
         post_install_deps,
-        hook_reports,
-    })
-}
-
-/// Materialise a **partial** resolution — a scoped `vibe update <pkg>` subtree
-/// — into dependency slots and run `pre-install` for each payload-changing slot
-/// (PROP-020 §2.1), the same placement + hook flow [`apply_resolution`]
-/// performs (copy / hardlink / in-place move + rollback), but
-/// **without** pruning unrelated slots or regenerating boot. A scoped update
-/// touches only the named subtree, so the caller removes any superseded slots
-/// itself and regenerates boot from the whole materialised tree afterwards;
-/// pruning here would delete every slot outside the subtree. Runs against the
-/// production seams and with no [`SlotVerifier`], so `Verify` here keeps the
-/// always-rematerialise discipline — the scoped update wants the fresh fetch
-/// reconciled into the slot, not a hash-checked skip.
-pub fn materialise_subtree(
-    workspace_root: &Path,
-    resolution: &[ResolvedDep],
-    slot_integrity: SlotIntegrity,
-    hooks: Option<&HookPolicy>,
-) -> Result<SubtreeOutcome, WorkspaceError> {
-    materialise_subtree_with_spec_format(
-        workspace_root,
-        resolution,
-        slot_integrity,
-        SpecFormat::Mixed,
-        None,
-        hooks,
-    )
-}
-
-/// Format-aware scoped materialisation used by `vibe update`.
-pub fn materialise_subtree_with_spec_format(
-    workspace_root: &Path,
-    resolution: &[ResolvedDep],
-    slot_integrity: SlotIntegrity,
-    spec_format: SpecFormat,
-    slot_verifier: Option<&dyn SlotVerifier>,
-    hooks: Option<&HookPolicy>,
-) -> Result<SubtreeOutcome, WorkspaceError> {
-    let Materialised {
-        materialised,
-        skipped,
-        integrity_warnings,
-        post_install_deps,
-        hook_reports,
-    } = materialise_resolution_with_spec_format(
-        workspace_root,
-        resolution,
-        MaterialiseOptions {
-            slot_integrity,
-            spec_format,
-            slot_verifier,
-            lifecycle: match hooks {
-                Some(policy) => MaterialiseLifecycle::LegacyHooks {
-                    policy,
-                    probe: &SystemProbe,
-                    runner: &SystemHookRunner,
-                },
-                None => MaterialiseLifecycle::None,
-            },
-            progress: vibe_core::progress::Progress::default(),
-        },
-    )?;
-    Ok(SubtreeOutcome {
-        materialised,
-        skipped,
-        integrity_warnings,
-        post_install_plan: PostInstallPlan::new(workspace_root, post_install_deps),
-        hook_reports,
-    })
-}
-
-/// Format-aware scoped materialisation under exactly one slot-lifecycle
-/// callback. Production update paths use this instead of the legacy hook
-/// runner so `[hooks]` sugar and explicit slot contributions cannot double.
-pub fn materialise_subtree_with_spec_format_and_slot_lifecycle(
-    workspace_root: &Path,
-    resolution: &[ResolvedDep],
-    slot_integrity: SlotIntegrity,
-    spec_format: SpecFormat,
-    slot_verifier: Option<&dyn SlotVerifier>,
-    lifecycle: &dyn SlotLifecycle,
-) -> Result<SubtreeOutcome, WorkspaceError> {
-    let Materialised {
-        materialised,
-        skipped,
-        integrity_warnings,
-        post_install_deps,
-        hook_reports,
-    } = materialise_resolution_with_spec_format(
-        workspace_root,
-        resolution,
-        MaterialiseOptions {
-            slot_integrity,
-            spec_format,
-            slot_verifier,
-            lifecycle: MaterialiseLifecycle::Callback(lifecycle),
-            progress: vibe_core::progress::Progress::default(),
-        },
-    )?;
-    Ok(SubtreeOutcome {
-        materialised,
-        skipped,
-        integrity_warnings,
-        post_install_plan: PostInstallPlan::new(workspace_root, post_install_deps),
         hook_reports,
     })
 }
@@ -588,3 +501,7 @@ mod tests_slot_lifecycle;
 #[cfg(test)]
 #[path = "install/tests_trace.rs"]
 mod tests_trace;
+
+#[cfg(test)]
+#[path = "install/tests_rollback.rs"]
+mod tests_rollback;

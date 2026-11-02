@@ -41,14 +41,16 @@ pub(super) fn build_with_providers(
     entries: Vec<&BootEntry>,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
+    lane: &str,
 ) -> Result<(Vec<ArtifactInput>, Vec<Option<DocumentProvider>>), WorkspaceError> {
-    build_with_providers_overlay(entries, workspace_root, self_coord, None)
+    build_with_providers_overlay(entries, workspace_root, self_coord, lane, None)
 }
 
 pub(super) fn build_with_providers_overlay(
     entries: Vec<&BootEntry>,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
+    lane: &str,
     overlay: Option<&BTreeMap<PathBuf, Arc<[u8]>>>,
 ) -> Result<(Vec<ArtifactInput>, Vec<Option<DocumentProvider>>), WorkspaceError> {
     let mut inputs = Vec::with_capacity(entries.len());
@@ -68,6 +70,7 @@ pub(super) fn build_with_providers_overlay(
         } else if entry.use_ref {
             let target = hoisted_seed(&entry.origin, &entry.path).ok_or_else(|| {
                 WorkspaceError::InlineCompile {
+                    lane: lane.to_string(),
                     reason: format!(
                         "cannot derive the hoisted document target for `{}` at `{}`",
                         entry.origin, entry.path
@@ -85,6 +88,7 @@ pub(super) fn build_with_providers_overlay(
             if entry.format.is_normal() {
                 let seed = normal_seed(&entry.origin, &entry.path).ok_or_else(|| {
                     WorkspaceError::InlineCompile {
+                        lane: lane.to_string(),
                         reason: format!(
                             "cannot derive a spec:// seed for the normal package `{}` at `{}` \
                              (PROP-035 §8): expected a `<group>/<name>` origin and a path under a \
@@ -139,6 +143,7 @@ pub(super) fn build_with_providers_overlay(
             }
         };
         let input = input.map_err(|error| WorkspaceError::InlineCompile {
+            lane: lane.to_string(),
             reason: error.to_string(),
         })?;
         inputs.push(input);

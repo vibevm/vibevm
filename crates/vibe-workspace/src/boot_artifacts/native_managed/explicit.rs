@@ -25,16 +25,18 @@ pub(crate) fn compile_backend_owner_managed<P: OwnerNativeCompileProvider>(
     if entries.is_empty() {
         return Ok(None);
     }
-    let (inputs, _) = inputs::build_with_providers(entries, workspace_root, self_coord)?;
+    let lane = format!("artifacts/{}", backend.as_str());
+    let (inputs, _) = inputs::build_with_providers(entries, workspace_root, self_coord, &lane)?;
     let plans = owner.runtime().compile_plans().clone();
     let plan = plans.attach_to(
         ArtifactPlan::custom_backend(
             backend.clone(),
-            format!("artifacts/{}", backend.as_str()),
+            lane.clone(),
             layout_paths::vibedeps(""),
             inputs,
         )
         .map_err(|error| WorkspaceError::InlineCompile {
+            lane,
             reason: error.to_string(),
         })?,
     );

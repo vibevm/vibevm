@@ -30,15 +30,17 @@ use crate::lifecycle::{
 };
 use crate::plan::PlannedInstall;
 use crate::record::{
-    exact_pinned_pkgref, finalize_pkgref_for_manifest, locked_package_from_fetched,
-    merge_manifest_requires, merge_root_dependencies, record_app_requirements,
-    replace_root_dependencies,
+    exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
+    merge_root_dependencies, record_app_requirements, replace_root_dependencies,
 };
 use crate::slot_verify::RegistrySlotVerifier;
 
 mod deferred;
+mod file_guard;
+mod lock;
 mod native;
 use deferred::materialise_deferred_in_place;
+use file_guard::FileGuard;
 use native::NativeApplyPreparation;
 
 /// What [`apply`] did — the caller renders it.
@@ -405,8 +407,13 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     } else {
         merge_manifest_requires(&mut manifest, &finalized_roots)
     };
+    // Everything from this write to the lock write is undone together: the
+    // guard puts the manifest's earlier bytes back unless the apply finishes.
+    let mut manifest_guard = FileGuard::idle();
     if manifest_changed {
-        manifest.write(project_root.join(Manifest::FILENAME))?;
+        let path = project_root.join(Manifest::FILENAME);
+        manifest_guard = FileGuard::before_write(&path)?;
+        manifest.write(path)?;
     }
 
     // 7. Rebuild the workspace so the boot computation reads the just-updated
@@ -505,69 +512,46 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
 
     let record_task = progress.task("Recording installation state");
 
-    // 9. Rebuild the lockfile from the fresh resolution — an install
-    //    re-resolves the whole graph, so the recorded package set is
-    //    replaced wholesale.
-    let resolved_language: Option<String> = language_chain.first().cloned().filter(|l| l != "en");
-    lockfile.packages.clear();
-    for f in &fetched {
-        let resolved = resolution
-            .iter()
-            .find(|candidate| {
-                candidate.group == f.cached.resolved.group
-                    && candidate.name == f.cached.resolved.name
-            })
-            .ok_or_else(|| {
-                Error::Solve(
-                    DepProviderError::Other(format!(
-                        "resolved package `{}/{}` has no matching visibility metadata \
-                         (violates spec://org.vibevm.core/vibevm/common/PROP-050#resolver; \
-                          fix: report the mismatched Fetched/ResolvedDep sets in vibe-install)",
-                        f.cached.resolved.group, f.cached.resolved.name
-                    ))
-                    .into(),
-                )
-            })?;
-        lockfile.packages.push(locked_package_from_fetched(
-            f,
-            resolved,
-            resolved_language.as_deref(),
-        ));
-    }
-    record_app_requirements(&mut lockfile, &fetched);
-    lockfile.meta.generated_at = vibe_core::timestamp::now_utc();
-    if !language_chain.is_empty() && language_chain != ["en"] {
-        lockfile.meta.language_chain = language_chain.clone();
-    }
-    let mut active_features_global: BTreeSet<String> = BTreeSet::new();
-    for f in &fetched {
-        let pkg_label = format!("{}/{}", f.cached.resolved.group, f.cached.resolved.name);
-        for feat in &f.feature_expansion.active_features {
-            active_features_global.insert(format!("{pkg_label}/{feat}"));
+    // 9-10. Rebuild and write the lockfile. Until it and its provenance are
+    //       written the install is not durable: a failure undoes this apply's
+    //       slot changes, and the guards put the three files back.
+    let lockfile_path = workspace.lockfile_path();
+    let provenance_path = vibe_core::lock_provenance::provenance_path(&lockfile_path);
+    let recorded = (|| {
+        let guards = [
+            FileGuard::before_write(&lockfile_path)?,
+            FileGuard::before_write(&provenance_path)?,
+        ];
+        lock::record_lock(
+            &mut lockfile,
+            lock::LockInputs {
+                fetched: &fetched,
+                resolution: &resolution,
+                language_chain: &language_chain,
+                roots: &roots,
+                finalized_roots: &finalized_roots,
+                lockfile_path: &lockfile_path,
+            },
+        )
+        .map(|()| guards)
+    })();
+    let mut lock_guards = match recorded {
+        Ok(guards) => guards,
+        Err(error) => {
+            let observer =
+                observer.map(|lifecycle| lifecycle as &dyn vibe_workspace::install::SlotLifecycle);
+            return Err(match outcome.roll_back(observer) {
+                Ok(()) => error,
+                Err(reason) => Error::RollbackFailed {
+                    primary: Box::new(error),
+                    reason,
+                },
+            });
         }
-    }
-    lockfile.meta.active_features = active_features_global.into_iter().collect();
-
-    // 10. Mirror the declared roots into `meta.root_dependencies` so
-    //     the lockfile stays a self-contained snapshot (PROP-002 §2.7).
-    //     Install-from-manifest records the workspace-derived roots;
-    //     an explicit install records the finalized request roots.
-    if finalized_roots.is_empty() {
-        // Bare install: `roots` is the complete current workspace union, so
-        // mirror it exactly and drop declarations removed since the prior
-        // lock.  Merging here would write a lock that freshness rejects on the
-        // very next invocation.
-        replace_root_dependencies(&mut lockfile, &roots);
-    } else {
-        // Explicit install: only the requested refs were finalized; merge
-        // those into the existing full-root snapshot.
-        merge_root_dependencies(&mut lockfile, &finalized_roots);
-    }
-
-    lockfile.write(workspace.lockfile_path())?;
-    // PROP-066 `#provenance`: where the bytes actually came from, beside
-    // the lock rather than inside it (see `record::fetch_provenance`).
-    crate::record::fetch_provenance(&fetched).write_beside(&workspace.lockfile_path())?;
+    };
+    outcome.commit();
+    manifest_guard.disarm();
+    lock_guards.iter_mut().for_each(FileGuard::disarm);
     record_task.finish();
 
     // 11. PROP-020 §2.1 — post-install hooks run once the package is durable

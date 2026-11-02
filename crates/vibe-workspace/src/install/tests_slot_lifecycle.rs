@@ -77,6 +77,7 @@ fn materialise_with_callback(
             slot_verifier: None,
             lifecycle: MaterialiseLifecycle::Callback(callback),
             progress: vibe_core::progress::Progress::default(),
+            rollback: None,
         },
     )
 }
@@ -205,6 +206,7 @@ fn callback_pre_plan_waits_for_all_slots_and_preserves_target_order() {
             slot_verifier: None,
             lifecycle: MaterialiseLifecycle::Callback(&callback),
             progress: vibe_core::progress::Progress::default(),
+            rollback: None,
         },
     )
     .unwrap();
@@ -236,6 +238,7 @@ fn deferred_pre_failure_rolls_back_only_its_target_and_aborts_the_plan() {
             slot_verifier: None,
             lifecycle: MaterialiseLifecycle::Callback(&callback),
             progress: vibe_core::progress::Progress::default(),
+            rollback: None,
         },
     )
     .unwrap_err();

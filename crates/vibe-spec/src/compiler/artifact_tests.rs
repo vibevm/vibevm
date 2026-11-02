@@ -548,3 +548,6 @@ mod emit_errors;
 
 #[path = "artifact_tests/transforms.rs"]
 mod transforms;
+
+#[path = "artifact_tests/source_merge_targets.rs"]
+mod source_merge_targets;

@@ -121,6 +121,8 @@ fn apply_with_materialise_lifecycle(
     // A malformed instruction block aborts before any mutation.
     validate_redirect_blocks(workspace)?;
 
+    let observer = lifecycle.callback();
+    let mut rollback = InstallRollback::new(&workspace.root);
     let Materialised {
         materialised,
         skipped,
@@ -136,12 +138,20 @@ fn apply_with_materialise_lifecycle(
             slot_verifier,
             lifecycle,
             progress: vibe_core::progress::Progress::default(),
+            rollback: Some(&mut rollback),
         },
     )?;
 
+    // From here to the caller's lock write, a failure puts every slot back.
     let kept: Vec<String> = materialised.iter().chain(&skipped).cloned().collect();
-    let pruned = prune_stale_slots(&workspace.root, &kept)?;
-    let nodes_regenerated = regenerate_boot_from_traced(workspace, resolution, spec_format, trace)?;
+    let finished = prune_stale_slots(&workspace.root, &kept, &mut rollback).and_then(|pruned| {
+        regenerate_boot_from_traced(workspace, resolution, spec_format, trace)
+            .map(|nodes| (pruned, nodes))
+    });
+    let (pruned, nodes_regenerated) = match finished {
+        Ok(finished) => finished,
+        Err(error) => return Err(rollback.undo(error, observer, &materialised)),
+    };
 
     Ok(InstallOutcome {
         materialised,
@@ -151,6 +161,7 @@ fn apply_with_materialise_lifecycle(
         nodes_regenerated,
         post_install_plan: PostInstallPlan::new(&workspace.root, post_install_deps),
         hook_reports,
+        rollback: Some(rollback),
     })
 }
 
@@ -239,7 +250,12 @@ where
     P: crate::extension_world::OwnerNativeCompileProvider,
 {
     validate_redirect_blocks(workspace)?;
-    let materialise = |lifecycle| {
+    let mut rollback = InstallRollback::new(&workspace.root);
+    let observer = match &lifecycle {
+        SlotLifecycleMode::Callback(callback) => Some(*callback),
+        SlotLifecycleMode::None | SlotLifecycleMode::LegacyHooks { .. } => None,
+    };
+    let mut materialise = |lifecycle| {
         materialise_resolution_with_spec_format(
             &workspace.root,
             resolution,
@@ -249,6 +265,7 @@ where
                 slot_verifier,
                 lifecycle,
                 progress: progress.clone(),
+                rollback: Some(&mut rollback),
             },
         )
     };
@@ -277,7 +294,88 @@ where
         .chain(&skipped)
         .cloned()
         .collect::<Vec<_>>();
-    let pruned = prune_stale_slots(&workspace.root, &kept)?;
+    // From here to the caller's lock write, a failure puts every slot back.
+    let finished = native_boot(
+        workspace,
+        resolution,
+        &kept,
+        &mut rollback,
+        NativeBoot {
+            spec_format,
+            trace,
+            prepare,
+            run,
+            make_provider,
+            progress,
+        },
+    );
+    let (pruned, nodes_regenerated, carriage) = match finished {
+        Ok(finished) => finished,
+        Err(error) => return Err(rollback.undo(error, observer, &materialised)),
+    };
+    Ok(NativeInstallOutcome {
+        outcome: InstallOutcome {
+            materialised,
+            skipped,
+            integrity_warnings,
+            pruned,
+            nodes_regenerated,
+            post_install_plan: PostInstallPlan::new(&workspace.root, post_install_deps),
+            hook_reports,
+            rollback: Some(rollback),
+        },
+        carriage,
+    })
+}
+
+/// The native apply's steps after materialisation, each one able to fail
+/// while every slot change is still undoable.
+struct NativeBoot<'a, F, G> {
+    spec_format: SpecFormat,
+    trace: Option<&'a crate::compile_trace::TraceRun>,
+    prepare: &'a mut F,
+    run: crate::extension_world::OwnerRuntimeRunFacts,
+    make_provider: &'a mut G,
+    progress: &'a vibe_core::progress::Progress,
+}
+
+type NativeBootResult = Result<(Vec<String>, Vec<String>, NativeInstallCarriage), WorkspaceError>;
+
+fn native_boot<F, G, P>(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    kept: &[String],
+    rollback: &mut InstallRollback,
+    steps: NativeBoot<'_, F, G>,
+) -> NativeBootResult
+where
+    F: FnMut(
+        &Workspace,
+        &[ResolvedDep],
+    ) -> Result<
+        (
+            crate::extension_world::ExtensionWorldEpoch,
+            crate::extension_world::OwnerRuntimeLowering,
+        ),
+        WorkspaceError,
+    >,
+    G: FnMut(
+        std::collections::BTreeMap<
+            crate::extension_world::OwnerRuntimeId,
+            vibe_spec::CompilerNativePolicy,
+        >,
+    ) -> Result<P, WorkspaceError>,
+    P: crate::extension_world::OwnerNativeCompileProvider,
+{
+    let NativeBoot {
+        spec_format,
+        trace,
+        prepare,
+        run,
+        make_provider,
+        progress,
+    } = steps;
+    let pruned = prune_stale_slots(&workspace.root, kept, rollback)?;
     // This callback is deliberately HERE: every slot and pre-install effect
     // is now visible, while boot publication and the lock write have not run.
     let (world, lowering) = prepare(workspace, resolution)?;
@@ -300,16 +398,5 @@ where
         "nodes",
     );
     boot_task.finish();
-    Ok(NativeInstallOutcome {
-        outcome: InstallOutcome {
-            materialised,
-            skipped,
-            integrity_warnings,
-            pruned,
-            nodes_regenerated,
-            post_install_plan: PostInstallPlan::new(&workspace.root, post_install_deps),
-            hook_reports,
-        },
-        carriage,
-    })
+    Ok((pruned, nodes_regenerated, carriage))
 }

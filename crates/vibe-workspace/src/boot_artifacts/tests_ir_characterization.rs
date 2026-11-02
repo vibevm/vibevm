@@ -182,7 +182,7 @@ fn normal_compile_error_restores_exact_package_attribution_wording() {
         SpecFormat::Markdown,
     )
     .unwrap_err();
-    let WorkspaceError::InlineCompile { reason } = error else {
+    let WorkspaceError::InlineCompile { reason, .. } = error else {
         panic!("expected InlineCompile")
     };
     assert_eq!(

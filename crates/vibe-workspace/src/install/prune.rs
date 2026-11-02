@@ -7,15 +7,18 @@ use std::path::Path;
 
 use crate::{WorkspaceError, layout_paths};
 
+use super::InstallRollback;
 use super::io_err;
 
 /// Remove every dependency slot whose path is not in `kept`, returning
 /// the removed slot paths (sorted). A `<kind>-<name>` directory left with
 /// no surviving version is removed too, so the dependency tree holds exactly the
-/// current resolution and no empty husks.
+/// current resolution and no empty husks. Each slot goes through `rollback`,
+/// so a later failure of the same apply can put it back.
 pub(super) fn prune_stale_slots(
     workspace_root: &Path,
     kept: &[String],
+    rollback: &mut InstallRollback,
 ) -> Result<Vec<String>, WorkspaceError> {
     let vibedeps_dir = workspace_root.join(vibe_core::layout::current_vibedeps_root());
     if !vibedeps_dir.is_dir() {
@@ -49,7 +52,7 @@ pub(super) fn prune_stale_slots(
             if keep.contains(rel.as_str()) {
                 any_kept = true;
             } else {
-                fs::remove_dir_all(&version_dir).map_err(|e| io_err(&version_dir, e))?;
+                rollback.remove(&version_dir)?;
                 pruned.push(rel);
             }
         }

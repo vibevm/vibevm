@@ -213,9 +213,15 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
             entries,
             workspace_root,
             self_coord,
+            static_path(spec_format),
             Some(overlay),
         )?,
-        None => inputs::build_with_providers(entries, workspace_root, self_coord)?,
+        None => inputs::build_with_providers(
+            entries,
+            workspace_root,
+            self_coord,
+            static_path(spec_format),
+        )?,
     };
     let target = if matches!(spec_format, SpecFormat::Xml) {
         ArtifactTarget::StaticXml
@@ -231,6 +237,7 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
             inputs,
         )
         .map_err(|error| WorkspaceError::InlineCompile {
+            lane: static_path(spec_format).to_string(),
             reason: error.to_string(),
         })?,
     );
@@ -248,7 +255,7 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
 
     if !has_native {
         let scope = acquire(&mode);
-        let result = compile_builtin(plan, source, mode, scope.as_ref());
+        let result = compile_builtin(plan, source, mode, scope.as_ref(), static_path(spec_format));
         finish_artifact_scope(scope.as_ref(), &result);
         return result.map(|artifact| {
             Some(OwnerManagedStaticCompile {
@@ -306,6 +313,7 @@ fn compile_builtin(
     source: &FsSectionSource,
     mode: OwnerNativeCompileMode<'_>,
     scope: Option<&crate::compile_trace::TraceScope>,
+    lane: &str,
 ) -> Result<EmittedArtifact, WorkspaceError> {
     let result = match mode {
         OwnerNativeCompileMode::Plain => compile_artifact(plan, source),
@@ -317,7 +325,7 @@ fn compile_builtin(
             compile_artifact_observed(plan, source, observer)
         }
     };
-    result.map_err(legacy_compile_error)
+    result.map_err(|error| legacy_compile_error(error, lane))
 }
 
 fn compile_native<B: crate::extension_world::CompilerNativeFactBinding>(
@@ -427,7 +435,7 @@ fn native_compile_error(owner: &OwnerRuntimeId, source: ArtifactCompileError) ->
     }
 }
 
-fn legacy_compile_error(error: ArtifactCompileError) -> WorkspaceError {
+fn legacy_compile_error(error: ArtifactCompileError, lane: &str) -> WorkspaceError {
     let reason = match error {
         ArtifactCompileError::Input { input, source }
             if input.kind == vibe_spec::ArtifactInputType::Normal =>
@@ -439,7 +447,10 @@ fn legacy_compile_error(error: ArtifactCompileError) -> WorkspaceError {
         }
         error => error.to_string(),
     };
-    WorkspaceError::InlineCompile { reason }
+    WorkspaceError::InlineCompile {
+        lane: lane.to_string(),
+        reason,
+    }
 }
 
 fn finish_scope(
