@@ -8,6 +8,7 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+- **A forced reinstall no longer leaves the lock describing other bytes.** `vibe reinstall --force` reproduces `vibe.lock`: when a package's source now serves bytes whose hash differs from the pinned `content_hash`, it refuses with `lock_hash_mismatch`, names both hashes and the fix `vibe update <group>/<name>`, and copies nothing into `vibedeps/`. The check covers every source kind, the local-directory registry included, which used to ignore the pin. `vibe check` gains `lock_slot_hash`, an error for an installed slot whose recorded source hash is not the one its lock row pins (B-196).
 - **A nested documentation scaffold escapes its title and translation fields.** `vibe init package --kind doc` now writes `title`, `[translates]` and the `[[documents]]` it copies from a source through the TOML writer, as it already did description, licence and authors, so a quote in a `--translates` spelling is written as text instead of ending the string (B-214).
 
 ## [1.0.9] — 2026-11-02

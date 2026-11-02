@@ -86,9 +86,10 @@ impl InstallSource for InstallResolver {
     /// version)`) is forwarded to the multi-registry path's
     /// mirror-aware fetch so a source serving disagreeing bytes can be
     /// skipped in favour of a matching one. The local-directory path
-    /// ignores the hint — there's only ever one source on that path,
-    /// and integrity is checked against the lockfile pin at apply
-    /// time.
+    /// ignores the hint — there's only ever one source on that path.
+    /// No path refuses on a mismatch: the returned `content_hash` is the
+    /// hash of the bytes fetched, and a caller that must reproduce the
+    /// lock (`vibe reinstall`) compares it with the pin itself.
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,

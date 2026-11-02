@@ -20,6 +20,10 @@ vibe-specdoc.workspace = true
 vibe-core.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true
+# The slot record's one reader: the lock-and-slot hash check compares what
+# a slot says it holds with what the lock pins, and a second parser of
+# `.vibe-slot.toml` would be a second grammar for it.
+vibe-workspace.workspace = true
 # The documentation pipeline owns everything with content in it
 # (PROP-057 `##PIPE-LIBRARY`), and the card's limits are content: the
 # permitted formats, the proportions and the byte ceilings are declared
