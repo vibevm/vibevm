@@ -8,8 +8,23 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+## [1.0.10] — 2026-11-02
+
+**Upgrade notes.**
+- `vibe check` reports a new `lock_slot_hash` finding when an installed slot
+  holds other bytes than its `vibe.lock` row pins: an error for a registry, git
+  or override source, a warning for a working-tree source. A project whose
+  in-tree package changed since the lock was written now shows that warning;
+  `vibe update <group>/<name>` re-records it.
+- `vibe reinstall --force` refuses with `lock_hash_mismatch`, and copies
+  nothing, when a package's source no longer serves the bytes the lock pins;
+  it used to copy the new bytes and leave the lock stale.
+- `vibe check --json` findings may carry a new optional `package` member.
+- The container image `vibevm/vibevm-zap` is no longer built or published by
+  the release; `vibevm/vibevm`, `vibevm/vibevm-dev` and `vibevm/vibevm-doc` are.
+
 - **A package a local registry holds no longer waits on every remote listed before it more than once.** Each remote registry is asked about a package once per run: its «not here» (a missing package, or a public registry's 401 / 403 that the walk passes) is remembered and replayed for the version listing, the selection, the metadata read and the download lookup that follow, so re-resolving an in-tree package asks each remote once instead of four times per walk set. The declared order is unchanged: an earlier remote that holds the package still wins over a later local registry (B-199).
-- **A forced reinstall no longer leaves the lock describing other bytes.** `vibe reinstall --force` reproduces `vibe.lock`: when a package's source now serves bytes whose hash differs from the pinned `content_hash`, it refuses with `lock_hash_mismatch`, names both hashes and the fix `vibe update <group>/<name>`, and copies nothing into `vibedeps/`. The check covers every source kind, the local-directory registry included, which used to ignore the pin. `vibe check` gains `lock_slot_hash` for an installed slot whose recorded source hash is not the one its lock row pins: an error for bytes a registry, a git source or an override pins, a warning for a working-tree source (`local`, `path`, `embedded`) that moved on since the lock was written (B-196).
+- **A forced reinstall no longer leaves the lock describing other bytes.** `vibe reinstall --force` reproduces `vibe.lock`: when a package's source now serves bytes whose hash differs from the pinned `content_hash`, it refuses with `lock_hash_mismatch`, names both hashes and the fix `vibe update <group>/<name>`, and copies nothing into `vibedeps/`. The check covers every source kind, the local-directory registry included, which used to ignore the pin. `vibe check` gains `lock_slot_hash` for an installed slot whose recorded source hash is not the one its lock row pins: an error for bytes a registry, a git source or an override pins, a warning for a working-tree source (`local`, `path`, `embedded`) that moved on since the lock was written; its `--json` finding carries `package` (`group/name@version`) so a reader can offer `vibe update` (B-196).
 - **A nested documentation scaffold escapes its title and translation fields.** `vibe init package --kind doc` now writes `title`, `[translates]` and the `[[documents]]` it copies from a source through the TOML writer, as it already did description, licence and authors, so a quote in a `--translates` spelling is written as text instead of ending the string (B-214).
 - **The XML static lane compiles a contract and a source that share anchors, and a failed install changes nothing.** Under `spec_format = "xml"` a `#source` merge whose contract and source declare the same anchor, two `{#root}` titles included, no longer stops with «defined twice»: the first heading keeps the qualified label and later ones continue it unanchored, so the XML and Markdown targets define the same labels and fact ids (PROP-035 `##XML-CONTINUED-HEADING`). An install that fails between its first slot change and the `vibe.lock` write now puts back every slot it placed, reconciled or pruned and the `vibe.toml` it rewrote, so `vibedeps/`, the lock and the boot lane are as they were before the command (PROP-009 `##INSTALL-ROLLBACK`). The refusal names the lane being compiled, `STATIC.xml` or `STATIC.md`, instead of the retired `INLINE.md` (B-206).
 

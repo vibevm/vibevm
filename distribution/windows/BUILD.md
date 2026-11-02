@@ -1,4 +1,4 @@
-# Building the Windows distributive (1.0.9 recipe)
+# Building the Windows distributive (1.0.10 recipe)
 
 The authored halves of the zip live in this directory (`install.ps1`,
 `uninstall.ps1`, `README-INSTALL.md`); the rest of the archive is built
@@ -11,7 +11,7 @@ Recipe, verified 2026-08-20 (the C9 landing):
 # 1. Release binary with static CRT — no VC++ Redistributable needed.
 $env:RUSTFLAGS = '-C target-feature=+crt-static'
 cargo build --locked --release -p vibe-cli --bin vibe
-& .\target\release\vibe.exe --version           # must print: vibe 1.0.9
+& .\target\release\vibe.exe --version           # must print: vibe 1.0.10
 
 # 2. Prove the CRT verdict (imports must NOT contain VCRUNTIME140.dll):
 #    dumpbin lives in the VS toolchain, not on PATH.
