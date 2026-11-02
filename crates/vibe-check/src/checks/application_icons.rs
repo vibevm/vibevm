@@ -46,6 +46,7 @@ impl Check for ApplicationIconsCheck {
                 line: None,
                 column: None,
                 field: Some(finding.field.to_string()),
+                package: None,
                 message: finding.message,
             });
         }

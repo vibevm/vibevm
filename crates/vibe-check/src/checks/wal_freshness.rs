@@ -58,6 +58,7 @@ impl Check for WalFreshnessCheck {
                 line: None,
                 column: None,
                 field: None,
+                package: None,
                 message: "WAL mtime is in the future relative to the current clock — possible system-clock skew"
                     .to_string(),
             });

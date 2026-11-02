@@ -222,6 +222,12 @@ fn check_reports_a_slot_whose_hash_the_lock_does_not_pin() {
     assert_eq!(finding["severity"], "error");
     assert_eq!(finding["field"], "package[0].content_hash");
     assert!(
+        finding["package"]
+            .as_str()
+            .is_some_and(|key| key.contains('/') && key.contains('@')),
+        "{finding}"
+    );
+    assert!(
         finding["path"]
             .as_str()
             .unwrap()
