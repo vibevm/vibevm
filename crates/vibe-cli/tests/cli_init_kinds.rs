@@ -185,3 +185,44 @@ fn a_quote_in_the_description_lands_escaped_in_the_manifest() {
         "{manifest}"
     );
 }
+
+/// Every free-text field a nested package takes, each carrying the three
+/// characters that broke the interpolated TOML (B-214): a quote, a
+/// backslash and a newline.
+const DESCRIPTION: &str = "a \"quoted\" \\ back\\slash\nand a second line";
+const LICENSE: &str = "Custom \"Licence\" \\ 1.0";
+const AUTHOR: &str = "Jane \"JD\" Doe \\ <jane@example.org>";
+
+fn assert_free_text_round_trips(user: &UserScratch, kind: &str, name: &str) {
+    let dir = tempfile::tempdir().unwrap();
+    let project = dir.path().join(format!("nested-{kind}"));
+    user.vibe()
+        .args(["init", "package", &format!("org.example/{name}")])
+        .args(["--kind", kind, "--description", DESCRIPTION])
+        .args(["--license", LICENSE, "--author", AUTHOR, "--path"])
+        .arg(&project)
+        .assert()
+        .success();
+    let package = project.join(common::pack_rel(&format!("org.example/{name}/v0.1.0")));
+    let text = fs::read_to_string(package.join("vibe.toml")).unwrap();
+    let parsed: toml::Value = toml::from_str(&text).unwrap();
+    let table = &parsed["package"];
+    assert_eq!(table["description"].as_str(), Some(DESCRIPTION), "{text}");
+    assert_eq!(table["license"].as_str(), Some(LICENSE), "{text}");
+    let authors = table["authors"].as_array().expect("authors array");
+    assert_eq!(authors.len(), 1, "{text}");
+    assert_eq!(authors[0].as_str(), Some(AUTHOR), "{text}");
+    assert_checks(user, &project);
+}
+
+#[test]
+fn a_nested_tool_package_writes_free_text_through_the_toml_writer() {
+    let user = UserScratch::new();
+    assert_free_text_round_trips(&user, "tool", "escaped");
+}
+
+#[test]
+fn a_nested_doc_package_writes_free_text_through_the_toml_writer() {
+    let user = UserScratch::new();
+    assert_free_text_round_trips(&user, "doc", "escaped-docs");
+}
