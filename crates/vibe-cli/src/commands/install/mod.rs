@@ -1,4 +1,4 @@
-//! `vibe install <kind>:<name>[@version] …` — the CLI's share of the install
+//! `vibe install <group>/<name>[@version] …` — the CLI's share of the install
 //! transaction (VIBEVM-SPEC §5.6, §9.1, §11.1).
 //!
 //! The pipeline itself is `vibe-install`; the whole-command algorithm above it

@@ -77,8 +77,11 @@ pub(crate) fn current_timestamp_utc() -> String {
     vibe_core::timestamp::now_utc()
 }
 
+/// `role` is the noun the trailer names the result by — `project` or
+/// `package` — so a package scaffold is never reported as a project.
 pub(super) fn report(
     ctx: &output::Context,
+    role: &str,
     name: &str,
     display_root: &str,
     outcomes: &[Outcome],
@@ -132,9 +135,11 @@ pub(super) fn report(
         specs_common =
             vibe_core::machine_json_path(&vibe_core::layout::current_specs_root().join("common")),
     ));
-    ctx.hint("next: install packages with vibe install <kind>:<name> (e.g. flow:wal)");
+    // The resolver takes `<group>/<name>`; the example is a package the
+    // default registry really serves, so the advice can be run as printed.
+    ctx.hint("next: install packages with vibe install <group>/<name> (e.g. org.vibevm.world/wal)");
     ctx.trailer(&format!(
-        "initialized {name} · {created} file{} created · {kept} kept",
+        "initialized {role} {name} · {created} file{} created · {kept} kept",
         if created == 1 { "" } else { "s" }
     ));
     Ok(())
@@ -301,4 +306,43 @@ pub(super) fn ensure_empty_lockfile(ctx: &output::Context, root: &Path) -> Resul
         action: Action::Created,
         reason: "lockfile",
     })
+}
+
+// ==== Escaping =============================================================
+//
+// A scaffold pastes a display title into a Markdown README and an XML page.
+// The title is derived from package names, which are kebab-case today, but
+// the writers do not lean on that: each escapes for the format it writes.
+
+/// Text for a Markdown line: no raw HTML can open (`<`, `>`, `&` become
+/// entities, which CommonMark renders as the characters) and no code span
+/// can start (a backtick is backslash-escaped).
+pub(super) fn markdown_text(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    for c in text.chars() {
+        match c {
+            '&' => out.push_str("&amp;"),
+            '<' => out.push_str("&lt;"),
+            '>' => out.push_str("&gt;"),
+            '`' => out.push_str("\\`"),
+            _ => out.push(c),
+        }
+    }
+    out
+}
+
+/// Text for an XML element or a double-quoted attribute: the specials an
+/// XML reader would take as markup, and the quote that would end the value.
+pub(super) fn xml_text(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    for c in text.chars() {
+        match c {
+            '&' => out.push_str("&amp;"),
+            '<' => out.push_str("&lt;"),
+            '>' => out.push_str("&gt;"),
+            '"' => out.push_str("&quot;"),
+            _ => out.push(c),
+        }
+    }
+    out
 }

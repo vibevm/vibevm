@@ -13,6 +13,24 @@ pub enum InitType {
     Package,
 }
 
+/// How a nested package's boot snippet is linked (PROP-009 `link`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, clap::ValueEnum)]
+pub enum InitLink {
+    Static,
+    #[default]
+    Dynamic,
+}
+
+impl InitLink {
+    /// The spelling `[boot_snippet].link` takes in the manifest.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            InitLink::Static => "static",
+            InitLink::Dynamic => "dynamic",
+        }
+    }
+}
+
 #[derive(Debug, Clone, clap::Args)]
 pub struct InitArgs {
     /// Root declaration: project or publishable package (same scaffold).
@@ -90,8 +108,10 @@ pub struct InitArgs {
     #[arg(long)]
     pub format: Option<String>,
 
-    /// Link type for the boot snippet: static or dynamic.
-    /// Default: static for project+package, dynamic for `init package`.
-    #[arg(long)]
-    pub link: Option<String>,
+    /// Link type of the nested package's boot snippet: static or dynamic.
+    /// Default: dynamic. Only `vibe init package <group>/<name>` writes a
+    /// boot snippet, so a root declaration and the kinds that carry none
+    /// (doc, remap) refuse the flag.
+    #[arg(long, value_enum)]
+    pub link: Option<InitLink>,
 }

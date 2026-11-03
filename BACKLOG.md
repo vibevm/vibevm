@@ -2240,7 +2240,7 @@ structure, and it goes when the file does.
 | @fact:B202-WHAT **what** | `vibe init` and `vibe init package` end with «install packages with `vibe install <kind>:<name>` (e.g. flow:wal)», a coordinate form the resolver no longer takes, and the package scaffold reports «Done. Project `org.example/my-skills`» about a package. |
 | @fact:B202-EVIDENCE **evidence** | 2026-09-27, the sandbox walk of `DOCS-OBSIDIAN-TUTORIAL`, steps 1 and 3. |
 | @fact:B202-SEVERITY **severity** | P3 — the first advice a new project gets is wrong. |
-| @fact:B202-DISPOSITION **disposition** | `open` — hint with `vibe install <group>/<name>`, and name a package a package. The tutorials print the output without the hint. |
+| @fact:B202-DISPOSITION **disposition** | `done` — landed on main 2026-11-03 as `fix(init): today's install hint, --link honoured, --translates parsed and escaped`. |
 | @fact:B202-FILED **filed by** | DOCS-OBSIDIAN-TUTORIAL (M-051), 2026-09-27. |
 
 ## B-203 — PROP-030 still names the retired `packages/` folder {#b-203}
@@ -2330,7 +2330,7 @@ structure, and it goes when the file does.
 | @fact:B211-WHAT **what** | `vibe init package … --link static` still writes `link = "dynamic"`. The format-help mismatch recorded here was corrected during root declaration selection on 2026-10-02: help now reports the existing `normal` default. |
 | @fact:B211-EVIDENCE **evidence** | 2026-09-27, the sandbox walks of `DOCS-MD-XML-TUTORIAL` (`f-cat-link-static`, `f-cat-defaults`) and `DOCS-OBSIDIAN-TUTORIAL`. |
 | @fact:B211-SEVERITY **severity** | P3 — two flags that do not do what their help says. |
-| @fact:B211-DISPOSITION **disposition** | `open` — honour `--link` (see also `B-201`). Format help is aligned with the existing default; the tutorials still set the link in the manifest. |
+| @fact:B211-DISPOSITION **disposition** | `done` — landed on main 2026-11-03 as `fix(init): today's install hint, --link honoured, --translates parsed and escaped`. |
 | @fact:B211-FILED **filed by** | DOCS-MD-XML-TUTORIAL (M-052), 2026-09-27. |
 
 ## B-212 — PROP-035 lags the compiler it describes {#b-212}
@@ -2510,5 +2510,5 @@ structure, and it goes when the file does.
 | @fact:B229-WHAT **what** | `vibe init package … --kind doc --translates <group>/<name>@<version>` only splits `--translates` on `/` and never parses it as a coordinate, so the source's name reaches the scaffold's title. Since `8ca42c901` the TOML values go through the TOML writer, but the same title is still pasted as written into the generated README and into the XML example page, where a quote or an angle bracket breaks the page. |
 | @fact:B229-EVIDENCE **evidence** | Review of `crates/vibe-cli/src/commands/init/doc.rs` during the B-214 close-out, 2026-11-02. Reaching the writer needs a readable source directory under that name, so ordinary use is unaffected. |
 | @fact:B229-SEVERITY **severity** | P3 — needs a source package whose directory name carries the character; a broken example page, nothing else. |
-| @fact:B229-DISPOSITION **disposition** | `open` — parse `--translates` as a package coordinate (refusing what does not parse), and escape the title in the README and the XML page. |
+| @fact:B229-DISPOSITION **disposition** | `done` — landed on main 2026-11-03 as `fix(init): today's install hint, --link honoured, --translates parsed and escaped`. |
 | @fact:B229-FILED **filed by** | installer-package wave close-out (H-1), 2026-11-02. |

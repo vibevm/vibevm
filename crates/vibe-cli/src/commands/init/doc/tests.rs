@@ -279,3 +279,46 @@ fn an_unreachable_source_names_the_warm_up() {
         "{message}"
     );
 }
+
+/// A title carrying markup characters (B-229). Package names are
+/// kebab-case, so the CLI cannot produce one today; the writers escape
+/// anyway, and this is the proof that they do.
+const HOSTILE_TITLE: &str = "Acme <b>Docs</b> & \"Friends\" `x`";
+
+#[test]
+fn a_title_with_markup_yields_an_xml_page_the_doc_reader_parses() {
+    let page = example_page(HOSTILE_TITLE);
+    let doc = vibe_specdoc::from_xml_with(&page, vibe_specdoc::Vocabulary::Doc)
+        .unwrap_or_else(|e| panic!("the example page must parse: {e:?}\n{page}"));
+    let title = doc.title.expect("the page keeps its title");
+    assert_eq!(title.text, HOSTILE_TITLE, "{page}");
+}
+
+#[test]
+fn a_title_with_markup_opens_no_html_and_no_code_span_in_the_readme() {
+    let readme = readme_text(HOSTILE_TITLE, "org.acme", "acme-docs");
+    let heading = readme.lines().next().unwrap();
+    assert_eq!(
+        heading, "# Acme &lt;b&gt;Docs&lt;/b&gt; &amp; \"Friends\" \\`x\\`",
+        "{readme}"
+    );
+}
+
+#[test]
+fn a_translates_value_that_is_not_a_coordinate_is_refused_with_the_form() {
+    let project = tempdir().unwrap();
+    for value in [
+        "acme-docs",
+        "org.acme/Acme<Docs>",
+        "org.acme/acme-docs@1.0",
+        "doc:org.acme/acme-docs",
+    ] {
+        let err = resolve_translation(project.path(), value, "acme-docs-ru")
+            .expect_err(value)
+            .to_string();
+        assert!(
+            err.contains("fix: `--translates org.example/acme-docs`"),
+            "{value}: {err}"
+        );
+    }
+}
