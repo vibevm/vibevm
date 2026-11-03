@@ -6,6 +6,167 @@ use vibe_core::manifest::{FeatureDecl, InstallerOptionDecl, ProfileDecl};
 use super::{FeatureRequest, ImpliedRule, resolve_features, tree_order};
 use crate::error::StepError;
 
+fn validated_preset() -> InstallerOptionDecl {
+    let manifest = vibe_core::manifest::Manifest::parse_str(
+        r#"
+[package]
+group = "org.example"
+name = "preset"
+version = "1.0.0"
+kind = "app"
+[application]
+id = "preset"
+[[installer_options]]
+id = "main"
+name = "Main"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+result = { external = "/tmp/preset" }
+[[installer_options.features]]
+id = "gui"
+name = "GUI"
+[[installer_options.features]]
+id = "gtk"
+name = "GTK"
+parent = "gui"
+exclusive_group = "toolkit"
+default = true
+[[installer_options.features]]
+id = "qt"
+name = "Qt"
+parent = "gui"
+exclusive_group = "toolkit"
+[[installer_options.profiles]]
+id = "typical"
+name = "Typical"
+features = ["gtk"]
+[[installer_options.steps]]
+id = "setup"
+title = "Set up"
+kind = "shell"
+command = "true"
+"#,
+    )
+    .unwrap();
+    manifest.installer_options.into_iter().next().unwrap()
+}
+
+#[test]
+fn direct_flags_override_a_valid_profile_base() {
+    let option = validated_preset();
+    let profile = &option.profiles[0];
+    let selected =
+        resolve_features(&option, Some(profile), &request(&["qt"], &[]), None, None).unwrap();
+    assert_eq!(selected.selected, ["gui", "qt"]);
+    let removed =
+        resolve_features(&option, Some(profile), &request(&[], &["gui"]), None, None).unwrap();
+    assert!(removed.selected.is_empty());
+}
+
+#[test]
+fn direct_flags_override_prompt_base_but_direct_contradictions_still_refuse() {
+    let option = validated_preset();
+    let prompted = ["gtk".to_owned()];
+    let selected =
+        resolve_features(&option, None, &request(&["qt"], &[]), None, Some(&prompted)).unwrap();
+    assert_eq!(selected.selected, ["gui", "qt"]);
+    assert!(
+        resolve_features(
+            &option,
+            None,
+            &request(&[], &["gui"]),
+            None,
+            Some(&prompted)
+        )
+        .unwrap()
+        .selected
+        .is_empty()
+    );
+    for conflicting in [request(&["gtk"], &["gui"]), request(&["qt"], &["qt"])] {
+        assert!(matches!(
+            resolve_features(&option, None, &conflicting, None, Some(&prompted)),
+            Err(StepError::FeatureConflict { .. })
+        ));
+    }
+}
+
+#[test]
+fn requires_chain_finishes_before_group_fallback_under_declaration_permutations() {
+    let root = feature("root", |f| f.requires = vec!["relay".into()]);
+    let relay = feature("relay", |f| f.requires = vec!["chosen".into()]);
+    let fallback = feature("fallback", |f| {
+        f.default = true;
+        f.exclusive_group = Some("g".into());
+    });
+    let chosen = feature("chosen", |f| f.exclusive_group = Some("g".into()));
+    for declarations in [
+        vec![
+            relay.clone(),
+            fallback.clone(),
+            chosen.clone(),
+            root.clone(),
+        ],
+        vec![root, relay, fallback, chosen],
+    ] {
+        let mut option = option();
+        option.features = declarations;
+        option.profiles.clear();
+        let result = resolve_features(
+            &option,
+            None,
+            &request(&[], &[]),
+            None,
+            Some(&["root".into()]),
+        )
+        .unwrap();
+        let mut selected = result.selected;
+        selected.sort();
+        assert_eq!(selected, ["chosen", "relay", "root"]);
+        assert!(
+            !result
+                .implied
+                .iter()
+                .any(|r| r.rule == ImpliedRule::ExclusiveDefault)
+        );
+    }
+}
+
+#[test]
+fn a_fallback_does_not_activate_another_group_before_its_requires_close() {
+    for (first, second) in [("a", "z"), ("z", "a")] {
+        let mut option = option();
+        option.profiles.clear();
+        option.features = vec![
+            feature("trigger", |f| {
+                f.default = true;
+                f.exclusive_group = Some(first.into());
+                f.requires = vec!["chosen".into()];
+            }),
+            feature("fallback", |f| {
+                f.default = true;
+                f.parent = Some("trigger".into());
+                f.exclusive_group = Some(second.into());
+            }),
+            feature("chosen", |f| {
+                f.parent = Some("trigger".into());
+                f.exclusive_group = Some(second.into());
+            }),
+        ];
+        let result = resolve_features(&option, None, &request(&[], &[]), None, Some(&[])).unwrap();
+        assert_eq!(result.selected, ["trigger", "chosen"]);
+        assert_eq!(
+            result
+                .implied
+                .iter()
+                .filter(|r| r.rule == ImpliedRule::ExclusiveDefault)
+                .map(|r| r.feature.as_str())
+                .collect::<Vec<_>>(),
+            ["trigger"]
+        );
+    }
+}
+
 fn feature(id: &str, edit: impl FnOnce(&mut FeatureDecl)) -> FeatureDecl {
     let mut decl = FeatureDecl {
         id: id.into(),
@@ -258,4 +419,73 @@ fn the_tree_order_puts_children_under_their_parents() {
             (0, "extras")
         ]
     );
+}
+
+pub(super) fn validated_parent_group() -> InstallerOptionDecl {
+    vibe_core::manifest::Manifest::parse_str(
+        r#"
+[package]
+group = "org.example"
+name = "parent-choice"
+version = "1.0.0"
+kind = "app"
+[application]
+id = "parent-choice"
+[[installer_options]]
+id = "main"
+name = "Main"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+result = { external = "/tmp/parent-choice" }
+[[installer_options.features]]
+id = "parent-a"
+name = "Parent A"
+exclusive_group = "parent"
+default = true
+[[installer_options.features]]
+id = "parent-b"
+name = "Parent B"
+exclusive_group = "parent"
+[[installer_options.features]]
+id = "child-a"
+name = "Child A"
+parent = "parent-a"
+[[installer_options.steps]]
+id = "setup"
+title = "Set up"
+kind = "shell"
+command = "true"
+"#,
+    )
+    .unwrap()
+    .installer_options
+    .into_iter()
+    .next()
+    .unwrap()
+}
+
+#[test]
+fn group_replacement_cannot_discard_a_direct_descendant() {
+    let option = validated_parent_group();
+    let direct = request(&["parent-b", "child-a"], &[]);
+    let error = resolve_features(&option, None, &direct, None, None).unwrap_err();
+    assert!(matches!(error, StepError::FeatureConflict { .. }));
+    assert!(
+        error
+            .to_string()
+            .contains("discard directly selected feature `child-a`"),
+        "{error}"
+    );
+    // A preset is lower precedence; only direct additions must survive.
+    let preset = ["child-a".to_owned()];
+    let overridden = resolve_features(
+        &option,
+        None,
+        &request(&["parent-b"], &[]),
+        None,
+        Some(&preset),
+    )
+    .unwrap();
+    assert_eq!(overridden.selected, ["parent-b"]);
 }

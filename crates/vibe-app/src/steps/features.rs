@@ -76,9 +76,9 @@ pub struct FeatureResolution {
 ///
 /// The base is the terminal's checkboxes, else the profile's features,
 /// else (with no flags at all) the recorded set of an update, else the
-/// defaults. Explicit choices are `--feature`, the profile and the
-/// checkboxes; `--no-feature` deselects a feature with its descendants; an
-/// explicit member of an exclusive group replaces the others. The closure
+/// defaults. Only `--feature` is a direct addition above that base;
+/// `--no-feature` deselects a feature with its descendants; a direct member
+/// of an exclusive group replaces the others. The closure
 /// then selects ancestors, `requires`, required children and group
 /// defaults. A deselection the closure undoes, or an exclusive group left
 /// with two members, is a refusal naming the reason.
@@ -141,13 +141,7 @@ pub fn resolve_features(
             "`{both}` is both selected and deselected"
         )));
     }
-    let explicit: BTreeSet<&str> = request
-        .enable
-        .iter()
-        .chain(profile_features.unwrap_or_default())
-        .chain(chosen_by_prompt.unwrap_or_default())
-        .map(String::as_str)
-        .collect();
+    let explicit: BTreeSet<&str> = request.enable.iter().map(String::as_str).collect();
     let base: Vec<&str> = match (chosen_by_prompt, profile_features, previous) {
         (Some(chosen), _, _) => chosen.iter().map(String::as_str).collect(),
         (None, Some(features), _) => features.iter().map(String::as_str).collect(),
@@ -184,6 +178,14 @@ pub fn resolve_features(
             [] => {}
             [only] => {
                 for member in members.iter().filter(|member| *member != only) {
+                    if let Some(descendant) = explicit
+                        .iter()
+                        .find(|selected| tree.is_descendant(selected, member))
+                    {
+                        return Err(conflict(format!(
+                            "exclusive group `{group}` cannot select `{only}`: replacing `{member}` would discard directly selected feature `{descendant}`"
+                        )));
+                    }
                     tree.remove_with_descendants(&mut set, member);
                 }
             }
@@ -317,46 +319,67 @@ impl<'a> Tree<'a> {
             }
         };
         loop {
-            let mut changed = false;
-            for feature in self.features {
-                let selected = set.contains(feature.id.as_str());
-                if selected {
-                    if let Some(parent) = feature.parent.as_deref().and_then(|id| self.get(id)) {
-                        changed |= add(set, &parent.id, ImpliedRule::Parent, Some(&feature.id));
+            // Implications finish before defaults: a requires chain may select
+            // a group member regardless of where its declarations appear.
+            loop {
+                let mut changed = false;
+                for feature in self.features {
+                    let selected = set.contains(feature.id.as_str());
+                    if selected {
+                        if let Some(parent) = feature.parent.as_deref().and_then(|id| self.get(id))
+                        {
+                            changed |= add(set, &parent.id, ImpliedRule::Parent, Some(&feature.id));
+                        }
+                        for required in &feature.requires {
+                            if let Some(required) = self.get(required) {
+                                changed |= add(
+                                    set,
+                                    &required.id,
+                                    ImpliedRule::Requires,
+                                    Some(&feature.id),
+                                );
+                            }
+                        }
                     }
-                    for required in &feature.requires {
-                        if let Some(required) = self.get(required) {
-                            changed |=
-                                add(set, &required.id, ImpliedRule::Requires, Some(&feature.id));
+                    if feature.required && !selected {
+                        match feature.parent.as_deref() {
+                            None => changed |= add(set, &feature.id, ImpliedRule::Required, None),
+                            Some(parent) if set.contains(parent) => {
+                                let parent = self.get(parent).map(|decl| decl.id.as_str());
+                                changed |= add(set, &feature.id, ImpliedRule::Required, parent);
+                            }
+                            Some(_) => {}
                         }
                     }
                 }
-                if feature.required && !selected {
-                    match feature.parent.as_deref() {
-                        None => changed |= add(set, &feature.id, ImpliedRule::Required, None),
-                        Some(parent) if set.contains(parent) => {
-                            let parent = self.get(parent).map(|decl| decl.id.as_str());
-                            changed |= add(set, &feature.id, ImpliedRule::Required, parent);
-                        }
-                        Some(_) => {}
-                    }
+                if !changed {
+                    break;
                 }
             }
-            for (group, members) in &self.groups {
-                let active = members.iter().any(|member| {
-                    self.get(member)
-                        .and_then(|decl| decl.parent.as_deref())
-                        .is_none_or(|parent| set.contains(parent))
-                });
-                if active && !members.iter().any(|member| set.contains(member)) {
-                    let default = members
+            // All groups observe the same closed set. Applying one fallback
+            // must not activate another group before ordinary closure runs.
+            let defaults: Vec<_> = self
+                .groups
+                .iter()
+                .filter_map(|(group, members)| {
+                    let active = members.iter().any(|member| {
+                        self.get(member)
+                            .and_then(|decl| decl.parent.as_deref())
+                            .is_none_or(|parent| set.contains(parent))
+                    });
+                    if !active || members.iter().any(|member| set.contains(member)) {
+                        return None;
+                    }
+                    members
                         .iter()
                         .copied()
-                        .find(|member| self.get(member).is_some_and(|decl| decl.default));
-                    if let Some(default) = default {
-                        changed |= add(set, default, ImpliedRule::ExclusiveDefault, Some(group));
-                    }
-                }
+                        .find(|member| self.get(member).is_some_and(|decl| decl.default))
+                        .map(|default| (default, *group))
+                })
+                .collect();
+            let mut changed = false;
+            for (default, group) in defaults {
+                changed |= add(set, default, ImpliedRule::ExclusiveDefault, Some(group));
             }
             if !changed {
                 return implied;

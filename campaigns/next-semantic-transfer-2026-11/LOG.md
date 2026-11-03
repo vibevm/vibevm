@@ -170,3 +170,21 @@ Root review потребовал ещё две коррекции: public wrappe
 Операторская поправка: дополнительное сравнение сначала было отправлено мной как сообщение завершённой задаче и не запускалось. Это обнаружено по статусу агентов; отдельный follow-up запущен, отчёт получен и прочитан. Старый отчёт не был выдан за новое исполнение.
 
 Source observations интегрирован commit6dafbac72, workspace constraints —075d38cb2. Обе временные копии удалены после проверки, что все их14и11изменённых файлов точно сохранены в main, отчёты вынесены, процессов использования нет. Другие worktrees и prototype dirty state не тронуты.
+
+## 2026-11-04 — Характеризация app-основы выявила ошибки до извлечения
+
+Проверка старого evaluator обнаружила зависимость результата от порядка declarations: root→relay→chosen мог получить лишний group fallback до завершения requires-chain. Ещё один случай зависел от имени группы: первый fallback активировал следующую группу прежде, чем его requires выбирал нужный member. Принято исправление: обычные parent/requires/required implications до fixed point, затем batch fallbacks из одного закрытого snapshot, повтор до стабильности. Конфликтующие defaults не являются разрешением автоматически подобрать другой ответ.
+
+Второй доказанный дефект: profile={gtk}, прямой --feature qt в той же группе давал «два explicit», хотя PROP-065#profiles требует применения flags поверх profile. --no-feature gui аналогично ошибочно конфликтовал с profile child gtk. Теперь profile/prompt — base, только request.enable — direct additions; прямые противоречащие flags остаются отказом. Регрессии используют Manifest::parse_str с валидной steps-декларацией. Первоначальная fixture смешивала installation sugar и steps, была исправлена; её parse failure не считается behavioral RED.
+
+Обе коррекции сохраняются отдельными patches перед извлечением kernel. Это важно для review: исправление ошибочного поведения не маскируется под чистый refactor. Первый общий компонент ограничен реально используемыми closure groups; предложенный произвольный AnySelected guard исключён, поскольку не имел текущего consumer и смешивал constraint с будущим consumer-owned choice. Rich positive guards остаются обязательством следующего слоя, не удаляются из общей цели.
+
+Третья ошибка подтверждена валидным app manifest: parent-a(default)/parent-b, child-a под parent-a; --feature parent-b --feature child-a прежде возвращал success={parent-b}, теряя прямой child-a. Исправление отказывает с group/member/descendant в сообщении. Тот же child-a из profile/prompt base может быть переопределён. Исходный evaluator84e44442c запущен против регрессий:3passed/5failed, exit101 (две closure regressions, profile, prompt, direct-child). Три исправления применены в main; проверка продолжается.
+
+Root review извлечения дополнительно нашёл compatibility regression: существующий manifest validator допускает повтор requires=[x,x], а новый model отвергал duplicate reference. Адаптер должен сохранить valid legacy inputs через order-preserving dedup, с отдельной validated regression. Это исправление нового кандидата, не дефект старого app.
+
+### App corrections: main behavioural gate
+
+После всех трёх исправлений main проходит8/8feature tests и публичный wizard1/1 (describe/plan/install/events/record/cancel/resume). Это9разных test functions, не сумма повторных запусков. Старый evaluator отдельно сохранён только в тестовом differential oracle кандидата; он не остаётся вторым production kernel. Проверки форматирования, conform и traceability выполняются перед отдельным bugfix commit.
+
+App bugfix gate завершён: fmt/conform exit0, specmap --check exit0 —9044units/4676items/3916edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Source review и девять behavioural tests допускают отдельный commit. Raw RED/GREEN, patches и main logs сохранены в local evidence/2026-11-04; общий configuration остаётся active.
