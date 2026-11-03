@@ -44,6 +44,7 @@ fn boot_category(kind: PackageKind) -> &'static str {
 pub(super) struct PreparedPackage {
     fields: ProjectFields,
     kind: PackageKind,
+    link: &'static str,
     translation: Option<Translation>,
 }
 
@@ -79,13 +80,25 @@ pub(super) fn prepare_package(
             Some(doc::resolve_translation(root, coordinate, name)?)
         }
     };
+    // `doc` and `remap` write no `[boot_snippet]`, so a link would be
+    // dropped without a word; refuse it before the container exists.
+    if args.link.is_some() && matches!(kind, PackageKind::Doc | PackageKind::Remap) {
+        bail!(
+            "`--link` sets a boot snippet, and a `{kind}` package carries none \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE; \
+             fix: drop `--link`, or pick a kind with a boot lane such as `--kind tool`)",
+            kind = kind.as_str(),
+        );
+    }
+    let link = args.link.unwrap_or_default().as_str();
     // The project container is created after this returns, so a manifest
     // that would not validate must be refused here, not after the folder
     // exists.
-    scaffold_manifest_text(group, name, "dynamic", &fields, kind, translation.as_ref())?;
+    scaffold_manifest_text(group, name, link, &fields, kind, translation.as_ref())?;
     Ok(PreparedPackage {
         fields,
         kind,
+        link,
         translation,
     })
 }
@@ -106,6 +119,7 @@ pub(super) fn create_package_in_project(
     let PreparedPackage {
         fields,
         kind,
+        link,
         translation,
     } = prepared;
     prompts::maybe_save_author(user_config, &fields.authors);
@@ -119,7 +133,7 @@ pub(super) fn create_package_in_project(
         &path,
         group,
         name,
-        "dynamic",
+        link,
         &fields,
         kind,
         translation.as_ref(),
@@ -133,6 +147,7 @@ pub(super) fn create_package_in_project(
 
     report(
         ctx,
+        "package",
         &format!("{group}/{name}"),
         &display_pathbuf(&path),
         &outcomes,
@@ -156,39 +171,6 @@ pub(super) fn create_group_in_project(
     ));
     ctx.summary(&format!("Created group `{group}` in `{}`", path.display()));
     Ok(())
-}
-
-/// Create the package directory tree for project+package (static link).
-pub(super) fn create_package_dirs(
-    ctx: &output::Context,
-    project_root: &Path,
-    group: &str,
-    name: &str,
-    args: &InitArgs,
-    default_link: &str,
-    project_fields: &ProjectFields,
-) -> Result<Vec<Outcome>> {
-    let fields = ProjectFields {
-        name: name.to_string(),
-        version: args.version.clone().unwrap_or_else(|| "0.1.0".to_string()),
-        authors: project_fields.authors.clone(),
-        license: args
-            .license
-            .clone()
-            .unwrap_or_else(|| project_fields.license.clone()),
-        description: args.description.clone().unwrap_or_default(),
-        format: args.format.clone().unwrap_or_else(|| "normal".to_string()),
-    };
-    create_package_dirs_from_fields(
-        ctx,
-        project_root,
-        group,
-        name,
-        default_link,
-        &fields,
-        requested_kind(args)?,
-        None,
-    )
 }
 
 /// Create the package directory tree from explicit fields.

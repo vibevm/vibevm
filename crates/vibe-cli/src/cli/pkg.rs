@@ -73,7 +73,7 @@ impl InstallArgs {
 
 #[derive(Debug, Clone, clap::Args)]
 pub struct InstallArgs {
-    /// Zero or more package references, each `<kind>:<name>[@<version>]`.
+    /// Zero or more package references, each `<group>/<name>[@<version>]`.
     /// When empty, `vibe install` reads the project's `vibe.toml`
     /// `[requires].packages` and installs every entry — same shape as
     /// `cargo build` / `npm install` against an existing manifest.
@@ -413,7 +413,7 @@ pub struct SearchArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct UpdateArgs {
-    /// Package references `<kind>:<name>` to update. Each must be
+    /// Package references `<group>/<name>` to update. Each must be
     /// currently installed. Mutually exclusive with `--all`.
     pub packages: Vec<String>,
 

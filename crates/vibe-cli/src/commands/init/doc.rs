@@ -169,13 +169,10 @@ pub(super) fn resolve_translation(
     coordinate: &str,
     name: &str,
 ) -> Result<Translation> {
-    let (group, source_name) = coordinate.split_once('/').with_context(|| {
-        format!(
-            "`--translates {coordinate}` is not a `<group>/<name>` coordinate — a translation \
-             names the documentation it adapts, without a version \
-             (spec://org.vibevm.core/vibevm/common/PROP-057#LOC-PACKAGE-PER-LANGUAGE)"
-        )
-    })?;
+    let (group, source_name) = parse_source(coordinate)?;
+    let (group, source_name) = (group.as_str(), source_name.as_str());
+    let coordinate = format!("{group}/{source_name}");
+    let coordinate = coordinate.as_str();
 
     // The language is the name's own suffix: an official translation is
     // published as `<docname>-<lang>` by the source's group
@@ -219,6 +216,29 @@ pub(super) fn resolve_translation(
             .collect(),
         root,
     })
+}
+
+/// Parse `--translates` with the package-reference parser `vibe install`
+/// uses, so a value that names no package is refused before anything is
+/// written, and only a group and a kebab-case name reach the paths and the
+/// title. The source's version is read from the source itself, so a
+/// version or a kind prefix in the value would be ignored; both are refused.
+fn parse_source(coordinate: &str) -> Result<(String, String)> {
+    let refuse = || {
+        anyhow::anyhow!(
+            "`--translates {coordinate}` is not a `<group>/<name>` coordinate — a translation \
+             names the documentation it adapts, without a kind or a version \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-057#LOC-PACKAGE-PER-LANGUAGE; \
+             fix: `--translates org.example/acme-docs`)"
+        )
+    };
+    let parsed = vibe_core::PackageRef::parse(coordinate).map_err(|_| refuse())?;
+    match (&parsed.kind, &parsed.group, &parsed.version) {
+        (None, Some(group), vibe_core::VersionSpec::Latest) if !coordinate.contains('@') => {
+            Ok((group.to_string(), parsed.name.to_string()))
+        }
+        _ => Err(refuse()),
+    }
 }
 
 /// The newest readable version directory of `<group>/<name>`, searched
@@ -420,8 +440,8 @@ pub(super) fn manifest_text(
              # for file; examples are not re-authored but referenced by id\n\
              # (spec://org.vibevm.core/vibevm/common/PROP-057#LOC-EXAMPLE-REF).\n\
              [translates]\npackage = {coordinate}\nversion = {constraint}\n",
-            // `--translates` is only split on `/`, never parsed as a
-            // coordinate, so it goes through the TOML writer too.
+            // Parsed as a coordinate already; the TOML writer stays so
+            // the manifest never depends on that parse for its quoting.
             coordinate = super::kinds::toml_literal(&source.coordinate),
             constraint = super::kinds::toml_literal(&source.constraint),
         ));
@@ -439,6 +459,7 @@ pub(super) fn manifest_text(
 }
 
 fn readme_text(title: &str, group: &str, name: &str) -> String {
+    let title = markdown_text(title);
     format!(
         "# {title}\n\n\
          Documentation, as a package of kind `doc`. Its pages live under `{specs}/`.\n\n\
@@ -452,6 +473,7 @@ fn readme_text(title: &str, group: &str, name: &str) -> String {
 }
 
 fn example_page(title: &str) -> String {
+    let title = xml_text(title);
     format!(
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
          <spec xmlns=\"https://vibevm.org/spec/1\">\n  \

@@ -8,6 +8,8 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+- **`vibe init` gives advice that runs, and honours `--link`.** Every form closes with `next: install packages with vibe install <group>/<name> (e.g. org.vibevm.world/wal)` instead of the retired `<kind>:<name>` form, and a nested package is reported as `initialized package <group>/<name>`, no longer as a project. `vibe init package … --link static|dynamic` now writes the link it is given (default `dynamic`); a root declaration and a `doc` or `remap` package, which write no boot snippet, refuse the flag before creating anything. `--translates` must be a bare `<group>/<name>` and anything else is refused before any folder exists; the translated title is escaped in the README and the XML example page. `vibe search` and the `install`/`update` help name the same `<group>/<name>` form.
+
 ## [1.0.11] — 2026-11-03
 
 **Upgrade notes.**

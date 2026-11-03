@@ -800,7 +800,7 @@ fn search_without_full_scan_keeps_unconfigured_status() {
 
 /// `vibe search` in a project where no registry has an
 /// `VIBEVM_INDEX_URL_<R>` env var configured prints a text-mode
-/// hint pointing the operator at `vibe install <kind>:<name>`
+/// hint pointing the operator at `vibe install <group>/<name>`
 /// directly. Regression guard surfaced by the opencode glm-flash
 /// walk: the prior message ("see docs/commands/search.md") was
 /// terse enough that a small model interpreted empty search as
@@ -833,7 +833,7 @@ fn search_text_hint_directs_agent_to_install_when_no_index_configured() {
     // New hint: install bypasses the index. This is the load-bearing
     // line that prevents the panic-loop the opencode walk surfaced.
     assert!(
-        stdout.contains("vibe install <kind>:<name>"),
+        stdout.contains("vibe install <group>/<name>"),
         "expected an explicit install-as-workaround hint:\n{stdout}"
     );
     // Phrase wraps across a newline ("does not need an\nindex.") so

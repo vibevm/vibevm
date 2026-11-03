@@ -96,14 +96,7 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
 
     match mode {
         InitMode::Project => {
-            create_project(
-                ctx,
-                &args,
-                &project_path,
-                &mut user_config,
-                interactive,
-                None,
-            )?;
+            create_project(ctx, &args, &project_path, &mut user_config, interactive)?;
         }
         InitMode::Package => {
             let pkgref =
@@ -182,27 +175,20 @@ fn ensure_project_exists(
         container_args.name = None;
         container_args.kind = None;
         container_args.translates = None;
-        create_project(
-            ctx,
-            &container_args,
-            project_path,
-            user_config,
-            interactive,
-            None,
-        )?;
+        // The link belongs to the nested package, not to its container.
+        container_args.link = None;
+        create_project(ctx, &container_args, project_path, user_config, interactive)?;
     }
     Ok(())
 }
 
-/// Create a full project (vibe.toml + spec tree + boot artifacts), optionally
-/// with a package.
+/// Create a full root (vibe.toml + spec tree + boot artifacts).
 fn create_project(
     ctx: &output::Context,
     args: &InitArgs,
     project_path: &Path,
     user_config: &mut UserConfig,
     interactive: bool,
-    package: Option<(&str, &str)>,
 ) -> Result<()> {
     use helpers::*;
 
@@ -220,13 +206,13 @@ fn create_project(
     let fields = plan.fields;
     prompts::maybe_save_author(user_config, &fields.authors);
 
+    let role = if plan.role == crate::cli::InitType::Package {
+        "package"
+    } else {
+        "project"
+    };
     ctx.rule(&format!(
-        "initializing {} {} in {display_root}",
-        if plan.role == crate::cli::InitType::Package {
-            "package"
-        } else {
-            "project"
-        },
+        "initializing {role} {} in {display_root}",
         fields.name
     ));
 
@@ -327,17 +313,10 @@ fn create_project(
         outcomes.push(o);
     }
 
-    // 6. Package (if requested).
-    if let Some((group, name)) = package {
-        outcomes.extend(package::create_package_dirs(
-            ctx, &path, group, name, args, "static", &fields,
-        )?);
-    }
-
-    // 7. Generate boot artifacts.
+    // 6. Generate boot artifacts.
     outcomes.extend(generate_boot_artifacts(ctx, &path)?);
 
-    report(ctx, &fields.name, &display_root, &outcomes)?;
+    report(ctx, role, &fields.name, &display_root, &outcomes)?;
     Ok(())
 }
 

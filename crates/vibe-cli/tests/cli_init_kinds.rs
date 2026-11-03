@@ -226,3 +226,134 @@ fn a_nested_doc_package_writes_free_text_through_the_toml_writer() {
     let user = UserScratch::new();
     assert_free_text_round_trips(&user, "doc", "escaped-docs");
 }
+
+fn screen(output: &std::process::Output) -> String {
+    format!(
+        "{}{}",
+        String::from_utf8_lossy(&output.stderr),
+        String::from_utf8_lossy(&output.stdout)
+    )
+}
+
+const HINT: &str = "vibe install <group>/<name> (e.g. org.vibevm.world/wal)";
+
+#[test]
+fn both_forms_close_with_the_install_hint_in_todays_syntax() {
+    let user = UserScratch::new();
+    let dir = tempfile::tempdir().unwrap();
+    let root = dir.path().join("demo");
+    let output = user
+        .vibe()
+        .args(["init", "--no-registry", "--path"])
+        .arg(&root)
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let text = screen(&output);
+    assert!(text.contains(HINT), "{text}");
+    assert!(text.contains("initialized project demo"), "{text}");
+    assert!(!text.contains("<kind>:<name>"), "{text}");
+
+    let output = user
+        .vibe()
+        .args(["init", "package", "org.example/my-skills", "--path"])
+        .arg(&root)
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let text = screen(&output);
+    assert!(text.contains(HINT), "{text}");
+    assert!(
+        text.contains("initialized package org.example/my-skills"),
+        "{text}"
+    );
+    assert!(!text.contains("<kind>:<name>"), "{text}");
+}
+
+fn link_of(project: &Path, name: &str) -> Option<vibe_core::manifest::LinkType> {
+    let package = project.join(common::pack_rel(&format!("org.example/{name}/v0.1.0")));
+    manifest(&package)
+        .boot_snippet
+        .expect("a boot snippet")
+        .link
+}
+
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE")]
+fn the_nested_form_honours_link_in_a_new_and_an_existing_project() {
+    use vibe_core::manifest::LinkType;
+    let user = UserScratch::new();
+    let dir = tempfile::tempdir().unwrap();
+    // A fresh folder: init creates the project and the package together.
+    let project = dir.path().join("fresh");
+    user.vibe()
+        .args(["init", "package", "org.example/pinned", "--link", "static"])
+        .arg("--path")
+        .arg(&project)
+        .assert()
+        .success();
+    assert_eq!(link_of(&project, "pinned"), Some(LinkType::Static));
+    // The existing project: the flag is honoured the other way round.
+    user.vibe()
+        .args(["init", "package", "org.example/lazy", "--link", "dynamic"])
+        .arg("--path")
+        .arg(&project)
+        .assert()
+        .success();
+    assert_eq!(link_of(&project, "lazy"), Some(LinkType::Dynamic));
+    // Silent, the nested form keeps its default.
+    init_nested(&user, &project, "org.example/plain", "tool");
+    assert_eq!(link_of(&project, "plain"), Some(LinkType::Dynamic));
+    assert_checks(&user, &project);
+}
+
+#[test]
+fn a_link_with_nothing_to_link_is_refused_before_any_folder() {
+    let user = UserScratch::new();
+    let dir = tempfile::tempdir().unwrap();
+    let root = dir.path().join("root");
+    user.vibe()
+        .args(["init", "--type", "package", "--group", "org.example"])
+        .args(["--name", "root", "--link", "dynamic", "--path"])
+        .arg(&root)
+        .assert()
+        .failure()
+        .stderr(predicate::str::is_match(r"fix\s+vibe init package").unwrap());
+    assert!(!root.exists(), "the root refusal left {root:?}");
+    for kind in ["doc", "remap"] {
+        let project = dir.path().join(kind);
+        user.vibe()
+            .args(["init", "package", "org.example/unlinked", "--kind", kind])
+            .args(["--link", "static", "--path"])
+            .arg(&project)
+            .assert()
+            .failure()
+            .stderr(predicate::str::contains("carries none"))
+            .stderr(predicate::str::is_match(r"fix\s+drop --link").unwrap());
+        assert!(!project.exists(), "{kind}: refusal left {project:?}");
+    }
+}
+
+#[test]
+fn a_translates_value_that_does_not_parse_is_refused_before_any_folder() {
+    let user = UserScratch::new();
+    let dir = tempfile::tempdir().unwrap();
+    for (index, value) in [
+        "acme-docs",
+        "org.acme/Acme<Docs>\"&",
+        "org.acme/acme-docs@1.0",
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let project = dir.path().join(format!("translation-{index}"));
+        user.vibe()
+            .args(["init", "package", "org.acme/acme-docs-ru", "--kind", "doc"])
+            .args(["--translates", value, "--path"])
+            .arg(&project)
+            .assert()
+            .failure()
+            .stderr(predicate::str::is_match(r"fix\s+--translates org.example/acme-docs").unwrap());
+        assert!(!project.exists(), "{value}: refusal left {project:?}");
+    }
+}

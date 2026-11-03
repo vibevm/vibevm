@@ -36,6 +36,15 @@ pub(super) fn plan(
     if args.translates.is_some() {
         bail!("`--translates` requires the nested `vibe init package <group>/<name>` form");
     }
+    // A root declaration writes no boot snippet, so a link it was given
+    // would be silently dropped; refuse it while nothing exists yet.
+    if args.link.is_some() {
+        bail!(
+            "`--link` sets the boot snippet of a nested package, and a root declaration writes \
+             none (violates spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE; \
+             fix: `vibe init package <group>/<name> --link static|dynamic`)"
+        );
+    }
     let manifest_path = root.join(Manifest::FILENAME);
     if manifest_path.exists() {
         return existing(args, Manifest::read(&manifest_path)?);

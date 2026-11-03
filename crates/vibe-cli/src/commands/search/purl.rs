@@ -177,7 +177,7 @@ pub(super) fn run_purl_lookup(
         if searched.is_empty() {
             ctx.summary(
                 "(no registry has VIBEVM_INDEX_URL_<R> configured; search returns empty.\n\
-                 To install a known package, run `vibe install <kind>:<name>` directly —\n\
+                 To install a known package, run `vibe install <group>/<name>` directly —\n\
                  install resolves through `[[registry]]` over git and does not need an\n\
                  index. The index is a discovery optimisation, not a runtime dependency.\n\
                  See docs/commands/search.md for setting up an index server.)",

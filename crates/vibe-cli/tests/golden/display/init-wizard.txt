@@ -12,6 +12,6 @@
 ✓ created  GEMINI.md
 
   next: edit vibevm/vibespecs/boot/00-core.md and vibevm/vibespecs/common as your project takes shape
-  next: install packages with vibe install <kind>:<name> (e.g. flow:wal)
+  next: install packages with vibe install <group>/<name> (e.g. org.vibevm.world/wal)
 
-✻ initialized demo · 10 files created · 0 kept · <time>
+✻ initialized project demo · 10 files created · 0 kept · <time>
