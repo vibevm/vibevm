@@ -283,6 +283,12 @@ impl Locator {
         if !scope_applies(row.scope.as_ref(), artifact) {
             return None;
         }
+        // A row limited to one kind of artifact — the built-in single-file
+        // endpoints — leaves every other kind (a registry clone, a git
+        // dependency, a source tree) to its declared origin.
+        if row.only.is_some_and(|kind| kind != artifact.kind) {
+            return None;
+        }
         let matched_prefix = match &row.key {
             RemapKey::Sha256(hex) => {
                 if artifact.digest.as_deref() != Some(hex.as_str()) {

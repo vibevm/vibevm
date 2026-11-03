@@ -314,6 +314,8 @@ pub fn rows_from_overrides(
 /// assert_eq!(rows[0].key.what(), "https://github.com/");
 /// // Both sides end in `/`, so a prefix replacement joins cleanly.
 /// assert_eq!(rows[0].target.display(), "https://raw.githubusercontent.com/");
+/// // Only single-file reads take the endpoint; a clone keeps its host.
+/// assert_eq!(rows[0].only, Some(vibe_core::remap::ArtifactKind::RawFile));
 /// ```
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
 pub fn default_raw_file_rows(hosts: &[(&str, &str)]) -> Vec<RemapRow> {
@@ -321,7 +323,7 @@ pub fn default_raw_file_rows(hosts: &[(&str, &str)]) -> Vec<RemapRow> {
         .iter()
         .enumerate()
         .map(|(index, (host, base))| {
-            row(
+            let mut built = row(
                 RemapKey::Prefix(format!("https://{host}/")),
                 // Prefix replacement is literal, so the key and the
                 // target have to agree about the separator: `.../` for
@@ -329,12 +331,19 @@ pub fn default_raw_file_rows(hosts: &[(&str, &str)]) -> Vec<RemapRow> {
                 // slash. Without it the two would concatenate into
                 // `https://raw.githubusercontent.comvibespecs/index`.
                 RemapTarget::Url(format!("{}/", base.trim_end_matches('/'))),
-                Some(format!("built-in single-file endpoint for `{host}`")),
+                Some(format!(
+                    "built-in single-file endpoint for `{host}` (single-file reads only)"
+                )),
                 // The built-in table is the weakest thing in the room: any
                 // row a user, a project or the invocation declares outranks
                 // it, which is exactly what makes the hosts replaceable.
                 Provenance::new(Layer::UserPackage, "built-in", index),
-            )
+            );
+            // The endpoint serves one file at a time; a clone of the same
+            // host goes to the host itself (a `git clone` of
+            // `raw.githubusercontent.com` is a 404).
+            built.only = Some(super::ArtifactKind::RawFile);
+            built
         })
         .collect()
 }
@@ -369,5 +378,6 @@ fn row(key: RemapKey, target: RemapTarget, reason: Option<String>, from: Provena
         from_package: None,
         from,
         target_ref: None,
+        only: None,
     }
 }

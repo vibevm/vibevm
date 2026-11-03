@@ -242,6 +242,13 @@ pub struct RemapRow {
     /// rather than folded into the URL so the canonical spelling of both
     /// stays recoverable.
     pub target_ref: Option<String>,
+    /// The one kind of artifact this row applies to, when it is not every
+    /// kind. Only the built-in single-file rows set it (`RawFile`): they
+    /// stand in for PROP-002's HTTPS single-file read, and a `git clone` of
+    /// the same host must not be sent to that endpoint. No TOML row sets
+    /// it, so it is not part of the written form.
+    #[serde(skip)]
+    pub only: Option<super::ArtifactKind>,
 }
 
 impl RemapRow {
@@ -378,6 +385,7 @@ impl RowDecl {
             from_package: self.from,
             from,
             target_ref: None,
+            only: None,
         })
     }
 }
