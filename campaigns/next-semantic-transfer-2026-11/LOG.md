@@ -116,3 +116,11 @@ Commit `c990b2900` фиксирует исследовательские ист�
 Для следующего slice утверждён URI-OBSERVED-SOURCE-READ: отдельный read-only shared-inode reader в существующем SafeFS, без ослабления single-link state/mutation readers. Реальные потребители старого строгого типа — rewrite/health preparation и owner seals/recovery journals — используют его гарантию, поэтому менять её ради source reads нельзя. Новый source consumer получает согласованные bytes; новый proof/authority объект ему не нужен.
 
 Сохранены явные ограничения: canonicalize только caller-owned root, не descendants; точные overlay keys; custom frontend admission before read; размер — initial observed length с fallible allocation, а не случайный64MiBlimit; второй проход сравнивает chunks с первым буфером. Whole-closure atomicity и source authentication не обещаются. Это проектное решение для реализации, ещё не прошедший runtime результат.
+
+## 2026-11-04 — Решение по workspace constraints
+
+Подготовлен следующий независимый slice install planner. Проверено по исходникам: первое объявление пакета вытесняет ограничения других consumers до solve; explicit request вытесняет не только выбранный node; conditional retry повторяет ту же потерю. Сами существующие solvers уже принимают несколько constraints одной координаты. Поэтому исправление принадлежит сборке/сохранению входов, а не новому solver или choice framework.
+
+Контракт INSTALL-CONSUMER-CONSTRAINTS / RETRIES / RECORDING закреплён в PROP-009. Все consumer requirements сохраняются; explicit edit относится к выбранному node; pins остаются временной оптимизацией и не удерживают явно изменяемую координату через sibling. Version.var выбранной зависимости сохраняет explicit изменение на диске, shared table/siblings не переписываются. Старый lock snapshot остаётся уникальным по координате; для разных consumer ranges в нём хранится реально выбранный exact version, тогда как manifests остаются настоящим источником требований. Это консервативная compatibility-проекция, не новый per-consumer lock формат.
+
+Отдельно обнаружена недостроенная композиция git/path sources между members. Этот slice не будет выдан за её исправление: текущие source identities сохраняются, а полноценная регистрация/конфликты источников остаются следующим явным обязательством. Реализация и её runtime проверки ещё не выполнены.
