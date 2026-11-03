@@ -8,7 +8,7 @@ There are eight package kinds: `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`, `
 
 ## Status
 
-The current release is **1.0.10**. This is a closed alpha, not a compatibility promise: **1.0.0 will break** while `public = false`. Until the owner declares the first public presentation, breaking changes may ship without migrations; the recovery path is re-init / re-fetch. Read [Alpha notes](docs-legacy/ALPHA-NOTES.md) before adopting the release and [CHANGELOG.md](CHANGELOG.md) before updating.
+The current release is **1.0.11**. This is a closed alpha, not a compatibility promise: **1.0.0 will break** while `public = false`. Until the owner declares the first public presentation, breaking changes may ship without migrations; the recovery path is re-init / re-fetch. Read [Alpha notes](docs-legacy/ALPHA-NOTES.md) before adopting the release and [CHANGELOG.md](CHANGELOG.md) before updating.
 
 ## Install from the Windows distributive
 
@@ -56,7 +56,7 @@ A ready-built `vibe` executable (for example, from the release zip) enters the
 same managed inventory without a Rust toolchain:
 
 ```bash
-vibe self import ./vibe.exe --tag 1.0.10 --use
+vibe self import ./vibe.exe --tag 1.0.11 --use
 ```
 
 Run `vibe self --help` for version switching, upgrades, removal, garbage collection, and relocation.
