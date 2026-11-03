@@ -1,6 +1,8 @@
 //! `vibe transfers` (PROP-068 `#verbs`): the downloads of this machine, as
 //! the journal under the settings root records them.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#verbs");
+
 /// Arguments of `vibe transfers`.
 #[derive(Debug, clap::Args)]
 #[command(args_conflicts_with_subcommands = true)]

@@ -1,5 +1,7 @@
 //! `[transfer]` — the machine's download settings (`PROP-068#limit`).
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#limit");
+
 use serde::{Deserialize, Serialize};
 
 /// `[transfer]` section of the user-level config.

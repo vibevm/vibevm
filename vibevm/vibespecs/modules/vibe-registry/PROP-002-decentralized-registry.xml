@@ -818,5 +818,7 @@ overridden      = false</fence>
       <OPEN-JTD-WINDOWS fact="true" status="spec/work">**JTD codegen ergonomics on Windows.** `jtd-codegen` is a Go binary; we vendor it project-local. Whether the experience is clean enough to not require PATH tinkering will be answered during the tooling commit.</OPEN-JTD-WINDOWS>
     </facts>
   </open>
+  <section id="change-record" title="Change record">
   <p><changelog fact="true" status="spec/done">2026-11-02 — B-199: §2.2's walk paragraph states that array order is absolute and that a remote's «not here» is remembered for the run (`##REGISTRY-WALK-ORDER`).</changelog></p>
+  </section>
 </spec>

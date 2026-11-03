@@ -4,6 +4,8 @@
 //! installations, so a machine that already has an arrangement keeps it and
 //! gains what the set adds.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#portable-set");
+
 use vibe_wire::generated::apps_manifest as wire;
 
 use crate::catalog::{

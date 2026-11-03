@@ -1,0 +1,3019 @@
+{
+  "schema": 1,
+  "source_commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "target_commit": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+  "assessment": "research candidates; source-observed, not runtime-verified or root-accepted",
+  "tasks": [
+    {
+      "id": "M-01-A.1",
+      "title": "Freeze address grammar and compatibility corpus",
+      "status": "implemented",
+      "feature": "Make accepted spellings and ambiguous lookup behavior executable before public reads.",
+      "evidence": [
+        "crates/vibe-spec/src/address/resource.rs:ResourceAddress",
+        "crates/vibe-spec/src/address/m_01_a_1_cases.rs:selected_vibe_and_unique_abbreviated_stem_canonicalize"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-A.2",
+      "title": "Unify portable component containment",
+      "status": "implemented",
+      "feature": "Make address lookup use the existing filesystem identity boundary.",
+      "evidence": [
+        "crates/vibe-safefs/src/component.rs:judge_selection",
+        "crates/vibe-spec/src/resolver/m_01_a_2_cases.rs:nested_portable_document_keeps_its_exact_logical_name"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-A.3",
+      "title": "Preserve failures across compiler and prompt callers",
+      "status": "implemented",
+      "feature": "Finish shared lookup semantics at existing integration points.",
+      "evidence": [
+        "crates/vibe-lifecycle/src/agent/resolver.rs:SelectedWorldPromptResolver::resolve",
+        "crates/vibe-spec/src/resolver/m_01_a_3_cases.rs:absent_document_remains_not_found"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-B.1",
+      "title": "Construct selected visible-source authority",
+      "status": "implemented",
+      "feature": "Queries consume an opaque prepared world instead of arbitrary lock rows.",
+      "evidence": [
+        "crates/vibe-workspace/src/source_query/capture.rs:BoundSourceInputs::from_prepared_node",
+        "crates/vibe-workspace/src/source_query/m_01_b_1_cases.rs:member_self_and_admitted_dependency_bind_exact_captured_roots"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-B.2",
+      "title": "Retain world and membership witnesses",
+      "status": "implemented",
+      "feature": "Prevent mixed worlds and unrelated broken members from contaminating point queries.",
+      "evidence": [
+        "crates/vibe-workspace/src/source_query/capture/continuity.rs:WitnessedSourceWorld::revalidate_current",
+        "crates/vibe-workspace/src/source_query/capture/m_01_b_2_cases.rs:unrelated_broken_member_does_not_poison_selected_point"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-C.1",
+      "title": "Retain file observation for digest and parsing",
+      "status": "implemented",
+      "feature": "Use one safely held source observation for every returned byte and identity.",
+      "evidence": [
+        "crates/vibe-safefs/src/file/bounded.rs:Project::read_file_snapshot_bounded",
+        "crates/vibe-safefs/src/file/m_01_c_1_cases.rs:held_snapshot_bytes_digest_and_identity_share_one_observation",
+        "crates/vibe-spec/src/resolver/m_01_c_1_cases.rs:projected_embed_and_raw_digest_use_one_held_source_buffer"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-C.2",
+      "title": "Prove membership against trusted captured source",
+      "status": "implemented",
+      "feature": "Separate local record agreement from independent source proof.",
+      "evidence": [
+        "crates/vibe-install/src/slot_verify.rs:verify_original_source_capture",
+        "crates/vibe-install/src/slot_verify/m_01_c_2_cases.rs:public_unreplayed_index_cannot_promote_coordinated_slot_tamper",
+        "crates/vibe-workspace/src/source_query/capture/continuity/m_01_c_2_cases.rs:original_index_retains_exact_snapshot_members_and_rejects_wrong_pin"
+      ],
+      "missing": [
+        "Proof is a library seam over caller-captured original bytes; only bounded legacy recipe zero is supported. Public source-query transport does not accept this verified proof."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-C.3",
+      "title": "Bind builtin converter and overlay provenance",
+      "status": "implemented",
+      "feature": "Prove transformed returned bytes using existing pure conversion.",
+      "evidence": [
+        "crates/vibe-install/src/slot_verify/derivation.rs:VerifiedSourceMembership::derive_builtin_output",
+        "crates/vibe-install/tests/m_01_c_3_cases.rs:verified_original_builtin_xml_exact_output_is_derived",
+        "crates/vibe-trace/src/selected_materialized/m_01_c_3_cases.rs:selected_xml_locator_and_ir_hash_do_not_rebadge_carried_md_decoration"
+      ],
+      "missing": [
+        "Builtin conversion proof exists only through install proof API; native/custom converters are unavailable and public query does not expose derivation-proven output."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-C.4",
+      "title": "Report failed source conversion at install",
+      "status": "implemented",
+      "feature": "Make failed Markdown-to-XML conversion observable, recorded and optionally fatal while preserving default install availability.",
+      "evidence": [
+        "crates/vibe-workspace/src/vibedeps/derived.rs:PreparedTransformedSlot::first_failed_conversion",
+        "crates/vibe-install/tests/m_01_c_4_cases.rs:strict_bad_second_package_preserves_manifest_lock_and_both_slots",
+        "crates/vibe-wire/src/m_01_c_4_cases.rs:schema_two_decodes_copied_unconverted_issues_and_refuses_unknown_class"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-D.1",
+      "title": "Extract classified units, sections and raw resources",
+      "status": "implemented",
+      "feature": "Expose source content without inventing facts in ordinary data.",
+      "evidence": [
+        "crates/vibe-workspace/src/source_query/capture/continuity/extract.rs:WitnessedSourceWorld::extract_source",
+        "crates/vibe-specdoc/src/selection/m_01_d_1_cases.rs:actual_parser_numeric_heading_keeps_literal_recipe_one_hash",
+        "crates/vibe-workspace/src/source_query/capture/continuity/extract/m_01_d_1_cases.rs:actual_compiler_embed_and_read_spec_share_section_list_and_table_ir"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-D.2",
+      "title": "Publish generated source-query service and adapters",
+      "status": "implemented",
+      "feature": "Make canonical service, CLI and MCP share the same validated contract.",
+      "evidence": [
+        "crates/vibe-workspace/src/source_query/capture/continuity/service.rs:SourceQueryService::execute_json",
+        "crates/vibe-workspace/src/source_query/capture/continuity/service/m_01_d_2_cases.rs:selected_whole_section_table_and_outline_have_validated_shapes"
+      ],
+      "missing": [
+        "Public query honestly exposes only observed or record-consistent strength, not the independent source/derivation proofs."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-E.1",
+      "title": "Exercise native and portable filesystem adversaries",
+      "status": "implemented",
+      "feature": "Prove path/observation behavior with real temporary filesystem fixtures.",
+      "evidence": [
+        "crates/vibe-safefs/src/file/bounded.rs:bounded_pass",
+        "crates/vibe-safefs/src/file/m_01_e_1_cases.rs:large_verified_stream_can_be_cancelled_without_writes",
+        "crates/vibe-spec/src/resolver/m_01_e_1_cases.rs:unique_nested_source_reaches_held_consumer"
+      ],
+      "missing": [
+        "Source inspection establishes fixture definitions only; native Windows/macOS execution and every current runtime result are unverified."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-01-E.2",
+      "title": "Close source delivery with purity and expectation parity",
+      "status": "partial",
+      "feature": "Demonstrate zero hidden effects and exact integrity outcomes across surfaces.",
+      "evidence": [
+        "crates/vibe-workspace/src/source_query/capture/continuity/service.rs:SourceQueryService::query",
+        "crates/vibe-cli/tests/m_01_e_2_cases.rs:process_service_success_expectation_and_missing_capture_parity",
+        "crates/vibe-cli/tests/m_01_e_2_cases/proof.rs:verified_original_and_derivation_refuse_missing_and_coordinated_poison"
+      ],
+      "missing": [
+        "CLI/MCP/service parity covers local observed/record-consistent responses. Source-proven and builtin-derivation positive tests call install library helpers, not the public transport; service rejects SourceProven as verified source proof owner unavailable."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-02-A.1",
+      "title": "Create a native origin and two local binding fixtures",
+      "status": "implemented",
+      "feature": "Demonstrate reusable package intent with independent project-owned refinements.",
+      "evidence": [
+        "crates/vibe-requirements/src/change/m_02_a_1_cases.rs:two_projects_reuse_exact_origin_with_distinct_local_intent",
+        "crates/vibe-requirements/src/change/m_02_a_1_cases.rs:native_origin_observation_preserves_artifact_requirements"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-02-A.2",
+      "title": "Prove binding independence from adoption and personal plans",
+      "status": "implemented",
+      "feature": "Establish which existing observations may inform a change without owning it.",
+      "evidence": [
+        "crates/vibe-requirements/src/change/m_02_a_2_cases.rs:shared_binding_has_no_scheduler_state_and_plan_perturbation_preserves_identity",
+        "crates/vibe-requirements/src/change/m_02_a_2_cases.rs:shared_binding_has_no_scheduler_state_and_plan_perturbation_preserves_identity"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-02-B.1",
+      "title": "Implement immutable change directory and document roles",
+      "status": "implemented",
+      "feature": "Make authored change grammar durable under the configured spec root.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/change/mod.rs:ChangeManifest",
+        "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs:connected_epoch_one_parse",
+        "crates/vibe-requirements/src/change/m_02_b_1_cases.rs:configured_nondefault_root_is_used_by_actual_lookup"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-02-B.2",
+      "title": "Separate intent and work graph identities",
+      "status": "implemented",
+      "feature": "Implement meaningful-input hashing without making work into runtime state.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/change/identity.rs:ChangeManifest::intent_identity",
+        "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs:connected_structural_graph",
+        "crates/vibe-requirements/src/change/m_02_b_2_cases.rs:actual_saved_lookup_separates_normative_work_and_closure"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-02-B.3",
+      "title": "Integrate saved-state and overlay change analysis",
+      "status": "implemented",
+      "feature": "Reuse M-16 editing boundaries for a safe change reader and future writer.",
+      "evidence": [
+        "crates/vibe-requirements/src/change/captured.rs:analyze_change_bytes",
+        "crates/vibe-orchestrator/src/change/m_02_b_3_cases.rs:two_clients_dirty_refinements_are_isolated",
+        "crates/vibe-requirements/src/change/m_02_b_3_cases.rs:pure_retained_bytes_keep_cosmetics_separate_from_normative_intent"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-02-C.1",
+      "title": "Retain accepted origin captures and explicit rebase",
+      "status": "implemented",
+      "feature": "Keep change origin stable across mutable package updates.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/rebase.rs:prepare_origin_rebase",
+        "crates/vibe-core/src/manifest/change/m_02_c_1_cases.rs:bound_domain_preserves_legacy_vector_and_work_identity",
+        "crates/vibe-orchestrator/src/change/m_02_c_1_cases.rs:saved_rebase_names_old_new_and_prepares_existing_barrier"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-02-C.2",
+      "title": "Provide a complete same-snapshot fact selection seam",
+      "status": "implemented",
+      "feature": "Prevent paginated or truncated requirements from masquerading as complete change scope.",
+      "evidence": [
+        "crates/vibe-requirements/src/complete.rs:CapturedFactSet::observe",
+        "crates/vibe-requirements/src/complete/m_02_c_2_cases.rs:connected_large_capture_exceeds_query_page_without_truncating_change_scope"
+      ],
+      "missing": [
+        "Directory selectors explicitly report DirectoryCensus gaps; converted source original bytes remain unavailable. This is honest incompleteness, not complete coverage for every package."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-02-D.1",
+      "title": "Implement no-overwrite change scaffolding",
+      "status": "implemented",
+      "feature": "Create a local change from an exact origin through one prepared saved-state write.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/scaffold/apply.rs:apply",
+        "crates/vibe-cli/src/commands/change/m_02_d_1_cases.rs:parsed_cli_prepare_apply_and_no_overwrite_match_artifacts",
+        "crates/vibe-orchestrator/src/change/scaffold/m_02_d_1_cases.rs:exact_saved_scaffold_creates_prepared_local_roles"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-02-D.2",
+      "title": "Expose check, show and coverage through shared services",
+      "status": "implemented",
+      "feature": "Finish useful read-only change access without a second verdict engine.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/query.rs:CapturedChangeQuery::query",
+        "crates/vibe-cli/src/commands/change/query/m_02_d_2_cases.rs:actual_cli_mcp_service_refusal_payloads_match_before_preparation",
+        "crates/vibe-orchestrator/src/change/query/m_02_d_2_cases.rs:actual_saved_capture_returns_useful_unclassified_local_intent"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-A.1",
+      "title": "Separate production from ordinary build and verify",
+      "status": "implemented",
+      "feature": "Implement the accepted public invocation law including prerequisite effects.",
+      "evidence": [
+        "crates/vibe-lifecycle/src/runner/invocation.rs:validate_invocation_prefix",
+        "crates/vibe-orchestrator/src/command/m_03_a_1_cases.rs:value"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-A.2",
+      "title": "Define fixed full-pass composition and identity carriers",
+      "status": "implemented",
+      "feature": "Give users one explicit create-to-verify entry without adding a workflow engine.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/change/full_pass.rs:SelectedFullPass",
+        "crates/vibe-core/src/manifest/change/m_03_a_2_cases.rs:selected_request_has_two_operations_and_invocation_independent_framing",
+        "crates/vibe-orchestrator/src/change/m_03_a_2_cases.rs:captured_selected_plan_is_saved_read_only_and_exposes_unavailable_carriage"
+      ],
+      "missing": [
+        "This atom delivers a read-only plan and request-identity recipe only. CLI change apply returns prepared with null production_request and machine_operation_ids; running full pass remains unavailable."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-B.1",
+      "title": "Carry producer request separately from invocation in execution state",
+      "status": "partial",
+      "feature": "Make scoped reuse depend on meaningful production inputs and exact target context.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/change/full_pass.rs:ProductionRequestIdentity"
+      ],
+      "missing": [
+        "ProductionRequestIdentity exists as an unbound pure value but is not carried by execution state, current state codec, hosted envelopes, or reports."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-B.2",
+      "title": "Thread scope through hosted tasks and continuation wires",
+      "status": "planned-only",
+      "feature": "Prevent outbox/task handoff from losing exact production authority.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/full_pass.rs:ChangeFullPassPlan::execution_carriage"
+      ],
+      "missing": [
+        "No change production request/invocation/target threading through hosted carriers; full-pass carriage explicitly unavailable."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-B.3",
+      "title": "Bind artifact and verification evidence to scoped operations",
+      "status": "planned-only",
+      "feature": "Preserve pre/post meaning through records, reports and external results.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/full_pass.rs:ChangeFullPassPlan::execution_carriage"
+      ],
+      "missing": [
+        "No scoped pre/post artifact and verification evidence join or persisted operation outcome."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-C.1",
+      "title": "Enforce workspace continuation conflicts",
+      "status": "planned-only",
+      "feature": "Protect one existing parked writer across nodes and change scopes.",
+      "evidence": [
+        "crates/vibe-lifecycle/src/lease.rs:LifecycleLease"
+      ],
+      "missing": [
+        "Existing workspace lease is not the planned change-request conflict/displacement protocol; no both-request identity conflict record found."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-C.2",
+      "title": "Recover hosted continuation and outcome after interruption",
+      "status": "planned-only",
+      "feature": "Make one accepted task resumable without duplicate provider execution.",
+      "evidence": [
+        "crates/vibe-lifecycle/src/runner/hosted.rs:existing hosted runner (no change request carriage)"
+      ],
+      "missing": [
+        "Existing hosted continuation support does not implement scoped change exact recovery/outbox outcome contract."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-D.1",
+      "title": "Characterize candidate production across the whole input prefix",
+      "status": "planned-only",
+      "feature": "Preserve the disjoint precursor proof without claiming integrated-code delivery.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/full_pass.rs:ChangeFullPassPlan::execution_carriage"
+      ],
+      "missing": [
+        "No complete scoped candidate-production prefix fixture; full-pass API is preparation only."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-D.2",
+      "title": "Verify a controlled existing-file change",
+      "status": "planned-only",
+      "feature": "Use the accepted transition law to prove new source is actually built and tested.",
+      "evidence": [
+        "crates/vibe-cli/src/commands/change/apply.rs:prepare"
+      ],
+      "missing": [
+        "No scoped existing-file producer/adopt/resume/current-source build-test journey; CLI cannot execute its prepared full pass."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-E.1",
+      "title": "Prove full-pass and standalone surface equivalence",
+      "status": "planned-only",
+      "feature": "Make public entrypoints share production policy and exact results.",
+      "evidence": [
+        "crates/vibe-cli/src/commands/change/apply.rs:prepare"
+      ],
+      "missing": [
+        "No full-pass execution to compare with standalone CLI/MCP; preparation-only parity is not execution parity."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-03-E.2",
+      "title": "Close replay and failure-prefix acceptance",
+      "status": "planned-only",
+      "feature": "Exercise adversarial scope drift and recovery across the complete lifecycle path.",
+      "evidence": [
+        "crates/vibe-cli/src/commands/change/apply.rs:prepare"
+      ],
+      "missing": [
+        "No scoped replay/failure-prefix proof including existing-file transition."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-04-A.1",
+      "title": "Persist exact question targets and stale states",
+      "status": "planned-only",
+      "feature": "Bind clarification questions to captured facts rather than mutable labels.",
+      "evidence": [
+        "crates/vibe-requirements/src/change/mod.rs:module inventory (no questions owner)"
+      ],
+      "missing": [
+        "No persisted exact-address change question grammar/store/query and stale-state reader found."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-04-A.2",
+      "title": "Record answers as local refinements transactionally",
+      "status": "planned-only",
+      "feature": "Promote explicit accepted answers without rewriting dependency packages.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/mod.rs:module inventory (no answer promotion)"
+      ],
+      "missing": [
+        "No question-answer-to-local-refinement prepared transaction found; scaffold/edit primitives are prerequisites only."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-04-B.1",
+      "title": "Join complete facts, work coverage and exact evidence",
+      "status": "partial",
+      "feature": "Compose change analysis over one captured fact universe.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/query/result.rs:produce"
+      ],
+      "missing": [
+        "Existing change query joins metadata, relations and work coverage, but does not join exact lifecycle evidence or evaluate closure terminality."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-04-B.2",
+      "title": "Preserve terminality and evidence-strength distinctions",
+      "status": "planned-only",
+      "feature": "Handle non-code requirements and weak legacy relations honestly.",
+      "evidence": [
+        "crates/progress-core/src/terminal.rs:resolve_terminal"
+      ],
+      "missing": [
+        "Incumbent progress-core terminal evaluator exists, but no change-specific evidence-strength truth table and availability composition implemented."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-04-C.1",
+      "title": "Model explicit waivers, accepted risks and policy identity",
+      "status": "planned-only",
+      "feature": "Make closure policy reviewable without hiding gaps.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/change/mod.rs:ChangeDocumentRole"
+      ],
+      "missing": [
+        "No explicit change waiver/risk/policy identity owner implemented."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-04-C.2",
+      "title": "Separate structural checks from optional semantic advice",
+      "status": "planned-only",
+      "feature": "Provide advisory extension plumbing without an LLM quality gate.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/query/result.rs:produce"
+      ],
+      "missing": [
+        "Existing structural query is not the planned structural/semantic advice contract; no rubric/advice seam found."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-04-D.1",
+      "title": "Persist durable closure with retained evidence",
+      "status": "planned-only",
+      "feature": "Record an explicit disposition whose evidence survives disposable cache loss.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/query/result.rs:produce (derived-closure-out-of-scope)"
+      ],
+      "missing": [
+        "Closure document role is inert and produces derived-closure-out-of-scope; no retained proof closure write action."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-04-D.2",
+      "title": "Recompute closure applicability without erasing history",
+      "status": "planned-only",
+      "feature": "Distinguish past acceptance from present readiness after drift.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/query/result.rs:produce (derived-closure-out-of-scope)"
+      ],
+      "missing": [
+        "No closure historical-decision/current-applicability revalidation; closure remains inert."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-04-E.1",
+      "title": "Expose manual and adopted evidence through shared actions",
+      "status": "planned-only",
+      "feature": "Allow truthful external work evidence without inventing an execution.",
+      "evidence": [
+        "crates/vibe-requirements/src/change/evidence.rs:from_observations (release impact only)"
+      ],
+      "missing": [
+        "No manual/adopted/executed change evidence action with retained provenance. ReleaseImpact reader is a different evidence purpose."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-04-E.2",
+      "title": "Close analysis and closure machine parity",
+      "status": "planned-only",
+      "feature": "Complete external change workflows while keeping personal planning independent.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/change/query/result.rs:produce"
+      ],
+      "missing": [
+        "No complete analysis-to-closure service/CLI/MCP journey."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-A.1",
+      "title": "Characterize root union and Fresh request loss",
+      "status": "implemented",
+      "feature": "Capture actual multi-consumer and fast-path behavior before changing resolution.",
+      "evidence": [
+        "crates/vibe-install/tests/m_05_a_1_cases.rs:root_union",
+        "crates/vibe-install/tests/m_05_a_1_cases.rs:root_union"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-A.2",
+      "title": "Characterize feature syntax and solver capabilities",
+      "status": "implemented",
+      "feature": "Map supported activation semantics and conditional solver failure cases.",
+      "evidence": [
+        "crates/vibe-resolver/src/m_05_a_2_cases.rs:solvers",
+        "crates/vibe-core/src/manifest/package/m_05_a_2_cases.rs:qualified_activation_strings_roundtrip_unchanged",
+        "crates/vibe-resolver/src/m_05_a_2_cases.rs:qualified_forwarding_first_slash_defect"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-B.1",
+      "title": "Implement one typed feature-effect algebra",
+      "status": "implemented",
+      "feature": "Represent optional dependencies and forwarding without a second choices grammar.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/package/features/effects.rs:FeatureEffect",
+        "crates/vibe-core/src/manifest/package/features/m_05_b_1_cases.rs:stable_ids_ignore_order_version_and_aliases",
+        "crates/vibe-resolver/src/features/m_05_b_1_cases.rs:optional_activation_and_strong_forwarding_share_effect_set"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-B.2",
+      "title": "Add constrained groups and consumer resolution domains",
+      "status": "implemented",
+      "feature": "Make semantic choices explicit while retaining environment and target roles.",
+      "evidence": [
+        "crates/vibe-resolver/src/features/configuration.rs:resolve_consumer_configuration",
+        "crates/vibe-core/src/manifest/package/features/constraints/m_05_b_2_cases.rs:four_cardinalities",
+        "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs:generated_request_needs_selection_without_effects"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-B.3",
+      "title": "Implement syntax-preserving feature migration",
+      "status": "implemented",
+      "feature": "Deliver deterministic old-to-new authored conversion using M-13 migration primitives.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/migration/features.rs:feature migration module",
+        "crates/vibe-core/src/manifest/migration/m_05_b_3_cases.rs:commented_features_preserve_meaning_and_epoch_coordinates",
+        "crates/vibe-workspace/src/migration_application/m_05_b_3_cases.rs:selected_profile_saved_apply_recovery_and_completed_replay"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-C.1",
+      "title": "Freeze candidate metadata for one resolution transaction",
+      "status": "implemented",
+      "feature": "Prevent mutable same-version metadata and repeated discovery from changing a solve.",
+      "evidence": [
+        "crates/vibe-package-source/src/source/transaction.rs:FrozenSource",
+        "crates/vibe-install/src/plan/m_05_c_1_cases.rs:catalog_identity_is_inspected_through_eto_before_effects",
+        "crates/vibe-package-source/src/source/m_05_c_1_cases_tests.rs:repeated_metadata_preserves_definition_and_capability_identity"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-C.2",
+      "title": "Make activation candidate-conditioned and backtrackable",
+      "status": "partial",
+      "feature": "Scope feature and choice implications to the candidate that introduced them.",
+      "evidence": [
+        "crates/vibe-resolver/src/resolvo_engine/configuration.rs:ResolvoDepSolver::solve_configuration_routes",
+        "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs:compatible_older_candidate_keeps_only_selected_effects"
+      ],
+      "missing": [
+        "Configured solve rejects cross-package feature forwarding, conditional targets/obsoletes, non-registry dependencies and multiple instances of one package. Thus candidate-conditioned configuration is not complete for the planned feature/source algebra."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-C.3",
+      "title": "Use normalized requests across every solve route",
+      "status": "partial",
+      "feature": "Prevent visibility retry and metadata paths from losing constraints or selected edges.",
+      "evidence": [
+        "crates/vibe-package-source/src/source.rs:bind_request",
+        "crates/vibe-install/src/plan/m_05_c_3_cases.rs:visibility_retry_preserves_requests_and_exact_choices",
+        "crates/vibe-package-source/src/source/m_05_c_3_cases.rs:same_request_catalog_across_solve_metadata_and_masked_routes"
+      ],
+      "missing": [
+        "Normalized routes share requests for supported cells; configured plus conditional targets, native candidates, non-registry edges, forwarding and multiple instances remain unsupported rather than equivalent solved configurations."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-D.1",
+      "title": "Persist requested intent separately from resolved configuration",
+      "status": "implemented",
+      "feature": "Make lock replay explain exact choices, captures and selected technical edges.",
+      "evidence": [
+        "crates/vibe-install/src/record.rs:requested_record / configuration_record",
+        "crates/vibe-core/src/manifest/lockfile/m_05_d_1_cases.rs:lock_roundtrip_preserves_active_dormant_and_feature_closure",
+        "crates/vibe-install/src/record/m_05_d_1_cases.rs:catalog_drift_refuses_normal_apply_before_product_writes"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-D.2",
+      "title": "Connect feature and subskill activation to real consumers",
+      "status": "implemented",
+      "feature": "Make selected contributions reach visibility, loading and projection while preserving source bytes.",
+      "evidence": [
+        "crates/vibe-workspace/src/install/bootgen/effective_subskills/m_05_d_2_cases.rs:selection_preserves_original_bytes_and_independent_skill",
+        "crates/vibe-mcp/src/tools/m_05_d_2_cases.rs:captured_delivery_is_visible_readable_and_inactive_is_hidden",
+        "crates/vibe-resolver/src/features/m_05_d_2_cases.rs:dormant_selection_is_retained_without_effects"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-E.1",
+      "title": "Check request freshness before fast paths and expose pure discovery",
+      "status": "implemented",
+      "feature": "Make changed user intent visible before install can report Fresh.",
+      "evidence": [
+        "crates/vibe-install/src/plan.rs:plan_prepared_mode",
+        "crates/vibe-install/tests/m_05_e_1_cases.rs:choice_only_defeats_fresh"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-E.2",
+      "title": "Implement exact reinstall and intent-preserving update",
+      "status": "implemented",
+      "feature": "Distinguish replay from reconfiguration when definitions change.",
+      "evidence": [
+        "crates/vibe-install/src/record.rs:validate_replay",
+        "crates/vibe-cli/src/commands/m_05_e_2_cases.rs:prepared_offline_reinstall_reproduces_lock_without_prompts",
+        "crates/vibe-orchestrator/src/install/m_05_e_2_cases.rs:prepared_replay_binds_leaf_capture_without_solve"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-E.3",
+      "title": "Make configuration apply and removal recoverable",
+      "status": "implemented",
+      "feature": "Validate whole-world effects before writing and protect shared dependencies.",
+      "evidence": [
+        "crates/vibe-install/src/removal.rs:plan_admitted_removal"
+      ],
+      "missing": [
+        "Recovery is honest partial-effects evidence and bounded local restoration, not rollback of arbitrary hooks or in-place effects; configured removal requires newly admitted authored request."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-E.4",
+      "title": "Implement attended and unattended choice interaction",
+      "status": "implemented",
+      "feature": "Expose explicit selection through TTY and machine clients without inferred answers.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/machine_operation/configuration_choice.rs:ConfigurationChoiceHost::dispatch"
+      ],
+      "missing": [
+        "Choice host is caller supplied; CLI --choice-host/--capture transport does not bootstrap authority. Missing prepared host is unavailable."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-F.1",
+      "title": "Express Redbook variants in its existing 1.1.0",
+      "status": "implemented",
+      "feature": "Dogfood the accepted continuity group and additions without global conflicts.",
+      "evidence": [
+        "vibevm/vibepacks/org.vibevm.world/redbook/v1.1.0/vibe.toml:[features]",
+        "crates/vibe-core/src/manifest/package/features/m_05_f_1_cases.rs:actual_redbook_definition_preserves_declarations_and_local_groups",
+        "crates/vibe-install/src/m_05_f_1_cases.rs:normal_local_source_and_planner_keep_original_redbook_intent"
+      ],
+      "missing": [
+        "Historical refined plan says Redbook 1.0.0 whereas task/source use 1.1.0; this historical policy mismatch must not become a new transfer mandate."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-F.2",
+      "title": "Migrate existing Redbook consumers and branch intent",
+      "status": "implemented",
+      "feature": "Replace manual exclusions without losing shared or dormant choices.",
+      "evidence": [
+        "crates/vibe-install/src/m_05_f_2_cases.rs:m_05_f_2_normal_migration_preserves_old_graph_and_comments",
+        "crates/vibe-install/src/m_05_f_2_cases.rs:m_05_f_2_normal_migration_preserves_old_graph_and_comments",
+        "crates/vibe-orchestrator/src/migration/m_05_f_2_cases.rs:saved_apply_preserves_comments_metadata_and_independent_roots"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-G.1",
+      "title": "Prove supported solver and workspace parity",
+      "status": "implemented",
+      "feature": "Close candidate and configuration behavior across actually supported backends.",
+      "evidence": [
+        "crates/vibe-resolver/src/resolvo_engine/m_05_g_1_cases.rs:configured_forwarding_native_and_multiple_instances_are_explicit_limits",
+        "crates/vibe-install/tests/m_05_g_1_cases.rs:workspace_root_union_and_selected_providers",
+        "crates/vibe-package-source/src/source/m_05_g_1_cases.rs:supported_legacy_matrix"
+      ],
+      "missing": [
+        "Parity is explicitly restricted: configured resolver is resolvo only; naive/sat missing-first OR and reconsideration are incomplete. Unsupported responses are not successful feature parity."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-05-G.2",
+      "title": "Close transaction and Redbook coexistence regressions",
+      "status": "implemented",
+      "feature": "Verify failure recovery, independent WAL/MUP use and current version policy.",
+      "evidence": [
+        "crates/vibe-install/tests/m_05_g_2_cases.rs:every_before_after_prefix_retains_identity_images_and_partial_recovery",
+        "crates/vibe-cli/tests/m_05_g_2_cases.rs:cli_no_input_is_typed_and_leaves_product_state_unchanged",
+        "crates/vibe-install/tests/m_05_g_2_cases.rs:redbook_coexists_switches_dormant_contributions_and_replays_exactly"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-A.1",
+      "title": "Define explicit source interpretation and its migration",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-core/src/manifest/source_descriptor/mod.rs:SourceDescriptor/select_source_rows",
+        "crates/vibe-core/src/manifest/migration.rs:plan_manifest_migration/BOOT_SOURCE_INSERT",
+        "crates/vibe-workspace/src/migration_planning/tests_apply.rs:explicit_source_question_plan_and_application_preserve_original_manifest_bytes"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-A.2",
+      "title": "Implement structural ordinary Markdown",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-specdoc/src/commonmark.rs:CommonMarkDoc::parse",
+        "crates/vibe-specdoc/src/commonmark/export.rs:resolve_export",
+        "crates/vibe-specdoc/src/commonmark/tests.rs:vibe_shaped_words_remain_ordinary_text_even_in_tables_and_code"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-A.3",
+      "title": "Preserve XML-data and opaque resources",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-specdoc/src/xml_data.rs:inspect_xml_data/preserve_opaque",
+        "crates/vibe-specdoc/src/xml_data/tests.rs:invalid_xml_and_external_entities_refuse_structure_without_hiding_bytes",
+        "crates/vibe-workspace/src/install/bootgen/replay_prepare/descriptor_positive_tests.rs:pending_replay_reads_selected_xml_and_preserves_raw_same_stem_resources"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-A.4",
+      "title": "Route all source consumers through descriptors",
+      "status": "partial",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-facts/src/scan/declared.rs:observe_declared_source",
+        "crates/vibe-facts/src/scan.rs:observe_authored_source/collect_spec_documents",
+        "crates/vibe-cli/src/commands/progress/grounding.rs:SourceAdmission::Legacy",
+        "crates/vibe-specdoc/src/load.rs:is_spec_source/load_spec_text"
+      ],
+      "missing": [
+        "Declared paths exist across consumers, but legacy suffix-based public scanner and progress fallback remain; historical plan requirement of no unclassified semantic path is not literally met. Compatibility may justify retention; decide target semantics explicitly."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-B.1",
+      "title": "Capture the existing boot graph and inclusion provenance",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/boot_debugger/mod.rs:from_static_summary/why_included",
+        "crates/vibe-spec/src/compiler/boot_graph/m_06_b_1_cases.rs:repeated_occurrences_share_one_source_without_becoming_unresolved"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-B.2",
+      "title": "Calculate exact and qualified boot measurements",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/boot_debugger/measurement.rs:measurement implementation",
+        "crates/vibe-workspace/src/boot_debugger/measurement/m_06_b_2_cases.rs:streamed_large_utf8_is_exact_and_chunk_independent_without_quota",
+        "crates/vibe-cli/src/commands/tree/m_06_b_2_cases.rs:tree_and_closure_transport_share_exact_static_dynamic_capture"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-C.1",
+      "title": "Expose debugger requests, snapshots and progress",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs:shared dispatch",
+        "crates/vibe-workspace/src/boot_debugger/protocol.rs:typed debugger protocol",
+        "crates/vibe-cli/src/commands/boot/m_06_c_1_cases.rs:m_06_c_1_cases_structured_cli_mcp_shared_overlay_positions_progress_and_cancel"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-C.2",
+      "title": "Deliver the standalone interactive boot inspector",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/boot_debugger/viewer.rs:Viewer/Action",
+        "crates/vibe-workspace/src/boot_debugger/viewer_tests.rs:viewer tests",
+        "crates/vibe-cli/tests/m_06_f_2_cases.rs:m_06_f_2_cases_interactive_line_ui_keeps_large_capture_and_canonical_bytes"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-D.1",
+      "title": "Define hypothetical world capture and pure builtin preview",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/boot_debugger/hypothetical.rs:FrozenWorld::from_resolution",
+        "crates/vibe-workspace/src/boot_debugger/m_06_d_1_cases.rs:builtin_deterministic_with_conditions_and_exact_carrier"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-D.2",
+      "title": "Separate effectful preparation from snapshot inspection",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/boot_debugger/preparation.rs:explicit preparation carrier",
+        "crates/vibe-orchestrator/src/machine_operation/boot_debugger/preparation.rs:preparation owner",
+        "crates/vibe-workspace/src/boot_debugger/m_06_d_2_cases.rs:partial_evidence_retains_exact_bytes_and_failure"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-E.1",
+      "title": "Compute marginal contribution including shared dependencies",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/boot_debugger/hypothetical/comparison.rs:comparison implementation",
+        "crates/vibe-workspace/src/boot_debugger/m_06_e_1_cases.rs:shared_transitive_membership_and_both_graph_links/independent_experiments_are_non_additive"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-E.2",
+      "title": "Expose install, remove and reconfigure scenarios",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/boot_debugger/scenario.rs:Draft::candidate/Edit",
+        "crates/vibe-cli/src/commands/boot/m_06_e_2_cases.rs:actual_continuity_reconfiguration_preserves_shared_contribution_and_missing_choice_is_typed"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-F.1",
+      "title": "Integrate derivatives and full debugger surface parity",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-cli/src/commands/boot/m_06_f_1_cases.rs:retained_derivative_all_surfaces_and_every_chunk_and_page_agree",
+        "crates/vibe-workspace/src/boot_debugger/m_06_f_1_cases.rs:unmapped_native_emission_never_invents_inverse_source_or_parent"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-F.2",
+      "title": "Prove scale, snapshot integrity and unchanged boot law",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/boot_debugger/m_06_f_2_cases.rs:million_units_keep_repeats_conditions_and_reproducible_qualified_measurements",
+        "crates/vibe-spec/src/compiler/m_06_f_2_cases.rs:million_units_canonical_bytes_survive_panicking_sink",
+        "crates/vibe-cli/tests/m_06_f_2_cases.rs:m_06_f_2_cases_capture_policy_separates_editor_limits_and_aggregate_capture"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-G.1",
+      "title": "Verify cross-package normal directives and authored boot semantics",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization/g1_cases.rs:xml_cross_package_normal_units_and_consumer_lane_close_once/xml_equal_prose_from_distinct_authored_documents_is_not_deduplicated"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-G.2",
+      "title": "Preserve XML host dialect and derived dependency state during init",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-cli/src/commands/init/helpers.rs:host format preservation",
+        "crates/vibe-cli/tests/cli_init/init_package_host_format.rs:init_package_keeps_existing_xml_host_and_derived_slots"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-G.3",
+      "title": "Exclude generated slot lanes and protect authored workspace members",
+      "status": "implemented",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/install/tests_hybrid/g3_cases.rs:consumer_install_keeps_source_workspace_member_bytes",
+        "crates/vibe-workspace/src/vibedeps/derived/g3_tests.rs:xml_derived_materialisation_excludes_generated_source_boot_files"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-06-G.4",
+      "title": "Support long Windows materialization paths with truthful diagnostics",
+      "status": "partial",
+      "feature": "Explicit source semantics and inspectable actual/hypothetical boot",
+      "evidence": [
+        "crates/vibe-workspace/src/vibedeps/m_06_g_4_cases.rs:native_windows_long_root_spec_path_installs_or_refuses_before_effect/native_windows_component_limit_refuses_new_slot_before_effect"
+      ],
+      "missing": [
+        "Platform-specific implementation/tests exist; actual native Windows proof cannot be established from source inspection. Preserve native execution obligation."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-A.1",
+      "title": "Bind publication plans to exact subjects",
+      "status": "implemented",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "crates/vibe-publish/src/publication_capture.rs:capture_distribution/subject_from_captured",
+        "crates/vibe-publish/src/publication_effect_plan.rs:plan_from_captured_remote/publication_effect_plan_digest",
+        "crates/vibe-publish/src/publication_subject.rs:publication_subject_digest"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-A.2",
+      "title": "Evaluate A approvals and disabled B policy",
+      "status": "implemented",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "crates/vibe-publish/src/publication_authority.rs:evaluate_publication_authority/exact_mode_a_and_explicit_b_admit_the_same_plan/default_needs_approval_and_b_stays_disabled"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-B.1",
+      "title": "Run installed bundle smokes in isolated native homes",
+      "status": "partial",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "xtask/src/dist/smoke.rs:stage_verified_bundle/run_native_probe",
+        "xtask/src/dist/smoke/tests.rs:real_distribution_bundle_native_smoke_from_env/foreign_target_is_unavailable_without_starting_child",
+        "xtask/src/dist/capture/tests.rs:local_smoke_preparation_persists_five_honest_rows_and_report_bound_subject"
+      ],
+      "missing": [
+        "Harness and five-row model exist; no native execution performed here, five actual target bundle runs remain unverified."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-B.2",
+      "title": "Make smoke default-on with explicit scoped skip",
+      "status": "implemented",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "xtask/src/dist/mod.rs:DistCommand::PrepareLocal/run_prepare_local_into",
+        "xtask/src/dist/smoke/prepare.rs:SmokeSelection",
+        "crates/vibe-publish/src/publication_subject.rs:require_apply_ready_default_smoke"
+      ],
+      "missing": [
+        "Default e1 deliberately refuses skipped smoke at apply; broader historical plan says explicit skip should be publishable. Task was narrowed; target policy decision must preserve this discrepancy."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-C.1",
+      "title": "Validate evidence producer and channel identity",
+      "status": "partial",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "crates/vibe-publish/src/publication_authority.rs:PublicationRecordProvenance/evaluate_publication_authority",
+        "crates/vibe-publish/src/publication_approval.rs:load_mode_a"
+      ],
+      "missing": [
+        "Owner-controlled approval provenance exists, but no independent smoke/source-evidence producer/channel validation and configured optional signature verifier found in publication source."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-C.2",
+      "title": "Prepare explicit source verification and PR pipeline",
+      "status": "partial",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "xtask/src/dist/mod.rs:DistCommand::Build",
+        "xtask/src/dist/build.rs:BuildOptions"
+      ],
+      "missing": [
+        "Explicit build checks/tests/self-check exist; no requested-check verification service/receipt or prepared M-07-C workflow patch found at pinned revision."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-C.3",
+      "title": "Install the explicitly approved CI producer configuration",
+      "status": "planned-only",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "campaigns/next/tasks/M-07-C.json:M-07-C.3"
+      ],
+      "missing": [
+        "Task-specific approved CI change and observed producer run not established; existing release workflows do not prove this task."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-D.1",
+      "title": "Fence the first destructive publication write",
+      "status": "partial",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "crates/vibe-publish/src/publication_full_plan/mod.rs:private owner journal",
+        "crates/vibe-publish/src/publication_full_plan/calls/owner.rs:drive_one_fixed",
+        "xtask/src/dist/mod.rs:run_dist",
+        "xtask/src/dist/release.rs:prepare_with"
+      ],
+      "missing": [
+        "Legacy dist prepare/upload/finalize remain reachable without consuming new ready plan/approval fence; prepare_with can delete existing release directly."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-D.2",
+      "title": "Recover interrupted remote publication prefixes",
+      "status": "partial",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "crates/vibe-publish/src/publication_full_plan/cold.rs:inspect_full_plan_cold",
+        "crates/vibe-publish/src/publication_full_plan/journal.rs:Intent/Step",
+        "crates/vibe-publish/src/publication_full_plan/calls/owner.rs:inspect_one"
+      ],
+      "missing": [
+        "Private journal/cold inspection and fault-test machinery exist; complete production recovery coverage of all legacy release routes is not connected."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-E.1",
+      "title": "Prove A and B effect equivalence without enabling B",
+      "status": "partial",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "crates/vibe-publish/src/publication_authority.rs:exact_mode_a_and_explicit_b_admit_the_same_plan",
+        "crates/vibe-publish/src/publication_full_plan/approval_join_tests.rs:approval join tests",
+        "crates/vibe-publish/src/publication_subject.rs:require_apply_ready_default_smoke"
+      ],
+      "missing": [
+        "Pure A/B parity exists; approved skipped-smoke successful effect path absent under only default e1 policy; full legacy effect parity not established."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-07-E.2",
+      "title": "Exercise native and remote failure recovery",
+      "status": "partial",
+      "feature": "Subject-bound distribution publication, smoke, approval and recovery",
+      "evidence": [
+        "crates/vibe-publish/src/publication_full_plan/calls/owner_loopback_tests.rs:owner loopback tests",
+        "crates/vibe-publish/src/publication_full_plan/calls/asset_driver_tests.rs:asset driver tests",
+        "xtask/src/dist/smoke/tests.rs:wrong_output_and_nonzero_exit_are_failed_probes"
+      ],
+      "missing": [
+        "Failure-injection source exists; actual all-target native proofs and complete real remote restoration not verified; legacy mutation route gap remains."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-A.1",
+      "title": "Characterize legacy projection ownership lanes",
+      "status": "implemented",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "crates/vibe-agent-projection/src/m_08_a_1_cases.rs:equal_bytes_do_not_transfer_between_standalone_and_automatic_receipts",
+        "crates/vibe-lifecycle/src/mechanism/deploy/plugin/m_08_a_1_cases.rs:opencode_logical_members_physical_lock_exact_bytes_and_scoped_remove",
+        "fixtures/next/adapters/matrix.json:legacy ownership matrix"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-A.2",
+      "title": "Specify four client contracts from exact versions",
+      "status": "partial",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "fixtures/next/adapters/four-client-contracts.json:clients/rows",
+        "crates/vibe-agent-projection/src/client_commands/m_08_d_1_cases.rs:exact_codex_01593_profile_preserves_legacy_and_refuses_neighbors"
+      ],
+      "missing": [
+        "Contract matrix exists but OpenCode/Qwen exact executable/version applicability explicitly unresolved; reference docs are not exact-version runtime support."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-B.1",
+      "title": "Separate hydration and probes from pure planning",
+      "status": "implemented",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/prepared_query.rs:prepare_deploy_query",
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_1_cases.rs:empty_cache_embedded_query_never_enters_preparation",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_b_1_cases.rs:injected_process_and_mutation_attempts_are_zero_during_plan_and_fingerprint"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-B.2",
+      "title": "Resolve bridge sources against their captured root",
+      "status": "implemented",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_2_cases.rs:direct_embedded_capture_ignores_provider_decoy_and_retains_full_membership/composed_resources_keep_exact_roots_includes_and_digest"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-C.1",
+      "title": "Load external client requests through an open map",
+      "status": "implemented",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "crates/vibe-agent-projection/src/client_capabilities.rs:ClientCapabilities::admit",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic.rs:GenericHost::capture/admit_payload",
+        "fixtures/next/adapters/m-08-c1/client.toml:external descriptor"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-C.2",
+      "title": "Execute closed generic file and config operations",
+      "status": "implemented",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs:GenericHost::plan",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs:ExactGrant/approve",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/apply.rs:apply"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-C.3",
+      "title": "Preserve receipt ownership through upgrade and revocation",
+      "status": "implemented",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/inverse.rs:prepare_retained/execute_retained",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/adoption.rs:prepare_skill_adoption/adopt_deployment",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/m_08_c_3_cases.rs:revocation_refuses_forward_but_allows_current_cleanup"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-D.1",
+      "title": "Admit typed client commands and executable identity",
+      "status": "implemented",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "crates/vibe-agent-projection/src/client_commands.rs:typed command recipes",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs:Host::prepare/approve/execute",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_commands/m_08_d_1_cases.rs:real_generic_file_approval_confers_no_process_authority"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-D.2",
+      "title": "Connect admitted commands to full deployment lifecycle",
+      "status": "implemented",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs:Host::execute/verify/prepare_recovery",
+        "crates/vibe-orchestrator/src/machine_operation/client_deploy.rs:ClientDeployRoute::dispatch",
+        "crates/vibe-cli/src/commands/machine_session/client_deploy/m_08_d_2_cases.rs:cli_frames_and_api_match_full_fixture_lifecycle"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-E.1",
+      "title": "Commission Claude Code and Codex external packages",
+      "status": "partial",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:actual_claude_2_1_299_required_matrix/actual_codex_0_159_3_required_matrix",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases/podbay_runner.rs:PodBayRunner",
+        "fixtures/next/adapters/m_08_e_1/PACKAGES.json:captured package fixtures"
+      ],
+      "missing": [
+        "Actual-client driver exists and deliberately requires physical namespace; complete native client matrix was not independently executed/validated here. Receipt files are not acceptance."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-08-E.2",
+      "title": "Commission OpenCode and Qwen without core changes",
+      "status": "partial",
+      "feature": "Package-defined client adapters and safe complete deployment lifecycle",
+      "evidence": [
+        "fixtures/next/adapters/four-client-contracts.json:opencode/qwen_code unresolved admission",
+        "crates/vibe-lifecycle/src/mechanism/deploy/m_08_e_1_cases.rs:external_package_data_uses_fixed_core_without_vendor",
+        "crates/vibe-agent-projection/src/client_capabilities.rs:open capability map"
+      ],
+      "missing": [
+        "Synthetic extensibility infrastructure exists; no corresponding M-08-E.2 full OpenCode/Qwen commissioning implementation/matrix found. All-four-client closure absent."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-09-A.1",
+      "title": "Audit the pinned Spec Kit resource closure",
+      "status": "unknown",
+      "feature": "Exact foreign bridge resources and reusable native feat journeys",
+      "evidence": [
+        "campaigns/next/tasks/M-09-A.json:M-09-A.1"
+      ],
+      "missing": [
+        "Required external bridge checkout/pin not resolved in this packet; no pinned fixtures/next/bridges content. Cannot infer external implementation or claim audit/runtime completion."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-09-A.2",
+      "title": "Audit expanded bridge procedures and platform effects",
+      "status": "unknown",
+      "feature": "Exact foreign bridge resources and reusable native feat journeys",
+      "evidence": [
+        "campaigns/next/tasks/M-09-A.json:M-09-A.2"
+      ],
+      "missing": [
+        "Required external bridge checkout/pin not resolved in this packet; no pinned fixtures/next/bridges content. Cannot infer external implementation or claim audit/runtime completion."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-09-B.1",
+      "title": "Migrate both bridge taxonomies and consumer bindings",
+      "status": "unknown",
+      "feature": "Exact foreign bridge resources and reusable native feat journeys",
+      "evidence": [
+        "campaigns/next/tasks/M-09-B.json:M-09-B.1"
+      ],
+      "missing": [
+        "Required external bridge checkout/pin not resolved in this packet; no pinned fixtures/next/bridges content. Cannot infer external implementation or claim audit/runtime completion."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-09-B.2",
+      "title": "Preserve complete foreign resources and source interpretation",
+      "status": "partial",
+      "feature": "Exact foreign bridge resources and reusable native feat journeys",
+      "evidence": [
+        "crates/vibe-agent-projection/src/pkgskill/projection/m_08_b_2_cases.rs:composed_resources_keep_exact_roots_includes_and_digest",
+        "crates/vibe-specdoc/src/commonmark.rs:CommonMarkDoc",
+        "crates/vibe-specdoc/src/xml_data.rs:preserve_opaque"
+      ],
+      "missing": [
+        "Shared capture/classification/projection engine exists; both exact bridge resource manifests and offline projections absent from pinned fixture tree; external state unknown."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-09-C.1",
+      "title": "Author native change, bug and assess profiles",
+      "status": "planned-only",
+      "feature": "Exact foreign bridge resources and reusable native feat journeys",
+      "evidence": [
+        "campaigns/next/tasks/M-09-C.json:M-09-C.1"
+      ],
+      "missing": [
+        "No fixtures/next/native-reuse or vibevm/vibespecs/examples/next profiles in pinned tree; generic change APIs do not establish change/bug/assess profile delivery."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-09-C.2",
+      "title": "Connect procedure scripts to explicit admitted actions",
+      "status": "partial",
+      "feature": "Exact foreign bridge resources and reusable native feat journeys",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs:Host::prepare/execute",
+        "crates/vibe-lifecycle/src/mechanism/deploy/client_deploy.rs:Host::execute"
+      ],
+      "missing": [
+        "Explicit admitted command machinery exists; no pinned bridge procedure action matrix and required script journey wired through it."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-09-D.1",
+      "title": "Prove one product feat on two stacks",
+      "status": "planned-only",
+      "feature": "Exact foreign bridge resources and reusable native feat journeys",
+      "evidence": [
+        "campaigns/next/tasks/M-09-D.json:M-09-D.1"
+      ],
+      "missing": [
+        "No native-reuse/bridge fixtures or four-cell Rust/TypeScript feat reuse journey in pinned tree; generic lifecycle and derivative primitives do not satisfy integrated existing-file reuse."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-09-D.2",
+      "title": "Prove a second feat and explicit origin drift handling",
+      "status": "planned-only",
+      "feature": "Exact foreign bridge resources and reusable native feat journeys",
+      "evidence": [
+        "campaigns/next/tasks/M-09-D.json:M-09-D.2"
+      ],
+      "missing": [
+        "No native-reuse/bridge fixtures or four-cell Rust/TypeScript feat reuse journey in pinned tree; generic lifecycle and derivative primitives do not satisfy integrated existing-file reuse."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-09-E.1",
+      "title": "Run complete bridge journeys offline after preparation",
+      "status": "unknown",
+      "feature": "Exact foreign bridge resources and reusable native feat journeys",
+      "evidence": [
+        "campaigns/next/tasks/M-09-E.json:M-09-E.1"
+      ],
+      "missing": [
+        "Required external bridge checkout/pin not resolved in this packet; no pinned fixtures/next/bridges content. Cannot infer external implementation or claim audit/runtime completion."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-09-E.2",
+      "title": "Integrate local derivatives with native reuse journeys",
+      "status": "planned-only",
+      "feature": "Exact foreign bridge resources and reusable native feat journeys",
+      "evidence": [
+        "campaigns/next/tasks/M-09-E.json:M-09-E.2"
+      ],
+      "missing": [
+        "No native-reuse/bridge fixtures or four-cell Rust/TypeScript feat reuse journey in pinned tree; generic lifecycle and derivative primitives do not satisfy integrated existing-file reuse."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-10-A.1",
+      "title": "Define the required derivative family matrix",
+      "status": "implemented",
+      "feature": "Owner-controlled local derivatives with exact provenance and separate activation",
+      "evidence": [
+        "fixtures/next/derivatives/manifest.json:five resource family matrix",
+        "fixtures/next/derivatives/README.md:family and boundary contract"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-10-A.2",
+      "title": "Choose one reusable derivative operation boundary",
+      "status": "implemented",
+      "feature": "Owner-controlled local derivatives with exact provenance and separate activation",
+      "evidence": [
+        "crates/vibe-workspace/src/derivatives.rs:DerivativeService/SourceInput/AuthoredReplacement",
+        "crates/vibe-workspace/src/derivatives/m_10_a_2_cases.rs:passive_inspection_has_no_provider_process_grant_or_slot_effect"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-10-B.1",
+      "title": "Define authored bindings and exact derivative provenance",
+      "status": "implemented",
+      "feature": "Owner-controlled local derivatives with exact provenance and separate activation",
+      "evidence": [
+        "crates/vibe-core/src/manifest/derivation.rs:authored binding grammar",
+        "crates/vibe-workspace/src/derivatives/binding.rs:BoundDerivative/prepare_binding",
+        "crates/vibe-core/src/manifest/derivation/m_10_b_1_cases.rs:equal_bytes_keep_owner_and_base_provenance"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-10-B.2",
+      "title": "Separate compatibility from activation authority",
+      "status": "implemented",
+      "feature": "Owner-controlled local derivatives with exact provenance and separate activation",
+      "evidence": [
+        "crates/vibe-workspace/src/derivatives/compatibility.rs:Compatibility/compatibility",
+        "crates/vibe-lifecycle/src/mechanism/deploy/derivative/m_10_b_2_cases.rs:compatible_activation_needs_own_typed_grant_and_stops_before_payload"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-10-C.1",
+      "title": "Implement inert derive, show and diff across files and trees",
+      "status": "implemented",
+      "feature": "Owner-controlled local derivatives with exact provenance and separate activation",
+      "evidence": [
+        "crates/vibe-workspace/src/derivatives/materialize.rs:MaterializedDerivative::derive/read",
+        "crates/vibe-workspace/src/derivatives/inspection.rs:show/diff",
+        "crates/vibe-workspace/src/derivatives/m_10_c_1_cases.rs:nested_tree_real_result_recreated/changed_base_local_missing_and_extra_resources_refuse_before_staging"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-10-C.2",
+      "title": "Implement explicit rebase and guarded authored apply",
+      "status": "implemented",
+      "feature": "Owner-controlled local derivatives with exact provenance and separate activation",
+      "evidence": [
+        "crates/vibe-workspace/src/derivatives/rebase.rs:RebaseReview/RebaseHandoff",
+        "crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs:prepare_derivative_rebase/recover_derivative_rebase",
+        "crates/vibe-orchestrator/src/document_analysis/edit/m_10_c_2_cases.rs:cold_recovery_and_unknown_third_state"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-10-D.1",
+      "title": "Expose derivatives in source and boot inspection",
+      "status": "implemented",
+      "feature": "Owner-controlled local derivatives with exact provenance and separate activation",
+      "evidence": [
+        "crates/vibe-workspace/src/source_query/derivatives.rs:DerivativeCatalog",
+        "crates/vibe-cli/src/commands/boot/m_10_d_1_cases.rs:standard_spec_command_and_registered_mcp_agree_with_source_api",
+        "crates/vibe-workspace/src/boot_debugger/m_10_d_1_cases.rs:all_five_families_retain_exact_passive_source_navigation"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-10-D.2",
+      "title": "Prove derivative activation, revocation and recovery",
+      "status": "implemented",
+      "feature": "Owner-controlled local derivatives with exact provenance and separate activation",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/derivative.rs:bind/execute",
+        "crates/vibe-lifecycle/src/mechanism/deploy/derivative/m_10_d_2_cases.rs:ordinary_host_interruption_recovers_same_generation_and_refuses_third_digest",
+        "crates/vibe-lifecycle/src/mechanism/deploy/generic/m_10_d_2_cases.rs:exact_derivative_payload_update_revocation_and_fresh_retained_cleanup"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-A.1",
+      "title": "Inventory declared scope with exclusions before reads",
+      "status": "partial",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "crates/vibe-scrape/src/inventory.rs:collect/walk"
+      ],
+      "missing": [
+        "Existing inventory is terminal-scrape implementation identical to main; only root .git exclusion, no declared include/exclude request or typed skipped/unreadable/partial report. Not new intake API."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-A.2",
+      "title": "Capture file witnesses and directory membership",
+      "status": "partial",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "crates/vibe-scrape/src/inventory.rs:walk/digest_entries"
+      ],
+      "missing": [
+        "Per-file identity/digest and second directory listing exist; no retained captured bytes, observation-window/snapshot report, explicit partial/unstable inventory carriers or M-11-specific mutation tests."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-B.1",
+      "title": "Produce evidence-linked algorithmic stack proposals",
+      "status": "planned-only",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "crates/vibe-scrape/src/lib.rs:prepare",
+        "campaigns/next/tasks/M-11-B.json:M-11-B.1"
+      ],
+      "missing": [
+        "Existing prepare plans terminal scrape; no evidence-linked stack analyzer/proposed facts/options brownfield service or fixture found."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-B.2",
+      "title": "Expose optional assist as a separate explicit operation",
+      "status": "planned-only",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "campaigns/next/tasks/M-11-B.json:M-11-B.2"
+      ],
+      "missing": [
+        "No optional brownfield-assist operation consuming an algorithmic proposal found; generic agent enhancement is not this consumer path."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-C.1",
+      "title": "Prepare promotion while preserving existing intent",
+      "status": "planned-only",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "campaigns/next/tasks/M-11-C.json:M-11-C.1"
+      ],
+      "missing": [
+        "No brownfield proposal-to-authored-intent promotion plan. Existing migration/edit service is reusable infrastructure only."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-C.2",
+      "title": "Apply promotion with full affected-set revalidation",
+      "status": "planned-only",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "campaigns/next/tasks/M-11-C.json:M-11-C.2"
+      ],
+      "missing": [
+        "No promotion apply transaction joining inventory membership, full affected set and selected proposal; generic saved-document transaction does not establish brownfield route."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-D.1",
+      "title": "Define the reusable pre/post transition witness",
+      "status": "partial",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "crates/vibe-lifecycle/src/runner/invocation.rs:comparable_completion",
+        "crates/vibe-lifecycle/src/runner/verify.rs:reconcile_verification"
+      ],
+      "missing": [
+        "Existing input/completion/artifact witnesses lack distinct reusable pre/post produced/adopted source-transition recipe and outside-write membership evidence."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-D.2",
+      "title": "Enforce produced and adopted transition ownership",
+      "status": "partial",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "crates/vibe-lifecycle/src/runner/invocation.rs:comparable_completion",
+        "crates/vibe-lifecycle/src/state/store.rs:retained execution state"
+      ],
+      "missing": [
+        "Completion compares original input witness to current and refuses original-inputs-changed; no matching produced-versus-adopted transition ownership path found."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-D.3",
+      "title": "Make post-create verification causal and convergent",
+      "status": "partial",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "crates/vibe-lifecycle/src/runner/invocation.rs:comparable_completion",
+        "crates/vibe-lifecycle/src/runner/invocation/m_03_a_1_execution.rs:completed_production_builds_then_verify_observes_without_producer_dispatch"
+      ],
+      "missing": [
+        "No-producer verify exists, but shown fixture producer reads intent.txt and writes src/product.rs (disjoint). Existing-file consumed-input edits still fail original-inputs-changed; required convergent pre/post path missing."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-E.1",
+      "title": "Run the complete existing-project brownfield journey",
+      "status": "planned-only",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "campaigns/next/tasks/M-11-E.json:M-11-E.1",
+        "crates/vibe-lifecycle/src/runner/invocation/m_03_a_1_execution.rs:fixture"
+      ],
+      "missing": [
+        "No fixtures/next/brownfield or integrated intake→promotion→existing-file production→current-source test path. Generic race/recovery tests do not prove end-to-end brownfield acceptance."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-11-E.2",
+      "title": "Reject concurrent edits and preserve recovery truth",
+      "status": "planned-only",
+      "feature": "Brownfield observe/propose/promote and controlled existing-file production",
+      "evidence": [
+        "campaigns/next/tasks/M-11-E.json:M-11-E.2",
+        "crates/vibe-lifecycle/src/runner/invocation/m_03_a_1_execution.rs:fixture"
+      ],
+      "missing": [
+        "No fixtures/next/brownfield or integrated intake→promotion→existing-file production→current-source test path. Generic race/recovery tests do not prove end-to-end brownfield acceptance."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-12-A.1",
+      "title": "Verify the complete initial package and capability graph",
+      "status": "planned-only",
+      "feature": "Reconcile all accepted initial-route captures, versions and external coverage before integration.",
+      "evidence": [
+        "campaigns/next/tasks/M-12-A.json:tasks",
+        "crates/vibe-orchestrator/src/machine_operation/exact_local_install.rs"
+      ],
+      "missing": [
+        "No fixtures/next/integration subtree at pinned source; complete bridges/adapters/native graph replay and zero-network composition not demonstrated by the existing per-domain routes."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-12-A.2",
+      "title": "Reproduce the accepted initial graph offline",
+      "status": "planned-only",
+      "feature": "Prove a clean isolated consumer can replay exact initial-route inputs and behaviors.",
+      "evidence": [
+        "campaigns/next/tasks/M-12-A.json:tasks",
+        "crates/vibe-orchestrator/src/machine_operation/exact_local_install.rs"
+      ],
+      "missing": [
+        "No fixtures/next/integration subtree at pinned source; complete bridges/adapters/native graph replay and zero-network composition not demonstrated by the existing per-domain routes."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-12-B.1",
+      "title": "Document only actual shared operations and policies",
+      "status": "partial",
+      "feature": "Update the user/developer journeys from implemented CLI/API behavior and accepted prototype policy.",
+      "evidence": [
+        "docs/machine-api/README.md:current shared machine service",
+        "docs/machine-api/framed-session.md:current route",
+        "crates/vibe-cli/src/commands/machine_session.rs:dispatch"
+      ],
+      "missing": [
+        "Machine documentation still claims no public command and only a pure planner despite explicit CLI fixed routes; complete example/capability conformance is absent."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-12-B.2",
+      "title": "Validate documentation examples and machine contracts",
+      "status": "partial",
+      "feature": "Exercise documented examples through headless surfaces and retain a reproducible capability matrix.",
+      "evidence": [
+        "docs/machine-api/README.md:current shared machine service",
+        "docs/machine-api/framed-session.md:current route",
+        "crates/vibe-cli/src/commands/machine_session.rs:dispatch"
+      ],
+      "missing": [
+        "Machine documentation still claims no public command and only a pure planner despite explicit CLI fixed routes; complete example/capability conformance is absent."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-12-C.1",
+      "title": "Prepare an optional one-way tracker projection",
+      "status": "planned-only",
+      "feature": "Only after explicit owner demand, derive a tracker export from accepted project facts without making the tracker authoritative.",
+      "evidence": [
+        "campaigns/next/tasks/M-12-C.json:tasks"
+      ],
+      "missing": [
+        "Optional demand-dependent tracker projection has no tracker implementation or fixtures in pinned source; no destination should be inferred."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-12-C.2",
+      "title": "Apply only an approved tracker batch idempotently",
+      "status": "planned-only",
+      "feature": "If the optional export is demanded and its exact batch approved, perform and independently verify the one-way write.",
+      "evidence": [
+        "campaigns/next/tasks/M-12-C.json:tasks"
+      ],
+      "missing": [
+        "Optional demand-dependent tracker projection has no tracker implementation or fixtures in pinned source; no destination should be inferred."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-12-D.1",
+      "title": "Prepare initial-route acceptance and exact publication batch",
+      "status": "planned-only",
+      "feature": "Produce the complete reviewable acceptance/effect package before requesting actual publication approval.",
+      "evidence": [
+        "campaigns/next/tasks/M-12-D.json:tasks",
+        "crates/vibe-publish/src/publication_full_plan/journal.rs"
+      ],
+      "missing": [
+        "General publication engine is not a reconciled exact campaign package batch; task-specific readiness and approved external execution not established by source."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-12-D.2",
+      "title": "Execute and verify the approved publication batch",
+      "status": "planned-only",
+      "feature": "Only after the exact current-A approval, apply the batch and independently verify its declared publication/smoke outcome.",
+      "evidence": [
+        "campaigns/next/tasks/M-12-D.json:tasks",
+        "crates/vibe-publish/src/publication_full_plan/journal.rs"
+      ],
+      "missing": [
+        "General publication engine is not a reconciled exact campaign package batch; task-specific readiness and approved external execution not established by source."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-13-A.1",
+      "title": "Map current lifecycle, resolver and source consumers",
+      "status": "unknown",
+      "feature": "Create an exact factual starting map for the known behavior/authority gaps before architectural changes.",
+      "evidence": [
+        "campaigns/next/tasks/M-13-A.json:tasks",
+        "formats/capability-coverage/coverage-e1.json:surfaces"
+      ],
+      "missing": [
+        "Historical census is an audit deliverable, not runtime code; its completeness and exact exclusions were not independently reconstructed by this scoped audit."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-13-A.2",
+      "title": "Census active owned versions and data boundaries",
+      "status": "unknown",
+      "feature": "Identify exactly which active own manifests/policies may change while excluding foreign/history/generated data.",
+      "evidence": [
+        "campaigns/next/tasks/M-13-A.json:tasks",
+        "formats/capability-coverage/coverage-e1.json:surfaces"
+      ],
+      "missing": [
+        "Historical census is an audit deliverable, not runtime code; its completeness and exact exclusions were not independently reconstructed by this scoped audit."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-13-B.1",
+      "title": "Reconcile source policy and apply the bounded active-owned 1.1.0 floor",
+      "status": "partial",
+      "feature": "Make the accepted owner policy authoritative without rewriting historical or foreign identities.",
+      "evidence": [
+        "Cargo.toml:workspace.package.version=1.1.0",
+        "vibe.toml:project.version=1.1.0",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml:Redbook composition policy"
+      ],
+      "missing": [
+        "Active root floor is present; exhaustive owned/foreign/historical exclusion census was not re-proven here."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-13-B.2",
+      "title": "Reconcile lifecycle roles, source semantics and ETO law",
+      "status": "implemented",
+      "feature": "Install the accepted architectural source rules before dependent APIs and implementations.",
+      "evidence": [
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml:DOMAIN-AUTHORITY",
+        "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml"
+      ],
+      "missing": [
+        "Source-law implementation only; it does not establish universal runtime coverage."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-13-C.1",
+      "title": "Implement pure versioned migration planning",
+      "status": "implemented",
+      "feature": "Parse and plan deterministic authored-format migrations while preserving owner syntax and values.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/migration.rs:ManifestMigrationPlan",
+        "crates/vibe-core/src/manifest/migration/tests.rs:transforms_one_token_preserving_choices_and_unrelated_bytes",
+        "crates/vibe-core/src/manifest/migration/tests.rs:ordered_insertions_keep_untouched_utf8_comments_and_crlf_bytes"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-13-C.2",
+      "title": "Expose migration plans and input requirements as machine values",
+      "status": "implemented",
+      "feature": "Connect the migration planner to strict request/report contracts and structured one-shot surfaces.",
+      "evidence": [
+        "crates/vibe-workspace/src/migration_planning.rs:plan_migration_request",
+        "crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+        "crates/vibe-mcp/src/tools/migration_plan.rs",
+        "crates/vibe-workspace/src/migration_planning/tests.rs:malformed_unknown_wrong_types_and_null_are_preflight"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-13-D.1",
+      "title": "Implement guarded migration apply and recovery",
+      "status": "implemented",
+      "feature": "Apply a validated migration on Linux, macOS and Windows with retained before-state, explicitly scoped coordinated concurrency guarantees and truthful interrupted-state recovery.",
+      "evidence": [
+        "crates/vibe-workspace/src/migration_application/runtime.rs",
+        "crates/vibe-workspace/src/migration_application/runtime_tests.rs:process_restart_apply_boundaries_preserve_supported_prefixes",
+        "crates/vibe-workspace/src/migration_application/runtime_tests.rs:changed_absent_third_state_and_forged_intent_do_not_overwrite"
+      ],
+      "missing": [
+        "Native Linux/macOS/Windows runtime proof was not executed in this audit; source acceptance does not imply platform verification."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-13-D.2",
+      "title": "Reconcile current active-owned 1.1.0 metadata within the refreshed census",
+      "status": "partial",
+      "feature": "Apply only the exact active-owned manifest/constraint changes identified by M-13-A.",
+      "evidence": [
+        "Cargo.toml:workspace.package.version=1.1.0",
+        "vibe.toml:project.version=1.1.0"
+      ],
+      "missing": [
+        "Bound active-owned reconciliation is visible but complete refreshed per-file census/exclusion evidence not independently validated."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-14-A.1",
+      "title": "Separate definition, executor and target identities",
+      "status": "implemented",
+      "feature": "Freeze the environment roles and compatibility interpretation before existing host-based consumers acquire new fields.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,ExecutionContext,TargetBinding",
+        "crates/vibe-core/src/environment/tests.rs:windows_executor_linux_payload_and_compiler_output_keep_three_roles"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-14-A.2",
+      "title": "Centralize environment layout and prefix policy",
+      "status": "implemented",
+      "feature": "Provide one injected layout/root policy for user profiles and offline targets without scattering machine paths through providers.",
+      "evidence": [
+        "crates/vibe-core/src/environment/layout.rs:EnvironmentLayout::settings_anchored",
+        "crates/vibe-core/src/environment/layout.rs:DeclaredRootBinding",
+        "crates/vibe-core/src/environment/layout_tests.rs"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-14-B.1",
+      "title": "Generate environment and realization wire contracts",
+      "status": "implemented",
+      "feature": "Bind exact lock, payload inventory and realized closure identities to the shared M-16 schema conventions.",
+      "evidence": [
+        "crates/vibe-core/src/environment/exact.rs:ExactLockDigest,SelectedLockTarget",
+        "crates/vibe-wire/src/generated/environment/e1/exact_lock/mod.rs",
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentGeneration"
+      ],
+      "missing": [
+        "These are supplied-evidence contracts; source owner still proves inventory completeness and authenticity."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-14-B.2",
+      "title": "Migrate legacy identity and supply-path readers",
+      "status": "implemented",
+      "feature": "Preserve old record meanings while adding exact build inputs, prefix constraints and replaceable source/cache locators.",
+      "evidence": [
+        "crates/vibe-core/src/environment/legacy.rs:legacy_package,classify_legacy_artifact,MissingLegacyInput",
+        "crates/vibe-lifecycle/src/mechanism/record.rs:LegacyArtifactView"
+      ],
+      "missing": [
+        "No runtime payload substitution engine follows merely from legacy classification."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-14-C.1",
+      "title": "Carry the target binding through local operation seams",
+      "status": "implemented",
+      "feature": "Carry an opt-in target binding through strict local operation records and refuse bound effects until the physical owner grants pinned roots.",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs:DeployTargetRequest",
+        "crates/vibe-lifecycle/src/mechanism/deploy/bound_tests.rs:bound_apply_refuses_before_selection_or_state_creation"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-14-C.2",
+      "title": "Fence aliased roots and stale target generations",
+      "status": "implemented",
+      "feature": "Fence aliased physical roots and stale target generations with pinned, lock-scoped capabilities; preserve safe refusal before the first bound effect.",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/binding.rs:TrustedLocalDeployFacts,acquire_destination,reobserve_before_commit",
+        "crates/vibe-lifecycle/src/mechanism/deploy/binding_tests.rs:aliased_settings_spellings_contend_for_one_physical_lock",
+        "crates/vibe-lifecycle/src/mechanism/deploy/binding_tests.rs:stale_trusted_generation_refuses_before_destination_setup"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-14-C.3",
+      "title": "Apply the first host-admitted bound builtin through the incumbent engine",
+      "status": "implemented",
+      "feature": "Thread a host-issued effect grant and pinned roots through the incumbent deploy transaction for the first successful local UserProfile vibe-bin operation.",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/bound_effect_tests.rs:two_admitted_homes_publish_physical_builtin_and_distinct_bound_receipts",
+        "crates/vibe-lifecycle/src/mechanism/deploy/bound_effect_tests.rs:generation_drift_after_publication_retains_bound_intent_and_reports_uncertain"
+      ],
+      "missing": [
+        "Only local admitted builtin seam; not the full M-15 environment manager."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-A.1",
+      "title": "Record exact payload production and closure",
+      "status": "planned-only",
+      "feature": "Turn existing source/prebuilt/build artifacts into independently verifiable realization inputs and outputs.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Turn existing source/prebuilt/build artifacts into independently verifiable realization inputs and outputs."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-A.2",
+      "title": "Realize payload files with target filesystem semantics",
+      "status": "planned-only",
+      "feature": "Validate archives and preserve ordinary tools' files, links and modes without exposing host paths.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Validate archives and preserve ordinary tools' files, links and modes without exposing host paths."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-A.3",
+      "title": "Unify legacy binary dispatch and trusted substitution",
+      "status": "planned-only",
+      "feature": "Route installed command selection through validated artifact/closure records instead of existence or debug-first fallback.",
+      "evidence": [
+        "crates/vibe-workspace/src/bins.rs:DeclaredBinary::artifact"
+      ],
+      "missing": [
+        "Legacy debug.exists() preference remains byte-identical to current main; no unified captured-artifact runtime validation dispatch."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-B.1",
+      "title": "Resolve standalone environment definitions and locks",
+      "status": "planned-only",
+      "feature": "Use the existing Vibe solver for environment consumers without requiring a repository or inventing another dependency grammar.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Use the existing Vibe solver for environment consumers without requiring a repository or inventing another dependency grammar."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-B.2",
+      "title": "Implement replaceable source and realization supply paths",
+      "status": "planned-only",
+      "feature": "Make fetch and substitution obey exact captures across local mirrors and offline replay.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Make fetch and substitution obey exact captures across local mirrors and offline replay."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-C.1",
+      "title": "Create immutable store objects and profile generations",
+      "status": "planned-only",
+      "feature": "Represent reusable payload storage and per-environment generations without confusing content identity with physical ownership.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Represent reusable payload storage and per-environment generations without confusing content identity with physical ownership."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-C.2",
+      "title": "Apply HOME installs and dependency-safe removal",
+      "status": "planned-only",
+      "feature": "Deliver install/update/remove over exact owned effects with command and reverse-dependency checks.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Deliver install/update/remove over exact owned effects with command and reverse-dependency checks."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-C.3",
+      "title": "Execute commands through explicit environment activation",
+      "status": "planned-only",
+      "feature": "Run installed commands with the correct target closure and controlled shell activation.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Run installed commands with the correct target closure and controlled shell activation."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-D.1",
+      "title": "Recover generation switches and configuration effects",
+      "status": "planned-only",
+      "feature": "Preserve truthful old/new/partial states across interrupted activation, rollback and repair.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Preserve truthful old/new/partial states across interrupted activation, rollback and repair."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-D.2",
+      "title": "Collect only unreferenced owned runtime content",
+      "status": "planned-only",
+      "feature": "Implement explicit GC plans that respect shared, pinned, live and recovery references.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Implement explicit GC plans that respect shared, pinned, live and recovery references."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-E.1",
+      "title": "Implement the backend-neutral package transaction port",
+      "status": "planned-only",
+      "feature": "Keep foreign package resolution and installed-state authority explicit without choosing the open Arch policy.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Keep foreign package resolution and installed-state authority explicit without choosing the open Arch policy."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-E.2",
+      "title": "Implement the explicitly selected Arch backend policy",
+      "status": "planned-only",
+      "feature": "Deliver the owner-selected Arch strategy in the disposable Linux executor without silently assuming recommendation A.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Deliver the owner-selected Arch strategy in the disposable Linux executor without silently assuming recommendation A."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-E.3",
+      "title": "Prove Arch update ownership and failure recovery",
+      "status": "planned-only",
+      "feature": "Verify complete repository-epoch updates and truthful partial hook outcomes under the selected backend.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Verify complete repository-epoch updates and truthful partial hook outcomes under the selected backend."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-F.1",
+      "title": "Populate rootfs payloads with Linux-owned metadata",
+      "status": "planned-only",
+      "feature": "Assemble an offline Linux rootfs through the already prepared executor while preserving target filesystem semantics.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Assemble an offline Linux rootfs through the already prepared executor while preserving target filesystem semantics."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-F.2",
+      "title": "Bind backend hooks and offline service preparation",
+      "status": "planned-only",
+      "feature": "Keep guest-root package effects inside the exact offline target and separate installation from service startup.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Keep guest-root package effects inside the exact offline target and separate installation from service startup."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-G.1",
+      "title": "Lower image definitions into a reviewable build plan",
+      "status": "planned-only",
+      "feature": "Compose deterministic image stages from the same environment lock and existing artifact DAG.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Compose deterministic image stages from the same environment lock and existing artifact DAG."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-G.2",
+      "title": "Execute BuildKit builds with structured stage evidence",
+      "status": "planned-only",
+      "feature": "Run prepared image builds through the existing provider and M-16 operation/control path.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Run prepared image builds through the existing provider and M-16 operation/control path."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-G.3",
+      "title": "Export OCI evidence and verify non-root runtime replay",
+      "status": "planned-only",
+      "feature": "Demonstrate local artifact delivery and offline execution without conflating export, load and publication.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Demonstrate local artifact delivery and offline execution without conflating export, load and publication."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-H.1",
+      "title": "Project admitted tool and service descriptors into generations",
+      "status": "planned-only",
+      "feature": "Make installed infrastructure discoverable through schemas and exact deployment bindings.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Make installed infrastructure discoverable through schemas and exact deployment bindings."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-H.2",
+      "title": "Admit service probes and typed API calls",
+      "status": "planned-only",
+      "feature": "Expose bounded service operations without turning discovery into trust or ambient authority.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Expose bounded service operations without turning discovery into trust or ambient authority."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-H.3",
+      "title": "Prove agent discovery across two isolated services",
+      "status": "planned-only",
+      "feature": "Verify the service catalog's full local agent-facing path and its refusal conditions.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Verify the service catalog's full local agent-facing path and its refusal conditions."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-I.1",
+      "title": "Connect image and runtime provenance to boot inspection",
+      "status": "planned-only",
+      "feature": "Explain package, environment, image and service contributions through the shared debugger and four selectable client profiles.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Explain package, environment, image and service contributions through the shared debugger and four selectable client profiles."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-I.2",
+      "title": "Measure independent build reproducibility levels",
+      "status": "planned-only",
+      "feature": "Compare two cache-disabled builds at explicit resolution, rootfs and OCI identity levels.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Compare two cache-disabled builds at explicit resolution, rootfs and OCI identity levels."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-I.3",
+      "title": "Replace images and recover failed deployments",
+      "status": "planned-only",
+      "feature": "Verify Docker update/remove/rollback and GC against actual live references and persistent data boundaries.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Verify Docker update/remove/rollback and GC against actual live references and persistent data boundaries."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-I.4",
+      "title": "Prove the complete supply chain without GitHub",
+      "status": "planned-only",
+      "feature": "Exercise bootstrap through local publication using independent local sources, mirrors, caches and OCI hosts.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Exercise bootstrap through local publication using independent local sources, mirrors, caches and OCI hosts."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-J.1",
+      "title": "Close HOME and Docker journeys with machine parity",
+      "status": "planned-only",
+      "feature": "Reconcile actual runtime proof for both required delivery modes before declaring this phase complete.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Reconcile actual runtime proof for both required delivery modes before declaring this phase complete."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-J.2",
+      "title": "Document portable operation and recovery contracts",
+      "status": "planned-only",
+      "feature": "Leave permanent developer/user documentation for self-hosted delivery, recovery and the precise future system boundary.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Leave permanent developer/user documentation for self-hosted delivery, recovery and the precise future system boundary."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-K.1",
+      "title": "Expose Docker executor capability preflight",
+      "status": "planned-only",
+      "feature": "Report the actual local Linux builder capability before any environment realization depends on it.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Report the actual local Linux builder capability before any environment realization depends on it."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-K.2",
+      "title": "Prepare an independent Linux bootstrap worker",
+      "status": "planned-only",
+      "feature": "Create the minimal isolated executor needed for later payload and backend work without a bootstrap cycle.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Create the minimal isolated executor needed for later payload and backend work without a bootstrap cycle."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-15-K.3",
+      "title": "Establish the independently observed egress boundary",
+      "status": "planned-only",
+      "feature": "Make later no-GitHub and offline claims testable across control processes, native children and Docker builders.",
+      "evidence": [
+        "crates/vibe-core/src/environment/roles.rs:EnvironmentDefinition,EnvironmentGeneration",
+        "crates/vibe-core/src/environment/tests.rs:future_target_modes_are_describable_but_operations_unsupported"
+      ],
+      "missing": [
+        "No crates/vibe-orchestrator/src/environment runtime owner in pinned tree; existing environment contracts and deploy builtin do not implement this task: Make later no-GitHub and offline claims testable across control processes, native children and Docker builders."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-A.1",
+      "title": "Census public operations and semantic model families",
+      "status": "partial",
+      "feature": "Create an exact whole-product denominator for external access before designing protocol wrappers.",
+      "evidence": [
+        "formats/capability-coverage/coverage-e1.json:247 surfaces,35 models,15 planned_families",
+        "docs/machine-api/authority-map.md:current selected inventory input"
+      ],
+      "missing": [
+        "Finite retained census contains 145 source-observed/unknown access rows and is not maintained as a complete live capability index; separate source-delta files do not close the denominator."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-A.2",
+      "title": "Map domain authority and ETO compatibility boundaries",
+      "status": "implemented",
+      "feature": "Specify extraction seams and complete semantic observability without a new universal graph engine or IDE product.",
+      "evidence": [
+        "docs/machine-api/authority-map.md:Independent observation axes and contract owners",
+        "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml:DOMAIN-AUTHORITY"
+      ],
+      "missing": [
+        "Mapping is design/review data and expressly does not prove external conformance."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-B.1",
+      "title": "Generate strict operation and capability contracts",
+      "status": "partial",
+      "feature": "Provide one validated registry/facade request/result/error/event surface for every domain.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/machine_operation.rs:MachineOperationService,validate_route_metadata",
+        "crates/vibe-orchestrator/src/machine_operation/fixed_cargo.rs",
+        "crates/vibe-orchestrator/src/machine_operation/fixed_package.rs"
+      ],
+      "missing": [
+        "Generic registry validates only migration-planner availability; other domains use separate routes. One validated shared facade for every domain is not delivered."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-B.2",
+      "title": "Define entity, composite snapshot and source-location views",
+      "status": "implemented",
+      "feature": "Give external clients exact, navigable model identities without pretending all changing domains are one atomic snapshot.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/machine_view/snapshot.rs:CompositeSnapshot::compose",
+        "crates/vibe-orchestrator/src/machine_view/resource_uri.rs:OwnerResourceUriMap",
+        "crates/vibe-orchestrator/src/machine_view/paging.rs:AuthorizedProjection::page"
+      ],
+      "missing": [
+        "Caller-supplied identities/completeness need domain proof; types alone are not full live model access."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-B.3",
+      "title": "Negotiate the local transport and trusted contexts",
+      "status": "implemented",
+      "feature": "Publish a precise on-demand machine-session framing/handshake contract compatible with existing MCP boundaries.",
+      "evidence": [
+        "crates/vibe-mcp/src/machine_session/framing.rs",
+        "crates/vibe-mcp/src/machine_session/state/negotiation.rs",
+        "crates/vibe-cli/src/commands/machine_session.rs:dispatch"
+      ],
+      "missing": [
+        "Permanent framed-session documentation is stale relative to added adapters."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-C.1",
+      "title": "Reserve scoped submissions before effects",
+      "status": "implemented",
+      "feature": "Establish durable pre-effect reservation and fixture-journal replay for the new machine submission path; real domain recovery and surface adapters follow in C.2/C.4.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/machine_submission.rs:submit,SubmissionJournal",
+        "crates/vibe-lifecycle/src/state/submission.rs:SubmissionReservations",
+        "crates/vibe-orchestrator/src/machine_submission/tests.rs:eight_same_key_submitters_invoke_one_fixture_effect"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-C.2",
+      "title": "Link short-lived operation owners to domain recovery",
+      "status": "partial",
+      "feature": "Retain inspectable truthful outcomes across API exit, EOF and execution-owner crashes; add missing pre-effect owner journals for direct build, package and remote publication before those domains are protected machine submissions.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/machine_submission.rs:SubmissionJournal",
+        "crates/vibe-lifecycle/src/mechanism/build/journal.rs:fixed_target",
+        "crates/vibe-publish/src/publication_operation.rs:submit_fake_tag_create"
+      ],
+      "missing": [
+        "Child slices have real retained outcomes but fixed fixtures do not close real-domain breadth."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-C.2.1",
+      "title": "Bind reserved lifecycle execution to retained outcomes",
+      "status": "partial",
+      "feature": "Make an owner-selected lifecycle run journal-ready before scratch, install or handler effects, then retain its per-run truthful outcome for retry/attach.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/tests.rs:one_script_validate_runs_once_after_stage_and_replays_retained_report",
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/tests.rs:one_agent_park_retains_task_and_report_then_replays_without_backend",
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/tests.rs:workspace_member_refuses_before_reservation_or_run"
+      ],
+      "missing": [
+        "Fixed selected lifecycle slices implemented; arbitrary whole-workspace/general lifecycle submission is not established."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-C.2.2",
+      "title": "Journal direct build and package effects",
+      "status": "partial",
+      "feature": "Add domain-owned pre-effect identity, partial truth and recovery to direct build/package paths before enabling protected machine submission.",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/build/journal.rs:fixed_target,subject,MANIFEST_BYTES,MAIN_BYTES",
+        "crates/vibe-lifecycle/src/mechanism/package/journal.rs:subject,reserve_fixed_static_file_intent"
+      ],
+      "missing": [
+        "Production journal permits exact fixture Cargo project and one static-file package shape, not arbitrary current build/package operations."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-C.2.3",
+      "title": "Link deploy journals to reserved operation owners",
+      "status": "partial",
+      "feature": "Join the incumbent deploy intent/checkpoint/sidecar/receipt chain to C.1 run identity and inspectable recovery without duplicating its transaction engine.",
+      "evidence": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/bound_effect_tests.rs:protected_bound_deploy_replays_verified_receipt_without_second_effect",
+        "crates/vibe-orchestrator/src/machine_submission/deploy_grant.rs"
+      ],
+      "missing": [
+        "Fixed deploy route has real journals and bound roots; all incumbent/native provider deploy shapes are not thereby protected submissions."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-C.2.4",
+      "title": "Journal remote publication and reconcile owner lifetime",
+      "status": "partial",
+      "feature": "Give remote publication its own pre-effect run journal and retained partial result, then prove cross-domain attach/EOF/crash semantics without a daemon.",
+      "evidence": [
+        "crates/vibe-publish/src/publication_operation.rs:submit_fake_tag_create",
+        "crates/vibe-publish/src/publication_operation/tests.rs:lost_fake_remote_reply_is_uncertain_and_duplicate_never_replays_effect",
+        "crates/vibe-orchestrator/src/retained_mechanism_attach_tests.rs:host_can_reopen_lease_and_attach_pending_package_and_deploy_without_dispatch"
+      ],
+      "missing": [
+        "Selected remote journal is a crate-private fake-tag proof; generic live remote protected submission and cross-domain owner lifetime closure not established."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-C.3",
+      "title": "Multiplex progress, queries and cooperative controls",
+      "status": "partial",
+      "feature": "Keep machine sessions responsive during long operations with bounded replay and honest cancellation.",
+      "evidence": [
+        "crates/vibe-mcp/src/machine_session/responsive.rs:poll",
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/stream.rs",
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/control.rs"
+      ],
+      "missing": [
+        "Responsive stream/control exists for fixed lifecycle owner; universal domain stream/replay/cancellation coverage is not proven."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-C.4",
+      "title": "Expose typed input and admission across all adapters",
+      "status": "partial",
+      "feature": "Remove machine-mode TTY/prose decisions and fixed startup defaults that hide per-operation capability.",
+      "evidence": [
+        "crates/vibe-cli/src/commands/machine_session.rs:validate_mode",
+        "crates/vibe-orchestrator/src/machine_submission/cli_grant.rs:CliGrantService",
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_decisions/questions.rs"
+      ],
+      "missing": [
+        "CLI session selects one fixed mode and bounded options; complete typed admission across every existing CLI/MCP operation remains missing."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-D.1",
+      "title": "Analyze immutable client-scoped document overlays",
+      "status": "implemented",
+      "feature": "Run pure validation/navigation/configuration/boot preview over one disk-plus-buffer capture without saving it.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/document_analysis/capture.rs:AnalysisCapture",
+        "crates/vibe-orchestrator/src/document_analysis/mod.rs:DocumentClient",
+        "crates/vibe-orchestrator/src/document_analysis/preview.rs:configuration_preview",
+        "crates/vibe-orchestrator/src/document_analysis/m_16_d_1_cases.rs"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-D.2",
+      "title": "Convert positions and invalidate captured views honestly",
+      "status": "implemented",
+      "feature": "Provide accurate editor locations and resnapshot behavior across Unicode, generated resources and missed watches.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/document_analysis/locations.rs",
+        "crates/vibe-orchestrator/src/document_analysis/invalidation.rs",
+        "crates/vibe-orchestrator/src/document_analysis/m_16_d_2_cases.rs"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-16-D.3",
+      "title": "Enforce saved-state edits with a cooperative barrier",
+      "status": "implemented",
+      "feature": "Separate buffer edit proposals from service-managed disk mutation and fence registered editors through commit.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/document_analysis/edit/fence.rs:acknowledge,ready",
+        "crates/vibe-orchestrator/src/document_analysis/edit/m_16_d_3_cases.rs:late_buffer_change_is_stale_and_private",
+        "crates/vibe-orchestrator/src/document_analysis/edit/m_16_d_3_cases.rs:post_write_partial_cold_recovery_and_third_state"
+      ],
+      "missing": [
+        "Cooperating registered editor guarantee only; no hostile-writer CAS or global editor lock."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-A.1",
+      "title": "Move tree and reference semantics behind shared services",
+      "status": "partial",
+      "feature": "Replace CLI-local summary assumptions with exact externally queryable tree/provenance/reference views.",
+      "evidence": [
+        "crates/vibe-cli/src/commands/tree/model.rs",
+        "crates/vibe-cli/src/commands/tree/build.rs",
+        "crates/vibe-orchestrator/src/document_analysis/views.rs"
+      ],
+      "missing": [
+        "Captured document views exist but broad semantic tree still has CLI-local ownership; no complete shared tree/reference API is established."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-A.2",
+      "title": "Expose legacy and administrative operations with partial-effect truth",
+      "status": "partial",
+      "feature": "Close initial-domain API gaps without hiding supported operations behind contextual unsupported results.",
+      "evidence": [
+        "crates/vibe-mcp/src/tools.rs",
+        "formats/capability-coverage/coverage-e1.json:surfaces",
+        "crates/vibe-cli/src/commands/machine_session.rs:validate_mode"
+      ],
+      "missing": [
+        "Legacy/admin denominator contains unknown and legacy external carriers; fixed machine routes do not cover all supported operations."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-A.3",
+      "title": "Read and capture complete retained debugging structures",
+      "status": "partial",
+      "feature": "Expose stage evidence without acquiring writer ownership, rerunning providers or silently truncating completeness.",
+      "evidence": [
+        "crates/vibe-workspace/src/compile_trace/open.rs:prepare,create_or_reopen",
+        "crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs"
+      ],
+      "missing": [
+        "Existing trace opening acquires cooperative writer lock; complete detached retained-stage read/export and capture closure not established across domains."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-A.4",
+      "title": "Retain extension schemas and close initial model coverage",
+      "status": "partial",
+      "feature": "Make contributed models/actions inspectable after provider removal and prove every supported initial coverage row.",
+      "evidence": [
+        "crates/vibe-workspace/src/extension_world/machine_schema.rs:project_machine_operation_schemas",
+        "crates/vibe-orchestrator/src/machine_operation/discovery.rs",
+        "crates/vibe-orchestrator/src/machine_operation.rs:validate_route_metadata"
+      ],
+      "missing": [
+        "Retained extension schema projection exists; every supported initial action/model is not yet reachable through the generic typed service."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-B.1",
+      "title": "Capture the owned package rename reference universe",
+      "status": "planned-only",
+      "feature": "Determine the complete authorized affected scope before editing any package coordinate.",
+      "evidence": [
+        "campaigns/next/tasks/M-17-B.json:tasks",
+        "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs:DocumentEditAuthority"
+      ],
+      "missing": [
+        "Generic edit barrier exists but no owned package-coordinate reference-universe/rename planner/apply/recovery implementation found. Existing pkgskill receipt rename is unrelated."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-B.2",
+      "title": "Prepare exact rename edits and identity transitions",
+      "status": "planned-only",
+      "feature": "Validate a reviewable semantic rename plan against captured saved-state inputs.",
+      "evidence": [
+        "campaigns/next/tasks/M-17-B.json:tasks",
+        "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs:DocumentEditAuthority"
+      ],
+      "missing": [
+        "Generic edit barrier exists but no owned package-coordinate reference-universe/rename planner/apply/recovery implementation found. Existing pkgskill receipt rename is unrelated."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-B.3",
+      "title": "Apply rename with editor fencing and regeneration recovery",
+      "status": "planned-only",
+      "feature": "Commit the prepared owned-source change through one writer and verify its regenerated post-state.",
+      "evidence": [
+        "campaigns/next/tasks/M-17-B.json:tasks",
+        "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs:DocumentEditAuthority"
+      ],
+      "missing": [
+        "Generic edit barrier exists but no owned package-coordinate reference-universe/rename planner/apply/recovery implementation found. Existing pkgskill receipt rename is unrelated."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-C.1",
+      "title": "Verify two-client analysis and rename journeys",
+      "status": "partial",
+      "feature": "Prove independent external clients can navigate, edit unsaved state and perform the saved-state rename protocol.",
+      "evidence": [
+        "crates/vibe-orchestrator/src/document_analysis/edit/m_16_d_3_cases.rs:clean_acknowledged_saved_edit_commits",
+        "crates/vibe-mcp/src/context/document_edit.rs"
+      ],
+      "missing": [
+        "Client isolation/barrier tests are useful foundations; external full semantic rename journey missing."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-C.2",
+      "title": "Verify long jobs, replay, cancellation and revoked inspection",
+      "status": "partial",
+      "feature": "Exercise failure and connection boundaries through independent external clients without duplicate effects.",
+      "evidence": [
+        "crates/vibe-mcp/src/machine_session/responsive/tests/provider_tcp/cases.rs",
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner/process_tests.rs"
+      ],
+      "missing": [
+        "Selected transport and owner failure tests do not close all external initial domains, revocation and retained model inspection."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-C.3",
+      "title": "Verify external HOME image and service actions",
+      "status": "planned-only",
+      "feature": "Close the M-15-inclusive external path with the same operation and provenance contracts as initial domains.",
+      "evidence": [
+        "campaigns/next/tasks/M-17-C.json:M-17-C.3"
+      ],
+      "missing": [
+        "No HOME/image/service runtime implementation found; no full external journey can be claimed."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-D.1",
+      "title": "Close every supported operation and model coverage row",
+      "status": "partial",
+      "feature": "Make ETO/interface completeness a mechanically checked property of the delivered product.",
+      "evidence": [
+        "formats/capability-coverage/coverage-e1.json:surfaces",
+        "docs/machine-api/README.md",
+        "docs/machine-api/framed-session.md"
+      ],
+      "missing": [
+        "Coverage register and documentation exist but remain incomplete/stale; all-domain closure including HOME/Docker and semantic rename absent."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "M-17-D.2",
+      "title": "Publish the local developer machine contract",
+      "status": "partial",
+      "feature": "Leave implementable client-neutral documentation and compatibility examples independent of temporary campaign files.",
+      "evidence": [
+        "formats/capability-coverage/coverage-e1.json:surfaces",
+        "docs/machine-api/README.md",
+        "docs/machine-api/framed-session.md"
+      ],
+      "missing": [
+        "Coverage register and documentation exist but remain incomplete/stale; all-domain closure including HOME/Docker and semantic rename absent."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-BASE.1",
+      "title": "Capture the actual Developer Preview 1 starting state",
+      "status": "partial",
+      "feature": "Retain the exact source, package and interface baseline from which the authorized implementation starts.",
+      "evidence": [
+        "docs/releases/developer-preview-1-to-2/transition.json:dp1",
+        "xtask/src/bin/preview-transition-check/capture.rs"
+      ],
+      "missing": [
+        "Exact historical DP1 declaration exists, but full capture and capability denominator were not independently remeasured here."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-BASE.2",
+      "title": "Define permanent release accounting and deterministic validators",
+      "status": "implemented",
+      "feature": "Create the permanent contract and generated machine-readable formats independently of future change and migration runtimes.",
+      "evidence": [
+        "tools/preview-transition/check.py:main",
+        "xtask/src/bin/preview-transition-check/main.rs",
+        "xtask/src/bin/preview-transition-check/contribution.rs",
+        "tools/preview-transition/tests/test_assemble.py:AssembleTests"
+      ],
+      "missing": [
+        "Later-stage readiness correctly returns pending; bootstrap implementation is not release completion."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-BASE.3",
+      "title": "Require contribution records before central acceptance",
+      "status": "implemented",
+      "feature": "Make missing release and documentation accounting visible from the first implementation contribution.",
+      "evidence": [
+        "xtask/src/bin/preview-transition-check/contribution.rs",
+        "xtask/src/bin/preview-transition-check/affected_review.rs",
+        "xtask/src/bin/preview-transition-check/contribution_tests.rs"
+      ],
+      "missing": [
+        "Mechanism exists; audit did not validate every historical contribution or enforce central behavior."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-BIND.1",
+      "title": "Adopt bootstrap release records in native change roles",
+      "status": "implemented",
+      "feature": "Reuse the already retained change identities and evidence when M-02 change documents become available.",
+      "evidence": [
+        "xtask/src/bin/preview-transition-check/bindings.rs:native_record,bound_record,check",
+        "xtask/src/bin/preview-transition-check/bindings_roles_tests.rs"
+      ],
+      "missing": [],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-BIND.2",
+      "title": "Connect format migrations and capability surfaces to release impacts",
+      "status": "partial",
+      "feature": "Link existing domain-owned change machinery to the permanent release record without duplicating journals or protocols.",
+      "evidence": [
+        "xtask/src/bin/preview-transition-check/domain_bindings.rs:check,native_planning",
+        "xtask/src/bin/preview-transition-check/readiness.rs:linked"
+      ],
+      "missing": [
+        "Selected inventory/domain links implemented; complete linked capability and migration owner closure remains unavailable/pending."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-DOCS.1",
+      "title": "Bind the incoming documentation source and topic census",
+      "status": "partial",
+      "feature": "Preserve the separately authored documentation as an exact input before planning its product-driven update.",
+      "evidence": [
+        "xtask/src/bin/preview-transition-check/documentation.rs:check",
+        "docs/releases/developer-preview-1-to-2/transition.json:documentation.state"
+      ],
+      "missing": [
+        "Checker covers selected page/byte subclaims; documentation owner binding pending, complete topic/anchor intake not implemented."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-DOCS.2",
+      "title": "Apply the accepted product delta to documentation",
+      "status": "planned-only",
+      "feature": "Update existing and missing documentation topics from the net product changes while preserving concurrent authored work.",
+      "evidence": [
+        "xtask/src/bin/preview-transition-check/readiness.rs:updated,check",
+        "docs/releases/developer-preview-1-to-2/transition.json:documentation.state"
+      ],
+      "missing": [
+        "Updated/verified stage reports unmet prerequisites, not executed whole-candidate documentation reconciliation or examples."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-DOCS.3",
+      "title": "Verify updated documentation against the exact candidate",
+      "status": "planned-only",
+      "feature": "Prove the revised documentation describes executable behavior and honest platform limits.",
+      "evidence": [
+        "xtask/src/bin/preview-transition-check/readiness.rs:updated,check",
+        "docs/releases/developer-preview-1-to-2/transition.json:documentation.state"
+      ],
+      "missing": [
+        "Updated/verified stage reports unmet prerequisites, not executed whole-candidate documentation reconciliation or examples."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-RELEASE.1",
+      "title": "Reconcile the net transition and draft migration guidance",
+      "status": "partial",
+      "feature": "Derive a complete DP1-to-candidate migration document from actual delivered changes rather than completed task counts.",
+      "evidence": [
+        "tools/preview-transition/assemble.py:main",
+        "tools/preview-transition/tests/test_assemble.py:AssembleTests",
+        "xtask/src/bin/preview-transition-check/readiness.rs:reviewed"
+      ],
+      "missing": [
+        "Deterministic draft assembler exists; net candidate guide/review remains pending."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-RELEASE.2",
+      "title": "Rehearse migration guidance on isolated captured states",
+      "status": "planned-only",
+      "feature": "Test the guide as an operator would follow it, including preservation and failed or interrupted attempts.",
+      "evidence": [
+        "xtask/src/bin/preview-transition-check/readiness.rs:rehearsed,check",
+        "docs/releases/developer-preview-1-to-2/transition.json:dp2.state,migration_guide.state"
+      ],
+      "missing": [
+        "Rehearsal/retired modes emit pending prerequisites; actual candidate rehearsal and scaffold-free permanent finalization not implemented/completed."
+      ],
+      "runtime_verified": false
+    },
+    {
+      "id": "NEXT-PREVIEW-RELEASE.3",
+      "title": "Prepare permanent transition proof for campaign retirement",
+      "status": "planned-only",
+      "feature": "Leave a complete permanent proof that can finalize DP2 after temporary planning scaffolding is gone.",
+      "evidence": [
+        "xtask/src/bin/preview-transition-check/readiness.rs:rehearsed,check",
+        "docs/releases/developer-preview-1-to-2/transition.json:dp2.state,migration_guide.state"
+      ],
+      "missing": [
+        "Rehearsal/retired modes emit pending prerequisites; actual candidate rehearsal and scaffold-free permanent finalization not implemented/completed."
+      ],
+      "runtime_verified": false
+    }
+  ]
+}
