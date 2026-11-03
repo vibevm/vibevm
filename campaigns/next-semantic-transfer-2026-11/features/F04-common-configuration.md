@@ -29,3 +29,17 @@ Original evaluator against intended regressions: 3 passed, 5 failed, exit 101. R
 ## Remaining acceptance
 
 Shared kernel review and integration; rich intent/guard/default/consumer semantics; typed parameters and secret handling; actual feature-effect and solver integration; authored/install-owner persistence; ordinary console and versioned external views; complete install/update/modify and all-kind scenarios. Prototype receipts and pure tests are evidence for bounded claims, not proof of these outcomes.
+
+## Kernel candidate review
+
+The shared kernel compiles local references into a private validated model. It supports all four closure cardinalities, parent/required/requires implications, structured refusals and declaration-ordered selection/reasons. Positive requires cycles terminate; parent cycles and invalid references refuse. Group activity derives from member parents. Overlapping constraint groups are independent; rich choice member ownership is a separate rule. App normalization, public types and error wording remain in the app adapter. The old production Tree closure is removed; the exact old implementation exists only as a test oracle.
+
+Root review corrected two unnecessary restrictions in the first candidate: arbitrary activation guards were removed from closure constraints, and the single-group membership ban was removed after comparison with main package exclusive sets. The app adapter also deduplicates redundant requires entries in first-occurrence order, preserving validated legacy input and implication reasons. These are candidate review corrections, not claims that all old declarations were broken.
+
+Final worker checks: 13 core unit tests, 14 app feature tests (including 18 named unaffected differential rows), 1 planner precedence test, 15 core doctests, 1 app doctest, and one each public wizard, modify and update/rollback test: 47 distinct test/doc functions. Scoped core/app clippy, formatting and diff checks returned 0. Main integration and scoped traceability/conform checks remain pending at this entry.
+
+The revised rich-choice semantics are frozen separately in PROP-069#CHOICE-CORE: positive group/member guards; independent omission and merge strength; dormant projection; no executable partial result; final composition through the existing closure kernel with an exact check that no unchosen choice member appeared and no chosen member disappeared. Candidate/default binding and persistence still need their real owners. Research found no downstream main consumers for several existing FeatureExpansion fields; their pure algebra is not end-to-end delivery. See research/rich-choice-design-input.md for exact paths and proposed distinguishing cases.
+
+Integrated main full application library: 107 passed, 0 failed, including feature/planner cases and existing child/cancellation/state tests. Candidate and main source bytes match all 12 recorded SHA256 values. This expands app consumer coverage; it does not claim native-platform execution or complete package configuration.
+
+Kernel accepted after main integration: full app library 107/107, scoped core/app conform 0 new findings, fmt and specmap --check exit 0. Traceability has 0 suspects, 0 gated orphans and 0 unresolved host edges; 43 pre-existing warnings remain. All 12 candidate source hashes match integrated bytes. Only PROP-069#FEATURE-KERNEL moves to impl/done; F04 and the whole common configuration remain active.

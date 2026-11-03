@@ -188,3 +188,23 @@ Root review извлечения дополнительно нашёл compatibi
 После всех трёх исправлений main проходит8/8feature tests и публичный wizard1/1 (describe/plan/install/events/record/cancel/resume). Это9разных test functions, не сумма повторных запусков. Старый evaluator отдельно сохранён только в тестовом differential oracle кандидата; он не остаётся вторым production kernel. Проверки форматирования, conform и traceability выполняются перед отдельным bugfix commit.
 
 App bugfix gate завершён: fmt/conform exit0, specmap --check exit0 —9044units/4676items/3916edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Source review и девять behavioural tests допускают отдельный commit. Raw RED/GREEN, patches и main logs сохранены в local evidence/2026-11-04; общий configuration остаётся active.
+
+## 2026-11-04 — Проверка будущего package-потребителя уточнила общий kernel
+
+App fixes приняты commit9f3a271ef. При сопоставлении package features обнаружена существенная разница: их legacy exclusive groups являются независимыми at-most-one sets (PROP-003#EXT-EXCLUSIVE), а explicit/default features объединяются без app-style replacement. Будущий adapter должен передавать этот union как base. Кроме того, parser/evaluator допускают пересекающиеся constraint sets; предложенный мной запрет membership в нескольких closure groups был лишним. Он снимается с regression для {a,b}/{b,c}; unique ownership относится к будущему consumer-owned choice, не к обычным ограничениям. Валидатор package features отдельно имеет подозрительный --all-features probe: нельзя объявлять overlap доказанным полным authored/check-путём только по evaluator.
+
+Уточнена и семантика next default intent: отсутствующая group entry даёт additive default, но явная entry с Omitted+Exact допустима и сохраняет Exact при применении default policy. Предыдущее сокращение «defaults всегда additive» было неточным. Полезный случай: «ровно показанный default set» должен конфликтовать с дополнительным запросом другого consumer, тогда как «включить default set» допускает union при подходящей cardinality. Это решение сохранять различие, не копировать identity/host layers.
+
+Исследование следующего слоя сохранено в research/rich-choice-design-input.md. Root принял уточнение consumer merge: сравниваются active eligible projections, original dormant answers сохраняются. Например exact{x} и exact{} не конфликтуют, пока x неeligible; при включении его guard конфликт становится действующим. Choice member имеет одну owner group, в отличие от независимых closure constraints. Unknown/removed dormant answers всё равно требуют reconfiguration, а не молча отбрасываются. Это спецификация следующего slice, ещё не runtime acceptance.
+
+## 2026-11-04 — Интеграция общего feature kernel
+
+Замороженный кандидат проверен по полному набору12изменённых файлов и ихSHA256; source bytes перенесены в main поверх исправленной app baseline9f3a271ef. Root прочитал production model/closure/types/errors и compatibility adapter. Старый production Tree удалён; legacy oracle доступен только под cfg(test). Все три regressions baseline сохранены; перемещение helper в tests не меняет проверки.
+
+Финальная worker sequence:13core+14app+1planner+15coredoctest+1appdoctest+3publicCLI=47разных test/doc functions,11commands exit0 (включая clippy/fmt/diff). Полные отчёты, команды и digests вынесены в local evidence до удаления worktree. Главный integration gate сейчас запускает весь app --lib, поскольку более строгий model admission может затронуть другие planners; затем conform и specmap. Полного common configuration или native Windows/macOS acceptance этот slice не заявляет.
+
+Полный main app --lib завершился exit0:107passed/0failed. Более строгий shared model не сломал остальные библиотечные app consumers. Далее выполняются scoped conform по core/app и specmap с явным --check; статусы общего design/intent/effects/persistence остаются незавершёнными.
+
+### Shared kernel: acceptance gate
+
+Main fmt/core conform/app conform/specmap generation+check завершены exit0. Карта:9045units/4689items/3929edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Core conform0findings; app сохраняет одну прежнюю nonblocking ambient-env observation,0new. Все12source SHA256 повторно совпали с проверенным кандидатом. Принимается именно FEATURE-KERNEL, а не весь PROP-069. Отдельные default binding, rich intent, typed values, effects, persistence, console/machine journey и глобальная история кампании остаются работой.

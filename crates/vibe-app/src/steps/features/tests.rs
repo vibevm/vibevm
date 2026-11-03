@@ -6,6 +6,50 @@ use vibe_core::manifest::{FeatureDecl, InstallerOptionDecl, ProfileDecl};
 use super::{FeatureRequest, ImpliedRule, resolve_features, tree_order};
 use crate::error::StepError;
 
+pub(super) fn validated_parent_group() -> InstallerOptionDecl {
+    vibe_core::manifest::Manifest::parse_str(
+        r#"
+[package]
+group = "org.example"
+name = "parent-choice"
+version = "1.0.0"
+kind = "app"
+[application]
+id = "parent-choice"
+[[installer_options]]
+id = "main"
+name = "Main"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+result = { external = "/tmp/parent-choice" }
+[[installer_options.features]]
+id = "parent-a"
+name = "Parent A"
+exclusive_group = "parent"
+default = true
+[[installer_options.features]]
+id = "parent-b"
+name = "Parent B"
+exclusive_group = "parent"
+[[installer_options.features]]
+id = "child-a"
+name = "Child A"
+parent = "parent-a"
+[[installer_options.steps]]
+id = "setup"
+title = "Set up"
+kind = "shell"
+command = "true"
+"#,
+    )
+    .unwrap()
+    .installer_options
+    .into_iter()
+    .next()
+    .unwrap()
+}
+
 fn validated_preset() -> InstallerOptionDecl {
     let manifest = vibe_core::manifest::Manifest::parse_str(
         r#"
@@ -419,50 +463,6 @@ fn the_tree_order_puts_children_under_their_parents() {
             (0, "extras")
         ]
     );
-}
-
-pub(super) fn validated_parent_group() -> InstallerOptionDecl {
-    vibe_core::manifest::Manifest::parse_str(
-        r#"
-[package]
-group = "org.example"
-name = "parent-choice"
-version = "1.0.0"
-kind = "app"
-[application]
-id = "parent-choice"
-[[installer_options]]
-id = "main"
-name = "Main"
-platform = "linux"
-platform_name = "Linux"
-arch = "x86_64"
-result = { external = "/tmp/parent-choice" }
-[[installer_options.features]]
-id = "parent-a"
-name = "Parent A"
-exclusive_group = "parent"
-default = true
-[[installer_options.features]]
-id = "parent-b"
-name = "Parent B"
-exclusive_group = "parent"
-[[installer_options.features]]
-id = "child-a"
-name = "Child A"
-parent = "parent-a"
-[[installer_options.steps]]
-id = "setup"
-title = "Set up"
-kind = "shell"
-command = "true"
-"#,
-    )
-    .unwrap()
-    .installer_options
-    .into_iter()
-    .next()
-    .unwrap()
 }
 
 #[test]
