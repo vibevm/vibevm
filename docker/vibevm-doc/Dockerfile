@@ -1,5 +1,5 @@
-ARG DEV_IMAGE=vibevm/vibevm-dev:1.0.10
-ARG BASE_IMAGE=vibevm/vibevm:1.0.10
+ARG DEV_IMAGE=vibevm/vibevm-dev:1.0.11
+ARG BASE_IMAGE=vibevm/vibevm:1.0.11
 
 FROM ${DEV_IMAGE} AS build
 ARG NPM_CONFIG_REGISTRY=https://registry.npmjs.org
