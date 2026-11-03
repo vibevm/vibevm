@@ -10,7 +10,7 @@ use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
 use vibe_core::visibility::{Analysis, ProvenanceRule};
-use vibe_core::{ContentHash, Group, PackageRef, VersionSpec};
+use vibe_core::{ContentHash, PackageRef};
 use vibe_registry::store;
 use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_resolver::{
@@ -77,11 +77,6 @@ pub struct PlannedInstall {
     pub(crate) manifest: Manifest,
     pub(crate) lockfile: Lockfile,
     pub(crate) language_chain: Vec<String>,
-    /// The effective root set the solve ran against — the request's
-    /// roots verbatim, or the workspace-derived union in
-    /// install-from-manifest mode (these become the lockfile's
-    /// `meta.root_dependencies` mirror in that mode).
-    pub(crate) roots: Vec<PackageRef>,
     pub(crate) fetched: Vec<Fetched>,
     /// The packages to materialise, in resolution order — the shape
     /// the caller presents for confirmation.
@@ -100,7 +95,7 @@ pub struct PlannedInstall {
 /// `project_root` (which must already contain a `vibe.toml`).
 ///
 /// Read-mostly: the single deliberate write is the case-c migration
-/// (an empty entry manifest seeded from `vibe.lock`'s
+/// (an undeclared workspace's entry manifest seeded from `vibe.lock`'s
 /// `meta.root_dependencies` and persisted before solving, so a panic
 /// mid-solve cannot lose it — PROP-002 §2.7).
 pub fn plan<S: InstallSource + ?Sized>(
@@ -126,11 +121,13 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
     spec_format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
-    let mut workspace = Workspace::discover(project_root)?;
-    let mut manifest = Manifest::read(project_root.join(Manifest::FILENAME))?;
+    let selected = Workspace::discover_selected(project_root)?;
+    let mut workspace = selected.workspace;
+    let selected_root = selected.selected_root;
+    let mut manifest = Manifest::read(selected_root.join(Manifest::FILENAME))?;
     plan_prepared_with_spec_format(
         source,
-        project_root,
+        &selected_root,
         &mut manifest,
         &mut workspace,
         request,
@@ -160,124 +157,35 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     project_root: &Path,
     manifest: &mut Manifest,
     workspace: &mut Workspace,
-    request: InstallRequest,
+    mut request: InstallRequest,
     spec_format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
+    let selected = roots::selected_node(workspace, project_root)?;
+    request.roots = roots::unique_requests(&request.roots)?;
     let lockfile = load_or_empty_lockfile(&workspace.root, &request.generated_by)?;
 
     // PROP-003 §2.7 language chain (caller override > project [i18n]).
     let language_chain = build_language_chain(request.language.as_deref(), manifest);
 
-    // 1. Decide the effective root list. Three input shapes:
-    //
-    //    a. Caller pkgrefs given (`vibe install flow:wal …`) — those
-    //       are the roots; they are also merged into `vibe.toml`
-    //       `[requires].packages` after a successful apply (Cargo /
-    //       npm shape: explicit install records the dep on disk).
-    //    b. No caller args, manifest has `[requires].packages` —
-    //       install every declared entry. The `cargo build` / `npm
-    //       install` shape: a fresh clone reproduces the project's
-    //       package set without re-typing.
-    //    c. No caller args, manifest is empty, but the lockfile
-    //       already carries `meta.root_dependencies` — first-run
-    //       migration path for projects that pre-date the
-    //       `[requires]` schema (PROP-002 §2.7). Seed the manifest
-    //       from the lockfile snapshot, persist it, and proceed as in
-    //       case b.
-    //
-    //    Anything else (no caller roots, no manifest entries, no
-    //    lockfile snapshot) is an error — there is nothing to install.
-    let roots: Vec<PackageRef> = if request.roots.is_empty() {
-        if manifest.requires.packages.is_empty()
-            && manifest.requires.git_packages.is_empty()
-            && !lockfile.meta.root_dependencies.is_empty()
-        {
-            observer.on(PlanEvent::MigratingRequires {
-                entries: lockfile.meta.root_dependencies.len(),
-            });
-            manifest
-                .requires
-                .packages
-                .clone_from(&lockfile.meta.root_dependencies);
-            manifest.write(project_root.join(Manifest::FILENAME))?;
-            // The finalised tree below is what the root union reads, so the
-            // migration has to reach it too. The wrapper used to get this by
-            // re-discovering; here the SAME concrete entries are appended to
-            // the exact selected node, which is the only node the write above
-            // changed. Nothing else in the tree is touched, and the node's
-            // already-expanded entries survive.
-            migrate_selected_node(workspace, project_root, &lockfile.meta.root_dependencies);
-        }
-        // Unified resolution (PROP-009 §2.7): the root set is the union
-        // of every workspace node's `[requires]`. The supplied tree
-        // reflects the migration above, an earlier `--git` declaration,
-        // and any `[workspace.versions]` placeholders; a standalone
-        // project is a one-node workspace, so this degenerates to "just
-        // the entry node". The source dispatches each pkgref through the
-        // right path internally (override > git > registry).
-        let discovered = &*workspace;
-        let mut all: Vec<PackageRef> = Vec::new();
-        // De-duplicate on the `(group, name)` identity (PROP-008 §2.3).
-        // A manifest pkgref is group-qualified, so `group` is present.
-        let mut seen: std::collections::HashSet<(Option<Group>, String)> =
-            std::collections::HashSet::new();
-        for (_, node) in discovered.iter_nodes() {
-            for p in &node.requires.packages {
-                if seen.insert((p.group.clone(), p.name.to_string())) {
-                    all.push(p.clone());
-                }
-            }
-            for g in &node.requires.git_packages {
-                if seen.insert((Some(g.group.clone()), g.name.clone())) {
-                    all.push(PackageRef::new(
-                        g.kind,
-                        Some(g.group.clone()),
-                        g.name.clone(),
-                        VersionSpec::Latest,
-                    )?);
-                }
-            }
-        }
-        all
-    } else {
-        // ##EXPLICIT-PKGREF-FULL-SOLVE (PROP-011, the 2026-08-24 ruling):
-        // the named packages JOIN the full manifest union — never replace
-        // it. The apply phase treats any resolution as the whole world
-        // (its prune drops every slot outside it), so a partial solve
-        // must never reach apply: `vibe install X --offline` used to
-        // erase every other slot and rewrite the lock to X's closure.
-        // The named refs stay as written (re-resolved fresh); every
-        // untouched manifest root is held to its locked pin below.
-        let discovered = &*workspace;
-        let mut all: Vec<PackageRef> = request.roots.clone();
-        let mut seen: std::collections::HashSet<(Option<Group>, String)> = all
-            .iter()
-            .map(|p| (p.group.clone(), p.name.to_string()))
-            .collect();
-        let mut rest: Vec<PackageRef> = Vec::new();
-        for (_, node) in discovered.iter_nodes() {
-            for p in &node.requires.packages {
-                if seen.insert((p.group.clone(), p.name.to_string())) {
-                    rest.push(p.clone());
-                }
-            }
-            for g in &node.requires.git_packages {
-                if seen.insert((Some(g.group.clone()), g.name.clone())) {
-                    rest.push(PackageRef::new(
-                        g.kind,
-                        Some(g.group.clone()),
-                        g.name.clone(),
-                        VersionSpec::Latest,
-                    )?);
-                }
-            }
-        }
-        // §5.3 minimum churn: the untouched roots move nothing — each one
-        // the lock still satisfies is pinned to its locked version.
-        all.extend(vibe_workspace::freshness::hold_pins(&rest, &lockfile));
-        all
-    };
+    // Legacy seeding is permitted only for a genuinely undeclared workspace,
+    // never for an empty selected node whose siblings own requirements.
+    if request.roots.is_empty()
+        && !roots::has_declarations(workspace)
+        && !roots::raw_has_declarations(manifest)
+        && !lockfile.meta.root_dependencies.is_empty()
+    {
+        let migrated = roots::migration_roots(&lockfile)?;
+        observer.on(PlanEvent::MigratingRequires {
+            entries: migrated.len(),
+        });
+        manifest.requires.packages.clone_from(&migrated);
+        manifest.write(project_root.join(Manifest::FILENAME))?;
+        migrate_selected_node(workspace, project_root, &migrated);
+    }
+    let requirements = roots::RootRequirements::collect(workspace, &selected, &request.roots)?;
+    let roots = requirements.authored();
+    let root_count = requirements.package_count();
 
     // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, the 2026-08-24 ruling): zero
     // dependencies is a fresh project, not an error — regenerate the boot
@@ -289,16 +197,18 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     let progress = observer.progress();
     let resolution_task = progress.task("Resolving dependencies");
     resolution_task.detail(format!(
-        "{} declared root package{}",
-        roots.len(),
-        if roots.len() == 1 { "" } else { "s" }
+        "{} root package{} from {} consumer declarations",
+        root_count,
+        if root_count == 1 { "" } else { "s" },
+        roots.len()
     ));
 
-    // The root set the depsolver actually runs against. For an
-    // explicit-pkgref install it is the named refs plus the pin-held
-    // remainder above; for a stale bare install PROP-011 §5.3 replaces it
-    // with the pin-held set below.
-    let mut solve_roots = roots.clone();
+    // Authored requirements remain unchanged for fallback and diagnostics.
+    let mut solve_roots = if request.roots.is_empty() {
+        roots.clone()
+    } else {
+        requirements.held(&lockfile, &request.roots)
+    };
 
     // PROP-011 §2.2 — the freshness fast path. When no explicit pkgref
     // was given (the install-from-manifest shape) and `vibe.lock` is
@@ -316,6 +226,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
             vibe_workspace::freshness::Freshness::Fresh
                 if slots_match_spec_format(&ws.root, &lockfile, spec_format) =>
             {
+                requirements.check_locked_kinds(&lockfile)?;
                 resolution_task.skip("vibe.lock is fresh");
                 return Ok(Plan::Fresh);
             }
@@ -342,7 +253,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     }
 
     // 2. Run the depsolver.
-    observer.on(PlanEvent::ResolvingRoots { roots: roots.len() });
+    observer.on(PlanEvent::ResolvingRoots { roots: root_count });
     let mut strict_roots = solve_roots.clone();
     let graph = match source.solve(&solve_roots) {
         Ok(graph) => graph,
@@ -358,25 +269,26 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
                 Ok(graph) => graph,
                 Err(error) => {
                     resolution_task.fail("dependency resolution failed");
-                    return Err(error.into());
+                    return Err(requirements.solve_error(error));
                 }
             }
         }
         Err(e) => {
             resolution_task.fail("dependency resolution failed");
-            return Err(e.into());
+            return Err(requirements.solve_error(e));
         }
     };
 
     let root_id = visibility_root_id(manifest);
-    let effective = resolve_effective(source, &strict_roots, manifest, &root_id, graph)?;
+    let effective = resolve_effective(source, &strict_roots, manifest, &root_id, graph)
+        .map_err(|e| requirements.contextualize(e))?;
     let graph = effective.graph;
     let mut visibility_analysis = effective.analysis;
     let _visibility_iterations = effective.iterations;
 
-    if graph.packages.len() > roots.len() {
+    if graph.packages.len() > root_count {
         observer.on(PlanEvent::GraphSolved {
-            roots: roots.len(),
+            roots: root_count,
             total: graph.packages.len(),
         });
     }
@@ -450,6 +362,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     expand_conditional_deps(
         source,
         &roots,
+        &strict_roots,
         &lockfile,
         &store_root,
         project_root,
@@ -463,7 +376,9 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         &mut visibility_analysis,
         observer,
         &fetch_task,
-    )?;
+    )
+    .map_err(|e| requirements.contextualize(e))?;
+    requirements.check_fetched_kinds(&fetched)?;
     fetch_task.set_progress(fetched.len() as u64, Some(fetched.len() as u64), "packages");
     fetch_task.finish();
 
@@ -513,7 +428,6 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         manifest: manifest.clone(),
         lockfile,
         language_chain,
-        roots,
         fetched,
         resolution,
         // A value, not a rediscovery: apply and the slot lifecycle work on the
@@ -529,6 +443,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
 mod fetch;
 use fetch::{expand_conditional_deps, fetch_or_defer};
 
+mod roots;
 mod selection;
 use selection::{
     migrate_selected_node, refuse_read_only_kinds, slots_match_spec_format, visibility_root_id,

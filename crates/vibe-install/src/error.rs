@@ -13,6 +13,34 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub enum Error {
     #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS: \
+         selected consumer `{selected}` is absent from workspace `{workspace}`; fix surface: supply the selected node's prepared workspace"
+    )]
+    SelectedConsumerMissing { selected: String, workspace: String },
+
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS: \
+         explicit requests `{first}` and `{second}` disagree for one coordinate; fix surface: choose one explicit requirement"
+    )]
+    ConflictingExplicitRoots { first: String, second: String },
+
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS: \
+         {source}; consumer declarations: {declarations:?}; fix surface: reconcile the named consumers' [requires]"
+    )]
+    ConsumerConstraints {
+        declarations: Vec<String>,
+        #[source]
+        source: vibe_resolver::SolveError,
+    },
+
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-RECORDING: \
+         historical root snapshot contains differing requirements for one coordinate; fix surface: restore explicit consumer declarations before migration"
+    )]
+    AmbiguousRootSnapshot,
+
+    #[error(
         "no packages to install — neither the command line nor any workspace \
          member's [requires] names one \
          (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail; \

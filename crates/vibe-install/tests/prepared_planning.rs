@@ -431,21 +431,12 @@ fn a_corrupt_selected_manifest_does_not_reach_prepared_planning() {
     );
 }
 
-/// Case-c migration mutates BOTH supplied values, and the tree gets a delta.
-///
-/// PROP-002 §2.7: an empty entry manifest whose lockfile still carries
-/// `meta.root_dependencies` is seeded from that snapshot and persisted before
-/// the solve. The wrapper then re-discovered so the root union would see it;
-/// the prepared seam instead applies the same concrete entries to the exact
-/// selected node — which this asserts three ways: the file was written, the
-/// caller's own `Workspace` value now carries the entry, and the solve saw it.
-///
-/// The delta is applied to the node, never as a wholesale copy of the raw
-/// table: an unrelated in-memory value on that node — here the expanded
-/// version a `[workspace.versions]` placeholder would have resolved to —
-/// survives the migration.
+/// Finalized declarations are authoritative even when the raw selected table
+/// is empty. PROP-009 INSTALL-CONSUMER-RECORDING forbids legacy seeding in that
+/// case: a snapshot must not become a second consumer of an existing member's
+/// dependency or override an already-expanded version variable.
 #[test]
-fn case_c_migration_writes_the_manifest_and_deltas_the_supplied_node() {
+fn prepared_declarations_prevent_legacy_snapshot_seeding() {
     let project = bare_project();
     let mut lockfile = Lockfile::empty("vibe test", "2026-08-27T00:00:00Z");
     lockfile.meta.root_dependencies = vec![tools_ref()];
@@ -477,11 +468,8 @@ fn case_c_migration_writes_the_manifest_and_deltas_the_supplied_node() {
 
     assert_eq!(
         source.every_root(),
-        BTreeSet::from([
-            "org.demo/expanded".to_string(),
-            "org.demo/tools".to_string()
-        ]),
-        "the migrated entry AND the finalised-only one both reached the solve",
+        BTreeSet::from(["org.demo/expanded".to_string()]),
+        "the finalized declaration alone reached the solve",
     );
     let names: Vec<String> = workspace
         .root_manifest
@@ -490,19 +478,10 @@ fn case_c_migration_writes_the_manifest_and_deltas_the_supplied_node() {
         .iter()
         .map(|p| p.name.to_string())
         .collect();
-    assert!(
-        names.contains(&"tools".to_string()) && names.contains(&"expanded".to_string()),
-        "the caller's tree got the migration as a DELTA, keeping what it had: {names:?}",
-    );
+    assert_eq!(names, ["expanded"]);
     let persisted = Manifest::read(project.path().join("vibe.toml"))
-        .expect("the migration wrote a parseable manifest");
-    assert_eq!(
-        persisted.requires.packages.len(),
-        1,
-        "and the FILE got the lockfile snapshot verbatim — the finalised-only \
-         entry is in-memory state, not something to persist",
-    );
-    assert_eq!(persisted.requires.packages[0].name.to_string(), "tools");
+        .expect("the original manifest remains parseable");
+    assert!(persisted.requires.packages.is_empty());
 }
 
 /// `Plan::Fresh` leaves the caller's workspace usable.

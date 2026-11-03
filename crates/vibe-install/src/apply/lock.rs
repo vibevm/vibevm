@@ -12,7 +12,6 @@ pub(super) struct LockInputs<'a> {
     pub(super) resolution: &'a [ResolvedDep],
     pub(super) language_chain: &'a [String],
     pub(super) roots: &'a [PackageRef],
-    pub(super) finalized_roots: &'a [PackageRef],
     pub(super) lockfile_path: &'a std::path::Path,
 }
 
@@ -22,7 +21,6 @@ pub(super) fn record_lock(lockfile: &mut Lockfile, inputs: LockInputs<'_>) -> Re
         resolution,
         language_chain,
         roots,
-        finalized_roots,
         lockfile_path,
     } = inputs;
     // 9. Rebuild the lockfile from the fresh resolution — an install
@@ -68,21 +66,9 @@ pub(super) fn record_lock(lockfile: &mut Lockfile, inputs: LockInputs<'_>) -> Re
     }
     lockfile.meta.active_features = active_features_global.into_iter().collect();
 
-    // 10. Mirror the declared roots into `meta.root_dependencies` so
-    //     the lockfile stays a self-contained snapshot (PROP-002 §2.7).
-    //     Install-from-manifest records the workspace-derived roots;
-    //     an explicit install records the finalized request roots.
-    if finalized_roots.is_empty() {
-        // Bare install: `roots` is the complete current workspace union, so
-        // mirror it exactly and drop declarations removed since the prior
-        // lock.  Merging here would write a lock that freshness rejects on the
-        // very next invocation.
-        replace_root_dependencies(lockfile, roots);
-    } else {
-        // Explicit install: only the requested refs were finalized; merge
-        // those into the existing full-root snapshot.
-        merge_root_dependencies(lockfile, finalized_roots);
-    }
+    // Both entry shapes record the complete post-edit compatibility snapshot.
+    // Its unique rows are not the per-consumer constraints used by the solver.
+    replace_root_dependencies(lockfile, roots);
 
     lockfile.write(lockfile_path)?;
     // PROP-066 `#provenance`: where the bytes actually came from, beside

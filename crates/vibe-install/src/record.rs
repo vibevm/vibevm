@@ -93,13 +93,9 @@ pub fn merge_root_dependencies(lockfile: &mut Lockfile, roots: &[PackageRef]) {
     }
 }
 
-/// Replace the lock's root snapshot with the complete manifest-derived set.
-///
-/// A bare `vibe install` resolves the whole workspace union.  Unlike an
-/// explicit `vibe install <pkg>` (which merges the newly finalized request
-/// into the existing declarations), that union is authoritative: retaining a
-/// removed root makes the freshly written lock immediately stale and can leave
-/// a package named as a root even though it is absent from the resolved graph.
+/// Replace the lock's compatibility snapshot with the complete unique root
+/// projection, for both bare and explicit installs. Consumer manifests, rather
+/// than this flattened snapshot, remain authoritative for future solving.
 pub(crate) fn replace_root_dependencies(lockfile: &mut Lockfile, roots: &[PackageRef]) {
     lockfile.meta.root_dependencies = roots.to_vec();
 }
@@ -109,11 +105,9 @@ pub(crate) fn replace_root_dependencies(lockfile: &mut Lockfile, roots: &[Packag
 /// any entry was added or changed — caller writes the manifest only
 /// when the in-memory shape actually diverged from disk.
 ///
-/// Skips pkgrefs that are already declared as a git-source in
-/// `manifest.requires.git_packages` — those were recorded earlier via
-/// the `--git` declaration path and writing them again as
-/// registry-resolved would create a `(group, name)` duplicate that
-/// `try_from = "RequiresWire"` rejects on the next parse.
+/// Preserves existing git/path source declarations. For a registry requirement,
+/// only its selected-node version variable is replaced by the explicit value;
+/// leaving that variable would overwrite the new value during serialization.
 pub fn merge_manifest_requires(manifest: &mut Manifest, roots: &[PackageRef]) -> bool {
     let mut changed = false;
     for r in roots {
@@ -122,10 +116,21 @@ pub fn merge_manifest_requires(manifest: &mut Manifest, roots: &[PackageRef]) ->
             .git_packages
             .iter()
             .any(|g| Some(&g.group) == r.group.as_ref() && g.name == r.name)
+            || manifest
+                .requires
+                .path_packages
+                .iter()
+                .any(|p| Some(&p.group) == r.group.as_ref() && p.name == r.name)
         {
-            // Already declared as git-source — leave untouched.
+            // A version request does not change an authored source route.
             continue;
         }
+        let before = manifest.requires.var_packages.len();
+        manifest
+            .requires
+            .var_packages
+            .retain(|v| Some(&v.group) != r.group.as_ref() || v.name != r.name);
+        changed |= before != manifest.requires.var_packages.len();
         let pos = manifest
             .requires
             .packages
@@ -145,6 +150,103 @@ pub fn merge_manifest_requires(manifest: &mut Manifest, roots: &[PackageRef]) ->
         }
     }
     changed
+}
+
+/// Project the complete post-edit declarations into the legacy unique-root
+/// snapshot. Differing ranges retain the selected version, not a guessed
+/// semver intersection. Current manifests remain the solve authority.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-RECORDING"
+)]
+pub(crate) fn workspace_root_snapshot(
+    workspace: &vibe_workspace::Workspace,
+    resolution: &[ResolvedDep],
+) -> crate::error::Result<Vec<PackageRef>> {
+    let mut groups: std::collections::BTreeMap<(vibe_core::Group, String), Vec<PackageRef>> =
+        std::collections::BTreeMap::new();
+    for (consumer, node) in workspace.iter_nodes() {
+        let mut declarations = node.requires.packages.clone();
+        for git in &node.requires.git_packages {
+            declarations.push(PackageRef::new(
+                git.kind,
+                Some(git.group.clone()),
+                git.name.clone(),
+                git.version.clone().unwrap_or(VersionSpec::Latest),
+            )?);
+        }
+        for path in &node.requires.path_packages {
+            declarations.push(PackageRef::new(
+                path.kind,
+                Some(path.group.clone()),
+                path.name.clone(),
+                path.version.clone().unwrap_or(VersionSpec::Latest),
+            )?);
+        }
+        for declaration in declarations {
+            let group = declaration
+                .group
+                .clone()
+                .ok_or_else(|| crate::Error::RootNotFetched {
+                    pkgref: declaration.to_string(),
+                })?;
+            let selected = resolution
+                .iter()
+                .find(|p| p.group == group && p.name == declaration.name)
+                .ok_or_else(|| crate::Error::RootNotFetched {
+                    pkgref: declaration.to_string(),
+                })?;
+            let mismatch = if !declaration.version.matches(&selected.version) {
+                Some(vibe_resolver::SolveError::VersionConflict {
+                    package: declaration.qualified_name(),
+                    existing: selected.version.to_string(),
+                    new_constraint: declaration.version.to_string(),
+                })
+            } else if let Some(requested) = declaration.kind
+                && requested != selected.kind
+            {
+                Some(vibe_resolver::SolveError::KindMismatch {
+                    package: declaration.qualified_name(),
+                    requested,
+                    actual: selected.kind,
+                })
+            } else {
+                None
+            };
+            if let Some(source) = mismatch {
+                return Err(crate::Error::ConsumerConstraints {
+                    declarations: vec![format!("{consumer}/vibe.toml: {declaration}")],
+                    source,
+                });
+            }
+            groups
+                .entry((group, declaration.name.to_string()))
+                .or_default()
+                .push(declaration);
+        }
+    }
+    let mut snapshot = Vec::new();
+    for ((group, name), declarations) in groups {
+        let Some(first) = declarations.first() else {
+            continue;
+        };
+        let selected = resolution
+            .iter()
+            .find(|p| p.group == group && p.name == name)
+            .ok_or_else(|| crate::Error::RootNotFetched {
+                pkgref: first.to_string(),
+            })?;
+        if declarations.iter().all(|d| d == first) {
+            snapshot.push(first.clone());
+        } else {
+            snapshot.push(PackageRef {
+                kind: Some(selected.kind),
+                group: Some(group),
+                name: first.name.clone(),
+                version: VersionSpec::Req(req_with_op(semver::Op::Exact, &selected.version)),
+            });
+        }
+    }
+    Ok(snapshot)
 }
 
 /// Record a `--git` source declaration into `manifest.requires`:

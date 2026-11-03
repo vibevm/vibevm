@@ -31,7 +31,7 @@ use crate::lifecycle::{
 use crate::plan::PlannedInstall;
 use crate::record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
-    merge_root_dependencies, record_app_requirements, replace_root_dependencies,
+    record_app_requirements, replace_root_dependencies,
 };
 use crate::slot_verify::RegistrySlotVerifier;
 
@@ -356,7 +356,6 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         mut manifest,
         mut lockfile,
         language_chain,
-        roots,
         mut fetched,
         mut resolution,
         // The plan's pre-apply tree. Step 7 below replaces it with the
@@ -425,6 +424,10 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     //    seam takes the in-memory value for the selected node and discovers
     //    the rest of the tree around it.
     let workspace = Workspace::discover_with_selected_manifest(&project_root, &manifest)?;
+    // Check the siblings this discovery actually read before slot effects.
+    // Deferred in-place refresh below preserves the solver's version/kind;
+    // it only refreshes the source manifest and materialization provenance.
+    let roots = crate::record::workspace_root_snapshot(&workspace, &resolution)?;
 
     // 7a. PROP-022 §2.4 — perform the deferred incremental `in-place` updates
     //     the plan held back (a re-resolve of an already-present in-place
@@ -529,7 +532,6 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
                 resolution: &resolution,
                 language_chain: &language_chain,
                 roots: &roots,
-                finalized_roots: &finalized_roots,
                 lockfile_path: &lockfile_path,
             },
         )

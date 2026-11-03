@@ -146,3 +146,15 @@ Review потребовал сохранить legacy fallback при обычн
 ### Source-read: финальный gate и готовность commit
 
 Интегрированная карта прошла specmap --check:0suspects/0gated orphans/0unresolved host edges,43известных warnings. Все14source hashes совпали с проверенным кандидатом. Реализация допускается к commit; исходная рабочая копия сохраняется до проверки содержимого Git snapshot. Число проходов тестов не подменяет ограниченную гарантию, описанную выше.
+
+## 2026-11-04 — Интеграция workspace constraints
+
+Исходный real-resolvo RED:5из6cases обнаружили потерю sibling constraints, неверный выбор версии, перезапись чужого требования и повторную потерю на conditional solve. Исправление сохраняет authored declarations отдельно от optimization pins, меняет только выбранного consumer, возвращает consumer names в конфликте и формирует полный unique lock snapshot после записи выбора.
+
+Root review потребовал ещё две коррекции: public wrapper должен сохранять relative/symlink entry paths, а уже прочитанное новое sibling requirement при apply должно соответствовать выбранной resolution. Три новых cases дали0/3RED, затем3/3GREEN. Финальные22integration+7prepared cases и2отдельных incumbent cases прошли; scoped clippy/fmt/conform чистые. Тестовые ошибки (недостающий project.version, ошибочный Result alias) сохранены в features/F02-workspace-constraints.md и не выдаются за behavioral evidence.
+
+Кандидат из11файлов сверяется по SHA256 и переносится в main. Здесь он дополнительно проверяется вместе с новым source reader. Cross-member git/path registration и полноценная conditional algebra остаются явными последующими обязанностями, а не скрытым заявлением о полной готовности configuration.
+
+### Workspace constraints: main gate
+
+Совместный main-прогон `cargo test --offline --locked -p vibe-install --test root_constraints --test prepared_planning` прошёл:22+7cases,0failed. Интегрированный specmap --check тоже чист по blocking gates:0suspects/0gated orphans/0unresolved host edges;43known warnings остаются. Все11source hashes совпали с проверенным кандидатом. Проверен существующий CLI error classifier: новый контекст сохраняет SolveError в source chain, поэтому kind mismatch продолжает иметь штатную категорию. Изменение допускается к commit, с сохранёнными ограничениями source registration и conditional algebra.

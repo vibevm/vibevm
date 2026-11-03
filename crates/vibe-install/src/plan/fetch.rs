@@ -202,6 +202,7 @@ pub(super) fn try_in_place_incremental(
 pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
     source: &S,
     roots: &[PackageRef],
+    held_roots: &[PackageRef],
     lockfile: &Lockfile,
     store_root: &Path,
     project_root: &Path,
@@ -218,6 +219,7 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
 ) -> Result<()> {
     const COND_DEP_MAX_ITER: usize = 5;
     let mut iteration: usize = 0;
+    let mut solve_roots = held_roots.to_vec();
     loop {
         iteration += 1;
         let preliminary_ctx = build_activation_context(
@@ -274,22 +276,44 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
             extra.len(),
             if extra.len() == 1 { "" } else { "s" }
         ));
-        let mut combined = roots.to_vec();
-        combined.extend(fetched.iter().filter(|f| f.meta.is_root).map(|f| {
-            exact_pinned_pkgref(&ResolvedNode {
-                group: f.cached.resolved.group.clone(),
-                name: f.cached.resolved.name.clone(),
-                version: f.cached.resolved.version.clone(),
-                dependencies: Vec::new(),
-                is_root: true,
+        // Carry previous conditional roots only. Pins for a base coordinate
+        // would override a consumer's allowed range and prevent a valid solve.
+        let carried: Vec<_> = fetched
+            .iter()
+            .filter(|f| {
+                f.meta.is_root
+                    && !roots.iter().any(|r| {
+                        r.group.as_ref() == Some(&f.cached.resolved.group)
+                            && r.name == f.cached.resolved.name
+                    })
             })
-        }));
+            .map(|f| {
+                exact_pinned_pkgref(&ResolvedNode {
+                    group: f.cached.resolved.group.clone(),
+                    name: f.cached.resolved.name.clone(),
+                    version: f.cached.resolved.version.clone(),
+                    dependencies: Vec::new(),
+                    is_root: true,
+                })
+            })
+            .collect();
+        let mut combined = solve_roots.clone();
+        combined.extend(carried.iter().cloned());
         combined.extend(extra.iter().cloned());
-        // De-duplicate by the `(group, name)` identity (PROP-008 §2.3).
-        let mut seen: std::collections::HashSet<(Option<Group>, String)> =
-            std::collections::HashSet::new();
-        combined.retain(|r| seen.insert((r.group.clone(), r.name.to_string())));
-        let new_graph = source.solve(&combined)?;
+        let new_graph = match source.solve(&combined) {
+            Ok(graph) => graph,
+            Err(error) if solve_roots != roots => {
+                observer.on(events::PlanEvent::HeldPinsConflicted {
+                    error: error.to_string(),
+                });
+                solve_roots = roots.to_vec();
+                combined = solve_roots.clone();
+                combined.extend(carried);
+                combined.extend(extra.iter().cloned());
+                source.solve(&combined)?
+            }
+            Err(error) => return Err(error.into()),
+        };
         let effective = crate::visibility_projection::resolve_effective(
             source,
             &combined,

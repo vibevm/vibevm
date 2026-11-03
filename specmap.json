@@ -23772,8 +23772,8 @@
       "item_kind": "enum",
       "line": 12,
       "symbol": "vibe_install::error::Error",
-      "end_line": 168,
-      "fingerprint": "tok1:2928983e1c16eddcd7503312b8057a346ceb17931f423460ff329454abd33df2"
+      "end_line": 196,
+      "fingerprint": "tok1:d955c643c7aa8d64653b125062f586450ec0b915abd526abea3e9dec970a9fe2"
     },
     {
       "crate_name": "vibe-install",
@@ -23889,8 +23889,8 @@
       "item_kind": "fn",
       "line": 176,
       "symbol": "vibe_install::plan::fetch::expand_conditional_deps",
-      "end_line": 315,
-      "fingerprint": "tok1:ecdc288547cf3664d65c6e6074d66847f2ea60193643d04d2f7b1a5d7bc53ff6"
+      "end_line": 339,
+      "fingerprint": "tok1:ce79828e9f230b204b13598a69ca35ddf5769cf9eb9a40dfb5d11aa73e69e425"
     },
     {
       "crate_name": "vibe-install",
@@ -23900,6 +23900,15 @@
       "symbol": "vibe_install::plan::fetch::try_in_place_incremental",
       "end_line": 174,
       "fingerprint": "tok1:03fb604974ae00b9f766c95784d7cdc97ed001165eecdb62c072da787eade08c"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/plan/roots.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_install::plan::roots",
+      "end_line": 4,
+      "fingerprint": "tok1:e1f536d510d1aeccde0ed6912b5b2ef5059769d76274dedcf779890f8df209f3"
     },
     {
       "crate_name": "vibe-install",
@@ -23923,10 +23932,73 @@
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/record.rs",
       "item_kind": "fn",
-      "line": 250,
+      "line": 352,
       "symbol": "vibe_install::record::fetch_provenance",
-      "end_line": 284,
+      "end_line": 386,
       "fingerprint": "tok1:24c20afffbe4fe564e72e48469fc2d1f23f327da09404fb9096fa4da4f022ded"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/record.rs",
+      "item_kind": "fn",
+      "line": 155,
+      "symbol": "vibe_install::record::workspace_root_snapshot",
+      "end_line": 250,
+      "fingerprint": "tok1:f4addd9d3199b3a93ae632a4c550dcc5f5207b786ef07e5bc9bd53d689806e10"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/root_constraints.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_install::tests::root_constraints",
+      "end_line": 4,
+      "fingerprint": "tok1:e1f536d510d1aeccde0ed6912b5b2ef5059769d76274dedcf779890f8df209f3"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/root_constraints.rs",
+      "item_kind": "fn",
+      "line": 107,
+      "symbol": "vibe_install::tests::root_constraints::conditional_resolve_preserves_base_consumer_intersection",
+      "end_line": 132,
+      "fingerprint": "tok1:d788c8520ad3cbedc795cc49bcf20d2d36f582a7d2096ad0478e353865d9f431"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/root_constraints/fixture.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_install::tests::root_constraints::fixture",
+      "end_line": 4,
+      "fingerprint": "tok1:e1f536d510d1aeccde0ed6912b5b2ef5059769d76274dedcf779890f8df209f3"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/root_constraints.rs",
+      "item_kind": "fn",
+      "line": 14,
+      "symbol": "vibe_install::tests::root_constraints::incompatible_siblings_refuse_before_fetch_and_preserve_bytes",
+      "end_line": 37,
+      "fingerprint": "tok1:3f107b875ea5769c2672fc0eab0c9d897495766f3506ac200d467fd6f5618042"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/root_constraints/review_cases.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_install::tests::root_constraints::review_cases",
+      "end_line": 4,
+      "fingerprint": "tok1:aa47fdc785af30a876ecbf727ea40b88dd8d3a073a524da45689ab72857ccccd"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/root_constraints.rs",
+      "item_kind": "fn",
+      "line": 248,
+      "symbol": "vibe_install::tests::root_constraints::snapshot_is_unique_conservative_and_roundtrips_prerelease",
+      "end_line": 266,
+      "fingerprint": "tok1:e9d7cb456c82ee894501482e3f0fa0cc040f1c4cf5b6efcb30f289197e4eb5d6"
     },
     {
       "crate_name": "vibe-install",
@@ -57005,6 +57077,14 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-install/src/plan/roots.rs",
+      "from_symbol": "vibe_install::plan::roots",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-install/src/plan/selection.rs",
       "from_symbol": "vibe_install::plan::selection",
       "line": 3,
@@ -57023,10 +57103,66 @@
     {
       "file": "crates/vibe-install/src/record.rs",
       "from_symbol": "vibe_install::record::fetch_provenance",
-      "line": 265,
+      "line": 367,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-066#provenance",
       "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-install/src/record.rs",
+      "from_symbol": "vibe_install::record::workspace_root_snapshot",
+      "line": 158,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-RECORDING",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/tests/root_constraints.rs",
+      "from_symbol": "vibe_install::tests::root_constraints",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/tests/root_constraints.rs",
+      "from_symbol": "vibe_install::tests::root_constraints::conditional_resolve_preserves_base_consumer_intersection",
+      "line": 108,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSTRAINT-RETRIES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/root_constraints/fixture.rs",
+      "from_symbol": "vibe_install::tests::root_constraints::fixture",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/tests/root_constraints.rs",
+      "from_symbol": "vibe_install::tests::root_constraints::incompatible_siblings_refuse_before_fetch_and_preserve_bytes",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/root_constraints/review_cases.rs",
+      "from_symbol": "vibe_install::tests::root_constraints::review_cases",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-RECORDING",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/tests/root_constraints.rs",
+      "from_symbol": "vibe_install::tests::root_constraints::snapshot_is_unique_conservative_and_roundtrips_prerelease",
+      "line": 249,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-RECORDING",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-install/tests/visibility_resolution.rs",
@@ -140341,7 +140477,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f9608363af74ec40cfff2aacaba30d968002abe7216578287ed543b8e734c8e5",
+      "content_hash": "sha256:24afa1e01d8a5ffa668adb85b34046c135090e96533f9c61949ba4c337e193c8",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "PROP-009: Loading model — computed boot composition and the effective spec",
@@ -140467,7 +140603,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:a89f49bb71a349221d56727cad717eebac31b6a13dd620a93570d1dfe4b5a5a8",
+      "content_hash": "sha256:1a83e2ae6934f2858c33906edf2a0c4b07f722028a2c3f6f5367f90015691c46",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2. Decisions",
@@ -140890,7 +141026,7 @@
     },
     {
       "anchor": "install",
-      "content_hash": "sha256:ce9cfd5b3c19768c9bbd27260a651d63c5bc737aedd6c9c4099dc0dfe232f07d",
+      "content_hash": "sha256:ab73201b62b246c9dc7cabc1be23d6772cb1f0cf5cfa4e3f21729825845d5f3e",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.7 Workspace-aware `vibe install` / `vibe build`",
@@ -140917,28 +141053,28 @@
     },
     {
       "anchor": "INSTALL-CONSUMER-CONSTRAINTS",
-      "content_hash": "sha256:84481e0b048448aa35924036a56f659ea9e579f9e6abfedbf2c55adf58609d46",
+      "content_hash": "sha256:aa249f9baa7502d8bfc1e20f26236d02d1251fd0cf66f69f0bd7ec35fe251bdf",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
-      "heading": "The unified install planner preserves every effective registry-version requirement from every finalized workspace node, including expanded workspace-version declarations. One selected package identity does not collapse its consumers' constraints. A plain explicit package request replaces that coordinate's registry-version declaration only in the selected node; sibling declarations remain binding. Different explicit requests for one coordinate refuse instead of becoming last-wins; identical requests may coalesce. Existing git/path/override source identities are not rewritten by this version-request operation. Requested kind assertions remain checked against the selected package. A conflict reports the relevant consumer declarations and does not apply a partial world. @status:spec/done",
+      "heading": "The unified install planner preserves every effective registry-version requirement from every finalized workspace node, including expanded workspace-version declarations. One selected package identity does not collapse its consumers' constraints. A plain explicit package request replaces that coordinate's registry-version declaration only in the selected node; sibling declarations remain binding. Different explicit requests for one coordinate refuse instead of becoming last-wins; identical requests may coalesce. Existing git/path/override source identities are not rewritten by this version-request operation. Requested kind assertions remain checked against the selected package. A conflict reports the relevant consumer declarations and does not apply a partial world. @status:impl/done",
       "line": 116,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS"
     },
     {
       "anchor": "INSTALL-CONSTRAINT-RETRIES",
-      "content_hash": "sha256:04dc74c9bfc34c8eb2f2da21f8d25913ca90617c2f832e751a7aa5c1a4a60b60",
+      "content_hash": "sha256:d19622e37cf8a6b532bc774130764204bd8c7ded993fc6c2209701f8cb86ba69",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
-      "heading": "Temporary held pins are optimization inputs, separate from authored requirements. An explicitly requested coordinate is not pinned through any sibling declaration; unrelated satisfied pins may be retained. On held-pin conflict the retry receives the complete authored constraint set. Conditional and visibility re-solves preserve every base consumer constraint; an earlier conditional root may be carried by an exact pin only when no base requirement already represents that coordinate. Preserving workspace roots does not imply that all source-routing or conditional-expression combinations are supported. Reporting counts resolved root identities separately from the number of consumer declarations. @status:spec/done",
+      "heading": "Temporary held pins are optimization inputs, separate from authored requirements. An explicitly requested coordinate is not pinned through any sibling declaration; unrelated satisfied pins may be retained. On held-pin conflict the retry receives the complete authored constraint set. Conditional and visibility re-solves preserve every base consumer constraint; an earlier conditional root may be carried by an exact pin only when no base requirement already represents that coordinate. Preserving workspace roots does not imply that all source-routing or conditional-expression combinations are supported. Reporting counts resolved root identities separately from the number of consumer declarations. @status:impl/done",
       "line": 117,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSTRAINT-RETRIES"
     },
     {
       "anchor": "INSTALL-CONSUMER-RECORDING",
-      "content_hash": "sha256:cf702c6a01b60e12b27253391b4283973c772fb450db642574e5e26fafabc96b",
+      "content_hash": "sha256:e35217121c9f17db694d862abcaf0d68b15df8f8958ef0b8d5573f7fda77372f",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
-      "heading": "After explicit apply, only the selected node's replaced version.var indirection becomes the finalized explicit requirement; the shared versions table and sibling declarations remain unchanged. The lock's root_dependencies remains a one-row-per-coordinate compatibility snapshot of the complete post-edit root set, not the authority for per-consumer intent. Identical effective requirements retain their spelling; differing consumer requirements project to the actually selected exact version, conservatively, rather than discarding a consumer or inventing a broader range. Available manifests remain the source for future solving and freshness. Legacy lock-to-manifest seeding occurs only when the workspace has no actual declarations to preserve, including git/path/version.var declarations; it must not populate an intentionally empty workspace root merely because members have dependencies. A missing selected node refuses before this migration or apply. @status:spec/done",
+      "heading": "After explicit apply, only the selected node's replaced version.var indirection becomes the finalized explicit requirement; the shared versions table and sibling declarations remain unchanged. The lock's root_dependencies remains a one-row-per-coordinate compatibility snapshot of the complete post-edit root set, not the authority for per-consumer intent. Identical effective requirements retain their spelling; differing consumer requirements project to the actually selected exact version, conservatively, rather than discarding a consumer or inventing a broader range. Available manifests remain the source for future solving and freshness. Legacy lock-to-manifest seeding occurs only when the workspace has no actual declarations to preserve, including git/path/version.var declarations; it must not populate an intentionally empty workspace root merely because members have dependencies. A missing selected node refuses before this migration or apply. @status:impl/done",
       "line": 118,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-RECORDING"
     },
