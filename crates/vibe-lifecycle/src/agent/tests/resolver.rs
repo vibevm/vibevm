@@ -18,6 +18,28 @@ use crate::agent::{PromptRequest, SelectedWorldPromptResolver};
 const GROUP: &str = "org.demo";
 const PROMPT: &str = "spec://org.demo/tools/common/PROMPT-001#root";
 
+#[cfg(unix)]
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
+)]
+fn actual_prompt_refuses_same_byte_replacement_during_source_read() {
+    let world = World::build();
+    let path = world
+        .provider_root
+        .join("vibevm/vibespecs/common/PROMPT-001.md");
+    let original = fs::read(&path).unwrap();
+    vibe_safefs::arm_before_bounded_read(Some(Box::new(|parent, name| {
+        let bytes = fs::read(parent.join(name)).unwrap();
+        fs::rename(parent.join(name), parent.join("retained-original")).unwrap();
+        fs::write(parent.join(name), bytes).unwrap();
+    })));
+    let outcome = world.resolver().resolve(&world.request(PROMPT));
+    vibe_safefs::arm_before_bounded_read(None);
+    assert!(outcome.unwrap_err().contains("replaced"));
+    assert_eq!(fs::read(path).unwrap(), original);
+}
+
 /// A materialised world: the executing provider instance at 1.0.0, a fresher
 /// 2.0.0 slot installed beside it that the lock did NOT choose, a colliding
 /// document in the workspace root's own authored tree, and a selected `lib`

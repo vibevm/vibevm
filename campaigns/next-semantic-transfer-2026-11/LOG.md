@@ -124,3 +124,25 @@ Commit `c990b2900` фиксирует исследовательские ист�
 Контракт INSTALL-CONSUMER-CONSTRAINTS / RETRIES / RECORDING закреплён в PROP-009. Все consumer requirements сохраняются; explicit edit относится к выбранному node; pins остаются временной оптимизацией и не удерживают явно изменяемую координату через sibling. Version.var выбранной зависимости сохраняет explicit изменение на диске, shared table/siblings не переписываются. Старый lock snapshot остаётся уникальным по координате; для разных consumer ranges в нём хранится реально выбранный exact version, тогда как manifests остаются настоящим источником требований. Это консервативная compatibility-проекция, не новый per-consumer lock формат.
 
 Отдельно обнаружена недостроенная композиция git/path sources между members. Этот slice не будет выдан за её исправление: текущие source identities сохраняются, а полноценная регистрация/конфликты источников остаются следующим явным обязательством. Реализация и её runtime проверки ещё не выполнены.
+
+## 2026-11-04 — Новый ориентир владельца: общий выбор для всех видов пакетов
+
+Владелец указал на уже работающие app-инсталляторы основной VibeVM: консольный выбор опций и представление того же выбора внешнему GUI. Затем поручил исследовать перенос/обобщение этой системы для законченного общего решения всех видов пакетов. Это новый ориентир дизайна package choices; не разрешение слепо копировать ни app-код, ни next-код.
+
+По исходникам main подтверждён цельный путь: `describe` → явные ответы CLI/GUI или injected console callbacks → один planner/resolve_features → исполнение → запись выбранных features и nonsecret parameters → update/modify с прежним выбором. Публичный CLI wizard test проходит describe/plan/install/events/record/cancel/resume. У apps validated exclusive group имеет ровно один default и ровно один выбор когда активна; неактивная группа может быть пустой. Непроверенная вручную собранная InstallerOptionDecl не получает эту гарантию автоматически.
+
+В next обнаружен другой путь: обычный attended install не создаёт choice host; отдельный интерактивный маршрут требует --choice-host и --choice-capture. Создание host найдено в тестовом стенде. Готовые selections в manifest действительно работают. Новые ответы host не соединены полностью с записью authored consumer_config: повторное чтение старого manifest может отвергнуть новый intent; это пока call-path вывод, не новый runtime reproduction. Дописывать следует всю цепочку выбора/плана/сохранения, а не только prompt.
+
+Принцип дальнейшего сравнения: единая модель/проверка выбора и общие console/machine surfaces, с сохранением необходимых domain effects. Нельзя свести four cardinalities, guards, omitted/explicit-empty, dormant choices и несколько consumers next к простому набору app checkboxes. Нельзя также насильно сделать все девять kind одинаково installable: doc имеет read/cache-only границу, remap — отдельное согласие на policy. Конкретный общий контракт ещё исследуется; внедрения новой универсальной системы пока нет.
+
+## 2026-11-04 — Приёмка согласованного чтения источников
+
+Source-read slice прошёл центральный review и копируется в main по14проверенным SHA256. Реальный RED показал чтение внешнего sentinel через redirected descendants и подменённый metadata locator. Новая реализация удерживает no-follow parent/file, сравнивает два прохода, использует один полный buffer и допускает поддерживаемые shared inodes. Старые single-link readers не изменены. Actual hardlink placement доказан равенством inode/device и link count, а не copy fallback; in-place и настоящая prompt-resolution цепочка проверены.
+
+Review потребовал сохранить legacy fallback при обычном файле с именем нового layout, а также обновить архитектурный dependency fence ровно под разрешённую SafeFS связь (сохранены exact allowlists и no-reverse checks). Обе коррекции сначала дали воспроизводимый RED, затем GREEN. Корневой embed run39/39; scoped conform по четырём затронутым crates —0new findings. Полный набор команд, случаев и ошибок разработки — features/F03-source-observations.md.
+
+Границы остаются явными: metadata — locator, не межвызовный root witness; explicit alias допускается заново в новом read epoch. Нет whole-closure atomicity, hostile ABA proof или authenticated original-source verdict. Pattern ambiguity/error propagation и case/NFC aliases остаются следующей работой. Объединение выбора app/package не меняет это самостоятельное исправление существующего источника bytes.
+
+### Source-read: финальный gate и готовность commit
+
+Интегрированная карта прошла specmap --check:0suspects/0gated orphans/0unresolved host edges,43известных warnings. Все14source hashes совпали с проверенным кандидатом. Реализация допускается к commit; исходная рабочая копия сохраняется до проверки содержимого Git snapshot. Число проходов тестов не подменяет ограниченную гарантию, описанную выше.

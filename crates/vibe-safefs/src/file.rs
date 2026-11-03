@@ -29,6 +29,7 @@ use crate::publish::{PublishError, Published};
 mod bounded;
 mod create_new;
 pub(crate) mod identity;
+mod source_read;
 mod stable;
 mod stream;
 pub use bounded::StableFileSnapshot;

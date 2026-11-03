@@ -38,29 +38,11 @@ pub(super) fn resolve_doc_with_formats(
         None => (base_spec.to_path_buf(), doc_path),
     };
 
-    if is_id_stem(last) {
-        let matches: Vec<PathBuf> = read_dir_or_empty(&dir)
-            .map(|e| e.path())
-            .filter(|p| id_file_matches_with_formats(p, last, active_formats))
-            .collect();
-        if let Some(collision) = active_same_stem_collision(doc_path, &matches, active_formats) {
-            return Err(collision);
-        }
-        if let Some((md, xml)) = pair_among(&matches) {
-            return Err(ResolveError::PairCollision { markdown: md, xml });
-        }
-        match matches.as_slice() {
-            [] => Err(ResolveError::DocNotFound {
-                doc_path: doc_path.to_string(),
-                base: base_spec.display().to_string(),
-            }),
-            [one] => resolved(one),
-            many => Err(ResolveError::AmbiguousDoc {
-                id: last.to_string(),
-                count: many.len(),
-                dir: dir.display().to_string(),
-            }),
-        }
+    let candidates = if is_id_stem(last) {
+        read_dir_or_empty(&dir)
+            .map(|entry| entry.path())
+            .filter(|path| id_file_matches_with_formats(path, last, active_formats))
+            .collect()
     } else {
         let mut candidates = vec![
             base_spec.join(format!("{doc_path}.md")),
@@ -74,27 +56,49 @@ pub(super) fn resolve_doc_with_formats(
         candidates.sort();
         candidates.dedup();
         candidates.retain(|candidate| candidate.is_file());
-        if candidates.len() > 1
-            && candidates.iter().any(|candidate| {
-                candidate
-                    .extension()
-                    .and_then(|value| value.to_str())
-                    .is_some_and(|extension| active_formats.iter().any(|value| value == extension))
-            })
-        {
-            return Err(active_collision(doc_path, &candidates));
+        candidates
+    };
+    select_doc(base_spec, doc_path, active_formats, &candidates)
+}
+
+pub(super) fn select_doc(
+    base_spec: &Path,
+    doc_path: &str,
+    active_formats: &[String],
+    candidates: &[PathBuf],
+) -> Result<ResolvedDoc, ResolveError> {
+    let (dir, last) = doc_path.rsplit_once('/').map_or_else(
+        || (base_spec.to_path_buf(), doc_path),
+        |(parent, last)| (base_spec.join(parent), last),
+    );
+    if is_id_stem(last) {
+        if let Some(collision) = active_same_stem_collision(doc_path, candidates, active_formats) {
+            return Err(collision);
         }
-        if let Some((md, xml)) = pair_among(&candidates) {
-            return Err(ResolveError::PairCollision { markdown: md, xml });
-        }
-        match candidates.as_slice() {
-            [one] => resolved(one),
-            [] => Err(ResolveError::DocNotFound {
-                doc_path: doc_path.to_string(),
-                base: base_spec.display().to_string(),
-            }),
-            many => Err(active_collision(doc_path, many)),
-        }
+    } else if candidates.len() > 1
+        && candidates.iter().any(|path| {
+            path.extension()
+                .and_then(|value| value.to_str())
+                .is_some_and(|extension| active_formats.iter().any(|format| format == extension))
+        })
+    {
+        return Err(active_collision(doc_path, candidates));
+    }
+    if let Some((markdown, xml)) = pair_among(candidates) {
+        return Err(ResolveError::PairCollision { markdown, xml });
+    }
+    match candidates {
+        [one] => resolved(one),
+        [] => Err(ResolveError::DocNotFound {
+            doc_path: doc_path.into(),
+            base: base_spec.display().to_string(),
+        }),
+        many if is_id_stem(last) => Err(ResolveError::AmbiguousDoc {
+            id: last.into(),
+            count: many.len(),
+            dir: dir.display().to_string(),
+        }),
+        _ => Err(active_collision(doc_path, candidates)),
     }
 }
 
@@ -129,7 +133,11 @@ pub(super) fn id_file_matches(path: &Path, id: &str) -> bool {
     id_file_matches_with_formats(path, id, &[])
 }
 
-fn id_file_matches_with_formats(path: &Path, id: &str, active_formats: &[String]) -> bool {
+pub(super) fn id_file_matches_with_formats(
+    path: &Path,
+    id: &str,
+    active_formats: &[String],
+) -> bool {
     let extension = path.extension().and_then(|value| value.to_str());
     if !matches!(extension, Some("md" | "xml"))
         && !active_formats

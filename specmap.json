@@ -24218,6 +24218,15 @@
     },
     {
       "crate_name": "vibe-lifecycle",
+      "file": "crates/vibe-lifecycle/src/agent/tests/resolver.rs",
+      "item_kind": "fn",
+      "line": 21,
+      "symbol": "vibe_lifecycle::agent::tests::resolver::actual_prompt_refuses_same_byte_replacement_during_source_read",
+      "end_line": 41,
+      "fingerprint": "tok1:b8a5ca0831cd8c77c4fd44adb4e6f9f605750fe8b2dd55d6c0879ce40ae6e0e7"
+    },
+    {
+      "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/artifacts.rs",
       "item_kind": "fn",
       "line": 105,
@@ -33760,9 +33769,9 @@
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "enum",
-      "line": 48,
+      "line": 49,
       "symbol": "vibe_safefs::file::Presence",
-      "end_line": 60,
+      "end_line": 61,
       "fingerprint": "tok1:4b753670f3588e7bfc7942d6b920f6077b6ea195d6dd26607ff71d9c5c7b520d"
     },
     {
@@ -33782,6 +33791,33 @@
       "symbol": "vibe_safefs::file::identity",
       "end_line": 9,
       "fingerprint": "tok1:c29675253d6768efd8adf97a4a44a4b942bdfc925dea2630dcb093de4b46566b"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file/source_read.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_safefs::file::source_read",
+      "end_line": 4,
+      "fingerprint": "tok1:3257d4e707e9ba7c517d947dcddde0ea5c5d7fb1b78c96ad7619480c48faf8f5"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file/source_read.rs",
+      "item_kind": "fn",
+      "line": 13,
+      "symbol": "vibe_safefs::file::source_read::Project::read_source_bytes",
+      "end_line": 33,
+      "fingerprint": "tok1:bf92d69f007f20e4ed4e43bfdeca90f2b6612153d77abfa5d91fe6e94a35a5ac"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file/source_read_tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_safefs::file::source_read_tests",
+      "end_line": 4,
+      "fingerprint": "tok1:3257d4e707e9ba7c517d947dcddde0ea5c5d7fb1b78c96ad7619480c48faf8f5"
     },
     {
       "crate_name": "vibe-safefs",
@@ -36044,6 +36080,15 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/compiler/transform/dependency_dag_fence_tests.rs",
+      "item_kind": "fn",
+      "line": 27,
+      "symbol": "vibe_spec::compiler::transform::dependency_dag_fence_tests::the_dependency_dag_keeps_only_approved_runtime_and_test_edges",
+      "end_line": 133,
+      "fingerprint": "tok1:d8b96769221f5b01a4b9db0066d35843993e1ef033071ec90ddef347f428cc9d"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/transform/emitted_reconstruction.rs",
       "item_kind": "mod",
       "line": 38,
@@ -38150,6 +38195,42 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/embed/read.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::embed::read",
+      "end_line": 4,
+      "fingerprint": "tok1:3257d4e707e9ba7c517d947dcddde0ea5c5d7fb1b78c96ad7619480c48faf8f5"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/embed/read.rs",
+      "item_kind": "fn",
+      "line": 8,
+      "symbol": "vibe_spec::embed::read::FsSectionSource::read_resolved",
+      "end_line": 35,
+      "fingerprint": "tok1:b5358b73f4e70dce4072c2cd8e1f2211abcd99531502558e6becc05002b5ec81"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/embed/source_reads.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::embed::source_reads",
+      "end_line": 4,
+      "fingerprint": "tok1:3257d4e707e9ba7c517d947dcddde0ea5c5d7fb1b78c96ad7619480c48faf8f5"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/embed/source_reads.rs",
+      "item_kind": "fn",
+      "line": 136,
+      "symbol": "vibe_spec::embed::source_reads::metadata_locator_does_not_freeze_explicit_root_alias_across_reads",
+      "end_line": 166,
+      "fingerprint": "tok1:e89548e6db7fbf77d1abe803bde890f98644fdb533cb3ce9b971802e2d46aaba"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/pipeline/absorb_characterization_tests.rs",
       "item_kind": "fn",
       "line": 12,
@@ -38417,6 +38498,15 @@
       "symbol": "vibe_spec::pipeline::qualify_characterization_tests::top_level_reorder_is_bound_by_seed_meta_and_simple_address",
       "end_line": 338,
       "fingerprint": "tok1:9524d856ba03e04cabd9d5988c11294c16547ea470df798cded4995347bc8375"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/resolver/observation.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::resolver::observation",
+      "end_line": 4,
+      "fingerprint": "tok1:3257d4e707e9ba7c517d947dcddde0ea5c5d7fb1b78c96ad7619480c48faf8f5"
     },
     {
       "crate_name": "vibe-spec",
@@ -40640,6 +40730,15 @@
       "symbol": "vibe_workspace::publish::topo_order",
       "end_line": 276,
       "fingerprint": "tok1:85037d8e1fb8746099f96e7340d8afbb736a32ecf37c651ad8abef54d92ef63a"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/tests/source_reads.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::tests::source_reads",
+      "end_line": 4,
+      "fingerprint": "tok1:3257d4e707e9ba7c517d947dcddde0ea5c5d7fb1b78c96ad7619480c48faf8f5"
     },
     {
       "crate_name": "vibe-workspace",
@@ -57202,6 +57301,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-lifecycle/src/agent/tests/resolver.rs",
+      "from_symbol": "vibe_lifecycle::agent::tests::resolver::actual_prompt_refuses_same_byte_replacement_during_source_read",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-lifecycle/src/artifacts.rs",
       "from_symbol": "vibe_lifecycle::artifacts::eligible_relative",
       "line": 133,
@@ -66006,7 +66113,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Presence",
-      "line": 50,
+      "line": 51,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -66025,6 +66132,30 @@
       "line": 9,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/file/source_read.rs",
+      "from_symbol": "vibe_safefs::file::source_read",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/file/source_read.rs",
+      "from_symbol": "vibe_safefs::file::source_read::Project::read_source_bytes",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/file/source_read_tests.rs",
+      "from_symbol": "vibe_safefs::file::source_read_tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
       "verb": "implements"
     },
     {
@@ -68058,6 +68189,14 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-spec/src/compiler/transform/dependency_dag_fence_tests.rs",
+      "from_symbol": "vibe_spec::compiler::transform::dependency_dag_fence_tests::the_dependency_dag_keeps_only_approved_runtime_and_test_edges",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-spec/src/compiler/transform/emitted_reconstruction.rs",
       "from_symbol": "vibe_spec::compiler::transform::emitted_reconstruction",
       "line": 38,
@@ -69954,6 +70093,38 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-spec/src/embed/read.rs",
+      "from_symbol": "vibe_spec::embed::read",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/embed/read.rs",
+      "from_symbol": "vibe_spec::embed::read::FsSectionSource::read_resolved",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/embed/source_reads.rs",
+      "from_symbol": "vibe_spec::embed::source_reads",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/embed/source_reads.rs",
+      "from_symbol": "vibe_spec::embed::source_reads::metadata_locator_does_not_freeze_explicit_root_alias_across_reads",
+      "line": 138,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-spec/src/pipeline/absorb_characterization_tests.rs",
       "from_symbol": "vibe_spec::pipeline::absorb_characterization_tests::both_public_modes_invoke_named_absorb_once_and_keep_exact_bytes",
       "line": 13,
@@ -70224,6 +70395,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/resolver/observation.rs",
+      "from_symbol": "vibe_spec::resolver::observation",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-spec/src/resolver/path_tests.rs",
@@ -72308,6 +72487,14 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/tests/source_reads.rs",
+      "from_symbol": "vibe_workspace::tests::source_reads",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-workspace/src/tools.rs",
@@ -145756,7 +145943,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:4871f15f9152057bf6c7afa47758c7f878514da892d2124affa8175a9c84e419",
+      "content_hash": "sha256:a666811682dd69606cb6b5a339dd53643da7d7f5a223b6ed4caabd6cd9b79c63",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker",
@@ -146188,7 +146375,7 @@
     },
     {
       "anchor": "addressing",
-      "content_hash": "sha256:0fbfb813922da83abd216ab282e3e080c6a0b92644719379b3696a2064bb1244",
+      "content_hash": "sha256:9cc7775d451b151cf6b11c42286ed88d7a39343b67a554ecdfe1dcf6dcef582c",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "6. `spec://` addressing and the resolver (\"router\")",
@@ -146314,10 +146501,10 @@
     },
     {
       "anchor": "URI-OBSERVED-SOURCE-READ",
-      "content_hash": "sha256:fe408703244ac0da078814c5cbff58d8b63176df2036cd8e2e409eba5739ea4c",
+      "content_hash": "sha256:922d52c4955a937f27ca9f8afe46fac730a8e2a1bb5571ddbec1b92324c27054",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
-      "heading": "A filesystem-backed source read observes one regular file through a held no-follow handle below its admitted caller-owned root. Relative and explicit root-alias spellings may be resolved once when admitting that read's root; derived layout, slot and document descendants must not be canonicalized to authorize a redirect. Ordinary source reads permit hardlinked files, including supported hardlink package materialization, and never copy-on-write or mutate them. They do not inherit the single-link ownership guarantee of state/mutation readers. The initial held length bounds allocation and detects growth; allocation and address-space failures are errors, not truncation, and no new fixed source-size quota is introduced. Two passes over the same handle must agree, with a fixed-size comparison buffer for the second pass; closing length/mode and final-name object identity are rechecked. Builtin projection and section parsing consume that same observed byte buffer; admitted custom frontend input remains raw UTF-8. An exact lexical overlay key selects its held bytes without a filesystem content read or fallback after a bad overlay. Frontend admission remains before custom content reads. Missing, unsafe, changed and unreadable observations refuse honestly. This is a per-document finite observation window, not whole-closure atomicity, hostile-ABA immunity, exclusive ownership or authenticated original-source proof. @status:spec/done",
+      "heading": "A filesystem-backed source read observes one regular file through a held no-follow handle below its admitted caller-owned root. Relative and explicit root-alias spellings may be resolved once when admitting that read's root; derived layout, slot and document descendants must not be canonicalized to authorize a redirect. Ordinary source reads permit hardlinked files, including supported hardlink package materialization, and never copy-on-write or mutate them. They do not inherit the single-link ownership guarantee of state/mutation readers. The initial held length bounds allocation and detects growth; allocation and address-space failures are errors, not truncation, and no new fixed source-size quota is introduced. Two passes over the same handle must agree, with a fixed-size comparison buffer for the second pass; closing length/mode and final-name object identity are rechecked. Builtin projection and section parsing consume that same observed byte buffer; admitted custom frontend input remains raw UTF-8. An exact lexical overlay key selects its held bytes without a filesystem content read or fallback after a bad overlay. Frontend admission remains before custom content reads. Missing, unsafe, changed and unreadable observations refuse honestly. This is a per-document finite observation window, not whole-closure atomicity, hostile-ABA immunity, exclusive ownership or authenticated original-source proof. @status:impl/done",
       "line": 103,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
     },

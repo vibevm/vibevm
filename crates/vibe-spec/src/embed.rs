@@ -52,11 +52,15 @@ pub trait SectionSource {
 }
 
 /// Text-free physical source identity resolved before content admission.
+/// This is a locator, not a cross-call root witness: a later read revalidates
+/// the locator and admits the caller's current root alias for that read epoch.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ResolvedSourceMetadata {
     origin: PathBuf,
     format: crate::compiler::ir::SourceFormatId,
     physical_stem: String,
+    // Locator context only: revalidation must use the same active suffix set.
+    active_formats: Vec<String>,
 }
 
 impl ResolvedSourceMetadata {
@@ -78,6 +82,7 @@ impl ResolvedSourceMetadata {
             format: crate::compiler::ir::SourceFormatId::new(format)
                 .map_err(|error| error.to_string())?,
             physical_stem,
+            active_formats: Vec::new(),
         })
     }
 
@@ -230,40 +235,6 @@ impl FsSectionSource {
     pub fn with_overlay(resolver: FileResolver, overlay: BTreeMap<PathBuf, Arc<[u8]>>) -> Self {
         Self { resolver, overlay }
     }
-
-    fn read_resolved(
-        &self,
-        addr: &SpecAddress,
-        metadata: ResolvedSourceMetadata,
-    ) -> Result<ResolvedSource, String> {
-        if metadata.format() == "markdown" {
-            let src = match self.overlay.get(metadata.origin()) {
-                Some(bytes) => project_overlay(metadata.origin(), bytes)?,
-                None => vibe_specdoc::load_spec_text(metadata.origin())
-                    .map(|(src, _kind)| src)
-                    .map_err(|error| error.to_string())?,
-            };
-            return resolve_section(&src, metadata.origin(), addr)
-                .map(|text| ResolvedSource::markdown(text, metadata.physical_stem));
-        }
-        let owned;
-        let bytes = match self.overlay.get(metadata.origin()) {
-            Some(bytes) => bytes.as_ref(),
-            None => {
-                owned = std::fs::read(metadata.origin()).map_err(|error| error.to_string())?;
-                &owned
-            }
-        };
-        let text = std::str::from_utf8(bytes)
-            .map_err(|error| {
-                format!(
-                    "custom source `{}` is not UTF-8: {error}",
-                    metadata.origin().display()
-                )
-            })?
-            .to_owned();
-        ResolvedSource::custom(text, metadata.format().to_owned(), metadata.physical_stem)
-    }
 }
 
 impl SectionSource for FsSectionSource {
@@ -274,17 +245,11 @@ impl SectionSource for FsSectionSource {
     }
 
     fn section_text(&self, addr: &SpecAddress) -> Result<String, String> {
-        let file = self
+        let location = self
             .resolver
-            .resolve_file(addr)
-            .map_err(|e| e.to_string())?;
-        let src = match self.overlay.get(&file) {
-            Some(bytes) => project_overlay(&file, bytes)?,
-            None => vibe_specdoc::load_spec_text(&file)
-                .map(|(src, _kind)| src)
-                .map_err(|e| e.to_string())?,
-        };
-        resolve_section(&src, &file, addr)
+            .locate_source(addr, &[])
+            .map_err(|error| error.to_string())?;
+        self.read_location(addr, location).map(|source| source.text)
     }
 
     fn source_metadata(
@@ -296,7 +261,10 @@ impl SectionSource for FsSectionSource {
             .resolver
             .resolve_source_file(addr, active_formats)
             .map_err(|error| error.to_string())?;
-        ResolvedSourceMetadata::new(resolved.path, resolved.format, resolved.physical_stem)
+        let mut metadata =
+            ResolvedSourceMetadata::new(resolved.path, resolved.format, resolved.physical_stem)?;
+        metadata.active_formats = active_formats.to_vec();
+        Ok(metadata)
     }
 
     fn read_resolved_source(
@@ -316,10 +284,10 @@ fn logical_stem(addr: &SpecAddress) -> String {
         .to_owned()
 }
 
-fn project_overlay(file: &Path, bytes: &[u8]) -> Result<String, String> {
+fn project_bytes(file: &Path, bytes: &[u8], origin: &str) -> Result<String, String> {
     let raw = std::str::from_utf8(bytes).map_err(|error| {
         format!(
-            "overlay spec source `{}` is not UTF-8: {error}",
+            "{origin} spec source `{}` is not UTF-8: {error}",
             file.display()
         )
     })?;
@@ -597,3 +565,8 @@ mod tests {
 #[cfg(test)]
 #[path = "embed/overlay_tests.rs"]
 mod overlay_tests;
+
+#[cfg(test)]
+mod source_reads;
+
+mod read;

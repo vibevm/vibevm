@@ -98,6 +98,11 @@ impl SelectedPackage {
 /// Why an address does not resolve to a file.
 #[derive(Debug, thiserror::Error)]
 pub enum ResolveError {
+    /// A source locator or held observation could not preserve its boundary.
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ: source `{path}` unavailable ({reason}); fix surface: restore a regular source below the selected root and resolve it again"
+    )]
+    SourceObservation { path: String, reason: String },
     /// A filesystem-bound spelling violates the shared declarant path law.
     #[error(
         "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-LOOKUP-PATHS: invalid {field} `{value}` ({}); fix surface: use a portable relative document path or single slot/version/suffix component",
@@ -295,91 +300,8 @@ impl FileResolver {
         addr: &SpecAddress,
         active_formats: &[String],
     ) -> Result<ResolvedSourceFile, ResolveError> {
-        paths::source(&addr.doc_path, active_formats)?;
-        // A pattern (a `*` in the package name) names a set, not a file. Refuse
-        // it loudly rather than falling through to the suffix lookup, which would
-        // report PackageSlotNotFound — "not installed" where the truth is "this
-        // address must be expanded first" (B-056, law 7).
-        if glob::is_pattern(addr) {
-            return Err(ResolveError::PatternNotExpanded {
-                given: addr.raw.clone(),
-            });
-        }
-        let base_spec = self.spec_root(&addr.authority)?;
-        let resolved =
-            lookup::resolve_doc_with_formats(&base_spec, &addr.doc_path, active_formats)?;
-        Ok(ResolvedSourceFile {
-            physical_stem: resolved.physical_stem,
-            format: if matches!(resolved.extension.as_str(), "md" | "xml") {
-                "markdown".to_owned()
-            } else {
-                resolved.extension
-            },
-            path: resolved.path,
-        })
-    }
-
-    /// The `spec/` root an authority resolves against.
-    ///
-    /// The self-coordinate match is the **first** arm (B-031): a
-    /// `spec://<self_group>/<self_name>/…` address lands in the authored
-    /// `spec/` tree before any `vibedeps/` slot is considered. Any other
-    /// package coordinate falls through to slot lookup; an undotted host
-    /// authority never resolves.
-    fn spec_root(&self, authority: &Authority) -> Result<PathBuf, ResolveError> {
-        match authority {
-            Authority::Package {
-                group,
-                name,
-                version: None,
-            } if self.is_self(group, name) => Ok(specs_root_under(&self.self_root)),
-            Authority::Package {
-                group,
-                name,
-                version: Some(v),
-            } if self.is_self(group, name) => Err(ResolveError::SelfCoordinateVersioned {
-                self_group: group.clone(),
-                self_name: name.clone(),
-                version: v.clone(),
-            }),
-            Authority::Package {
-                group,
-                name,
-                version,
-            } => Ok({
-                let slot = match &self.selected {
-                    Some(selected) => {
-                        let chosen =
-                            selected
-                                .get(&(group.clone(), name.clone()))
-                                .ok_or_else(|| ResolveError::UnselectedPackage {
-                                    given: format!("{group}/{name}"),
-                                })?;
-                        // A pin is a claim about which instance the author
-                        // meant. Honour it by checking it: agreeing pins pass,
-                        // disagreeing pins refuse with both numbers, and an
-                        // absent pin means "whatever the lock chose".
-                        if let Some(requested) = version.as_deref() {
-                            let requested = requested.trim_start_matches('=');
-                            if requested != chosen.version {
-                                return Err(ResolveError::SelectedVersionMismatch {
-                                    given: format!("{group}/{name}"),
-                                    requested: requested.to_string(),
-                                    selected: chosen.version.clone(),
-                                });
-                            }
-                        }
-                        chosen.root.clone()
-                    }
-                    None => self.package_slot(group, name, version.as_deref())?,
-                };
-                specs_root_under(&slot)
-            }),
-            Authority::Host(h) => Err(ResolveError::LegacyHostAuthority {
-                given: h.clone(),
-                hint: self.legacy_host_hint(h),
-            }),
-        }
+        self.locate_source(addr, active_formats)
+            .map(|source| source.resolved)
     }
 
     /// Whether a parsed `<group>/<name>` is this resolver's own coordinate. A
@@ -405,55 +327,6 @@ impl FileResolver {
                 .to_string(),
         }
     }
-
-    /// Find a package's materialised slot: `vibedeps/<group>.<name>/<version>`
-    /// (PROP-022 §2.1 — the slot is keyed by identity, so the address's own
-    /// `<group>/<name>` names the directory exactly; no suffix scan). An
-    /// explicit `@version` names the slot version; an absent one resolves to
-    /// the **freshest installed** version (semver-newest; the owner's
-    /// optional-version rule, B-028 2026-08-04). A directory whose name does
-    /// not look like a version (it does not start with a digit) is ignored as
-    /// a candidate — if none remain, the slot is treated as not installed.
-    /// Lockfile-backed selection is the layer above.
-    fn package_slot(
-        &self,
-        group: &str,
-        name: &str,
-        version: Option<&str>,
-    ) -> Result<PathBuf, ResolveError> {
-        let component = paths::package_component(group, name, version)?;
-        let slot_dir = vibedeps_root_under(&self.ws_root).join(component);
-        if !slot_dir.is_dir() {
-            return Err(ResolveError::PackageSlotNotFound(name.to_string()));
-        }
-
-        match version {
-            Some(v) => Ok(slot_dir.join(v)),
-            None => {
-                // The freshest installed version: collect names that look like
-                // versions (a version directory starts with its major number —
-                // a stray non-version folder is not a candidate, B-028 У1) and
-                // take the semver-newest. Zero candidates ⇒ not installed.
-                let candidates: Vec<String> = read_dir_or_empty(&slot_dir)
-                    .filter_map(|e| {
-                        let p = e.path();
-                        if !p.is_dir() {
-                            return None;
-                        }
-                        let n = p.file_name()?.to_str()?;
-                        n.chars()
-                            .next()
-                            .is_some_and(|c| c.is_ascii_digit())
-                            .then_some(n.to_string())
-                    })
-                    .collect();
-                match version_order::newest(candidates.iter().map(String::as_str)) {
-                    Some(v) => Ok(slot_dir.join(v)),
-                    None => Err(ResolveError::PackageSlotNotFound(name.to_string())),
-                }
-            }
-        }
-    }
 }
 
 /// The document-lookup half: doc-path → file, the layout roots it resolves
@@ -462,9 +335,11 @@ impl FileResolver {
 /// answers "which `spec/` root does this authority mean", everything there
 /// answers "which file inside a root does this doc-path mean".
 mod lookup;
+mod observation;
 mod paths;
 pub use lookup::canonical_doc_path;
 pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
+pub(crate) use observation::SourceLocation;
 
 #[derive(Debug)]
 pub(crate) struct ResolvedSourceFile {
