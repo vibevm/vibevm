@@ -208,3 +208,19 @@ App fixes приняты commit9f3a271ef. При сопоставлении pack
 ### Shared kernel: acceptance gate
 
 Main fmt/core conform/app conform/specmap generation+check завершены exit0. Карта:9045units/4689items/3929edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Core conform0findings; app сохраняет одну прежнюю nonblocking ambient-env observation,0new. Все12source SHA256 повторно совпали с проверенным кандидатом. Принимается именно FEATURE-KERNEL, а не весь PROP-069. Отдельные default binding, rich intent, typed values, effects, persistence, console/machine journey и глобальная история кампании остаются работой.
+
+## 2026-11-04 — Kernel принят; начат rich-choice слой
+
+Feature kernel интегрирован commitc20b6bc89. Все12source files сверены с committed HEAD, отчёт/логи/manifest hashes сохранены вне временной копии, live cwd/exe/fd users отсутствовали. Worktree common-feature-kernel удалён штатным Git; отсутствие каталога и registry entry проверено. Prototype dirty files и чужие worktrees не изменялись.
+
+Следующий atom CHOICE-CORE исполняется нативным worker в отдельной копии common-choice-intent от c20b6bc89, с собственным reflink target. Root сохраняет архитектуру, specs, review/acceptance и уборку. Пакет ограничен configuration module: validated positive guard DAG, omitted/explicit-empty/additive/exact/default policy, active/dormant projections, конфликты consumers и композиция через уже принятый feature kernel. Никаких новых host/socket/grant/identity слоёв, wire schema, persistence или effect runtime в этом atom. Default usage пока является данными; semantic candidate binding, typed parameters, настоящие consumers/сохранение и console/GUI остаются следующими явными этапами.
+
+Параллельно запущены два ограниченных read-only исследования через нативные workers: integration points для candidate solving/effects и существующий typed-parameter/secret output путь. Root не делегирует выбор архитектуры или приёмку. В параметрах по исходникам найдены diagnostic ветки, включающие raw value/path; это ещё не новый runtime reproduction, поэтому не объявляется доказанным публичным leak. Для effects уже получена важная поправка: subskills_active=[] в main связан с retirement старого per-file install; нельзя механически оживить старую доставку файлов только потому, что поле FeatureExpansion не читается. Нужен действующий loading/boot consumer, проверяемый по своему контракту.
+
+## 2026-11-04 — Исправлены преждевременные implementation claims package features
+
+Независимое source-сопоставление сохранено в research/package-choice-integration-design.md. Root проверил RequiresWire/InlinePackageDepWire: optional/features/default_features отсутствуют при deny_unknown_fields. В нормальном пути solve предшествует local expand_features; четыре effect outputs не читаются downstream. Поэтому прежние impl/done для optional activation, weak forwarding, graph unification, SAT exclusive enforcement и selected subskills в PROP-003 исправлены на impl/work, без удаления самих требований. Добавлена явная implementation boundary. Это source evidence, не новый runtime-negative test.
+
+Причина недостоверной готовности здесь конкретная: datatype/parser/local test были выданы в спецификации за подключённое поведение solver/install. Для subskills есть дополнительная причина расхождения — устаревший install-time контракт после смены loading model. Перенос обязан восстановить смысл через существующий boot/read путь; вернуть старое copying ради закрытия поля было бы ошибкой. Ещё одна незавершённость next: config_values там записываются/показываются, но исследование не нашло runtime consumer; generic map в lockfile не будет принят за работающий config effect.
+
+Status correction gate: specmap --check exit0,9046units/4689items/3929edges,0blocking findings,43known warnings. Это отдельное исправление достоверности спецификации, без изменения кода, публичных schema или удаления product requirements.

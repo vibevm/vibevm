@@ -135266,7 +135266,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:eb844354543e86e0bf45d1507c0d34a4bd11d07a7fbafef640a9c47ec300b6f3",
+      "content_hash": "sha256:279c298447c190fec58291a763b0c44d8264144d4472e5a8ab8989faaee7369f",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2. Decisions",
@@ -135590,7 +135590,7 @@
     },
     {
       "anchor": "features",
-      "content_hash": "sha256:f89650f8402761a398c9217e34b87b6a749053270723f1b76d214833a453b74f",
+      "content_hash": "sha256:8ca9988a4e2936cf1ea24da6db5f99085bdf19a1c80e712b5867007a59cd60b3",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.4 Optional components (features) — cargo-tradition with vibevm twists",
@@ -135653,19 +135653,19 @@
     },
     {
       "anchor": "KEEP-OPTIONAL-DEP",
-      "content_hash": "sha256:a18084811c4a2a753ede14a085d7fa27e3901ca974bca50edc736d04051d3bfe",
+      "content_hash": "sha256:9df79ac321dd5d2a6814f26a9dbae7d003059a68a8dc720e701283464c64a3dc",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
-      "heading": "**Optional dep activation.** A `[dependencies.foo] optional = true` entry creates an implicit feature named `foo` that activates the dep; alternatively the explicit `dep:foo` syntax in a feature list activates the dep without exposing the implicit feature name. @status:impl/done",
+      "heading": "**Optional dep activation.** A `[dependencies.foo] optional = true` entry creates an implicit feature named `foo` that activates the dep; alternatively the explicit `dep:foo` syntax in a feature list activates the dep without exposing the implicit feature name. @status:impl/work",
       "line": 137,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-OPTIONAL-DEP"
     },
     {
       "anchor": "KEEP-WEAK-FEATURE",
-      "content_hash": "sha256:1cdf3721bd8ad11b5ef1cde1eea3610393025769039b49815e9c430ce6214bb3",
+      "content_hash": "sha256:5324518fdf5da13ddaa875416581a332dbe5d9e67028c310434c34ee0c7d12c4",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
-      "heading": "**Weak feature** (cargo's `dep?/feat` syntax): `feat-A = [\"other-pkg?/some-feat\"]` — if `other-pkg` is *already* in the graph, request `some-feat` on it; otherwise no-op. The `?` prevents activation-by-default of `other-pkg`. @status:impl/done",
+      "heading": "**Weak feature** (cargo's `dep?/feat` syntax): `feat-A = [\"other-pkg?/some-feat\"]` — if `other-pkg` is *already* in the graph, request `some-feat` on it; otherwise no-op. The `?` prevents activation-by-default of `other-pkg`. @status:impl/work",
       "line": 138,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-WEAK-FEATURE"
     },
@@ -135680,10 +135680,10 @@
     },
     {
       "anchor": "KEEP-UNIFICATION",
-      "content_hash": "sha256:949b13cc33f8ae97ca1916eb8688cdd79e2b9e21d95f6f70b5f675f734e6a17a",
+      "content_hash": "sha256:8823fec8c17bae4f779785d7f6835d5c053169204188f9db1807ce5b82f62dfc",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
-      "heading": "**Feature unification across the dep graph.** If `pkg-A` and `pkg-B` both depend on `pkg-C` and request different features, the solver unifies — `pkg-C` is built/materialised once with the union of requested features. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user,author\"/>",
+      "heading": "**Feature unification across the dep graph.** If `pkg-A` and `pkg-B` both depend on `pkg-C` and request different features, the solver unifies — `pkg-C` is built/materialised once with the union of requested features. <status stage=\"impl\" state=\"work\" action=\"continue\" actionstage=\"doc\" audience=\"user,author\"/>",
       "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#KEEP-UNIFICATION"
     },
@@ -135734,19 +135734,19 @@
     },
     {
       "anchor": "EXT-EXCLUSIVE",
-      "content_hash": "sha256:e49eb16fdf0c54dad2eb847a57d0b089d8e77f56b0eded0a611389826bfc501b",
+      "content_hash": "sha256:19a52a37907a1b8ec32047f1e12948ef1c1182bda0cae6ff797956ebb19c5530",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
-      "heading": "**Mutual exclusion** via `[features.exclusive]` named groups — each value list is an at-most-one set, enforced by the SAT solver via direct conflict rules. cargo has no equivalent (because rustc cfg-conditioning makes mutual exclusion software-rebuilt, not solver-enforced); vibevm uses it for cross-cutting choices like `rust-stack` vs `python-stack` where both make sense individually but not together. Named groups (`stacks = [...]`, `languages = [...]`) read better than r1's underscore-prefixed `__exclusive = [[…], […]]`. @status:impl/done",
+      "heading": "**Mutual exclusion** via `[features.exclusive]` named groups — each value list is an at-most-one set, enforced by the SAT solver via direct conflict rules. cargo has no equivalent (because rustc cfg-conditioning makes mutual exclusion software-rebuilt, not solver-enforced); vibevm uses it for cross-cutting choices like `rust-stack` vs `python-stack` where both make sense individually but not together. Named groups (`stacks = [...]`, `languages = [...]`) read better than r1's underscore-prefixed `__exclusive = [[…], […]]`. @status:impl/work",
       "line": 150,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#EXT-EXCLUSIVE"
     },
     {
       "anchor": "EXT-SUBSKILL-MAP",
-      "content_hash": "sha256:433d74bfb11155e220aa8281c964c8ae781cca9c8b608449cfc29966e8813110",
+      "content_hash": "sha256:e3665257953d593951c2f2693e652a35bb1f56cbb7b8799b0198aadd15fa0cd0",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
-      "heading": "**Feature → subskill mapping.** A feature can list `subskill:<path>` in its activation list, which directs the resolver to materialise the corresponding subskill (§2.5). This is the bridge between cargo-style features and vibevm-native subskill content. @status:impl/done",
+      "heading": "**Feature → subskill mapping.** A feature can list `subskill:<path>` in its activation list, which directs the resolver to materialise the corresponding subskill (§2.5). This is the bridge between cargo-style features and vibevm-native subskill content. @status:impl/work",
       "line": 151,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#EXT-SUBSKILL-MAP"
     },
@@ -135760,12 +135760,21 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#EXT-VISIBILITY"
     },
     {
+      "anchor": "FEATURES-INTEGRATION-STATUS",
+      "content_hash": "sha256:a142547d74899c9e8037d2489731802fab0a73a89c0317701fa2b1db6092c4a7",
+      "doc_path": "modules/vibe-resolver/PROP-003",
+      "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+      "heading": "The local feature expansion/parser is implemented, but its dependency activation, strong/weak forwarding and selected-subskill outputs are not yet consumed by the main solve/install path. Current dependency wire declarations do not admit optional/features/default-features fields; feature unification and candidate-conditioned implications therefore are not completed by the local evaluator tests. Exclusive constraints currently run in local expansion after solving, not as the promised candidate SAT conflicts. The PROP-009 loading model retains complete package slots and retired old per-file subskill projection; completing selected subskills must connect effective loading/read surfaces without restoring that retired copying behavior. The requirements above remain obligations; their implementation status must not be inferred from the existence of FeatureExpansion fields. @status:impl/work",
+      "line": 154,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FEATURES-INTEGRATION-STATUS"
+    },
+    {
       "anchor": "subskills",
       "content_hash": "sha256:511997d218e8b78bb32e6ab01403e491229333f1b45d47ed226ca8b636ba1980",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.5 Subskills — vibevm-native optional content units with three delivery modes",
-      "line": 155,
+      "line": 156,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskills"
     },
     {
@@ -135774,7 +135783,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Decision.** A package may carry a `subskills/` subtree alongside its top-level content: @status:impl/done",
-      "line": 156,
+      "line": 157,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SUBSKILLS-TREE"
     },
     {
@@ -135783,7 +135792,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "A **subskill** is the smallest activatable content unit inside a package. Structurally it looks like a tiny package: own manifest, own files, own optional further subskill children (§2.5.5). What changes per subskill is the **delivery mode** (§2.5.0 below) and the **activation rules** (§2.5.2): together they decide when the subskill's content reaches the agent and how. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 178,
+      "line": 179,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SUBSKILL-DEFINITION"
     },
     {
@@ -135792,7 +135801,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.5.0 Three delivery modes — eager, lazy-push, lazy-pull",
-      "line": 179,
+      "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#delivery-modes"
     },
     {
@@ -135801,7 +135810,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "A subskill's `delivery` field is the **primary axis** of the manifest, not a follow-up bolt-on. It picks how the subskill's content reaches the agent. Three values, each well-defined: <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 180,
+      "line": 181,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DELIVERY-PRIMARY-AXIS"
     },
     {
@@ -135810,7 +135819,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**`eager`** (default — the only mode in revision r1). Once activation matches, the subskill's files materialise into the project tree under `vibevm/vibespecs/...` at install time. They stay on disk until uninstall. Every agent session that opens the project sees them — analogous to PROP-002 §2.5 base-package behaviour. **Use for** rules-of-the-house content that should always be visible: foundational protocols, boot snippets, mandatory disciplines. @status:impl/done",
-      "line": 182,
+      "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MODE-EAGER"
     },
     {
@@ -135819,7 +135828,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**`lazy-push`**. Files are *not* materialised at install time. Instead, when an agent connects via the `vibe-mcp` server (M1.7), and the agent's current task description matches the subskill's natural-language `description` field (§2.5.1), `vibe-mcp` materialises the files **into the agent's current MCP context** — pushed to the agent on its behalf without disk-side cache. The push leaves no on-disk artefact unless `--persist` is passed. **Use for** workflow guidance (procedural skills) that's relevant only sometimes, and only on disk for the duration of one agent task. @status:impl/done",
-      "line": 183,
+      "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MODE-LAZY-PUSH"
     },
     {
@@ -135828,7 +135837,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**`lazy-pull`**. Files never materialise except on explicit agent request through `vibe-mcp`'s `read_subskill(package, path)` tool. The agent decides when to consult them; the user never sees them in `vibevm/vibespecs/...`. **Use for** library-knowledge documentation: API references, framework deep-dives, edge-case catalogs that an agent should be able to query but that would bloat the project tree if eager-materialised. @status:impl/done",
-      "line": 184,
+      "line": 185,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MODE-LAZY-PULL"
     },
     {
@@ -135837,7 +135846,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The three modes mirror Tessl's \"rules eager-push / skills lazy-push / docs lazy-pull\" framing (research at [PROP-004 §2.10](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md#delivery-modes)) — with the difference that vibevm makes the mode a **per-subskill choice** rather than a per-content-type one. A single package can ship eager rules + lazy-push workflows + lazy-pull deep references and the consumer sees each at the right moment. @status:spec/done",
-      "line": 186,
+      "line": 187,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#modes-tessl-mirror"
     },
     {
@@ -135846,7 +135855,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Lockfile impact.** Lockfile schema v3 (§2.9) records the resolved delivery mode per active subskill so the materialisation behaviour is reproducible across machines. @status:impl/done",
-      "line": 187,
+      "line": 188,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MODES-LOCKFILE-IMPACT"
     },
     {
@@ -135855,7 +135864,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Why all three modes need to exist in the schema from day one.** If we ship `eager` only and add `lazy-push` / `lazy-pull` later, every existing subskill manifest needs a default-mode declaration retroactively, and every existing lockfile needs the per-subskill-mode field. Pre-release schema churn is free; post-release it costs migrations. We pay the cost once, here. @status:spec/done",
-      "line": 188,
+      "line": 189,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#modes-why-day-one"
     },
     {
@@ -135864,7 +135873,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.5.1 Subskill manifest (`vibe-subskill.toml`)",
-      "line": 190,
+      "line": 191,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-manifest"
     },
     {
@@ -135873,7 +135882,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The manifest is intentionally a strict subset of `vibe-package.toml` — same TOML idioms, same fields where applicable, same `deny_unknown_fields` discipline. New per-subskill fields (revision r2): `delivery`, `description`, `describes`, plus the expanded `[activation].context.*` probes. @status:impl/done",
-      "line": 271,
+      "line": 272,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MANIFEST-STRICT-SUBSET"
     },
     {
@@ -135882,7 +135891,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**`description` is required for `delivery = \"lazy-push\"` and `lazy-pull`.** The activation trigger is the entire mechanism for those modes — without it, `vibe-mcp` has nothing to match against. `eager` mode also benefits but is not required. `vibe check` errors out (not warns) on a lazy-push subskill missing `description`. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 272,
+      "line": 273,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DESCRIPTION-REQUIRED"
     },
     {
@@ -135891,7 +135900,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**`description` length policy.** No hard limit, but `vibe review` activation-axis scoring penalises descriptions over ~600 characters as \"vague when long\" — Tessl's empirical finding (their skills cap at 500 lines for the body and ~5 lines for the description). Authors are expected to be precise. @status:spec/done",
-      "line": 273,
+      "line": 274,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#description-length-policy"
     },
     {
@@ -135900,7 +135909,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.5.2 Subskill activation channels — broader probe surface",
-      "line": 275,
+      "line": 276,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation"
     },
     {
@@ -135909,7 +135918,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "A subskill becomes \"active\" if any one of these channels matches. Channels compose orthogonally; an active subskill activates once regardless of how many matched. The full set, more comprehensive than revision r1: <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 276,
+      "line": 277,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ACTIVATION-ANY-MATCH"
     },
     {
@@ -135918,7 +135927,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Manual via parent feature.** The parent's `[features]` table includes the subskill in some feature's activation list (`rust-stack = [\"subskill:stack/rust\"]`); the feature is active; the subskill activates. @status:impl/done",
-      "line": 278,
+      "line": 279,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CH-MANUAL-FEATURE"
     },
     {
@@ -135927,7 +135936,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Context-based: `if_present`.** Activates if the project's effective dep graph contains a named package or capability (`stack:rust`, `capability:wal-protocol`). @status:impl/done",
-      "line": 279,
+      "line": 280,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CH-IF-PRESENT"
     },
     {
@@ -135936,7 +135945,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Context-based: `if_provides`.** Activates if any package in the graph declares `[provides]` matching the named interface tag (`interface:build-system`). Strictly more general than `if_present` (producer can be anyone fulfilling the role). @status:impl/done",
-      "line": 280,
+      "line": 281,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CH-IF-PROVIDES"
     },
     {
@@ -135945,7 +135954,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Context-based: `if_files`.** New in r2. Activates if the project tree matches one of the supplied glob patterns (`**/Cargo.toml`, `package.json`, `requirements.txt`). This is what `tessl init` infers implicitly when it auto-detects \"you are in a Rust project, you are in a Python project\" — vibevm makes the probe explicit and per-subskill. @status:impl/done",
-      "line": 281,
+      "line": 282,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CH-IF-FILES"
     },
     {
@@ -135954,7 +135963,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Context-based: `if_command`.** New in r2. Activates if any of the listed commands resolve on the user's `PATH` (`cargo`, `python3`, `pnpm`). This is a **machine-state** trigger, distinct from project-state triggers — useful for tooling subskills that document a CLI the agent might shell out to. @status:impl/done",
-      "line": 282,
+      "line": 283,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CH-IF-COMMAND"
     },
     {
@@ -135963,7 +135972,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Context-based: `if_env`.** New in r2. Activates if any of the listed env-vars are set (`RUST_LOG`, `CI`, `KUBECONFIG`). Useful for environment-specific guidance (\"you're in CI, here's the CI-specific gotchas subskill\"). @status:impl/done",
-      "line": 283,
+      "line": 284,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CH-IF-ENV"
     },
     {
@@ -135972,7 +135981,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Context-based: `if_os`.** Activates if the session's operating system is in the listed set — `windows`, `macos`, `linux` (`std::env::consts::OS` names). A **machine-state** trigger, alongside `if_command` / `if_env`. This is the same OS probe the `[boot_snippet]` `when` gate ships end-to-end (PROP-009 §2.4 / §2.6) — one OS grammar across both mechanisms. On the subskill side it is reserved in the schema for forward compatibility, inert until the activation engine is built. @status:impl/work",
-      "line": 284,
+      "line": 285,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CH-IF-OS"
     },
     {
@@ -135981,7 +135990,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Context-based: `if_describes_match`.** New in r2. Activates if any package in the graph (or the consumer project itself) declares `describes` with a PURL whose `type` matches this subskill's `describes` type. This is the bridge between the project's \"I document FastAPI 0.116\" PURL and a subskill's \"I'm the Rust-specific cut of FastAPI guidance.\" @status:impl/done",
-      "line": 285,
+      "line": 286,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CH-IF-DESCRIBES-MATCH"
     },
     {
@@ -135990,7 +135999,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Context-based: `if_language`.** Activates if the consumer's resolved language preference (§2.7.3) is in the listed set. Carried over from r1. @status:impl/done",
-      "line": 286,
+      "line": 287,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CH-IF-LANGUAGE"
     },
     {
@@ -135999,7 +136008,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**LLM-emitted virtual capability.** New shape in r2 (replacing r1's \"LLM-inferred\" channel — see §2.5.3 below). Equivalent expressive power, single audit point. @status:spec/done",
-      "line": 287,
+      "line": 288,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CH-LLM-VIRTUAL"
     },
     {
@@ -136008,7 +136017,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Each channel is **opt-in per subskill** — silence on a probe means \"this probe doesn't fire for this subskill.\" `[activation]` with no probes at all means the subskill activates only manually (via parent feature). @status:impl/done",
-      "line": 289,
+      "line": 290,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CHANNELS-OPT-IN"
     },
     {
@@ -136017,7 +136026,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.5.3 LLM-emitted virtual capabilities (post-M1.5) — refactor of \"LLM-inferred activation\"",
-      "line": 291,
+      "line": 292,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#llm-virtual-caps"
     },
     {
@@ -136026,7 +136035,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Revision r1 introduced \"LLM-inferred activation\": during `vibe build`, the LLM was given a list of inactive subskills and could pick which to turn on. This created an ad-hoc imperative side-effect with no audit trail and no way for the dep graph to observe the LLM's reasoning. @status:spec/done",
-      "line": 292,
+      "line": 293,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#llm-r1-history"
     },
     {
@@ -136035,7 +136044,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Revision r2 reformulates the channel as **virtual capability emission**: @status:spec/done",
-      "line": 293,
+      "line": 294,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#llm-r2-reformulation"
     },
     {
@@ -136044,7 +136053,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "During `vibe build`, after the static SAT solve and the post-pass static activation rules have run, the LLM is invoked with a prompt summarising the project's effective spec, the target feat, and the project's surrounding context (recent commits, file tree, env). @status:spec/done",
-      "line": 295,
+      "line": 296,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LLM-STEP-INVOKE"
     },
     {
@@ -136053,7 +136062,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The LLM is asked: \"What capabilities and interfaces, beyond those statically declared, should be considered present in this project for the purpose of context selection?\" @status:spec/done",
-      "line": 296,
+      "line": 297,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LLM-STEP-QUESTION"
     },
     {
@@ -136062,7 +136071,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The LLM responds with a list of **virtual capabilities** — `capability:claude-coordinator`, `interface:build-system`, `language:russian-comments`, etc. Each is a string in the same namespace as static capabilities/interfaces. @status:spec/done",
-      "line": 297,
+      "line": 298,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LLM-STEP-EMIT"
     },
     {
@@ -136071,7 +136080,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The virtual capabilities are added to the resolved graph as if a synthetic package emitted them. Normal activation channels (`if_present` / `if_provides`) handle the actual subskill toggle. @status:spec/done",
-      "line": 298,
+      "line": 299,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LLM-STEP-GRAFT"
     },
     {
@@ -136080,7 +136089,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The lockfile's `[meta]` block records which virtual capabilities the LLM emitted plus the prompt-and-response trace ID. `vibe show effective` displays virtually-emitted capabilities with a `[virtual via LLM]` annotation. The audit trail is per-resolution; reproducing a run reproduces the trace. @status:spec/done",
-      "line": 299,
+      "line": 300,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LLM-STEP-AUDIT"
     },
     {
@@ -136089,7 +136098,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The expressive power is identical: anything r1's \"LLM picks subskill X\" did, r2's \"LLM emits capability Y → subskill X activates via `if_present = [Y]`\" does. The differences are operationally meaningful: @status:spec/done",
-      "line": 301,
+      "line": 302,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#llm-power-identical"
     },
     {
@@ -136098,7 +136107,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Single audit point.** Every LLM contribution to activation passes through one boundary (capability emission), not scattered across N subskill toggles. @status:spec/done",
-      "line": 303,
+      "line": 304,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LLM-DIFF-AUDIT-POINT"
     },
     {
@@ -136107,7 +136116,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Static rules win.** Manually-declared `if_present` rules still apply uniformly to virtual emissions; the consumer can declare `[[overrides]] reject_virtual_capability = \"language:...\"` to shut off entire LLM-emitted dimensions if needed. @status:spec/done",
-      "line": 304,
+      "line": 305,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LLM-DIFF-STATIC-WINS"
     },
     {
@@ -136116,7 +136125,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Transparency at the spec layer.** A virtual capability is a spec-layer object — operator can write `[provides]` for it, `[requires]` against it, see it in `vibe show config`. r1's LLM-inferred activation never crossed back into the spec ontology. @status:spec/done",
-      "line": 305,
+      "line": 306,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LLM-DIFF-TRANSPARENCY"
     },
     {
@@ -136125,7 +136134,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Per-subskill opt-out is unnecessary at the channel level.** Subskills that don't want LLM-emitted activation simply don't use `if_present` against the namespace the LLM is allowed to emit into. Project-level policy is `[llm].emission.allowed_namespaces = [\"capability:*\", \"interface:*\"]` (default — generous; restrict by namespace if security-sensitive). @status:spec/done",
-      "line": 306,
+      "line": 307,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LLM-DIFF-OPT-OUT"
     },
     {
@@ -136134,7 +136143,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.5.4 Why subskills, not just more packages",
-      "line": 309,
+      "line": 310,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-rationale"
     },
     {
@@ -136143,7 +136152,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The same end-state could be achieved by splitting `flow:wal` into `flow:wal-base`, `flow:wal-rust`, `flow:wal-python`, etc. Two reasons we don't: @status:spec/done",
-      "line": 310,
+      "line": 311,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#split-alternative"
     },
     {
@@ -136152,7 +136161,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Cohesion.** The Rust-specific notes belong *inside* the `flow:wal` package as a unit — author-time, the same person writes them, they reference each other across the boundary, they ship as a single tag `v0.1.0`. Splitting forces the author to coordinate version numbers across N repos. @status:spec/done",
-      "line": 312,
+      "line": 313,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#RATIONALE-COHESION"
     },
     {
@@ -136161,7 +136170,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Discovery surface.** A registry browser sees one `flow:wal` and walks its subskills; with N split packages it sees a flood of micro-entries that don't communicate \"these are different cuts of the same flow.\" This matters as soon as the registry has more than ~10 packages. @status:spec/done",
-      "line": 313,
+      "line": 314,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#RATIONALE-DISCOVERY"
     },
     {
@@ -136170,7 +136179,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Cargo solves this through `[features]` in a single crate — vibevm goes one step further because the unit (\"a feature\") and the activated content unit (some files, structure preserved) are not the same object in vibevm. Hence the explicit `subskill` model. **Tessl** ships only flat skills with no subdivision (research at [PROP-004 §5.3](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md)) — that's a meaningful gap they'll need to close once their registry exceeds atomic-skill complexity. @status:spec/done",
-      "line": 315,
+      "line": 316,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#cargo-tessl-comparison"
     },
     {
@@ -136179,7 +136188,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.5.5 Recursive subskills",
-      "line": 317,
+      "line": 318,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-recursion"
     },
     {
@@ -136188,7 +136197,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "A subskill may itself carry a `subskills/` directory; activation rules apply recursively. Practical limit: depth ≤ 3 (anything deeper is almost certainly a smell — the package should be split). `vibe check` warns at depth 4. Each nested subskill carries its own `delivery` mode independently of its parent; an `eager` parent can have a `lazy-pull` deep reference subskill nested inside. @status:impl/done",
-      "line": 318,
+      "line": 319,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#RECURSIVE-SUBSKILLS"
     },
     {
@@ -136197,7 +136206,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.5.6 `describes` PURL on subskills",
-      "line": 320,
+      "line": 321,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-describes"
     },
     {
@@ -136206,7 +136215,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Per §2.7 of [PROP-004](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md#purl), Tessl's headline marketing claim — version-matched documentation — rides on the `describes` field at the tile level. vibevm goes one step further: the field is available **on subskills as well as packages**. A `flow:wal` package as a whole may not bind to any one library, but its `subskills/stack/rust/` cut binds specifically to `pkg:cargo/sqlx@0.8.0`; another `subskills/stack/rust-diesel/` cut binds to `pkg:cargo/diesel@2.x`. The two coexist in the same package, and the activation channel `context.if_describes_match` selects the right one for the consumer's actual library version. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 321,
+      "line": 322,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DESCRIBES-ON-SUBSKILLS"
     },
     {
@@ -136215,7 +136224,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Format.** Standard Package URL spec ([`https://github.com/package-url/purl-spec`](https://github.com/package-url/purl-spec)) — `pkg:<type>/<namespace>/<name>@<version>` or `pkg:<type>/<name>@<version>` for unscoped. `<version>` may be a SemVer requirement (`^0.8`) rather than an exact version when the subskill applies to a range. @status:impl/done",
-      "line": 322,
+      "line": 323,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DESCRIBES-FORMAT"
     },
     {
@@ -136224,7 +136233,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Lockfile impact.** When a subskill activates via `if_describes_match`, the lockfile records both the subskill's `describes` PURL and the matched in-graph PURL. @status:impl/done",
-      "line": 323,
+      "line": 324,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DESCRIBES-LOCKFILE-RECORD"
     },
     {
@@ -136233,7 +136242,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Drift detection (M1.9 + M1.10) then cross-references: when the consumer upgrades sqlx 0.8 → 0.9, `vibe outdated --upstream` flags subskills whose `describes` no longer matches. @status:spec/done",
-      "line": 325,
+      "line": 326,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DESCRIBES-DRIFT-OUTDATED"
     },
     {
@@ -136242,7 +136251,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.6 Capability-based interface tags — the abstract layer",
-      "line": 329,
+      "line": 330,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#interface-tags"
     },
     {
@@ -136251,7 +136260,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Decision.** Extend PROP-002 §2.9's `[provides]` / `[requires]` capability surface with a new concept: **interface tags**. @status:impl/done",
-      "line": 330,
+      "line": 331,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#INTERFACE-TAGS-DECISION"
     },
     {
@@ -136260,7 +136269,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Interface tags differ from capabilities in two ways: @status:impl/done",
-      "line": 344,
+      "line": 345,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#iface-differences-lead"
     },
     {
@@ -136269,7 +136278,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Abstraction over name.** A package requiring `interface:build-system` doesn't care whether the consumer has `stack:rust-cargo`, `stack:python-poetry`, or `stack:nix-flake`; any of them with `[provides]` matching the interface satisfies. Capabilities (`capability:wal-protocol`) tend to be more specific and authored together. @status:impl/done",
-      "line": 346,
+      "line": 347,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#IFACE-ABSTRACTION"
     },
     {
@@ -136278,7 +136287,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Discovery surface.** Subskills can `context.if_provides` against an interface to auto-activate when the consumer happens to have *any* package fulfilling the role. Capabilities are matched against `[requires]` only. @status:impl/done",
-      "line": 347,
+      "line": 348,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#IFACE-DISCOVERY"
     },
     {
@@ -136287,7 +136296,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Naming convention.** Interface tags use the `interface:<name>` namespace. The `<name>` segment uses `-` for word boundaries (kebab-case), `/` for category nesting (`interface:storage/sql`, `interface:storage/key-value`). Solver treats them as opaque strings; no semantic meaning beyond match/no-match. @status:impl/done",
-      "line": 349,
+      "line": 350,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#IFACE-NAMING"
     },
     {
@@ -136296,7 +136305,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Provenance.** Both `[provides]` and `[requires]` interface tags are user-authored (no LLM inference). The author is making an intentional declaration about an architectural role; that's not a thing the LLM should be guessing at. Note: §2.5.3 introduces *virtual capabilities* the LLM may emit at runtime (post-M1.5) — those flow through a different channel and never persist into the package manifest. @status:impl/done",
-      "line": 350,
+      "line": 351,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#IFACE-PROVENANCE"
     },
     {
@@ -136305,7 +136314,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.6.1 Conditional dependencies — `[target.\"context(...)\".dependencies]`",
-      "line": 352,
+      "line": 353,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps"
     },
     {
@@ -136314,7 +136323,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Decision.** Beyond subskill activation (which controls *content within an active package*), vibevm gains conditional dependencies (which control *whether a package is in the graph at all*), modelled on Cargo's `[target.\"cfg(...)\".dependencies]` shape but predicated on vibevm's context probes rather than rustc target triples: @status:impl/done",
-      "line": 353,
+      "line": 354,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CONDITIONAL-DEPS-DECISION"
     },
     {
@@ -136323,7 +136332,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The predicate grammar",
-      "line": 363,
+      "line": 364,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "kind": "req",
       "revision": 1
@@ -136334,7 +136343,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`req r1` @status:impl/done",
-      "line": 364,
+      "line": 365,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-grammar-req"
     },
     {
@@ -136343,7 +136352,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The `context(...)` predicate accepts the same `if_present` / `if_provides` / `if_files` / `if_command` / `if_env` / `if_describes_match` / `if_language` probes from §2.5.2, plus boolean composition (`and`, `or`, `not`). @status:impl/done",
-      "line": 365,
+      "line": 366,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CONDITIONAL-GRAMMAR"
     },
     {
@@ -136352,7 +136361,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "When to use which",
-      "line": 367,
+      "line": 368,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#design-conditional-when-to-use",
       "kind": "design",
       "revision": 1
@@ -136363,7 +136372,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`design r1` @status:spec/done",
-      "line": 368,
+      "line": 369,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-when-to-use-design"
     },
     {
@@ -136372,7 +136381,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**When to use which.** Subskills are *content shaped to context* — files inside a package. Conditional deps are *packages shaped to context* — entire packages added to the graph or not. Choose subskills when the content lives naturally inside an existing package; choose conditional deps when bringing in a separately-versioned, separately-authored package makes more sense. @status:spec/done",
-      "line": 369,
+      "line": 370,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-choice-guidance"
     },
     {
@@ -136381,7 +136390,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Conditional dependencies resolve to a fixed point",
-      "line": 371,
+      "line": 372,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint",
       "kind": "req",
       "revision": 1
@@ -136392,7 +136401,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`req r1` @status:impl/done",
-      "line": 372,
+      "line": 373,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-fixpoint-req"
     },
     {
@@ -136401,7 +136410,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Solver impact.** Conditional deps are evaluated **after** the static SAT solve has run on unconditional deps (otherwise the solver doesn't know which probes will fire). The flow: solve unconditional → evaluate `[target.<...>.dependencies]` predicates → add new requirements → re-solve. Convergence guaranteed in finite steps because each pass only adds requirements, never relaxes them; libsolv handles the incremental rule addition cleanly. @status:impl/done",
-      "line": 373,
+      "line": 374,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CONDITIONAL-FIXPOINT"
     },
     {
@@ -136410,7 +136419,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Predicate evaluation is host-invariant",
-      "line": 375,
+      "line": 376,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
       "kind": "req",
       "revision": 1
@@ -136421,7 +136430,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`req r1` @status:impl/done",
-      "line": 376,
+      "line": 377,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-host-invariance-req"
     },
     {
@@ -136430,7 +136439,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Cargo's resolution-stability lesson.** Cargo's `cfg`-based conditional deps were originally per-target evaluated at solve time, which produced different lockfiles per host triple. vibevm's `context(...)` is evaluated against the **resolved project state**, not host state — so the lockfile is host-invariant for the same project state. Build-host machine differences (e.g. `cargo` available or not) are explicitly out of scope; if the user wants those, they declare project-level capabilities. @status:impl/done",
-      "line": 377,
+      "line": 378,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CONDITIONAL-HOST-INVARIANCE"
     },
     {
@@ -136439,7 +136448,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Boolean composition over predicates",
-      "line": 379,
+      "line": 380,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
       "kind": "req",
       "revision": 2
@@ -136450,7 +136459,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`req r2` @status:impl/done",
-      "line": 380,
+      "line": 381,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-composition-req"
     },
     {
@@ -136459,7 +136468,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Predicates compose with `and` / `or` / `not` over context keys, with parentheses for grouping and the standard precedence (`not` > `and` > `or`): `context(stack:rust and not stack:go)`, `context((a or b) and c)`. Composition over the richer §2.5.2 probe forms (`if_files = '…'` inside `context(...)`) remains future work; the parser surfaces those as `PredicateError::Unsupported` — see the recorded `deviates` on the grammar edge in `crates/vibe-resolver/src/conditional.rs`. (r1 was `planned`; the adopt-v0.3 Phase 7 implementation ratified it at r2.) @status:impl/done",
-      "line": 381,
+      "line": 382,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CONDITIONAL-COMPOSITION"
     },
     {
@@ -136468,7 +136477,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.7 Internationalization (i18n) — multi-language package content",
-      "line": 384,
+      "line": 385,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#i18n"
     },
     {
@@ -136477,7 +136486,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Decision.** Adopt a **sidecar file naming pattern** with **BCP-47 language tags** as suffixes, plus first-class language-preference declarations at three levels (CLI flag, project manifest, package manifest). <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user,author\"/>",
-      "line": 385,
+      "line": 386,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-DECISION"
     },
     {
@@ -136486,7 +136495,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.7.1 File naming — the chosen pattern",
-      "line": 386,
+      "line": 387,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#i18n-naming"
     },
     {
@@ -136495,7 +136504,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "A localised file is the canonical filename with a `.<lang>` segment inserted before the extension. `<lang>` is a [BCP-47](https://datatracker.ietf.org/doc/html/rfc5646) language tag — `en`, `ru`, `ja`, `zh-Hans`, `pt-BR`. We also accept short ISO-639-1 codes alone (`ru`, `ja`) as a convenience; they map to the BCP-47 tag with no region. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 398,
+      "line": 399,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SIDECAR-PATTERN"
     },
     {
@@ -136504,7 +136513,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Why sidecar (`README.ru.md`), not directory (`i18n/ru/README.md`) or suffix (`README_RU.md`):** @status:spec/done",
-      "line": 399,
+      "line": 400,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#sidecar-why-lead"
     },
     {
@@ -136513,7 +136522,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Sidecar wins on every operationally-relevant axis. It's also the pattern Pandoc, Gettext PO bundles, MDX, and Hugo i18n converge to. @status:spec/done",
-      "line": 427,
+      "line": 428,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#sidecar-wins"
     },
     {
@@ -136522,7 +136531,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.7.2 Language preference resolution — fallback chain",
-      "line": 429,
+      "line": 430,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#i18n-fallback"
     },
     {
@@ -136531,7 +136540,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "When materialising file `<X>` for the target project's preferred language `<lang>`: @status:impl/done",
-      "line": 430,
+      "line": 431,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#fallback-chain-lead"
     },
     {
@@ -136540,7 +136549,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Exact match.** If `<X>.<lang>.<ext>` exists in the package, use it. @status:impl/done",
-      "line": 432,
+      "line": 433,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FB-EXACT"
     },
     {
@@ -136549,7 +136558,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Region fallback.** If `<lang>` carries a region (e.g. `pt-BR`), try `<X>.pt.<ext>` next. @status:impl/done",
-      "line": 433,
+      "line": 434,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FB-REGION"
     },
     {
@@ -136558,7 +136567,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Canonical fallback.** Use `<X>.<ext>` (no language suffix; the de-facto canonical form, by convention English in the vibevm registry but nothing prevents a package from declaring its canonical to be Spanish or Mandarin). @status:impl/done",
-      "line": 434,
+      "line": 435,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FB-CANONICAL"
     },
     {
@@ -136567,7 +136576,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Hard error.** If even the canonical form is missing, fail the install with `MissingFile { logical_path }`. @status:impl/done",
-      "line": 435,
+      "line": 436,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#FB-HARD-ERROR"
     },
     {
@@ -136576,7 +136585,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Critical invariant: **every package must ship the canonical form of every file it lists in `[content].files_written`**. Translations are additive. This is what makes step 3 always reachable; it also lets a project install a package that has zero translation coverage for the user's preferred language without seeing errors. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 437,
+      "line": 438,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-CANONICAL-INVARIANT"
     },
     {
@@ -136585,7 +136594,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.7.3 Language preference declarations — three layers",
-      "line": 439,
+      "line": 440,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#i18n-prefs"
     },
     {
@@ -136594,7 +136603,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Same precedence model as PROP-002 §9.5 (CLI flag > env var > project manifest > package manifest > built-in default): @status:impl/done",
-      "line": 440,
+      "line": 441,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#i18n-prefs-lead"
     },
     {
@@ -136603,7 +136612,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**CLI flag**: `vibe install flow:wal --language ru` overrides everything else for this invocation. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 442,
+      "line": 443,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-CLI-FLAG"
     },
     {
@@ -136612,7 +136621,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Env var**: `VIBE_LANGUAGE=ru` matches the existing `VIBE_LOG` / `VIBE_REGISTRY_CACHE` env-var conventions. @status:spec/done",
-      "line": 443,
+      "line": 444,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-ENV"
     },
     {
@@ -136621,7 +136630,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Project `vibe.toml`**: @status:impl/done",
-      "line": 444,
+      "line": 445,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-PROJECT-MANIFEST"
     },
     {
@@ -136630,7 +136639,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Package `vibe-package.toml`**: declares which languages the package itself ships: @status:impl/done",
-      "line": 451,
+      "line": 452,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-PACKAGE-MANIFEST"
     },
     {
@@ -136639,7 +136648,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Built-in default**: `en`. Hard-coded as the registry-wide canonical fallback so a malformed/empty `[i18n]` block in any layer doesn't paralyse install. @status:impl/done",
-      "line": 458,
+      "line": 459,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PREF-BUILTIN-DEFAULT"
     },
     {
@@ -136648,7 +136657,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.7.4 Manifest-field translation (short strings)",
-      "line": 461,
+      "line": 462,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#i18n-fields"
     },
     {
@@ -136657,7 +136666,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "For short translatable strings inside `vibe-package.toml` itself (`description`, `summary`, `[features.<name>].description`), we adopt **dotted-key translations**: @status:spec/done",
-      "line": 462,
+      "line": 463,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DOTTED-KEY-DECISION"
     },
     {
@@ -136666,7 +136675,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "This is the syntax TOML 1.0 already supports (`description` is a string and `description.ru` is a key inside an inline `description` table — no, *that's wrong*: TOML disallows mixing a bare string and a table at the same key). Real TOML representation: @status:spec/done",
-      "line": 474,
+      "line": 475,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#toml-mixing-correction"
     },
     {
@@ -136675,7 +136684,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Or, more readably: @status:spec/done",
-      "line": 476,
+      "line": 477,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#dotted-key-readable-form"
     },
     {
@@ -136684,7 +136693,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The parser accepts either form: a bare string `description = \"...\"` is interpreted as `{ en = \"...\" }`. Lookup walks the same fallback chain as files (§2.7.2). This is backward-compatible with all existing manifests in fixtures and on GitHub today (they use the bare-string form, which auto-promotes to `{en = \"...\"}`). @status:spec/done",
-      "line": 481,
+      "line": 482,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DOTTED-KEY-PARSER"
     },
     {
@@ -136693,7 +136702,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.7.5 Lockfile impact",
-      "line": 483,
+      "line": 484,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#i18n-lockfile"
     },
     {
@@ -136702,7 +136711,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The lockfile records the **resolved language preference** under `[meta]` so a re-install on a different machine without an explicit flag produces the same materialised files. **As shipped**, the preference and its fallback are merged into a single ordered `language_chain` field (`vibe-lock`'s `lockfile.rs`), and the live schema version is 5 — the fence below is the r2 draft shape, kept for the reasoning it carries: @status:impl/done",
-      "line": 484,
+      "line": 485,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-LOCKFILE-META"
     },
     {
@@ -136711,7 +136720,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The post-resolution chain (shipped as `language_chain`) carries the built-in `en` appended if absent. Clearing this metadata (e.g. a checked-in lockfile from a teammate using `ru` when the current operator wants the canonical form) requires explicit `vibe update --language en` or hand-editing. @status:impl/done",
-      "line": 490,
+      "line": 491,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#language-fallback-clearing"
     },
     {
@@ -136720,7 +136729,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.7.6 Documentation packages translate by package, not by sidecar",
-      "line": 492,
+      "line": 493,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#i18n-doc-packages"
     },
     {
@@ -136729,7 +136738,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Amendment 2026-09-11 ([PROP-057 §5](../../common/PROP-057-documentation-packages-and-site.xml)).** Packages of kind `doc` reuse this section's BCP-47 tags, the `[i18n].canonical` field as the package's own language, and the preference chain of §2.7.2–§2.7.3 (`I18nDecl`, `project_preference_chain`, the lockfile's `language_chain`) — but they do **not** take part in the sidecar layout of §2.7.1: a translation of documentation is a **separate package** of kind `doc`, named `<documentation-name>-<lang>` in the same group for the official-by-default case, declaring the source through the `[translates]` table and mirroring its tree file for file. `[i18n].available` of a `doc` package is therefore empty by construction, and the coverage check of §2.7 that expects sidecars does not apply to it. The reason is ownership: a translation has its own author, its own rhythm and its own officiality, and the unit of ownership in this project is the package. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 493,
+      "line": 494,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#I18N-DOC-PACKAGES"
     },
     {
@@ -136738,7 +136747,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.8 Manifest schema additions — the consolidated picture",
-      "line": 496,
+      "line": 497,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#manifest"
     },
     {
@@ -136747,7 +136756,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Pulling together every section above, the v0.2 package schema looks like the fence below. Two r1 leftovers survive in it and are **not** the shipped grammar: the `__exclusive = [[…]]` sigil was replaced by named `[features.exclusive]` groups in r2's own §2.4, and the manifest file itself is `vibe.toml`'s `[package]` section, not the retired `vibe-package.toml`: @status:impl/done",
-      "line": 497,
+      "line": 498,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#manifest-consolidated-lead"
     },
     {
@@ -136756,7 +136765,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Each subskill carries its own `vibe-subskill.toml` per §2.5.1. @status:impl/done",
-      "line": 556,
+      "line": 557,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SUBSKILL-MANIFEST-PER"
     },
     {
@@ -136765,7 +136774,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`deny_unknown_fields` everywhere — vibevm never silently drops unfamiliar manifest keys; we'd rather fail loud and add the section to the schema than corrupt provenance. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 557,
+      "line": 558,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#DENY-UNKNOWN-FIELDS"
     },
     {
@@ -136774,7 +136783,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.9 Lockfile schema impact (v3)",
-      "line": 559,
+      "line": 560,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#lockfile-v3"
     },
     {
@@ -136783,7 +136792,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The lockfile gains: @status:impl/done",
-      "line": 560,
+      "line": 561,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#lockfile-v3-lead"
     },
     {
@@ -136792,7 +136801,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`[meta].language_chain` (§2.7.5) — shipped as **one** ordered field merging the preference and its fallback, not the `language` + `language_fallback` pair this section drafted. @status:impl/done",
-      "line": 562,
+      "line": 563,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-META-LANGUAGE"
     },
     {
@@ -136801,7 +136810,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`[meta].active_features = [...]` — full list of features active in the resolution. Per-package activation goes under each `[[package]]` entry. @status:impl/done",
-      "line": 563,
+      "line": 564,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-META-ACTIVE-FEATURES"
     },
     {
@@ -136810,7 +136819,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`[meta].virtual_capabilities = [...]` — capabilities emitted by the LLM during resolution (§2.5.3). Each entry carries `name`, `emitter` (the LLM provider/model identifier), `trace_id` (link into the audit log), and `emitted_at`. @status:impl/done",
-      "line": 564,
+      "line": 565,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-META-VIRTUAL-CAPS"
     },
     {
@@ -136819,7 +136828,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`[[package]]` entries gain `features = [\"...\"]`, `subskills_active = [...]` (with each entry being `{ path = \"stack/rust\", delivery = \"lazy-push\" }` so the materialisation behaviour is reproducible) and the latter's delivery mode persisted because eager / lazy-push / lazy-pull are operationally distinct on the consumer side. @status:impl/done",
-      "line": 565,
+      "line": 566,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-PKG-FEATURES-SUBSKILLS"
     },
     {
@@ -136828,7 +136837,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`[[package]]` entries gain optional `language` field if the package was materialised in a non-canonical language (otherwise inherits `[meta].language`). @status:impl/done",
-      "line": 566,
+      "line": 567,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-PKG-LANGUAGE"
     },
     {
@@ -136837,7 +136846,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`[[package]]` and per-subskill entries gain optional `describes` PURL when set in the source manifest. @status:impl/done",
-      "line": 567,
+      "line": 568,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#LF-DESCRIBES-PURL"
     },
     {
@@ -136846,7 +136855,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`schema_version = 3` triggers the v2 → v3 read-side migration on next `vibe install`. Schema-write side is unconditional v3 once this PROP lands — pre-release, no migration burden. @status:impl/done",
-      "line": 596,
+      "line": 597,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#SCHEMA-V3-MIGRATION"
     },
     {
@@ -136855,7 +136864,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.10 CLI surface — additions and adjustments",
-      "line": 598,
+      "line": 599,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#cli"
     },
     {
@@ -136864,7 +136873,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "New flags / commands: @status:impl/done",
-      "line": 599,
+      "line": 600,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#cli-new-lead"
     },
     {
@@ -136873,7 +136882,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`vibe install <pkgref> [--features <a,b,c>] [--no-default-features] [--all-features]` — control feature activation (cargo-shape). <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 601,
+      "line": 602,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CLI-INSTALL-FEATURES"
     },
     {
@@ -136882,7 +136891,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`vibe install <pkgref> [--language <bcp47>]` — override resolved language for this install. @status:impl/done",
-      "line": 602,
+      "line": 603,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CLI-INSTALL-LANGUAGE"
     },
     {
@@ -136891,7 +136900,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`vibe show features <pkgref>` — list the package's features, default state, current activation in the project. @status:impl/done",
-      "line": 603,
+      "line": 604,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CLI-SHOW-FEATURES"
     },
     {
@@ -136900,7 +136909,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`vibe show subskills <pkgref>` — list the package's subskills, activation state with reason (\"active because feature `rust-stack`\", \"active because `stack:rust` is in the project\", \"available but not active\", \"would-activate-if-LLM-build\" — post-M1.5). @status:impl/done",
-      "line": 604,
+      "line": 605,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CLI-SHOW-SUBSKILLS"
     },
     {
@@ -136909,7 +136918,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`vibe check`'s existing checks gain four new entries (numbered per VIBEVM-SPEC §12 expansion): @status:impl/done",
-      "line": 605,
+      "line": 606,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CHECK-FOUR-ENTRIES"
     },
     {
@@ -136918,7 +136927,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**i18n coverage**: every file declared in `[content].files_written` exists for the package's canonical language; missing translations warn (not error) per language declared in `[i18n].available`. @status:impl/done",
-      "line": 606,
+      "line": 607,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CHECK-I18N-COVERAGE"
     },
     {
@@ -136927,7 +136936,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**subskill structure**: subskill manifests parse, activation rules are valid (`if_present` references exist, `if_provides` interface tags are well-formed, `if_files` glob patterns parse, `delivery` is one of the three allowed values, `description` is present when `delivery` ∈ {`lazy-push`, `lazy-pull`}). @status:impl/done",
-      "line": 607,
+      "line": 608,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CHECK-SUBSKILL-STRUCTURE"
     },
     {
@@ -136936,7 +136945,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**feature graph**: feature activations don't form cycles, exclusion sets are not violated by `default`, every `subskill:<path>` reference resolves to a real subskill in the package. @status:impl/done",
-      "line": 608,
+      "line": 609,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CHECK-FEATURE-GRAPH"
     },
     {
@@ -136945,7 +136954,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**activation conflict**: subskill `description` triggers don't materially overlap. Detection runs an LLM-judge (when available) or a heuristic substring-overlap pass (in `vibe check`'s static mode) over every pair of subskills with `delivery ∈ {lazy-push, lazy-pull}` in the same package, flagging pairs whose triggers contain ≥75% of each other's content keywords. Mirrors Tessl's review-rubric \"activation distinctiveness\" axis (research at [PROP-004 §2.11](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md#review-rubric)). Authors are expected to either tighten one description or merge the two subskills. @status:impl/done",
-      "line": 609,
+      "line": 610,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CHECK-ACTIVATION-CONFLICT"
     },
     {
@@ -136954,7 +136963,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Existing flags pick up new behaviours: @status:impl/done",
-      "line": 611,
+      "line": 612,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#cli-existing-lead"
     },
     {
@@ -136963,7 +136972,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`vibe update --features <list>` — re-resolve with a different feature set. **Specified, not shipped:** the install-side `--features` is live, but the update-side re-resolve was never wired (`vibe update --help` carries only `all` / `json` / `path` / `quiet` plus the global flags). @status:spec/done",
-      "line": 613,
+      "line": 614,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CLI-UPDATE-FEATURES"
     },
     {
@@ -136972,7 +136981,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`vibe show config` exposes the resolved language preference and its provenance per the existing precedence chain. @status:impl/done",
-      "line": 614,
+      "line": 615,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CLI-SHOW-CONFIG-LANGUAGE"
     },
     {
@@ -136981,7 +136990,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`vibe show effective` materialises the effective spec at the project's resolved language, falling back per §2.7.2; `--all-languages` shows every available language side-by-side (debugging aid). @status:impl/work",
-      "line": 615,
+      "line": 616,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#CLI-SHOW-EFFECTIVE-LANGUAGE"
     },
     {
@@ -136990,7 +136999,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "2.11 Migration path from `NaiveDepSolver`",
-      "line": 618,
+      "line": 619,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#migration"
     },
     {
@@ -136999,7 +137008,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The codebase has no shipped users; migration is internal. Order: @status:spec/done",
-      "line": 619,
+      "line": 620,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#migration-lead"
     },
     {
@@ -137008,7 +137017,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Land libsolv FFI** (`crates/vibe-resolver-libsolv`) and `SatDepSolver` impl behind a trait. Naive stays the default. @status:spec/done",
-      "line": 621,
+      "line": 622,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MIG-LIBSOLV-FFI"
     },
     {
@@ -137017,7 +137026,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Land manifest schema additions** (§2.8) without runtime activation logic — parser-only. Existing manifests parse unchanged. @status:impl/done",
-      "line": 622,
+      "line": 623,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MIG-MANIFEST-PARSER"
     },
     {
@@ -137026,7 +137035,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Land features semantics** in `SatDepSolver` (rule encoding, solving, activation map); `vibe install --features` and `--no-default-features` start working. Naive remains feature-blind. @status:impl/done",
-      "line": 623,
+      "line": 624,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MIG-FEATURES"
     },
     {
@@ -137035,7 +137044,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Land subskill materialisation** in `vibe-install`: walk activation rules post-solve, write subskill files, integrity-check (boot collision, file collision). @status:impl/done",
-      "line": 624,
+      "line": 625,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MIG-SUBSKILL-MAT"
     },
     {
@@ -137044,7 +137053,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Land i18n resolution** in `vibe-install`: at file-write time, walk the language fallback chain. CLI flag wired. @status:impl/done",
-      "line": 625,
+      "line": 626,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MIG-I18N"
     },
     {
@@ -137053,7 +137062,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Switch default solver** — executed, but to **`resolvo`**, not `sat`: [PROP-017](PROP-017-resolvo-resolver.xml) reversed the engine call before this step ran, and runtime resolution defaults to resolvo in the R-001 selection seam. Naive remains for fixtures/tests exactly as written. @status:impl/done",
-      "line": 626,
+      "line": 627,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MIG-DEFAULT-SAT"
     },
     {
@@ -137062,7 +137071,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Lockfile v3 migration** on read; unconditional v3 write. @status:impl/done",
-      "line": 627,
+      "line": 628,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#MIG-LOCKFILE-V3"
     },
     {
@@ -137071,7 +137080,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Each step is its own PR, lockfile-shape-stable mid-step (we control the format pre-release; if a step needs to break, we break and don't carry compatibility). @status:spec/done",
-      "line": 629,
+      "line": 630,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#migration-cadence"
     },
     {
@@ -137080,7 +137089,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "3. SAT solver algorithm details",
-      "line": 632,
+      "line": 633,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#algorithm"
     },
     {
@@ -137089,7 +137098,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "3.1 Rule encoding — vibevm concepts → libsolv rules",
-      "line": 633,
+      "line": 634,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#rule-encoding"
     },
     {
@@ -137098,7 +137107,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "libsolv's solver is rule-based: every constraint becomes a clause in the SAT problem. We map our concepts: @status:spec/done",
-      "line": 634,
+      "line": 635,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#rule-encoding-lead"
     },
     {
@@ -137107,7 +137116,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "This is the same encoding `dnf5` uses for RPM weak-deps; we just reuse the `RULE_*` constants from libsolv's public `solv/solver.h`. @status:spec/done",
-      "line": 697,
+      "line": 698,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#dnf5-same-encoding"
     },
     {
@@ -137116,7 +137125,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "3.2 Solver phases",
-      "line": 699,
+      "line": 700,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-phases"
     },
     {
@@ -137125,7 +137134,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "For one `vibe install` invocation: @status:spec/done",
-      "line": 700,
+      "line": 701,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-phases-lead"
     },
     {
@@ -137134,7 +137143,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Pool population.** Walk `MultiRegistryResolver::list_versions` for every root and transitively-discovered package. Each `(kind, name, version)` becomes a libsolv solvable; capabilities/interfaces become provides relations; deps become requires relations. Known-version cache from PROP-002 §2.4 cuts repeat lookups. @status:spec/done",
-      "line": 702,
+      "line": 703,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PHASE-POOL"
     },
     {
@@ -137143,7 +137152,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Job formulation.** Each root `pkgref` becomes a `SOLVER_INSTALL | SOLVER_SOLVABLE_NAME` job with version constraint. Active features become enabling literals on root solvables. @status:spec/done",
-      "line": 703,
+      "line": 704,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PHASE-JOBS"
     },
     {
@@ -137152,7 +137161,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Rule materialisation.** Encode every constraint above as libsolv rules. @status:spec/done",
-      "line": 704,
+      "line": 705,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PHASE-RULES"
     },
     {
@@ -137161,7 +137170,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Solve.** `solver_solve()` runs CDCL. On unsat, walk problems with `solver_problem_count()` → `solver_findproblemrule()` → reconstruct vibevm-shape `SolveError::Unsatisfiable { problems: Vec<Problem> }` for the CLI to render. @status:spec/done",
-      "line": 705,
+      "line": 706,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PHASE-SOLVE"
     },
     {
@@ -137170,7 +137179,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Decoding.** Walk `solver_get_decisionqueue()` to extract the chosen solvables, decode back into `ResolvedNode`s with the version + features picked. @status:spec/done",
-      "line": 706,
+      "line": 707,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PHASE-DECODE"
     },
     {
@@ -137179,7 +137188,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Subskill projection.** For each resolved package, evaluate its subskills' `context.if_present` and `if_provides` rules against the full graph. Set activation flags. (No SAT round-trip; this is a deterministic post-pass.) @status:spec/done",
-      "line": 707,
+      "line": 708,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PHASE-SUBSKILL-PROJECTION"
     },
     {
@@ -137188,7 +137197,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Materialisation handoff.** `vibe-install` reads the final node list (with feature + subskill flags) and walks the i18n fallback at file-write time. @status:spec/done",
-      "line": 708,
+      "line": 709,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PHASE-MATERIALISATION"
     },
     {
@@ -137197,7 +137206,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "3.3 Determinism",
-      "line": 711,
+      "line": 712,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#determinism"
     },
     {
@@ -137206,7 +137215,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "libsolv's solver is **deterministic** for a fixed pool, fixed jobs, fixed rules — it does not use randomness or wall-clock-driven heuristics. Two solves with the same inputs produce the same result. This is a property we explicitly rely on for `cargo xtask check-codegen`-style drift checks: `vibe check --simulate-install <pkgref>` should produce a stable hash per (manifest, lockfile) pair. We test this via a fixture-driven integration test that runs the same install N times and asserts identical lockfile bytes. @status:spec/done",
-      "line": 712,
+      "line": 713,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#libsolv-determinism"
     },
     {
@@ -137215,7 +137224,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "3.4 Performance envelope",
-      "line": 714,
+      "line": 715,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#perf"
     },
     {
@@ -137224,7 +137233,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "libsolv is the engine YUM and DNF have used for ~15 years against repos with 50K+ packages and conflict-rich constraint sets. vibevm's expected scale (hundreds of packages, tens of features per package, depth-3 graphs typical) is comfortably within the linear regime. We don't anticipate performance pressure from libsolv; we anticipate it from the registry-fetch layer (network bound), which is unchanged. @status:spec/done",
-      "line": 715,
+      "line": 716,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#perf-envelope"
     },
     {
@@ -137233,7 +137242,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "The Rust FFI cost is negligible — one `solver_solve()` call per `vibe install` invocation; everything else is in-process. @status:spec/done",
-      "line": 716,
+      "line": 717,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ffi-cost"
     },
     {
@@ -137242,7 +137251,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "4. Rejected alternatives",
-      "line": 719,
+      "line": 720,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#rejected"
     },
     {
@@ -137251,7 +137260,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "These were considered and explicitly *not* taken. Documented so the next reader doesn't re-derive. @status:spec/done",
-      "line": 720,
+      "line": 721,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#rejected-lead"
     },
     {
@@ -137260,7 +137269,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Already covered in §2.2. Re-stated for completeness: pure-Rust appeal is real, but libsolv's battle-testing, weak-deps semantics, and rule-introspection wins for v1. resolvo remains a viable second impl. @status:spec/done",
-      "line": 722,
+      "line": 723,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#REJ-RESOLVO"
     },
     {
@@ -137269,7 +137278,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Pubgrub's contribution (incremental version solving with native disjunction explanation) is genuinely best-in-class for SemVer-shaped constraints — Cargo's adoption is the existence proof. But pubgrub's data model assumes constraints are version ranges over named packages; capability/interface/virtual-package shapes need to be encoded as synthetic packages, and pubgrub's explanation hooks degrade when synthetic packages dominate the unsat core. Once the encoding is shoehorned in, the explanation quality slips below libsolv's. Door left open via `DepSolver` trait. @status:spec/done",
-      "line": 725,
+      "line": 726,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#REJ-PUBGRUB"
     },
     {
@@ -137278,7 +137287,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "i.e. split `flow:wal` into N packages instead of one with subskills. Already covered in [§2.5.4](#subskill-rationale) (the rationale moved there when r2 inserted the LLM virtual-capabilities section at §2.5.3). Discoverability + cohesion losses outweigh the schema simplicity. @status:spec/done",
-      "line": 728,
+      "line": 729,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#REJ-PACKAGES-ONLY"
     },
     {
@@ -137287,7 +137296,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Already covered in §2.7.1. Case-folding bugs and BCP-47 incompatibility are dealbreakers. @status:spec/done",
-      "line": 731,
+      "line": 732,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#REJ-UNDERSCORE-SUFFIX"
     },
     {
@@ -137296,7 +137305,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Already covered in §2.7.1. Path-depth doubling and filesystem-watch fragility are real costs; the operational wins of sidecar-per-file outweigh the grouping benefit of per-language trees. A package can still have a per-language directory under `subskills/` (e.g. `subskills/i18n/ru-extras/`) if it wants to ship language-specific *content* (not translation) — but that's subskills, not the i18n mechanism. @status:spec/done",
-      "line": 734,
+      "line": 735,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#REJ-LANG-DIRECTORY"
     },
     {
@@ -137305,7 +137314,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Tempting: the LLM reads the package and infers what it provides. We don't do it. `[provides]` is an architectural commitment and authorship matters — having the author intentionally declare interfaces is the only way the system stays auditable. The LLM channel is reserved for *activation* (which subskills to materialise) where the author has already declared the option space. @status:spec/done",
-      "line": 737,
+      "line": 738,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#REJ-LLM-PROVIDES"
     },
     {
@@ -137314,7 +137323,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`description = { en = \"...\", ru = \"...\" }` works for short strings but doesn't scale to multi-paragraph documents (TOML strings without escapes are awkward; multiline literal strings disrupt the toml-edit roundtrip). Sidecar files are the right unit at the document level. @status:spec/done",
-      "line": 740,
+      "line": 741,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#REJ-INLINE-I18N"
     },
     {
@@ -137323,7 +137332,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "A package declaring `[meta] solver = \"naive\"` for itself while the rest of the graph uses `sat` — rejected. Single-solver-per-resolution keeps semantics consistent. @status:spec/done",
-      "line": 743,
+      "line": 744,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#REJ-PER-PACKAGE-SOLVER"
     },
     {
@@ -137332,7 +137341,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "5. Out of scope for this PROP",
-      "line": 746,
+      "line": 747,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#out-of-scope"
     },
     {
@@ -137341,7 +137350,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Module / stream concept** (à la dnf5 modules). Subskills cover the same use cases at a finer grain; modules are RPM-distribution-shape baggage we don't need. @status:spec/done",
-      "line": 748,
+      "line": 749,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OOS-MODULES"
     },
     {
@@ -137350,7 +137359,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Non-SemVer version schemes.** vibevm stays SemVer-only. @status:spec/done",
-      "line": 749,
+      "line": 750,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OOS-NON-SEMVER"
     },
     {
@@ -137359,7 +137368,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**RPM-style boolean rich deps** (`Requires: (A or B)`). `[[requires_any]]` covers the 99 % case; if adoption pulls richer logic in, it lands as a follow-up PROP. @status:spec/done",
-      "line": 750,
+      "line": 751,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OOS-RICH-DEPS"
     },
     {
@@ -137368,7 +137377,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Federated registry trust models** (signing, attestation). Tracked under PROP-002 §6 / future PROP-004. @status:spec/done",
-      "line": 751,
+      "line": 752,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OOS-TRUST"
     },
     {
@@ -137377,7 +137386,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Translation tooling pipelines.** Authors hand-write or LLM-assist their translations; vibevm just resolves and materialises. @status:spec/done",
-      "line": 752,
+      "line": 753,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OOS-TRANSLATION-TOOLING"
     },
     {
@@ -137386,7 +137395,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "6. Phases / staging plan",
-      "line": 755,
+      "line": 756,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#phases"
     },
     {
@@ -137395,7 +137404,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Concretely scoped slices, each shippable independently: @status:spec/done",
-      "line": 756,
+      "line": 757,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#phases-lead"
     },
     {
@@ -137404,7 +137413,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "libsolv FFI crate. @status:spec/done",
-      "line": 759,
+      "line": 760,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PA-FFI-CRATE"
     },
     {
@@ -137413,7 +137422,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`SatDepSolver` impl matching `NaiveDepSolver`'s output on all fixture graphs. @status:spec/done",
-      "line": 760,
+      "line": 761,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PA-SAT-IMPL"
     },
     {
@@ -137422,7 +137431,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Naive stays default; `--solver sat` opt-in. @status:spec/done",
-      "line": 761,
+      "line": 762,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PA-NAIVE-DEFAULT"
     },
     {
@@ -137431,7 +137440,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Acceptance: every existing test passes with `--solver sat` *and* `--solver naive`. @status:spec/done",
-      "line": 762,
+      "line": 763,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PA-ACCEPTANCE"
     },
     {
@@ -137440,7 +137449,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Manifest schema for `[features]`. @status:impl/done",
-      "line": 767,
+      "line": 768,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PB-MANIFEST"
     },
     {
@@ -137449,7 +137458,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Feature activation in solver, lockfile v3 records. @status:impl/done",
-      "line": 768,
+      "line": 769,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PB-SOLVER-LOCKFILE"
     },
     {
@@ -137458,7 +137467,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`--features` / `--no-default-features` / `--all-features` CLI flags. @status:impl/done",
-      "line": 769,
+      "line": 770,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PB-CLI-FLAGS"
     },
     {
@@ -137467,7 +137476,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Acceptance: a feat that depends on `flow:wal` with `--features rust-stack` materialises the rust-specific files; without the flag, those files are absent. @status:impl/done",
-      "line": 770,
+      "line": 771,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PB-ACCEPTANCE"
     },
     {
@@ -137476,7 +137485,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Subskill manifest format, package layout convention. @status:impl/done",
-      "line": 775,
+      "line": 776,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PC-MANIFEST-FORMAT"
     },
     {
@@ -137485,7 +137494,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Manifest fields: `delivery`, `description`, `describes`, full `[activation]` probe set (`if_present` / `if_provides` / `if_files` / `if_command` / `if_env` / `if_describes_match` / `if_language`). @status:impl/done",
-      "line": 776,
+      "line": 777,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PC-FIELDS"
     },
     {
@@ -137494,7 +137503,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Manual feature → subskill mapping (Phase B's hooks). @status:impl/done",
-      "line": 777,
+      "line": 778,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PC-MANUAL-MAPPING"
     },
     {
@@ -137503,7 +137512,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Context-based activation post-pass: probes evaluated against the resolved graph + project tree + machine state. @status:impl/done",
-      "line": 778,
+      "line": 779,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PC-CONTEXT-POST-PASS"
     },
     {
@@ -137512,7 +137521,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Eager-mode materialisation in `vibe-install`. Lazy-push / lazy-pull modes plumb through but require `vibe-mcp` (M1.7) to be useful — when M1.7 hasn't landed, the modes degrade to `eager` with a `tracing::warn!` so the consumer is never silently broken. @status:impl/done",
-      "line": 779,
+      "line": 780,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PC-EAGER-MATERIALISATION"
     },
     {
@@ -137521,7 +137530,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`vibe show subskills` CLI. @status:impl/done",
-      "line": 780,
+      "line": 781,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PC-SHOW-SUBSKILLS"
     },
     {
@@ -137530,7 +137539,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Acceptance: a package with `subskills/stack/rust/` (delivery=eager) activates under a `stack:rust` project without explicit user opt-in. A package with `subskills/sqlx-0.8/` (delivery=lazy-push, describes=`pkg:cargo/sqlx@0.8.0`) does NOT materialise files but registers itself for `vibe-mcp` exposure once M1.7 is in. Activation-conflict check fires when two lazy-push subskills' descriptions overlap. @status:impl/done",
-      "line": 781,
+      "line": 782,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PC-ACCEPTANCE"
     },
     {
@@ -137539,7 +137548,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "BCP-47 sidecar file resolution. @status:impl/done",
-      "line": 786,
+      "line": 787,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PD-SIDECAR"
     },
     {
@@ -137548,7 +137557,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Manifest field translations (dotted-key form). @status:spec/done",
-      "line": 787,
+      "line": 788,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PD-FIELD-TRANSLATIONS"
     },
     {
@@ -137557,7 +137566,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "`--language` flag, `[i18n]` blocks at project/package level. @status:impl/done",
-      "line": 788,
+      "line": 789,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PD-LANGUAGE-FLAG"
     },
     {
@@ -137566,7 +137575,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Lockfile v3 records resolved language. @status:impl/done",
-      "line": 789,
+      "line": 790,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PD-LOCKFILE-LANGUAGE"
     },
     {
@@ -137575,7 +137584,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Acceptance: `vibe install flow:wal --language ru` against a package shipping Russian translations writes the Russian files; `--language en` writes the canonical; `--language ja` (no translation in this package) writes the canonical with a `tracing::info!` \"language ja not available, using en fallback\". @status:impl/done",
-      "line": 790,
+      "line": 791,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PD-ACCEPTANCE"
     },
     {
@@ -137584,7 +137593,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Default flips — to **`resolvo`**, in the R-001 selection seam ([PROP-017](PROP-017-resolvo-resolver.xml) `DONE-DEFAULT-FLIP`; `--solver`'s help reads \"Defaults to resolvo\"). The `sat` this line named was superseded before the flip shipped. @status:impl/done",
-      "line": 795,
+      "line": 796,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PE-DEFAULT-FLIP"
     },
     {
@@ -137593,7 +137602,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Naive demoted to \"tests + small graphs\" path. @status:impl/done",
-      "line": 796,
+      "line": 797,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PE-NAIVE-DEMOTED"
     },
     {
@@ -137602,7 +137611,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Acceptance: clean runs of every smoke (M1.5-gate-v2, M1.6-mirror-vendor, plus new feature/subskill smokes) green on fresh install. @status:impl/done",
-      "line": 797,
+      "line": 798,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PE-ACCEPTANCE"
     },
     {
@@ -137611,7 +137620,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Wire into the `vibe build` LLM tool-use loop. @status:impl/plan",
-      "line": 802,
+      "line": 803,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PF-BUILD-LOOP"
     },
     {
@@ -137620,7 +137629,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "LLM is invoked with the effective spec + project context + a request to emit virtual capabilities (§2.5.3). @status:impl/plan",
-      "line": 803,
+      "line": 804,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PF-EMISSION-REQUEST"
     },
     {
@@ -137629,7 +137638,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Subskills with matching `if_present` / `if_provides` rules activate through the normal channel. @status:impl/plan",
-      "line": 804,
+      "line": 805,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PF-ACTIVATION-CHANNEL"
     },
     {
@@ -137638,7 +137647,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Audit surface: every emission logs `(name, emitter, trace_id, reasoning)` to the lockfile's `[meta].virtual_capabilities`. `vibe show effective` annotates virtually-emitted capabilities with `[virtual via LLM]`. @status:impl/plan",
-      "line": 805,
+      "line": 806,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PF-AUDIT-SURFACE"
     },
     {
@@ -137647,7 +137656,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Project-level policy: `[llm].emission.allowed_namespaces = [\"capability:*\", \"interface:*\"]` (default — generous; restrict by namespace if security-sensitive). Per-subskill `context.allow_llm_emission = false` is the per-subskill opt-out, but most subskills won't need it because they simply don't declare `if_present` against the LLM-emission namespace. @status:impl/plan",
-      "line": 806,
+      "line": 807,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PF-POLICY"
     },
     {
@@ -137656,7 +137665,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Acceptance: a `feat:welcome-page × stack:rust` build emits `interface:llm-coordinator` based on detecting an LLM-mediated workflow, which activates the `flow:wal/llm-coordinator/anthropic` subskill via its `if_provides = [\"interface:llm-coordinator\"]` rule, and the lockfile records the emission with full audit trail. @status:impl/plan",
-      "line": 807,
+      "line": 808,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#PF-ACCEPTANCE"
     },
     {
@@ -137665,7 +137674,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "7. Open questions",
-      "line": 811,
+      "line": 812,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#open"
     },
     {
@@ -137674,7 +137683,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Mutually-exclusive feature sets across packages.** §2.4's `[features.exclusive]` is intra-package. Should we support cross-package mutual exclusion (\"at most one of `stack:rust` or `stack:python` in the same project\")? Today this is implicit via `kind`/`name` uniqueness on the resolution side, but a project that pulls both via different transitive paths is not currently rejected. Defer to adoption signal. @status:spec/work",
-      "line": 813,
+      "line": 814,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OPEN-CROSS-PACKAGE-EXCLUSION"
     },
     {
@@ -137683,7 +137692,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Subskill versioning.** Today a subskill is part of its parent package's version. Do we ever want subskills with their own SemVer? Probably not — would force the subskill into being its own package. Mark closed. @status:spec/done",
-      "line": 814,
+      "line": 815,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OPEN-SUBSKILL-VERSIONING"
     },
     {
@@ -137692,7 +137701,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Translation provenance.** Should the lockfile record *which version of a translation* was materialised (translations may evolve faster than canonical)? Open — likely yes, requires schema extension to v4 if pursued. @status:spec/work",
-      "line": 815,
+      "line": 816,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OPEN-TRANSLATION-PROVENANCE"
     },
     {
@@ -137701,7 +137710,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Interface-tag namespacing in the registry.** Today interface tags are global (`interface:build-system` matches across all registries). For multi-tenant federations we may need scoping; defer until multi-registry adoption surfaces real conflicts. @status:spec/work",
-      "line": 816,
+      "line": 817,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OPEN-IFACE-NAMESPACING"
     },
     {
@@ -137710,7 +137719,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Virtual-capability emission rate-limiting.** §2.5.3 leaves the LLM emission unconstrained. In the worst case the LLM could emit hundreds of virtual capabilities per resolution and inflate the activation graph. Open: should the schema cap emissions at N (configurable) and ask the LLM to prioritise? Lean toward `[llm].emission.max = 50` default with override at `vibe build --llm-emission-max=N`. @status:spec/work",
-      "line": 817,
+      "line": 818,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OPEN-EMISSION-RATE-LIMIT"
     },
     {
@@ -137719,7 +137728,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Workspace / monorepo support.** Cargo's `[workspace]` shape lets a repo carry many crates with shared lockfile. vibevm today is one-package-one-repo. With subskills + features, this constraint is workable; without them, monorepos for multi-package collections (`vibespecs/flow-collection` carrying `flow:wal` + `flow:git-atomic-commits`) become attractive. Defer to adoption. @status:spec/work",
-      "line": 818,
+      "line": 819,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OPEN-WORKSPACE-MONOREPO"
     },
     {
@@ -137728,7 +137737,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**`describes` PURL coverage.** Should `vibe check` warn when a `describes` PURL points at a package version that doesn't exist on the upstream registry (npm, pypi, crates.io)? Requires a probe layer that's opinionated about upstream-host APIs. Park as M2-territory. @status:spec/work",
-      "line": 819,
+      "line": 820,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OPEN-DESCRIBES-COVERAGE"
     },
     {
@@ -137737,7 +137746,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Activation-conflict detection threshold.** §2.10's check uses 75% keyword-overlap as the threshold for \"descriptions materially overlap.\" Is that the right number? Tessl doesn't publish theirs. Open — instrument and adjust based on real-world false-positive rate once we have a corpus. @status:spec/work",
-      "line": 820,
+      "line": 821,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OPEN-CONFLICT-THRESHOLD"
     },
     {
@@ -137746,7 +137755,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**Feature flags from environment variables.** `VIBE_FEATURES=foo,bar` — useful for CI/automation? Probably yes, mirrors `--features`. Cheap addition to Phase B if pulled. @status:spec/work",
-      "line": 821,
+      "line": 822,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OPEN-ENV-FEATURES"
     },
     {
@@ -137755,7 +137764,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "**LLM activation transparency to the consumer.** Per-project policy at `[llm].emission.allowed_namespaces` (§2.5.3) covers the bulk case. Should there also be a `[llm].emission.denylist = [\"capability:dangerous-pattern\"]` for explicit refusal of named capabilities? Lean yes; cheap; probably lands as part of Phase F. @status:spec/work",
-      "line": 822,
+      "line": 823,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#OPEN-LLM-DENYLIST"
     },
     {
@@ -137764,7 +137773,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "8. References",
-      "line": 825,
+      "line": 826,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#references"
     },
     {
@@ -137773,7 +137782,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Cargo's `[features]` reference: <https://doc.rust-lang.org/cargo/reference/features.html> @status:spec/done",
-      "line": 827,
+      "line": 828,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-cargo-features"
     },
     {
@@ -137782,7 +137791,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Cargo's feature-resolver-v2 design: <https://doc.rust-lang.org/cargo/reference/resolver.html#feature-resolver-version-2> @status:spec/done",
-      "line": 828,
+      "line": 829,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-cargo-resolver-v2"
     },
     {
@@ -137791,7 +137800,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "Cargo source: `refs/study/cargo/src/cargo/core/resolver/features.rs`, `refs/study/cargo/src/cargo/core/summary.rs`. @status:spec/done",
-      "line": 829,
+      "line": 830,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-cargo-source"
     },
     {
@@ -137800,7 +137809,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "libsolv canonical: <https://github.com/openSUSE/libsolv> (BSD-3-Clause). @status:spec/done",
-      "line": 830,
+      "line": 831,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-libsolv"
     },
     {
@@ -137809,7 +137818,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "libsolv internal docs: `doc/libsolv-bindings.txt`, `doc/libsolv-history.txt`, `examples/`. @status:spec/done",
-      "line": 831,
+      "line": 832,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-libsolv-docs"
     },
     {
@@ -137818,7 +137827,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "DNF5 source (LGPL-2.1, NOT linked — read for design only): `refs/study/dnf5/libdnf5/solv/`, `refs/study/dnf5/dnf5/commands/module/`, `refs/study/dnf5/libdnf5/comps/`. @status:spec/done",
-      "line": 832,
+      "line": 833,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-dnf5"
     },
     {
@@ -137827,7 +137836,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "DNF legacy (Python 3 generation): `refs/study/dnf/dnf/`. @status:spec/done",
-      "line": 833,
+      "line": 834,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-dnf-legacy"
     },
     {
@@ -137836,7 +137845,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "BCP-47: <https://datatracker.ietf.org/doc/html/rfc5646>. @status:spec/done",
-      "line": 834,
+      "line": 835,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-bcp47"
     },
     {
@@ -137845,7 +137854,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "TOML 1.0: <https://toml.io/en/v1.0.0>. @status:spec/done",
-      "line": 835,
+      "line": 836,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-toml"
     },
     {
@@ -137854,7 +137863,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "vibevm's existing depsolver trait: `crates/vibe-resolver/src/lib.rs`. @status:spec/done",
-      "line": 836,
+      "line": 837,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-depsolver-trait"
     },
     {
@@ -137863,7 +137872,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "vibevm's existing manifest model: `crates/vibe-core/src/manifest/`. @status:spec/done",
-      "line": 837,
+      "line": 838,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#ref-manifest-model"
     },
     {
@@ -137872,7 +137881,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
       "heading": "*This PROP is a design proposal. Ratification — and the corresponding lockfile schema bump — happens through PR review against this document. Any field added here that doesn't land in the implementation by the end of Phase E is removed from the spec rather than carried as aspirational documentation.* @status:spec/done",
-      "line": 839,
+      "line": 840,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#closing-note"
     },
     {
