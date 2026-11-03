@@ -158,3 +158,15 @@ Root review потребовал ещё две коррекции: public wrappe
 ### Workspace constraints: main gate
 
 Совместный main-прогон `cargo test --offline --locked -p vibe-install --test root_constraints --test prepared_planning` прошёл:22+7cases,0failed. Интегрированный specmap --check тоже чист по blocking gates:0suspects/0gated orphans/0unresolved host edges;43known warnings остаются. Все11source hashes совпали с проверенным кандидатом. Проверен существующий CLI error classifier: новый контекст сохраняет SolveError в source chain, поэтому kind mismatch продолжает иметь штатную категорию. Изменение допускается к commit, с сохранёнными ограничениями source registration и conditional algebra.
+
+## 2026-11-04 — Общий configuration contract и проверенная app-основа
+
+Публичный Linux baseline `cargo test --offline --locked -p vibe-cli --test cli_app_wizard a_tool_drives_describe_plan_install_runs_cancel_and_errors -- --exact` прошёл:1test,0failed; fixture самостоятельно проходит describe/plan/install/events/record/cancel/resume. Это fresh evidence существующего app-пути, а не source-only утверждение исследования.
+
+Создан PROP-069 общего configuration. Выбран общий kind-neutral локальный kernel и описание/оценка выбора, с адаптерами существующих эффектов и владельцев состояния. Сохраняются richer original intent, cardinalities, guards, default consent, dormant choices и конфликты consumers; текущий app behavior не подменяется более слабой или иной семантикой. Constraint over feature closure и consumer-owned choice различены в модели, а не ветвлением по package kind. Произвольный choice-host процесс пользователю не требуется.
+
+Первый implementation slice — извлечь существующий app feature-closure kernel в vibe-core::configuration и подключить app обратно через совместимый адаптер. Никакой новой публичной configuration wire-схемы или полного end-to-end общего результата этот первый slice не обещает. Дальше следуют rich choices/intent, effect/solver integration, persistence и общие surfaces с cross-kind acceptance. Исследования и конкретные counterexamples сохранены в research/choice-semantics-comparison.md.
+
+Операторская поправка: дополнительное сравнение сначала было отправлено мной как сообщение завершённой задаче и не запускалось. Это обнаружено по статусу агентов; отдельный follow-up запущен, отчёт получен и прочитан. Старый отчёт не был выдан за новое исполнение.
+
+Source observations интегрирован commit6dafbac72, workspace constraints —075d38cb2. Обе временные копии удалены после проверки, что все их14и11изменённых файлов точно сохранены в main, отчёты вынесены, процессов использования нет. Другие worktrees и prototype dirty state не тронуты.
