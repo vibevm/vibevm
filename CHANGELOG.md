@@ -8,6 +8,8 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+- **A git clone of github.com or gitverse.ru goes to the host again.** Since 1.0.9 the built-in remap rows that send single-file reads to `raw.githubusercontent.com` and the gitverse file endpoint also applied to every other fetch of those hosts, so a git-source dependency (`{ git = "https://github.com/…" }`) and other one-URL clones were sent to the file endpoint and failed with `git archive --remote=https://raw.githubusercontent.com/… exited with status 128`. The built-in rows now apply to single-file reads only; a `VIBE_REMAP` file is no longer needed to work around it.
+
 - **An interrupt stops what a step started, not only its shell.** Ctrl-C (or `SIGTERM`) during an application install now reaches the step's whole process group on Unix: a recipe whose shell waits on a compiler or a `sleep` stops at once, where before the child kept running — on macOS, whose `/bin/sh` is bash, the recipe even ran to its end — and vibe waited for it. A step child that may read the terminal stays in the foreground group, as before.
 
 ## [1.0.10] — 2026-11-02

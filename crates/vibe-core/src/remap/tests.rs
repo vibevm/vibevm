@@ -503,3 +503,35 @@ fn a_package_key_honours_a_version_requirement_when_the_artifact_carries_one() {
         .with_package("org.example/tool");
     assert_eq!(first_target(&built, &unversioned), "https://pinned/");
 }
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
+fn the_built_in_single_file_rows_leave_a_clone_on_its_host() {
+    // The built-in table stands in for PROP-002's single-file read only: a
+    // `git clone` sent to `raw.githubusercontent.com` is a 404 (reported
+    // against 1.0.9 and 1.0.10).
+    let built = locator(default_raw_file_rows(&[(
+        "github.com",
+        "https://raw.githubusercontent.com",
+    )]));
+    let file = Artifact::new(ArtifactKind::RawFile)
+        .with_url("https://github.com/vibespecs/index/main/vibe.toml");
+    assert_eq!(
+        first_target(&built, &file),
+        "https://raw.githubusercontent.com/vibespecs/index/main/vibe.toml"
+    );
+    for kind in [
+        ArtifactKind::RegistryClone,
+        ArtifactKind::GitSourceDep,
+        ArtifactKind::EmbeddedSource,
+        ArtifactKind::AppInput,
+        ArtifactKind::IndexFile,
+    ] {
+        let clone = Artifact::new(kind).with_url("https://github.com/vibespecs/index.git");
+        assert_eq!(
+            first_target(&built, &clone),
+            "https://github.com/vibespecs/index.git",
+            "{kind:?} must keep its declared host"
+        );
+    }
+}

@@ -141,6 +141,7 @@ pub(crate) fn build(env: &RemapEnv) -> Result<(Locator, Vec<String>)> {
             from: vibe_core::remap::Provenance::new(Layer::Invocation, RELEASE_ORIGIN_ENV, 0),
             from_package: None,
             target_ref: None,
+            only: None,
         };
         sources.push(LoadedSource {
             layer: Layer::Invocation,

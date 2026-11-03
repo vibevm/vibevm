@@ -4,11 +4,11 @@
 
   1. prefix    https://github.com/
      to      https://raw.githubusercontent.com/  [https, unknown]
-     why     built-in single-file endpoint for github.com
+     why     built-in single-file endpoint for github.com (single-file reads only)
      note    the target could not be classified from here
   2. prefix    https://gitverse.ru/
      to      https://gitverse.ru/  [https, unknown]
-     why     built-in single-file endpoint for gitverse.ru
+     why     built-in single-file endpoint for gitverse.ru (single-file reads only)
      note    the target could not be classified from here
 
 ── [[mirror]] / [[override]]  local, unmatched = allow ────
