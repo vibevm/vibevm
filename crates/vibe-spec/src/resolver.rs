@@ -98,6 +98,16 @@ impl SelectedPackage {
 /// Why an address does not resolve to a file.
 #[derive(Debug, thiserror::Error)]
 pub enum ResolveError {
+    /// A filesystem-bound spelling violates the shared declarant path law.
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-LOOKUP-PATHS: invalid {field} `{value}` ({}); fix surface: use a portable relative document path or single slot/version/suffix component",
+        .reason.reason()
+    )]
+    InvalidLookupPath {
+        field: &'static str,
+        value: String,
+        reason: vibe_core::manifest::DeclarantPathFault,
+    },
     /// A legacy undotted `spec://<host>/…` authority (B-031). Such an authority
     /// is grammar-legal but never resolves — the host is a package coordinate.
     /// `hint` names the resolver's actual self coordinate (or notes its
@@ -285,6 +295,7 @@ impl FileResolver {
         addr: &SpecAddress,
         active_formats: &[String],
     ) -> Result<ResolvedSourceFile, ResolveError> {
+        paths::source(&addr.doc_path, active_formats)?;
         // A pattern (a `*` in the package name) names a set, not a file. Refuse
         // it loudly rather than falling through to the suffix lookup, which would
         // report PackageSlotNotFound — "not installed" where the truth is "this
@@ -410,7 +421,8 @@ impl FileResolver {
         name: &str,
         version: Option<&str>,
     ) -> Result<PathBuf, ResolveError> {
-        let slot_dir = vibedeps_root_under(&self.ws_root).join(format!("{group}.{name}"));
+        let component = paths::package_component(group, name, version)?;
+        let slot_dir = vibedeps_root_under(&self.ws_root).join(component);
         if !slot_dir.is_dir() {
             return Err(ResolveError::PackageSlotNotFound(name.to_string()));
         }
@@ -450,6 +462,7 @@ impl FileResolver {
 /// answers "which `spec/` root does this authority mean", everything there
 /// answers "which file inside a root does this doc-path mean".
 mod lookup;
+mod paths;
 pub use lookup::canonical_doc_path;
 pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
 
@@ -481,3 +494,6 @@ pub use glob::is_pattern;
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod path_tests;

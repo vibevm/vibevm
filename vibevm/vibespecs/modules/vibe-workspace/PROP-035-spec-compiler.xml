@@ -99,9 +99,13 @@
     </facts>
     <facts ordered="false">
       <ROUTER-DETERMINISM fact="true" status="impl/done">Determinism is a hard requirement: the static compiler must resolve every address to exactly one node or fail loudly.</ROUTER-DETERMINISM>
+      <URI-LOOKUP-PATHS fact="true" status="impl/done">Before filesystem lookup, a document path must satisfy the shared portable declarant-relative path law in vibe-core: no absolute path, dot segment, backslash, control character, device spelling or platform-dependent path syntax. An address must not escape its selected source root by path spelling. A package slot name and any explicit slot version used as a filesystem component satisfy the same component law; a custom frontend suffix must form one safe filename component. These checks apply at the resolver boundary, including publicly constructed SpecAddress values, and to pattern document paths before enumeration. Percent sequences remain literal characters; this rule introduces no URI decoding. Valid nested paths, selected-world routing, optional-version selection, ordinary Unicode names and existing active custom frontend formats retain their behavior. This lexical guarantee alone is not a race-free read, a symlink-containment proof or a source-integrity attestation.</URI-LOOKUP-PATHS>
       <ROUTER-EXTENDS-SPECMAP fact="true" status="impl/done">The router extends the `specmap.json` index (already a `uri↔file` table) rather than duplicating it.</ROUTER-EXTENDS-SPECMAP>
     </facts>
   </addressing>
+  <lookup-path-decision title="Resolver path validation decision, 2026-11-03">
+    <p>Decision: validate filesystem-bound address fields through the existing vibe-core declarant path/component functions in the incumbent resolver. Why: direct joins of document paths and version components permit lexical traversal even when the caller selected the intended package; the source/embed consumer then reads the resolved file. Considered and rejected: parser-only validation cannot protect public struct construction; normalization would change the requested identity; importing the prototype's complete source-query and machine layers would add unrelated prerequisites. Revisit when a supported address form needs different physical-path semantics, with an explicit representation and consumer test. Filesystem races, aliases and held-byte reads retain separate verification obligations.</p>
+  </lookup-path-decision>
   <directives title="7. The three directives">
     <facts ordered="false">
       <DIRECTIVE-SHAPE fact="true" status="impl/done">Common shape: `#&lt;directive&gt; [options] &lt;specpath&gt;`, where `specpath` is a `spec://` address (§6) — a section, or a whole file.</DIRECTIVE-SHAPE>

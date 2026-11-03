@@ -71,6 +71,7 @@ impl FileResolver {
         if !is_pattern(addr) {
             return Ok(vec![addr.clone()]);
         }
+        super::paths::source(&addr.doc_path, &[])?;
         // A pattern always carries a package name; an undotted host authority is
         // never a pattern (is_pattern is false for it), so it returned above.
         let Authority::Package { group, name, .. } = &addr.authority else {
