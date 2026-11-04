@@ -1,5 +1,7 @@
 # F06 — Metadata publication ownership and checked rollback
 
+Accepted implementation:50a4630aa. Temporary candidate retired after exact committed-file and live-use checks; evidence is preserved.
+
 ## Need and decision
 
 The incumbent apply guard remembered a pathname and unconditionally restored its old bytes on failure. Actual public plan→apply reproduced one ordinary rollback control and four failures: a later byte change, a replacement object with identical bytes, a symlink substitution and a hardlink substitution were overwritten. A second public hosted-lifecycle reproduction found that the outer caller hid a rollback conflict behind a clean Delegated outcome.

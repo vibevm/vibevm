@@ -309,7 +309,7 @@ Rich portable export/import is not implemented by the first candidate. Legacy po
 
 FMT-009 secret-default clarification: authored defaults/choices/labels remain public definition data under the existing contract. A definition snapshot/hash may retain that literal; evaluated secret values and supplied overrides remain excluded/redacted. This does not change legacy describe and does not conceal credentials authored into a public manifest default. New origin metadata describes the current binding; it never invents older secret-provision history.
 
-## FMT-011 — Apply metadata ownership and rollback (accepted, Unreleased)
+## FMT-011 — Apply metadata ownership and rollback (Unreleased; 50a4630aa)
 
 No vibe.toml keys or lock/provenance schema change. The correction replaces ambient truncate/remove rollback with prepared bytes and observed owned-publication checks for selected manifest, workspace lock and provenance. Initial symlink/reparse/special/shared-link mutation targets refuse before effects under existing mutation policy; ordinary read-only shared source remains supported. Standard regular-file rollback and permissions remain valid. Later byte/object/link substitutions are preserved with a conflict, rather than silently overwritten. A guard that never wrote does not undo.
 
