@@ -1,6 +1,6 @@
 # F12 — Selected-installer configuration through real operations
 
-This is the selected-installer runtime boundary of F04. Full portable configuration, configured package solving and the all-kind operation matrix remain required work; this card does not close F04 or the whole campaign. Integrated acceptance is complete; the commit is recorded in the local campaign plan and LOG.md.
+This is the selected-installer runtime boundary of F04. Full portable configuration, configured package solving and the all-kind operation matrix remain required work; this card does not close F04 or the whole campaign. Integrated acceptance is complete in c5662ee42; original candidate sources/evidence were archived and its temporary worktree retired.
 
 ## What users gain
 
