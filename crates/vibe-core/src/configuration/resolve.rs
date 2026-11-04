@@ -36,6 +36,29 @@ impl Selection {
 }
 
 impl FeatureModel {
+    /// Choice members augment the base, never acquire direct replacement
+    /// priority. The sole evaluator below still owns every closure rule.
+    pub(super) fn resolve_with_seeds(
+        &self,
+        input: &FeatureInput,
+        seeds: &[String],
+    ) -> Result<FeatureResolution, Error> {
+        let mut base = match &input.base {
+            FeatureBase::Defaults => self
+                .nodes
+                .iter()
+                .filter(|n| n.declaration.default)
+                .map(|n| n.declaration.id.clone())
+                .collect::<Vec<_>>(),
+            FeatureBase::Selected(ids) => ids.clone(),
+        };
+        base.extend_from_slice(seeds);
+        self.resolve(&FeatureInput {
+            base: FeatureBase::Selected(base),
+            additions: input.additions.clone(),
+            disabled: input.disabled.clone(),
+        })
+    }
     /// Resolve one supplied local selection. No I/O or effect is performed.
     /// Fallbacks are a separate simultaneous round after ordinary closure;
     /// incompatible resulting cardinalities refuse, without default backtracking.
@@ -51,6 +74,73 @@ impl FeatureModel {
     /// ```
     #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#FEATURE-KERNEL")]
     pub fn resolve(&self, input: &FeatureInput) -> Result<FeatureResolution, Error> {
+        let (selected, disabled) = self.prepare(input)?;
+        let mut state = Selection {
+            selected,
+            reasons: vec![None; self.nodes.len()],
+        };
+        self.close(&mut state);
+        for group in &self.groups {
+            if !state.active(group) {
+                continue;
+            }
+            let members: Vec<_> = group
+                .members
+                .iter()
+                .copied()
+                .filter(|id| state.selected.contains(id))
+                .collect();
+            if !group.declaration.cardinality.accepts(members.len()) {
+                return Err(Error::Cardinality {
+                    group: group.declaration.id.clone(),
+                    cardinality: group.declaration.cardinality,
+                    members: members.into_iter().map(|id| self.name(id)).collect(),
+                });
+            }
+        }
+        for index in disabled {
+            if let Some(reason) = &state.reasons[index] {
+                return Err(Error::DisabledImplied {
+                    feature: self.name(index),
+                    reason: reason.clone(),
+                });
+            }
+        }
+        Ok(FeatureResolution {
+            selected: self
+                .nodes
+                .iter()
+                .enumerate()
+                .filter(|(id, _)| state.selected.contains(id))
+                .map(|(_, node)| node.declaration.id.clone())
+                .collect(),
+            implied: state
+                .reasons
+                .into_iter()
+                .enumerate()
+                .filter_map(|(id, reason)| {
+                    reason.map(|reason| Implication {
+                        feature: self.name(id),
+                        reason,
+                    })
+                })
+                .collect(),
+        })
+    }
+
+    fn input_id(&self, id: &str) -> Result<usize, Error> {
+        self.ids
+            .get(id)
+            .copied()
+            .ok_or_else(|| Error::UnknownFeature { id: id.into() })
+    }
+
+    /// Validate ordinary IDs and direct contradictions without running closure.
+    pub(super) fn validate_input(&self, input: &FeatureInput) -> Result<(), Error> {
+        self.prepare(input).map(|_| ())
+    }
+
+    fn prepare(&self, input: &FeatureInput) -> Result<(BTreeSet<usize>, Vec<usize>), Error> {
         let base = match &input.base {
             FeatureBase::Defaults => self
                 .nodes
@@ -123,64 +213,7 @@ impl FeatureModel {
                 }
             }
         }
-        let mut state = Selection {
-            selected,
-            reasons: vec![None; self.nodes.len()],
-        };
-        self.close(&mut state);
-        for group in &self.groups {
-            if !state.active(group) {
-                continue;
-            }
-            let members: Vec<_> = group
-                .members
-                .iter()
-                .copied()
-                .filter(|id| state.selected.contains(id))
-                .collect();
-            if !group.declaration.cardinality.accepts(members.len()) {
-                return Err(Error::Cardinality {
-                    group: group.declaration.id.clone(),
-                    cardinality: group.declaration.cardinality,
-                    members: members.into_iter().map(|id| self.name(id)).collect(),
-                });
-            }
-        }
-        for index in disabled {
-            if let Some(reason) = &state.reasons[index] {
-                return Err(Error::DisabledImplied {
-                    feature: self.name(index),
-                    reason: reason.clone(),
-                });
-            }
-        }
-        Ok(FeatureResolution {
-            selected: self
-                .nodes
-                .iter()
-                .enumerate()
-                .filter(|(id, _)| state.selected.contains(id))
-                .map(|(_, node)| node.declaration.id.clone())
-                .collect(),
-            implied: state
-                .reasons
-                .into_iter()
-                .enumerate()
-                .filter_map(|(id, reason)| {
-                    reason.map(|reason| Implication {
-                        feature: self.name(id),
-                        reason,
-                    })
-                })
-                .collect(),
-        })
-    }
-
-    fn input_id(&self, id: &str) -> Result<usize, Error> {
-        self.ids
-            .get(id)
-            .copied()
-            .ok_or_else(|| Error::UnknownFeature { id: id.into() })
+        Ok((selected, disabled))
     }
 
     fn input_ids(&self, ids: &[String]) -> Result<BTreeSet<usize>, Error> {

@@ -84,6 +84,10 @@ fn references(
 }
 
 impl FeatureModel {
+    /// Local validation query for sibling configuration components.
+    pub(super) fn contains_feature(&self, id: &str) -> bool {
+        self.ids.contains_key(id)
+    }
     /// Validate all supplied definitions, including inactive groups. Positive
     /// `requires` cycles are finite closures; parent cycles are invalid trees.
     /// Feature and group IDs occupy separate local namespaces.
