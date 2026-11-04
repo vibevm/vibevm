@@ -1,5 +1,7 @@
 # F07 — Code-span quotations do not define fact anchors
 
+Accepted commit:d6147a94d. Exact ten-file snapshot verified against committed HEAD; temporary source worktree removed, evidence retained.
+
 ## Meaning and source judgment
 
 The prototype's narrow correction8a4c096f removes a real inconsistency in the existing main parser: after canonical parsing masked inline code, a second raw scan counted definition-looking quotations again. This could reject legitimate documents, conversions and fact scans. Historical B-092 deliberately introduced that diagnostic convention; the current PROP-043 code-opacity/first-token grammar says otherwise. The history is retained with a dated compatibility correction, not erased or described as accidental.

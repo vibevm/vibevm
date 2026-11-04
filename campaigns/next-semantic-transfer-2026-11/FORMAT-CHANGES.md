@@ -333,7 +333,7 @@ Malformed reserved embed pairs (unexpected/mismatched/crossed/empty/unclosed or 
 
 Proposed additive Rust API: vibe_spec::fenced_code_lines(&str) -> Vec<bool>, sharing the existing FenceTracker and including delimiter lines. No new dependency is needed. Implementation and final compatibility tests are pending; this does not deliver the full boot debugger, ordinary source inspector or exact byte measurements. Design: research/boot-tree-attribution-design.md.
 
-## FMT-013 — Quoted fact anchors remain literal (accepted, Unreleased)
+## FMT-013 — Quoted fact anchors remain literal (Unreleased; d6147a94d)
 
 No vibe.toml key, install -g flag/app-index, authored anchor grammar, tracked campaign-record or public Rust signature change. The correction follows the current first-token/code-opacity contract: a definition-looking @fact token inside an inline code span no longer creates a second definition or DuplicateId. Real parsed heading/fact/typed-fact duplicates still fail; marked/missing and swallowed-anchor checks remain. The canonical backtick/fence parser is unchanged, including unmatched backticks being literal rather than hiding following markup. Other existing consumers using this parser inherit the corrected diagnostic; a separate global-app installation journey is not claimed by this slice.
 
