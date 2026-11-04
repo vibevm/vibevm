@@ -101,6 +101,9 @@ impl Manifest {
             if !self.compatibility.is_empty() {
                 offenders.push("[compatibility]");
             }
+            if self.configuration.is_some() {
+                offenders.push("[configuration]");
+            }
             if !self.features.is_empty() {
                 offenders.push("[features]");
             }
@@ -121,6 +124,32 @@ impl Manifest {
             application.validate()?;
         }
         self.validate_installer_options()?;
+        if let Some(package) = &self.package {
+            if let Some(configuration) = &self.configuration {
+                let at = FieldPath::root().table("configuration");
+                if !self.features.is_empty() {
+                    return Err(FieldError::new(
+                        at,
+                        "common configuration conflicts with legacy [features] in package scope",
+                    )
+                    .into());
+                }
+                configuration.validate_scope(&self.requires, package.kind, false, &at)?;
+            }
+            for (index, option) in self.installer_options.iter().enumerate() {
+                if let Some(configuration) = &option.configuration {
+                    configuration.validate_scope(
+                        &self.requires,
+                        package.kind,
+                        true,
+                        &FieldPath::root()
+                            .table("installer_options")
+                            .index(index)
+                            .table("configuration"),
+                    )?;
+                }
+            }
+        }
         if has_package && !self.run_commands.is_empty() {
             return Err(Error::InvalidManifest {
                 reason: "[[command]] is host-owned and cannot be declared by a publishable package"

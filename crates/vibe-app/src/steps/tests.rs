@@ -370,3 +370,57 @@ fn features_come_from_flags_then_the_question_then_defaults_and_update_reuses_th
     let cancel = |_: &str, _: &[crate::select::Choice], _: &[bool]| Ok(None);
     assert!(chosen(&attended, Some(&cancel)).is_err());
 }
+
+#[test]
+fn common_installer_configuration_refuses_before_prompts_or_step_planning() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut resolved = package(dir.path(), BUILD);
+    let option = &mut resolved.options[0];
+    option.features.clear();
+    option.configuration = Some(Default::default());
+    let called = RefCell::new(false);
+    let chooser = |_: &str, _: &[crate::select::Choice], _: &[bool]| {
+        *called.borrow_mut() = true;
+        Ok(Some(vec![]))
+    };
+    let error = run(dir.path(), &resolved, &host(), Some(&chooser)).unwrap_err();
+    assert_eq!(error.code(), "configuration_unsupported");
+    assert!(error.to_string().contains("installer main"));
+    assert!(!*called.borrow());
+    assert!(!dir.path().join("settings").exists());
+}
+
+#[test]
+fn common_shorthand_option_is_admitted_but_not_silently_executed() {
+    let dir = tempfile::tempdir().unwrap();
+    let manifest=Manifest::parse_str("[package]\ngroup='org.example'\nname='tool'\nkind='app'\nversion='1.0.0'\n[application]\nid='tool'\n[[installer_options]]\nid='main'\nname='Main'\nplatform='linux'\nplatform_name='Linux'\narch='x86_64'\n[installer_options.installation]\ntype='shell'\napp_root='/tmp/tool'\ninstall='true'\nforce_install='true'\nuninstall='true'\nforce_uninstall='true'\n[installer_options.configuration]\n").unwrap();
+    let resolved = from_manifest(
+        manifest,
+        dir.path().to_path_buf(),
+        PackageCoordinate {
+            group: "org.example".into(),
+            name: "tool".into(),
+            version: "1.0.0".into(),
+        },
+    )
+    .unwrap();
+    let error = run(dir.path(), &resolved, &host(), None).unwrap_err();
+    assert_eq!(error.code(), "configuration_unsupported");
+    assert!(!dir.path().join("settings").exists());
+}
+
+#[test]
+fn a_legacy_selected_option_still_plans_beside_an_unselected_common_option() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut resolved = package(dir.path(), BUILD);
+    let mut other = resolved.options[0].clone();
+    other.id = "rich".into();
+    other.features.clear();
+    other.configuration = Some(Default::default());
+    resolved.options.push(other);
+    let planned = run(dir.path(), &resolved, &host(), None).unwrap();
+    assert_eq!(planned.option, "main");
+    let error = crate::describe(&resolved).unwrap_err();
+    assert_eq!(error.code(), "configuration_unsupported");
+    assert!(error.to_string().contains("installer rich"));
+}

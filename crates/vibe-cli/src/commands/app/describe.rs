@@ -26,11 +26,12 @@ pub(super) fn show(
 ) -> Result<()> {
     let settings = global::settings_root()?;
     let resolved = global::resolve_package(&settings, registry, embedded_root, package, offline)?;
+    let document = vibe_app::describe(&resolved)?;
     if ctx.is_json() {
-        return ctx.emit_json(&vibe_app::describe(&resolved));
+        return ctx.emit_json(&document);
     }
     if !steps_only {
-        print_outline(&vibe_app::describe(&resolved));
+        print_outline(&document);
         return Ok(());
     }
     #[derive(Serialize)]

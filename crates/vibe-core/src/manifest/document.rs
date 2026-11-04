@@ -278,6 +278,9 @@ pub struct Manifest {
     #[serde(default, skip_serializing_if = "FeaturesTable::is_empty")]
     pub features: FeaturesTable,
 
+    /// Common package-owned definitions, independent of selected installer scopes.
+    pub configuration: Option<super::ConfigurationDecl>,
+
     /// `[target."<predicate>"]` — conditional dependencies (package-role).
     #[serde(default, rename = "target", skip_serializing_if = "BTreeMap::is_empty")]
     pub conditional_deps: BTreeMap<String, ConditionalTarget>,

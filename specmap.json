@@ -9082,64 +9082,73 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/error.rs",
       "item_kind": "enum",
-      "line": 453,
+      "line": 405,
       "symbol": "vibe_app::error::AppError",
-      "end_line": 582,
+      "end_line": 534,
       "fingerprint": "tok1:9202b09f71cc93daf8da36abb71e73db4ea40213062e77b1535c5107b601b9df"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/error.rs",
       "item_kind": "enum",
-      "line": 171,
+      "line": 123,
       "symbol": "vibe_app::error::InstallerError",
-      "end_line": 253,
+      "end_line": 205,
       "fingerprint": "tok1:810f1742fa109898d910d03a2307b368e4622a1a6e7bde7e36af24e872adb0b4"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/error.rs",
       "item_kind": "enum",
-      "line": 426,
+      "line": 378,
       "symbol": "vibe_app::error::LaunchError",
-      "end_line": 451,
+      "end_line": 403,
       "fingerprint": "tok1:7690bc06829f76e29a575c234e73d64eb5d8462fab96e7e3538cd70b115e3e82"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/error.rs",
       "item_kind": "enum",
-      "line": 120,
-      "symbol": "vibe_app::error::ResolveError",
-      "end_line": 169,
-      "fingerprint": "tok1:05b1ca200d615eb91a6ff75b86d9a2720761529314d07a2e4605cb6edb5f9411"
-    },
-    {
-      "crate_name": "vibe-app",
-      "file": "crates/vibe-app/src/error.rs",
-      "item_kind": "enum",
-      "line": 10,
+      "line": 13,
       "symbol": "vibe_app::error::StateError",
-      "end_line": 55,
+      "end_line": 58,
       "fingerprint": "tok1:edd9f82fe1120c8be8134ab0b73c34a9f592cd8c6a01109053f4b41f42a9c3d2"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/error.rs",
       "item_kind": "enum",
-      "line": 255,
+      "line": 207,
       "symbol": "vibe_app::error::StepError",
-      "end_line": 424,
+      "end_line": 376,
       "fingerprint": "tok1:f9afee94f42cd85cc718cf198dd352d6d08a5776f4e1ab0715990437a8d5830e"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/error.rs",
       "item_kind": "enum",
-      "line": 57,
+      "line": 60,
       "symbol": "vibe_app::error::StorageError",
-      "end_line": 118,
+      "end_line": 121,
       "fingerprint": "tok1:1e997e76f38bb586b65f908ee7377e094f80bd62cd3542388b5c248680fbe593"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/error/resolve.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::error::resolve",
+      "end_line": 2,
+      "fingerprint": "tok1:8880d97812150ae8713d4f8916d409c295e2df26f7fa0f5ff18a828bcb27175c"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/error/resolve.rs",
+      "item_kind": "enum",
+      "line": 7,
+      "symbol": "vibe_app::error::resolve::ResolveError",
+      "end_line": 60,
+      "fingerprint": "tok1:e84afe23a728835e2274ffeb5f81a613b36d5f2eb94ff99364023ef000a979c3"
     },
     {
       "crate_name": "vibe-app",
@@ -10459,45 +10468,45 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 44,
+      "line": 47,
       "symbol": "vibe_app::steps::plan::HostFacts",
-      "end_line": 54,
+      "end_line": 57,
       "fingerprint": "tok1:50ba09ef7bdf41f9812a2d4f13ce7d9f4689e6ef2aa9d75a9982094430a57e4e"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 179,
+      "line": 182,
       "symbol": "vibe_app::steps::plan::Plan",
-      "end_line": 209,
+      "end_line": 212,
       "fingerprint": "tok1:cf6b718d53bacd2e18c4f1fb57c0a7a65bbc04e20f342c8663aa80c692b09493"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 92,
+      "line": 95,
       "symbol": "vibe_app::steps::plan::PlannedDependency",
-      "end_line": 115,
+      "end_line": 118,
       "fingerprint": "tok1:96184ebc938e56499cd5ef9da324c7d2ab7d97bbbe948f420a2f6cccffb1b7b5"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 163,
+      "line": 166,
       "symbol": "vibe_app::steps::plan::PlannedStep",
-      "end_line": 177,
+      "end_line": 180,
       "fingerprint": "tok1:3ba7542240f4474c2eae931a2cd413a2a7fae6e5f59abd09e9fef5d3625e40b8"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 151,
+      "line": 154,
       "symbol": "vibe_app::steps::plan::RequiredBy",
-      "end_line": 161,
+      "end_line": 164,
       "fingerprint": "tok1:4b3b4e3a00c3ffc45ae5d43a3660b4ff91e1f32544e12a3d856fccec94829393"
     },
     {
@@ -10517,6 +10526,24 @@
       "symbol": "vibe_app::steps::plan::remap_note::unremappable_network",
       "end_line": 33,
       "fingerprint": "tok1:c9bb8117bab3a2384e9b847e282c4af024b7c9d0631e0f0f4aa474bbd92b2241"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/plan/selection.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::steps::plan::selection",
+      "end_line": 2,
+      "fingerprint": "tok1:9834ceec85f26d27eb9e61d864ac00bc98cc85617df83b7087c5d0becb26f8fe"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/plan/selection.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_app::steps::plan::selection",
+      "end_line": 3,
+      "fingerprint": "tok1:9e8b32b6d1e6028eb44dda4da04247acfed5bcba59821df6cd510f8906f6fbca"
     },
     {
       "crate_name": "vibe-app",
@@ -16505,6 +16532,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_common_configuration.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::tests::cli_app_common_configuration",
+      "end_line": 3,
+      "fingerprint": "tok1:f956fa548e69c4e87b9bca5e8d07ee208c28d7a3ff5f7e8cb7eafe1c42518794"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_app_secret_errors.rs",
       "item_kind": "mod",
       "line": 3,
@@ -18035,6 +18071,51 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::manifest::configuration",
+      "end_line": 3,
+      "fingerprint": "tok1:27906599157f3814a463fa2dea1cd7b5ab7900c457c5a134d7f3a114b028fb60"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/lower.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::configuration::lower",
+      "end_line": 2,
+      "fingerprint": "tok1:27906599157f3814a463fa2dea1cd7b5ab7900c457c5a134d7f3a114b028fb60"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/lower.rs",
+      "item_kind": "fn",
+      "line": 10,
+      "symbol": "vibe_core::manifest::configuration::lower::ConfigurationDecl::compile_choices",
+      "end_line": 29,
+      "fingerprint": "tok1:76a8682d0cb08d5ded8055d7f513d60e89d9f26ad4432e6977cf7424888ccb2f"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/validate.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::configuration::validate",
+      "end_line": 2,
+      "fingerprint": "tok1:f956fa548e69c4e87b9bca5e8d07ee208c28d7a3ff5f7e8cb7eafe1c42518794"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/vocabulary.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::configuration::vocabulary",
+      "end_line": 2,
+      "fingerprint": "tok1:27906599157f3814a463fa2dea1cd7b5ab7900c457c5a134d7f3a114b028fb60"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/consumer.rs",
       "item_kind": "mod",
       "line": 10,
@@ -18273,8 +18354,8 @@
       "item_kind": "struct",
       "line": 63,
       "symbol": "vibe_core::manifest::document::Manifest",
-      "end_line": 327,
-      "fingerprint": "tok1:97eba93758db7a20e2906059275f9ad431bd281a0a7d8a23ae57eae70f179bd8"
+      "end_line": 330,
+      "fingerprint": "tok1:a1f2577f09500f689cc2b0308c4b4207d038d4a0861658097942b2ac5e318484"
     },
     {
       "crate_name": "vibe-core",
@@ -19180,9 +19261,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 329,
+      "line": 332,
       "symbol": "vibe_core::manifest::package::application::ApplicationDecl",
-      "end_line": 356,
+      "end_line": 359,
       "fingerprint": "tok1:37ccc53335d70a09606cc864c9f51588029c52f73b1f567362710586d3c73e01"
     },
     {
@@ -19200,8 +19281,8 @@
       "item_kind": "struct",
       "line": 275,
       "symbol": "vibe_core::manifest::package::application::InstallerOptionDecl",
-      "end_line": 327,
-      "fingerprint": "tok1:a508ea21d01766fd237c8dee0eb7fa1b89154d8f3f5a17e61e2ab57343429eeb"
+      "end_line": 330,
+      "fingerprint": "tok1:64551c66884546cfb427ba8827d6f5d667d77cfb553b42c905d59e511735308f"
     },
     {
       "crate_name": "vibe-core",
@@ -24051,8 +24132,8 @@
       "item_kind": "enum",
       "line": 12,
       "symbol": "vibe_install::error::Error",
-      "end_line": 196,
-      "fingerprint": "tok1:d955c643c7aa8d64653b125062f586450ec0b915abd526abea3e9dec970a9fe2"
+      "end_line": 200,
+      "fingerprint": "tok1:f6e1f35ffb22067564fbcdd9adbea419209b2bc2e2df8cfd3e11e6bd2ae35c4b"
     },
     {
       "crate_name": "vibe-install",
@@ -24166,19 +24247,19 @@
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/plan/fetch.rs",
       "item_kind": "fn",
-      "line": 176,
+      "line": 186,
       "symbol": "vibe_install::plan::fetch::expand_conditional_deps",
-      "end_line": 339,
+      "end_line": 349,
       "fingerprint": "tok1:ce79828e9f230b204b13598a69ca35ddf5769cf9eb9a40dfb5d11aa73e69e425"
     },
     {
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/plan/fetch.rs",
       "item_kind": "fn",
-      "line": 85,
+      "line": 90,
       "symbol": "vibe_install::plan::fetch::try_in_place_incremental",
-      "end_line": 174,
-      "fingerprint": "tok1:03fb604974ae00b9f766c95784d7cdc97ed001165eecdb62c072da787eade08c"
+      "end_line": 184,
+      "fingerprint": "tok1:46cecca875c077eb46f544ba09bc8cd079a748df17673aefbfe71e22ee22b9f2"
     },
     {
       "crate_name": "vibe-install",
@@ -43876,7 +43957,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::AppError",
-      "line": 455,
+      "line": 407,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "implements"
@@ -43884,7 +43965,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::AppError",
-      "line": 456,
+      "line": 408,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "documents"
@@ -43892,7 +43973,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::InstallerError",
-      "line": 173,
+      "line": 125,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation",
       "verb": "implements"
@@ -43900,7 +43981,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::InstallerError",
-      "line": 174,
+      "line": 126,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation",
       "verb": "documents"
@@ -43908,7 +43989,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::LaunchError",
-      "line": 428,
+      "line": 380,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations",
       "verb": "implements"
@@ -43916,31 +43997,15 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::LaunchError",
-      "line": 429,
+      "line": 381,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operations",
       "verb": "documents"
     },
     {
       "file": "crates/vibe-app/src/error.rs",
-      "from_symbol": "vibe_app::error::ResolveError",
-      "line": 122,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-app/src/error.rs",
-      "from_symbol": "vibe_app::error::ResolveError",
-      "line": 123,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options",
-      "verb": "documents"
-    },
-    {
-      "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::StateError",
-      "line": 12,
+      "line": 15,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "implements"
@@ -43948,7 +44013,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::StateError",
-      "line": 13,
+      "line": 16,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
       "verb": "documents"
@@ -43956,7 +44021,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::StepError",
-      "line": 257,
+      "line": 209,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
       "verb": "implements"
@@ -43964,7 +44029,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::StepError",
-      "line": 258,
+      "line": 210,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#execution",
       "verb": "documents"
@@ -43972,7 +44037,7 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::StorageError",
-      "line": 60,
+      "line": 63,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#storage-libraries",
       "verb": "implements"
@@ -43980,9 +44045,33 @@
     {
       "file": "crates/vibe-app/src/error.rs",
       "from_symbol": "vibe_app::error::StorageError",
-      "line": 61,
+      "line": 64,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#move",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/error/resolve.rs",
+      "from_symbol": "vibe_app::error::resolve",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/error/resolve.rs",
+      "from_symbol": "vibe_app::error::resolve::ResolveError",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/error/resolve.rs",
+      "from_symbol": "vibe_app::error::resolve::ResolveError",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options",
       "verb": "documents"
     },
     {
@@ -45173,7 +45262,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::HostFacts",
-      "line": 46,
+      "line": 49,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#conditions",
       "verb": "documents"
@@ -45181,7 +45270,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::Plan",
-      "line": 181,
+      "line": 184,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
       "verb": "documents"
@@ -45189,7 +45278,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::PlannedDependency",
-      "line": 94,
+      "line": 97,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
       "verb": "documents"
@@ -45197,7 +45286,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::PlannedStep",
-      "line": 165,
+      "line": 168,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
       "verb": "documents"
@@ -45205,7 +45294,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::RequiredBy",
-      "line": 155,
+      "line": 158,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
       "verb": "documents"
@@ -45225,6 +45314,22 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-066#not-covered",
       "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/plan/selection.rs",
+      "from_symbol": "vibe_app::steps::plan::selection",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#features",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/plan/selection.rs",
+      "from_symbol": "vibe_app::steps::plan::selection",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#profiles",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-app/src/steps/plan_view.rs",
@@ -50625,6 +50730,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_app_common_configuration.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_common_configuration",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-SCOPES",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_app_secret_errors.rs",
       "from_symbol": "vibe_cli::tests::cli_app_secret_errors",
       "line": 3,
@@ -52048,6 +52161,46 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-core/src/manifest/configuration.rs",
+      "from_symbol": "vibe_core::manifest::configuration",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/lower.rs",
+      "from_symbol": "vibe_core::manifest::configuration::lower",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/lower.rs",
+      "from_symbol": "vibe_core::manifest::configuration::lower::ConfigurationDecl::compile_choices",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/validate.rs",
+      "from_symbol": "vibe_core::manifest::configuration::validate",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-SCOPES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/vocabulary.rs",
+      "from_symbol": "vibe_core::manifest::configuration::vocabulary",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-core/src/manifest/consumer.rs",
       "from_symbol": "vibe_core::manifest::consumer",
       "line": 10,
@@ -53096,7 +53249,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::ApplicationDecl",
-      "line": 332,
+      "line": 335,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
       "verb": "documents"
@@ -57661,7 +57814,7 @@
     {
       "file": "crates/vibe-install/src/plan/fetch.rs",
       "from_symbol": "vibe_install::plan::fetch::expand_conditional_deps",
-      "line": 199,
+      "line": 209,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint",
       "verb": "implements"
@@ -57669,7 +57822,7 @@
     {
       "file": "crates/vibe-install/src/plan/fetch.rs",
       "from_symbol": "vibe_install::plan::fetch::try_in_place_incremental",
-      "line": 100,
+      "line": 105,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "implements",
@@ -99133,7 +99286,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:80d17c9da69b154662c8bae4c7afc3670542cc3aa7385f2cd2776c816846ad75",
+      "content_hash": "sha256:fc815a5aa115715647ebf26f8f36ef042cda6061ca4aa63d2b15836f85f38cff",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -99169,7 +99322,7 @@
     },
     {
       "anchor": "model",
-      "content_hash": "sha256:ea3b2ea54c17fad15c267a435045f5170e67aa9d64ded6465b9f62711bae3252",
+      "content_hash": "sha256:26ea9eef93f5c6727d1ce0ac75d20ffb65c8ffd8bf00fcbda45ebf62f43f2f01",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "2. Shared data and validation",
@@ -99232,25 +99385,25 @@
     },
     {
       "anchor": "AUTHORED-DEFINITIONS",
-      "content_hash": "sha256:3b3109685a72ed38a58ca876165e6d596954c8befc7027107ba1822b21763dbe",
+      "content_hash": "sha256:1274275f515269be498586345aea943bb81cda3fd337ec371599a7ca3d391a46",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "The ordinary Manifest reader, parser, validator and serializer retain one optional ConfigurationDecl at [configuration] for package scope and the same type under an actual installer option for installation scope. There is no profile-selected alternate manifest decoder or lossy rich-to-legacy source projection. A common declaration contains ordered feature/group/parameter/profile definitions and declared typed config-value data. Feature relations use the shared feature kernel; choice groups use the shared choice core. Groups explicitly declare mode choice (defaults and positive guards) or closure (fallback and parent-derived activity), with no ambiguous defaults interpretation. Parameter declarations reuse existing typed validation/canonicalization. Profiles carry ordinary feature seeds, group answers and public typed parameter presets; explicit per-consumer answers override that consumer's profile before independent consumers merge. Unknown references are rejected even on dormant branches. @status:spec/done",
+      "heading": "The ordinary Manifest reader, parser, validator and serializer retain one optional ConfigurationDecl at [configuration] for package scope and the same type under an actual installer option for installation scope. There is no profile-selected alternate manifest decoder or lossy rich-to-legacy source projection. A common declaration contains ordered feature/group/parameter/profile definitions and declared typed config-value data. Feature relations use the shared feature kernel; choice groups use the shared choice core. Groups explicitly declare mode choice (defaults and positive guards) or closure (fallback and parent-derived activity), with no ambiguous defaults interpretation. Parameter declarations reuse existing typed validation/canonicalization. Profiles retain ordinary feature seeds, group answers, public typed parameter presets and a default marker (at most one default profile). Parsing or compiling these declarations does not automatically apply a profile. Unknown references are rejected even on dormant branches. @status:impl/done",
       "line": 16,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS"
     },
     {
       "anchor": "AUTHORED-SCOPES",
-      "content_hash": "sha256:dfee46ee163d1e0d74919c9c38179d17e2ca94ca633ea36dfdaff65a337161db",
+      "content_hash": "sha256:0c39028b247d46eafc93a588e378ba51869a0ca0e50d6192fd4a1598bba2c418",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "Absent common declarations preserve all existing legacy inputs. Within one scope, common configuration conflicts with nonempty legacy features (and installer profiles/parameters); two graph definitions are never silently combined or prioritized. Unrelated manifest/installer fields retain their meaning. Package scope and selected installer scope remain distinct real operation contexts even when local IDs coincide. All nine package kinds can describe/evaluate data; doc/remap definitions cannot acquire dependency, subskill loading or execution authority through configuration. Remap consent and doc read/cache boundaries remain in their current owners. Ordinary effect consumers must refuse an unsupported common declaration explicitly before apply instead of silently treating its legacy projection as empty; such a refusal is a temporary implementation boundary, not completed user support. @status:spec/done",
+      "heading": "Absent common declarations preserve all existing legacy inputs. Within one scope, common configuration conflicts with nonempty legacy features (and installer profiles/parameters); two graph definitions are never silently combined or prioritized. Unrelated manifest/installer fields retain their meaning. Package scope and selected installer scope remain distinct real operation contexts even when local IDs coincide. Installer feature/parameter references belong to existing app steps and may select config-value data; dependency/forward/subskill effects belong to package scope and are refused in installer scope rather than implicitly binding to the parent manifest. Existing app step requirements retain their own owner. The ordinary reader admits data definitions for all nine package kinds; doc/remap definitions cannot acquire dependency, subskill loading or execution authority through configuration. Remap consent and doc read/cache boundaries remain in their current owners. Ordinary effect consumers must refuse an unsupported common declaration explicitly before apply instead of silently treating its legacy projection as empty; such a refusal is a temporary implementation boundary, not completed user support. @status:impl/done",
       "line": 17,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-SCOPES"
     },
     {
       "anchor": "intent",
-      "content_hash": "sha256:0537eed6620a23390f06a017de4690f6f863798bf8c6cede4dbc964ddf7ad75d",
+      "content_hash": "sha256:479c6b803203f577a4f8a1a82e3dca29e1d9749e5979d4a8c0cd2db861f5963f",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "3. Preserve what the consumer asked for",
@@ -99258,12 +99411,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#intent"
     },
     {
+      "anchor": "PROFILE-INPUTS",
+      "content_hash": "sha256:dd355f3e9362d1eddda5bc08d45fed82f9c60d66c932e2aa8f738ebe34d4bde9",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "Applying a profile is a consumer input-normalization operation, separate from declaring or compiling its definition. Explicit answers override that consumer's profile inputs, including explicit empty group answers, before independent consumers merge. Retain profile identity, overrides and applicable reviewed semantic basis; a default-profile marker alone does not supply consent. Canonical parameter values supplied by consumers of one real instance must agree, with named conflicts for differing values; last-CLI-value precedence is local to one consumer and never resolves cross-consumer disagreement. Runtime normalization, parameter merging, origin retention and persistence require their actual domain consumers. @status:spec/done",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PROFILE-INPUTS"
+    },
+    {
       "anchor": "ORIGINAL-INTENT",
       "content_hash": "sha256:061f10f768ad6b24964bec03e82720c7ae95aa169e8d025fda50d7ef0eb9d895",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "A computed feature set does not replace the request. Omitted selection, explicit empty selection, additive intent and exact intent remain distinguishable through evaluation, persistence and reconfiguration. Disabling a guard makes an answer dormant; it does not erase it or let it activate its own guard. Removed or invalid explicit/dormant answers require a named reconfiguration response, not silent filtering in the rich contract. @status:spec/done",
-      "line": 20,
+      "line": 21,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#ORIGINAL-INTENT"
     },
     {
@@ -99272,7 +99434,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "A declared default is data, not universal permission to use it. Require-selection and use-declared-defaults are explicit policies. Explicit empty never becomes omitted and never silently takes a default. A missing mandatory selection returns questions without effects. A generic confirmation flag such as assume-yes is not a semantic answer. When a choice follows a shown default, its retained receipt identifies that definition/default; a changed semantic default requires rediscovery rather than backtracking into a different answer. @status:spec/done",
-      "line": 21,
+      "line": 22,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DEFAULT-CONSENT"
     },
     {
@@ -99281,7 +99443,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "The domain owner groups real consumers of one actual configuration instance before calling the common evaluator. Each consumer-owned member belongs to one choice group; this restriction does not apply to overlapping closure constraints. Additive selections union; exact selections must agree and bound additive requests over currently active, eligible members. Ineligible member answers remain dormant in the original request and do not conflict until eligible. Omitted versus explicit selection and additive versus exact strength are independent: an absent group entry normalizes to omitted/additive, while an explicit omitted/exact entry applies any consented defaults as an exact set. Conflict names the contributing consumers/declarations. Different real instances can be evaluated independently. A client-provided label cannot manufacture another physical instance or waive another consumer's requirement. Current workspace and application-home ownership are reused; unused environment/lock/target identity layers from the prototype are not prerequisites of the pure evaluator. @status:spec/done",
-      "line": 22,
+      "line": 23,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#CONSUMER-MERGE"
     },
     {
@@ -99290,7 +99452,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "A package candidate's definition and effects belong to that candidate. Rejected candidate effects and default receipts do not leak into a selected older candidate. Explicit stable answers remain hard constraints where compatible; backtracking does not choose a new semantic answer for the user. Definition identity for a split describe/evaluate/apply interaction is checked against the definition actually used. It is a stale-input check, not an authentication token or a new durable host process. @status:spec/done",
-      "line": 23,
+      "line": 24,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY"
     },
     {
@@ -99299,7 +99461,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "4. One result, explicit incompleteness",
-      "line": 25,
+      "line": 26,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#evaluation"
     },
     {
@@ -99308,7 +99470,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Evaluation returns original intent separately from effective features, active and dormant selections, parameter values, implication reasons, required questions and conflicts. Unresolved or conflicting configurations publish no partial effect expansion. One deterministic rule set resolves local feature closure and group constraints; adapters do not reimplement another checkbox evaluator. Declared order is retained for presentation, while identity/merge comparisons are order-independent where order carries no meaning. @status:spec/done",
-      "line": 26,
+      "line": 27,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#EVALUATION"
     },
     {
@@ -99317,7 +99479,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Typed parameter answers are values, not manufactured feature identifiers. They retain bounds, validation, origin and secret handling. A feature's declared config effect and a user parameter remain distinct; conflicting effects refuse without partial merging. Host-dependent path validation is supplied by the actual planning host. The shared library does not read ambient environment to decide a dependency or choice. @status:spec/done",
-      "line": 27,
+      "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PARAMETERS-ARE-VALUES"
     },
     {
@@ -99326,7 +99488,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Application steps consume the evaluated app configuration through their existing planner and runner. Package dependency activation, strong/weak forwarding, subskills and config effects remain with the existing feature/resolver/install owners, consuming the same validated selection. A pure forwarding test does not establish configured-install support: every advertised effect must reach a real supported route. Config-value effects select declared typed data for plan inspection, persistence/replay and before/after comparison; they do not implicitly authorize arbitrary runtime or config-file writes. An execution destination is required only when a separately declared effect actually promises one. Unsupported source/target modes refuse explicitly before mutation and remain visible obligations; no registry-only or fixture-only slice is advertised as universal coverage. @status:spec/done",
-      "line": 28,
+      "line": 29,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS"
     },
     {
@@ -99335,7 +99497,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "5. Console, GUI and agent-facing consumers",
-      "line": 30,
+      "line": 31,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#surfaces"
     },
     {
@@ -99344,7 +99506,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "The common description exposes enough data to render feature trees, radio/multi-select groups, profiles, typed parameter controls, defaults, eligibility and reasons. Console questions and external answers use the same definition and evaluator. The external flow is describe → submit answers/evaluate → domain plan → supported apply/read operation. Required follow-up questions are returned as data. A graphical tool never needs to scrape terminal prose or start a configuration host to answer them. @status:spec/done",
-      "line": 31,
+      "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN"
     },
     {
@@ -99353,7 +99515,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "CLI, structured JSON and MCP adapters call the same library capability. Existing application console widgets and prompt conventions are reused where applicable. Declared options can be inspected for every PackageKind; applying a result respects the selected operation's existing domain boundary. A package with no options has an explicit empty definition; unsupported operations and unknown answers do not masquerade as successful no-ops. @status:spec/done",
-      "line": 32,
+      "line": 33,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SURFACE-PARITY"
     },
     {
@@ -99362,7 +99524,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Existing application describe/plan documents and valid flags retain their established meaning. Rich common definitions and evaluations receive a separately versioned, generated machine contract rather than extra unknown fields in an old closed schema. Old views are faithful adapters for what they can represent; they must not relabel a new semantic rule as an old one. No model completion or human prose parsing participates in wire validation. @status:spec/done",
-      "line": 33,
+      "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#WIRE-COMPATIBILITY"
     },
     {
@@ -99371,7 +99533,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Framework-owned descriptions, plans, progress records and persisted configuration omit secret answer values. They may report presence and redaction. Values needed for execution remain ephemeral inputs to the authorized domain operation. This does not claim to sandbox arbitrary package-authored child code or prevent it from emitting its own data. Secret marking is not converted into a persisted plaintext or reusable public digest by generalization. @status:spec/done",
-      "line": 34,
+      "line": 35,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-BOUNDARY"
     },
     {
@@ -99380,7 +99542,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Errors for a parameter marked secret omit the supplied raw value, canonical value, resolved path and opaque prompt-error text; parameter/option identifiers and safe reason classes remain available. Public parameters retain useful diagnostics. Classified parameter Debug output redacts the marked value. Attended secret input uses hidden entry before type-specific visible widgets, and empty input may retain a supplied default/preset. Authored defaults, choices and labels remain public definition data. These rules do not imply that template interpolation, replay argv, arbitrary child output or unclassified malformed CLI arguments are safe; the complete secret boundary requires its remaining consumers to be verified. @status:impl/done",
-      "line": 35,
+      "line": 36,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-DIAGNOSTICS"
     },
     {
@@ -99389,7 +99551,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "6. Existing owners retain the state",
-      "line": 37,
+      "line": 38,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#persistence"
     },
     {
@@ -99398,7 +99560,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Project dependency choices belong to the selected consumer's authored configuration; application choices belong to their existing installation owner; other supported domains retain their existing state owners or explicit request-local result. Package source definitions are not edited to store a consumer answer. No parallel global choice database is created. Plan and apply use the same normalized intent; an answer is not discarded by rereading an older manifest before it is recorded. @status:spec/done",
-      "line": 38,
+      "line": 39,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE"
     },
     {
@@ -99407,7 +99569,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Install, update and modify preserve relevant explicit and dormant intent, diagnose removed choices/new mandatory groups and validate changed definitions before effects. Root constraints from other consumers remain binding. Required persistence and domain execution are included in acceptance, not deferred after a successful UI test. Existing domain interruption/rollback/resume guarantees are stated honestly and are not silently replaced with one generic recovery protocol. @status:spec/done",
-      "line": 39,
+      "line": 40,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#RECONFIGURATION"
     },
     {
@@ -99416,7 +99578,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Legacy app declarations retain demonstrated feature-tree/default/profile/flag/modify behavior. A valid active legacy exclusive group still has its unique default; inactive groups may be empty. Older installation records carry effective choices, not richer original intent or default-consent provenance they never stored. Compatibility lowering states exactly what is known and preserves that behavior; richer requests retain their stronger distinctions. A package kind alone never selects a weaker interpretation of the same rich definition. @status:spec/done",
-      "line": 40,
+      "line": 41,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-APP-COMPATIBILITY"
     },
     {
@@ -99425,7 +99587,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "The existing package FeaturesTable is lowered into the same feature kernel. Its default is a real named feature, default and explicit seeds union, all-features initially selects public names only, and private underscore-prefixed names remain reachable through local implications while direct public requests refuse them. Positive implication cycles terminate. Existing exclusive sets are independent at-most-one closure constraints without fallback or app-style direct replacement; empty legacy sets are no-ops. The adapter preserves valid literal identifiers rather than inventing another identity encoding. Definition validation checks every local reference and activation syntax, including dormant/private branches, without treating an all-features activation conflict as an invalid definition. Existing dependency/forwarding/subskill values are projected from the shared resolved set, never through another production closure walk. This adapter preserves the current feature algebra; real solver/effect consumers remain separately required and are not implied by a populated expansion struct. @status:impl/done",
-      "line": 41,
+      "line": 42,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-PACKAGE-COMPATIBILITY"
     },
     {
@@ -99434,7 +99596,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "7. Finished means a working shared system",
-      "line": 43,
+      "line": 44,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#acceptance"
     },
     {
@@ -99443,7 +99605,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Acceptance requires the existing public application wizard scenario and app update/modify behavior to pass; the same ordinary package request to work through console and serialized external answers without host bootstrap; all cardinalities and omitted/empty/default policies; dormant switch-away/switch-back; additive/exact multi-consumer conflicts; candidate backtracking without effect/default leakage; integrated forwarding/subskill/config effects; typed parameters and redaction; persistence followed by install/update/reconfiguration; stale definition refusals without writes; and a PackageKind-driven matrix of supported views and effects, including read-only and consent-only boundaries. Structural/schema success and counts are supporting checks, not substitutes for these user outcomes. @status:spec/done",
-      "line": 44,
+      "line": 45,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#ACCEPTANCE"
     },
     {
@@ -99452,7 +99614,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "8. Rationale and rejected alternatives",
-      "line": 46,
+      "line": 47,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#decisions"
     },
     {

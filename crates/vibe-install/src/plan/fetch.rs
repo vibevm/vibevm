@@ -29,6 +29,11 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
         expected.as_deref(),
         progress,
     )?;
+    if cached.manifest.configuration.is_some() {
+        return Err(Error::ConfigurationUnsupported {
+            package: format!("{}/{}", node.group, node.name),
+        });
+    }
     let req = if node.is_root {
         tailor_feature_request(root_features, &cached.manifest.features)
     } else {
@@ -127,6 +132,11 @@ pub(super) fn try_in_place_incremental(
         Ok(m) if m.package.is_some() => m,
         _ => return Ok(None),
     };
+    if manifest.configuration.is_some() {
+        return Err(Error::ConfigurationUnsupported {
+            package: format!("{}/{}", node.group, node.name),
+        });
+    }
     let req = if node.is_root {
         tailor_feature_request(root_features, &manifest.features)
     } else {

@@ -13,6 +13,10 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub enum Error {
     #[error(
+        "this operation does not yet evaluate common configuration for package `{package}` (violates REQ spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-SCOPES; fix surface: connect common configuration evaluation before package planning)"
+    )]
+    ConfigurationUnsupported { package: String },
+    #[error(
         "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS: \
          selected consumer `{selected}` is absent from workspace `{workspace}`; fix surface: supply the selected node's prepared workspace"
     )]

@@ -91,6 +91,7 @@ codes!(STORAGE, StorageError [] {
 });
 
 codes!(RESOLVE, ResolveError [] {
+    ConfigurationUnsupported => "configuration_unsupported", Refusal, "this operation does not yet evaluate common configuration";
     Coordinate => "coordinate_invalid", Refusal, "the package coordinate is malformed";
     Registry => "registry_failed", Failure, "resolving the package from its registry failed";
     Manifest => "manifest_invalid", Refusal, "the package is not a usable application package";

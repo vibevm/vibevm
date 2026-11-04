@@ -204,3 +204,27 @@ fn installing_an_app_package_is_not_refused() {
         "an explicit-root install is never Fresh"
     );
 }
+
+#[test]
+fn common_package_configuration_refuses_before_apply_instead_of_empty_legacy_success() {
+    let (_outer, project, source) = project_requiring("flow", "configured");
+    let path = source.fixtures.join("configured/vibe.toml");
+    let text = fs::read_to_string(&path).unwrap() + "\n[configuration]\n";
+    fs::write(&path, &text).unwrap();
+    assert!(Manifest::read(&path).unwrap().configuration.is_some());
+    let before = fs::read(project.join("vibe.toml")).unwrap();
+    let error =
+        vibe_install::plan(&source, &project, request("configured"), &NullObserver).unwrap_err();
+    assert!(
+        matches!(error, vibe_install::Error::ConfigurationUnsupported { .. }),
+        "{error}"
+    );
+    assert!(
+        error
+            .to_string()
+            .contains("does not yet evaluate common configuration")
+    );
+    assert_eq!(before, fs::read(project.join("vibe.toml")).unwrap());
+    assert!(!project.join("vibe.lock").exists());
+    assert!(!project.join("vibevm/vibedeps").exists());
+}

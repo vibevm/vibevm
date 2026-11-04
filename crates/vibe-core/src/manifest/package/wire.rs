@@ -207,3 +207,4 @@ pub(in crate::manifest::package) enum VersionFieldWire {
 }
 
 mod requires;
+pub(in crate::manifest) use requires::parse_pkgref_key;

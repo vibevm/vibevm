@@ -394,6 +394,8 @@ pub(crate) struct ManifestWire {
     boot_snippet: Option<BootSnippet>,
     #[serde(default, skip_serializing_if = "FeaturesTable::is_empty")]
     features: FeaturesTable,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    configuration: Option<crate::manifest::ConfigurationDecl>,
     #[serde(default, rename = "target", skip_serializing_if = "BTreeMap::is_empty")]
     conditional_deps: BTreeMap<String, ConditionalTarget>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -491,6 +493,7 @@ impl TryFrom<ManifestWire> for Manifest {
             compatibility: wire.compatibility,
             boot_snippet: wire.boot_snippet,
             features: wire.features,
+            configuration: wire.configuration,
             conditional_deps: wire.conditional_deps,
             active: wire.active,
             llm: wire.llm,
@@ -577,6 +580,7 @@ impl TryFrom<Manifest> for ManifestWire {
             compatibility: manifest.compatibility,
             boot_snippet: manifest.boot_snippet,
             features: manifest.features,
+            configuration: manifest.configuration,
             conditional_deps: manifest.conditional_deps,
             active: manifest.active,
             llm: manifest.llm,

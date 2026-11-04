@@ -12,6 +12,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#
 
 mod artifact;
 mod compile;
+mod configuration;
 mod consumer;
 mod declarant_path;
 mod decor;
@@ -36,6 +37,10 @@ pub use artifact::{
     ArtifactsError, ArtifactsSection, PackageTargetProjection, build_target_for_binary,
 };
 pub use compile::CompileSection;
+pub use configuration::{
+    ConfigurationDecl, ConfigurationEffect, ConfigurationFeatureDecl, ConfigurationGroupDecl,
+    ConfigurationGuard, ConfigurationProfileDecl, ConfigurationSelection, ForwardStrength,
+};
 pub use consumer::{ConsumerNode, NodeRole};
 pub use declarant_path::{
     DeclarantPathFault, DeclarantPathMode, declarant_path, declarant_path_component,

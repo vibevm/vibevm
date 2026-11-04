@@ -60,20 +60,92 @@ mode = ["a", "b"]
 
 ## FMT-004 — Common configuration в обычном vibe.toml
 
-Статус: **в разработке**, normative design `d16fb59c8`, implementation candidate в common-authored-definitions. **В main parser ещё не принято; сейчас не инструкция пользователям перейти на новый формат.** Версия выпуска не назначена.
+Статус: **принято в main как admission/validation этап**, source design `d16fb59c8`; acceptance commit — `feat(manifest): retain common configuration definitions` (точный hash дописывается после commit). Версия выпуска не назначена, **Unreleased**. Поддержка чтения/проверки определения не равна готовой установке; переходить всем пакетам на этот формат пока рано.
 
-Планируемые формы:
+### Точные новые формы
 
-- `[configuration]` — definition package scope.
-- `[[installer_options]]` с вложенным `configuration` — та же definition type для конкретного app installer. Этот вариант затрагивает **`vibe install -g`**, app planning/update/modify.
-- Ordered `features`, `groups`, `parameters`, `profiles` и `config_values`. Choice/closure groups различаются явным `mode`, cardinality: zero-or-more / one-or-more / zero-or-one / exactly-one. Choice использует defaults/guards, closure — fallback.
-- Typed effects используют явный `kind`; точные принятые поля и рабочие примеры будут закреплены после review. Исследовательские примеры с другой формой effect record не являются окончательной грамматикой.
+| Место | Поля и значение |
+|---|---|
+| `[configuration]` | Optional package definition. Project-only/virtual-workspace node не может владеть package definition. Пустая, но присутствующая таблица отличается от отсутствия. |
+| `[installer_options.configuration]` | Та же definition type для конкретного installer option; допускается с installation shorthand и со steps. Package scope остаётся отдельным. |
+| `[[configuration.features]]` | id/name; optional description/parent; required/default=false; requires/guards/effects=[] по умолчанию. Literal IDs без trim/normalization. |
+| Guard | Ровно `{group="ID"}` или `{member="ID"}`; положительные зависимости проверяются на полный DAG, включая dormant branches. |
+| `[[configuration.groups]]`, mode=`choice` | id/name/optional description/cardinality/members; optional defaults (отсутствие и [] различаются); guards. Не принимает fallback. |
+| `[[configuration.groups]]`, mode=`closure` | id/name/optional description/cardinality/members; optional fallback. Не принимает choice defaults/guards. |
+| Cardinality | `zero-or-more`, `one-or-more`, `zero-or-one`, `exactly-one`. |
+| Effect `kind="dependency"` | target реальной qualified requires declaration. |
+| Effect `kind="forward"` | target, feature, strength=`strong` или `weak`. Source declaration связывается сейчас; foreign feature delivery ещё не реализуется этим parser. |
+| Effect `kind="subskill"` | path безопасного relative export selector; existence/capture export отдельно проверяется его owner. |
+| Effect `kind="config-value"` | name declared config_values entry. Выбирает данные, не разрешает произвольную runtime запись. |
+| `[configuration.config_values]` | Named bool/i64/string; float/other shapes rejected. |
+| `[[configuration.parameters]]` | Existing ParameterDecl fields/types/default/bounds/choices/required/must_exist/secret. ID сохраняет portable lowercase-token grammar. Definition admission не проверяет host filesystem. |
+| `[[configuration.profiles]]` | id/name/optional description, default=false (не более одного), features seeds, selections, public typed parameters presets. Secret presets rejected. |
+| Profile selection | `{intent="additive"|"exact", members=[...]}`. Отсутствующий members — omitted; [] — explicit empty. Unknown/dormant refs проверяются. Неполный профиль допустим. |
 
-В одном scope rich configuration и nonempty legacy features/profiles/parameters будут конфликтовать явно. Absent configuration сохраняет старые manifests. Package и installer scopes не объединяются при совпадении IDs; installer effects не получают доступ к parent package dependencies автоматически. Все unrelated manifest sections сохраняются обычным reader/serializer.
+Все records закрыты для unknown fields. Arrays сохраняют declaration order. Все относительные формы выше также применяются под installer_options.configuration. Default marker профиля — сохранённые данные; compile_choices не применяет профиль автоматически.
 
-Совместимость: нынешние старые binaries имеют closed/deny_unknown_fields parser и откажут на новых ключах. Новый reader должен читать старые manifests без переписывания. Это additive source format для нового reader, **не** forward compatibility старого binary. Минимальная released version будет указана после выбора release, не угадана сейчас.
+### Пример до/после
 
-Временная реализационная граница: после admission, пока конкретный consumer не подключён, install/planner должен явно отказать до apply, а не молча проигнорировать common configuration. Такой отказ не считается готовым пользовательским install. Окончательный migration пример появится после рабочего consumer acceptance.
+Старое объявление package features остаётся валидным и автоматически не переписывается:
+
+```toml
+[features]
+default = ["fast"]
+fast = []
+careful = []
+[features.exclusive]
+mode = ["fast", "careful"]
+```
+
+Представление того же initial default и at-most-one ограничения в новой **closure**-форме:
+
+```toml
+[[configuration.features]]
+id = "default"
+name = "Default feature set"
+default = true
+requires = ["fast"]
+[[configuration.features]]
+id = "fast"
+name = "Fast"
+[[configuration.features]]
+id = "careful"
+name = "Careful"
+[[configuration.groups]]
+id = "mode"
+name = "Mode"
+mode = "closure"
+cardinality = "zero-or-one"
+members = ["fast", "careful"]
+```
+
+Замена closure на choice — изменение смысла, а не механическое переименование: choice хранит отдельный ответ/политику defaults. Это пример формы определения для будущей миграции, **не** обещание, что install нового формата уже работает.
+
+### Совместимость и область команд
+
+В одном scope rich configuration конфликтует с nonempty legacy package features или installer features/profiles/parameters. Absent configuration сохраняет старые документы; unrelated sections сохраняются reader/serializer. Package и installer scopes не объединяются при одинаковых IDs. Installer/doc/remap scopes допускают только config-value DATA effects; dependency/forward/subskill effects там rejected.
+
+Старые binaries с deny_unknown_fields откажут на новых ключах. Новый reader читает прежние manifests. Минимальная released version будет названа после выбора релиза, не угадана сейчас.
+
+| Путь | Состояние этого этапа |
+|---|---|
+| Ordinary Manifest read/parse/validate/serialize | Данные сохраняются; compile_choices использует существующий pure evaluator. |
+| Package install, normal/deferred | Явный ConfigurationUnsupported до apply; приобретение source/metadata могло уже произойти. |
+| **`vibe install -g`**, package scope | App source resolution отказывает с `configuration_unsupported`, scope=package, exit2. |
+| **`vibe install -g`**, selected installer scope | Planning отказывает до prompts/license/steps/app-work/index; scope=`installer <id>`, тот же code/exit2. Legacy selected option остаётся доступным при rich unselected alternative. |
+| App update/modify | Используют те же source/selected-option owners и наследуют временный отказ; отдельные новые public update/modify сценарии этим этапом не доказаны. |
+| `vibe app describe` / `steps`, human/JSON | Отказывают на rich option вместо misleading empty legacy arrays. Успешный legacy e1 document сохраняется. |
+| Doc cache/read; remap offer/consent | Существующие операции сохраняются над data-only declarations. Новый общий evaluated result/новые эффекты/consent не создаются. |
+
+Guards временные: они предотвращают тихую потерю настроек и не считаются завершённой поддержкой общего пользовательского пути. Rich requires-edge intent, persistence/default receipts, solver effects и common machine/console consumers ещё подключаются. Lock7/index3 и старые app e1 documents не расширены скрытыми полями.
+
+### Rust API и error propagation
+
+Новые optional поля `Manifest.configuration` и `InstallerOptionDecl.configuration` требуют обновления полных Rust struct literals; callers с подходящим Default/construction path сохраняют старые значения. `vibe_app::describe` возвращает `Result<ApplicationDescribe, AppError>` вместо direct document; source caller должен обработать Result. Workspace crates имеют publish=false; версия опубликованного crate этой записью не объявляется. CLI сериализует прежний successful e1 document, **не** Rust Result wrapper.
+
+Global source wrapper теперь сохраняет typed ResolveError через AppError: новый package-scope отказ до исправления давал exit1 без JSON code, после — exit2/configuration_unsupported. Incumbent missing package проверен отдельно: остаётся exit1/registry_failed. Error class не выбирается по строке сообщения.
+
+Evidence: ordinary-reader/all9kind/roundtrip/local-evaluation matrix; real global install4CLI cases (включая describe/steps human+JSON и legacy error control); прежний full wizard после изменения describe. Candidate597distinct tests/docs дедуплицированы по именам; main reader11/11 и public CLI4/4, fmt,4scoped conform и specmap --check прошли. Structural amendment подтверждён15existing app cases; они не прибавляются повторно к coverage count. Traceability0blocking findings,43known warnings. Profile application/parameter answer merge и whole runtime user journey ещё не принимаются.
 
 ## FMT-005 — Workspace requirements и lock root snapshot
 

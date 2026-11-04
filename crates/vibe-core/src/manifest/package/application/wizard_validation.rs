@@ -14,9 +14,34 @@ use super::*;
 impl InstallerOptionDecl {
     /// Check the wizard declarations and return the ids steps may name.
     pub(super) fn validate_wizard(&self, at: &FieldPath) -> Result<Names<'_>, FieldError> {
-        let features = self.validate_features(at)?;
-        self.validate_profiles(&features, at)?;
-        let mut params = BTreeSet::new();
+        if self.configuration.is_some()
+            && (!self.features.is_empty()
+                || !self.profiles.is_empty()
+                || !self.parameters.is_empty())
+        {
+            return Err(FieldError::new(
+                at.table("configuration"),
+                "common configuration conflicts with legacy features/profiles/parameters in this installer scope",
+            ));
+        }
+        let features = if let Some(configuration) = &self.configuration {
+            configuration.compile_choices_at(&at.table("configuration"))?;
+            configuration
+                .features
+                .iter()
+                .map(|f| f.id.as_str())
+                .collect()
+        } else {
+            let features = self.validate_features(at)?;
+            self.validate_profiles(&features, at)?;
+            features
+        };
+        let mut params: BTreeSet<&str> = self
+            .configuration
+            .as_ref()
+            .into_iter()
+            .flat_map(|c| c.parameters.iter().map(|p| p.id.as_str()))
+            .collect();
         for (index, parameter) in self.parameters.iter().enumerate() {
             let table = format!("[[installer_options.parameters]] `{}`", parameter.id);
             let row = at.table("parameters").index(index);
@@ -214,7 +239,7 @@ impl InstallerOptionDecl {
 
 /// Type-specific fields and a default that the type accepts; `at` is the
 /// parameter's row.
-fn validate_parameter(
+pub(crate) fn validate_parameter(
     parameter: &ParameterDecl,
     table: &str,
     at: &FieldPath,

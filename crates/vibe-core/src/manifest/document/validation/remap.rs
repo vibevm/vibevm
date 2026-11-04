@@ -21,9 +21,10 @@ use super::super::Manifest;
 
 /// Every table a `remap`-kind package is allowed to carry, as a reader of
 /// the manifest spells it. Anything else is named in the refusal.
-const ALLOWED: [&str; 5] = [
+const ALLOWED: [&str; 6] = [
     "[package]",
     "[compatibility]",
+    "[configuration] (data only)",
     "[remap]",
     "[[remap]]",
     "[policy]",

@@ -49,7 +49,7 @@ fn invalid(problem: Problem) -> DefinitionError {
 }
 
 /// Local identifiers are literal data. Validate without rewriting their spelling.
-pub(super) fn valid_identifier(id: &str) -> bool {
+pub(crate) fn valid_identifier(id: &str) -> bool {
     !id.trim().is_empty() && !id.chars().any(char::is_control)
 }
 

@@ -238,7 +238,9 @@ fn visibility_wire(
     )
 }
 
-fn parse_pkgref_key(key: &str) -> Result<(Option<PackageKind>, Group, String)> {
+pub(in crate::manifest) fn parse_pkgref_key(
+    key: &str,
+) -> Result<(Option<PackageKind>, Group, String)> {
     if key.contains('@') {
         return Err(Error::BadDependencyDecl {
             input: key.to_string(),

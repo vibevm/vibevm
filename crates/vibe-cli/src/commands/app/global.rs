@@ -50,15 +50,18 @@ pub(crate) fn resolve_package(
 ) -> Result<ResolvedPackage> {
     if let Some(root) = registry {
         let local = open_local(root)?;
-        return Ok(vibe_app::from_local_registry(&local, root, spelling)?);
+        return Ok(vibe_app::from_local_registry(&local, root, spelling)
+            .map_err(vibe_app::AppError::from)?);
     }
     if let Some(root) = embedded_root {
         let local = open_local(root)?;
         if vibe_app::local_registry_carries(&local, spelling)? {
-            return Ok(vibe_app::from_local_registry(&local, root, spelling)?);
+            return Ok(vibe_app::from_local_registry(&local, root, spelling)
+                .map_err(vibe_app::AppError::from)?);
         }
     }
-    Ok(vibe_app::from_global(settings.path(), spelling, offline)?)
+    Ok(vibe_app::from_global(settings.path(), spelling, offline)
+        .map_err(vibe_app::AppError::from)?)
 }
 
 fn open_local(root: &Path) -> Result<vibe_registry::LocalRegistry> {

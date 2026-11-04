@@ -316,3 +316,63 @@ fn general_install_defers_in_place_instead_of_recloning() {
         ["pre-install", "post-install"]
     );
 }
+
+#[test]
+fn deferred_common_definition_refuses_without_reclone_or_mutating_existing_state() {
+    let tmp = TempDir::new().unwrap();
+    let root = tmp.path();
+    write(
+        root,
+        "vibe.toml",
+        "[project]\nname='demo'\nversion='0.1.0'\n",
+    );
+    let lock = format!(
+        "[meta]\ngenerated_by='vibe test'\ngenerated_at='2026-11-04T00:00:00Z'\nschema_version={CURRENT_SCHEMA_VERSION}\n[[package]]\nkind='feat'\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nsource_url='https://example.test/giant.git'\ncontent_hash='sha256:0000'\nsource_kind='registry'\nresolved_commit='1111111111111111111111111111111111111111'\nmaterialization='in-place'\n"
+    );
+    write(root, "vibe.lock", &lock);
+    write(
+        root,
+        "vibevm/vibedeps/org.vibevm.giant/.git/HEAD",
+        "ref: refs/heads/main\n",
+    );
+    let declaration = "[package]\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nkind='feat'\nmaterialization='in-place'\n[configuration]\n";
+    write(
+        root,
+        "vibevm/vibedeps/org.vibevm.giant/vibe.toml",
+        declaration,
+    );
+    let source = MockSource {
+        graph: ResolvedGraph {
+            packages: vec![ResolvedNode {
+                group: Group::parse("org.vibevm").unwrap(),
+                name: "giant".into(),
+                version: semver::Version::parse("1.0.0").unwrap(),
+                dependencies: vec![],
+                is_root: true,
+            }],
+        },
+        fetched: RefCell::new(vec![]),
+        placed: RefCell::new(vec![]),
+        changed: Cell::new(false),
+    };
+    let request = InstallRequest {
+        roots: vec![PackageRef::parse("org.vibevm/giant").unwrap()],
+        features: FeatureRequest::default(),
+        language: None,
+        exact: false,
+        generated_by: "vibe test".into(),
+        offline: true,
+    };
+    let error = vibe_install::plan(&source, root, request, &NullObserver).unwrap_err();
+    assert!(
+        matches!(error, vibe_install::Error::ConfigurationUnsupported { .. }),
+        "{error}"
+    );
+    assert!(source.fetched.borrow().is_empty());
+    assert!(source.placed.borrow().is_empty());
+    assert_eq!(fs::read_to_string(root.join("vibe.lock")).unwrap(), lock);
+    assert_eq!(
+        fs::read_to_string(root.join("vibevm/vibedeps/org.vibevm.giant/vibe.toml")).unwrap(),
+        declaration
+    );
+}

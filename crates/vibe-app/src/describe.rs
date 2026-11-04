@@ -20,9 +20,34 @@ use crate::installer::shell::interpreter_name;
 use crate::resolve::ResolvedPackage;
 use crate::steps::{FeatureRequest, resolve_features};
 
-/// The `vibe-app-describe/1` document of a resolved package.
-pub fn describe(resolved: &ResolvedPackage) -> wire::ApplicationDescribe {
-    wire::ApplicationDescribe {
+/// The unchanged legacy `vibe-app-describe/1` view, or an explicit refusal
+/// when a common option definition cannot be represented by that document.
+///
+/// ```
+/// use vibe_app::{describe, from_manifest, PackageCoordinate};
+/// use vibe_core::manifest::Manifest;
+/// let manifest = Manifest::parse_str("[package]\ngroup='org.example'\nname='demo'\nkind='app'\nversion='1.0.0'\n[application]\nid='demo'")?;
+/// let resolved = from_manifest(manifest, "/tmp/demo".into(), PackageCoordinate {
+///     group: "org.example".into(), name: "demo".into(), version: "1.0.0".into()
+/// })?;
+/// assert_eq!(describe(&resolved)?.protocol, "vibe-app-describe/1");
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
+pub fn describe(
+    resolved: &ResolvedPackage,
+) -> Result<wire::ApplicationDescribe, crate::error::AppError> {
+    if let Some(option) = resolved
+        .options
+        .iter()
+        .find(|option| option.configuration.is_some())
+    {
+        return Err(crate::error::ResolveError::ConfigurationUnsupported {
+            package: resolved.package.key(),
+            scope: format!("installer {}", option.id),
+        }
+        .into());
+    }
+    Ok(wire::ApplicationDescribe {
         protocol: "vibe-app-describe/1".into(),
         package: wire::Package {
             group: resolved.package.group.clone(),
@@ -50,7 +75,7 @@ pub fn describe(resolved: &ResolvedPackage) -> wire::ApplicationDescribe {
             .iter()
             .map(|option| describe_option(resolved, option))
             .collect(),
-    }
+    })
 }
 
 fn describe_option(

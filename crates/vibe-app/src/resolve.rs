@@ -179,6 +179,12 @@ pub fn from_manifest(
             "the manifest identity differs from its registry coordinate",
         ));
     }
+    if manifest.configuration.is_some() {
+        return Err(ResolveError::ConfigurationUnsupported {
+            package: coordinate.key(),
+            scope: "package".into(),
+        });
+    }
     let application = manifest
         .application
         .clone()
@@ -218,6 +224,28 @@ pub(crate) fn strip_verbatim(path: PathBuf) -> PathBuf {
 #[cfg(test)]
 mod carries_tests {
     use super::*;
+
+    #[test]
+    fn common_package_configuration_is_not_discarded_at_app_resolution() {
+        let manifest = Manifest::parse_str("[package]\ngroup='org.example'\nname='demo'\nversion='1.0.0'\nkind='app'\n[application]\nid='demo'\n[configuration]\n").unwrap();
+        let result = from_manifest(
+            manifest,
+            PathBuf::from("/unused"),
+            PackageCoordinate {
+                group: "org.example".into(),
+                name: "demo".into(),
+                version: "1.0.0".into(),
+            },
+        );
+        let error = result.unwrap_err();
+        assert!(matches!(
+            error,
+            ResolveError::ConfigurationUnsupported { .. }
+        ));
+        let app: crate::error::AppError = error.into();
+        assert_eq!(app.code(), "configuration_unsupported");
+        assert!(app.to_string().contains("scope `package`"));
+    }
 
     #[test]
     fn an_absent_package_is_not_carried_and_a_present_one_is() {

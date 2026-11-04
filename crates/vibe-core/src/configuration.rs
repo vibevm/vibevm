@@ -21,6 +21,7 @@ pub use choices::{
 };
 pub use errors::{DefinitionError, DefinitionProblem, EvaluationError, ReferenceKind};
 pub use model::FeatureModel;
+pub(crate) use model::valid_identifier;
 pub use types::{
     Cardinality, ClosureGroup, FeatureBase, FeatureInput, FeatureNode, FeatureResolution,
     Implication, ImplicationReason,

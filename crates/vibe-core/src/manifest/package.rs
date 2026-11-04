@@ -557,3 +557,5 @@ pub use capabilities::*;
 #[cfg(test)]
 #[path = "package/tests.rs"]
 mod tests;
+
+pub(in crate::manifest) use wire::parse_pkgref_key;

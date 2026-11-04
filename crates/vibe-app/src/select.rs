@@ -435,6 +435,7 @@ mod tests {
             }),
             result: None,
             features: Vec::new(),
+            configuration: None,
             profiles: Vec::new(),
             parameters: Vec::new(),
             license: None,

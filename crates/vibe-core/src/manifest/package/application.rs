@@ -300,6 +300,9 @@ pub struct InstallerOptionDecl {
     pub result: Option<ResultDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub features: Vec<FeatureDecl>,
+    /// Common definitions owned by this installer option.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub configuration: Option<crate::manifest::ConfigurationDecl>,
     /// Named feature sets (`PROP-065#profiles`); only with `steps`.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub profiles: Vec<ProfileDecl>,
@@ -362,3 +365,5 @@ fn portable_default() -> bool {
 fn is_portable_default(value: &bool) -> bool {
     *value
 }
+
+pub(crate) use wizard_validation::validate_parameter;
