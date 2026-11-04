@@ -99558,7 +99558,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:47baaef394e92562853cce84d78c4faaf8d119ad555afd0cd1d6c22cf1f70e0e",
+      "content_hash": "sha256:4b114ecb322d4c13e31571345afde591c4be86450ce012720b0747092ef16adf",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -99909,7 +99909,7 @@
     },
     {
       "anchor": "app-runtime",
-      "content_hash": "sha256:d41256ff9c37f7afad4dc8b9bd73daf7be2f3d53fcf7567f60c511f009bad620",
+      "content_hash": "sha256:4ec6d93114bc8c3bddcfd5a862da2096fbf70f72269f23dc31abeebaa77ee6b6",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "6.1 Selected-installer implementation boundary",
@@ -99927,10 +99927,10 @@
     },
     {
       "anchor": "APP-CONFIGURATION-BASIS",
-      "content_hash": "sha256:f6133c668e734859f131740814583470acfc48828beaa32c86282dbcc6f663f0",
+      "content_hash": "sha256:f7300a1688c3d19c78e419c62c197f117581bba896101009cd3135e89551e184",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "A fresh explicit defaults policy may bind the actual selected definition in that operation; an expected definition from a split client must match. Stored reuse does not renew changed default/profile meaning. Retain historical definition evidence and a versioned typed semantic basis, excluding presentation-only changes, with reasons for automatic reliance including dormant/absent defaults. Whole-definition comparison is conservatively allowed for automatic reliance; fully explicit input without it survives unrelated default changes. Review occurs before dependencies/removal/execution. Public path input, origin and absolute lossless realization remain distinct. On reuse without a fresh setter/replacement, unchanged lexical source/origin retains the old realization; changed validation rules revalidate that path rather than re-anchoring it to a new working directory. Secret values or reusable answer digests never enter these records. @status:spec/done",
+      "heading": "A fresh explicit defaults policy may bind the actual selected definition in that operation; an expected definition from a split client must match. Stored reuse does not renew changed default/profile meaning. Retain historical definition evidence and a versioned typed semantic basis, excluding presentation-only changes, with reasons for automatic reliance including dormant/absent defaults. Whole-definition comparison is conservatively allowed for automatic reliance; fully explicit input without it survives unrelated default changes. Review occurs before dependencies/removal/execution. Public path input, origin and absolute lossless realization remain distinct. On reuse without a fresh setter/replacement, unchanged lexical source/origin retains the old realization; changed validation rules revalidate that path rather than re-anchoring it to a new working directory. Secret operation answers or reusable answer digests never enter these records. Authored defaults, choices and labels retain the explicit public-definition boundary in SECRET-DIAGNOSTICS; a supplied or resolved answer must never be substituted into that definition snapshot. @status:spec/done",
       "line": 51,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS"
     },
