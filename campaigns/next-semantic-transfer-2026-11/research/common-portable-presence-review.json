@@ -1,0 +1,333 @@
+{
+  "status": "bounded read-only design recommendation; root chooses format/API",
+  "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+  "builds_tests_codegen_network_product_or_git_edits": false,
+  "recommendation": "new closed typed portable transport with omission=None; explicit presence tags not intrinsically required for inspected snapshot state",
+  "correction_to_previous_report": "TOML no-null establishes mismatch with canonical required-nullable admission, not a third semantic state requiring tags",
+  "nullable_positions": [
+    {
+      "path": "evaluation.input.intent.selections.{id}.members",
+      "type": "Option<Vec<String>>",
+      "disposition": "transfer",
+      "meaning": "preserve parent selection and intent; absent=None, []=Some(empty)"
+    },
+    {
+      "path": "definition.profiles[].selections.{id}.members",
+      "type": "Option<Vec<String>>",
+      "disposition": "transfer",
+      "meaning": "same selection-entry preservation"
+    },
+    {
+      "path": "definition.groups[mode=choice].defaults",
+      "type": "Option<Vec<String>>",
+      "disposition": "transfer",
+      "meaning": "absent default versus declared empty array"
+    },
+    {
+      "path": "definition.groups[mode=closure].fallback",
+      "type": "Option<Vec<String>>",
+      "disposition": "transfer",
+      "meaning": "absent fallback versus declared empty array"
+    },
+    {
+      "path": "definition.parameters[].default",
+      "type": "Option<ConfigurationValue>",
+      "disposition": "transfer",
+      "meaning": "absent versus typed false/zero/empty text"
+    },
+    {
+      "path": "evaluation.parameters[privacy=public].source",
+      "type": "Option<ConfigurationValue>",
+      "disposition": "transfer",
+      "meaning": "retain id/type/origin; omit only None source"
+    },
+    {
+      "path": "evaluation.parameters[privacy=public].value",
+      "type": "Option<ConfigurationValue>",
+      "disposition": "diagnostic optional; target recomputes",
+      "meaning": "historical host realization not target authority"
+    },
+    {
+      "path": "evaluation.normalizedConsumers[].answers.{id}.members",
+      "type": "Option<Vec<String>>",
+      "disposition": "recompute",
+      "meaning": "normalized answers must not replace original"
+    },
+    {
+      "path": "evaluation.controls[].selection",
+      "type": "Option<Vec<String>>",
+      "disposition": "recompute",
+      "meaning": "current UI projection"
+    },
+    {
+      "path": "evaluation.problems[kind=feature].reason",
+      "type": "Option<ConfigurationImplicationReason>",
+      "disposition": "recompute",
+      "meaning": "diagnostic reason"
+    }
+  ],
+  "optional_positions": [
+    "input.intent.profile",
+    "definition.features[].description",
+    "definition.features[].parent",
+    "definition.groups[].description",
+    "definition.parameters[].description",
+    "definition.parameters[].min",
+    "definition.parameters[].max",
+    "definition.profiles[].description"
+  ],
+  "excluded_optional_derived": [
+    "evaluation.resolved",
+    "evaluation.featureResult"
+  ],
+  "collection_findings": {
+    "nullable_elements_in_minimal_transfer": false,
+    "nullable_direct_map_values_in_minimal_transfer": false,
+    "option_option_found": false,
+    "missing_map_entry_distinct_from_present_selection_with_omitted_members": true,
+    "some_empty_arrays_must_be_emitted": true
+  },
+  "counterexamples": [
+    {
+      "case": "profile overlay",
+      "missing_group_key": "inherit profile answer",
+      "present_selection_omitted_members": "replace profile answer with Selection::Omitted",
+      "present_members_empty": "Selection::Explicit(empty)",
+      "owner": "manifest/configuration/intent.rs::normalize_input"
+    },
+    {
+      "case": "default/fallback emptiness",
+      "none": "no declared default/fallback",
+      "some_empty": "separate historical semantic fingerprint",
+      "owner": "manifest/configuration/semantic.rs::semantic_fingerprint"
+    },
+    {
+      "case": "typed scalar presence",
+      "none": "no default/source",
+      "present": "false, zero, empty string remain typed values",
+      "owner": "configuration/vocabulary.rs"
+    },
+    {
+      "case": "future edit tri-state",
+      "finding": "missing=leave/null=clear/value=set would require explicit TOML edit action; not current full-snapshot semantics"
+    }
+  ],
+  "must_transfer": [
+    "complete original input including disabledFeatures and dormant selections",
+    "historical typed definition and semantic fingerprint",
+    "prior reliance list",
+    "public parameter id/type/origin/lexical source",
+    "secret id/value-free origin/previous explicit provision",
+    "selected source identity context from prior design"
+  ],
+  "recompute": [
+    "normalized consumers",
+    "controls/projections/default-use rows",
+    "effective feature closure",
+    "target questions/problems/readiness/data",
+    "target path realizations",
+    "current secret-resupply questions"
+  ],
+  "secret_boundary": "no values/hashes; old provided=true causes resupply when consumed; old ready resupply=false is not target waiver; authored public defaults remain public",
+  "integer_boundary": "tagged integer value and optional min/max use canonical signed-i64 decimal strings; no JSON-number substitution",
+  "validation_boundary": [
+    "new version-dispatched closed typed envelope",
+    "required parent objects/maps/discriminators retained",
+    "local field omission maps to existing Option only",
+    "historical definition/input/fingerprint/classification validation",
+    "target re-evaluation with old basis, not automatic replacement/review approval"
+  ],
+  "approaches": [
+    {
+      "name": "tagged presence",
+      "disposition": "valid but unnecessary for inspected Option fields; use only genuine extra state"
+    },
+    {
+      "name": "typed portable optional fields",
+      "disposition": "recommended; reuse primitives and semantic adapters, small changed nested/container representations"
+    },
+    {
+      "name": "narrow normalization",
+      "disposition": "possible only explicit allowlist within present validated objects; no generic JSON Value/string escape or parent creation"
+    }
+  ],
+  "open_root_choices": [
+    "exact new envelope/API and protocol",
+    "full typed historical definition versus separately proven smaller projection",
+    "explicit JSON null accepted as None alias versus concrete strict rejection; actual reader/schema must agree"
+  ],
+  "source_ledger": [
+    {
+      "path": "formats/vocabularies.json",
+      "sha256": "209828d945e60a78dc622331f88a1c62e243b75b6256f88ddfa7a2bdc79569ce",
+      "bytes": 122218,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "selected relevant bodies or privately parsed configuration metadata; no runtime proof",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "schemas/apps_manifest.jtd.json",
+      "sha256": "5a343c854ee2c359a4369e1ccbe303aa10a41961a3a51bcf4980c89b457a3886",
+      "bytes": 5954,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "selected relevant bodies or privately parsed configuration metadata; no runtime proof",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-app/src/portable.rs",
+      "sha256": "e966f243e9f8d4b256c84850937d80521dc95663c7472522328be35ab61204d8",
+      "bytes": 15531,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "selected relevant bodies or privately parsed configuration metadata; no runtime proof",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/app/portable.rs",
+      "sha256": "72de9996c35c5135ab49861664b9a4a924f32ce7efd298ee60e3a8b90b52b3d5",
+      "bytes": 15281,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "selected relevant bodies or privately parsed configuration metadata; no runtime proof",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-app/src/configuration/vocabulary.rs",
+      "sha256": "658780e48a72fd23d5fb9478e9b045a12849cd028e1d479b40f412ddef33f3b1",
+      "bytes": 6333,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "full file read",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-app/src/configuration/definition.rs",
+      "sha256": "65c7449cfc59164198675b0764a73e1b25bcbdaf58f8def9db46ca7b562a7a87",
+      "bytes": 9196,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "full file read",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-app/src/configuration/input.rs",
+      "sha256": "bbdc5d2008848cf7994d734826ecf9c7a2d59804c3c19f4bdae20e552195c567",
+      "bytes": 3732,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "full file read",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-app/src/configuration/evaluate.rs",
+      "sha256": "f0de24d2501f35194cc3115c37a21feb7edfe84805fb768575df031bbcfb45e5",
+      "bytes": 12542,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "selected relevant bodies or privately parsed configuration metadata; no runtime proof",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-app/src/configuration/parameters.rs",
+      "sha256": "bfa8cd5478f51cfc865890eb11fbfb27daf1a8e5b7d7c6da2cad36b35de782ef",
+      "bytes": 10581,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "selected relevant bodies or privately parsed configuration metadata; no runtime proof",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-app/src/configuration/record.rs",
+      "sha256": "2cfaea4918a8ba08d3b318900aa4b05e462dd8c9a93799efd9e934fde80f8478",
+      "bytes": 4422,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "full file read",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-app/src/configuration/review.rs",
+      "sha256": "c936d99d7941286045b9cb582feff02b88272b6986d5ac08ff23d16fd4146e0b",
+      "bytes": 4775,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "full file read",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec",
+      "bytes": 22719,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "full prior read reused after byte-identical comparison",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "sha256": "e676881df0adc17f7179208172cab6aaf687633b48a0a9f16bb28b1d143e383e",
+      "bytes": 45699,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "full prior read reused after byte-identical comparison",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "sha256": "9e7869425ce31d049e3273c0d21667f91c1ef963a63f3727444357cf143f82e2",
+      "bytes": 35620,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "full prior read reused after byte-identical comparison",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/research/common-portable-design-input.md",
+      "sha256": "61ea42d3a4f6594219e61f3d4fda191ebb178c802563a642a1da8021cb29e3c7",
+      "bytes": 25420,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "prior full report reused, appended root rulings read",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/research/common-portable-auto-design-input.md",
+      "sha256": "57c6d14cd26e27bdd6b770af65cacb300a071e386eb2022a6c4007431268fcfb",
+      "bytes": 20847,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "prior full report reused, exact bytes same",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F12-selected-installer-runtime.md",
+      "sha256": "f3deda05dee66149c9850f23c530758e65ff6489210d375f64ce3fc7173e6307",
+      "bytes": 6351,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "full file read",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/configuration.rs",
+      "sha256": "6513e765102ce62a57389f2438b4406b25550d00682159c48ffb0d314200e288",
+      "bytes": 8067,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "selected relevant bodies or privately parsed configuration metadata; no runtime proof",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83",
+      "bytes": 9526,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "selected relevant bodies or privately parsed configuration metadata; no runtime proof",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-wire/src/generated/shared/mod.rs",
+      "sha256": "3e44e70a43a76f19348559dfef51bcf77b6b23aa6e6eda5f7f15f9e0aad9cc30",
+      "bytes": 132047,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "exact selected generated structs, not whole generated file",
+      "capture_matches_hash": true
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/configuration/semantic.rs",
+      "sha256": "0e433d6c75c5d56ff48928927fc68cbc1f989a7a4081644013f51a2c3c065b6d",
+      "bytes": 8705,
+      "pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "inspection": "selected relevant bodies or privately parsed configuration metadata; no runtime proof",
+      "capture_matches_hash": true
+    }
+  ],
+  "capture_root": "/tmp/nst-portable-presence-capture",
+  "report_sha256": "4f4340f72290cea8512570778aabe188b70bf5452af1363e616bf1bd40737d68",
+  "sample_status": "proposed semantics; no JSON/TOML roundtrip tests executed",
+  "concrete_consumer_gap": "Request.previous currently requires full ready ConfigurationRecord. Minimal portable history needs narrow historical-basis view or separately validated rich history; never fabricate dummy resolved fields."
+}

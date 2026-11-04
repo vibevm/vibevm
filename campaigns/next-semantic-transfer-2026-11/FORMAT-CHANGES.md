@@ -394,3 +394,7 @@ Generator accounting clarification for FMT-015/016: earlier194/204numbers descri
 ## FMT-018 — Init honors the existing host spec_format (Unreleased)
 
 No new vibe.toml field, grammar, epoch or install-g option. Ordinary init package now respects the existing root consumer spec_format when regenerating boot, instead of always choosing Mixed. Explicit xml keeps STATIC.xml and matching INDEX/launcher references; explicit markdown and absent-setting Mixed compatibility remain. New package --format/--link and scaffold Normal/Dynamic defaults remain separate from the host dialect. Actual nonempty-dependency preservation and both converter paths are exercised through real CLI fixtures; see F13.
+
+## FMT-019 — Full portable configuration (approved design, implementation pending)
+
+Planned vibe-apps/2 retains typed original configuration/history and required-Auto bindings in JSON/TOML; apps/1 remains compatible. None uses omission in the new representation, preserving empty values and selection-object presence; canonical common JSON stays unchanged. Planned export --configuration forces the full form; existing --json controls JSON versus default TOML. Planned import --target-input and --secret-input have separately versioned typed per-application inputs; secrets remain ephemeral. Private import-work versioning must be reviewed with its actual continuation delta. No new vibe.toml key or new HOME/rootfs/Docker support is implied. Full decisions and acceptance cases: research/common-portable-implementation-decisions.md.
