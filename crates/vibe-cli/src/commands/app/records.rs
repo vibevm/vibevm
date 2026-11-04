@@ -71,8 +71,15 @@ pub(super) fn work(
     settings: &SettingsRoot,
     package: Option<&str>,
     clean: bool,
+    import: Option<&str>,
 ) -> Result<()> {
-    let listing = if clean {
+    let listing = if let Some(id) = import {
+        if clean {
+            vibe_app::clean_import(settings, id)?
+        } else {
+            vibe_app::work_import(settings, id)?
+        }
+    } else if clean {
         vibe_app::clean_work(settings, package)?
     } else {
         vibe_app::work(settings, package)?
@@ -83,13 +90,13 @@ pub(super) fn work(
     if clean {
         return removed(ctx, &listing);
     }
-    if listing.entries.is_empty() {
+    if listing.entries.is_empty() && listing.imports.is_empty() {
         ctx.summary(&format!("no kept work directories in {}", listing.home));
         return Ok(());
     }
     ctx.summary(&format!(
         "{} kept work directory(ies) in {}",
-        listing.entries.len(),
+        listing.entries.len() + listing.imports.len(),
         listing.home
     ));
     if ctx.is_quiet() {
@@ -97,7 +104,7 @@ pub(super) fn work(
     }
     // One row per kept directory: its key, then how far the run got, when
     // it changed, its size and where it is (PROP-067 `#list`, `#meta`).
-    let rows = listing
+    let mut rows: Vec<Row> = listing
         .entries
         .iter()
         .map(|entry| {
@@ -112,18 +119,35 @@ pub(super) fn work(
             ])
         })
         .collect();
+    for cohort in &listing.imports {
+        let phase = match cohort.phase {
+            vibe_wire::generated::shared::ApplicationImportPhase::Running => "running",
+            vibe_wire::generated::shared::ApplicationImportPhase::Arrangement => "arrangement",
+            vibe_wire::generated::shared::ApplicationImportPhase::Complete => "complete",
+        };
+        rows.push(
+            Row::new(vec![
+                Cell::new(format!("import {}", cohort.target.operation), Role::Accent),
+                Cell::text(format!(
+                    "{phase}; {} / {} rows; continue: vibe app import --resume {}",
+                    cohort.cursor, cohort.total, cohort.target.operation
+                )),
+            ])
+            .meta(vec![
+                Meta::Note(cohort.changed.clone()),
+                Meta::Count(human_bytes(cohort.bytes)),
+                Meta::Note(cohort.path.clone()),
+            ]),
+        );
+    }
     ctx.block(&List::new(rows).render());
     Ok(())
 }
 
 /// What a `--clean` deleted, directory by directory.
 fn removed(ctx: &output::Context, listing: &ApplicationWork) -> Result<()> {
-    for entry in &listing.entries {
-        ctx.summary(&format!(
-            "removed {} ({})",
-            entry.path,
-            human_bytes(entry.bytes)
-        ));
+    for path in &listing.removed {
+        ctx.summary(&format!("removed {path}"));
     }
     ctx.summary(&format!("freed {}", human_bytes(listing.freed)));
     Ok(())
@@ -138,10 +162,51 @@ fn state_text(entry: &Entry) -> String {
         EntryState::Delegated => "delegated",
         EntryState::Unknown => "unknown",
     };
-    match &entry.step {
+    let mut text = match &entry.step {
         Some(step) => format!("{state} at step {step}"),
         None => state.to_owned(),
+    };
+    if let Some(operation) = &entry.operation {
+        use vibe_wire::generated::shared::ApplicationPendingOperationPhase as P;
+        let phase = match operation.phase {
+            P::Prepared => "prepared",
+            P::Dependencies => "dependencies",
+            P::Removing => "removing",
+            P::Removed => "removed",
+            P::Running => "running",
+            P::Placing => "placing",
+            P::Placed => "placed",
+            P::Publishing => "publishing",
+            P::Published => "published",
+            P::Complete => "complete",
+            P::Retiring => "retiring",
+        };
+        text.push_str(&format!(
+            "; operation {} ({phase})",
+            operation.target.operation
+        ));
+        if operation.phase != P::Complete {
+            text.push_str(&format!(
+                "; continue: {}",
+                vibe_app::resume_command(&operation.target)
+            ));
+        }
     }
+    if let Some(parent) = &entry.retained_for {
+        match &parent.owner {
+            vibe_wire::generated::shared::ApplicationContinuationTarget::Application(owner) => text
+                .push_str(&format!(
+                    "; retained for parent {} (operation {})",
+                    owner.target.key, owner.target.operation
+                )),
+            vibe_wire::generated::shared::ApplicationContinuationTarget::Import(owner) => text
+                .push_str(&format!(
+                    "; retained for import {} row {}",
+                    owner.target.operation, owner.row
+                )),
+        }
+    }
+    text
 }
 
 fn size_text(entry: &Entry) -> String {

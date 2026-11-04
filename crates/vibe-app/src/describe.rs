@@ -36,6 +36,13 @@ use crate::steps::{FeatureRequest, resolve_features};
 pub fn describe(
     resolved: &ResolvedPackage,
 ) -> Result<wire::ApplicationDescribe, crate::error::AppError> {
+    if resolved.configuration.is_some() {
+        return Err(crate::ResolveError::ConfigurationUnsupported {
+            package: resolved.package.key(),
+            scope: "legacy package description; use --configuration".into(),
+        }
+        .into());
+    }
     if let Some(option) = resolved
         .options
         .iter()
@@ -54,22 +61,7 @@ pub fn describe(
             name: resolved.package.name.clone(),
             version: resolved.package.version.clone(),
         },
-        application: wire::Application {
-            id: resolved.application.id.clone(),
-            portable: resolved.application.portable,
-            icon: match &resolved.application.icon {
-                Some(IconDecl::Path(icon)) => Some(resolved.root.join(icon).display().to_string()),
-                _ => None,
-            },
-            icon_set: resolved
-                .application
-                .icon
-                .as_ref()
-                .and_then(|icon| package_icon(&resolved.root, icon)),
-            menu_group: resolved.application.menu_group.clone(),
-            categories: resolved.application.categories.clone(),
-            keywords: resolved.application.keywords.clone(),
-        },
+        application: describe_application(resolved),
         options: resolved
             .options
             .iter()
@@ -78,7 +70,7 @@ pub fn describe(
     })
 }
 
-fn describe_option(
+pub(crate) fn describe_option(
     resolved: &ResolvedPackage,
     option: &InstallerOptionDecl,
 ) -> wire::InstallerOption {
@@ -444,4 +436,23 @@ fn describe_step(step: &StepDecl) -> wire::Step {
         }
     }
     row
+}
+
+pub(crate) fn describe_application(resolved: &ResolvedPackage) -> wire::Application {
+    wire::Application {
+        id: resolved.application.id.clone(),
+        portable: resolved.application.portable,
+        icon: match &resolved.application.icon {
+            Some(IconDecl::Path(icon)) => Some(resolved.root.join(icon).display().to_string()),
+            _ => None,
+        },
+        icon_set: resolved
+            .application
+            .icon
+            .as_ref()
+            .and_then(|icon| package_icon(&resolved.root, icon)),
+        menu_group: resolved.application.menu_group.clone(),
+        categories: resolved.application.categories.clone(),
+        keywords: resolved.application.keywords.clone(),
+    }
 }

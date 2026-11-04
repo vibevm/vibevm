@@ -8,20 +8,15 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#portable-set");
 
-use std::path::Path;
-
 use anyhow::{Context, Result, bail};
-use vibe_app::{
-    FeatureRequest, ImportAction, ImportInstall, Index, InstallRequest, OperationContext,
-    PortableExport, ResolvedPackage, SettingsRoot,
-};
+use vibe_app::{ImportAction, Index, OperationContext, PortableExport, SettingsRoot};
 use vibe_wire::generated::application_import::{ApplicationImport, License, Refused, Skipped};
 use vibe_wire::generated::apps_manifest::{ApplicationMark, AppsManifest};
 
 use super::agents::{AgentSetup, report_parked};
 use super::display::StepDisplay;
 use super::global::{self, Observation, Packages};
-use super::report::{prose, render};
+use super::report::prose;
 use crate::cli::{AppExportArgs, AppImportArgs, AppStepArgs};
 use crate::output;
 use crate::output::language::{Role, Stream, paint};
@@ -76,6 +71,23 @@ struct Tally {
 }
 
 impl Tally {
+    fn add_results(&mut self, cohort: &vibe_app::PreparedImport) {
+        use vibe_wire::generated::shared::ApplicationPendingImportResultAction as Action;
+        for row in cohort.results() {
+            match row.action {
+                Action::Installed => self
+                    .installed
+                    .push((row.key.clone(), row.option.clone().unwrap_or_default())),
+                Action::Skipped => self.skipped.push((row.key.clone(), row.message.clone())),
+                Action::Refused => self.refused.push((
+                    row.key.clone(),
+                    row.code.clone().unwrap_or_else(|| "import_refused".into()),
+                    row.message.clone(),
+                )),
+            }
+        }
+    }
+
     fn refuse(&mut self, key: &str, error: &vibe_app::AppError) {
         self.refused
             .push((key.to_owned(), error.code().to_owned(), error.to_string()));
@@ -98,8 +110,15 @@ pub(super) fn import(
              drop --path, and add project applications with `vibe install`)"
         );
     }
-    let file = args.file.display().to_string();
-    let text = std::fs::read_to_string(&args.file)
+    if let Some(id) = &args.resume {
+        return resume_import(ctx, id, offline);
+    }
+    let path = args
+        .file
+        .as_ref()
+        .context("import needs FILE or --resume OPERATION_ID")?;
+    let file = path.display().to_string();
+    let text = std::fs::read_to_string(path)
         .map_err(|error| vibe_app::AppError::from(portable_invalid(&file, &error)))?;
     let set = vibe_app::parse_portable(&file, &text)?;
     let settings = global::settings_root()?;
@@ -114,84 +133,119 @@ pub(super) fn import(
     let proxy_image = global::proxy_image()?;
     let agents = AgentSetup::new(ctx, None, false)?;
     let mut tally = Tally::default();
+    // Resolve and classify every selected manual row before the first mutation.
+    // A later rich/secret row must not be discovered after an earlier install.
+    let mut selected = Vec::new();
     for row in set
         .application
         .iter()
-        .filter(|row| row.mark == ApplicationMark::Manual)
+        .filter(|r| r.mark == ApplicationMark::Manual)
     {
         let resolved = match packages.resolve(&exact(&row.key)) {
-            Ok(resolved) => resolved,
-            Err(error) => {
-                tally.refuse(&row.key, &error);
+            Ok(r) => r,
+            Err(e) => {
+                tally.refuse(&row.key, &e);
                 continue;
             }
         };
-        let index = Index::load(&settings)?;
-        match vibe_app::import_action(&index, row, &resolved.options, args.skip_installed) {
-            ImportAction::Skip(reason) => tally.skipped.push((row.key.clone(), reason)),
-            ImportAction::Refuse(error) => tally.refuse(&row.key, &error),
+        let choice = vibe_app::import_choice(row, &resolved.options);
+        let option = match vibe_app::select_option(
+            &resolved.options,
+            &choice,
+            global::attended(ctx).then_some(&super::wizard::chooser as vibe_app::Chooser<'_>),
+        ) {
+            Ok(o) => o,
+            Err(e) => {
+                tally.refuse(&row.key, &e.into());
+                continue;
+            }
+        };
+        selected.push((row, resolved, option));
+    }
+    let candidates: Vec<_> = selected
+        .iter()
+        .map(|(row, resolved, option)| vibe_app::ImportCandidate {
+            row,
+            resolved,
+            option,
+        })
+        .collect();
+    let mut prepared = vibe_app::prepare_import(
+        &set,
+        &candidates,
+        args.skip_installed,
+        args.accept_license,
+        args.registry.as_deref(),
+        global::attended(ctx),
+    )?;
+    let index = Index::load(&settings)?;
+    for row in prepared.rows() {
+        let original = vibe_app::import_row(row);
+        let resolved = &selected
+            .iter()
+            .find(|(r, _, _)| r.key == row.key)
+            .ok_or_else(|| {
+                anyhow::anyhow!("classified import row `{}` has no selected source", row.key)
+            })?
+            .1;
+        match vibe_app::import_action(&index, &original, &resolved.options, args.skip_installed) {
             ImportAction::Install(install) => {
-                if let Some(license) =
-                    vibe_app::import_license(&index, row, &install, &resolved, args.accept_license)
-                {
+                if let Some(license) = vibe_app::import_license(
+                    &index,
+                    &original,
+                    &install,
+                    resolved,
+                    args.accept_license,
+                ) {
                     tally.licenses.push(License {
                         key: row.key.clone(),
                         name: license.name,
                         file: license.file,
                     });
                 }
-                let using = install
-                    .option
-                    .clone()
-                    .unwrap_or_else(|| "chosen on this host".into());
                 if args.dry_run {
-                    tally.installed.push((row.key.clone(), using));
-                    continue;
+                    tally
+                        .installed
+                        .push((row.key.clone(), row.installer.clone()));
                 }
-                let target = Target {
-                    settings: &settings,
-                    packages: &packages,
-                    proxy_image: &proxy_image,
-                    agents: &agents,
-                };
-                let outcome = install_row(ctx, &target, &resolved, &install, args, row.hidden)?
-                    .and_then(|outcome| {
-                        if row.held {
-                            vibe_app::hold(&settings, &row.key, true, &proxy_image)?;
-                        }
-                        Ok(outcome)
-                    });
-                match outcome {
-                    Ok(outcome) => {
-                        if !ctx.is_json() {
-                            render(ctx, &outcome)?;
-                        }
-                        tally.installed.push((row.key.clone(), using));
-                    }
-                    Err(error) => tally.refuse(&row.key, &error),
+            }
+            ImportAction::Skip(reason) => {
+                if args.dry_run {
+                    tally.skipped.push((row.key.clone(), reason));
+                }
+            }
+            ImportAction::Refuse(error) => {
+                if args.dry_run {
+                    tally.refuse(&row.key, &error);
                 }
             }
         }
     }
-    let index = Index::load(&settings)?;
-    for row in set
-        .application
-        .iter()
-        .filter(|row| row.mark == ApplicationMark::Auto)
-    {
-        let reason = if args.dry_run {
-            "a requirement; installed only when a manual row requires it"
-        } else if index.installations.contains_key(&row.key) {
-            "a requirement; installed with what requires it"
-        } else {
-            "a requirement nothing in the set required"
-        };
-        tally.skipped.push((row.key.clone(), reason.into()));
-    }
-    if !args.dry_run {
-        tally
-            .skipped
-            .extend(vibe_app::restore_arrangement(&settings, &set)?);
+    if args.dry_run {
+        tally.skipped.extend(prepared.automatic().iter().map(|key| {
+            (
+                key.clone(),
+                "a requirement; installed only when a manual row requires it".into(),
+            )
+        }));
+    } else {
+        for (key, code, message) in tally.refused.drain(..) {
+            prepared.note_refusal(key, code, message);
+        }
+        let resolver = |name: &str| packages.resolve(name);
+        let show = global::plan_printer(ctx);
+        let display = StepDisplay::open(ctx, &AppStepArgs::default());
+        let observe = Observation::new(ctx, true, &display)?;
+        display.around(ctx, || {
+            let operation = OperationContext {
+                agent: agents.hooks(),
+                resolver: Some(&resolver),
+                resolver_scope: packages.scope(),
+                ..global::operation(ctx, &settings, offline, &proxy_image, Some(&show), &observe)
+            };
+            report_parked(ctx, vibe_app::import_cohort(&operation, &mut prepared))
+        })?;
+        tally.add_results(&prepared);
     }
     report(ctx, &settings, &set, args.dry_run, &tally)?;
     Ok((!tally.refused.is_empty()).then_some(1))
@@ -213,58 +267,27 @@ fn portable_invalid(file: &str, error: &dyn std::fmt::Display) -> vibe_app::Life
     }
 }
 
-/// What every row of one import installs into and with.
-struct Target<'a> {
-    settings: &'a SettingsRoot,
-    packages: &'a Packages,
-    proxy_image: &'a Path,
-    agents: &'a AgentSetup,
-}
-
-/// One row through the ordinary `install -g` operation: its plan, step
-/// panel, licence question and requirements, exactly as `install -g` with
-/// the row's `--installer`, `--feature`, `--no-feature` and `--set`. The
-/// outer error stops the whole import; the inner one refuses this row.
-fn install_row(
+/// A completed exact import continuation uses the established cohort report.
+pub(super) fn report_retained(
     ctx: &output::Context,
-    target: &Target<'_>,
-    resolved: &ResolvedPackage,
-    install: &ImportInstall,
-    args: &AppImportArgs,
-    hidden: bool,
-) -> Result<Result<vibe_app::Outcome, vibe_app::AppError>> {
-    let request = InstallRequest {
-        choice: install.choice.clone(),
-        features: FeatureRequest {
-            enable: install.enable.clone(),
-            disable: install.disable.clone(),
-            profile: None,
-        },
-        parameters: install.parameters.clone(),
-        accept_license: args.accept_license,
-        hidden,
-        ..InstallRequest::default()
+    settings: &SettingsRoot,
+    cohort: &vibe_app::PreparedImport,
+) -> Result<Option<i32>> {
+    let mut tally = Tally::default();
+    tally.add_results(cohort);
+    let set = AppsManifest {
+        protocol: vibe_app::APPS_PROTOCOL.into(),
+        exported: String::new(),
+        home: vibe_wire::generated::apps_manifest::AppsManifestHome::User,
+        platform: String::new(),
+        arch: String::new(),
+        application: vec![],
+        collection: vec![],
+        pin: vec![],
+        launcher: vec![],
     };
-    let packages = target.packages;
-    let resolver = |spelling: &str| packages.resolve(spelling);
-    let show = global::plan_printer(ctx);
-    let display = StepDisplay::open(ctx, &AppStepArgs::default());
-    let observe = Observation::new(ctx, true, &display)?;
-    Ok(display.around(ctx, || {
-        let operation = OperationContext {
-            agent: target.agents.hooks(),
-            resolver: Some(&resolver),
-            ..global::operation(
-                ctx,
-                target.settings,
-                packages.offline,
-                target.proxy_image,
-                Some(&show),
-                &observe,
-            )
-        };
-        report_parked(ctx, vibe_app::install(&operation, resolved, &request))
-    }))
+    report(ctx, settings, &set, false, &tally)?;
+    Ok((!tally.refused.is_empty()).then_some(1))
 }
 
 fn report(
@@ -358,4 +381,56 @@ fn report(
         ),
     );
     Ok(())
+}
+
+fn resume_import(ctx: &output::Context, id: &str, offline: bool) -> Result<Option<i32>> {
+    use vibe_wire::generated::shared::ApplicationPendingLookup as Lookup;
+    let settings = global::settings_root()?;
+    let info = vibe_app::import_resume_info(&settings, id)?;
+    let agents = AgentSetup::for_import(ctx, &info)?;
+    let packages = Packages {
+        settings: settings.clone(),
+        registry: match &info.lookup {
+            Lookup::Registry(r) => Some(r.root.clone().into()),
+            _ => None,
+        },
+        embedded: match &info.lookup {
+            Lookup::Chain(r) => r.embedded.clone().map(Into::into),
+            _ => None,
+        },
+        offline: offline || info.offline,
+    };
+    let resolver = |name: &str| match &info.lookup {
+        Lookup::Project(p) => {
+            super::project::resolve_saved_requirement(std::path::Path::new(&p.root), name)
+        }
+        Lookup::Caller(_) => Err(vibe_app::ResolveError::Registry {
+            spelling: name.into(),
+            reason: "saved caller-owned resolver cannot be reconstructed by this CLI".into(),
+        }
+        .into()),
+        _ => packages.resolve(name),
+    };
+    let proxy = global::proxy_image()?;
+    let display = StepDisplay::flat();
+    let observe = Observation::new(ctx, true, &display)?;
+    let show = global::plan_printer(ctx);
+    let result = display.around(ctx, || {
+        let operation = OperationContext {
+            agent: agents.hooks(),
+            resolver: Some(&resolver),
+            resolver_scope: packages.scope(),
+            ..global::operation(
+                ctx,
+                &settings,
+                offline || info.offline,
+                &proxy,
+                Some(&show),
+                &observe,
+            )
+        };
+        report_parked(ctx, vibe_app::resume_import(&operation, id))
+    });
+    let cohort = display.report(ctx, result)?;
+    report_retained(ctx, &settings, &cohort)
 }

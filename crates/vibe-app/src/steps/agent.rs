@@ -68,6 +68,7 @@ pub(crate) fn admit<'p>(
     answered: &dyn Fn(&str) -> bool,
     vars: &Vars<'_>,
     attended: bool,
+    envelope_of: &dyn Fn(&str) -> Envelope,
 ) -> Result<(), AppError> {
     let Some(agent) = hooks.selected.filter(|_| !hooks.hosted) else {
         return Ok(());
@@ -81,10 +82,12 @@ pub(crate) fn admit<'p>(
         let StepKind::Agent { mode, .. } = &step.kind else {
             continue;
         };
-        let envelope = Envelope::at(&vars.work, &step.id);
+        let envelope = envelope_of(&step.id);
         let preview = agent.invocation(
             &step.id,
-            mode_of(*mode, attended),
+            planned
+                .agent_mode
+                .unwrap_or_else(|| mode_of(*mode, attended)),
             &Placeholders {
                 prompt: "{prompt}",
                 prompt_file: &envelope.prompt,
@@ -134,6 +137,8 @@ pub(crate) fn admit<'p>(
 
 /// Everything one agent step runs with.
 pub(crate) struct AgentStep<'a> {
+    pub target: Option<&'a vibe_wire::generated::shared::ApplicationContinuationTarget>,
+    pub envelope: Envelope,
     pub hooks: &'a AgentHooks<'a>,
     pub plan: &'a Plan,
     pub package_root: &'a Path,
@@ -169,8 +174,10 @@ pub(crate) fn run(
     let StepKind::Agent { mode, .. } = &step.kind else {
         return (None, Ok(None));
     };
-    let mode = mode_of(*mode, cx.attended);
-    let envelope = Envelope::at(cx.work, &step.id);
+    let mode = planned
+        .agent_mode
+        .unwrap_or_else(|| mode_of(*mode, cx.attended));
+    let envelope = &cx.envelope;
     let mut record = AgentRun {
         agent: if cx.hooks.hosted {
             "hosting-agent".into()
@@ -185,7 +192,7 @@ pub(crate) fn run(
         status: None,
         message: None,
     };
-    let result = deliver(cx, planned, mode, &envelope, &mut record);
+    let result = deliver(cx, planned, mode, envelope, &mut record);
     if let Some(record_step) = &cx.record_step {
         envelope.keep(record_step);
     }
@@ -213,16 +220,23 @@ fn deliver(
         features: &cx.plan.features,
         earlier: cx.earlier.clone(),
     };
-    let context = envelope.write(&prompt, &envelope::context(envelope, &facts))?;
+    let declared_context = envelope::context(envelope, &facts);
+    let context = if cx.resumed_delegation {
+        envelope.verify_saved(&prompt, &declared_context)?
+    } else {
+        envelope.write(&prompt, &declared_context)?
+    };
     if cx.resumed_delegation && envelope.result.is_file() {
         return answer(cx, step, envelope, None, record);
     }
     envelope.clear_answer()?;
     if cx.hooks.hosted {
         let resume = cx
-            .hooks
-            .resume_command
-            .unwrap_or("the same command with --resume");
+            .target
+            .map(crate::operations::pending::continuation_command)
+            .unwrap_or_else(|| {
+                "the same explicit manual command with --resume (legacy work)".into()
+            });
         let task = envelope::park(
             &cx.outbox,
             &step.id,
@@ -230,7 +244,7 @@ fn deliver(
             &prompt,
             &context,
             envelope,
-            resume,
+            &resume,
         )?;
         record.status = Some(AgentStatus::Parked);
         if let Some(task_progress) = cx.io.task {
@@ -242,7 +256,7 @@ fn deliver(
             run_id: cx.run_id.clone(),
             run: envelope.run.display().to_string(),
             task_files: vec![task.display().to_string()],
-            resume: resume.into(),
+            resume: resume.clone(),
             work: cx.work.display().to_string(),
         }))
         .into());
@@ -402,18 +416,31 @@ fn answer(
 /// The runner's side of agent steps: consent before the first step, and
 /// the context of one delivery.
 impl<'a> Run<'a> {
+    fn agent_envelope(&self, id: &str) -> Envelope {
+        let legacy = Envelope::at(&self.work, id);
+        let adopted_legacy=self.delegated.iter().any(|v|v==id)
+            && self.state.operation.as_ref().is_some_and(|op|op.provenance==vibe_wire::generated::shared::ApplicationPendingOperationProvenance::LegacyEffectiveOnly)
+            && self.state.get(id).and_then(|s|s.agent.as_ref()).is_some_and(|a|a.envelope==legacy.run.to_string_lossy());
+        if adopted_legacy {
+            legacy
+        } else {
+            Envelope::for_generation(
+                &self.work,
+                id,
+                self.state
+                    .operation
+                    .as_ref()
+                    .map(|op| op.target.operation.as_str()),
+            )
+        }
+    }
+
     /// Show every pending agent prompt and obtain consent before anything
     /// changes on disk (`PROP-064#consent`).
     pub fn admit_agents(&self) -> Result<(), AppError> {
         let vars = self.vars(None);
         let answered = |id: &str| {
-            self.delegated.iter().any(|step| step == id)
-                && self
-                    .work
-                    .join("steps")
-                    .join(id)
-                    .join("result.json")
-                    .is_file()
+            self.delegated.iter().any(|step| step == id) && self.agent_envelope(id).result.is_file()
         };
         admit(
             &self.ctx.agent,
@@ -427,6 +454,7 @@ impl<'a> Run<'a> {
             &answered,
             &vars,
             self.attended(),
+            &|id| self.agent_envelope(id),
         )
     }
 
@@ -462,7 +490,14 @@ impl<'a> Run<'a> {
             .record
             .as_ref()
             .map_or_else(|| self.plan.package.directory_name(), RunRecord::id);
+        let target =
+            match crate::operations::pending::continuation_target(self.ctx.settings, &self.state) {
+                Ok(target) => target,
+                Err(error) => return (None, Err(error)),
+            };
         let cx = AgentStep {
+            target: target.as_ref(),
+            envelope: self.agent_envelope(&step.id),
             hooks: &self.ctx.agent,
             plan: self.plan,
             package_root: &self.resolved.root,

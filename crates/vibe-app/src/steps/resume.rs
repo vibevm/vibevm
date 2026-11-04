@@ -29,11 +29,17 @@ pub(crate) struct StartPoint {
 }
 
 /// Load and check the kept state for `start`, or begin a fresh one.
-pub(crate) fn start_point(plan: &Plan, work: &Path, start: &Start) -> Result<StartPoint, AppError> {
+pub(crate) fn start_point(
+    plan: &Plan,
+    work: &Path,
+    start: &Start,
+    target: Option<&vibe_wire::generated::shared::ApplicationPendingTarget>,
+) -> Result<StartPoint, AppError> {
     let key = plan.package.key();
-    if *start == Start::Fresh {
+    if *start == Start::Fresh && target.is_none() {
         return Ok(StartPoint {
             state: StepsFile {
+                operation: None,
                 package: plan.package.clone(),
                 option: plan.option.clone(),
                 features: plan.features.clone(),
@@ -49,6 +55,26 @@ pub(crate) fn start_point(plan: &Plan, work: &Path, start: &Start) -> Result<Sta
         work: work.display().to_string(),
         reason: format!("no kept work directory `{}` exists", work.display()),
     })?;
+    if let Some(target) = target
+        && state.operation.as_ref().map(|o| &o.target) != Some(target)
+    {
+        return Err(StepError::ResumeMismatch {
+            work: work.display().to_string(),
+            reason: "the operation generation differs from the prepared checkpoint".into(),
+        }
+        .into());
+    }
+    let retained_unfinished = state.operation.as_ref().is_some_and(|o| {
+        o.phase != vibe_wire::generated::shared::ApplicationPendingOperationPhase::Complete
+    });
+    let placed = state.operation.as_ref().is_some_and(|o| {
+        matches!(
+            o.phase,
+            vibe_wire::generated::shared::ApplicationPendingOperationPhase::Placed
+                | vibe_wire::generated::shared::ApplicationPendingOperationPhase::Publishing
+                | vibe_wire::generated::shared::ApplicationPendingOperationPhase::Published
+        )
+    });
     let mismatch = if state.package != plan.package {
         Some(format!("it belongs to {}", state.package.key()))
     } else if state.option != plan.option {
@@ -80,7 +106,7 @@ pub(crate) fn start_point(plan: &Plan, work: &Path, start: &Start) -> Result<Sta
             )
         })
     };
-    if *start == Start::Resume && settled() {
+    if *start == Start::Resume && settled() && !retained_unfinished {
         // A directory kept after success (`#work`) has nothing left to
         // continue; only a named step can be run again inside it.
         return Err(StepError::NothingToResume {
@@ -112,15 +138,19 @@ pub(crate) fn start_point(plan: &Plan, work: &Path, start: &Start) -> Result<Sta
             .steps
             .iter()
             .position(|planned| {
-                state.get(&planned.step.id).map(|step| step.outcome) != Some(StepOutcome::Done)
+                !matches!(
+                    state.get(&planned.step.id).map(|step| step.outcome),
+                    Some(StepOutcome::Done | StepOutcome::Skipped)
+                )
             })
             .unwrap_or(plan.steps.len()),
     };
-    let finish_resume = *start == Start::Resume
-        && plan
-            .steps
-            .get(first)
-            .is_some_and(|planned| planned.step.phase == StepPhase::Finish)
+    let finish_resume = (placed
+        || (*start == Start::Resume
+            && plan
+                .steps
+                .get(first)
+                .is_some_and(|planned| planned.step.phase == StepPhase::Finish)))
         && plan
             .steps
             .iter()
@@ -133,7 +163,7 @@ pub(crate) fn start_point(plan: &Plan, work: &Path, start: &Start) -> Result<Sta
     let delegated = state
         .steps
         .iter()
-        .filter(|step| step.outcome == StepOutcome::Delegated)
+        .filter(|step| *start == Start::Resume && step.outcome == StepOutcome::Delegated)
         .map(|step| step.id.clone())
         .collect();
     Ok(StartPoint {

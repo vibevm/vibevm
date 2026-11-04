@@ -89,6 +89,14 @@ pub fn restore_arrangement(
         return Ok(Vec::new());
     }
     let _lock = settings.lock()?;
+    restore_locked(settings, set)
+}
+
+/// The same arrangement owner under the application mutation lock.
+pub(crate) fn restore_locked(
+    settings: &SettingsRoot,
+    set: &wire::AppsManifest,
+) -> Result<Vec<(String, String)>, AppError> {
     let index = Index::load(settings)?;
     let mut layer = UserLaunchers::load(settings)?;
     let mut skipped: Vec<(String, String)> = Vec::new();

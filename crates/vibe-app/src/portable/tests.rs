@@ -51,6 +51,9 @@ fn installed(option: &str, features: &[&str]) -> Index {
     index.installations.insert(
         KEY.into(),
         Installation {
+            secret_origins: Default::default(),
+            configuration: None,
+            pending: None,
             slot: "demo".into(),
             package: PackageCoordinate {
                 group: "org.example".into(),

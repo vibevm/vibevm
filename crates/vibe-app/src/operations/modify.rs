@@ -32,6 +32,7 @@ use super::{
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#modify")]
 pub struct ModifyRequest {
+    pub configuration: Option<crate::configuration::ConfigurationSubmission>,
     /// `--installer ID`: another installer option of the same version.
     pub installer: Option<String>,
     /// `--profile`, `--feature`, `--no-feature`.
@@ -46,7 +47,10 @@ pub struct ModifyRequest {
 
 impl ModifyRequest {
     fn is_empty(&self) -> bool {
-        self.installer.is_none() && self.features.is_empty() && self.parameters.is_empty()
+        self.configuration.is_none()
+            && self.installer.is_none()
+            && self.features.is_empty()
+            && self.parameters.is_empty()
     }
 }
 
@@ -59,7 +63,19 @@ pub fn modify(
     resolved: &ResolvedPackage,
     request: &ModifyRequest,
 ) -> Result<Outcome, AppError> {
-    let _lock = ctx.settings.lock()?;
+    let held = ctx.settings.lock()?;
+    let lock = &held;
+    modify_locked(lock, ctx, resolved, request, None)
+}
+
+pub(super) fn modify_locked(
+    lock: &crate::MutationLock,
+    ctx: &OperationContext<'_>,
+    resolved: &ResolvedPackage,
+    request: &ModifyRequest,
+    resumed: Option<(&crate::steps::StepsFile, &InstallRequest)>,
+) -> Result<Outcome, AppError> {
+    let saved = resumed.map(|(state, _)| state);
     let index = Index::load(ctx.settings)?;
     let storage = Storage::load(ctx.settings)?;
     let key = resolved.package.key();
@@ -99,20 +115,52 @@ pub fn modify(
     let option = choose(ctx, resolved, &choice)?;
     admit(ctx, &index, &[key.as_str()], resolved, &option)?;
     let recorded = declared_only(&option, &record.features);
-    let install_request = InstallRequest {
-        choice,
-        features: keep_recorded(&option, &recorded, &request.features),
-        parameters: request.parameters.clone(),
-        accept_license: request.accept_license,
-        keep_work: request.keep_work,
-        ..InstallRequest::default()
+    let install_request = resumed
+        .map(|(_, request)| request.clone())
+        .unwrap_or_else(|| InstallRequest {
+            configuration: request.configuration.clone(),
+            choice,
+            features: if option.configuration.is_some() {
+                request.features.clone()
+            } else {
+                keep_recorded(&option, &recorded, &request.features)
+            },
+            parameters: request.parameters.clone(),
+            accept_license: request.accept_license,
+            keep_work: request.keep_work,
+            ..InstallRequest::default()
+        });
+    let previous = if let Some(op) = saved.and_then(|s| s.operation.as_ref()) {
+        Previous {
+            secret_origins: &op.request.secret_origins,
+            configuration: op.request.configuration.as_ref(),
+            features: &op.request.features,
+            parameters: &op.request.parameters,
+            license: None,
+            ask: false,
+        }
+    } else {
+        Previous {
+            secret_origins: &record.secret_origins,
+            configuration: record.configuration.as_ref(),
+            features: &recorded,
+            parameters: &record.parameters,
+            license: record.license.as_ref().map(|l| l.name.as_str()),
+            ask: request.is_empty(),
+        }
     };
-    let previous = Previous {
-        features: &recorded,
-        parameters: &record.parameters,
-        license: record.license.as_ref().map(|license| license.name.as_str()),
-        ask: request.is_empty(),
-    };
+    let published = saved
+        .and_then(|s| s.operation.as_ref())
+        .map(|op| super::pending::was_published(ctx.settings, &index, op))
+        .transpose()?
+        .unwrap_or(false);
+    let needs_removal = saved.and_then(|s| s.operation.as_ref()).is_none_or(|op| {
+        matches!(
+            op.phase,
+            vibe_wire::generated::shared::ApplicationPendingOperationPhase::Prepared
+                | vibe_wire::generated::shared::ApplicationPendingOperationPhase::Dependencies
+        )
+    });
     let quiet = OperationContext {
         on_plan: None,
         ..*ctx
@@ -122,10 +170,18 @@ pub fn modify(
         resolved,
         &option,
         &install_request,
-        Some(previous),
+        if saved.is_none() && option.configuration.is_some() && option.id != record.option {
+            None
+        } else {
+            Some(previous)
+        },
         &index,
+        saved.and_then(|s| s.operation.as_ref()),
     )?;
-    for item in tree::authored_removal(&record) {
+    for item in tree::authored_removal(&record)
+        .into_iter()
+        .filter(|_| needs_removal)
+    {
         plan.warnings.push(match item {
             Undo::Script { step, commands } => format!(
                 "modify first undoes `{step}` of the recorded choice: {}",
@@ -138,17 +194,68 @@ pub fn modify(
             ),
         });
     }
+    apply::admit_agents(ctx, resolved, &plan, &install_request, saved)?;
+    let target = if let Some(state) = saved {
+        super::pending::validate_plan(ctx, resolved, &option, &install_request, &plan, state)?;
+        state
+            .operation
+            .as_ref()
+            .ok_or_else(|| {
+                super::pending::failure(
+                    ctx.settings,
+                    &resolved.package,
+                    "missing modification operation".into(),
+                )
+            })?
+            .target
+            .clone()
+    } else {
+        super::pending::begin(
+            lock,
+            ctx,
+            resolved,
+            &option,
+            &install_request,
+            &plan,
+            super::pending::Checkpoint {
+                kind: vibe_wire::generated::shared::ApplicationPendingOperationKind::Modify,
+                retirements: Vec::new(),
+                predecessor: Some(&key),
+                parent: None,
+            },
+        )?
+    };
+    super::pending::bind_resupply(ctx.settings, &target, &plan.secret_provided)?;
+    super::pending::keep_work(ctx.settings, &target, install_request.keep_work)?;
     if let Some(show) = ctx.on_plan {
         show(&plan);
     }
     let mut stack = Vec::new();
     deps::enter(&mut stack, &key)?;
-    let paths = deps::install_required(ctx, &plan, request.accept_license, &mut stack)?;
+    super::pending::before_dependencies(ctx.settings, &target)?;
+    let paths = deps::install_required(
+        lock,
+        ctx,
+        &plan,
+        request.accept_license,
+        &mut stack,
+        Some(&target),
+    )?;
+    if needs_removal {
+        super::pending::phase(
+            ctx.settings,
+            &target,
+            vibe_wire::generated::shared::ApplicationPendingOperationPhase::Removing,
+        )?;
+    }
     let root = match &record.location {
         Location::Owned { .. } => launch::app_root(&record, &storage).ok(),
         Location::External { app_root } => Some(app_root.clone()),
     };
-    if let Some(root) = root.as_deref().filter(|root| root.exists()) {
+    if let Some(root) = root
+        .as_deref()
+        .filter(|root| needs_removal && root.exists())
+    {
         let mut run = RunRecord::open(
             ctx.settings,
             &record.package,
@@ -165,6 +272,13 @@ pub fn modify(
         });
         result?;
     }
+    if needs_removal {
+        super::pending::phase(
+            ctx.settings,
+            &target,
+            vibe_wire::generated::shared::ApplicationPendingOperationPhase::Removed,
+        )?;
+    }
     let library = match &record.location {
         Location::Owned { library, .. } if option_owned(&plan.result) => Some(library.clone()),
         _ => None,
@@ -173,6 +287,7 @@ pub fn modify(
         ctx,
         &storage,
         &Selected {
+            operation: Some(&target),
             resolved,
             option: &option,
             plan: &plan,
@@ -193,6 +308,14 @@ pub fn modify(
         ..record.lifecycle.clone()
     };
     let finish_failure = applied.finish_failure.take();
+    let resumable_failure = install_request.keep_work
+        || matches!(
+            &finish_failure,
+            Some(AppError::Agent(crate::AgentError::Parked(_)))
+        );
+    applied.installation.pending =
+        (finish_failure.is_some() && resumable_failure).then(|| target.clone());
+    super::pending::publishing(ctx.settings, &target, &applied.installation)?;
     let mut index = Index::load(ctx.settings)?;
     let outcome = commit(
         ctx,
@@ -201,11 +324,24 @@ pub fn modify(
         applied,
         None,
         None,
-        Command::Modify,
+        super::Publication {
+            lock,
+            command: Command::Modify,
+            preserve_default: published,
+        },
+    )?;
+    super::pending::phase(
+        ctx.settings,
+        &target,
+        vibe_wire::generated::shared::ApplicationPendingOperationPhase::Published,
     )?;
     if let Some(failure) = finish_failure {
+        if !resumable_failure {
+            super::pending::complete(lock, ctx.settings, &target)?;
+        }
         return Err(failure);
     }
+    super::pending::complete(lock, ctx.settings, &target)?;
     Ok(Outcome {
         message: format!(
             "modified {key}: installer `{}` → `{}`, features [{}] → [{}]",

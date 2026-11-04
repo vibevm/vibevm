@@ -80,6 +80,14 @@ pub(crate) struct Packages {
 }
 
 impl Packages {
+    pub(crate) fn scope(&self) -> vibe_app::ResolverScope<'_> {
+        match self.registry.as_deref() {
+            Some(root) => vibe_app::ResolverScope::Registry(root),
+            None => vibe_app::ResolverScope::Chain {
+                embedded: self.embedded.as_deref(),
+            },
+        }
+    }
     pub(crate) fn resolve(&self, spelling: &str) -> Result<ResolvedPackage, vibe_app::AppError> {
         resolve_package(
             &self.settings,
@@ -216,6 +224,8 @@ pub(super) fn operation<'a>(
         interrupt: observe.interrupt(),
         agent: vibe_app::AgentHooks::default(),
         resolver: None,
+        resolver_scope: vibe_app::ResolverScope::Caller,
+        source_reader: Some(&super::project::read_saved_source as vibe_app::SavedSourceReader<'_>),
         environment: observe.environment.as_deref(),
         search_path: observe.search_path.as_deref(),
     }
@@ -240,24 +250,28 @@ pub(super) fn request(
     library: Option<String>,
     force: bool,
     steps: &AppStepArgs,
-) -> InstallRequest {
+) -> Result<InstallRequest> {
     let start = match (&steps.from_step, steps.resume) {
         (Some(step), _) => Start::FromStep(step.clone()),
         (None, true) => Start::Resume,
         (None, false) => Start::Fresh,
     };
-    InstallRequest {
+    Ok(InstallRequest {
         library,
         force,
         start,
         keep_work: steps.keep_work,
-        ..plan_request(choice, &steps.choice)
-    }
+        ..plan_request(choice, &steps.choice)?
+    })
 }
 
 /// The selection and wizard answers of `vibe app plan`.
-pub(super) fn plan_request(choice: InstallChoice, answers: &AppChoiceArgs) -> InstallRequest {
-    InstallRequest {
+pub(super) fn plan_request(
+    choice: InstallChoice,
+    answers: &AppChoiceArgs,
+) -> Result<InstallRequest> {
+    Ok(InstallRequest {
+        configuration: super::configuration::read(answers)?,
         choice,
         library: None,
         force: false,
@@ -270,13 +284,13 @@ pub(super) fn plan_request(choice: InstallChoice, answers: &AppChoiceArgs) -> In
         accept_license: answers.accept_license,
         start: Start::Fresh,
         ..InstallRequest::default()
-    }
+    })
 }
 
 /// `vibe app plan` and `install --plan-only`: JSON or text on stdout.
 pub(crate) fn render_plan(ctx: &output::Context, plan: &Plan) -> Result<()> {
     if ctx.is_json() {
-        return ctx.emit_json(&plan.to_wire());
+        return ctx.emit_json(&plan.to_wire()?);
     }
     ctx.block(&super::plan_text::render(plan, ctx.invoked_by()));
     Ok(())
@@ -332,7 +346,7 @@ pub fn install(
     };
     let request = InstallRequest {
         hidden: args.hidden,
-        ..request(choice, args.library, args.force, &args.steps)
+        ..request(choice, args.library, args.force, &args.steps)?
     };
     let agents = AgentSetup::new(ctx, args.agent.as_deref(), args.assume_yes)?;
     let packages = Packages {
@@ -348,6 +362,7 @@ pub fn install(
         let operation = OperationContext {
             agent: agents.hooks(),
             resolver: Some(&resolver),
+            resolver_scope: packages.scope(),
             ..operation(ctx, &settings, offline, &proxy_image, None, &observe)
         };
         let plan = vibe_app::plan(&operation, &resolved, &request)?;
@@ -360,6 +375,7 @@ pub fn install(
         let operation = OperationContext {
             agent: agents.hooks(),
             resolver: Some(&resolver),
+            resolver_scope: packages.scope(),
             ..operation(ctx, &settings, offline, &proxy_image, Some(&show), &observe)
         };
         report_parked(ctx, vibe_app::install(&operation, &resolved, &request))
@@ -413,7 +429,7 @@ pub(crate) fn update_one(
     };
     let request = InstallRequest {
         purge_previous: args.purge_previous,
-        ..request(choice, args.library.clone(), args.force, &args.steps)
+        ..request(choice, args.library.clone(), args.force, &args.steps)?
     };
     let agents = AgentSetup::new(ctx, args.agent.as_deref(), args.assume_yes)?;
     let packages = Packages {
@@ -430,6 +446,7 @@ pub(crate) fn update_one(
         let operation = OperationContext {
             agent: agents.hooks(),
             resolver: Some(&resolver),
+            resolver_scope: packages.scope(),
             ..operation(
                 ctx,
                 &settings,

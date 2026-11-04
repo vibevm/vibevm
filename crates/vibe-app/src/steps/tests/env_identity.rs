@@ -51,6 +51,8 @@ fn runtime_refuses_programmatic_plan_collisions_without_values_or_work_publicati
         interrupt: None,
         agent: AgentHooks::default(),
         resolver: None,
+        resolver_scope: crate::ResolverScope::Caller,
+        source_reader: None,
         environment: None,
         search_path: None,
     };
@@ -78,6 +80,7 @@ fn runtime_refuses_programmatic_plan_collisions_without_values_or_work_publicati
             &resolved,
             &plan,
             RunFlags {
+                operation: None,
                 command: Command::Install,
                 start: Start::Fresh,
                 force: false,
@@ -111,6 +114,7 @@ fn runtime_refuses_programmatic_plan_collisions_without_values_or_work_publicati
                 &resolved,
                 &plan,
                 RunFlags {
+                    operation: None,
                     command: Command::Install,
                     start: Start::Fresh,
                     force: false,

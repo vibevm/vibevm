@@ -23,9 +23,18 @@ pub(super) fn show(
     package: &str,
     offline: bool,
     steps_only: bool,
+    configuration: bool,
 ) -> Result<()> {
     let settings = global::settings_root()?;
     let resolved = global::resolve_package(&settings, registry, embedded_root, package, offline)?;
+    if configuration {
+        let document = vibe_app::configuration::describe(&resolved);
+        if ctx.is_json() {
+            return ctx.emit_json(&document);
+        }
+        println!("{}", serde_json::to_string_pretty(&document)?);
+        return Ok(());
+    }
     let document = vibe_app::describe(&resolved)?;
     if ctx.is_json() {
         return ctx.emit_json(&document);

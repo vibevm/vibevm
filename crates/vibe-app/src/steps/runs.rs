@@ -83,7 +83,11 @@ impl RunRecord {
         };
         run.write_json("run.json", &run.record)?;
         if let Some(plan) = plan {
-            run.write_json("plan.json", &plan.to_wire())?;
+            if plan.configuration.is_some() {
+                run.write_json("plan.json", &plan.to_configuration_wire()?)?;
+            } else {
+                run.write_json("plan.json", &plan.to_wire()?)?;
+            }
         }
         Ok(run)
     }
@@ -316,6 +320,7 @@ mod tests {
         fs::create_dir_all(log.parent().unwrap()).unwrap();
         fs::write(&log, "built\n").unwrap();
         first.steps(&StepsFile {
+            operation: None,
             package: package.clone(),
             option: "main".into(),
             features: Vec::new(),

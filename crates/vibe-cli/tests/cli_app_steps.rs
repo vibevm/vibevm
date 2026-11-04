@@ -325,7 +325,7 @@ fn a_step_list_plans_installs_fails_resumes_and_restarts() {
     assert!(error.contains("exited with code 4"), "{error}");
     let work = user.settings.join(WORK);
     let state: Value = serde_json::from_slice(&fs::read(work.join("steps.json")).unwrap()).unwrap();
-    assert_eq!(state["protocol"], "vibe-app-steps/1");
+    assert_eq!(state["protocol"], "vibe-app-steps/2");
     assert_eq!(state["steps"][0]["outcome"], "done");
     assert_eq!(state["steps"][1]["outcome"], "skipped");
     assert_eq!(state["steps"][2]["outcome"], "failed");
@@ -693,7 +693,10 @@ fn keep_work_keeps_the_work_directory_for_a_later_from_step_and_app_work_cleans_
     ok(&fixture.app(&user, &["install", "-g"], name, &["--keep-work"]));
     let listed = ok(&fixture.vibe(&user, &["app", "work", "-g"]));
     assert!(listed.contains(KEY), "{listed}");
-    assert!(listed.contains(&format!("{KEY}  done · ")), "{listed}");
+    assert!(
+        listed.contains(&format!("{KEY}  done; operation ")) && listed.contains("(complete)"),
+        "{listed}"
+    );
     let cleaned = ok(&fixture.vibe(&user, &["app", "work", "-g", name, "--clean"]));
     assert!(
         cleaned.contains(&format!("removed {}", work.display())) && cleaned.contains("freed "),

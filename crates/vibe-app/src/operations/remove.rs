@@ -65,7 +65,8 @@ pub fn uninstall(
     spelling: &str,
     request: &RemoveRequest,
 ) -> Result<Removal, AppError> {
-    let _lock = ctx.settings.lock()?;
+    let held = ctx.settings.lock()?;
+    let lock = &held;
     let index = Index::load(ctx.settings)?;
     let storage = Storage::load(ctx.settings)?;
     let (key, _) = installed(ctx.settings, &index, spelling)?;
@@ -88,7 +89,7 @@ pub fn uninstall(
     }
     let mut outcome = None;
     for (doomed, _) in &planned {
-        let removed = remove_locked(ctx, doomed, request.force)?;
+        let removed = remove_locked(lock, ctx, doomed, request.force)?;
         if *doomed == key {
             outcome = Some(removed);
         }
@@ -125,7 +126,8 @@ pub fn uninstall(
 /// previous installation (`PROP-065#uninstall-tree`,
 /// `#update-and-rollback`); a manual installation is never removed.
 pub fn autoremove(ctx: &OperationContext<'_>, plan_only: bool) -> Result<Removal, AppError> {
-    let _lock = ctx.settings.lock()?;
+    let held = ctx.settings.lock()?;
+    let lock = &held;
     let index = Index::load(ctx.settings)?;
     let storage = Storage::load(ctx.settings)?;
     let planned = tree::autoremove_order(&index);
@@ -136,7 +138,7 @@ pub fn autoremove(ctx: &OperationContext<'_>, plan_only: bool) -> Result<Removal
     };
     if !plan_only {
         for (doomed, _) in &planned {
-            remove_locked(ctx, doomed, false)?;
+            remove_locked(lock, ctx, doomed, false)?;
         }
     }
     Ok(Removal {
@@ -156,7 +158,8 @@ pub fn remove_unrecorded(
     ctx: &OperationContext<'_>,
     recorded: &dyn Fn(&PackageCoordinate) -> bool,
 ) -> Result<Vec<Outcome>, AppError> {
-    let _lock = ctx.settings.lock()?;
+    let held = ctx.settings.lock()?;
+    let lock = &held;
     let index = Index::load(ctx.settings)?;
     let mut doomed: BTreeSet<String> = index
         .installations
@@ -193,7 +196,7 @@ pub fn remove_unrecorded(
     }
     order
         .iter()
-        .map(|key| remove_locked(ctx, key, false))
+        .map(|key| remove_locked(lock, ctx, key, false))
         .collect()
 }
 
@@ -223,9 +226,19 @@ fn report(
 /// payload, its icon copies (`PROP-059#menu`), then the proxies. An external
 /// root is never deleted.
 pub(crate) fn remove_locked(
+    lock: &crate::MutationLock,
     ctx: &OperationContext<'_>,
     key: &str,
     force: bool,
+) -> Result<Outcome, AppError> {
+    remove_with_boundary(lock, ctx, key, force, None)
+}
+pub(super) fn remove_with_boundary(
+    lock: &crate::MutationLock,
+    ctx: &OperationContext<'_>,
+    key: &str,
+    force: bool,
+    before_effect: Option<&dyn Fn() -> Result<(), AppError>>,
 ) -> Result<Outcome, AppError> {
     let mut index = Index::load(ctx.settings)?;
     let storage = Storage::load(ctx.settings)?;
@@ -275,6 +288,9 @@ pub(crate) fn remove_locked(
         &installation.option,
         None,
     )?;
+    if let Some(before) = before_effect {
+        before()?;
+    }
     if let Some(root) = root.as_deref() {
         undo_authored(ctx, &installation, &undo, force, root, &mut record)?;
     }
@@ -318,9 +334,10 @@ pub(crate) fn remove_locked(
         });
     }
     normalize_slots(&mut index);
-    index.save(
+    index.save_locked(
         ctx.settings,
         &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Removed, key.clone()),
+        lock,
     )?;
     // The user layer follows the inventory: this package's keys leave every
     // collection, both pinned lists, the overrides and the usage facts, and
@@ -340,11 +357,12 @@ pub(crate) fn remove_locked(
             .join(installation.package.directory_name()),
     );
     crate::icons::remove_package_icons(ctx.settings, &installation.package);
-    proxies::sync(
+    proxies::sync_locked(
         ctx.settings,
         &reserved,
         &reserved_names(&index),
         ctx.proxy_image,
+        lock,
     )?;
     Ok(Outcome {
         command: Command::Uninstall,
@@ -396,6 +414,7 @@ pub(crate) fn undo_authored(
 ) -> Result<(), AppError> {
     let key = installation.package.key();
     let mut state = StepsFile {
+        operation: None,
         package: installation.package.clone(),
         option: installation.option.clone(),
         features: installation.features.clone(),

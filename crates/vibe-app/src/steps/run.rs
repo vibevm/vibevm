@@ -29,6 +29,7 @@ use super::state::{Start, StepState, StepsFile};
 use super::template::Vars;
 use super::work::{human_bytes, tree_bytes};
 
+mod continuation;
 mod environment;
 mod projections;
 
@@ -54,6 +55,7 @@ fn writes_log(kind: &StepKind) -> bool {
 
 /// The flags one run applies to every step.
 pub(crate) struct RunFlags {
+    pub operation: Option<vibe_wire::generated::shared::ApplicationPendingTarget>,
     /// The command the run record names (`PROP-065#runs`).
     pub command: Command,
     pub start: Start,
@@ -111,7 +113,7 @@ impl<'a> Run<'a> {
             first,
             finish_resume,
             delegated,
-        } = start_point(plan, &work, &flags.start)?;
+        } = start_point(plan, &work, &flags.start, flags.operation.as_ref())?;
         let kept = |index: usize, planned: &PlannedStep| {
             index < first || (finish_resume && planned.step.phase == StepPhase::Prepare)
         };
@@ -157,7 +159,7 @@ impl<'a> Run<'a> {
             state,
             first,
             finish_resume,
-            fresh: flags.start == Start::Fresh,
+            fresh: flags.start == Start::Fresh && flags.operation.is_none(),
             opened: false,
             force: flags.force,
             update_in_place: flags.update_in_place,
@@ -235,7 +237,13 @@ impl<'a> Run<'a> {
             .collect();
         self.state
             .steps
-            .retain(|step| !again.contains(&step.id.as_str()));
+            .retain(|step| !again.contains(&step.id.as_str()) || self.delegated.contains(&step.id));
+        if let Some(operation) = &mut self.state.operation {
+            use vibe_wire::generated::shared::ApplicationPendingOperationPhase as P;
+            if matches!(operation.phase, P::Prepared | P::Dependencies | P::Removed) {
+                operation.phase = P::Running;
+            }
+        }
         self.opened = true;
         let mut record = RunRecord::open(
             self.ctx.settings,
@@ -555,6 +563,10 @@ impl<'a> Run<'a> {
         result: Result<(AuthoredCommands, Option<String>), AppError>,
         task: &ProgressTask,
     ) -> Result<(), AppError> {
+        let result = match result {
+            Err(error @ AppError::Step(StepError::ResumeMismatch { .. })) => return Err(error),
+            result => result,
+        };
         state.finished =
             Some(chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true));
         let outcome = match result {

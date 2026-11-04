@@ -13,7 +13,6 @@ use std::path::{Component, Path, PathBuf};
 
 use vibe_core::manifest::{InstallerMethod, InstallerOptionDecl, LauncherDecl};
 
-use crate::agents::AgentError;
 use crate::error::AppError;
 use crate::index::{
     AcceptedLicense, ApplicationMenu, AuthoredCommands, Installation, Lifecycle, Location, Method,
@@ -46,6 +45,7 @@ pub(super) struct Applied {
 }
 
 pub(super) struct Selected<'a> {
+    pub operation: Option<&'a vibe_wire::generated::shared::ApplicationPendingTarget>,
     pub resolved: &'a ResolvedPackage,
     pub option: &'a InstallerOptionDecl,
     pub plan: &'a Plan,
@@ -61,6 +61,35 @@ pub(super) struct Selected<'a> {
     pub keep_work: bool,
     /// The requirements' PATH entries per step.
     pub paths: StepPaths,
+}
+
+/// Existing agent consent, before pending publication/dependency/removal effects.
+/// The temporary runner is read-only; execution constructs its runner once more
+/// with actual dependency paths, without repeating the consent prompt.
+pub(super) fn admit_agents(
+    ctx: &OperationContext<'_>,
+    resolved: &ResolvedPackage,
+    plan: &Plan,
+    request: &super::InstallRequest,
+    saved: Option<&crate::steps::StepsFile>,
+) -> Result<(), AppError> {
+    let run = Run::new(
+        ctx,
+        resolved,
+        plan,
+        RunFlags {
+            operation: saved
+                .and_then(|s| s.operation.as_ref())
+                .map(|o| o.target.clone()),
+            command: Command::Install,
+            start: request.start.clone(),
+            force: request.force,
+            update_in_place: false,
+            replaces: None,
+            paths: StepPaths::default(),
+        },
+    )?;
+    run.admit_agents()
 }
 
 pub(super) fn apply(
@@ -88,6 +117,7 @@ pub(super) fn apply(
         selected.resolved,
         plan,
         RunFlags {
+            operation: selected.operation.cloned(),
             command: selected.command,
             start: selected.start.clone(),
             force: selected.force,
@@ -96,7 +126,6 @@ pub(super) fn apply(
             paths: selected.paths.clone(),
         },
     )?;
-    run.admit_agents()?;
     let derive = |root: &Path| installed_launchers(ctx, selected, root);
     let placed = match plan.result.external_root() {
         None => place_owned(storage, selected, &mut run, &derive),
@@ -119,9 +148,7 @@ pub(super) fn apply(
     // A parked finish step keeps the work directory for `--resume`, and
     // `--keep-work` keeps it for the next `--from-step` (`PROP-065#work`).
     let kept_work = selected.keep_work.then(|| run.work().to_path_buf());
-    if kept_work.is_none()
-        && !matches!(finish_failure, Some(AppError::Agent(AgentError::Parked(_))))
-    {
+    if kept_work.is_none() && finish_failure.is_none() && selected.operation.is_none() {
         retired.push(run.work().to_path_buf());
     }
     let mut steps = run.records();
@@ -166,6 +193,9 @@ pub(super) fn apply(
     }
     Ok(Applied {
         installation: Installation {
+            secret_origins: run.secret_origins(),
+            configuration: plan.configuration.clone(),
+            pending: None,
             slot: selected.resolved.application.id.clone(),
             package: selected.resolved.package.clone(),
             option: option.id.clone(),
@@ -280,7 +310,7 @@ fn place_owned(
     let directory = format!("apps/{slot}/{}", selected.resolved.package.directory_name());
     let target = crate::launch::library_path(&library_root, &directory);
     let owned_by_record = prior_owned == Some((library, directory.as_str()));
-    if target.exists() && !owned_by_record && !selected.force {
+    if target.exists() && !owned_by_record && !run.has_placement() && !selected.force {
         return Err(AppError::ForeignDirectory {
             path: target.display().to_string(),
         });
@@ -297,11 +327,15 @@ fn place_owned(
     let payload = staging.join("payload");
     let previous = staging.join("previous");
     // Resuming a parked finish step: the payload is already in place.
-    let placed_before = run.resumes_finish() && owned_by_record && target.is_dir();
+    let placed_before =
+        run.resumes_finish() && (owned_by_record || run.has_placement()) && target.is_dir();
     let placed = run.prepare(&target).and_then(|()| {
         if placed_before {
             return Ok(());
         }
+        run.operation_phase(
+            vibe_wire::generated::shared::ApplicationPendingOperationPhase::Placing,
+        )?;
         run.take_out(&payload)?;
         if target.exists() {
             fs::rename(&target, &previous)
@@ -310,11 +344,16 @@ fn place_owned(
         fs::rename(&payload, &target)
             .map_err(|source| installer::io("placing", &target, source).into())
     });
+    let placed = placed.and_then(|()| {
+        run.operation_phase(vibe_wire::generated::shared::ApplicationPendingOperationPhase::Placed)
+    });
     let launchers = placed.and_then(|()| {
         derive(&target).inspect_err(|_| {
             // Keep the payload for `--resume`; the previous one moves back.
-            let _ = fs::rename(&target, run.out());
-            let _ = fs::remove_dir_all(&target);
+            if !placed_before {
+                let _ = fs::rename(&target, run.out());
+                let _ = fs::remove_dir_all(&target);
+            }
         })
     });
     let launchers = match launchers {
@@ -328,9 +367,12 @@ fn place_owned(
     let finish_failure = match run.finish(&target) {
         Ok(failure) => failure,
         Err(error) => {
-            // Keep the payload for `--resume` when it can move back.
-            let _ = fs::rename(&target, run.out());
-            let _ = fs::remove_dir_all(&target);
+            // A resumed placed payload was not replaced by this attempt;
+            // preserve its already-published record/root on hook failure.
+            if !placed_before {
+                let _ = fs::rename(&target, run.out());
+                let _ = fs::remove_dir_all(&target);
+            }
             restore(&target, &previous);
             let _ = fs::remove_dir_all(&staging);
             return Err(error);
@@ -389,6 +431,7 @@ fn run_external(
             reason: "it is not a real directory after the installer finished".into(),
         })?;
     let launchers = derive(&root)?;
+    run.operation_phase(vibe_wire::generated::shared::ApplicationPendingOperationPhase::Placed)?;
     let failure = run.finish(&root)?;
     Ok((root, failure, launchers))
 }

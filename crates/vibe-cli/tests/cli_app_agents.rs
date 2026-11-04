@@ -120,7 +120,11 @@ fn an_unattended_agent_receives_the_envelope_and_its_answer_is_recorded() {
 
     // The external-registration argument contract.
     let work = fixture.work();
-    let run_dir = work.join("steps/fix");
+    let run_dir = PathBuf::from(
+        step(&steps_json(&newest_record(&fixture)), "fix")["agent"]["envelope"]
+            .as_str()
+            .unwrap(),
+    );
     let path = |file: &str| run_dir.join(file).display().to_string();
     assert_eq!(
         fixture.record.args(),
@@ -286,12 +290,13 @@ fn inside_a_hosting_agent_the_step_is_parked_and_resume_validates_the_answer() {
     let stdout = String::from_utf8_lossy(&output.stdout);
     assert_eq!(stdout.matches("```vibe-agent-tasks").count(), 1, "{stdout}");
     assert!(
-        stdout.contains("resume: vibe install -g --agent-mode agent org.example/hooked --registry"),
+        stdout.contains("resume: vibe app resume org.example/hooked@1.0.0 --operation "),
         "{stdout}"
     );
-    assert!(stdout.contains(" --resume\n"), "{stdout}");
+    assert!(stdout.contains(" -g\n"), "{stdout}");
     let work = fixture.work();
     let state = steps_json(&work);
+    let run_dir = PathBuf::from(step(&state, "fix")["agent"]["envelope"].as_str().unwrap());
     assert_eq!(step(&state, "payload")["outcome"], "done");
     assert_eq!(step(&state, "fix")["outcome"], "delegated");
     assert_eq!(step(&state, "fix")["agent"]["status"], "parked");
@@ -304,7 +309,7 @@ fn inside_a_hosting_agent_the_step_is_parked_and_resume_validates_the_answer() {
     let text = fs::read_to_string(&task).unwrap();
     assert!(text.contains("Keep $HOME untouched."), "{text}");
     assert!(
-        text.contains(&work.join("steps/fix/result.json").display().to_string()),
+        text.contains(&run_dir.join("result.json").display().to_string()),
         "{text}"
     );
     assert!(stdout.contains(&task.display().to_string()), "{stdout}");
@@ -325,15 +330,17 @@ fn inside_a_hosting_agent_the_step_is_parked_and_resume_validates_the_answer() {
         (Some(75), Some("delegated"))
     );
     assert_eq!(envelope["tasks"].as_array().unwrap().len(), 1);
-    assert!(envelope["resume"].as_str().unwrap().ends_with("--resume"));
-    assert_eq!(
-        envelope["run"],
-        work.join("steps/fix").display().to_string()
+    assert!(
+        envelope["resume"]
+            .as_str()
+            .unwrap()
+            .starts_with("vibe app resume org.example/hooked@1.0.0 --operation ")
     );
+    assert_eq!(envelope["run"], run_dir.display().to_string());
 
     // The hosting agent answers; --resume validates it and continues.
     fs::write(
-        work.join("steps/fix/result.json"),
+        run_dir.join("result.json"),
         r#"{"protocol":"vibe-agent-hook-result/1","status":"ok","message":"done by the host"}"#,
     )
     .unwrap();
@@ -362,7 +369,12 @@ fn a_parked_finish_step_resumes_against_the_placed_payload() {
     let record = &fixture.index()["installations"][KEY];
     assert_eq!(record["steps"][1]["outcome"], "delegated");
     let work = fixture.work();
-    fs::write(work.join("steps/fix/result.json"), r#"{"status":"ok"}"#).unwrap();
+    let run_dir = PathBuf::from(
+        step(&steps_json(&work), "fix")["agent"]["envelope"]
+            .as_str()
+            .unwrap(),
+    );
+    fs::write(run_dir.join("result.json"), r#"{"status":"ok"}"#).unwrap();
     ok(&run(fixture.app(
         &["install", "-g", "--agent-mode", "agent"],
         &["--resume"],

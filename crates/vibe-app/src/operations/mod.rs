@@ -6,11 +6,21 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#alternatives");
 
 mod apply;
+pub(crate) mod import;
+mod install;
+mod planning;
+pub use import::{import_cohort, import_resume_info, resume_import};
+pub use install::install;
+use install::install_locked;
+pub use planning::{configuration_plan, plan};
+use planning::{plan_option, plan_option_with_modes};
 mod deps;
 mod lifecycle;
 mod listing;
 mod modify;
 mod outdated;
+pub(crate) mod pending;
+pub use pending::{ResumeInfo, ResumeRequest, resume, resume_info};
 mod remove;
 mod tree;
 mod update;
@@ -34,19 +44,19 @@ use crate::agents::AgentHooks;
 use crate::alternatives::{check_reservation, reserved_names};
 use crate::environment::UserEnvironment;
 use crate::error::{AppError, ResolveError};
-use crate::index::{Index, Installation, Lifecycle, Location, Mark, Method};
+use crate::index::{Index, Installation, Location, Mark, Method, PackageCoordinate};
 use crate::installer::{Interrupt, StepLogs, StepPanel};
 use crate::proxies;
 use crate::resolve::ResolvedPackage;
 use crate::select::{Chooser, InstallChoice, select_option};
 use crate::settings::SettingsRoot;
 use crate::steps::{
-    self, FeatureChooser, FeatureRequest, HostFacts, LicensePrompt, ParameterPrompt, Plan,
-    PlanInput, Previous, Prompts, RequiredBy, RequirementResolver, Start,
+    FeatureChooser, FeatureRequest, HostFacts, LicensePrompt, ParameterPrompt, Plan, RequiredBy,
+    Start,
 };
 use crate::storage::{Availability, Storage};
 
-use apply::{Applied, Mode, Selected};
+use apply::Applied;
 
 /// What every mutating operation needs from its caller.
 #[derive(Clone, Copy)]
@@ -96,6 +106,9 @@ pub struct OperationContext<'a> {
     /// (`PROP-065#app-dependencies`); absent, only installed requirements
     /// are usable.
     pub resolver: Option<PackageResolver<'a>>,
+    pub resolver_scope: ResolverScope<'a>,
+    /// Re-admit a retained project-slot source through its project/lock owner.
+    pub source_reader: Option<SavedSourceReader<'a>>,
     /// The durable user environment env steps change (`PROP-065#env-step`).
     pub environment: Option<&'a dyn UserEnvironment>,
     /// The caller's PATH, behind the requirements a step's child sees
@@ -103,8 +116,28 @@ pub struct OperationContext<'a> {
     pub search_path: Option<&'a OsStr>,
 }
 
+/// Existing package-lookup owners, retained for descendants not planned before a park.
+#[derive(Debug, Clone, Copy, Default)]
+#[specmark::spec(
+    documents = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION"
+)]
+pub enum ResolverScope<'a> {
+    #[default]
+    Caller,
+    Registry(&'a Path),
+    Chain {
+        embedded: Option<&'a Path>,
+    },
+    Project(&'a Path),
+}
+
 /// Resolves one application package spelling to its package tree.
 pub type PackageResolver<'a> = &'a dyn Fn(&str) -> Result<ResolvedPackage, AppError>;
+/// Typed callback for source owners outside the app crate; never a newest lookup.
+pub type SavedSourceReader<'a> = &'a dyn Fn(
+    &vibe_wire::generated::shared::ApplicationPendingSource,
+    &PackageCoordinate,
+) -> Result<ResolvedPackage, AppError>;
 
 impl OperationContext<'_> {
     /// Where child output goes besides the run log.
@@ -122,6 +155,8 @@ impl OperationContext<'_> {
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub struct InstallRequest {
+    /// Complete common input; absent maintenance input reuses the retained original.
+    pub configuration: Option<crate::configuration::ConfigurationSubmission>,
     pub choice: InstallChoice,
     pub library: Option<String>,
     pub force: bool,
@@ -175,110 +210,6 @@ pub struct Outcome {
     pub work: Option<PathBuf>,
 }
 
-/// Install one app package into the current user's settings root: its
-/// requirements first (`PROP-065#app-dependencies`), then the package.
-pub fn install(
-    ctx: &OperationContext<'_>,
-    resolved: &ResolvedPackage,
-    request: &InstallRequest,
-) -> Result<Outcome, AppError> {
-    let _lock = ctx.settings.lock()?;
-    install_locked(ctx, resolved, request, &mut Vec::new())
-}
-
-/// [`install`] under the held lock; `stack` names the installations in
-/// progress further up, so a requirement cycle is refused.
-fn install_locked(
-    ctx: &OperationContext<'_>,
-    resolved: &ResolvedPackage,
-    request: &InstallRequest,
-    stack: &mut Vec<String>,
-) -> Result<Outcome, AppError> {
-    let key = resolved.package.key();
-    deps::enter(stack, &key)?;
-    let result = install_entered(ctx, resolved, request, stack);
-    stack.pop();
-    result
-}
-
-fn install_entered(
-    ctx: &OperationContext<'_>,
-    resolved: &ResolvedPackage,
-    request: &InstallRequest,
-    stack: &mut Vec<String>,
-) -> Result<Outcome, AppError> {
-    let index = Index::load(ctx.settings)?;
-    let storage = Storage::load(ctx.settings)?;
-    let option = choose(ctx, resolved, &request.choice)?;
-    let key = resolved.package.key();
-    admit(ctx, &index, &[key.as_str()], resolved, &option)?;
-    let prior = index.installations.get(&key).cloned();
-    if let Some(prior) = &prior {
-        ensure_available(&key, prior, &storage)?;
-    }
-    let plan = plan_option(ctx, resolved, &option, request, None, &index)?;
-    let paths = deps::install_required(ctx, &plan, request.accept_license, stack)?;
-    let mut applied = apply::apply(
-        ctx,
-        &storage,
-        &Selected {
-            resolved,
-            option: &option,
-            plan: &plan,
-            prior: prior.as_ref(),
-            library: request.library.as_deref(),
-            force: request.force,
-            mode: Mode::Install,
-            start: &request.start,
-            command: Command::Install,
-            replaces: None,
-            keep_work: request.keep_work,
-            paths,
-        },
-    )?;
-    let kept = prior.as_ref().map(|prior| &prior.lifecycle);
-    applied.installation.lifecycle = Lifecycle {
-        hidden: request.hidden,
-        mark: match (request.mark, kept.map(|kept| kept.mark)) {
-            (Mark::Auto, Some(Mark::Manual)) => Mark::Manual,
-            (mark, _) => mark,
-        },
-        requires: deps::recorded(&plan),
-        env: std::mem::take(&mut applied.installation.lifecycle.env),
-        held: kept.is_some_and(|kept| kept.held),
-        replaced: None,
-        superseded_by: None,
-    };
-    if let Some(prior) = &prior {
-        retire_env(ctx, &key, prior, &applied.installation)?;
-    }
-    let replaced = prior.is_some();
-    let finish_failure = applied.finish_failure.take();
-    let mut index = Index::load(ctx.settings)?;
-    let outcome = commit(
-        ctx,
-        &storage,
-        &mut index,
-        applied,
-        None,
-        None,
-        Command::Install,
-    )?;
-    if let Some(failure) = finish_failure {
-        return Err(failure);
-    }
-    Ok(Outcome {
-        message: format!(
-            "{} {}{} via installer `{}`",
-            if replaced { "replaced" } else { "installed" },
-            outcome.key,
-            if request.hidden { " hidden" } else { "" },
-            option.id
-        ),
-        ..outcome
-    })
-}
-
 /// Remove the environment entries the previous record of the same key
 /// applied and the new one no longer does (`PROP-065#env-step`).
 fn retire_env(
@@ -301,70 +232,14 @@ fn retire_env(
     remove::rollback_env(ctx, key, "env", &stale)
 }
 
-/// Plan one installation without downloading or running anything
-/// (`vibe app plan`, `install --plan-only`): the choice, features,
-/// parameters and license acceptance of `request`.
-pub fn plan(
-    ctx: &OperationContext<'_>,
-    resolved: &ResolvedPackage,
-    request: &InstallRequest,
-) -> Result<Plan, AppError> {
-    let option = choose(ctx, resolved, &request.choice)?;
-    let index = Index::load(ctx.settings)?;
-    plan_option(ctx, resolved, &option, request, None, &index)
-}
-
-/// Compute the plan of the selected option and show it.
-fn plan_option(
-    ctx: &OperationContext<'_>,
-    resolved: &ResolvedPackage,
-    option: &InstallerOptionDecl,
-    request: &InstallRequest,
-    previous: Option<Previous<'_>>,
-    index: &Index,
-) -> Result<Plan, AppError> {
-    let owner = resolved.package.key();
-    let requirements = |spelling: &str, scope, step: Option<&str>| {
-        deps::resolve_requirement(
-            ctx,
-            index,
-            &owner,
-            spelling,
-            scope,
-            step,
-            request.accept_license,
-        )
-    };
-    let plan = steps::plan(&PlanInput {
-        resolved,
-        option,
-        request: &request.features,
-        parameters: &request.parameters,
-        accept_license: request.accept_license,
-        previous,
-        settings: ctx.settings,
-        facts: ctx.facts,
-        offline: ctx.offline,
-        attended: ctx.chooser.is_some(),
-        prompts: Prompts {
-            chooser: ctx.chooser,
-            features: ctx.feature_chooser,
-            parameter: ctx.parameter_prompt,
-            license: ctx.license_prompt,
-        },
-        agent: ctx.agent,
-        requirements: Some(&requirements as RequirementResolver<'_>),
-        required_by: request.required_by.clone(),
-    })?;
-    if let Some(show) = ctx.on_plan {
-        show(&plan);
-    }
-    Ok(plan)
-}
-
 /// Record an applied installation, refresh its icon copies, apply the slot
 /// default rules, write the index, then delete retired directories and the
 /// copies of a replaced key (a failure leaves an orphan).
+struct Publication<'a> {
+    lock: &'a crate::MutationLock,
+    command: Command,
+    preserve_default: bool,
+}
 fn commit(
     ctx: &OperationContext<'_>,
     storage: &Storage,
@@ -372,8 +247,13 @@ fn commit(
     applied: Applied,
     replaces: Option<String>,
     supersede: Option<String>,
-    command: Command,
+    publication: Publication<'_>,
 ) -> Result<Outcome, AppError> {
+    let Publication {
+        lock,
+        command,
+        preserve_default,
+    } = publication;
     let reserved = reserved_names(index);
     let work = applied.work;
     let installation = applied.installation;
@@ -403,7 +283,8 @@ fn commit(
         .default_of(&slot)
         .and_then(|default| index.installations.get(default))
         .map(|record| record.package.clone());
-    let take_default = !installation.lifecycle.hidden
+    let take_default = !preserve_default
+        && !installation.lifecycle.hidden
         && match (&current_default, command) {
             (None, _) => true,
             (Some(package), Command::Update) => package.same_package(&installation.package),
@@ -422,9 +303,12 @@ fn commit(
             crate::catalog::EventKind::Updated
         }
     };
-    index.save(
+    let image = proxies::for_publication(ctx.settings, index, ctx.proxy_image)?;
+    index.publish_locked(
         ctx.settings,
         &crate::catalog::HomeEvent::about(changed, key.clone()),
+        lock,
+        image.as_ref(),
     )?;
     // The user layer follows the inventory: the collection this package's
     // `menu_group` names gains its menu launchers (`PROP-059#launcher-catalog`).
@@ -437,11 +321,13 @@ fn commit(
     if let Some(package) = dropped {
         crate::icons::remove_package_icons(ctx.settings, &package);
     }
-    proxies::sync(
+    proxies::sync_captured(
         ctx.settings,
+        &ctx.settings.proxy_dir(),
         &reserved,
         &reserved_names(index),
-        ctx.proxy_image,
+        image.as_ref(),
+        lock,
     )?;
     Ok(Outcome {
         command,

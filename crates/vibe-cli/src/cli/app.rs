@@ -35,6 +35,11 @@ fn parameter_value(text: &str) -> Result<(String, String), String> {
 /// (PROP-065 `#features`, `#profiles`, `#parameters`, `#license`).
 #[derive(Debug, Clone, Default, clap::Args)]
 pub struct AppChoiceArgs {
+    /// Complete common configuration input; - reads standard input once.
+    #[arg(long, value_name = "FILE")]
+    pub configuration_input: Option<std::path::PathBuf>,
+    #[arg(skip)]
+    pub parsed_configuration: Option<vibe_app::configuration::ConfigurationSubmission>,
     /// Choose an application installer feature by ID; repeatable.
     #[arg(long = "feature", value_name = "ID")]
     pub feature: Vec<String>,
@@ -202,6 +207,9 @@ pub enum AppCommand {
     /// or running anything (PROP-065 `#plan`).
     Plan {
         package: String,
+        /// Emit common evaluation and execution only when fully resolved.
+        #[arg(long)]
+        configuration: bool,
         /// Resolve from this local registry instead of the configured registries.
         #[arg(long)]
         registry: Option<std::path::PathBuf>,
@@ -236,9 +244,21 @@ pub enum AppCommand {
     /// results, launchers, features and steps (PROP-065 `#describe`).
     Describe {
         package: String,
+        /// Describe separate package and installer common configurations.
+        #[arg(long)]
+        configuration: bool,
         /// Resolve from this local registry instead of the configured registries.
         #[arg(long)]
         registry: Option<std::path::PathBuf>,
+    },
+
+    /// Continue an exact retained operation; --set supplies ephemeral secrets only.
+    Resume {
+        package: String,
+        #[arg(long, value_name = "ID")]
+        operation: String,
+        #[arg(long="set",value_name="ID=VALUE",value_parser=parameter_value)]
+        parameters: Vec<(String, String)>,
     },
 
     /// List the run records of an application package newest first, with
@@ -259,6 +279,9 @@ pub enum AppCommand {
         /// omitted, every kept directory of the home is listed.
         #[arg(group = "kept")]
         package: Option<String>,
+        /// Inspect or clean one exact finite import cohort, including its owned attempts.
+        #[arg(long, value_name = "OPERATION_ID", group = "kept")]
+        import: Option<String>,
         /// Delete the selected work directory; needs a package or `--all`.
         #[arg(long, requires = "kept")]
         clean: bool,

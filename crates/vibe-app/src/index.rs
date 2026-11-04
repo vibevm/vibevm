@@ -14,13 +14,14 @@ use vibe_core::manifest::{
     IconDecl, InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl,
     RequirementScope, ShellInterpreter, StepPhase,
 };
-use vibe_wire::generated::application::e2::index as wire;
+use vibe_wire::generated::application::e3::index as wire;
 
 use crate::error::StateError;
 use crate::settings::{SettingsRoot, io, write_atomic};
 
 /// The protocol tag of the current index format.
-pub const INDEX_PROTOCOL: &str = "vibe-user-applications/3";
+pub const INDEX_PROTOCOL: &str = "vibe-user-applications/4";
+const LEGACY_PROTOCOL: &str = "vibe-user-applications/3";
 
 /// `group/name@version` of one package.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -167,6 +168,13 @@ pub struct AuthoredCommands {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
 pub struct Installation {
+    /// Captured value-free secret origins; absent/empty legacy state is unknown history.
+    pub secret_origins:
+        BTreeMap<String, vibe_wire::generated::shared::ConfigurationParameterOrigin>,
+    /// Original common input, semantic basis and effective data; absent in legacy records.
+    pub configuration: Option<crate::configuration::ConfigurationRecord>,
+    /// An unfinished operation whose completion must precede installed shortcuts.
+    pub pending: Option<vibe_wire::generated::shared::ApplicationPendingTarget>,
     pub slot: String,
     pub package: PackageCoordinate,
     pub option: String,
@@ -194,6 +202,12 @@ pub struct Installation {
     pub steps: Vec<StepRecord>,
     /// Exposure, marks, requirements, environment and update state.
     pub lifecycle: Lifecycle,
+}
+
+impl Installation {
+    pub(crate) fn identity_record(&self) -> wire::Installation {
+        wire_form::identity_record(self)
+    }
 }
 
 /// The `[application]` menu metadata an installation keeps after its package
@@ -328,11 +342,16 @@ pub struct Index {
 impl Index {
     /// Read the index; an absent file is an empty inventory.
     pub fn load(settings: &SettingsRoot) -> Result<Self, StateError> {
+        Self::load_with_protocol(settings).map(|(index, _)| index)
+    }
+
+    /// Observe the persisted tag independently of lossless writer eligibility.
+    pub(crate) fn load_with_protocol(settings: &SettingsRoot) -> Result<(Self, bool), StateError> {
         let path = settings.index_path();
         let bytes = match fs::read(&path) {
             Ok(bytes) => bytes,
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
-                return Ok(Self::default());
+                return Ok((Self::default(), false));
             }
             Err(source) => return Err(io("reading", &path, source)),
         };
@@ -340,30 +359,38 @@ impl Index {
             path: path.display().to_string(),
             reason,
         };
-        let document: wire::ApplicationIndex =
-            serde_json::from_slice(&bytes).map_err(|error| invalid(error.to_string()))?;
-        Self::from_wire(document).map_err(invalid)
+        Self::parse_with_protocol(&bytes).map_err(invalid)
     }
 
-    /// Replace the index atomically (write a sibling, rename over it) and
-    /// increment the catalog revision with `event`, so a client that
-    /// compares one number never misses a change to the inventory
-    /// (`PROP-059#launcher-catalog`) and a watcher sees what it was
-    /// (`PROP-059#launcher-runtime`).
-    pub fn save(
-        &self,
-        settings: &SettingsRoot,
-        event: &crate::catalog::HomeEvent,
-    ) -> Result<(), StateError> {
-        let path = settings.index_path();
-        let mut bytes =
-            serde_json::to_vec_pretty(&self.to_wire()).map_err(|error| StateError::Index {
-                path: path.display().to_string(),
-                reason: error.to_string(),
-            })?;
-        bytes.push(b'\n');
-        write_atomic(&path, &bytes)?;
-        crate::catalog::bump_revision(settings, event).map(|_| ())
+    /// Read the exact protocol's closed schema; loading never writes a migration.
+    pub fn parse(bytes: &[u8]) -> Result<Self, String> {
+        Self::parse_with_protocol(bytes).map(|(index, _)| index)
+    }
+
+    fn parse_with_protocol(bytes: &[u8]) -> Result<(Self, bool), String> {
+        #[derive(serde::Deserialize)]
+        struct Header {
+            protocol: String,
+        }
+        let header: Header = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
+        let document = match header.protocol.as_str() {
+            LEGACY_PROTOCOL => upgrade::promote(
+                serde_json::from_slice::<
+                    vibe_wire::generated::application::e2::index::ApplicationIndex,
+                >(bytes)
+                .map_err(|e| e.to_string())?,
+            ),
+            INDEX_PROTOCOL => serde_json::from_slice(bytes).map_err(|e| e.to_string())?,
+            _ => return Err("unsupported application index protocol".into()),
+        };
+        Self::from_wire(document).map(|index| (index, header.protocol == INDEX_PROTOCOL))
+    }
+
+    /// Whether any retained data needs the current closed index4 reader.
+    pub(crate) fn requires_reader_four(&self) -> bool {
+        self.installations.values().any(|r| {
+            r.configuration.is_some() || r.pending.is_some() || !r.secret_origins.is_empty()
+        })
     }
 
     pub fn default_of(&self, slot: &str) -> Option<&str> {
@@ -387,9 +414,19 @@ impl Index {
         found
     }
 
+    /// One record without derived reverse edges for retained operation identity.
+    pub(crate) fn identity_record(&self, key: &str) -> Option<wire::Installation> {
+        self.installations.get(key).map(wire_form::identity_record)
+    }
+
     pub fn to_wire(&self) -> wire::ApplicationIndex {
         wire::ApplicationIndex {
-            protocol: INDEX_PROTOCOL.into(),
+            protocol: if self.requires_reader_four() {
+                INDEX_PROTOCOL
+            } else {
+                LEGACY_PROTOCOL
+            }
+            .into(),
             installations: self
                 .installations
                 .iter()
@@ -411,11 +448,20 @@ impl Index {
     }
 
     pub fn from_wire(document: wire::ApplicationIndex) -> Result<Self, String> {
-        if document.protocol != INDEX_PROTOCOL {
+        if document.protocol != INDEX_PROTOCOL && document.protocol != LEGACY_PROTOCOL {
             return Err(format!(
                 "protocol `{}` is not `{INDEX_PROTOCOL}`",
                 document.protocol
             ));
+        }
+        if document.protocol == LEGACY_PROTOCOL
+            && document.installations.values().any(|r| {
+                r.configuration.is_some() || r.pending.is_some() || !r.secret_origins.is_empty()
+            })
+        {
+            return Err(
+                "protocol3 cannot retain common configuration or pending operation state".into(),
+            );
         }
         let mut installations = BTreeMap::new();
         for (key, record) in document.installations {
@@ -451,6 +497,9 @@ impl Index {
 
 #[path = "index/launcher_wire.rs"]
 mod launcher_wire;
+mod publication;
+#[path = "index/upgrade.rs"]
+mod upgrade;
 #[path = "index/wire.rs"]
 mod wire_form;
 

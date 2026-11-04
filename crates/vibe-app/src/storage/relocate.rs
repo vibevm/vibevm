@@ -45,7 +45,8 @@ pub struct Moved {
 /// assert!(error.unwrap_err().to_string().contains("not_installed"));
 /// ```
 pub fn relocate(settings: &SettingsRoot, spelling: &str, to: &str) -> Result<Moved, AppError> {
-    let _lock = settings.lock()?;
+    let held = settings.lock()?;
+    let lock = &held;
     let mut index = Index::load(settings)?;
     let storage = Storage::load(settings)?;
     let (key, record) = installed(settings, &index, spelling)?;
@@ -98,9 +99,10 @@ pub fn relocate(settings: &SettingsRoot, spelling: &str, to: &str) -> Result<Mov
             directory,
         };
     }
-    index.save(
+    index.save_locked(
         settings,
         &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Updated, key.clone()),
+        lock,
     )?;
     let mut message = format!("moved {key} from library `{from}` to `{to}`");
     if let Err(error) = fs::remove_dir_all(&source) {
@@ -233,6 +235,9 @@ pub(crate) mod tests {
 
     pub(crate) fn owned_record(library: &str, directory: &str) -> Installation {
         Installation {
+            secret_origins: Default::default(),
+            configuration: None,
+            pending: None,
             slot: "tool".into(),
             package: PackageCoordinate {
                 group: "org.example".into(),

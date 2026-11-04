@@ -7,6 +7,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#principle");
 
 mod agent;
+mod configuration_view;
 mod env;
 mod envelope;
 mod features;
@@ -22,6 +23,7 @@ mod state;
 mod template;
 mod work;
 
+pub(crate) use agent::mode_of as agent_mode;
 pub(crate) use env::StepPaths;
 pub use features::{FeatureRequest, FeatureResolution, Implied, ImpliedRule, resolve_features};
 pub(crate) use params::admit_license;
@@ -33,7 +35,7 @@ pub(crate) use runs::{RunOutcome, RunRecord};
 pub use runs::{prune_runs, runs};
 pub use state::Start;
 pub(crate) use state::{StepState, StepsFile};
-pub use work::{clean_work, human_bytes, work};
+pub use work::{clean_import, clean_work, human_bytes, work, work_import};
 
 #[cfg(test)]
 mod tests;

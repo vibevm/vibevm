@@ -25,7 +25,6 @@ pub(crate) struct AgentSetup {
     assume_yes: bool,
     show: bool,
     attended: bool,
-    resume: String,
 }
 
 impl AgentSetup {
@@ -43,8 +42,47 @@ impl AgentSetup {
             assume_yes: assume_yes || ctx.is_unattended(),
             show: !ctx.is_machine_progress(),
             attended: global::attended(ctx),
-            resume: resume_command(std::env::args().skip(1)),
         })
+    }
+
+    /// Restore the declared delivery posture without serializing executor argv or credentials.
+    pub(crate) fn for_resume(ctx: &output::Context, info: &vibe_app::ResumeInfo) -> Result<Self> {
+        if info.cleanup_only {
+            return Ok(Self {
+                config: AgentsConfig::default(),
+                selected: None,
+                hosted: false,
+                assume_yes: false,
+                show: !ctx.is_machine_progress(),
+                attended: global::attended(ctx),
+            });
+        }
+        Self::for_saved(ctx, info.hosted, info.agent_external, info.agent.as_deref())
+    }
+
+    pub(crate) fn for_import(
+        ctx: &output::Context,
+        info: &vibe_wire::generated::shared::ApplicationImportContext,
+    ) -> Result<Self> {
+        Self::for_saved(ctx, info.hosted, info.agent_external, info.agent.as_deref())
+    }
+    fn for_saved(
+        ctx: &output::Context,
+        hosted: bool,
+        external: bool,
+        agent: Option<&str>,
+    ) -> Result<Self> {
+        if hosted {
+            return Ok(Self {
+                config: AgentsConfig::default(),
+                selected: None,
+                hosted: true,
+                assume_yes: ctx.is_unattended(),
+                show: !ctx.is_machine_progress(),
+                attended: global::attended(ctx),
+            });
+        }
+        Self::new(ctx, if external { None } else { agent }, false)
     }
 
     /// The hooks an operation context carries.
@@ -58,7 +96,7 @@ impl AgentSetup {
             confirm: self
                 .attended
                 .then_some(&confirm as vibe_app::ConsentPrompt<'_>),
-            resume_command: Some(&self.resume),
+            resume_command: None,
         }
     }
 }
@@ -66,41 +104,6 @@ impl AgentSetup {
 /// The external registration of this process, for `vibe agent list`.
 pub(crate) fn external_registration() -> Result<Option<vibe_app::ExternalAgent>> {
     Ok(super::facts::external_agent().map_err(AppError::from)?)
-}
-
-/// The same command again with `--resume` (and without `--from-step`).
-fn resume_command(args: impl Iterator<Item = String>) -> String {
-    let mut words = vec!["vibe".to_owned()];
-    let mut skip_value = false;
-    for arg in args {
-        if std::mem::take(&mut skip_value) {
-            continue;
-        }
-        if arg == "--from-step" {
-            skip_value = true;
-            continue;
-        }
-        if arg.starts_with("--from-step=") || arg == "--resume" {
-            continue;
-        }
-        words.push(arg);
-    }
-    words.push("--resume".into());
-    words
-        .iter()
-        .map(|word| {
-            if !word.is_empty()
-                && word
-                    .chars()
-                    .all(|ch| ch.is_ascii_alphanumeric() || "-_./:=@,+".contains(ch))
-            {
-                word.clone()
-            } else {
-                format!("'{}'", word.replace('\'', "'\\''"))
-            }
-        })
-        .collect::<Vec<_>>()
-        .join(" ")
 }
 
 /// Print the step, the agent command and the full prompt before any agent
@@ -174,27 +177,22 @@ pub(crate) fn report_parked<T>(
 
 #[cfg(test)]
 mod tests {
-    use super::resume_command;
-
     #[test]
-    fn the_resume_command_repeats_the_invocation_with_resume() {
-        let args = [
-            "install",
-            "-g",
-            "org.example/tool",
-            "--from-step",
-            "fix",
-            "--set",
-            "a=b c",
-        ];
+    fn continuation_command_contains_only_the_retained_target() {
+        let target = vibe_wire::generated::shared::ApplicationPendingTarget {
+            home: "/private/home".into(),
+            key: "org.example/tool@1.0.0".into(),
+            operation: "generation-7".into(),
+            project: None,
+        };
         assert_eq!(
-            resume_command(args.iter().map(|arg| (*arg).to_owned())),
-            "vibe install -g org.example/tool --set 'a=b c' --resume"
+            vibe_app::resume_command(&target),
+            "vibe app resume org.example/tool@1.0.0 --operation generation-7 -g"
         );
-        let resumed = ["update", "-g", "x/y", "--resume"];
-        assert_eq!(
-            resume_command(resumed.iter().map(|arg| (*arg).to_owned())),
-            "vibe update -g x/y --resume"
-        );
+        let target = vibe_wire::generated::shared::ApplicationPendingTarget {
+            project: Some("/project with space".into()),
+            ..target
+        };
+        assert!(vibe_app::resume_command(&target).contains("--path '/project with space'"));
     }
 }

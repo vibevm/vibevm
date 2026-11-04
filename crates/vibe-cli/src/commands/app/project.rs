@@ -63,7 +63,7 @@ pub(crate) fn install(
     let consent = args.assume_yes || ctx.is_unattended();
     let offline = root_offline || args.offline;
     let path = args.path.clone();
-    let request = global::request(choice, None, args.force, &args.steps);
+    let request = global::request(choice, None, args.force, &args.steps)?;
     let display = StepDisplay::open(ctx, &args.steps);
     let hidden = if args.hidden {
         args.packages
@@ -115,7 +115,7 @@ pub(crate) fn update(
         verb: "update",
         request: InstallRequest {
             purge_previous: args.purge_previous,
-            ..global::request(choice, None, args.force, &args.steps)
+            ..global::request(choice, None, args.force, &args.steps)?
         },
         display: &display,
         consent: args.assume_yes || ctx.is_unattended(),
@@ -264,6 +264,17 @@ fn install_pending(
         settings,
         flags,
     )?;
+    let candidates = pending
+        .iter()
+        .map(|package| from_slot(flags.root, package))
+        .collect::<Result<Vec<_>>>()?;
+    let selected = super::configuration::select_batch(
+        ctx,
+        candidates,
+        &flags.request.choice,
+        &flags.request.parameters,
+        flags.request.configuration.as_ref(),
+    )?;
     if !settings.path().exists() {
         let entry = vibe_app::PROJECT_HOME.join("/");
         vibedeps::ensure_gitignored(flags.root, &entry)
@@ -298,9 +309,9 @@ fn install_pending(
             })?;
         from_slot(flags.root, row).map_err(|error| unrecorded(format!("{error:#}")))
     };
-    for package in pending {
-        let resolved = from_slot(flags.root, package)?;
+    for (resolved, choice) in selected {
         let request = &InstallRequest {
+            choice,
             hidden: flags.hidden.iter().any(|(group, name)| {
                 *group == resolved.package.group && *name == resolved.package.name
             }),
@@ -314,6 +325,7 @@ fn install_pending(
             let operation = OperationContext {
                 agent: agents.hooks(),
                 resolver: Some(&resolver),
+                resolver_scope: vibe_app::ResolverScope::Project(flags.root),
                 ..global::operation(
                     ctx,
                     settings,
@@ -458,9 +470,65 @@ fn from_slot(root: &Path, package: &LockedPackage) -> Result<ResolvedPackage> {
             slot.display()
         )
     })?;
-    Ok(vibe_app::from_manifest(
-        manifest,
-        slot,
-        coordinate(package),
-    )?)
+    let mut resolved = vibe_app::from_manifest(manifest, slot, coordinate(package))?;
+    resolved.source.kind = vibe_wire::generated::shared::ApplicationPendingSourceKind::ProjectSlot;
+    resolved.source.project = Some(
+        root.to_str()
+            .context("project source path is not lossless UTF-8")?
+            .into(),
+    );
+    Ok(resolved)
+}
+
+/// Re-admit an exact saved slot through the current project lock and existing slot owner.
+pub(super) fn read_saved_source(
+    route: &vibe_wire::generated::shared::ApplicationPendingSource,
+    coordinate: &PackageCoordinate,
+) -> std::result::Result<ResolvedPackage, vibe_app::AppError> {
+    let failed = |reason: String| vibe_app::ResolveError::Registry {
+        spelling: coordinate.key(),
+        reason,
+    };
+    let project = route
+        .project
+        .as_ref()
+        .map(PathBuf::from)
+        .filter(|p| p.is_absolute())
+        .ok_or_else(|| failed("retained project source has no absolute project root".into()))?;
+    let root = crate::commands::resolve_project_root(&project)
+        .map_err(|e| failed(format!("saved project is unavailable: {e:#}")))?;
+    let rows = app_dependencies(&root)
+        .map_err(|e| failed(format!("saved project lock is unavailable: {e:#}")))?;
+    let row = rows
+        .iter()
+        .find(|row| self::coordinate(row) == *coordinate)
+        .ok_or_else(|| {
+            failed(
+                "the current project lock no longer binds this exact application coordinate".into(),
+            )
+        })?;
+    from_slot(&root, row)
+        .map_err(|e| failed(format!("saved slot cannot be admitted: {e:#}")).into())
+}
+
+pub(super) fn resolve_saved_requirement(
+    root: &Path,
+    spelling: &str,
+) -> std::result::Result<ResolvedPackage, vibe_app::AppError> {
+    let requested = vibe_app::qualified_ref(spelling)?;
+    let fail = |reason| vibe_app::ResolveError::Registry {
+        spelling: spelling.into(),
+        reason,
+    };
+    let rows =
+        app_dependencies(root).map_err(|e| fail(format!("project lock cannot be read: {e:#}")))?;
+    let row = rows
+        .iter()
+        .find(|p| {
+            requested.group.as_ref() == Some(&p.group)
+                && requested.name == p.name
+                && requested.version.matches(&p.version)
+        })
+        .ok_or_else(|| fail("project lock has no matching application dependency".into()))?;
+    from_slot(root, row).map_err(|e| fail(format!("project slot cannot be read: {e:#}")).into())
 }

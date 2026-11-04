@@ -99,7 +99,8 @@ pub fn set_default(
     key: &str,
     proxy_image: &Path,
 ) -> Result<DefaultChange, AppError> {
-    let _lock = settings.lock()?;
+    let held = settings.lock()?;
+    let lock = &held;
     let mut index = Index::load(settings)?;
     let providers = providers(&index, slot)?;
     if !providers.iter().any(|(provider, _)| *provider == key) {
@@ -116,11 +117,18 @@ pub fn set_default(
     let previous = index.default_of(slot).map(str::to_owned);
     let reserved = reserved_names(&index);
     index.slots.insert(slot.to_owned(), Some(key.to_owned()));
-    index.save(
+    index.save_locked(
         settings,
         &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Updated, key),
+        lock,
     )?;
-    proxies::sync(settings, &reserved, &reserved_names(&index), proxy_image)?;
+    proxies::sync_locked(
+        settings,
+        &reserved,
+        &reserved_names(&index),
+        proxy_image,
+        lock,
+    )?;
     Ok(DefaultChange {
         slot: slot.to_owned(),
         previous,
@@ -213,6 +221,9 @@ mod tests {
 
     fn record(name: &str, slot: &str, commands: &[&str]) -> Installation {
         Installation {
+            secret_origins: Default::default(),
+            configuration: None,
+            pending: None,
             slot: slot.into(),
             package: PackageCoordinate {
                 group: "org.example".into(),

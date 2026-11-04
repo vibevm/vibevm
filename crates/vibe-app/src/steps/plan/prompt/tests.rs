@@ -36,6 +36,8 @@ fn planned(root: &Path, extra: &str, hosted: bool) -> Result<crate::steps::Plan,
     .unwrap();
     let settings = SettingsRoot::new(&root.join("settings"));
     plan(&PlanInput {
+        agent_modes: None,
+        configuration: None,
         resolved: &resolved,
         option: &resolved.options[0],
         request: &FeatureRequest::default(),
@@ -145,7 +147,16 @@ fn retained_literal_is_used_by_consent_preview_and_execution_expansion() {
         notify: Some(&notify),
         ..Default::default()
     };
-    crate::steps::agent::admit(&hooks, &p, p.steps.iter(), &|_| false, &vars, false).unwrap();
+    crate::steps::agent::admit(
+        &hooks,
+        &p,
+        p.steps.iter(),
+        &|_| false,
+        &vars,
+        false,
+        &|id| crate::steps::envelope::Envelope::at(&vars.work, id),
+    )
+    .unwrap();
     assert_eq!(*shown.borrow(), ["ADMITTED $app_root"]);
     let actual_root = root.path().join("installed");
     let vars = Vars {

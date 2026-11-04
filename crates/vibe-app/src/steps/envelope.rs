@@ -41,6 +41,48 @@ impl Envelope {
         }
     }
 
+    /// New retained operations isolate answer files by execution generation.
+    pub fn for_generation(work: &Path, step: &str, generation: Option<&str>) -> Self {
+        let Some(generation) = generation else {
+            return Self::at(work, step);
+        };
+        let run = work
+            .join("steps")
+            .join(step)
+            .join("operations")
+            .join(generation);
+        Self {
+            prompt: run.join("prompt.md"),
+            context: run.join("context.json"),
+            result: run.join("result.json"),
+            transcript: run.join("transcript.log"),
+            run,
+        }
+    }
+
+    /// Verify the task the agent actually received before overwriting anything or accepting its answer.
+    pub fn verify_saved(
+        &self,
+        prompt: &str,
+        context: &hook::AgentHook,
+    ) -> Result<String, crate::AppError> {
+        let refuse = |reason: String| crate::StepError::ResumeMismatch {
+            work: self.run.display().to_string(),
+            reason,
+        };
+        let old_prompt = fs::read_to_string(&self.prompt)
+            .map_err(|_| refuse("the delegated prompt is missing or unreadable".into()))?;
+        let old_context = fs::read_to_string(&self.context)
+            .map_err(|_| refuse("the delegated context is missing or unreadable".into()))?;
+        let mut expected =
+            serde_json::to_string_pretty(context).map_err(|e| refuse(e.to_string()))?;
+        expected.push('\n');
+        if old_prompt != prompt || old_context != expected {
+            return Err(refuse("the delegated prompt or execution context changed; the saved answer is not applicable; start fresh reconfiguration".into()).into());
+        }
+        Ok(old_context)
+    }
+
     /// Write `prompt.md` and `context.json`; returns the context text.
     pub fn write(&self, prompt: &str, context: &hook::AgentHook) -> Result<String, AgentError> {
         fs::create_dir_all(&self.run).map_err(|error| io("creating", &self.run, error))?;

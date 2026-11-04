@@ -1,4 +1,4 @@
-//! Public install -g refuses unconnected common scopes before app execution.
+//! Public install -g keeps package and selected-installer scopes distinct.
 #![cfg(target_os = "linux")]
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-SCOPES");
 
@@ -9,11 +9,12 @@ use serde_json::Value;
 use std::fs;
 
 #[cfg(test)]
-fn refusal(package_scope: bool) {
+fn installs(package_scope: bool) {
     let registry = AppRegistry::new();
-    let sentinel = registry.root.path().join("STEP_MUST_NOT_RUN");
+    let sentinel = registry.root.path().join("STEP_RAN");
     let option = format!(
-        "result={{external='/tmp/common-config-test'}}\n[[installer_options.steps]]\nid='setup'\ntitle='Setup'\nkind='shell'\ncommand=\"touch '{}'\"\n",
+        "result={{external='{}'}}\n[[installer_options.steps]]\nid='setup'\ntitle='Setup'\nkind='shell'\ncommand=\"touch '{}'\"\n",
+        registry.root.path().display(),
         sentinel.display()
     );
     let package = registry.package("common-config", "1.0.0", "common-config", &option);
@@ -33,31 +34,31 @@ fn refusal(package_scope: bool) {
     );
     let stdout = String::from_utf8(output.stdout).unwrap();
     let stderr = String::from_utf8(output.stderr).unwrap();
-    assert_eq!(output.status.code(), Some(2), "{stdout}\n{stderr}");
-    let envelope = stderr
-        .lines()
-        .filter_map(|line| serde_json::from_str::<Value>(line).ok())
-        .find(|v| v["ok"] == false)
-        .expect("JSON refusal");
-    assert_eq!(envelope["code"], "configuration_unsupported", "{envelope}");
-    let scope = if package_scope {
-        "scope `package`"
-    } else {
-        "scope `installer main`"
-    };
-    assert!(stderr.contains(scope), "{stderr}");
-    assert!(!sentinel.exists());
-    assert!(!registry.settings().join("applications/index.json").exists());
-    assert!(!registry.settings().join("cache/app-work").exists());
+    assert_eq!(output.status.code(), Some(0), "{stdout}\n{stderr}");
+    assert!(sentinel.exists());
+    let index: Value = serde_json::from_slice(
+        &fs::read(registry.settings().join("applications/index.json")).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(
+        index["protocol"],
+        if package_scope {
+            "vibe-user-applications/3"
+        } else {
+            "vibe-user-applications/4"
+        }
+    );
+    let record = &index["installations"]["org.example/common-config@1.0.0"];
+    assert_eq!(record.get("configuration").is_some(), !package_scope);
 }
 
 #[test]
-fn global_install_refuses_package_common_configuration_without_app_publication() {
-    refusal(true);
+fn global_install_keeps_package_configuration_separate_from_installer() {
+    installs(true);
 }
 #[test]
-fn global_install_refuses_selected_option_common_configuration_without_app_publication() {
-    refusal(false);
+fn global_install_records_selected_installer_common_configuration() {
+    installs(false);
 }
 
 #[test]

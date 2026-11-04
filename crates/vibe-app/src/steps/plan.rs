@@ -12,13 +12,12 @@ use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use vibe_core::manifest::{
-    AgentMode, Condition, FeatureDecl, InstallerOptionDecl, Need, RequirementDecl,
-    RequirementScope, ResultDecl, StepDecl, StepKind, StepPhase, result_of, steps_of,
+    FeatureDecl, InstallerOptionDecl, RequirementScope, ResultDecl, StepDecl, StepKind, StepPhase,
+    result_of, steps_of,
 };
 
 use crate::agents::AgentHooks;
 use crate::error::{AppError, StepError};
-use crate::error_lifecycle::LifecycleError;
 use crate::index::PackageCoordinate;
 use crate::resolve::ResolvedPackage;
 use crate::select::{Choice, Chooser};
@@ -26,11 +25,12 @@ use crate::settings::SettingsRoot;
 
 use super::features::{FeatureRequest, Implied};
 use super::params::{
-    LicensePrompt, ParamValue, ParameterPrompt, PlanLicense, admit_license, param_equals,
-    param_holds, resolve_parameters,
+    LicensePrompt, ParamValue, ParameterPrompt, PlanLicense, admit_license, resolve_parameters,
 };
-use super::sizes::{downloads, input_local, source_cached};
+use super::sizes::downloads;
+mod decision;
 use super::template::{self, Vars};
+use decision::{NO_AGENT, decide, effective_agent_mode, require};
 
 #[path = "plan/remap_note.rs"]
 mod remap_note;
@@ -121,6 +121,9 @@ pub struct PlannedDependency {
 /// What the installation an update starts from recorded.
 #[derive(Clone, Copy)]
 pub(crate) struct Previous<'a> {
+    pub secret_origins:
+        &'a BTreeMap<String, vibe_wire::generated::shared::ConfigurationParameterOrigin>,
+    pub configuration: Option<&'a crate::configuration::ConfigurationRecord>,
     pub features: &'a [String],
     pub parameters: &'a BTreeMap<String, String>,
     pub license: Option<&'a str>,
@@ -131,6 +134,8 @@ pub(crate) struct Previous<'a> {
 
 /// Everything one plan is computed from.
 pub(crate) struct PlanInput<'a> {
+    pub agent_modes: Option<&'a BTreeMap<String, crate::RunMode>>,
+    pub configuration: Option<&'a crate::configuration::ConfigurationSubmission>,
     pub resolved: &'a ResolvedPackage,
     pub option: &'a InstallerOptionDecl,
     pub request: &'a FeatureRequest,
@@ -168,6 +173,8 @@ pub struct RequiredBy {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
 pub struct PlannedStep {
+    /// Effective delivery mode, retained independently of a later caller's terminal.
+    pub agent_mode: Option<crate::RunMode>,
     pub step: StepDecl,
     /// The validated literal prompt for a running agent; never reread at execution.
     /// This internal plan data is not part of the authored step or wire document.
@@ -187,6 +194,12 @@ pub struct PlannedStep {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
 pub struct Plan {
+    /// Legacy secret origins captured by this operation; common records own their own metadata.
+    pub secret_origins:
+        BTreeMap<String, vibe_wire::generated::shared::ConfigurationParameterOrigin>,
+    /// Value-free presence of explicitly provided secret answers, distinct from authored defaults.
+    pub secret_provided: Vec<String>,
+    pub configuration: Option<crate::configuration::ConfigurationRecord>,
     pub package: PackageCoordinate,
     pub option: String,
     pub platform: String,
@@ -215,6 +228,21 @@ pub struct Plan {
     pub required_by: Option<RequiredBy>,
 }
 
+impl Plan {
+    /// Actual declared feature IDs used by the execution environment adapter.
+    pub(crate) fn feature_ids(&self) -> Vec<&str> {
+        match &self.configuration {
+            Some(c) => c
+                .definition
+                .features
+                .iter()
+                .map(|f| f.id.as_str())
+                .collect(),
+            None => self.declared.iter().map(|f| f.id.as_str()).collect(),
+        }
+    }
+}
+
 /// The work directory of an installation key.
 pub(crate) fn work_dir(settings: &SettingsRoot, package: &PackageCoordinate) -> PathBuf {
     settings.app_work_dir().join(package.directory_name())
@@ -236,13 +264,6 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
             package: key.clone(),
             reason: format!("{}: {error}", error.field),
         })?;
-    if option.configuration.is_some() {
-        return Err(crate::error::ResolveError::ConfigurationUnsupported {
-            package: key,
-            scope: format!("installer {}", option.id),
-        }
-        .into());
-    }
     let license = admit_license(
         option,
         &key,
@@ -251,14 +272,67 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         input.previous.and_then(|previous| previous.license),
         input.prompts.license.filter(|_| input.attended),
     )?;
-    let (profile, resolution) = choose_features(input)?;
-    let parameters = resolve_parameters(
-        option,
-        input.parameters,
-        input.previous.map(|previous| previous.parameters),
-        input.facts,
-        input.prompts.parameter.filter(|_| input.attended),
-    )?;
+    let (profile, resolution, parameters, configuration, secret_provided, secret_origins) =
+        if option.configuration.is_some() {
+            let common = crate::configuration::plan::prepare(input)?;
+            let secret_provided = common
+                .record
+                .evaluation
+                .parameters
+                .iter()
+                .filter_map(|p| match p {
+                    vibe_wire::generated::shared::ConfigurationParameterResult::Secret(p)
+                        if p.provided =>
+                    {
+                        Some(p.id.clone())
+                    }
+                    _ => None,
+                })
+                .collect();
+            let features = common
+                .record
+                .evaluation
+                .resolved
+                .as_ref()
+                .map(|r| r.features.selected.clone())
+                .unwrap_or_default();
+            (
+                common.record.evaluation.input.intent.profile.clone(),
+                super::features::FeatureResolution {
+                    selected: features,
+                    implied: vec![],
+                },
+                common.parameters,
+                Some(common.record),
+                secret_provided,
+                BTreeMap::new(),
+            )
+        } else {
+            if input.configuration.is_some() {
+                return Err(crate::configuration::ConfigurationError::Invalid {
+                    option: option.id.clone(),
+                    reason: "this installer has no common configuration definition".into(),
+                }
+                .into());
+            }
+            let (profile, resolution) = choose_features(input)?;
+            let parameters = resolve_parameters(
+                option,
+                input.parameters,
+                input.previous.map(|previous| previous.parameters),
+                input.facts,
+                input.prompts.parameter.filter(|_| input.attended),
+                input.previous.map(|p| p.secret_origins),
+            )?;
+            (
+                profile,
+                resolution,
+                parameters.values,
+                None,
+                parameters.supplied_secrets,
+                parameters.secret_origins,
+            )
+        };
     let work = work_dir(input.settings, package);
     let vars = Vars::planning(
         &work,
@@ -291,7 +365,12 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         }
         let note = unremappable_network(run, &step);
         let prepared_prompt = prompt::prepare(option, &step, run, &input.resolved.root, &vars)?;
+        let agent_mode = match &step.kind {
+            StepKind::Agent { mode, .. } => Some(effective_agent_mode(input, &step.id, *mode)),
+            _ => None,
+        };
         steps.push(PlannedStep {
+            agent_mode,
             step,
             prepared_prompt,
             run,
@@ -328,6 +407,9 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         &work,
     );
     Ok(Plan {
+        secret_provided,
+        secret_origins,
+        configuration,
         package: package.clone(),
         option: option.id.clone(),
         platform: option.platform.clone(),
@@ -346,174 +428,4 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         warnings,
         required_by: input.required_by.clone(),
     })
-}
-
-const NO_AGENT: &str = "no agent configured";
-
-/// Resolve one requirement through the caller's resolver.
-fn require(
-    input: &PlanInput<'_>,
-    key: &str,
-    requirement: &RequirementDecl,
-    default: RequirementScope,
-    step: Option<&str>,
-) -> Result<PlannedDependency, AppError> {
-    let resolver = input
-        .requirements
-        .ok_or_else(|| LifecycleError::RequirementUnresolved {
-            key: key.into(),
-            requirement: requirement.package().into(),
-            reason: "no package resolver is available in this context".into(),
-        })?;
-    resolver(requirement.package(), requirement.scope_or(default), step)
-}
-
-/// One step's decision: whether it runs, why not, and the requirements
-/// it brings when it runs.
-type Decision = (bool, Option<String>, Vec<PlannedDependency>);
-
-fn skip(reason: String) -> Result<Decision, AppError> {
-    Ok((false, Some(reason), Vec::new()))
-}
-
-/// Run or skip one step, or refuse the whole plan. `provided` names the
-/// public commands of the option-level requirements.
-fn decide(
-    input: &PlanInput<'_>,
-    step: &StepDecl,
-    vars: &Vars<'_>,
-    work: &Path,
-    key: &str,
-    provided: &[String],
-) -> Result<Decision, AppError> {
-    for condition in &step.when {
-        if !holds(input, condition, vars, step)? {
-            return skip(format!("when `{condition}` does not hold"));
-        }
-    }
-    for condition in &step.unless {
-        if holds(input, condition, vars, step)? {
-            return skip(format!("unless `{condition}` holds"));
-        }
-    }
-    if let StepKind::Agent { required, mode, .. } = &step.kind {
-        // `PROP-064#selection`: no agent means skip, unless the step is
-        // required; `#modes`: interactive needs a terminal unless parked.
-        if !input.agent.available() {
-            if *required {
-                return Err(StepError::AgentRequired {
-                    key: key.into(),
-                    step: step.id.clone(),
-                    reason: step
-                        .description
-                        .clone()
-                        .unwrap_or_else(|| step.title.clone()),
-                }
-                .into());
-            }
-            return skip(NO_AGENT.into());
-        }
-        if *mode == Some(AgentMode::Interactive) && !input.attended && !input.agent.hosted {
-            if step.optional {
-                return skip("unmet need `terminal`".into());
-            }
-            return Err(StepError::UnmetNeed {
-                key: key.into(),
-                step: step.id.clone(),
-                need: Need::Terminal.to_string(),
-            }
-            .into());
-        }
-    }
-    let mut needed = Vec::new();
-    for requirement in &step.requires {
-        match require(
-            input,
-            key,
-            requirement,
-            RequirementScope::Build,
-            Some(&step.id),
-        ) {
-            Ok(dependency) => needed.push(dependency),
-            Err(error) if step.optional => {
-                return skip(format!("unresolved requirement: {error}"));
-            }
-            Err(error) => return Err(error),
-        }
-    }
-    let commands: Vec<&str> = provided
-        .iter()
-        .map(String::as_str)
-        .chain(
-            needed
-                .iter()
-                .flat_map(|dependency| dependency.commands.iter().map(String::as_str)),
-        )
-        .collect();
-    for need in &step.needs {
-        if need_met(input, need, step, work, &commands) {
-            continue;
-        }
-        if step.optional {
-            return skip(format!("unmet need `{need}`"));
-        }
-        return Err(StepError::UnmetNeed {
-            key: key.into(),
-            step: step.id.clone(),
-            need: need.to_string(),
-        }
-        .into());
-    }
-    Ok((true, None, needed))
-}
-
-fn holds(
-    input: &PlanInput<'_>,
-    condition: &Condition,
-    vars: &Vars<'_>,
-    step: &StepDecl,
-) -> Result<bool, AppError> {
-    Ok(match condition {
-        Condition::Feature(id) => vars.features.iter().any(|chosen| chosen == id),
-        Condition::Param(id) => param_holds(input.option, vars.params, id),
-        Condition::ParamEquals(test) => {
-            param_equals(input.option, vars.params, &test.id, &test.value)
-        }
-        Condition::CommandPresent(name) => (input.facts.command_present)(name),
-        Condition::EnvPresent(name) => (input.facts.env_present)(name),
-        Condition::AgentConfigured(value) => input.agent.available() == *value,
-        Condition::Offline(value) => input.offline == *value,
-        Condition::FilePresent(path) => {
-            let expanded = template::expand(path, vars, &step.id, "file_present")?;
-            input.resolved.root.join(expanded).exists()
-        }
-    })
-}
-
-/// Whether a need of a running step is met on this host or by the public
-/// commands of its requirements (`PROP-065#app-dependencies`).
-fn need_met(
-    input: &PlanInput<'_>,
-    need: &Need,
-    step: &StepDecl,
-    work: &Path,
-    provided: &[&str],
-) -> bool {
-    match need {
-        Need::Command(name) => {
-            provided.contains(&name.as_str()) || (input.facts.command_present)(name)
-        }
-        Need::Agent => input.agent.available(),
-        Need::Terminal => input.attended,
-        Need::Network if !input.offline => true,
-        Need::Network => match &step.kind {
-            StepKind::Sources { sources } => sources
-                .iter()
-                .all(|source| source.url.is_none() || source_cached(input.settings, source)),
-            StepKind::Archive { source, sha256, .. } | StepKind::Native { source, sha256, .. } => {
-                input_local(work, step, source, sha256)
-            }
-            _ => false,
-        },
-    }
 }

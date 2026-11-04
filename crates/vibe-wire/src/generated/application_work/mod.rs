@@ -17,7 +17,24 @@ pub struct ApplicationWork {
     pub removed: Vec<String>,
 
     pub freed: ByteCount,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub imports: Vec<ImportEntry>,
 }
+
+pub use crate::generated::shared::ApplicationContinuationTarget;
+
+pub use crate::generated::shared::ApplicationContinuationTargetApplication;
+
+pub use crate::generated::shared::ApplicationContinuationTargetImport;
+
+pub use crate::generated::shared::ApplicationImportPhase;
+
+pub use crate::generated::shared::ApplicationImportTarget;
+
+pub use crate::generated::shared::ApplicationPendingOperationPhase;
+
+pub use crate::generated::shared::ApplicationPendingTarget;
 
 /// An exact non-negative byte count. JTD has no uint64 form, so generated Rust
 /// narrows the numeric form to u64.
@@ -57,6 +74,48 @@ pub struct Entry {
     pub bytes: ByteCount,
 
     pub parts: Parts,
+
+    #[serde(rename = "retainedFor")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub retained_for: Option<Retention>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub operation: Option<Operation>,
+}
+
+/// Inspection of a real finite cohort, distinct from package work entries.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ImportEntry {
+    #[serde(deserialize_with = "__reader_projection::deserialize_application_import_target_2")]
+    pub target: ApplicationImportTarget,
+
+    pub path: String,
+
+    #[serde(deserialize_with = "__reader_projection::deserialize_application_import_phase_3")]
+    pub phase: ApplicationImportPhase,
+
+    pub cursor: u32,
+
+    pub total: u32,
+
+    pub changed: String,
+
+    pub bytes: ByteCount,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(deserialize_with = "__reader_projection::deserialize_application_pending_target_4")]
+    pub current: Option<ApplicationPendingTarget>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Operation {
+    #[serde(deserialize_with = "__reader_projection::deserialize_application_pending_target_0")]
+    pub target: ApplicationPendingTarget,
+
+    #[serde(
+        deserialize_with = "__reader_projection::deserialize_application_pending_operation_phase_1"
+    )]
+    pub phase: ApplicationPendingOperationPhase,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -68,4 +127,234 @@ pub struct Parts {
     pub inputs: ByteCount,
 
     pub other: ByteCount,
+}
+
+/// The exact unfinished owner retaining completed application work.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Retention {
+    #[serde(
+        deserialize_with = "__reader_projection::deserialize_application_continuation_target_5"
+    )]
+    pub owner: ApplicationContinuationTarget,
+}
+
+#[doc(hidden)]
+#[allow(clippy::collapsible_if, unused_variables)]
+mod __reader_projection {
+    #[derive(Clone, Copy)]
+    struct NoDuplicateValue;
+
+    impl<'de> serde::de::DeserializeSeed<'de> for NoDuplicateValue {
+        type Value = serde_json::Value;
+
+        fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            deserializer.deserialize_any(NoDuplicateValueVisitor)
+        }
+    }
+
+    struct NoDuplicateValueVisitor;
+
+    impl<'de> serde::de::Visitor<'de> for NoDuplicateValueVisitor {
+        type Value = serde_json::Value;
+
+        fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            formatter.write_str("a JSON value without duplicate object members")
+        }
+
+        fn visit_bool<E>(self, value: bool) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Bool(value))
+        }
+
+        fn visit_i64<E>(self, value: i64) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Number(value.into()))
+        }
+
+        fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Number(value.into()))
+        }
+
+        fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>
+        where
+            E: serde::de::Error,
+        {
+            serde_json::Number::from_f64(value)
+                .map(serde_json::Value::Number)
+                .ok_or_else(|| E::custom("non-finite JSON number"))
+        }
+
+        fn visit_str<E>(self, value: &str) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::String(value.to_string()))
+        }
+
+        fn visit_string<E>(self, value: String) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::String(value))
+        }
+
+        fn visit_none<E>(self) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Null)
+        }
+
+        fn visit_unit<E>(self) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Null)
+        }
+
+        fn visit_some<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)
+        }
+
+        fn visit_newtype_struct<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)
+        }
+
+        fn visit_seq<A>(self, mut sequence: A) -> Result<Self::Value, A::Error>
+        where
+            A: serde::de::SeqAccess<'de>,
+        {
+            let mut items = Vec::new();
+            while let Some(item) = sequence.next_element_seed(NoDuplicateValue)? {
+                items.push(item);
+            }
+            Ok(serde_json::Value::Array(items))
+        }
+
+        fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+        where
+            A: serde::de::MapAccess<'de>,
+        {
+            let mut object = serde_json::Map::new();
+            while let Some(key) = map.next_key::<String>()? {
+                if object.contains_key(&key) {
+                    return Err(<A::Error as serde::de::Error>::custom(
+                        "duplicate object member",
+                    ));
+                }
+                let value = map.next_value_seed(NoDuplicateValue)?;
+                object.insert(key, value);
+            }
+            Ok(serde_json::Value::Object(object))
+        }
+    }
+
+    pub(super) fn deserialize_application_pending_target_0<'de, D>(
+        deserializer: D,
+    ) -> Result<crate::generated::shared::ApplicationPendingTarget, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_application_pending_target(&mut value);
+        serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    pub(super) fn deserialize_application_pending_operation_phase_1<'de, D>(
+        deserializer: D,
+    ) -> Result<crate::generated::shared::ApplicationPendingOperationPhase, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_application_pending_operation_phase(&mut value);
+        serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    pub(super) fn deserialize_application_import_target_2<'de, D>(
+        deserializer: D,
+    ) -> Result<crate::generated::shared::ApplicationImportTarget, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_application_import_target(&mut value);
+        serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    pub(super) fn deserialize_application_import_phase_3<'de, D>(
+        deserializer: D,
+    ) -> Result<crate::generated::shared::ApplicationImportPhase, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_application_import_phase(&mut value);
+        serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    pub(super) fn deserialize_application_pending_target_4<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<crate::generated::shared::ApplicationPendingTarget>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_application_pending_target(&mut value);
+        serde_json::from_value(value)
+            .map(Some)
+            .map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    pub(super) fn deserialize_application_continuation_target_5<'de, D>(
+        deserializer: D,
+    ) -> Result<crate::generated::shared::ApplicationContinuationTarget, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_application_continuation_target(&mut value);
+        serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    fn prune_application_continuation_target(value: &mut serde_json::Value) {
+        let Some(object) = value.as_object_mut() else {
+            return;
+        };
+        let Some(tag) = object
+            .get("kind")
+            .and_then(serde_json::Value::as_str)
+            .map(str::to_owned)
+        else {
+            return;
+        };
+        match tag.as_str() {
+            "application" => {
+                object.retain(|key, _| matches!(key.as_str(), "kind" | "target"));
+                if let Some(child) = object.get_mut("target") {
+                    prune_application_pending_target(child);
+                }
+            }
+            "import" => {
+                object.retain(|key, _| matches!(key.as_str(), "kind" | "row" | "target"));
+                if let Some(child) = object.get_mut("target") {
+                    prune_application_import_target(child);
+                }
+            }
+            _ => {}
+        }
+    }
+
+    fn prune_application_import_phase(_value: &mut serde_json::Value) {}
+
+    fn prune_application_import_target(value: &mut serde_json::Value) {
+        let Some(object) = value.as_object_mut() else {
+            return;
+        };
+        object.retain(|key, _| matches!(key.as_str(), "home" | "operation"));
+    }
+
+    fn prune_application_pending_operation_phase(_value: &mut serde_json::Value) {}
+
+    fn prune_application_pending_target(value: &mut serde_json::Value) {
+        let Some(object) = value.as_object_mut() else {
+            return;
+        };
+        object.retain(|key, _| matches!(key.as_str(), "home" | "key" | "operation" | "project"));
+    }
 }

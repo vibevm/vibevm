@@ -278,6 +278,7 @@ fn classified_parameter_debug_redacts_only_the_secret_value() {
         None,
     )
     .unwrap()
+    .values
     .remove(0);
     assert_eq!(value.value, "SYN_DEBUG_SECRET_CANARY");
     assert_eq!(
@@ -285,6 +286,9 @@ fn classified_parameter_debug_redacts_only_the_secret_value() {
         "ParamValue { id: \"answer\", value: \"[redacted]\", secret: true }"
     );
     let plan = crate::steps::Plan {
+        secret_provided: vec![],
+        secret_origins: Default::default(),
+        configuration: None,
         package: crate::PackageCoordinate {
             group: "org.example".into(),
             name: "diagnostic".into(),
@@ -308,6 +312,7 @@ fn classified_parameter_debug_redacts_only_the_secret_value() {
             .iter()
             .cloned()
             .map(|step| crate::steps::PlannedStep {
+                agent_mode: None,
                 step,
                 prepared_prompt: None,
                 run: true,
@@ -333,7 +338,7 @@ fn classified_parameter_debug_redacts_only_the_secret_value() {
 }
 
 #[test]
-fn secret_prompt_none_keeps_required_default_and_existing_precedence() {
+fn secret_prompt_none_keeps_required_default_and_public_history_never_replays_answers() {
     let option = classified_option("bool", "required=true\ndefault=true", true);
     let prompt = |_: &ParameterDecl, preset: Option<&str>| {
         assert_eq!(preset, Some("true"));
@@ -341,11 +346,11 @@ fn secret_prompt_none_keeps_required_default_and_existing_precedence() {
     };
     let values = resolve_parameters(&option, &[], None, facts(), Some(&prompt)).unwrap();
     assert_eq!(values[0].value, "true");
-    let never =
-        |_: &ParameterDecl, _: Option<&str>| panic!("explicit/recorded answer must precede prompt");
+    let never = |_: &ParameterDecl, _: Option<&str>| panic!("explicit answer must precede prompt");
     let previous = BTreeMap::from([("answer".into(), "off".into())]);
-    let values = resolve_parameters(&option, &[], Some(&previous), facts(), Some(&never)).unwrap();
-    assert_eq!(values[0].value, "false");
+    // The previous map is PUBLIC history; its same-ID value is not a secret answer.
+    let values = resolve_parameters(&option, &[], Some(&previous), facts(), Some(&prompt)).unwrap();
+    assert_eq!(values[0].value, "true");
     let values = resolve_parameters(
         &option,
         &set(&[("answer", "false"), ("answer", "on")]),
@@ -355,4 +360,15 @@ fn secret_prompt_none_keeps_required_default_and_existing_precedence() {
     )
     .unwrap();
     assert_eq!(values[0].value, "true");
+}
+
+// Fresh/unknown-history fixtures exercise the unchanged incumbent fallback path.
+fn resolve_parameters(
+    option: &vibe_core::manifest::InstallerOptionDecl,
+    set: &[(String, String)],
+    previous: Option<&std::collections::BTreeMap<String, String>>,
+    facts: HostFacts<'_>,
+    prompt: Option<ParameterPrompt<'_>>,
+) -> Result<ParameterResolution, crate::StepError> {
+    super::resolve_parameters(option, set, previous, facts, prompt, None)
 }

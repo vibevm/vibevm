@@ -65,19 +65,27 @@ fn edit_then(
     apply: impl FnOnce(&mut Index, &str) -> Result<String, AppError>,
     after: impl FnOnce(&Index, &str) -> Result<(), AppError>,
 ) -> Result<Change, AppError> {
-    let _lock = settings.lock()?;
+    let held = settings.lock()?;
+    let lock = &held;
     let mut index = Index::load(settings)?;
     let (key, record) = installed(settings, &index, spelling)?;
     let (key, slot) = (key.to_owned(), record.slot.clone());
     let reserved = reserved_names(&index);
     let message = apply(&mut index, &key)?;
     normalize_slots(&mut index);
-    index.save(
+    index.save_locked(
         settings,
         &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Updated, key.clone()),
+        lock,
     )?;
     after(&index, &key)?;
-    proxies::sync(settings, &reserved, &reserved_names(&index), proxy_image)?;
+    proxies::sync_locked(
+        settings,
+        &reserved,
+        &reserved_names(&index),
+        proxy_image,
+        lock,
+    )?;
     Ok(Change {
         verb,
         slot_default: index.default_of(&slot).map(str::to_owned),

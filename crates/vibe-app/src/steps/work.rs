@@ -20,6 +20,9 @@ use crate::settings::SettingsRoot;
 
 use super::state::StepsFile;
 
+mod cohorts;
+pub use cohorts::{clean_import, work_import};
+
 const WORK_PROTOCOL: &str = "vibe-app-work/1";
 
 /// A byte count as a terminal shows it: `912 B`, `1.4 MiB`.
@@ -82,8 +85,16 @@ pub fn work(
     settings: &SettingsRoot,
     package: Option<&str>,
 ) -> Result<wire::ApplicationWork, AppError> {
+    listing(settings, package, true)
+}
+
+fn listing(
+    settings: &SettingsRoot,
+    package: Option<&str>,
+    inspect_retention: bool,
+) -> Result<wire::ApplicationWork, AppError> {
     let home = settings.app_work_dir();
-    let entries = kept(&home, package)?;
+    let entries = kept(settings, &home, package, inspect_retention)?;
     if entries.is_empty()
         && let Some(spelling) = package
     {
@@ -97,6 +108,11 @@ pub fn work(
         protocol: WORK_PROTOCOL.into(),
         home: home.display().to_string(),
         entries,
+        imports: if package.is_none() {
+            cohorts::imports(settings, None)?
+        } else {
+            vec![]
+        },
         removed: Vec::new(),
         freed: 0,
     })
@@ -118,23 +134,27 @@ pub fn clean_work(
     settings: &SettingsRoot,
     package: Option<&str>,
 ) -> Result<wire::ApplicationWork, AppError> {
-    let _lock = settings.lock()?;
-    let mut listing = work(settings, package)?;
-    for entry in &listing.entries {
-        let path = PathBuf::from(&entry.path);
-        fs::remove_dir_all(&path).map_err(|source| io("removing", &path, source))?;
-        listing.freed += entry.bytes;
-        listing.removed.push(entry.path.clone());
-    }
+    let held = settings.lock()?;
+    let lock = &held;
+    let mut listing = listing(settings, package, false)?;
+    cohorts::cleanup(lock, settings, &mut listing, package.is_none())?;
     Ok(listing)
 }
 
 /// Read every work directory of `home` that `package` matches.
-fn kept(home: &Path, package: Option<&str>) -> Result<Vec<wire::Entry>, AppError> {
+fn kept(
+    settings: &SettingsRoot,
+    home: &Path,
+    package: Option<&str>,
+    inspect_retention: bool,
+) -> Result<Vec<wire::Entry>, AppError> {
     let wanted = package.map(qualified_ref).transpose()?;
     let mut entries = Vec::new();
     for dir in directories(home) {
         let name = file_name(&dir);
+        if name == "imports" {
+            continue;
+        }
         if let Some(wanted) = &wanted {
             let group = wanted
                 .group
@@ -150,17 +170,36 @@ fn kept(home: &Path, package: Option<&str>) -> Result<Vec<wire::Entry>, AppError
                 continue;
             }
         }
-        entries.push(entry(&dir, &name));
+        entries.push(entry(settings, &dir, &name, inspect_retention)?);
     }
     entries.sort_by(|left, right| left.key.cmp(&right.key));
     Ok(entries)
 }
 
-fn entry(dir: &Path, name: &str) -> wire::Entry {
+fn entry(
+    settings: &SettingsRoot,
+    dir: &Path,
+    name: &str,
+    inspect_retention: bool,
+) -> Result<wire::Entry, AppError> {
     let state = StepsFile::load(dir).ok().flatten();
     let parts = parts(dir);
     let (outcome, step) = reached(state.as_ref());
-    wire::Entry {
+    let retained_for = if inspect_retention {
+        match &state {Some(state) if state.operation.as_ref().is_some_and(|o|o.phase==vibe_wire::generated::shared::ApplicationPendingOperationPhase::Complete)=>crate::operations::pending::retained_for(settings,state)?,_=>None}
+    } else {
+        None
+    };
+    let operation = state
+        .as_ref()
+        .and_then(|s| s.operation.as_ref())
+        .map(|op| wire::Operation {
+            target: op.target.clone(),
+            phase: op.phase.clone(),
+        });
+    Ok(wire::Entry {
+        operation,
+        retained_for: retained_for.map(|owner| wire::Retention { owner }),
         key: state
             .map(|state| state.package.key())
             .or_else(|| key_of(name))
@@ -171,7 +210,7 @@ fn entry(dir: &Path, name: &str) -> wire::Entry {
         changed: changed(dir),
         bytes: parts.sources + parts.out + parts.inputs + parts.other,
         parts,
-    }
+    })
 }
 
 /// How far the kept run got: the first step that is neither done nor
@@ -185,6 +224,13 @@ fn reached(state: Option<&StepsFile>) -> (wire::EntryState, Option<String>) {
         .iter()
         .find(|step| !matches!(step.outcome, StepOutcome::Done | StepOutcome::Skipped));
     match open {
+        None if state.operation.as_ref().is_some_and(|op| {
+            op.phase != vibe_wire::generated::shared::ApplicationPendingOperationPhase::Complete
+                || op.publication_record.is_none()
+        }) =>
+        {
+            (wire::EntryState::Unknown, None)
+        }
         None => (wire::EntryState::Done, None),
         Some(step) => match step.outcome {
             StepOutcome::Failed => (wire::EntryState::Failed, Some(step.id.clone())),
@@ -268,6 +314,7 @@ mod tests {
 
     fn state(version: &str, outcomes: &[(&str, StepOutcome)]) -> StepsFile {
         StepsFile {
+            operation: None,
             package: PackageCoordinate {
                 group: "org.example".into(),
                 name: "tool".into(),

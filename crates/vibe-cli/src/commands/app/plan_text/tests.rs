@@ -19,6 +19,9 @@ fn required(package: &str, step: Option<&str>, installed: bool) -> PlannedDepend
 
 fn plan(steps: Vec<PlannedStep>, dependencies: Vec<PlannedDependency>) -> Plan {
     Plan {
+        configuration: None,
+        secret_origins: Default::default(),
+        secret_provided: Vec::new(),
         package: PackageCoordinate {
             group: "org.example".into(),
             name: "tool".into(),
@@ -45,6 +48,7 @@ fn plan(steps: Vec<PlannedStep>, dependencies: Vec<PlannedDependency>) -> Plan {
 
 fn copy(id: &str, title: &str, run: bool, reason: Option<&str>) -> PlannedStep {
     PlannedStep {
+        agent_mode: None,
         prepared_prompt: None,
         step: StepDecl::new(
             id,

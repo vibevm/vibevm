@@ -22,6 +22,12 @@ use crate::index::PackageCoordinate;
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
 pub struct ResolvedPackage {
+    /// Exact admitted source route for operation continuation, never a newest-version lookup.
+    pub source: vibe_wire::generated::shared::ApplicationPendingSource,
+    /// Package acquisition retains these declarations without creating a configuration instance.
+    pub kind: vibe_core::PackageKind,
+    pub configuration: Option<vibe_core::manifest::ConfigurationDecl>,
+    pub requires: vibe_core::manifest::Requires,
     pub package: PackageCoordinate,
     pub root: PathBuf,
     pub application: ApplicationDecl,
@@ -108,7 +114,15 @@ pub fn from_local_registry(
         name: selected.name.clone(),
         version: selected.version.to_string(),
     };
-    from_manifest(manifest, package_root, coordinate)
+    let mut resolved = from_manifest(manifest, package_root, coordinate)?;
+    resolved.source.kind =
+        vibe_wire::generated::shared::ApplicationPendingSourceKind::LocalRegistry;
+    resolved.source.registry = Some(
+        root.to_str()
+            .ok_or_else(|| failed("registry path is not lossless UTF-8".into()))?
+            .into(),
+    );
+    Ok(resolved)
 }
 
 /// Resolve through the configured global registries into the package store.
@@ -153,7 +167,10 @@ pub fn from_global(
         name: cached.resolved.name.clone(),
         version: cached.resolved.version.to_string(),
     };
-    from_manifest(cached.manifest, root, coordinate)
+    let mut resolved = from_manifest(cached.manifest, root, coordinate)?;
+    resolved.source.kind =
+        vibe_wire::generated::shared::ApplicationPendingSourceKind::AcquiredStore;
+    Ok(resolved)
 }
 
 /// Check the manifest against the registry coordinate and take its
@@ -179,23 +196,24 @@ pub fn from_manifest(
             "the manifest identity differs from its registry coordinate",
         ));
     }
-    if manifest.configuration.is_some() {
-        return Err(ResolveError::ConfigurationUnsupported {
-            package: coordinate.key(),
-            scope: "package".into(),
-        });
-    }
-    if let Some(dependency) = manifest.requires.configurations.keys().next() {
-        return Err(ResolveError::ConfigurationUnsupported {
-            package: coordinate.key(),
-            scope: format!("dependency {dependency}"),
-        });
-    }
     let application = manifest
         .application
         .clone()
         .ok_or_else(|| unusable("the package declares no [application]"))?;
+    let source = vibe_wire::generated::shared::ApplicationPendingSource {
+        directory: root
+            .to_str()
+            .ok_or_else(|| unusable("source directory is not lossless UTF-8"))?
+            .into(),
+        kind: vibe_wire::generated::shared::ApplicationPendingSourceKind::Directory,
+        registry: None,
+        project: None,
+    };
     Ok(ResolvedPackage {
+        source,
+        kind: package.kind,
+        configuration: manifest.configuration,
+        requires: manifest.requires,
         package: coordinate,
         root,
         application,
@@ -203,7 +221,7 @@ pub fn from_manifest(
     })
 }
 
-fn canonical_dir(path: &Path) -> Result<PathBuf, String> {
+pub(crate) fn canonical_dir(path: &Path) -> Result<PathBuf, String> {
     let metadata = fs::symlink_metadata(path)
         .map_err(|error| format!("reading `{}`: {error}", path.display()))?;
     if metadata.file_type().is_symlink() {
@@ -243,20 +261,23 @@ mod carries_tests {
                 version: "1.0.0".into(),
             },
         );
-        let error = result.unwrap_err();
-        assert!(matches!(
-            error,
-            ResolveError::ConfigurationUnsupported { .. }
-        ));
-        let app: crate::error::AppError = error.into();
-        assert_eq!(app.code(), "configuration_unsupported");
-        assert!(app.to_string().contains("scope `package`"));
+        let resolved = result.unwrap();
+        assert!(resolved.configuration.is_some());
+        assert_eq!(resolved.kind, vibe_core::PackageKind::App);
+        assert_eq!(
+            crate::configuration::describe(&resolved)
+                .configuration
+                .unwrap()
+                .features
+                .len(),
+            0
+        );
     }
 
     #[test]
     fn original_dependency_input_is_not_dropped_by_app_source_projection() {
         let m=Manifest::parse_str("[package]\ngroup='org.example'\nname='demo'\nversion='1.0.0'\nkind='app'\n[application]\nid='demo'\n[requires.packages.'org.example/dep']\nversion='*'\nconfiguration={policy='require-selection',parameters={value='SYN_INPUT'}}\n").unwrap();
-        let error = from_manifest(
+        let resolved = from_manifest(
             m,
             "/unused".into(),
             PackageCoordinate {
@@ -265,13 +286,11 @@ mod carries_tests {
                 version: "1.0.0".into(),
             },
         )
-        .unwrap_err();
-        assert!(
-            matches!(&error,ResolveError::ConfigurationUnsupported{scope,..} if scope=="dependency org.example/dep")
+        .unwrap();
+        assert_eq!(
+            resolved.requires.configurations["org.example/dep"].parameters["value"],
+            vibe_core::manifest::ParameterValue::Text("SYN_INPUT".into())
         );
-        let e: crate::AppError = error.into();
-        assert_eq!(e.code(), "configuration_unsupported");
-        assert!(!e.to_string().contains("SYN_INPUT"));
     }
 
     #[test]

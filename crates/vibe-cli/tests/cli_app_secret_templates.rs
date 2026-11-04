@@ -81,7 +81,15 @@ fn global_install_uses_the_preflight_prompt_after_an_earlier_step_replaces_its_f
         "REPLACEMENT_PROMPT"
     );
     assert_eq!(
-        std::fs::read_to_string(work.join("steps/agent/prompt.md")).unwrap(),
+        std::fs::read_to_string(
+            std::path::Path::new(
+                common::fake_agent::refused(&output).1["run"]
+                    .as_str()
+                    .unwrap()
+            )
+            .join("prompt.md")
+        )
+        .unwrap(),
         "ADMITTED_PROMPT"
     );
 }

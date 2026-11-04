@@ -9,6 +9,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#error-codes");
 use specmark::spec;
 
 use crate::agents::AgentError;
+use crate::configuration::ConfigurationError;
 use crate::error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,
 };
@@ -68,6 +69,7 @@ macro_rules! codes {
 }
 
 codes!(STATE, StateError [] {
+    ProxyUpgrade => "proxy_upgrade_failed", Failure, "compatible owned PATH readers could not be established before publication";
     Io => "state_io", Failure, "reading or writing the settings root failed";
     Locked => "locked", Refusal, "another vibe command holds the application mutation lock";
     Index => "index_invalid", Failure, "the application index is unreadable";
@@ -178,7 +180,13 @@ codes!(LIFECYCLE, LifecycleError [] {
     PortableInvalid => "apps_file_invalid", Refusal, "the application set given to import is unreadable";
 });
 
-codes!(APP, AppError [State, Catalog, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle] {
+codes!(CONFIGURATION, ConfigurationError [] {
+    UnsupportedFormat => "configuration_portable_unsupported", Refusal, "the legacy portable format cannot represent common configuration";
+    Unresolved => "configuration_unresolved", Refusal, "common configuration requires answers or default-basis review";
+    Invalid => "configuration_input_invalid", Refusal, "common configuration input is invalid";
+});
+
+codes!(APP, AppError [Configuration, State, Catalog, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle] {
     NotInstalled => "not_installed", Refusal, "the application is not installed";
     AmbiguousInstallation => "ambiguous_installation", Refusal, "several installed versions match";
     ForceUnsupported => "force_unsupported", Refusal, "--force has no authored variant to run";
@@ -205,7 +213,17 @@ codes!(APP, AppError [State, Catalog, Storage, Resolve, Installer, Launch, Step,
 /// ```
 pub fn error_codes() -> Vec<ErrorCode> {
     [
-        STATE, STORAGE, RESOLVE, INSTALLER, STEP, AGENT, LIFECYCLE, LAUNCH, CATALOG, APP,
+        CONFIGURATION,
+        STATE,
+        STORAGE,
+        RESOLVE,
+        INSTALLER,
+        STEP,
+        AGENT,
+        LIFECYCLE,
+        LAUNCH,
+        CATALOG,
+        APP,
     ]
     .concat()
 }

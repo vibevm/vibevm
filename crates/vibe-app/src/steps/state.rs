@@ -11,6 +11,14 @@ use vibe_core::manifest::ShellInterpreter;
 use vibe_wire::generated::application::e1::steps as wire;
 
 use crate::agents::RunMode;
+mod versions;
+
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+#[serde(untagged)]
+pub(crate) enum StepsDocument {
+    Legacy(wire::StepsFile),
+    Current(Box<vibe_wire::generated::application::e2::steps::StepsFile>),
+}
 use crate::error::{AppError, StepError};
 use crate::index::{AuthoredCommands, EnvEntry, EnvOp, PackageCoordinate, StepOutcome, ValueKind};
 use crate::installer::{ServedBy, ServedRow};
@@ -72,6 +80,7 @@ pub(crate) struct AgentRun {
 /// The whole `steps.json`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct StepsFile {
+    pub operation: Option<vibe_wire::generated::shared::ApplicationPendingOperation>,
     pub package: PackageCoordinate,
     pub option: String,
     pub features: Vec<String>,
@@ -85,6 +94,30 @@ fn path(work: &Path) -> PathBuf {
 }
 
 impl StepsFile {
+    pub(crate) fn pending(
+        &self,
+        settings: &crate::SettingsRoot,
+    ) -> Result<&vibe_wire::generated::shared::ApplicationPendingOperation, AppError> {
+        self.operation.as_ref().ok_or_else(|| {
+            crate::operations::pending::failure(
+                settings,
+                &self.package,
+                "expected retained operation metadata is absent".into(),
+            )
+        })
+    }
+    pub(crate) fn pending_mut(
+        &mut self,
+        settings: &crate::SettingsRoot,
+    ) -> Result<&mut vibe_wire::generated::shared::ApplicationPendingOperation, AppError> {
+        self.operation.as_mut().ok_or_else(|| {
+            crate::operations::pending::failure(
+                settings,
+                &self.package,
+                "expected retained operation metadata is absent".into(),
+            )
+        })
+    }
     /// Read the kept state; `None` when the work directory has none.
     pub fn load(work: &Path) -> Result<Option<Self>, AppError> {
         let file = path(work);
@@ -93,15 +126,64 @@ impl StepsFile {
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
             Err(error) => return Err(mismatch(work, error.to_string())),
         };
-        let document: wire::StepsFile =
-            serde_json::from_slice(&bytes).map_err(|error| mismatch(work, error.to_string()))?;
-        if document.protocol != STEPS_PROTOCOL {
-            return Err(mismatch(
-                work,
-                format!("protocol `{}` is not `{STEPS_PROTOCOL}`", document.protocol),
-            ));
+        #[derive(serde::Deserialize)]
+        struct Header {
+            protocol: String,
         }
-        Ok(Some(Self::from_wire(document)))
+        let header: Header =
+            serde_json::from_slice(&bytes).map_err(|e| mismatch(work, e.to_string()))?;
+        match header.protocol.as_str() {
+            STEPS_PROTOCOL => {
+                let document: wire::StepsFile =
+                    serde_json::from_slice(&bytes).map_err(|e| mismatch(work, e.to_string()))?;
+                Ok(Some(Self::from_wire(document)))
+            }
+            "vibe-app-steps/2" => {
+                let document = serde_json::from_slice::<
+                    vibe_wire::generated::application::e2::steps::StepsFile,
+                >(&bytes)
+                .map_err(|e| mismatch(work, e.to_string()))?;
+                let (rows, operation) = versions::split(document);
+                if !crate::operations::pending::valid_operation(&operation.target.operation) {
+                    return Err(mismatch(
+                        work,
+                        "invalid pending operation generation token".into(),
+                    ));
+                }
+                let mut retired = std::collections::BTreeSet::new();
+                if operation.kind
+                    != vibe_wire::generated::shared::ApplicationPendingOperationKind::Update
+                    && !operation.retirements.is_empty()
+                    || operation.phase
+                        == vibe_wire::generated::shared::ApplicationPendingOperationPhase::Retiring
+                        && (operation.kind
+                            != vibe_wire::generated::shared::ApplicationPendingOperationKind::Update
+                            || operation.retirements.is_empty())
+                    || operation.retirements.iter().any(|r| {
+                        r.key == operation.target.key
+                            || r.expected_record.is_empty()
+                            || !retired.insert(&r.key)
+                    })
+                {
+                    return Err(mismatch(
+                        work,
+                        "invalid bound retirement list for this operation".into(),
+                    ));
+                }
+                let mut state = Self::from_wire(rows);
+                if operation.target.key != state.package.key()
+                    || operation.request.installer != state.option
+                {
+                    return Err(mismatch(
+                        work,
+                        "pending operation differs from its step owner".into(),
+                    ));
+                }
+                state.operation = Some(operation);
+                Ok(Some(state))
+            }
+            _ => Err(mismatch(work, "unsupported steps protocol".into())),
+        }
     }
 
     /// Replace `steps.json` atomically.
@@ -124,7 +206,17 @@ impl StepsFile {
         }
     }
 
-    pub fn to_wire(&self) -> wire::StepsFile {
+    pub fn to_wire(&self) -> StepsDocument {
+        let rows = self.legacy_rows();
+        match &self.operation {
+            Some(operation) => {
+                StepsDocument::Current(Box::new(versions::promote(rows, operation.clone())))
+            }
+            None => StepsDocument::Legacy(rows),
+        }
+    }
+
+    fn legacy_rows(&self) -> wire::StepsFile {
         wire::StepsFile {
             protocol: STEPS_PROTOCOL.into(),
             package: wire::Package {
@@ -181,6 +273,7 @@ impl StepsFile {
 
     pub fn from_wire(document: wire::StepsFile) -> Self {
         Self {
+            operation: None,
             package: PackageCoordinate {
                 group: document.package.group,
                 name: document.package.name,
@@ -347,7 +440,7 @@ mod tests {
             .join("../../formats/corpora/application/e1/steps.json");
         let document: wire::StepsFile = serde_json::from_slice(&fs::read(corpus).unwrap()).unwrap();
         let state = StepsFile::from_wire(document.clone());
-        assert_eq!(state.to_wire(), document);
+        assert_eq!(state.to_wire(), StepsDocument::Legacy(document));
         assert_eq!(state.get("fix").unwrap().outcome, StepOutcome::Skipped);
         assert_eq!(
             state.get("register").unwrap().uninstall.interpreter,

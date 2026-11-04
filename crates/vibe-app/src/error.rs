@@ -16,6 +16,10 @@ pub use resolve::ResolveError;
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
 pub enum StateError {
     #[error(
+        "application publication at `{path}` failed: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#proxy-index-upgrade; fix: use a current paired vibe-app-proxy image and retry under this home's mutation lock)"
+    )]
+    ProxyUpgrade { path: String, reason: String },
+    #[error(
         "{action} `{path}` failed: {source} (violates spec://org.vibevm.core/vibevm/common/PROP-059#principle; \
          fix: check that the settings root is writable and has free space)"
     )]
@@ -407,6 +411,8 @@ pub enum LaunchError {
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub enum AppError {
+    #[error(transparent)]
+    Configuration(#[from] crate::configuration::ConfigurationError),
     #[error(transparent)]
     State(#[from] StateError),
     #[error(transparent)]

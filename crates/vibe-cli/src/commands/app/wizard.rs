@@ -83,7 +83,13 @@ pub(super) fn parameter_prompt(
                 }
                 input
                     .interact_text()
-                    .map(|text| Some(text).filter(|text| !text.is_empty()))
+                    .map(|text| {
+                        Some(text).filter(|text| {
+                            !text.is_empty()
+                                && !(parameter.kind == ParameterType::Path
+                                    && preset == Some(text.as_str()))
+                        })
+                    })
                     .map_err(failed)
             }
         }

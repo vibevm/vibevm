@@ -25,6 +25,7 @@ mod agents;
 mod alternatives;
 mod catalog;
 mod codes;
+pub mod configuration;
 mod derive;
 mod describe;
 mod desktop;
@@ -40,6 +41,7 @@ mod index;
 mod installer;
 mod launch;
 mod operations;
+pub use operations::pending::command as resume_command;
 mod portable;
 mod proxies;
 mod resolve;
@@ -100,14 +102,17 @@ pub use launch::{
 };
 pub use operations::{
     Change, ChangeVerb, Command, InstallRequest, ModifyRequest, OperationContext, Outcome,
-    PackageResolver, Removal, RemoveRequest, autoremove, expose, hide, hold, install, installed,
-    list, mark, modify, outdated, plan, remove_unrecorded, rollback, uninstall, update,
+    PackageResolver, Removal, RemoveRequest, ResolverScope, ResumeInfo, ResumeRequest,
+    SavedSourceReader, autoremove, configuration_plan, expose, hide, hold, import_cohort,
+    import_resume_info, install, installed, list, mark, modify, outdated, plan, remove_unrecorded,
+    resume, resume_import, resume_info, rollback, uninstall, update,
 };
 pub use portable::{
-    APPS_PROTOCOL, IMPORT_PROTOCOL, ImportAction, ImportInstall, PortableExport, import_action,
-    import_license, parse_portable, portable_set, portable_toml, restore_arrangement,
+    APPS_PROTOCOL, IMPORT_PROTOCOL, ImportAction, ImportCandidate, ImportInstall, PortableExport,
+    PreparedImport, import_action, import_choice, import_license, import_row, parse_portable,
+    portable_set, portable_toml, prepare_import, restore_arrangement,
 };
-pub use proxies::{proxy_file_name, sync as sync_proxies};
+pub use proxies::{proxy_file_name, sync as sync_proxies, sync_locked as sync_proxies_locked};
 pub use resolve::{
     ResolvedPackage, from_global, from_local_registry, from_manifest, local_registry_carries,
     qualified_ref,
@@ -121,8 +126,8 @@ pub use settings::{MutationLock, PROJECT_HOME, SettingsRoot};
 pub use steps::{
     FeatureChooser, FeatureRequest, FeatureResolution, HostFacts, Implied, ImpliedRule,
     LicensePrompt, ParamValue, ParameterPrompt, Plan, PlanLicense, PlannedDependency, PlannedStep,
-    RequiredBy, Start, clean_work, human_bytes, prune_runs, resolve_features, runs, step_env_name,
-    work,
+    RequiredBy, Start, clean_import, clean_work, human_bytes, prune_runs, resolve_features, runs,
+    step_env_name, work, work_import,
 };
 pub use storage::{
     Availability, DEFAULT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker, Moved, Storage,

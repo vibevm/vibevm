@@ -103,10 +103,42 @@ pub(crate) fn carry_over(
         return Ok(());
     }
     let rewrite = rewrite_of(from, to);
-    crate::export::rekey(settings, &rewrite)?;
+    carry_rewrite(settings, to, &rewrite)
+}
+
+pub(crate) fn carry_over_ids(
+    settings: &SettingsRoot,
+    from: &str,
+    ids: &[String],
+    to: &Installation,
+) -> Result<(), StateError> {
+    if from == to.package.key() {
+        return Ok(());
+    }
+    let rewrite = ids
+        .iter()
+        .map(|id| {
+            (
+                super::launcher_key(from, id),
+                to.launchers
+                    .iter()
+                    .any(|l| &l.id == id)
+                    .then(|| super::launcher_key(&to.package.key(), id)),
+            )
+        })
+        .collect();
+    carry_rewrite(settings, to, &rewrite)
+}
+
+fn carry_rewrite(
+    settings: &SettingsRoot,
+    to: &Installation,
+    rewrite: &Rewrite,
+) -> Result<(), StateError> {
+    crate::export::rekey(settings, rewrite)?;
     let mut layer = UserLaunchers::load(settings)?;
     let mut usage = Usage::load(settings)?;
-    if apply(&mut layer, &mut usage, &rewrite) {
+    if apply(&mut layer, &mut usage, rewrite) {
         layer.write(settings)?;
         usage.write(settings)?;
         super::bump_revision(

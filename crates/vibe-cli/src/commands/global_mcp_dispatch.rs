@@ -25,6 +25,7 @@ pub(crate) fn run_install(
     offline: bool,
 ) -> Result<()> {
     if !args.global {
+        refuse_configuration_input(&args.steps.choice, "workspace package acquisition")?;
         // PROP-066 `#layers-packages`: a project's `[requires.remaps]` is
         // resolved and pinned in the lock like any other requirement, and
         // recorded in this user's home as an offer — so every clone of
@@ -52,10 +53,12 @@ pub(crate) fn run_install(
         // a probe that cannot answer falls through, so the application
         // path keeps producing its own errors exactly as before.
         if let Some(refs) = remap::claims_install(&args, offline) {
+            refuse_configuration_input(&args.steps.choice, "remap package acquisition")?;
             return remap::install_packages(ctx, &args, &refs, offline);
         }
         return application::install(ctx, args, embedded_root, offline);
     }
+    refuse_configuration_input(&args.steps.choice, "MCP package acquisition")?;
     let overall = ctx.progress().task("Installing global MCP package");
     let scoped = ctx.with_progress_scope(overall.progress());
     let result = install_mcp(&scoped, args, embedded_root, offline);
@@ -210,6 +213,7 @@ pub(crate) fn run_update(
 ) -> Result<()> {
     if !args.global {
         if let Some(root) = application_home::project_at(&args.path)? {
+            refuse_configuration_input(&args.steps.choice, "workspace package update")?;
             return application_project::update(ctx, args, embedded_root, offline, &root);
         }
         if args.all
@@ -219,6 +223,7 @@ pub(crate) fn run_update(
                 .iter()
                 .any(|package| package.starts_with("mcp:"))
         {
+            refuse_configuration_input(&args.steps.choice, "workspace package update")?;
             return update::run(ctx, args, embedded_root, offline);
         }
         return application::update(ctx, args, embedded_root, offline);
@@ -231,6 +236,7 @@ pub(crate) fn run_update(
     else {
         return application::update(ctx, args, embedded_root, offline);
     };
+    refuse_configuration_input(&args.steps.choice, "MCP package update")?;
     let consent = args.assume_yes || ctx.is_unattended();
     mcp::preflight_refresh_global_package(ctx, &package)?;
     let updated = install::run_global_mcp_update(ctx, args, embedded_root, offline)?;
@@ -248,3 +254,10 @@ pub(crate) fn run_update(
 
 #[cfg(test)]
 mod tests;
+
+fn refuse_configuration_input(answers: &crate::cli::AppChoiceArgs, scope: &str) -> Result<()> {
+    if answers.configuration_input.is_some() || answers.parsed_configuration.is_some() {
+        return Err(vibe_app::AppError::from(vibe_app::configuration::ConfigurationError::Invalid{option:scope.into(),reason:"--configuration-input belongs to a selected app installer; this route does not evaluate that submission".into()}).into());
+    }
+    Ok(())
+}

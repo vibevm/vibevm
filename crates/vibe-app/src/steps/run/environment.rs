@@ -21,18 +21,18 @@ pub(super) fn prepare(plan: &Plan) -> Result<Vec<(String, String)>, AppError> {
         ),
     };
     StepEnvironment::Feature
-        .validate(plan.declared.iter().map(|f| f.id.as_str()))
+        .validate(plan.feature_ids())
         .map_err(refuse)?;
     StepEnvironment::Parameter
         .validate(plan.parameters.iter().map(|p| p.id.as_str()))
         .map_err(refuse)?;
     Ok(plan
-        .declared
-        .iter()
+        .feature_ids()
+        .into_iter()
         .map(|feature| {
             (
-                step_env_name("VIBE_FEATURE_", &feature.id),
-                if plan.features.contains(&feature.id) {
+                step_env_name("VIBE_FEATURE_", feature),
+                if plan.features.iter().any(|id| id == feature) {
                     "1"
                 } else {
                     "0"

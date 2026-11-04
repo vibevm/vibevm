@@ -32,8 +32,12 @@ use crate::steps::PlanLicense;
 
 #[path = "portable/arrangement.rs"]
 mod arrangement;
+pub(crate) mod continuation;
+pub use continuation::{ImportCandidate, PreparedImport, import_row, prepare_import};
+pub(crate) use continuation::{arrangement as import_arrangement, definition as import_definition};
 
 pub use arrangement::restore_arrangement;
+pub(crate) use arrangement::restore_locked as restore_arrangement_locked;
 
 /// The protocol tag of the portable set.
 pub const APPS_PROTOCOL: &str = "vibe-apps/1";
@@ -77,16 +81,27 @@ pub fn portable_set(
     request: &PortableExport,
 ) -> Result<wire::AppsManifest, AppError> {
     let index = Index::load(settings)?;
-    let application = index
+    let selected: Vec<_> = index
         .installations
         .values()
-        // A kept previous version is rollback state of this machine, not a
-        // choice anyone would carry to another one.
         .filter(|record| record.lifecycle.superseded_by.is_none())
         .filter(|record| request.all || !record.lifecycle.hidden)
         .filter(|record| request.all || record.lifecycle.mark == Mark::Manual)
-        .map(row_of)
         .collect();
+    if let Some(record) = selected
+        .iter()
+        .find(|record| record.configuration.is_some())
+    {
+        return Err(
+            crate::configuration::ConfigurationError::UnsupportedFormat {
+                format: APPS_PROTOCOL,
+                operation: "export",
+                package: record.package.key(),
+            }
+            .into(),
+        );
+    }
+    let application = selected.into_iter().map(row_of).collect();
     let mut set = wire::AppsManifest {
         protocol: APPS_PROTOCOL.into(),
         exported: chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
@@ -223,22 +238,29 @@ pub fn import_action(
     options: &[InstallerOptionDecl],
     skip_installed: bool,
 ) -> ImportAction {
-    let host = detected_platform();
-    let offered = options.iter().any(|option| {
-        option.id == row.installer
-            && Some(option.platform.as_str()) == host
-            && option.arch == detected_arch()
-    });
-    let choice = if offered {
-        InstallChoice {
-            platform: host.map(str::to_owned),
-            arch: Some(detected_arch().into()),
-            installer: Some(row.installer.clone()),
-        }
-    } else {
-        InstallChoice::default()
-    };
+    let choice = import_choice(row, options);
     let chosen = select_option(options, &choice, None).ok();
+    if chosen
+        .as_ref()
+        .is_some_and(|option| option.configuration.is_some())
+    {
+        return ImportAction::Refuse(
+            crate::configuration::ConfigurationError::UnsupportedFormat {
+                format: APPS_PROTOCOL,
+                operation: "import",
+                package: row.key.clone(),
+            }
+            .into(),
+        );
+    }
+    if let Some(option) = &chosen
+        && let Some(id) = row
+            .parameters
+            .keys()
+            .find(|id| option.parameters.iter().any(|p| &p.id == *id && p.secret))
+    {
+        return ImportAction::Refuse(crate::configuration::ConfigurationError::Invalid{option:format!("{}/{}",row.key,option.id),reason:format!("portable parameter `{id}` is secret in the selected installer; supply it ephemerally instead")}.into());
+    }
     let install = answers(row, choice, chosen.as_ref());
     let Some(record) = index
         .installations
@@ -247,6 +269,9 @@ pub fn import_action(
     else {
         return ImportAction::Install(install);
     };
+    if let Some(target) = &record.pending {
+        return ImportAction::Refuse(crate::StepError::ResumeMismatch{work:format!("{} [operation {}]",target.key,target.operation),reason:format!("this installed row is unfinished; continue `{}` or inspect/explicitly abandon its correctly scoped work before a fresh install; missing work does not establish completion",crate::resume_command(target))}.into());
+    }
     let wanted = install.option.as_deref().unwrap_or(&row.installer);
     let same = record.option == wanted
         && sorted(&record.features) == sorted(&row.features)
@@ -311,7 +336,7 @@ pub fn import_license(
 /// and parameters it does not declare are dropped and the defaults the row
 /// left out are deselected, so the import reproduces the recorded set rather
 /// than the package's defaults.
-fn answers(
+pub(crate) fn answers(
     row: &wire::Application,
     choice: InstallChoice,
     chosen: Option<&InstallerOptionDecl>,
@@ -366,3 +391,22 @@ fn describe(option: &str, features: &[String]) -> String {
 #[cfg(test)]
 #[path = "portable/tests.rs"]
 mod tests;
+
+/// The established host fallback for a legacy portable row.
+pub fn import_choice(row: &wire::Application, options: &[InstallerOptionDecl]) -> InstallChoice {
+    let host = detected_platform();
+    let offered = options.iter().any(|option| {
+        option.id == row.installer
+            && Some(option.platform.as_str()) == host
+            && option.arch == detected_arch()
+    });
+    if offered {
+        InstallChoice {
+            platform: host.map(str::to_owned),
+            arch: Some(detected_arch().into()),
+            installer: Some(row.installer.clone()),
+        }
+    } else {
+        InstallChoice::default()
+    }
+}

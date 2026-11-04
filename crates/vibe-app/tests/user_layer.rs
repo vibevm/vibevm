@@ -48,6 +48,9 @@ fn home(dir: &Path) -> SettingsRoot {
     index.installations.insert(
         package.key(),
         Installation {
+            configuration: None,
+            pending: None,
+            secret_origins: Default::default(),
             slot: "editor".into(),
             package: package.clone(),
             option: "main".into(),

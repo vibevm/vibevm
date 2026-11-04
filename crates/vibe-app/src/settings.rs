@@ -16,8 +16,8 @@ use crate::error::StateError;
 /// An application home: the current user's settings root (`~/.vibe` or
 /// `$VIBE_SETTINGS`) or a project home `<project>/vibevm/vibeopt`, threaded in
 /// by the caller; this crate never reads the environment itself. Both have
-/// the same layout; a project home keeps its downloads and build work
-/// directories in the user home's `cache/`.
+/// the same layout; a project home shares the user home's download/source
+/// cache, while mutable build work remains under its own home.
 ///
 /// ```
 /// let dir = tempfile::tempdir().unwrap();
@@ -45,6 +45,22 @@ pub struct SettingsRoot {
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
 pub struct MutationLock {
     _file: File,
+    home: PathBuf,
+}
+
+impl MutationLock {
+    /// Check the actual home, including aliases, before a held-lock mutation.
+    pub(crate) fn require_home(&self, settings: &SettingsRoot) -> Result<(), StateError> {
+        let home = fs::canonicalize(settings.path())
+            .map_err(|source| io("resolving", settings.path(), source))?;
+        if home != self.home {
+            return Err(StateError::ProxyUpgrade {
+                path: settings.path().display().to_string(),
+                reason: "the mutation lock belongs to another application home".into(),
+            });
+        }
+        Ok(())
+    }
 }
 
 /// The project home relative to its project root.
@@ -60,7 +76,7 @@ impl SettingsRoot {
     }
 
     /// The project home `<project_root>/vibevm/vibeopt`, sharing the source
-    /// cache and build directories of `user`.
+    /// cache of `user`; mutable build work stays in the project home.
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#project-scope")]
     pub fn project(project_root: &Path, user: &SettingsRoot) -> Self {
         Self {
@@ -240,7 +256,11 @@ impl SettingsRoot {
         let deadline = Instant::now() + window;
         loop {
             match file.try_lock() {
-                Ok(()) => return Ok(MutationLock { _file: file }),
+                Ok(()) => {
+                    let home = fs::canonicalize(self.path())
+                        .map_err(|source| io("resolving", self.path(), source))?;
+                    return Ok(MutationLock { _file: file, home });
+                }
                 Err(TryLockError::WouldBlock) if Instant::now() < deadline => {
                     std::thread::sleep(LOCK_RETRY_POLL);
                 }

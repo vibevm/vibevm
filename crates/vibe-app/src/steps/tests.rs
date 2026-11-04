@@ -18,6 +18,10 @@ use crate::settings::SettingsRoot;
 #[path = "tests/env_identity.rs"]
 mod env_identity;
 
+#[cfg(test)]
+#[path = "tests/common_ui.rs"]
+mod common_ui;
+
 fn package(dir: &Path, steps: &str) -> ResolvedPackage {
     let text = format!(
         r#"[package]
@@ -89,13 +93,18 @@ fn run(
 ) -> Result<super::Plan, AppError> {
     let settings = SettingsRoot::new(&dir.join("settings"));
     let parameters = Default::default();
+    let secret_origins = Default::default();
     plan(&PlanInput {
+        agent_modes: None,
+        configuration: None,
         resolved,
         option: &resolved.options[0],
         request: &host.request,
         parameters: &[],
         accept_license: false,
         previous: host.previous.as_deref().map(|features| Previous {
+            secret_origins: &secret_origins,
+            configuration: None,
             features,
             parameters: &parameters,
             license: None,
@@ -174,7 +183,7 @@ fn conditions_decide_run_or_skip_with_the_deciding_condition() {
     };
     let plan = run(dir.path(), &resolved, &offline, None).unwrap();
     assert!(!plan.steps[4].run, "offline = true holds");
-    let wire = plan.to_wire();
+    let wire = plan.to_wire().unwrap();
     assert_eq!(wire.protocol, "vibe-app-plan/1");
     assert!(wire.features[1].chosen);
 }
@@ -376,7 +385,7 @@ fn features_come_from_flags_then_the_question_then_defaults_and_update_reuses_th
 }
 
 #[test]
-fn common_installer_configuration_refuses_before_prompts_or_step_planning() {
+fn common_installer_configuration_plans_with_inspectable_evaluation() {
     let dir = tempfile::tempdir().unwrap();
     let mut resolved = package(dir.path(), BUILD);
     let option = &mut resolved.options[0];
@@ -387,15 +396,26 @@ fn common_installer_configuration_refuses_before_prompts_or_step_planning() {
         *called.borrow_mut() = true;
         Ok(Some(vec![]))
     };
-    let error = run(dir.path(), &resolved, &host(), Some(&chooser)).unwrap_err();
-    assert_eq!(error.code(), "configuration_unsupported");
-    assert!(error.to_string().contains("installer main"));
+    let plan = run(dir.path(), &resolved, &host(), Some(&chooser)).unwrap();
+    assert!(
+        plan.configuration
+            .as_ref()
+            .unwrap()
+            .evaluation
+            .resolved
+            .is_some()
+    );
+    assert!(plan.to_configuration_wire().unwrap().execution.is_some());
+    assert_eq!(
+        plan.to_wire().unwrap_err().code(),
+        "configuration_unsupported"
+    );
     assert!(!*called.borrow());
     assert!(!dir.path().join("settings").exists());
 }
 
 #[test]
-fn common_shorthand_option_is_admitted_but_not_silently_executed() {
+fn common_shorthand_option_plans_through_the_same_evaluator() {
     let dir = tempfile::tempdir().unwrap();
     let manifest=Manifest::parse_str("[package]\ngroup='org.example'\nname='tool'\nkind='app'\nversion='1.0.0'\n[application]\nid='tool'\n[[installer_options]]\nid='main'\nname='Main'\nplatform='linux'\nplatform_name='Linux'\narch='x86_64'\n[installer_options.installation]\ntype='shell'\napp_root='/tmp/tool'\ninstall='true'\nforce_install='true'\nuninstall='true'\nforce_uninstall='true'\n[installer_options.configuration]\n").unwrap();
     let resolved = from_manifest(
@@ -408,8 +428,16 @@ fn common_shorthand_option_is_admitted_but_not_silently_executed() {
         },
     )
     .unwrap();
-    let error = run(dir.path(), &resolved, &host(), None).unwrap_err();
-    assert_eq!(error.code(), "configuration_unsupported");
+    let plan = run(dir.path(), &resolved, &host(), None).unwrap();
+    assert!(
+        plan.configuration
+            .as_ref()
+            .unwrap()
+            .evaluation
+            .resolved
+            .is_some()
+    );
+    assert_eq!(plan.steps.len(), 1);
     assert!(!dir.path().join("settings").exists());
 }
 
@@ -427,4 +455,36 @@ fn a_legacy_selected_option_still_plans_beside_an_unselected_common_option() {
     let error = crate::describe(&resolved).unwrap_err();
     assert_eq!(error.code(), "configuration_unsupported");
     assert!(error.to_string().contains("installer rich"));
+}
+
+#[test]
+fn legacy_effective_values_do_not_become_common_intent_from_partial_flags_or_terminal_presence() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut resolved = package(dir.path(), BUILD);
+    let option = &mut resolved.options[0];
+    option.features.clear();
+    option.configuration = Some(
+        toml::from_str(
+            "[[features]]\nid='foo'\nname='Foo'\ndefault=true\n[[features]]\nid='bar'\nname='Bar'",
+        )
+        .unwrap(),
+    );
+    for attended in [false, true] {
+        let mut current = host();
+        current.attended = attended;
+        current.previous = Some(vec!["bar".into()]);
+        current.request.enable = vec!["foo".into()];
+        let called = RefCell::new(false);
+        let features = |_: &str, _: &[crate::Choice], _: &[bool]| {
+            *called.borrow_mut() = true;
+            Ok(Some(vec![0]))
+        };
+        let error = run(dir.path(), &resolved, &current, Some(&features)).unwrap_err();
+        assert_eq!(error.code(), "configuration_input_invalid");
+        assert!(error.to_string().contains("no original common intent"));
+        assert!(
+            !*called.borrow(),
+            "terminal presence cannot stand in for an explicit fresh-input decision"
+        );
+    }
 }

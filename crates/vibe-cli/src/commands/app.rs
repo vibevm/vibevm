@@ -9,6 +9,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operati
 pub(crate) mod agents;
 mod alternatives;
 mod catalog;
+mod configuration;
 mod describe;
 pub(crate) mod display;
 mod environment;
@@ -26,6 +27,7 @@ pub(crate) mod processes;
 pub(crate) mod project;
 mod records;
 mod report;
+mod resume;
 mod runtime;
 mod views;
 mod wizard;
@@ -69,6 +71,7 @@ pub fn run(
         }
         AppCommand::Plan {
             package,
+            configuration,
             registry,
             platform,
             arch,
@@ -98,6 +101,7 @@ pub fn run(
             let operation = vibe_app::OperationContext {
                 agent: agents.hooks(),
                 resolver: Some(&resolver),
+                resolver_scope: packages.scope(),
                 ..global::operation(
                     ctx,
                     app_home.settings(),
@@ -114,21 +118,51 @@ pub fn run(
                     installer,
                 },
                 &choice,
-            );
+            )?;
+            if configuration {
+                let document = ctx.suspend_progress(|| {
+                    vibe_app::configuration_plan(&operation, &resolved, &request)
+                })?;
+                if ctx.is_json() {
+                    ctx.emit_json(&document)?;
+                } else {
+                    println!("{}", serde_json::to_string_pretty(&document)?);
+                }
+                return Ok(None);
+            }
             let plan = ctx.suspend_progress(|| vibe_app::plan(&operation, &resolved, &request))?;
             global::render_plan(ctx, &plan)?;
             Ok(None)
         }
+        AppCommand::Resume {
+            package,
+            operation,
+            parameters,
+        } => resume::run(
+            ctx,
+            app_home.settings(),
+            &package,
+            &operation,
+            parameters,
+            offline,
+        ),
         AppCommand::Runs { package, prune } => {
             records::runs(ctx, app_home.settings(), &package, prune)?;
             Ok(None)
         }
         AppCommand::Work {
             package,
+            import,
             clean,
             all: _,
         } => {
-            records::work(ctx, app_home.settings(), package.as_deref(), clean)?;
+            records::work(
+                ctx,
+                app_home.settings(),
+                package.as_deref(),
+                clean,
+                import.as_deref(),
+            )?;
             Ok(None)
         }
         AppCommand::Errors => {
@@ -239,10 +273,15 @@ pub fn run(
                 &package,
                 offline,
                 true,
+                false,
             )?;
             Ok(None)
         }
-        AppCommand::Describe { package, registry } => {
+        AppCommand::Describe {
+            package,
+            registry,
+            configuration,
+        } => {
             describe::show(
                 ctx,
                 registry.as_deref(),
@@ -250,6 +289,7 @@ pub fn run(
                 &package,
                 offline,
                 false,
+                configuration,
             )?;
             Ok(None)
         }

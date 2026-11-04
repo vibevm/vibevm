@@ -57,7 +57,8 @@ pub struct AgentHooks<'a> {
     pub notify: Option<&'a dyn Fn(&AgentNotice<'_>)>,
     /// Present only in an attended terminal.
     pub confirm: Option<ConsentPrompt<'a>>,
-    /// The exact command a hosting agent re-invokes after answering.
+    /// Legacy caller hint retained for source compatibility; retained operations
+    /// derive their continuation solely from the value-free pending target.
     pub resume_command: Option<&'a str>,
 }
 

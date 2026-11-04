@@ -13,7 +13,9 @@ use std::path::{Path, PathBuf};
 use vibe_core::manifest::is_command_name;
 
 use crate::error::AppError;
-use crate::settings::{SettingsRoot, io};
+use crate::settings::{MutationLock, SettingsRoot, io};
+mod upgrade;
+pub(crate) use upgrade::{CapturedImage, before_publication, for_publication};
 
 /// The proxy file name of one command (`<command>.exe` on Windows).
 ///
@@ -42,7 +44,9 @@ pub(crate) fn require_image(proxy_image: &Path) -> Result<(), AppError> {
 
 /// Make `opt/bin` hold one current proxy copy per name in `current`: remove
 /// the copies of names only `previous` reserved, then copy the image for new
-/// names and overwrite copies whose bytes differ. Names that are not portable
+/// names and overwrite copies whose bytes differ. This entrypoint takes the
+/// home mutation lock; use [`sync_locked`] inside an existing mutation.
+/// Names that are not portable
 /// command tokens are never written or removed.
 ///
 /// ```
@@ -65,20 +69,102 @@ pub fn sync(
     current: &BTreeSet<String>,
     proxy_image: &Path,
 ) -> Result<(), AppError> {
-    sync_into(&settings.proxy_dir(), previous, current, proxy_image)
+    let lock = settings.lock()?;
+    sync_locked(settings, previous, current, proxy_image, &lock)
 }
 
-/// [`sync`] for any proxy directory of a home: `opt/bin`, or the session
-/// proxies of one installation (`PROP-059#hidden-installations`). A proxy
-/// finds its home as the nearest ancestor holding the index, so `dir`
-/// must lie inside the home.
-pub(crate) fn sync_into(
-    dir: &Path,
+/// Reconcile global proxies inside an already-held home mutation. The supplied
+/// image must advertise reader4 support when this home uses index4.
+///
+/// ```
+/// use std::collections::BTreeSet;
+/// let temp = tempfile::tempdir().unwrap();
+/// let home = vibe_app::SettingsRoot::new(temp.path());
+/// let lock = home.lock().unwrap();
+/// vibe_app::sync_proxies_locked(&home, &BTreeSet::new(), &BTreeSet::new(),
+///     &temp.path().join("unused"), &lock).unwrap();
+/// ```
+pub fn sync_locked(
+    settings: &SettingsRoot,
     previous: &BTreeSet<String>,
     current: &BTreeSet<String>,
     proxy_image: &Path,
+    lock: &MutationLock,
 ) -> Result<(), AppError> {
-    let dir = dir.to_path_buf();
+    lock.require_home(settings)?;
+    if !current.iter().any(|name| command_name(name)) {
+        return sync_captured(
+            settings,
+            &settings.proxy_dir(),
+            previous,
+            current,
+            None,
+            lock,
+        );
+    }
+    let four = crate::Index::load_with_protocol(settings)?.1;
+    if !four {
+        // Preserve the incumbent3 contract: obsolete names are removed even
+        // when the image for a new command is missing.
+        let obsolete = previous.difference(current).cloned().collect();
+        sync_captured(
+            settings,
+            &settings.proxy_dir(),
+            &obsolete,
+            &BTreeSet::new(),
+            None,
+            lock,
+        )?;
+    }
+    let image = CapturedImage::read(proxy_image, four)?;
+    sync_captured(
+        settings,
+        &settings.proxy_dir(),
+        previous,
+        current,
+        Some(&image),
+        lock,
+    )
+}
+
+/// Reconcile names using the same captured bytes admitted before publication.
+pub(crate) fn sync_captured(
+    settings: &SettingsRoot,
+    dir: &Path,
+    previous: &BTreeSet<String>,
+    current: &BTreeSet<String>,
+    image: Option<&CapturedImage>,
+    lock: &MutationLock,
+) -> Result<(), AppError> {
+    lock.require_home(settings)?;
+    let wanted: Vec<_> = current
+        .iter()
+        .filter(|name| command_name(name))
+        .map(|name| dir.join(proxy_file_name(name)))
+        .collect();
+    for path in wanted.iter().chain(
+        previous
+            .difference(current)
+            .filter(|name| command_name(name))
+            .map(|name| dir.join(proxy_file_name(name)))
+            .collect::<Vec<_>>()
+            .iter(),
+    ) {
+        upgrade::regular(settings, path)?;
+    }
+    if !wanted.is_empty() {
+        let image = image.ok_or_else(|| crate::StateError::ProxyUpgrade {
+            path: dir.display().to_string(),
+            reason: "proxy writes require the captured image".into(),
+        })?;
+        if crate::Index::load_with_protocol(settings)?.1 && !image.supports_both {
+            return Err(crate::StateError::ProxyUpgrade {
+                path: dir.display().to_string(),
+                reason: "index4 proxy writes require an admitted compatible image".into(),
+            }
+            .into());
+        }
+    }
     for name in previous
         .difference(current)
         .filter(|name| command_name(name))
@@ -86,26 +172,22 @@ pub(crate) fn sync_into(
         let path = dir.join(proxy_file_name(name));
         match fs::remove_file(&path) {
             Ok(()) => {}
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-            Err(source) => return Err(io("removing", &path, source).into()),
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+            Err(e) => return Err(io("removing", &path, e).into()),
         }
     }
-    let wanted: Vec<PathBuf> = current
-        .iter()
-        .filter(|name| command_name(name))
-        .map(|name| dir.join(proxy_file_name(name)))
-        .collect();
     if wanted.is_empty() {
         return Ok(());
     }
-    require_image(proxy_image)?;
-    let image = fs::read(proxy_image).map_err(|source| io("reading", proxy_image, source))?;
-    fs::create_dir_all(&dir).map_err(|source| io("creating", &dir, source))?;
+    fs::create_dir_all(dir).map_err(|e| io("creating", dir, e))?;
+    let Some(image) = image else {
+        return Ok(());
+    };
     for path in wanted {
-        if fs::read(&path).is_ok_and(|bytes| bytes == image) {
+        if fs::read(&path).is_ok_and(|bytes| bytes == image.bytes) {
             continue;
         }
-        place(&path, &image)?;
+        place(&path, &image.bytes)?;
     }
     Ok(())
 }
@@ -117,24 +199,23 @@ fn command_name(name: &str) -> bool {
 /// Write an executable sibling and rename it over `path`.
 fn place(path: &Path, bytes: &[u8]) -> Result<(), AppError> {
     let parent = path.parent().unwrap_or(Path::new("."));
-    let name = path
-        .file_name()
-        .map(|name| name.to_string_lossy().into_owned())
-        .unwrap_or_default();
-    let sibling = parent.join(format!(".{name}.{}.tmp", std::process::id()));
-    let written = File::create(&sibling).and_then(|mut file| {
-        file.write_all(bytes)?;
-        file.sync_all()
-    });
+    let mut sibling = tempfile::NamedTempFile::new_in(parent)
+        .map_err(|source| io("creating proxy sibling", parent, source))?;
+    sibling
+        .write_all(bytes)
+        .and_then(|()| sibling.as_file().sync_all())
+        .map_err(|source| io("writing", path, source))?;
     #[cfg(unix)]
-    let written = written.and_then(|()| {
+    {
         use std::os::unix::fs::PermissionsExt;
-        fs::set_permissions(&sibling, fs::Permissions::from_mode(0o755))
-    });
-    if let Err(source) = written.and_then(|()| fs::rename(&sibling, path)) {
-        let _ = fs::remove_file(&sibling);
-        return Err(io("writing", path, source).into());
+        sibling
+            .as_file()
+            .set_permissions(fs::Permissions::from_mode(0o755))
+            .map_err(|source| io("making proxy executable", path, source))?;
     }
+    sibling
+        .persist(path)
+        .map_err(|e| io("replacing proxy", path, e.error))?;
     Ok(())
 }
 
@@ -195,5 +276,19 @@ mod tests {
         assert!(error.to_string().contains("absent-proxy"), "{error}");
         assert!(!settings.proxy_dir().join(proxy_file_name("old")).exists());
         sync(&settings, &names(&[]), &names(&[]), &image).unwrap();
+    }
+    #[test]
+    fn invalid_only_requested_commands_need_no_image_and_keep_filtered_removals() {
+        let dir = tempfile::tempdir().unwrap();
+        let settings = SettingsRoot::new(dir.path());
+        let missing = dir.path().join("missing");
+        let invalid = names(&["vibe", "../escape"]);
+        sync(&settings, &names(&[]), &invalid, &missing).unwrap();
+        fs::create_dir_all(settings.proxy_dir()).unwrap();
+        let obsolete = settings.proxy_dir().join(proxy_file_name("old"));
+        fs::write(&obsolete, b"old").unwrap();
+        sync(&settings, &names(&["old"]), &invalid, &missing).unwrap();
+        assert!(!obsolete.exists());
+        assert!(!dir.path().join("escape").exists());
     }
 }

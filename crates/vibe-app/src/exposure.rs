@@ -56,10 +56,11 @@ pub fn expose_for_session(
     spelling: &str,
     proxy_image: &Path,
 ) -> Result<Exposure, AppError> {
+    let lock = settings.lock()?;
     let index = Index::load(settings)?;
     let storage = Storage::load(settings)?;
     let (key, record) = installed(settings, &index, spelling)?;
-    exposure_of(settings, &storage, key, record, proxy_image)
+    exposure_of(settings, &storage, key, record, proxy_image, &lock)
 }
 
 /// The exposure of one installation record; writes its proxy directory.
@@ -69,7 +70,9 @@ pub(crate) fn exposure_of(
     key: &str,
     record: &Installation,
     proxy_image: &Path,
+    lock: &crate::MutationLock,
 ) -> Result<Exposure, AppError> {
+    lock.require_home(settings)?;
     let dir = settings
         .app_proxies_dir()
         .join(record.package.directory_name())
@@ -79,7 +82,22 @@ pub(crate) fn exposure_of(
         .iter()
         .map(|command| command.name.clone())
         .collect();
-    proxies::sync_into(&dir, &BTreeSet::new(), &commands, proxy_image)?;
+    let image = if commands.is_empty() {
+        None
+    } else {
+        Some(proxies::CapturedImage::read(
+            proxy_image,
+            Index::load_with_protocol(settings)?.1,
+        )?)
+    };
+    proxies::sync_captured(
+        settings,
+        &dir,
+        &BTreeSet::new(),
+        &commands,
+        image.as_ref(),
+        lock,
+    )?;
     let bin = match &record.location {
         Location::Owned { .. } => launch::app_root(record, storage)
             .ok()

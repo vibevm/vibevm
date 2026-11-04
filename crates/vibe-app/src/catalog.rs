@@ -41,7 +41,7 @@ mod view;
 #[path = "catalog/watch.rs"]
 mod watch;
 
-pub(crate) use carry::carry_over;
+pub(crate) use carry::{carry_over, carry_over_ids};
 pub use edit::{
     LauncherChange, PinTarget, collection_add, collection_create, collection_delete,
     collection_order, collection_remove, collection_rename, collections, launcher_override, pin,
@@ -181,6 +181,9 @@ mod tests {
         index.installations.insert(
             package.key(),
             Installation {
+                secret_origins: Default::default(),
+                configuration: None,
+                pending: None,
                 slot: "editor".into(),
                 package: package.clone(),
                 option: "main".into(),

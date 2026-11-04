@@ -185,6 +185,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | crate::cli::AppCommand::Launcher { .. } => FastMetadata,
             crate::cli::AppCommand::Use { .. } => FiniteFallback("Command app use"),
             crate::cli::AppCommand::Modify { .. } => FiniteFallback("Command app modify"),
+            crate::cli::AppCommand::Resume { .. } => FiniteFallback("Command app resume"),
             crate::cli::AppCommand::Expose { .. }
             | crate::cli::AppCommand::Hide { .. }
             | crate::cli::AppCommand::Mark { .. }

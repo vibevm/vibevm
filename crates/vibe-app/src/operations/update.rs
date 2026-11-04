@@ -6,6 +6,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#update-and-rollback");
 
 use vibe_core::manifest::result_of;
+pub(super) mod retirement;
 
 use crate::error::AppError;
 use crate::index::{Index, Lifecycle, Location};
@@ -28,26 +29,48 @@ pub fn update(
     resolved: &ResolvedPackage,
     request: &InstallRequest,
 ) -> Result<Outcome, AppError> {
-    let _lock = ctx.settings.lock()?;
+    let held = ctx.settings.lock()?;
+    let lock = &held;
+    if let Some(outcome) = super::pending::manual(lock, ctx, resolved, request)? {
+        return Ok(outcome);
+    }
     let mut stack = Vec::new();
     deps::enter(&mut stack, &resolved.package.key())?;
-    update_locked(ctx, resolved, request, &mut stack)
+    update_locked(lock, ctx, resolved, request, &mut stack, None)
 }
 
-fn update_locked(
+pub(super) fn update_locked(
+    lock: &crate::MutationLock,
     ctx: &OperationContext<'_>,
     resolved: &ResolvedPackage,
     request: &InstallRequest,
     stack: &mut Vec<String>,
+    saved: Option<&crate::steps::StepsFile>,
 ) -> Result<Outcome, AppError> {
     let index = Index::load(ctx.settings)?;
     let storage = Storage::load(ctx.settings)?;
-    let prior_key = previous_installation(ctx.settings, &index, resolved)?;
-    let prior = index
-        .installations
-        .get(&prior_key)
-        .cloned()
-        .ok_or_else(|| AppError::not_installed(ctx.settings, &prior_key))?;
+    let operation = saved.and_then(|s| s.operation.as_ref());
+    let published = operation
+        .map(|op| super::pending::was_published(ctx.settings, &index, op))
+        .transpose()?
+        .unwrap_or(false);
+    let prior_key = match operation {
+        Some(op) => op.predecessor.clone().ok_or_else(|| {
+            super::pending::failure(
+                ctx.settings,
+                &resolved.package,
+                "update has no retained predecessor".into(),
+            )
+        })?,
+        None => previous_installation(ctx.settings, &index, resolved)?,
+    };
+    let original_prior = index.installations.get(&prior_key).cloned();
+    let prior = if published {
+        index.installations.get(&resolved.package.key()).cloned()
+    } else {
+        original_prior.clone()
+    }
+    .ok_or_else(|| AppError::not_installed(ctx.settings, &prior_key))?;
     if prior.slot != resolved.application.id {
         return Err(AppError::SlotChanged {
             key: prior_key,
@@ -95,19 +118,96 @@ fn update_locked(
             Some(prior_key.clone()),
         )
     };
-    let previous = Previous {
-        features: &prior.features,
-        parameters: &prior.parameters,
-        license: prior.license.as_ref().map(|license| license.name.as_str()),
-        ask: false,
+    if operation.is_some_and(|op| {
+        owned
+            && prior_key != key
+            && replaces.is_none()
+            && request.purge_previous
+            && !op.retirements.iter().any(|r| r.key == prior_key)
+    }) {
+        return Err(super::pending::failure(
+            ctx.settings,
+            &resolved.package,
+            "requested previous-version retirement has no bound obligation".into(),
+        ));
+    }
+    let previous = if let Some(op) = operation {
+        Previous {
+            secret_origins: &op.request.secret_origins,
+            configuration: op.request.configuration.as_ref(),
+            features: &op.request.features,
+            parameters: &op.request.parameters,
+            license: None,
+            ask: false,
+        }
+    } else {
+        Previous {
+            secret_origins: &prior.secret_origins,
+            configuration: prior.configuration.as_ref(),
+            features: &prior.features,
+            parameters: &prior.parameters,
+            license: prior.license.as_ref().map(|l| l.name.as_str()),
+            ask: false,
+        }
     };
-    let plan = plan_option(ctx, resolved, &option, request, Some(previous), &index)?;
-    let paths = deps::install_required(ctx, &plan, request.accept_license, stack)?;
+    let previous = if saved.is_none() && option.configuration.is_some() && option.id != prior.option
+    {
+        None
+    } else {
+        Some(previous)
+    };
+    let plan = plan_option(ctx, resolved, &option, request, previous, &index, operation)?;
+    let retirements = if saved.is_none() && owned && prior_key != key && replaces.is_none() {
+        retirement::bind(ctx, &index, &prior, &key, request.purge_previous)?
+    } else {
+        Vec::new()
+    };
+    apply::admit_agents(ctx, resolved, &plan, request, saved)?;
+    let target = if let Some(state) = saved {
+        super::pending::validate_plan(ctx, resolved, &option, request, &plan, state)?;
+        operation
+            .ok_or_else(|| {
+                super::pending::failure(
+                    ctx.settings,
+                    &resolved.package,
+                    "missing retained update".into(),
+                )
+            })?
+            .target
+            .clone()
+    } else {
+        super::pending::begin(
+            lock,
+            ctx,
+            resolved,
+            &option,
+            request,
+            &plan,
+            super::pending::Checkpoint {
+                kind: vibe_wire::generated::shared::ApplicationPendingOperationKind::Update,
+                retirements,
+                predecessor: Some(&prior_key),
+                parent: None,
+            },
+        )?
+    };
+    super::pending::bind_resupply(ctx.settings, &target, &plan.secret_provided)?;
+    super::pending::keep_work(ctx.settings, &target, request.keep_work)?;
+    super::pending::before_dependencies(ctx.settings, &target)?;
+    let paths = deps::install_required(
+        lock,
+        ctx,
+        &plan,
+        request.accept_license,
+        stack,
+        Some(&target),
+    )?;
     let moved = prior_key != key;
     let mut applied = apply::apply(
         ctx,
         &storage,
         &Selected {
+            operation: Some(&target),
             resolved,
             option: &option,
             plan: &plan,
@@ -132,6 +232,20 @@ fn update_locked(
         superseded_by: None,
     };
     let finish_failure = applied.finish_failure.take();
+    let resumable_failure = request.keep_work
+        || matches!(
+            &finish_failure,
+            Some(AppError::Agent(crate::AgentError::Parked(_)))
+        );
+    let has_retirements =
+        super::pending::load(ctx.settings, &resolved.package, Some(&target.operation))?
+            .operation
+            .as_ref()
+            .is_some_and(|o| !o.retirements.is_empty());
+    applied.installation.pending = ((finish_failure.is_some() && resumable_failure)
+        || (finish_failure.is_none() && has_retirements))
+        .then(|| target.clone());
+    super::pending::publishing(ctx.settings, &target, &applied.installation)?;
     // An owned update of another key keeps the previous installation,
     // hidden; earlier kept versions of the slot go now.
     let supersede = (owned && moved && replaces.is_none()).then(|| prior_key.clone());
@@ -141,44 +255,60 @@ fn update_locked(
         &storage,
         &mut index,
         applied,
-        replaces,
-        supersede.clone(),
-        Command::Update,
+        if published { None } else { replaces },
+        if published { None } else { supersede.clone() },
+        super::Publication {
+            lock,
+            command: Command::Update,
+            preserve_default: published,
+        },
+    )?;
+    super::pending::phase(
+        ctx.settings,
+        &target,
+        vibe_wire::generated::shared::ApplicationPendingOperationPhase::Published,
     )?;
     // The user's collections, pins, overrides and counts follow the
     // launchers to the new key (`PROP-059#launcher-runtime`).
     if moved && let Some(record) = index.installations.get(&key) {
-        crate::catalog::carry_over(ctx.settings, &prior, record)?;
+        if let Some(op) = operation {
+            crate::catalog::carry_over_ids(
+                ctx.settings,
+                &prior_key,
+                &op.predecessor_launchers,
+                record,
+            )?;
+        } else {
+            crate::catalog::carry_over(ctx.settings, &prior, record)?;
+        }
     }
     let mut message = if moved {
         format!("updated {prior_key} to {key}")
     } else {
         format!("refreshed {key} in place")
     };
-    if let Some(kept) = &supersede {
-        let earlier: Vec<String> = index
-            .installations
-            .iter()
-            .filter(|(other, record)| {
-                record.slot == prior.slot
-                    && record.lifecycle.superseded_by.is_some()
-                    && (*other != kept || request.purge_previous)
-            })
-            .map(|(other, _)| other.clone())
-            .collect();
-        for other in &earlier {
-            remove::remove_locked(ctx, other, false)?;
+    if let Some(failure) = finish_failure {
+        // Setup did not succeed. Keep previous versions; queued retirement never
+        // starts merely because a replacement record was published.
+        if !resumable_failure
+            && let Err(cleanup) = super::pending::complete_failed(lock, ctx.settings, &target)
+            && let Some(notice) = ctx.on_notice
+        {
+            notice(&format!("failed update work remains: {cleanup}"));
         }
+        return Err(failure);
+    }
+    if has_retirements {
+        retirement::run(lock, ctx, &target)?;
+        retirement::clear_pending(lock, ctx, &target)?;
+    }
+    if let Some(kept) = supersede.as_ref() {
         if request.purge_previous {
             message.push_str(&format!("; removed the previous {kept}"));
         } else {
-            message.push_str(&format!(
-                "; the previous {kept} is kept hidden until the next update (`vibe app rollback` restores it)"
-            ));
+            message.push_str(&format!("; the previous {kept} is kept hidden until the next successful update (`vibe app rollback` restores it)"));
         }
     }
-    if let Some(failure) = finish_failure {
-        return Err(failure);
-    }
+    super::pending::complete(lock, ctx.settings, &target)?;
     Ok(Outcome { message, ..outcome })
 }

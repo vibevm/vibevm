@@ -12,6 +12,29 @@ use crate::index::{EnvEntry, StepRecord};
 use super::Run;
 
 impl Run<'_> {
+    /// Inherited legacy prefixes cannot turn a current default into a historical receipt.
+    pub fn secret_origins(
+        &self,
+    ) -> std::collections::BTreeMap<
+        String,
+        vibe_wire::generated::shared::ConfigurationParameterOrigin,
+    > {
+        use vibe_wire::generated::shared as w;
+        let mut origins = self.plan.secret_origins.clone();
+        if self.state.operation.as_ref().is_some_and(|o| {
+            o.provenance == w::ApplicationPendingOperationProvenance::LegacyEffectiveOnly
+        }) {
+            for value in origins.values_mut() {
+                if !matches!(value, w::ConfigurationParameterOrigin::Explicit(_)) {
+                    *value = w::ConfigurationParameterOrigin::LegacyEffective(Box::new(
+                        w::ConfigurationParameterOriginLegacyEffective {},
+                    ));
+                }
+            }
+        }
+        origins
+    }
+
     /// The step outcomes the index keeps.
     pub fn records(&self) -> Vec<StepRecord> {
         self.plan

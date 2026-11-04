@@ -51,6 +51,7 @@ pub(crate) fn modify(
     };
     let resolved = packages.resolve(&exact)?;
     let request = ModifyRequest {
+        configuration: super::configuration::read(args.choice)?,
         installer: args.installer,
         features: FeatureRequest {
             enable: args.choice.feature.clone(),
@@ -71,6 +72,7 @@ pub(crate) fn modify(
         let operation = OperationContext {
             agent: agents.hooks(),
             resolver: Some(&resolver),
+            resolver_scope: packages.scope(),
             ..global::operation(ctx, home, offline, &proxy_image, Some(&show), &observe)
         };
         report_parked(ctx, vibe_app::modify(&operation, &resolved, &request))
@@ -156,15 +158,17 @@ pub(crate) fn autoremove(
 /// `#update-and-rollback`), one ordinary update each.
 pub(crate) fn update_all(
     ctx: &output::Context,
-    args: UpdateArgs,
+    mut args: UpdateArgs,
     embedded_root: Option<PathBuf>,
     offline: bool,
 ) -> Result<()> {
+    super::configuration::preload(&mut args.steps.choice)?;
     let settings = global::settings_root()?;
     let index = Index::load(&settings)?;
     let mut seen = std::collections::BTreeSet::new();
     let mut skipped = Vec::new();
     let mut updated = 0;
+    let mut candidates = Vec::new();
     for record in index.installations.values() {
         let package = &record.package;
         if record.lifecycle.superseded_by.is_some()
@@ -198,6 +202,24 @@ pub(crate) fn update_all(
         if offered <= installed_newest {
             continue;
         }
+        candidates.push(resolved);
+    }
+    let choice = vibe_app::InstallChoice {
+        platform: args.platform.clone(),
+        arch: args.arch.clone(),
+        installer: args.installer.clone(),
+    };
+    let selected = super::configuration::select_batch(
+        ctx,
+        candidates,
+        &choice,
+        &args.steps.choice.set,
+        args.steps.choice.parsed_configuration.as_ref(),
+    )?;
+    for (resolved, choice) in selected {
+        args.platform = choice.platform;
+        args.arch = choice.arch;
+        args.installer = choice.installer;
         let outcome = global::update_one(ctx, &args, embedded_root.clone(), offline, &resolved)?;
         render(ctx, &outcome)?;
         updated += 1;

@@ -53,10 +53,16 @@ fn run() -> Result<i32, String> {
     execute(&launch, &caller)
 }
 
-/// `--probe` and `--version` answer only under the original image name.
+/// Capability queries answer only under the original image name.
 fn original(caller: &[OsString]) -> Result<i32, String> {
     match caller {
         [flag] if flag == "--probe" => println!("{PROXY_PROTOCOL}"),
+        [flag, protocol] if flag == "--supports-index" => match protocol.to_str() {
+            Some("vibe-user-applications/3" | "vibe-user-applications/4") => {
+                println!("{}", protocol.to_string_lossy());
+            }
+            _ => return Err("unsupported application index protocol".into()),
+        },
         [flag] if flag == "--version" => println!("vibe-app-proxy {}", env!("CARGO_PKG_VERSION")),
         _ => {
             return Err(

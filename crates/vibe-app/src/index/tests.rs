@@ -6,6 +6,9 @@ use vibe_core::manifest::{
 
 fn sample() -> Index {
     let owned = Installation {
+        secret_origins: Default::default(),
+        configuration: None,
+        pending: None,
         slot: "editor".into(),
         package: PackageCoordinate {
             group: "org.example".into(),

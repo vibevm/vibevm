@@ -73,6 +73,13 @@ pub(super) fn resolve_requirement(
         .collect();
     candidates.sort_by(|left, right| left.0.cmp(&right.0));
     if let Some((_, key, record)) = candidates.last() {
+        if let Some(target) = &record.pending {
+            super::pending::load(ctx.settings, &record.package, Some(&target.operation))?;
+            return Err(unresolved(format!(
+                "dependency has unfinished work; continue its actual operation with `{}` before starting a different parent",
+                super::pending::command(target)
+            )));
+        }
         return Ok(PlannedDependency {
             package: spelling.into(),
             scope,
@@ -93,6 +100,19 @@ pub(super) fn resolve_requirement(
         .resolver
         .ok_or_else(|| unresolved("no package resolver is available in this context".into()))?;
     let resolved = resolver(spelling).map_err(|error| unresolved(error.to_string()))?;
+    if let Some(state) =
+        crate::steps::StepsFile::load(&super::pending::work(ctx.settings, &resolved.package))?
+        && let Some(op) = state.operation.as_ref().filter(|op| {
+            op.phase != vibe_wire::generated::shared::ApplicationPendingOperationPhase::Complete
+                || op.parent.is_some()
+        })
+    {
+        super::pending::load(ctx.settings, &resolved.package, Some(&op.target.operation))?;
+        return Err(unresolved(format!(
+            "dependency has retained work from another operation; continue `{}` before starting a different parent",
+            super::pending::command(&op.target)
+        )));
+    }
     let option = select_option(&resolved.options, &InstallChoice::default(), None)
         .map_err(|error| unresolved(error.to_string()))?;
     if ctx.chooser.is_none() {
@@ -141,14 +161,60 @@ pub(super) fn enter(stack: &mut Vec<String>, key: &str) -> Result<(), AppError> 
 /// `auto`, under the requiring command's `--accept-license`; then expose
 /// each requirement for the steps that need it.
 pub(super) fn install_required(
+    lock: &crate::MutationLock,
     ctx: &OperationContext<'_>,
     plan: &Plan,
     accept_license: bool,
     stack: &mut Vec<String>,
+    parent: Option<&vibe_wire::generated::shared::ApplicationPendingTarget>,
 ) -> Result<StepPaths, AppError> {
     let mut done = BTreeSet::new();
     for dependency in &plan.dependencies {
-        if dependency.installed || !done.insert(dependency.key.clone()) {
+        if !done.insert(dependency.key.clone()) {
+            continue;
+        }
+        if let Some(parent) = parent
+            && let Some(target) = super::pending::bound_child(ctx, parent, &dependency.key)?
+        {
+            let package = super::pending::coordinate(&target.key)?;
+            let state = super::pending::load(ctx.settings, &package, Some(&target.operation))?;
+            let op = state.operation.as_ref().ok_or_else(|| {
+                super::pending::failure(
+                    ctx.settings,
+                    &package,
+                    "missing bound child operation".into(),
+                )
+            })?;
+            if op.phase != vibe_wire::generated::shared::ApplicationPendingOperationPhase::Complete
+            {
+                if op.parent.as_ref() != Some(&super::pending::application_reference(parent))
+                    || op.kind
+                        != vibe_wire::generated::shared::ApplicationPendingOperationKind::Install
+                {
+                    return Err(super::pending::failure(
+                        ctx.settings,
+                        &package,
+                        format!(
+                            "continue the dependency's actual operation separately with `{}`",
+                            super::pending::command(&target)
+                        ),
+                    ));
+                }
+                if let Err(error) = super::pending::continue_target(lock, ctx, &target, stack) {
+                    if matches!(
+                        &error,
+                        AppError::Configuration(_)
+                            | AppError::Step(crate::StepError::ParameterInvalid { .. })
+                    ) {
+                        return Err(LifecycleError::RequirementUnresolved{key:parent.key.clone(),requirement:dependency.package.clone(),reason:format!("{error}; supply this child's ephemeral input using `{}` (declared secret IDs: {})",super::pending::command(&target),op.secret_required.join(", "))}.into());
+                    }
+                    return Err(error);
+                }
+            }
+            super::pending::ack_child(ctx.settings, parent, &dependency.key)?;
+            continue;
+        }
+        if dependency.installed {
             continue;
         }
         let Some(resolved) = dependency.resolved.as_deref() else {
@@ -193,8 +259,24 @@ pub(super) fn install_required(
             progress: &progress,
             ..*ctx
         };
-        match super::install_locked(&nested, resolved, &request, stack) {
-            Ok(_) => task.finish(),
+        match super::install_locked(
+            lock,
+            &nested,
+            resolved,
+            &request,
+            stack,
+            None,
+            parent.map(|p| super::pending::Parent::Dependency {
+                target: p,
+                requirement: dependency.package.as_str(),
+            }),
+        ) {
+            Ok(_) => {
+                if let Some(parent) = parent {
+                    super::pending::ack_child(ctx.settings, parent, &dependency.key)?;
+                }
+                task.finish();
+            }
             Err(error) => {
                 task.fail(error.to_string());
                 return Err(error);
@@ -217,6 +299,7 @@ pub(super) fn install_required(
             &dependency.key,
             record,
             ctx.proxy_image,
+            lock,
         )?;
         match &dependency.step {
             None => paths.option.push(exposure),

@@ -26,7 +26,12 @@ pub struct AppExportArgs {
 #[derive(Debug, Clone, clap::Args)]
 pub struct AppImportArgs {
     /// The set `vibe app export` wrote (TOML, or JSON from `--json`).
-    pub file: PathBuf,
+    #[arg(required_unless_present = "resume", conflicts_with = "resume")]
+    pub file: Option<PathBuf>,
+
+    /// Continue one exact user-home import cohort without rereading the original file.
+    #[arg(long,value_name="OPERATION_ID",conflicts_with_all=["file","dry_run","registry","accept_license","skip_installed"])]
+    pub resume: Option<String>,
 
     /// Print what each row would do and change nothing.
     #[arg(long)]

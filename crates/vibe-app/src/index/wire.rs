@@ -6,7 +6,7 @@
 use std::path::PathBuf;
 
 use vibe_core::manifest::{PublicCommandDecl, RequirementScope, ShellInterpreter, StepPhase};
-use vibe_wire::generated::application::e2::index as wire;
+use vibe_wire::generated::application::e3::index as wire;
 
 use super::launcher_wire::{icon_from_wire, icon_to_wire, launcher_from_wire, launcher_to_wire};
 use super::{
@@ -20,6 +20,21 @@ pub(super) fn installation_to_wire(
     key: &str,
     value: &Installation,
 ) -> wire::Installation {
+    installation_with_reverse(
+        value,
+        index
+            .required_by(key)
+            .into_iter()
+            .map(|(owner, _)| owner.to_owned())
+            .collect(),
+    )
+}
+
+pub(super) fn identity_record(value: &Installation) -> wire::Installation {
+    installation_with_reverse(value, Vec::new())
+}
+
+fn installation_with_reverse(value: &Installation, required_by: Vec<String>) -> wire::Installation {
     let (library, directory, app_root) = match &value.location {
         Location::Owned { library, directory } => {
             (Some(library.clone()), Some(directory.clone()), None)
@@ -28,6 +43,9 @@ pub(super) fn installation_to_wire(
     };
     let (icon, icon_set) = icon_to_wire(value.icon.as_ref());
     wire::Installation {
+        secret_origins: value.secret_origins.clone(),
+        configuration: value.configuration.clone(),
+        pending: value.pending.clone(),
         slot: value.slot.clone(),
         package: wire::Package {
             group: value.package.group.clone(),
@@ -108,11 +126,7 @@ pub(super) fn installation_to_wire(
                 step: requirement.step.clone(),
             })
             .collect(),
-        required_by: index
-            .required_by(key)
-            .into_iter()
-            .map(|(owner, _)| owner.to_owned())
-            .collect(),
+        required_by,
         env: value.lifecycle.env.iter().map(env_to_wire).collect(),
         held: value.lifecycle.held,
         replaced: value.lifecycle.replaced.clone(),
@@ -180,6 +194,13 @@ fn interpreter_from_wire(value: wire::Interpreter) -> ShellInterpreter {
 }
 
 pub(super) fn installation_from_wire(record: wire::Installation) -> Result<Installation, String> {
+    crate::configuration::record::validate_origins(&record.secret_origins)?;
+    if record.configuration.is_some() && !record.secret_origins.is_empty() {
+        return Err("common configuration and legacy secret origin records cannot both own parameter metadata".into());
+    }
+    if let Some(configuration) = &record.configuration {
+        crate::configuration::record::validate(configuration)?;
+    }
     let method = match record.method {
         wire::Method::Shell => Method::Shell,
         wire::Method::Zip => Method::Zip,
@@ -219,6 +240,9 @@ pub(super) fn installation_from_wire(record: wire::Installation) -> Result<Insta
         }
     };
     Ok(Installation {
+        secret_origins: record.secret_origins,
+        configuration: record.configuration,
+        pending: record.pending,
         slot: record.slot,
         package: PackageCoordinate {
             group: record.package.group,

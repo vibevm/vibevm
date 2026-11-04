@@ -68,6 +68,21 @@ pub fn step_env_name(prefix: &str, id: &str) -> String {
     vibe_core::manifest::step_env_name(prefix, id)
 }
 
+/// Execution values plus value-free proof of actual explicit secret provision.
+#[derive(Debug)]
+pub(crate) struct ParameterResolution {
+    pub values: Vec<ParamValue>,
+    pub supplied_secrets: Vec<String>,
+    pub secret_origins:
+        BTreeMap<String, vibe_wire::generated::shared::ConfigurationParameterOrigin>,
+}
+impl std::ops::Deref for ParameterResolution {
+    type Target = [ParamValue];
+    fn deref(&self) -> &Self::Target {
+        &self.values
+    }
+}
+
 /// Resolve every declared parameter: `--set`, else the recorded value of
 /// an update, else an attended prompt, else the default. A required
 /// parameter without a value, a value the type refuses, a `path` that must
@@ -78,7 +93,8 @@ pub(crate) fn resolve_parameters(
     previous: Option<&BTreeMap<String, String>>,
     facts: HostFacts<'_>,
     prompt: Option<ParameterPrompt<'_>>,
-) -> Result<Vec<ParamValue>, StepError> {
+    origins: Option<&BTreeMap<String, vibe_wire::generated::shared::ConfigurationParameterOrigin>>,
+) -> Result<ParameterResolution, StepError> {
     let invalid = |parameter: &str, reason: String| StepError::ParameterInvalid {
         option: option.id.clone(),
         parameter: parameter.into(),
@@ -105,18 +121,36 @@ pub(crate) fn resolve_parameters(
         }
     }
     let mut values = Vec::new();
+    let mut supplied_secrets = Vec::new();
+    let mut secret_origins = BTreeMap::new();
     for parameter in &option.parameters {
-        let default = parameter.default.as_ref().map(ToString::to_string);
+        let needs_resupply = parameter.secret
+            && origins.and_then(|o| o.get(&parameter.id)).is_some_and(|o| {
+                matches!(
+                    o,
+                    vibe_wire::generated::shared::ConfigurationParameterOrigin::Explicit(_)
+                )
+            });
+        let default = if needs_resupply {
+            None
+        } else {
+            parameter.default.as_ref().map(ToString::to_string)
+        };
         let named = set
             .iter()
             .rev()
             .find(|(id, _)| id == &parameter.id)
             .map(|(_, value)| value.clone());
-        let recorded = previous.and_then(|previous| previous.get(&parameter.id).cloned());
-        let raw = match (named, recorded, prompt) {
-            (Some(value), _, _) | (None, Some(value), _) => Some(value),
-            (None, None, Some(ask)) => ask(parameter, default.as_deref())
-                .map_err(|reason| {
+        let recorded = if parameter.secret {
+            None
+        } else {
+            previous.and_then(|previous| previous.get(&parameter.id).cloned())
+        };
+        let (raw, provided) = match (named, recorded, prompt) {
+            (Some(value), _, _) => (Some(value), true),
+            (None, Some(value), _) => (Some(value), false),
+            (None, None, Some(ask)) => {
+                let supplied = ask(parameter, default.as_deref()).map_err(|reason| {
                     invalid(
                         &parameter.id,
                         if parameter.secret {
@@ -125,10 +159,35 @@ pub(crate) fn resolve_parameters(
                             format!("the prompt failed: {reason}")
                         },
                     )
-                })?
-                .or(default),
-            (None, None, None) => default,
+                })?;
+                let provided = supplied.is_some();
+                (supplied.or(default), provided)
+            }
+            (None, None, None) => (default, false),
         };
+        if needs_resupply && !provided {
+            return Err(invalid(
+                &parameter.id,
+                "a previously supplied secret must be provided again for this operation".into(),
+            ));
+        }
+        if parameter.secret {
+            use vibe_wire::generated::shared as w;
+            let origin = if provided {
+                w::ConfigurationParameterOrigin::Explicit(Box::new(
+                    w::ConfigurationParameterOriginExplicit {},
+                ))
+            } else if raw.is_some() {
+                w::ConfigurationParameterOrigin::Default(Box::new(
+                    w::ConfigurationParameterOriginDefault {},
+                ))
+            } else {
+                w::ConfigurationParameterOrigin::Absent(Box::new(
+                    w::ConfigurationParameterOriginAbsent {},
+                ))
+            };
+            secret_origins.insert(parameter.id.clone(), origin);
+        }
         let Some(raw) = raw else {
             if parameter.required {
                 return Err(invalid(
@@ -155,19 +214,32 @@ pub(crate) fn resolve_parameters(
             }
             value = path.to_string_lossy().into_owned();
         }
+        if parameter.secret && provided {
+            supplied_secrets.push(parameter.id.clone());
+        }
         values.push(ParamValue {
             id: parameter.id.clone(),
             value,
             secret: parameter.secret,
         });
     }
-    Ok(values)
+    Ok(ParameterResolution {
+        values,
+        supplied_secrets,
+        secret_origins,
+    })
+}
+
+fn declarations(option: &InstallerOptionDecl) -> &[ParameterDecl] {
+    option
+        .configuration
+        .as_ref()
+        .map_or(option.parameters.as_slice(), |c| c.parameters.as_slice())
 }
 
 /// `param = "ID"`: a `bool` that is true, or any non-empty value.
 pub(crate) fn param_holds(option: &InstallerOptionDecl, values: &[ParamValue], id: &str) -> bool {
-    let bool_typed = option
-        .parameters
+    let bool_typed = declarations(option)
         .iter()
         .any(|parameter| parameter.id == id && parameter.kind == ParameterType::Bool);
     values
@@ -189,8 +261,7 @@ pub(crate) fn param_equals(
     id: &str,
     expected: &str,
 ) -> bool {
-    let expected = option
-        .parameters
+    let expected = declarations(option)
         .iter()
         .find(|parameter| parameter.id == id)
         .and_then(|parameter| parameter.canonical(expected).ok())

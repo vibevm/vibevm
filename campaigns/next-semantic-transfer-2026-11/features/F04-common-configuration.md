@@ -1,6 +1,6 @@
 # F04 — Common configuration from the working application wizard
 
-Status: active. The common user journey is not accepted merely because a pure kernel is extracted. Canonical contract: PROP-069-common-configuration.xml.
+Status: active overall. The selected-installer runtime is integrated through actual application operations and old-copy-safe proxy publication; see [F12](F12-selected-installer-runtime.md) for the exact scope and gates. Full portable roundtrip, configured package solver/effect consumers and the all-kind matrix remain required. Canonical contract: PROP-069-common-configuration.xml. The sections below retain the chronological evidence of earlier slices; they are not a claim that their then-pending work is still all missing.
 
 Architecture-ordered foundation update: F09 adds the independently checked core semantic fingerprint/direct-input delta and its versioned recipe. It does not activate new app/wire/state consumers or close F04. The whole222architecture map now governs subsequent integration order, including standalone proxy compatibility before index4 writer activation.
 
@@ -24,13 +24,13 @@ A closure constraint is not a consumer-owned choice. The former constrains the c
 
 The first two standalone patches are separate from kernel extraction. This separates actual behavior repairs from the claim of a compatible refactor. A malformed first profile fixture mixed installation sugar and steps; correcting the fixture is not behavioral RED evidence.
 
-## Verification so far
+## Initial characterization evidence
 
 Original evaluator against intended regressions: 3 passed, 5 failed, exit 101. Repaired standalone evaluator in main: 8 passed, 0 failed. Public app wizard after the repairs: 1 passed, 0 failed (describe/plan/install/events/record/cancel/resume). Scoped app conform: 0 new findings; one pre-existing ambient-env observation is nonblocking under current policy. The existing public wizard passed before extraction. Shared-kernel and maintenance evidence will be appended after review.
 
 ## Remaining acceptance
 
-Shared kernel review and integration; rich intent/guard/default/consumer semantics; typed parameters and secret handling; actual feature-effect and solver integration; authored/install-owner persistence; ordinary console and versioned external views; complete install/update/modify and all-kind scenarios. Prototype receipts and pure tests are evidence for bounded claims, not proof of these outcomes.
+Remaining after the selected-installer boundary: full portable configuration without loss of original/default/path/secret meaning; configured package solver/effect/persistence consumers; honest supported-operation coverage across all nine kinds; final cross-consumer acceptance and the owner-requested full status. Earlier kernel, declaration, parameter and selected-app milestones are described below and in F09–F12. Prototype receipts or one app adapter alone do not establish those remaining outcomes.
 
 ## Kernel candidate review
 

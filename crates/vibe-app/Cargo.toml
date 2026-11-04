@@ -21,6 +21,7 @@ serde_json.workspace = true
 sha2.workspace = true
 specmark.workspace = true
 tar.workspace = true
+tempfile.workspace = true
 thiserror.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
@@ -30,6 +31,3 @@ vibe-registry.workspace = true
 vibe-safefs.workspace = true
 vibe-wire.workspace = true
 zip.workspace = true
-
-[dev-dependencies]
-tempfile.workspace = true

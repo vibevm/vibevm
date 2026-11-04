@@ -12,8 +12,18 @@ use super::plan::Plan;
 
 impl Plan {
     /// The `vibe-app-plan/1` document; secret parameter values are omitted.
-    pub fn to_wire(&self) -> wire::ApplicationPlan {
-        wire::ApplicationPlan {
+    pub fn to_wire(&self) -> Result<wire::ApplicationPlan, crate::AppError> {
+        if self.configuration.is_some() {
+            return Err(crate::ResolveError::ConfigurationUnsupported {
+                package: self.package.key(),
+                scope: format!(
+                    "legacy plan view of installer {}; use --configuration",
+                    self.option
+                ),
+            }
+            .into());
+        }
+        Ok(wire::ApplicationPlan {
             protocol: "vibe-app-plan/1".into(),
             package: wire::Package {
                 group: self.package.group.clone(),
@@ -113,6 +123,6 @@ impl Plan {
                 })
                 .collect(),
             warnings: self.warnings.clone(),
-        }
+        })
     }
 }
