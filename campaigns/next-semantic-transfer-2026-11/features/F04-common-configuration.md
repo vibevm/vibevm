@@ -2,6 +2,8 @@
 
 Status: active. The common user journey is not accepted merely because a pure kernel is extracted. Canonical contract: PROP-069-common-configuration.xml.
 
+Architecture-ordered foundation update: F09 adds the independently checked core semantic fingerprint/direct-input delta and its versioned recipe. It does not activate new app/wire/state consumers or close F04. The whole222architecture map now governs subsequent integration order, including standalone proxy compatibility before index4 writer activation.
+
 ## Why this feature is being generalized
 
 The owner identified the existing app console/GUI choice system as a stronger starting point than the prototype's manual choice-host route. Main has describe → choose → plan → install → record → modify/update consumers. Next contributes important semantics: cardinalities, positive guards, original omitted/empty/additive/exact intent, multiple consumers and dormant choices. Neither a set of booleans nor a parallel host service completes the combined requirement.

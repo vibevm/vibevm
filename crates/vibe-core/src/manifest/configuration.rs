@@ -9,6 +9,7 @@ use std::collections::BTreeMap;
 
 mod intent;
 mod lower;
+mod semantic;
 mod validate;
 mod vocabulary;
 pub use intent::{ConfigurationIntentDecl, NormalizedConfigurationInput};

@@ -135,6 +135,19 @@ impl FeatureModel {
             .ok_or_else(|| Error::UnknownFeature { id: id.into() })
     }
 
+    /// Apply direct additions/removals to a supplied base without expanding implications.
+    /// This retains original direct intent when an operation edits an older request.
+    pub(super) fn prepare_selection(&self, input: &FeatureInput) -> Result<Vec<String>, Error> {
+        let (selected, _) = self.prepare(input)?;
+        Ok(self
+            .nodes
+            .iter()
+            .enumerate()
+            .filter(|(id, _)| selected.contains(id))
+            .map(|(_, node)| node.declaration.id.clone())
+            .collect())
+    }
+
     /// Validate ordinary IDs and direct contradictions without running closure.
     pub(super) fn validate_input(&self, input: &FeatureInput) -> Result<(), Error> {
         self.prepare(input).map(|_| ())

@@ -26,6 +26,15 @@ pub struct ChoiceModel {
 }
 
 impl ChoiceModel {
+    /// Apply a direct-input delta using ordinary feature replacement rules, before closure.
+    /// The returned IDs are direct input only, never inferred effective intent.
+    pub fn prepare_feature_delta(
+        &self,
+        input: &super::super::FeatureInput,
+    ) -> Result<Vec<String>, super::super::EvaluationError> {
+        self.features.prepare_selection(input)
+    }
+
     /// Validate references/defaults and every guard cycle, including implicit
     /// owning-group dependencies. Ordinary feature-requires cycles are unchanged.
     ///

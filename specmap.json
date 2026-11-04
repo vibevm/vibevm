@@ -17551,9 +17551,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/configuration/choices/model.rs",
       "item_kind": "fn",
-      "line": 29,
+      "line": 38,
       "symbol": "vibe_core::configuration::choices::model::ChoiceModel::new",
-      "end_line": 160,
+      "end_line": 169,
       "fingerprint": "tok1:e9b7ddf7ecef9c10e52c7506699bd601c18fbc1a76e64aea1fbfaca5b969961d"
     },
     {
@@ -18307,9 +18307,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/configuration.rs",
       "item_kind": "enum",
-      "line": 70,
+      "line": 71,
       "symbol": "vibe_core::manifest::configuration::ConfigurationFeatureVisibility",
-      "end_line": 82,
+      "end_line": 83,
       "fingerprint": "tok1:f46eef4dc57c93917b445e2e26ff04c17c99aaa9c8b133eba9886e06fe764be6"
     },
     {
@@ -18365,6 +18365,24 @@
       "symbol": "vibe_core::manifest::configuration::lower::ConfigurationDecl::compile_choices",
       "end_line": 29,
       "fingerprint": "tok1:76a8682d0cb08d5ded8055d7f513d60e89d9f26ad4432e6977cf7424888ccb2f"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/semantic.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::manifest::configuration::semantic",
+      "end_line": 3,
+      "fingerprint": "tok1:b90d0eaa31f0e777a6f8ee4ef6edf8bdbb5674782d059ee1776a0152074c97fd"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/semantic.rs",
+      "item_kind": "fn",
+      "line": 85,
+      "symbol": "vibe_core::manifest::configuration::semantic::ConfigurationDecl::semantic_fingerprint",
+      "end_line": 240,
+      "fingerprint": "tok1:6994a0837fc1590da8478da6b3762b197d20779b02c15dfcc19ecc66cfb8b876"
     },
     {
       "crate_name": "vibe-core",
@@ -52212,7 +52230,7 @@
     {
       "file": "crates/vibe-core/src/configuration/choices/model.rs",
       "from_symbol": "vibe_core::configuration::choices::model::ChoiceModel::new",
-      "line": 39,
+      "line": 48,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#CHOICE-CORE",
       "verb": "implements"
@@ -52884,7 +52902,7 @@
     {
       "file": "crates/vibe-core/src/manifest/configuration.rs",
       "from_symbol": "vibe_core::manifest::configuration::ConfigurationFeatureVisibility",
-      "line": 75,
+      "line": 76,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#FEATURE-VISIBILITY",
       "verb": "implements"
@@ -52935,6 +52953,22 @@
       "line": 24,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/semantic.rs",
+      "from_symbol": "vibe_core::manifest::configuration::semantic",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/semantic.rs",
+      "from_symbol": "vibe_core::manifest::configuration::semantic::ConfigurationDecl::semantic_fingerprint",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
       "verb": "implements"
     },
     {
