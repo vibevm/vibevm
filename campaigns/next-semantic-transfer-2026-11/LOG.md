@@ -376,3 +376,19 @@ AUTHORED-INTENT и INPUT-NORMALIZATION принимаются в их узком
 ### Authored intent accepted gate
 
 Main source6/6 + normalize6/6 + prepared9/9 + F02constraints22/22 прошли. Fmt и4scoped conform exit0,0new (core0/workspace0/app1existing observation/install0); specmap9055units/4730items/3970edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Все22amended source hashes совпадают. Exact schema/normalization/command/Rust API changes внесены в FMT-006. Runtime guards остаются debt, не user feature completion.
+
+## 2026-11-04 — Следующая проверка app consumer: имена environment
+
+Source review перед общим app runtime обнаружил незакрытую границу отображения ID: is_portable_token допускает a-b и a.b, а step_env_name превращает оба в A_B. Run строит environment для всех объявленных features и supplied params. Это конкретное source observation, ещё не новый runtime reproduction. Перед включением rich installer исполнения нужно проверить actual child scenario и исключить потерю независимых значений при таком отображении; arbitrary common IDs нельзя молча перекодировать или терять. На данном этапе это owned follow-up F04, не выполненная поправка и не основание расширять текущие frozen patches.
+
+## 2026-11-04 — Secret templates integration
+
+Source intent принят commit237f7bf2b;22amended hashes сверены с committed HEAD, evidence вынесены, live users отсутствовали, worktree удалён и registry absence подтверждён. Затем14secret-template files интегрированы поверх него: каждый hash и unchanged source base проверены; direct app→safefs edge — единственное изменение Cargo.lock, package versions/source/checksums совпадают.
+
+Root просмотрел one-pass declaration/runtime validators, active-only SafeFS prompt preparation, retained literal и preview/run consumers. Catch-all raw fallback удалён; отсутствующие finish paths — единственный preview placeholder. Main совместный publicCLI4common-format+2secret-template прошёл. Candidate75distinct tests/docs включает actual old RED с earlier step/outbox publication и prompt-file replacement, затем отсутствие этих эффектов/retained admitted text. Core/app/CLI clippy/fmt/diff прошли у worker; main conform/map ещё выполняются.
+
+PROP-065 secret wording уточнён: framework-owned views/records обязаны скрывать значения, recipe/shell получают ephemeral input, произвольный child output/content не является sandboxed. Это не снимает pending raw-argv replay debt и не объявляет SECRET-BOUNDARY целиком выполненным.
+
+### Secret templates accepted gate
+
+Main joint publicCLI6/6 прошёл. Fmt/core+app+CLI conform exit0,0new; incumbent observations core0/app1/CLI67 сохранены. Map9055units/4734items/3974edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Все14reviewed source hashes совпали. Reader dependency edge verified отдельно: никаких новых package versions/source/checksums. Принимается SECRET-TEMPLATES; raw argv replay и cross-process continuation не объявлены исправленными. FMT-007 содержит точный before/after и migration guidance.

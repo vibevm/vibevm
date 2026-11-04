@@ -309,6 +309,7 @@ fn classified_parameter_debug_redacts_only_the_secret_value() {
             .cloned()
             .map(|step| crate::steps::PlannedStep {
                 step,
+                prepared_prompt: None,
                 run: true,
                 reason: None,
                 note: None,

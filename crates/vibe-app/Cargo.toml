@@ -27,6 +27,7 @@ vibe-core.workspace = true
 vibe-install.workspace = true
 vibe-package-source.workspace = true
 vibe-registry.workspace = true
+vibe-safefs.workspace = true
 vibe-wire.workspace = true
 zip.workspace = true
 

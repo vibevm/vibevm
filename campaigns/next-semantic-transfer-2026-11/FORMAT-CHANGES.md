@@ -167,7 +167,7 @@ Generated `vibe.lock` root snapshot остаётся unique по координ�
 
 ## FMT-006 — Original input на requires edge (Unreleased)
 
-Статус: **принято как source/input этап**, commit `feat(configuration): preserve original dependency input` (hash дописывается после commit). Runtime configured-solving/persistence/UI ещё не завершены. Cargo version остаётся1.0.11; release number не назначен.
+Статус: **принято как source/input этап**, commit `237f7bf2b` (`feat(configuration): preserve original dependency input`). Runtime configured-solving/persistence/UI ещё не завершены. Cargo version остаётся1.0.11; release number не назначен.
 
 В inline `[requires.packages."<qualified coordinate>"]` добавлено optional `configuration`, одинаково для registry/git/path/version.var. Version/source/auth/link/access/friend/exclude сохраняются. Bare version string без metadata остаётся bare. Existing duplicate normalized coordinate check сохраняется; checked serialization теперь отказывает при dangling configuration или ambiguous manually constructed Requires вместо потери данных.
 
@@ -213,8 +213,35 @@ Lock7/index3 и public wire formats не менялись. Rust Requires и Conf
 
 Evidence:529distinct successful candidate tests/docs, включая actual Workspace finalization двух nodes и2diagnostic RED→GREEN. Main source6/6, normalization6/6, prepared9/9+F02constraints22/22, fmt и4scoped conform0new; specmap0blocking,43known warnings. Source/serialize errors называют реальную edge и input field, не values. Configured solve, default binding, selected-node answer writing, scalar merge, lock/replay и common UI остаются следующей работой.
 
-## FMT-007 — Secret references в step templates (дизайн, Unreleased)
+## FMT-007 — Secret references в step templates (Unreleased)
 
-Статус: только дизайн/следующий atom. Новых TOML-ключей не требуется; ужесточается значение existing secret=true: framework-interpreted `$param:ID`/`${param:ID}` не смогут использовать secret parameter. Это затронет inline copy/env/agent/file_present fields и активный prompt_file, включая `vibe install -g`. Альтернатива для предназначенного выполнения — существующий `VIBE_PARAM_<ID>` в recipe/shell, без нового secret transport в agent/native.
+Статус: **принято в main**, commit `fix(app): prepare prompts without secret interpolation` (hash дописывается после commit). Новых TOML-ключей, Vibe lock/index epochs или app machine-schema fields нет. Cargo.lock меняется только добавлением уже существующего workspace dependency app→safefs, без смены package versions.
 
-Escaped `$$param:ID` остаётся literal. Direct parameter conditions остаются допустимыми. Неактивный agent prompt_file не читается только ради этой проверки; активный читается и удерживается до выполнения, чтобы mutable file не менял уже проверенный prompt. Это не исправление hosted raw-argv replay и не sandbox произвольного child output. Exact before/after/public command evidence будет добавлен при acceptance.
+Ужесточается existing secret=true: framework-interpreted `$param:ID`/`${param:ID}` запрещены для secret parameter в copy destination, env set/path_prepend, agent prompt и file_present condition. Inline declaration validation проверяет также inactive branches. Active prompt_file проверяется при planning до dependency/app execution, work/env/envelope publication. Skipped/agentless external prompt file не читается.
+
+До:
+
+```toml
+[[installer_options.parameters]]
+id = "token"
+name = "Token"
+type = "string"
+secret = true
+[[installer_options.steps]]
+id = "agent"
+title = "Agent"
+kind = "agent"
+prompt = "Use $param:token"
+```
+
+Такое объявление раньше принималось и могло записать значение в envelope. Теперь оно отказывает при validation; тот же текст в активном prompt_file отказывает при planning. Для предназначенного выполнения secret остаётся в существующем `VIBE_PARAM_TOKEN` окружении recipe/shell. Agent/native не получают нового secret transport. Не заменять отказ сохранением plaintext в prompt/config. Public templates и secret recipe/shell input не требуют переписывания.
+
+`$$param:token` — literal, допустим. Returned public parameter text не разбирается повторно как template. Direct Param/ParamEquals conditions остаются допустимыми. Inline и file prompt используют одинаковое правило prose controls (newline/CR/tab допустимы). Missing public value в исполняемом prompt теперь является ошибкой, а не поводом скрыть её raw fallback.
+
+Активный prompt_file читается existing SafeFS shared-inode observer: explicit root допускается отдельно, descendants не canonicalize/follow; hardlinks сохранены. План хранит exact checked literal, preview/run больше не перечитывают файл. Лишь unavailable finish app_root/app_bin могут остаться placeholders в preview. Эта continuity относится к одному плану; новая persisted resume identity этим patch не вводится.
+
+Commands: **vibe install -g** проверен реальными CLI scenarios. Общий planner используется app plan/install/update/modify/import и project installation; отдельные public прогоны каждого maintenance/import verb не заявляются. Исчерпывающие Rust literals PlannedStep должны добавить prepared_prompt:None либо пользоваться planner; поле не сериализуется в authored StepDecl/e1 plan.
+
+Evidence: actual RED core1/runtime1/public2; в старом -g earlier step и outbox успевали появиться, а изменённый recipe prompt_file подменял показанный prompt. После исправления actual dependency/earlier-step sentinels/work/outbox/index отсутствуют при refusal exit2, canary не попадает в output; replacement recipe действительно меняет файл, но envelope содержит ADMITTED_PROMPT. Candidate75distinct tests/docs, включая10existing agent cases и1wizard. Main joint CLI4common-format+2secret-template, fmt,3scoped conform0new и specmap --check0blocking/43known warnings прошли.
+
+Это не исправление hosted raw-argv replay, optional-secret resume, batch/modify/import/dependency continuation, unclassified malformed CLI input или arbitrary child output. SECRET-BOUNDARY остаётся незавершённой общей обязанностью.

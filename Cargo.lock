@@ -4462,6 +4462,7 @@ dependencies = [
  "vibe-install",
  "vibe-package-source",
  "vibe-registry",
+ "vibe-safefs",
  "vibe-wire",
  "zip",
 ]

@@ -36,6 +36,7 @@ use super::template::{self, Vars};
 mod remap_note;
 use remap_note::unremappable_network;
 
+mod prompt;
 mod selection;
 use selection::choose_features;
 
@@ -168,6 +169,9 @@ pub struct RequiredBy {
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
 pub struct PlannedStep {
     pub step: StepDecl,
+    /// The validated literal prompt for a running agent; never reread at execution.
+    /// This internal plan data is not part of the authored step or wire document.
+    pub prepared_prompt: Option<String>,
     pub run: bool,
     pub reason: Option<String>,
     /// What a reader has to know about a step that WILL run
@@ -278,8 +282,10 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
             skipped_agents.push(format!("`{}`", step.id));
         }
         let note = unremappable_network(run, &step);
+        let prepared_prompt = prompt::prepare(option, &step, run, &input.resolved.root, &vars)?;
         steps.push(PlannedStep {
             step,
+            prepared_prompt,
             run,
             reason,
             note,

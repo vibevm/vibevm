@@ -138,6 +138,7 @@ impl InstallerOptionDecl {
 
 /// The feature and parameter ids conditions and templates may name.
 pub(super) struct Names<'a> {
+    pub option: &'a InstallerOptionDecl,
     pub features: BTreeSet<&'a str>,
     pub params: BTreeSet<&'a str>,
 }
@@ -192,19 +193,10 @@ fn validate_template(
 /// An inline agent prompt is prose: line breaks and tabs are allowed, other
 /// control characters are not (`PROP-064#envelope`).
 fn validate_prompt(value: &str, names: &Names<'_>, site: &Site<'_>) -> Result<(), FieldError> {
-    if value
-        .chars()
-        .any(|ch| ch.is_control() && !matches!(ch, '\n' | '\r' | '\t'))
-    {
-        return Err(site.refuse(
-            "prompt",
-            format!(
-                "{}.prompt must not contain control characters other than line breaks and tabs",
-                site.prose
-            ),
-        ));
-    }
-    expand_names(value, names, site, "prompt")
+    names
+        .option
+        .validate_prompt_template(value)
+        .map_err(|reason| site.refuse("prompt", format!("{}.prompt: {reason}", site.prose)))
 }
 
 /// The variables a template names exist: features and parameters declared.
@@ -214,17 +206,10 @@ fn expand_names(
     site: &Site<'_>,
     field: &str,
 ) -> Result<(), FieldError> {
-    expand_step_template(value, &mut |var| match var {
-        StepVar::Feature(id) if !names.features.contains(id) => {
-            Err(format!("`$feature:{id}` names an undeclared feature"))
-        }
-        StepVar::Param(id) if !names.params.contains(id) => {
-            Err(format!("`$param:{id}` names an undeclared parameter"))
-        }
-        _ => Ok("x".into()),
-    })
-    .map(|_| ())
-    .map_err(|reason| site.refuse(field, format!("{}.{field}: {reason}", site.prose)))
+    names
+        .option
+        .validate_step_template(value)
+        .map_err(|reason| site.refuse(field, format!("{}.{field}: {reason}", site.prose)))
 }
 
 /// An environment variable name an env step may set or unset: a portable

@@ -45,6 +45,7 @@ fn plan(steps: Vec<PlannedStep>, dependencies: Vec<PlannedDependency>) -> Plan {
 
 fn copy(id: &str, title: &str, run: bool, reason: Option<&str>) -> PlannedStep {
     PlannedStep {
+        prepared_prompt: None,
         step: StepDecl::new(
             id,
             title,

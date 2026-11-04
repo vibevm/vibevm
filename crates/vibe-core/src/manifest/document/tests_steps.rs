@@ -27,6 +27,56 @@ arch = "x86_64"
 
 const SHA: &str = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
 
+#[test]
+fn secret_inline_templates_refuse_even_in_inactive_branches() {
+    let parameter =
+        "[[installer_options.parameters]]\nid='token'\nname='Token'\ntype='string'\nsecret=true\n";
+    let bodies = [
+        "kind='copy'\nfrom='input'\nto='$param:token'",
+        "kind='env'\nset={DEMO='$param:token'}",
+        "kind='env'\npath_prepend=['${param:token}']",
+        "kind='agent'\nprompt='Use $param:token'",
+        "kind='shell'\ncommand='true'\nwhen={file_present='$param:token'}",
+        "kind='agent'\nprompt='Use $param:token'\nwhen={feature='off'}",
+    ];
+    let mut accepted = Vec::new();
+    for body in bodies {
+        let text = format!(
+            "{HEADER}result={{external='/tmp/external'}}\n{parameter}[[installer_options.features]]\nid='off'\nname='Off'\n[[installer_options.steps]]\nid='step'\ntitle='Step'\n{body}\n"
+        );
+        match Manifest::parse_str(&text) {
+            Ok(_) => accepted.push(body),
+            Err(error) => assert!(error.to_string().contains("secret"), "{error}"),
+        }
+    }
+    assert!(
+        accepted.is_empty(),
+        "secret templates admitted: {accepted:?}"
+    );
+}
+
+#[test]
+fn secret_direct_conditions_and_escaped_templates_remain_valid() {
+    let text = format!(
+        "{HEADER}result={{external='/tmp/external'}}\n[[installer_options.parameters]]\nid='token'\nname='Token'\ntype='string'\nsecret=true\n[[installer_options.steps]]\nid='step'\ntitle='Step'\nkind='agent'\nprompt='Literal $$param:token'\nwhen={{param='token'}}\nunless={{param_equals={{id='token',value='public literal'}}}}\n"
+    );
+    Manifest::parse_str(&text).unwrap();
+}
+
+#[test]
+fn common_installer_parameters_use_the_same_template_reference_policy() {
+    let text = format!(
+        "{HEADER}result={{external='/tmp/external'}}\n[[installer_options.configuration.parameters]]\nid='token'\nname='Token'\ntype='string'\nsecret=true\n[[installer_options.steps]]\nid='step'\ntitle='Step'\nkind='agent'\nprompt='Use $param:token'\n"
+    );
+    assert!(
+        Manifest::parse_str(&text)
+            .unwrap_err()
+            .to_string()
+            .contains("secret")
+    );
+    assert!(Manifest::parse_str(&text.replace("secret=true", "secret=false")).is_ok());
+}
+
 fn four_steps() -> String {
     format!(
         r#"{HEADER}

@@ -5,6 +5,70 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#templates");
 
+use super::InstallerOptionDecl;
+
+impl InstallerOptionDecl {
+    /// Check template references without expanding values or reading files.
+    /// Secret parameters are execution inputs, not framework template values.
+    ///
+    /// ```
+    /// use vibe_core::manifest::{InstallerOptionDecl, ParameterDecl};
+    /// let mut option: InstallerOptionDecl = toml::from_str(
+    ///     "id='main'\nname='Main'\nplatform='linux'\nplatform_name='Linux'\narch='x86_64'"
+    /// )?;
+    /// option.parameters.push(ParameterDecl { id: "token".into(), secret: true, ..Default::default() });
+    /// assert!(option.validate_step_template("$param:token").is_err());
+    /// assert!(option.validate_step_template("$$param:token").is_ok());
+    /// # Ok::<(), Box<dyn std::error::Error>>(())
+    /// ```
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-TEMPLATES")]
+    pub fn validate_step_template(&self, value: &str) -> Result<(), String> {
+        expand_step_template(value, &mut |var| match var {
+            StepVar::Feature(id) => {
+                let known = self.configuration.as_ref().map_or_else(
+                    || self.features.iter().any(|f| f.id == id),
+                    |c| c.features.iter().any(|f| f.id == id),
+                );
+                if known { Ok(String::new()) } else { Err(format!("`$feature:{id}` names an undeclared feature")) }
+            }
+            StepVar::Param(id) => {
+                let parameters = self.configuration.as_ref().map_or(self.parameters.as_slice(), |c| c.parameters.as_slice());
+                match parameters.iter().find(|p| p.id == id) {
+                    Some(parameter) if parameter.secret => Err(format!("`$param:{id}` refers to a secret parameter; use the recipe/shell parameter environment instead")),
+                    Some(_) => Ok(String::new()),
+                    None => Err(format!("`$param:{id}` names an undeclared parameter")),
+                }
+            }
+            StepVar::Named(_) => Ok(String::new()),
+        }).map(|_| ())
+    }
+
+    /// Validate inline or file-backed prompt prose with the same reference law.
+    /// Newlines, carriage returns and tabs are valid prose controls.
+    ///
+    /// ```
+    /// use vibe_core::manifest::InstallerOptionDecl;
+    /// let option: InstallerOptionDecl = toml::from_str(
+    ///     "id='main'\nname='Main'\nplatform='linux'\nplatform_name='Linux'\narch='x86_64'"
+    /// )?;
+    /// assert!(option.validate_prompt_template("A\n\t$work").is_ok());
+    /// assert!(option.validate_prompt_template("A\u{7}").is_err());
+    /// # Ok::<(), Box<dyn std::error::Error>>(())
+    /// ```
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-TEMPLATES")]
+    pub fn validate_prompt_template(&self, value: &str) -> Result<(), String> {
+        if value
+            .chars()
+            .any(|ch| ch.is_control() && !matches!(ch, '\n' | '\r' | '\t'))
+        {
+            return Err(
+                "prompt must not contain control characters other than line breaks and tabs".into(),
+            );
+        }
+        self.validate_step_template(value)
+    }
+}
+
 /// One variable reference of a step template.
 #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#templates")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

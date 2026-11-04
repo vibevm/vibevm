@@ -10407,8 +10407,8 @@
       "item_kind": "fn",
       "line": 269,
       "symbol": "vibe_app::steps::params::tests::classified_parameter_debug_redacts_only_the_secret_value",
-      "end_line": 332,
-      "fingerprint": "tok1:05f747b478ec076fce37ac65cc233e28003617e7259b297e0bc5c2d60ebb3ea4"
+      "end_line": 333,
+      "fingerprint": "tok1:768ce26b57786eced81c5665e77f0ed202176965a8fb767cfd26d7f450232232"
     },
     {
       "crate_name": "vibe-app",
@@ -10468,46 +10468,55 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 47,
+      "line": 48,
       "symbol": "vibe_app::steps::plan::HostFacts",
-      "end_line": 57,
+      "end_line": 58,
       "fingerprint": "tok1:50ba09ef7bdf41f9812a2d4f13ce7d9f4689e6ef2aa9d75a9982094430a57e4e"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 182,
+      "line": 186,
       "symbol": "vibe_app::steps::plan::Plan",
-      "end_line": 212,
+      "end_line": 216,
       "fingerprint": "tok1:cf6b718d53bacd2e18c4f1fb57c0a7a65bbc04e20f342c8663aa80c692b09493"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 95,
+      "line": 96,
       "symbol": "vibe_app::steps::plan::PlannedDependency",
-      "end_line": 118,
+      "end_line": 119,
       "fingerprint": "tok1:96184ebc938e56499cd5ef9da324c7d2ab7d97bbbe948f420a2f6cccffb1b7b5"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 166,
+      "line": 167,
       "symbol": "vibe_app::steps::plan::PlannedStep",
-      "end_line": 180,
-      "fingerprint": "tok1:3ba7542240f4474c2eae931a2cd413a2a7fae6e5f59abd09e9fef5d3625e40b8"
+      "end_line": 184,
+      "fingerprint": "tok1:c78896e01d7089aed785057b2c96082a2aaf8928bf22864966e7650f6c8169e4"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 154,
+      "line": 155,
       "symbol": "vibe_app::steps::plan::RequiredBy",
-      "end_line": 164,
+      "end_line": 165,
       "fingerprint": "tok1:4b3b4e3a00c3ffc45ae5d43a3660b4ff91e1f32544e12a3d856fccec94829393"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/plan/prompt.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::steps::plan::prompt",
+      "end_line": 2,
+      "fingerprint": "tok1:51c6fc0ae2e02d98b5e88e30a7df43b51b279564a8853f619ce7aba2d2778cb6"
     },
     {
       "crate_name": "vibe-app",
@@ -16550,6 +16559,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_secret_templates.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::tests::cli_app_secret_templates",
+      "end_line": 3,
+      "fingerprint": "tok1:51c6fc0ae2e02d98b5e88e30a7df43b51b279564a8853f619ce7aba2d2778cb6"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
       "item_kind": "fn",
       "line": 128,
@@ -19683,10 +19701,28 @@
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application/template.rs",
+      "item_kind": "fn",
+      "line": 46,
+      "symbol": "vibe_core::manifest::package::application::template::InstallerOptionDecl::validate_prompt_template",
+      "end_line": 69,
+      "fingerprint": "tok1:59f8a9d881162ceda6a5f7d6588457d7ac8ee2b41f14eb85de3d3988e6c1f997"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/application/template.rs",
+      "item_kind": "fn",
+      "line": 11,
+      "symbol": "vibe_core::manifest::package::application::template::InstallerOptionDecl::validate_step_template",
+      "end_line": 44,
+      "fingerprint": "tok1:7bf610f412f4c0c1d50a1f7bbd619554ee75830de5172f441e3401d4fd64d309"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/application/template.rs",
       "item_kind": "enum",
-      "line": 8,
+      "line": 72,
       "symbol": "vibe_core::manifest::package::application::template::StepVar",
-      "end_line": 18,
+      "end_line": 82,
       "fingerprint": "tok1:7de0367fb2e2d04f2a9484a00c5940ee0ea415eebfcf51b6bb48fca3591e14db"
     },
     {
@@ -45316,7 +45352,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::HostFacts",
-      "line": 49,
+      "line": 50,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#conditions",
       "verb": "documents"
@@ -45324,7 +45360,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::Plan",
-      "line": 184,
+      "line": 188,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
       "verb": "documents"
@@ -45332,7 +45368,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::PlannedDependency",
-      "line": 97,
+      "line": 98,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
       "verb": "documents"
@@ -45340,7 +45376,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::PlannedStep",
-      "line": 168,
+      "line": 169,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
       "verb": "documents"
@@ -45348,10 +45384,18 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::RequiredBy",
-      "line": 158,
+      "line": 159,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
       "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/plan/prompt.rs",
+      "from_symbol": "vibe_app::steps::plan::prompt",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-TEMPLATES",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-app/src/steps/plan/remap_note.rs",
@@ -50800,6 +50844,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_app_secret_templates.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_secret_templates",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-TEMPLATES",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_clean_and_world.rs",
       "from_symbol": "vibe_cli::tests::cli_clean_and_world::a_bare_install_over_zero_dependencies_is_a_noop",
       "line": 131,
@@ -53686,8 +53738,24 @@
     },
     {
       "file": "crates/vibe-core/src/manifest/package/application/template.rs",
+      "from_symbol": "vibe_core::manifest::package::application::template::InstallerOptionDecl::validate_prompt_template",
+      "line": 58,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-TEMPLATES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/application/template.rs",
+      "from_symbol": "vibe_core::manifest::package::application::template::InstallerOptionDecl::validate_step_template",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-TEMPLATES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/application/template.rs",
       "from_symbol": "vibe_core::manifest::package::application::template::StepVar",
-      "line": 9,
+      "line": 73,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#templates",
       "verb": "documents"
@@ -98389,7 +98457,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:9fd141636c93ce38767506310342b74cc00f9f6aba23bb2c5f9a8c4e5ca8385a",
+      "content_hash": "sha256:753e51c455590f83a96998bf6589c5c1e6e2d7c87664861516059d6d8bac8e92",
       "doc_path": "common/PROP-065",
       "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
       "heading": "PROP-065 — Structured installation: features, steps, conditions, plan, resume",
@@ -98560,10 +98628,10 @@
     },
     {
       "anchor": "parameters",
-      "content_hash": "sha256:736db5662ea57c83d5ab2e519ff7d7b1477441639a986197c9a25d4cda54d06d",
+      "content_hash": "sha256:cc4e44789bceaed95e39ef2a036a9c9d70c1a88a4e6a16a41bdbc56c6708051f",
       "doc_path": "common/PROP-065",
       "file": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
-      "heading": "`[[installer_options.parameters]]` rows are the typed questions a wizard asks: `id`, `name`, optional `description`, `type` one of `string`, `bool`, `integer`, `choice`, `path`, optional `default`, `required` (default false), for `integer` optional `min` / `max`, for `choice` a `choices` array of `{ value, name }`, for `path` optional `must_exist`. Values arrive as `--set ID=VALUE` (repeatable), from an attended terminal as typed prompts, otherwise from `default`; a required parameter with no value is a planning refusal. Values are validated at planning time against the type, never later. Steps read them as `$param:ID` in templates and as `VIBE_PARAM_<ID>` (upper-cased, `-` to `_`) in the environment; a condition may test `param = \"ID\"` (a `bool` true or a non-empty value) or `param_equals = { id = \"ID\", value = \"V\" }`. Chosen values are recorded with the installation (never for a parameter marked `secret = true`, which is passed to children and not written anywhere). @status:spec/done",
+      "heading": "`[[installer_options.parameters]]` rows are the typed questions a wizard asks: `id`, `name`, optional `description`, `type` one of `string`, `bool`, `integer`, `choice`, `path`, optional `default`, `required` (default false), for `integer` optional `min` / `max`, for `choice` a `choices` array of `{ value, name }`, for `path` optional `must_exist`. Values arrive as `--set ID=VALUE` (repeatable), from an attended terminal as typed prompts, otherwise from `default`; a required parameter with no value is a planning refusal. Values are validated at planning time against the type, never later. Steps read them as `$param:ID` in templates and as `VIBE_PARAM_<ID>` (upper-cased, `-` to `_`) in the environment; a condition may test `param = \"ID\"` (a `bool` true or a non-empty value) or `param_equals = { id = \"ID\", value = \"V\" }`. Chosen values are recorded with the installation (never for a parameter marked `secret = true`, which remains an ephemeral recipe/shell execution input and must be omitted from framework-owned views and records; arbitrary package-authored child output/content is not sandboxed by this marking). @status:spec/done",
       "line": 24,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#parameters"
     },
@@ -99388,7 +99456,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:4ae6552217869d88226ddc7281607568ab27913d6a4bd7f9e6f8d45cf25196bc",
+      "content_hash": "sha256:063f62595cd589688b0a30b5d59c89e7de8fd01693627f44351644d64f0b6928",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -99622,7 +99690,7 @@
     },
     {
       "anchor": "surfaces",
-      "content_hash": "sha256:63c9dd4718c18e1f13aa2ae208aaae7d5ba2f67c50a86f0f3e9b34fd6cebb820",
+      "content_hash": "sha256:cc6bb52f76192344d18e328d3b62336ea147968a0daf39a41cf35babf8bb2592",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "5. Console, GUI and agent-facing consumers",
@@ -99676,10 +99744,10 @@
     },
     {
       "anchor": "SECRET-TEMPLATES",
-      "content_hash": "sha256:0b3b13b14900e4c378ba2e566f6a76a877a01959c7d71b2f2008c554bc470051",
+      "content_hash": "sha256:8cac57806ce710641b022d5098e83cfb8e358fd14601536fd33f55e3cdc7ad0f",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "Framework-interpreted step templates refuse references to parameters marked secret, using the existing one-pass StepVar grammar. Escaped dollars and parameter text returned by a callback are not reparsed. Pure declaration validation checks inline copy destinations, environment values, agent prompts and file-present conditions, including inactive inline branches. For an agent step actually planned to run, planning reads and validates prompt_file text before dependency/app execution and retains that exact literal text for preview/execution; skipped agent steps do not force unused external prompt reads. The read uses the existing shared-inode SafeFS source observation below the admitted package root, without a new ownership claim. Runtime expansion also refuses secret references for programmatic inputs. Preview may retain only unavailable finish-phase app_root/app_bin placeholders; unrelated errors never fall back to raw text. Existing recipe/shell ephemeral parameter environment and direct parameter conditions remain; agent/native parameter transport is not widened. This closes template-derived framework disclosure, not raw argv replay or arbitrary package-authored child output. @status:spec/done",
+      "heading": "Framework-interpreted step templates refuse references to parameters marked secret, using the existing one-pass StepVar grammar. Escaped dollars and parameter text returned by a callback are not reparsed. Pure declaration validation checks inline copy destinations, environment values, agent prompts and file-present conditions, including inactive inline branches. For an agent step actually planned to run, planning reads and validates prompt_file text before dependency/app execution and retains that exact literal text for preview/execution; skipped agent steps do not force unused external prompt reads. The read uses the existing shared-inode SafeFS source observation below the admitted package root, without a new ownership claim. Runtime expansion also refuses secret references for programmatic inputs. Preview may retain only unavailable finish-phase app_root/app_bin placeholders; unrelated errors never fall back to raw text. Existing recipe/shell ephemeral parameter environment and direct parameter conditions remain; agent/native parameter transport is not widened. This closes template-derived framework disclosure, not raw argv replay or arbitrary package-authored child output. @status:impl/done",
       "line": 40,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-TEMPLATES"
     },

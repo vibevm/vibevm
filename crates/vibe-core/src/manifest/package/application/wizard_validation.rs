@@ -77,7 +77,11 @@ impl InstallerOptionDecl {
                 ));
             }
         }
-        Ok(Names { features, params })
+        Ok(Names {
+            option: self,
+            features,
+            params,
+        })
     }
 
     fn validate_features(&self, at: &FieldPath) -> Result<BTreeSet<&str>, FieldError> {

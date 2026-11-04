@@ -9,7 +9,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#parking");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#never");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#envelope");
 
-use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::Instant;
@@ -41,33 +40,20 @@ pub(crate) fn mode_of(mode: Option<AgentMode>, attended: bool) -> RunMode {
     }
 }
 
-/// The prompt after template expansion (`PROP-065#templates`): inline, or
-/// read from a package-relative `prompt_file`.
-pub(crate) fn prompt_text(
-    step: &StepDecl,
-    package_root: &Path,
-    vars: &Vars<'_>,
-) -> Result<String, AppError> {
-    let StepKind::Agent {
-        prompt,
-        prompt_file,
-        ..
-    } = &step.kind
-    else {
-        return Ok(String::new());
-    };
-    let text = match (prompt, prompt_file) {
-        (Some(prompt), _) => prompt.clone(),
-        (None, Some(file)) => {
-            fs::read_to_string(package_root.join(file)).map_err(|error| StepError::Template {
-                step: step.id.clone(),
-                field: "prompt_file",
-                reason: format!("`{}` cannot be read: {error}", file.display()),
-            })?
+/// Expand the exact literal admitted into the plan; no external file is reread.
+pub(crate) fn prompt_text(planned: &PlannedStep, vars: &Vars<'_>) -> Result<String, AppError> {
+    template::expand(prompt_literal(planned)?, vars, &planned.step.id, "prompt")
+}
+
+fn prompt_literal(planned: &PlannedStep) -> Result<&str, AppError> {
+    planned.prepared_prompt.as_deref().ok_or_else(|| {
+        StepError::Template {
+            step: planned.step.id.clone(),
+            field: "prompt",
+            reason: "the running agent prompt was not prepared by planning".into(),
         }
-        (None, None) => String::new(),
-    };
-    template::expand(&text, vars, &step.id, "prompt")
+        .into()
+    })
 }
 
 /// Show every agent prompt that will run and obtain consent for it before
@@ -80,7 +66,6 @@ pub(crate) fn admit<'p>(
     plan: &Plan,
     pending: impl Iterator<Item = &'p PlannedStep>,
     answered: &dyn Fn(&str) -> bool,
-    package_root: &Path,
     vars: &Vars<'_>,
     attended: bool,
 ) -> Result<(), AppError> {
@@ -92,8 +77,7 @@ pub(crate) fn admit<'p>(
         if !planned.run || !matches!(step.kind, StepKind::Agent { .. }) || answered(&step.id) {
             continue;
         }
-        let prompt =
-            prompt_text(step, package_root, vars).or_else(|_| raw_prompt(step, package_root))?;
+        let prompt = template::preview(prompt_literal(planned)?, vars, &step.id, step.phase)?;
         let StepKind::Agent { mode, .. } = &step.kind else {
             continue;
         };
@@ -148,24 +132,6 @@ pub(crate) fn admit<'p>(
     Ok(())
 }
 
-/// A prompt whose expansion needs a value known only later (`$app_root`
-/// of a finish step) is shown as written.
-fn raw_prompt(step: &StepDecl, package_root: &Path) -> Result<String, AppError> {
-    let StepKind::Agent {
-        prompt,
-        prompt_file,
-        ..
-    } = &step.kind
-    else {
-        return Ok(String::new());
-    };
-    match (prompt, prompt_file) {
-        (Some(prompt), _) => Ok(prompt.clone()),
-        (None, Some(file)) => Ok(fs::read_to_string(package_root.join(file)).unwrap_or_default()),
-        (None, None) => Ok(String::new()),
-    }
-}
-
 /// Everything one agent step runs with.
 pub(crate) struct AgentStep<'a> {
     pub hooks: &'a AgentHooks<'a>,
@@ -197,8 +163,9 @@ pub(crate) struct AgentStep<'a> {
 /// answer's message or the error (a parked step is `AgentError::Parked`).
 pub(crate) fn run(
     cx: &AgentStep<'_>,
-    step: &StepDecl,
+    planned: &PlannedStep,
 ) -> (Option<AgentRun>, Result<Option<String>, AppError>) {
+    let step = &planned.step;
     let StepKind::Agent { mode, .. } = &step.kind else {
         return (None, Ok(None));
     };
@@ -218,7 +185,7 @@ pub(crate) fn run(
         status: None,
         message: None,
     };
-    let result = deliver(cx, step, mode, &envelope, &mut record);
+    let result = deliver(cx, planned, mode, &envelope, &mut record);
     if let Some(record_step) = &cx.record_step {
         envelope.keep(record_step);
     }
@@ -227,12 +194,13 @@ pub(crate) fn run(
 
 fn deliver(
     cx: &AgentStep<'_>,
-    step: &StepDecl,
+    planned: &PlannedStep,
     mode: RunMode,
     envelope: &Envelope,
     record: &mut AgentRun,
 ) -> Result<Option<String>, AppError> {
-    let prompt = prompt_text(step, cx.package_root, cx.vars)?;
+    let step = &planned.step;
+    let prompt = prompt_text(planned, cx.vars)?;
     let facts = ContextFacts {
         package: &cx.plan.package,
         option: &cx.plan.option,
@@ -457,7 +425,6 @@ impl<'a> Run<'a> {
                 .filter(|(index, _)| !self.kept(*index))
                 .map(|(_, planned)| planned),
             &answered,
-            &self.resolved.root,
             &vars,
             self.attended(),
         )
@@ -518,6 +485,6 @@ impl<'a> Run<'a> {
             run_id,
             resumed_delegation: self.delegated.contains(&step.id),
         };
-        run(&cx, step)
+        run(&cx, planned)
     }
 }
