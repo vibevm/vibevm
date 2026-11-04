@@ -224,7 +224,7 @@ recoverable-or-not, independent-parser count, sunset date, golden-corpus path.
 From it the `FormatId` enum is generated, and all wire I/O goes through
 `wire::publish(FormatId, …)` / `wire::load(FormatId, …)` — an unregistered
 format is *inexpressible in the type system*, not merely discouraged. An
-unnumbered format is a format that will be broken without anyone noticing.</M-FORMAT-REGISTRY></p>
+unnumbered format is a format that will be broken without anyone noticing. The existing optional unknown_fields axis declares reader admission independently of foreign-parser count; when absent its established role-derived default remains. An explicit deny is valid for a public submitted-input format, whose independent-reader count must remain honest.</M-FORMAT-REGISTRY></p>
     <p><M-SCHEMA-DESCRIBES-FORM fact="true" status="spec/plan">**4.2 Schemas describe form; the generator owns
 policy.** One schema per format per epoch (`schemas/&lt;format&gt;/e&lt;N&gt;/…`). The
 schema language (JTD today) is chosen for *poverty*, not power: an agent cannot
@@ -235,7 +235,7 @@ values, skip-empty conventions, canonical ordering, determinism — is emitted b
 A third-party generator's expressiveness never decides our policy. Measured
 2026-08-09: stock `jtd-codegen 0.4.1` handles tagged unions (`#[serde(tag)]`)
 but emits closed vocabularies and `Option&lt;Box&lt;…&gt;&gt;` optionals — exactly the gap
-the layer exists to close.</M-SCHEMA-DESCRIBES-FORM></p>
+the layer exists to close. Local types, shared-vocabulary joins and consumer-site reader projections must consume the same effective unknown_fields policy from the one registry loader; a later local override must not disagree with an earlier shared-policy decision.</M-SCHEMA-DESCRIBES-FORM></p>
     <p><M-WIRE-FIELD-ORDER fact="true" status="impl/done">**Exact object-member byte order is
     opt-in and schema-declared.** JTD property-map order has no meaning and is
     never inferred. A root or named-definition object that requires a stable

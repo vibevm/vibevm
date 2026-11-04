@@ -246,7 +246,7 @@ Evidence: actual RED core1/runtime1/public2; в старом -g earlier step и 
 
 Это не исправление hosted raw-argv replay, optional-secret resume, batch/modify/import/dependency continuation, unclassified malformed CLI input или arbitrary child output. SECRET-BOUNDARY остаётся незавершённой общей обязанностью.
 
-## FMT-008 — Уникальность app environment names (Unreleased)
+## FMT-008 — Уникальность app environment names (Unreleased; 8f84aefb9)
 
 Принято после root review и main gates: publicCLI2/2, app2/2, core16/16, fmt/conform0new/specmap --check0blocking;43прежних warnings сохранены. Новых TOML keys, wire epochs, lock/index schemas или package versions нет. Версия остаётся1.0.11; номер следующего релиза не назначен.
 
@@ -272,3 +272,15 @@ Migration: явно переименовать один неоднозначны
 Rust API: additive core `step_env_name`, `StepEnvironment`, `StepEnvironmentError`, `StepKind::receives_step_environment`, `InstallerOptionDecl::validate_step_environment`. Прежний `vibe_app::step_env_name` сохраняет signature/output и делегирует core helper. Public struct fields не меняются.
 
 Candidate89distinct tests/docs, clippy/fmt/diff прошли. Это защита projection identity, не завершение common configuration, secret argv replay или cross-process resume.
+
+## FMT-009 — Common app runtime and continuation (design only, Unreleased)
+
+Not implemented or released at this entry. No additional vibe.toml keys are proposed: the already accepted configuration declarations become actual selected-installer inputs. Package and installer scopes stay separate; merely acquiring a package for install -g does not execute package configuration effects. Existing ordinary workspace guards remain until that consumer is connected.
+
+Planned public selectors: app describe/plan --configuration; complete generated input via --configuration-input FILE (stdin - read once) for plan/install -g/update -g/app modify/force repair. Protocols: vibe-configuration-description/1, vibe-configuration-input/1, vibe-configuration-evaluation/1, vibe-app-configuration-plan/1. Existing successful e1 describe/plan remain unchanged; no rich meaning hidden in empty legacy arrays. Submitted input is strict, preserving omitted versus explicit empty and exact versus additive; typed i64 transport uses canonical decimal strings.
+
+Planned persistence: application index epoch3/protocol4 for rich records, strict v3 read as effective-only and v3 write when all retained data is losslessly representable. No read-time migration. Pending steps epoch2/protocol2 when continuation metadata is needed, including new legacy runs with secret-presence/agent requirements; old1 retains explicitly weaker provenance. Rich plan.json stays in its existing run owner with a new generated envelope. No parallel choice database or secret answer hashes.
+
+Planned canonical command: vibe app resume GROUP/NAME@VERSION --operation ID, using the actual -g/--path home and ephemeral secret resupply. It reuses saved public input and cannot renew default consent by replaying a file or flags. Old task commands refuse a replaced generation. Whole-import continuation requires its finite cursor; it is not claimed merely because one row resumes. Exact compatibility tests/results and accepted commits will be appended after implementation.
+
+Generator correction uses existing unknown_fields=deny independently of truthful foreign_parsers=many for public input; local/shared/projection decisions must agree. No new policy field, owner epoch flag change, release number or package version is authorized by this design entry. Codegen/corpus/reader/runtime gates are still pending. Detailed before/after decisions: research/common-app-vertical-decisions.md.

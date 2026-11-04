@@ -86087,7 +86087,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:ea935b2f1b405bc322df159ceed7b7b91bd791020df82c8b41106ce479fba970",
+      "content_hash": "sha256:5a4382f4dc27774e6203e6f653c18c8e5a785774889ad9d48153007c3955dba8",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -86321,7 +86321,7 @@
     },
     {
       "anchor": "machinery",
-      "content_hash": "sha256:237888672b7bf1975c83c49cfcec171f49caa55437be2f85df0b2d50c5eae6a0",
+      "content_hash": "sha256:0268fc218bc16ecc9f7379e623cd4c398341b43df82800ec7de9b13fc4f4155c",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "4. The machinery",
@@ -86339,19 +86339,19 @@
     },
     {
       "anchor": "M-FORMAT-REGISTRY",
-      "content_hash": "sha256:b2e9889dd84631fa09eae35842764a07f03a373e5f27f8d5ba7feec2a2505abc",
+      "content_hash": "sha256:1b77177aabb6188444297d059542979d6a42dfc191c00a776be176687440a877",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
-      "heading": "**4.1 The format registry.** `formats/REGISTRY.toml`\ninventories every surface a foreign parser reads: id, epoch, schema path,\nrecoverable-or-not, independent-parser count, sunset date, golden-corpus path.\nFrom it the `FormatId` enum is generated, and all wire I/O goes through\n`wire::publish(FormatId, …)` / `wire::load(FormatId, …)` — an unregistered\nformat is *inexpressible in the type system*, not merely discouraged. An\nunnumbered format is a format that will be broken without anyone noticing. @status:spec/plan",
+      "heading": "**4.1 The format registry.** `formats/REGISTRY.toml`\ninventories every surface a foreign parser reads: id, epoch, schema path,\nrecoverable-or-not, independent-parser count, sunset date, golden-corpus path.\nFrom it the `FormatId` enum is generated, and all wire I/O goes through\n`wire::publish(FormatId, …)` / `wire::load(FormatId, …)` — an unregistered\nformat is *inexpressible in the type system*, not merely discouraged. An\nunnumbered format is a format that will be broken without anyone noticing. The existing optional unknown_fields axis declares reader admission independently of foreign-parser count; when absent its established role-derived default remains. An explicit deny is valid for a public submitted-input format, whose independent-reader count must remain honest. @status:spec/plan",
       "line": 221,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY"
     },
     {
       "anchor": "M-SCHEMA-DESCRIBES-FORM",
-      "content_hash": "sha256:698b789c93879c18eb1af2f6bc8ac59eefb968a04c57b7eb426e2d8242ee57fc",
+      "content_hash": "sha256:fb87299a453eb138c205094696543e950d6c6c4dee8ee046abbc37e5cab8ddc6",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
-      "heading": "**4.2 Schemas describe form; the generator owns\npolicy.** One schema per format per epoch (`schemas/<format>/e<N>/…`). The\nschema language (JTD today) is chosen for *poverty*, not power: an agent cannot\nwrite a half-tagged union or a conditional schema in it. Everything the\nlanguage cannot express — strictness, open vocabularies with preserved unknown\nvalues, skip-empty conventions, canonical ordering, determinism — is emitted by\n**our own generator layer**, which is a first-class component of this project.\nA third-party generator's expressiveness never decides our policy. Measured\n2026-08-09: stock `jtd-codegen 0.4.1` handles tagged unions (`#[serde(tag)]`)\nbut emits closed vocabularies and `Option<Box<…>>` optionals — exactly the gap\nthe layer exists to close. @status:spec/plan",
+      "heading": "**4.2 Schemas describe form; the generator owns\npolicy.** One schema per format per epoch (`schemas/<format>/e<N>/…`). The\nschema language (JTD today) is chosen for *poverty*, not power: an agent cannot\nwrite a half-tagged union or a conditional schema in it. Everything the\nlanguage cannot express — strictness, open vocabularies with preserved unknown\nvalues, skip-empty conventions, canonical ordering, determinism — is emitted by\n**our own generator layer**, which is a first-class component of this project.\nA third-party generator's expressiveness never decides our policy. Measured\n2026-08-09: stock `jtd-codegen 0.4.1` handles tagged unions (`#[serde(tag)]`)\nbut emits closed vocabularies and `Option<Box<…>>` optionals — exactly the gap\nthe layer exists to close. Local types, shared-vocabulary joins and consumer-site reader projections must consume the same effective unknown_fields policy from the one registry loader; a later local override must not disagree with an earlier shared-policy decision. @status:spec/plan",
       "line": 228,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-SCHEMA-DESCRIBES-FORM"
     },
@@ -99524,7 +99524,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:2f9e03c2fc1a31f561c865bdbc8536d4bee0b826ea092da2d0b518b5b3d0b2ec",
+      "content_hash": "sha256:f4cf2d6c1524bee4394f511eb803cd6ca415e6dcf847e47104706b84e3f76bc5",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -99874,12 +99874,48 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-PACKAGE-COMPATIBILITY"
     },
     {
+      "anchor": "app-runtime",
+      "content_hash": "sha256:c0ae8721f45a4a102e98cdb8e1a6eb7a4ae2d18f31ae8be344e710027249385a",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "6.1 Selected-installer implementation boundary",
+      "line": 49,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#app-runtime"
+    },
+    {
+      "anchor": "APP-CONFIGURATION-JOURNEY",
+      "content_hash": "sha256:694c10db0afc87f8244db8ac7eb3b9f1e4abfaedb61d97858940003ddcf8f3e8",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "An application operation configures its selected installer, while package acquisition retains package configuration and requires data without implicitly executing their effects. The common app input preserves original ConfigurationIntentDecl plus direct disables and ephemeral secret inputs. Complete submission replaces input; absent maintenance submission reuses the recorded original, and explicit flags apply as deltas without deleting dormant answers. Only a fully resolved common result feeds the existing app planner/runner. Shared normalization/evaluation and parameter validation remain the owners, with parameter origin separate from value. Existing views retain their closed legacy shape; common describe/plan and configuration-input documents use generated versioned vocabulary. Actual install, fresh-process modify/update, rollback and force repair, console and external answers, and pending continuation are required for this journey; type/schema admission alone is not delivery. Concrete decisions and discriminators are recorded in campaigns/next-semantic-transfer-2026-11/research/common-app-vertical-decisions.md. @status:spec/done",
+      "line": 50,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-JOURNEY"
+    },
+    {
+      "anchor": "APP-CONFIGURATION-BASIS",
+      "content_hash": "sha256:f6133c668e734859f131740814583470acfc48828beaa32c86282dbcc6f663f0",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "A fresh explicit defaults policy may bind the actual selected definition in that operation; an expected definition from a split client must match. Stored reuse does not renew changed default/profile meaning. Retain historical definition evidence and a versioned typed semantic basis, excluding presentation-only changes, with reasons for automatic reliance including dormant/absent defaults. Whole-definition comparison is conservatively allowed for automatic reliance; fully explicit input without it survives unrelated default changes. Review occurs before dependencies/removal/execution. Public path input, origin and absolute lossless realization remain distinct. On reuse without a fresh setter/replacement, unchanged lexical source/origin retains the old realization; changed validation rules revalidate that path rather than re-anchoring it to a new working directory. Secret values or reusable answer digests never enter these records. @status:spec/done",
+      "line": 51,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS"
+    },
+    {
+      "anchor": "APP-CONFIGURATION-CONTINUATION",
+      "content_hash": "sha256:dcec10b32e5ef6bc3ea2c383f325d4785048ea5f3ba48cf458ac7495a467f05f",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "The existing pending work owner retains public original input and operation context before dependency descent. Canonical app resume names an exact package key and operation generation in the actual home; it reuses saved input rather than replaying raw argv or mutable input files. Secret resupply remains ephemeral and proves presence, not equality with an earlier value. Linked pending children precede indexed-completion shortcuts. Maintenance keeps its actual predecessor and removal/publication phase; uncertain external removal is not automatically repeated or certified. Delegated result reuse checks the actual prepared prompt/task context before rewriting its envelope, without claiming whole-source authentication. Whole-import continuation retains its finite cohort/cursor and arrangement policy; row continuation is not whole-import completion. New continuation metadata uses an explicit steps version even for legacy syntax; older work remains labeled with its weaker provenance. Index writes preserve v3 legacy records faithfully and use v4 when rich data requires it; no read-time migration or silent old projection is permitted. @status:spec/done",
+      "line": 52,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION"
+    },
+    {
       "anchor": "acceptance",
       "content_hash": "sha256:ba57173c57aa1e9a9f3a5ff1b85f0f8b35a2d3f6d243468ed5e3c2b71c2b4e4f",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "7. Finished means a working shared system",
-      "line": 49,
+      "line": 54,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#acceptance"
     },
     {
@@ -99888,7 +99924,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Acceptance requires the existing public application wizard scenario and app update/modify behavior to pass; the same ordinary package request to work through console and serialized external answers without host bootstrap; all cardinalities and omitted/empty/default policies; dormant switch-away/switch-back; additive/exact multi-consumer conflicts; candidate backtracking without effect/default leakage; integrated forwarding/subskill/config effects; typed parameters and redaction; persistence followed by install/update/reconfiguration; stale definition refusals without writes; and a PackageKind-driven matrix of supported views and effects, including read-only and consent-only boundaries. Structural/schema success and counts are supporting checks, not substitutes for these user outcomes. @status:spec/done",
-      "line": 50,
+      "line": 55,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#ACCEPTANCE"
     },
     {
@@ -99897,7 +99933,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "8. Rationale and rejected alternatives",
-      "line": 52,
+      "line": 57,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#decisions"
     },
     {

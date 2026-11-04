@@ -414,3 +414,15 @@ Candidate89distinct tests/docs, scoped clippy/fmt/diff exit0. Exact-source RED: 
 ### Environment identity accepted gate
 
 Main: public CLI2/2, programmatic app2/2, core declaration16/16; fmt/core+app+CLI conform/specmap+check/diff exit0. Conform0new; existing observations core0/app1/CLI67 unchanged. Map9056units/4738items/3978edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. All13source hashes match the reviewed candidate. APP-ENV-IDENTITY accepted at its exact recipe/shell transport boundary; general common execution and continuation remain open. FMT-008 records changed validation, unchanged syntax/schemas/version, exact -g error path and explicit migration guidance.
+
+## 2026-11-04 — Environment identity committed and cleaned
+
+Accepted commit8f84aefb9. All13files verified against committed HEAD;35candidate evidence files plus root gate logs preserved locally. No live cwd/exe/fd users; exact temporary worktree removed, directory and Git registry absence verified. Original untracked doc.web and unrelated worktree untouched. No push or release performed. Current frontier remains full common selected-installer journey; two bounded read-only reviews resolve path-origin/shared-wire and pending-resume seams before one implementation writer starts.
+
+## 2026-11-04 — Freeze the complete selected-installer route
+
+Two bounded source reviews promoted with root decisions: common-app-runtime-seams.md and common-app-continuation-review.md; prior vertical design retained as design input. No source-only scenario is labeled runtime evidence. Root selected ordinary CLI/common generated documents, original-input maintenance, explicit default-basis rules and canonical pending-operation resume. These are spec/done requirements, not implemented claims; APP-CONFIGURATION-JOURNEY/BASIS/CONTINUATION remain open implementation obligations.
+
+Corrections made during review: same-definition config-value references cannot conflict in value, so no invented conflict subsystem/test; path validation changes must check the old realization rather than rebase it; DefaultUse alone misses dormant/absent automatic reliance; a parent needs pending input before a child can park; indexed finish-parked children are unfinished; default/parameter provenance and operation generation are necessary data, not inferred from effective booleans. A dedicated home-aware app resume replaces the earlier proposal to sanitize and replay raw argv, and supplies the missing project-child route. Import needs its actual finite loop cursor, not a generic scheduler. Secret resupply cannot prove old-value equality and source locators cannot prove whole-tree authentication.
+
+The generator already supports explicit unknown_fields through its loader and a late local stamp, but three earlier shared/projection decisions still re-infer policy from foreign_parsers. Root authorizes only alignment with the existing effective policy; no new registry axis/serializer. Existing defaults remain. Whole app implementation is one active parent with concrete stages; none closes the broader all-kind solver/effect/persistence campaign.
