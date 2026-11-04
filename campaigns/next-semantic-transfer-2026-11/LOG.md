@@ -298,3 +298,13 @@ Final candidate9commands exit0:28resolver+38configuration+37docs+14app+2checker+
 ### Package adapter accepted gate
 
 Main resolver28/28 и configuration38/38 прошли. Fmt/core conform/resolver conform/specmap+check exit0. Map9047units/4709items/3949edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Core conform0findings; resolver2existing ambient-env observations,0new. Все12candidate source hashes совпадают с main; дополнительная root правка checker только документальная. Принимается реальный package adapter к общему kernel, не отсутствующие foreign dependency/export consumers.
+
+## 2026-11-04 — Package принят, secret diagnostics интегрируется
+
+Package adapter commit5af2eadc8 сохранён; все12candidate bytes сверены с committed HEAD, evidence вынесены, live cwd/exe/fd users отсутствовали. Временная копия удалена; отсутствие каталога и registry entry подтверждено.
+
+Secret candidate6files проверен против полного diff/untracked set, SHA256 и unchanged base; перенесён в main. Final23distinct tests/docs плюс clippy/fmt/diff прошли. Полный CLI RED5fail/2controls и GREEN7pass сохранён. Core/app RED доступен только как реальные наблюдённые excerpts; новые полные unit GREEN записаны при resume. Этого ограничения evidence не скрываем. Root source review подтвердил redaction только classified answers и неизменность public diagnostics; interactive Password branch не проходил PTY, проверен по коду/компиляции. Main повторяет7publicCLIcases совместно с новым package adapter.
+
+### Secret diagnostics accepted gate
+
+Main publicCLI7/7 прошёл, fmt/core+app+CLI conform/specmap+check exit0. Conform0new findings; прежние nonblocking observations сохранены (core0/app1/CLI67). Map9048units/4715items/3955edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Все6integrated source hashes совпали с reviewed candidate. Принимается SECRET-DIAGNOSTICS; общий SECRET-BOUNDARY остаётся spec/done с незакрытой реализацией templates/replay. Ни Password PTY, ни native-platform pass не заявлены.

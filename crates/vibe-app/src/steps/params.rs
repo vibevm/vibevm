@@ -25,14 +25,38 @@ pub type ParameterPrompt<'a> =
 /// returns whether the user accepts.
 pub type LicensePrompt<'a> = &'a dyn Fn(&str, &str) -> Result<bool, String>;
 
-/// One resolved parameter value; a secret one is passed to children and
-/// never written anywhere.
-#[derive(Debug, Clone, PartialEq, Eq)]
+/// One resolved parameter value. Secret values remain execution inputs;
+/// Debug omits their contents.
+///
+/// ```
+/// let value = vibe_app::ParamValue {
+///     id: "token".into(), value: "SYN_DEBUG_INPUT".into(), secret: true,
+/// };
+/// assert!(!format!("{value:?}").contains("SYN_DEBUG_INPUT"));
+/// assert_eq!(value.value, "SYN_DEBUG_INPUT");
+/// ```
+#[derive(Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#parameters")]
 pub struct ParamValue {
     pub id: String,
     pub value: String,
     pub secret: bool,
+}
+
+impl std::fmt::Debug for ParamValue {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let value = if self.secret {
+            "[redacted]"
+        } else {
+            self.value.as_str()
+        };
+        formatter
+            .debug_struct("ParamValue")
+            .field("id", &self.id)
+            .field("value", &value)
+            .field("secret", &self.secret)
+            .finish()
+    }
 }
 
 /// `VIBE_PARAM_<ID>` / `VIBE_FEATURE_<ID>`: upper-cased, `-` and `.` to `_`.
@@ -99,7 +123,16 @@ pub(crate) fn resolve_parameters(
         let raw = match (named, recorded, prompt) {
             (Some(value), _, _) | (None, Some(value), _) => Some(value),
             (None, None, Some(ask)) => ask(parameter, default.as_deref())
-                .map_err(|reason| invalid(&parameter.id, format!("the prompt failed: {reason}")))?
+                .map_err(|reason| {
+                    invalid(
+                        &parameter.id,
+                        if parameter.secret {
+                            "the prompt failed for a secret parameter".into()
+                        } else {
+                            format!("the prompt failed: {reason}")
+                        },
+                    )
+                })?
                 .or(default),
             (None, None, None) => default,
         };
@@ -120,7 +153,11 @@ pub(crate) fn resolve_parameters(
             if parameter.must_exist && !path.exists() {
                 return Err(invalid(
                     &parameter.id,
-                    format!("`{}` does not exist", path.display()),
+                    if parameter.secret {
+                        "the secret path does not exist".into()
+                    } else {
+                        format!("`{}` does not exist", path.display())
+                    },
                 ));
             }
             value = path.to_string_lossy().into_owned();

@@ -31,8 +31,8 @@ pub(super) fn feature_chooser(
     asking(|| prompts::choose_many(prompt, items, defaults).map_err(|error| error.to_string()))
 }
 
-/// A typed parameter question (PROP-065 `#parameters`): a confirmation, a
-/// list, a hidden entry for a secret, otherwise a line of text.
+/// A typed parameter question (PROP-065 `#parameters`): hidden input for
+/// every secret kind, otherwise a confirmation, list or line of text.
 pub(super) fn parameter_prompt(
     parameter: &ParameterDecl,
     preset: Option<&str>,
@@ -46,6 +46,12 @@ pub(super) fn parameter_prompt(
     asking(|| {
         prompts::space_before_question();
         match parameter.kind {
+            _ if parameter.secret => Password::with_theme(&theme)
+                .with_prompt(label)
+                .allow_empty_password(preset.is_some() || !parameter.required)
+                .interact()
+                .map(|text| Some(text).filter(|text| !text.is_empty()))
+                .map_err(failed),
             ParameterType::Bool => Confirm::with_theme(&theme)
                 .with_prompt(label)
                 .default(preset == Some("true"))
@@ -68,12 +74,6 @@ pub(super) fn parameter_prompt(
                     .and_then(|index| parameter.choices.get(index))
                     .map(|choice| choice.value.clone()))
             }
-            _ if parameter.secret => Password::with_theme(&theme)
-                .with_prompt(label)
-                .allow_empty_password(!parameter.required)
-                .interact()
-                .map(|text| Some(text).filter(|text| !text.is_empty()))
-                .map_err(failed),
             _ => {
                 let mut input = Input::<String>::with_theme(&theme)
                     .with_prompt(label)

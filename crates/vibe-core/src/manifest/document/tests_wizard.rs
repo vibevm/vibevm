@@ -212,3 +212,111 @@ fn wizard_rules_are_enforced_with_named_reasons() {
         assert!(error.contains(needle), "expected `{needle}` in: {error}");
     }
 }
+
+#[cfg(test)]
+fn diagnostic_parameter(kind: &str, fields: &str, secret: bool) -> crate::manifest::ParameterDecl {
+    let text = format!(
+        "[package]\nname='diagnostic'\ngroup='org.example'\nkind='app'\nversion='1.0.0'\n\
+         [application]\nid='diagnostic'\n\
+         [[installer_options]]\nid='main'\nname='Main'\nplatform='linux'\nplatform_name='Linux'\narch='x86_64'\n\
+         [[installer_options.parameters]]\nid='answer'\nname='Answer'\ntype='{kind}'\nsecret={secret}\n{fields}\n\
+         [[installer_options.steps]]\nid='build'\ntitle='Build'\nkind='recipe'\nscript='build.sh'\n"
+    );
+    option(&text).parameters.remove(0)
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-BOUNDARY")]
+fn secret_canonical_errors_omit_supplied_text() {
+    let mut failures = Vec::new();
+    for (kind, fields, raw, reason) in [
+        ("bool", "", "SYN_SECRET_BOOL_CANARY", "not a boolean"),
+        ("integer", "", "SYN_SECRET_INTEGER_CANARY", "not an integer"),
+        (
+            "choice",
+            "choices=[{value='alpha',name='Alpha'},{value='beta',name='Beta'}]",
+            "SYN_SECRET_CHOICE_CANARY",
+            "not one of alpha, beta",
+        ),
+        ("string", "", "SYN_SECRET_CONTROL\n", "control characters"),
+        ("path", "", "SYN_SECRET_PATH\n", "control characters"),
+    ] {
+        let error = diagnostic_parameter(kind, fields, true)
+            .canonical(raw)
+            .unwrap_err();
+        assert!(error.contains(reason), "{kind}: {error}");
+        if error.contains(raw) {
+            failures.push((kind, error));
+        }
+    }
+    assert!(failures.is_empty(), "secret answer in errors: {failures:?}");
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-BOUNDARY")]
+fn secret_integer_bounds_do_not_echo_the_canonical_value() {
+    let error = diagnostic_parameter("integer", "min=1\nmax=10", true)
+        .canonical("0004242")
+        .unwrap_err();
+    assert!(error.contains("outside 1..=10"));
+    assert!(
+        !error.contains("4242"),
+        "canonical secret integer was exposed: {error}"
+    );
+}
+
+#[test]
+fn public_parameter_diagnostics_and_valid_canonical_values_are_unchanged() {
+    for (kind, fields, raw, expected) in [
+        (
+            "bool",
+            "",
+            "maybe",
+            "`maybe` is not a boolean (true / false)",
+        ),
+        ("integer", "", "text", "`text` is not an integer"),
+        (
+            "integer",
+            "min=1\nmax=10",
+            "0004242",
+            "4242 is outside 1..=10",
+        ),
+        (
+            "choice",
+            "choices=[{value='alpha',name='Alpha'}]",
+            "other",
+            "`other` is not one of alpha",
+        ),
+        ("path", "", "   ", "a path must be nonempty"),
+    ] {
+        assert_eq!(
+            diagnostic_parameter(kind, fields, false)
+                .canonical(raw)
+                .unwrap_err(),
+            expected
+        );
+    }
+    for (kind, fields, raw, expected) in [
+        ("bool", "default=true", " YeS ", "true"),
+        ("bool", "", "0", "false"),
+        ("integer", "min=1\nmax=100", " 080 ", "80"),
+        (
+            "choice",
+            "choices=[{value='alpha',name='Alpha'}]\ndefault='alpha'",
+            "alpha",
+            "alpha",
+        ),
+        ("string", "required=true\ndefault='public default'", "", ""),
+        ("string", "", " spaced value ", " spaced value "),
+        ("path", "", "relative/path", "relative/path"),
+    ] {
+        for secret in [false, true] {
+            assert_eq!(
+                diagnostic_parameter(kind, fields, secret)
+                    .canonical(raw)
+                    .unwrap(),
+                expected
+            );
+        }
+    }
+}

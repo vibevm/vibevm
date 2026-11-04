@@ -205,3 +205,153 @@ fn a_license_needs_acceptance_before_anything_is_fetched() {
     let accept = |_: &str, _: &str| Ok(true);
     assert!(admit_license(&option, "k", dir.path(), false, None, Some(&accept)).is_ok());
 }
+
+#[cfg(test)]
+fn classified_option(kind: &str, fields: &str, secret: bool) -> InstallerOptionDecl {
+    Manifest::parse_str(&format!(
+        "[package]\nname='diagnostic'\ngroup='org.example'\nkind='app'\nversion='1.0.0'\n\
+         [application]\nid='diagnostic'\n\
+         [[installer_options]]\nid='main'\nname='Main'\nplatform='linux'\nplatform_name='Linux'\narch='x86_64'\n\
+         [[installer_options.parameters]]\nid='answer'\nname='Answer'\ntype='{kind}'\nsecret={secret}\n{fields}\n\
+         [[installer_options.steps]]\nid='build'\ntitle='Build'\nkind='recipe'\nscript='build.sh'\n"
+    )).unwrap().installer_options.remove(0)
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-BOUNDARY")]
+fn secret_resolved_path_error_is_value_free_but_public_path_keeps_detail() {
+    let root = tempfile::tempdir().unwrap();
+    let resolved = root.path().join("SYN_RESOLVED_PATH_CANARY");
+    let host = |_: &str| resolved.clone();
+    for secret in [true, false] {
+        let option = classified_option("path", "must_exist=true", secret);
+        let facts = HostFacts {
+            resolve_path: &host,
+            ..HostFacts::default()
+        };
+        let error = resolve_parameters(
+            &option,
+            &set(&[("answer", "SYN_RAW_PATH_ALIAS")]),
+            None,
+            facts,
+            None,
+        )
+        .unwrap_err();
+        assert_eq!(error.code(), "parameter_invalid");
+        let text = format!("{error}\n{error:?}");
+        assert!(
+            text.contains("answer") && text.contains("main") && text.contains("does not exist")
+        );
+        assert!(!text.contains("SYN_RAW_PATH_ALIAS"));
+        assert_eq!(text.contains("SYN_RESOLVED_PATH_CANARY"), !secret, "{text}");
+    }
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-BOUNDARY")]
+fn secret_prompt_failure_drops_opaque_text_and_error_chain() {
+    let prompt = |_: &ParameterDecl, _: Option<&str>| Err("SYN_OPAQUE_PROMPT_CANARY".to_owned());
+    for secret in [true, false] {
+        let option = classified_option("string", "", secret);
+        let error = resolve_parameters(&option, &[], None, facts(), Some(&prompt)).unwrap_err();
+        assert_eq!(error.code(), "parameter_invalid");
+        let mut text = format!("{error}\n{error:?}");
+        let mut cause = std::error::Error::source(&error);
+        while let Some(source) = cause {
+            text.push_str(&source.to_string());
+            cause = source.source();
+        }
+        assert!(text.contains("prompt failed") && text.contains("answer"));
+        assert_eq!(text.contains("SYN_OPAQUE_PROMPT_CANARY"), !secret, "{text}");
+    }
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-BOUNDARY")]
+fn classified_parameter_debug_redacts_only_the_secret_value() {
+    let option = classified_option("string", "", true);
+    let value = resolve_parameters(
+        &option,
+        &set(&[("answer", "SYN_DEBUG_SECRET_CANARY")]),
+        None,
+        facts(),
+        None,
+    )
+    .unwrap()
+    .remove(0);
+    assert_eq!(value.value, "SYN_DEBUG_SECRET_CANARY");
+    assert_eq!(
+        format!("{value:?}"),
+        "ParamValue { id: \"answer\", value: \"[redacted]\", secret: true }"
+    );
+    let plan = crate::steps::Plan {
+        package: crate::PackageCoordinate {
+            group: "org.example".into(),
+            name: "diagnostic".into(),
+            version: "1.0.0".into(),
+        },
+        option: option.id.clone(),
+        platform: option.platform.clone(),
+        arch: option.arch.clone(),
+        result: vibe_core::manifest::ResultDecl::owned(),
+        declared: vec![],
+        profile: None,
+        features: vec![],
+        implied: vec![],
+        parameters: vec![value.clone()],
+        license: None,
+        download_bytes: 0,
+        unknown_sizes: 0,
+        dependencies: vec![],
+        steps: option
+            .steps
+            .iter()
+            .cloned()
+            .map(|step| crate::steps::PlannedStep {
+                step,
+                run: true,
+                reason: None,
+                note: None,
+            })
+            .collect(),
+        warnings: vec![],
+        required_by: None,
+    };
+    let text = format!("{value:?}\n{value:#?}\n{plan:?}");
+    assert!(!text.contains("SYN_DEBUG_SECRET_CANARY"), "{text}");
+    assert!(text.contains("answer") && text.contains("secret: true"));
+    let public = ParamValue {
+        id: "public".into(),
+        value: "PUBLIC_VALUE".into(),
+        secret: false,
+    };
+    assert_eq!(
+        format!("{public:?}"),
+        "ParamValue { id: \"public\", value: \"PUBLIC_VALUE\", secret: false }"
+    );
+}
+
+#[test]
+fn secret_prompt_none_keeps_required_default_and_existing_precedence() {
+    let option = classified_option("bool", "required=true\ndefault=true", true);
+    let prompt = |_: &ParameterDecl, preset: Option<&str>| {
+        assert_eq!(preset, Some("true"));
+        Ok(None)
+    };
+    let values = resolve_parameters(&option, &[], None, facts(), Some(&prompt)).unwrap();
+    assert_eq!(values[0].value, "true");
+    let never =
+        |_: &ParameterDecl, _: Option<&str>| panic!("explicit/recorded answer must precede prompt");
+    let previous = BTreeMap::from([("answer".into(), "off".into())]);
+    let values = resolve_parameters(&option, &[], Some(&previous), facts(), Some(&never)).unwrap();
+    assert_eq!(values[0].value, "false");
+    let values = resolve_parameters(
+        &option,
+        &set(&[("answer", "false"), ("answer", "on")]),
+        Some(&previous),
+        facts(),
+        Some(&never),
+    )
+    .unwrap();
+    assert_eq!(values[0].value, "true");
+}

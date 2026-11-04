@@ -111,7 +111,8 @@ impl ParameterDecl {
     /// Validate `raw` against the type and return its canonical text:
     /// `true` / `false`, a decimal integer within `min` / `max`, a declared
     /// choice value, or the text itself. Whether a `path` exists is a host
-    /// fact the planner checks.
+    /// fact the planner checks. Errors for a secret declaration omit the
+    /// supplied value; declared bounds and allowed choices remain public.
     ///
     /// ```
     /// use vibe_core::manifest::{ParameterDecl, ParameterType};
@@ -122,11 +123,20 @@ impl ParameterDecl {
     /// assert!(port.canonical("0").is_err());
     /// let flag = ParameterDecl { kind: ParameterType::Bool, ..port };
     /// assert_eq!(flag.canonical("Yes").unwrap(), "true");
+    /// let secret = ParameterDecl { secret: true, ..flag };
+    /// assert!(!secret.canonical("SYN_SECRET_INPUT").unwrap_err().contains("SYN_SECRET_INPUT"));
     /// ```
     pub fn canonical(&self, raw: &str) -> Result<String, String> {
         if raw.chars().any(char::is_control) {
             return Err("the value contains control characters".into());
         }
+        let rejected = || {
+            if self.secret {
+                "the secret value".to_owned()
+            } else {
+                format!("`{raw}`")
+            }
+        };
         match self.kind {
             ParameterType::String => Ok(raw.to_owned()),
             ParameterType::Path if raw.trim().is_empty() => Err("a path must be nonempty".into()),
@@ -134,18 +144,23 @@ impl ParameterDecl {
             ParameterType::Bool => match raw.trim().to_ascii_lowercase().as_str() {
                 "true" | "yes" | "on" | "1" => Ok("true".into()),
                 "false" | "no" | "off" | "0" => Ok("false".into()),
-                _ => Err(format!("`{raw}` is not a boolean (true / false)")),
+                _ => Err(format!("{} is not a boolean (true / false)", rejected())),
             },
             ParameterType::Integer => {
                 let value: i64 = raw
                     .trim()
                     .parse()
-                    .map_err(|_| format!("`{raw}` is not an integer"))?;
+                    .map_err(|_| format!("{} is not an integer", rejected()))?;
                 if self.min.is_some_and(|min| value < min)
                     || self.max.is_some_and(|max| value > max)
                 {
+                    let supplied = if self.secret {
+                        "the secret value".to_owned()
+                    } else {
+                        value.to_string()
+                    };
                     return Err(format!(
-                        "{value} is outside {}..={}",
+                        "{supplied} is outside {}..={}",
                         self.min.map_or_else(String::new, |min| min.to_string()),
                         self.max.map_or_else(String::new, |max| max.to_string())
                     ));
@@ -155,7 +170,8 @@ impl ParameterDecl {
             ParameterType::Choice => match self.choices.iter().find(|choice| choice.value == raw) {
                 Some(choice) => Ok(choice.value.clone()),
                 None => Err(format!(
-                    "`{raw}` is not one of {}",
+                    "{} is not one of {}",
+                    rejected(),
                     self.choices
                         .iter()
                         .map(|choice| choice.value.as_str())

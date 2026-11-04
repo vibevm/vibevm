@@ -63,3 +63,13 @@ Five old flaws were reproduced as failing correction cases: the all-alternatives
 Candidate verification: resolver 28, shared configuration 38, docs 37, app feature consumer 14, checker 2, public CLI installation 1 — 120 distinct tests/docs. The 21-row differential matrix is included, not counted again. Clippy/fmt/diff passed. Root verified exact 12-file hashes and integrated them; main checks are in progress. The old evaluator remains test-only. Checker prose is corrected to match actual local admission and avoid claiming export existence from a selector.
 
 Package adapter accepted after main resolver 28/28 and configuration 38/38, fmt and scoped conform (0 new), specmap --check (0 blocking findings, 43 known warnings). All 12 source hashes match. Existing package CLI install remains the tested consumer; richer authored choices, dependency effects, selected loading and durable original intent still require connection.
+
+## Classified secret diagnostics
+
+Six reviewed files correct existing secret-value error paths and Debug, and choose hidden input before public boolean/choice widgets. Invalid booleans, integers, choices, canonical range values, resolved paths and opaque prompt callback errors no longer disclose marked answers. Public diagnostics retain useful details; typed canonicalization, explicit/recorded/prompt/default precedence and existing recipe/shell input delivery remain. Authored default/choice definitions are public data.
+
+The complete real CLI RED has 5 failures and 2 passing controls; corrected human+JSON output passes all 7, retaining exit 2 and parameter_invalid. Core/app RED is retained as observed excerpts, not fabricated complete logs. Final candidate coverage is 23 distinct tests/docs (6 core, 7 params, 7 CLI, 1 existing wizard, 2 docs), plus scoped clippy/fmt/diff. Password branch selection is source-reviewed and compiled; no real PTY interaction is claimed. Root integrated all six SHA256-verified files and is running public CLI tests in main.
+
+This accepts only classified errors/Debug/prompt handling. Template interpolation/persistence, raw argv in hosted replay, batch/root/current scopes, optional-secret resupply and other continuation gaps remain required work. There is no assertion of arbitrary child sandboxing or redaction of malformed CLI input before its declaration is known.
+
+Classified secret diagnostics accepted after main public CLI 7/7 and fmt, scoped conform (0 new) and specmap --check (0 blocking findings; 43 known warnings). All six integrated hashes match the reviewed candidate. SECRET-DIAGNOSTICS is implemented; the broader SECRET-BOUNDARY and complete F04 remain unfinished.
