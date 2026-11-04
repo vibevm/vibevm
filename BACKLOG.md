@@ -2546,3 +2546,13 @@ structure, and it goes when the file does.
 | @fact:B232-SEVERITY **severity** | P1 — **high priority by the owner's word (2026-11-04)**: "will be installed from <source>", "Take it from here" and the preferred hosting in the Library wait for these three. |
 | @fact:B232-DISPOSITION **disposition** | `open — high priority (the owner, 2026-11-04)`; when vibe has them, vibevm-app adds the three (R137 §4, I-2075). |
 | @fact:B232-FILED **filed by** | vibevm-app build side (session MVP), 2026-11-04. |
+
+## B-233 — окружения на основе существующего мета-дистрибутива {#b-233}
+
+| field | value |
+|---|---|
+| @fact:B233-WHAT **what** | Архитектурно проверить гипотезу владельца: подготовка Docker и других окружений должна опираться на существующий мета-дистрибутив `vibe install -g`, расширенный на другие корни установки и точки монтирования, вместо второй независимой системы установки. HOME, target rootfs и исполнитель не следует отождествлять. Пользовательская цель: сборка понятных контейнеров из готовых пакетов через общие GUI/CLI/агентные инструменты; долгосрочно — ОС с Vibe как пакетным менеджером, одинаково доступная людям и агентам. Дословные слова владельца сохранены в заметке и комментарии PROP-059. |
+| @fact:B233-EVIDENCE **evidence** | Предложение владельца2026-11-04; существующий мета-дистрибутив описан в PROP-059#purpose, структурированные шаги — в PROP-065. Уже есть пользовательские/проектные homes и библиотеки хранения; их достаточность для Docker/rootfs не установлена. Подробные вопросы и ожидаемый результат: [архитектурная заметка](campaigns/next-semantic-transfer-2026-11/research/environment-targets-metadistribution-question.md). |
+| @fact:B233-SEVERITY **severity** | P2 — серьёзный открытый архитектурный вопрос перед проектированием окружений; не аварийный дефект. |
+| @fact:B233-DISPOSITION **disposition** | `open — architecture investigation`; гипотеза не объявлена утверждённым решением. Сопоставить с M-14/M-15 полного плана, явно отделив reuse, необходимые расширения и backend-specific поведение. Не новая задача в знаменателе222 и не основание считать Docker уже готовым. |
+| @fact:B233-FILED **filed by** | По предложению владельца,2026-11-04. |

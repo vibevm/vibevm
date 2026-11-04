@@ -53,3 +53,22 @@
     <p><binary-ownership fact="true" status="spec/void">Retired 2026-10-30. See `#ownership` and `#storage-libraries`.</binary-ownership></p>
     <p><verification fact="true" status="spec/void">Retired 2026-10-19. See `#acceptance`.</verification></p>
 </spec>
+
+<!--
+B-233: owner architecture question and product vision, recorded 2026-11-04.
+Status: open investigation; not an implemented environment/OS contract.
+Keep these words available when designing M-14/M-15; do not infer that changing
+HOME alone supplies a Docker/rootfs executor or that the current app runtime
+already implements the envisioned OS. The existing install-g meta-distribution
+and its GUI connection are the proposed shared foundation for console, GUI
+and agent operations. Detailed questions and interpretation:
+campaigns/next-semantic-transfer-2026-11/research/environment-targets-metadistribution-question.md
+
+Owner's original words (verbatim):
+я бы где-нибудь записал подумать вот о чем. У нас есть целый набор задач про подготовку Docker и прочих окружений. И одновременно, мы уже реализовали мета-дистрибутив поверх vibe install -g. Я бы препдоложил, что работа с окружением внутри Docker и других дистрибутивов - должна быть основана на механике нашего уже существующего мета-дистрибутива, расширенной на другие точки монитирования кроме банального HOME. Это серьеный сложный вопрос на обдумывание.
+
+Я бы также вписал туда, что это откроет путь к возможности конструировать Docker образы примерно тем же образом и с примерно теми же графическими и консольными утилитами, что мы делаем с помощью vibe install -g (там уже есть связь с графическим приложением). Это позволило бы пользователям, далеким от девопса, быстро собирать контейнеры из готовых пакетов, визуализировать и понимать структуру таких контейнеров. Кроме того, это путь к тому, чтобы целиком операционная система основанная на vibe в качестве пакетного менеджера, была полностью доступна одновременно и людям и агентам в виде удобных утилит, которые изначально написаны универсальным образом, в расчете одновременно и на GUI, и на агентный подход.
+
+The owner explicitly asked to preserve these formulations in the specification
+or detailed comments so they can be revisited when those features are built.
+-->
