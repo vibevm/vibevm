@@ -15,15 +15,15 @@
     "cross_checked_graph_statuses": true
   },
   "counts": {
-    "partial": 15,
+    "partial": 14,
+    "full": 1,
     "not-transferred": 17,
     "unknown": 81,
-    "full": 0,
     "already_main": 0
   },
-  "minimum_proven_complete_old_tasks": 0,
-  "exact_global_complete_total": "not established",
-  "important": "0 is the proven lower bound under strict full-task criteria, not a claim of no delivered capability. Partial overlaps are not task closures; unknown rows are not assumed absent. not-transferred means no accepted campaign delivery for named scope, not absence of all baseline helpers. No already-main full-task equivalence proved.",
+  "minimum_proven_complete_old_tasks": 1,
+  "exact_global_complete_total": "not established; at least1",
+  "important": "At least1 full old task proved,14partial,17named scopes not transferred,81not yet fully reconciled. This is not a global completion percentage; accepted semantic alternatives are not missing implementation.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -341,7 +341,7 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Finish shared lookup semantics at existing integration points.\nAcceptance criteria: Every inventoried caller has a result/refusal fixture.; No alternate lookup path bypasses containment.",
-      "status": "partial",
+      "status": "full",
       "accepted_main_features": [
         "F03",
         "F05"
@@ -351,7 +351,7 @@
         "df040becb965d0a05b3ebd18b8bd758646eef6a3"
       ],
       "transferred_scope": "Real filesystem/embed/compiler and prompt consumers tested with typed refusals.",
-      "unmet_or_unverified": "F03/F05 supply real compiler/embed/prompt tests and may satisfy this narrow task. This bounded audit did not join the original caller inventory against every fixture. Full resource-query grammar/service is NOT a criterion of this task and must not be used to deny completion. Mark partial/provisional pending that matrix; no specific uncorrected caller is established here.",
+      "unmet_or_unverified": "No blocking gap at original internal-caller boundary; compositional test specificity limits explicitly accepted in research/m01-a3-transfer-acceptance.md.",
       "exact_contract": {
         "goal": "Finish shared lookup semantics at existing integration points.",
         "steps": [
@@ -372,13 +372,14 @@
       },
       "contract_source": "campaigns/next/tasks/M-01-A.json",
       "criterion_counter": {
-        "basis": "unverified_acceptance_matrix_not_demonstrated_behavior_gap",
-        "exact_old_clause": "Every inventoried caller has a result/refusal fixture.",
-        "gap_or_evidence_limit": "F03/F05 supply real compiler/embed/prompt tests and may satisfy this narrow task. This bounded audit did not join the original caller inventory against every fixture. Full resource-query grammar/service is NOT a criterion of this task and must not be used to deny completion. Mark partial/provisional pending that matrix; no specific uncorrected caller is established here."
+        "basis": "both original acceptance clauses fulfilled",
+        "safe_stop": "Internal callers complete; public exposure waits M-01-D.",
+        "remaining": "public M01D and neighboring alias/native scopes are not A3 requirements"
       },
       "implemented_coverage": "Real filesystem/embed/compiler and prompt consumers tested with typed refusals.",
-      "remaining_behavior": "F03/F05 supply real compiler/embed/prompt tests and may satisfy this narrow task. This bounded audit did not join the original caller inventory against every fixture. Full resource-query grammar/service is NOT a criterion of this task and must not be used to deny completion. Mark partial/provisional pending that matrix; no specific uncorrected caller is established here.",
-      "superseded_obligations": []
+      "remaining_behavior": [],
+      "superseded_obligations": [],
+      "root_acceptance_report": "research/m01-a3-transfer-acceptance.md"
     },
     {
       "old_task_id": "M-01-B.1",

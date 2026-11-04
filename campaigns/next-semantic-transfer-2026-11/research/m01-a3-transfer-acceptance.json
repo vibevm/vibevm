@@ -1,0 +1,442 @@
+{
+  "schema": 1,
+  "task": "M-01-A.3",
+  "main_pin": "a344c6389fdb60a8db075f60b8a7c89712572916",
+  "original_contract_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "old_accepted_commit": "f6b2fb27a",
+  "pre_campaign_baseline": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+  "review_verdict": "semantic-equivalence-supported-at-original-internal-caller-boundary",
+  "root_acceptance_pending": false,
+  "recommended_disposition": "full under approved semantic alternatives, using accepted current result/refusal suites plus direct callee review; root may require explicit residual matrix cells before counting",
+  "why": "Both explicit acceptance criteria have evidence: every original inventoried caller has real result/refusal fixtures, and actual current routes converge on held containment rather than an alternate read. Safe-stop expressly excludes public M01D. No original filename/type/whole-source-service required.",
+  "not_claimed": [
+    "fresh tests by this review",
+    "native Windows/macOS qualification",
+    "all error classes directly injected through every outer caller",
+    "whole source query service/exports/authentication",
+    "hostile atomic race guarantees"
+  ],
+  "exact_contract": {
+    "id": "M-01-A.3",
+    "title": "Preserve failures across compiler and prompt callers",
+    "goal": "Finish shared lookup semantics at existing integration points.",
+    "read_paths": [
+      "crates/vibe-spec/src/resolver.rs",
+      "crates/vibe-spec/src/embed.rs",
+      "crates/vibe-lifecycle/src/agent/resolver.rs",
+      "crates/vibe-spec/Cargo.toml",
+      "crates/vibe-spec/src/lib.rs",
+      "crates/vibe-lifecycle/Cargo.toml",
+      "crates/vibe-lifecycle/src/lib.rs",
+      "crates/vibe-lifecycle/src/agent/mod.rs"
+    ],
+    "write_paths": [
+      "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "crates/vibe-spec/src/resolver.rs",
+      "crates/vibe-spec/src/resolver/",
+      "crates/vibe-spec/src/embed.rs",
+      "crates/vibe-lifecycle/src/agent/resolver.rs",
+      "crates/vibe-spec/Cargo.toml",
+      "crates/vibe-spec/src/lib.rs",
+      "crates/vibe-lifecycle/Cargo.toml",
+      "crates/vibe-lifecycle/src/lib.rs",
+      "crates/vibe-lifecycle/src/agent/mod.rs"
+    ],
+    "steps": [
+      "Trace the compiler/embed/prompt call sites cited by the baseline.",
+      "Replace first-match and guessed not-found handling with typed lookup results.",
+      "Characterize unchanged valid content and distinguish absent, unreadable, ambiguous and unstable outcomes per caller."
+    ],
+    "positive_cases": [
+      "Existing valid embed and provider prompt retain their content."
+    ],
+    "negative_cases": [
+      "Unreadable source never becomes not-found; duplicate anchor never succeeds."
+    ],
+    "checks": [
+      "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "cargo fmt --all -- --check",
+      "git diff --check"
+    ],
+    "acceptance": [
+      "Every inventoried caller has a result/refusal fixture.",
+      "No alternate lookup path bypasses containment."
+    ],
+    "safe_stop": "Internal callers complete; public exposure waits M-01-D.",
+    "commit_subject": "fix(spec): propagate exact lookup failure causes",
+    "notes": [
+      "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+      "Permanent destination: vibevm/vibespecs/common/PROP-070-resource-resolution.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+      "TO CREATE: m_01_a_3_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+      "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+      "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+    ]
+  },
+  "caller_mapping": [
+    {
+      "caller": "FileResolver point/pattern membership (shared lower lookup boundary)",
+      "original_inventory": "Original eight m_01_a_3_cases plus report resolver/glob paragraph",
+      "main_route": "FileResolver.resolve_file → resolve_source_file/locate_source; expand_pattern → held InstalledSlots/selected-world point lookup → member",
+      "result_tests": [
+        "source_selection_probe::control_absence_unmatched_names_and_empty_world_remain_empty",
+        "source_selection_probe::invariant_selected_world_drives_membership_instead_of_unselected_disk_slots",
+        "source_selection_probe::explicit_pattern_pin_is_honored_and_missing_pin_does_not_fall_back"
+      ],
+      "refusal_tests": [
+        "source_selection_probe::invariant_matched_document_failures_do_not_disappear_from_pattern",
+        "source_selection_probe::matching_non_directory_slot_refuses_as_a_source_observation",
+        "source_selection_probe::matching_symlink_slots_refuse_while_other_names_and_groups_are_not_opened",
+        "source_selection::edges::matching_version_and_document_parent_symlinks_are_errors_not_absence"
+      ],
+      "conclusion": "Covered. Actual member only excludes DocNotFound/PackageSlotNotFound; SourceObservation/AmbiguousDoc propagate. Current fixed-group semantics intentionally supersede old cross-group collision rule."
+    },
+    {
+      "caller": "FsSectionSource.section_text and recursive expand_embeds",
+      "original_inventory": "Original duplicate_anchor, descriptor_owned_embed_read and compiler-facing source cases; report embed path",
+      "main_route": "section_text → locate_source → read_location → held bytes → project_bytes/resolve_unique_path; expand_rec preserves reason in EmbedError::Unresolved",
+      "result_tests": [
+        "source_selection_probe::control_unique_xml_projection_remains_readable",
+        "source_selection_probe::control_markdown_paths_and_characterize_xml_global_id_uniqueness",
+        "embed::source_reads::explicit_root_alias_and_shared_regular_file_remain_readable"
+      ],
+      "refusal_tests": [
+        "source_selection_probe::invariant_requested_duplicate_anchor_refuses_in_section_and_embed",
+        "embed::source_reads::redirected_document_and_parent_refuse_actual_embed_content",
+        "embed::source_reads::redirected_layout_and_derived_package_slot_are_not_root_aliases"
+      ],
+      "conclusion": "Covered for inventoried incumbent source/embed boundary. Descriptor protocol is not required; every actual current source read converges on held locator/reader."
+    },
+    {
+      "caller": "Compiler frontend source_metadata/read_resolved_source (including active custom formats)",
+      "original_inventory": "Original candidate report identifies frontend.rs AdmittedSource::load; original root acceptance confirms direct trace of owner",
+      "main_route": "AdmittedSource.load preserves metadata Err as Ok(Err(reason)); custom admission precedes read; FsSectionSource.read_resolved_source → read_resolved → locator consistency → same read_location",
+      "result_tests": [
+        "frontend_discovery_tests::only_effective_activated_frontend_formats_resolve_or_read_txt",
+        "embed::source_reads::custom_metadata_is_content_free_and_the_admitted_read_keeps_raw_bytes"
+      ],
+      "refusal_tests": [
+        "frontend_discovery_tests::production_selects_txt_then_returns_typed_frontend_deferred",
+        "frontend_execution_tests::unselected_custom_format_refuses_before_alternate_source_read",
+        "embed::source_reads::supplied_metadata_cannot_substitute_an_outside_document",
+        "embed::source_reads::metadata_drift_refuses_without_reading_a_substituted_id_match",
+        "embed::source_reads::same_byte_replacement_is_refused_by_builtin_and_custom_consumers",
+        "compiler::artifact_tests::repair::embed_failure_precedence_follows_interleaved_plan_roots"
+      ],
+      "conclusion": "Covered by actual compiler boundary fixtures plus shared source reader cases. No direct new complete compiler×every filesystem-error matrix claimed; exact failure-forwarding body reviewed."
+    },
+    {
+      "caller": "SelectedWorldPromptResolver::resolve (provider self and selected cross-package embed)",
+      "original_inventory": "Original two prompt tests; existing self/missing/selected prompt receipts",
+      "main_route": "construct FsSectionSource with exact provider root and selected world; section_text? then expand_embeds with exact reason conversion; no fallback read",
+      "result_tests": [
+        "agent::tests::resolver::a_self_prompt_resolves_from_the_executing_provider_instance",
+        "agent::tests::resolver::a_cross_package_embed_resolves_only_the_lock_selected_version",
+        "agent::tests::resolver::actual_prompt_refuses_ambiguous_requested_anchor_but_keeps_qualified_leaf_paths"
+      ],
+      "refusal_tests": [
+        "agent::tests::resolver::blank_and_missing_prompts_refuse",
+        "agent::tests::resolver::actual_prompt_embed_refuses_an_ambiguous_selected_dependency_anchor",
+        "agent::tests::resolver::actual_prompt_refuses_same_byte_replacement_during_source_read",
+        "agent::tests::resolver::an_embed_into_an_unselected_coordinate_refuses"
+      ],
+      "conclusion": "Covered by real result/refusal/race fixtures and direct same-reader propagation. No dedicated prompt filesystem-unreadable-not-missing fixture found in current resolver test module; this specific cell is compositionally proven from shared SourceObservation path and direct ? propagation, not freshly executed at prompt level."
+    }
+  ],
+  "baseline_test_presence": [
+    {
+      "path": "crates/vibe-spec/src/compiler/pass_tier/frontend_discovery_tests.rs",
+      "test": "only_effective_activated_frontend_formats_resolve_or_read_txt",
+      "exists_in_pre_campaign_baseline": true,
+      "exists_at_main_pin": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/pass_tier/frontend_discovery_tests.rs",
+      "test": "production_selects_txt_then_returns_typed_frontend_deferred",
+      "exists_in_pre_campaign_baseline": true,
+      "exists_at_main_pin": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/pass_tier/frontend_execution_tests.rs",
+      "test": "unselected_custom_format_refuses_before_alternate_source_read",
+      "exists_in_pre_campaign_baseline": true,
+      "exists_at_main_pin": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/artifact_tests/repair.rs",
+      "test": "embed_failure_precedence_follows_interleaved_plan_roots",
+      "exists_in_pre_campaign_baseline": true,
+      "exists_at_main_pin": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/agent/tests/resolver.rs",
+      "test": "a_self_prompt_resolves_from_the_executing_provider_instance",
+      "exists_in_pre_campaign_baseline": true,
+      "exists_at_main_pin": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/agent/tests/resolver.rs",
+      "test": "a_cross_package_embed_resolves_only_the_lock_selected_version",
+      "exists_in_pre_campaign_baseline": true,
+      "exists_at_main_pin": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/agent/tests/resolver.rs",
+      "test": "blank_and_missing_prompts_refuse",
+      "exists_in_pre_campaign_baseline": true,
+      "exists_at_main_pin": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/agent/tests/resolver.rs",
+      "test": "actual_prompt_refuses_ambiguous_requested_anchor_but_keeps_qualified_leaf_paths",
+      "exists_in_pre_campaign_baseline": false,
+      "exists_at_main_pin": true
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/agent/tests/resolver.rs",
+      "test": "actual_prompt_refuses_same_byte_replacement_during_source_read",
+      "exists_in_pre_campaign_baseline": false,
+      "exists_at_main_pin": true
+    }
+  ],
+  "superseded_obligations": [
+    {
+      "original": "group-blind wildcard same-name slots refuse as ambiguous",
+      "accepted_target": "fixed group plus actual selected world; foreign groups neither select nor sabotage membership",
+      "reference": "F05 root design f6856d522 and implementation df040becb; pattern_group_is_fixed_and_other_groups_cannot_control_membership"
+    },
+    {
+      "original": "global duplicate-anchor index refuses addressed leaf even across distinct parents",
+      "accepted_target": "requested full path uniqueness; distinct qualified leaves/whole documents retain legitimate reads",
+      "reference": "F05 resolve_unique_path + qualified-leaf tests"
+    },
+    {
+      "original": "pathname preflight then two reads and separate SourceUnreadable/SourceUnstable variant names",
+      "accepted_target": "held no-follow observer, typed SourceObservation with precise reason, unchanged textual caller interface",
+      "reference": "F03 accepted6dafbac72; SourceLocation.read and failure; old root acceptance explicitly preserves textual public reasons"
+    },
+    {
+      "original": "descriptor-owned reader special path",
+      "accepted_target": "current incumbent filesystem and overlay paths share held reader; future descriptor service not A3 acceptance dependency",
+      "reference": "task safe_stop Internal callers complete; public exposure waits M-01-D"
+    }
+  ],
+  "residual_test_specificity": [
+    {
+      "cell": "prompt ordinary unreadable structural/IO refusal",
+      "state": "not separately executed in inspected current prompt module; direct propagation and shared lower fixture evidence",
+      "blocking_assessment": "Not a demonstrated behavior gap. Explicit acceptance requires result/refusal per caller, which exists; if root interprets characterize all four outcomes per caller as requiring separate end-to-end fixtures, request exactly this extra case, not whole service."
+    },
+    {
+      "cell": "actual full compiler with filesystem unreadable/duplicate/instability input",
+      "state": "shared compiler-facing reader tests plus admission/error-forwarding source and baseline compiler tests, not every failure injected through entire pipeline",
+      "blocking_assessment": "Compositional evidence for existing thin adapter. Root may choose an exact missing outer fixture; no source defect inferred."
+    }
+  ],
+  "existing_execution_evidence": [
+    "F05 integrated main source_selection17/17 + actual lifecycle prompt14/14, fmt/conform/specmap checks; exact accepted commit df040becb",
+    "F03 accepted held-byte source suite and root embed39/39; candidate142distinct selected tests/docs, explicit Linux-only limits; commit6dafbac72",
+    "F01 root exact compiler frontend execution/no-alternate-read tests plus source containment;504b42f76",
+    "Original A3 root acceptance records no end-to-end compiler/prompt race, preserved text reasons, native platforms unperformed; current prompt race is additional evidence"
+  ],
+  "input_hashes": [
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-01-A.json",
+      "sha256": "8b75fa4f75863517f7931fff8d4f94d981ad0e2554ed669319a90c4cf68fd40c",
+      "inspection": "full M-01-A.3 task"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "f6b2fb27a",
+      "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/CANDIDATE-REPORT.md",
+      "sha256": "92fc41a84a502072cef18e51d23247d6c09477c50e7a2a260670d38e3d9f0bc7",
+      "inspection": "full bounded result, fixture inventory, limits"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "f6b2fb27a",
+      "path": "campaigns/next/evidence/M-01-A.3/accepted-2026-10-12.md",
+      "sha256": "4eb97c3f16b84ef6ec01d0b1bb2711b33c035bab805ecd80b233b2eb900b76b2",
+      "inspection": "full original root acceptance including compiler trace confirmation"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "f6b2fb27a",
+      "path": "crates/vibe-spec/src/resolver/m_01_a_3_cases.rs",
+      "sha256": "e59f9f0d062a872e5688533382c413a625923d34c364af825b6dde10005d34cf",
+      "inspection": "full eight original fixtures"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "f6b2fb27a",
+      "path": "crates/vibe-spec/src/resolver/read.rs",
+      "sha256": "357a9f1245f7c97014bf70e307371a79d4321351393d9b9763c63bec4d1cf797",
+      "inspection": "read_stable_with/read_error and two tests"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "f6b2fb27a",
+      "path": "crates/vibe-lifecycle/src/agent/resolver.rs",
+      "sha256": "d6a34239224ed740d996e4569b23b703eab3a64139bce0cb75cdc6b35ca01be0",
+      "inspection": "original two A3 prompt fixtures"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/embed.rs",
+      "sha256": "34690aabd9e02810896baf503f408f1669b8fff23156830e85233fd71959760d",
+      "inspection": "SectionSource defaults; expand_rec error forwarding; FsSectionSource impl; resolve_section; baseline XML tests"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/embed/read.rs",
+      "sha256": "8e9a4bb733be25cb79a179f0827a9059104b4c50437e4c0afd3ebfa2cdcf2e97",
+      "inspection": "full actual held-byte and compiler-facing read implementation"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/embed/source_reads.rs",
+      "sha256": "46d34fd5132d3b3d7b3bf435f655338f77bff76aeb5b46f88e6e634621e21ebd",
+      "inspection": "source/read result and refusal fixtures, same-byte replacement, foreign metadata and custom handling"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/resolver.rs",
+      "sha256": "491b9070d99e7a0366131d9fc4d0c3a7175774162caceab91b67e2737d813dc2",
+      "inspection": "resolve_file/resolve_source_file; SourceObservation typed variant"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/resolver/observation.rs",
+      "sha256": "50867896231ed4598c4ce3bbef2b2c8524ed33d27bab5054b33135459d034a50",
+      "inspection": "SourceLocation::read, failure, held lookup/package branches"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/resolver/glob.rs",
+      "sha256": "9f5658954e4efd7ecc2ed0fe51703c094f0beffa8d07803e4798df52ef06c259",
+      "inspection": "1-109 actual pattern/member implementation"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/tests/source_selection_probe.rs",
+      "sha256": "cb80d02d2f5aff9585f590003bc09172694a9bad6c16481b139cb87db68ca792",
+      "inspection": "test bodies/names; exact duplicate, absence, invalid slot, selected-world and group/version assertions"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/tests/source_selection/edges.rs",
+      "sha256": "42cb1850360ac707bda368d54bfb4d80cccfc9987a844cd8bee9f47edb957235",
+      "inspection": "test names/assertions for additional containment branches"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-lifecycle/src/agent/resolver.rs",
+      "sha256": "91041e1b62be31d65c54a96df3bab564716adefc65926691b5fe86cb847c1711",
+      "inspection": "103-133 actual selected prompt delegation and propagation"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-lifecycle/src/agent/tests/resolver.rs",
+      "sha256": "25329123e85d158eb2c4503cbac5f832c6b54d998c4a97ad5f163cfbf36f68f9",
+      "inspection": "all test-name inventory; actual anchor/race/self/selected/missing fixture bodies"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/compiler/pass_tier/frontend.rs",
+      "sha256": "5efbe399b2ee175334285ff249e6dab9da236e3581b9eb581b38a1f465152bb3",
+      "inspection": "AdmittedSource::load/expand_pattern, lines25-74"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/compiler/pass_tier/frontend_discovery_tests.rs",
+      "sha256": "680e2abdcff5e8b3f20f11e8b21acb3a486acae3302f5b54cc31c737c0d8a625",
+      "inspection": "114-131 and212-229 actual FsSectionSource active-format/deferred fixtures"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/compiler/pass_tier/frontend_execution_tests.rs",
+      "sha256": "a44280f6ee141952545a14ef8a6cf0272f79a437939c3516c4acde4049cae90f",
+      "inspection": "344-358 no-alternate-read fixture"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/compiler/artifact_tests/repair.rs",
+      "sha256": "e1a7bfc52c01e89e795ab9c07b94154e3b721bd11a963830401c46caf2ba9ff9",
+      "inspection": "238-267 actual compiler error retention fixture"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "crates/vibe-spec/src/compiler/merge/tests.rs",
+      "sha256": "a7660613a96ac78112b15b33864ee389dcfbe97129faca0ca1c44672548bf1b0",
+      "inspection": "93-162 exact reason forwarding fixture (supporting, not source IO reproduction)"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F03-source-observations.md",
+      "sha256": "1bbf85aa3ff6758bf821abf70a4db3f8fc0ddcfa00fe3c56796407a1c6d7b473",
+      "inspection": "accepted implementation/test boundaries"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F05-source-selection.md",
+      "sha256": "8ca9fbc1f9c54abfccafcc787493c7bc5aa1f53723a1783c00601a04cd3714e6",
+      "inspection": "full acceptance/equivalence boundaries"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "campaigns/next-semantic-transfer-2026-11/LOG.md",
+      "sha256": "c9317aca68799a07ab1358bec96dfcea922c209d07abf6b2de892b81dc5cca50",
+      "inspection": "F01,F03,F05 decisions, execution, integration and commit entries"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/history-m01-address-review.md",
+      "sha256": "2089b58ecc8b959ece8e17063fc7a4710886d420ceee0819f12e14f2d50af6a6",
+      "inspection": "M01 A3 final caller and original semantics review"
+    }
+  ],
+  "runtime_tests_run": false,
+  "root_acceptance": {
+    "status": "accepted",
+    "disposition": "full semantic transfer at original internal-caller boundary",
+    "main_verified_at": "d374cfcaf9d3e6440e3b967569c5976b1d327e09",
+    "basis": "literal two acceptance clauses and safe_stop excluding public M01D; actual caller/error forwarding bodies + accepted F03/F05 source/prompt fixtures",
+    "hash_check": "all25historical input hashes valid;18main inputs identical, only current campaign LOG changed; no product-source drift",
+    "fresh_runtime_tests": false,
+    "limits": [
+      {
+        "cell": "prompt ordinary unreadable structural/IO refusal",
+        "state": "not separately executed in inspected current prompt module; direct propagation and shared lower fixture evidence",
+        "blocking_assessment": "Not a demonstrated behavior gap. Explicit acceptance requires result/refusal per caller, which exists; if root interprets characterize all four outcomes per caller as requiring separate end-to-end fixtures, request exactly this extra case, not whole service."
+      },
+      {
+        "cell": "actual full compiler with filesystem unreadable/duplicate/instability input",
+        "state": "shared compiler-facing reader tests plus admission/error-forwarding source and baseline compiler tests, not every failure injected through entire pipeline",
+        "blocking_assessment": "Compositional evidence for existing thin adapter. Root may choose an exact missing outer fixture; no source defect inferred."
+      }
+    ]
+  }
+}
