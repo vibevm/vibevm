@@ -1,0 +1,2263 @@
+[
+  {
+    "sha": "4271112df9f39937e9774fd9d1ca257492ec6ca6",
+    "subject": "feat(core): define constrained consumer configurations",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "df040becb965d0a05b3ebd18b8bd758646eef6a3",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_commit_review": false,
+    "reviewed_paths": [
+      {
+        "path": "crates/vibe-core/src/manifest/mod.rs",
+        "scope": "full changed-file diff read",
+        "blob": "ed60118052b4f7e3d4d43f42852ada50992e1071",
+        "sha256": "0292e9abce71bc270eef1952236b6734882151ffdba29d98d43145728e3000a4",
+        "kind": "production",
+        "diff_sha256": "a1f850efd466e976dc363ae87952d8bffe244124ddcd60d34fa4a06e153f0d69",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package.rs",
+        "scope": "full changed-file diff read",
+        "blob": "e9f23978cfe0b7c4685dbba4a7c854292a15a70f",
+        "sha256": "522d08ce433bedb7c3bd0efc536b235079e9d585a6af4e7a280a6a18d0dd26bc",
+        "kind": "production",
+        "diff_sha256": "c6cd79dc6fc64e9b6d6eddee84179337fa3a01adca6fbbc30e31a977749b83d7",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/features.rs",
+        "scope": "full changed-file diff read",
+        "blob": "bd024aed13b960026f38122402b7b0ed5fa07849",
+        "sha256": "4253ce61d52b6acacdf7cbf944879443ea9e1286c2d27aa8e8c353e10310bbbe",
+        "kind": "production",
+        "diff_sha256": "75f6c0da723fdd2a2d4fb7f5f458ef3907fad692d8c85a77fd7ec84ff474384b",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/features/constraints.rs",
+        "scope": "full changed-file diff read",
+        "blob": "59157c43bf938bf876b0a99e9232cd4ed274a2ec",
+        "sha256": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+        "kind": "production",
+        "diff_sha256": "44968ac2a31b6d3332da905f7639949e739a9ee9d578056f43683da3b8523449",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/features/constraints/m_05_b_2_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "0b7f748c6e096bbf825c79143003bc530e363b96",
+        "sha256": "c3117f5009a278f67873e1071c4164e5085396be33d819e9dc2fbc5ca0e2e0b0",
+        "kind": "test",
+        "diff_sha256": "874d867ab99081dc0e1b95637a12fd155bbccc8c4277735a69dc6fd7c01b5b20",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/Cargo.toml",
+        "scope": "full changed-file diff read",
+        "blob": "e58444802b5b7b147c338c2dc869974954e27045",
+        "sha256": "25e0c2cdc4ca6293a2118c2e77e85acf9f66268dbbe43e3295b2584b4d4b1573",
+        "kind": "production",
+        "diff_sha256": "615c86160648970b9f3f7093772579c08b38c8b49ca45d24667bfac53e933113",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/features.rs",
+        "scope": "full changed-file diff read",
+        "blob": "fa59f016f02f8ab82e9e8a3a7836e21f351aa930",
+        "sha256": "452bcfde58fe416f3042a5fad129c821239d61bcada09fdaaabe3fb8623d8db9",
+        "kind": "production",
+        "diff_sha256": "11aff5e25ff1297683826c26b090a8bb939122d7b5883378f83f7324cb40ccf8",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/features/configuration.rs",
+        "scope": "full changed-file diff read",
+        "blob": "0ba17e57c6375369ccf1def1322909ebdedf1485",
+        "sha256": "3ab92163a1d81220e5e8803622d785791d3c7247f76c9d22cb0d597c163da6c5",
+        "kind": "production",
+        "diff_sha256": "4f747a8be31f13f149ece2e459f7ea09ac1c58a36d6c6f98b8049c12deec0204",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/features/configuration/m_05_b_2_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "1adca9b975304b826e14e20c0d16c976811fc47f",
+        "sha256": "38f4f94fcc529f82b4a9b7ca7f4dbf09cd864f7eccd642f988cb1228c1d0193e",
+        "kind": "test",
+        "diff_sha256": "ab4072e3827418ba0099c652627c3759441980b6699dd6e34f4efcd723cc0791",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-wire/src/behaviour/consumer_configuration.rs",
+        "scope": "full changed-file diff read",
+        "blob": "f9543c9e5e0edbd7cdef4a4da3c3a33b2e318a38",
+        "sha256": "08c4a5ea8815aedc12b1cd958e975a7162a321bbccd5ceee2221e3a10d0c4403",
+        "kind": "production",
+        "diff_sha256": "fc985055a1c75d13813e7f409f4e43e1442688762ee0cb96b712147dba238074",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-wire/src/behaviour/consumer_configuration/m_05_b_2_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "6c93fb47d949153acff25c2984810e87bfa32904",
+        "sha256": "ce40720e3b70dd8efea5eacfc6e94a5a7deeec8122775607cd53e696c293c217",
+        "kind": "test",
+        "diff_sha256": "a242049f7724c000b93803ed6dd50e7c844ff74be5c1010f4c1828ae8b071924",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-wire/src/behaviour/mod.rs",
+        "scope": "full changed-file diff read",
+        "blob": "3604a0198c6b57b4d0cc05aff31a829afa88da14",
+        "sha256": "c334a495359f7eb9cf2a56749cfd6ebf50b5f8c11a29fc143b3d441dd8a7f925",
+        "kind": "production",
+        "diff_sha256": "132bccc5d2e42118e3945463b74dee3f3ffaa521aea29eed138b911a1cfbb2d4",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "scope": "full changed-file diff read",
+        "blob": "e108e444ce54e05256ae399a989d846461a445cc",
+        "sha256": "ca73ea03bb279d491848bd02f176dc9f800481364e3f4ca251fdd0d0ab06df1f",
+        "kind": "spec",
+        "diff_sha256": "fd514a353fc4016866ebdb3f303945b79c6fd8ebf7e9858a70a2bdf4a3f73db8",
+        "complete_changed_path_review": true
+      }
+    ],
+    "excluded_paths": [
+      {
+        "path": "Cargo.lock",
+        "reason": "Derived/index/dependency metadata not content-reviewed; no behavioral claim."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/application/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_query/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/client_capability/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/consumer_configuration/e1/request/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/consumer_configuration/e1/result/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/consumer_configuration/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/environment/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/machine/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/native/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/source_query/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "formats/REGISTRY.toml",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/consumer-configuration-request/e1/invalid/foreign-guard.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/consumer-configuration-request/e1/invalid/unknown-epoch.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/consumer-configuration-request/e1/valid/dormant-native-version.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/consumer-configuration-request/e1/valid/explicit-empty.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/consumer-configuration-request/e1/valid/omitted.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/consumer-configuration-result/e1/valid/exact-conflict.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/consumer-configuration-result/e1/valid/needs-selection.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/consumer-configuration-result/e1/valid/resolved-provenance.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "schemas/consumer_configuration/e1/request.jtd.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "schemas/consumer_configuration/e1/result.jtd.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      }
+    ],
+    "partially_excluded_spans": [],
+    "full_patch_sha256": "0e9a028ebd12b63145d58bf98baf588a9a5000e75459e65078e2f2ef23e52e65",
+    "full_patch_hash_meaning": "input provenance only; not complete reading",
+    "original_outcome": "Adds Constraints/OwnerEdge/ConfigurationInstance, strict codec and pure combined B2 evaluator; no normal authored/install consumer is delivered in this commit.",
+    "bounded_capability": "Four cardinalities, positive guard ordering, exact/additive and omitted/explicit-empty distinctions, default provenance, dormant retention, and no expansion on NeedsSelection/conflict. Ordinary closure cannot select unchosen constrained members.",
+    "final_source_observation": "Pure evaluator survives with later question projections. Final authored_configuration copies complete requires PackageRef into edge.package; admission compares full instance equality including version. Same domain/instance with compatible different ranges is therefore source-derived pre-solve refusal, not a reproduced runtime RED.",
+    "actual_callers": [
+      "final crates/vibe-install/src/authored_configuration.rs::authored_configuration → consumer_configuration::admit_request",
+      "final resolvo_engine/configuration.rs::solve_configuration_routes → resolve_consumer_configuration"
+    ],
+    "inspected_test_definitions": [
+      "generated_request_needs_selection_without_effects",
+      "shared_additive_union_and_actual_evaluator",
+      "exact_conflicts_name_both_edges_and_additive_must_fit",
+      "dormant_member_exact_intent_and_group_guards",
+      "separate_environment_domains_keep_different_choices"
+    ],
+    "target_transfer_state": "ChoiceModel and FeatureModel already accepted in main; use real workspace consumer origins. Keep incoming version range separate from physical/shared instance identity; do not import environment/domain wrappers merely for API conformance.",
+    "exclusions_uncertainty": "Native opaque wire values/separate supplied domains do not prove native or multiple physical installations. Generated schema/corpus paths not reviewed. Compatible-range counterexample inferred from actual constructor/equality path only.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-resolver/src/features/configuration.rs",
+        "scope": "complete historical file + complete delta to final",
+        "blob": "1f4ae26311e09c50722a31428ba6ed6d31f5fd12",
+        "sha256": "614dfa8ad2d2ac3bdc0d99ce804d6a4c13797408fed9a685ba4d849870f4af95"
+      },
+      {
+        "path": "crates/vibe-install/src/authored_configuration.rs",
+        "scope": "complete final file",
+        "blob": "8a3fc9df1bf2ea6b67952b34cb235c17196c5406",
+        "sha256": "2e4bfa7858f77b3fb4f30c5363d39b2c540cb9a5c5554833dfd43687980ecb51"
+      },
+      {
+        "path": "crates/vibe-core/src/package_ref.rs",
+        "scope": "378–408 equality fields/constructor",
+        "blob": "a7c0e37f8f0e55650438a9b29ffcf15cffd04dc6",
+        "sha256": "925d6ac318c67a2da1c0f25d8dadb29b99b1885ed236385f7d4cfef12899af3b"
+      },
+      {
+        "path": "crates/vibe-wire/src/behaviour/consumer_configuration.rs",
+        "scope": "complete historical admission plus complete final delta (test-only additions); production equality unchanged",
+        "blob": "7737f4e882a3764195e4c39f5b4ab0a9377df389",
+        "sha256": "51d8cc9ba6b1abf36ce7be0334a574a7058bfe748dc48c62b4e9a72d1d02ff76"
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+        "scope": "historical complete file + complete delta to final",
+        "blob": "2857ffe75e8db3d26fc9ccaf854e443bc63a2a58",
+        "sha256": "b13c7516929498a3e0d314b4e3648865b89301ca757d91eb71b5b1e294ea6ab7"
+      }
+    ],
+    "target_proof": [
+      {
+        "path": "crates/vibe-core/src/configuration/choices/evaluate.rs",
+        "scope": "40–214 evaluate/finish",
+        "blob": "208f9c68d916550be52877d0f9022cb43e70c066",
+        "sha256": "5572c229891593d9290cce7f22f07651fd2e1282270469b2eab8a15fb6f5ca1b"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+        "scope": "120–236 normalize_input",
+        "blob": "dd8e66c7939846974022b1c5890b74bee421dced",
+        "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/roots.rs",
+        "scope": "69–137 collect/authored/held;204–221 reject_configuration_inputs",
+        "blob": "f5f4e69093feb9258145187d48931eea722f853a",
+        "sha256": "e290a7d290dd14f6cc8b66b5496a370b05b1a0ac1726add5e5b041a16fa5e850"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/fetch.rs",
+        "scope": "13–71 fetch gate/current expansion",
+        "blob": "dcf862dfe2627f496a0977099e0359baa6907054",
+        "sha256": "44c5392a3ab2762e244c42324ef98a4b7e852bb1587eab5ed30a8edfc3751b9b"
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "scope": "258–372 get_dependencies including app resolution_requires",
+        "blob": "761a6480c047e22b6d57b03fad9dec5066753a5d",
+        "sha256": "41f555b597f1470dbe4be515c002c89f45593a1f083d43ae1947690ea1758d67"
+      }
+    ],
+    "verification": "Source inspection only. No builds/tests/native/runtime execution; no product/Git writes. No acceptance.",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-configuration-resolver-review.md",
+    "report_section": "R1"
+  },
+  {
+    "sha": "9fdead3bf7fb6126582ef1f39c92f152a88b7c9c",
+    "subject": "feat(core): migrate feature requests without losing intent",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "df040becb965d0a05b3ebd18b8bd758646eef6a3",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_commit_review": false,
+    "reviewed_paths": [
+      {
+        "path": "crates/vibe-core/src/manifest/migration.rs",
+        "scope": "full changed-file diff read",
+        "blob": "5217ce9e86203e4a21f1f552855330a6e181f0ec",
+        "sha256": "c1e8b7eb2373c9f65413f496b9e3f7e112a75c1eaf6b73130c9e6229ec6d4607",
+        "kind": "production",
+        "diff_sha256": "932e1b11a4eebda8eb7381a6850b4c232611230f66c107c96327aae47208608d",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/migration/features.rs",
+        "scope": "full changed-file diff read",
+        "blob": "2e57e3ed2ed96421d40245e6d00bbbcb949bd02a",
+        "sha256": "da4618ef2113dbd6f8fa18bdfcf057db3d32223732effafebeae9d79c0da17f5",
+        "kind": "production",
+        "diff_sha256": "060ed2e6636df37399a889ff6a72f5994bfaa243dc1837178adf3a45b0fd8ddb",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/migration/m_05_b_3_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "5f7254abe2ff3fd9d434c75978742d503fb3aa68",
+        "sha256": "f30e818f2f860b12d049b8cca40c2afabcc098e4d482eafbaabe7bdd58b7e956",
+        "kind": "test",
+        "diff_sha256": "8453526cbf15b533f8263507e733fa9033d1e007b9fca3e4a036416eb6177f7a",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/migration/source.rs",
+        "scope": "full changed-file diff read",
+        "blob": "eb95fbc61f4e533e3aa36df93663d76d34d11373",
+        "sha256": "7d24038d43c9315a2e10e4847415f563ff38683374d8580bb88a3066f4b700e0",
+        "kind": "production",
+        "diff_sha256": "e601eb38fce8f95462bf68a86b63f507ae1df2916a2aeefe2610ab3f630f18dd",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/mod.rs",
+        "scope": "full changed-file diff read",
+        "blob": "cdf99a4ad4b766e4b17e03c9c554fc4650623f5d",
+        "sha256": "13e06028c627dabcb10cc66e193cb6373222df88260dde1a95353445482204f8",
+        "kind": "production",
+        "diff_sha256": "11d228f067de8322c1a2f02f28d93ff87e0fccedd6ef658501d37312fef4c9fb",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package.rs",
+        "scope": "full changed-file diff read",
+        "blob": "193c0e47197a34085a22e3aae879948bb35b0aa6",
+        "sha256": "5c242a11c2f1de7d6e952d096af4c11a950192451847bcb179ba35693a5da52e",
+        "kind": "production",
+        "diff_sha256": "355e358c537b4d6e131eb6bf94b4639bdf958d6b22d9866aa1020f7c642c5f2b",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/features.rs",
+        "scope": "full changed-file diff read",
+        "blob": "f390c34ebc2563f7e0153f8270618c10b2c1d4d6",
+        "sha256": "8d74209bf6dafdf04471fe24669b83de1cf8b6422b687c802c21f069ca0fbf16",
+        "kind": "production",
+        "diff_sha256": "fb53a903047c352489c42329a5a5f1ab684d1540f2bcee8d03844abd48ba5fae",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/features/profile.rs",
+        "scope": "full changed-file diff read",
+        "blob": "c6e2678fc1d9ef74e771286775b7c8a11d0e8850",
+        "sha256": "9ca940986bedc1da5903b122f2185160a8dede12125b288ef82a9294228fcce3",
+        "kind": "production",
+        "diff_sha256": "e1d22a7a69f95d5ac191fb103124931534b60fe3e8af93d1675780fb8b94fb25",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/visibility.rs",
+        "scope": "full changed-file diff read",
+        "blob": "bf17e0dd1e60e414377db64c4738f8ae85bcbca3",
+        "sha256": "c4db60745a23448727fb9613f024ee85942f7718193cc84fd93621b1b25a2d66",
+        "kind": "production",
+        "diff_sha256": "0bb61be02fc884c958e326395672e6fac60dce3f6f52b8854819172fc791484c",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-workspace/src/migration_application.rs",
+        "scope": "full changed-file diff read",
+        "blob": "4d97241c27937660b6251345bd589aa5293275d7",
+        "sha256": "88aa14dacfa1f81f75c17b9444693b1a1a832f4e9224f8762795761a19c5d633",
+        "kind": "production",
+        "diff_sha256": "06c47ec3c307c640409af9883e4d27d0c1808009c1e8ed4bd1b02d7e38818be2",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-workspace/src/migration_application/m_05_b_3_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "305712ca2eb88e41f8db5397909ce9b4d7292823",
+        "sha256": "b5734d8ec1088805203b4febe1984f5fccb5523e747c2ba8cc6f6c5d5dee1609",
+        "kind": "test",
+        "diff_sha256": "ef0647b264b8c3bddefe0e5d66bdf26a2c49a4b453225e55adb95decccd9e9b8",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-workspace/src/migration_application/recovery.rs",
+        "scope": "full changed-file diff read",
+        "blob": "7575bf5c1d4caeb533045f6c1ce6f11ef306e110",
+        "sha256": "2bc11aa95f0746a735b2ffb2b012fe807dda581e7a90a8ab04169fef12400033",
+        "kind": "production",
+        "diff_sha256": "4d5d59770b25410119c37d57f7cd1db278ef021989c8556cf00e490fbf21a144",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-workspace/src/migration_application/validation.rs",
+        "scope": "full changed-file diff read",
+        "blob": "c3c1e09af09bdae55305e21eafb1d4f70db04fd2",
+        "sha256": "79d1e3f0089cd868fb41f7afcfe56ce39d36c366a9098ea7fad7c0a0d6588fbf",
+        "kind": "production",
+        "diff_sha256": "24fb3d55955656d21546d8e4760ab58a207d19d18781d8f1668c96ab830e370d",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-workspace/src/migration_planning.rs",
+        "scope": "full changed-file diff read",
+        "blob": "65b6ac66c8302f1bd90b3810dc0f55bf408ce4be",
+        "sha256": "00bbf76afc7b4bd3739fb038e7ff17a4d2d7e36c6fea9f5e3353becd6a62fdb0",
+        "kind": "production",
+        "diff_sha256": "82480c810dfccee027f965952c6dbc948d4003a8a07ee8b235b7618fab3aa4cc",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-workspace/src/migration_planning/feature.rs",
+        "scope": "full changed-file diff read",
+        "blob": "dffabeacc0fe84816e1a1190fbac99a1901c44c1",
+        "sha256": "c987bc6bee0a3c23daf429f5ffba1328adeb19c16417a2ae8d422c584a9330c2",
+        "kind": "production",
+        "diff_sha256": "dce35f669e0dca6964a2db7b7dd2f4a02379ba32cab9a3a9d88d2531e241853d",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "scope": "full changed-file diff read",
+        "blob": "665c5e52ccbe4a15324283fb2471f286857f658f",
+        "sha256": "d8011e357e673a845035cf192e0f182288b6731f9b0776c1dc67a2ab45cd924e",
+        "kind": "spec",
+        "diff_sha256": "7fcb7b2e33152289c92d1638ad186667cc0e1b9ed98305d1b875052dedccbdfd",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "scope": "full changed-file diff read",
+        "blob": "495e3b7706560ed2ecf6e0578a04079ef974caa4",
+        "sha256": "5b39f53225ce5f0e2de3d2271dab8a3406303b3512ff86326f7735f3631477e2",
+        "kind": "spec",
+        "diff_sha256": "4ff362a6df15c1911af940d2d50f815b5babae4f6666277c1d8eeb4b64202f3f",
+        "complete_changed_path_review": true
+      }
+    ],
+    "excluded_paths": [
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/CASE-BINDINGS.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/CHECKS.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/CODEGEN-CHANGES.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/FAILURE-HISTORY.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/FINDINGS.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/PRIVATE-LOG-REFERENCES.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/REPORT.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/SCOPE-AUDIT.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/SCOPE-DECISIONS.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/SEMANTICS-MAP.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/SOURCE-CLOSURES.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/logs/V1-1.log",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/logs/V2-1.log",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/logs/V3-1.log",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/logs/V3-2.log",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/logs/V3-3.log",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/logs/V3-4.log",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/logs/V3-5.log",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/logs/core-failure-1.log",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-B.3/logs/rustfmt-correction.log",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/application/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_query/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/client_capability/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/client_command/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/client_command/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/client_deploy/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/client_deploy/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/consumer_configuration/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/environment/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/machine/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/migration/e2/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/migration/e2/plan_error/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/migration/e2/plan_report/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/migration/e2/plan_request/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/native/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "crates/vibe-wire/src/generated/source_query/mod.rs",
+        "reason": "Generated reader/projection body inventoried, not semantically reviewed; no schema/generator conformance inferred."
+      },
+      {
+        "path": "formats/REGISTRY.toml",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/migration-plan-error/e2/valid/invalid-request.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/migration-plan-report/e2/invalid/unknown-question-field.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/migration-plan-report/e2/valid/feature-question.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/migration-plan-request/e2/valid/absent.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "formats/corpora/migration-plan-request/e2/valid/epoch1.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "schemas/migration/e2/plan_error.jtd.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "schemas/migration/e2/plan_report.jtd.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      },
+      {
+        "path": "schemas/migration/e2/plan_request.jtd.json",
+        "reason": "Format/schema/corpus authoring inventoried but outside selected code/contract content review; not accepted by patch hash."
+      }
+    ],
+    "partially_excluded_spans": [],
+    "full_patch_sha256": "4c5578392a073d2ed0c75facf3f6a02faf671e7dfcd2764d25da39e90c52735a",
+    "full_patch_hash_meaning": "input provenance only; not complete reading",
+    "original_outcome": "Adds finite opt-in legacy→typed feature migration profiles and epoch2 question reports; reuses existing approved-request apply/recovery with selected output reader.",
+    "bounded_capability": "Byte-span edits preserve surrounding text/comments/metadata; ambiguous aliases/options/export/config references return NeedsInput before plan. Typed output keeps canonical legacy semantic projection and Selection::Omitted, no invented default authorization.",
+    "final_source_observation": "migration/features.rs unchanged at pin. profile.rs adds later constrained module/extracts validation. CandidateMetadata later reads constrained::read; finite migration-only typed grammar is not normal install grammar.",
+    "actual_callers": [
+      "core migration::plan → features::edits → read_feature_manifest",
+      "workspace migration_planning::feature::plan_feature_migration_json → core_outcome",
+      "workspace migration_application::validation::replay and recovery::target_write → selected read_migration_target"
+    ],
+    "inspected_test_definitions": [
+      "commented_features_preserve_meaning_and_epoch_coordinates",
+      "ambiguous_feature_references_and_unknown_profiles_have_zero_edits",
+      "selected_profile_saved_apply_recovery_and_completed_replay",
+      "needs_input_and_concurrent_authored_edit_make_no_partial_changes"
+    ],
+    "target_transfer_state": "Main now has ordinary common ConfigurationDecl and requires-edge intent; migration can preserve byte/ambiguity principles but old finite migration grammar must not become a parallel ordinary language.",
+    "exclusions_uncertainty": "Generated e2 formats/corpora and historic receipts excluded. Recovery fixture manually establishes persisted prepared prefix; no OS-crash/native proof. No answer transport promised.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-core/src/manifest/migration/features.rs",
+        "scope": "historical whole file unchanged at final",
+        "blob": "2e57e3ed2ed96421d40245e6d00bbbcb949bd02a",
+        "sha256": "da4618ef2113dbd6f8fa18bdfcf057db3d32223732effafebeae9d79c0da17f5"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/features/profile.rs",
+        "scope": "historical whole file + complete delta to final",
+        "blob": "9e015dd137404025811f1a35e7ea2a9dbe9096b7",
+        "sha256": "6364a891d8afdfacf312b5fbe38dd8d16f899d752dc145953c3acb46f09e4ada"
+      },
+      {
+        "path": "crates/vibe-registry/src/candidate_metadata.rs",
+        "scope": "historical whole file + complete delta to final",
+        "blob": "b636518ff7874f482194eda49254552c43dbe180",
+        "sha256": "cc87854f9c1daac1e86255a2449bb767084c25aa2c9f2c01e200c5ccf4f0e395"
+      }
+    ],
+    "target_proof": [
+      {
+        "path": "crates/vibe-core/src/configuration/choices/evaluate.rs",
+        "scope": "40–214 evaluate/finish",
+        "blob": "208f9c68d916550be52877d0f9022cb43e70c066",
+        "sha256": "5572c229891593d9290cce7f22f07651fd2e1282270469b2eab8a15fb6f5ca1b"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+        "scope": "120–236 normalize_input",
+        "blob": "dd8e66c7939846974022b1c5890b74bee421dced",
+        "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/roots.rs",
+        "scope": "69–137 collect/authored/held;204–221 reject_configuration_inputs",
+        "blob": "f5f4e69093feb9258145187d48931eea722f853a",
+        "sha256": "e290a7d290dd14f6cc8b66b5496a370b05b1a0ac1726add5e5b041a16fa5e850"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/fetch.rs",
+        "scope": "13–71 fetch gate/current expansion",
+        "blob": "dcf862dfe2627f496a0977099e0359baa6907054",
+        "sha256": "44c5392a3ab2762e244c42324ef98a4b7e852bb1587eab5ed30a8edfc3751b9b"
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "scope": "258–372 get_dependencies including app resolution_requires",
+        "blob": "761a6480c047e22b6d57b03fad9dec5066753a5d",
+        "sha256": "41f555b597f1470dbe4be515c002c89f45593a1f083d43ae1947690ea1758d67"
+      }
+    ],
+    "verification": "Source inspection only. No builds/tests/native/runtime execution; no product/Git writes. No acceptance.",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-configuration-resolver-review.md",
+    "report_section": "R2"
+  },
+  {
+    "sha": "f5a9dc9873e22989db4a54dde0e372dff85dcc64",
+    "subject": "feat(resolver): freeze candidate configuration catalogs",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "df040becb965d0a05b3ebd18b8bd758646eef6a3",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_commit_review": false,
+    "reviewed_paths": [
+      {
+        "path": "crates/vibe-install/src/lib.rs",
+        "scope": "full changed-file diff read",
+        "blob": "ba244047b37fba7950b0176c59027bdf9adaff7c",
+        "sha256": "0a3800e64894d547fbbe0ff64e51c46c590567ae91091cb59471ef11220a958f",
+        "kind": "production",
+        "diff_sha256": "e8b1130da37f5f0b62db8fd4bdc2af019357af0714d6a20dc77d4b196c1896b3",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/src/plan.rs",
+        "scope": "full changed-file diff read",
+        "blob": "cdd16123eab98d92c30c1a7778ff7b68de043a5f",
+        "sha256": "9acc2a9da70a10784eb1c22d881684758970a01015c11ba91365d661e1c50438",
+        "kind": "production",
+        "diff_sha256": "72d2e1a891d0e898fb1cd3257b6ee94bdee64644672a002ff8ccf696636ca9b5",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/src/plan/fetch.rs",
+        "scope": "full changed-file diff read",
+        "blob": "b09334ef651fedc430f59a21ef111936cda8d90f",
+        "sha256": "438cb36f8f8f3dc71118ae4962d80283646eb407a19843320ba3348546f6d35a",
+        "kind": "production",
+        "diff_sha256": "5f7925e541a78a28cac7a50692b0c95f233a47248ebc3768f4ea5f6733287543",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/src/plan/transaction.rs",
+        "scope": "full changed-file diff read",
+        "blob": "6d290740e1a045619378754d4bb14df37da40bb0",
+        "sha256": "fad5ddc881795375e00481edba6a120e399409b1c1054db5a06366395eb780f7",
+        "kind": "production",
+        "diff_sha256": "b863518362bef75ea4e0954cbdf6086977526c68664503702e0ff35d55e4be48",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-package-source/src/cells.rs",
+        "scope": "full changed-file diff read",
+        "blob": "1bacc3eeef87b3ff896fddf3cd30ecff2539a4c2",
+        "sha256": "d8bdc3c88bf94bdb1640bc38bc6b0ed7074458aa04ad138a904aadf8f23e757f",
+        "kind": "production",
+        "diff_sha256": "cd480ba573bae3ade08eab6b4f88414b7a32cb59050f3c62e0e0fa901647fe51",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-package-source/src/source.rs",
+        "scope": "full changed-file diff read",
+        "blob": "27bc95bdf8a8f2f08577bbc05408008396b8b6db",
+        "sha256": "33d345622f10e0499e8f53fd1a6c123559c6ff07f508b066fa38e3b709060d86",
+        "kind": "production",
+        "diff_sha256": "3b5b034c2c8f8c91d93cdd8d1dcec0357724ca831390e7c7beb30009d2bf6381",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-package-source/src/source/transaction.rs",
+        "scope": "full changed-file diff read",
+        "blob": "b66394610f2e4cae31ecb54b3dd0a522ff1f562b",
+        "sha256": "0bcfefaabf14dba8a5ace7e1c7b53c83c1e80aa083f02296890df3a95d806764",
+        "kind": "production",
+        "diff_sha256": "8e9f328e1972cdda27a97a9816f6d4cc136d22376e527c99a621d10e3cc7f763",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-registry/src/candidate_metadata.rs",
+        "scope": "full changed-file diff read",
+        "blob": "94592970c7d0354d1277bc418262aa09f9a595ab",
+        "sha256": "3a194a9a8452240078f363c532d5cfce9393c0d5f540d572f549fc0c91b8da15",
+        "kind": "production",
+        "diff_sha256": "34eafca0ddbe487dcf43fa7ee50d60face097632868f173970bf36a224baee15",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-registry/src/git_package_registry/fetch.rs",
+        "scope": "full changed-file diff read",
+        "blob": "190bd3189ddc93a44b8b34f3b3cae5c435fa5a12",
+        "sha256": "2fa9162d9ee20a55ce8021942d47114049b6085064cf0ed297d2b8cc2bdd2c73",
+        "kind": "production",
+        "diff_sha256": "99208cf13dfc69da042271169ca36877a2455814a7c98be06b0d593ca12f8074",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-registry/src/git_package_registry/lookup.rs",
+        "scope": "full changed-file diff read",
+        "blob": "5294e80d53d8651befad50b9a0fdb4af7a1e81a2",
+        "sha256": "92e4f6e2fde705ad74b9ca5c21682c2a22ea8aa14b509a113b7b8ac0ddf6511b",
+        "kind": "production",
+        "diff_sha256": "86746094bcc6d3967a378ca8e8367360f7a80088a584d359c7f2449e2c106b78",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/catalog.rs",
+        "scope": "full changed-file diff read",
+        "blob": "810b47a221b818eaba9d647a6e89b734a57bc4a9",
+        "sha256": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1",
+        "kind": "production",
+        "diff_sha256": "f4197ed940921235f7631d22cc5df4576a2ab1f17ce22eb883cd111b1f611f3a",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_1_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "879c45e393667bf84dfc8a165f77f9e765e4cd6d",
+        "sha256": "b1cde16085dbd32a4d32daeeb13c42b84b7adf28e259e388493f9d191bdd515c",
+        "kind": "test",
+        "diff_sha256": "b99de596b7b89d79427fcf9dd5059b7340182cd2150ece47dfab937f0ab72e9b",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+        "scope": "full changed-file diff read",
+        "blob": "43b07f290191d08d6ba3d6fd85c303994f919701",
+        "sha256": "af0afaaeec32885171948c028809d8f439589c4371010902495e0c7da9063056",
+        "kind": "production",
+        "diff_sha256": "243fdc2f4b21d34a205af38c2715e3d5f1574aa125e57e59d4f11f7be59c454d",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+        "scope": "full changed-file diff read",
+        "blob": "8e97957fa8976201a44fd64e945342ed28a31edb",
+        "sha256": "5a00d047cf2a0854c7f1b907e77edf0ceae7b9ee4f5f1977677c8d6878346f0c",
+        "kind": "production",
+        "diff_sha256": "330ab1605d326b88fe9f869754d1e5c8c95eb866aeca7fc274b2fe2425087307",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "scope": "full changed-file diff read",
+        "blob": "af59140dfbc7fe6581dd9d819e08112c332fd162",
+        "sha256": "443669a7c4de54c9a30b4ff810ca1eb75148d3a71fb7305df399d6732ad85d2d",
+        "kind": "spec",
+        "diff_sha256": "5405ecce04b671befd590e5419256ed930ffd5d747e59c5105362d9adb5af347",
+        "complete_changed_path_review": true
+      }
+    ],
+    "excluded_paths": [
+      {
+        "path": "crates/vibe-install/src/events.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-install/src/plan/m_05_c_1_cases.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-package-source/src/qualified.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-package-source/src/source/m_05_c_1_cases_tests.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/git_backend/mod.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/git_backend/shell.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/git_backend/shell/tests.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/lib.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/local_registry.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/multi_registry_resolver/dispatch.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/multi_registry_resolver/redirect_follow.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/multi_registry_resolver/sources.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/multi_registry_resolver/walk/observation.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-registry/src/shippable.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-resolver/src/lib.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/capabilities.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      }
+    ],
+    "partially_excluded_spans": [],
+    "full_patch_sha256": "aa23910ba7e2328d4ecc3d71ef16110c47be749bc78d76c19a0a1b8a2d1cf3c5",
+    "full_patch_hash_meaning": "input provenance only; not complete reading",
+    "original_outcome": "Adds transaction candidate source/content/definition binding and shared immutable metadata snapshot; moves early case-c manifest write after successful planning.",
+    "bounded_capability": "Real local hash/read/hash capture and Git commit/file binding; source corruption not SAT incompatibility; selected metadata rechecked before acquisition, fetched candidate compared to captured manifest/content.",
+    "final_source_observation": "TransactionCatalog::capture unchanged: all versions and requires/recommends/OR/conditional closure are eagerly read. Final source bind_request captures catalog and admits package-owned definitions; each bare InstallResolver call makes its own transaction, planner carries one frozen source.",
+    "actual_callers": [
+      "install plan → PlanningSource::capture[_request] → InstallSource::begin_transaction/normalized transaction",
+      "InstallResolver::bind_request → TransactionCatalog::capture(CaptureProvider)",
+      "FrozenSource::fetch_bound → validate_catalog_candidate → resolve_and_fetch_inner(captured) → content/manifest comparison",
+      "GitPerPackageRegistry::fetch_candidate_at_ref → resolve_metadata_ref → exact commit file read/fallback"
+    ],
+    "inspected_test_definitions": [
+      "solve_and_manifest_observation_share_catalog_identity",
+      "discarded_candidate_metadata_never_requests_global_selection",
+      "inspect_bound_solve helper"
+    ],
+    "target_transfer_state": "Retain actual observed candidate definition/source at main metadata owner and recheck acquisition. Eager all-version closure is a separate cost/availability choice, not entailed by identity; main current provider returns Manifest and fetched values retain content/source facts.",
+    "exclusions_uncertainty": "Only 15 named changed paths fully reviewed. Registry multi walk, dispatch, lower-level Git backend and remaining source/install tests excluded. No latency/network/native measurement. Metadata fallback can write clone cache; no universal zero-write claim.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/catalog.rs",
+        "scope": "historical complete file, byte-identical final",
+        "blob": "810b47a221b818eaba9d647a6e89b734a57bc4a9",
+        "sha256": "1fa98c22693c01b1a3ea9a18c9a29340dd0a09ace7fe12acc20da8aa1d8c18d1"
+      },
+      {
+        "path": "crates/vibe-registry/src/candidate_metadata.rs",
+        "scope": "historical complete file + complete final delta",
+        "blob": "b636518ff7874f482194eda49254552c43dbe180",
+        "sha256": "cc87854f9c1daac1e86255a2449bb767084c25aa2c9f2c01e200c5ccf4f0e395"
+      },
+      {
+        "path": "crates/vibe-package-source/src/source.rs",
+        "scope": "final lines86–205 and bind_request225–320",
+        "blob": "fd8b8aade31dc01f25abe681a58b330e0bd65b07",
+        "sha256": "5f62c25de0af150ce9a74eb8f0b9e8df951fe8cfb1b4dc16a81db41e4827d7f0"
+      },
+      {
+        "path": "crates/vibe-package-source/src/source/transaction.rs",
+        "scope": "historical complete f5 introduction +5698 route diff + complete final delta",
+        "blob": "02beef74be531be5f69bbbcbdb56e2d72ab27d95",
+        "sha256": "750332db0a1257e4e5c6aa61d017c59595da0802feb82fc5175207c54475aa3b"
+      }
+    ],
+    "target_proof": [
+      {
+        "path": "crates/vibe-core/src/configuration/choices/evaluate.rs",
+        "scope": "40–214 evaluate/finish",
+        "blob": "208f9c68d916550be52877d0f9022cb43e70c066",
+        "sha256": "5572c229891593d9290cce7f22f07651fd2e1282270469b2eab8a15fb6f5ca1b"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+        "scope": "120–236 normalize_input",
+        "blob": "dd8e66c7939846974022b1c5890b74bee421dced",
+        "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/roots.rs",
+        "scope": "69–137 collect/authored/held;204–221 reject_configuration_inputs",
+        "blob": "f5f4e69093feb9258145187d48931eea722f853a",
+        "sha256": "e290a7d290dd14f6cc8b66b5496a370b05b1a0ac1726add5e5b041a16fa5e850"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/fetch.rs",
+        "scope": "13–71 fetch gate/current expansion",
+        "blob": "dcf862dfe2627f496a0977099e0359baa6907054",
+        "sha256": "44c5392a3ab2762e244c42324ef98a4b7e852bb1587eab5ed30a8edfc3751b9b"
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "scope": "258–372 get_dependencies including app resolution_requires",
+        "blob": "761a6480c047e22b6d57b03fad9dec5066753a5d",
+        "sha256": "41f555b597f1470dbe4be515c002c89f45593a1f083d43ae1947690ea1758d67"
+      }
+    ],
+    "verification": "Source inspection only. No builds/tests/native/runtime execution; no product/Git writes. No acceptance.",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-configuration-resolver-review.md",
+    "report_section": "R3"
+  },
+  {
+    "sha": "19ed29697dd84a66dc0af2634459879e1c450f6d",
+    "subject": "feat(resolver): condition activation on selected candidates",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "df040becb965d0a05b3ebd18b8bd758646eef6a3",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_commit_review": false,
+    "reviewed_paths": [
+      {
+        "path": "crates/vibe-resolver/src/features/configuration.rs",
+        "scope": "full changed-file diff read",
+        "blob": "03a54c580971a8e8151fd7c2a47d74d470642a31",
+        "sha256": "bb5d4a926225152fa2bfab4c21dc968c320e24e1b78327e716d5bdb35d5d7dbb",
+        "kind": "production",
+        "diff_sha256": "a1a3521d9e87802d11c192622ff87de13a6de28d6559e2ad20202fa967a05bb2",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/lib.rs",
+        "scope": "full changed-file diff read",
+        "blob": "1260eb12eaa521fed7da2ff7df8beeace9ca4534",
+        "sha256": "c8a128ed8660c001835f07eb255b6644eb15a7aa469d79d165c26c023797baf9",
+        "kind": "production",
+        "diff_sha256": "c73c7158cd303acd46cc954e23128b882595e98c80736cae59b2ded897148dde",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+        "scope": "full changed-file diff read",
+        "blob": "9f0fee7fa3b78d018701d49bf413c4f2e8d3a459",
+        "sha256": "10525778011a61cae4aa889d9223dcf1b8d0fb32a58519f2d2480b803568be0a",
+        "kind": "production",
+        "diff_sha256": "f35d8495742880e24f1bcaee798b36ac76d441c1864751a279093390ca229eb7",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "e3853b159e9be9704e1d1f2f64bd7957e74cfaff",
+        "sha256": "117284db695224fcd16bf4a409505f9d40f111a48db42e8f84360e87addeb4c7",
+        "kind": "test",
+        "diff_sha256": "86dd7778af23ad7b490f06c0a2f68fc6ff269bae5696ec2f87bf39bd2a449baf",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+        "scope": "full changed-file diff read",
+        "blob": "a23ca36d9a69280b0dff87cead5fedaea8f86a4d",
+        "sha256": "2ae5c00874146336e7d6b27fdb94a02031d3c8e51f56ce0650b3336aa0f1f871",
+        "kind": "production",
+        "diff_sha256": "682d9b7749633f3d5f4952e4cbef5cc36ac5c1c08e48ba48deeca89311b7f7e2",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "scope": "full changed-file diff read",
+        "blob": "c2d240a27fda88fec8054f8c17c58b1e85f5bcac",
+        "sha256": "c2b121471d63ca721d405aeec520b534a813073b1f5fe862c6acfc88bca15559",
+        "kind": "production",
+        "diff_sha256": "c22ca4a08d05f8fab63c28798119aec18e0f9d966f076df274292c1e3c317e2e",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+        "scope": "full changed-file diff read",
+        "blob": "f01c389f9fa7d61fe375dd17812166e461e68dc0",
+        "sha256": "94a4c95570b187607f64f0a0ebfc34eb8f94ad97cf118d5f93301f88fab53004",
+        "kind": "production",
+        "diff_sha256": "65b4b787daace2c544870b2a5c7a28fbf370feed37c9bd21872d6e901364e6c7",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "scope": "full changed-file diff read",
+        "blob": "7b00a11780216db2d51a954034a48bb1e33729d4",
+        "sha256": "a5a7cc70e7a11a217e7d161c70ca829c60d24cf2c463c5b9be1a1ba82b7a84ec",
+        "kind": "spec",
+        "diff_sha256": "8da016a25299b3d8df3c94e68b9a65c74ba257f5c7cfddd9adf1e15752c3cfff",
+        "complete_changed_path_review": true
+      }
+    ],
+    "excluded_paths": [],
+    "partially_excluded_spans": [],
+    "full_patch_sha256": "f2f2678a585ffcf310ca1bfa94021eb922cdc07c4a89f11cc050f9254a061fcc",
+    "full_patch_hash_meaning": "input provenance only; not complete reading",
+    "original_outcome": "Adds configured resolvo entry over fixed original consumers and immutable candidate definitions; candidate-local effect evaluation feeds existing solver.",
+    "bounded_capability": "Rebuilds dependency requirements per candidate; rejects incompatible candidates with source identity/consumer reasons; selected-only effects; default receipt binds complete request+shown normalized definition+source/content/definition. Unbound defaults disabled before internal implications; unresolved known closure is private.",
+    "final_source_observation": "Final from_metadata/admit_source_definitions compare actual package-owned bytes and reject substituted definitions; unbound discovered candidates surface NeedsSelection only if selected. OR later supported; TargetFeature strong/weak, native, multiple full instances, non-registry, conditional/obsoletes remain explicit limits.",
+    "actual_callers": [
+      "package_source::cells::solve_catalog_request → ResolvoDepSolver::solve_configuration_routes",
+      "ConfiguredCatalog::fetch_manifest/candidate_rejection → incumbent resolvo provider",
+      "solve_configuration_routes → resolve_consumer_configuration then selected graph effect projection"
+    ],
+    "inspected_test_definitions": [
+      "compatible_older_candidate_keeps_only_selected_effects",
+      "all_incoming_consumers_survive_candidate_rejection",
+      "unreachable_mandatory_group_has_no_prompt",
+      "changed_semantic_default_requires_rediscovery",
+      "removed_optional_default_requires_rediscovery",
+      "unresolved_group_keeps_known_ordinary_implications"
+    ],
+    "target_transfer_state": "Shared main evaluator already owns local semantics; add candidate effect obligations to incumbent solver while retaining application resolution_requires. Required foreign forwarding cannot be called delivered by copying prototype Unsupported.",
+    "exclusions_uncertainty": "Full eight-path changed diff reviewed, not whole product. Initial tests manually supply normalized definitions; later captured-source callers separately inspected. No solver runtime or cross-platform proof.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+        "scope": "complete introduction + complete final delta",
+        "blob": "2857ffe75e8db3d26fc9ccaf854e443bc63a2a58",
+        "sha256": "b13c7516929498a3e0d314b4e3648865b89301ca757d91eb71b5b1e294ea6ab7"
+      },
+      {
+        "path": "crates/vibe-package-source/src/cells.rs",
+        "scope": "final solve_catalog_request237–345",
+        "blob": "b03c34d838fd8d8c45aca25615d7b5b3aa9ccb41",
+        "sha256": "831f6c6f17f8aa3f58c7760ee22cb8895e1dcdde24ab1a27166d9fcb800ffcfd"
+      },
+      {
+        "path": "crates/vibe-package-source/src/source.rs",
+        "scope": "final bind_request",
+        "blob": "fd8b8aade31dc01f25abe681a58b330e0bd65b07",
+        "sha256": "5f62c25de0af150ce9a74eb8f0b9e8df951fe8cfb1b4dc16a81db41e4827d7f0"
+      },
+      {
+        "path": "crates/vibe-install/src/plan.rs",
+        "scope": "final350–400 authored/capture-before-freshness",
+        "blob": "7a8ac758c6dd467de5cda96888bbe0a99d5af64c",
+        "sha256": "1495b9b494c3f1c491d9aec3a408fbbed5a9c72884df24e108b014a39a143fea"
+      }
+    ],
+    "target_proof": [
+      {
+        "path": "crates/vibe-core/src/configuration/choices/evaluate.rs",
+        "scope": "40–214 evaluate/finish",
+        "blob": "208f9c68d916550be52877d0f9022cb43e70c066",
+        "sha256": "5572c229891593d9290cce7f22f07651fd2e1282270469b2eab8a15fb6f5ca1b"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+        "scope": "120–236 normalize_input",
+        "blob": "dd8e66c7939846974022b1c5890b74bee421dced",
+        "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/roots.rs",
+        "scope": "69–137 collect/authored/held;204–221 reject_configuration_inputs",
+        "blob": "f5f4e69093feb9258145187d48931eea722f853a",
+        "sha256": "e290a7d290dd14f6cc8b66b5496a370b05b1a0ac1726add5e5b041a16fa5e850"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/fetch.rs",
+        "scope": "13–71 fetch gate/current expansion",
+        "blob": "dcf862dfe2627f496a0977099e0359baa6907054",
+        "sha256": "44c5392a3ab2762e244c42324ef98a4b7e852bb1587eab5ed30a8edfc3751b9b"
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "scope": "258–372 get_dependencies including app resolution_requires",
+        "blob": "761a6480c047e22b6d57b03fad9dec5066753a5d",
+        "sha256": "41f555b597f1470dbe4be515c002c89f45593a1f083d43ae1947690ea1758d67"
+      }
+    ],
+    "verification": "Source inspection only. No builds/tests/native/runtime execution; no product/Git writes. No acceptance.",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-configuration-resolver-review.md",
+    "report_section": "R4"
+  },
+  {
+    "sha": "5698d64d9f822d0a19c368f0b67edf3cb836bc5e",
+    "subject": "fix(resolver): preserve requests across visibility retries",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "df040becb965d0a05b3ebd18b8bd758646eef6a3",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_commit_review": false,
+    "reviewed_paths": [
+      {
+        "path": "crates/vibe-install/src/plan.rs",
+        "scope": "full changed-file diff read",
+        "blob": "b50adb8927373ca97145860f6a3f08e4f4aafb08",
+        "sha256": "b5aba63bf5ae4628f3c2ea67980f5c7e73631a17be8fb2375233a273d139374f",
+        "kind": "production",
+        "diff_sha256": "d22e353f15e546cb070a86510854791a20ed8b95c8ced4999c82560900f635b1",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/src/plan/fetch.rs",
+        "scope": "full changed-file diff read",
+        "blob": "0f4d47301bf3163d47e154b5f290bf3fcfd8fa1e",
+        "sha256": "a4bab3732f64d68eede122c3089e53cb2510f821ccabb6081f9bb4cc9ef0939b",
+        "kind": "production",
+        "diff_sha256": "388e7c2bb8b9a9222e06c79fc759a5ab914024680f1d959c3aff7fba1bbeb28a",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+        "scope": "new-file diff lines152–298: visibility retry, conditional already-present incompatible constraint and inconsistent route cases; fixture implementation and workspace_root_constraints excluded",
+        "blob": "efa77047d2ffd0be7f9e3a7c548d6de462d2b6d8",
+        "sha256": "c00d4cb75a08d3c4247d91df2de7bd2b9eb9a9480db540cc9f76215770b7f7fa",
+        "kind": "test",
+        "diff_sha256": "88d1e2e0bb619a10a6437b50331e231d50680c54af483f333ba5b8389464542f",
+        "complete_changed_path_review": false
+      },
+      {
+        "path": "crates/vibe-install/src/plan/transaction.rs",
+        "scope": "full changed-file diff read",
+        "blob": "9c44dec6cdad53b719b65e884169c39a2b164ef7",
+        "sha256": "b2b6f7162a7e85bc9998e5dc303e4aa8e2dc76e22d46b364a1b31da991ec870b",
+        "kind": "production",
+        "diff_sha256": "eacb3acdc65a6a1a010eb2f8ec7191331f9dd238cc341ea46f3f290f11db24c5",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/src/visibility_projection.rs",
+        "scope": "full changed-file diff read",
+        "blob": "d36f59625478379f91285960996c5ec9b36fe9a7",
+        "sha256": "a5471b916d06b4ad0ba8beabb0c165fbd28c9f572aee62a723fa93ea55a407b0",
+        "kind": "production",
+        "diff_sha256": "b07c67f9d58ce2b8fbea1c5c83312da240ea78012b796f9ef6441e26b0230570",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-package-source/src/cells.rs",
+        "scope": "full changed-file diff read",
+        "blob": "96b2d576449300db714283356a812d5afb87b5a1",
+        "sha256": "fb0c6de0c3bf7c63de69b8318cb02538bf398cbb61f5c5e0e0f551c49aa3bc1e",
+        "kind": "production",
+        "diff_sha256": "b1f01b948f2e69efb534c2ff950aae3a81a851d27a0d253d82e8bcb03c635b3a",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+        "scope": "new-file diff lines355–468: production_visibility_retry_retains_configured_choices and production_conditional_route_retains_selected_declaration; fixture and other cases excluded",
+        "blob": "7e75195b71340bbac635542a441328d8cfab86f2",
+        "sha256": "fc897302dbfddcd89faaedbf9d35e0d8a55667b2292dd38378a918c329bb2c01",
+        "kind": "test",
+        "diff_sha256": "0ddb7c4cedba51c54a9f9d62862af99a1a29614b4bfd444e42feaedc1cef076a",
+        "complete_changed_path_review": false
+      },
+      {
+        "path": "crates/vibe-package-source/src/source/transaction.rs",
+        "scope": "full changed-file diff read",
+        "blob": "8f06cc53473bbef8e6e6b4626503666842154a81",
+        "sha256": "d9d9c621ec76c6541e37973071c82040a37f0752afaa748fe561bd4bab996d83",
+        "kind": "production",
+        "diff_sha256": "6ab28b5d537471ba3e414e8dbea7e6769934dc481a7b1562ac5e70d5ccac396f",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+        "scope": "full changed-file diff read",
+        "blob": "37b521f947b5348ff500f1b873cc8bab5c21dd55",
+        "sha256": "e17847976d66a93f1d145f0f4d4c27c48fefe473dcf95d7d5e20239377c2e56f",
+        "kind": "production",
+        "diff_sha256": "f80f449bbfbebff052c01094d0faa5242867185c7dd863a3f74d4555b71d9ced",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_3_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "348640397739e0ce506686578ddd80297728653d",
+        "sha256": "1f2198a21db7fa1a273d2ba60d939c97f037479db78191d0bc447563db1867c4",
+        "kind": "test",
+        "diff_sha256": "65b789bd15c77326666f2925226f174ed8183687856778eb438a3c048f040fa4",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/request.rs",
+        "scope": "full changed-file diff read",
+        "blob": "b21d82ebb5619c076a4cf65da72e0d710eaa2cfc",
+        "sha256": "675b0d1271144108f9802a19514a6c091ff4837ea5d240d4fb03b374298a7c24",
+        "kind": "production",
+        "diff_sha256": "fe324d80914dd8fcfc25e6f4562f029d48edc007093c72b1f0e285891c9f0024",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "scope": "full changed-file diff read",
+        "blob": "1a778b27994584ef450bf90a8793f5e10fee7cf6",
+        "sha256": "361de652bdfb1d0fb0b8f116cb48de6e7fef54bb8a1d6dca774b96144ae08b02",
+        "kind": "spec",
+        "diff_sha256": "807495e8a57d42576dc31f744b9e13231413e90f8d44535f8241ba6bc7b13c0f",
+        "complete_changed_path_review": true
+      }
+    ],
+    "excluded_paths": [
+      {
+        "path": "crates/vibe-install/src/apply.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-install/src/lib.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-package-source/src/qualified.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-package-source/src/source.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-resolver/src/error.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-resolver/src/lib.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-resolver/src/naive.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/snapshot.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      },
+      {
+        "path": "crates/vibe-resolver/src/sat.rs",
+        "reason": "Changed implementation/test/wiring path not reviewed in this bounded batch; selected caller coverage cannot upgrade it."
+      }
+    ],
+    "partially_excluded_spans": [
+      {
+        "path": "crates/vibe-package-source/src/source/m_05_c_3_cases.rs",
+        "reviewed_scope": "new-file diff lines355–468: production_visibility_retry_retains_configured_choices and production_conditional_route_retains_selected_declaration; fixture and other cases excluded",
+        "remainder": "not read; no full-file review"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/m_05_c_3_cases.rs",
+        "reviewed_scope": "new-file diff lines152–298: visibility retry, conditional already-present incompatible constraint and inconsistent route cases; fixture implementation and workspace_root_constraints excluded",
+        "remainder": "not read; no full-file review"
+      }
+    ],
+    "full_patch_sha256": "15016add2c3b71f4182e3296b03274328f85544aed1041964d2fd915b2df9180",
+    "full_patch_hash_meaning": "input provenance only; not complete reading",
+    "original_outcome": "Preserves normalized requests through metadata/masked/visibility/conditional routes; introduces selected edge provenance and fixes repeated root loss.",
+    "bounded_capability": "all_roots appends without dedup; metadata uses selected projected manifests; fetch uses selected effect map; projection trims absent nodes/effects; every active conditional constraint retained even if target already present; invalid predicate and unstable/changed-parent conditional paths refuse.",
+    "final_source_observation": "fetch.rs and FrozenSource route logic survive (latter only adds rejected-reason carriage later). Final planner reads authored configuration before freshness; original requests/selected effects survive route replacement. Configured conditional remains unsupported.",
+    "actual_callers": [
+      "plan::effective_root_constraints → NormalizedRequest → PlanningSource::capture_request",
+      "visibility_projection::resolve_effective → project_selected → source.solve_masked → finish_route_projection",
+      "FrozenSource::solve_masked → cells::solve_catalog_request → request.all_roots → RouteResolution::bind",
+      "fetch_node/fetch_or_defer → route_resolution.effects; expand_conditional_deps → solve_conditional"
+    ],
+    "inspected_test_definitions": [
+      "selected_capability_and_or_edges_keep_exact_provenance",
+      "duplicate_root_constraints_are_not_first_wins",
+      "production_visibility_retry_retains_configured_choices (355–415)",
+      "production_conditional_route_retains_selected_declaration (418–468)",
+      "conditional_route_retains_all_root_constraints (210–281)"
+    ],
+    "target_transfer_state": "Main RootRequirements already fixes all-consumer constraints and held pin authority. Preserve its implementation; add chosen-candidate effects/provenance through existing route owners, with masked forwarding support tied to actual declarations.",
+    "exclusions_uncertainty": "10 full changed paths +2 partial new test files. Full provider witness extraction, naive/sat implementations and remaining changed files excluded. Exact final path equivalence does not certify all retry races. Bounded conditional limit explicitly not completeness.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-install/src/plan/fetch.rs",
+        "scope": "historical complete changed diff, unchanged final",
+        "blob": "0f4d47301bf3163d47e154b5f290bf3fcfd8fa1e",
+        "sha256": "a4bab3732f64d68eede122c3089e53cb2510f821ccabb6081f9bb4cc9ef0939b"
+      },
+      {
+        "path": "crates/vibe-package-source/src/source/transaction.rs",
+        "scope": "complete f5 introduction + full5698 diff +final rejected carriage delta",
+        "blob": "02beef74be531be5f69bbbcbdb56e2d72ab27d95",
+        "sha256": "750332db0a1257e4e5c6aa61d017c59595da0802feb82fc5175207c54475aa3b"
+      },
+      {
+        "path": "crates/vibe-package-source/src/source.rs",
+        "scope": "final bind_request",
+        "blob": "fd8b8aade31dc01f25abe681a58b330e0bd65b07",
+        "sha256": "5f62c25de0af150ce9a74eb8f0b9e8df951fe8cfb1b4dc16a81db41e4827d7f0"
+      },
+      {
+        "path": "crates/vibe-package-source/src/cells.rs",
+        "scope": "historical full changed diff and final237–345",
+        "blob": "b03c34d838fd8d8c45aca25615d7b5b3aa9ccb41",
+        "sha256": "831f6c6f17f8aa3f58c7760ee22cb8895e1dcdde24ab1a27166d9fcb800ffcfd"
+      },
+      {
+        "path": "crates/vibe-install/src/plan.rs",
+        "scope": "historical complete diff and final350–400",
+        "blob": "7a8ac758c6dd467de5cda96888bbe0a99d5af64c",
+        "sha256": "1495b9b494c3f1c491d9aec3a408fbbed5a9c72884df24e108b014a39a143fea"
+      }
+    ],
+    "target_proof": [
+      {
+        "path": "crates/vibe-core/src/configuration/choices/evaluate.rs",
+        "scope": "40–214 evaluate/finish",
+        "blob": "208f9c68d916550be52877d0f9022cb43e70c066",
+        "sha256": "5572c229891593d9290cce7f22f07651fd2e1282270469b2eab8a15fb6f5ca1b"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+        "scope": "120–236 normalize_input",
+        "blob": "dd8e66c7939846974022b1c5890b74bee421dced",
+        "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/roots.rs",
+        "scope": "69–137 collect/authored/held;204–221 reject_configuration_inputs",
+        "blob": "f5f4e69093feb9258145187d48931eea722f853a",
+        "sha256": "e290a7d290dd14f6cc8b66b5496a370b05b1a0ac1726add5e5b041a16fa5e850"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/fetch.rs",
+        "scope": "13–71 fetch gate/current expansion",
+        "blob": "dcf862dfe2627f496a0977099e0359baa6907054",
+        "sha256": "44c5392a3ab2762e244c42324ef98a4b7e852bb1587eab5ed30a8edfc3751b9b"
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "scope": "258–372 get_dependencies including app resolution_requires",
+        "blob": "761a6480c047e22b6d57b03fad9dec5066753a5d",
+        "sha256": "41f555b597f1470dbe4be515c002c89f45593a1f083d43ae1947690ea1758d67"
+      }
+    ],
+    "verification": "Source inspection only. No builds/tests/native/runtime execution; no product/Git writes. No acceptance.",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-configuration-resolver-review.md",
+    "report_section": "R5"
+  },
+  {
+    "sha": "73b192f4a22b2f729ec326962475bed7e060adc6",
+    "subject": "test(resolver): prove configuration backend parity",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "df040becb965d0a05b3ebd18b8bd758646eef6a3",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_commit_review": false,
+    "reviewed_paths": [
+      {
+        "path": "crates/vibe-install/tests/g1_support/mod.rs",
+        "scope": "full changed-file diff read",
+        "blob": "955ecc91f337d17fc29af2aa0dfe235afb359b1e",
+        "sha256": "7411abcc1659e021aba110f1be8e554c4d0033dd94e5cf20e98213aa6c7f22d7",
+        "kind": "test",
+        "diff_sha256": "7a7f6197d5f8a9280af555762322d3f48d9a1eacc88002f3576949c0a3a79f50",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/tests/m_05_g_1_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "357af0d9d9daac2a15c911031f444cfa36e82357",
+        "sha256": "0cd261ac95958f67fb4cf817e782a5db1b791abd4b4dd0d6096f9fc7f2e9ff76",
+        "kind": "test",
+        "diff_sha256": "30b7c4fdd78678542f23e37b022e55cf729880a543e3b10e79819ecbcb51444b",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-package-source/src/cells.rs",
+        "scope": "full changed-file diff read",
+        "blob": "b03c34d838fd8d8c45aca25615d7b5b3aa9ccb41",
+        "sha256": "831f6c6f17f8aa3f58c7760ee22cb8895e1dcdde24ab1a27166d9fcb800ffcfd",
+        "kind": "production",
+        "diff_sha256": "41d107714839677762c1e039ed8ec100971364b6810339ff3dd4102a9d672138",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-package-source/src/source.rs",
+        "scope": "full changed-file diff read",
+        "blob": "87f9417e621157b35b0c9a949179b29b32c99c1b",
+        "sha256": "38280090c78992bad4592ffc7bf2815381c4d4e4ab632d3bc312d0dd875613ad",
+        "kind": "production",
+        "diff_sha256": "773f5412da626735a70b60fb69f94fc4703133d3d272d3d11b38a42ff1eaee07",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-package-source/src/source/m_05_g_1_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "eac6f26e7f267b995a9cb7a0982ac61e2cdcc400",
+        "sha256": "1280c9a330c0c416b31aa8ad2e73335268ea0a98cbe52c8d19ffc2ae0026f97e",
+        "kind": "test",
+        "diff_sha256": "1965f1db3b3532cc6b3b1fc2b4c04a39f998a58ce00dcb358028a3780e2cbaca",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-package-source/src/source/transaction.rs",
+        "scope": "full changed-file diff read",
+        "blob": "02beef74be531be5f69bbbcbdb56e2d72ab27d95",
+        "sha256": "750332db0a1257e4e5c6aa61d017c59595da0802feb82fc5175207c54475aa3b",
+        "kind": "production",
+        "diff_sha256": "b505496e6c3e1933ba2d397e50c44fa3f0b252c537ae71d08fb1223f9711c0bd",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "dcec5a3de4a08ef8c1d62cf68151250575e94cc0",
+        "sha256": "7833dca3211e4de0c016842cdad5688e50d264f3a70dc34b027182fb5d36e477",
+        "kind": "test",
+        "diff_sha256": "6795661e08833395fc072eef746c8e2e61847b1446e8443ca661d24eeebdad34",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/m_05_g_1_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "45e7e7dd527981a8ed5cc802311e0f40078670bf",
+        "sha256": "f6c3dad840a0212cbc3df29235c731a8f5493302984645ffc2dce6618ec4a74b",
+        "kind": "test",
+        "diff_sha256": "c12b83d87e1522833a721b0384c19d84b135c77b9e512302abb03c44ced878aa",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+        "scope": "full changed-file diff read",
+        "blob": "4466c3440a31268f54d1fab19bc9d1c2c6dfcc88",
+        "sha256": "bb2704b4e9adb6fe99c0c1b7f5c1b11ada9e43779ed80d089d88ca326d512418",
+        "kind": "production",
+        "diff_sha256": "99b9c1911f0d6303314dd2f8c47a7d6f6c3d4b73d82d7126f6df7f177e86a8e5",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/request.rs",
+        "scope": "full changed-file diff read",
+        "blob": "c3b6c03e95fdf35b1902dbe3664b4f7e6bddb85f",
+        "sha256": "ffe87ab2a3a1817b9a50b39ca43d8e4ba16062f86dba78f6334c243731e027e1",
+        "kind": "production",
+        "diff_sha256": "bb48952d7cdf49f8d9bcbbde860cc05eb7cce942a00161dd5d2e6172c2fd3bf9",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "scope": "full changed-file diff read",
+        "blob": "f9de458756e3d1fb187874ae352464d05240ecf0",
+        "sha256": "21e1c7c48ace5047bd8846191548bc9c7ed10e5551bd294520d5030e83b4ea7d",
+        "kind": "spec",
+        "diff_sha256": "4f00d147a78943dc0a7896c3982bd00d3037c658184c27cb233e8984c46c8ab2",
+        "complete_changed_path_review": true
+      }
+    ],
+    "excluded_paths": [
+      {
+        "path": "campaigns/next/evidence/M-05-G.1/acceptance-2026-10-18/ACTUAL-ACCEPTANCE.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.1/acceptance-2026-10-18/BACKEND-MATRIX.md",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.1/acceptance-2026-10-18/CHECKS.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.1/acceptance-2026-10-18/INDEPENDENT-REVIEW.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.1/acceptance-2026-10-18/INDEPENDENT-REVIEW.md",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.1/acceptance-2026-10-18/MANAGED-SUMMARY.md",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.1/acceptance-2026-10-18/README.md",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.1/acceptance-2026-10-18/RESULT-INTAKE-STATUS.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.1/acceptance-2026-10-18/ROOT-DECISION.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.1/acceptance-2026-10-18/SOURCE-SNAPSHOT.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      }
+    ],
+    "partially_excluded_spans": [],
+    "full_patch_sha256": "8f595a750ac2a89b021c60411f834c315a2b4a34995eae70382d87b1a7d5d810",
+    "full_patch_hash_meaning": "input provenance only; not complete reading",
+    "original_outcome": "Adds finite solver/provider/workspace parity regressions and production retention of rejected candidate reasons.",
+    "bounded_capability": "Legacy 12-cell supported intersection; configured default/resolvo6 positive and naive/sat6 explicit refusal cells; actual builder and planner tests; full request/effect/provenance plus valid OR witness class.",
+    "final_source_observation": "cells and FrozenSource keep rejected through rebinding; final configured branch still refuses naive/sat, strong/weak forwarding/native/multiple instances. Legacy effects carry forwarding data but inspected parity assertion checks parent.dep_features, not target feature activation.",
+    "actual_callers": [
+      "g1_support::Fixture::source → build_install_resolver for Local/file-Multi/Embedded",
+      "source tests → bind_request/solve/manifest_of/solve_masked",
+      "install tests → vibe_install::plan with authored or prepared consumers",
+      "configured 28-row matrix → same resolve_consumer_configuration evaluator as implementation"
+    ],
+    "inspected_test_definitions": [
+      "supported_legacy_matrix",
+      "source_route_consistency_and_backend_refusals",
+      "legacy_or_search_limits_and_wrong_versions",
+      "authored_workspace_consumers_reach_configured_source",
+      "accepted_group_matrix_matches_complete_effect_or_typed_conflict",
+      "configured_forwarding_native_and_multiple_instances_are_explicit_limits"
+    ],
+    "target_transfer_state": "Preserve explicit support/absence/source-error distinctions; no universal parity label. Add independent target graph/effect oracles for actual common forwarding and compatible different authored ranges.",
+    "exclusions_uncertainty": "All11 selected production/test/spec diffs read; logs/evidence excluded. Matrix same-evaluator oracle is integration parity not independent local correctness. File Multi not live remote Git. Authored test both ranges ^1; differing compatible ranges only legacy fixture.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-package-source/src/cells.rs",
+        "scope": "final237–345",
+        "blob": "b03c34d838fd8d8c45aca25615d7b5b3aa9ccb41",
+        "sha256": "831f6c6f17f8aa3f58c7760ee22cb8895e1dcdde24ab1a27166d9fcb800ffcfd"
+      },
+      {
+        "path": "crates/vibe-package-source/src/source/transaction.rs",
+        "scope": "full final delta from5698",
+        "blob": "02beef74be531be5f69bbbcbdb56e2d72ab27d95",
+        "sha256": "750332db0a1257e4e5c6aa61d017c59595da0802feb82fc5175207c54475aa3b"
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+        "scope": "complete historical +final delta",
+        "blob": "2857ffe75e8db3d26fc9ccaf854e443bc63a2a58",
+        "sha256": "b13c7516929498a3e0d314b4e3648865b89301ca757d91eb71b5b1e294ea6ab7"
+      }
+    ],
+    "target_proof": [
+      {
+        "path": "crates/vibe-core/src/configuration/choices/evaluate.rs",
+        "scope": "40–214 evaluate/finish",
+        "blob": "208f9c68d916550be52877d0f9022cb43e70c066",
+        "sha256": "5572c229891593d9290cce7f22f07651fd2e1282270469b2eab8a15fb6f5ca1b"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+        "scope": "120–236 normalize_input",
+        "blob": "dd8e66c7939846974022b1c5890b74bee421dced",
+        "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/roots.rs",
+        "scope": "69–137 collect/authored/held;204–221 reject_configuration_inputs",
+        "blob": "f5f4e69093feb9258145187d48931eea722f853a",
+        "sha256": "e290a7d290dd14f6cc8b66b5496a370b05b1a0ac1726add5e5b041a16fa5e850"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/fetch.rs",
+        "scope": "13–71 fetch gate/current expansion",
+        "blob": "dcf862dfe2627f496a0977099e0359baa6907054",
+        "sha256": "44c5392a3ab2762e244c42324ef98a4b7e852bb1587eab5ed30a8edfc3751b9b"
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "scope": "258–372 get_dependencies including app resolution_requires",
+        "blob": "761a6480c047e22b6d57b03fad9dec5066753a5d",
+        "sha256": "41f555b597f1470dbe4be515c002c89f45593a1f083d43ae1947690ea1758d67"
+      }
+    ],
+    "verification": "Source inspection only. No builds/tests/native/runtime execution; no product/Git writes. No acceptance.",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-configuration-resolver-review.md",
+    "report_section": "R6"
+  },
+  {
+    "sha": "62a9fafd2fe4006f5872ecb16aeb9ca58d960c2f",
+    "subject": "test(resolver): cover activation recovery and exact replay",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "df040becb965d0a05b3ebd18b8bd758646eef6a3",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_commit_review": false,
+    "reviewed_paths": [
+      {
+        "path": "crates/vibe-cli/tests/m_05_g_2_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "2d9d11e6119fca00c6f9bdb1d58e62bd8f739974",
+        "sha256": "f031c30f13d12515eb3f7ad4d71cf240ba80005b3442b266e716b5332d0595a5",
+        "kind": "test",
+        "diff_sha256": "20adf10db2dd1aff1147c66198e27f264b1c6c89ee5bf8aafbb6abde52c2481d",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/src/apply.rs",
+        "scope": "full changed-file diff read",
+        "blob": "572e3743271e42266b44582aaf449a720cce7d08",
+        "sha256": "db0304eca87881ccc95aad67c31c941fe80c00edd6addfd6190a6ca1d9efc003",
+        "kind": "production",
+        "diff_sha256": "b37fc9be407123bad73beef4f4222d3b07d1cd847f84728be3f9c1222956750e",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/src/lifecycle.rs",
+        "scope": "full changed-file diff read",
+        "blob": "868590ab0d130fe8dbae1b788aa0b6d913bb8cfd",
+        "sha256": "9b8b47dc3dd3f8fab65286c6e14fdb598b73622787ffd081994b27884353d33f",
+        "kind": "production",
+        "diff_sha256": "080588eb968774e730ae7afc4b71baf21aae80ddb6c2c09ba5c226cb04ad26ab",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/tests/m_05_g_2_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "b3a4a6f4d45878d44341b3318553999640a1b30d",
+        "sha256": "18cbc4bceb1274fedb4b88a3fd9bee930b95f46d1ff4c80bd52f3a5e0ed2a264",
+        "kind": "test",
+        "diff_sha256": "0a54eb5fe02274d46d8b8aedbd43b2eda1f1772a5bc05d4edc9f3b4718148b24",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-install/tests/support/g2.rs",
+        "scope": "full changed-file diff read",
+        "blob": "711a3ecd4ccc025d5e6fc92fe676a6794b186454",
+        "sha256": "94254f66bec4dd10a415bbd929c1c36cbd7794fde0a9c21f2898d71537451c1d",
+        "kind": "test",
+        "diff_sha256": "8ecde6ede1b242161dbdf1587b67d6ea42971e69f752e40071dfee5e1e8a4fe7",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-orchestrator/tests/m_05_g_2_cases.rs",
+        "scope": "full changed-file diff read",
+        "blob": "2badd6d8c993588256570e9f129c7f832aee2349",
+        "sha256": "abac8f62eb5959c1d6ac591bc2a54435e944472b315133b6b638de2a1ffb73a7",
+        "kind": "test",
+        "diff_sha256": "cc6e5b63f27aee340c60c965a0c97817ca963ff4c9ae4844bebdf252938bf4e3",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "crates/vibe-workspace/src/configuration_transaction.rs",
+        "scope": "full changed-file diff read",
+        "blob": "fa96320baf25cdf00db0ae7dfd720e7ba68b1bc6",
+        "sha256": "05986f25727325cdffcbc65193abf20a7cda8f28d65def1385aa9225824159b2",
+        "kind": "production",
+        "diff_sha256": "d01c650f79dc80d3cb735d62acc61bf46e3638993f0238527efadcb2a321cc24",
+        "complete_changed_path_review": true
+      },
+      {
+        "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+        "scope": "full changed-file diff read",
+        "blob": "7d78044a4d25af5eb80eb604f87158e900a02aa0",
+        "sha256": "12df50430e89ea0a88d098a69dcefba08a8a7bad807cdbeb0ff60f9fdfa09891",
+        "kind": "spec",
+        "diff_sha256": "e628465bdb9f9b9e48d1cc1c9753ee0ae9aa5ead3926186427abafc152313d47",
+        "complete_changed_path_review": true
+      }
+    ],
+    "excluded_paths": [
+      {
+        "path": "campaigns/next/evidence/M-05-G.2/acceptance-2026-10-18/ACTUAL-ACCEPTANCE.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.2/acceptance-2026-10-18/INDEPENDENT-REPORT.md",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.2/acceptance-2026-10-18/INDEPENDENT-RESULT.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.2/acceptance-2026-10-18/README.md",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.2/acceptance-2026-10-18/ROOT-REVIEW-DRAFT.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.2/acceptance-2026-10-18/SOURCE-BINDING.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      },
+      {
+        "path": "campaigns/next/evidence/M-05-G.2/acceptance-2026-10-18/VERIFICATION.json",
+        "reason": "Historical campaign/test/evidence artifact not read or replayed; no runtime outcome imported."
+      }
+    ],
+    "partially_excluded_spans": [],
+    "full_patch_sha256": "299cb6d6ae37808de4b776c4a9e78e0844b1dbfef279a29989af4161d7ec241a",
+    "full_patch_hash_meaning": "input provenance only; not complete reading",
+    "original_outcome": "Adds activation/recovery/exact-replay integration suites and repairs nondraining post-hook callback failure detection before recovery journal completion.",
+    "bounded_capability": "Real plan/apply and execute_prepared/standard-builder calls; CLI isolated child; before/after durable writer-prefix injection, third-state preservation and honest external-effect uncertainty; flags soft post failure without discarding caller reports.",
+    "final_source_observation": "apply retains callback_post_failed OR legacy HookReport gate, entering post-install-failed instead of complete. lifecycle.rs and configuration_transaction.rs unchanged from commit. Exact replay test validates PreparedReinstall without solve/fetch/materialize, not a second replay apply.",
+    "actual_callers": [
+      "apply_with_spec_format_and_slot_lifecycle → InstallSlotLifecycle::has_failed_post_install → recovery.enter(post-install-failed) or complete",
+      "ConfigurationTransaction::enter persists then before fault; checkpoint persists then after fault",
+      "tests: vibe_install::plan/apply; orchestrator execute_prepared with RegistryPackageSource factory; UserScratch::vibe child"
+    ],
+    "inspected_test_definitions": [
+      "redbook_coexists_switches_dormant_contributions_and_replays_exactly",
+      "every_before_after_prefix_retains_identity_images_and_partial_recovery",
+      "offline_replay_refuses_changed_lock_source_payload_definition_and_slot",
+      "actual_pre_post_hook_prefixes_keep_external_effect_uncertainty",
+      "cli_failed_pre_and_post_hooks_retain_typed_effect_dispositions",
+      "execute_prepared_propagates_each_before_after_interruption_and_retains_evidence"
+    ],
+    "target_transfer_state": "Useful concrete callback failure gate and negative oracles; reuse existing install/report owners. Do not interpret local restore as full rollback or automatically import entire recovery framework. Configured removal is still explicit unsupported without new request.",
+    "exclusions_uncertainty": "All8 selected production/test/spec diffs read;7 evidence paths excluded. Fixture external f1 package helper/CLI common helpers not deeply audited. In-process injected faults not OS crash or native durability proof; no tests rerun.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-install/src/apply.rs",
+        "scope": "final635–690 post-hook gate",
+        "blob": "572e3743271e42266b44582aaf449a720cce7d08",
+        "sha256": "db0304eca87881ccc95aad67c31c941fe80c00edd6addfd6190a6ca1d9efc003"
+      },
+      {
+        "path": "crates/vibe-install/src/lifecycle.rs",
+        "scope": "changed method and byte-identical final",
+        "blob": "868590ab0d130fe8dbae1b788aa0b6d913bb8cfd",
+        "sha256": "9b8b47dc3dd3f8fab65286c6e14fdb598b73622787ffd081994b27884353d33f"
+      },
+      {
+        "path": "crates/vibe-workspace/src/configuration_transaction.rs",
+        "scope": "changed fault/enter/checkpoint methods and byte-identical final",
+        "blob": "fa96320baf25cdf00db0ae7dfd720e7ba68b1bc6",
+        "sha256": "05986f25727325cdffcbc65193abf20a7cda8f28d65def1385aa9225824159b2"
+      }
+    ],
+    "target_proof": [
+      {
+        "path": "crates/vibe-core/src/configuration/choices/evaluate.rs",
+        "scope": "40–214 evaluate/finish",
+        "blob": "208f9c68d916550be52877d0f9022cb43e70c066",
+        "sha256": "5572c229891593d9290cce7f22f07651fd2e1282270469b2eab8a15fb6f5ca1b"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+        "scope": "120–236 normalize_input",
+        "blob": "dd8e66c7939846974022b1c5890b74bee421dced",
+        "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/roots.rs",
+        "scope": "69–137 collect/authored/held;204–221 reject_configuration_inputs",
+        "blob": "f5f4e69093feb9258145187d48931eea722f853a",
+        "sha256": "e290a7d290dd14f6cc8b66b5496a370b05b1a0ac1726add5e5b041a16fa5e850"
+      },
+      {
+        "path": "crates/vibe-install/src/plan/fetch.rs",
+        "scope": "13–71 fetch gate/current expansion",
+        "blob": "dcf862dfe2627f496a0977099e0359baa6907054",
+        "sha256": "44c5392a3ab2762e244c42324ef98a4b7e852bb1587eab5ed30a8edfc3751b9b"
+      },
+      {
+        "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+        "scope": "258–372 get_dependencies including app resolution_requires",
+        "blob": "761a6480c047e22b6d57b03fad9dec5066753a5d",
+        "sha256": "41f555b597f1470dbe4be515c002c89f45593a1f083d43ae1947690ea1758d67"
+      }
+    ],
+    "verification": "Source inspection only. No builds/tests/native/runtime execution; no product/Git writes. No acceptance.",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-configuration-resolver-review.md",
+    "report_section": "R7"
+  }
+]

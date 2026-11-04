@@ -1,0 +1,1871 @@
+{
+  "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "main_comparator": "df040becb965d0a05b3ebd18b8bd758646eef6a3",
+  "report": "campaigns/next-semantic-transfer-2026-11/research/history-configuration-install-review.md",
+  "commit_count": 5,
+  "runtime_validation": "not-run",
+  "rows": [
+    {
+      "sha": "cecd8552725a3fc17dd9139b1eabf0c5910db4ef",
+      "subject": "feat(install): record exact requested and resolved configuration",
+      "path_count": 87,
+      "review_level": "bounded-code-schema-test-content-classified",
+      "whole_commit_review": false,
+      "reviewed_paths": [
+        {
+          "path": "crates/vibe-core/src/manifest/lockfile.rs",
+          "blob_oid": "a567ff3d0da7f3dd86a8e18fb53d7aec7c2d8b56",
+          "blob_sha256": "b27f395250b31fadcefee48630421fa1fbae327c5a4e5a5dd7693107f0c6332d",
+          "diff_sha256": "df6a30529e542cbacf0a4e72c78fbd14f1225f7dd718848291c39a3411d1f793",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/lockfile/m_05_d_1_cases.rs",
+          "blob_oid": "81fa1f372d2059f187c02fbdb5d1cf7e6fd08463",
+          "blob_sha256": "8c0e51504beada631df861ad56ae3ac5a6e34818fa6ecd9f3cbfc1e955f64e7f",
+          "diff_sha256": "142173e58f7e63589c9276e29093f0591c6217b08502648cf6a43c389d8f0744",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/Cargo.toml",
+          "blob_oid": "ebec0b792ece542d0cb78c3f04ad49cc45a9fad2",
+          "blob_sha256": "9fa5f6994420c1c9519b268901350d448b667c41773bb56cd7e17d8902c48277",
+          "diff_sha256": "0ebca38d7029857f350d58b256d0b81fbe94a4500b389f2e529ee46e764379e2",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/apply.rs",
+          "blob_oid": "b5c00d1d20b8ceead8b5868af857f2de4f1b72d5",
+          "blob_sha256": "02aa550a42422c4761f5dd1222f757e894b4c5d656c900f6b7855a4834e32b01",
+          "diff_sha256": "4ecb4e488b8745332ce25547594abf9ecfeed3798a2f2c1b3f47749110a73d8c",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/fetched.rs",
+          "blob_oid": "7d9ef88f104fc0fd02f1542e6fcfc5cf1375cdc4",
+          "blob_sha256": "db5bb59d7eb7d772f3cc37757acb47224967a3beb63dd13666e9090470d6ac69",
+          "diff_sha256": "cb9b5ee3f87813411b5351c2537459c286180a1e67a9ed4f1fada3031aae28b4",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/plan.rs",
+          "blob_oid": "b438ab4b1244ee5ba2f657247a9df8738e62715d",
+          "blob_sha256": "3361dede4ba4a284b6ff5758f1ab3c65ca69d7b8e5a998e8aed9e10acaac28df",
+          "diff_sha256": "a556987561df0221c3340cd5dfdac392b77229128f28150f93ee14100be92adf",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/record.rs",
+          "blob_oid": "04d2c89a6ae987f6fff12fd1f8f978290e2a8bc3",
+          "blob_sha256": "ab0fbbffc40722180377258cd2dd15339312c11a5d22ff88a057726d2b73c757",
+          "diff_sha256": "98f1967c7e73b8157bf5493d10a049e09775da74f1bd80755d927cc38ff5960e",
+          "scope": "bounded complete method-body view with a small output-truncated middle; later final diff/source comparison, not byte-by-byte whole-file claim"
+        },
+        {
+          "path": "crates/vibe-install/src/record/m_05_d_1_cases.rs",
+          "blob_oid": "e810dcfc28d11f29cfbd2b69906c8e70aad65cfd",
+          "blob_sha256": "3391f6d807f0783bed605f3f057d4d610464451eb43d37927dfd15b402174a10",
+          "diff_sha256": "59ebaf140814d6c6a205637e0aa349e690856e09661392cd5babf6fe8029572c",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+          "blob_oid": "03d7c2e434f4099aae4946bb2f9ef66ac4624684",
+          "blob_sha256": "fd33d7cf81ec7d9b21ced8419bcc7d048b70205bb53de81b6adcc8b219987647",
+          "diff_sha256": "1c5d56c17102ef21cb2e3f1a1300e0700bfe4af69b49172219455a7ea6f2170a",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-wire/src/behaviour/lock_configuration.rs",
+          "blob_oid": "f33a3affc44838a884e2cffaf1385ea351823227",
+          "blob_sha256": "2a5fac25e52f54ca536a229a59af573730cd0ba9d65ed513e0cc83ae3be4a1cd",
+          "diff_sha256": "2aaf7490624cb44c6189fa11c7d72bb2b87d4bd43660e2b54ea7a0ddbc7fc70b",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-wire/src/m_05_d_1_cases.rs",
+          "blob_oid": "3f3855efbb754f98bf140b45d1783907df6e6062",
+          "blob_sha256": "b846b301bbb60ec7fd093b70910797580424ad74283d91e5049345ee776dbdf4",
+          "diff_sha256": "79e8894363d41f0a2467c588c95fe8bbf69c6f26bfcdc12a3f4a039af1946351",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "formats/REGISTRY.toml",
+          "blob_oid": "23f767849fcc7ce62f48769897e0d0bbf85e5a4b",
+          "blob_sha256": "2ec413f611f13a9a92606356d64a8dda2b1c9e52ca5b98193d65c7b77a5913b0",
+          "diff_sha256": "c4477b1aba36f41f8688f1baff8f443b797218f9c020cd9825a89562f4b919b9",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "schemas/lock_configuration/e1/requested.jtd.json",
+          "blob_oid": "18416b361e1fa661265126c7e039e0aea92d88dd",
+          "blob_sha256": "3ef3b6ce4591413c90b24c5def78be423bdda3c244e5530261eab006ffc75dc5",
+          "diff_sha256": "b2073b66d602b7250dd09eb1ea094ecc61f3efaed26b2ac8da1d5b243f5aab08",
+          "scope": "parsed complete schema structure; inspected field/reference mapping, not generated-code parity"
+        },
+        {
+          "path": "schemas/lock_configuration/e1/resolved.jtd.json",
+          "blob_oid": "5f807169d81650ce347eb63777fe780b64472bc2",
+          "blob_sha256": "1bd1a6e8a863fcbd52c843b1e348f07dd8dbd119637f4ee8fb5f42d810fd0ea8",
+          "diff_sha256": "a2690e62fbf6aa4092d543063d4cfd2ad894abe439848422513d83a5b2ce60cf",
+          "scope": "parsed complete schema structure; inspected field/reference mapping, not generated-code parity"
+        },
+        {
+          "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+          "blob_oid": "d146fc9f1ee59bac859ba23e4016937e88ab4fa7",
+          "blob_sha256": "27db02c8bc744c41867b648c5a13ceb75fcf57f08e5e086594ffd09c482718ea",
+          "diff_sha256": "e432b6c7201a96f42cabb9b990fb3df7397f8a0890b96e5f682b1a7f651f73fd",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        }
+      ],
+      "excluded_paths": [
+        {
+          "path": "crates/vibe-core/src/manifest/mod.rs",
+          "blob_oid": "58bcc1b916b82a69e84fe0856ca9e02d146a3750",
+          "blob_sha256": "6caece7ea7eaa19afa1ce6059f50204d63ceca72adc6ddafe957c5df756ac19b",
+          "diff_sha256": "670ca9821a82533c9bdd411ce178221357d8cd9792e4ad8b3229e3650c14b37a",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-wire/src/behaviour/mod.rs",
+          "blob_oid": "b411615bdf6de6a27087f884a658ddf09a598447",
+          "blob_sha256": "96f3ec07694bd09c64e1f9de929d72060c045e836bc16ed61593b3d0010d2a3e",
+          "diff_sha256": "a5b47a9d7d579dd1eff4a05aadef1f3dc25a6a01099483b34b343391dd79d4b9",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/adapter_plan/e1/mod.rs",
+          "blob_oid": "d4c72ad5d5a75b4599947cc90474c8ad8ecbcc44",
+          "blob_sha256": "ebd7a3d62b09d37b8bac24b3b1b3f38e322cb731e84fbb2df377aa5c24dba30a",
+          "diff_sha256": "356b079a01c51d1775d3ecebfb56b11f3e39363d83764b2f61ad75321f529b9d",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/adapter_plan/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "be0ee07ec6745d344fa6384bf31558f241b091a6282c3e0166168da792442512",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/application/e1/mod.rs",
+          "blob_oid": "869575ee0ed65071d83b730f9117fec23c4ccad8",
+          "blob_sha256": "e45394bc926b9ec68166c7fee97fbea9aeb6f8ed26429d71511e7d70e0bae8a1",
+          "diff_sha256": "2a84477fec7e969bbd2dfd115d9e4cff8bdf5b4314137a36649e000628b09abf",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/application/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "54b6b828338cb8167f903110ad1c698c8bb6b5150b3fdf6ab16ed440fc31f28e",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/boot_debugger/e1/mod.rs",
+          "blob_oid": "fca27db14bc5018822c24e64ae9dfad18ea584aa",
+          "blob_sha256": "d4e1d780abcf55c708ef4893867c644322ebb243e9cd35251154631959a9c6ea",
+          "diff_sha256": "d1135aed29cc097b2b2338d705c65ef927285b02c640528b8ac3bedab295bad9",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/boot_debugger/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "53e8ee79aa4920b4259ee606f258ca5394f9d892847413ae2c8c7ca09d48ee27",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/capability/e1/mod.rs",
+          "blob_oid": "8a2f8942ca2818f5c5e397a3047f3ab01ddf2291",
+          "blob_sha256": "4e1e74c0c204690138e2bf7ac9b53ecd110f78534630772cb26a063a1888dbb6",
+          "diff_sha256": "9013e5f5877d573604fac347f846b7e1a66e54c0c4f6de2a712a42d661062472",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/capability/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "0d3dbfece6433da13c2dbffa4ef4cbc08083d59e33427b93dcb88fdb06fb25b6",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/change_query/e1/mod.rs",
+          "blob_oid": "4703703335ac2769616bffa603fbc823d6ebe602",
+          "blob_sha256": "169948f95decfed4536e1bb6e7350913bd72c7b7e224fd8525c7287bafcd95bb",
+          "diff_sha256": "fcd496a509c9492ab7b809383ec8a7fae6140b8165c4b46ab2c14180c42ab416",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/change_query/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "dccdf275e92c177ab78beb7392bae5d8cdd7d7e36da3da9fba464a2ba103f683",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/e1/mod.rs",
+          "blob_oid": "ca28594fc494051fbe9efd2a68a3fc95ca588518",
+          "blob_sha256": "82bbc749a5dfc246c1860a77776fd99799c90bc1c1c99f205d104e5b1c1e5d4d",
+          "diff_sha256": "442eab6ccd8d5a69b9d7911d44ecefd24c6b75f3948ca20202cec2ecd747ffa5",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/change_scaffold_cli_report/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "b04919c84a94d6a017976c42e97f71b267d96d8704b876c3b2f389f71f529123",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/client_capability/e1/mod.rs",
+          "blob_oid": "d4c72ad5d5a75b4599947cc90474c8ad8ecbcc44",
+          "blob_sha256": "ebd7a3d62b09d37b8bac24b3b1b3f38e322cb731e84fbb2df377aa5c24dba30a",
+          "diff_sha256": "6b3f4d1f1098c0782b07a6327e14fa70d87f23e635be1b72d2a25410fae02aba",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/client_capability/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "11a470d17a1878cf4ec489d96ac4df0a23cc815a186c87b5ff5bd44a54ab8e32",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/client_command/e1/mod.rs",
+          "blob_oid": "19046b655199e0e917682940354091110755e7cc",
+          "blob_sha256": "f789072c78211657c746cd573f767de58ddf8aa94b7043c64dbdc1d8ad43b809",
+          "diff_sha256": "4334698ed5ae3b133db3cc283420e996f03690a0b1f5b01b2364d571b889f9bb",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/client_command/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "2c3ed5bfbc92f746ba3f42d07c54e25880d495d1c26a61ab50789e6118304c55",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/client_deploy/e1/mod.rs",
+          "blob_oid": "57f3c489d1c5fb808a1f42d3c2b36640e716a452",
+          "blob_sha256": "d765a90e623820468ca2c64e7f1759ae14ed8fa6774f51217fd01a585cdb781d",
+          "diff_sha256": "b83e072493427d319b151f71f40f581001f4c782e26bb54c26ce335fc943fcc4",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/client_deploy/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "5081847b481fe088bb37cd8447edb7e8dbade90ed5fda2fe7e8dd44e85f1a574",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/compiler_ir/e1/mod.rs",
+          "blob_oid": "831dcb5dbd3550ba0e1aed97d737d6fba3d2ed6c",
+          "blob_sha256": "2370005c5e6f24a2a37238e9253a019b156eb57be469f4b0b3325b006b53c96c",
+          "diff_sha256": "c4f5b7e38d574c3467aa722897181d901091c3f0f65543c0584fd7211afb1616",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/compiler_ir/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "edab81f9fb5e3e534639ed912e42ef68dc88ff58ee55ac14098b04a974ee775c",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/compiler_trace_index/e1/mod.rs",
+          "blob_oid": "55dda5f148e7fd95af9ced08ba32617fcc1752c2",
+          "blob_sha256": "bca05ff000d9d630e718ae8990b1c5ca7c5242fece6ff3bd244f511d85d59af4",
+          "diff_sha256": "18c4f56cc55927294e05b361a7b3728230a9c44c57c9795dd1ad886ad6e0f4e7",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/compiler_trace_index/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "24ec80d5a283893f3661a52883f338af6b4975ee5529998f624fa63f0ddcb683",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/consumer_configuration/e1/mod.rs",
+          "blob_oid": "a57519b28dfe09a762617aead7b8530c59893068",
+          "blob_sha256": "84d84c1692923e96ae2c472ce630d9447098f4309a2c781009ab2df06bbc9fc5",
+          "diff_sha256": "7de02e794bdcf38cfe0ca4e0d63f41585dbe2765a228014f74e0333485736576",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/consumer_configuration/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "af73814bfb9e846ca58748040a300de3c478e5f8332269c3f1dd78bb604c607c",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/distribution/e1/mod.rs",
+          "blob_oid": "607c8ee13dc6459b4a7ec4958ec02badc22307d2",
+          "blob_sha256": "a37c3551d291a6027a2a0b13871ed84bfd31dcc73962a88b0a17a40b3679aa54",
+          "diff_sha256": "e16643431456978e0f0512795365a0385bc7483cc3a79af58c84f0b1a6b970f5",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/distribution/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "46bc0c11689d805b0fdc4d0e26bec0ea0a977c6f640c425c9a1cf60ec73cbeb0",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/environment/e1/mod.rs",
+          "blob_oid": "0fced9527f6d5f72070837cd97bf04dc43eaaa4a",
+          "blob_sha256": "b717d741fe20f19ec4914c451d8f9c675dec6462e197736e5762385bf8e185de",
+          "diff_sha256": "ee0ce757a9e9bda8fb860c47e3af153efb9644f61228007c3a9d9ed2d5b96119",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/environment/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "2dfee0080e35f07966e75994d8e2e2079e6968b7fef371d2fb0b63e2f4bcc7e9",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/format_id/mod.rs",
+          "blob_oid": "b3a51e1bd99561372c3484bd0beae15542ee9f17",
+          "blob_sha256": "69a2542ed7069a1f73e1da0ca9dfaed6a03d8ac6821b81b40b688689fde36ffc",
+          "diff_sha256": "324c13a53fe5c8b6a8e0c928efb46138953188f121c5382a281a28b8eb891f7c",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/format_id/properties.rs",
+          "blob_oid": "1c8e48296861f53f9da6c297764b8e3774d943dc",
+          "blob_sha256": "a03832d80a44325af466820717a535b1f3b1dd54d0d12d42bc533b46b192350a",
+          "diff_sha256": "6abceb2a58a377061712a245ad2d1e2710af11e59c05d9455029fd220ea2ba14",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/hello/e1/mod.rs",
+          "blob_oid": "9e017de5b6d8a2b7bc307e09d1d13ef25ecaa354",
+          "blob_sha256": "0ec1523a0d30df09888b71f9dbfc67668eb8e47e28eec0d2afa40f25877b8a71",
+          "diff_sha256": "595072321cda023ad1c32623d1a92928168fabb770db2d5853335bc1ce526abb",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/hello/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "363142ce5ff29f2f9c74cfc26f43699f1cac5a8adfa3ee6dfb41feb9058aa9c4",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/index/e1/mod.rs",
+          "blob_oid": "8dddb2ce949e5de379578a3511c49fc6526a86a0",
+          "blob_sha256": "bb16ea5abe69ac86b2c20d673ac7264b52c867b771129ac8dee0b07e98dcf9e4",
+          "diff_sha256": "cb06207197f6692c52704174e329d677834ae2ffa26cadff263e7923da8aece4",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/index/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "476bbae4e898d99e7e700379e3f3938dc0e62b9f9a2641a819b485010b096bb1",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/index_cli/e1/mod.rs",
+          "blob_oid": "72984eeb131c3a5c950f7a77411111d69575bcb3",
+          "blob_sha256": "41c1eae4df2b01b5717e654fd9e2b1c2e958c53c4e85824d5b0f865422e32e5c",
+          "diff_sha256": "9244dcebcf4b518cdb7c07abea9528bfd1808764d9367f3761fed59b38212cff",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/index_cli/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "0b6126c40999ab291c5f876a3c47f8c83db89f96262002b1fcabf34f5ad84f95",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/index_http/e1/mod.rs",
+          "blob_oid": "92a1a868bc8358fa19d36053e206613bca5a6254",
+          "blob_sha256": "89d64f7cee0773617ae2c02dcdc0e8194b2826020c1fc43a32c231b76daf8c63",
+          "diff_sha256": "504e6cfb860afe0fe099edf44bfa9777f206c9af45bf342a95106c83b110bbf8",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/index_http/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "527866daef3a9e54b3d5a3108fb7cc302654c8507b37a4fa9d2902f81e830a0f",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/journal/e1/mod.rs",
+          "blob_oid": "8dd224eca495217438f83f3255a84d1a3b63ed8e",
+          "blob_sha256": "fe6088d63678a2b5d053224e453d1e64e753a154ba71d31ec32910a0ad473ddf",
+          "diff_sha256": "df2807ee58380e72ddacc9f322c9f8e5c3817c0262b11ff9bda940cde1581503",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/journal/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "c7a741822338798ddcd92baa59878b44159524f8fb4cdd36ecfa726bb5287a11",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/lifecycle/e1/mod.rs",
+          "blob_oid": "828d446127a9364edc585e8648268ad0b47de5e0",
+          "blob_sha256": "da16e6ad76c0e3848a124c9ff861cfaa3cf7b8a2b1576300fc4d1496ba9a381e",
+          "diff_sha256": "58b1c74af4e05d5984bc3f6e08139c17d465755bfb8e65aef265378bc768377a",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/lifecycle/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "839bde16e811cfd99c0fbd5df6bd1e0ac10e584f1878cc26c9f1e8cd3a5e7706",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/e2/mod.rs",
+          "blob_oid": "b3c2732e86332d2e0b11523e244d1309dea141bb",
+          "blob_sha256": "618d1b1ff330099fd68cfccea53f87b97f39829701a64303e0322a19eb24d851",
+          "diff_sha256": "d275e43273b009024866b2c64979bbef6eb54a5011c1ee39d9f6baf2729c47d2",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/lifecycle_state_v2/mod.rs",
+          "blob_oid": "e2cee51ce5f7b641e4ed0a8bd881d748f0edd9a1",
+          "blob_sha256": "537751b3dc5b593a6c969479c9b8bf18421712500112968feb39387a90769584",
+          "diff_sha256": "b3a6443fc62916436d1f157318f3818e8d4f52acb2e02afe167c3a68a488af48",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/llm/mod.rs",
+          "blob_oid": "cfb2466b8007c6aef5ac80d66b78867c73b359fd",
+          "blob_sha256": "5ef3dc0999df6453d624073d6dd4a4bdfb5d20a4777ffd44a7cb4fbcd6364087",
+          "diff_sha256": "f0077bf637bd0f4053c68407b9fe2d329af803fe3b17522f2ea6c4ac90397e24",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/llm/openai_compatible/e1/mod.rs",
+          "blob_oid": "b1c659547480222b78456fc6eda988f27f0a223a",
+          "blob_sha256": "c23eeff4f722bf10e7b01da5123823f3c48eb69b30a6e201932b950eac5c3319",
+          "diff_sha256": "732a45d5331644a899f42f9f8b7c1d3542edc33481590cb06c295f05d9352367",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/llm/openai_compatible/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "3b0ad2f599a8b63e60bfd2a8436ef3200536eb568a442a168dc79e1af16a4048",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/lock_configuration/e1/mod.rs",
+          "blob_oid": "d26e2840396b1b2e26cc5756adcc670a497aa4c5",
+          "blob_sha256": "f5259241dff8f64ff1fc5eee86a392c399cfb007eabd20be1ffe6c65a60b23e5",
+          "diff_sha256": "4689a48502c163c0ff8a72e1f0d3722ccfd77f12eddffe6eeb670c97e3d7f925",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/lock_configuration/e1/requested/mod.rs",
+          "blob_oid": "dd79f7cc1e6a5b6973f40c0f0608d6c80dba7de3",
+          "blob_sha256": "e8a1578f102a474aa9f33bc75f08f9aa1a49e7092414c5c40b107964feac91c5",
+          "diff_sha256": "a89f4c585f5e207bafb2a68776be235ff082ad971d89449ca1d2b58aa985c9df",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/lock_configuration/e1/resolved/mod.rs",
+          "blob_oid": "c8b0a5992486ead12421621817bb064390ec2f78",
+          "blob_sha256": "87ed8b89385073c5a710710521e53bb35782fbaddabcc9826930411b7105d7c8",
+          "diff_sha256": "db35a4d57684afc67aaf3d2d018d8ca4cd148fb52d83d0fe8732747e0679c70b",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/lock_configuration/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "ff46c1e917a52de08de5ff8face7d1b303a3c00272532f2ebd2cccac32f30812",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/machine/e1/mod.rs",
+          "blob_oid": "f634fdac06bb2376443d4ac722e7f004b8a8e6c9",
+          "blob_sha256": "d2e95c8b94bb05941db39607e43e064fdc5812f1ddbe6cf55e3a28381955384f",
+          "diff_sha256": "b849a6b7ed40e1930066b9dd3274d19e0562936bc60d8d61bd5c677f8d9eb9c2",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/machine/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "5845ff5d720f8b05ea94250045863d630b79590a88d561ab354c2b3de312c983",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/migration/e1/mod.rs",
+          "blob_oid": "70eb6adb7d2b4fef37f164fb4f8fde536a7938b6",
+          "blob_sha256": "d86fbb54ae4f36bdd5e89273ea18442b82a6da0325468722ee47a803949a5b4d",
+          "diff_sha256": "8464516667f36c3c5c7b7e6d48e1d4d074e7cbba64f6ebd2c0e1d77000870ef2",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/migration/e2/mod.rs",
+          "blob_oid": "8402b90a366238df0de8609be94d455885977af4",
+          "blob_sha256": "ca76b131fcd667f58a2803c6fa6cee7bf9f8b66dd9229924d8da04a9aa0ce585",
+          "diff_sha256": "c7044e5c4373b440dcd50f9d5b8fdccf47a8fa153bb20f4960e0876cfd596baa",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/migration/mod.rs",
+          "blob_oid": "3da3a04976b2353632daa2be363ae21b634d5d0b",
+          "blob_sha256": "02653e8a8a7671573dec78b67db6fea21c56e90802b36a06ea771fcc022e8c42",
+          "diff_sha256": "fdde629e1b412a33452f59e835fdf497e5aebc29f96ea714f37ece5d239c4037",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/mod.rs",
+          "blob_oid": "7be49f49722ade4f01566930c12548cb3e833092",
+          "blob_sha256": "2f2f602b89298be1ff84600644550398076f49ffe750ef24115ed003ab0dcb69",
+          "diff_sha256": "c1a8a86d999b4cb0db2fdb36f7e104cbcf2b32a7795025f142fd4ebb46a92383",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/native/e1/mod.rs",
+          "blob_oid": "3d154a57b8b6253e12a529cb0b918124a825036b",
+          "blob_sha256": "93caa9f7e8439b1fefa11639a4d991308cf0146fa3fdbf61b5afe0edafbadc13",
+          "diff_sha256": "24a7f0cb5c5a3be87d497e87e119537ecebdc7d676149e99e234479189034c6e",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/native/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "157174a0382968a85d2f72eb68b0911097341594d48d90f2ea19e6d8ba7a7d35",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/preview/e1/mod.rs",
+          "blob_oid": "b8fb54589dcb943fba99af3d9f692d3b419e400a",
+          "blob_sha256": "293d0d17559a6c9761916de12dd24b4d7a411141fac71ee0b4608ccb6729bf5c",
+          "diff_sha256": "777e7256c09851224e235f3caf1792f10fc86468d3429b7e785764f72cd65206",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/preview/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "c69b64ab278c7f84d8f4b2221fbffae5bbb390fac60ead77bcfd8c1d9b49a99a",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/scrape/e1/mod.rs",
+          "blob_oid": "c482626b7f45e674eb3c50450762aba7fc71fe4a",
+          "blob_sha256": "91449bf4d14b548717806cb47530eea46637dd2b5184335c7cbfca34eae5bd29",
+          "diff_sha256": "aab9bdd622f4a381b0523ad1aa1beb312051d7319dbab841f62823e60140be89",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/scrape/e2/mod.rs",
+          "blob_oid": "946f220c631259a29b36eddf1ca7a1aae48a3f71",
+          "blob_sha256": "5115f1709ab5d4c46263dab6ecd31075823ab7445f25745e92405c76f9027c1f",
+          "diff_sha256": "d6d0dd47a60d86d7198234aa0d8fc894d40c5ae2ccf51abf1b257da30793a097",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/scrape/e3/mod.rs",
+          "blob_oid": "328ab3b8e614a7852109c94f93db1d974dae02f5",
+          "blob_sha256": "797e385c34a32d11b9714a37de3cbfed01fb554df1933d064289f22e3a7b54be",
+          "diff_sha256": "50aaa9723339fffcadf3f1423def794498a259c62a6d059b78f38ef553955a09",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/scrape/mod.rs",
+          "blob_oid": "f7d549f1bd95f8cdede3eacfbc258106cb693031",
+          "blob_sha256": "b070c424a34d0e309193fe67d420df4e78bf769aa81f08dd6927ab97c2286a90",
+          "diff_sha256": "14ea95cc1244c95e7cc729f71c6b356c67489f12477eee6d08fcff50617979e0",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/source_query/e1/mod.rs",
+          "blob_oid": "d9d48d747defab63154841ee5454d42490808594",
+          "blob_sha256": "80b7b28b5a535561da69b47f9f457793b01d8ce0029e8296625341ffd7dee04f",
+          "diff_sha256": "9ebaf245d4daf609bf2998e1dec4222c82047ca2d3faa13b0d36c8096230f99b",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/source_query/mod.rs",
+          "blob_oid": "71f90e6b26b8486ea0d498a34157358eff82a0ed",
+          "blob_sha256": "f7ae9075a84a033faa8b64b0dc2c9d15a9e36d371fd871a3bd94ef53aca29a2d",
+          "diff_sha256": "ee8d0f5d24d832602c608f8d2504266685dee33245058bd259cacfd9eaac2f37",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-wire/src/lib.rs",
+          "blob_oid": "ba2daf23c8e2dc6c177b2418b15345e6549b7fb2",
+          "blob_sha256": "214f931a40e8b1aa00c4a78eacb3109681786f0631a96583673452d29e88e4e2",
+          "diff_sha256": "88d895dc88b764351dc520c61d796bbb1392cbfd1728c1e660eb94787ed2b017",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "formats/corpora/lock-configuration/e1/requested.json",
+          "blob_oid": "5b4e551c8a9dd9a397d191dffaf8a91d56742807",
+          "blob_sha256": "f5039fffe0dab97c438c579fb2779dea268637cc6d0a111f5306a3c7b033ab57",
+          "diff_sha256": "27104a45c6935408f2c12ec4930a3b6f3cbfdf052fc3e5eefd22326b81c7d1be",
+          "reason": "Corpus fixture bytes excluded; test/codec semantics reviewed separately"
+        },
+        {
+          "path": "formats/corpora/lock-configuration/e1/resolved.json",
+          "blob_oid": "9931ffb6654fecd59f72d4b1854cfce97b0d7fdb",
+          "blob_sha256": "32a159d3a7c741860442bf51abd82fd79cf6f352006d0617cf0d9d131bb4754c",
+          "diff_sha256": "b7107bf13cbac19e232e7040106542a33ab1c1924ce5bb86bf6f5155c3fcc035",
+          "reason": "Corpus fixture bytes excluded; test/codec semantics reviewed separately"
+        }
+      ],
+      "old_observation": "Requested/result separation and canonical configuration lock; explicit/default/dormant intent and provenance; strict replay authority.",
+      "final_observation": "Later final ordinary authored binding exists before freshness and reaches configured solver, selected effects and apply. It is not all host-only.",
+      "actual_callers": "direct CLI→factory→RegistryPackageSource→execute_prepared→plan_prepared_mode→authored_configuration/capture_authored→bind_request→cells configured solver→fetch→apply.",
+      "target_transfer_state": "Keep original authored intent and generated result in existing main owners; target currently refuses rich package effects before legacy plan. Do not copy nested JSON or artificial instance labels without need.",
+      "limits": [
+        "Static source and historical test definitions only; no execution",
+        "No feature/task acceptance",
+        "Other implementation dependencies and excluded paths not certified"
+      ],
+      "report_section": "C1",
+      "commit_diff_sha256": "fdeaf18a5bd434684d463d0f3e61e16057d26b814e1b561c6a69f3b3247942c4"
+    },
+    {
+      "sha": "62b61fe6c7c43bbcb1dc24bf03c4fd95bd19179a",
+      "subject": "feat(install): preserve configuration intent across replay and update",
+      "path_count": 32,
+      "review_level": "bounded-code-schema-test-content-classified",
+      "whole_commit_review": false,
+      "reviewed_paths": [
+        {
+          "path": "crates/vibe-cli/src/commands/m_05_e_2_cases.rs",
+          "blob_oid": "2eecc0098849d0b8abc8b94ded6871e1f47da444",
+          "blob_sha256": "29b5d0714c6625d6c29aafe76604728737b054326e683fc77c249740144172b5",
+          "diff_sha256": "6a34f3635eb5ff12def3aeef236ad05f68302ff087ec958700d7f9cefe18c701",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/reinstall.rs",
+          "blob_oid": "3ea2f0754a66a88c2130443a5fd928958587f390",
+          "blob_sha256": "e9785d0cac63cd8e27e6b2ec82918f86273ca983fe00b475af697f8239087237",
+          "diff_sha256": "dfd404bf05e50086cc98c7eaf2dc978f5c9a95ec7ce1e3fe0f7cd07854c46d71",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/reinstall/force.rs",
+          "blob_oid": "8a73b27f0006599887383348494f0a5a75bee93c",
+          "blob_sha256": "c8ef9df4cd3d65e7ebeec838a48edd3bd5eb0dbe0fc6114707d28ed178d947b5",
+          "diff_sha256": "63102b14d8ca212cc774a18ea5d3a34a507f1c5dce75f0d5c1a07cda43ac3baf",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/reinstall/prepare.rs",
+          "blob_oid": "8e0ca5bf8713293967a13b2a3c04ecc59c0ae1d1",
+          "blob_sha256": "3a4f721ce986e9985d483edcd03120b8076df26d877c561bf710412ccc944e95",
+          "diff_sha256": "43cbb7e14eba5a69df90c1b7a4a04371dd8e223e5a36d393927376496a16dde5",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/reinstall/regenerate.rs",
+          "blob_oid": "d6ca283d855ae67b738a66386d4f9655ef5e4273",
+          "blob_sha256": "0fc564c76d30383b04143fbb44b5024f0699531b76c403096a7caadb764c550b",
+          "diff_sha256": "1353580c7d76c200e2aa13761d69ce7fcd785a73817824da2986cdb9ce1f723a",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/update.rs",
+          "blob_oid": "d5c53734e57c58e424a820a13130216aebb5bca5",
+          "blob_sha256": "22dc5b383386dd507745dc41cbaf43f24873f5d3aedc7fe7d7438c5e829a7709",
+          "diff_sha256": "5189ee05ec11a75babae8644c8caac1d8fba84e3eb716098931d683ebf7ca6d3",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/update/scoped.rs",
+          "blob_oid": "25d6c01ee99c36f2fe9f1a84fed6596d3450a858",
+          "blob_sha256": "39085acb21f1a8e5fe2372baf4eb48d57e2eecf23e3b6554e452f6a675f1a77c",
+          "diff_sha256": "3b83c33aba70c7970cd3d3f13a952251d1b17c22f65ffd5ae820ff01fcac5495",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/update/whole.rs",
+          "blob_oid": "9f25ddf038e680c8b088a0c929abe272ef5024d2",
+          "blob_sha256": "aa862c43e8921b2318ce36f7833ced53b40acf12d5506eb831bbb2a5f79c7aef",
+          "diff_sha256": "695e5ff1b5f1d30fba8fbcb3880d28e2913eef0fa1d1a2f143eea93618a16feb",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/apply.rs",
+          "blob_oid": "7fd3104159df414923325c208b105928af131f01",
+          "blob_sha256": "05c03f8280bcac09de1a798dada9c2ee418318b77570fd47daf4edd3cc888eee",
+          "diff_sha256": "b94b37402454f51f8605e368514204b08378e93740a03694d53be59e44741320",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/evolution.rs",
+          "blob_oid": "2095871b72f862558ee9efaab044fd7f82fe0f4f",
+          "blob_sha256": "9fdc981d545285cb3a7e98368bb504c5718ca331ee78b2d2ea3da80b2fc42f34",
+          "diff_sha256": "483d6cd68950e7078c3c70016f41b21b9d92d003840f977c0eb21a31f44e0c94",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/plan.rs",
+          "blob_oid": "72c73a8c888c34f37abc146b7d8c227741831610",
+          "blob_sha256": "8fde879a1fcdafea96f99fef06858c1650a28efdad2db9ea64bf5809c1c56b5e",
+          "diff_sha256": "5773179a3c6e345d039325ec44734541140c08fe6e7b2cf0f9945ca354a29c75",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/record/m_05_d_1_cases.rs",
+          "blob_oid": "1bada7796e17818e7f3b160782439f72930aa079",
+          "blob_sha256": "40eb9bbb44815a0bcc58f3151987f8e4352e879c3d2fd99a13b80fc88315fad5",
+          "diff_sha256": "1289f6df93f958242223dddc7798397bf7f34dcae0c58a85bc206149d1cd8219",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/install/configured_source.rs",
+          "blob_oid": "a8ecccc9a1ac9ada736f05084f23c5788d00135c",
+          "blob_sha256": "4c6edede4442564fa8eee546578a7b2753179ea167005140dddc62f95e54eb1f",
+          "diff_sha256": "a7256a0764e0426bc194794e7aebdcf67e6941eccda3be201523382bc9dc245f",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/install/m_05_e_2_cases.rs",
+          "blob_oid": "5f10f416306d8af9f33c4919b2040a06dbd8fc13",
+          "blob_sha256": "c6d0f51222fa65eebc47bba6c38116212a368daca4fc306b3c28e9989d66086d",
+          "diff_sha256": "568b4fbd29c09d3926302312b2749ea87fa932114a11ce3be5b644d79d962253",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/install/mod.rs",
+          "blob_oid": "a0e54f54112c006c730462e14ec31578115f2f53",
+          "blob_sha256": "1b2f4d63ca9502afd7560e1bc70a4f3fd23f5846a3ec7c6d6bcc13c05401f217",
+          "diff_sha256": "eb265006b5f2abebb374e2a943923ca72ed43c0c6b66b92f66b66be83c02cce1",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+          "blob_oid": "8f4bf07bb942ac29332a372306add416ee74b05b",
+          "blob_sha256": "97c9cbb83d193cd1795fa1d1c5e61ad0054006429f016898b004f4b857b58ca3",
+          "diff_sha256": "1073f83284b159b3a742a7533a7edefb6d5775a60643758d0d9a7f79436a3cd4",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        }
+      ],
+      "excluded_paths": [
+        {
+          "path": "campaigns/next/evidence/M-05-E.2/acceptance-2026-10-17/ACCEPTED-WORK.json",
+          "blob_oid": "94e00c99ca870092410f5d76bf6c424561c58438",
+          "blob_sha256": "7c5863308af8bb0cd6d9bf441d6562cd557fccac2e4750bc94fe8effbac0bfdb",
+          "diff_sha256": "a08b480ff0939ac1dc0256eb1e102af627f1c6cf76dd6a0c0a74af52e5753095",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.2/acceptance-2026-10-17/CHECK-MAPPING.json",
+          "blob_oid": "d80c03367276b4763505466c315e2d5c72d2a8a2",
+          "blob_sha256": "7a405e729f3c0237376551a9a98ddc39d92a1cce5e368648b2ec291a778ad665",
+          "diff_sha256": "b35bc4038e9f151ba2fef3347f9bbafd52056671194ab523a610986d419f4a96",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.2/acceptance-2026-10-17/IMPLEMENTATION-REPORT.md",
+          "blob_oid": "ba71b4da381143cdc0aae422a20ef04a07aca3c3",
+          "blob_sha256": "7a71cc672273cb99b0c66ae523d4e96a32f194d78309fa2f8e4c83d45c2feab0",
+          "diff_sha256": "a86e4bf0543090fa37b7610c8e8d2d7d260928ffc5e86d6f54226bf738d8b734",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.2/acceptance-2026-10-17/INDEPENDENT-EVIDENCE.json",
+          "blob_oid": "ad47bb46a5db5ad18256b443b188445d1719693f",
+          "blob_sha256": "968920be99bdc010b259224f58ef8b2c96cad98010f9879f72828d0ea9bfbfc7",
+          "diff_sha256": "15d567dc08445795440bf2ad3caa8baaab310bedbecd0738cd23318bbb5a9973",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.2/acceptance-2026-10-17/INDEPENDENT-REPORT.md",
+          "blob_oid": "0de018d7f8633942319e320d9d99a8d5450af9aa",
+          "blob_sha256": "bd554e4f47409bccee03596e84dfff2c873d749403395747fa3c3b37feb8f1c5",
+          "diff_sha256": "c31d49ddea4cf810683fdf64bdf242d137a22051580522d23f96f3a5377ad202",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.2/acceptance-2026-10-17/INDEPENDENT-RESULT.json",
+          "blob_oid": "3bac739d529cbf34f4f2b65b21a87a1370ab5e38",
+          "blob_sha256": "5c448752df828a05cab8e84b43ca83f715ca5a751f563af09630500a5cdca817",
+          "diff_sha256": "c255bef7707a478577f383fa27906b8a3da68a352ba94f1756e8e33e5a2cd78a",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.2/acceptance-2026-10-17/README.md",
+          "blob_oid": "30044dacf2c2210d16ca90afc2b3f773fe96a8f6",
+          "blob_sha256": "6af22639e3f8bf0aa17fbf582ce6ad75c39da33eda2d3e2c70d3f052db3b1358",
+          "diff_sha256": "32d309688a5f724d4ccf6e602c6300df6be28682da5cbe70ccfb57ce9d05d100",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.2/acceptance-2026-10-17/ROOT-DECISION.json",
+          "blob_oid": "c4b802060c3a3afe5c33e26134d0cddadba7fc07",
+          "blob_sha256": "0c7fcc5ac022896038a15d359091dd8f642289ea12394c4fed691435b929ab82",
+          "diff_sha256": "1e37179468eefa91ea661c3e0db007435ccc712ee11576dcbd076d6b3e87167c",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.2/acceptance-2026-10-17/ROOT-SAFETY-REPORT.json",
+          "blob_oid": "ec5656959456e716a3b33870b18a5e3a10d68386",
+          "blob_sha256": "2518d77c0dd19f2e12fba07c342aa324c942e14296c7e1ddaa205e50c0b808a8",
+          "diff_sha256": "93f609787cf380b372226b127fae2f267bdd03bdf6f8dd67e01cb7d823560966",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.2/acceptance-2026-10-17/ROOT-VERIFICATION-REPORT.json",
+          "blob_oid": "6a63c22f01e61e1f678b93e6a197214f6c093750",
+          "blob_sha256": "753ea9b6880bf098b807fed916bc933fd7157324cc61532a834d785d5fb21015",
+          "diff_sha256": "ea595dc79aa3e0bdd3b629584c73d7d6dc5404447be35281a34d703e7ca342e8",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/mod.rs",
+          "blob_oid": "cab02f0ae1b628060b7ead42cd5b58193dedb6a7",
+          "blob_sha256": "513338f8cdfe8f3d36be961bc154e64a55470a8229bb5a4df2aecf588285aa9a",
+          "diff_sha256": "7fb78ae7eb8b4a05a89018022092109b486951ba8fb378592db40002f63aca2e",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-install/Cargo.toml",
+          "blob_oid": "8c4943360ad9fc12c0dd6f424c6b3319ad5d8de9",
+          "blob_sha256": "3a166a89a4587e3bcd21d5d165a6e2670677b0e976cf86e114aaf27304c420d6",
+          "diff_sha256": "7d74ffab64f40aa5ca55ab7e7f41432adc59f4ea5ae2b88ebda321379e860b6f",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-install/src/fetched.rs",
+          "blob_oid": "4ee2af685b06775b1d7fbcfca9d908b7268c3bed",
+          "blob_sha256": "ce4dd6d4c00f275590a0091cb0d2a20506843a76cd953b6bfa3c85bc03073127",
+          "diff_sha256": "6ee604b5d85ddd777090882178dd811e705c7af7b846ef7dc2905808c81b11f5",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-install/src/lib.rs",
+          "blob_oid": "26b57f2ae71822e062b8169a0a7ecc32ee48333d",
+          "blob_sha256": "628e03ddc00889d793ce258edbc91dba43191c5a1dfb2ca0c2c470b368232609",
+          "diff_sha256": "d3a53ff385af96b41644e09bf4f42cdbadb4cd7b84456f8cef6b035b7f015133",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/install/m_05_e_2_fixture.rs",
+          "blob_oid": "eeee6a87a1679da8f2591d2f365fe1ad041aa8e4",
+          "blob_sha256": "e6594cb07c858ba3de1c5e50f5d2bb01471c692a91b636ae08e8d906ecd5e0d0",
+          "diff_sha256": "b5e6f773f2e79ab3cd30c371321d6ca4d2ea21d072d31e4446eedd4c95df4081",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/lib.rs",
+          "blob_oid": "0c94dc1f7d9f3a92a8111bf5f13bfb8f0a97385b",
+          "blob_sha256": "604d53ce7c1313418f1eebf278cd03574bc5f3117d598e65c2414f38f7b1a72b",
+          "diff_sha256": "89bf0be9bc2cfe807897ed4c7d0e58d007bf2f24bdc7d04b3ab9da841141eb5b",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        }
+      ],
+      "old_observation": "Historical E2 adds typed exact replay and intent-preserving candidate update/reporting; that historical plan_update has no automatic authored fallback. Later 88174dd48 adds it.",
+      "final_observation": "Corrected after root review: ordinary whole update reaches plan_update, which first binds workspace-authored configuration when normalized configuration is absent, then recurses. Stable authored inputs can reach ordinary solve/confirmation/apply. Scoped named update and ordinary configured reinstall still call require_update_authority without that fallback. Lock-only host answers with no authored rows still lack authority.",
+      "actual_callers": "update::run(None)→whole when no packages or --all→execute_prepared_reporting→plan_update:456-468→bind_authored_request→recursive plan_update→Ready/apply. Named scoped update→scoped::run:151-152→require_update_authority. reinstall::run(None)→prepare_with_capture:79-94 and run_inner:293-301→same rejecting helper. Explicit plan_reconfiguration also has authored fallback at evolution.rs:726-738.",
+      "target_transfer_state": "Preserve existing final authored install/whole-update binding; do not claim all maintenance is host-only. Reconcile scoped update, configured exact replay, interactive answer source writeback and changed/default-receipt limits with main owners. Static supported call path is not fresh runtime acceptance.",
+      "limits": [
+        "Static source and historical test definitions only; no execution",
+        "No feature/task acceptance",
+        "Other implementation dependencies and excluded paths not certified",
+        "Root corrected an earlier false blanket whole-update refusal caused by reading historical callee behavior as final. Pre-correction reports retained separately; final callee bodies reread completely."
+      ],
+      "report_section": "C2",
+      "commit_diff_sha256": "900f2caa4835885681354a219da4b9f13759e094efbf44d3fba0e43f8cf3e2f3"
+    },
+    {
+      "sha": "644bbd0de25e1335e21e513b3228c1a688256bf0",
+      "subject": "feat(install): recover configuration and removal transactions",
+      "path_count": 29,
+      "review_level": "bounded-code-schema-test-content-classified",
+      "whole_commit_review": false,
+      "reviewed_paths": [
+        {
+          "path": "crates/vibe-cli/src/commands/uninstall.rs",
+          "blob_oid": "968d2001c43a241c564b1ca5b1324f41843000d0",
+          "blob_sha256": "101a6e227a38bbc13cee6ade58ed88651f9dafe32022609702654bfd16a4da9b",
+          "diff_sha256": "48b05d7de0d0ac2a6ef0b185e5952f4746b1a19ee8e27a39b4acde6219af20ce",
+          "scope": "full production entry/body; selected changed test bodies, tail of test module excluded"
+        },
+        {
+          "path": "crates/vibe-install/src/apply.rs",
+          "blob_oid": "dc79f21f4b50ebf23c48077c7b04c6c86ce14ba2",
+          "blob_sha256": "0065e773aae80bd2e0d8955b765148e0958722250c0914211efd1e86ea0ef076",
+          "diff_sha256": "bcfa92169363bae3f5d5baab61e8ebd0fd8e9633deddb6d50d4aafbf111b03e1",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/evolution.rs",
+          "blob_oid": "052dfc0c803fec4284dd19dfeb69c3ef2321a2e7",
+          "blob_sha256": "73a5991848b982701c5202ca95ed2791c730f71a267eb2205498a2395c0e943c",
+          "diff_sha256": "7f3106c4f790dff129c0feb9ef11a970a021493761e651a9de787cbd52f279c3",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/plan.rs",
+          "blob_oid": "b7d66fd827f5c25104757bd0f61a0046c822a6ba",
+          "blob_sha256": "e7bfa35f97ae75aa2665a21c8f3e6adb672a0eb588e672cdfa07750cdae6299f",
+          "diff_sha256": "165c07df85a81e3880c498b7111ea046fd3255a1fbc9d80233227c3e537738d8",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/preconditions.rs",
+          "blob_oid": "323d952439f470f23c23246ca7939b793f56dc21",
+          "blob_sha256": "20f5f0a0df4e6103b46a9a7939a8ec33deed116d5c045f51e9c453d0db86b457",
+          "diff_sha256": "64e6cc871dfd12702d2c8e89b95e5deae0801ef491a88a6e4a91a037d5070120",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/record/m_05_d_1_cases.rs",
+          "blob_oid": "19d5329bbe38605d5f7332ea4ad01b170e4f11b0",
+          "blob_sha256": "6d6e68766674044ffafca81895121e8f4c6999f62de729a8a4fe8466c2e38bba",
+          "diff_sha256": "794b8ae0998e62d724d58fdfd586798a37b4d945f9d16eb94d0362c16b2a8e2a",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/removal.rs",
+          "blob_oid": "a5efee0c0e5b05fc2beff6f33975d2c09a02ada4",
+          "blob_sha256": "5cb0408955200dc6c02154d2ab371752e2a845d2443df7b2965bc4b64165305c",
+          "diff_sha256": "790d2e9ee8edbdccedf04a3cbd84da1b8fe07adcf84553f721460ff848f71240",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/install/tests.rs",
+          "blob_oid": "7d638a400a431f149a9e105b92adc82208f5de8f",
+          "blob_sha256": "0ca7db48c087c04bdfa5b6ae782cc6b6d8a6a4f6fdc597d993dd1ba7cc0eab24",
+          "diff_sha256": "88200a258efc1e12ed9fa420189b7298b73076e95c5d7f42d3e23117128a9fa5",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-workspace/src/configuration_transaction.rs",
+          "blob_oid": "35e3e8f68f3e270a5b56fd88e399d9e0905a9b19",
+          "blob_sha256": "d5c127b05548177795be3a4a4d9e46da7c3c91651151f9edbd5f1a5e3c63c5a4",
+          "diff_sha256": "cf72d23062b35f5133cff893a9e75ef5dfed8ac88e019ba4a5b3061b8ed37d3f",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-workspace/src/install.rs",
+          "blob_oid": "ff872a232d437684549c2da24e29579bb2c5dbaf",
+          "blob_sha256": "e083f95e2c9c2777a0845fc401b07f55c1022272efa32acca7df877d1db2e6be",
+          "diff_sha256": "5ea0f7297ed371605b313e2002d5be38127059ce5829a44da37e287e525ff51d",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-workspace/src/install/bootgen.rs",
+          "blob_oid": "386f4b0c45bb34747f7c67b987b5554591f16430",
+          "blob_sha256": "5e8ae218ec7b42245b8f6049047ebaebab6538b94c29ec5021c680e75564c30f",
+          "diff_sha256": "03bbb6dd093a3e0dae28338b2b1b97800b59fcda44475dbf65703ee25e9f3093",
+          "scope": "selected changed preflight bodies; output-truncated middle excluded"
+        },
+        {
+          "path": "crates/vibe-workspace/src/install/hook_output.rs",
+          "blob_oid": "b938e03af4aec0e6a6b34a0498bf45f17b12a723",
+          "blob_sha256": "00eb3c4a4909988e8fc6ba39fd961d61cc9987f8b767f5e02470a09100e37e6b",
+          "diff_sha256": "f1e7d4102a59a8efb7d893229655395b112c42912bec8da0e34323c1cb9f2509",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-workspace/src/install/prune.rs",
+          "blob_oid": "2885067606306df1fdd2b502d5855e34ca4cd497",
+          "blob_sha256": "6e9f836964d45574d1eb52c17e9047b234bf0675beb0d8f64b99d2b1e47e515e",
+          "diff_sha256": "b317a2ea83d1bb1e6d7203029873511564275e5c183223a0ffc9dadbd6ce0b7f",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-workspace/src/vibedeps/removal.rs",
+          "blob_oid": "58759e1bfb4cad4878ac778d39e6b3aab3d5aa89",
+          "blob_sha256": "110da80af940619d21b3d4dd09d3646c09e222c212f18488f1683941428295e4",
+          "diff_sha256": "ae6f9966e13a341a6ca5c216fa2755d8304027e2e64d91f9b02ad9c7fe27854b",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+          "blob_oid": "831775a071a968fd0b4c4c6ff7fdc9bc0a00b4b5",
+          "blob_sha256": "1adaa99a59144139f60c857b04352d22c34f0254028440f1584cf197ada85d9a",
+          "diff_sha256": "10fed76c041c30083f6f1e9da121f93e3ce119b0aa094e05e52403a3a71284b6",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        }
+      ],
+      "excluded_paths": [
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/MANAGED-REPORT.md",
+          "blob_oid": "2607feac95c379fa71384077d53a0df361929aa9",
+          "blob_sha256": "34cff17d1a37baf81dea70eeb7a3ba2af0307f4b6b1c589fff9c322c4f600ab6",
+          "diff_sha256": "42d7fe4759569471c74e53b9e0abde9a94570d09c0fe4a235aea3aba6c68cbb1",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/README.md",
+          "blob_oid": "a08f519e2f4f66a690c27d287c02c4befff81a01",
+          "blob_sha256": "10b8cf2e09d0098489c2b82af857b2d526e5e2d00f08bf5e2296b808b7e3e038",
+          "diff_sha256": "c01d3f5a8caf0097f4bb1544197dc72071f58021e13e15eb9b4cb05fdeaa6c3c",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/REVIEW.json",
+          "blob_oid": "13d6715868efc12c11d09e23b42ef58a5db746a3",
+          "blob_sha256": "5ab79e137c0b5117d1b5219c1ad269ff4c5a8244b873fc90e749a1bcfc834c36",
+          "diff_sha256": "33c07c6271a36085a39c4a52181d688f7d7b99fb0a9dcb3c77b71e673cda3be0",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/REVIEW.md",
+          "blob_oid": "924699d47fc5180d2bfe4fc0db4fc97a9431ed92",
+          "blob_sha256": "f59ead2d9586e75b7cf554aa9edaef9adc05c90c530c6edcb5b27a9833a1ea6e",
+          "diff_sha256": "c1ab52ced5c93b87677e485dcd389ceb204c707f5752f2bcf6fd9f44a3d1707b",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/ROOT-DECISION.json",
+          "blob_oid": "73fcc1243365192f130af77f90a89bb7634a92fa",
+          "blob_sha256": "c688d27e5fb2cd2ccb4b805cec5e832eff00bed2fa9a26bc748c76bd946adec6",
+          "diff_sha256": "5e6911318fba2302a9eae9b19e17d195949c9c432c967df89a56821bba97c14b",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/ROOT-SAFETY.json",
+          "blob_oid": "fd0758ca85562f822f896de0e9453deb9eaa243f",
+          "blob_sha256": "711f88873c1d9d951c88784a446c43a632d6f34d1faf0c4a8cde8d2a95281e81",
+          "diff_sha256": "b60fb9d96865fcb34dd356fbf05351bbc05cce733ba33f1849d913c3f4b2ca69",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/ROOT-VERIFICATION.json",
+          "blob_oid": "2f2c60665441dfe9e611c66a34b3a8e351097be0",
+          "blob_sha256": "3f6ace69c7f98afa69a392bc330f026555ea4523eba031e232703bb026bd431f",
+          "diff_sha256": "db22b95efd9d4a1839226555bd07fa09a54879da22eae3127145f44babb7f491",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/SOURCE-SNAPSHOT.json",
+          "blob_oid": "95e766de54032c9429f270ff255a24da7a7293c3",
+          "blob_sha256": "3d87dcae59dd890ad8c95d5a807411650b2c1621df7af32e43eb83c3cb5ae58c",
+          "diff_sha256": "0c2aca099d3d0c91cfa856d0ddffd9385771454ad6877b25130d68379a1b6a51",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/STOP-METADATA.json",
+          "blob_oid": "e1d037b2fe301324d8852c5935fdbbe19ae3342a",
+          "blob_sha256": "b2d80b061f4c7ae9d86812c14f435d9ea538751aace2f7871dadade52ab7e695",
+          "diff_sha256": "912b0925c3343f81c938e3624fde2be71cc88ba80dd1471dd082505c26283803",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/WORK-ACCEPTED-RECEIPT.json",
+          "blob_oid": "faedee80e7516f2b9cd6d40776afb9284c23fa17",
+          "blob_sha256": "078834160c2107932e315aaf55ed599e8e9723fc908e3711beca10977afdf6f5",
+          "diff_sha256": "a07c3e2ab3b9b00be3f05750a8a50e82bab3d57a9210682e8f268f3bde86fdd5",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.3/acceptance-2026-10-17/WORK.json",
+          "blob_oid": "466b8067f3b879871e7f6e3f7959d1fc964998f3",
+          "blob_sha256": "22b86a3f4df63d830862c0c1e52a062af2c4eadb207823d8b9eb5429bb11a2e5",
+          "diff_sha256": "ad3ed35b0c32966a6ca1e559cc075d8d4028ac31eba4964ff373a97fbed308b7",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "crates/vibe-install/src/lib.rs",
+          "blob_oid": "49609b667795462e4eaa42829822017e7001ab41",
+          "blob_sha256": "c03150c8dd93066235975ac9796be1906243dbdc570f0f90ecbc77cfb2b6b8b9",
+          "diff_sha256": "b9fade368d2369589edfc6c6146c8813c4dddc23bd448c2640324c9a36384d5a",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-workspace/src/lib.rs",
+          "blob_oid": "c1c84e2307e7c2c9f0b7fe498adef6b56a03ca3e",
+          "blob_sha256": "19dc8188e4262c8e35dc06fa98b46914e548e747f3813bef37783e2bf0916555",
+          "diff_sha256": "86155ab6847ed95cebc7e2dcd88ceb4775595fbe220849c8c2280cf271c49dfb",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-workspace/src/vibedeps.rs",
+          "blob_oid": "51dca4e05349535588e59873ab0208d7fc4406bb",
+          "blob_sha256": "cc774aca850cd9e912b4a8fba307ca78335368f884acc874b7aa90fe0700a2c0",
+          "diff_sha256": "a8a5bad2101393c82d0f19669f2cf49862745e108c85f43106f48bd9d9011da7",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        }
+      ],
+      "old_observation": "Preconditions, durable whole-operation images/checkpoints, explicit configured removal, lock-graph removal and footprint guards.",
+      "final_observation": "Actual install/uninstall writes journaled; retained operation blocks subsequent begin; reopen/restore callers found only in tests. Final change adds before-phase injection but no normal recovery command. Final evolution::plan_reconfiguration also auto-binds authored workspace input; its explicit typed source argument is not a universal embedding prerequisite.",
+      "actual_callers": "apply→ConfigurationTransaction::begin/enter/checkpoint; uninstall::run→plan_removal/apply_removal; plan_admitted_removal→ordinary apply only explicitly supplied.",
+      "target_transfer_state": "Main already has closure-aware removal/staged rollback. Preserve main unrelated-history retention and in-place support. Review crash recovery and third-state safety through incumbent owners; repeated full-slot capture is concrete cost.",
+      "limits": [
+        "Static source and historical test definitions only; no execution",
+        "No feature/task acceptance",
+        "Other implementation dependencies and excluded paths not certified"
+      ],
+      "report_section": "C3",
+      "commit_diff_sha256": "8ac29b4078b3db8538280b85c96127ed3a41aaae61f50bb6e373282297ff34b9"
+    },
+    {
+      "sha": "efc6da9a04034dc280b4d5a0eabe8f8b4c723f97",
+      "subject": "feat(install): expose captured configuration choices across interfaces",
+      "path_count": 38,
+      "review_level": "bounded-code-schema-test-content-classified",
+      "whole_commit_review": false,
+      "reviewed_paths": [
+        {
+          "path": "crates/vibe-cli/src/cli/pkg.rs",
+          "blob_oid": "f4fcc884b598844581653faff316506a3a680510",
+          "blob_sha256": "20233f28b4a5453a28d6fad62adb95e9dc044aa65c92ad2b96be422fe27201cc",
+          "diff_sha256": "c19d0eaffef62863bd3fb11dbe60dbb9bf4b132ab132fc4fd25146fb6b4a2dbe",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/install/choices.rs",
+          "blob_oid": "337be0bd3af08a03c7f8fbfe1ea9751c3d008ed7",
+          "blob_sha256": "51f22ea8f3c921c62f5a70d478449e5c73b195ee0f798fcc2f625bdd2cbedf17",
+          "diff_sha256": "7ac4028d237001d210263e4761e6a4da505be63d8c87e86cc637606568b6515f",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/install/direct.rs",
+          "blob_oid": "d08c60e87fb29396f6a12851cdcff72b19bccd63",
+          "blob_sha256": "880945cd7caeb812cf47ba4159dfa63af507bd903537916eaab4e03219918ea1",
+          "diff_sha256": "def5468afe97e2145d2e9ffd7c1217553e9666527e6cbb2d6b27315cda523f3d",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/evolution.rs",
+          "blob_oid": "7fe43dc4b8765a29d7c847d7b0c5678c6dabb937",
+          "blob_sha256": "eaf163e779d9de0977eced5e433f5d66a64bd1c10a882ac95e461adb59464e14",
+          "diff_sha256": "c4715f3cd858d304256f774fc1cfa3aa0649d1d347d1e41d7dd5a2e361634363",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-install/src/plan.rs",
+          "blob_oid": "f0c63b7d96f92453272837942312515f088ae3b6",
+          "blob_sha256": "1196bcd6469bce8e87789902435fb00612a4cce3793edadc5d7cffca07f63dd8",
+          "diff_sha256": "56c442d9f29b2216be4ddb4cd0ffd21a1c39deaabb82ef44c9389c0cb2756d22",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-mcp/src/context.rs",
+          "blob_oid": "06b9997bda466370e82d9ac51fd10e1c7cad183a",
+          "blob_sha256": "d1a58bc25c7fcfb3fe47f1bcf3542273d71025ce6df618483f3121755bed7559",
+          "diff_sha256": "a73e3bfb0ebb88394b9774157bcb2940edfb56daa27c62d9c6085feaf43782c5",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-mcp/src/tools/configuration_choice.rs",
+          "blob_oid": "27ccb28455e7d5f01e2cde95752785e285b5a688",
+          "blob_sha256": "c9332cbd8abace824571c4454564da8e19801618df103cb2a06fe0ed623fc34e",
+          "diff_sha256": "13ddeeaecc37061aa4edbbf254f4f03f31a167c417f4298023992e0190fbd6ee",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/document_analysis/catalog.rs",
+          "blob_oid": "afde557a0dc71e787f96201884c2f35e3c48ca7b",
+          "blob_sha256": "da955bf662e4e4419483d18ef697feea10408ff8aa110e78a1912cf7760a2506",
+          "diff_sha256": "20bf60210bafa7bf3d5d71fbf66b5b3770f897ea27e51f0b156529f803bc3b81",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/machine_operation/configuration_choice.rs",
+          "blob_oid": "350cc3088d0f90f03c6b61c933595df1b12673b8",
+          "blob_sha256": "9fa0f7631e2f123af99b70c950360c18ae73456e2c70dd5bd9edc5dc8fe00e22",
+          "diff_sha256": "aee8706615c8543aec6bf912e92d0546201cf67b186175832818da34a70b5b4f",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/machine_operation/configuration_choice_fixture.rs",
+          "blob_oid": "b43a49a9dbc61ccfa15bdaf7c969e9cbd3cd8491",
+          "blob_sha256": "1d8dee828be90717e6dc50460c50f31e5cee02194c7dea07ba19321727df4c22",
+          "diff_sha256": "6220b698bc382a1adce2590035d7a1bf5ea8254a805f05dfe7c79d18fdc3e984",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-resolver/src/features/configuration.rs",
+          "blob_oid": "1f4ae26311e09c50722a31428ba6ed6d31f5fd12",
+          "blob_sha256": "614dfa8ad2d2ac3bdc0d99ce804d6a4c13797408fed9a685ba4d849870f4af95",
+          "diff_sha256": "9b55a3085c2c2e73f39483896e905d0d1f190ba32c2c7e9e58cc68570643ce51",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-wire/src/behaviour/consumer_configuration.rs",
+          "blob_oid": "7737f4e882a3764195e4c39f5b4ab0a9377df389",
+          "blob_sha256": "51d8cc9ba6b1abf36ce7be0334a574a7058bfe748dc48c62b4e9a72d1d02ff76",
+          "diff_sha256": "b67b3aafc98151a99b724e7e0d622c10861d9f9d2109f13c301e50a38c2fc178",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml",
+          "blob_oid": "0659aa265fa00a845d480e4695ae500d41165ad1",
+          "blob_sha256": "a20748391a500d8be5346c548691eac4301bfdc7d72e332d815165ee0adf3abe",
+          "diff_sha256": "60c1ef9a67cf88e245d0166c25d729a866f910831dd9c77bdd27985a0e6bcedb",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        }
+      ],
+      "excluded_paths": [
+        {
+          "path": "Cargo.lock",
+          "blob_oid": "58b98f0d963f8750ce1da766b8bfeda00acbd89a",
+          "blob_sha256": "21a82e641b571f9bd089ca0680cd6c1b8998f18d9e12bcb29d4271d29b2b3b8b",
+          "diff_sha256": "8a87bde99b44833645a5e3f4abddb1c4787269bf5a7e6e60757959b910dfac42",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/CAS-LINK.json",
+          "blob_oid": "6ec429a9221bc3f33d6c6a24c6da33a8e27ade47",
+          "blob_sha256": "01d32d3ff354f6dbe8d48afc441e1d73f9bcbdbae5e047e4f3b63cdfafefbcc4",
+          "diff_sha256": "154179c36ac14981516aa112682c36e78da1a457547311b974e607e797bc604c",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/INITIAL-REVIEW.json",
+          "blob_oid": "665d58f413796981b2589a3d5a77baf903105011",
+          "blob_sha256": "93e92a7e1bc0d59ddc1ff0ac2042a16c0d24d80c1121144ad0d69d1e7cf9ff75",
+          "diff_sha256": "2c4ff173a94ff5a3e8beff356451c1313e313266c11dedaff7d137d365f0990a",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/MANAGED-REPORT.md",
+          "blob_oid": "d655533cac02b61be57d7b0c5d134393b3831aeb",
+          "blob_sha256": "47e31b14e88a61df41d4320a2ab5ec9ff62e546b7f58255857536451d2dfc625",
+          "diff_sha256": "28cdcca4c562b9c111b000549447962de1a9f0af8d404823e88941ced32d89da",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/README.md",
+          "blob_oid": "c356645345fc57b9dae04ee361b7a8c0385e02b2",
+          "blob_sha256": "d2f962a4a339e5538814006cbe1cbec4b5631c45fc2e85198993419929b2c35a",
+          "diff_sha256": "21e2a5a5b347863828ab89d5167afd99dd2be202f66af713c7cb79e983998396",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/REVIEW.json",
+          "blob_oid": "4f5125459b7631ce9058a9aab78b41d02e40a240",
+          "blob_sha256": "0d269384cf9f46bad4ec185a59ba13f9bf41914a89908b53389959d1a2bb9b80",
+          "diff_sha256": "b179ba79a096bff033f07634b5e1893a8f8dc11ad9028e62b2ce07b6632503ca",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/REVIEW.md",
+          "blob_oid": "c2c7d9e351c64bf939c7a121b38f17c24661ffa7",
+          "blob_sha256": "2876a2badc6fc3546f135a84c22fd6e40bbdf020fbc95c2fb47f283c5a447eed",
+          "diff_sha256": "c68b76a8bbaa1716fdd46e57ac805a43d8008a605d0eb416b1611a3e86eab4e5",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/ROOT-DECISION.json",
+          "blob_oid": "30cf7fe1076b17e75d62727d6d7d7b543de22cfb",
+          "blob_sha256": "a66d3819c8557cdc7e36aaedde8f0aeedf21be1233c2de61c7b2e1f304975b0a",
+          "diff_sha256": "9d394da7fc7786eda03e3dadcc4517e49cebe900c5b60e0473fcd615aed7cc22",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/ROOT-SAFETY.json",
+          "blob_oid": "7ee581e8b326a33e6e9366f92a6c7e9907b46b8b",
+          "blob_sha256": "1e2178a6bb1a578e066b8d7605b0d9b2210b1cb3be9edabe42e5d8d69aaba83c",
+          "diff_sha256": "adbef0ea13aa24a65c5b30921f0284bd9c7efbeaea39f7c9f397aeb5ce55383c",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/ROOT-VERIFICATION.json",
+          "blob_oid": "fdf90d2fae675417e58fa9c07d8a20df3e663f12",
+          "blob_sha256": "fa9ed7477afb1b3ab7dbfc76ac508b33b772c14aa38eab0de0351af04a0ecb43",
+          "diff_sha256": "4e71be625254a8368b64d33336eca98b744e8330a681a4af85f459145cc5983d",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/SOURCE-SNAPSHOT.json",
+          "blob_oid": "ae321594d93af3ed9c0c205267ce4b71cc667971",
+          "blob_sha256": "04bea860e18950ab0e97ae1e711924e6a52dfbe2105ef5f4d51cca3d6e15dabb",
+          "diff_sha256": "acaec31437584556bc0f3089c58ddc86ffea8e8fb4121d259d7dd1d589256498",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/WORK-ACCEPTED-RECEIPT.json",
+          "blob_oid": "09fc2e7fb08379839dd80bde836a339428105749",
+          "blob_sha256": "778c7753622a66f705587c78b67b674f0d2174c4f5fdbc3410174c222e87511e",
+          "diff_sha256": "c9d0c59cf3053228d89fa726bea16a7ab72de79c7bdd65d6445c011620a282b1",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "campaigns/next/evidence/M-05-E.4/acceptance-2026-10-17/WORK.json",
+          "blob_oid": "745e7f59f44e54ad769fdc2da23f4d9f97a433d8",
+          "blob_sha256": "c0799a46a15643e47ed377526d537686377774b858f8e7eface597087e7fc409",
+          "diff_sha256": "68ecc4a725273417b5a310a379b8a012e57f8f03e7a1d04df91a27457933cd62",
+          "reason": "Historical acceptance/report/log/receipt evidence not revalidated or used as runtime proof"
+        },
+        {
+          "path": "crates/vibe-cli/src/cli/lifecycle.rs",
+          "blob_oid": "c7cd45a9730d503fb33a2ff8ca0398434e06dba4",
+          "blob_sha256": "60e9caa911f732487c3edd9e099eb7d4898a9bd0ce151fe2ac5a8989289ce245",
+          "diff_sha256": "ebc07087391f91fa5b934636d30002e8e9da1e22a0a334ac3be8fb95f189bb08",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/cache/add.rs",
+          "blob_oid": "bc537f8527e0b53b51f7c8bc181ff8730336e047",
+          "blob_sha256": "38e11f5951a5cb3ecc561ceb2f3a1cd4bdc8fe9efd75d70b039e15a03ad1623e",
+          "diff_sha256": "f365433cbedb97773d82baa2132c48381138974e567d962c31dfc71159b3730a",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/install/direct/tests.rs",
+          "blob_oid": "77b2e7e580cf37df591e63a087f88c7222641429",
+          "blob_sha256": "bb138ff6d55eebc27c13f86c011f261cb51165b286844a8c6ecc55d6ccf36335",
+          "diff_sha256": "a8a377a3cf3ab78b7513436f61f9832ee293cd738c39c090c0f33791cc2a60e8",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+          "blob_oid": "aadec1fc534c25f5e7b9655b3f1161701d555363",
+          "blob_sha256": "4a17c94919da4c2ba1d838b0b1db259e47ef3dedcafd96f13465e23c29db6099",
+          "diff_sha256": "30411b3d6567e88b0e3ae918baf68a74e40c024f560256e0ca58ba0b0d92ff75",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/install/global_mcp.rs",
+          "blob_oid": "fe1ad7888d662015b21ed643431bfc681f3f008b",
+          "blob_sha256": "eb5a3e72997f522914ff372434e17b936aa201de15d6211abacdb385bf6c77f3",
+          "diff_sha256": "92fde6694908324fdbbdd01b31f3e3ca8beae8275f58dac3415b5394c11a07b7",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/install/mod.rs",
+          "blob_oid": "537d5d1c77335013e9f10ce363e86cb8ca65a269",
+          "blob_sha256": "55dd26e26c3412076d0b2229fa3918924176d571e29f219ab09f25def4b7ec55",
+          "diff_sha256": "27bc61250694e8727043cf9c17f9ade4899cdb1c6bffca5289919e2de4bbb9dd",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/reinstall/inputs.rs",
+          "blob_oid": "51e9d2e527e09975082af46ce92d7b720177681b",
+          "blob_sha256": "99e6bd9489fa973866c0d03ce2f890d96ccd6b21331a13af2f4eaa8175bbcd70",
+          "diff_sha256": "5939bead14ce1163b242df43942013fd12183e53007b255ecbe9df5c64c43f4b",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/update/inputs.rs",
+          "blob_oid": "fe98c3473618425b63c70d2464ef81849901665d",
+          "blob_sha256": "036e350539688dbaf3a10b900896e38f9f42456b934fe48e4cff5743d9fcd091",
+          "diff_sha256": "92f233c2d9c66cfdd361eaab189959152c310666949c0151696c0229682a514c",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-mcp/Cargo.toml",
+          "blob_oid": "3ef2373372438bd7e324eeaf1c288bd3977327ea",
+          "blob_sha256": "d348effc0afab252a62a87fdfc65c66ee14a10969613dc6033fb2a06ebef507b",
+          "diff_sha256": "fd74466a150800988e7b6509ae45cdb51744c35d6884dcbc65827635d7af83e8",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-mcp/src/tools.rs",
+          "blob_oid": "44cd1b18ec9434ebf4e13c77f7c7a8367ed3fbb9",
+          "blob_sha256": "29711de4957652310659099828c4f0504c5ccc9e44b18b431fb885eedc2bd9dc",
+          "diff_sha256": "708cd90f41d5b14756b6d013daf33ae747ceff9b1534a033058a9847017cfa6c",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/document_analysis/mod.rs",
+          "blob_oid": "0fe62711ed073dd468c36f2554b912a01fbde479",
+          "blob_sha256": "e022442b741ede9c128fad370429185355df5b7f29254dc2898f6a82aeb8c24b",
+          "diff_sha256": "df1d547825d556314f2dc611eea705f8d4d1eab1f77f5f938a4b8d7297d14ce4",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/machine_operation.rs",
+          "blob_oid": "da714e51fd5cec4f7a3e1bc737885638511d3e25",
+          "blob_sha256": "05e428831b8422a00e233a696f7a130ff9a190a8d88f72a23b75b99f4fb66a2d",
+          "diff_sha256": "fecc14b92eb2933b4b050f44ade4c23abacc235fa008ec1554119d093a5203c5",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        }
+      ],
+      "old_observation": "Shared prepared choice questions/evaluate/prepare/apply host with Unix CLI and MCP adapters; exact shown-default consent.",
+      "final_observation": "Host calls real apply and writes lock request; no normal host bootstrap callsite found; answers do not edit authored consumer_configuration. Existing authored mismatch refuses at final binding.",
+      "actual_callers": "CLI choice_host branch→UnixStream→host.dispatch; MCP default host None; constructors/with_configuration_choices/listener use found in fixtures/tests.",
+      "target_transfer_state": "Reuse evaluator controls/consent semantics; ordinary local wizard should own source answers and follow-up. Do not make socket/manual capture a universal prerequisite.",
+      "limits": [
+        "Static source and historical test definitions only; no execution",
+        "No feature/task acceptance",
+        "Other implementation dependencies and excluded paths not certified"
+      ],
+      "report_section": "C4",
+      "commit_diff_sha256": "474411eb4ae2cd2085946f29ae58b338971253840832e700baa54e880291ac11"
+    },
+    {
+      "sha": "25f60dff7c581d451d2afe0859675a44b991ce2e",
+      "subject": "feat(boot): compare preinstall configuration scenarios",
+      "path_count": 19,
+      "review_level": "bounded-code-schema-test-content-classified",
+      "whole_commit_review": false,
+      "reviewed_paths": [
+        {
+          "path": "crates/vibe-cli/src/commands/boot/m_06_e_2_cases.rs",
+          "blob_oid": "5b7e55f1a28352003b47e5ce4132cb8bb66c794d",
+          "blob_sha256": "94449a6e3ebf2db9c9c862cb84092bf3025db2e5475bd7af6af684ceb1f6630d",
+          "diff_sha256": "bbd1d4dd92a52310e3a690f125890ed9abe207ceaefa2b8692fc113f57f2da08",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/boot/mod.rs",
+          "blob_oid": "4e9d816948723eabe2197da8da2b65de77c098b6",
+          "blob_sha256": "d5f59f19c2c9b30dfdd5fc63eb93459157ccbf57769cb47861705738617a10ef",
+          "diff_sha256": "dc45550b79e6be76c4db13600c1763a33aeb3eb3c75ebfd85a498f15345811fd",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-cli/src/commands/boot/viewer.rs",
+          "blob_oid": "7452af965517fb2fcf4853d48b06b177ffa06dd2",
+          "blob_sha256": "e8abb8d1a69007fe1c9fecabe24d66e96f277351725b841ef54a012b86552494",
+          "diff_sha256": "7a233446fce87b1401ff19ff69c59aa3d46d8e5221d584a17e83415ecb5a87aa",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-mcp/src/context.rs",
+          "blob_oid": "26c98fbb24f5542b310ffb33dbc86048caf70767",
+          "blob_sha256": "189e880c85bc0039c14325aa32fc6d09dc4d5f5b8b1ac85edd5637b8e01d4b41",
+          "diff_sha256": "8de1683d2e44a2b335dec8514cf05da1d6c10e5fcd256494f11e524dde74a5a4",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-mcp/src/tools/boot_debugger.rs",
+          "blob_oid": "e9e9a8d758e9b9ce88aeb363ddce0219f94df897",
+          "blob_sha256": "f698fba4bfcaede2adc9c149d8ed0c752a1a512bbea023a6fbdccce84854bedb",
+          "diff_sha256": "9f63b4100044d5986192fc36f90d47b1551a5a1176fe99c76d1dde0f9999bde5",
+          "scope": "production changed adapter hunks and partial added test excerpts only"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger.rs",
+          "blob_oid": "95aab3da40910824536a01f6972442595b528f2e",
+          "blob_sha256": "5a0738cc87adf7edb03c2c093fec4d6319984951d284dfbe8d89eb9177ac1c5a",
+          "diff_sha256": "f1551b1985821e14e646fabee346d89e05c8aece5ab0118fcfb835a99850ddbb",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger/dispatch.rs",
+          "blob_oid": "6efb8dcf4ca566ce9ae621427ac295b9d180a20a",
+          "blob_sha256": "5e4ff27af8d004826e7df3547d43fc9dde96427537ed0674de9b4432bccdb4d5",
+          "diff_sha256": "35cffbc7a8b606c941ada6c0e95795f95055097c0eb5c8c610ac6fc5d8c2b15f",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger/scenarios.rs",
+          "blob_oid": "c8ccb1903e7825182076326aabb03ca5db0a31dd",
+          "blob_sha256": "fc6553303cec463e824e05ae9d9a7b3061df2086be78b590671152b1c46ef9af",
+          "diff_sha256": "1cfad0a3a2da57a0bab273d5d0712e99fbb4a81a08dbc3243a29a7566b969441",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-package-source/src/source/preview.rs",
+          "blob_oid": "a1a75bc355fea2128540f14e4922e7fc7d21e68b",
+          "blob_sha256": "426cf6ab57ff11c9b806557c395870bbe05ef264ec34db10265aaa7682553489",
+          "diff_sha256": "c889ccbf48e80b38c396edd0b2c0d6d1a542c73492ec291bfa49b2897502ceff",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-package-source/src/source/scenario.rs",
+          "blob_oid": "2e6b954df5390368b40298c04ed41f9e4d8c6bcb",
+          "blob_sha256": "df38ef3f62f31c00751d8e3949dbe666fe1562d38c90cf946cd87746fa4b42cc",
+          "diff_sha256": "ddf486e7c4bde73cdd24026e26b9ac2cfb27e62c24e6827d4cdb2b41776923c2",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_debugger/m_06_e_2_cases.rs",
+          "blob_oid": "ab4017dac246da207a4e0ee28647d315b08bf245",
+          "blob_sha256": "b0c17f12a2924ed7e9502b432d599421e1cceb4e425e98e4364ae02c25cee877",
+          "diff_sha256": "91d8b7843f14a8eff4900672fb877e745492b80ec29542e380b271df7818f16d",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_debugger/scenario.rs",
+          "blob_oid": "863e2f0d455f0dc36bc0c56a3c5f8514cfc14364",
+          "blob_sha256": "56de46e95799920acb5beed5e87a705d1870322758baf8c4f492d47e4633113b",
+          "diff_sha256": "9411c2206b4e9736d98ace1b31c63f9db6500d1377cd8b7ae4dcb9cfd9610b63",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_debugger/viewer.rs",
+          "blob_oid": "d37df3890b702b5e23595d19926eb3d2e2e00d84",
+          "blob_sha256": "7e1f417fab5f1ee1ae0803b83e077014542bd820c61f0e87e671171d8c5b2f0d",
+          "diff_sha256": "ef24ed874f46cef79d2bcebf50f9c05a3f0945f42fd64f00fc32b29ff675c140",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "schemas/boot_debugger/e1/request.jtd.json",
+          "blob_oid": "cbdd2bee0ccc072dc9faba01d80db0e718030e00",
+          "blob_sha256": "72f58b1af6a5a7c6d08e9aa2f1b94bc1b44ee8d7a437a5fd38b8bc1e2463677f",
+          "diff_sha256": "d896831ae158b85b451f9864aafab3193a0ba3a526a14cf14eb9d7a604d73af6",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        },
+        {
+          "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+          "blob_oid": "5704f39315f82bfa29d4e928c90532871ffdcec6",
+          "blob_sha256": "82c0cac6af85e0c61409b7c7ebb1d92ed49352965a87668fe1db7bd79adb0c0e",
+          "diff_sha256": "a2a70e97098fbdc30927dc34af84be7967506b7760f5bf6fe6e8bbbf16fb5191",
+          "scope": "bounded changed diff and/or historical method bodies; not a full transitive implementation audit"
+        }
+      ],
+      "excluded_paths": [
+        {
+          "path": "crates/vibe-cli/src/commands/boot/viewer_tests.rs",
+          "blob_oid": "c6481fe8fac4dd9899e9daa6b94ded8a012a2983",
+          "blob_sha256": "54eeb046096773b2e00363710ea930050af6008550f71eb7e0917401c8bd87a4",
+          "diff_sha256": "2f7eb7e40f577a7bf8d148175c877600290f1f07f9d7d15f14a2b082cb8f118b",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-package-source/src/source.rs",
+          "blob_oid": "fd8b8aade31dc01f25abe681a58b330e0bd65b07",
+          "blob_sha256": "5f62c25de0af150ce9a74eb8f0b9e8df951fe8cfb1b4dc16a81db41e4827d7f0",
+          "diff_sha256": "86e9c7b05394972fb85a632872a60e41116696656bef87fd4387ed38e16c6a9d",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        },
+        {
+          "path": "crates/vibe-wire/src/generated/boot_debugger/e1/request/mod.rs",
+          "blob_oid": "1c281da80c5f47e12e6f6cafb68c9f616bfad92c",
+          "blob_sha256": "50e70112ebbe9e3b177e5307f8f9b294b9714d9e293c7b7a791e882030d30bb8",
+          "diff_sha256": "56e381172c7c0946d7fbae9d467bdc6826241c4e04ff367764f1074abb82206c",
+          "reason": "Generated projection/churn excluded; schema/behavior owner reviewed separately"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_debugger/mod.rs",
+          "blob_oid": "3c929dbd551d294e845933683e3ac2f7053fcc5f",
+          "blob_sha256": "91c838f92e3cf944a952ac5954e507e10c9dfa35b1c8b76e189b7dd7dceb5a32",
+          "diff_sha256": "3dc6de3e0170d72afe8f4a7da329c8963d389b4cc8b91b9b15299899dbe2c559",
+          "reason": "Ancillary wiring/fixture/dependency path outside selected body review; no whole-commit coverage claimed"
+        }
+      ],
+      "old_observation": "Immutable preinstall add/remove/toggle/reconfigure drafts and whole-world preview via local source constructor.",
+      "final_observation": "Ordinary CLI and default MCP really construct local producer; scenario captures two worlds and preview returns comparisons/artifact/measurements, never installation. Unsupported preparation and runtime cost remain explicit.",
+      "actual_callers": "CLI boot::open_route and MCP default boot_debugger_route→InstallResolver::open_boot_debugger→LocalProducer→capture_boot_scenario→route.scenario→preview.",
+      "target_transfer_state": "Main has no corresponding boot-debugger tree. Retain concrete read-only what-if consumer and qualified cost/refusal semantics; full M16 stack necessity remains unproven.",
+      "limits": [
+        "Static source and historical test definitions only; no execution",
+        "No feature/task acceptance",
+        "Other implementation dependencies and excluded paths not certified"
+      ],
+      "report_section": "C5",
+      "commit_diff_sha256": "1163c39be54a7fc99e7454be8ded4764fd52085106d4c62c948d0231370d3311"
+    }
+  ],
+  "source_final_proofs": [
+    {
+      "path": "crates/vibe-install/src/lib.rs",
+      "blob_oid": "87b254b18cb6eea46fdcbe800bf3028840fb8e3b",
+      "blob_sha256": "a728d83c03495b4acdeb1691c17aa00095884611c6c9a5a7850552c4e051db28",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-install/src/plan.rs",
+      "blob_oid": "7a8ac758c6dd467de5cda96888bbe0a99d5af64c",
+      "blob_sha256": "1495b9b494c3f1c491d9aec3a408fbbed5a9c72884df24e108b014a39a143fea",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-install/src/plan/transaction.rs",
+      "blob_oid": "105e32c315b4889053dabceb81aa6d169a4d5439",
+      "blob_sha256": "67e27001dd63af97ff6a6971cdd04ee67f697aa8b09b5072a22607c93f86c10d",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-install/src/plan/fetch.rs",
+      "blob_oid": "0f4d47301bf3163d47e154b5f290bf3fcfd8fa1e",
+      "blob_sha256": "a4bab3732f64d68eede122c3089e53cb2510f821ccabb6081f9bb4cc9ef0939b",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-install/src/authored_configuration.rs",
+      "blob_oid": "8a3fc9df1bf2ea6b67952b34cb235c17196c5406",
+      "blob_sha256": "2e4bfa7858f77b3fb4f30c5363d39b2c540cb9a5c5554833dfd43687980ecb51",
+      "scope": "root-correction final body review",
+      "spans": [
+        {
+          "start_line": 1,
+          "end_line": 103,
+          "scope": "complete authored reader and bind_authored_request",
+          "sha256": "2e4bfa7858f77b3fb4f30c5363d39b2c540cb9a5c5554833dfd43687980ecb51"
+        }
+      ]
+    },
+    {
+      "path": "crates/vibe-install/src/record.rs",
+      "blob_oid": "9efdd1f45d95456a1fe55153085afd809cf07bdf",
+      "blob_sha256": "53482faf61a96341bfa0e0fb4756bf89a3c99d4fae67966fefb11257fa7ff89c",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-install/src/evolution.rs",
+      "blob_oid": "e757f59a0abfba9bd06c136f9baf0e7c7482c14c",
+      "blob_sha256": "24d493585145c459d1cec2a0dbc195fd928243bfceb7951a9f24ae659fa7fd3d",
+      "scope": "root-correction final body review",
+      "spans": [
+        {
+          "start_line": 1,
+          "end_line": 425,
+          "scope": "complete exact replay/report method bodies",
+          "sha256": "169f906130cb9debf40a0641a018c92b06377cd139b83c5855742072ba231df0"
+        },
+        {
+          "start_line": 427,
+          "end_line": 708,
+          "scope": "complete require_update_authority and plan_update including authored fallback",
+          "sha256": "5e9674710f452407100543e394364b56a4ae83b2d9bdde918b5da81559639c6e"
+        },
+        {
+          "start_line": 710,
+          "end_line": 782,
+          "scope": "complete plan_reconfiguration including authored fallback",
+          "sha256": "83de175ed36ea876d3c9a2a2bc2f887f8ef36c6592c1bd4169f1b8dd7e19598a"
+        }
+      ]
+    },
+    {
+      "path": "crates/vibe-install/src/removal.rs",
+      "blob_oid": "a5efee0c0e5b05fc2beff6f33975d2c09a02ada4",
+      "blob_sha256": "5cb0408955200dc6c02154d2ab371752e2a845d2443df7b2965bc4b64165305c",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-package-source/src/source.rs",
+      "blob_oid": "fd8b8aade31dc01f25abe681a58b330e0bd65b07",
+      "blob_sha256": "5f62c25de0af150ce9a74eb8f0b9e8df951fe8cfb1b4dc16a81db41e4827d7f0",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-package-source/src/source/transaction.rs",
+      "blob_oid": "02beef74be531be5f69bbbcbdb56e2d72ab27d95",
+      "blob_sha256": "750332db0a1257e4e5c6aa61d017c59595da0802feb82fc5175207c54475aa3b",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-package-source/src/qualified.rs",
+      "blob_oid": "42bee8475c828f11607ee7724172cb325dabb7d8",
+      "blob_sha256": "8277592aed4cede4311789fa844572e96e1c7cc29916f1637df370d74d562f6b",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-package-source/src/cells.rs",
+      "blob_oid": "b03c34d838fd8d8c45aca25615d7b5b3aa9ccb41",
+      "blob_sha256": "831f6c6f17f8aa3f58c7760ee22cb8895e1dcdde24ab1a27166d9fcb800ffcfd",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "blob_oid": "2857ffe75e8db3d26fc9ccaf854e443bc63a2a58",
+      "blob_sha256": "b13c7516929498a3e0d314b4e3648865b89301ca757d91eb71b5b1e294ea6ab7",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/install/resolver/port.rs",
+      "blob_oid": "23d4876a8a3148646504bcf3bf4e3d630097edfb",
+      "blob_sha256": "dda3a95168add3023e076137640750f681f70bb13a1111bb7d11b32fb3e46d37",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/reinstall.rs",
+      "blob_oid": "3ea2f0754a66a88c2130443a5fd928958587f390",
+      "blob_sha256": "e9785d0cac63cd8e27e6b2ec82918f86273ca983fe00b475af697f8239087237",
+      "scope": "root-correction final body review",
+      "spans": [
+        {
+          "start_line": 164,
+          "end_line": 365,
+          "scope": "complete run/run_with_capture/execute_after_open/run_inner bodies",
+          "sha256": "e3b9a176891a08b85317b0e713c9497474a02af73088e8a56cc7e020b7c5087f"
+        }
+      ]
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update.rs",
+      "blob_oid": "d5c53734e57c58e424a820a13130216aebb5bca5",
+      "blob_sha256": "22dc5b383386dd507745dc41cbaf43f24873f5d3aedc7fe7d7438c5e829a7709",
+      "scope": "root-correction final body review",
+      "spans": [
+        {
+          "start_line": 1,
+          "end_line": 152,
+          "scope": "complete final update dispatch/wrappers",
+          "sha256": "22dc5b383386dd507745dc41cbaf43f24873f5d3aedc7fe7d7438c5e829a7709"
+        }
+      ]
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update/scoped.rs",
+      "blob_oid": "25d6c01ee99c36f2fe9f1a84fed6596d3450a858",
+      "blob_sha256": "39085acb21f1a8e5fe2372baf4eb48d57e2eecf23e3b6554e452f6a675f1a77c",
+      "scope": "root-correction final body review",
+      "spans": [
+        {
+          "start_line": 1,
+          "end_line": 430,
+          "scope": "complete final scoped run and qualification bodies",
+          "sha256": "18d3d63ac2b3a178375ac3fc523c60cae727792a25a4059543632e40ff997a6e"
+        }
+      ]
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/install/mod.rs",
+      "blob_oid": "a0e54f54112c006c730462e14ec31578115f2f53",
+      "blob_sha256": "1b2f4d63ca9502afd7560e1bc70a4f3fd23f5846a3ec7c6d6bcc13c05401f217",
+      "scope": "root-correction final body review",
+      "spans": [
+        {
+          "start_line": 290,
+          "end_line": 510,
+          "scope": "final lock/source construction, configured update branch and Ready dispatch start",
+          "sha256": "b9c25cdc790d1c1347bb55e245f2bd8995c51fce1db81b3720fe5667c6ab5ade"
+        }
+      ]
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/configuration_choice.rs",
+      "blob_oid": "350cc3088d0f90f03c6b61c933595df1b12673b8",
+      "blob_sha256": "9fa0f7631e2f123af99b70c950360c18ae73456e2c70dd5bd9edc5dc8fe00e22",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/machine_operation/boot_debugger/preview.rs",
+      "blob_oid": "b7490c8154b94c40da2c2c282d74a559be60fe99",
+      "blob_sha256": "f02ca42152e0837951c918ae2ea79402059041ebdaed38a4c3226d4e573d9e2f",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-workspace/src/configuration_transaction.rs",
+      "blob_oid": "fa96320baf25cdf00db0ae7dfd720e7ba68b1bc6",
+      "blob_sha256": "05986f25727325cdffcbc65193abf20a7cda8f28d65def1385aa9225824159b2",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_debugger/hypothetical.rs",
+      "blob_oid": "a531fbf82eb0814af1da745603a3e7eeb204cd03",
+      "blob_sha256": "bee8cf07e3fbb86e01cb52ce14b7675cf96bc93f98b2823d5ab821873550e7d8",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update/whole.rs",
+      "blob_oid": "9f25ddf038e680c8b088a0c929abe272ef5024d2",
+      "blob_sha256": "aa862c43e8921b2318ce36f7833ced53b40acf12d5506eb831bbb2a5f79c7aef",
+      "scope": "root-correction final body review",
+      "spans": [
+        {
+          "start_line": 1,
+          "end_line": 378,
+          "scope": "complete final file, including whole run body and tests",
+          "sha256": "aa862c43e8921b2318ce36f7833ced53b40acf12d5506eb831bbb2a5f79c7aef"
+        }
+      ]
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update/inputs.rs",
+      "blob_oid": "fe98c3473618425b63c70d2464ef81849901665d",
+      "blob_sha256": "036e350539688dbaf3a10b900896e38f9f42456b934fe48e4cff5743d9fcd091",
+      "scope": "root-correction final body review",
+      "spans": [
+        {
+          "start_line": 1,
+          "end_line": 131,
+          "scope": "complete delegated install arguments and lock helpers",
+          "sha256": "036e350539688dbaf3a10b900896e38f9f42456b934fe48e4cff5743d9fcd091"
+        }
+      ]
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/reinstall/prepare.rs",
+      "blob_oid": "8e0ca5bf8713293967a13b2a3c04ecc59c0ae1d1",
+      "blob_sha256": "3a4f721ce986e9985d483edcd03120b8076df26d877c561bf710412ccc944e95",
+      "scope": "root-correction final body review",
+      "spans": [
+        {
+          "start_line": 1,
+          "end_line": 140,
+          "scope": "complete final prepare_with_capture body and prelude ordering",
+          "sha256": "3a4f721ce986e9985d483edcd03120b8076df26d877c561bf710412ccc944e95"
+        }
+      ]
+    }
+  ],
+  "main_proofs": [
+    {
+      "path": "crates/vibe-install/src/plan.rs",
+      "blob_oid": "2d3b8853ab3801f6df840074ee3a2f1fbb262277",
+      "blob_sha256": "94f2e2bd7e3a1d9fd7403071fd62d316a561ad760228e4013c6cb04faffebded",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-install/src/plan/roots.rs",
+      "blob_oid": "f5f4e69093feb9258145187d48931eea722f853a",
+      "blob_sha256": "e290a7d290dd14f6cc8b66b5496a370b05b1a0ac1726add5e5b041a16fa5e850",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-install/src/apply.rs",
+      "blob_oid": "c3347e751e67de1659ab024d0ccc206c1e5df05f",
+      "blob_sha256": "b716f482862542681fcdd78020576850f4d31dae35ad18f93fccbe873d2a69cb",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-install/src/apply/file_guard.rs",
+      "blob_oid": "7b793279546cba9097d6d6a3b958922bbd004251",
+      "blob_sha256": "a81c906e4d0fb3f66d6ae481c887157c197ef5d04a7da555e6490cd056259c8e",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/uninstall.rs",
+      "blob_oid": "7a90a6637a4b2b77f9b0e08b4aad7ce18bafba90",
+      "blob_sha256": "a8d18bdb6396a3a848b85fce0f1de0f9ab322eb33fff4f442dd96dd4604880ff",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/uninstall/plan.rs",
+      "blob_oid": "8a8edfeb742b422abd9fb0260d1f2b0efa039842",
+      "blob_sha256": "1de887480aa511452b95c9ae5635f12554b637ccd5907f7cc482400c7c1e955a",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/uninstall/transaction.rs",
+      "blob_oid": "2c77dbc9d243c284323d80289ca7ed9bdd84ce40",
+      "blob_sha256": "30d506a9064853df60d7ee8b332b5cb65ab599c345ff30c0a68d8f1b6779b7be",
+      "scope": "selected relevant final method bodies/caller search or historical-to-pin diff; not full file audit"
+    }
+  ],
+  "method": "Actual historical production/test diff/body reading plus bounded final call chains. Hashing omitted paths is provenance, not reading or acceptance.",
+  "correction": {
+    "trigger": "Root identified missed final plan_update authored fallback",
+    "cause": "Worker inferred final refusal from outer None plus historical method body instead of reading the complete final callee",
+    "withdrawn_claim": "Ordinary configured whole update immediately returns Unavailable because standard source.normalized_request is None",
+    "replacement": "Whole update binds authored workspace input before absence checks; scoped update and ordinary configured reinstall retain separate refusals",
+    "runtime_validation": "not-run",
+    "acceptance": "Root has not accepted/indexed these five rows",
+    "prior_reports": [
+      {
+        "path": "/tmp/nst-history-configuration-install-review-before-root-correction.md",
+        "sha256": "c61ddc740bbc8fca16906bd392b1dc727bf21a563cedcfaabaae55b82867eca6"
+      },
+      {
+        "path": "/tmp/nst-history-configuration-install-review-before-root-correction.json",
+        "sha256": "4d03a41bbb642364781d9626141c80894001917880f4d0452f5556cbf3b9abe9"
+      }
+    ],
+    "supplementary_history": {
+      "sha": "88174dd48c2855a2c1770647060cbc3a980ca852",
+      "path": "crates/vibe-install/src/evolution.rs",
+      "scope": "complete relevant file diff only; not a sixth commit audit",
+      "diff_sha256": "a45827a3b588cdb2dbdd63b551b3e961816b694b065e4b2d4104083a7cd7bebb"
+    },
+    "proof_paths": [
+      "crates/vibe-install/src/evolution.rs",
+      "crates/vibe-install/src/authored_configuration.rs",
+      "crates/vibe-cli/src/commands/update.rs",
+      "crates/vibe-cli/src/commands/update/whole.rs",
+      "crates/vibe-cli/src/commands/update/scoped.rs",
+      "crates/vibe-cli/src/commands/update/inputs.rs",
+      "crates/vibe-cli/src/commands/reinstall.rs",
+      "crates/vibe-cli/src/commands/reinstall/prepare.rs",
+      "crates/vibe-orchestrator/src/install/mod.rs"
+    ]
+  }
+}
