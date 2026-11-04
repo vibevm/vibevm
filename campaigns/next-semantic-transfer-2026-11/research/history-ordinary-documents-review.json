@@ -1,0 +1,756 @@
+[
+  {
+    "sha": "d00908242bf2ca41de4dad8122376719a207b6cf",
+    "subject": "feat(specdoc): parse ordinary CommonMark structure",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "ee3031c5150403b7cf693c77d467eb01c3e8a67b",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_product_or_subsystem_audit": false,
+    "changed_diff_coverage": "all changed paths, exact diff content only",
+    "reviewed_paths": [
+      {
+        "path": "Cargo.lock",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "53441e82c58fa4c906a4286df2e0631b96e08a7e",
+        "sha256": "84c30857e29824bc34c22ee4f44251aec4dfdfc65cceac07828db5857baa7d52",
+        "diff_sha256": "f6c4048e2c7f9af4c816fd4379d65ec5653ef5290a4260d4b246c23b15df2263",
+        "kind": "dependency"
+      },
+      {
+        "path": "Cargo.toml",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "410bf2aa06a2cbc56e318a729ea773b23054c1b0",
+        "sha256": "5abcd0f5386de6f5a6cd7143b8f93e5565fc474ee7a9558927a4aa262bf84835",
+        "diff_sha256": "9a5749350dff857a1b1c3e2454f653f2f2830d54b45f89c43cda0d1594d1c777",
+        "kind": "dependency"
+      },
+      {
+        "path": "crates/vibe-specdoc/Cargo.toml",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "1b2cfacd7f9a66d2aa6c9245199020899f0a5cbf",
+        "sha256": "7b69765fe130acc6612321ea554faec91e99550c533fd691b635f9afc7acb64e",
+        "diff_sha256": "aeae7f5f743b12865f9cc3f90286f38d4d6827d810b34d6bcc1f31e43f9d7079",
+        "kind": "dependency"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/commonmark.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "a806742c62e68bbc8e2d882ab81364de397e9fa6",
+        "sha256": "98d9b0f50bbc9909d92d8de6dc3db0dd42599f729457654cb167008488a3cb0a",
+        "diff_sha256": "9cc02ab1ae984b5886559b36669c1cb66176496e7736f49cd72154f338d59117",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/commonmark/tests.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "019af1f9b9ba8af6ea3386a52bb1c4bacaca34de",
+        "sha256": "1212cf2a29fc73b1d8b8225203a7bd8ccb1bb4fe7808db15daa7fbc7dc4b26df",
+        "diff_sha256": "3613ecad8a185bdcdfcbcf6986da64646d0fceea6343de77859cee242e68ae83",
+        "kind": "test"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/lib.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "d0dc157ca907aed78f185ddb299aeec9842a89fc",
+        "sha256": "b22516706e991ce9b2fec7a7ac10b92b8ebaee4c0464dadff21ad7879c20c337",
+        "diff_sha256": "a446f02c8c30caa4536838c231210d1a2485399f1841ebd9d2652d8b351e7a8a",
+        "kind": "production"
+      }
+    ],
+    "excluded_paths": [],
+    "full_patch_sha256": "5b1d865ee65df543bc8b486b16d8c594ed409f3228aac8b8235b4012b9c13f8f",
+    "original_intent": "Separate explicitly selected ordinary CommonMark structure from Vibe facts/directives while retaining captured source byte spans.",
+    "original_observation": "New CommonMarkDoc with document/section/fence/link/text/inline-code nodes, heading-level stack and global exact normalized-title lookup; pulldown-cmark offset events with ENABLE_TABLES only.",
+    "final_surviving_observation": "Parser body survives unchanged. Actual declared facts/captured inspection/extract_source and derivative heading compatibility call it. AnalysisCapture.inspect returns library ordinary view; outline/select require Vibe. No complete public ordinary navigation follows from helper presence.",
+    "actual_callers": [
+      "vibe_facts::scan::declared::observe_declared_document → CommonMarkDoc::parse",
+      "observe_declared_source keeps Structure but only Facts variants mint facts",
+      "vibe_specdoc::captured::inspect_captured → CommonMarkDoc::parse",
+      "workspace source_query extract_source → structured_view → CommonMarkDoc::parse",
+      "AnalysisCapture::inspect → inspect_captured; outline/select refuse non-Vibe",
+      "BoundDerivative::compatibility CommonmarkHeading → CommonMarkDoc::heading"
+    ],
+    "target_transfer_state": "New ordinary inspection capability; main legacy Vibe adapter must remain separate. Add one explicit read-only file inspection consumer using existing held source-read owner; do not silently reinterpret suffixes.",
+    "dependency_changes": [
+      "workspace pulldown-cmark = =0.13.4",
+      "specdoc pulldown-cmark workspace edge",
+      "lock additions pulldown-cmark0.13.4,pulldown-cmark-escape0.11.0,getopts0.2.24,unicase2.9.0"
+    ],
+    "format_keys": [],
+    "uncertainty": "Partial structural projection, not complete block AST or full GFM. Lists/quotes/tables have no container nodes; node IDs snapshot-local and raw retrieval must slice source, not decoded Text/title strings. No runtime parser conformance or resource-limit benchmark.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-specdoc/src/commonmark.rs",
+        "scope": "full introduction and complete delta to pin",
+        "blob": "e760adafe8514d37858e47ecda4e68f3ba98c48c",
+        "sha256": "f6b19557d0e4a3f2497a98ccfc47d56238f695c6a11a3f166e9cfba0f526de3e"
+      },
+      {
+        "path": "crates/vibe-facts/src/scan/declared.rs",
+        "scope": "95–245 descriptor→Structure/Vibe/Raw branches",
+        "blob": "e5c5cece29776136ebfb73dc05ffd388fd997e6d",
+        "sha256": "2acc859faa9586c150c42f25ebc243ea6b70bf117f892f8643fae14f6a10637e"
+      },
+      {
+        "path": "crates/vibe-facts/src/scan/declared/walk.rs",
+        "scope": "50–140 structure vs facts aggregation",
+        "blob": "8ceb3468c5323846d2da05b1e9a91f151eef0287",
+        "sha256": "13d892739237d103e729f88501bc718f423b8b93e1a9a82404dc457de09081ea"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/captured.rs",
+        "scope": "complete file",
+        "blob": "16453930bce838bc9ba96233f9e1c740fdd4b21e",
+        "sha256": "f4eefd76877a0efff4e820467c0408f58a9a12a449bac1c5c956e1c9821c8047"
+      },
+      {
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/extract.rs",
+        "scope": "75–150 capture selection;250–320 structured_view",
+        "blob": "06eb3dd02ed8f93a4ac1c8971ea24e7d8a328aae",
+        "sha256": "4e4f38a09d3cf73ec573f6d3c4b7180564e48b45975247336875972bfe746f0b"
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/document_analysis/preview.rs",
+        "scope": "complete file",
+        "blob": "9565f16fb44e6e7b19752b8b037c910c7fd08039",
+        "sha256": "b25c25a3953fff5b69cf81a5178489ff5f17348a99e9ba1d9b14f01b0f2395f4"
+      },
+      {
+        "path": "crates/vibe-orchestrator/src/document_analysis/views.rs",
+        "scope": "complete file",
+        "blob": "e040666d331fc7fa929e68c6ff553a0908b524fb",
+        "sha256": "99d683cc24e473a2a653a9783cbe125edcc40247f181404189eb85cf25e8fca6"
+      },
+      {
+        "path": "crates/vibe-workspace/src/derivatives/compatibility.rs",
+        "scope": "1–120 complete production implementation",
+        "blob": "e76be61509aaf6764bcd9c105a33fa72122c8153",
+        "sha256": "0cdd315c34532fd82be409e485442da451447361fc57081405e9fed714e5a879"
+      }
+    ],
+    "main_proof": [
+      {
+        "path": "crates/vibe-specdoc/Cargo.toml",
+        "scope": "complete dependency section",
+        "blob": "1cb0718280884d29e60f83be51a82ea050d60364",
+        "sha256": "92998a5947bd3b6cc20f20e35d47e528151406495d0e4471471b7c3d15bd6091"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/load.rs",
+        "scope": "107–175 extension-based Vibe projection",
+        "blob": "c24b60973c67b8580febb6f97427fa32c979f256",
+        "sha256": "814e2be930dbecf36bce70ecbe48b8de9aeecbd02ba800c5ddc755537701c728"
+      },
+      {
+        "path": "crates/vibe-spec/src/embed/read.rs",
+        "scope": "complete file",
+        "blob": "96f087de4d9922477748b54bda450437e50d3cb4",
+        "sha256": "8e9a4bb733be25cb79a179f0827a9059104b4c50437e4c0afd3ebfa2cdcf2e97"
+      },
+      {
+        "path": "crates/vibe-spec/src/embed.rs",
+        "scope": "285–320 unique Vibe selection",
+        "blob": "206d52d14bd94742d888c155e89fde67b2782eea",
+        "sha256": "34690aabd9e02810896baf503f408f1669b8fff23156830e85233fd71959760d"
+      },
+      {
+        "path": "crates/vibe-cli/src/commands/skill/mod.rs",
+        "scope": "complete file; list inventories declarations rather than file inspection",
+        "blob": "72ae956e1a492a18dfb81a93b9dded4b0f498549",
+        "sha256": "657a6d39b12591ef544c63a24e821c91317bce1e5b94a2f81a105dc8ec3a5288"
+      }
+    ],
+    "verification": "Source/diff/test-definition inspection only; no runtime or acceptance. Repository untouched.",
+    "report": "research/history-ordinary-documents-review.md",
+    "report_section": "D1"
+  },
+  {
+    "sha": "722a0f2ee971ce9e4bbcc586cbddd0d882c8810f",
+    "subject": "fix(specdoc): port nested item parser and corpus pins",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "ee3031c5150403b7cf693c77d467eb01c3e8a67b",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_product_or_subsystem_audit": false,
+    "changed_diff_coverage": "all changed paths, exact diff content only",
+    "reviewed_paths": [
+      {
+        "path": "crates/vibe-specdoc/src/md_in.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "e13952c965112612beea39349c6e72e1da6b6f58",
+        "sha256": "2b134310ba5d4e2a182b1eb65beff5fc22bf38252be256c396803abba7144fe2",
+        "diff_sha256": "72dd851375861a1a54630b0e9563136d9f29c249576ec10945a16495f799f447",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-specdoc/tests/docs_corpus.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "4aee9d7f14eb9acc443207068214956d7144b45c",
+        "sha256": "d53a3c02f8144b5cbd02c6a42ea6043f47ee7ae21072fd231b22b5b158ebb4c2",
+        "diff_sha256": "f221e72994656a6c452ab2f0a719c532b2fa2ad3807edb418f5e6734531102bf",
+        "kind": "test"
+      },
+      {
+        "path": "crates/vibe-specdoc/tests/nested_item_multibyte.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "d633f92ee2e3422b1bfdd9f5e200ff6e51442ba5",
+        "sha256": "37f06d48022b20caf9500cd3d2704e8930b88b1330d6cbe3f836b1697bee09c2",
+        "diff_sha256": "bd4909b8e5bf3ff76de170f0bafe1db740de1004d946eb7afc541dd11f17bdc8",
+        "kind": "test"
+      }
+    ],
+    "excluded_paths": [],
+    "full_patch_sha256": "40eea67d0d8937eeb761560e5caa477da0f5cb2194c5087d7b1dccffd6bc4156",
+    "original_intent": "Repair double-counted nested list indentation in Vibe conversion and bind current docs corpus with honest exceptions.",
+    "original_observation": "item_unit slices line[mlen..] because marker length includes indent, preserving UTF8 and nested task checkbox. Corpus v1.0.0/49→v1.1.0/54; adds plain-page and exact unparsable-projection tripwires.",
+    "final_surviving_observation": "Repaired item_unit survives at source431–442; main379–392 already has equivalent correction and both nested_item_multibyte regressions. No new CommonMark parsing is involved.",
+    "actual_callers": [
+      "vibe_specdoc::from_markdown → progress_core parse → Adapter::item_unit → to_xml",
+      "public nested_item_multibyte integration tests exercise actual conversion"
+    ],
+    "target_transfer_state": "Already present in main. Preserve implementation/test; do not port prototype docs count/pins or duplicate the repair.",
+    "dependency_changes": [],
+    "format_keys": [],
+    "uncertainty": "Tests read, not rerun. Corpus counts/versions are historical, not target update instructions. Unchanged full docs corpus was not read; only complete changed diff and named new tests.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-specdoc/src/md_in.rs",
+        "scope": "from_markdown/detailed entry and item_unit431–442",
+        "blob": "944bd8c889d02c0d00bf9d1045a94a704815775a",
+        "sha256": "0e78322804e9877d90101d4e4e7538271f5b3a5bc025132de6a7b6cbc41a1331"
+      },
+      {
+        "path": "crates/vibe-specdoc/tests/nested_item_multibyte.rs",
+        "scope": "full introduced file",
+        "blob": "d633f92ee2e3422b1bfdd9f5e200ff6e51442ba5",
+        "sha256": "37f06d48022b20caf9500cd3d2704e8930b88b1330d6cbe3f836b1697bee09c2"
+      }
+    ],
+    "main_proof": [
+      {
+        "path": "crates/vibe-specdoc/src/md_in.rs",
+        "scope": "from_markdown43–53 and item_unit379–392",
+        "blob": "bb2b82516af2af64f800ebf9c9254c16e30c1766",
+        "sha256": "738a16ef04edcbdadf9e03581f28129ca8b27ef0b6de959366680a478d0a5d28"
+      },
+      {
+        "path": "crates/vibe-specdoc/tests/nested_item_multibyte.rs",
+        "scope": "complete file",
+        "blob": "83ebac009d72c1037c3b3597a547bb670f6778f1",
+        "sha256": "742598eed27c030907c32c25ab9f771bfb399bd8324d097254576364727b100f"
+      }
+    ],
+    "verification": "Source/diff/test-definition inspection only; no runtime or acceptance. Repository untouched.",
+    "report": "research/history-ordinary-documents-review.md",
+    "report_section": "D2"
+  },
+  {
+    "sha": "e8f1bfe797c2955c354cc5835e5f195aa7a607ee",
+    "subject": "feat(specdoc): resolve authored CommonMark section exports",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "ee3031c5150403b7cf693c77d467eb01c3e8a67b",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_product_or_subsystem_audit": false,
+    "changed_diff_coverage": "all changed paths, exact diff content only",
+    "reviewed_paths": [
+      {
+        "path": "Cargo.lock",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "c428446737131cd8aaa05494795a6160c89315ee",
+        "sha256": "47734f8889538a8661c1c3827ed587c4c14172f3c0d3bf237996294eb26a8de9",
+        "diff_sha256": "2a1f0e3d50f3d72ff3199a60861b74b041486df24d11ef7a8f79daac86379158",
+        "kind": "dependency"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/mod.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "a2b6827b34c76fb9b6fb14416082494d6228922f",
+        "sha256": "edb6795b61ea19e11a781a03df8572937ed7098e7596e61820b7b46f373261da",
+        "diff_sha256": "e8188371c5207fab83cbe9c8b1f98c06ea89c54aaa8316184f6ab092ea3ba6de",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "61fe3ea0aed8e44929f0765af7e76c04d48f30d0",
+        "sha256": "3eed6d41d0ef688b9755bfddf72f3c5e711e6c1a2e97463eef2354907c6cfa5a",
+        "diff_sha256": "8de22ab728391114ff7283a3a30c3d8b95c823ab95cbfdfb2420f37d195c38f5",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/meta.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "42d953bb956f002dd1468bec468bc27e6d94d13b",
+        "sha256": "b91797d3943e5ed2d2e8c1a14ab56fbf4632fbc7a857cb1e12d253d8d13f5722",
+        "diff_sha256": "ee836aed84d64e821617e158d907a060d43f2e22fb7ed8ab8f3478e0f040b523",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/source_export.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "7832b82a7cc5e45949ed1d3ed364b9780fac5ba4",
+        "sha256": "107dc5dac91094687058c847349e81b75ce93b699bea5b72a54192ccb558a7fc",
+        "diff_sha256": "e1a8f1e35dff2d0af34de7556612219f0ac67c5a48d813ec804132ecb7b287e9",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/tests.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "0f6fbedea1fb628fffee09d1b177d50b2faf85cd",
+        "sha256": "35b363355f5ee7cae70e3e06e59b223134f2fea84a84069c78faf11c37eae388",
+        "diff_sha256": "2f4b3b51708b42c97c29c440c54d048ea406c6a4c646edfca0005cb35d11d33d",
+        "kind": "test"
+      },
+      {
+        "path": "crates/vibe-core/src/manifest/package/wire.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "1cd6654578f2c8fa9ab7eeb12492285757ee5d8e",
+        "sha256": "d77051d93323016b8150f15707367ae795b55153bb311f071d46a03863f80387",
+        "diff_sha256": "914545876c7875ec8e07dd830aea541d61fecc7f963ecfec6cab03ae26eb09b4",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-specdoc/Cargo.toml",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "94beb98ba589574f3ef6c205063c9a90d8c505aa",
+        "sha256": "dcc92651d19bc8fefaf0d899c9939bc9c0de9d07edc8a9a42a3c282c93370b44",
+        "diff_sha256": "4e86c2f6a86bf8b89f1d244ad677ca044b28f08c635095089cb2ce30f3689c8b",
+        "kind": "dependency"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/commonmark.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "e760adafe8514d37858e47ecda4e68f3ba98c48c",
+        "sha256": "f6b19557d0e4a3f2497a98ccfc47d56238f695c6a11a3f166e9cfba0f526de3e",
+        "diff_sha256": "8b18fd9689f66ab78a50642c3f4f87e2c6e8ed1faa7a126622e4c979a5faa5c2",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/commonmark/export.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "daa6a00a59f642511440c49df250e6e3d0f23a6f",
+        "sha256": "60bd72b6651c7259d21521ac058c6c552ba88c4dacbbf255dc30a19d81e2b776",
+        "diff_sha256": "0b97e14208d88c3dd9564467b97507dcc637353864f40f2a154a4595c102ae5e",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/commonmark/tests.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "e5ab854f610356a1491c0646ae3f2cea785a8205",
+        "sha256": "33aa5608eb1b36d226f72a20cf80552b82059eb6240cc10f0894d8cb22bf3ef5",
+        "diff_sha256": "6cde57478f548beea56fc9e36b17e8a28282e80ea1884533c7fb2be7c8ff13a5",
+        "kind": "test"
+      }
+    ],
+    "excluded_paths": [],
+    "full_patch_sha256": "0ddc6acfe70956095c80d8da313a14a5452ef211198316ac8460b1d36086f701",
+    "original_intent": "Add package-unique authored CommonMark exports with direct-child heading selection and snapshot byte hash/span.",
+    "original_observation": "Core parses closed name/file/headings row and checks duplicate names on serialization+deserialization. Pure resolve_export checks normalized name/heading grammar and exact direct-child path; returns snapshot NodeId, entire-source SHA256 and section byte range.",
+    "final_surviving_observation": "SourceExport and commonmark/export.rs byte-identical. Later facts and witnessed-world joins validate descriptor/source/hash before returning literal section. canonical_export_resource validates selected package/version/name without body read. Searches found only definitions/tests for named export joins; public SourceQueryService queries Vibe only.",
+    "actual_callers": [
+      "resolve_declared_export → package.select_source + SourceFileWitness equality → CommonMarkDoc::resolve_export; only test callers found",
+      "WitnessedSourceWorld::read_export → revalidate_current/extract_source → CommonMarkDoc::resolve_export/hash/span check; only test callers found",
+      "canonical_export_resource → selected package/version/name → ResourceAddress::export; only tests found",
+      "SourceQueryService::query uses canonical_vibe_resource and rejects non-Vibe view; no read_export branch"
+    ],
+    "target_transfer_state": "Missing public named-export journey, useful primitive/negative cases. Main unique Vibe anchor path is not ordinary heading selection. First explicit request-local inspector can avoid durable export format; if exports adopted, complete selected resource route and recheck contract together.",
+    "dependency_changes": [
+      "specdoc sha2.workspace=true; one Cargo.lock edge (sha2 already workspace dependency)"
+    ],
+    "format_keys": [
+      "[[package.source_exports]]",
+      "name",
+      "file",
+      "headings"
+    ],
+    "uncertainty": "Pure resolve_export rehashes new source; it has no old-witness argument and does not itself refuse a changed file. Stale use is host obligation. No line numbers. Rust reference search does not rule out external clients; no public named-export runtime demonstrated.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-core/src/manifest/package/source_export.rs",
+        "scope": "complete introduced file and unchanged at pin",
+        "blob": "7832b82a7cc5e45949ed1d3ed364b9780fac5ba4",
+        "sha256": "107dc5dac91094687058c847349e81b75ce93b699bea5b72a54192ccb558a7fc"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/commonmark/export.rs",
+        "scope": "complete introduced file and unchanged at pin",
+        "blob": "daa6a00a59f642511440c49df250e6e3d0f23a6f",
+        "sha256": "60bd72b6651c7259d21521ac058c6c552ba88c4dacbbf255dc30a19d81e2b776"
+      },
+      {
+        "path": "crates/vibe-facts/src/scan/declared/export.rs",
+        "scope": "complete file",
+        "blob": "f7d698c612e699dfc1576c993c43e72ebe4cb226",
+        "sha256": "859135e4afee1624b790caa6dbe8892c56850067af245c173bd1dac7d8f46b01"
+      },
+      {
+        "path": "crates/vibe-facts/src/scan/declared/export/tests.rs",
+        "scope": "complete file; stale/wrong-resource/missing/duplicate tests",
+        "blob": "57fb030c3bea696dcbeb5cfae0e1cb11fd634be8",
+        "sha256": "7ebe5893003615fb21acd1e776170e494ccc50c1e1f9012119761f8e4fd1c190"
+      },
+      {
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/extract/export.rs",
+        "scope": "complete file",
+        "blob": "5a6e89201e21600d7c14d401b8c65901af0d383b",
+        "sha256": "30fd6f5be84fd162678d3c5f5590f83049e46fe7fab8db028f39ed890a493ec7"
+      },
+      {
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/extract/m_01_d_1_cases.rs",
+        "scope": "145–230 export positive/ambiguity bodies",
+        "blob": "490243cb2e635580781e6ff6727186dfd3f38bbb",
+        "sha256": "49f3e08ea66eb84efe4827cad7a74e20edd6051d4c015097a2199d9bdadbe21a"
+      },
+      {
+        "path": "crates/vibe-spec/src/resolver/resource.rs",
+        "scope": "100–180 canonical_export_resource",
+        "blob": "678d2173147ce0cffa23c6f518a7e7b564a4dbfe",
+        "sha256": "54887819d9f372d4813f2809bc8af2106736a8707b6bafe1fed7ad43e2a175ea"
+      },
+      {
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+        "scope": "225–390 execute/query and Vibe-only acceptance",
+        "blob": "4448e3e438e9732feac85b5047db641a9e935065",
+        "sha256": "0d24437c8e3982e9ab8e1068f6bfd85571f04e487328f38b3c2e2abdab8883ac"
+      },
+      {
+        "path": "crates/vibe-spec/src/captured_source.rs",
+        "scope": "complete file; only Vibe IR enters compiler",
+        "blob": "ca4c1c7cb7ef9f127a4d6170aa164b3213698ebc",
+        "sha256": "1a40f5b6ae99c38030f6e3696aff49d67561ece0e2a29ed3179bb3f97253e575"
+      }
+    ],
+    "main_proof": [
+      {
+        "path": "crates/vibe-spec/src/embed.rs",
+        "scope": "285–320 resolve_unique_path",
+        "blob": "206d52d14bd94742d888c155e89fde67b2782eea",
+        "sha256": "34690aabd9e02810896baf503f408f1669b8fff23156830e85233fd71959760d"
+      },
+      {
+        "path": "crates/vibe-specdoc/Cargo.toml",
+        "scope": "dependency section lacks CommonMark/sha2 edges",
+        "blob": "1cb0718280884d29e60f83be51a82ea050d60364",
+        "sha256": "92998a5947bd3b6cc20f20e35d47e528151406495d0e4471471b7c3d15bd6091"
+      }
+    ],
+    "verification": "Source/diff/test-definition inspection only; no runtime or acceptance. Repository untouched.",
+    "report": "research/history-ordinary-documents-review.md",
+    "report_section": "D3"
+  },
+  {
+    "sha": "e9abbbba80acc758d9322ae1252f0aaa0213a341",
+    "subject": "spec(next): define CommonMark section exports",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "ee3031c5150403b7cf693c77d467eb01c3e8a67b",
+    "review_level": "bounded-contract-record-content-classified",
+    "whole_product_or_subsystem_audit": false,
+    "changed_diff_coverage": "all changed paths, exact diff content only",
+    "reviewed_paths": [
+      {
+        "path": "campaigns/next/manifest.json",
+        "scope": "full changed-file diff read; not full unchanged file; changed digest/projected record only, no authority/hash recomputation",
+        "blob": "cb9f4bfd05375acb2b4686e1f28c29ed1c57419d",
+        "sha256": "1e067fae524d48281db53914b5cebfbcd4aa0a2fc398fe35ab238dbb6ab4f6f6",
+        "diff_sha256": "552d755958fcf75608dc22426c21e3e1e8352bb0d7db3a3cede684814ab95759",
+        "kind": "record"
+      },
+      {
+        "path": "campaigns/next/plan.seed.toml",
+        "scope": "full changed-file diff read; not full unchanged file; changed digest/projected record only, no authority/hash recomputation",
+        "blob": "a3256a7155357047eb38a2e69191466f259965af",
+        "sha256": "7aebfc4e3d1fff704409b1b6f7077524c2ad94ec0f19206b4db3983eb2eeea8e",
+        "diff_sha256": "075a99677cb8ab1846feae7e1f1b762a7d035924a0cf5d73e440e8813566dd95",
+        "kind": "record"
+      },
+      {
+        "path": "campaigns/next/tasks/M-06-A.json",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "e085813018969fc8b9bd5ef97fb26d7dd81f9e18",
+        "sha256": "a8070bdaaf3584a5a1c767653c2a689c9bb967f61e91e1dbbbbd622380018b6d",
+        "diff_sha256": "723c6e29a6de2935409b54135f80b6ec76f0ba6c02e5f28eda4503286f38cc39",
+        "kind": "record"
+      },
+      {
+        "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "8a2dfb8eb4d05d637e641825216a65d2d3c5b912",
+        "sha256": "bf41b8cbf92b7b922250913b215c6774b3bb0ebb7dbfb79edaa21fdcf123f4a7",
+        "diff_sha256": "84012fca094946fd825ee5b4d65120fa7d5defe69101ae0ef0d3b734014d64dd",
+        "kind": "contract"
+      }
+    ],
+    "excluded_paths": [],
+    "full_patch_sha256": "3960af42d0c6449a2fbc82f767afeb0df1dcded0fed455ef83aaed1511862c17",
+    "original_intent": "Freeze conservative export grammar and split core authored row ownership from specdoc captured-byte selection before implementation.",
+    "original_observation": "Adds planned SOURCE-EXPORT-SELECTOR; expands M06A task perimeter to core manifest, updates task contract digest in campaign manifest/seed. No executable change.",
+    "final_surviving_observation": "Contract requirements have pure selector and later witness-join implementations; public named-export invocation remains unestablished as described in D3.",
+    "actual_callers": [
+      "spec anchor cited by SourceExport and pure export helper; not an executable caller"
+    ],
+    "target_transfer_state": "A source_exports declaration must not be introduced without concrete consumer and later-use witness behavior. Existing legacy source semantics cannot silently change.",
+    "dependency_changes": [],
+    "format_keys": [
+      "[[package.source_exports]]: name/file/headings",
+      "selected [[package.sources]]: file or directory,media,interpretation,role,loading; latter existing prerequisite, not added by this commit"
+    ],
+    "uncertainty": "Full changed diff only for large task/manifest/seed. Digest edits classified as records, not independently recomputed task-authority/acceptance proof. Historical packet text is data.",
+    "source_proof": [
+      {
+        "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+        "scope": "historical changed export contract; final sources read separately through implementations",
+        "blob": "413e73f1826385e2c5f0a0ae21da74fb52e43193",
+        "sha256": "f6aa4a213baf6ad85a1b9b4ec76e9179646e4141c51fe5efae99910e5cf996d8"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/commonmark/export.rs",
+        "scope": "complete unchanged implementation",
+        "blob": "daa6a00a59f642511440c49df250e6e3d0f23a6f",
+        "sha256": "60bd72b6651c7259d21521ac058c6c552ba88c4dacbbf255dc30a19d81e2b776"
+      },
+      {
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/extract/export.rs",
+        "scope": "complete host witness join",
+        "blob": "5a6e89201e21600d7c14d401b8c65901af0d383b",
+        "sha256": "30fd6f5be84fd162678d3c5f5590f83049e46fe7fab8db028f39ed890a493ec7"
+      }
+    ],
+    "main_proof": [
+      {
+        "path": "crates/vibe-specdoc/src/load.rs",
+        "scope": "107–175 unchanged legacy interpretation owner",
+        "blob": "c24b60973c67b8580febb6f97427fa32c979f256",
+        "sha256": "814e2be930dbecf36bce70ecbe48b8de9aeecbd02ba800c5ddc755537701c728"
+      }
+    ],
+    "verification": "Source/diff/test-definition inspection only; no runtime or acceptance. Repository untouched.",
+    "report": "research/history-ordinary-documents-review.md",
+    "report_section": "D4"
+  },
+  {
+    "sha": "b66ea01be2709edd6f6104f143c89c0071a89bb0",
+    "subject": "feat(specdoc): inspect XML data without changing bytes",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "ee3031c5150403b7cf693c77d467eb01c3e8a67b",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_product_or_subsystem_audit": false,
+    "changed_diff_coverage": "all changed paths, exact diff content only",
+    "reviewed_paths": [
+      {
+        "path": "crates/vibe-specdoc/src/lib.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "472520050b7bccdbe0c02a355f93bc05f9e77e45",
+        "sha256": "fa7eb9d177e339361a3621b9faf8e6751bd2e920813258a546f1dc0a049ddd92",
+        "diff_sha256": "ff91912f2840df2e49cc9bf41ac35fc961681a089666e156afa76251130c1bae",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/xml_data.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "38b8033d68b7ef887cc974848b89a72d181a1342",
+        "sha256": "c9340cecd7c2c166fc1990363999b20a96ccb605bdb2f69cc2ce9216ade7e56e",
+        "diff_sha256": "09667aa065bf38c1abfb7e60c7b55835306e519aa6b369bcb91a1e923309b350",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/xml_data/tests.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "d7e4311de2f5d3da6daa4f3e8fe2f9f42e6b6e20",
+        "sha256": "2231af971f6f29acb36b7643cf967f03ce9e896a23f37e8c00196eae722d1f44",
+        "diff_sha256": "ad839202989f5a66f5f4bb5f603fefdba2d8e497c3c17d4acf06c1435514ab21",
+        "kind": "test"
+      }
+    ],
+    "excluded_paths": [],
+    "full_patch_sha256": "9fbc87510d7800b7d6a0d8505fff51fb1cc80849cb0df0acfa8c3d2e4aa17217",
+    "original_intent": "Optional bounded XML-data inspection that never normalizes/hides captured bytes; opaque path skips parsing.",
+    "original_observation": "PreservedData borrows raw slice; inspection returns outline counts or typed unavailable. UTF8-only, forbidden DOCTYPE/unknown refs, balanced root and XML-char checks;4MiB/depth64/elements10000/text1MiB inspection limits.",
+    "final_surviving_observation": "xml_data.rs byte-identical. inspect_captured and extract_source structured_view call inspect_xml_data. Facts declared reader returns XmlData as Raw. preserve_opaque itself only has test references in searched Rust; production uses other raw wrappers.",
+    "actual_callers": [
+      "captured::inspect_captured(XmlData) → inspect_xml_data",
+      "WitnessedSourceWorld::extract_source → structured_view(XmlData) → inspect_xml_data",
+      "facts observe_declared_document(XmlData/Opaque) → Raw (does not inspect)",
+      "AnalysisCapture::inspect → captured reader; public source query remains Vibe-only"
+    ],
+    "target_transfer_state": "New optional ordinary inspector, reusing already present quick-xml and held bytes. Explicit inspector does not solve main suffix/location-based install conversion or broad classification.",
+    "dependency_changes": [
+      "No added package; existing quick-xml reused"
+    ],
+    "format_keys": [],
+    "uncertainty": "Counts are source-event spelling, not decoded character count or element-position tree. Not namespace/schema validation. Optional structure cap is not raw read cap. No live entity/network, parser performance or native-platform execution.",
+    "source_proof": [
+      {
+        "path": "crates/vibe-specdoc/src/xml_data.rs",
+        "scope": "complete introduced file, unchanged final",
+        "blob": "38b8033d68b7ef887cc974848b89a72d181a1342",
+        "sha256": "c9340cecd7c2c166fc1990363999b20a96ccb605bdb2f69cc2ce9216ade7e56e"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/captured.rs",
+        "scope": "complete file",
+        "blob": "16453930bce838bc9ba96233f9e1c740fdd4b21e",
+        "sha256": "f4eefd76877a0efff4e820467c0408f58a9a12a449bac1c5c956e1c9821c8047"
+      },
+      {
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/extract.rs",
+        "scope": "structured_view250–320",
+        "blob": "06eb3dd02ed8f93a4ac1c8971ea24e7d8a328aae",
+        "sha256": "4e4f38a09d3cf73ec573f6d3c4b7180564e48b45975247336875972bfe746f0b"
+      },
+      {
+        "path": "crates/vibe-facts/src/scan/declared.rs",
+        "scope": "95–245 Raw/XML/CommonMark branches",
+        "blob": "e5c5cece29776136ebfb73dc05ffd388fd997e6d",
+        "sha256": "2acc859faa9586c150c42f25ebc243ea6b70bf117f892f8643fae14f6a10637e"
+      }
+    ],
+    "main_proof": [
+      {
+        "path": "crates/vibe-specdoc/Cargo.toml",
+        "scope": "quick-xml existing",
+        "blob": "1cb0718280884d29e60f83be51a82ea050d60364",
+        "sha256": "92998a5947bd3b6cc20f20e35d47e528151406495d0e4471471b7c3d15bd6091"
+      },
+      {
+        "path": "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "scope": "55–170 materialise path;406–465 transform_file;538–570 suffix/location selection",
+        "blob": "d8e522bf8ecbf097cb16927ad1b192603c47993f",
+        "sha256": "1f298052cec6004125e7bf5dfe661051675c16ca1745e866e0ceee08e761fb66"
+      },
+      {
+        "path": "crates/vibe-spec/src/embed/read.rs",
+        "scope": "complete held buffer consumer",
+        "blob": "96f087de4d9922477748b54bda450437e50d3cb4",
+        "sha256": "8e9a4bb733be25cb79a179f0827a9059104b4c50437e4c0afd3ebfa2cdcf2e97"
+      }
+    ],
+    "verification": "Source/diff/test-definition inspection only; no runtime or acceptance. Repository untouched.",
+    "report": "research/history-ordinary-documents-review.md",
+    "report_section": "D5"
+  },
+  {
+    "sha": "8a4c096f305479f9c56e86db6c7421956174ba24",
+    "subject": "fix(facts): keep inline-code anchors opaque",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "ee3031c5150403b7cf693c77d467eb01c3e8a67b",
+    "review_level": "bounded-code-test-contract-content-classified",
+    "whole_product_or_subsystem_audit": false,
+    "changed_diff_coverage": "all changed paths, exact diff content only",
+    "reviewed_paths": [
+      {
+        "path": "crates/progress-core/src/parse/anchor_token.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "53c9605fd8bfd2a325befb4662d0a24c005a4a43",
+        "sha256": "485c8b43429220f74bec23939105dfaffd073856a159c2ecea020f875c411d3e",
+        "diff_sha256": "8969ddd0585637a3380416e1f2c07563a78cada6d085a78f5fde3bf0724df824",
+        "kind": "production"
+      },
+      {
+        "path": "crates/progress-core/src/parse/anchors.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "9321a2722380384ac6fc9486840d5c34cac9c49f",
+        "sha256": "3ce185b77428de7fcc29872d77aa3c3c1fa55ee3315ac038c1a982525a09710d",
+        "diff_sha256": "4c47176103acdbf896739749ab958c6bd94493249bc648489d5fb449e1d7968f",
+        "kind": "production"
+      },
+      {
+        "path": "crates/progress-core/src/parse/facts.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "2354c30894e6977f6725fc489ca9c4e260ed0246",
+        "sha256": "b82ba1f20f3aaf5493620692609bff59c93646be80b46760c6b6b2c104b700a8",
+        "diff_sha256": "2c5d07bc58e75cccd162db39515e6c53ae8c87711f0e010b1295ce3184ebdc03",
+        "kind": "production"
+      },
+      {
+        "path": "crates/progress-core/src/parse/mod.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "ce2081766b4fd1b580abe3045c75c38f3de26041",
+        "sha256": "a8e703541b1d47e315f9c46e8982700df9d85674b52bef8a4605fc007096f8cf",
+        "diff_sha256": "6b1f11c40d4ad465d9df6364abb2f3ed2f15b719e592414c60f7de1338c558d4",
+        "kind": "production"
+      },
+      {
+        "path": "crates/vibe-specdoc/tests/docs_corpus.rs",
+        "scope": "full changed-file diff read; not full unchanged file",
+        "blob": "a9a30aac37c436be8c9b07018ec1f2f9c8c7259c",
+        "sha256": "b85407c11a4b0c2b2798505000679ab67703a7004d815aa3905c61ab915c2c0f",
+        "diff_sha256": "e0ce8e28cc6945af1a9bbf0cfe012b64c453e22ae5f584bc0cb782ceb594bd39",
+        "kind": "test"
+      }
+    ],
+    "excluded_paths": [],
+    "full_patch_sha256": "da3e2d3cb9b7079a28e9c829e34906fe841c8f7b3df10e9184ef6b39fe6e10bc",
+    "original_intent": "Make inline-code fact quotations opaque to duplicate checking, using parsed definitions instead of a second raw scan.",
+    "original_observation": "Deletes qualified_fact_tokens raw scan and counts only unit/fact anchors; retains real DuplicateId and MissingAnchor checks. Replaces quoted-definition duplicate expectation with paragraph/table quote controls; removes exact tutorial projection exception.",
+    "final_surviving_observation": "anchors.rs/anchor_token.rs unchanged at source pin. Main still intentionally counts code-formatted @fact as definition and tests it. Main permanent PARSE-FACT-ANCHORS explicitly says code spans/fences opaque; BACKLOG B092 records Aug20 intentional contrary expansion based on lexical grep and no demonstrated wrong-address consumer.",
+    "actual_callers": [
+      "main from_markdown → progress_core::parse_document → check_anchor_laws → error_count refusal",
+      "main observe_authored_source → project_spec_text → from_markdown → Invalid; scan_authored_facts → typed SpecParse",
+      "main/public XML→Markdown conversion corpus can fail when projection quotes a real @fact spelling"
+    ],
+    "target_transfer_state": "Separate existing-consumer correction candidate with no parser/dependency/manifest additions. Root should reconcile current opacity law and B092 compatibility history, then run public conversion/facts negative and quote controls.",
+    "dependency_changes": [],
+    "format_keys": [],
+    "uncertainty": "Genuine historical policy/grammar tension, not an accidentally stale test. No fix/acceptance. Matched code spans distinct from unmatched ticks; incumbent blank_inline_code matches equal-width runs and literal unmatched runs remain unmasked. Outside-code definitions must still duplicate-check.",
+    "source_proof": [
+      {
+        "path": "crates/progress-core/src/parse/anchors.rs",
+        "scope": "complete changed diff, unchanged final",
+        "blob": "9321a2722380384ac6fc9486840d5c34cac9c49f",
+        "sha256": "3ce185b77428de7fcc29872d77aa3c3c1fa55ee3315ac038c1a982525a09710d"
+      },
+      {
+        "path": "crates/progress-core/src/parse/anchor_token.rs",
+        "scope": "complete changed diff, unchanged final",
+        "blob": "53c9605fd8bfd2a325befb4662d0a24c005a4a43",
+        "sha256": "485c8b43429220f74bec23939105dfaffd073856a159c2ecea020f875c411d3e"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/md_in.rs",
+        "scope": "43–60 public detailed parser error gate",
+        "blob": "944bd8c889d02c0d00bf9d1045a94a704815775a",
+        "sha256": "0e78322804e9877d90101d4e4e7538271f5b3a5bc025132de6a7b6cbc41a1331"
+      }
+    ],
+    "main_proof": [
+      {
+        "path": "crates/progress-core/src/parse/anchors.rs",
+        "scope": "19–62 raw duplicate scan;80–165 duplicate diagnostic and exact old test",
+        "blob": "ab8e130c0a1ed4f1a9ae04131dda2c81149c0cf9",
+        "sha256": "5bc7ee223e47ce5283f8c3c5868da970f7a4b06c552c6002f9a713733df59c6e"
+      },
+      {
+        "path": "crates/progress-core/src/parse/delimiters.rs",
+        "scope": "65–260 matched-run algorithm and unmatched/width tests",
+        "blob": "95bbed05eb90fb9027cde1094f1e0d93b95eccfb",
+        "sha256": "29c589babb8d5af439412541e7d05060cf73dba2a829b5872ccf1829d1b66f71"
+      },
+      {
+        "path": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
+        "scope": "93–108;470–488;620–655 including PARSE-FACT-ANCHORS641–645",
+        "blob": "62261a6990461bae7e5feea26a562a3ea8b06ca3",
+        "sha256": "5eb64e91ad2f00b0eee40826748c2a70ca6b7f5c3d3bf49213ad8e0dcf8f91d4"
+      },
+      {
+        "path": "BACKLOG.md",
+        "scope": "1269–1282 B092 historical deliberate inline-code policy, root-authorized follow-up",
+        "blob": "eaaf4c71377c5a4ecd4a2f9c8d8f6e07322ef1d0",
+        "sha256": "84b1826927b352ee88b1444d665fc454037cb04ac04b1a5d4d8a3c54498365a0"
+      },
+      {
+        "path": "crates/vibe-specdoc/src/md_in.rs",
+        "scope": "43–53 public from_markdown error gate",
+        "blob": "bb2b82516af2af64f800ebf9c9254c16e30c1766",
+        "sha256": "738a16ef04edcbdadf9e03581f28129ca8b27ef0b6de959366680a478d0a5d28"
+      },
+      {
+        "path": "crates/vibe-facts/src/scan.rs",
+        "scope": "290–350 conversion/invalid;350–390 public scan error mapping",
+        "blob": "c1e576ad09ab87e20bc264d7c4f9272d159df412",
+        "sha256": "4664b5ea43556d80a88a932da10a6766c2017ac521ca04e1dca496f55565dc83"
+      }
+    ],
+    "verification": "Source/diff/test-definition inspection only; no runtime or acceptance. Repository untouched.",
+    "report": "research/history-ordinary-documents-review.md",
+    "report_section": "D6"
+  }
+]

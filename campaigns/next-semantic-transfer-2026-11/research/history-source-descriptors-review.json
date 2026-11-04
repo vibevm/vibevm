@@ -1,0 +1,717 @@
+{
+  "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "main_comparator": "ee3031c5150403b7cf693c77d467eb01c3e8a67b",
+  "report": "research/history-source-descriptors-review.md",
+  "commit_count": 7,
+  "changed_path_entries": 42,
+  "runtime_validation": "not-run",
+  "acceptance": "none; root retains review/decision",
+  "rows": [
+    {
+      "sha": "2928123034787ead067f508a8fa6597e61539ed0",
+      "subject": "feat(manifest): declare and select package source descriptors",
+      "path_count": 6,
+      "inspected": [
+        {
+          "path": "crates/vibe-core/src/manifest/mod.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "e11b79c44dbd828c7ad5b08143ea95edfa9f28fb",
+          "blob_sha256": "7513cc4b317661123163382608c5896f9e47b5e5ffc855abb7539106fc7eccdf",
+          "diff_sha256": "ee1e57096fbd49adc3f5cfadb0c85c0e85aba316525689a6dfc14f893ed1aa30"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/package/meta.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "b389de8bb24eb2ce730259203cd1266dc6f5fccf",
+          "blob_sha256": "c7a98ffec4ed58361ccf369dd29adfdcae08126e5b130eeb5c4d4db9e4a674ab",
+          "diff_sha256": "6c4c99ccb61b5ea8c56b187593d5f7e1528d74e589a0fb9a600c9a269f50ab15"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/package/tests.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "0a4d447294139d74a9412111e34ee9efeb82026a",
+          "blob_sha256": "c58343d7356affc6ebc2ccc2f0a941f9ca3f57d62d474472b8b7ecbe0a69df0b",
+          "diff_sha256": "ec4c4c35339511d621efd3babf25a0d00f3690d23615ee361c612106f2720086"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/package/wire.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "854fe66cf109705786dc0bfa3f166bbe53abc699",
+          "blob_sha256": "e7ebaeab474a776fb0602d7b4ac6cb5a67b5a005af3d58e2a388849efc6b5647",
+          "diff_sha256": "43a3b9c4930ad06dc666cfa6ce183c3ea535cf36f09dfc0642edd0e2a7b1acc0"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/source_descriptor/mod.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "0f5640d77f4ddf3fd7c92ede9209ba54d9c3da89",
+          "blob_sha256": "054a88cadc7f3c45067d89353740d00b9ebeb33e42f155d79c2c1ebf52018a4a",
+          "diff_sha256": "6ea993e51965a78cd8813daa9b148a6e91ba7d7dec0d4f84cd9be6329efdcbd9"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/source_descriptor/tests.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "262af102298eadb514c31f648c7d916e44b306c0",
+          "blob_sha256": "43f2874fc53b01f540382fe219596cccc2449a8bcd529bc6ecdd8e27a568ca09",
+          "diff_sha256": "685e8f60bd00b1ca8b225f0feef29d30b3f8cceac6694d8cb6c860ca05386249"
+        }
+      ],
+      "excluded": [],
+      "review_level": "bounded-code-schema-test-content-classified",
+      "whole_commit_semantic_acceptance": false,
+      "original_intent": "Introduces strict package.sources rows and pure exact-file/longest-directory selection; no trust or suffix-derived interpretation.",
+      "current_surviving_implementation": "Final selector survives and project shares it. All row semantic fields required. Package empty-list contract is not explicit; materializer/map key-presence and facts empty-Vec decisions differ.",
+      "actual_callers": "PackageMeta.select_source→select_source_rows; materializer classify; facts declared observation; strict source-query extraction.",
+      "target_transfer_state": "Transfer grammar/precedence and raw-vs-Vibe distinctions through current held readers; settle package empty independently of documented project empty legacy.",
+      "uncertainty": [
+        "Static source/test-definition review only; no runtime or native-platform execution",
+        "Complete changed-path accounting does not audit all referenced implementations or accept feature",
+        "Package empty-list governing rule is unresolved; project empty-list legacy rule is explicit"
+      ],
+      "report_section": "S1",
+      "commit_diff_sha256": "0527a0aeeebc1b1852fb74b9f8479f6e817fe3001006f2ebfb37f4cfcfa4e044"
+    },
+    {
+      "sha": "00ce69ab54c033cfe9bd736b5f20345fb7f6c7ad",
+      "subject": "feat(resolver): bind installed descriptor source map",
+      "path_count": 8,
+      "inspected": [
+        {
+          "path": "crates/vibe-spec/src/lib.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "e62cc4ab3ff56079df256af12e7628dc7da699d9",
+          "blob_sha256": "795f7fae093d5834ad411858b8188c000d2ad57754bf199ce4c96c01433bc257",
+          "diff_sha256": "049ad50ff51fee151730141dc1cec6c5f30dc1c04abc91418b321713060057d2"
+        },
+        {
+          "path": "crates/vibe-spec/src/resolver.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "bd4031561635ce770b607b7e06f1c5b464e65c84",
+          "blob_sha256": "a18a231fef525ef9339115da43081cd5444de67a7b394cc9d12ab8977e9d63c6",
+          "diff_sha256": "b1bcca9a82e0a568261f0abad1dcfb821dd568dc7ac0ac21dba4bf5d99a4243a"
+        },
+        {
+          "path": "crates/vibe-spec/src/resolver/source_map.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "4820e39a8d98ae734063faadd26f3d28ea06c70d",
+          "blob_sha256": "fc7d680377b580ef54702b6ee1cc70720f30d0ee842266682cc74ea7b3957def",
+          "diff_sha256": "a6dd9853d6eec54f85e45b254d0a55c2cf326750c19f7079509e5f5b3e32123a"
+        },
+        {
+          "path": "crates/vibe-spec/src/resolver/tests.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "9bc864a5904ad9cac5fc52ee7dd7306ece86140c",
+          "blob_sha256": "476d72ea99cf0fa30574c9021aa39a536ddea55134f8ab361a48593222386257",
+          "diff_sha256": "fdf4c08422f7276c3366f0e7d73a580464b32febda519dc4f9525572c8abc300"
+        },
+        {
+          "path": "crates/vibe-workspace/src/vibedeps.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "8791056737d7af21ef9cf13104c960b2890e9c5f",
+          "blob_sha256": "21f65627e41001ab58a019863fce59f3abfa4e8e9f8fac09f2ace7b1caeb9d6b",
+          "diff_sha256": "ccff020b39b7a0c289f69dcaa26bb358bd8a9a386f63779cbfee73e6a899a2ac"
+        },
+        {
+          "path": "crates/vibe-workspace/src/vibedeps/derived/tests.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "5cab4b3f36c92aaf2828d0d2d422bc4dc80dc954",
+          "blob_sha256": "a6c3c920b780eb2522cd4d117aec1482920f333251e76b2efc16e110f78680bd",
+          "diff_sha256": "1e5706303a4fd0ff2051a6754aa22fb01176b5bc3bb7e9491adfe532ec029335"
+        },
+        {
+          "path": "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "377284e7ede308ba73aae5133a0195c0734a27df",
+          "blob_sha256": "cdb5a20619aa93769dbdb70a9eaf4c5fcc581583b5e07e20cd2cbe3ea5d4e559",
+          "diff_sha256": "11451fd11a93186f035d1974f030220fd74a37ba2886a084c01ab5c58a777f32"
+        },
+        {
+          "path": "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "2a21989bc9dfd60cbf5172131942df3ed9463e86",
+          "blob_sha256": "f7e4a9b5982a8d93f82164866b14b2c26ab88f434be9c75660c57297c5ae25f4",
+          "diff_sha256": "0779424f6721053933025eb2e49d4d16191154af681eb720dfc66032a3dd6ae9"
+        }
+      ],
+      "excluded": [],
+      "review_level": "bounded-code-schema-test-content-classified",
+      "whole_commit_semantic_acceptance": false,
+      "original_intent": "Adds logical output map and held installed-manifest/record/output verifier; point lookup only maps selected Vibe rows.",
+      "current_surviving_implementation": "Final reader rechecks legacy manifest/record before None; copied citations can require record. Adds materialized media, shared alias key. Map establishes record consistency, not original content/derivation proof.",
+      "actual_callers": "read_validated_descriptor_map[_optional_hash/_for_citation]→FileResolver.with_descriptor_source_map→resolve_source_file/read_classified_node.",
+      "target_transfer_state": "Reuse selected output/byte identity with current held source owner. Preserve shared-inode reads and main point/pattern behavior; avoid repeated whole-map reconstruction.",
+      "uncertainty": [
+        "Static source/test-definition review only; no runtime or native-platform execution",
+        "Complete changed-path accounting does not audit all referenced implementations or accept feature",
+        "Package empty-list governing rule is unresolved; project empty-list legacy rule is explicit"
+      ],
+      "report_section": "S2",
+      "commit_diff_sha256": "349620e1d4e81fafe76aed606eb2c9b0ef3bfbc94efc51701212d881b4181ab5"
+    },
+    {
+      "sha": "9e3a91dee4cb6647372edd7e35d27db1fa39885a",
+      "subject": "feat(boot): read selected descriptor slots through map",
+      "path_count": 9,
+      "inspected": [
+        {
+          "path": "crates/vibe-spec/src/resolver/source_map.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "ff475dad1b76cf2361c4d7af91b3f630ba104fea",
+          "blob_sha256": "f3e7980e256c427ac6e38480537355d633ff9529ff551d8f22d83fc4f10db78a",
+          "diff_sha256": "5d80fcecd152ce0a02a68253886a504cdb97ae84240b32c6fcbe545c962f0134"
+        },
+        {
+          "path": "crates/vibe-spec/src/resolver/tests.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "c680a54c7bd2640c46652c772075f8dc490ecf89",
+          "blob_sha256": "d7a07178816d4d40a9cbd2ffe192ba37fa0574f44ff04bc2c7beeb45222442da",
+          "diff_sha256": "7d4427c8f7308cad183a75eef0a8bd63c3ac44184d3fd85e2c9d0498ec8c3175"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_artifacts.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "b6b993eb3623c1d4c7ca935da58911373cdf33ab",
+          "blob_sha256": "29c2572f34929b67ebf3292d8e64378d23363bfb31d62c26e43c7e61aaba0ea4",
+          "diff_sha256": "94f0239a64855213693cba15364d714d7382c79c249133907b9aa4d04540d678"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_artifacts/descriptor_reader.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "5276afc56b37143ee0a079d4a28545821406971e",
+          "blob_sha256": "41151d7846579fb0ee5a50d5885e9dde861a14a2cd34d1bf42f11ff546bac68a",
+          "diff_sha256": "d2f4384b68512b0c77a5b0533b12bc6a3d581570a60b0d806f03832b4ad36346"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_artifacts/descriptor_reader/tests.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "58f4e8f0e6d5ff3df07f337cb17d53f798e6dc60",
+          "blob_sha256": "34fb02efe1bd34d3a9554aac3c418e6b022ef6cee7d7aa5fe93361d7c27ddee5",
+          "diff_sha256": "8baa319b806f5090701e5b184b783eba0b929fc9a9c22cf55933d47700a502c9"
+        },
+        {
+          "path": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "838756b04a02cd2acb347253d5599cb42c8c2be9",
+          "blob_sha256": "a12072f2f3c4e1bf20ee16cc53989a42cf06709773747428aaf49561001aa78b",
+          "diff_sha256": "99e149f5b433d722fa8e7699439a8c6fca1b8033412c2177a84c826d6aaf77e7"
+        },
+        {
+          "path": "crates/vibe-workspace/src/vibedeps.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "549a159326c30c17712ab08455fd9e540a59cd24",
+          "blob_sha256": "a527116153920d008f02e2b149c8a37718d9d48afcd7a1b760fa424a5737b69a",
+          "diff_sha256": "75c2f5b39403beb94fb91c213fc04cd449334448f98a89597462a135921c8620"
+        },
+        {
+          "path": "crates/vibe-workspace/src/vibedeps/derived/tests.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "8cabb39eea970ec3c50c17478c6e2d94babb625f",
+          "blob_sha256": "afe331528b28c927fded2ff5fc7762cbdb547e98c4e7bd30cf314efb8e32f057",
+          "diff_sha256": "6a71aad163dfd97c25abf2b4e14bf57897cc6e5b9db895f28943e31e1b150c5b"
+        },
+        {
+          "path": "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "ab211bbea7b07589086159d22e05f50fa39daa8e",
+          "blob_sha256": "af3147407ff35d1413a3ad1df6f366435f4782f70bb320eec231ff5298e973b4",
+          "diff_sha256": "7cbc7b1de1dc1b713312709673bf78d3653b88ce6a5c49bcfc525704d3952213"
+        }
+      ],
+      "excluded": [],
+      "review_level": "bounded-code-schema-test-content-classified",
+      "whole_commit_semantic_acceptance": false,
+      "original_intent": "Carries selected slot hash/version into boot unit readers and corrects XML disk serialization versus builtin frontend identity.",
+      "current_surviving_implementation": "Unit/bound native node/replay readers use selected witnesses. No-map worlds and standalone writers retain explicit legacy construction. Dynamic index is separate reference projection.",
+      "actual_callers": "hybrid_emit→render_static_observed_selected→compile_static_artifact_with_plans→selected_resolver; native node passes selected slots.",
+      "target_transfer_state": "Keep independent lock/source hash and declared media; verify actual selected command path, not standalone None. Main does not yet have descriptor maps.",
+      "uncertainty": [
+        "Static source/test-definition review only; no runtime or native-platform execution",
+        "Complete changed-path accounting does not audit all referenced implementations or accept feature",
+        "Package empty-list governing rule is unresolved; project empty-list legacy rule is explicit"
+      ],
+      "report_section": "S3",
+      "commit_diff_sha256": "574e6558598ef23e0fcd3a1aa52f4bc77e4c1e61d487c1aa9f38e9772d025d62"
+    },
+    {
+      "sha": "11eefad1ff16420c20de1874bfdc26ef3dcc640b",
+      "subject": "feat(manifest): share source descriptors with projects",
+      "path_count": 9,
+      "inspected": [
+        {
+          "path": "crates/vibe-cli/src/commands/init/helpers.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "8f588a1669537465481561c73e364c4cc3a1a3b0",
+          "blob_sha256": "536e48fbdae990e11754ed9a81e5ef9969d348dea6ef082cba4ac4b8df91e712",
+          "diff_sha256": "742102203755e34d184ade365ecc2b8abaac3e79e870f5f68f111be9a5dd4fe3"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/document.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "0a96794a23df44e5783d2fa5e418c77d59a841ed",
+          "blob_sha256": "1721fe18a09f670f81284f5bec4a4de8c0af3b4ab817c40fdb43f4e95fe350bb",
+          "diff_sha256": "d31b585d221969142f31d13d562fde82342af6ad2833f0224964262453097226"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/mod.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "44f69b09e25b4e69ce4213cdf575398ee24d3569",
+          "blob_sha256": "2cb6b87c74110f76e65f1748e0a7d4fed1ff9d0b2e913bab793452b3bb8c5121",
+          "diff_sha256": "ca57e23b20f62b06571eb26f590937330aa407037fb138a360d5fb17d42b6e00"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/project.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "e89c51fa26f88bc8b34a334f66e6063c82c4ebf9",
+          "blob_sha256": "770a8dba383a19664d54edffe7e146b6c0fcf174e7b20b4ed199ba437bb902f8",
+          "diff_sha256": "c301c7cd733adea7dd7151830fec9b9c62f867c9153b6767da9f1fe93a851353"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/project/tests.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "2ba85e875950c0aefe75318fd36d9768baceb5ed",
+          "blob_sha256": "c2fbd917ae454fae49a3c06b2b4661242ca29e970a0410567cd6eb1331882d14",
+          "diff_sha256": "5922e95ededc3f727cb2bbe46132f96a2acdb4cba396b73690a19455bf426827"
+        },
+        {
+          "path": "crates/vibe-core/src/manifest/source_descriptor/mod.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "9d8f52767697a6c1e68a295c3c9ebaa52713d2f4",
+          "blob_sha256": "eab0327054485fc6b22adf7786c51a471c3092e43bfaa48cd6e419c38094230e",
+          "diff_sha256": "e852508623e1300633bfc16e4b769ca2e3648f8f6bb3e5fd45c474a96ee11fde"
+        },
+        {
+          "path": "crates/vibe-install/tests/recording_behaviour.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "b12beeb6248c1a785bebcb5f33d0b6b7c01fcdba",
+          "blob_sha256": "f0e343f9d46f9b358013b9e5a91a56b3da768482a89d998a70c97ad2dce6d807",
+          "diff_sha256": "2a1494fc918ce4dcdcb90b0a0974cd837125c602e6175920bc792506f80fffec"
+        },
+        {
+          "path": "crates/vibe-workspace/src/extension_world/tests.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "9bef079d2f632bdd026633e7509cce336c8ce504",
+          "blob_sha256": "4edf15f60c6c32eb30a891bb0d30ab00c83267b66da804ae2c2bfd027d4c952f",
+          "diff_sha256": "1a4a63468b34a642e5e9fdf76b9bac6b0cf31cb3e9690ae01a5120fe5929aaa8"
+        },
+        {
+          "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "fcee6e051fa8eec487e6a71cd6c8193302aa0656",
+          "blob_sha256": "cfd8e63c9f8cf60432053ad6543838619558269bfa11b063d95a6f101e3af648",
+          "diff_sha256": "74fa45aff34058149c88c033fa242c13ea70540abf8529a448617d2dd66956ea"
+        }
+      ],
+      "excluded": [],
+      "review_level": "bounded-code-schema-test-content-classified",
+      "whole_commit_semantic_acceptance": false,
+      "original_intent": "Adds project.sources and shared selector; explicitly states absent/empty project list retains legacy behavior.",
+      "current_surviving_implementation": "Final package/project selector is one function; project facts sync/Checkout citation honor nonempty opt-in and reject unavailable directory census. Own boot inventory still uses suffix-based route.",
+      "actual_callers": "ProjectSection.sources→select_source_rows; sync::load_declared_snapshot; declared_checkout_citation; source-query extraction.",
+      "target_transfer_state": "Preserve project legacy contract while completing opted-in consumers; do not assume project empty policy defines package empty.",
+      "uncertainty": [
+        "Static source/test-definition review only; no runtime or native-platform execution",
+        "Complete changed-path accounting does not audit all referenced implementations or accept feature",
+        "Package empty-list governing rule is unresolved; project empty-list legacy rule is explicit"
+      ],
+      "report_section": "S1",
+      "commit_diff_sha256": "259c8cee4f12dec5c21d977db22824314f725bf5a63194c01ad16c8997c487a5"
+    },
+    {
+      "sha": "2ee7fdc400085fcac57cd8b510b723215425b515",
+      "subject": "fix(boot): classify selected simple inputs before projection",
+      "path_count": 6,
+      "inspected": [
+        {
+          "path": "crates/vibe-spec/src/resolver/source_map.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "3dc5dd6851768bd1b8b3c5c28d1976469165bff2",
+          "blob_sha256": "8547feb985b03958e2ae001e2fbb82f16b4947fc9c71d7b1f782f306e3d4ef70",
+          "diff_sha256": "4b4f9adea01988ce2d44fef47182ed6d0f6c6ab83f43e0a08db4f02226a30988"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_artifacts.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "2b641ab78efd620206f589b02bc0b0247c071836",
+          "blob_sha256": "69a405305f8a4445b222e0684d33b1aa0afd15dab19efef27f74c6def0151381",
+          "diff_sha256": "46cef0a11c225463d228ef21bc3986c563515f85a3a79bd759cd686bef553ab2"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "f0fdfd29faf4252a83cb5f035c14f1ffea5e46d9",
+          "blob_sha256": "9cc8024fde94c3b9e993865c9fd130e0d47861bd4cad40165aad518f326b4827",
+          "diff_sha256": "948ed3341ead18a3bc236d159f7eb57660505c21bf7cc2ffdeeb3729b6dbeacb"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_artifacts/inputs_tests.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "e56833ee66205636ddc9c4caf5e0c1ecc34bd2d6",
+          "blob_sha256": "a893d407d9a1c0e59a6ea6f4824247873f5010a6700ed2e9439e64a032982e0d",
+          "diff_sha256": "38a7a456fb787f92a262c2e0d0095f25c76d40b86a7f530b1eff1a43f09e360a"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_artifacts/native_managed.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "6a827d839039aa3aeddfbf565cf433e93396f4c1",
+          "blob_sha256": "16dfa90eb316fb6c5802e4dbb47a86086d0ebbb43417fe8918702d3c01028175",
+          "diff_sha256": "c9f652315d9dd43f58ac0dbe77d5ee53c958c9a95739014a92f5571381fcf08d"
+        },
+        {
+          "path": "crates/vibe-workspace/src/boot_artifacts/native_managed/explicit.rs",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "e476a7244f170a812bc7b976a0283c7f1050c841",
+          "blob_sha256": "8b4cff43f8a64cf5dc6f609f578e58801e55548fdee67ddef3f29538565c83f8",
+          "diff_sha256": "f94e1f98940238fbed796fdba1e669d651697159e16a95f9e45abc7de8d7e862"
+        }
+      ],
+      "excluded": [],
+      "review_level": "bounded-code-schema-test-content-classified",
+      "whole_commit_semantic_acceptance": false,
+      "original_intent": "Classifies selected Simple boot output before projection; validates row/hash/overlay and threads witnesses across managed and explicit backend builders.",
+      "current_surviving_implementation": "Final selected Simple path retains VibeSpec/hash guards and separate eager-subskill authority but calls extension-dispatched project_spec_text, unlike classified point media dispatch.",
+      "actual_callers": "build_with_providers_overlay→selected_simple_markdown→read_validated_descriptor_map_optional_hash→held snapshot→project_spec_text.",
+      "target_transfer_state": "Use same classification/media with main held bytes. Mixed XML-under-md Simple input needs runtime discriminator; no executed failure claimed.",
+      "uncertainty": [
+        "Static source/test-definition review only; no runtime or native-platform execution",
+        "Complete changed-path accounting does not audit all referenced implementations or accept feature",
+        "Package empty-list governing rule is unresolved; project empty-list legacy rule is explicit"
+      ],
+      "report_section": "S3",
+      "commit_diff_sha256": "3ccb94f7dec7ddea85d5609780ae2ac88e8eefce5044760d45fbf1026c8b339e"
+    },
+    {
+      "sha": "960bc3e20dfb9ac1d4209648fc34238b101be1dc",
+      "subject": "plan(next): bind descriptor resolver map consumers",
+      "path_count": 3,
+      "inspected": [
+        {
+          "path": "campaigns/next/manifest.json",
+          "scope": "complete structured semantic delta inspected recursively (single task_files_sha256 value); raw file/diff hashed, not dumped/read as full artifact",
+          "blob_oid": "c7386e767518cbfe7081e6918b928a64cc09f347",
+          "blob_sha256": "92f1d353f67792c0a58f2f9d4feaf9fc7b4efec2e648eadb8fae5bd1fd485f4d",
+          "diff_sha256": "41570a166dc274814ac52e55f6ab54b03b33a29f7ab4f52286328aa40b540011"
+        },
+        {
+          "path": "campaigns/next/plan.seed.toml",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "32e6e23cfcebaab731e20ad2cf04fbd3514f9dc8",
+          "blob_sha256": "e7ad18cecc708e0813e697aa73b35a42f2ee7bf865c32d160668674b004d7802",
+          "diff_sha256": "c476df96dbbe1652b9a495aa49638a389403497576a2c5094bf8d43ad2fe0921"
+        },
+        {
+          "path": "campaigns/next/tasks/M-06-A.json",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "f3db3136d184d894dc8e13a2b7d04acce3854f54",
+          "blob_sha256": "75903343cbfca16b9799af271c92de9b4d5391078c4ccdc59652b14ed9897a17",
+          "diff_sha256": "14f3a25a30b4340730bc6906f205292a3a004c5e63b2b05ab584a47965008dac"
+        }
+      ],
+      "excluded": [],
+      "review_level": "bounded-record-document-content-classified",
+      "whole_commit_semantic_acceptance": false,
+      "original_intent": "Expands M-06-A.3 packet to descriptor-map/boot/replay/resolver tests, limits proof to record/output consistency and leaves lifecycle/citation due at A.4; refreshes linked hashes.",
+      "current_surviving_implementation": "Historical scope accounting, not runtime delivery. Final prompt/citation/pattern bodies must be checked independently of task acceptance.",
+      "actual_callers": "No runtime caller; task JSON plus seed/manifest hash projections only.",
+      "target_transfer_state": "Keep consumer obligations and evidence-strength limits, do not inherit old packet/DAG as implementation architecture.",
+      "uncertainty": [
+        "Static source/test-definition review only; no runtime or native-platform execution",
+        "Complete changed-path accounting does not audit all referenced implementations or accept feature",
+        "Package empty-list governing rule is unresolved; project empty-list legacy rule is explicit"
+      ],
+      "report_section": "S5",
+      "commit_diff_sha256": "cbeb4bab25644cd0a740da1a3a6419b4c3a2bffb28f54bb82b77ab70067eedd2"
+    },
+    {
+      "sha": "d40d02cb62fdbbbae153565d9540d8712c9d1103",
+      "subject": "docs(next): review classified source consumers",
+      "path_count": 1,
+      "inspected": [
+        {
+          "path": "docs/releases/developer-preview-1-to-2/evidence/source-consumers-a4-central-review.md",
+          "scope": "complete changed-file diff read; surrounding transitive implementation bounded separately",
+          "blob_oid": "d7f02da2521a323a8b6e39d56233353c73bdd29e",
+          "blob_sha256": "dcb326151a105e7cc071d9409249fced52a6e84cee8215d4f655502a3fe8d33d",
+          "diff_sha256": "624cd6f5df170a3e222fbb985c714d859d6341573c469d466aa1eb63f92fa2bb"
+        }
+      ],
+      "excluded": [],
+      "review_level": "bounded-record-document-content-classified",
+      "whole_commit_semantic_acceptance": false,
+      "original_intent": "Records bounded source-consumer central review and historical focused test claims with legacy/unsupported/native limits.",
+      "current_surviving_implementation": "Final facts/Checkout/source-query paths substantiate selected portions; lifecycle prompt lacks map; Lock citation later reopens path; pattern remains older selection route.",
+      "actual_callers": "Receipt refers to initial CLI/facts/requirements/boot/doc/display/progress checks; inspected final callers listed in report S4.",
+      "target_transfer_state": "Treat receipt as historical claim. Full requirements/progress/check/skill implementations not audited here; no blanket source-consumer acceptance.",
+      "uncertainty": [
+        "Static source/test-definition review only; no runtime or native-platform execution",
+        "Complete changed-path accounting does not audit all referenced implementations or accept feature",
+        "Package empty-list governing rule is unresolved; project empty-list legacy rule is explicit"
+      ],
+      "report_section": "S4/S5",
+      "commit_diff_sha256": "624cd6f5df170a3e222fbb985c714d859d6341573c469d466aa1eb63f92fa2bb"
+    }
+  ],
+  "final_source_proofs": [
+    {
+      "path": "crates/vibe-core/src/manifest/source_descriptor/mod.rs",
+      "scope": "full final file body read",
+      "blob_oid": "9d8f52767697a6c1e68a295c3c9ebaa52713d2f4",
+      "blob_sha256": "eab0327054485fc6b22adf7786c51a471c3092e43bfaa48cd6e419c38094230e"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/source_export.rs",
+      "scope": "full final file body read",
+      "blob_oid": "7832b82a7cc5e45949ed1d3ed364b9780fac5ba4",
+      "blob_sha256": "107dc5dac91094687058c847349e81b75ce93b699bea5b72a54192ccb558a7fc"
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/wire.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "1cd6654578f2c8fa9ab7eeb12492285757ee5d8e",
+      "blob_sha256": "d77051d93323016b8150f15707367ae795b55153bb311f071d46a03863f80387"
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+      "scope": "full final file body read",
+      "blob_oid": "204209b58044fa85c9c7ff742a5e4cb54a216e5c",
+      "blob_sha256": "f1a3d3fae53b22d3e642650a3e5ffcbe391451e9d75f0cf6a1ed8b87f909f0ac"
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/derived/selection.rs",
+      "scope": "full final file body read",
+      "blob_oid": "056534189c25f3c2bb097c7b1e96bdec16098b31",
+      "blob_sha256": "da9431e699fdb45be5d57fe0a8fdffc78a4ab14736f19fe23b12bfa5c63891cf"
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "5c97101f82bad268edf0bf240d4e4be2ca419fbf",
+      "blob_sha256": "b902daa8d8b4d26db3d44b5be1720f878d7aa0251908a8e00283e761d145c8fb"
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver/source_map.rs",
+      "scope": "full final file body read",
+      "blob_oid": "516e0bb59099a4fa7d138b578ccfe6ef3a7b5bef",
+      "blob_sha256": "f7ede8b6bdc5b43cb0a3dd211b9e8d5523dbe6294afa330d59f847398da50527"
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "dd958fc69909dc7e3217360de2a0eebe455fc347",
+      "blob_sha256": "5b8b6a74fb3e02c158a0591e623b18acf42b7cf6ea2668072f25487259404534"
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver/glob.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "d60d903b461bb25cc16ac176c2b30e4889918916",
+      "blob_sha256": "eb4d80b55480c890d70d6caa1ab7ed6bca0cc26b51aea8529232f566655b83a5"
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver/selection.rs",
+      "scope": "full final file body read",
+      "blob_oid": "322c78928b804dbb65964e4ccc09a950bd80af29",
+      "blob_sha256": "6b1abb319808dd04a2b589775a44f2038553562ef8f0b78af033d85f6f65b6e3"
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver/read.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "b0897edeefe0acf358ee3efb1d469e6f6d283d5a",
+      "blob_sha256": "243d74dba9e5f76828740f4170e07c579c1b0bbeeae3e6eb7cb4a46d4a9dbe27"
+    },
+    {
+      "path": "crates/vibe-spec/src/embed.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "130fb66c92a9d95f36b129484c059e873c93eb25",
+      "blob_sha256": "ee0c265af5d02592e7c29b90d6e319ea00bc20089b37480b48ba54c6f1c25f05"
+    },
+    {
+      "path": "crates/vibe-spec/src/embed/selection.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "324b786c80b5222261c71b5bd2b364b0e3077df1",
+      "blob_sha256": "fa40b4d849504df104ef0bec0db33f6b85237b372086ab37e301814c17b3f515"
+    },
+    {
+      "path": "crates/vibe-lifecycle/src/agent/resolver.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "6ad3de221c4ba33c48acb2fabb40717bdaea7f3a",
+      "blob_sha256": "d6a34239224ed740d996e4569b23b703eab3a64139bce0cb75cdc6b35ca01be0"
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_artifacts/descriptor_reader.rs",
+      "scope": "full final file body read",
+      "blob_oid": "2cc014050ae0037f4a5ebb48fda2787ad507136e",
+      "blob_sha256": "7248688bb5842e21ca586a4e242d34d56779f1a9146c5913cfd51c11b15ab48c"
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "e4d196b8821a32435a6d43b62dc5d5a2df7f0a5b",
+      "blob_sha256": "0d835fa8ae14cfe569a32b8b1273dd1c179216e097f00a1a899918169805f4aa"
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_artifacts.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "a3daf1fd9440d8e101e3d46b6054a1a3fbc9a27b",
+      "blob_sha256": "3ab856fe0038a848dad2427342cc8c3fb46fdb500be9705c240becf561047b6e"
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_artifacts/publication.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "0e195471791442cd2ced73d725e0d446d986f5b4",
+      "blob_sha256": "6186155bfb970ea3c972ce9d6f9b331dcdade9d9689d6641da3506d8e9109293"
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "386f4b0c45bb34747f7c67b987b5554591f16430",
+      "blob_sha256": "5e8ae218ec7b42245b8f6049047ebaebab6538b94c29ec5021c680e75564c30f"
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/captured.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "46d75153add9717a445138cd12f0f2ab824369df",
+      "blob_sha256": "d5fd929a93013d68e541521cc95ed079358fd6687327a4bf62ec88750908a5c2"
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/conditions.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "c3b84016a1b2e9441046fc836abb3d6b8018fc16",
+      "blob_sha256": "0b9cf54fc66c474b045fe11003cac0ac5551d27d0a5f5d4d04f5511429548ab9"
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "30cf8621c13d1540a835f79b27d6350f5afec866",
+      "blob_sha256": "08bf450db973b9f1522a4dfa60c3d64adf7c4a97706bf6c7b13e64dd5d91c361"
+    },
+    {
+      "path": "crates/vibe-specdoc/src/load.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "c24b60973c67b8580febb6f97427fa32c979f256",
+      "blob_sha256": "814e2be930dbecf36bce70ecbe48b8de9aeecbd02ba800c5ddc755537701c728"
+    },
+    {
+      "path": "crates/vibe-facts/src/scan/declared.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "e5c5cece29776136ebfb73dc05ffd388fd997e6d",
+      "blob_sha256": "2acc859faa9586c150c42f25ebc243ea6b70bf117f892f8643fae14f6a10637e"
+    },
+    {
+      "path": "crates/vibe-facts/src/scan/declared/walk.rs",
+      "scope": "full final file body read",
+      "blob_oid": "8ceb3468c5323846d2da05b1e9a91f151eef0287",
+      "blob_sha256": "13d892739237d103e729f88501bc718f423b8b93e1a9a82404dc457de09081ea"
+    },
+    {
+      "path": "crates/vibe-facts/src/scan/declared/export.rs",
+      "scope": "full final file body read",
+      "blob_oid": "f7d698c612e699dfc1576c993c43e72ebe4cb226",
+      "blob_sha256": "859135e4afee1624b790caa6dbe8892c56850067af245c173bd1dac7d8f46b01"
+    },
+    {
+      "path": "crates/vibe-facts/src/sync.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "d57dd35872328219a261206801421343e790ed5f",
+      "blob_sha256": "8f53dc630f588cb6af653e79c96b4dd89ecb284402cc66fa25159688f536127e"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/facts.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "e0fd394bc15bb6b3e9d20563236704d61710f564",
+      "blob_sha256": "46b70f5b5cfd4fe40af17e758b6011189af2122a9445917f63b1d291aea7df9b"
+    },
+    {
+      "path": "crates/vibe-doc/src/citations/sources.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "dda3976f61c85b8a58aa09e85f18a99b06b4894d",
+      "blob_sha256": "0abf4072266833a5a528e493716ea41d78c8b5fb38d800e1637ff2fd3db226e1"
+    },
+    {
+      "path": "crates/vibe-doc/src/citations/sources/checkout.rs",
+      "scope": "full final file body read",
+      "blob_oid": "b41bd66ac04035900c7dacbd07cdcb11997fbaea",
+      "blob_sha256": "acf4bb89d72e45655e0b8aec8d1b3b6b5b18935f414d8fa2115c2bd7cf72ad28"
+    },
+    {
+      "path": "crates/vibe-doc/src/citations/anchor.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "ba9aca820c42f7bb454b67077c06db64b8713a26",
+      "blob_sha256": "b2027a9ae87956d9b9f850d2344cc7d8abfb78ccedb97a099cea2de717c37f53"
+    },
+    {
+      "path": "crates/vibe-doc/src/agent.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "0697b82efc7f0b58c09d846e76d86e925b259b4c",
+      "blob_sha256": "7a45d8abb07cd002ac9c7dce3ee91a03b1f558994bd571026e496c4b93fe4bed"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/spec/mod.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "77a9d2cf890379ea64b64912194a2e3b0812c90d",
+      "blob_sha256": "b72f12b4b6d3138f06a3911ae72b1be0325f658404a64f5c68b6f4117857ab49"
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/extract.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "06eb3dd02ed8f93a4ac1c8971ea24e7d8a328aae",
+      "blob_sha256": "4e4f38a09d3cf73ec573f6d3c4b7180564e48b45975247336875972bfe746f0b"
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "4448e3e438e9732feac85b5047db641a9e935065",
+      "blob_sha256": "0d24437c8e3982e9ab8e1068f6bfd85571f04e487328f38b3c2e2abdab8883ac"
+    },
+    {
+      "path": "crates/vibe-workspace/src/source_query/capture/continuity/service/preparation.rs",
+      "scope": "full final file body read",
+      "blob_oid": "4ce711e75b7eba0323defd9444a5ae2927abcc25",
+      "blob_sha256": "d3f83c7accc76be8bebac71df5feb5222a959c894d99c2036829e3c4003028d7"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "413e73f1826385e2c5f0a0ae21da74fb52e43193",
+      "blob_sha256": "f6aa4a213baf6ad85a1b9b4ec76e9179646e4141c51fe5efae99910e5cf996d8"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+      "scope": "selected final relevant method bodies/callers/contracts; remaining file not audited",
+      "blob_oid": "35fae199c99d66bcf1b24260ecba65339fa6f956",
+      "blob_sha256": "a5c7160eb77bf9932dce8cc7de21cc0828a2ec7c7cf7961a025541ea53306f0a"
+    }
+  ],
+  "main_proofs": [
+    {
+      "path": "crates/vibe-spec/src/resolver/glob.rs",
+      "scope": "selected actual held-read/point-pattern/materialization method bodies",
+      "blob_oid": "ed07142f69522747909a1226f2462ac9277c993b",
+      "blob_sha256": "9f5658954e4efd7ecc2ed0fe51703c094f0beffa8d07803e4798df52ef06c259"
+    },
+    {
+      "path": "crates/vibe-spec/src/embed/read.rs",
+      "scope": "selected actual held-read/point-pattern/materialization method bodies",
+      "blob_oid": "96f087de4d9922477748b54bda450437e50d3cb4",
+      "blob_sha256": "8e9a4bb733be25cb79a179f0827a9059104b4c50437e4c0afd3ebfa2cdcf2e97"
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "scope": "selected actual held-read/point-pattern/materialization method bodies",
+      "blob_oid": "d8e522bf8ecbf097cb16927ad1b192603c47993f",
+      "blob_sha256": "1f298052cec6004125e7bf5dfe661051675c16ca1745e866e0ceee08e761fb66"
+    },
+    {
+      "path": "crates/vibe-safefs/src/file/source_read.rs",
+      "scope": "selected actual held-read/point-pattern/materialization method bodies",
+      "blob_oid": "330c7cdfff06265f7c96ba87bd557d49e89d9b4c",
+      "blob_sha256": "ea7ebdc001ff0adf1306921a5f486a7eec8deec5e9e2025ad07af6a7580c507b"
+    }
+  ],
+  "unreviewed_consumer_boundaries": [
+    "full requirements consumer",
+    "full show/tree/check/progress implementations",
+    "skill resource preparation implementation",
+    "full original-source proof and derivative runtime",
+    "public named ordinary-export delivery",
+    "platform-native behavior"
+  ],
+  "method": "All supplied changed paths partitioned; hashes identify content and never promote unread bodies/receipts into runtime proof. Final callee fallbacks inspected for the named paths. Historical instructions treated as evidence."
+}

@@ -854,10 +854,15 @@
         "crates/vibe-facts/src/scan/declared.rs:observe_declared_source",
         "crates/vibe-facts/src/scan.rs:observe_authored_source/collect_spec_documents",
         "crates/vibe-cli/src/commands/progress/grounding.rs:SourceAdmission::Legacy",
-        "crates/vibe-specdoc/src/load.rs:is_spec_source/load_spec_text"
+        "crates/vibe-specdoc/src/load.rs:is_spec_source/load_spec_text",
+        "research/history-source-descriptors-review.md (final pinned caller audit, no runtime execution)",
+        "research/history-ordinary-documents-review.md (ordinary views/export joins and public Vibe-only boundary)"
       ],
       "missing": [
-        "Declared paths exist across consumers, but legacy suffix-based public scanner and progress fallback remain; historical plan requirement of no unclassified semantic path is not literally met. Compatibility may justify retention; decide target semantics explicitly."
+        "Retained legacy routes are qualified compatibility, not by themselves a defect. Final lifecycle prompt constructor omits descriptor admission; prototype pattern membership bypasses selected descriptor world (main F05 is stronger).",
+        "Selected Simple boot checks interpretation/hash but projects by filename suffix rather than declared materialized media; Lock documentation citations validate selection then reopen the path instead of consuming captured bytes. These are source-derived runtime discriminators, not executed failures.",
+        "Explicit empty package sources/source_exports-only opt-in differs across materialization/map versus facts/citation readers; package empty policy remains unresolved, while project absent/empty legacy is explicitly documented.",
+        "Host/dynamic boot and remaining requirements/show/tree/check/progress/skill consumers still need bounded complete-call-path review and chosen end-to-end semantics. Named ordinary exports have library joins but no verified public query route."
       ],
       "runtime_verified": false
     },
