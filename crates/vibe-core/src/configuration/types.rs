@@ -32,7 +32,8 @@ impl Cardinality {
     }
 }
 
-/// One declared feature; identifiers are opaque local, nonblank tokens.
+/// One declared feature; identifiers are nonblank, control-free local strings.
+/// Accepted spelling (including spaces) is preserved and matched literally.
 ///
 /// ```
 /// use vibe_core::configuration::FeatureNode;

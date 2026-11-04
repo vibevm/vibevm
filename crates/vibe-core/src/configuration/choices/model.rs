@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#CHOICE-CORE");
 
 use super::super::FeatureModel;
+use super::super::model::valid_identifier;
 use super::{ChoiceDefinitionError as Error, ChoiceGroup, ChoiceGuard, MemberGuards};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -44,12 +45,7 @@ impl ChoiceModel {
         let mut group_ids = BTreeMap::new();
         let mut owners = BTreeMap::new();
         for (index, group) in groups.iter().enumerate() {
-            if group.id.is_empty()
-                || group
-                    .id
-                    .chars()
-                    .any(|c| c.is_whitespace() || c.is_control())
-            {
+            if !valid_identifier(&group.id) {
                 return Err(Error::InvalidGroupId {
                     group: group.id.clone(),
                 });

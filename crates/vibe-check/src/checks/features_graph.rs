@@ -1,6 +1,6 @@
 //! PROP-003 §2.10 — `[features]` table is internally consistent
-//! (no cycles to unknown features, no exclusive-group violations,
-//! every `subskill:<path>` reference resolves on disk).
+//! (all local references and activation syntax admitted, defaults satisfy
+//! exclusive constraints). Subskill selectors are not proof of export existence.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
@@ -17,9 +17,9 @@ use crate::{Check, CheckId, CheckOptions, CheckReport};
 /// Walks every package available to the project (lockfile + project tree
 /// `packages/`) and validates its `[features]` table. Diagnostics from
 /// the resolver's [`vibe_resolver::validate_features_table`] surface as
-/// warnings since a misconfigured table won't break install for
-/// projects that don't activate any of its features but is still worth
-/// surfacing.
+/// warnings under the existing checker policy. Installation also validates
+/// dormant/private local definitions; an unselected invalid branch is not
+/// exempt. Foreign dependency and subskill export binding belongs to their owners.
 #[cell(seam = "Check", variant = "features-graph")]
 pub struct FeaturesGraphCheck;
 

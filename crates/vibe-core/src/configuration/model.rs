@@ -48,8 +48,13 @@ fn invalid(problem: Problem) -> DefinitionError {
     DefinitionError { problem }
 }
 
+/// Local identifiers are literal data. Validate without rewriting their spelling.
+pub(super) fn valid_identifier(id: &str) -> bool {
+    !id.trim().is_empty() && !id.chars().any(char::is_control)
+}
+
 fn identifier(id: &str) -> Result<(), DefinitionError> {
-    if id.is_empty() || id.chars().any(|c| c.is_whitespace() || c.is_control()) {
+    if !valid_identifier(id) {
         return Err(invalid(Problem::InvalidIdentifier { id: id.into() }));
     }
     Ok(())

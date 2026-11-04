@@ -1,6 +1,43 @@
 //! Validation is independent of whether a guard will be active in a request.
 use super::*;
 
+#[test]
+fn choice_group_identifiers_share_literal_nonblank_control_free_validation() {
+    let model = model(
+        vec![group(
+            " build mode ",
+            &["lint level"],
+            Cardinality::ZeroOrOne,
+        )],
+        vec![],
+    );
+    let c = consumer(
+        "caller",
+        ChoicePolicy::RequireSelection,
+        &[(" build mode ", answer(&["lint level"], MergeIntent::Exact))],
+    );
+    assert_eq!(selected(&model.evaluate(&ordinary(), &[c])), ["lint level"]);
+    let trimmed = consumer(
+        "caller",
+        ChoicePolicy::RequireSelection,
+        &[("build mode", answer(&["lint level"], MergeIntent::Exact))],
+    );
+    assert!(
+        matches!(&model.evaluate(&ordinary(), &[trimmed]).invalid_answers[0], AnswerError::UnknownGroup { group, .. } if group == "build mode")
+    );
+    for id in ["", "   ", "line\nfeed", "tab\there"] {
+        assert_eq!(
+            ChoiceModel::new(
+                kernel(),
+                vec![group(id, &["a"], Cardinality::ZeroOrOne)],
+                vec![]
+            )
+            .unwrap_err(),
+            ChoiceDefinitionError::InvalidGroupId { group: id.into() }
+        );
+    }
+}
+
 fn kernel() -> FeatureModel {
     FeatureModel::new(
         vec![feature("a"), feature("b"), feature("ordinary")],

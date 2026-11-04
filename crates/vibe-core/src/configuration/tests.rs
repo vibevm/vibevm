@@ -2,6 +2,72 @@
 
 use super::*;
 
+#[test]
+fn literal_identifiers_preserve_spaces_private_names_and_exact_matching() {
+    let mut public = node("lint level");
+    public.requires = vec!["_internal helper".into()];
+    let group = ClosureGroup {
+        id: " build mode ".into(),
+        members: vec!["lint level".into(), "lint".into()],
+        cardinality: Cardinality::ZeroOrOne,
+        fallback: None,
+    };
+    let model = FeatureModel::new(
+        vec![
+            public,
+            node("_internal helper"),
+            node("lint"),
+            node(" padded "),
+        ],
+        vec![group],
+    )
+    .unwrap();
+    assert_eq!(
+        model.resolve(&input(&["lint level"])).unwrap().selected,
+        ["lint level", "_internal helper"]
+    );
+    assert_eq!(
+        model.resolve(&input(&[" padded "])).unwrap().selected,
+        [" padded "]
+    );
+    assert!(matches!(
+        model.resolve(&input(&["padded"])),
+        Err(EvaluationError::UnknownFeature { .. })
+    ));
+    assert_eq!(
+        model.resolve(&input(&["lint level", "lint"])),
+        Err(EvaluationError::Cardinality {
+            group: " build mode ".into(),
+            cardinality: Cardinality::ZeroOrOne,
+            members: vec!["lint level".into(), "lint".into()]
+        })
+    );
+}
+
+#[test]
+fn blank_and_control_identifiers_still_refuse_for_features_and_closure_groups() {
+    for id in ["", " \u{a0} ", "line\nfeed", "tab\there", "zero\0byte"] {
+        assert_eq!(
+            FeatureModel::new(vec![node(id)], vec![])
+                .unwrap_err()
+                .problem,
+            DefinitionProblem::InvalidIdentifier { id: id.into() }
+        );
+        let group = ClosureGroup {
+            id: id.into(),
+            members: vec!["a".into()],
+            cardinality: Cardinality::ZeroOrOne,
+            fallback: None,
+        };
+        assert_eq!(
+            FeatureModel::new(vec![node("a")], vec![group])
+                .unwrap_err()
+                .problem,
+            DefinitionProblem::InvalidIdentifier { id: id.into() }
+        );
+    }
+}
+
 fn node(id: &str) -> FeatureNode {
     FeatureNode {
         id: id.into(),

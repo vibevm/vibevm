@@ -262,3 +262,39 @@ CHOICE-CORE принят commit033a4236d. Все12amended hashes сверены 
 Следующий bounded atom — package FeaturesTable adapter к тому же kernel, вместо ещё одного изолированного evaluator. Сохраняются default-as-feature, union explicit/default seeds, private input policy, cycles и независимые at-most-one constraints; all-features не является проверкой валидности определения с exclusive alternatives. Нужна проверка настоящих legacy literal IDs, включая возможное избыточное ограничение общего kernel. Эффекты пока только проецируются из одного resolved set; SAT/install/boot consumers этим не закрываются.
 
 Порядок работы уточнён: реальные consumers подключаются по мере готовности нужной семантики, а не ждут окончания всех чистых типов. Default binding, typed parameters, persistence и surfaces остаются обязательными для общего acceptance. Это не отменяет найденные secret/template/resume gaps и не объявляет существующий app lifecycle универсально готовым.
+
+## 2026-11-04 — Два ограниченных рабочих запуска
+
+Package adapter запущен от effb460e4 в package-feature-kernel, нативный inventory_machine. Он меняет resolver feature owner; core ID validation остаётся у root до конкретного compatibility counterexample. Параллельно inventory_sources работает в app-secret-diagnostics от той же базы: только declared-secret errors, hidden prompt selection и Debug, с synthetic RED и реальным human/JSON output. Эти файлы не пересекаются с resolver/configuration worker. Обе копии имеют собственные reflink targets, root отвечает за review/acceptance/уборку.
+
+Диагностический secret slice намеренно не выдаётся за закрытие SECRET-BOUNDARY: template persistence, raw argv replay, root/batch scopes и continuation state остаются явными planned obligations. Сначала исправляется уже известное нарушение в существующем пути; перенос value types без реального consumer не становится новым условием начала package integration.
+
+## 2026-11-04 — Исправление моей оценки config-value effects
+
+Я назвал отсутствие runtime writer для config_values недоделкой next; это было чрезмерным выводом из верного source observation. Проверка исходного контракта установила: M05B1-EFFECTS требует выбрать declared values и отказать при конфликте; C2 — исключить values отвергнутого кандидата; D1/E2 — inspection, persistence/replay и diff. Конкретный config-file/runtime writer не обещан. Поэтому он не добавляется как скрытое требование завершения. Уточнение и точные anchors сохранены в research/config-effect-meaning.md; прежняя запись журнала остаётся исторической, current design report и PROP-069 уточнены.
+
+Для subskills ситуация иная: D2 прямо называет boot/read consumers. Loading report показывает, почему feature-gated fragment не заменяет полные export identity/description/eager/lazy-push/lazy-pull semantics. Перенос использует существующий EffectiveBoot/emitter и reader с целым package slot; inactive selection не является запретом явного raw source read. Источник выбора должен идти с тем же prepared/resolved world, а не через отдельное несогласованное reread lock.
+
+Package adapter characterization6/6 выявил мой избыточный общий ID restriction: валидные legacy feature `lint level`, private `_internal helper` и group `build mode` принимались manifest/validator/evaluator, но rejected kernel. Разрешено единое правило nonblank/no-control без trim/normalization accepted IDs; synthetic identity remapping не нужен. Legacy exclusive list трактуется как set (duplicates dedup), all=true сохраняет precedence и игнорирует explicit list. Unknown local/group references проверяются даже dormant/private.
+
+Diagnostic RED уже настоящий runtime:2core cases failed; app family4passed/3failed, показав canonical numeric value, resolved secret path, opaque prompt text и Debug. CLI negative output ещё проверяется. Все значения synthetic, общий secret-boundary этим ещё не закрыт.
+
+## 2026-11-04 — Остановка владельцем и продолжение
+
+По команде «стой» root остановил обоих implementation workers, перевёл goal в paused и завершил task-local cargo/clippy процессы. Файлы двух кандидатов сохранены, приёмка не выполнена. После явного возобновления goal проверены main HEAD effb460e4, dirty boundaries и обе рабочие копии; живых предыдущих builds не обнаружено. Прежние agent handles отсутствовали в live inventory, поэтому созданы два новых нативных workers с точными прежними quiet packets, владельцами finish_package_adapter и finish_secret_diagnostics. Они завершают недостающие проверки по существующим файлам и логам, не начинают реализацию заново.
+
+Предыдущий рабочий turn классифицирован как progress: shared kernel/choice core интегрированы, исходные defects воспроизведены, пакетный и diagnostic кандидаты реализованы. Остановка была owner-requested, не blocker. Кампания снова active; полный remaining scope сохранён.
+
+После второй краткой паузы владелец явно написал «продолжай». Live inventory показал двух текущих finish-workers, поэтому они сохранены: дублирующих запусков не создавалось. Проверка сохранившихся package logs установила, что финальный clippy/fmt/diff успел завершиться exit0 до остановки; полный9-command result есть на диске. Для secret candidate полный CLI GREEN7/7 и wizard1/1 также сохранились, но interrupted CLI clippy не имел terminal marker; повторяется только этот недостающий gate и проверки, для которых не осталось полного raw output.
+
+Технический goal-service после второй UI-паузы ещё возвращал paused; explicit chat «продолжай» разрешает продолжение работ. Агентский update_goal не имеет операции resume, поэтому этот сервисный статус не подменён ложным complete/blocked.
+
+## 2026-11-04 — Package adapter integration
+
+Root прочитал frozen report и проверил полный12-file manifest против реального diff/untracked set, candidate SHA256 и неизменённой main base. Исходники перенесены точно; raw evidence архивированы. Дополнительно root исправил только stale FeaturesGraphCheck prose: full dormant/private local admission действует и при install; table-only selector не доказывает subskill export/file existence. Warning severity не менялась.
+
+Final candidate9commands exit0:28resolver+38configuration+37docs+14app+2checker+1publicCLI=120distinct cases. Пять original behavioural RED сохранены отдельно. Main повторяет resolver/configuration integration checks и затем scoped conform/map. LEGACY-PACKAGE-COMPATIBILITY принимается отдельно от still-open solver/install/boot effects.
+
+### Package adapter accepted gate
+
+Main resolver28/28 и configuration38/38 прошли. Fmt/core conform/resolver conform/specmap+check exit0. Map9047units/4709items/3949edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Core conform0findings; resolver2existing ambient-env observations,0new. Все12candidate source hashes совпадают с main; дополнительная root правка checker только документальная. Принимается реальный package adapter к общему kernel, не отсутствующие foreign dependency/export consumers.

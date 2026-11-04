@@ -19,6 +19,7 @@ pub enum ChoiceGuard {
 
 /// One consumer-owned group; members are existing local feature IDs.
 /// None and an explicitly empty default set remain distinct.
+/// Its ID is a nonblank, control-free string; accepted spelling is not normalized.
 ///
 /// ```
 /// use vibe_core::configuration::{ChoiceGroup, Cardinality};
