@@ -60,7 +60,7 @@ mode = ["a", "b"]
 
 ## FMT-004 — Common configuration в обычном vibe.toml
 
-Статус: **принято в main как admission/validation этап**, source design `d16fb59c8`; acceptance commit — `feat(manifest): retain common configuration definitions` (точный hash дописывается после commit). Версия выпуска не назначена, **Unreleased**. Поддержка чтения/проверки определения не равна готовой установке; переходить всем пакетам на этот формат пока рано.
+Статус: **принято в main как admission/validation этап**, source design `d16fb59c8`; acceptance commit — `da741ee16` (`feat(manifest): retain common configuration definitions`). Версия выпуска не назначена, **Unreleased**. Поддержка чтения/проверки определения не равна готовой установке; переходить всем пакетам на этот формат пока рано.
 
 ### Точные новые формы
 
