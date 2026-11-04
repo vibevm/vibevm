@@ -2556,3 +2556,15 @@ structure, and it goes when the file does.
 | @fact:B233-SEVERITY **severity** | P2 — серьёзный открытый архитектурный вопрос перед проектированием окружений; не аварийный дефект. |
 | @fact:B233-DISPOSITION **disposition** | `open — architecture investigation`; гипотеза не объявлена утверждённым решением. Сопоставить с M-14/M-15 полного плана, явно отделив reuse, необходимые расширения и backend-specific поведение. Не новая задача в знаменателе222 и не основание считать Docker уже готовым. |
 | @fact:B233-FILED **filed by** | По предложению владельца,2026-11-04. |
+
+
+## B-233 — an installed application records no source {#b-233}
+
+| field | value |
+|---|---|
+| @fact:B233-WHAT **what** | `vibe install -g` of an application from a registry writes no global `vibe.lock`, and `applications/index.json` records no source of the installation, so a client cannot say where an installed application came from ("Installed from <registry/url@ref>"). A project's `vibe.lock` does record `registry`, `source_url`, `source_ref`, `resolved_commit` for a project package. |
+| @fact:B233-EVIDENCE **evidence** | vibevm-app's R137b probe of vibe 1.0.11, 2026-11-04, in a temp home: `install -g` from a local registry; no global lock written, the index without a source. vibevm-app's `ApplicationFacts.installed.source` waits for it (I-1246). |
+| @fact:B233-SEVERITY **severity** | P2 — the Library's "Installed from" line on an application's page is hidden until vibe records it; related to B-232 (the install's source, high priority). |
+| @fact:B233-DISPOSITION **disposition** | `candidate — to be considered and decided later in vibe` (the owner's rule of 2026-11-04 for vibe's needs found while building the app). |
+| @fact:B233-FILED **filed by** | vibevm-app build side (session MVP), 2026-11-04. |
+
