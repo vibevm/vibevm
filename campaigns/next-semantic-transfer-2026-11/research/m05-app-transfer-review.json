@@ -1,0 +1,642 @@
+{
+  "mode": "read-only immutable pin review; root decides promotion",
+  "at_utc": "2026-11-04T20:24:49.119698+00:00",
+  "main_pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "rows": [
+    {
+      "old_task_id": "M-05-D.1",
+      "title": "Persist requested intent separately from resolved configuration",
+      "prior_status": "partial",
+      "proposed_status": "partial",
+      "exact_old_contract": {
+        "goal": "Make lock replay explain exact choices, captures and selected technical edges.",
+        "steps": [
+          "Serialize authored-request digest separately from active/dormant resolved selections and feature closure.",
+          "Record exact owner capture/definition, resolution domain/target, induced dependencies and selected capability providers.",
+          "Add reader migration/refusal and canonical ordering through existing generated format machinery."
+        ],
+        "positive_cases": [
+          "Lock preserves explicit choices and actual provider edges for offline replay."
+        ],
+        "negative_cases": [
+          "Same-version changed definition or lost request digest cannot be accepted as exact replay.",
+          "Derived selections cannot become the only authored authority."
+        ],
+        "acceptance": [
+          "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
+          "Every induced edge explains its source declaration and consumer intent."
+        ],
+        "safe_stop": "Keep an old lock recognizable; do not silently reinterpret unknown epochs."
+      },
+      "clauses": [
+        {
+          "id": "goal.1",
+          "exact_old_clause": "Make lock replay explain exact choices, captures and selected technical edges.",
+          "scoped_assessment": "App original/effective persistence and exact operation context now exist; configured lock/capture/provider-edge replay remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.1",
+          "exact_old_clause": "Serialize authored-request digest separately from active/dormant resolved selections and feature closure.",
+          "scoped_assessment": "Full original input is retained separately from active/dormant/resolved data in app index/work; not a new standalone authored-request digest or generic lock.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.2",
+          "exact_old_clause": "Record exact owner capture/definition, resolution domain/target, induced dependencies and selected capability providers.",
+          "scoped_assessment": "App historical definition, home/key/generation/source-route/dependency context are retained; no configured solver provider/domain capture closure.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.3",
+          "exact_old_clause": "Add reader migration/refusal and canonical ordering through existing generated format machinery.",
+          "scoped_assessment": "Generated index3/4, steps1/2 and strict readers provide the app format subset; no generic rich lock migration.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.1",
+          "exact_old_clause": "Lock preserves explicit choices and actual provider edges for offline replay.",
+          "scoped_assessment": "Actual offline app maintenance preserves explicit original input; selected capability-provider edges in configured lock replay are unproved.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.1",
+          "exact_old_clause": "Same-version changed definition or lost request digest cannot be accepted as exact replay.",
+          "scoped_assessment": "App expected-definition/basis/execution identity checks exist; generic missing request digest or changed capture exact replay is not implemented.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.2",
+          "exact_old_clause": "Derived selections cannot become the only authored authority.",
+          "scoped_assessment": "Actual app journey preserves original dormant input independently of empty effective features; generic package lock remains outside scope.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.1",
+          "exact_old_clause": "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
+          "scoped_assessment": "App index/work across-process round-trip separates request/result; not requested whole configured lock semantics.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.2",
+          "exact_old_clause": "Every induced edge explains its source declaration and consumer intent.",
+          "scoped_assessment": "App dependency context records key/scope/step/commands, but every induced configured solver/provider edge is not established.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "safe_stop.1",
+          "exact_old_clause": "Keep an old lock recognizable; do not silently reinterpret unknown epochs.",
+          "scoped_assessment": "Old app index/work versions remain independently recognized without fabricated rich history; generic lock evolution still separate.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        }
+      ],
+      "main_source_paths": [
+        "crates/vibe-app/src/configuration/evaluate.rs",
+        "crates/vibe-app/src/configuration/input.rs",
+        "crates/vibe-app/src/configuration/record.rs",
+        "crates/vibe-app/src/operations/pending/checkpoint.rs",
+        "crates/vibe-app/src/operations/pending/identity.rs",
+        "crates/vibe-core/src/manifest/lockfile.rs",
+        "crates/vibe-install/src/plan/roots.rs"
+      ],
+      "actual_test_evidence": [
+        {
+          "test": "actual_common_install_modify_update_rollback_and_repair_keep_original_paths_and_dormant_answers",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log",
+            "/tmp/nst-runtime-activation/public-affected-final.log",
+            "/tmp/nst-runtime-activation/cli-settled.log"
+          ]
+        },
+        {
+          "test": "parent_resume_finishes_indexed_child_and_keeps_original_public_input_after_file_removal",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log"
+          ]
+        },
+        {
+          "test": "old3_read_is_unchanged_and_new_full_operation_records_only_its_actual_default",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log"
+          ]
+        },
+        {
+          "test": "old1_kept_prefix_does_not_become_a_whole_installation_default_receipt",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log"
+          ]
+        }
+      ],
+      "whole_contract_complete": false
+    },
+    {
+      "old_task_id": "M-05-E.1",
+      "title": "Check request freshness before fast paths and expose pure discovery",
+      "prior_status": "not-transferred",
+      "proposed_status": "partial",
+      "exact_old_contract": {
+        "goal": "Make changed user intent visible before install can report Fresh.",
+        "steps": [
+          "Compute request/definition freshness before bare-install shortcut.",
+          "Implement cached choices/catalog discovery through the M-16 service boundary.",
+          "Expose candidate definition/effects/defaults without selecting, fetching or writing; explicit preparation remains separate."
+        ],
+        "positive_cases": [
+          "Changing only a choice or requested feature defeats Fresh."
+        ],
+        "negative_cases": [
+          "Empty cache discovery returns unavailable with no provider call.",
+          "Repeated unresolved discovery state stops NeedsSelection instead of looping."
+        ],
+        "acceptance": [
+          "Fast-path decisions cite request/definition identity.",
+          "Discovery purity counters show no authored/cache mutation."
+        ],
+        "safe_stop": "Discovery-only result is useful and does not admit an install."
+      },
+      "clauses": [
+        {
+          "id": "goal.1",
+          "exact_old_clause": "Make changed user intent visible before install can report Fresh.",
+          "scoped_assessment": "App pre-execution request/definition review exists; generic bare-install Fresh identity is absent.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.1",
+          "exact_old_clause": "Compute request/definition freshness before bare-install shortcut.",
+          "scoped_assessment": "App normalization/staleness precede effects; generic plan explicitly refuses configuration before Fresh instead of supporting it.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.2",
+          "exact_old_clause": "Implement cached choices/catalog discovery through the M-16 service boundary.",
+          "scoped_assessment": "No cached common discovery/service boundary was activated.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.3",
+          "exact_old_clause": "Expose candidate definition/effects/defaults without selecting, fetching or writing; explicit preparation remains separate.",
+          "scoped_assessment": "Local projection of supplied resolved app definition/default/effect data exists; CLI resolution may fetch/cache and is not pure cached discovery.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.1",
+          "exact_old_clause": "Changing only a choice or requested feature defeats Fresh.",
+          "scoped_assessment": "Actual app modify/update consume changed input; no generic choice-only change through bare-install Fresh tested.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.1",
+          "exact_old_clause": "Empty cache discovery returns unavailable with no provider call.",
+          "scoped_assessment": "No empty-cache/no-provider-call discriminator or completed cache-only service.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.2",
+          "exact_old_clause": "Repeated unresolved discovery state stops NeedsSelection instead of looping.",
+          "scoped_assessment": "App prepare returns structured unresolved without machine polling; generic service convergence remains unimplemented.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.1",
+          "exact_old_clause": "Fast-path decisions cite request/definition identity.",
+          "scoped_assessment": "App expected-definition and review basis carry identities; generic Fresh decision does not admit rich configuration.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.2",
+          "exact_old_clause": "Discovery purity counters show no authored/cache mutation.",
+          "scoped_assessment": "No authored/cache purity counters in accepted app describe/plan scenarios.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "safe_stop.1",
+          "exact_old_clause": "Discovery-only result is useful and does not admit an install.",
+          "scoped_assessment": "App unresolved machine plan remains useful and omits execution; it does not admit install.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        }
+      ],
+      "main_source_paths": [
+        "crates/vibe-app/src/configuration/describe.rs",
+        "crates/vibe-app/src/configuration/evaluate.rs",
+        "crates/vibe-app/src/configuration/plan.rs",
+        "crates/vibe-cli/src/commands/app/describe.rs",
+        "crates/vibe-install/src/plan.rs",
+        "crates/vibe-install/src/plan/roots.rs"
+      ],
+      "actual_test_evidence": [
+        {
+          "test": "missing_choice_is_a_structured_question_and_install_runs_nothing",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log",
+            "/tmp/nst-runtime-activation/public-affected-final.log",
+            "/tmp/nst-runtime-activation/cli-settled.log"
+          ]
+        },
+        {
+          "test": "actual_common_install_modify_update_rollback_and_repair_keep_original_paths_and_dormant_answers",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log",
+            "/tmp/nst-runtime-activation/public-affected-final.log",
+            "/tmp/nst-runtime-activation/cli-settled.log"
+          ]
+        },
+        {
+          "test": "review::deleting_the_last_automatic_input_requires_real_update_review_before_effects",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log",
+            "/tmp/nst-runtime-activation/public-affected-final.log",
+            "/tmp/nst-runtime-activation/cli-settled.log"
+          ]
+        }
+      ],
+      "whole_contract_complete": false
+    },
+    {
+      "old_task_id": "M-05-E.2",
+      "title": "Implement exact reinstall and intent-preserving update",
+      "prior_status": "not-transferred",
+      "proposed_status": "partial",
+      "exact_old_contract": {
+        "goal": "Distinguish replay from reconfiguration when definitions change.",
+        "steps": [
+          "Route reinstall to exact captures and locked selections without solving or picking defaults.",
+          "Keep authored choices during update and produce exact definition/payload/induced-graph diff.",
+          "Require explicit reconfiguration for removed options/new required groups; preserve force/assume-yes meanings."
+        ],
+        "positive_cases": [
+          "Prepared offline reinstall reproduces the lock without prompts.",
+          "Update retains an explicit selection even if the package default changes."
+        ],
+        "negative_cases": [
+          "Missing capture, removed option or changed definition refuses/stales instead of silently reselecting.",
+          "Force cannot change chosen branch."
+        ],
+        "acceptance": [
+          "Replay/update reports distinguish exact reuse from changed semantic inputs.",
+          "No new option is selected as an incidental solver decision."
+        ],
+        "safe_stop": "Return a complete reconfiguration plan without applying drift."
+      },
+      "clauses": [
+        {
+          "id": "goal.1",
+          "exact_old_clause": "Distinguish replay from reconfiguration when definitions change.",
+          "scoped_assessment": "Selected-app preservation/review distinguishes changed automatic basis; generic configured exact replay remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.1",
+          "exact_old_clause": "Route reinstall to exact captures and locked selections without solving or picking defaults.",
+          "scoped_assessment": "Exact app continuation restores retained public input and source route; no generic captured lock reinstall without solve/default picking.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.2",
+          "exact_old_clause": "Keep authored choices during update and produce exact definition/payload/induced-graph diff.",
+          "scoped_assessment": "App update preserves input and renders typed definition/features/parameter/data diff; no payload/induced-provider-graph diff.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.3",
+          "exact_old_clause": "Require explicit reconfiguration for removed options/new required groups; preserve force/assume-yes meanings.",
+          "scoped_assessment": "App normalization/review refuses incompatible/automatic drift before effects; cross-kind reconfiguration semantics remain.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.1",
+          "exact_old_clause": "Prepared offline reinstall reproduces the lock without prompts.",
+          "scoped_assessment": "Offline local-registry force repair is demonstrated; not exact captured generic lock replay.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.2",
+          "exact_old_clause": "Update retains an explicit selection even if the package default changes.",
+          "scoped_assessment": "Library explicit scalar7 survives changed default1to2; app journey preserves explicit/dormant selections across update. Do not claim a group-default-change CLI case from the scalar test.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.1",
+          "exact_old_clause": "Missing capture, removed option or changed definition refuses/stales instead of silently reselecting.",
+          "scoped_assessment": "App stale/basis/invalid-input paths refuse; whole payload capture absence and generic replay remain.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.2",
+          "exact_old_clause": "Force cannot change chosen branch.",
+          "scoped_assessment": "Actual app force repair retains original chosen input; no blanket solver branch invariant is proven.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.1",
+          "exact_old_clause": "Replay/update reports distinguish exact reuse from changed semantic inputs.",
+          "scoped_assessment": "App typed review and retained operation context exist; complete configured replay/update payload/edge report remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.2",
+          "exact_old_clause": "No new option is selected as an incidental solver decision.",
+          "scoped_assessment": "Core forbids accidental choice activation; app consumes explicit resolved selection. Configured solver candidate/backtracking consumer remains absent.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "safe_stop.1",
+          "exact_old_clause": "Return a complete reconfiguration plan without applying drift.",
+          "scoped_assessment": "App questions/typed review prevent effect execution; full generic reconfiguration plan remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        }
+      ],
+      "main_source_paths": [
+        "crates/vibe-app/src/configuration/input.rs",
+        "crates/vibe-app/src/configuration/evaluate.rs",
+        "crates/vibe-app/src/configuration/review.rs",
+        "crates/vibe-app/src/operations/update.rs",
+        "crates/vibe-app/src/operations/pending/input.rs",
+        "crates/vibe-app/src/operations/pending/source.rs",
+        "crates/vibe-app/src/portable.rs"
+      ],
+      "actual_test_evidence": [
+        {
+          "test": "actual_common_install_modify_update_rollback_and_repair_keep_original_paths_and_dormant_answers",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log",
+            "/tmp/nst-runtime-activation/public-affected-final.log",
+            "/tmp/nst-runtime-activation/cli-settled.log"
+          ]
+        },
+        {
+          "test": "configuration::evaluate::tests::explicit_answers_survive_changed_defaults_automatic_answers_request_review",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/app-full1.log"
+          ]
+        },
+        {
+          "test": "review::deleting_the_last_automatic_input_requires_real_update_review_before_effects",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log",
+            "/tmp/nst-runtime-activation/public-affected-final.log",
+            "/tmp/nst-runtime-activation/cli-settled.log"
+          ]
+        }
+      ],
+      "whole_contract_complete": false
+    },
+    {
+      "old_task_id": "M-05-E.4",
+      "title": "Implement attended and unattended choice interaction",
+      "prior_status": "not-transferred",
+      "proposed_status": "partial",
+      "exact_old_contract": {
+        "goal": "Expose explicit selection through TTY and machine clients without inferred answers.",
+        "steps": [
+          "Build TTY radio/checkbox discovery from the same captured definition/effects model as machine requests.",
+          "Require explicit selections or explicit allow-defaults unattended; no JSON/non-TTY prompt and no assume-yes semantic answer.",
+          "Expose exact typed NeedsSelection/questions and prepared plan through M-16 operations; save applied intent."
+        ],
+        "positive_cases": [
+          "Attended installation shows default/effects and persists chosen values.",
+          "Explicit unattended allow-defaults binds the shown definition."
+        ],
+        "negative_cases": [
+          "Missing required input, unknown option or conflicting exact choice refuses before mutation.",
+          "No lexical fallback or implicit default selection in unattended mode."
+        ],
+        "acceptance": [
+          "CLI/service/MCP produce the same request and prepared effect graph.",
+          "Machine invocation completes or returns typed input requirements without waiting on TTY."
+        ],
+        "safe_stop": "Stop at NeedsSelection with exact definition identity."
+      },
+      "clauses": [
+        {
+          "id": "goal.1",
+          "exact_old_clause": "Expose explicit selection through TTY and machine clients without inferred answers.",
+          "scoped_assessment": "Actual common app TTY/JSON/library intent flow exists; generic/service/MCP parity does not.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.1",
+          "exact_old_clause": "Build TTY radio/checkbox discovery from the same captured definition/effects model as machine requests.",
+          "scoped_assessment": "App controls and callbacks share core definition/evaluator, including real PTY edit/dormant behavior; no generic cached effect-graph discovery.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.2",
+          "exact_old_clause": "Require explicit selections or explicit allow-defaults unattended; no JSON/non-TTY prompt and no assume-yes semantic answer.",
+          "scoped_assessment": "Machine explicit policy/questions and no-prompt path tested; assume-yes separation source-backed, not a newly identified --yes negative test.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.3",
+          "exact_old_clause": "Expose exact typed NeedsSelection/questions and prepared plan through M-16 operations; save applied intent.",
+          "scoped_assessment": "App typed evaluation/questions/plan and applied intent persist; M16/MCP counterpart remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.1",
+          "exact_old_clause": "Attended installation shows default/effects and persists chosen values.",
+          "scoped_assessment": "Real attended modify preserves selected values and execution; initial common install in cited case is machine input. Existing legacy attended wizard is baseline, not new all-kind evidence.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.2",
+          "exact_old_clause": "Explicit unattended allow-defaults binds the shown definition.",
+          "scoped_assessment": "Actual use-declared-defaults input binds current selected definition; public split expected-definition source check exists.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.1",
+          "exact_old_clause": "Missing required input, unknown option or conflicting exact choice refuses before mutation.",
+          "scoped_assessment": "Missing required choice/secret and malformed supplied values refuse without execution/index; unknown/reference/conflict handling uses core, full multi-consumer installation negative matrix remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.2",
+          "exact_old_clause": "No lexical fallback or implicit default selection in unattended mode.",
+          "scoped_assessment": "No lexical choice fallback; unattended missing choice returns question/refusal. No generic/MCP unattended route established.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.1",
+          "exact_old_clause": "CLI/service/MCP produce the same request and prepared effect graph.",
+          "scoped_assessment": "CLI and library use common evaluator; MCP/service prepared graph parity missing.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.2",
+          "exact_old_clause": "Machine invocation completes or returns typed input requirements without waiting on TTY.",
+          "scoped_assessment": "Actual JSON/unattended app returns typed requirements/no execution instead of waiting on TTY.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "safe_stop.1",
+          "exact_old_clause": "Stop at NeedsSelection with exact definition identity.",
+          "scoped_assessment": "App questions retain definition identity; no complete generic configured service NeedsSelection boundary.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        }
+      ],
+      "main_source_paths": [
+        "crates/vibe-app/src/configuration/plan.rs",
+        "crates/vibe-app/src/configuration/evaluate.rs",
+        "crates/vibe-cli/src/commands/app/configuration.rs",
+        "crates/vibe-app/src/steps/configuration_view.rs"
+      ],
+      "actual_test_evidence": [
+        {
+          "test": "attended_modify_enter_preserves_the_actual_rich_group_selection",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log"
+          ]
+        },
+        {
+          "test": "attended_visible_edit_retains_dormant_member_in_the_record_then_reactivation_uses_it",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log"
+          ]
+        },
+        {
+          "test": "hidden_required_secret_enter_retains_its_public_declared_default",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log"
+          ]
+        },
+        {
+          "test": "missing_choice_is_a_structured_question_and_install_runs_nothing",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-main1.log",
+            "/tmp/nst-runtime-activation/public-affected-final.log",
+            "/tmp/nst-runtime-activation/cli-settled.log"
+          ]
+        },
+        {
+          "test": "malformed_submitted_values_are_not_echoed_and_never_reach_execution",
+          "passing_logs": [
+            "/tmp/nst-runtime-activation/public-affected-final.log",
+            "/tmp/nst-runtime-activation/cli-settled.log"
+          ]
+        }
+      ],
+      "whole_contract_complete": false
+    }
+  ],
+  "source_sha256": {
+    "crates/vibe-app/src/configuration/evaluate.rs": "f0de24d2501f35194cc3115c37a21feb7edfe84805fb768575df031bbcfb45e5",
+    "crates/vibe-app/src/configuration/review.rs": "c936d99d7941286045b9cb582feff02b88272b6986d5ac08ff23d16fd4146e0b",
+    "crates/vibe-app/src/configuration/record.rs": "2cfaea4918a8ba08d3b318900aa4b05e462dd8c9a93799efd9e934fde80f8478",
+    "crates/vibe-app/src/configuration/describe.rs": "7f6b82ca10f5d4fbff8e88c957b398d4697a5e015870051a8c64208f56aa02eb",
+    "crates/vibe-app/src/configuration/input.rs": "bbdc5d2008848cf7994d734826ecf9c7a2d59804c3c19f4bdae20e552195c567",
+    "crates/vibe-app/src/configuration/choices.rs": "98f05f631e70bc5d9916fe8bc015fd08132cce31e17f262546d03c31c5fea0be",
+    "crates/vibe-app/src/configuration/plan.rs": "6ed7de8855d6bb32e8b8828e8fdaab26a68e01aa411784e1ab83617fb6472607",
+    "crates/vibe-app/src/configuration/parameters.rs": "bfa8cd5478f51cfc865890eb11fbfb27daf1a8e5b7d7c6da2cad36b35de782ef",
+    "crates/vibe-cli/tests/cli_app_common_configuration.rs": "9db142ccad982ef67330c2ba6a2957119f5532d203355f9e926e5637dbc3ed65",
+    "crates/vibe-cli/tests/cli_app_common_journey.rs": "bb4d9d4c3b0b0111d06c7ea321097aed319916f5ae1e01c53cb12f3bcdb824fd",
+    "crates/vibe-cli/tests/cli_app_common_journey/review.rs": "cb96b5d8052ec4d42e68360a78057ad246869de9b4f1665964133206c0a88b4e",
+    "crates/vibe-cli/tests/cli_app_common_dependencies.rs": "c162d9dae71ea15dd009fa27887b71066b7245ee8cc0b677624710dc899f88b7",
+    "crates/vibe-cli/tests/cli_app_common_maintenance_resume.rs": "b787d84a11f6270b19e0bd50b05e858ee71ff2c0d8f2fef977c4874e543cd048",
+    "crates/vibe-cli/tests/cli_app_wizard.rs": "7bccd970bcab32547260150abd307918bec84405ae775373c54143715acc648e",
+    "crates/vibe-cli/tests/cli_app_import_continuation.rs": "d5a2541556ec9930685ecbb2a00c0c4fd2195f705e1dc6fbf8678ea6381b6a42",
+    "crates/vibe-cli/tests/cli_app_project_continuation.rs": "48d16a6d53e94ddb5f08bcaf9b58d2c90fa06b8a9bdc966d60d85b2f2a4d41a1",
+    "crates/vibe-cli/src/commands/app/configuration.rs": "27ea2db3cd7c2a40171fae88a7579f039c52c2042b8043418519a970ba4080e4",
+    "crates/vibe-cli/src/commands/app/describe.rs": "cd4f4a9e2f4d79ed0967dc3ee48194dcdb694c1a44f950b8f385a8e9d85c1e65",
+    "crates/vibe-cli/src/commands/app/global.rs": "a3ce2d71dd42f4d6c576a18c49054b0084fc192bc64a89d075cd73a6e36e819b",
+    "crates/vibe-core/src/manifest/lockfile.rs": "acc1516c4c6edaead839f7461f9fba5fc46af62de06f67d525c63bf8baa1bf0d",
+    "crates/vibe-install/src/plan.rs": "94f2e2bd7e3a1d9fd7403071fd62d316a561ad760228e4013c6cb04faffebded",
+    "crates/vibe-app/src/operations/pending/identity.rs": "a22d4d913a807e07c74a03719117d95d85a507e8ca9b1314adc7f82f4b190375",
+    "crates/vibe-app/src/operations/pending/input.rs": "79345d07487dee8fb31462130ea5234e6aefd301e04f62e692379d51e0982d16",
+    "crates/vibe-app/src/operations/pending/source.rs": "327350fc59ebcbabc213d8741f57d11c7529dbf847d67794042fb1200036fc1e",
+    "crates/vibe-app/src/operations/planning.rs": "1edcb6163dc02a75113750b4b671f55414bd23e79d5d4fec5298b7871cdf9bfe",
+    "crates/vibe-app/src/index/publication.rs": "a8dd88b8eb668d67900fbf9ff13c9954a7becfc98fd4d15a93395682b08d82da",
+    "crates/vibe-app/src/steps/configuration_view.rs": "148cdb6c30ddcce6c19a644b58c236e7e109c5c7d43bfe09876ba420afbc05f0",
+    "crates/vibe-cli/tests/cli_app_resume_modes.rs": "fddc4a0033ff93c1e1daf44f26b0696705ab302f9e6f40ca1758d7afe71fb98a",
+    "crates/vibe-app/src/configuration/evaluate/tests.rs": "0c18cf91dc292ae3ff8cf774358b43ae37941066051ed51c758d42d99099fe0e",
+    "crates/vibe-app/src/configuration/definition.rs": "65c7449cfc59164198675b0764a73e1b25bcbdaf58f8def9db46ca7b562a7a87",
+    "crates/vibe-install/src/plan/roots.rs": "e290a7d290dd14f6cc8b66b5496a370b05b1a0ac1726add5e5b041a16fa5e850",
+    "crates/vibe-app/src/operations/install.rs": "25bc24dab4007f30f002914be94df26325adf78d42fc8f1c5efd29d7dbd3b31a",
+    "crates/vibe-app/src/operations/update.rs": "f67779a18e99e224c708d7f11b91797f2e1d255d1591e907a2f20f537cb825c3",
+    "crates/vibe-app/src/operations/pending/checkpoint.rs": "44c650c12c46a1106f1064828d618ddd438c3045ff72f298820f731bd2d3d715",
+    "crates/vibe-app/src/portable.rs": "e966f243e9f8d4b256c84850937d80521dc95663c7472522328be35ab61204d8",
+    "crates/vibe-cli/tests/cli_app_secret_history.rs": "52f20a5b4bed4e144891e5364ccdf8b556d3dce1d9d0ce53edea2f389d7fc55c",
+    "crates/vibe-core/src/manifest/configuration/semantic.rs": "0e433d6c75c5d56ff48928927fc68cbc1f989a7a4081644013f51a2c3c065b6d",
+    "crates/vibe-core/src/manifest/configuration/intent.rs": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83"
+  },
+  "standing_sha256": {
+    "vibevm/vibespecs/boot/90-user.xml": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec",
+    "vibevm/vibespecs/common/PROP-069-common-configuration.xml": "9e7869425ce31d049e3273c0d21667f91c1ef963a63f3727444357cf143f82e2",
+    "campaigns/next-semantic-transfer-2026-11/ARCHITECTURE.md": "9def306f1f1d042d6d116285ba50ec454f3333a6b9f51e0884445aba751c70e1",
+    "campaigns/next-semantic-transfer-2026-11/features/F04-common-configuration.md": "40e9f76eaf5c51b94f582b5b10868c99247b3067a503bad7e2146bfe9835b6dc",
+    "campaigns/next-semantic-transfer-2026-11/features/F12-selected-installer-runtime.md": "f3deda05dee66149c9850f23c530758e65ff6489210d375f64ce3fc7173e6307",
+    "campaigns/next-semantic-transfer-2026-11/research/old113-transfer-crosswalk.md": "8abbb1994f852354290ba6f551a0bde654d748018b1434272e2f8bc08518325e",
+    "campaigns/next-semantic-transfer-2026-11/research/old113-transfer-crosswalk.json": "b028973b4abd8000d17bcd2cb292e2e245e8177709f470dccdbe1f1ca116580b"
+  },
+  "old_task_file_sha256": {
+    "campaigns/next/tasks/M-05-D.json": "c62526ad692d0f466caaed214b87008f6b10985a77be6d254ce123f8659e948c",
+    "campaigns/next/tasks/M-05-E.json": "32a40b39db6e672e62e851f67eaf4dcd43330cd72d9bdd71b5406886af2b94d2"
+  },
+  "immutable_recheck_drift": 0,
+  "evidence": [
+    {
+      "path": "/tmp/nst-runtime-activation/public-main1.log",
+      "sha256": "36923d60583ababeb1246b2db64aa508a3bab7ffb40502bd03ce359e063bdb85",
+      "bytes": 7399
+    },
+    {
+      "path": "/tmp/nst-runtime-activation/public-affected-final.log",
+      "sha256": "5b8ad6f357c7e52ebfe9df6231efb6beccf960ff2060c9bc722561bd6f67139e",
+      "bytes": 3462
+    },
+    {
+      "path": "/tmp/nst-runtime-activation/cli-settled.log",
+      "sha256": "06acad7bc37d130667c221978701067d5f5d23b4998693c2ead5cbe2228e73fa",
+      "bytes": 4924
+    },
+    {
+      "path": "/tmp/nst-runtime-activation/app-full1.log",
+      "sha256": "a1b78bfeec83d38a5b335d80c95e67d003fb7c7a7e9ca248c78904e134b349c0",
+      "bytes": 22409
+    },
+    {
+      "path": "/tmp/nst-runtime-activation-report.md",
+      "sha256": "f81320239338cfd342eb8bc53c3f59dd063b1ddcbbba2bf91c3d0d966b20faea",
+      "bytes": 11822
+    },
+    {
+      "path": "/tmp/nst-runtime-activation-evidence.json",
+      "sha256": "929bf5a82f2b438c2ae6177a71df7a4e13bfa593628d63e91385dff0b665e14a",
+      "bytes": 30328
+    },
+    {
+      "path": "/tmp/nst-runtime-activation-root-final-gates.json",
+      "sha256": "3d9a68a77fca19ea9d8724538db66833d77baff3c123a2951b62dc19607bf375",
+      "bytes": 586
+    },
+    {
+      "path": "/tmp/nst-runtime-activation-root-accepted-gates.json",
+      "sha256": "c62cdc032f532204d6716f4b21033945d88fd1582e6ab37d08295056d26d0529",
+      "bytes": 618
+    }
+  ],
+  "report_sha256": "c5d4a59a0e41b9d4624d6416bce1f4ba3eb6dc09ad189bc920729aafb19541ed",
+  "proposal": {
+    "full_completion_increment": 0,
+    "promote_to_partial": [
+      "M-05-E.1",
+      "M-05-E.2",
+      "M-05-E.4"
+    ],
+    "expand_existing_partial": [
+      "M-05-D.1"
+    ],
+    "global_crosswalk_counts": "not modified or recomputed"
+  },
+  "limits": [
+    "No build/test execution by reviewer",
+    "No generic configured solver/lock replay completion",
+    "No cache-only discovery/provider purity counters",
+    "No common MCP/service parity acceptance",
+    "Rich portable roundtrip remains unsupported/refused",
+    "Linux actual PTY only; no native Windows/macOS claim"
+  ],
+  "packet_correction": "report.json absent; actual runtime companion is -evidence.json",
+  "mechanism_rule": "No prototype wrapper names or dedicated host service required solely for parity; useful missing behaviors decide partial status"
+}

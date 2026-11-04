@@ -15,13 +15,13 @@
     "cross_checked_graph_statuses": true
   },
   "counts": {
-    "partial": 22,
-    "full": 1,
-    "not-transferred": 19,
+    "partial": 24,
+    "full": 2,
+    "not-transferred": 16,
     "unknown": 71,
     "already_main": 0
   },
-  "minimum_proven_complete_old_tasks": 1,
+  "minimum_proven_complete_old_tasks": 2,
   "exact_global_complete_total": "not established; at least1",
   "important": "At least1full old task proved;19partial,19named scopes not transferred,74not yet fully reconciled. Exact global complete total remains unestablished. Already-main subclauses and approved semantic alternatives are retained.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
@@ -1085,7 +1085,8 @@
       "historical_graph_description": "Make lock replay explain exact choices, captures and selected technical edges.\nAcceptance criteria: Lock round-trip reconstructs requested versus resolved semantics distinctly.; Every induced edge explains its source declaration and consumer intent.",
       "status": "partial",
       "accepted_main_features": [
-        "F04"
+        "F04",
+        "F12"
       ],
       "accepted_main_commits": [
         "c20b6bc8945ad4ff971db4ba8a2e9b1aa8645424",
@@ -1095,10 +1096,11 @@
         "da741ee16315ab368c47eebd20db493bb97934d7",
         "237f7bf2bde418a041df184ce721c5e3bc4e0a42",
         "eefe840b8a13bd5e7b2a08a38779bb580dcf48f1",
-        "8f84aefb9cf94d7e875c6d25eb26b90a1d22a319"
+        "8f84aefb9cf94d7e875c6d25eb26b90a1d22a319",
+        "c5662ee420973d006d0b2f019496f58b65eb28a8"
       ],
-      "transferred_scope": "Original ConfigurationIntentDecl survives requires-edge authored round-trip and target-aware normalization.",
-      "unmet_or_unverified": "Supporting input boundary only: no complete requested-vs-resolved configuration lock round-trip, capture/domain/target or induced-edge explanations accepted. Do not count this as persistence delivery.",
+      "transferred_scope": "Selected-app index/work retains original input separately from normalized/effective evaluation, historical basis and origins; actual cross-process maintenance and child continuation retain it.",
+      "unmet_or_unverified": "Generic configured vibe.lock request/capture/definition/domain/target/provider-edge persistence and exact offline replay remain.",
       "exact_contract": {
         "goal": "Make lock replay explain exact choices, captures and selected technical edges.",
         "steps": [
@@ -1116,7 +1118,8 @@
         "acceptance": [
           "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
           "Every induced edge explains its source declaration and consumer intent."
-        ]
+        ],
+        "safe_stop": "Keep an old lock recognizable; do not silently reinterpret unknown epochs."
       },
       "contract_source": "campaigns/next/tasks/M-05-D.json",
       "criterion_counter": {
@@ -1124,9 +1127,73 @@
         "exact_old_clause": "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
         "gap_or_evidence_limit": "Requires-source intent round-trip is a supporting input slice, not the requested lock round-trip. Both the absence and partial label are scoped to that distinction."
       },
-      "implemented_coverage": "Original ConfigurationIntentDecl survives requires-edge authored round-trip and target-aware normalization.",
-      "remaining_behavior": "Supporting input boundary only: no complete requested-vs-resolved configuration lock round-trip, capture/domain/target or induced-edge explanations accepted. Do not count this as persistence delivery.",
-      "superseded_obligations": []
+      "implemented_coverage": "Selected-app index/work retains original input separately from normalized/effective evaluation, historical basis and origins; actual cross-process maintenance and child continuation retain it.",
+      "remaining_behavior": "Generic configured vibe.lock request/capture/definition/domain/target/provider-edge persistence and exact offline replay remain.",
+      "superseded_obligations": [],
+      "criterion_review": [
+        {
+          "id": "goal.1",
+          "exact_old_clause": "Make lock replay explain exact choices, captures and selected technical edges.",
+          "scoped_assessment": "App original/effective persistence and exact operation context now exist; configured lock/capture/provider-edge replay remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.1",
+          "exact_old_clause": "Serialize authored-request digest separately from active/dormant resolved selections and feature closure.",
+          "scoped_assessment": "Full original input is retained separately from active/dormant/resolved data in app index/work; not a new standalone authored-request digest or generic lock.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.2",
+          "exact_old_clause": "Record exact owner capture/definition, resolution domain/target, induced dependencies and selected capability providers.",
+          "scoped_assessment": "App historical definition, home/key/generation/source-route/dependency context are retained; no configured solver provider/domain capture closure.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.3",
+          "exact_old_clause": "Add reader migration/refusal and canonical ordering through existing generated format machinery.",
+          "scoped_assessment": "Generated index3/4, steps1/2 and strict readers provide the app format subset; no generic rich lock migration.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.1",
+          "exact_old_clause": "Lock preserves explicit choices and actual provider edges for offline replay.",
+          "scoped_assessment": "Actual offline app maintenance preserves explicit original input; selected capability-provider edges in configured lock replay are unproved.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.1",
+          "exact_old_clause": "Same-version changed definition or lost request digest cannot be accepted as exact replay.",
+          "scoped_assessment": "App expected-definition/basis/execution identity checks exist; generic missing request digest or changed capture exact replay is not implemented.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.2",
+          "exact_old_clause": "Derived selections cannot become the only authored authority.",
+          "scoped_assessment": "Actual app journey preserves original dormant input independently of empty effective features; generic package lock remains outside scope.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.1",
+          "exact_old_clause": "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
+          "scoped_assessment": "App index/work across-process round-trip separates request/result; not requested whole configured lock semantics.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.2",
+          "exact_old_clause": "Every induced edge explains its source declaration and consumer intent.",
+          "scoped_assessment": "App dependency context records key/scope/step/commands, but every induced configured solver/provider edge is not established.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "safe_stop.1",
+          "exact_old_clause": "Keep an old lock recognizable; do not silently reinterpret unknown epochs.",
+          "scoped_assessment": "Old app index/work versions remain independently recognized without fabricated rich history; generic lock evolution still separate.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        }
+      ],
+      "review_main_pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "review_evidence": "research/m05-app-transfer-review.md/.json"
     },
     {
       "old_task_id": "M-05-D.2",
@@ -1185,14 +1252,103 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Make changed user intent visible before install can report Fresh.\nAcceptance criteria: Fast-path decisions cite request/definition identity.; Discovery purity counters show no authored/cache mutation.",
-      "status": "not-transferred",
-      "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Configured request/definition freshness before Fresh and pure discovery not delivered by input-only admission.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Configured request/definition freshness before Fresh and pure discovery not delivered by input-only admission.",
-      "superseded_obligations": []
+      "status": "partial",
+      "accepted_main_features": [
+        "F04",
+        "F12"
+      ],
+      "accepted_main_commits": [
+        "c5662ee420973d006d0b2f019496f58b65eb28a8"
+      ],
+      "transferred_scope": "Supplied-definition app description/evaluation, expected-definition and automatic-basis checks, typed unresolved questions and no-execution refusal are accepted.",
+      "unmet_or_unverified": "Generic Fresh identity and cache-only discovery/service purity remain. CLI resolution may consult registry/cache; no provider-call or cache-write purity counters accepted.",
+      "implemented_coverage": "Supplied-definition app description/evaluation, expected-definition and automatic-basis checks, typed unresolved questions and no-execution refusal are accepted.",
+      "remaining_behavior": "Generic Fresh identity and cache-only discovery/service purity remain. CLI resolution may consult registry/cache; no provider-call or cache-write purity counters accepted.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Make changed user intent visible before install can report Fresh.",
+        "steps": [
+          "Compute request/definition freshness before bare-install shortcut.",
+          "Implement cached choices/catalog discovery through the M-16 service boundary.",
+          "Expose candidate definition/effects/defaults without selecting, fetching or writing; explicit preparation remains separate."
+        ],
+        "positive_cases": [
+          "Changing only a choice or requested feature defeats Fresh."
+        ],
+        "negative_cases": [
+          "Empty cache discovery returns unavailable with no provider call.",
+          "Repeated unresolved discovery state stops NeedsSelection instead of looping."
+        ],
+        "acceptance": [
+          "Fast-path decisions cite request/definition identity.",
+          "Discovery purity counters show no authored/cache mutation."
+        ],
+        "safe_stop": "Discovery-only result is useful and does not admit an install."
+      },
+      "criterion_review": [
+        {
+          "id": "goal.1",
+          "exact_old_clause": "Make changed user intent visible before install can report Fresh.",
+          "scoped_assessment": "App pre-execution request/definition review exists; generic bare-install Fresh identity is absent.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.1",
+          "exact_old_clause": "Compute request/definition freshness before bare-install shortcut.",
+          "scoped_assessment": "App normalization/staleness precede effects; generic plan explicitly refuses configuration before Fresh instead of supporting it.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.2",
+          "exact_old_clause": "Implement cached choices/catalog discovery through the M-16 service boundary.",
+          "scoped_assessment": "No cached common discovery/service boundary was activated.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.3",
+          "exact_old_clause": "Expose candidate definition/effects/defaults without selecting, fetching or writing; explicit preparation remains separate.",
+          "scoped_assessment": "Local projection of supplied resolved app definition/default/effect data exists; CLI resolution may fetch/cache and is not pure cached discovery.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.1",
+          "exact_old_clause": "Changing only a choice or requested feature defeats Fresh.",
+          "scoped_assessment": "Actual app modify/update consume changed input; no generic choice-only change through bare-install Fresh tested.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.1",
+          "exact_old_clause": "Empty cache discovery returns unavailable with no provider call.",
+          "scoped_assessment": "No empty-cache/no-provider-call discriminator or completed cache-only service.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.2",
+          "exact_old_clause": "Repeated unresolved discovery state stops NeedsSelection instead of looping.",
+          "scoped_assessment": "App prepare returns structured unresolved without machine polling; generic service convergence remains unimplemented.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.1",
+          "exact_old_clause": "Fast-path decisions cite request/definition identity.",
+          "scoped_assessment": "App expected-definition and review basis carry identities; generic Fresh decision does not admit rich configuration.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.2",
+          "exact_old_clause": "Discovery purity counters show no authored/cache mutation.",
+          "scoped_assessment": "No authored/cache purity counters in accepted app describe/plan scenarios.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "safe_stop.1",
+          "exact_old_clause": "Discovery-only result is useful and does not admit an install.",
+          "scoped_assessment": "App unresolved machine plan remains useful and omits execution; it does not admit install.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        }
+      ],
+      "review_main_pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "review_evidence": "research/m05-app-transfer-review.md/.json"
     },
     {
       "old_task_id": "M-05-E.2",
@@ -1200,14 +1356,110 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Distinguish replay from reconfiguration when definitions change.\nAcceptance criteria: Replay/update reports distinguish exact reuse from changed semantic inputs.; No new option is selected as an incidental solver decision.",
-      "status": "not-transferred",
-      "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Full exact configured reinstall/intent-preserving update not accepted; app candidate excluded.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Full exact configured reinstall/intent-preserving update not accepted; app candidate excluded.",
-      "superseded_obligations": []
+      "status": "partial",
+      "accepted_main_features": [
+        "F04",
+        "F12"
+      ],
+      "accepted_main_commits": [
+        "c5662ee420973d006d0b2f019496f58b65eb28a8"
+      ],
+      "transferred_scope": "Actual selected-app modify/update/rollback/force repair preserve original/dormant input and path realization; automatic-basis changes require review.",
+      "unmet_or_unverified": "Generic exact-capture configured reinstall and definition/payload/induced-provider-graph update diff remain. Scalar default-change unit is not group-default CLI proof; rich portable roundtrip remains.",
+      "implemented_coverage": "Actual selected-app modify/update/rollback/force repair preserve original/dormant input and path realization; automatic-basis changes require review.",
+      "remaining_behavior": "Generic exact-capture configured reinstall and definition/payload/induced-provider-graph update diff remain. Scalar default-change unit is not group-default CLI proof; rich portable roundtrip remains.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Distinguish replay from reconfiguration when definitions change.",
+        "steps": [
+          "Route reinstall to exact captures and locked selections without solving or picking defaults.",
+          "Keep authored choices during update and produce exact definition/payload/induced-graph diff.",
+          "Require explicit reconfiguration for removed options/new required groups; preserve force/assume-yes meanings."
+        ],
+        "positive_cases": [
+          "Prepared offline reinstall reproduces the lock without prompts.",
+          "Update retains an explicit selection even if the package default changes."
+        ],
+        "negative_cases": [
+          "Missing capture, removed option or changed definition refuses/stales instead of silently reselecting.",
+          "Force cannot change chosen branch."
+        ],
+        "acceptance": [
+          "Replay/update reports distinguish exact reuse from changed semantic inputs.",
+          "No new option is selected as an incidental solver decision."
+        ],
+        "safe_stop": "Return a complete reconfiguration plan without applying drift."
+      },
+      "criterion_review": [
+        {
+          "id": "goal.1",
+          "exact_old_clause": "Distinguish replay from reconfiguration when definitions change.",
+          "scoped_assessment": "Selected-app preservation/review distinguishes changed automatic basis; generic configured exact replay remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.1",
+          "exact_old_clause": "Route reinstall to exact captures and locked selections without solving or picking defaults.",
+          "scoped_assessment": "Exact app continuation restores retained public input and source route; no generic captured lock reinstall without solve/default picking.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.2",
+          "exact_old_clause": "Keep authored choices during update and produce exact definition/payload/induced-graph diff.",
+          "scoped_assessment": "App update preserves input and renders typed definition/features/parameter/data diff; no payload/induced-provider-graph diff.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.3",
+          "exact_old_clause": "Require explicit reconfiguration for removed options/new required groups; preserve force/assume-yes meanings.",
+          "scoped_assessment": "App normalization/review refuses incompatible/automatic drift before effects; cross-kind reconfiguration semantics remain.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.1",
+          "exact_old_clause": "Prepared offline reinstall reproduces the lock without prompts.",
+          "scoped_assessment": "Offline local-registry force repair is demonstrated; not exact captured generic lock replay.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.2",
+          "exact_old_clause": "Update retains an explicit selection even if the package default changes.",
+          "scoped_assessment": "Library explicit scalar7 survives changed default1to2; app journey preserves explicit/dormant selections across update. Do not claim a group-default-change CLI case from the scalar test.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.1",
+          "exact_old_clause": "Missing capture, removed option or changed definition refuses/stales instead of silently reselecting.",
+          "scoped_assessment": "App stale/basis/invalid-input paths refuse; whole payload capture absence and generic replay remain.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.2",
+          "exact_old_clause": "Force cannot change chosen branch.",
+          "scoped_assessment": "Actual app force repair retains original chosen input; no blanket solver branch invariant is proven.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.1",
+          "exact_old_clause": "Replay/update reports distinguish exact reuse from changed semantic inputs.",
+          "scoped_assessment": "App typed review and retained operation context exist; complete configured replay/update payload/edge report remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.2",
+          "exact_old_clause": "No new option is selected as an incidental solver decision.",
+          "scoped_assessment": "Core forbids accidental choice activation; app consumes explicit resolved selection. Configured solver candidate/backtracking consumer remains absent.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "safe_stop.1",
+          "exact_old_clause": "Return a complete reconfiguration plan without applying drift.",
+          "scoped_assessment": "App questions/typed review prevent effect execution; full generic reconfiguration plan remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        }
+      ],
+      "review_main_pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "review_evidence": "research/m05-app-transfer-review.md/.json"
     },
     {
       "old_task_id": "M-05-E.3",
@@ -1267,14 +1519,110 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Expose explicit selection through TTY and machine clients without inferred answers.\nAcceptance criteria: CLI/service/MCP produce the same request and prepared effect graph.; Machine invocation completes or returns typed input requirements without waiting on TTY.",
-      "status": "not-transferred",
-      "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Complete common CLI/service/MCP interaction not accepted; app candidate excluded.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Complete common CLI/service/MCP interaction not accepted; app candidate excluded.",
-      "superseded_obligations": []
+      "status": "partial",
+      "accepted_main_features": [
+        "F04",
+        "F12"
+      ],
+      "accepted_main_commits": [
+        "c5662ee420973d006d0b2f019496f58b65eb28a8"
+      ],
+      "transferred_scope": "Common selected-app CLI/serialized input and typed questions share the evaluator and persist answers; actual PTY edits preserve explicit/dormant choices and noninteractive unresolved input refuses without effects.",
+      "unmet_or_unverified": "MCP/service/all-kind parity and configured package dependency/forward/subskill effects remain. Generic prepared-plan and yes-as-answer runtime negative are not inferred from app consent separation.",
+      "implemented_coverage": "Common selected-app CLI/serialized input and typed questions share the evaluator and persist answers; actual PTY edits preserve explicit/dormant choices and noninteractive unresolved input refuses without effects.",
+      "remaining_behavior": "MCP/service/all-kind parity and configured package dependency/forward/subskill effects remain. Generic prepared-plan and yes-as-answer runtime negative are not inferred from app consent separation.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Expose explicit selection through TTY and machine clients without inferred answers.",
+        "steps": [
+          "Build TTY radio/checkbox discovery from the same captured definition/effects model as machine requests.",
+          "Require explicit selections or explicit allow-defaults unattended; no JSON/non-TTY prompt and no assume-yes semantic answer.",
+          "Expose exact typed NeedsSelection/questions and prepared plan through M-16 operations; save applied intent."
+        ],
+        "positive_cases": [
+          "Attended installation shows default/effects and persists chosen values.",
+          "Explicit unattended allow-defaults binds the shown definition."
+        ],
+        "negative_cases": [
+          "Missing required input, unknown option or conflicting exact choice refuses before mutation.",
+          "No lexical fallback or implicit default selection in unattended mode."
+        ],
+        "acceptance": [
+          "CLI/service/MCP produce the same request and prepared effect graph.",
+          "Machine invocation completes or returns typed input requirements without waiting on TTY."
+        ],
+        "safe_stop": "Stop at NeedsSelection with exact definition identity."
+      },
+      "criterion_review": [
+        {
+          "id": "goal.1",
+          "exact_old_clause": "Expose explicit selection through TTY and machine clients without inferred answers.",
+          "scoped_assessment": "Actual common app TTY/JSON/library intent flow exists; generic/service/MCP parity does not.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.1",
+          "exact_old_clause": "Build TTY radio/checkbox discovery from the same captured definition/effects model as machine requests.",
+          "scoped_assessment": "App controls and callbacks share core definition/evaluator, including real PTY edit/dormant behavior; no generic cached effect-graph discovery.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.2",
+          "exact_old_clause": "Require explicit selections or explicit allow-defaults unattended; no JSON/non-TTY prompt and no assume-yes semantic answer.",
+          "scoped_assessment": "Machine explicit policy/questions and no-prompt path tested; assume-yes separation source-backed, not a newly identified --yes negative test.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "steps.3",
+          "exact_old_clause": "Expose exact typed NeedsSelection/questions and prepared plan through M-16 operations; save applied intent.",
+          "scoped_assessment": "App typed evaluation/questions/plan and applied intent persist; M16/MCP counterpart remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.1",
+          "exact_old_clause": "Attended installation shows default/effects and persists chosen values.",
+          "scoped_assessment": "Real attended modify preserves selected values and execution; initial common install in cited case is machine input. Existing legacy attended wizard is baseline, not new all-kind evidence.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "positive_cases.2",
+          "exact_old_clause": "Explicit unattended allow-defaults binds the shown definition.",
+          "scoped_assessment": "Actual use-declared-defaults input binds current selected definition; public split expected-definition source check exists.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.1",
+          "exact_old_clause": "Missing required input, unknown option or conflicting exact choice refuses before mutation.",
+          "scoped_assessment": "Missing required choice/secret and malformed supplied values refuse without execution/index; unknown/reference/conflict handling uses core, full multi-consumer installation negative matrix remains.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "negative_cases.2",
+          "exact_old_clause": "No lexical fallback or implicit default selection in unattended mode.",
+          "scoped_assessment": "No lexical choice fallback; unattended missing choice returns question/refusal. No generic/MCP unattended route established.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.1",
+          "exact_old_clause": "CLI/service/MCP produce the same request and prepared effect graph.",
+          "scoped_assessment": "CLI and library use common evaluator; MCP/service prepared graph parity missing.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "acceptance.2",
+          "exact_old_clause": "Machine invocation completes or returns typed input requirements without waiting on TTY.",
+          "scoped_assessment": "Actual JSON/unattended app returns typed requirements/no execution instead of waiting on TTY.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        },
+        {
+          "id": "safe_stop.1",
+          "exact_old_clause": "Stop at NeedsSelection with exact definition identity.",
+          "scoped_assessment": "App questions retain definition identity; no complete generic configured service NeedsSelection boundary.",
+          "evidence_kind": "source plus specifically matched tests; full old clause not declared complete"
+        }
+      ],
+      "review_main_pin": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "review_evidence": "research/m05-app-transfer-review.md/.json"
     },
     {
       "old_task_id": "M-05-F.1",
@@ -2125,13 +2473,17 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.\nAcceptance criteria: Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.2; Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.; Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
-      "status": "partial",
-      "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": "Already-main package scaffolding, declared link/default format and correct provenance marker; default Markdown init route.",
-      "unmet_or_unverified": "Choose the existing host consumer spec_format before ordinary init boot regeneration; verify unchanged XML lane/INDEX/redirects and derived slots with real XML/Markdown controls. Do not interpret all writes into vibedeps as globally forbidden during install: this task concerns unrelated init preserving existing dependency state.",
-      "implemented_coverage": "Already-main package scaffolding, declared link/default format and correct provenance marker; default Markdown init route.",
-      "remaining_behavior": "Choose the existing host consumer spec_format before ordinary init boot regeneration; verify unchanged XML lane/INDEX/redirects and derived slots with real XML/Markdown controls. Do not interpret all writes into vibedeps as globally forbidden during install: this task concerns unrelated init preserving existing dependency state.",
+      "status": "full",
+      "accepted_main_features": [
+        "F13"
+      ],
+      "accepted_main_commits": [
+        "bc49f122007b6f46242de6f91afcbae44489aa70"
+      ],
+      "transferred_scope": "Ordinary init preserves declared XML/Markdown host dialect and nonempty existing dependency/source/boot/launcher bytes; absent host setting remains Mixed and package format/link semantics stay separate.",
+      "unmet_or_unverified": "No missing G2 behavior at accepted boundary. Native Windows/macOS qualification stays open; G1/G3 remain separate.",
+      "implemented_coverage": "Full scoped G2 behavior accepted with real CLI preservation and existing default/marker controls.",
+      "remaining_behavior": "No missing scoped G2 behavior; separate native qualification and G1/G3 work remain.",
       "superseded_obligations": [],
       "exact_contract": {
         "id": "M-06-G.2",
@@ -2188,8 +2540,8 @@
           "kind": "steps",
           "index": 1,
           "exact": "Reproduce init package in a disposable xml-spec_format project with existing STATIC.xml/INDEX and generated instruction blocks; capture host and derived dependency bytes before the command.",
-          "assessment": "unverified main execution",
-          "analysis": "Prototype real CLI fixture captures existing XML lane and nonempty derived tree before adding second package. Current main has no same named host-format fixture; no command run in audit.",
+          "assessment": "satisfied at original scoped boundary",
+          "analysis": "Actual pre-fix XML CLI RED succeeded and added the package but changed the lane/index/three launchers; four installed dependency files made preservation non-vacuous.",
           "evidence": [
             "prototype cli_init/init_package_host_format.rs:seed_static_host,init_package_keeps_existing_xml_host_and_derived_slots"
           ]
@@ -2198,8 +2550,8 @@
           "kind": "steps",
           "index": 2,
           "exact": "Carry the selected host dialect into boot regeneration or skip it when unnecessary; never default this path to Mixed/STATIC.md and never treat a vibedeps slot as a write target.",
-          "assessment": "missing",
-          "analysis": "Ordinary create_package_in_project calls generate_boot_artifacts, which unconditionally selects Mixed. regenerate_boot_with_spec_format/traced passes it through to unit/node generation; downstream selected/stale path depends on passed value. Analyzer reads existing artifact dialect but is not in this init call chain. Prototype fixes only helper by reading root consumer spec_format.",
+          "assessment": "satisfied at original scoped boundary",
+          "analysis": "Existing root consumer spec_format reaches the incumbent generator; absent keeps Mixed. XML/explicitMarkdown/default snapshots are equal after correction.",
           "evidence": [
             "main init/package.rs:110-146",
             "main init/helpers.rs:162-179",
@@ -2213,8 +2565,8 @@
           "kind": "steps",
           "index": 3,
           "exact": "Characterize scaffold tool format/link defaults and static marker spelling against declared options and update only their documented mismatch.",
-          "assessment": "covered/source with partial test map",
-          "analysis": "Main already honors declared link, defaults format to normal, and marker spells group exactly once. Actual marker and nested link tests exist in baseline; prototype adds combined format/link default test. Preserve current version cohort, do not transplant old version literals.",
+          "assessment": "satisfied at original scoped boundary",
+          "analysis": "Existing marker/link controls passed. The default Tool test now also asserts parsed Normal format and Dynamic link; explicit new package Simple/Dynamic is independent. Parser Simple compatibility is separately characterized.",
           "evidence": [
             "main init/package.rs:83-101,255-268",
             "main init/prompts.rs:package_fields_from_args",
@@ -2226,8 +2578,8 @@
           "kind": "positive_cases",
           "index": 1,
           "exact": "The new package slot is present; host STATIC.xml and instruction blocks still name XML, and vibedeps remains byte-identical.",
-          "assessment": "missing",
-          "analysis": "Mixed route can select STATIC.md and remove stale STATIC.xml, rewriting INDEX/redirect dialect; unit generation can also replace XML dependency cache. Existing byte-equal/fingerprint skip only applies when selected lane exists and opposite lane absent, so it does not hide this format change. Static inference; no fresh CLI RED claimed.",
+          "assessment": "satisfied at original scoped boundary",
+          "analysis": "New package manifest exists; exact XML lane/INDEX/launcher and nonempty dependency/source/host snapshots are preserved.",
           "evidence": [
             "main hybrid_emit.rs:373-393,410-424",
             "main publication.rs:134-170",
@@ -2238,8 +2590,8 @@
           "kind": "positive_cases",
           "index": 2,
           "exact": "The same command remains correct for a Markdown-lane host.",
-          "assessment": "covered default path; preservation fixture unverified",
-          "analysis": "Mixed is correct for unspecified Markdown host and existing init functionality is present; exact nonempty derived-tree unchanged control has no fresh main execution.",
+          "assessment": "satisfied at original scoped boundary",
+          "analysis": "Explicit Markdown and absent-setting compatibility cases passed with the same preservation oracle.",
           "evidence": [
             "main init/helpers.rs:176-179",
             "prototype Markdown host test"
@@ -2249,8 +2601,8 @@
           "kind": "negative_cases",
           "index": 1,
           "exact": "Init package removes STATIC.xml or rewrites a dependency slot boot lane.",
-          "assessment": "missing",
-          "analysis": "Same ordinary hardcoded-Mixed callee chain leaves this unwanted effect reachable. Quiet/success output does not modify the generation path.",
+          "assessment": "satisfied at original scoped boundary",
+          "analysis": "Pre-fix lane removal was reproduced; exact path-to-byte maps and absent alternate-lane assertions reject it. Initial RED did not falsely claim dependency mutation.",
           "evidence": [
             "main init/helpers.rs:176-179",
             "main bootgen.rs:281-290",
@@ -2261,8 +2613,8 @@
           "kind": "negative_cases",
           "index": 2,
           "exact": "A quiet successful command hides a host dialect change or writes into derived dependencies.",
-          "assessment": "missing",
-          "analysis": "Same ordinary hardcoded-Mixed callee chain leaves this unwanted effect reachable. Quiet/success output does not modify the generation path.",
+          "assessment": "satisfied at original scoped boundary",
+          "analysis": "Success is not the oracle: exact content and references are checked. Quiet affects reporting, not target selection; no separate quiet execution is claimed.",
           "evidence": [
             "main init/helpers.rs:176-179",
             "main bootgen.rs:281-290",
@@ -2273,8 +2625,8 @@
           "kind": "acceptance",
           "index": 1,
           "exact": "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.2",
-          "assessment": "covered (review procedure)",
-          "analysis": "Exact task read; historical commands not executed.",
+          "assessment": "satisfied at original scoped boundary",
+          "analysis": "Root read the complete pinned G2 contract, including checks/notes/safe-stop as historical data.",
           "evidence": [
             "pinned task contract",
             "bounded source/test ledger"
@@ -2284,8 +2636,8 @@
           "kind": "acceptance",
           "index": 2,
           "exact": "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.",
-          "assessment": "partial",
-          "analysis": "Choose the existing host consumer spec_format before ordinary init boot regeneration; verify unchanged XML lane/INDEX/redirects and derived slots with real XML/Markdown controls. Do not interpret all writes into vibedeps as globally forbidden during install: this task concerns unrelated init preserving existing dependency state.",
+          "assessment": "satisfied at original scoped boundary",
+          "analysis": "Minimal helper and actual current-main ordinary-init cases establish requested package addition without host/installed-state conversion.",
           "evidence": [
             "pinned task contract",
             "bounded source/test ledger"
@@ -2295,8 +2647,8 @@
           "kind": "acceptance",
           "index": 3,
           "exact": "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
-          "assessment": "unverified current runtime; historical evidence retained",
-          "analysis": "Historical source receipts explicitly leave native Windows unperformed/open. This audit has no runtime permission, so current target fixture definitions and source bodies are evidence, not fresh PASS; native gap is not silently waived or used to demand unrelated platform work.",
+          "assessment": "satisfied at original scoped boundary",
+          "analysis": "Root reviewed RED/GREEN,37distinct tests and the strengthened1/1 existing control. Native Windows remains explicitly open/unperformed as the acceptance requires; it is not waived.",
           "evidence": [
             "pinned task contract",
             "bounded source/test ledger"
@@ -2304,9 +2656,9 @@
         }
       ],
       "architecture": "CLI init host-format input adapter into incumbent boot generation; minimal prototype fix is local helper selection, with current-main fixtures and existing owner behavior preserved.",
-      "review_main_pin": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
-      "review_evidence": "research/m06-g123-transfer-review.md/.json",
-      "review_disposition": "Root accepted bounded partial classification; coverage already existed in main, no new runtime code or test execution in this review"
+      "review_main_pin": "bc49f122007b6f46242de6f91afcbae44489aa70",
+      "review_evidence": "research/m06-g2-transfer-acceptance.md/.json",
+      "review_disposition": "Root accepted full original scoped task, without native qualification or G3 waiver"
     },
     {
       "old_task_id": "M-06-G.3",
@@ -3342,6 +3694,6 @@
   ],
   "count_caution": "The 0 complete lower bound is epistemic, not evidence all 113 fail. In particular M-01-A.3 could be complete once original caller inventory is reconciled. No missing type-name or broader subsystem requirement is used as a criterion substitute.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
-  "version_note": "Cumulative scoped reconciliation: M01A3 full accepted; prior M06 seven-row update; G1/G2/G3 unknown→partial after30clause/57pinned-source review. Initial whole-crosswalk pin remains historical; per-row review pins are explicit. No new runtime execution or additional full-task completion.",
-  "latest_scoped_review_main_pin": "5d44c51045fbcc8809db50fc677e950bb60d2d52"
+  "version_note": "M01A3 and M06G2 full. Four M05 partial scopes updated after accepted app runtime.2full/24partial/16named untransferred/71unknown; exact global completed total remains unestablished.",
+  "latest_scoped_review_main_pin": "bc49f122007b6f46242de6f91afcbae44489aa70"
 }

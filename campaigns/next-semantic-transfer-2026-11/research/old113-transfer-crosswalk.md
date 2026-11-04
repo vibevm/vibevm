@@ -1,8 +1,8 @@
 # Old 113 task semantic-transfer crosswalk
 
-Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. Latest G1/G2/G3 review uses accepted main `5d44c5104`. Unaccepted common-app runtime is excluded; the latest review ran no builds or tests.
+Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. G123 review uses accepted main `5d44c5104`; the later app scope review uses `c5662ee42`, and G2 is accepted in `bc49f1220`. Unaccepted common-app runtime is excluded; the latest review ran no builds or tests.
 
-**Current counting result:** 113 old accepted IDs verified: **1 full semantic transfer, 22 partial correspondences, 19 scopes with no accepted campaign delivery, 71 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). **The exact global completed total remains unestablished; at least1is proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **2 full semantic transfers, 24 partial correspondences, 16 scopes with no accepted campaign delivery, 71 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least2are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -128,6 +128,8 @@ Exact old clause: “Every graph edge has a selected declaration/provider proven
 
 ### M-05-D.1 — Persist requested intent separately from resolved configuration
 
+Current accepted app scope is expanded in the [four-row runtime review](m05-app-transfer-review.md); the following initial mapping predates c5662ee42. Generic configured lock/provider-edge replay remains open.
+
 Accepted mapping: F04; commits c20b6bc89, 033a4236d, 5af2eadc8, d0c961277, da741ee16, 237f7bf2b, eefe840b8, 8f84aefb9.
 
 **Implemented:** Original ConfigurationIntentDecl survives requires-edge authored round-trip and target-aware normalization.
@@ -180,9 +182,9 @@ Exact old clause: “Retain repeated occurrences, inclusion chains, source posit
 - M-05-B.3: No accepted executable syntax-preserving idempotent migration; authored admission is not migration.
 - M-05-C.1: Prototype transaction catalog binding remains transfer work; no accepted F04 configured solver integration.
 - M-05-C.2: Candidate-conditioned configured solving/backtracking not delivered by common closure/choice kernel.
-- M-05-E.1: Configured request/definition freshness before Fresh and pure discovery not delivered by input-only admission.
-- M-05-E.2: Full exact configured reinstall/intent-preserving update not accepted; app candidate excluded.
-- M-05-E.4: Complete common CLI/service/MCP interaction not accepted; app candidate excluded.
+- M-05-E.1: now partial local app inspection/review/no-execution semantics; generic Fresh/cache-only discovery remains open.
+- M-05-E.2: now partial accepted app original-intent maintenance; generic exact-capture replay and induced-graph update remain open.
+- M-05-E.4: now partial common app CLI/PTY/machine questions; MCP/service/all-kind parity remains open.
 - M-05-F.1: No accepted Redbook configuration/continuity dogfood slice in F01-F08.
 - M-05-F.2: No accepted Redbook consumer migration slice in F01-F08.
 - M-05-G.1: Full configured solver/backend/workspace parity not accepted by kernel unit/differential gates.
@@ -205,7 +207,7 @@ Preserved versions: `/tmp/nst-old113-transfer-crosswalk-before-root-correction.{
 
 ## Root reconciliation boundary
 
-Root verified the exact113ID set against the recovered remaining109 complement, all19pinned input/contract hashes and15implementation commit ancestry links. Intentional target alternatives (shared source inodes, literal percent spelling, avoiding an unconsumed proof wrapper) are accepted design decisions, not missing work merely because they differ from prototype types. Useful observable semantics still require their own decision/evidence. The A3 caller matrix was accepted separately; only that proven full task contributes to the current lower bound. Source runtime flags and the1056history census are unaffected.
+Root verified the exact113ID set against the recovered remaining109 complement, all19pinned input/contract hashes and15implementation commit ancestry links. Intentional target alternatives (shared source inodes, literal percent spelling, avoiding an unconsumed proof wrapper) are accepted design decisions, not missing work merely because they differ from prototype types. Useful observable semantics still require their own decision/evidence. The A3 caller matrix and later G2 preservation matrix were accepted separately; those two proven tasks form the current lower bound. Source runtime flags and the1056history census are unaffected.
 
 
 ## M06 bounded update
@@ -214,10 +216,16 @@ Seven formerly unknown rows were reconciled in [the M06 review](m06-transfer-cro
 
 ## G1/G2/G3 scoped follow-through
 
-[The three-row review](m06-g123-transfer-review.md) maps30 exact clauses against actual source and fixture definitions. Root verified57 pinned Git-object hashes and9 byte-identical pre-campaign comparisons. All three rows become partial because useful pieces already existed in main; this review transfers no new code and closes no whole task. Current partition is1full/22partial/19named untransferred/71unknown.
+[The three-row review](m06-g123-transfer-review.md) maps30 exact clauses against actual source and fixture definitions. Root verified57 pinned Git-object hashes and9 byte-identical pre-campaign comparisons. All three rows become partial because useful pieces already existed in main; this review transfers no new code and closes no whole task. At that review boundary the partition was1full/22partial/19named untransferred/71unknown; later updates below supersede it.
 
 - G1 still needs same-source section/preamble once coverage across normal contributions, preserving uncovered fragments and equal prose from different documents; ordinary simple/embed distinctions already work.
 - G2 ordinary init still hardcodes Mixed instead of reading the host consumer dialect, potentially replacing XML and disturbing derived state. The next narrow atom is the existing dialect adapter plus real XML/Markdown preservation cases.
 - G3 needs generated-payload exclusion in both source walks, authored static-zone projection and selected source-member publication protection. Existing multi-fragment retention and compiled-STATIC citation refusal must be preserved.
 
 These are source-derived gaps, not fresh runtime failures. G2 is independent of the current app runtime, while these foundations must precede their consuming package/init enhancements. Native Windows qualification remains explicitly unperformed.
+
+## Accepted runtime and G2 update
+
+[Four M05 rows](m05-app-transfer-review.md) now reflect the accepted c5662ee42 runtime. D1 remains partial with actual app index/work original-input persistence; E1/E2/E4 move from not-transferred to partial for local inspection/review, real app maintenance and common CLI/PTY/question handling. Root verified38source files,7standing files,2old contract containers and8evidence artifacts. No generic solver/provider-edge lock replay, cache-only discovery purity or MCP/all-kind parity is inferred. No whole M05 task is closed.
+
+[G2 is fully accepted at its original ordinary-init boundary](m06-g2-transfer-acceptance.md) in bc49f1220, with actual XML RED/GREEN, three host variants,37distinct CLI tests and the strengthened existing Tool control. Native Windows qualification stays explicitly open as its original acceptance requires. G1/G3 remain partial. The current total is2full/24partial/16named untransferred/71unknown; exact global completion is still unestablished.

@@ -1,0 +1,194 @@
+{
+  "old_task_id": "M-06-G.2",
+  "status": "full",
+  "accepted_main_commit": "bc49f122007b6f46242de6f91afcbae44489aa70",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "scope": "ordinary init dialect/derived/source preservation; no G1/G3 completion",
+  "exact_contract": {
+    "id": "M-06-G.2",
+    "title": "Preserve XML host dialect and derived dependency state during init",
+    "goal": "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.",
+    "read_paths": [
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+      "crates/vibe-cli/src/commands/init/",
+      "crates/vibe-workspace/src/install/bootgen/",
+      "crates/vibe-workspace/src/vibedeps/",
+      "crates/vibe-workspace/src/boot_artifacts/"
+    ],
+    "write_paths": [
+      "crates/vibe-cli/src/commands/init/",
+      "crates/vibe-workspace/src/install/bootgen/",
+      "crates/vibe-workspace/src/vibedeps/",
+      "crates/vibe-workspace/src/boot_artifacts/",
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml"
+    ],
+    "steps": [
+      "Reproduce init package in a disposable xml-spec_format project with existing STATIC.xml/INDEX and generated instruction blocks; capture host and derived dependency bytes before the command.",
+      "Carry the selected host dialect into boot regeneration or skip it when unnecessary; never default this path to Mixed/STATIC.md and never treat a vibedeps slot as a write target.",
+      "Characterize scaffold tool format/link defaults and static marker spelling against declared options and update only their documented mismatch."
+    ],
+    "positive_cases": [
+      "The new package slot is present; host STATIC.xml and instruction blocks still name XML, and vibedeps remains byte-identical.",
+      "The same command remains correct for a Markdown-lane host."
+    ],
+    "negative_cases": [
+      "Init package removes STATIC.xml or rewrites a dependency slot boot lane.",
+      "A quiet successful command hides a host dialect change or writes into derived dependencies."
+    ],
+    "checks": [
+      "SELECT BEFORE DISPATCH: bind the affected vibe-workspace/vibe-cli/vibe-spec target and exact regression cases from source before compiling; use --lib or a named integration target.",
+      "RUN BOUND CHECKS: cargo test -p vibe-workspace --lib <reviewed case> -- --exact or the corresponding affected named target; require one nonzero selected case.",
+      "CONDITIONAL ORACLE: run codegen/specmap only if a changed schema, generator, source index or dependent contract actually requires it; do not use a broad gate from write perimeter alone."
+    ],
+    "acceptance": [
+      "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.2",
+      "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.",
+      "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."
+    ],
+    "safe_stop": "Keep the regression reproducible in a disposable fixture and report exact unsupported behavior until the affected path is fixed.",
+    "commit_subject": "fix(init): preserve XML host boot dialect",
+    "notes": [
+      "Product-neutral regressions observed on a separate local main are hypotheses for this next checkout until disposable current-tree tests prove them. Do not copy fixture-specific package names or publish external package sets.",
+      "Maintain the mutable 1.1.0 cohort and the no-public-Git hold. Bind only affected tests; no mutation suite or routine whole-workspace gate."
+    ]
+  },
+  "clauses": [
+    {
+      "kind": "steps",
+      "index": 1,
+      "exact": "Reproduce init package in a disposable xml-spec_format project with existing STATIC.xml/INDEX and generated instruction blocks; capture host and derived dependency bytes before the command.",
+      "assessment": "satisfied at original scoped boundary",
+      "analysis": "Actual pre-fix XML CLI RED succeeded and added the package but changed the lane/index/three launchers; four installed dependency files made preservation non-vacuous.",
+      "evidence": [
+        "prototype cli_init/init_package_host_format.rs:seed_static_host,init_package_keeps_existing_xml_host_and_derived_slots"
+      ]
+    },
+    {
+      "kind": "steps",
+      "index": 2,
+      "exact": "Carry the selected host dialect into boot regeneration or skip it when unnecessary; never default this path to Mixed/STATIC.md and never treat a vibedeps slot as a write target.",
+      "assessment": "satisfied at original scoped boundary",
+      "analysis": "Existing root consumer spec_format reaches the incumbent generator; absent keeps Mixed. XML/explicitMarkdown/default snapshots are equal after correction.",
+      "evidence": [
+        "main init/package.rs:110-146",
+        "main init/helpers.rs:162-179",
+        "main bootgen.rs:271-291",
+        "main hybrid_emit.rs:373-398",
+        "main publication.rs:134-170",
+        "prototype init/helpers.rs:host spec_format selection"
+      ]
+    },
+    {
+      "kind": "steps",
+      "index": 3,
+      "exact": "Characterize scaffold tool format/link defaults and static marker spelling against declared options and update only their documented mismatch.",
+      "assessment": "satisfied at original scoped boundary",
+      "analysis": "Existing marker/link controls passed. The default Tool test now also asserts parsed Normal format and Dynamic link; explicit new package Simple/Dynamic is independent. Parser Simple compatibility is separately characterized.",
+      "evidence": [
+        "main init/package.rs:83-101,255-268",
+        "main init/prompts.rs:package_fields_from_args",
+        "main cli_init.rs:279-313",
+        "main cli_init_kinds.rs:283-308"
+      ]
+    },
+    {
+      "kind": "positive_cases",
+      "index": 1,
+      "exact": "The new package slot is present; host STATIC.xml and instruction blocks still name XML, and vibedeps remains byte-identical.",
+      "assessment": "satisfied at original scoped boundary",
+      "analysis": "New package manifest exists; exact XML lane/INDEX/launcher and nonempty dependency/source/host snapshots are preserved.",
+      "evidence": [
+        "main hybrid_emit.rs:373-393,410-424",
+        "main publication.rs:134-170",
+        "prototype XML host test snapshot assertions"
+      ]
+    },
+    {
+      "kind": "positive_cases",
+      "index": 2,
+      "exact": "The same command remains correct for a Markdown-lane host.",
+      "assessment": "satisfied at original scoped boundary",
+      "analysis": "Explicit Markdown and absent-setting compatibility cases passed with the same preservation oracle.",
+      "evidence": [
+        "main init/helpers.rs:176-179",
+        "prototype Markdown host test"
+      ]
+    },
+    {
+      "kind": "negative_cases",
+      "index": 1,
+      "exact": "Init package removes STATIC.xml or rewrites a dependency slot boot lane.",
+      "assessment": "satisfied at original scoped boundary",
+      "analysis": "Pre-fix lane removal was reproduced; exact path-to-byte maps and absent alternate-lane assertions reject it. Initial RED did not falsely claim dependency mutation.",
+      "evidence": [
+        "main init/helpers.rs:176-179",
+        "main bootgen.rs:281-290",
+        "main publication.rs:stale_static_file"
+      ]
+    },
+    {
+      "kind": "negative_cases",
+      "index": 2,
+      "exact": "A quiet successful command hides a host dialect change or writes into derived dependencies.",
+      "assessment": "satisfied at original scoped boundary",
+      "analysis": "Success is not the oracle: exact content and references are checked. Quiet affects reporting, not target selection; no separate quiet execution is claimed.",
+      "evidence": [
+        "main init/helpers.rs:176-179",
+        "main bootgen.rs:281-290",
+        "main publication.rs:stale_static_file"
+      ]
+    },
+    {
+      "kind": "acceptance",
+      "index": 1,
+      "exact": "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.2",
+      "assessment": "satisfied at original scoped boundary",
+      "analysis": "Root read the complete pinned G2 contract, including checks/notes/safe-stop as historical data.",
+      "evidence": [
+        "pinned task contract",
+        "bounded source/test ledger"
+      ]
+    },
+    {
+      "kind": "acceptance",
+      "index": 2,
+      "exact": "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.",
+      "assessment": "satisfied at original scoped boundary",
+      "analysis": "Minimal helper and actual current-main ordinary-init cases establish requested package addition without host/installed-state conversion.",
+      "evidence": [
+        "pinned task contract",
+        "bounded source/test ledger"
+      ]
+    },
+    {
+      "kind": "acceptance",
+      "index": 3,
+      "exact": "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
+      "assessment": "satisfied at original scoped boundary",
+      "analysis": "Root reviewed RED/GREEN,37distinct tests and the strengthened1/1 existing control. Native Windows remains explicitly open/unperformed as the acceptance requires; it is not waived.",
+      "evidence": [
+        "pinned task contract",
+        "bounded source/test ledger"
+      ]
+    }
+  ],
+  "checks": {
+    "named_nonzero_cases": 3,
+    "full_distinct_cli_tests": 37,
+    "stronger_existing_tool_control": 1,
+    "clippy_fmt_conform": 0,
+    "map_check": 0,
+    "map_units": 9068,
+    "map_items": 4904,
+    "map_edges": 4060,
+    "known_warnings": 43,
+    "blocking": 0
+  },
+  "limits": [
+    "Linux executed; native Windows/macOS remain unperformed",
+    "Requested package additions occur; no globally side-effect-free claim",
+    "G1/G3 remain separate"
+  ]
+}
