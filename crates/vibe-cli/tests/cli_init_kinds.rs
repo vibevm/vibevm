@@ -304,6 +304,13 @@ fn the_nested_form_honours_link_in_a_new_and_an_existing_project() {
     // Silent, the nested form keeps its default.
     init_nested(&user, &project, "org.example/plain", "tool");
     assert_eq!(link_of(&project, "plain"), Some(LinkType::Dynamic));
+    assert_eq!(
+        manifest(&project.join(common::pack_rel("org.example/plain/v0.1.0")))
+            .require_package()
+            .unwrap()
+            .format,
+        vibe_core::manifest::PackageFormat::Normal
+    );
     assert_checks(&user, &project);
 }
 

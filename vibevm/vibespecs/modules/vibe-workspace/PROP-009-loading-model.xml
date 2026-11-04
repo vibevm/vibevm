@@ -45,6 +45,7 @@
       </facts>
     </effective-boot>
     <artifacts title="2.3 Generated boot artifacts">
+      <p>When ordinary `vibe init package` regenerates an existing consumer, it retains the root consumer's declared `spec_format`. XML stays XML and explicit Markdown stays Markdown; an absent setting keeps the existing Mixed/Markdown compatibility. A new package's own `--format` and `--link` describe that package, not the host serialization target. Regeneration must preserve the existing host boot, managed launcher blocks, installed dependency bytes and unrelated source state while adding the requested package.</p>
       <p><ARTIFACTS-PAIR fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** For every entry-point node, `vibe install` generates two artifacts under the node's `vibevm/vibespecs/boot/`:</ARTIFACTS-PAIR></p>
       <facts ordered="false">
         <ARTIFACT-STATIC-MD fact="true" status="spec/work">**`STATIC.md`** — the **anchor-qualified** concatenation, in priority order, of every `static`-typed (§2.4) contribution in the node's effective boot: each contribution's content is carried whole, with its label definitions (heading anchors, fact ids) and intra-contribution label links rewritten to the origin-qualified form `&lt;origin-slug&gt;--&lt;original&gt;` (PROP-035 §8's qualify phase, B-011 — owner-approved 2026-08-04), so the compiled file's label namespace is collision-free by construction. Read first. Generated only when the node has `static` contributions.</ARTIFACT-STATIC-MD>
