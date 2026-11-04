@@ -2,81 +2,46 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#parsing");
 
-use super::facts::qualified_fact_tokens;
-use crate::doc::{BlockKind, Issue, IssueCode, ParsedDoc, Severity};
+use crate::doc::{Issue, IssueCode, ParsedDoc, Severity};
 use std::collections::HashMap;
 
 #[derive(Debug)]
 struct Definition {
     id: String,
     line: usize,
-    column: usize,
 }
 
 /// The anchored-when-marked law + one shared id namespace (PROP-043 §3.8):
 /// every marked countable unit needs a `##<ID>`; every id — fact or
 /// heading anchor — is unique per document.
-pub(super) fn check_anchor_laws(doc: &mut ParsedDoc, text: &str) {
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS"
+)]
+pub(super) fn check_anchor_laws(doc: &mut ParsedDoc) {
     let mut definitions = Vec::new();
     for u in &doc.units {
         if let Some(a) = &u.anchor {
             definitions.push(Definition {
                 id: a.clone(),
                 line: u.line_start,
-                column: 0,
             });
         }
     }
 
-    // A code-formatted citation must use the legacy `##ID` reference spelling.
-    // If its contents use `@fact:ID`, the definition spelling, count it as a
-    // definition too: matching a real id then produces the B-092 duplicate.
-    // Compare raw text with the parser's inline-code-blanked scan rather than
-    // lexing backticks again. Fenced/comment-only blocks are not Text blocks.
-    let lines: Vec<&str> = text.lines().collect();
-    for b in &doc.blocks {
-        if b.kind != BlockKind::Text {
-            continue;
-        }
-        let scan_lines: Vec<&str> = b.scan_text.lines().collect();
-        for (offset, line_no) in (b.line_start..=b.line_end).enumerate() {
-            let Some(raw) = lines.get(line_no - 1) else {
-                continue;
-            };
-            let scan = scan_lines.get(offset).copied().unwrap_or_default();
-            let mut visible: HashMap<String, usize> = HashMap::new();
-            for (id, _, _) in qualified_fact_tokens(scan, 0, scan.len()) {
-                *visible.entry(id).or_default() += 1;
-            }
-            for (id, column, _) in qualified_fact_tokens(raw, 0, raw.len()) {
-                let remaining = visible.entry(id.clone()).or_default();
-                if *remaining > 0 {
-                    *remaining -= 1;
-                    continue;
-                }
-                definitions.push(Definition {
-                    id,
-                    line: line_no,
-                    column,
-                });
-            }
-        }
-    }
-
-    // All actual definitions come from the parser, under either spelling.
+    // The parser already owns code-span/fence opacity and definition placement.
+    // Quoted anchor spellings are content, never additional definitions.
     for b in &doc.blocks {
         for f in &b.facts {
             if let Some(id) = &f.id {
                 definitions.push(Definition {
                     id: id.clone(),
                     line: f.line,
-                    column: 0,
                 });
             }
         }
     }
 
-    definitions.sort_by_key(|d| (d.line, d.column));
+    definitions.sort_by_key(|d| d.line);
     let mut seen: HashMap<String, usize> = HashMap::new();
     let mut new_issues = Vec::new();
     for definition in definitions {
@@ -134,14 +99,13 @@ mod tests {
     }
 
     #[test]
-    fn definition_form_used_as_inline_citation_is_a_duplicate() {
+    fn definition_form_quoted_in_inline_code_is_not_a_definition() {
         let doc = parse_document(
             "x.md",
             "# H {#h}\n\n@fact:SAME definition\n\n@fact:OTHER see `@fact:SAME`\n",
         );
-        let issues = duplicates(&doc);
-        assert_eq!(issues.len(), 1, "{:#?}", doc.issues);
-        assert!(issues[0].message.contains("lines 3 and 5"));
+        assert!(duplicates(&doc).is_empty(), "{:#?}", doc.issues);
+        assert_eq!(doc.fact_count, 2);
     }
 
     #[test]

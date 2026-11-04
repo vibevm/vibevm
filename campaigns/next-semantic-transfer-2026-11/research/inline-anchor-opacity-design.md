@@ -16,7 +16,15 @@ The parser's real unit and fact anchors are the sole definition set for duplicat
 
 Actual parsed definitions across headings/facts/typed facts share the same namespace and still reject duplicate IDs with useful line diagnostics. Marked units still require anchors; swallowed-anchor and typed-fence adjacency checks remain. A definition-looking token inside a code span or fence remains ordinary literal content and cannot add an address or create DuplicateId. Legacy literal citations remain compatible.
 
-No authored syntax, vibe.toml key, storage epoch, dependency or public Rust signature changes are needed. The diagnostic behavior changes: documents formerly rejected solely for quoting an existing anchor now pass. No document rewrite or migration is required. Record this change in FMT-013 and, after acceptance, add a dated supersession note to the existing B-092 record without erasing its historical rationale. Do not transplant prototype documentation version/count changes or unrelated corpus exceptions.
+No authored syntax, vibe.toml key, tracked campaign-cache schema, dependency or public Rust signature changes are needed. The diagnostic behavior changes: documents formerly rejected solely for quoting an existing anchor now pass. No authored document rewrite is required. Record this change in FMT-013 and, after acceptance, add a dated supersession note to the existing B-092 record without erasing its historical rationale. Do not transplant prototype documentation version/count changes or unrelated corpus exceptions.
+
+## Ordinary cached consumers are part of the correction
+
+Root review of the first green candidate found a missing path: its CLI tests all used --no-cache, while ground() can reuse a matching-content ParsedDoc from payload schema3. The corrected parser cannot remove a false error from an old parse that never reaches it. This is a source-derived upgrade concern until the warm-cache discriminator runs; it cannot be excluded from a complete ordinary-user correction.
+
+Use the existing erasable sidecar's foreign-schema-as-miss behavior: advance PAYLOAD_SCHEMA3→4 for the changed parse semantics, and document that its version covers semantic as well as structural changes. Do not change tracked CACHE_SCHEMA2 or invalidate/rekey verdicts, evidence, campaign maps or source hashes. No new recipe registry, parallel cache or bulk cleanup is needed. A read-only check must reparse old payloads without rewriting/deleting either the old sidecar or repository records; a normal cache-writing operation can later regenerate the derived payload under4.
+
+First preserve actual RED with an old3 payload and matching record/source, then run the fixed CLI WITHOUT --no-cache. Verify old payload is not reused, genuine duplicates still fail, unchanged source and tracked verdict state survive, read-only files remain byte-identical, and current4 warm/cold behavior agrees. Use only isolated synthetic settings/campaigns. Retain the existing9-file candidate report before this bounded amendment.
 
 ## Required proof and acceptance
 

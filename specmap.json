@@ -5267,6 +5267,15 @@
     },
     {
       "crate_name": "progress-core",
+      "file": "crates/progress-core/src/parse/anchors.rs",
+      "item_kind": "fn",
+      "line": 14,
+      "symbol": "progress_core::parse::anchors::check_anchor_laws",
+      "end_line": 78,
+      "fingerprint": "tok1:f3c1c72ce36b203bac191e9f9d37170fc9f0746346a2f9c302f779a75a59b0c2"
+    },
+    {
+      "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/blocks.rs",
       "item_kind": "mod",
       "line": 3,
@@ -5314,18 +5323,18 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/facts.rs",
       "item_kind": "fn",
-      "line": 125,
+      "line": 123,
       "symbol": "progress_core::parse::facts::blockquote_prefix_len",
-      "end_line": 145,
+      "end_line": 143,
       "fingerprint": "tok1:14763e9fd4800cda4cdd254a5faa478ba9c75661d113093e92a2b803983e778f"
     },
     {
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/facts.rs",
       "item_kind": "fn",
-      "line": 45,
+      "line": 43,
       "symbol": "progress_core::parse::facts::task_box_len",
-      "end_line": 83,
+      "end_line": 81,
       "fingerprint": "tok1:7f076ed3e18915286ac912f8ae239ed0d78d01fb4495ef3547a539644f734743"
     },
     {
@@ -5449,18 +5458,18 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/sidecar.rs",
       "item_kind": "fn",
-      "line": 202,
+      "line": 205,
       "symbol": "progress_core::sidecar::Payloads::load",
-      "end_line": 215,
+      "end_line": 218,
       "fingerprint": "tok1:09d5976fe206fb4fcfa49bd5161a6213751f2d8543d3cb5ef99ab2741e317146"
     },
     {
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/sidecar.rs",
       "item_kind": "fn",
-      "line": 233,
+      "line": 236,
       "symbol": "progress_core::sidecar::Payloads::store",
-      "end_line": 266,
+      "end_line": 269,
       "fingerprint": "tok1:f4817a639e64971d11d32ec3894092fe1e062a7ff0188b0acbb14eed2ced7197"
     },
     {
@@ -5516,6 +5525,24 @@
       "symbol": "progress_core::terminal::resolve_terminal",
       "end_line": 82,
       "fingerprint": "tok1:cb14dfddb051fd1c12f3f03988733ccb45bd588e6f9b475083066cfd54dd4685"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/tests/inline_anchor_opacity.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "progress_core::tests::inline_anchor_opacity",
+      "end_line": 2,
+      "fingerprint": "tok1:d92c6ad32e1cd3d6bb33d6de10c642b78ad4db27d2182fca264f3ded0e527435"
+    },
+    {
+      "crate_name": "progress-core",
+      "file": "crates/progress-core/tests/inline_anchor_opacity.rs",
+      "item_kind": "fn",
+      "line": 6,
+      "symbol": "progress_core::tests::inline_anchor_opacity::quoted_anchors_do_not_add_definitions",
+      "end_line": 38,
+      "fingerprint": "tok1:d032ea4c1d1dea626e05a24cd9040264edd2c486cb243125e66fce30972c4082"
     },
     {
       "crate_name": "progress-core",
@@ -16829,6 +16856,33 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_inline_anchor_opacity.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::cli_inline_anchor_opacity",
+      "end_line": 2,
+      "fingerprint": "tok1:d92c6ad32e1cd3d6bb33d6de10c642b78ad4db27d2182fca264f3ded0e527435"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_inline_anchor_opacity.rs",
+      "item_kind": "fn",
+      "line": 105,
+      "symbol": "vibe_cli::tests::cli_inline_anchor_opacity::normal_checks_discard_old_parse_payload_and_scan_keeps_verdicts",
+      "end_line": 227,
+      "fingerprint": "tok1:ba04c1fcc7da9b60e3b7ec4d6809dca0d0b33c2fbecb10dd8e226283a05a8b75"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_inline_anchor_opacity.rs",
+      "item_kind": "fn",
+      "line": 66,
+      "symbol": "vibe_cli::tests::cli_inline_anchor_opacity::quoted_definition_is_literal",
+      "end_line": 76,
+      "fingerprint": "tok1:1d92eda13999402af91db3a6410eea17cacffc773edafa9499a2fb706bab2aa2"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_lifecycle.rs",
       "item_kind": "fn",
       "line": 115,
@@ -23180,6 +23234,24 @@
       "symbol": "vibe_facts::tests",
       "end_line": 3,
       "fingerprint": "tok1:9a3c7892eef76c2fabdb36fe96c8948e17dc508238174a0221d670ea5cbbd50d"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/tests/inline_anchor_opacity.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_facts::tests::inline_anchor_opacity",
+      "end_line": 2,
+      "fingerprint": "tok1:d92c6ad32e1cd3d6bb33d6de10c642b78ad4db27d2182fca264f3ded0e527435"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/tests/inline_anchor_opacity.rs",
+      "item_kind": "fn",
+      "line": 5,
+      "symbol": "vibe_facts::tests::inline_anchor_opacity::quoted_anchors_do_not_duplicate_authored_addresses_or_change_source",
+      "end_line": 28,
+      "fingerprint": "tok1:fcd8931ea20702e4e7ef9b0149a7dc5c74f06990883db4348cee46d069b6b6dd"
     },
     {
       "crate_name": "vibe-index",
@@ -39554,6 +39626,24 @@
     },
     {
       "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/tests/inline_anchor_opacity.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_specdoc::tests::inline_anchor_opacity",
+      "end_line": 2,
+      "fingerprint": "tok1:d92c6ad32e1cd3d6bb33d6de10c642b78ad4db27d2182fca264f3ded0e527435"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/tests/inline_anchor_opacity.rs",
+      "item_kind": "fn",
+      "line": 5,
+      "symbol": "vibe_specdoc::tests::inline_anchor_opacity::quoted_anchor_survives_public_conversion_and_xml_projection",
+      "end_line": 19,
+      "fingerprint": "tok1:4d232ee9b0ec9ccc9e409087c21dc231d069d9cce71af2616cfa0c2928f8e717"
+    },
+    {
+      "crate_name": "vibe-specdoc",
       "file": "crates/vibe-specdoc/src/xml_blocks.rs",
       "item_kind": "mod",
       "line": 3,
@@ -42703,6 +42793,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/progress-core/src/parse/anchors.rs",
+      "from_symbol": "progress_core::parse::anchors::check_anchor_laws",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+      "verb": "implements"
+    },
+    {
       "file": "crates/progress-core/src/parse/blocks.rs",
       "from_symbol": "progress_core::parse::blocks",
       "line": 3,
@@ -42761,7 +42859,7 @@
     {
       "file": "crates/progress-core/src/parse/facts.rs",
       "from_symbol": "progress_core::parse::facts::blockquote_prefix_len",
-      "line": 134,
+      "line": 132,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#granularity",
       "verb": "implements"
@@ -42769,7 +42867,7 @@
     {
       "file": "crates/progress-core/src/parse/facts.rs",
       "from_symbol": "progress_core::parse::facts::task_box_len",
-      "line": 66,
+      "line": 64,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#granularity",
       "verb": "implements"
@@ -42777,7 +42875,7 @@
     {
       "file": "crates/progress-core/src/parse/facts.rs",
       "from_symbol": "progress_core::parse::facts::task_box_len",
-      "line": 67,
+      "line": 65,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#placement",
       "verb": "implements"
@@ -42889,7 +42987,7 @@
     {
       "file": "crates/progress-core/src/sidecar.rs",
       "from_symbol": "progress_core::sidecar::Payloads::load",
-      "line": 209,
+      "line": 212,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#erasure",
       "verb": "implements"
@@ -42897,7 +42995,7 @@
     {
       "file": "crates/progress-core/src/sidecar.rs",
       "from_symbol": "progress_core::sidecar::Payloads::store",
-      "line": 246,
+      "line": 249,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#erasure",
       "verb": "implements"
@@ -42949,6 +43047,22 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#terminal-artifacts",
       "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/tests/inline_anchor_opacity.rs",
+      "from_symbol": "progress_core::tests::inline_anchor_opacity",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/progress-core/tests/inline_anchor_opacity.rs",
+      "from_symbol": "progress_core::tests::inline_anchor_opacity::quoted_anchors_do_not_add_definitions",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+      "verb": "verifies"
     },
     {
       "file": "crates/progress-core/src/weave.rs",
@@ -51273,6 +51387,30 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_inline_anchor_opacity.rs",
+      "from_symbol": "vibe_cli::tests::cli_inline_anchor_opacity",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_inline_anchor_opacity.rs",
+      "from_symbol": "vibe_cli::tests::cli_inline_anchor_opacity::normal_checks_discard_old_parse_payload_and_scan_keeps_verdicts",
+      "line": 109,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_inline_anchor_opacity.rs",
+      "from_symbol": "vibe_cli::tests::cli_inline_anchor_opacity::quoted_definition_is_literal",
+      "line": 67,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_lifecycle.rs",
       "from_symbol": "vibe_cli::tests::cli_lifecycle::build_runs_generate_and_exactly_one_install_then_install_is_fresh",
       "line": 116,
@@ -57119,6 +57257,22 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#model",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/tests/inline_anchor_opacity.rs",
+      "from_symbol": "vibe_facts::tests::inline_anchor_opacity",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/tests/inline_anchor_opacity.rs",
+      "from_symbol": "vibe_facts::tests::inline_anchor_opacity::quoted_anchors_do_not_duplicate_authored_addresses_or_change_source",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-index/src/lib.rs",
@@ -72122,6 +72276,22 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/tests/inline_anchor_opacity.rs",
+      "from_symbol": "vibe_specdoc::tests::inline_anchor_opacity",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/tests/inline_anchor_opacity.rs",
+      "from_symbol": "vibe_specdoc::tests::inline_anchor_opacity::quoted_anchor_survives_public_conversion_and_xml_projection",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-facts/PROP-043#PARSE-FACT-ANCHORS",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-specdoc/src/xml_blocks.rs",

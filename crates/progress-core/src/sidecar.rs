@@ -38,7 +38,10 @@ use std::path::{Path, PathBuf};
 
 /// Schema of the sidecar file. A foreign value reads as an empty store:
 /// the payload is regenerable, so there is nothing here worth migrating.
-pub const PAYLOAD_SCHEMA: u32 = 3;
+/// Schema 4 reparses payloads from before the inline-code anchor opacity
+/// correction: unchanged source hashes cannot invalidate old false DuplicateId
+/// diagnostics. The tracked cache schema and campaign verdicts are unchanged.
+pub const PAYLOAD_SCHEMA: u32 = 4;
 
 /// The one file a payload bucket holds.
 pub const PAYLOAD_FILE: &str = "payloads.json";
@@ -401,9 +404,15 @@ mod tests {
         );
         Payloads::load(Some(bucket.clone())).store([&doc]);
         let path = bucket.join(PAYLOAD_FILE);
-        let current = std::fs::read_to_string(&path).expect("stored schema three");
-        std::fs::write(&path, current.replacen("\"schema\":3", "\"schema\":2", 1))
-            .expect("downgrade fixture");
+        let mut current: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(&path).expect("stored current schema"))
+                .expect("valid stored payload");
+        current["schema"] = serde_json::json!(2);
+        std::fs::write(
+            &path,
+            serde_json::to_vec(&current).expect("serialize old schema"),
+        )
+        .expect("downgrade fixture");
         assert!(
             Payloads::load(Some(bucket))
                 .get("a.md", &doc.content_hash)
