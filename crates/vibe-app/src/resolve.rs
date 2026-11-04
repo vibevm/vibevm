@@ -185,6 +185,12 @@ pub fn from_manifest(
             scope: "package".into(),
         });
     }
+    if let Some(dependency) = manifest.requires.configurations.keys().next() {
+        return Err(ResolveError::ConfigurationUnsupported {
+            package: coordinate.key(),
+            scope: format!("dependency {dependency}"),
+        });
+    }
     let application = manifest
         .application
         .clone()
@@ -245,6 +251,27 @@ mod carries_tests {
         let app: crate::error::AppError = error.into();
         assert_eq!(app.code(), "configuration_unsupported");
         assert!(app.to_string().contains("scope `package`"));
+    }
+
+    #[test]
+    fn original_dependency_input_is_not_dropped_by_app_source_projection() {
+        let m=Manifest::parse_str("[package]\ngroup='org.example'\nname='demo'\nversion='1.0.0'\nkind='app'\n[application]\nid='demo'\n[requires.packages.'org.example/dep']\nversion='*'\nconfiguration={policy='require-selection',parameters={value='SYN_INPUT'}}\n").unwrap();
+        let error = from_manifest(
+            m,
+            "/unused".into(),
+            PackageCoordinate {
+                group: "org.example".into(),
+                name: "demo".into(),
+                version: "1.0.0".into(),
+            },
+        )
+        .unwrap_err();
+        assert!(
+            matches!(&error,ResolveError::ConfigurationUnsupported{scope,..} if scope=="dependency org.example/dep")
+        );
+        let e: crate::AppError = error.into();
+        assert_eq!(e.code(), "configuration_unsupported");
+        assert!(!e.to_string().contains("SYN_INPUT"));
     }
 
     #[test]

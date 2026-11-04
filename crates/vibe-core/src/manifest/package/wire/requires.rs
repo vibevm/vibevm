@@ -14,22 +14,32 @@ impl From<Requires> for RequiresWire {
             let (access, friend, exclude) = p.group.as_ref().map_or((None, None, None), |group| {
                 visibility_wire(&r, group, p.name.as_str())
             });
+            let configuration = p
+                .group
+                .as_ref()
+                .and_then(|g| r.configurations.get(&link_key(g, p.name.as_str())))
+                .cloned();
             let constraint = version_spec_to_constraint_str(&p.version);
             // A registry dep carrying per-edge metadata needs the inline
             // form so every explicit declaration survives round-trip.
-            let value =
-                if link.is_some() || access.is_some() || friend.is_some() || exclude.is_some() {
-                    RequiresPackageEntryWire::Inline(InlinePackageDepWire {
-                        version: Some(VersionFieldWire::Constraint(constraint)),
-                        link,
-                        access,
-                        friend,
-                        exclude,
-                        ..Default::default()
-                    })
-                } else {
-                    RequiresPackageEntryWire::Constraint(constraint)
-                };
+            let value = if link.is_some()
+                || access.is_some()
+                || friend.is_some()
+                || exclude.is_some()
+                || configuration.is_some()
+            {
+                RequiresPackageEntryWire::Inline(Box::new(InlinePackageDepWire {
+                    version: Some(VersionFieldWire::Constraint(constraint)),
+                    link,
+                    access,
+                    friend,
+                    exclude,
+                    configuration,
+                    ..Default::default()
+                }))
+            } else {
+                RequiresPackageEntryWire::Constraint(constraint)
+            };
             packages.insert(key, value);
         }
         for g in &r.git_packages {
@@ -63,8 +73,9 @@ impl From<Requires> for RequiresWire {
                 access: r.accesses.get(&link_key(&g.group, &g.name)).copied(),
                 friend: r.friend_flags.get(&link_key(&g.group, &g.name)).copied(),
                 exclude: r.excludes.get(&link_key(&g.group, &g.name)).cloned(),
+                configuration: r.configurations.get(&link_key(&g.group, &g.name)).cloned(),
             };
-            packages.insert(key, RequiresPackageEntryWire::Inline(inline));
+            packages.insert(key, RequiresPackageEntryWire::Inline(Box::new(inline)));
         }
         for p in &r.path_packages {
             let key = wire_key(p.kind, Some(&p.group), &p.name);
@@ -78,9 +89,10 @@ impl From<Requires> for RequiresWire {
                 access: r.accesses.get(&link_key(&p.group, &p.name)).copied(),
                 friend: r.friend_flags.get(&link_key(&p.group, &p.name)).copied(),
                 exclude: r.excludes.get(&link_key(&p.group, &p.name)).cloned(),
+                configuration: r.configurations.get(&link_key(&p.group, &p.name)).cloned(),
                 ..Default::default()
             };
-            packages.insert(key, RequiresPackageEntryWire::Inline(inline));
+            packages.insert(key, RequiresPackageEntryWire::Inline(Box::new(inline)));
         }
         for v in &r.var_packages {
             let key = wire_key(v.kind, Some(&v.group), &v.name);
@@ -90,9 +102,10 @@ impl From<Requires> for RequiresWire {
                 access: r.accesses.get(&link_key(&v.group, &v.name)).copied(),
                 friend: r.friend_flags.get(&link_key(&v.group, &v.name)).copied(),
                 exclude: r.excludes.get(&link_key(&v.group, &v.name)).cloned(),
+                configuration: r.configurations.get(&link_key(&v.group, &v.name)).cloned(),
                 ..Default::default()
             };
-            packages.insert(key, RequiresPackageEntryWire::Inline(inline));
+            packages.insert(key, RequiresPackageEntryWire::Inline(Box::new(inline)));
         }
         RequiresWire {
             packages,
@@ -123,6 +136,7 @@ impl TryFrom<RequiresWire> for Requires {
         let mut accesses: BTreeMap<String, AccessLevel> = BTreeMap::new();
         let mut friend_flags: BTreeMap<String, bool> = BTreeMap::new();
         let mut excludes: BTreeMap<String, Vec<String>> = BTreeMap::new();
+        let mut configurations = BTreeMap::new();
         for (key, entry) in w.packages {
             let (kind, group, name) = parse_pkgref_key(&key).map_err(|e| e.to_string())?;
             match entry {
@@ -134,6 +148,18 @@ impl TryFrom<RequiresWire> for Requires {
                     );
                 }
                 RequiresPackageEntryWire::Inline(inline) => {
+                    if let Some(input) = &inline.configuration {
+                        input
+                            .validate_shape_at(
+                                &crate::manifest::FieldPath::root()
+                                    .table("requires")
+                                    .table("packages")
+                                    .table(&key)
+                                    .table("configuration"),
+                            )
+                            .map_err(|e| format!("{}: {}", e.field, e.message))?;
+                        configurations.insert(link_key(&group, &name), input.clone());
+                    }
                     // Per-edge metadata is source-kind independent and keeps
                     // explicit defaults distinguishable from absent fields.
                     if let Some(link) = inline.link {
@@ -149,7 +175,7 @@ impl TryFrom<RequiresWire> for Requires {
                         excludes.insert(link_key(&group, &name), exclude);
                     }
                     // Source dispatch stays path, git, variable, registry.
-                    let mut inline = inline;
+                    let mut inline = *inline;
                     if let Some(path) = inline.path.take() {
                         path_packages.push(
                             inline_to_path_dep(kind, group, name, path, inline)
@@ -221,6 +247,7 @@ impl TryFrom<RequiresWire> for Requires {
             accesses,
             friend_flags,
             excludes,
+            configurations,
         })
     }
 }

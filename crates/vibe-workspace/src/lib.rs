@@ -368,3 +368,7 @@ mod tests;
 #[cfg(test)]
 #[path = "lib/selected_manifest_tests.rs"]
 mod selected_manifest_tests;
+
+#[cfg(test)]
+#[path = "lib/configuration_intent_tests.rs"]
+mod configuration_intent_tests;

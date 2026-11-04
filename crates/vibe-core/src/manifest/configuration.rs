@@ -7,9 +7,11 @@ use crate::configuration::{Cardinality, MergeIntent};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+mod intent;
 mod lower;
 mod validate;
 mod vocabulary;
+pub use intent::{ConfigurationIntentDecl, NormalizedConfigurationInput};
 
 /// A package or installer-owned common definition, admitted by the ordinary reader.
 /// ```
@@ -43,6 +45,12 @@ pub struct ConfigurationDecl {
 pub struct ConfigurationFeatureDecl {
     pub id: String,
     pub name: String,
+    /// Source interface visibility; the pure feature kernel keeps opaque IDs.
+    #[serde(
+        default,
+        skip_serializing_if = "ConfigurationFeatureVisibility::is_public"
+    )]
+    pub visibility: ConfigurationFeatureVisibility,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -57,6 +65,25 @@ pub struct ConfigurationFeatureDecl {
     pub guards: Vec<ConfigurationGuard>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub effects: Vec<ConfigurationEffect>,
+}
+
+/// Common source visibility, independent of ID spelling and source-read access.
+/// ```
+/// use vibe_core::manifest::ConfigurationFeatureVisibility;
+/// assert_eq!(ConfigurationFeatureVisibility::default(), ConfigurationFeatureVisibility::Public);
+/// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#FEATURE-VISIBILITY")]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum ConfigurationFeatureVisibility {
+    #[default]
+    Public,
+    Internal,
+}
+impl ConfigurationFeatureVisibility {
+    fn is_public(&self) -> bool {
+        *self == Self::Public
+    }
 }
 
 /// Positive choice guards; the two identifier namespaces are distinct.

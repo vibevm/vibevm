@@ -34,6 +34,7 @@ use crate::package_ref::{PackageKind, PackageRef, VersionSpec};
 
 pub(crate) mod application;
 mod binary;
+mod configuration_intent;
 mod deps;
 mod documentation;
 mod embedded_source;

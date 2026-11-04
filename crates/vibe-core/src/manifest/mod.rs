@@ -38,8 +38,10 @@ pub use artifact::{
 };
 pub use compile::CompileSection;
 pub use configuration::{
-    ConfigurationDecl, ConfigurationEffect, ConfigurationFeatureDecl, ConfigurationGroupDecl,
-    ConfigurationGuard, ConfigurationProfileDecl, ConfigurationSelection, ForwardStrength,
+    ConfigurationDecl, ConfigurationEffect, ConfigurationFeatureDecl,
+    ConfigurationFeatureVisibility, ConfigurationGroupDecl, ConfigurationGuard,
+    ConfigurationIntentDecl, ConfigurationProfileDecl, ConfigurationSelection, ForwardStrength,
+    NormalizedConfigurationInput,
 };
 pub use consumer::{ConsumerNode, NodeRole};
 pub use declarant_path::{

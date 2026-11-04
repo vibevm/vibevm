@@ -13,6 +13,13 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub enum Error {
     #[error(
+        "this operation does not yet evaluate configuration input from consumer `{consumer}` for dependency `{dependency}` (violates REQ spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-INTENT; fix surface: connect original consumer input before installation planning)"
+    )]
+    ConfigurationInputUnsupported {
+        consumer: String,
+        dependency: String,
+    },
+    #[error(
         "this operation does not yet evaluate common configuration for package `{package}` (violates REQ spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-SCOPES; fix surface: connect common configuration evaluation before package planning)"
     )]
     ConfigurationUnsupported { package: String },

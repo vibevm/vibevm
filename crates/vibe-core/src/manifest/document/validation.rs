@@ -124,6 +124,9 @@ impl Manifest {
             application.validate()?;
         }
         self.validate_installer_options()?;
+        self.requires
+            .validate_configuration_metadata()
+            .map_err(|reason| Error::InvalidManifest { reason })?;
         if let Some(package) = &self.package {
             if let Some(configuration) = &self.configuration {
                 let at = FieldPath::root().table("configuration");

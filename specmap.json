@@ -18080,6 +18080,51 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration.rs",
+      "item_kind": "enum",
+      "line": 70,
+      "symbol": "vibe_core::manifest::configuration::ConfigurationFeatureVisibility",
+      "end_line": 82,
+      "fingerprint": "tok1:f46eef4dc57c93917b445e2e26ff04c17c99aaa9c8b133eba9886e06fe764be6"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::configuration::intent",
+      "end_line": 2,
+      "fingerprint": "tok1:1ed3d74fd241e12d7efc0acb92e261594011d2952318117f98f2468d22dd6221"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "item_kind": "fn",
+      "line": 105,
+      "symbol": "vibe_core::manifest::configuration::intent::ConfigurationDecl::normalize_input",
+      "end_line": 232,
+      "fingerprint": "tok1:b3c9ded78bc65fa11119fe099f7413cacede53d7d3cef7aebd82ba3921836397"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "item_kind": "struct",
+      "line": 18,
+      "symbol": "vibe_core::manifest::configuration::intent::ConfigurationIntentDecl",
+      "end_line": 41,
+      "fingerprint": "tok1:0a44665e21f09482c1a28d9d5e632b9e9c81688dc80b46a2df7e980f65053463"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "item_kind": "struct",
+      "line": 43,
+      "symbol": "vibe_core::manifest::configuration::intent::NormalizedConfigurationInput",
+      "end_line": 58,
+      "fingerprint": "tok1:711d3a49ff11acd8655dd1eefc1ae9864ff30ceb1a2afdce1df046be098b513e"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/configuration/lower.rs",
       "item_kind": "mod",
       "line": 2,
@@ -19243,9 +19288,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package.rs",
       "item_kind": "enum",
-      "line": 245,
+      "line": 246,
       "symbol": "vibe_core::manifest::package::Materialization",
-      "end_line": 293,
+      "end_line": 294,
       "fingerprint": "tok1:65c877351cb20d9e0003f1d107267a7129b6ac1a44c706c1c1024ba849765ec8"
     },
     {
@@ -19742,6 +19787,15 @@
       "symbol": "vibe_core::manifest::package::capabilities",
       "end_line": 8,
       "fingerprint": "tok1:648644b2ed2fc55bf99779a01ba53a02271cc74786eb973fe1b83cbce7a41f2a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/configuration_intent.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::package::configuration_intent",
+      "end_line": 2,
+      "fingerprint": "tok1:1428a48112d5d44ba9cbcda837792a891084ae384e8e513d28d28719fc851ae6"
     },
     {
       "crate_name": "vibe-core",
@@ -24132,8 +24186,8 @@
       "item_kind": "enum",
       "line": 12,
       "symbol": "vibe_install::error::Error",
-      "end_line": 200,
-      "fingerprint": "tok1:f6e1f35ffb22067564fbcdd9adbea419209b2bc2e2df8cfd3e11e6bd2ae35c4b"
+      "end_line": 207,
+      "fingerprint": "tok1:3afb15d419936ce74b75fffcfc0a1ee60267f549b9d3f6e9a55b4bbb2e45da05"
     },
     {
       "crate_name": "vibe-install",
@@ -24247,19 +24301,19 @@
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/plan/fetch.rs",
       "item_kind": "fn",
-      "line": 186,
+      "line": 198,
       "symbol": "vibe_install::plan::fetch::expand_conditional_deps",
-      "end_line": 349,
+      "end_line": 361,
       "fingerprint": "tok1:ce79828e9f230b204b13598a69ca35ddf5769cf9eb9a40dfb5d11aa73e69e425"
     },
     {
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/plan/fetch.rs",
       "item_kind": "fn",
-      "line": 90,
+      "line": 96,
       "symbol": "vibe_install::plan::fetch::try_in_place_incremental",
-      "end_line": 184,
-      "fingerprint": "tok1:46cecca875c077eb46f544ba09bc8cd079a748df17673aefbfe71e22ee22b9f2"
+      "end_line": 196,
+      "fingerprint": "tok1:9f7b77977a2f8c980024e7b8f944423374068ca03166b024711a8a514587e716"
     },
     {
       "crate_name": "vibe-install",
@@ -52169,6 +52223,46 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/manifest/configuration.rs",
+      "from_symbol": "vibe_core::manifest::configuration::ConfigurationFeatureVisibility",
+      "line": 75,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#FEATURE-VISIBILITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "from_symbol": "vibe_core::manifest::configuration::intent",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#INPUT-NORMALIZATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "from_symbol": "vibe_core::manifest::configuration::intent::ConfigurationDecl::normalize_input",
+      "line": 117,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#INPUT-NORMALIZATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "from_symbol": "vibe_core::manifest::configuration::intent::ConfigurationIntentDecl",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-INTENT",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "from_symbol": "vibe_core::manifest::configuration::intent::NormalizedConfigurationInput",
+      "line": 53,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#INPUT-NORMALIZATION",
+      "verb": "documents"
+    },
+    {
       "file": "crates/vibe-core/src/manifest/configuration/lower.rs",
       "from_symbol": "vibe_core::manifest::configuration::lower",
       "line": 2,
@@ -53232,7 +53326,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package.rs",
       "from_symbol": "vibe_core::manifest::package::Materialization",
-      "line": 273,
+      "line": 274,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#modes",
       "verb": "implements",
@@ -53684,6 +53778,14 @@
       "line": 8,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/configuration_intent.rs",
+      "from_symbol": "vibe_core::manifest::package::configuration_intent",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-INTENT",
       "verb": "implements"
     },
     {
@@ -57814,7 +57916,7 @@
     {
       "file": "crates/vibe-install/src/plan/fetch.rs",
       "from_symbol": "vibe_install::plan::fetch::expand_conditional_deps",
-      "line": 209,
+      "line": 221,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint",
       "verb": "implements"
@@ -57822,7 +57924,7 @@
     {
       "file": "crates/vibe-install/src/plan/fetch.rs",
       "from_symbol": "vibe_install::plan::fetch::try_in_place_incremental",
-      "line": 105,
+      "line": 111,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "implements",
@@ -99286,7 +99388,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:89f28abbc132119123c7b1b79e78626dc5f4f34861c5bd1d98fdb1dbd1b20b74",
+      "content_hash": "sha256:4ae6552217869d88226ddc7281607568ab27913d6a4bd7f9e6f8d45cf25196bc",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -99403,7 +99505,7 @@
     },
     {
       "anchor": "intent",
-      "content_hash": "sha256:acfc94d5e8c17854c9f035792ed6a11d74fab9388d31d743f9fc80704cd52b4a",
+      "content_hash": "sha256:a4828ba149437ba7b22a2fa0234f494ce41cc9bea1dd3f13eddd308589c812c0",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "3. Preserve what the consumer asked for",
@@ -99412,28 +99514,28 @@
     },
     {
       "anchor": "AUTHORED-INTENT",
-      "content_hash": "sha256:5f872596ad9eb372f5f768bc12e5e3384ba823a295737295354a6c71b7822a05",
+      "content_hash": "sha256:06252fd7c97b5a92ed509770ed7d6f579cb1d992cca0738818334d44fb712590",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "An ordinary requires.packages inline entry may retain configuration intent beside its actual version/source/link/visibility fields. The same intent data survives registry, git, path and version.var dispatch and workspace finalization. Its fields are required policy (require-selection or use-declared-defaults), optional profile, features additions, default_features (true when omitted), selections using independent exact/additive strength and omitted/explicit-empty members, and typed public parameter inputs. The real workspace node and requires declaration supply consumer identity; no authored domain/instance/owner label creates a separate installation. Duplicate normalized dependency identities remain invalid, and serialization rejects dangling configuration metadata rather than discarding it. Absent configuration preserves all legacy source forms. Rich lock/index/default receipts are not fabricated from this source record. @status:spec/done",
+      "heading": "An ordinary requires.packages inline entry may retain configuration intent beside its actual version/source/link/visibility fields. The same intent data survives registry, git, path and version.var dispatch and workspace finalization. Its fields are required policy (require-selection or use-declared-defaults), optional profile, features additions, default_features (true when omitted), selections using independent exact/additive strength and omitted/explicit-empty members, and typed public parameter inputs. The real workspace node and requires declaration supply consumer identity; no authored domain/instance/owner label creates a separate installation. Duplicate normalized dependency identities remain invalid, and serialization rejects dangling configuration metadata rather than discarding it. Absent configuration preserves all legacy source forms. Rich lock/index/default receipts are not fabricated from this source record. @status:impl/done",
       "line": 20,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-INTENT"
     },
     {
       "anchor": "INPUT-NORMALIZATION",
-      "content_hash": "sha256:033ef62a4db21b9b90cf82549d99620793fd464e97aa01d6c3544abec12add96",
+      "content_hash": "sha256:3d33382f35a3d2ee55eb7cbfa7ef8ecc9d95b99472486bb97973ec0470122c8b",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "Given the actual target definition, authored input normalization validates references, selects only an explicitly named profile, and overlays explicit group/parameter answers on that consumer's profile. Explicit omitted or empty group entries replace the profile entry as written. The ordinary feature base is the named profile's feature list, otherwise declared feature defaults when default_features is true, otherwise empty; explicit features are additions above that base. The default profile marker is not applied automatically. Normalization returns the existing FeatureInput and ConsumerChoices plus supplied typed parameter inputs; it does not replace original authored intent, fill missing parameter defaults, run closure/effects, resolve host paths or prove candidate/default freshness. Authored parameter inputs and profile presets cannot carry values for a target-declared secret parameter; secret operation inputs require the existing ephemeral domain channel. @status:spec/done",
+      "heading": "Given the actual target definition, authored input normalization validates references, selects only an explicitly named profile, and overlays explicit group/parameter answers on that consumer's profile. Explicit omitted or empty group entries replace the profile entry as written. The ordinary feature base is the named profile's feature list, otherwise declared feature defaults when default_features is true, otherwise empty; explicit features are additions above that base. The default profile marker is not applied automatically. Normalization returns the existing FeatureInput and ConsumerChoices plus supplied typed parameter inputs; it does not replace original authored intent, fill missing parameter defaults, run closure/effects, resolve host paths or prove candidate/default freshness. Authored parameter inputs and profile presets cannot carry values for a target-declared secret parameter; secret operation inputs require the existing ephemeral domain channel. @status:impl/done",
       "line": 21,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#INPUT-NORMALIZATION"
     },
     {
       "anchor": "FEATURE-VISIBILITY",
-      "content_hash": "sha256:9565538d46312a45bf6e821a7f6bf06541700cf976b89e407f89f9202b3acd1f",
+      "content_hash": "sha256:c00710f6a44e59d2f39e27be13380cd5534c1e9d9f8ea7608241cf97b67b07ee",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "Common feature declarations explicitly distinguish public and internal features, defaulting to public. The pure closure kernel still treats identifiers as opaque local data. Direct consumer feature additions and cross-package forwarding may name only public target features; package-owned profiles, local implications and declared choice members may deliberately expose internal backing features through their declared interface. Internal does not make source bytes secret or restrict explicit raw reading. Legacy FeaturesTable underscore privacy remains in its adapter; converting that meaning to a common declaration requires marking the corresponding feature internal rather than guessing policy from spelling in the common kernel. @status:spec/done",
+      "heading": "Common feature declarations explicitly distinguish public and internal features, defaulting to public. The pure closure kernel still treats identifiers as opaque local data. Direct consumer feature additions and cross-package forwarding may name only public target features; package-owned profiles, local implications and declared choice members may deliberately expose internal backing features through their declared interface. Internal does not make source bytes secret or restrict explicit raw reading. Legacy FeaturesTable underscore privacy remains in its adapter; converting that meaning to a common declaration requires marking the corresponding feature internal rather than guessing policy from spelling in the common kernel. @status:impl/work",
       "line": 22,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#FEATURE-VISIBILITY"
     },

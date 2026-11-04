@@ -162,6 +162,7 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
     let selected = roots::selected_node(workspace, project_root)?;
+    roots::reject_configuration_inputs(workspace, &selected, manifest)?;
     request.roots = roots::unique_requests(&request.roots)?;
     let lockfile = load_or_empty_lockfile(&workspace.root, &request.generated_by)?;
 

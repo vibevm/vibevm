@@ -160,7 +160,7 @@ enum RequiresPackageEntryWire {
     /// Bare constraint string: `"^0.3"`, `"=1.0"`, `"*"`.
     Constraint(String),
     /// Inline-table: registry-resolved with options OR git-source.
-    Inline(InlinePackageDepWire),
+    Inline(Box<InlinePackageDepWire>),
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]
@@ -192,6 +192,8 @@ pub(in crate::manifest::package) struct InlinePackageDepWire {
     friend: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     exclude: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    configuration: Option<crate::manifest::ConfigurationIntentDecl>,
 }
 
 /// The `version` field of an inline `[requires.packages]` entry — either a

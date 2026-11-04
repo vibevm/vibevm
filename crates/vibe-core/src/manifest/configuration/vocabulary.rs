@@ -55,3 +55,23 @@ pub(super) mod intent {
         }
     }
 }
+
+pub(super) mod policy {
+    use crate::configuration::ChoicePolicy;
+    use serde::{Deserialize, Deserializer, Serializer};
+    pub fn serialize<S: Serializer>(p: &ChoicePolicy, s: S) -> Result<S::Ok, S::Error> {
+        s.serialize_str(match p {
+            ChoicePolicy::RequireSelection => "require-selection",
+            ChoicePolicy::UseDeclaredDefaults => "use-declared-defaults",
+        })
+    }
+    pub fn deserialize<'de, D: Deserializer<'de>>(d: D) -> Result<ChoicePolicy, D::Error> {
+        match String::deserialize(d)?.as_str() {
+            "require-selection" => Ok(ChoicePolicy::RequireSelection),
+            "use-declared-defaults" => Ok(ChoicePolicy::UseDeclaredDefaults),
+            _ => Err(serde::de::Error::custom(
+                "unknown configuration default policy",
+            )),
+        }
+    }
+}

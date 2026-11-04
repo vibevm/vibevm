@@ -317,8 +317,8 @@ fn general_install_defers_in_place_instead_of_recloning() {
     );
 }
 
-#[test]
-fn deferred_common_definition_refuses_without_reclone_or_mutating_existing_state() {
+#[cfg(test)]
+fn deferred_common_refusal(source_input: bool) {
     let tmp = TempDir::new().unwrap();
     let root = tmp.path();
     write(
@@ -335,7 +335,11 @@ fn deferred_common_definition_refuses_without_reclone_or_mutating_existing_state
         "vibevm/vibedeps/org.vibevm.giant/.git/HEAD",
         "ref: refs/heads/main\n",
     );
-    let declaration = "[package]\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nkind='feat'\nmaterialization='in-place'\n[configuration]\n";
+    let declaration = if source_input {
+        "[package]\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nkind='feat'\nmaterialization='in-place'\n[requires.packages.'org.example/dep']\nversion='*'\nconfiguration={policy='require-selection'}\n"
+    } else {
+        "[package]\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nkind='feat'\nmaterialization='in-place'\n[configuration]\n"
+    };
     write(
         root,
         "vibevm/vibedeps/org.vibevm.giant/vibe.toml",
@@ -365,7 +369,14 @@ fn deferred_common_definition_refuses_without_reclone_or_mutating_existing_state
     };
     let error = vibe_install::plan(&source, root, request, &NullObserver).unwrap_err();
     assert!(
-        matches!(error, vibe_install::Error::ConfigurationUnsupported { .. }),
+        if source_input {
+            matches!(
+                error,
+                vibe_install::Error::ConfigurationInputUnsupported { .. }
+            )
+        } else {
+            matches!(error, vibe_install::Error::ConfigurationUnsupported { .. })
+        },
         "{error}"
     );
     assert!(source.fetched.borrow().is_empty());
@@ -375,4 +386,13 @@ fn deferred_common_definition_refuses_without_reclone_or_mutating_existing_state
         fs::read_to_string(root.join("vibevm/vibedeps/org.vibevm.giant/vibe.toml")).unwrap(),
         declaration
     );
+}
+
+#[test]
+fn deferred_common_definition_refuses_without_reclone_or_mutating_existing_state() {
+    deferred_common_refusal(false);
+}
+#[test]
+fn deferred_original_input_refuses_without_reclone_or_mutating_existing_state() {
+    deferred_common_refusal(true);
 }

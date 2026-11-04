@@ -165,13 +165,53 @@ Generated `vibe.lock` root snapshot остаётся unique по координ�
 
 Записывать: ID/дата; статус; base/commit; released range или Unreleased; exact keys/types/значение; old/new example; затронутые команды (явно проверить install -g, update, modify, import, project install); совместимость обоих направлений; migration/recovery; record/wire/schema versions; tests и ограничения. Изменение только semantics/validation тоже фиксировать, даже если TOML-ключи не поменялись.
 
-## FMT-006 — Original input на requires edge (дизайн, Unreleased)
+## FMT-006 — Original input на requires edge (Unreleased)
 
-Статус: только дизайн/следующий implementation atom, ещё не принято parser. Предлагается nested `configuration` в существующей inline `[requires.packages."<coordinate>"]`: required `policy = "require-selection" | "use-declared-defaults"`, optional profile, features additions, default_features=true, selections и typed public parameters. Registry/git/path/version.var и link/access/friend/exclude должны сохранять этот input. Отсутствие и `members=[]` не смешиваются. No client-supplied instance/domain/owner keys.
+Статус: **принято как source/input этап**, commit `feat(configuration): preserve original dependency input` (hash дописывается после commit). Runtime configured-solving/persistence/UI ещё не завершены. Cargo version остаётся1.0.11; release number не назначен.
 
-Для common feature rows добавляется явная `visibility = "public" | "internal"` (default public), чтобы представлять legacy private nodes без magic underscore в общем kernel. При явной миграции legacy `_helper` его private interface нужно обозначить internal. Старые `[features]` сохраняют прежнее underscore правило.
+В inline `[requires.packages."<qualified coordinate>"]` добавлено optional `configuration`, одинаково для registry/git/path/version.var. Version/source/auth/link/access/friend/exclude сохраняются. Bare version string без metadata остаётся bare. Existing duplicate normalized coordinate check сохраняется; checked serialization теперь отказывает при dangling configuration или ambiguous manually constructed Requires вместо потери данных.
 
-Новые поля относятся к source intent; lock7/index3 и receipts не меняются автоматически. `vibe install -g` не становится workspace consumer: его app operation input и источник package requirements имеют разные владельцы. Пока новые source inputs не подключены к runtime, обычные consumers обязаны явно отказать до apply, не потерять intent. Точная final grammar, migration examples и command impact дополняются после реализации/проверок.
+| Поле configuration | Точное значение |
+|---|---|
+| policy | Обязательное `require-selection` / `use-declared-defaults`; отсутствующий policy не становится assume-yes. |
+| profile | Optional literal profile ID; default marker не выбирает его автоматически. |
+| features | Public direct additions; default []; duplicate source additions rejected. |
+| default_features | Boolean default true; false убирает automatic feature-default seeding, но не explicit profile seeds. |
+| selections.<group> | `{intent="additive"|"exact", members=[...]}`; omitted members и [] различаются; absent entry сохраняется. |
+| parameters.<id> | Typed bool/i64/string supplied public inputs. Target-aware validation проверяет name/type/bounds/secret classification. Host paths не разрешаются этим этапом. |
+
+Исходный input сохраняется отдельно. Normalization выбирает явно названный profile, затем explicit selection/parameter entries заменяют его entries; explicit omitted и [] тоже заменяют profile answer. Возвращаются существующие FeatureInput/ConsumerChoices и supplied parameters, без заполнения missing defaults, effects, receipts или физической instance authority. Consumer identity задаёт реальный node/declaration, а не поле из TOML.
+
+До:
+
+```toml
+[requires.packages]
+"flow:org.example/workflow" = "^1.0"
+```
+
+После явного выбора нового input format:
+
+```toml
+[requires.packages."flow:org.example/workflow"]
+version = "^1.0"
+link = "dynamic"
+[requires.packages."flow:org.example/workflow".configuration]
+policy = "require-selection"
+default_features = false
+[requires.packages."flow:org.example/workflow".configuration.selections]
+planning = { intent = "exact", members = ["mup"] }
+extras = { intent = "additive", members = ["audit"] }
+```
+
+Inactive audit answer остаётся в source, возвращается при разрешающем guard. Это пример исходных данных, не готовая migration installed state; временные runtime guards ниже ещё действуют. Старые binaries отвергают new fields; новый reader сохраняет legacy absence/fields.
+
+Common feature rows также получили `visibility="public"|"internal"` (default public), в package и installer definitions. Direct additions могут называть public; target-owned profiles/implications/declared choice interfaces могут активировать internal backing nodes. При явной миграции legacy `_helper` его private interface обозначается `visibility="internal"`; старый `[features]` сохраняет underscore policy. Internal не ограничивает raw source read и не делает bytes секретными. Foreign forwarding enforcement ещё pending.
+
+Commands: prepared project install отказывает на неподключённый input любого workspace consumer/raw selected manifest до case-c migration/solve/Fresh/apply. Такой же guard действует на requires input fetched transitive package и deferred in-place. App source projection отказывает с dependency scope/configuration_unsupported; это касается acquisition для **vibe install -g**, app describe и source-based update/modify. Здесь проверена library guard; новая public CLI серия для каждого из этих verbs не заявляется. Предыдущий атом проверил используемую typed error propagation. Doc/remap границы не расширены.
+
+Lock7/index3 и public wire formats не менялись. Rust Requires и ConfigurationFeatureDecl получили поля; exhaustive struct literals требуют обновления. Serializer больше не схлопывает неоднозначный вручную построенный Requires.
+
+Evidence:529distinct successful candidate tests/docs, включая actual Workspace finalization двух nodes и2diagnostic RED→GREEN. Main source6/6, normalization6/6, prepared9/9+F02constraints22/22, fmt и4scoped conform0new; specmap0blocking,43known warnings. Source/serialize errors называют реальную edge и input field, не values. Configured solve, default binding, selected-node answer writing, scalar merge, lock/replay и common UI остаются следующей работой.
 
 ## FMT-007 — Secret references в step templates (дизайн, Unreleased)
 

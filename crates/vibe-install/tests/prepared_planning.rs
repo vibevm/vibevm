@@ -515,3 +515,54 @@ fn a_fresh_plan_leaves_the_callers_workspace_available() {
         "and it is the whole value, not a husk planning moved out of",
     );
 }
+
+#[test]
+fn prepared_sibling_configuration_input_refuses_before_solve_or_fresh() {
+    let project = bare_project();
+    let root = project.path();
+    std::fs::write(
+        root.join("vibe.toml"),
+        "[project]\nname='root'\nversion='0.1.0'\n[workspace]\nmembers=['member']\n",
+    )
+    .unwrap();
+    std::fs::create_dir_all(root.join("member")).unwrap();
+    std::fs::write(root.join("member/vibe.toml"),"[project]\nname='member'\nversion='0.1.0'\n[requires.packages.'org.example/target']\nversion='*'\nconfiguration={policy='require-selection',parameters={message='SYN_NOT_IN_DIAGNOSTIC'}}\n").unwrap();
+    let (mut manifest, mut workspace) = prepare(root);
+    let before = std::fs::read(root.join("vibe.toml")).unwrap();
+    let source = RecordingSource::default();
+    let error = plan_prepared(&source, root, &mut manifest, &mut workspace, request()).unwrap_err();
+    assert!(
+        matches!(&error,vibe_install::Error::ConfigurationInputUnsupported{consumer,dependency} if consumer=="member/vibe.toml" && dependency=="org.example/target"),
+        "{error}"
+    );
+    assert!(!error.to_string().contains("SYN_NOT_IN_DIAGNOSTIC"));
+    assert!(source.solves.lock().unwrap().is_empty());
+    assert_eq!(std::fs::read(root.join("vibe.toml")).unwrap(), before);
+    assert!(!root.join("vibe.lock").exists());
+}
+
+#[test]
+fn raw_selected_input_refuses_before_case_c_can_seed_or_write() {
+    let project = bare_project();
+    let root = project.path();
+    let mut lock = Lockfile::empty("test", "2026-11-04T00:00:00Z");
+    lock.meta.root_dependencies = vec![tools_ref()];
+    lock.write(root.join("vibe.lock")).unwrap();
+    let (mut raw, mut workspace) = prepare(root);
+    // The prepared raw and finalized views intentionally differ. Even this raw
+    // metadata must not disappear through case-c migration or the empty path.
+    let supplied=Manifest::parse_str("[project]\nname='demo'\nversion='0.1.0'\n[requires.packages.'org.demo/tools']\nversion='^1'\nconfiguration={policy='require-selection'}\n").unwrap();
+    raw.requires.configurations = supplied.requires.configurations;
+    let before = std::fs::read(root.join("vibe.toml")).unwrap();
+    let lock_before = std::fs::read(root.join("vibe.lock")).unwrap();
+    let source = RecordingSource::default();
+    assert!(matches!(
+        plan_prepared(&source, root, &mut raw, &mut workspace, request()),
+        Err(vibe_install::Error::ConfigurationInputUnsupported { .. })
+    ));
+    assert!(source.solves.lock().unwrap().is_empty());
+    assert!(raw.requires.packages.is_empty());
+    assert!(workspace.root_manifest.requires.packages.is_empty());
+    assert_eq!(std::fs::read(root.join("vibe.toml")).unwrap(), before);
+    assert_eq!(std::fs::read(root.join("vibe.lock")).unwrap(), lock_before);
+}

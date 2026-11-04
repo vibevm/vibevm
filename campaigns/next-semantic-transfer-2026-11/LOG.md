@@ -366,3 +366,13 @@ Normalization применяет только явно названный profil
 После принятой diagnostics correction остаётся доказанный source-path риск: framework templates могут вставить secret в persistent env record, copy destination или agent prompt/envelope. Root фиксирует запрет secret references именно в StepVar grammar с existing recipe/shell environment и direct conditions. Escape $$ и returned parameter text не reparsed. Agent/native transport не расширяется; argv replay остаётся отдельной задачей.
 
 Active agent prompt_file читается/проверяется до dependency/app execution и сохраняется literal snapshot в плане; preview/run используют тот же текст. Skipped agent не требует чтения unused file: сохраняется действующий agentless installation путь. Только missing finish app_root/app_bin может остаться placeholder в preview, не любой exception. Источник bytes — уже принятый SafeFS shared-inode reader, с новым прямым app→safefs runtime edge; это не write ownership и не whole-tree atomic proof. Файлы этого атома отделены от requires-intent worker.
+
+## 2026-11-04 — Authored intent integration
+
+Root проверил полный22-file amended snapshot, исходный diff/untracked set и main base; пересечения с живым secret-template writer отсутствуют. Source files перенесены точно, отчёты и raw evidence архивированы. Normalizer/checked serializer/source dispatch/real workspace guards просмотрены. Main source family6/6, normalization6/6 и prepared/F02 integration9+22 прошли. Candidate529distinct tests/docs содержит2новых RED→GREEN на потерю actual edge/field text; ошибки import/fixture/large-enum clippy указаны отдельно.
+
+AUTHORED-INTENT и INPUT-NORMALIZATION принимаются в их узком source/input boundary. FEATURE-VISIBILITY остаётся impl/work: declaration и direct input enforcement есть, реальная foreign forwarding проверка ещё не подключена. PROFILE-INPUTS/scalar merge/default binding/persistence/runtime остаются незавершёнными. Наличие source intent не превращает временный unsupported guard в готовую установку.
+
+### Authored intent accepted gate
+
+Main source6/6 + normalize6/6 + prepared9/9 + F02constraints22/22 прошли. Fmt и4scoped conform exit0,0new (core0/workspace0/app1existing observation/install0); specmap9055units/4730items/3970edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Все22amended source hashes совпадают. Exact schema/normalization/command/Rust API changes внесены в FMT-006. Runtime guards остаются debt, не user feature completion.

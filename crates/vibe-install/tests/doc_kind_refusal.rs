@@ -228,3 +228,82 @@ fn common_package_configuration_refuses_before_apply_instead_of_empty_legacy_suc
     assert!(!project.join("vibe.lock").exists());
     assert!(!project.join("vibevm/vibedeps").exists());
 }
+
+#[test]
+fn fetched_transitive_source_input_cannot_be_ignored_before_apply() {
+    struct Transitive(FixtureSource);
+    impl InstallSource for Transitive {
+        fn resolve_and_fetch(
+            &self,
+            p: &PackageRef,
+            s: &Path,
+            h: Option<&str>,
+        ) -> Result<CachedPackage, RegistryError> {
+            self.0.resolve_and_fetch(p, s, h)
+        }
+        fn manifest_of(&self, p: &PackageRef) -> Result<Manifest, SolveError> {
+            self.0.manifest_of(p)
+        }
+        fn solve(&self, _: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+            Ok(ResolvedGraph {
+                packages: [
+                    ("parent", vec!["configured"], true),
+                    ("configured", vec!["leaf"], false),
+                    ("leaf", vec![], false),
+                ]
+                .into_iter()
+                .map(|(name, deps, is_root)| ResolvedNode {
+                    group: Group::parse("org.vibevm.core").unwrap(),
+                    name: name.into(),
+                    version: semver::Version::parse("0.1.0").unwrap(),
+                    dependencies: deps
+                        .into_iter()
+                        .map(|name| PackageRef::parse(&format!("org.vibevm.core/{name}")).unwrap())
+                        .collect(),
+                    is_root,
+                })
+                .collect(),
+            })
+        }
+        fn solve_masked(
+            &self,
+            roots: &[PackageRef],
+            _: &BTreeSet<(String, String)>,
+        ) -> Result<ResolvedGraph, SolveError> {
+            self.solve(roots)
+        }
+        fn materialise_in_place(
+            &self,
+            p: &PackageRef,
+            s: &Path,
+        ) -> Result<vibe_registry::InPlaceMaterialised, RegistryError> {
+            self.0.materialise_in_place(p, s)
+        }
+    }
+    let (_outer, project, fixture) = project_requiring("flow", "parent");
+    for (name, requires) in [
+        (
+            "parent",
+            "[requires.packages]\n'org.vibevm.core/configured'='*'\n",
+        ),
+        (
+            "configured",
+            "[requires.packages.'org.vibevm.core/leaf']\nversion='*'\nconfiguration={policy='require-selection',parameters={x='SYN_NO_OUTPUT'}}\n",
+        ),
+        ("leaf", ""),
+    ] {
+        let dir = fixture.fixtures.join(name);
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("vibe.toml"),format!("[package]\ngroup='org.vibevm.core'\nname='{name}'\nversion='0.1.0'\nkind='flow'\n{requires}")).unwrap();
+    }
+    let source = Transitive(fixture);
+    let error =
+        vibe_install::plan(&source, &project, request("parent"), &NullObserver).unwrap_err();
+    assert!(
+        matches!(&error,vibe_install::Error::ConfigurationInputUnsupported{consumer,dependency} if consumer=="package org.vibevm.core/configured"&&dependency=="org.vibevm.core/leaf"),
+        "{error}"
+    );
+    assert!(!error.to_string().contains("SYN_NO_OUTPUT"));
+    assert!(!project.join("vibe.lock").exists());
+    assert!(!project.join("vibevm/vibedeps").exists());
+}

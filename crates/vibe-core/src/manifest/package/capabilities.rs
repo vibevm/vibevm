@@ -66,8 +66,8 @@ impl Provides {
 /// assert_eq!(r.packages.len(), 2);
 /// assert_eq!(r.capabilities.len(), 1);
 /// ```
-#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(into = "RequiresWire", try_from = "RequiresWire")]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize)]
+#[serde(try_from = "RequiresWire")]
 pub struct Requires {
     /// Registry-resolved package dependencies.
     pub packages: Vec<PackageRef>,
@@ -115,6 +115,8 @@ pub struct Requires {
     pub friend_flags: BTreeMap<String, bool>,
     /// Per-edge deep subtree exclusions, keyed by `<group>/<name>`.
     pub excludes: BTreeMap<String, Vec<String>>,
+    /// Original consumer input, keyed by the actual normalized requires edge.
+    pub configurations: BTreeMap<String, crate::manifest::ConfigurationIntentDecl>,
 }
 
 impl Requires {
@@ -129,6 +131,7 @@ impl Requires {
             && self.accesses.is_empty()
             && self.friend_flags.is_empty()
             && self.excludes.is_empty()
+            && self.configurations.is_empty()
     }
 
     /// Return every root dependency's `(group, name)` identity in a single
