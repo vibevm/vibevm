@@ -392,3 +392,7 @@ PROP-065 secret wording уточнён: framework-owned views/records обяза
 ### Secret templates accepted gate
 
 Main joint publicCLI6/6 прошёл. Fmt/core+app+CLI conform exit0,0new; incumbent observations core0/app1/CLI67 сохранены. Map9055units/4734items/3974edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Все14reviewed source hashes совпали. Reader dependency edge verified отдельно: никаких новых package versions/source/checksums. Принимается SECRET-TEMPLATES; raw argv replay и cross-process continuation не объявлены исправленными. FMT-007 содержит точный before/after и migration guidance.
+
+## 2026-11-04 — Закрытие двух принятых рабочих копий
+
+Authored intent принят237f7bf2b, secret templates —eefe840b8. Все22и14final source hashes проверены против committed snapshots, отчёты/RED/GREEN/commands/digests сохранены вне copies. Обе временные copies удалены после проверки отсутствия live users; отсутствие каталогов и registry entries подтверждено. FORMAT-CHANGES дополнен обоими accepted hashes. Полная кампания active: следующий frontier — actual common evaluation/planning и persistence/UI, чтобы заменить временные unsupported guards рабочими consumers. Source/data слой не выдаётся за завершённую установку.

@@ -215,7 +215,7 @@ Evidence:529distinct successful candidate tests/docs, включая actual Work
 
 ## FMT-007 — Secret references в step templates (Unreleased)
 
-Статус: **принято в main**, commit `fix(app): prepare prompts without secret interpolation` (hash дописывается после commit). Новых TOML-ключей, Vibe lock/index epochs или app machine-schema fields нет. Cargo.lock меняется только добавлением уже существующего workspace dependency app→safefs, без смены package versions.
+Статус: **принято в main**, commit `eefe840b8` (`fix(app): prepare prompts without secret interpolation`). Новых TOML-ключей, Vibe lock/index epochs или app machine-schema fields нет. Cargo.lock меняется только добавлением уже существующего workspace dependency app→safefs, без смены package versions.
 
 Ужесточается existing secret=true: framework-interpreted `$param:ID`/`${param:ID}` запрещены для secret parameter в copy destination, env set/path_prepend, agent prompt и file_present condition. Inline declaration validation проверяет также inactive branches. Active prompt_file проверяется при planning до dependency/app execution, work/env/envelope publication. Skipped/agentless external prompt file не читается.
 
