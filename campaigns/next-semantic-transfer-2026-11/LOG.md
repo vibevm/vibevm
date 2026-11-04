@@ -254,3 +254,11 @@ CHOICE-CORE main integration:35/35 passed. Первый conform gate завер�
 ### CHOICE-CORE acceptance gate
 
 Main35/35, exact test-context follow-up4/4, fmt, core conform и specmap --check завершены exit0. Map9046units/4701items/3941edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Приняты12source files по amended SHA256 manifest (единственная root поправка — два cfg(test) declarations). Принимается локальный CHOICE-CORE: unchosen/lost members отказывают, unresolved не выдаёт executable feature result, original/dormant intent сохраняется. Общий F04 остаётся active; source/default binding, solver/domain consumers, persistence, typed parameters и публичный общий путь не закрыты.
+
+## 2026-11-04 — CHOICE-CORE commit и переход к существующему package consumer
+
+CHOICE-CORE принят commit033a4236d. Все12amended hashes сверены с committed HEAD; live cwd/exe/fd users отсутствовали, evidence вынесены. Worktree common-choice-intent удалён, отсутствие каталога и Git registry entry проверено.
+
+Следующий bounded atom — package FeaturesTable adapter к тому же kernel, вместо ещё одного изолированного evaluator. Сохраняются default-as-feature, union explicit/default seeds, private input policy, cycles и независимые at-most-one constraints; all-features не является проверкой валидности определения с exclusive alternatives. Нужна проверка настоящих legacy literal IDs, включая возможное избыточное ограничение общего kernel. Эффекты пока только проецируются из одного resolved set; SAT/install/boot consumers этим не закрываются.
+
+Порядок работы уточнён: реальные consumers подключаются по мере готовности нужной семантики, а не ждут окончания всех чистых типов. Default binding, typed parameters, persistence и surfaces остаются обязательными для общего acceptance. Это не отменяет найденные secret/template/resume gaps и не объявляет существующий app lifecycle универсально готовым.

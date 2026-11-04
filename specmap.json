@@ -98895,7 +98895,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d3c1878c9e276052f75473bcc0567ce8f5ec4b5e90af86e775fbec48b5c39b09",
+      "content_hash": "sha256:ac48b56e9a208a332b759c8d9e3057fd4d998eed75b953ee8aa2d133dbab0a84",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -99120,7 +99120,7 @@
     },
     {
       "anchor": "persistence",
-      "content_hash": "sha256:1a9274572e280318ffe456cc24d42355627074cd0fd0c9ba6ce099b7303a5ae0",
+      "content_hash": "sha256:8d309bd6ec1c8f5eb4bbe9e469cfdbde4557bb82577ff7831027ad358b762736",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "6. Existing owners retain the state",
@@ -99155,12 +99155,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-APP-COMPATIBILITY"
     },
     {
+      "anchor": "LEGACY-PACKAGE-COMPATIBILITY",
+      "content_hash": "sha256:0cf2de0d3b572c2719e5f7bddf58ddb6bef7bbf43a0df4b1f5fd3ce8cb5b16ee",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "The existing package FeaturesTable is lowered into the same feature kernel. Its default is a real named feature, default and explicit seeds union, all-features initially selects public names only, and private underscore-prefixed names remain reachable through local implications while direct public requests refuse them. Positive implication cycles terminate. Existing exclusive sets are independent at-most-one closure constraints without fallback or app-style direct replacement; empty legacy sets are no-ops. The adapter preserves valid literal identifiers rather than inventing another identity encoding. Definition validation checks every local reference and activation syntax, including dormant/private branches, without treating an all-features activation conflict as an invalid definition. Existing dependency/forwarding/subskill values are projected from the shared resolved set, never through another production closure walk. This adapter preserves the current feature algebra; real solver/effect consumers remain separately required and are not implied by a populated expansion struct. @status:spec/done",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-PACKAGE-COMPATIBILITY"
+    },
+    {
       "anchor": "acceptance",
       "content_hash": "sha256:ba57173c57aa1e9a9f3a5ff1b85f0f8b35a2d3f6d243468ed5e3c2b71c2b4e4f",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "7. Finished means a working shared system",
-      "line": 39,
+      "line": 40,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#acceptance"
     },
     {
@@ -99169,7 +99178,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Acceptance requires the existing public application wizard scenario and app update/modify behavior to pass; the same ordinary package request to work through console and serialized external answers without host bootstrap; all cardinalities and omitted/empty/default policies; dormant switch-away/switch-back; additive/exact multi-consumer conflicts; candidate backtracking without effect/default leakage; integrated forwarding/subskill/config effects; typed parameters and redaction; persistence followed by install/update/reconfiguration; stale definition refusals without writes; and a PackageKind-driven matrix of supported views and effects, including read-only and consent-only boundaries. Structural/schema success and counts are supporting checks, not substitutes for these user outcomes. @status:spec/done",
-      "line": 40,
+      "line": 41,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#ACCEPTANCE"
     },
     {
@@ -99178,7 +99187,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "8. Rationale and rejected alternatives",
-      "line": 42,
+      "line": 43,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#decisions"
     },
     {
