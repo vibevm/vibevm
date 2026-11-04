@@ -2523,3 +2523,15 @@ structure, and it goes when the file does.
 | @fact:B230-SEVERITY **severity** | P3 — invalid-by-schema null aliases absence in existing readers; valid declared values remain distinguishable. Compatibility needs review before changing old admission. |
 | @fact:B230-DISPOSITION **disposition** | open; deliberately not tightened globally during common app integration. New presence-sensitive common arrays use supported required-nullable collection refs, preserving null versus [] and rejecting missing required fields in their new contract. Review old schemas/consumers before either declaring nullability or narrowing readers. Inline required-nullable collections additionally hit an existing empty-policy generation limitation; the equivalent shared collection-ref route is supported, so no general emitter expansion is needed for the current consumer. |
 | @fact:B230-FILED **filed by** | Semantic transfer campaign,2026-11-04. |
+
+
+## B-231 — `vibe self import --use` writes the PATH line into the shell profile without asking {#b-231}
+
+| field | value |
+|---|---|
+| @fact:B231-WHAT **what** | `vibe self import <exe> --use` writes the shims and vibe's managed PATH block into the shell's profile (zsh `~/.zshrc`, bash `~/.bashrc`, fish `config.fish`, else `~/.profile`, chosen by `$SHELL`) on every unix, with no consent asked and no flag to leave the profile alone. VibeVM's first start on macOS runs that import, so the folder is on PATH before the person is asked: the consent of Settings → vibe's *Add to PATH* (`vibe self doctor --fix --yes`, vibevm-app R130, I-2044) then only covers a line that was later removed. Also: `vibe self doctor --json` names no profile and reads only the calling process's PATH, so a client started from the Finder must repeat vibe's `$SHELL` rule and read the managed block itself. |
+| @fact:B231-EVIDENCE **evidence** | vibevm-app's R130 agent, 2026-11-04: in a temp home `vibe 1.0.11 self import … --use` wrote `.zshrc` at once; read in the source at /fast/git/vibevm. Recorded fixtures in vibevm-app `crates/core/tests/fixtures/vibe-path/`. |
+| @fact:B231-SEVERITY **severity** | P2 — consent to change a shell profile is implied rather than asked on the first import; nothing breaks. |
+| @fact:B231-DISPOSITION **disposition** | `candidate — to be considered and decided later in vibe` (the owner, 2026-11-04). Options to weigh: a `--no-profile` (or consent) switch for `self import`, the profile and its block named in the doctor's JSON. |
+| @fact:B231-FILED **filed by** | vibevm-app build side (session MVP), 2026-11-04. |
+
