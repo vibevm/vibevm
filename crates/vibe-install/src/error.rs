@@ -191,7 +191,7 @@ pub enum Error {
     /// dependency tree back as it was. `primary` stopped the install;
     /// `reason` is the first undo step that failed, the path to inspect.
     #[error(
-        "{primary}; restoring the dependency tree afterwards also failed: {reason} \
+        "{primary}; restoring installation state afterwards also failed: {reason} \
          (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail; \
           fix: inspect that path, then run `vibe install` again)"
     )]

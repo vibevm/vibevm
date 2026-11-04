@@ -28,6 +28,7 @@ mod plane;
 mod project;
 pub mod purl;
 mod redirect;
+mod rendering;
 mod run_command;
 mod subskill;
 mod target_when;
@@ -128,14 +129,25 @@ where
 {
     let path = path.as_ref();
     let rendered = toml::to_string_pretty(value)?;
-    let final_content = match fs::read_to_string(path) {
-        Ok(existing) => merge_preserving_comments(&existing, &rendered),
-        Err(_) => rendered,
-    };
+    let existing = fs::read_to_string(path).ok();
+    let final_content = decorate_toml(&rendered, existing.as_deref());
     fs::write(path, final_content).map_err(|source| Error::Write {
         path: path.to_path_buf(),
         source,
     })
+}
+
+/// Render from an explicit decoration observation without reading a path.
+pub(crate) fn render_toml<T: Serialize>(value: &T, existing: Option<&str>) -> Result<String> {
+    let rendered = toml::to_string_pretty(value)?;
+    Ok(decorate_toml(&rendered, existing))
+}
+
+fn decorate_toml(rendered: &str, existing: Option<&str>) -> String {
+    match existing {
+        Some(existing) => merge_preserving_comments(existing, rendered),
+        None => rendered.to_owned(),
+    }
 }
 
 /// Merge a freshly-rendered TOML payload (`new_rendered`) into the

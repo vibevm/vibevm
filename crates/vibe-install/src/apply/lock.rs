@@ -15,7 +15,11 @@ pub(super) struct LockInputs<'a> {
     pub(super) lockfile_path: &'a std::path::Path,
 }
 
-pub(super) fn record_lock(lockfile: &mut Lockfile, inputs: LockInputs<'_>) -> Result<()> {
+pub(super) fn record_lock(
+    lockfile: &mut Lockfile,
+    inputs: LockInputs<'_>,
+    files: &mut MetadataFiles,
+) -> Result<()> {
     let LockInputs {
         fetched,
         resolution,
@@ -70,9 +74,11 @@ pub(super) fn record_lock(lockfile: &mut Lockfile, inputs: LockInputs<'_>) -> Re
     // Its unique rows are not the per-consumer constraints used by the solver.
     replace_root_dependencies(lockfile, roots);
 
-    lockfile.write(lockfile_path)?;
-    // PROP-066 `#provenance`: where the bytes actually came from, beside
-    // the lock rather than inside it (see `record::fetch_provenance`).
-    crate::record::fetch_provenance(fetched).write_beside(lockfile_path)?;
+    files.check_lock_path(lockfile_path)?;
+    let lock_text = lockfile.render_with_comments(files.lock.previous_text()?)?;
+    let provenance = crate::record::fetch_provenance(fetched)
+        .render_with_comments(files.provenance.previous_text()?)?;
+    files.lock.publish(Some(&lock_text))?;
+    files.provenance.publish(provenance.as_deref())?;
     Ok(())
 }

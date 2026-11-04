@@ -68,7 +68,9 @@ macro_rules! project_file_methods {
         bytes: &[u8],
         unix_mode: Option<u32>,
     ) -> Result<crate::DurableWrite, PublishError> {
-        self.write_atomic_durable_in_with_mode_stage(directory, relative, bytes, unix_mode, None)
+        self.write_atomic_durable_in_with_mode_stage(
+            directory, relative, bytes, unix_mode, None, None,
+        )
     }
 
     /// Transaction-only deterministic staging. `stage_name` must be derived
@@ -89,9 +91,11 @@ macro_rules! project_file_methods {
             bytes,
             unix_mode,
             Some(stage_name),
+            None,
         )
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn write_atomic_durable_in_with_mode_stage(
         &self,
         directory: &Pinned,
@@ -99,6 +103,7 @@ macro_rules! project_file_methods {
         bytes: &[u8],
         unix_mode: Option<u32>,
         deterministic_stage: Option<&str>,
+        mut owned_receipt: Option<&mut Option<OwnedFileReceipt>>,
     ) -> Result<crate::DurableWrite, PublishError> {
         let mut created: Vec<std::path::PathBuf> = Vec::new();
         let mut directory_syncs = Vec::new();
@@ -180,6 +185,7 @@ macro_rules! project_file_methods {
                 (name, Some(file), true)
             }
         };
+        let mut owned_stage = None;
         if let Some(staged_file) = staged_file {
             let mut std_file = staged_file.into_std();
             let written = std_file
@@ -187,10 +193,21 @@ macro_rules! project_file_methods {
                 .and_then(|()| std_file.flush())
                 .and_then(|()| stable::set_unix_mode(&std_file, unix_mode))
                 .and_then(|()| std_file.sync_all());
-            drop(std_file);
             if let Err(error) = written {
                 if created_stage {
-                    let _ = destination.dir.remove_file(&staged_name);
+                    if owned_receipt.is_some() {
+                        if let Err(cleanup) =
+                            owned::clean_held_stage(&destination, &staged_name, &std_file)
+                        {
+                            return Err(before(
+                                &created,
+                                anyhow::Error::new(error)
+                                    .context(format!("stage cleanup refused: {cleanup:#}")),
+                            ));
+                        }
+                    } else {
+                        let _ = destination.dir.remove_file(&staged_name);
+                    }
                 }
                 return Err(before(
                     &created,
@@ -200,10 +217,25 @@ macro_rules! project_file_methods {
                     )),
                 ));
             }
+            if let Some(slot) = owned_receipt.as_deref_mut() {
+                *slot = Some(owned::capture_stage(&destination, &staged_name, &std_file, bytes)
+                    .map_err(|error| before(&created, error))?);
+                owned_stage = Some(std_file);
+            }
         }
+        let clean_stage = || -> Result<()> {
+            if let Some(held) = &owned_stage {
+                owned::clean_held_stage(&destination, &staged_name, held)
+            } else {
+                destination
+                    .dir
+                    .remove_file(&staged_name)
+                    .map_err(Into::into)
+            }
+        };
         if let Some(injected) = create_new::injected_pre_publication_failure(relative) {
             if created_stage {
-                let _ = destination.dir.remove_file(&staged_name);
+                clean_stage().map_err(|error| before(&created, error))?;
             }
             return Err(before(&created, injected));
         }
@@ -211,19 +243,24 @@ macro_rules! project_file_methods {
             .dir
             .rename(&staged_name, &destination.dir, &name)
         {
-            // Our own stage, created with `create_new`: removing it removes
-            // nothing anyone else owns. A failed rename leaves the destination
-            // untouched, so this stays `BeforePublication`.
-            if created_stage {
-                let _ = destination.dir.remove_file(&staged_name);
-            }
-            return Err(before(
-                &created,
-                anyhow::Error::new(error).context(format!(
-                    "publishing `{}`",
-                    destination.join(&name).display()
-                )),
+            // The owned variant cannot infer an unchanged destination merely
+            // from a failed rename. Preserve possibly-published evidence and
+            // clean only a stage still bound to the retained handle. Existing
+            // logical callers retain their previous error-stage contract.
+            let mut error = anyhow::Error::new(error).context(format!(
+                "publishing `{}`",
+                destination.join(&name).display()
             ));
+            if created_stage && let Err(cleanup) = clean_stage() {
+                error = error.context(format!(
+                    "stage left untouched after cleanup refusal: {cleanup:#}"
+                ));
+            }
+            return Err(if owned_receipt.is_some() {
+                PublishError::possibly(created.clone(), error)
+            } else {
+                before(&created, error)
+            });
         }
         // Past this line the destination entry may already be the new bytes.
         let possibly = |error: anyhow::Error| PublishError::possibly(created.clone(), error);
@@ -236,16 +273,32 @@ macro_rules! project_file_methods {
         // spending nothing past `cap + 1` — instead of allocating a foreign
         // payload to compare against, and it never offers a prefix as success.
         let wanted_digest = format!("{:x}", sha2::Sha256::digest(bytes));
-        match stable::read_stable_in(self, &destination, &name, Some(bytes.len() as u64))
-            .map_err(&possibly)?
+        match stable::read_stable_with_identity_in(
+            self,
+            &destination,
+            &name,
+            Some(bytes.len() as u64),
+        )
+        .map_err(&possibly)?
         {
-            Some(visible)
-                if visible.sha256 == wanted_digest
+            Some((visible, identity))
+                if owned_receipt
+                    .as_deref()
+                    .and_then(Option::as_ref)
+                    .is_none_or(|receipt| {
+                        receipt.matches_state(
+                            identity,
+                            &visible.sha256,
+                            visible.bytes,
+                            visible.unix_mode,
+                        )
+                    })
+                    && visible.sha256 == wanted_digest
                     && visible.bytes == bytes.len() as u64
                     && stable::mode_matches(visible.unix_mode, unix_mode) => {}
             Some(_) => {
                 return Err(possibly(anyhow::anyhow!(
-                    "published bytes or mode of `{}` do not match the staged bytes/mode",
+                    "published object, bytes or mode of `{}` do not match the staged bytes/mode",
                     destination.join(&name).display()
                 )));
             }

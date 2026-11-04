@@ -66,6 +66,18 @@ impl Project {
         name: &str,
         bytes: &[u8],
     ) -> Result<(), PublishError> {
+        self.publish_new_in_with_mode(directory, name, bytes, None)
+    }
+
+    /// Create without replacing any occupant, setting an optional Unix mode
+    /// on the held stage before its name becomes visible.
+    pub fn publish_new_in_with_mode(
+        &self,
+        directory: &Pinned,
+        name: &str,
+        bytes: &[u8],
+        unix_mode: Option<u32>,
+    ) -> Result<(), PublishError> {
         let before = |error: anyhow::Error| PublishError::before(Vec::new(), error);
         ensure_safe_component(name).map_err(&before)?;
         // Cheap, honest early refusal with a legible diagnostic. It is NOT
@@ -78,6 +90,7 @@ impl Project {
         let written = std_file
             .write_all(bytes)
             .and_then(|()| std_file.flush())
+            .and_then(|()| super::stable::set_unix_mode(&std_file, unix_mode))
             .and_then(|()| std_file.sync_all());
         drop(std_file);
         if let Err(error) = written {
@@ -136,10 +149,12 @@ impl Project {
         // on its own metadata, spending nothing past `cap + 1`, rather than
         // being read whole to be told it mismatches.
         match self
-            .read_file_bounded_in(directory, name, bytes.len())
+            .read_file_snapshot_bounded_in(directory, name, bytes.len())
             .map_err(&possibly)?
         {
-            Some(visible) if visible.as_slice() == bytes => {}
+            Some(visible)
+                if visible.bytes.as_slice() == bytes
+                    && super::stable::mode_matches(visible.unix_mode, unix_mode) => {}
             Some(_) => {
                 return Err(possibly(anyhow::anyhow!(
                     "published bytes of `{}` do not match the staged bytes",

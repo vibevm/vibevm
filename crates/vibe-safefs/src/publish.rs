@@ -22,7 +22,9 @@ use specmark::spec;
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
 pub enum PublishStage {
     /// The rename had not been attempted. The destination file is definitely
-    /// unchanged; any staging file has been removed.
+    /// unchanged. Checked cleanup may leave a stage whose ownership cannot
+    /// be proved; any such residue is reported in the error, never removed
+    /// merely because its name looks like this operation's stage.
     BeforePublication,
     /// The rename was attempted and may have taken effect, or it took effect
     /// and the visible result then failed verification. The destination file

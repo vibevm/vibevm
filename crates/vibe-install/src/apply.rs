@@ -8,7 +8,7 @@ use std::collections::BTreeSet;
 use std::sync::Arc;
 
 use vibe_core::PackageRef;
-use vibe_core::manifest::{Manifest, SpecFormat};
+use vibe_core::manifest::SpecFormat;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_lifecycle::process::StreamMode;
 use vibe_lifecycle::{LifecycleLease, LifecycleRunHandle, RunMetadata};
@@ -38,9 +38,11 @@ use crate::slot_verify::RegistrySlotVerifier;
 mod deferred;
 mod file_guard;
 mod lock;
+mod metadata;
 mod native;
 use deferred::materialise_deferred_in_place;
-use file_guard::FileGuard;
+use file_guard::MetadataFiles;
+use metadata::apply_with_spec_format_and_slot_lifecycle;
 use native::NativeApplyPreparation;
 
 /// What [`apply`] did — the caller renders it.
@@ -297,29 +299,41 @@ fn apply_with_spec_format_and_lifecycle_observed_traced_prepared_inner<
         native,
     );
     // A parked hosted row halts the orchestrator through the seam's only
-    // stopping channel. It is a durable handoff, not a failure — so it is
-    // retyped here, WITH the rows executed up to the park, before any caller
-    // can mistake the sentinel for an install error.
+    // stopping channel. Retype the sentinel as a durable handoff only when
+    // rollback succeeded; any rollback conflict stays a reported failure,
+    // with the parked task and run state retained for inspection.
     let mut prepared = match applied {
         Ok(prepared) => prepared,
         Err(error) => {
-            return Err(match lifecycle.parked() {
-                Some(delegation) => Error::Delegated {
+            let reports = lifecycle.take_reports().unwrap_or_default();
+            let progress = Box::new(lifecycle.progress());
+            return Err(match (lifecycle.parked(), error) {
+                // Parking is a clean handoff only when undo succeeded. Keep
+                // the task/state on disk, but surface both errors instead of
+                // converting a rollback conflict into a successful park.
+                (Some(delegation), Error::RollbackFailed { primary, reason }) => {
+                    Error::SlotFailed {
+                        source: Box::new(Error::RollbackFailed {
+                            primary,
+                            reason: format!(
+                                "{reason}; lifecycle run `{}` remains parked; retained task(s): {}; resolve the rollback conflict before resuming",
+                                delegation.run_id,
+                                delegation.tasks.join(", ")
+                            ),
+                        }),
+                        reports,
+                        progress,
+                    }
+                }
+                (Some(delegation), _) => Error::Delegated {
                     delegation: Box::new(delegation),
-                    reports: lifecycle.take_reports().unwrap_or_default(),
-                    // Progress was recorded AS the mutation happened, so a
-                    // pre-install park reports the slots that survived its
-                    // rollback and a post-install park reports the whole
-                    // completed apply. Neither invents a file census.
-                    progress: Box::new(lifecycle.progress()),
+                    reports,
+                    progress,
                 },
-                // A failure is an outcome too: the rows this pass executed and
-                // the progress it really made travel with it, so the outermost
-                // command can report them.
-                None => Error::SlotFailed {
+                (None, error) => Error::SlotFailed {
                     source: Box::new(error),
-                    reports: lifecycle.take_reports().unwrap_or_default(),
-                    progress: Box::new(lifecycle.progress()),
+                    reports,
+                    progress,
                 },
             });
         }
@@ -334,7 +348,7 @@ fn apply_with_spec_format_and_lifecycle_observed_traced_prepared_inner<
 }
 
 #[allow(clippy::too_many_arguments)]
-fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
+fn apply_metadata_checked<S: InstallSource + ?Sized>(
     source: &S,
     planned: PlannedInstall,
     slot_integrity: SlotIntegrity,
@@ -349,11 +363,12 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     // the workspace apply's boot regeneration and no further.
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
     native: Option<NativeApplyPreparation<'_>>,
+    files: &mut MetadataFiles,
 ) -> Result<PreparedApplyReport> {
     let PlannedInstall {
         project_root,
-        request,
-        mut manifest,
+        request: _,
+        manifest,
         mut lockfile,
         language_chain,
         mut fetched,
@@ -365,54 +380,11 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
         progress,
     } = planned;
 
-    // 6. Update `vibe.toml` `[requires].packages` with the requested
-    //    roots — caret by default, `exact` pins `=<resolved>`, an
-    //    explicit constraint is preserved verbatim. De-dup by
-    //    `(group, name)`; a no-op in install-from-manifest mode.
-    //
-    //    This MUST run before the boot regeneration below:
-    //    `apply_resolution` composes each node's boot from its
-    //    `[requires]`, so a package installed by pkgref has to be
-    //    declared first or its boot snippet is dropped from the
-    //    generated `INDEX.md`.
-    //
-    //    A requested root absent from the fetched set means the
-    //    install source returned an incomplete resolution — through
-    //    the seam that is checkable input, not a construction
-    //    invariant, so it surfaces as an error.
-    let finalized_roots: Vec<PackageRef> = request
-        .roots
-        .iter()
-        .map(|cli_pkgref| {
-            let resolved = fetched
-                .iter()
-                .find(|f| {
-                    Some(&f.cached.resolved.group) == cli_pkgref.group.as_ref()
-                        && f.cached.resolved.name == cli_pkgref.name
-                })
-                .map(|f| &f.cached.resolved.version)
-                .ok_or_else(|| Error::RootNotFetched {
-                    pkgref: cli_pkgref.to_string(),
-                })?;
-            Ok(finalize_pkgref_for_manifest(
-                cli_pkgref,
-                resolved,
-                request.exact,
-            ))
-        })
-        .collect::<Result<_>>()?;
-    let manifest_changed = if finalized_roots.is_empty() {
-        false
-    } else {
-        merge_manifest_requires(&mut manifest, &finalized_roots)
-    };
     // Everything from this write to the lock write is undone together: the
     // guard puts the manifest's earlier bytes back unless the apply finishes.
-    let mut manifest_guard = FileGuard::idle();
-    if manifest_changed {
-        let path = project_root.join(Manifest::FILENAME);
-        manifest_guard = FileGuard::before_write(&path)?;
-        manifest.write(path)?;
+    if let Some(guard) = &mut files.manifest {
+        let rendered = manifest.render_with_comments(guard.previous_text()?)?;
+        guard.publish(Some(&rendered))?;
     }
 
     // 7. Rebuild the workspace so the boot computation reads the just-updated
@@ -519,41 +491,31 @@ fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     //       written the install is not durable: a failure undoes this apply's
     //       slot changes, and the guards put the three files back.
     let lockfile_path = workspace.lockfile_path();
-    let provenance_path = vibe_core::lock_provenance::provenance_path(&lockfile_path);
-    let recorded = (|| {
-        let guards = [
-            FileGuard::before_write(&lockfile_path)?,
-            FileGuard::before_write(&provenance_path)?,
-        ];
-        lock::record_lock(
-            &mut lockfile,
-            lock::LockInputs {
-                fetched: &fetched,
-                resolution: &resolution,
-                language_chain: &language_chain,
-                roots: &roots,
-                lockfile_path: &lockfile_path,
+    let recorded = lock::record_lock(
+        &mut lockfile,
+        lock::LockInputs {
+            fetched: &fetched,
+            resolution: &resolution,
+            language_chain: &language_chain,
+            roots: &roots,
+            lockfile_path: &lockfile_path,
+        },
+        files,
+    );
+    if let Err(error) = recorded {
+        let error = files.undo_records(error);
+        let observer =
+            observer.map(|lifecycle| lifecycle as &dyn vibe_workspace::install::SlotLifecycle);
+        return Err(match outcome.roll_back(observer) {
+            Ok(()) => error,
+            Err(reason) => Error::RollbackFailed {
+                primary: Box::new(error),
+                reason,
             },
-        )
-        .map(|()| guards)
-    })();
-    let mut lock_guards = match recorded {
-        Ok(guards) => guards,
-        Err(error) => {
-            let observer =
-                observer.map(|lifecycle| lifecycle as &dyn vibe_workspace::install::SlotLifecycle);
-            return Err(match outcome.roll_back(observer) {
-                Ok(()) => error,
-                Err(reason) => Error::RollbackFailed {
-                    primary: Box::new(error),
-                    reason,
-                },
-            });
-        }
-    };
+        });
+    }
     outcome.commit();
-    manifest_guard.disarm();
-    lock_guards.iter_mut().for_each(FileGuard::disarm);
+    files.disarm();
     record_task.finish();
 
     // 11. PROP-020 §2.1 — post-install hooks run once the package is durable

@@ -27,6 +27,8 @@ use crate::project::{Pinned, Project, descend};
 use crate::publish::{PublishError, Published};
 
 mod bounded;
+mod owned;
+pub use owned::{OwnedFileReceipt, OwnedPublication, OwnedPublishError};
 mod create_new;
 pub(crate) mod identity;
 mod source_read;
@@ -220,3 +222,6 @@ mod publish_verify_tests;
 #[cfg(test)]
 #[path = "file/stable_tests.rs"]
 mod stable_tests;
+
+#[cfg(test)]
+mod owned_tests;

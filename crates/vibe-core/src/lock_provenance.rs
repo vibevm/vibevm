@@ -114,6 +114,22 @@ impl LockProvenance {
         read_toml(path)
     }
 
+    /// Prepare the exact sorted sidecar text from captured decoration.
+    /// `None` means removal: an empty provenance record has no sidecar.
+    /// No filesystem path is read or modified.
+    ///
+    /// ```
+    /// let provenance = vibe_core::lock_provenance::LockProvenance::default();
+    /// assert_eq!(provenance.render_with_comments(Some("# prior record")).unwrap(), None);
+    /// ```
+    pub fn render_with_comments(&self, previous: Option<&str>) -> Result<Option<String>> {
+        if self.is_empty() {
+            return Ok(None);
+        }
+        let sorted = self.sorted();
+        crate::manifest::render_toml(&sorted, previous).map(Some)
+    }
+
     /// Write the sidecar beside `lockfile_path`, or remove it when there
     /// is nothing to record.
     #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
@@ -128,10 +144,15 @@ impl LockProvenance {
             }
             return Ok(());
         }
+        let sorted = self.sorted();
+        write_toml(path, &sorted)
+    }
+
+    fn sorted(&self) -> Self {
         let mut sorted = self.clone();
         sorted
             .packages
             .sort_by(|left, right| left.package.cmp(&right.package));
-        write_toml(path, &sorted)
+        sorted
     }
 }

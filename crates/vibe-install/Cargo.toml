@@ -24,6 +24,7 @@ specmark.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 vibe-core.workspace = true
+vibe-safefs.workspace = true
 vibe-facts.workspace = true
 vibe-lifecycle.workspace = true
 vibe-registry.workspace = true
@@ -32,6 +33,7 @@ vibe-wire.workspace = true
 vibe-workspace.workspace = true
 
 [dev-dependencies]
+vibe-safefs = { workspace = true, features = ["inject-failures"] }
 serde_json.workspace = true
 tempfile.workspace = true
 vibe-native-loader-fixture = { path = "../vibe-native-loader/tests/fixtures/native-plugin" }

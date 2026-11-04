@@ -331,7 +331,7 @@ pub(super) fn read_stable_in(
     )
 }
 
-fn read_stable_with_identity_in(
+pub(super) fn read_stable_with_identity_in(
     project: &Project,
     directory: &Pinned,
     relative: &str,

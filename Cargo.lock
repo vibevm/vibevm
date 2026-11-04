@@ -4739,6 +4739,7 @@ dependencies = [
  "vibe-native-loader-fixture",
  "vibe-registry",
  "vibe-resolver",
+ "vibe-safefs",
  "vibe-wire",
  "vibe-workspace",
 ]

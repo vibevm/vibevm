@@ -17875,10 +17875,10 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/lock_provenance.rs",
       "item_kind": "fn",
-      "line": 117,
+      "line": 133,
       "symbol": "vibe_core::lock_provenance::LockProvenance::write_beside",
-      "end_line": 136,
-      "fingerprint": "tok1:7777f6d436ba1dcd7bb8b1ea2bd2da0daa72c5ef8c1a0d1f104c0d522b6579c0"
+      "end_line": 149,
+      "fingerprint": "tok1:3c1d219d5c5e98673c486ac65fdfc40ae103799acc7857756db8828653aebd4a"
     },
     {
       "crate_name": "vibe-core",
@@ -24245,6 +24245,33 @@
     },
     {
       "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/apply/file_guard.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_install::apply::file_guard",
+      "end_line": 3,
+      "fingerprint": "tok1:508c1db230e2559c3c7e2227bd6cfde490b5e677edff4bdf5a5254569021c998"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/apply/file_guard.rs",
+      "item_kind": "struct",
+      "line": 12,
+      "symbol": "vibe_install::apply::file_guard::FileGuard",
+      "end_line": 22,
+      "fingerprint": "tok1:bd224a79333302d6b51036344859f222811bc2f733513f41236a557f3d55d8c7"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/apply/file_guard.rs",
+      "item_kind": "fn",
+      "line": 136,
+      "symbol": "vibe_install::apply::file_guard::FileGuard::undo",
+      "end_line": 203,
+      "fingerprint": "tok1:4bcf0283ebe2684a0d8283b116d3ba9e2eb9443d24c0b1e2f622c69448ab1255"
+    },
+    {
+      "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/error.rs",
       "item_kind": "mod",
       "line": 5,
@@ -24259,7 +24286,7 @@
       "line": 12,
       "symbol": "vibe_install::error::Error",
       "end_line": 207,
-      "fingerprint": "tok1:3afb15d419936ce74b75fffcfc0a1ee60267f549b9d3f6e9a55b4bbb2e45da05"
+      "fingerprint": "tok1:1d69766773943b70dd12ebf239dc7ee2d7e1ff91a0d875df67cc24510ce06393"
     },
     {
       "crate_name": "vibe-install",
@@ -24431,6 +24458,78 @@
       "symbol": "vibe_install::record::workspace_root_snapshot",
       "end_line": 250,
       "fingerprint": "tok1:f4addd9d3199b3a93ae632a4c550dcc5f5207b786ef07e5bc9bd53d689806e10"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_install::tests::apply_file_rollback",
+      "end_line": 4,
+      "fingerprint": "tok1:508c1db230e2559c3c7e2227bd6cfde490b5e677edff4bdf5a5254569021c998"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "item_kind": "fn",
+      "line": 289,
+      "symbol": "vibe_install::tests::apply_file_rollback::failed_apply_does_not_follow_substituted_symlink",
+      "end_line": 295,
+      "fingerprint": "tok1:2d8f71805a1070bd4ef6da8bd318a160e07e5527e7147a89db872f0dd6a57640"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "item_kind": "fn",
+      "line": 297,
+      "symbol": "vibe_install::tests::apply_file_rollback::failed_apply_does_not_truncate_substituted_hardlink_sibling",
+      "end_line": 303,
+      "fingerprint": "tok1:8c556a92e1a1bdffa9919ca76ca929aa0ed30abccb2124f96a25a0f5fecc65c5"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "item_kind": "fn",
+      "line": 281,
+      "symbol": "vibe_install::tests::apply_file_rollback::failed_apply_preserves_same_bytes_new_object",
+      "end_line": 287,
+      "fingerprint": "tok1:0b039e9dd35a229553e91a6d098de102c273b2a85d834b3da7d8c86b8ef5d38f"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "item_kind": "fn",
+      "line": 273,
+      "symbol": "vibe_install::tests::apply_file_rollback::failed_apply_preserves_same_inode_third_state_edit",
+      "end_line": 279,
+      "fingerprint": "tok1:975dfe2e865a639c172eec407ffc53d987b1d0fc040dcb3000b7f4eb67511aa2"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "item_kind": "fn",
+      "line": 265,
+      "symbol": "vibe_install::tests::apply_file_rollback::ordinary_failed_apply_restores_original_manifest",
+      "end_line": 271,
+      "fingerprint": "tok1:47f6b29676ea7b058d2276fa46310578fea4f4e7b6a134bbc0ce2d55a7260c1c"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/apply_file_rollback/parking.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_install::tests::apply_file_rollback::parking",
+      "end_line": 2,
+      "fingerprint": "tok1:508c1db230e2559c3c7e2227bd6cfde490b5e677edff4bdf5a5254569021c998"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/apply_file_rollback/parking.rs",
+      "item_kind": "fn",
+      "line": 154,
+      "symbol": "vibe_install::tests::apply_file_rollback::parking::metadata_rollback_conflict_is_not_erased_by_a_hosted_park",
+      "end_line": 160,
+      "fingerprint": "tok1:d11f7a9fbed2506636ef6c3eca762c74ca398aaa1e1da5ff71f3d7f058b51051"
     },
     {
       "crate_name": "vibe-install",
@@ -34399,9 +34498,9 @@
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "enum",
-      "line": 49,
+      "line": 51,
       "symbol": "vibe_safefs::file::Presence",
-      "end_line": 61,
+      "end_line": 63,
       "fingerprint": "tok1:4b753670f3588e7bfc7942d6b920f6077b6ea195d6dd26607ff71d9c5c7b520d"
     },
     {
@@ -34421,6 +34520,42 @@
       "symbol": "vibe_safefs::file::identity",
       "end_line": 9,
       "fingerprint": "tok1:c29675253d6768efd8adf97a4a44a4b942bdfc925dea2630dcb093de4b46566b"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file/owned.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_safefs::file::owned",
+      "end_line": 3,
+      "fingerprint": "tok1:508c1db230e2559c3c7e2227bd6cfde490b5e677edff4bdf5a5254569021c998"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file/owned.rs",
+      "item_kind": "struct",
+      "line": 14,
+      "symbol": "vibe_safefs::file::owned::OwnedFileReceipt",
+      "end_line": 38,
+      "fingerprint": "tok1:d042cda44cc59d4fd151153fea07054977d959e60b921424c4c8fcb1b502c1a4"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file/owned.rs",
+      "item_kind": "struct",
+      "line": 83,
+      "symbol": "vibe_safefs::file::owned::OwnedPublication",
+      "end_line": 103,
+      "fingerprint": "tok1:4dc222374291977d636c3d5e295d420b77ed44b216b92e5a33e40e030173585a"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file/owned.rs",
+      "item_kind": "struct",
+      "line": 105,
+      "symbol": "vibe_safefs::file::owned::OwnedPublishError",
+      "end_line": 128,
+      "fingerprint": "tok1:0f976b68990e42021ae6bdba15e0bd3eab7a53da858f61a381bfddf7f22e877f"
     },
     {
       "crate_name": "vibe-safefs",
@@ -34615,9 +34750,9 @@
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/publish.rs",
       "item_kind": "struct",
-      "line": 33,
+      "line": 35,
       "symbol": "vibe_safefs::publish::PublishError",
-      "end_line": 43,
+      "end_line": 45,
       "fingerprint": "tok1:65f35e1f768e0b2f0079f999298b7bf11b23788ff4201dc7cb42dc78af70540c"
     },
     {
@@ -34626,16 +34761,16 @@
       "item_kind": "enum",
       "line": 20,
       "symbol": "vibe_safefs::publish::PublishStage",
-      "end_line": 31,
-      "fingerprint": "tok1:897e4980b5e087e4dd6458911541eebee0fe781b954f7fbd8ca11b31aa417f84"
+      "end_line": 33,
+      "fingerprint": "tok1:5d52cf429a1b25d9db736076b8147416371d217b77fd7b1c2cffbe5b6aac5877"
     },
     {
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/publish.rs",
       "item_kind": "struct",
-      "line": 106,
+      "line": 108,
       "symbol": "vibe_safefs::publish::Published",
-      "end_line": 112,
+      "end_line": 114,
       "fingerprint": "tok1:27bfd20b084e3e63f529040ffe66fecfeceefe9579e692cfbb70df3da8750bfa"
     },
     {
@@ -52131,7 +52266,7 @@
     {
       "file": "crates/vibe-core/src/lock_provenance.rs",
       "from_symbol": "vibe_core::lock_provenance::LockProvenance::write_beside",
-      "line": 119,
+      "line": 135,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-066#provenance",
       "verb": "documents"
@@ -57956,6 +58091,30 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-install/src/apply/file_guard.rs",
+      "from_symbol": "vibe_install::apply::file_guard",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/src/apply/file_guard.rs",
+      "from_symbol": "vibe_install::apply::file_guard::FileGuard",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/src/apply/file_guard.rs",
+      "from_symbol": "vibe_install::apply::file_guard::FileGuard::undo",
+      "line": 136,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-install/src/error.rs",
       "from_symbol": "vibe_install::error",
       "line": 5,
@@ -58123,6 +58282,70 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-RECORDING",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "from_symbol": "vibe_install::tests::apply_file_rollback",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "from_symbol": "vibe_install::tests::apply_file_rollback::failed_apply_does_not_follow_substituted_symlink",
+      "line": 290,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "from_symbol": "vibe_install::tests::apply_file_rollback::failed_apply_does_not_truncate_substituted_hardlink_sibling",
+      "line": 298,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "from_symbol": "vibe_install::tests::apply_file_rollback::failed_apply_preserves_same_bytes_new_object",
+      "line": 282,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "from_symbol": "vibe_install::tests::apply_file_rollback::failed_apply_preserves_same_inode_third_state_edit",
+      "line": 274,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/apply_file_rollback.rs",
+      "from_symbol": "vibe_install::tests::apply_file_rollback::ordinary_failed_apply_restores_original_manifest",
+      "line": 266,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/apply_file_rollback/parking.rs",
+      "from_symbol": "vibe_install::tests::apply_file_rollback::parking",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/tests/apply_file_rollback/parking.rs",
+      "from_symbol": "vibe_install::tests::apply_file_rollback::parking::metadata_rollback_conflict_is_not_erased_by_a_hosted_park",
+      "line": 155,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-install/tests/root_constraints.rs",
@@ -67321,7 +67544,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Presence",
-      "line": 51,
+      "line": 53,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -67340,6 +67563,38 @@
       "line": 9,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/file/owned.rs",
+      "from_symbol": "vibe_safefs::file::owned",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/file/owned.rs",
+      "from_symbol": "vibe_safefs::file::owned::OwnedFileReceipt",
+      "line": 29,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/file/owned.rs",
+      "from_symbol": "vibe_safefs::file::owned::OwnedPublication",
+      "line": 97,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/file/owned.rs",
+      "from_symbol": "vibe_safefs::file::owned::OwnedPublishError",
+      "line": 122,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO",
       "verb": "implements"
     },
     {
@@ -67513,7 +67768,7 @@
     {
       "file": "crates/vibe-safefs/src/publish.rs",
       "from_symbol": "vibe_safefs::publish::PublishError",
-      "line": 35,
+      "line": 37,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "implements"
@@ -67521,7 +67776,7 @@
     {
       "file": "crates/vibe-safefs/src/publish.rs",
       "from_symbol": "vibe_safefs::publish::PublishError",
-      "line": 36,
+      "line": 38,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -67537,7 +67792,7 @@
     {
       "file": "crates/vibe-safefs/src/publish.rs",
       "from_symbol": "vibe_safefs::publish::Published",
-      "line": 109,
+      "line": 111,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -140805,7 +141060,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7efafc5c3f330473f3f8f04002efb12a8bf1a6552639cbcd8f7e9febe7c8d3d9",
+      "content_hash": "sha256:210fb07e2e4dec309202a1450dcf2a00ce8659063f0e2c70c5e873d838f8313e",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
       "heading": "PROP-007: Workspace — multi-package projects, recursive nesting, selective publish",
@@ -142006,7 +142261,7 @@
     },
     {
       "anchor": "apply-file-ownership",
-      "content_hash": "sha256:ed39eaf605e6e1859b8384707b8ed8841e4c221133a494a069e1e055bf30c67d",
+      "content_hash": "sha256:d5ffa08d8ce411f852b6a6bbab7aa60971ac7ed25a995654ea269045b06162cd",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
       "heading": "10. Metadata publication and checked undo",
@@ -142015,10 +142270,10 @@
     },
     {
       "anchor": "APPLY-FILE-UNDO",
-      "content_hash": "sha256:cb89d66aed01b73ada299eb55094ecbd7dc93ab09095726a6681092ed62bebe0",
+      "content_hash": "sha256:81042a3bc409d27c8e49bfa9617e8c8777d808c729c1be00c55c23ffefeb4d0f",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
-      "heading": "Install apply owns only its published changes to the selected manifest, workspace lock and provenance sidecar. Capture their separate admitted parents and prior regular-file state before effects; prepare exact after bytes or removal through the existing serializers and captured decoration. Do not arm undo before publication or adopt an after-image by reopening an arbitrary current name. An additive filesystem publication receipt retains the newly created stage handle/identity from before rename, with known bytes/mode and before-versus-possibly-published outcome. Undo first checks the current held name against that owned after-state; observed byte/object/link substitutions are preserved and reported as conflicts. Equal bytes on another object do not authorize undo. Restore absence only after owned-file observation, and restore removed prior bytes only through no-replace creation. Original errors and rollback conflicts remain visible; ordinary no-third-state rollback and post-durability disarm remain. Existing single-link/no-follow mutation admission is retained, with unsafe initial targets refused before effects; shared read-only source support is unchanged. This is bounded checked publication under cooperating command ownership, not portable occupied-name kernel CAS: a final observation-to-mutation window against uncooperative writers remains. It provides neither all-file atomicity nor OS-crash recovery, and introduces no whole-slot before-image store. @status:spec/done",
+      "heading": "Install apply owns only its published changes to the selected manifest, workspace lock and provenance sidecar. Capture their separate admitted parents and prior regular-file state before effects; prepare exact after bytes or removal through the existing serializers and captured decoration. Do not arm undo before publication or adopt an after-image by reopening an arbitrary current name. An additive filesystem publication receipt retains the newly created stage handle/identity from before rename, with known bytes/mode and before-versus-possibly-published outcome. Undo first checks the current held name against that owned after-state; observed byte/object/link substitutions are preserved and reported as conflicts. Equal bytes on another object do not authorize undo. Restore absence only after owned-file observation, and restore removed prior bytes only through no-replace creation. Original errors and rollback conflicts remain visible; ordinary no-third-state rollback and post-durability disarm remain. Existing single-link/no-follow mutation admission is retained, with unsafe initial targets refused before effects; shared read-only source support is unchanged. This is bounded checked publication under cooperating command ownership, not portable occupied-name kernel CAS: a final observation-to-mutation window against uncooperative writers remains. It provides neither all-file atomicity nor OS-crash recovery, and introduces no whole-slot before-image store. @status:impl/done",
       "line": 320,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO"
     },
