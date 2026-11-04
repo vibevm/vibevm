@@ -2,7 +2,7 @@
 
 Main pin `a344c6389fdb60a8db075f60b8a7c89712572916`; unaccepted common-app candidate excluded. Read-only, no builds or tests.
 
-**Current counting result:** 113 old accepted IDs verified: **1 full semantic transfer,14partial accepted overlaps,17scopes with no accepted campaign delivery,81not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). **The exact global completed total remains unestablished; at least1is proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **1 full semantic transfer,19partial accepted overlaps,19scopes with no accepted campaign delivery,74not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). **The exact global completed total remains unestablished; at least1is proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -206,3 +206,8 @@ Preserved versions: `/tmp/nst-old113-transfer-crosswalk-before-root-correction.{
 ## Root reconciliation boundary
 
 Root verified the exact113ID set against the recovered remaining109 complement, all19pinned input/contract hashes and15implementation commit ancestry links. Intentional target alternatives (shared source inodes, literal percent spelling, avoiding an unconsumed proof wrapper) are accepted design decisions, not missing work merely because they differ from prototype types. Useful observable semantics still require their own decision/evidence. The remaining A3 caller matrix is being checked separately; no full-task count is manufactured from this provisional partition. Source runtime flags and the1056history census are unaffected.
+
+
+## M06 bounded update
+
+Seven formerly unknown rows were reconciled in [the M06 review](m06-transfer-crosswalk-review.md): five partial and two untransferred requested scopes. Root verified37pinned source/contract hashes and5baseline symbol/blob checks. Existing init link handling, nested-item conversion, raw-copy paths and standalone VibeTree/headless presentation are actual already-main subclauses. F07/F08 add accepted opaque quotations and occurrence attribution; no full source-classification/measurement/debugger task follows from those pieces. This reduces unknown accounting to74without claiming any extra complete task or fresh runtime execution.

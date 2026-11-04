@@ -15,15 +15,15 @@
     "cross_checked_graph_statuses": true
   },
   "counts": {
-    "partial": 14,
+    "partial": 19,
     "full": 1,
-    "not-transferred": 17,
-    "unknown": 81,
+    "not-transferred": 19,
+    "unknown": 74,
     "already_main": 0
   },
   "minimum_proven_complete_old_tasks": 1,
   "exact_global_complete_total": "not established; at least1",
-  "important": "At least1 full old task proved,14partial,17named scopes not transferred,81not yet fully reconciled. This is not a global completion percentage; accepted semantic alternatives are not missing implementation.",
+  "important": "At least1full old task proved;19partial,19named scopes not transferred,74not yet fully reconciled. Exact global complete total remains unestablished. Already-main subclauses and approved semantic alternatives are retained.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -1342,14 +1342,67 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Place source classification before every semantic consumer.\nAcceptance criteria: Reader and executable migration land together with preserved comments/values.; One descriptor identity is available to downstream scanner/resolver/converter consumers.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
       "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "unmet_or_unverified": "An authored or equivalent explicit interpretation selection before semantic consumption, exact-file vs directory precedence/conflict input, and executable deterministic declaration migration preserving existing comments/values. Main PackageMetaWire has no descriptor/source-export fields; actual load dispatch is suffix-based. No source-classification migration route was found in bounded core/workspace inventory.",
+      "implemented_coverage": "Existing legacy Vibe source reader/converter and strict PackageMetaWire remain; they are not explicit ordinary/Vibe source interpretation selection.",
+      "remaining_behavior": "An authored or equivalent explicit interpretation selection before semantic consumption, exact-file vs directory precedence/conflict input, and executable deterministic declaration migration preserving existing comments/values. Main PackageMetaWire has no descriptor/source-export fields; actual load dispatch is suffix-based. No source-classification migration route was found in bounded core/workspace inventory.",
+      "superseded_obligations": [
+        {
+          "clause": "Every semantic consumer globally classified immediately",
+          "decision": "Final prototype contract expressly preserves absent/empty project legacy and bounded undeclared-package compatibility; global forced migration is not required.",
+          "reference": "pinned PROP-072 SOURCE-HOST-OPT-IN/SOURCE-REPRESENTATION-COLLISION",
+          "counts_as_remaining": false
+        },
+        {
+          "clause": "Use incumbent M-13 planner/replay machinery",
+          "decision": "Specific prototype framework is not needed merely to satisfy deterministic safe migration; no target implementation design selected by this review.",
+          "reference": "semantic-transfer rule; no approved removal of migration behavior",
+          "counts_as_remaining": false
+        }
+      ],
+      "exact_contract": {
+        "title": "Define explicit source interpretation and its migration",
+        "goal": "Place source classification before every semantic consumer.",
+        "steps": [
+          "Define SourceDescriptor identity/media/interpretation/role/loading/trust and exact-file versus directory-default precedence.",
+          "Implement deterministic legacy declaration migration with the reader in this task by extending the incumbent M-13 planner and replay path; support byte-preserving ordered insertions and multiple edits rather than a second executor.",
+          "Classify conflicting/unknown old intent as NeedsInput; suffix/content sniffing may validate syntax but cannot enable Vibe semantics."
+        ],
+        "positive_cases": [
+          "An explicit file declaration overrides one less-specific directory default."
+        ],
+        "negative_cases": [
+          "Equally applicable conflicting declarations require typed path-specific input; foreign contents do not become specs by extension, and unchanged comments/values survive insertions."
+        ],
+        "acceptance": [
+          "Reader and executable migration land together with preserved comments/values.",
+          "One descriptor identity is available to downstream scanner/resolver/converter consumers."
+        ]
+      },
+      "criterion_counter": [
+        {
+          "exact_criterion": "Reader and executable migration land together with preserved comments/values.",
+          "disposition": "missing",
+          "analysis": "No explicit-source reader plus executable migration landed; legacy suffix loader is concrete counterevidence to treating this already-main.",
+          "evidence": [
+            "vibe-core/src/manifest/package/wire.rs:27-71",
+            "vibe-specdoc/src/load.rs:147-160"
+          ]
+        },
+        {
+          "exact_criterion": "One descriptor identity is available to downstream scanner/resolver/converter consumers.",
+          "disposition": "missing",
+          "analysis": "No shared classified identity available to ordinary scanner/resolver/converter on actual inspected routes. Missing useful joined interpretation, not missing a particular Rust type name.",
+          "evidence": [
+            "vibe-facts/src/scan.rs:303-316",
+            "vibe-workspace/src/vibedeps/derived.rs:406-460"
+          ]
+        }
+      ],
+      "review_report": "research/m06-transfer-crosswalk-review.md"
     },
     {
       "old_task_id": "M-06-A.2",
@@ -1357,14 +1410,65 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Make ordinary Markdown navigable while preserving literal Vibe syntax.\nAcceptance criteria: Structural view and raw content point to the same captured document.; No CommonMark node acquires normative Vibe fact authority.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [],
       "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "unmet_or_unverified": "Explicit inert ordinary Markdown structure tied to retained raw document; headings/fences/links, exact section selection and durable declared exports requested in explicit task steps. Current loader passes .md into Vibe downstream semantics; accepted inline opacity does not make all ordinary directives inert.",
+      "implemented_coverage": "Accepted F07 d6147a94d fixes the explicitly listed inline-code @fact opacity clause through parser/conversion/facts/normal warm-cache CLI; real duplicates still refuse. Nested Vibe list multibyte/task-box conversion already exists before campaign. Existing held source reads and unique Vibe anchor paths are reusable, not ordinary CommonMark interpretation.",
+      "remaining_behavior": "Explicit inert ordinary Markdown structure tied to retained raw document; headings/fences/links, exact section selection and durable declared exports requested in explicit task steps. Current loader passes .md into Vibe downstream semantics; accepted inline opacity does not make all ordinary directives inert.",
+      "superseded_obligations": [
+        {
+          "clause": "Must use exact prototype CommonMarkDoc/NodeId/source-query host",
+          "decision": "Alternative pure parser/current held reader and smaller actual consumer can meet semantics; no framework/type identity obligation.",
+          "reference": "history-ordinary-documents-review.md D1/D3 and next concrete decision",
+          "counts_as_remaining": false
+        }
+      ],
+      "exact_contract": {
+        "title": "Implement structural ordinary Markdown",
+        "goal": "Make ordinary Markdown navigable while preserving literal Vibe syntax.",
+        "steps": [
+          "Implement CommonMark headings/sections/fences/links through the selected parser boundary; inspect existing dependencies before any addition.",
+          "Resolve durable manifest exports against exact section selectors and captured bytes.",
+          "Keep snapshot-local node IDs distinct from durable fact IDs; ordinary annotations/directives remain text.",
+          "Keep inline-code spans as quoted text in both paragraph and table-cell fact scans; pin a real @fact:X plus repeated quoted marker regression and remove any stale docs-corpus quarantine only if still present."
+        ],
+        "positive_cases": [
+          "Nested fences and headings produce stable same-snapshot sections.",
+          "Literal @requires/#use text is retained without fact/directive effects.",
+          "Real @fact:X with identical inline-code quotes in paragraph and table cell passes without DuplicateId; existing current scanner behavior remains pinned."
+        ],
+        "negative_cases": [
+          "Duplicate heading without unique export is ambiguous.",
+          "A malformed section selector cannot silently choose a heading."
+        ],
+        "acceptance": [
+          "Structural view and raw content point to the same captured document.",
+          "No CommonMark node acquires normative Vibe fact authority."
+        ]
+      },
+      "criterion_counter": [
+        {
+          "exact_criterion": "Structural view and raw content point to the same captured document.",
+          "disposition": "missing",
+          "analysis": "No current ordinary structure/raw capture view in inspected specdoc/source route; nested Vibe conversion is not that view.",
+          "evidence": [
+            "vibe-specdoc/src/load.rs:140-160",
+            "vibe-specdoc/tests/nested_item_multibyte.rs"
+          ]
+        },
+        {
+          "exact_criterion": "No CommonMark node acquires normative Vibe fact authority.",
+          "disposition": "partial",
+          "analysis": "Inline quoted markers now inert, but no explicit ordinary interpretation shields all CommonMark content from facts/directives. Scanner still projects suffix-selected text then parses Vibe facts.",
+          "evidence": [
+            "vibe-cli/tests/cli_inline_anchor_opacity.rs:70-94",
+            "vibe-facts/src/scan.rs:303-316"
+          ]
+        }
+      ],
+      "review_report": "research/m06-transfer-crosswalk-review.md"
     },
     {
       "old_task_id": "M-06-A.3",
@@ -1372,14 +1476,62 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Keep data bytes and logical resources distinct from Vibe XML conversion.\nAcceptance criteria: Install/derive/read round-trips preserve data bytes exactly.; Optional structure failure does not invalidate unrelated facts.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [],
       "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "unmet_or_unverified": "Consistent XML-data/opaque classification preserving raw bytes even when text is parseable as Vibe; optional safe XML structure whose failure leaves raw retrieval and unrelated facts usable; declared logical-resource collision semantics allow same-stem ordinary Markdown/XML-data. Actual transform_file may convert qualifying .md/.xml under specs/README and load.rs treats same stems as representations.",
+      "implemented_coverage": "Already-main derived materialization has an actual untransformed raw-copy branch and per-file hashes; non-UTF8/parse-failed input without overlay remains copied. Held source bytes already exist. These preserve some opaque payloads today.",
+      "remaining_behavior": "Consistent XML-data/opaque classification preserving raw bytes even when text is parseable as Vibe; optional safe XML structure whose failure leaves raw retrieval and unrelated facts usable; declared logical-resource collision semantics allow same-stem ordinary Markdown/XML-data. Actual transform_file may convert qualifying .md/.xml under specs/README and load.rs treats same stems as representations.",
+      "superseded_obligations": [
+        {
+          "clause": "Copy prototype preserve_opaque wrapper or its exact 4MiB/64depth limits",
+          "decision": "Unconsumed wrapper and arbitrary inspection limits are not required; preserve bytes and bounded safe optional interpretation by a reviewed target design.",
+          "reference": "history-ordinary-documents-review.md D5",
+          "counts_as_remaining": false
+        }
+      ],
+      "exact_contract": {
+        "title": "Preserve XML-data and opaque resources",
+        "goal": "Keep data bytes and logical resources distinct from Vibe XML conversion.",
+        "steps": [
+          "Add XML-data/raw and opaque handling with encoding/comments/whitespace preserved.",
+          "Allow safe optional XML tree inspection without external entities or network; invalid data stays raw retrievable.",
+          "Change pair/collision enumeration to compare declared logical resource identities instead of same filename stem alone."
+        ],
+        "positive_cases": [
+          "Same-stem ordinary Markdown and XML-data coexist.",
+          "Non-UTF8 or intentionally invalid XML fixture keeps exact raw bytes."
+        ],
+        "negative_cases": [
+          "Spec-format conversion cannot normalize ordinary XML-data.",
+          "External entity loading and ambiguous declared representations refuse."
+        ],
+        "acceptance": [
+          "Install/derive/read round-trips preserve data bytes exactly.",
+          "Optional structure failure does not invalidate unrelated facts."
+        ]
+      },
+      "criterion_counter": [
+        {
+          "exact_criterion": "Install/derive/read round-trips preserve data bytes exactly.",
+          "disposition": "partial",
+          "analysis": "Raw fallback branch exists, but suffix/location eligibility plus successful Vibe parse can reserialize ordinary bytes. No explicit selected XML-data exemption.",
+          "evidence": [
+            "vibe-workspace/src/vibedeps/derived.rs:167-193,406-460,538-549"
+          ]
+        },
+        {
+          "exact_criterion": "Optional structure failure does not invalidate unrelated facts.",
+          "disposition": "missing",
+          "analysis": "No optional XML-data structure result on these current routes. Facts reader turns projection/parse error into invalid observation rather than independent raw-data structural unavailability.",
+          "evidence": [
+            "vibe-facts/src/scan.rs:303-326",
+            "vibe-specdoc/src/load.rs:152-159"
+          ]
+        }
+      ],
+      "review_report": "research/m06-transfer-crosswalk-review.md"
     },
     {
       "old_task_id": "M-06-A.4",
@@ -1387,14 +1539,68 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "partial",
       "historical_graph_description": "Eliminate remaining suffix-only semantic fallback in the initial product path.\nAcceptance criteria: Consumer inventory has no unclassified semantic path.; Existing equivalent Vibe fixtures preserve canonical output and status/void meaning.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [],
       "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "unmet_or_unverified": "Classification/ordinary-loading behavior across the opted-in consumer set is absent: actual facts+converter remain suffix-semantic, not descriptor/equivalent-classification consumers. Root vibe.toml explicit old task housekeeping still says packages/ tree. Tutorial/reference completeness not exhaustively audited and not used as primary failure.",
+      "implemented_coverage": "Already-main init package threads args.link to scaffold and renders requested link; real CLI static/dynamic/default test exists in baseline. --format help and noninteractive default both say/use normal. F07 preserves legitimate quoted Vibe input; F08 corrects committed attribution, not source classification.",
+      "remaining_behavior": "Classification/ordinary-loading behavior across the opted-in consumer set is absent: actual facts+converter remain suffix-semantic, not descriptor/equivalent-classification consumers. Root vibe.toml explicit old task housekeeping still says packages/ tree. Tutorial/reference completeness not exhaustively audited and not used as primary failure.",
+      "superseded_obligations": [
+        {
+          "clause": "No unclassified semantic path including all undeclared legacy input",
+          "decision": "Refined source contract permits bounded legacy routes; require consistency for opted-in classified sources, not forced retrofit of every old file.",
+          "reference": "pinned PROP-072 SOURCE-HOST-OPT-IN/SOURCE-REPRESENTATION-COLLISION",
+          "counts_as_remaining": false
+        }
+      ],
+      "exact_contract": {
+        "title": "Route all source consumers through descriptors",
+        "goal": "Eliminate remaining suffix-only semantic fallback in the initial product path.",
+        "steps": [
+          "Pass one descriptor view through facts/sync, lookup, materialization, compiler/boot and skill resource preparation.",
+          "Require explicit loading for ordinary resources; literal embedded data cannot become managed compiler directives.",
+          "Build mixed-source fixtures that pass each consumer and record classification/provenance.",
+          "Honor vibe init package --link static/dynamic rather than hard-coding dynamic; reconcile the documented --format default and scaffold output.",
+          "Correct the root vibe.toml in-tree package comment to vibevm/vibepacks and refresh affected tutorial/reference examples after behavior is proven."
+        ],
+        "positive_cases": [
+          "Declared Vibe source retains existing facts and canonical projection.",
+          "Foreign bridge resources remain source-exact across all consumers.",
+          "vibe init package --kind flow --link static writes link = \"static\"; default/help and generated format agree."
+        ],
+        "negative_cases": [
+          "Any suffix-only fallback or ordinary same-stem false collision fails the matrix.",
+          "A resource under spec root does not enter boot automatically."
+        ],
+        "acceptance": [
+          "Consumer inventory has no unclassified semantic path.",
+          "Existing equivalent Vibe fixtures preserve canonical output and status/void meaning."
+        ]
+      },
+      "criterion_counter": [
+        {
+          "exact_criterion": "Consumer inventory has no unclassified semantic path.",
+          "disposition": "missing",
+          "analysis": "No accepted opted-in classification route across actual semantic consumers. This is stronger evidence than an absent descriptor type: suffix selection followed by Vibe parser is still the actual body.",
+          "evidence": [
+            "vibe-facts/src/scan.rs:303-316,418",
+            "vibe-specdoc/src/load.rs:147-160",
+            "vibe-workspace/src/vibedeps/derived.rs:406-460"
+          ]
+        },
+        {
+          "exact_criterion": "Existing equivalent Vibe fixtures preserve canonical output and status/void meaning.",
+          "disposition": "partly already-main, integration unverified",
+          "analysis": "Existing Vibe projection and accepted parser/boot regressions preserve concrete behavior. No mixed classified-source matrix proves equivalent Vibe status/void alongside foreign resources across consumers.",
+          "evidence": [
+            "features/F07-inline-anchor-opacity.md",
+            "features/F08-boot-attribution.md",
+            "vibe-cli/tests/cli_init_kinds.rs:283-308"
+          ]
+        }
+      ],
+      "review_report": "research/m06-transfer-crosswalk-review.md"
     },
     {
       "old_task_id": "M-06-B.1",
@@ -1447,14 +1653,66 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Measure content and occurrences without imposing a token quota.\nAcceptance criteria: Measurement report names basis, recipe and unknown portions.; Large corpus can be traversed without hidden total boot cap.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [],
       "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "unmet_or_unverified": "Qualified report with exact basis/recipe, unknown portions and tokenizer status; scalars/unique-vs-occurrence measurements; per-snippet dynamic and package direct/inclusive bytes and closure-diff parity. Current static body uses lines().map(len+1), so CRLF/final-newline values are normalized estimates, not exact original body-byte counts. INDEX entry has no bytes. read_opt conflates missing/unreadable as None. Large-corpus traversal/resource evidence is not established by no constant cap.",
+      "implemented_coverage": "Already-main tree has whole STATIC byte length and static-region bytes/lines; closure diff has actual metadata byte samples of three lanes. F08 7ed7e7256 now retains repeated/nested embed line occurrences. No boot-size veto added in inspected tree route.",
+      "remaining_behavior": "Qualified report with exact basis/recipe, unknown portions and tokenizer status; scalars/unique-vs-occurrence measurements; per-snippet dynamic and package direct/inclusive bytes and closure-diff parity. Current static body uses lines().map(len+1), so CRLF/final-newline values are normalized estimates, not exact original body-byte counts. INDEX entry has no bytes. read_opt conflates missing/unreadable as None. Large-corpus traversal/resource evidence is not established by no constant cap.",
+      "superseded_obligations": [
+        {
+          "clause": "Must import prototype BootGraph/machine compiler DTO world",
+          "decision": "Existing artifact reader and narrow captured model can satisfy measurements; preserving v1 old fields alongside a qualified additive report is valid.",
+          "reference": "boot-candidates.md measurement recommendation and F08 explicit unchanged byte-arithmetic boundary",
+          "counts_as_remaining": false
+        }
+      ],
+      "exact_contract": {
+        "title": "Calculate exact and qualified boot measurements",
+        "goal": "Measure content and occurrences without imposing a token quota.",
+        "steps": [
+          "Measure raw/emitted bytes, scalar counts, unique payload and actual read occurrences from the captured graph.",
+          "Add tokenizer identity/version with exact/estimated/unavailable status; show unknown ambient tail separately.",
+          "Report direct/inclusive contribution only where mapping proves it; large captures use streaming/chunking rather than total-size rejection.",
+          "In vibe tree --json and closure diff, report each static and dynamic boot snippet byte contribution plus lane and package direct/inclusive sums from the captured graph; show unavailable attribution honestly."
+        ],
+        "positive_cases": [
+          "Same capture and tokenizer recipe yields reproducible counts.",
+          "Repeated reads differ from unique payload size.",
+          "JSON/tree and closure diff agree on per-snippet, per-package and lane byte totals, including dynamic INDEX entries and repeated occurrences."
+        ],
+        "negative_cases": [
+          "Missing mapping cannot be replaced by proportional fake attribution.",
+          "No size/token threshold may veto install/build or pretend to be provider billing."
+        ],
+        "acceptance": [
+          "Measurement report names basis, recipe and unknown portions.",
+          "Large corpus can be traversed without hidden total boot cap."
+        ]
+      },
+      "criterion_counter": [
+        {
+          "exact_criterion": "Measurement report names basis, recipe and unknown portions.",
+          "disposition": "missing",
+          "analysis": "Current fields lack measurement basis/recipe/unknown status; body arithmetic and dynamic omission are concrete gaps independent of UI/debugger framework.",
+          "evidence": [
+            "vibe-cli/src/commands/tree/artifacts.rs:85-120",
+            "vibe-cli/src/commands/tree/model.rs:209-253",
+            "vibe-cli/src/commands/install/closure_diff.rs:42-58,162-172"
+          ]
+        },
+        {
+          "exact_criterion": "Large corpus can be traversed without hidden total boot cap.",
+          "disposition": "evidence-gap",
+          "analysis": "No hidden size limit found in selected reader, but whole file String plus Vec lines is used. No accepted large-corpus/streaming result mapped. This is not a demonstrated cap or performance failure.",
+          "evidence": [
+            "vibe-cli/src/commands/tree/build.rs:read_opt",
+            "vibe-cli/src/commands/tree/artifacts.rs:85-120"
+          ]
+        }
+      ],
+      "review_report": "research/m06-transfer-crosswalk-review.md"
     },
     {
       "old_task_id": "M-06-C.1",
@@ -1462,14 +1720,63 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Use the shared service protocol for structured debugger input and output.\nAcceptance criteria: Structured input exists, not only --json output.; Progress/error/state envelopes agree with the shared operation model.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
       "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "unmet_or_unverified": "Structured semantic inspect/tree/explain/cost/compare/capture/cancel requests and consistent debugger result/error/progress/state, snapshot-bound filters/cursors and cancellation scope. Actual TreeArgs has path/plain/console/terminal only; current default_tools has no boot debugger route. AIUI state rebuilds current tree per call, not immutable snapshot identity.",
+      "implemented_coverage": "Current tree offers machine JSON output; existing AIUI offers typed commands/key scripts and structured presentation state. MCP accepts structured arguments for its existing twelve tools. These are real existing interfaces but not the requested snapshot debugger operation family.",
+      "remaining_behavior": "Structured semantic inspect/tree/explain/cost/compare/capture/cancel requests and consistent debugger result/error/progress/state, snapshot-bound filters/cursors and cancellation scope. Actual TreeArgs has path/plain/console/terminal only; current default_tools has no boot debugger route. AIUI state rebuilds current tree per call, not immutable snapshot identity.",
+      "superseded_obligations": [
+        {
+          "clause": "Must reuse exact M16 reservation/transport/context framework",
+          "decision": "Equivalent shared typed operation boundary may be simpler; no original generated filenames or generic operation store required.",
+          "reference": "semantic transfer rule and boot-candidates.md narrow-reader recommendation",
+          "counts_as_remaining": false
+        }
+      ],
+      "exact_contract": {
+        "title": "Expose debugger requests, snapshots and progress",
+        "goal": "Use the shared service protocol for structured debugger input and output.",
+        "steps": [
+          "Register inspect/tree/explain/cost/compare/capture/cancel models on M-16 context/overlay/event contracts.",
+          "Generate and validate request/result/error/progress schemas; expose structured CLI input and MCP adapters.",
+          "Bind pages/filters/chunks to immutable snapshots and source-position basis; preserve replay gaps and cancellation scope."
+        ],
+        "positive_cases": [
+          "Independent headless clients inspect the same snapshot with matching result identities."
+        ],
+        "negative_cases": [
+          "Stale cursor, mixed filters or wrong context/epoch refuses.",
+          "Cancelling inspection cannot claim the underlying build was cancelled."
+        ],
+        "acceptance": [
+          "Structured input exists, not only --json output.",
+          "Progress/error/state envelopes agree with the shared operation model."
+        ]
+      },
+      "criterion_counter": [
+        {
+          "exact_criterion": "Structured input exists, not only --json output.",
+          "disposition": "missing for requested debugger semantics",
+          "analysis": "Structured presentation input exists and must not be denied, but no semantic boot-debugger request family exposed by the inspected ordinary dispatch. JSON output alone does not satisfy this criterion.",
+          "evidence": [
+            "vibe-cli/src/cli/inspect.rs:100-125",
+            "vibe-cli/src/cli/aiui.rs:AiuiSubcommand",
+            "vibe-cli/src/commands/tree/mod.rs:run,snapshot,state"
+          ]
+        },
+        {
+          "exact_criterion": "Progress/error/state envelopes agree with the shared operation model.",
+          "disposition": "missing",
+          "analysis": "No corresponding debugger progress/error/state envelope/current snapshot context to compare across CLI/MCP. Existing generic tools are not evidence of debugger parity.",
+          "evidence": [
+            "vibe-mcp/src/tools.rs:default_tools",
+            "vibe-cli/src/commands/aiui/mod.rs:render,state"
+          ]
+        }
+      ],
+      "review_report": "research/m06-transfer-crosswalk-review.md"
     },
     {
       "old_task_id": "M-06-C.2",
@@ -1477,14 +1784,65 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Make tree/detail/source/compare usable on the shared debugger model.\nAcceptance criteria: Headless viewer and API report the same nodes, provenance and differences.; Standalone D-007 viewer exists; no IDE plugin/MVP is introduced.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [],
       "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "unmet_or_unverified": "Requested boot fragment/source/why-included navigation and exact two-snapshot compare with diagnostics on shared semantic results. Current RowNode is package/missing/separator/subheader; App holds one PackageTree; render/state rebuild current model. No compare request or two-snapshot result exists in inspected route. Large/partial graph usability/parity evidence for that richer model remains open.",
+      "implemented_coverage": "Already-main real standalone VibeTree TUI and desktop-terminal launch, JSON/plain modes, headless rendering, structured model_view and shared App/keyscript logic; package navigation/details already exist. These are legitimate viewer substrate, not a proposed stub.",
+      "remaining_behavior": "Requested boot fragment/source/why-included navigation and exact two-snapshot compare with diagnostics on shared semantic results. Current RowNode is package/missing/separator/subheader; App holds one PackageTree; render/state rebuild current model. No compare request or two-snapshot result exists in inspected route. Large/partial graph usability/parity evidence for that richer model remains open.",
+      "superseded_obligations": [
+        {
+          "clause": "Separate new standalone D-007 executable/name",
+          "decision": "Existing standalone VibeTree can be extended if it supplies the specified semantics; no new executable or IDE plugin required by semantic transfer.",
+          "reference": "task first step explicitly permits reuse of existing standalone viewer components",
+          "counts_as_remaining": false
+        }
+      ],
+      "exact_contract": {
+        "title": "Deliver the standalone interactive boot inspector",
+        "goal": "Make tree/detail/source/compare usable on the shared debugger model.",
+        "steps": [
+          "Reuse existing standalone viewer components or a thin local viewer over the shared model.",
+          "Implement graph navigation, source/why-included details and two-snapshot comparison with diagnostics.",
+          "Keep viewport/selection in presentation state; domain queries use typed services and preserve canonical boot output."
+        ],
+        "positive_cases": [
+          "Selecting a package/fragment shows accurate source and inclusion details.",
+          "Compare exposes changes between exact snapshots."
+        ],
+        "negative_cases": [
+          "A large/partial graph remains navigable with explicit missing data.",
+          "UI actions cannot bypass service authority or turn text labels into semantic IDs."
+        ],
+        "acceptance": [
+          "Headless viewer and API report the same nodes, provenance and differences.",
+          "Standalone D-007 viewer exists; no IDE plugin/MVP is introduced."
+        ]
+      },
+      "criterion_counter": [
+        {
+          "exact_criterion": "Headless viewer and API report the same nodes, provenance and differences.",
+          "disposition": "partial",
+          "analysis": "Headless and interactive paths use same PackageTree/App, but the requested snapshot provenance/differences are absent. Shared renderer is not exact two-snapshot comparison.",
+          "evidence": [
+            "vibe-cli/src/commands/tree/tui/mod.rs:105-158",
+            "vibe-cli/src/commands/tree/tui/model_view.rs",
+            "vibe-cli/src/commands/tree/mod.rs:263-282"
+          ]
+        },
+        {
+          "exact_criterion": "Standalone D-007 viewer exists; no IDE plugin/MVP is introduced.",
+          "disposition": "already-main substrate; incomplete requested viewer",
+          "analysis": "Standalone tree is real today; do not mark this bullet wholly absent. Completing D007 behavior still requires the task explicit source/fragment/compare steps, not an unrelated full subsystem.",
+          "evidence": [
+            "vibe-cli/src/commands/tree/mod.rs:run",
+            "vibe-cli/src/commands/tree/tui/row.rs:RowNode",
+            "vibe-cli/src/commands/tree/tui/state.rs:App"
+          ]
+        }
+      ],
+      "review_report": "research/m06-transfer-crosswalk-review.md"
     },
     {
       "old_task_id": "M-06-D.1",
