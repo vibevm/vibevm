@@ -2512,3 +2512,14 @@ structure, and it goes when the file does.
 | @fact:B229-SEVERITY **severity** | P3 — needs a source package whose directory name carries the character; a broken example page, nothing else. |
 | @fact:B229-DISPOSITION **disposition** | `done` — landed on main 2026-11-03 as `fix(init): today's install hint, --link honoured, --translates parsed and escaped`. |
 | @fact:B229-FILED **filed by** | installer-package wave close-out (H-1), 2026-11-02. |
+
+
+## B-230 — optional preserved collection readers accept undeclared null {#b-230}
+
+| field | value |
+|---|---|
+| @fact:B230-WHAT **what** | A nonnullable JTD optional collection with x-empty=preserve generates Option<Vec/Map> using ordinary serde, so explicit JSON null is admitted as absence even though the schema declares only absent or collection. This keeps None versus empty but has a reader/schema admission mismatch. |
+| @fact:B230-EVIDENCE **evidence** | Common-configuration candidate exposed the distinction. Existing application_describe.forceArguments is optional nonnullable in schemas/application_describe.jtd.json and Option<Vec<String>> with ordinary serde in generated/application_describe/mod.rs; preserve tests in xtask/src/codegen/empty_policy/tests.rs assert that generated shape. requirements_report and doc_manifest also use this policy. Root inspected these source shapes; no broad old-client runtime/compatibility matrix has been run. |
+| @fact:B230-SEVERITY **severity** | P3 — invalid-by-schema null aliases absence in existing readers; valid declared values remain distinguishable. Compatibility needs review before changing old admission. |
+| @fact:B230-DISPOSITION **disposition** | open; deliberately not tightened globally during common app integration. New presence-sensitive common arrays use supported required-nullable collection refs, preserving null versus [] and rejecting missing required fields in their new contract. Review old schemas/consumers before either declaring nullability or narrowing readers. Inline required-nullable collections additionally hit an existing empty-policy generation limitation; the equivalent shared collection-ref route is supported, so no general emitter expansion is needed for the current consumer. |
+| @fact:B230-FILED **filed by** | Semantic transfer campaign,2026-11-04. |
