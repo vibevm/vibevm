@@ -2537,13 +2537,12 @@ structure, and it goes when the file does.
 | @fact:B231-FILED **filed by** | vibevm-app build side (session MVP), 2026-11-04. |
 
 
-## B-232 — a project install has no plan that names each package's source {#b-232}
+## B-232 — a project install names no source before it; no per-requirement pin; no preferred hosting {#b-232}
 
 | field | value |
 |---|---|
-| @fact:B232-WHAT **what** | For packages of a project, `vibe install` has no way to say before installing where each package will come from: `--plan-only` works only with `--global` (applications, `vibe app plan`), there is no `--dry-run`, and the stream's `install:plan` document carries `packages[{package, version}]` with no registry or source. The source is known only after the install, from `vibe.lock` (`registry`, `source_url`, `source_ref`, `resolved_commit`, `source_kind`). Also missing: pinning a registry to one requirement (a project-wide registry order is all there is). |
-| @fact:B232-EVIDENCE **evidence** | vibevm-app's R137 check on vibe 1.0.11, 2026-11-04, in a temp home: `install org.vibevm.world/wal --plan-only --json` in a project → "Usage: vibe install --global --plan-only …"; `install --json` → `install:plan`, `install:closure-diff`, `install` with no source; the lock row names `registry = "vibespecs"`. |
-| @fact:B232-SEVERITY **severity** | P3 — the app shows the source after the install; "will be installed from <source>" before it cannot be built without guessing. |
-| @fact:B232-DISPOSITION **disposition** | `candidate — to be considered and decided later in vibe` (the owner's rule of 2026-11-04 for vibe's needs found while building the app). Options: `install --plan-only` (or `--dry-run`) for project packages, the plan naming each package's registry and source; a per-requirement registry pin. |
+| @fact:B232-WHAT **what** | Three needs of VibeVM's Library, to be built in vibe: (1) a plan of a project's install without installing (`install --plan-only` or `--dry-run` for project packages) that names the registry and the source each package will come from — today `--plan-only` works only with `--global` (applications), there is no `--dry-run`, and `install:plan` carries `packages[{package, version}]` with no source; the source is known only after the install, from `vibe.lock` (`registry`, `source_url`, `source_ref`, `resolved_commit`, `source_kind`); (2) pinning a registry to one requirement (today only the project's `[[registry]]` order exists); (3) a resolution order by a preferred hosting (a package published on GitHub and mirrored on GitVerse is taken from the hosting the person prefers — in VibeVM by the home: ru → GitVerse first, world → GitHub). |
+| @fact:B232-EVIDENCE **evidence** | vibevm-app's R137 check on vibe 1.0.11, 2026-11-04, in a temp home: `install org.vibevm.world/wal --plan-only --json` in a project → "Usage: vibe install --global --plan-only …"; `install --json` → `install:plan`, `install:closure-diff`, `install` with no source; the lock row names `registry = "vibespecs"`. vibevm-app's I-2075: the application does not choose or know an install's source until vibe can say it. |
+| @fact:B232-SEVERITY **severity** | P1 — **high priority by the owner's word (2026-11-04)**: "will be installed from <source>", "Take it from here" and the preferred hosting in the Library wait for these three. |
+| @fact:B232-DISPOSITION **disposition** | `open — high priority (the owner, 2026-11-04)`; when vibe has them, vibevm-app adds the three (R137 §4, I-2075). |
 | @fact:B232-FILED **filed by** | vibevm-app build side (session MVP), 2026-11-04. |
-
