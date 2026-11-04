@@ -246,8 +246,29 @@ Evidence: actual RED core1/runtime1/public2; в старом -g earlier step и 
 
 Это не исправление hosted raw-argv replay, optional-secret resume, batch/modify/import/dependency continuation, unclassified malformed CLI input или arbitrary child output. SECRET-BOUNDARY остаётся незавершённой общей обязанностью.
 
-## FMT-008 — Уникальность app environment names (дизайн, Unreleased)
+## FMT-008 — Уникальность app environment names (Unreleased)
 
-Следующий scoped fix, ещё не принят. Синтаксис ID не меняется глобально; у installer options с recipe/shell (включая expanded hooks) будет проверяться текущая проекция ID в VIBE_FEATURE_/VIBE_PARAM_: ASCII uppercase, dash/dot→underscore. a-b и a.b дают один ключ и должны отказать с обоими IDs/key, вместо прежней зависимости от declaration order. Feature и parameter namespaces раздельны; options без такого consumer и package/generic literal IDs не ограничиваются.
+Принято после root review и main gates: publicCLI2/2, app2/2, core16/16, fmt/conform0new/specmap --check0blocking;43прежних warnings сохранены. Новых TOML keys, wire epochs, lock/index schemas или package versions нет. Версия остаётся1.0.11; номер следующего релиза не назначен.
 
-Migration: явно переименовать один неоднозначный ID и его references/profile/conditions/flags/intent; обычные environment spellings сохраняются. Никакого автоматического encoding/renaming или нового JSON env transport. Изменение касается plan/install -g и общих app planners; public CLI negative/positive evidence будет внесено после реализации.
+У installer options с recipe/shell (включая expanded hooks и conditional declarations) проверяется существующая проекция ID в VIBE_FEATURE_/VIBE_PARAM_: ASCII uppercase, dash/dot→underscore. Проверяются все feature и отдельно все parameter declarations, включая inactive/optional. Feature/parameter prefixes и разные options независимы. Package/generic literal IDs и options без этого consumer нового ограничения не получают.
+
+Раньше два допустимых ID `a-b` и `a.b` давали один environment key: позднее объявление затирало первое, в том числе выключенная feature могла затереть выбранную значением0. Теперь такое объявление отказывает до выполнения. Для common IDs также отвергаются case/underscore aliases и имена, которые нельзя представить portable ASCII environment identifier, только в consuming option. Обычные noncolliding spellings сохраняются.
+
+```toml
+[[installer_options.features]]
+id = "a-b"
+name = "First"
+[[installer_options.features]]
+id = "a.b"
+name = "Second"
+```
+
+При recipe/shell эта пара теперь возвращает ошибку с обоими IDs, `VIBE_FEATURE_A_B` и `installer_options[0].features[1].id`. Parameter/common scopes дают соответствующий точный field path. Answer values в эту диагностику не включаются.
+
+Migration: явно переименовать один неоднозначный/unrepresentable installer-local ID, например `a.b` → `a-dot-b`, и обновить references, profiles, conditions, CLI flags и retained consumer intent. Автоматического encoding/renaming нет; существующие records не переписываются и миграция record не заявляется. Agent/native не получают нового transport.
+
+**vibe install -g:** actual CLI проверяет обе очередности colliding feature/parameter definitions; refusal остаётся incumbent exit1/registry_failed, без app-work/index publication. Это не valid-but-unsupported refusal2. Positive real recipe видит оба feature значения1/0 и оба parameter values. Plan/install/update/modify/import/project installation используют общие validation/planning/runtime owners; отдельные новые public maintenance/import прогоны этим patch не заявляются.
+
+Rust API: additive core `step_env_name`, `StepEnvironment`, `StepEnvironmentError`, `StepKind::receives_step_environment`, `InstallerOptionDecl::validate_step_environment`. Прежний `vibe_app::step_env_name` сохраняет signature/output и делегирует core helper. Public struct fields не меняются.
+
+Candidate89distinct tests/docs, clippy/fmt/diff прошли. Это защита projection identity, не завершение common configuration, secret argv replay или cross-process resume.

@@ -14,6 +14,10 @@ use crate::index::PackageCoordinate;
 use crate::resolve::{ResolvedPackage, from_manifest};
 use crate::settings::SettingsRoot;
 
+#[cfg(test)]
+#[path = "tests/env_identity.rs"]
+mod env_identity;
+
 fn package(dir: &Path, steps: &str) -> ResolvedPackage {
     let text = format!(
         r#"[package]

@@ -65,14 +65,7 @@ impl std::fmt::Debug for ParamValue {
 /// assert_eq!(vibe_app::step_env_name("VIBE_PARAM_", "install-dir"), "VIBE_PARAM_INSTALL_DIR");
 /// ```
 pub fn step_env_name(prefix: &str, id: &str) -> String {
-    let tail: String = id
-        .chars()
-        .map(|ch| match ch {
-            '-' | '.' => '_',
-            other => other.to_ascii_uppercase(),
-        })
-        .collect();
-    format!("{prefix}{tail}")
+    vibe_core::manifest::step_env_name(prefix, id)
 }
 
 /// Resolve every declared parameter: `--set`, else the recorded value of

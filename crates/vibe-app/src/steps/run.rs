@@ -22,7 +22,6 @@ use crate::resolve::ResolvedPackage;
 
 use super::env::StepPaths;
 use super::kinds::{self, StepContext};
-use super::params::step_env_name;
 use super::plan::{Plan, PlannedStep, work_dir};
 use super::resume::{StartPoint, start_point};
 use super::runs::{RunOutcome, RunRecord, transfer_facts};
@@ -30,6 +29,7 @@ use super::state::{Start, StepState, StepsFile};
 use super::template::Vars;
 use super::work::{human_bytes, tree_bytes};
 
+mod environment;
 mod projections;
 
 /// The task label of one step (`PROP-065#display`): its id, its kind and
@@ -103,6 +103,7 @@ impl<'a> Run<'a> {
         plan: &'a Plan,
         flags: RunFlags,
     ) -> Result<Self, AppError> {
+        let env = environment::prepare(plan)?;
         let work = work_dir(ctx.settings, &plan.package);
         let key = plan.package.key();
         let StartPoint {
@@ -148,22 +149,6 @@ impl<'a> Run<'a> {
         if flags.update_in_place && !flags.force && !shells.is_empty() && !shells.contains(&true) {
             return Err(AppError::MissingUpdate { key });
         }
-        let env = plan
-            .declared
-            .iter()
-            .map(|feature| {
-                let chosen = plan.features.contains(&feature.id);
-                (
-                    step_env_name("VIBE_FEATURE_", &feature.id),
-                    if chosen { "1" } else { "0" }.to_owned(),
-                )
-            })
-            .chain(
-                plan.parameters
-                    .iter()
-                    .map(|param| (step_env_name("VIBE_PARAM_", &param.id), param.value.clone())),
-            )
-            .collect();
         Ok(Self {
             ctx,
             resolved,

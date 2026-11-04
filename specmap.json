@@ -10396,9 +10396,9 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/params.rs",
       "item_kind": "struct",
-      "line": 210,
+      "line": 203,
       "symbol": "vibe_app::steps::params::PlanLicense",
-      "end_line": 217,
+      "end_line": 210,
       "fingerprint": "tok1:4e7f4c303c4b00afa24999d09f80f3d836c96b0ff48f57d726afed0f9e03bbff"
     },
     {
@@ -10607,6 +10607,15 @@
       "symbol": "vibe_app::steps::run",
       "end_line": 7,
       "fingerprint": "tok1:c864316211b43e725664c9fa1fb466db69839832a575cd56db6579ab7443eb63"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/run/environment.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::steps::run::environment",
+      "end_line": 2,
+      "fingerprint": "tok1:ed984288d37c11b9c2b036d848f09531e7fcfef4c981698b89fcb0fe765061c8"
     },
     {
       "crate_name": "vibe-app",
@@ -16550,6 +16559,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_env_identity.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::tests::cli_app_env_identity",
+      "end_line": 3,
+      "fingerprint": "tok1:ed984288d37c11b9c2b036d848f09531e7fcfef4c981698b89fcb0fe765061c8"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_app_secret_errors.rs",
       "item_kind": "mod",
       "line": 3,
@@ -19324,73 +19342,91 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 332,
+      "line": 334,
       "symbol": "vibe_core::manifest::package::application::ApplicationDecl",
-      "end_line": 359,
+      "end_line": 361,
       "fingerprint": "tok1:37ccc53335d70a09606cc864c9f51588029c52f73b1f567362710586d3c73e01"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "enum",
-      "line": 54,
+      "line": 56,
       "symbol": "vibe_core::manifest::package::application::InstallerMethod",
-      "end_line": 114,
+      "end_line": 116,
       "fingerprint": "tok1:fb798e45d6fe23688550080e70f18af3a69a086bdd05ad6daedfc681826bd9b8"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 275,
+      "line": 277,
       "symbol": "vibe_core::manifest::package::application::InstallerOptionDecl",
-      "end_line": 330,
+      "end_line": 332,
       "fingerprint": "tok1:64551c66884546cfb427ba8827d6f5d667d77cfb553b42c905d59e511735308f"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 168,
+      "line": 170,
       "symbol": "vibe_core::manifest::package::application::LauncherDecl",
-      "end_line": 235,
+      "end_line": 237,
       "fingerprint": "tok1:201e3a56326cab84ecd90e70273219b8f2c7c71bdac4af45250e9bc3ec44d4dd"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 264,
+      "line": 266,
       "symbol": "vibe_core::manifest::package::application::PublicCommandDecl",
-      "end_line": 273,
+      "end_line": 275,
       "fingerprint": "tok1:04f03af3cd491eb9368dd0a32d7f7ad6e85b58c533d90605eb54289f482e0937"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 157,
+      "line": 159,
       "symbol": "vibe_core::manifest::package::application::RecipeDecl",
-      "end_line": 166,
+      "end_line": 168,
       "fingerprint": "tok1:205f67efe04cd404d78f701ae49ab918b10127f21110c98d9d6b4c3cee85e001"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "enum",
-      "line": 42,
+      "line": 44,
       "symbol": "vibe_core::manifest::package::application::ShellInterpreter",
-      "end_line": 52,
+      "end_line": 54,
       "fingerprint": "tok1:2711ee004e3a114ad01b3d8afabb4626408e64ddcd5a7e84bf3903dba5a048fa"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "item_kind": "struct",
-      "line": 139,
+      "line": 141,
       "symbol": "vibe_core::manifest::package::application::SourceInputDecl",
-      "end_line": 155,
+      "end_line": 157,
       "fingerprint": "tok1:83360791a84751d5773a9c676f858dc57ca6d8686ebb9feb7559e2a78a9320df"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/application/environment.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::package::application::environment",
+      "end_line": 2,
+      "fingerprint": "tok1:ed984288d37c11b9c2b036d848f09531e7fcfef4c981698b89fcb0fe765061c8"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/application/environment.rs",
+      "item_kind": "enum",
+      "line": 91,
+      "symbol": "vibe_core::manifest::package::application::environment::StepEnvironmentError",
+      "end_line": 120,
+      "fingerprint": "tok1:5044907a1d41f8fe1f830c8aff9bf9990a8159ae97e92bb8250a7b317f829ec6"
     },
     {
       "crate_name": "vibe-core",
@@ -45288,7 +45324,7 @@
     {
       "file": "crates/vibe-app/src/steps/params.rs",
       "from_symbol": "vibe_app::steps::params::PlanLicense",
-      "line": 212,
+      "line": 205,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#license",
       "verb": "documents"
@@ -45475,6 +45511,14 @@
       "line": 6,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#resume",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/run/environment.rs",
+      "from_symbol": "vibe_app::steps::run::environment",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-ENV-IDENTITY",
       "verb": "implements"
     },
     {
@@ -50836,6 +50880,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_app_env_identity.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_env_identity",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-ENV-IDENTITY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_app_secret_errors.rs",
       "from_symbol": "vibe_cli::tests::cli_app_secret_errors",
       "line": 3,
@@ -53395,7 +53447,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::ApplicationDecl",
-      "line": 335,
+      "line": 337,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
       "verb": "documents"
@@ -53403,7 +53455,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::InstallerMethod",
-      "line": 56,
+      "line": 58,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation",
       "verb": "documents"
@@ -53411,7 +53463,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::InstallerOptionDecl",
-      "line": 277,
+      "line": 279,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options",
       "verb": "documents"
@@ -53419,7 +53471,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::LauncherDecl",
-      "line": 186,
+      "line": 188,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points",
       "verb": "documents"
@@ -53427,7 +53479,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::PublicCommandDecl",
-      "line": 267,
+      "line": 269,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#launch-points",
       "verb": "documents"
@@ -53435,7 +53487,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::RecipeDecl",
-      "line": 159,
+      "line": 161,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#source-build",
       "verb": "documents"
@@ -53443,7 +53495,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::ShellInterpreter",
-      "line": 47,
+      "line": 49,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation",
       "verb": "documents"
@@ -53451,9 +53503,25 @@
     {
       "file": "crates/vibe-core/src/manifest/package/application.rs",
       "from_symbol": "vibe_core::manifest::package::application::SourceInputDecl",
-      "line": 140,
+      "line": 142,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#source-build",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/application/environment.rs",
+      "from_symbol": "vibe_core::manifest::package::application::environment",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-ENV-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/application/environment.rs",
+      "from_symbol": "vibe_core::manifest::package::application::environment::StepEnvironmentError",
+      "line": 101,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-ENV-IDENTITY",
       "verb": "documents"
     },
     {
@@ -99456,7 +99524,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:fe9f057a123503bf4a0a61ebfc705f0aa349c0e4bec9118d98bf20edc7dbf0b6",
+      "content_hash": "sha256:2f9e03c2fc1a31f561c865bdbc8536d4bee0b826ea092da2d0b518b5b3d0b2ec",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -99654,7 +99722,7 @@
     },
     {
       "anchor": "evaluation",
-      "content_hash": "sha256:c83c7d519960273d2999e678bcc3c5010ab9fcc1d9b00fd6fe8f957a83587d77",
+      "content_hash": "sha256:1ccea818ef7790b7acc947cc91d48b9cf870161f453c2668722b8ae3143e3811",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "4. One result, explicit incompleteness",
@@ -99690,10 +99758,10 @@
     },
     {
       "anchor": "APP-ENV-IDENTITY",
-      "content_hash": "sha256:c76c6d6d86cfe0987a74e7fac45276890f00a84bcc9ed6c08e87e83bfd9c3442",
+      "content_hash": "sha256:44880fd330703baa79d2b98a455b5f77ecac401b4d3a2da9dff5390584dceadb",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "An installer whose expanded declaration includes a recipe or shell step must preserve feature and parameter identity through its existing environment projection. The current ASCII-uppercase, dash/dot-to-underscore spelling remains unchanged, but emitted names must be portable ASCII environment identifiers and injective across all declared features and, independently, all declared parameters, including inactive/optional declarations. A collision names both original IDs and the emitted key; an unrepresentable ID refuses rather than being silently renamed or lost. Core application validation and runtime use one projection owner. Planning/runtime checks protect programmatic inputs before execution. Options with no recipe/shell consumer, package-scope definitions and the generic feature kernel retain their literal IDs; unrelated durable env-step names retain their own owner. Distinct feature/parameter prefixes and distinct options remain separate namespaces. @status:spec/done",
+      "heading": "An installer whose expanded declaration includes a recipe or shell step must preserve feature and parameter identity through its existing environment projection. The current ASCII-uppercase, dash/dot-to-underscore spelling remains unchanged, but emitted names must be portable ASCII environment identifiers and injective across all declared features and, independently, all declared parameters, including inactive/optional declarations. A collision names both original IDs and the emitted key; an unrepresentable ID refuses rather than being silently renamed or lost. Core application validation and runtime use one projection owner. Planning/runtime checks protect programmatic inputs before execution. Options with no recipe/shell consumer, package-scope definitions and the generic feature kernel retain their literal IDs; unrelated durable env-step names retain their own owner. Distinct feature/parameter prefixes and distinct options remain separate namespaces. @status:impl/done",
       "line": 33,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-ENV-IDENTITY"
     },

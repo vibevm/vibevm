@@ -228,6 +228,14 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
     let package = &input.resolved.package;
     let key = package.key();
     let option = input.option;
+    option
+        .validate_step_environment(
+            &vibe_core::manifest::FieldPath::root().table("installer_options"),
+        )
+        .map_err(|error| crate::error::ResolveError::Manifest {
+            package: key.clone(),
+            reason: format!("{}: {error}", error.field),
+        })?;
     if option.configuration.is_some() {
         return Err(crate::error::ResolveError::ConfigurationUnsupported {
             package: key,

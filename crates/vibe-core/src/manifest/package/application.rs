@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 
+mod environment;
 mod icon_files;
 mod launcher;
 mod launcher_validation;
@@ -15,6 +16,7 @@ mod validation;
 mod wizard;
 mod wizard_validation;
 
+pub use environment::{StepEnvironment, StepEnvironmentError, step_env_name};
 pub use icon_files::{IconFinding, icon_findings};
 pub use launcher::{
     ARG_PLACEHOLDERS, IconDecl, IconSet, IconSlot, LauncherActionDecl, LauncherKind,

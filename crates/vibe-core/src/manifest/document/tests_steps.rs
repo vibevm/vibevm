@@ -7,6 +7,10 @@ use crate::manifest::{
     steps_of,
 };
 
+#[cfg(test)]
+#[path = "tests_steps/env_identity.rs"]
+mod env_identity;
+
 const HEADER: &str = r#"
 [package]
 name = "demo"

@@ -59,6 +59,7 @@ impl InstallerOptionDecl {
             }
             validate_parameter(parameter, &table, &row)?;
         }
+        self.validate_step_environment(at)?;
         if let Some(license) = &self.license {
             let license_at = at.table("license");
             declarant_path(&license.file).map_err(|fault| {

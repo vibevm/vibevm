@@ -72,9 +72,9 @@ pub use package::application::{
     LauncherActionDecl, LauncherDecl, LauncherKind, LauncherSource, LicenseDecl, MENU_CATEGORIES,
     NativeFormatDecl, Need, OwnedWord, ParamEquals, ParameterDecl, ParameterType, ParameterValue,
     ProfileDecl, PublicCommandDecl, RecipeDecl, RequirementDecl, RequirementScope,
-    RequirementTable, ResultDecl, ShellInterpreter, SourceInputDecl, StepDecl, StepKind,
-    StepOrigin, StepPhase, StepVar, application_requirements, expand_step_template, icon_findings,
-    png_dimensions, result_of, steps_of,
+    RequirementTable, ResultDecl, ShellInterpreter, SourceInputDecl, StepDecl, StepEnvironment,
+    StepEnvironmentError, StepKind, StepOrigin, StepPhase, StepVar, application_requirements,
+    expand_step_template, icon_findings, png_dimensions, result_of, step_env_name, steps_of,
 };
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, Authorship, BinaryDecl,
