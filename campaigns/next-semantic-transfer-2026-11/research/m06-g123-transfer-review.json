@@ -1,0 +1,1187 @@
+{
+  "schema": 1,
+  "scope": "exact3 old113 G1/G2/G3; independent read-only clause review",
+  "main_pin": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "rows": [
+    {
+      "id": "M-06-G.1",
+      "title": "Verify cross-package normal directives and authored boot semantics",
+      "proposed_status": "partial",
+      "root_status_unchanged": "unknown",
+      "old_source_assessment": "implemented",
+      "clauses": [
+        {
+          "kind": "steps",
+          "index": 1,
+          "exact": "Build a disposable XML consumer with a normal-format umbrella and two statically required normal packages; test cross-package #use root/solution, #source transit and unresolved-address typed failure.",
+          "assessment": "partial",
+          "analysis": "Main has normal compiler/source merge and typed unresolved source; no exact multi-entry XML closure-once fixture found. Actual linker emits full document tree for every normal emission occurrence and assembler preserves each; prototype adds across-contribution same-document section/preamble coverage. This is a static reachable repeated-emission counterpath, not a newly executed failure.",
+          "evidence": [
+            "main compiler/link.rs:179-238",
+            "main compiler/assemble/project.rs:33-64",
+            "prototype g1_cases.rs:48-89"
+          ]
+        },
+        {
+          "kind": "steps",
+          "index": 2,
+          "exact": "Compare the same authored snippet under simple format, where #use remains literal by contract, and verify #embed behavior without conflating the two formats.",
+          "assessment": "covered",
+          "analysis": "Existing main differential test explicitly asserts simple #use remains literal and does not source-merge; independent embed test observes splicing. This was already present before transfer.",
+          "evidence": [
+            "main boot_artifacts/tests.rs:282-308,374-425"
+          ]
+        },
+        {
+          "kind": "steps",
+          "index": 3,
+          "exact": "Document that a project-owned static boot file named by INDEX is read as authored instructions rather than compiled as a package snippet; specify #source placement from parser behavior, including section/top-level versus last-line rule.",
+          "assessment": "partial",
+          "analysis": "Actual own boot is dynamically referenced in INDEX (unconditional entry labeled kind=static) and carried Simple; scanner accepts #source at any unmasked line start. Exact explanatory prototype doc is absent at main, and no current dedicated before-heading/mid-section XML fixture was found. No invented last-line constraint.",
+          "evidence": [
+            "main boot.rs:331-344",
+            "main boot_artifacts.rs:178-206",
+            "main directives.rs:91-112,267-281",
+            "prototype docs/spec-compiler-static-xml-consumer.md"
+          ]
+        },
+        {
+          "kind": "positive_cases",
+          "index": 1,
+          "exact": "Normal cross-package #use inlines the exact target and source closure once; simple retains literal text.",
+          "assessment": "partial",
+          "analysis": "Normal/source and simple differential behavior exists; same source section reached by umbrella and separately direct static root is not suppressed across contributions in main. Distinct-document equal prose must remain separate; raw string dedup is not acceptable.",
+          "evidence": [
+            "main compiler/link.rs:210-238",
+            "prototype compiler/link/normal_once.rs",
+            "prototype g1_cases.rs:48-101"
+          ]
+        },
+        {
+          "kind": "positive_cases",
+          "index": 2,
+          "exact": "An unresolved normal #use refuses before committing a changed boot lane.",
+          "assessment": "covered with exact fixture gap",
+          "analysis": "Main typed missing-normal-use render refusal exists and the compile-before-publication path plus sentinel preservation test covers nonmutation; prototype has a single joined XML missing-use/old-bytes fixture not found in main. No fresh target execution here.",
+          "evidence": [
+            "main tests_ir_characterization.rs:137-193",
+            "main hybrid_emit.rs:395-424",
+            "prototype tests_ir_characterization.rs:119-151"
+          ]
+        },
+        {
+          "kind": "negative_cases",
+          "index": 1,
+          "exact": "The simple literal observation is labeled a confirmed normal-format bug.",
+          "assessment": "covered",
+          "analysis": "Main test calls this the deliberate format distinction; no false claim that simple literal #use is a normal-format bug.",
+          "evidence": [
+            "main tests.rs:374-425"
+          ]
+        },
+        {
+          "kind": "negative_cases",
+          "index": 2,
+          "exact": "A #source paragraph is silently accepted or relocated without its actual syntax rule.",
+          "assessment": "partial evidence",
+          "analysis": "Scanner only recognizes a directive at start of an unmasked line, not arbitrary mid-paragraph spelling; section/top-level position does not constrain it. Actual main before/mid-section XML proof and permanent explanatory docs remain unjoined.",
+          "evidence": [
+            "main directives.rs:91-112,267-281",
+            "main directives/tests.rs:parses_the_three_directives,directives_in_fences_are_ignored,heading_is_not_a_directive",
+            "prototype g1_cases.rs:6-44"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 1,
+          "exact": "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.1",
+          "assessment": "covered (review procedure)",
+          "analysis": "Exact task read; historical commands not executed.",
+          "evidence": [
+            "pinned task contract",
+            "bounded source/test ledger"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 2,
+          "exact": "Classify normal versus simple package directives and document the authored-project boot boundary without claiming the simple literal case is a bug.",
+          "assessment": "partial",
+          "analysis": "Whole consumer lane source-identity-aware once coverage for normal entries reached both transitively and directly, retaining uncovered siblings and preamble and never deduplicating different documents by equal prose; precise authored-INDEX/#source-placement documentation and exact fixture mapping.",
+          "evidence": [
+            "pinned task contract",
+            "bounded source/test ledger"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 3,
+          "exact": "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
+          "assessment": "unverified current runtime; historical evidence retained",
+          "analysis": "Historical source receipts explicitly leave native Windows unperformed/open. This audit has no runtime permission, so current target fixture definitions and source bodies are evidence, not fresh PASS; native gap is not silently waived or used to demand unrelated platform work.",
+          "evidence": [
+            "pinned task contract",
+            "bounded source/test ledger"
+          ]
+        }
+      ],
+      "exact_contract": {
+        "id": "M-06-G.1",
+        "title": "Verify cross-package normal directives and authored boot semantics",
+        "goal": "Classify normal versus simple package directives and document the authored-project boot boundary without claiming the simple literal case is a bug.",
+        "read_paths": [
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+          "crates/vibe-spec/src/directives.rs",
+          "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+          "crates/vibe-workspace/src/boot_artifacts/",
+          "docs/"
+        ],
+        "write_paths": [
+          "crates/vibe-spec/src/directives.rs",
+          "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+          "crates/vibe-workspace/src/boot_artifacts/",
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+          "docs/"
+        ],
+        "steps": [
+          "Build a disposable XML consumer with a normal-format umbrella and two statically required normal packages; test cross-package #use root/solution, #source transit and unresolved-address typed failure.",
+          "Compare the same authored snippet under simple format, where #use remains literal by contract, and verify #embed behavior without conflating the two formats.",
+          "Document that a project-owned static boot file named by INDEX is read as authored instructions rather than compiled as a package snippet; specify #source placement from parser behavior, including section/top-level versus last-line rule."
+        ],
+        "positive_cases": [
+          "Normal cross-package #use inlines the exact target and source closure once; simple retains literal text.",
+          "An unresolved normal #use refuses before committing a changed boot lane."
+        ],
+        "negative_cases": [
+          "The simple literal observation is labeled a confirmed normal-format bug.",
+          "A #source paragraph is silently accepted or relocated without its actual syntax rule."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: bind the affected vibe-workspace/vibe-cli/vibe-spec target and exact regression cases from source before compiling; use --lib or a named integration target.",
+          "RUN BOUND CHECKS: cargo test -p vibe-workspace --lib <reviewed case> -- --exact or the corresponding affected named target; require one nonzero selected case.",
+          "CONDITIONAL ORACLE: run codegen/specmap only if a changed schema, generator, source index or dependent contract actually requires it; do not use a broad gate from write perimeter alone."
+        ],
+        "acceptance": [
+          "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.1",
+          "Classify normal versus simple package directives and document the authored-project boot boundary without claiming the simple literal case is a bug.",
+          "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."
+        ],
+        "safe_stop": "Keep the regression reproducible in a disposable fixture and report exact unsupported behavior until the affected path is fixed.",
+        "commit_subject": "test(boot): distinguish normal directive reach",
+        "notes": [
+          "Product-neutral regressions observed on a separate local main are hypotheses for this next checkout until disposable current-tree tests prove them. Do not copy fixture-specific package names or publish external package sets.",
+          "Maintain the mutable 1.1.0 cohort and the no-public-Git hold. Bind only affected tests; no mutation suite or routine whole-workspace gate."
+        ]
+      },
+      "implemented_coverage": "Already-main normal/source/#use compiler, simple literal behavior, embed expansion, own-boot INDEX reference and typed compilation/refusal boundary.",
+      "remaining_behavior": "Whole consumer lane source-identity-aware once coverage for normal entries reached both transitively and directly, retaining uncovered siblings and preamble and never deduplicating different documents by equal prose; precise authored-INDEX/#source-placement documentation and exact fixture mapping.",
+      "architecture": "Existing compiler link/assembly semantics + boot artifact tests/docs; no source-query service, descriptor migration or app runtime prerequisite.",
+      "minimal_next_checks": [
+        "Run exact XML umbrella+two direct static normal roots discriminator, nested child and partial→whole→direct preamble; equal prose different docs control.",
+        "Bind current #source before-heading/mid-section fixture and authored INDEX behavior; retain simple/embed and precommit typed failure controls."
+      ],
+      "newly_transferred_by_this_review": false,
+      "native_windows": "unperformed/open; no claim",
+      "scope_note": "Full means requested semantics, not old filenames or framework. Root alone promotes status."
+    },
+    {
+      "id": "M-06-G.2",
+      "title": "Preserve XML host dialect and derived dependency state during init",
+      "proposed_status": "partial",
+      "root_status_unchanged": "unknown",
+      "old_source_assessment": "implemented",
+      "clauses": [
+        {
+          "kind": "steps",
+          "index": 1,
+          "exact": "Reproduce init package in a disposable xml-spec_format project with existing STATIC.xml/INDEX and generated instruction blocks; capture host and derived dependency bytes before the command.",
+          "assessment": "unverified main execution",
+          "analysis": "Prototype real CLI fixture captures existing XML lane and nonempty derived tree before adding second package. Current main has no same named host-format fixture; no command run in audit.",
+          "evidence": [
+            "prototype cli_init/init_package_host_format.rs:seed_static_host,init_package_keeps_existing_xml_host_and_derived_slots"
+          ]
+        },
+        {
+          "kind": "steps",
+          "index": 2,
+          "exact": "Carry the selected host dialect into boot regeneration or skip it when unnecessary; never default this path to Mixed/STATIC.md and never treat a vibedeps slot as a write target.",
+          "assessment": "missing",
+          "analysis": "Ordinary create_package_in_project calls generate_boot_artifacts, which unconditionally selects Mixed. regenerate_boot_with_spec_format/traced passes it through to unit/node generation; downstream selected/stale path depends on passed value. Analyzer reads existing artifact dialect but is not in this init call chain. Prototype fixes only helper by reading root consumer spec_format.",
+          "evidence": [
+            "main init/package.rs:110-146",
+            "main init/helpers.rs:162-179",
+            "main bootgen.rs:271-291",
+            "main hybrid_emit.rs:373-398",
+            "main publication.rs:134-170",
+            "prototype init/helpers.rs:host spec_format selection"
+          ]
+        },
+        {
+          "kind": "steps",
+          "index": 3,
+          "exact": "Characterize scaffold tool format/link defaults and static marker spelling against declared options and update only their documented mismatch.",
+          "assessment": "covered/source with partial test map",
+          "analysis": "Main already honors declared link, defaults format to normal, and marker spells group exactly once. Actual marker and nested link tests exist in baseline; prototype adds combined format/link default test. Preserve current version cohort, do not transplant old version literals.",
+          "evidence": [
+            "main init/package.rs:83-101,255-268",
+            "main init/prompts.rs:package_fields_from_args",
+            "main cli_init.rs:279-313",
+            "main cli_init_kinds.rs:283-308"
+          ]
+        },
+        {
+          "kind": "positive_cases",
+          "index": 1,
+          "exact": "The new package slot is present; host STATIC.xml and instruction blocks still name XML, and vibedeps remains byte-identical.",
+          "assessment": "missing",
+          "analysis": "Mixed route can select STATIC.md and remove stale STATIC.xml, rewriting INDEX/redirect dialect; unit generation can also replace XML dependency cache. Existing byte-equal/fingerprint skip only applies when selected lane exists and opposite lane absent, so it does not hide this format change. Static inference; no fresh CLI RED claimed.",
+          "evidence": [
+            "main hybrid_emit.rs:373-393,410-424",
+            "main publication.rs:134-170",
+            "prototype XML host test snapshot assertions"
+          ]
+        },
+        {
+          "kind": "positive_cases",
+          "index": 2,
+          "exact": "The same command remains correct for a Markdown-lane host.",
+          "assessment": "covered default path; preservation fixture unverified",
+          "analysis": "Mixed is correct for unspecified Markdown host and existing init functionality is present; exact nonempty derived-tree unchanged control has no fresh main execution.",
+          "evidence": [
+            "main init/helpers.rs:176-179",
+            "prototype Markdown host test"
+          ]
+        },
+        {
+          "kind": "negative_cases",
+          "index": 1,
+          "exact": "Init package removes STATIC.xml or rewrites a dependency slot boot lane.",
+          "assessment": "missing",
+          "analysis": "Same ordinary hardcoded-Mixed callee chain leaves this unwanted effect reachable. Quiet/success output does not modify the generation path.",
+          "evidence": [
+            "main init/helpers.rs:176-179",
+            "main bootgen.rs:281-290",
+            "main publication.rs:stale_static_file"
+          ]
+        },
+        {
+          "kind": "negative_cases",
+          "index": 2,
+          "exact": "A quiet successful command hides a host dialect change or writes into derived dependencies.",
+          "assessment": "missing",
+          "analysis": "Same ordinary hardcoded-Mixed callee chain leaves this unwanted effect reachable. Quiet/success output does not modify the generation path.",
+          "evidence": [
+            "main init/helpers.rs:176-179",
+            "main bootgen.rs:281-290",
+            "main publication.rs:stale_static_file"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 1,
+          "exact": "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.2",
+          "assessment": "covered (review procedure)",
+          "analysis": "Exact task read; historical commands not executed.",
+          "evidence": [
+            "pinned task contract",
+            "bounded source/test ledger"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 2,
+          "exact": "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.",
+          "assessment": "partial",
+          "analysis": "Choose the existing host consumer spec_format before ordinary init boot regeneration; verify unchanged XML lane/INDEX/redirects and derived slots with real XML/Markdown controls. Do not interpret all writes into vibedeps as globally forbidden during install: this task concerns unrelated init preserving existing dependency state.",
+          "evidence": [
+            "pinned task contract",
+            "bounded source/test ledger"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 3,
+          "exact": "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
+          "assessment": "unverified current runtime; historical evidence retained",
+          "analysis": "Historical source receipts explicitly leave native Windows unperformed/open. This audit has no runtime permission, so current target fixture definitions and source bodies are evidence, not fresh PASS; native gap is not silently waived or used to demand unrelated platform work.",
+          "evidence": [
+            "pinned task contract",
+            "bounded source/test ledger"
+          ]
+        }
+      ],
+      "exact_contract": {
+        "id": "M-06-G.2",
+        "title": "Preserve XML host dialect and derived dependency state during init",
+        "goal": "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.",
+        "read_paths": [
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+          "crates/vibe-cli/src/commands/init/",
+          "crates/vibe-workspace/src/install/bootgen/",
+          "crates/vibe-workspace/src/vibedeps/",
+          "crates/vibe-workspace/src/boot_artifacts/"
+        ],
+        "write_paths": [
+          "crates/vibe-cli/src/commands/init/",
+          "crates/vibe-workspace/src/install/bootgen/",
+          "crates/vibe-workspace/src/vibedeps/",
+          "crates/vibe-workspace/src/boot_artifacts/",
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml"
+        ],
+        "steps": [
+          "Reproduce init package in a disposable xml-spec_format project with existing STATIC.xml/INDEX and generated instruction blocks; capture host and derived dependency bytes before the command.",
+          "Carry the selected host dialect into boot regeneration or skip it when unnecessary; never default this path to Mixed/STATIC.md and never treat a vibedeps slot as a write target.",
+          "Characterize scaffold tool format/link defaults and static marker spelling against declared options and update only their documented mismatch."
+        ],
+        "positive_cases": [
+          "The new package slot is present; host STATIC.xml and instruction blocks still name XML, and vibedeps remains byte-identical.",
+          "The same command remains correct for a Markdown-lane host."
+        ],
+        "negative_cases": [
+          "Init package removes STATIC.xml or rewrites a dependency slot boot lane.",
+          "A quiet successful command hides a host dialect change or writes into derived dependencies."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: bind the affected vibe-workspace/vibe-cli/vibe-spec target and exact regression cases from source before compiling; use --lib or a named integration target.",
+          "RUN BOUND CHECKS: cargo test -p vibe-workspace --lib <reviewed case> -- --exact or the corresponding affected named target; require one nonzero selected case.",
+          "CONDITIONAL ORACLE: run codegen/specmap only if a changed schema, generator, source index or dependent contract actually requires it; do not use a broad gate from write perimeter alone."
+        ],
+        "acceptance": [
+          "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.2",
+          "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.",
+          "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."
+        ],
+        "safe_stop": "Keep the regression reproducible in a disposable fixture and report exact unsupported behavior until the affected path is fixed.",
+        "commit_subject": "fix(init): preserve XML host boot dialect",
+        "notes": [
+          "Product-neutral regressions observed on a separate local main are hypotheses for this next checkout until disposable current-tree tests prove them. Do not copy fixture-specific package names or publish external package sets.",
+          "Maintain the mutable 1.1.0 cohort and the no-public-Git hold. Bind only affected tests; no mutation suite or routine whole-workspace gate."
+        ]
+      },
+      "implemented_coverage": "Already-main package scaffolding, declared link/default format and correct provenance marker; default Markdown init route.",
+      "remaining_behavior": "Choose the existing host consumer spec_format before ordinary init boot regeneration; verify unchanged XML lane/INDEX/redirects and derived slots with real XML/Markdown controls. Do not interpret all writes into vibedeps as globally forbidden during install: this task concerns unrelated init preserving existing dependency state.",
+      "architecture": "CLI init host-format input adapter into incumbent boot generation; minimal prototype fix is local helper selection, with current-main fixtures and existing owner behavior preserved.",
+      "minimal_next_checks": [
+        "Real init package into existing XML host with nonempty selected dependency tree: package added, XML/INDEX/three instruction blocks remain correct, dependency path→bytes unchanged.",
+        "Same command Markdown host, explicit link/format and group-marker controls."
+      ],
+      "newly_transferred_by_this_review": false,
+      "native_windows": "unperformed/open; no claim",
+      "scope_note": "Full means requested semantics, not old filenames or framework. Root alone promotes status."
+    },
+    {
+      "id": "M-06-G.3",
+      "title": "Exclude generated slot lanes and protect authored workspace members",
+      "proposed_status": "partial",
+      "root_status_unchanged": "unknown",
+      "old_source_assessment": "implemented",
+      "clauses": [
+        {
+          "kind": "steps",
+          "index": 1,
+          "exact": "Reproduce a simple package with static requires under an XML consumer, nested static zones and a multi-fragment zone; compare the current next tree with the reported main-only fixpoint behavior.",
+          "assessment": "partial",
+          "analysis": "Main has fixed-point desubstitution and deliberately retains a compiled unit when static_boot_count>1, preserving fragments. That does not prevent reading its generated multi-document XML as simple single-document input. Prototype avoids static unit substitution for directly selected static zone members, honoring declared→suggested→node-default link and dynamic inverse.",
+          "evidence": [
+            "main desubstitute.rs:60-106",
+            "main bootgen.rs:462-489",
+            "main inputs.rs:111-142",
+            "prototype node_dependency.rs",
+            "prototype transitive.rs:45-75"
+          ]
+        },
+        {
+          "kind": "steps",
+          "index": 2,
+          "exact": "Classify generated slot boot/STATIC.*, INDEX.md and .vibe-boot-* as derived artifacts outside authored package traversal and #use targets; retain every authored fragment exactly once, including static_boot_count greater than one.",
+          "assessment": "partial/missing payload exclusion",
+          "analysis": "Main generated STATIC/INDEX classifier exists for derived hash/purity, but derived collect_files and Mixed collect_source_files omit only .git; generated payloads remain admitted and direct .vibe-boot-* not classified. Compiled STATIC #use target refusal already exists. Prototype adds same exclusion to both source walks plus direct generated-prefix files.",
+          "evidence": [
+            "main derived.rs:378-403,551-562",
+            "main slot_diff.rs:535-560",
+            "main directives.rs:284-306",
+            "prototype derived.rs:497-545"
+          ]
+        },
+        {
+          "kind": "steps",
+          "index": 3,
+          "exact": "In a disposable workspace whose members are source package slots, snapshot each member and run install/check; either prove no source mutation or fix output placement so generated host lanes and lock records stay in the consumer-owned derived location.",
+          "assessment": "missing",
+          "analysis": "Workspace.iter_nodes includes every member; ordinary and native boot regeneration publish node lanes into each member without selected-package guard. Redirect validation also scans every member, so malformed source-owned redirect may block consumer installation. Prototype protects only nonroot package members matching selected typed kind/group/name, including version drift. Root/project/unselected members still publish; no broad ban on all package roots.",
+          "evidence": [
+            "main lib.rs:276-282",
+            "main bootgen.rs:165-203,534-549",
+            "main native_managed.rs:129-180",
+            "prototype publication.rs:publish_node_boot",
+            "prototype g3_cases.rs:228-330"
+          ]
+        },
+        {
+          "kind": "positive_cases",
+          "index": 1,
+          "exact": "XML and Markdown consumers install the same authored static closure without parsing a generated multi-document lane as one spec.",
+          "assessment": "missing",
+          "analysis": "Payload filtering alone is insufficient: new compiled unit substitution still feeds multi-fragment XML into single-spec projection in main. Needed authored-static-zone projection is distinct from existing keep-all-fragments fixpoint.",
+          "evidence": [
+            "main bootgen.rs:462-489",
+            "main desubstitute.rs:89-94",
+            "main inputs.rs:127-140",
+            "prototype g3_cases.rs:154-223"
+          ]
+        },
+        {
+          "kind": "positive_cases",
+          "index": 2,
+          "exact": "Source member directories remain byte-identical after consumer install; package check does not read a generated lane as an authored single document.",
+          "assessment": "missing",
+          "analysis": "All-member publication is an actual mutation path; no current main source-member-byte-identical fixture corresponding to prototype found. Package check input classification only becomes meaningful after generated state is excluded/protected.",
+          "evidence": [
+            "main bootgen.rs:165-203",
+            "main native_managed.rs:129-180",
+            "prototype g3_cases.rs:228-330"
+          ]
+        },
+        {
+          "kind": "negative_cases",
+          "index": 1,
+          "exact": "A generated slot STATIC.xml/INDEX/.vibe-boot file enters simple package content or becomes a #use target.",
+          "assessment": "partial",
+          "analysis": "Compiled STATIC citation rejection already covered; generated source payload exclusion and XML simple substitution remain missing. Do not claim every INDEX or generated-prefix address independently resolves successfully: that was not demonstrated.",
+          "evidence": [
+            "main directives/tests.rs:use_into_the_compiled_lane_is_rejected,every_directive_kind_rejects_a_lane_target",
+            "main derived.rs:378-403",
+            "main slot_diff.rs:535-560"
+          ]
+        },
+        {
+          "kind": "negative_cases",
+          "index": 2,
+          "exact": "Dropping a substituted multi-fragment unit loses authored content; install writes host cache files into vibepacks source members.",
+          "assessment": "partial",
+          "analysis": "Main already keeps >1fragments instead of dropping a substituted unit. Missing is correct authored-fragment projection and selected-source-member output ownership; fixes must preserve explicit dynamic suggestion override and unselected/project/root entrypoints.",
+          "evidence": [
+            "main desubstitute.rs:89-94",
+            "prototype transitive.rs:45-75",
+            "prototype g3_cases.rs:169-223,334-439"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 1,
+          "exact": "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.3",
+          "assessment": "covered (review procedure)",
+          "analysis": "Exact task read; historical commands not executed.",
+          "evidence": [
+            "pinned task contract",
+            "bounded source/test ledger"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 2,
+          "exact": "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.",
+          "assessment": "partial",
+          "analysis": "Exclude exact generated artifacts from both package source traversals; prevent static simple multi-fragment units being reparsed as generated multi-document specs by projecting their authored static closure; protect selected typed package source members in ordinary/native publication and redirect preflight, retaining root/project/unselected behavior.",
+          "evidence": [
+            "pinned task contract",
+            "bounded source/test ledger"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 3,
+          "exact": "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
+          "assessment": "unverified current runtime; historical evidence retained",
+          "analysis": "Historical source receipts explicitly leave native Windows unperformed/open. This audit has no runtime permission, so current target fixture definitions and source bodies are evidence, not fresh PASS; native gap is not silently waived or used to demand unrelated platform work.",
+          "evidence": [
+            "pinned task contract",
+            "bounded source/test ledger"
+          ]
+        }
+      ],
+      "exact_contract": {
+        "id": "M-06-G.3",
+        "title": "Exclude generated slot lanes and protect authored workspace members",
+        "goal": "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.",
+        "read_paths": [
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+          "crates/vibe-workspace/src/boot_artifacts/",
+          "crates/vibe-workspace/src/install/bootgen/",
+          "crates/vibe-workspace/src/vibedeps/",
+          "crates/vibe-workspace/src/install/",
+          "crates/vibe-spec/src/directives.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-workspace/src/boot_artifacts/",
+          "crates/vibe-workspace/src/install/bootgen/",
+          "crates/vibe-workspace/src/vibedeps/",
+          "crates/vibe-workspace/src/install/",
+          "crates/vibe-spec/src/directives.rs"
+        ],
+        "steps": [
+          "Reproduce a simple package with static requires under an XML consumer, nested static zones and a multi-fragment zone; compare the current next tree with the reported main-only fixpoint behavior.",
+          "Classify generated slot boot/STATIC.*, INDEX.md and .vibe-boot-* as derived artifacts outside authored package traversal and #use targets; retain every authored fragment exactly once, including static_boot_count greater than one.",
+          "In a disposable workspace whose members are source package slots, snapshot each member and run install/check; either prove no source mutation or fix output placement so generated host lanes and lock records stay in the consumer-owned derived location."
+        ],
+        "positive_cases": [
+          "XML and Markdown consumers install the same authored static closure without parsing a generated multi-document lane as one spec.",
+          "Source member directories remain byte-identical after consumer install; package check does not read a generated lane as an authored single document."
+        ],
+        "negative_cases": [
+          "A generated slot STATIC.xml/INDEX/.vibe-boot file enters simple package content or becomes a #use target.",
+          "Dropping a substituted multi-fragment unit loses authored content; install writes host cache files into vibepacks source members."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: bind the affected vibe-workspace/vibe-cli/vibe-spec target and exact regression cases from source before compiling; use --lib or a named integration target.",
+          "RUN BOUND CHECKS: cargo test -p vibe-workspace --lib <reviewed case> -- --exact or the corresponding affected named target; require one nonzero selected case.",
+          "CONDITIONAL ORACLE: run codegen/specmap only if a changed schema, generator, source index or dependent contract actually requires it; do not use a broad gate from write perimeter alone."
+        ],
+        "acceptance": [
+          "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.3",
+          "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.",
+          "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."
+        ],
+        "safe_stop": "Keep the regression reproducible in a disposable fixture and report exact unsupported behavior until the affected path is fixed.",
+        "commit_subject": "fix(boot): exclude generated slot lanes",
+        "notes": [
+          "Product-neutral regressions observed on a separate local main are hypotheses for this next checkout until disposable current-tree tests prove them. Do not copy fixture-specific package names or publish external package sets.",
+          "Maintain the mutable 1.1.0 cohort and the no-public-Git hold. Bind only affected tests; no mutation suite or routine whole-workspace gate."
+        ]
+      },
+      "implemented_coverage": "Already-main generated-hash exclusion, compiled STATIC citation refusal and multi-fragment preservation in fixpoint; actual shared boot generator and transaction owner.",
+      "remaining_behavior": "Exclude exact generated artifacts from both package source traversals; prevent static simple multi-fragment units being reparsed as generated multi-document specs by projecting their authored static closure; protect selected typed package source members in ordinary/native publication and redirect preflight, retaining root/project/unselected behavior.",
+      "architecture": "Package payload-selection boundary + static boot-zone lowering + node publication ownership. These are three linked responsibilities within old G3; no new compiler framework, global snapshot or app state needed.",
+      "minimal_next_checks": [
+        "Generated poison STATIC.md/xml, INDEX and direct .vibe-boot-* excluded from Mixed/transformed payload while authored fragments remain.",
+        "XML/Markdown nested simple zones under declared/suggested/default static and explicit dynamic inverse preserve each authored fragment once.",
+        "Selected package source-member full path→bytes snapshot through install/check/repeat/durable lock reread/version drift; root/project/unselected member controls."
+      ],
+      "newly_transferred_by_this_review": false,
+      "native_windows": "unperformed/open; no claim",
+      "scope_note": "Full means requested semantics, not old filenames or framework. Root alone promotes status."
+    }
+  ],
+  "proposed_counts": {
+    "full": 0,
+    "partial": 3,
+    "not-transferred": 0,
+    "unknown": 0
+  },
+  "root_decision_required": true,
+  "crosswalk_edited": false,
+  "product_or_git_edits": false,
+  "tests_or_builds_run": false,
+  "meaning": "All3 have actual existing main coverage and concrete missing clauses; proposes resolving unknown to partial, not global completion arithmetic.",
+  "baseline_comparisons": [
+    {
+      "path": "crates/vibe-cli/src/commands/init/helpers.rs",
+      "baseline_commit": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+      "baseline_sha256": "d8c849250fc4e3cdd50ea892cb4a933145c9d2f3a71fb1308bf8a1109be253f9",
+      "main_sha256": "d8c849250fc4e3cdd50ea892cb4a933145c9d2f3a71fb1308bf8a1109be253f9",
+      "byte_identical": true
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/desubstitute.rs",
+      "baseline_commit": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+      "baseline_sha256": "136823134a7fa221b8097dd81bac7db26bde03dd6acec3f0cf15494dfbf328aa",
+      "main_sha256": "136823134a7fa221b8097dd81bac7db26bde03dd6acec3f0cf15494dfbf328aa",
+      "byte_identical": true
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+      "baseline_commit": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+      "baseline_sha256": "f94e836c2da0795b9b7b8c28b9cf78fc2552a5a413eaf1ad61ee39043b7abb95",
+      "main_sha256": "f94e836c2da0795b9b7b8c28b9cf78fc2552a5a413eaf1ad61ee39043b7abb95",
+      "byte_identical": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/link.rs",
+      "baseline_commit": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+      "baseline_sha256": "7a5d04d352a9ddde4b1aa89266477fb0c90d16d1638ba8a674a441f8d2fcfa6a",
+      "main_sha256": "7a5d04d352a9ddde4b1aa89266477fb0c90d16d1638ba8a674a441f8d2fcfa6a",
+      "byte_identical": true
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot.rs",
+      "baseline_commit": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+      "baseline_sha256": "6ee4cc5c5eb15a9176a953c283a31418f6f49dacaa7a6d0fbf1d14358991d88c",
+      "main_sha256": "6ee4cc5c5eb15a9176a953c283a31418f6f49dacaa7a6d0fbf1d14358991d88c",
+      "byte_identical": true
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_artifacts/tests.rs",
+      "baseline_commit": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+      "baseline_sha256": "bdc5ac7d767cf4e6c903fe8b7af50df6d63139ddd83afa144885e72231006bde",
+      "main_sha256": "bdc5ac7d767cf4e6c903fe8b7af50df6d63139ddd83afa144885e72231006bde",
+      "byte_identical": true
+    },
+    {
+      "path": "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization.rs",
+      "baseline_commit": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+      "baseline_sha256": "cc262b4b478c3855614e4be719607a37d590e038b211a0f884a0fb75cbbe9381",
+      "main_sha256": "cc262b4b478c3855614e4be719607a37d590e038b211a0f884a0fb75cbbe9381",
+      "byte_identical": true
+    },
+    {
+      "path": "crates/vibe-cli/tests/cli_init_kinds.rs",
+      "baseline_commit": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+      "baseline_sha256": "4ac12f52a40b1779523a97f3bfab55e42b33db29f219d0534759dc4655d6cc69",
+      "main_sha256": "4ac12f52a40b1779523a97f3bfab55e42b33db29f219d0534759dc4655d6cc69",
+      "byte_identical": true
+    },
+    {
+      "path": "crates/vibe-cli/tests/cli_init.rs",
+      "baseline_commit": "6d2f6e59be3bf55ac85fb2db67ad4e80b6925d79",
+      "baseline_sha256": "60024ae7fd2ea18b1984f0cc182f483be1b75d97b54d855e8f5a164dfce0be84",
+      "main_sha256": "60024ae7fd2ea18b1984f0cc182f483be1b75d97b54d855e8f5a164dfce0be84",
+      "byte_identical": true
+    }
+  ],
+  "evidence_ledger": [
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-06-G.json",
+      "sha256": "55c4cf284d3c4e0ece120b8c7ff23c10c8e3b49347a53bb5beb0abcd4a733432",
+      "git_blob": "bc965e9ce1dc525c03436656e4b85c7ddf1c72df",
+      "read_scope": "Complete ONLY G.1/G.2/G.3 rows; historical commands treated as data"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-cli/src/commands/init/helpers.rs",
+      "sha256": "d8c849250fc4e3cdd50ea892cb4a933145c9d2f3a71fb1308bf8a1109be253f9",
+      "git_blob": "f74c7c6954004f7d3a3cec6d99bcb2f0726f0e4e",
+      "read_scope": "generate_boot_artifacts155-195 actual Mixed call"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-cli/src/commands/init/package.rs",
+      "sha256": "1e33edac89ca544508e57cc202de68094e2cc5abf22118a523f8e45a26dd06c4",
+      "git_blob": "cc06d672f73bdf4353c5156cf122d9482d106f6d",
+      "read_scope": "prepare60-103/create110-146; scaffold marker255-269; link/format rendering"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-cli/src/commands/init/prompts.rs",
+      "sha256": "ca7b4906f1716ae2f6d47a7eb18c1b2a3928b80f34b86d65a9d8438adbaf5eaa",
+      "git_blob": "80fb1aad32ee203f2927f3ce2445d8c90ff42cb1",
+      "read_scope": "package_fields_from_args normal default38-59"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-cli/tests/cli_init.rs",
+      "sha256": "60024ae7fd2ea18b1984f0cc182f483be1b75d97b54d855e8f5a164dfce0be84",
+      "git_blob": "92f0f76307652d7cd642152ace85617169b02cc5",
+      "read_scope": "init_package_boot_snippet_names_the_group_once270-315"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-cli/tests/cli_init_kinds.rs",
+      "sha256": "4ac12f52a40b1779523a97f3bfab55e42b33db29f219d0534759dc4655d6cc69",
+      "git_blob": "8db691dfcd3a0f35ce4f4d9d5726319ad05a26ab",
+      "read_scope": "prior reviewed actual nested static/dynamic/default test273-309; targeted name search in this review"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/lib.rs",
+      "sha256": "46b2d42f5d0dcfe56820eabe18ffdbcb818bf886c8ecfccf1388d6b833e772a1",
+      "git_blob": "5488ab3a68131dee66d1a56ff9ad1c9fc410ad4e",
+      "read_scope": "iter_nodes270-286 actual all-member traversal"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/boot.rs",
+      "sha256": "6ee4cc5c5eb15a9176a953c283a31418f6f49dacaa7a6d0fbf1d14358991d88c",
+      "git_blob": "8b23393396a54128cc0bc03bf935457220911c58",
+      "read_scope": "compute_effective_boot own331-344 and dependency precedence350-366"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/boot_artifacts.rs",
+      "sha256": "114858054131449a8ed4d58ce722e2c9b6574e5612349b8cf004af16dc4a6480",
+      "git_blob": "9a0676ca3a6f8b44e3527b8b93cb96e7d6c826e6",
+      "read_scope": "prepare_index_body178-206"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+      "sha256": "6ca45967691ebb327c451c64cae8b4d90ac1281559f65964ebb3e3ff17a42547",
+      "git_blob": "bf24e948b6b9b9fc9f846a699ef7569c21c5416d",
+      "read_scope": "build_with_providers_overlay45-153 normal/simple actual dispatch"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/boot_artifacts/tests.rs",
+      "sha256": "bdc5ac7d767cf4e6c903fe8b7af50df6d63139ddd83afa144885e72231006bde",
+      "git_blob": "78da77c755cd99b3b1a791542e88673aedcb50b9",
+      "read_scope": "render_static normal source closure, differential and embed controls277-427; XML test names"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization.rs",
+      "sha256": "cc262b4b478c3855614e4be719607a37d590e038b211a0f884a0fb75cbbe9381",
+      "git_blob": "ad45affb8c4553a257b22413d395089f11beede8",
+      "read_scope": "137-193 failure preservation and typed missing normal source tests"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/boot_artifacts/publication.rs",
+      "sha256": "5c901b3fa9641f7eb63f0a6c23cd50f30a47747f28b119549838be4d0cb6961f",
+      "git_blob": "1242e0c226340f568e8c924c4705888511fac22c",
+      "read_scope": "134-172 spec_format-driven selected/stale unit paths"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/boot_artifacts/transaction.rs",
+      "sha256": "c7b898cee5693055f46d72cc20d268a021df6528ecdc4492310da5040b5a6fd1",
+      "git_blob": "f8537544fa28bf8bf8d58eec0363bbf89c553466",
+      "read_scope": "stale removal actual call search, write target shape"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/install/bootgen.rs",
+      "sha256": "b0f2c2c64e8e8716778ec6ab03e4a571bf2b6edcf1ca2976824aa6d9b764a3a0",
+      "git_blob": "d8ca509a0f486e25a6e7aa4d758b9604e7de3065",
+      "read_scope": "150-208 actual node writes;270-291 passthrough;392-493 dependency substitution;528-551 redirect validation"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+      "sha256": "766633f526d13049e88c8bb519564ac31d1b728c8abf1116ed1cb22bf5ab1ede",
+      "git_blob": "2e9f5b28ea100aa6c303f16867bf810d799a5819",
+      "read_scope": "125-180 actual all-node native publication/candidate loop"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "sha256": "b78045d2a8e88d22e501b4c881e2ede424e8313ebadc67eff789511f6b6842b3",
+      "git_blob": "3dc45f786b9e9b36465805ea01e12df0dd89c8c1",
+      "read_scope": "215-235 retained artifact format inference; not init caller"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/install/bootgen/desubstitute.rs",
+      "sha256": "136823134a7fa221b8097dd81bac7db26bde03dd6acec3f0cf15494dfbf328aa",
+      "git_blob": "a184221ec94556a0da55164a6553788b643e19f3",
+      "read_scope": "60-113 static_boot_count>1 keeps compiled unit"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
+      "sha256": "c023c38778e6214d3d5c0638a099ba851a3dbefa81673227cf969fd14fea03a1",
+      "git_blob": "2b0b487018d72da270a8f0be195a0b7f3be4bda5",
+      "read_scope": "365-424 actual unit paths, freshness and publication"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "sha256": "1f298052cec6004125e7bf5dfe661051675c16ca1745e866e0ceee08e761fb66",
+      "git_blob": "d8e522bf8ecbf097cb16927ad1b192603c47993f",
+      "read_scope": "378-403 source enumeration;538-562 generated hash classifier; collect_hash_files targeted caller"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+      "sha256": "f94e836c2da0795b9b7b8c28b9cf78fc2552a5a413eaf1ad61ee39043b7abb95",
+      "git_blob": "5851b26e7f4fabd741bf7ff81bbc72c2f0e86fc0",
+      "read_scope": "535-560 source enumeration; prepare_source_tree call inventory"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-spec/src/directives.rs",
+      "sha256": "3cd28c83e017f55b0c676ea18bc6f62708274ea36458dbf8fd3c65202521bafb",
+      "git_blob": "00ad945595bbde5a0593f43aad4b6fe9f8a12935",
+      "read_scope": "88-121 scanner;267-310 exact prefixes and generated STATIC citation refusal"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-spec/src/directives/tests.rs",
+      "sha256": "3955c5dd5b53da22e3381bdb7b0687e3b0bab89374fb65fa4b4a7f15b88694b4",
+      "git_blob": "ea2212149eb96786b15079b3ad2828dad70e8a71",
+      "read_scope": "three directives/fence/tail/compiled STATIC refusal test inventory"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-spec/src/compiler/link.rs",
+      "sha256": "7a5d04d352a9ddde4b1aa89266477fb0c90d16d1638ba8a674a441f8d2fcfa6a",
+      "git_blob": "f53db6b1cb123f997f3c10ea98aae6084cc707f5",
+      "read_scope": "142-252 actual per-contribution plan_stream full text;326-352 resolution forwarding"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-spec/src/compiler/assemble.rs",
+      "sha256": "c7a9d8e580c59a17b3f8e1f0fd8ddaf2b37d2c5943ee11ea18d7042925112f29",
+      "git_blob": "ef464ce69d748802602555bf83f0c6c71f2dd31f",
+      "read_scope": "74-84 linked projection call"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-spec/src/compiler/assemble/project.rs",
+      "sha256": "1f73e98c5b6fa66ff3cf04ea35673c43a53cc8f99a95b356b49ece6ab8171a6e",
+      "git_blob": "9f1c0051833b1312beeb0059f3b8ce2049582baf",
+      "read_scope": "25-108 occurrence projection; no implicit dedup"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+      "sha256": "3e8e64a1833c6fefc7fe99e910c09943af7e8fe9624513e9bd54e6817d20b159",
+      "git_blob": "c08b8f7cf3ec25cb781836930993e0314e43464b",
+      "read_scope": "source/normal/simple/authored placement targeted contract searches; not full spec audit"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-cli/src/commands/init/helpers.rs",
+      "sha256": "68f284d2b09b894a798a1002f9953b7d9551b62dfcb971956db3f04734776a14",
+      "git_blob": "81a21d39626fa4496dfd3fcf0558f3d0d5cf172d",
+      "read_scope": "155-210 host consumer spec_format selected before regeneration"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-cli/tests/cli_init/init_package_host_format.rs",
+      "sha256": "5ab5e89c4630b387e40f5d445dd52fcb577873f6a9dc9070f72fcf593fbcff30",
+      "git_blob": "06ca45f22039fe306d9464f76160c9c6e9d2f4b9",
+      "read_scope": "full XML/Markdown real CLI fixtures and source/dependency snapshot assertions"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-cli/tests/cli_init.rs",
+      "sha256": "3632bed6c7a3c7e320fff4bdcdea747af8aa728a7658fc66b5f27c70a3e1a7bf",
+      "git_blob": "5d6fe31852ce826d9d9f2cf3699a875363975cc5",
+      "read_scope": "format/link/marker focused test declarations"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization.rs",
+      "sha256": "e9295ed540c54d8f77f43907d62c6484ff1d58586cab3211687758ab795d9cda",
+      "git_blob": "0b280f460285d7c54f97feac531eb2c0bd1a5f52",
+      "read_scope": "cross-package fixture and unresolved-precommit119-151; test inventory"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/boot_artifacts/tests_ir_characterization/g1_cases.rs",
+      "sha256": "25a9ccb9d433adceac1352ba4106fb159b565d6bd9b53f467961181c7d5382fc",
+      "git_blob": "81b11af24f6b28cbcd7be5dbcdb640e60bf74b59",
+      "read_scope": "1-101 source-placement, unit/whole-lane once, uncovered siblings; later test inventory"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-spec/src/compiler/link.rs",
+      "sha256": "6dd21c7a07bc0dc93460a7fe9dc3e4c7763686e8bfb03cd982ae83e29d5ad105",
+      "git_blob": "3fd2005b0e639a3f8b97d03187f074ecac0d5ae9",
+      "read_scope": "175-285 cross_root coverage map and normal_body_once call"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-spec/src/compiler/link/normal_once.rs",
+      "sha256": "be7f60955bc7767bf81ca7370277906836ff234aa7e3a5594215623e5b6577a4",
+      "git_blob": "49940e7c1fa4d1046a68bf3b64e743e4937b679a",
+      "read_scope": "full same-document qualified section/whole/preamble algorithm"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/install/bootgen/publication.rs",
+      "sha256": "a6c78a87ebcd6559764ce26e934409dee3cdc73d9b1330420d02d70cca461c16",
+      "git_blob": "234f85bd9cf71dc05f2900d7513400598bf757fa",
+      "read_scope": "full selected package member publication predicate"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/install/bootgen/node_dependency.rs",
+      "sha256": "44ea1ee31afef231d27f079ae8c3efdb247b3419cdf582a751aff43e9b3832bc",
+      "git_blob": "637b253e9c9ee44710e5fd0976417970727c2c2f",
+      "read_scope": "1-180 static unit authored expansion condition/callers"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/install/bootgen/transitive.rs",
+      "sha256": "0294524930f4c9c8ea63b71eff12caf78a54bd2a774a0658ec4154bea5d142b1",
+      "git_blob": "0e0a11d2747501a11d522eac0d3fd7a1c5cbb2ce",
+      "read_scope": "static_unit_members45-75 declaration→suggestion→default precedence"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/install/bootgen.rs",
+      "sha256": "5e8ae218ec7b42245b8f6049047ebaebab6538b94c29ec5021c680e75564c30f",
+      "git_blob": "386f4b0c45bb34747f7c67b987b5554591f16430",
+      "read_scope": "publish_node_boot guard and redirect-validation call sites"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+      "sha256": "08bf450db973b9f1522a4dfa60c3d64adf7c4a97706bf6c7b13e64dd5d91c361",
+      "git_blob": "30cf8621c13d1540a835f79b27d6350f5afec866",
+      "read_scope": "publish_node_boot guard before native candidate construction"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "sha256": "b902daa8d8b4d26db3d44b5be1720f878d7aa0251908a8e00283e761d145c8fb",
+      "git_blob": "5c97101f82bad268edf0bf240d4e4be2ca419fbf",
+      "read_scope": "collect_files497-529 and generated classifier533-545"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/install/tests_hybrid/g3_cases.rs",
+      "sha256": "ca994eac457cb1c61fd35e070f1205a3730ec7b9929d6220c94dd7cc4ec35d6e",
+      "git_blob": "e7c37258f1c44ab8d4b2e9d036fd11dc1527af32",
+      "read_scope": "test inventory plus228-330 actual source member snapshot/durable reread/version drift; explicit/suggested/default/dynamic case assertions"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/vibedeps/derived/g3_tests.rs",
+      "sha256": "11271e714fe58fc66784bbe71f8a90b446a939634da881153db5cf629c34f7aa",
+      "git_blob": "5050c1db0e1dbca6d1f7be9b931997e2958f3d46",
+      "read_scope": "full generated source exclusion test"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "docs/spec-compiler-static-xml-consumer.md",
+      "sha256": "9bfcdf92540a0c950351f1c7b07ca5cc3bf0515f9f4d64b4523832836909efac",
+      "git_blob": "483c1c71c4a49a105c1205919677a227fc23d89a",
+      "read_scope": "full authored semantics/placement/normal once documentation"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/evidence/M-06-G.1/accepted-2026-10-12.md",
+      "sha256": "9b5a6e42f7da81bc2e177074179d56aaddee5676b77d552b1a25dd5ee8d3b1e4",
+      "git_blob": "f3949fbedbe5cf9df0195e2ffadd6ae7e482d799",
+      "read_scope": "full historical root acceptance and native/runtime limits"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/evidence/M-06-G.1/post-extraction-log-manifest.json",
+      "sha256": "91b1ea89fd9f2576367877fa751021a6cbf60d8ab2533d9b90fe8b943ca99ca7",
+      "git_blob": "c5f0416af679107772217623e82977c44800aab6",
+      "read_scope": "historical selected test-log metadata, not rerun"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/evidence/M-06-G.2/accepted-2026-10-12.md",
+      "sha256": "5e17628219933f87373e99b07386f70d34f60b4b936743ed3bf7bab79d004c11",
+      "git_blob": "ec7b8d2b3eec5886e102b3367be784a5bf8c712f",
+      "read_scope": "full historical RED/GREEN scope and limits"
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/evidence/M-06-G.3/acceptance-2026-10-12-logs/CANDIDATE-REPORT.md",
+      "sha256": "e657ca206d25b440ef35ec8f9a8b64765070dc0b7872ed5717fc70fc1e13b7cc",
+      "git_blob": "8d56b15c60c29e9b20d35f5402e4f301a1f0e574",
+      "read_scope": "full substantive mechanisms/precedence/publication scope and historical evidence limits"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec",
+      "git_blob": "fb1c6386e2859a6e10b4085daf63ac60b055e234",
+      "read_scope": "standing rules already read in this continuing quiet worker; identity re-bound"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "campaigns/next-semantic-transfer-2026-11/ARCHITECTURE.md",
+      "sha256": "9b11a7bef4a67bd600b92c380ac81fd023d7290533c0fc1a501d34e20c4e2c01",
+      "git_blob": "e935cc3876353a0d99d69eaffff3074e7306285f",
+      "read_scope": "current foundation-first/app-frontier guidance; unrelated runtime source not read"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/old113-transfer-crosswalk.md",
+      "sha256": "f4ae7c0e255bf64bb99e388b07eb065e7cc549aaaf07fc95746edf1ff459d12a",
+      "git_blob": "105d142de70842f0bd430e391be37f76184fc368",
+      "read_scope": "prior report reused; only selected G123 classification considered"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/old113-transfer-crosswalk.json",
+      "sha256": "1d16fa6d79c2b66555aa537f5c47cb4b4ed2830e4093770e81d5cb717e94ef23",
+      "git_blob": "c3c081fe6f0fa0a1c858050c59f329c9848f8dd7",
+      "read_scope": "three exact unknown rows parsed and read"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/m06-transfer-crosswalk-review.md",
+      "sha256": "9534c8637207832794b34309984c9634fe066b0be282f8bb9b2bb9a6094ac86e",
+      "git_blob": "8e35d0f39ee3ce535c4a98edf480ae920ff8eb30",
+      "read_scope": "prior seven-row audit reused; no repeat/extrapolated acceptance"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/m06-transfer-crosswalk-review.json",
+      "sha256": "b7d00449e8b3f05af02422616443aa2c06770f8439f42ba33e65b7fd163d2567",
+      "git_blob": "179679038ddac9e0c3282dc9bf30037df3952f91",
+      "read_scope": "prior scope/identities reused"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F07-inline-anchor-opacity.md",
+      "sha256": "c840cb4a3686994ed56eff409a685eaec50208fc2971b93fe44eb51ac16dc451",
+      "git_blob": "7cb9a8ba80d63004b81317524824abb7d0749783",
+      "read_scope": "prior accepted narrow parser/cache boundary, not G123 proof"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F08-boot-attribution.md",
+      "sha256": "c56a272426a4968c8f20c6568f79155b035b78748a3e628edf4b4ec73fc0b1d8",
+      "git_blob": "14bd3c2dff189dd2e1138d06d50701a644fcaaa5",
+      "read_scope": "exact filename discovered; prior committed artifact attribution scope, not G123 proof"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-cli/tests/cli_spec_format.rs",
+      "sha256": "09c893438fba88b4a49c8449690145135e259746b64f8c5e04dc83637ab6fe66",
+      "git_blob": "d1a1c89ea88820ab84cc7da468772355629e9a4e",
+      "read_scope": "43-108 explicit Markdown→XML→Mixed ordinary install target fixture and227-252 CLI helper; source-only gate reuse candidate"
+    },
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "path": "crates/vibe-cli/src/cli/init.rs",
+      "sha256": "946e82f1bba8c0bf82f48135b1cc402b313ce20ad20576c530302520bde90494",
+      "git_blob": "6b2f623a40e3b6a9d8a680300b2a2d29c7165b54",
+      "read_scope": "103-112 actual normal-format/dynamic-link help"
+    }
+  ],
+  "immutable_pin_final_checks": [
+    {
+      "repo": "/fast/git/vibevm",
+      "commit": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
+      "object_type": "commit",
+      "matches_requested_pin": true
+    },
+    {
+      "repo": "/fast/git/v/vibevm-next",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "object_type": "commit",
+      "matches_requested_pin": true
+    }
+  ],
+  "accepted_adjacent_features": {
+    "F07": "d6147a94d is inline anchor/cache correctness; no G123 source payload/init/normal-once acceptance follows",
+    "F08": "7ed7e7256 is committed artifact occurrence attribution; it does not make compiler emit shared normal sections once or protect package members"
+  },
+  "missing_file_searches": [
+    {
+      "main_path": "docs/spec-compiler-static-xml-consumer.md",
+      "result": "absent at immutable main pin; no public documentation equivalence inferred merely from absence; parser/source rule independently traced"
+    },
+    {
+      "main_test_families": "G1 source fixture names, init_package_keeps_existing_xml_host_and_derived_slots, consumer_install_keeps_source_workspace_member_bytes",
+      "result": "no matches in targeted actual compiler/workspace/init test paths; no repository-wide external test absence claim"
+    }
+  ],
+  "hash_recipe": "SHA256 over raw git show PIN:PATH bytes; Git blob identity from git rev-parse PIN:PATH. Scope is bounded spans/search, not entire file audit.",
+  "standalone_G2_future_atom": {
+    "boundary": "Root consumer dialect → actual ordinary init package caller → existing Markdown/XML converter/publication owners → unchanged host dialect and unrelated/derived bytes; add only requested package slot.",
+    "minimal_production_owner": "crates/vibe-cli/src/commands/init/helpers.rs::generate_boot_artifacts; inspect current caller coupling before edit. No blanket bootgen rewrite and no source copy performed here.",
+    "input_policy": "Preserve explicit root consumer spec_format; retain current compatibility Mixed behavior for absent setting. Do not introduce old prototype version numbers or unrelated defaults.",
+    "frozen_source_fixture": {
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-cli/tests/cli_init/init_package_host_format.rs",
+      "registered_target": "vibe-cli integration cli_init; module init_package_host_format",
+      "tests": [
+        "init_package_host_format::init_package_keeps_existing_xml_host_and_derived_slots",
+        "init_package_host_format::init_package_keeps_existing_markdown_host_and_derived_slots"
+      ],
+      "status": "Both are prototype fixture definitions/evidence only, absent in inspected main. Future adoption must use current UserScratch/layout/version controls."
+    },
+    "existing_main_controls": [
+      {
+        "target": "cli_init",
+        "test": "init_package_boot_snippet_names_the_group_once",
+        "purpose": "Exact group marker, no duplicated org prefix."
+      },
+      {
+        "target": "cli_init_kinds",
+        "test": "the_nested_form_honours_link_in_a_new_and_an_existing_project",
+        "purpose": "Declared static/dynamic and default dynamic survive."
+      },
+      {
+        "target": "cli_spec_format",
+        "test": "redbook_polygon_follows_each_static_target_and_switches_without_an_orphan",
+        "purpose": "Existing real install uses Markdown, XML, then Mixed targets; reuse if converter/publication touched, not evidence init is fixed."
+      },
+      {
+        "target": "vibe-workspace lib",
+        "test": "boot_artifacts::tests::render_static_normal_differs_from_simple_on_the_same_file",
+        "purpose": "Ordinary semantics unaffected; G1 once behavior is separate."
+      }
+    ],
+    "independent_oracles": [
+      "New requested package manifest exists; no second/old package rewritten.",
+      "Existing XML host: STATIC.xml bytes preserved, STATIC.md absent, INDEX and all three generated instruction blocks still select XML.",
+      "Explicit Markdown and unspecified compatibility hosts: correct Markdown lane remains; no accidental XML file.",
+      "Snapshot nonempty vibedeps path→bytes before/after; unchanged host vibe.toml/vibe.lock, authored boot and unrelated source package files; only requested new package slot additions allowed.",
+      "Use both target forms/converted dependencies so a no-op fixture cannot pass without exercising actual converter selection; existing source fixture already seeds flow/install.",
+      "Repeat appropriate unaffected init/default/marker controls; no native Windows result invented."
+    ],
+    "suggested_future_commands_not_run": [
+      "cargo test -p vibe-cli --test cli_init init_package_host_format::init_package_keeps_existing_xml_host_and_derived_slots -- --exact",
+      "cargo test -p vibe-cli --test cli_init init_package_host_format::init_package_keeps_existing_markdown_host_and_derived_slots -- --exact",
+      "cargo test -p vibe-cli --test cli_init init_package_boot_snippet_names_the_group_once -- --exact",
+      "cargo test -p vibe-cli --test cli_init_kinds the_nested_form_honours_link_in_a_new_and_an_existing_project -- --exact"
+    ],
+    "sequence": "Independent of current application runtime. Required before later init/package enhancements consume this broken dialect boundary. G1/G3 remain separate obligations; crossing an actual G3 source-member fixture requires its own fix, not silent broadening of G2."
+  }
+}

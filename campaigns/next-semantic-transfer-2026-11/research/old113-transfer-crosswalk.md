@@ -1,8 +1,8 @@
 # Old 113 task semantic-transfer crosswalk
 
-Main pin `a344c6389fdb60a8db075f60b8a7c89712572916`; unaccepted common-app candidate excluded. Read-only, no builds or tests.
+Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. Latest G1/G2/G3 review uses accepted main `5d44c5104`. Unaccepted common-app runtime is excluded; the latest review ran no builds or tests.
 
-**Current counting result:** 113 old accepted IDs verified: **1 full semantic transfer,19partial accepted overlaps,19scopes with no accepted campaign delivery,74not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). **The exact global completed total remains unestablished; at least1is proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **1 full semantic transfer, 22 partial correspondences, 19 scopes with no accepted campaign delivery, 71 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). **The exact global completed total remains unestablished; at least1is proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -32,13 +32,13 @@ Exact old clause: “Drive/UNC/ADS/device roots, trailing dots, control bytes an
 
 ### M-01-A.3 — Preserve failures across compiler and prompt callers — accepted full
 
-**Root disposition supersedes the preliminary evidence gap below:** complete at its original internal-caller boundary, with compositional test limits explicitly recorded in [M-01-A.3 acceptance](m01-a3-transfer-acceptance.md).
+**Root disposition:** complete at its original internal-caller boundary, with compositional test limits explicitly recorded in [M-01-A.3 acceptance](m01-a3-transfer-acceptance.md).
 
 Accepted mapping: F03, F05; commits 6dafbac72, df040becb.
 
 **Implemented:** Real filesystem/embed/compiler and prompt consumers tested with typed refusals.
 
-**Remaining behavior/evidence:** F03/F05 supply real compiler/embed/prompt tests and may satisfy this narrow task. This bounded audit did not join the original caller inventory against every fixture. Full resource-query grammar/service is NOT a criterion of this task and must not be used to deny completion. Mark partial/provisional pending that matrix; no specific uncorrected caller is established here.
+**Accepted boundary:** the earlier missing caller/fixture matrix was resolved by the linked acceptance. Full resource-query grammar/service is not a criterion of this task and is not a reason to reopen its completed internal-caller boundary. The matrix and its compositional limits remain the evidence; there is no outstanding provisional-partial instruction for this row.
 
 Exact old clause: “Every inventoried caller has a result/refusal fixture.” (unverified_acceptance_matrix_not_demonstrated_behavior_gap).
 
@@ -168,7 +168,7 @@ Accepted mapping: F08; commits 7ed7e7256.
 
 Exact old clause: “Retain repeated occurrences, inclusion chains, source positions and exact capture/snapshot identities.” (explicit_task_step).
 
-## Other 98 rows
+## Other scopes and unresolved rows
 
 - M-01-B.1: Opaque prepared visible-source authority/capture service not delivered by F01/F03/F05 (private point locator expressly is not that object).
 - M-01-B.2: Full source-world/membership witness service remains outside accepted source slices.
@@ -188,7 +188,7 @@ Exact old clause: “Retain repeated occurrences, inclusion chains, source posit
 - M-05-G.1: Full configured solver/backend/workspace parity not accepted by kernel unit/differential gates.
 - M-05-G.2: Whole M05 activation/recovery/replay and failed-prefix coexistence exit not accepted.
 
-The remaining81 IDs are individually `unknown` in JSON. These are not assumed absent, not automatically already-main and not silently dropped. The bounded read does not cover every whole changes/migration/deployment/environment/machine/release contract.
+The 71 still-unreconciled IDs are individually `unknown` in JSON. These are not assumed absent, not automatically already-main and not silently dropped. The bounded read does not cover every whole changes/migration/deployment/environment/machine/release contract.
 
 F07 inline anchor/cache correction is accepted (`d6147a94d`) but is not a complete ordinary-CommonMark task. F04 secret/env improvements are accepted real behavior without automatically completing one old task each.
 
@@ -205,9 +205,19 @@ Preserved versions: `/tmp/nst-old113-transfer-crosswalk-before-root-correction.{
 
 ## Root reconciliation boundary
 
-Root verified the exact113ID set against the recovered remaining109 complement, all19pinned input/contract hashes and15implementation commit ancestry links. Intentional target alternatives (shared source inodes, literal percent spelling, avoiding an unconsumed proof wrapper) are accepted design decisions, not missing work merely because they differ from prototype types. Useful observable semantics still require their own decision/evidence. The remaining A3 caller matrix is being checked separately; no full-task count is manufactured from this provisional partition. Source runtime flags and the1056history census are unaffected.
+Root verified the exact113ID set against the recovered remaining109 complement, all19pinned input/contract hashes and15implementation commit ancestry links. Intentional target alternatives (shared source inodes, literal percent spelling, avoiding an unconsumed proof wrapper) are accepted design decisions, not missing work merely because they differ from prototype types. Useful observable semantics still require their own decision/evidence. The A3 caller matrix was accepted separately; only that proven full task contributes to the current lower bound. Source runtime flags and the1056history census are unaffected.
 
 
 ## M06 bounded update
 
-Seven formerly unknown rows were reconciled in [the M06 review](m06-transfer-crosswalk-review.md): five partial and two untransferred requested scopes. Root verified37pinned source/contract hashes and5baseline symbol/blob checks. Existing init link handling, nested-item conversion, raw-copy paths and standalone VibeTree/headless presentation are actual already-main subclauses. F07/F08 add accepted opaque quotations and occurrence attribution; no full source-classification/measurement/debugger task follows from those pieces. This reduces unknown accounting to74without claiming any extra complete task or fresh runtime execution.
+Seven formerly unknown rows were reconciled in [the M06 review](m06-transfer-crosswalk-review.md): five partial and two untransferred requested scopes. Root verified37pinned source/contract hashes and5baseline symbol/blob checks. Existing init link handling, nested-item conversion, raw-copy paths and standalone VibeTree/headless presentation are actual already-main subclauses. F07/F08 add accepted opaque quotations and occurrence attribution; no full source-classification/measurement/debugger task follows from those pieces. That review reduced the then-unknown partition to74 without claiming any extra complete task or fresh runtime execution; the later G1/G2/G3 update below further refines it.
+
+## G1/G2/G3 scoped follow-through
+
+[The three-row review](m06-g123-transfer-review.md) maps30 exact clauses against actual source and fixture definitions. Root verified57 pinned Git-object hashes and9 byte-identical pre-campaign comparisons. All three rows become partial because useful pieces already existed in main; this review transfers no new code and closes no whole task. Current partition is1full/22partial/19named untransferred/71unknown.
+
+- G1 still needs same-source section/preamble once coverage across normal contributions, preserving uncovered fragments and equal prose from different documents; ordinary simple/embed distinctions already work.
+- G2 ordinary init still hardcodes Mixed instead of reading the host consumer dialect, potentially replacing XML and disturbing derived state. The next narrow atom is the existing dialect adapter plus real XML/Markdown preservation cases.
+- G3 needs generated-payload exclusion in both source walks, authored static-zone projection and selected source-member publication protection. Existing multi-fragment retention and compiled-STATIC citation refusal must be preserved.
+
+These are source-derived gaps, not fresh runtime failures. G2 is independent of the current app runtime, while these foundations must precede their consuming package/init enhancements. Native Windows qualification remains explicitly unperformed.
