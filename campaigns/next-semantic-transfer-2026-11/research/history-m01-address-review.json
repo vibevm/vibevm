@@ -1,0 +1,1219 @@
+[
+  {
+    "commit": "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5",
+    "parent": "20e952e331ad6695971e404dc253f81526f11013",
+    "task": "M-01-A.1",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "main_comparator": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "prior_review_level": "inventory-only",
+    "proposed_review_level": "bounded-production-diff-and-test-source",
+    "whole_commit_reviewed": false,
+    "runtime_verified": false,
+    "product_acceptance": false,
+    "changed_path_count": 22,
+    "reviewed_product_paths": [
+      "crates/vibe-spec/src/address.rs",
+      "crates/vibe-spec/src/address/resource.rs",
+      "crates/vibe-spec/src/lib.rs",
+      "crates/vibe-spec/src/resolver.rs",
+      "crates/vibe-spec/src/resolver/resource.rs",
+      "crates/vibe-spec/src/resolver/source_map.rs"
+    ],
+    "reviewed_test_paths": [
+      "crates/vibe-spec/src/address/m_01_a_1_cases.rs"
+    ],
+    "reviewed_spec_paths": [
+      "vibevm/vibespecs/common/PROP-070-resource-resolution.xml"
+    ],
+    "reviewed_historical_evidence": [
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/acceptance-2026-10-12-logs/ADDRESS-COMPATIBILITY-REVIEW.md",
+        "extent": "bounded historical rationale/acceptance clauses; no raw-log validation or current acceptance"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/acceptance-2026-10-12-logs/CANDIDATE-REPORT.md",
+        "extent": "bounded historical rationale/acceptance clauses; no raw-log validation or current acceptance"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/accepted-2026-10-12.md",
+        "extent": "bounded historical rationale/acceptance clauses; no raw-log validation or current acceptance"
+      }
+    ],
+    "excluded_paths": [
+      {
+        "path": "FIXED-ISSUES.md",
+        "reason": "general historical incident/inventory record outside this bounded production/test review"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/acceptance-2026-10-12-logs/INVENTORY.md",
+        "reason": "general historical incident/inventory record outside this bounded production/test review"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/acceptance-2026-10-12-logs/address-family-after.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/acceptance-2026-10-12-logs/anchor-before.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/acceptance-2026-10-12-logs/anchor-final.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/acceptance-2026-10-12-logs/package-fmt-final.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/acceptance-2026-10-12-logs/post-anchor-a_selected_world_enforces_the_exact_locked_version.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/acceptance-2026-10-12-logs/post-anchor-descriptor_map_excludes_same_stem_raw_resources_without_changing_legacy_pairing.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/acceptance-2026-10-12-logs/xml-anchors.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.1/manifest.json",
+        "reason": "historical acceptance manifest; no revalidation of its claims/hashes in this audit"
+      },
+      {
+        "path": "specmap.json",
+        "reason": "generated traceability map; not semantic implementation evidence"
+      }
+    ],
+    "reviewed_evidence": [
+      {
+        "revision": "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5",
+        "path": "crates/vibe-spec/src/address.rs",
+        "blob_sha256": "658c6e7e0ce2b3517ac61efbc4da0263e67a706071d3fe603b841eb3d8a2f813",
+        "diff_sha256": "e4dfa6e106fd0d270681aad0f1577cb3961eb67672223d1a8a68e2decb0a9a67",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5",
+        "path": "crates/vibe-spec/src/address/m_01_a_1_cases.rs",
+        "blob_sha256": "ec9b890f3cc967ebe0ff89e26054c8d1c73acb9efe32d7d5847f4adce4b8a96f",
+        "diff_sha256": "f558cea876730aeb9004fb1c658d2f34d695679bde27717e6d7dab244c9c4a14",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5",
+        "path": "crates/vibe-spec/src/address/resource.rs",
+        "blob_sha256": "043256e54305d72aa2573f46c5d6321caf2e0165f62ea6635842c81079d08e22",
+        "diff_sha256": "682b9f8880abfae0dc6446cb3c07901b829f35740282b0040f4943b19f79a5e1",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5",
+        "path": "crates/vibe-spec/src/lib.rs",
+        "blob_sha256": "e66ba9daf2ff86c37ecbd3e7cb5ec99741be2a8779439b760f6390c440432a37",
+        "diff_sha256": "546aa50615f485bcc633099d5274a82eb3fd1dc4b9da09e8e8dbd0d228f926f9",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5",
+        "path": "crates/vibe-spec/src/resolver.rs",
+        "blob_sha256": "c4eafeb1be796351358b42c8d02f0bb1e44d1d0fe960dbb14b32d2637bde962f",
+        "diff_sha256": "3e57b6aca956b6651d35c667b72be8937ad9f4fc43c9e5749470ee1365136ba4",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5",
+        "path": "crates/vibe-spec/src/resolver/resource.rs",
+        "blob_sha256": "95bd7332206742218c8d7ee96ac091bba7442fe5722227207dd642dcd40b70b0",
+        "diff_sha256": "1adef4825446166ad5c660cb43f3b0ba19ef79765b8c565c474e146584415eed",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5",
+        "path": "crates/vibe-spec/src/resolver/source_map.rs",
+        "blob_sha256": "e09a123277524753a84f45f0cb307d5faac47ac6dd72b8e409d10709ce6edfc6",
+        "diff_sha256": "764f84adc23f8eb6ab982e0493b7fa3eae2aa3027e745b3a78ecfe513083f83a",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5",
+        "path": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+        "blob_sha256": "d21a0f224e765b25c774736638d5acd2b0eda6bee781f3ddef5c022dba0297dc",
+        "diff_sha256": "653ecc94333b4eeb8eadf49f48da4d741f08d6d846fe059539d9804444f0d946",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      }
+    ],
+    "tests_inspected": [
+      "selected_vibe_and_unique_abbreviated_stem_canonicalize",
+      "legacy_conversion_is_explicit_and_selected",
+      "mutated_legacy_anchor_cannot_publish_an_invalid_resource",
+      "refused_percent_empty_revision_and_wrong_version_are_distinct",
+      "duplicate_stem_and_two_forms_refuse_without_first_match",
+      "named_export_uses_separate_scheme_and_selected_authority",
+      "self_coordinate_is_unversioned_and_strict_read_needs_vibe_classification"
+    ],
+    "prior_source_observations": [
+      "Legacy SpecAddress is syntactic and publicly mutable; selected FileResolver already exists.",
+      "No separate strict selected Vibe/export value existed in this commit parent."
+    ],
+    "introduced_source_observations": [
+      "Private ResourceAddress carries classified logical identity, never held bytes or filesystem authority.",
+      "Strict Vibe construction checks selected version, descriptor map and canonical stem; legacy conversion is explicit and validates mutated anchor fields.",
+      "Named export construction binds matching PackageMeta/validated SourceExport row; does not read resource payload/headings."
+    ],
+    "final_source_observations": [
+      "address/resource.rs unchanged at pin; resource resolver only gained A2 checked-file preflight.",
+      "canonical_vibe_resource is used by live SourceQueryService/query/doc capture.",
+      "canonical_export_resource/convert_legacy_vibe_address have no production call found in scoped crate search beyond definitions (legacy conversion corpus remains)."
+    ],
+    "main_transfer_state": [
+      "Existing main selected-world/self/version semantics already overlap.",
+      "Strict ResourceAddress, descriptor classification and named-export family not transferred in F01/F03.",
+      "Keep main literal-percent legacy lookup; strict new URI grammar must not silently narrow old filesystem paths."
+    ],
+    "pinned_descendant_paths": [
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-core/src/manifest/package/source_export.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-spec/src/address/resource.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-spec/src/resolver/resource.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/service/document.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      }
+    ],
+    "main_comparator_paths": [
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/paths.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/observation.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/lookup.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/glob.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/embed.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/embed/read.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/doctree.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-lifecycle/src/agent/resolver.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-workspace/src/extension_world.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-install/src/visibility_projection.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/component.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/project/pinned.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/file/source_read.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      }
+    ],
+    "evidence_references": [
+      "/tmp/nst-history-m01-address-review.md",
+      "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5:vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/features/F01-source-paths.md",
+      "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/features/F03-source-observations.md"
+    ]
+  },
+  {
+    "commit": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+    "parent": "b7cf75a72b16b637fe4e45b25d7af29f5ee930e5",
+    "task": "M-01-A.2",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "main_comparator": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "prior_review_level": "inventory-only",
+    "proposed_review_level": "bounded-production-diff-and-test-source",
+    "whole_commit_reviewed": false,
+    "runtime_verified": false,
+    "product_acceptance": false,
+    "changed_path_count": 24,
+    "reviewed_product_paths": [
+      "Cargo.lock",
+      "crates/vibe-spec/Cargo.toml",
+      "crates/vibe-spec/src/resolver.rs",
+      "crates/vibe-spec/src/resolver/lookup.rs",
+      "crates/vibe-spec/src/resolver/portable.rs",
+      "crates/vibe-spec/src/resolver/resource.rs",
+      "crates/vibe-spec/src/resolver/source_map.rs"
+    ],
+    "reviewed_test_paths": [
+      "crates/vibe-spec/src/resolver/m_01_a_2_cases.rs"
+    ],
+    "reviewed_spec_paths": [
+      "vibevm/vibespecs/common/PROP-070-resource-resolution.xml"
+    ],
+    "reviewed_historical_evidence": [
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/CANDIDATE-REPORT.md",
+        "extent": "bounded historical rationale/acceptance clauses; no raw-log validation or current acceptance"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/accepted-2026-10-12.md",
+        "extent": "bounded historical rationale/acceptance clauses; no raw-log validation or current acceptance"
+      }
+    ],
+    "excluded_paths": [
+      {
+        "path": "FIXED-ISSUES.md",
+        "reason": "general historical incident/inventory record outside this bounded production/test review"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/id-extension-before.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/spec-fmt-final2.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/trailing-physical-before.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/verified-a1.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/verified-a2.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/verified-custom.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/verified-id.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/verified-pair.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/verified-selected.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/acceptance-2026-10-12-logs/xml-check.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.2/manifest.json",
+        "reason": "historical acceptance manifest; no revalidation of its claims/hashes in this audit"
+      },
+      {
+        "path": "specmap.json",
+        "reason": "generated traceability map; not semantic implementation evidence"
+      }
+    ],
+    "reviewed_evidence": [
+      {
+        "revision": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+        "path": "Cargo.lock",
+        "blob_sha256": "6b8f0b46095fa04efde10f7bd326b7d784a434fedb5c3a708e93bcc74927ce33",
+        "diff_sha256": "1d303d7f95b7fd4597a766e27e3c267f15b9ad519b778f00cc47bdc216530f11",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+        "path": "crates/vibe-spec/Cargo.toml",
+        "blob_sha256": "ec4c12e554eecf9346a88c8684f946b3bcbeaac663e665388e5c4a2279acca82",
+        "diff_sha256": "df1b4e84c31f97f9da975b68e3ba6450d040c2b59b9e62575b5a88919f4c1dbf",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+        "path": "crates/vibe-spec/src/resolver.rs",
+        "blob_sha256": "729a8925357b100462fab6f39ae44e615b87c9ec9d17b225c077ddee2594f678",
+        "diff_sha256": "3b35fc999f4402678c818264996459c97071f357dab4775ad2e12b6c86bb69f5",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+        "path": "crates/vibe-spec/src/resolver/lookup.rs",
+        "blob_sha256": "ced4a59a2b75fa7958452f599c7a13c00a3cecd2f19978ec638d69b843032a21",
+        "diff_sha256": "eadd4a377b2a306966553ae84549a20330c367a9f09a177b5f2c9afb20f810b3",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+        "path": "crates/vibe-spec/src/resolver/m_01_a_2_cases.rs",
+        "blob_sha256": "d380b90d42c7ff5c35e87ecdae479d98082471b7b1c7509ed41ade9e03cb3084",
+        "diff_sha256": "e6ccf5e322bcd1fc080a73732f6a1d7ddcbd5f8c604caa8ce737ef043c1c594e",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+        "path": "crates/vibe-spec/src/resolver/portable.rs",
+        "blob_sha256": "6a3d82e61d10183af6ff100baac59c063bf55561e0d3ced59e3bbb5c5c061f7b",
+        "diff_sha256": "cbc3a7c56de3422fee0b93e324cf11b39d9b217171c34061a5876bd84fa967d7",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+        "path": "crates/vibe-spec/src/resolver/resource.rs",
+        "blob_sha256": "54887819d9f372d4813f2809bc8af2106736a8707b6bafe1fed7ad43e2a175ea",
+        "diff_sha256": "9379effa9510f61db9924c67a12380910a6c87a8df95b330fcedfcfbc5c74037",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+        "path": "crates/vibe-spec/src/resolver/source_map.rs",
+        "blob_sha256": "751bb4c5e9a2968498844004de87569655b3d1dfad2306859720700ba3e15b90",
+        "diff_sha256": "3a19047a9b59c67440fae82849d1bda99c79a55ea548449a60f0ae4e497926bc",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+        "path": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+        "blob_sha256": "3a27031146db9f27d205035196dee5a0b7877d4717b9a49558cd2d76cdd55fcb",
+        "diff_sha256": "240ff82036eae477159d172ed7cfad22d8b7c530c186e07a1b50f431bf6a91e4",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      }
+    ],
+    "tests_inspected": [
+      "nested_portable_document_keeps_its_exact_logical_name",
+      "portable_refusals_precede_lookup_of_hostile_components",
+      "directory_file_case_and_nfc_aliases_refuse_instead_of_opening",
+      "symlinked_child_refuses_before_observing_outside_target",
+      "descriptor_rows_use_the_same_portable_component_and_identity_law",
+      "classified_strict_resource_refuses_a_symlinked_descriptor_output",
+      "layout_root_probe_does_not_follow_an_outside_symlink"
+    ],
+    "prior_source_observations": [
+      "Lookup joins paths and checks native entries; descriptor rows used local blacklist/lowercase output comparison."
+    ],
+    "introduced_source_observations": [
+      "Reuses SafeFS split_relative/identity_key/path_identity_key, preserves exact spelling and refuses case/NFC/physical extension aliases.",
+      "Pathname no-follow preflight is explicitly not a retained race-free content observation."
+    ],
+    "final_source_observations": [
+      "Portable/lookup behavior survives with A3 error propagation; final byte reading belongs to later held snapshot owner."
+    ],
+    "main_transfer_state": [
+      "F01 lexical path/slot/version/suffix admission and F03 capability traversal already implement much of the needed containment with stronger shared-source compatibility.",
+      "Portable sibling alias comparison is still missing in main held lookup, despite reusable SafeFS identity functions already existing.",
+      "Retain F03 root aliases/hardlinks/layout controls; do not replace them with pathname preflight or A2 symlink-as-layout-miss behavior."
+    ],
+    "pinned_descendant_paths": [
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-spec/src/resolver/portable.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-spec/src/resolver/lookup.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-spec/src/resolver/source_map.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      }
+    ],
+    "main_comparator_paths": [
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/paths.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/observation.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/lookup.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/glob.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/embed.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/embed/read.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/doctree.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-lifecycle/src/agent/resolver.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-workspace/src/extension_world.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-install/src/visibility_projection.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/component.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/project/pinned.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/file/source_read.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      }
+    ],
+    "evidence_references": [
+      "/tmp/nst-history-m01-address-review.md",
+      "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae:vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/features/F01-source-paths.md",
+      "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/features/F03-source-observations.md"
+    ]
+  },
+  {
+    "commit": "f6b2fb27add4142904f1622a69dafb836f08d252",
+    "parent": "6f4f3b1c7fff13a51e7a6040c4eee7a4fc9543ae",
+    "task": "M-01-A.3",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "main_comparator": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "prior_review_level": "inventory-only",
+    "proposed_review_level": "bounded-production-diff-and-test-source",
+    "whole_commit_reviewed": false,
+    "runtime_verified": false,
+    "product_acceptance": false,
+    "changed_path_count": 26,
+    "reviewed_product_paths": [
+      "crates/vibe-spec/src/embed.rs",
+      "crates/vibe-spec/src/resolver.rs",
+      "crates/vibe-spec/src/resolver/glob.rs",
+      "crates/vibe-spec/src/resolver/lookup.rs",
+      "crates/vibe-spec/src/resolver/portable.rs",
+      "crates/vibe-spec/src/resolver/read.rs"
+    ],
+    "reviewed_test_paths": [
+      "crates/vibe-spec/src/resolver/m_01_a_3_cases.rs",
+      "crates/vibe-spec/src/resolver/read.rs",
+      "crates/vibe-lifecycle/src/agent/resolver.rs"
+    ],
+    "reviewed_spec_paths": [
+      "vibevm/vibespecs/common/PROP-070-resource-resolution.xml"
+    ],
+    "reviewed_historical_evidence": [
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/CANDIDATE-REPORT.md",
+        "extent": "bounded historical rationale/acceptance clauses; no raw-log validation or current acceptance"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/accepted-2026-10-12.md",
+        "extent": "bounded historical rationale/acceptance clauses; no raw-log validation or current acceptance"
+      }
+    ],
+    "excluded_paths": [
+      {
+        "path": "FIXED-ISSUES.md",
+        "reason": "general historical incident/inventory record outside this bounded production/test review"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/duplicate-anchor-before.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/final2-a3.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/final2-compiler.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/final2-compiler_deferred.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/final2-embed_xml.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/final2-prompt.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/final2-prompt_selected.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/package-fmt-final2.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/prompt-before.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/read-final2.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/resolver-before.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/acceptance-2026-10-12-logs/xml-check.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-A.3/manifest.json",
+        "reason": "historical acceptance manifest; no revalidation of its claims/hashes in this audit"
+      },
+      {
+        "path": "specmap.json",
+        "reason": "generated traceability map; not semantic implementation evidence"
+      }
+    ],
+    "reviewed_evidence": [
+      {
+        "revision": "f6b2fb27add4142904f1622a69dafb836f08d252",
+        "path": "crates/vibe-lifecycle/src/agent/resolver.rs",
+        "blob_sha256": "d6a34239224ed740d996e4569b23b703eab3a64139bce0cb75cdc6b35ca01be0",
+        "diff_sha256": "4979e99ea09faa51ed8742d6ac39c2f74c87361f57000c1f64a8579d89cc538a",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "f6b2fb27add4142904f1622a69dafb836f08d252",
+        "path": "crates/vibe-spec/src/embed.rs",
+        "blob_sha256": "6ca2f21df1637ee54d3bd2baa935d306bbb21440c441a4a586a61b8e84b1dbdb",
+        "diff_sha256": "a7141490d45b9578dafb2a5da9cd989409a3daafc7072de31bac31bec90d2ad7",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "f6b2fb27add4142904f1622a69dafb836f08d252",
+        "path": "crates/vibe-spec/src/resolver.rs",
+        "blob_sha256": "a9b790d9fecb30fee697d54db43012c326a029605638a2c297d86b0e51202774",
+        "diff_sha256": "382327f03251e3623ae86efd00d20ba76effc226ff23206c1e37a778f435733b",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "f6b2fb27add4142904f1622a69dafb836f08d252",
+        "path": "crates/vibe-spec/src/resolver/glob.rs",
+        "blob_sha256": "eb4d80b55480c890d70d6caa1ab7ed6bca0cc26b51aea8529232f566655b83a5",
+        "diff_sha256": "960392ea46ea8584c30fab4fdb4203625eb947dbc78c0fda5ee15cb7ab570826",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "f6b2fb27add4142904f1622a69dafb836f08d252",
+        "path": "crates/vibe-spec/src/resolver/lookup.rs",
+        "blob_sha256": "5628eccbe15a4fd7ebb2eef3babd529c325fe2b7832ccf2acf50a1b89a2a75d0",
+        "diff_sha256": "18d32d4d7deb59448fc0cf5404705c85141f17bacddd31c24bf325dfb23ff86d",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "f6b2fb27add4142904f1622a69dafb836f08d252",
+        "path": "crates/vibe-spec/src/resolver/m_01_a_3_cases.rs",
+        "blob_sha256": "e59f9f0d062a872e5688533382c413a625923d34c364af825b6dde10005d34cf",
+        "diff_sha256": "b2357bbd475ab9bc340b440b5cdd97b742caf9af144e9de2a4594ba483ea3397",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "f6b2fb27add4142904f1622a69dafb836f08d252",
+        "path": "crates/vibe-spec/src/resolver/portable.rs",
+        "blob_sha256": "54dce72d371063237eacafef8d509b248a1d147e01e63152d630c3805b313b9f",
+        "diff_sha256": "0b0e97e02ad4a58ddbc536ea3928e7ab029be695880ae57829710dc74b3da718",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "f6b2fb27add4142904f1622a69dafb836f08d252",
+        "path": "crates/vibe-spec/src/resolver/read.rs",
+        "blob_sha256": "357a9f1245f7c97014bf70e307371a79d4321351393d9b9763c63bec4d1cf797",
+        "diff_sha256": "2619ed80616b69bcaa09b29ae227ceb1f4a5e54941f899a793c0540e9802abac",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "f6b2fb27add4142904f1622a69dafb836f08d252",
+        "path": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+        "blob_sha256": "532c0a4150e630b71e7df59b9c7e09f946258a0019ff7913b32066916863521c",
+        "diff_sha256": "675979caef1dd289ef64b6396b4e9fff6292dc69c70efaa8c77232f82e9d50d8",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      }
+    ],
+    "tests_inspected": [
+      "absent_document_remains_not_found",
+      "non_directory_installed_slot_is_not_a_missing_package",
+      "ambiguous_glob_document_refuses_instead_of_disappearing",
+      "pattern_member_collision_refuses_instead_of_choosing_a_slot",
+      "unreadable_pattern_slot_does_not_disappear_from_set",
+      "duplicate_anchor_does_not_return_the_first_section",
+      "descriptor_owned_embed_read_refuses_symlinked_output",
+      "compiler_facing_source_preserves_content_and_distinct_refusals",
+      "changing_bytes_between_reads_is_unstable_not_absent",
+      "a_non_file_source_is_unreadable_not_absent",
+      "provider_prompt_unreadable_is_not_reported_missing",
+      "provider_prompt_duplicate_anchor_never_returns_first_body"
+    ],
+    "prior_source_observations": [
+      "Directory errors flattened by read_dir_or_empty; glob resolve_doc.is_ok silently excluded every failure.",
+      "Duplicate matched package names selected lexical first; duplicate requested anchor selected first body."
+    ],
+    "introduced_source_observations": [
+      "Only actual DocNotFound excludes a matched member; unreadable, unstable, ambiguity and duplicate-anchor causes propagate.",
+      "Both embed/compiler and selected-provider prompt use the same underlying reader.",
+      "Initial read helper compares two fs::read buffers after preflight, explicitly without retained handle guarantees."
+    ],
+    "final_source_observations": [
+      "Duplicate-anchor check moved into embed/selection.rs; glob/portable A3 code unchanged at pin.",
+      "Production read.rs now uses held SafeFS StableFileSnapshot with64MiB cap and single-link default; old two-read helper remains cfg(test)-only.",
+      "Classified selected-IR path is later work beyond this commit; no blanket coverage of it is claimed."
+    ],
+    "main_transfer_state": [
+      "F03 supplies shared-inode coherent byte reads/no-follow metadata and failure propagation for point reads, without new source ownership or arbitrary cap.",
+      "Main still lacks requested duplicate-anchor refusal and still swallows/deduplicates failures in legacy glob.",
+      "Exact unreadable/unstable enum distinctions not fully copied; main uses SourceObservation.",
+      "Wildcard duplicate semantics need explicit compatibility decision, since lexical survivor is incumbent policy, not an unlabelled accidental refactor."
+    ],
+    "pinned_descendant_paths": [
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-spec/src/resolver/read.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-spec/src/resolver/glob.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-spec/src/embed.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-spec/src/embed/selection.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-safefs/src/file/bounded.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      }
+    ],
+    "main_comparator_paths": [
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/paths.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/observation.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/lookup.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/glob.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/embed.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/embed/read.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/doctree.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-lifecycle/src/agent/resolver.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-workspace/src/extension_world.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-install/src/visibility_projection.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/component.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/project/pinned.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/file/source_read.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      }
+    ],
+    "evidence_references": [
+      "/tmp/nst-history-m01-address-review.md",
+      "f6b2fb27add4142904f1622a69dafb836f08d252:vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/features/F01-source-paths.md",
+      "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/features/F03-source-observations.md"
+    ]
+  },
+  {
+    "commit": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+    "parent": "f6b2fb27add4142904f1622a69dafb836f08d252",
+    "task": "M-01-B.1",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "main_comparator": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "prior_review_level": "inventory-only",
+    "proposed_review_level": "bounded-production-diff-and-test-source",
+    "whole_commit_reviewed": false,
+    "runtime_verified": false,
+    "product_acceptance": false,
+    "changed_path_count": 29,
+    "reviewed_product_paths": [
+      "Cargo.lock",
+      "crates/vibe-install/Cargo.toml",
+      "crates/vibe-install/src/lib.rs",
+      "crates/vibe-install/src/visibility_projection.rs",
+      "crates/vibe-workspace/src/extension_world.rs",
+      "crates/vibe-workspace/src/lib.rs",
+      "crates/vibe-workspace/src/source_query/capture.rs",
+      "crates/vibe-workspace/src/source_query/mod.rs",
+      "crates/vibe-workspace/src/source_query/visibility.rs"
+    ],
+    "reviewed_test_paths": [
+      "crates/vibe-workspace/src/source_query/m_01_b_1_cases.rs",
+      "crates/vibe-workspace/src/source_query/mod.rs",
+      "crates/vibe-install/src/lib.rs",
+      "crates/vibe-install/src/visibility_projection.rs"
+    ],
+    "reviewed_spec_paths": [
+      "vibevm/vibespecs/common/PROP-070-resource-resolution.xml"
+    ],
+    "reviewed_historical_evidence": [
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/CANDIDATE-REPORT-FINAL4.md",
+        "extent": "bounded historical rationale/acceptance clauses; no raw-log validation or current acceptance"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/accepted-2026-10-12.md",
+        "extent": "bounded historical rationale/acceptance clauses; no raw-log validation or current acceptance"
+      }
+    ],
+    "excluded_paths": [
+      {
+        "path": "FIXED-ISSUES.md",
+        "reason": "general historical incident/inventory record outside this bounded production/test review"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/final4-friends.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/final4-install_bridge.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/final4-install_private.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/final4-owner_order.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/final4-owner_scope.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/final4-package-fmt.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/final4-private.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/final4-source_query.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/final4-workspace-fmt.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/final4-xml.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/public-bypass-after2.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/public-bypass-before.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/acceptance-2026-10-12-logs/root-specmap-final.log",
+        "reason": "historical execution log; not inspected or replayed in this audit"
+      },
+      {
+        "path": "campaigns/next/evidence/M-01-B.1/manifest.json",
+        "reason": "historical acceptance manifest; no revalidation of its claims/hashes in this audit"
+      },
+      {
+        "path": "specmap.json",
+        "reason": "generated traceability map; not semantic implementation evidence"
+      }
+    ],
+    "reviewed_evidence": [
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "Cargo.lock",
+        "blob_sha256": "aeeb33d4e91e751b2a2b85e5b7d9b0896a19974680164eb18f1fba41fdd6da98",
+        "diff_sha256": "d2fead2330fbb5eaaeb1ff592e36145385910020b0b51c18abb8c034408ffbbb",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "crates/vibe-install/Cargo.toml",
+        "blob_sha256": "10de2a88e991bc312fd434ab258700855f18e28e4ae8f8c2be0171ac4f1d2887",
+        "diff_sha256": "78d43e91316bdd08c5a02d65bb8fd4fbca5d86d74553cc5fcd2b336b65995bd1",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "crates/vibe-install/src/lib.rs",
+        "blob_sha256": "4f6a7f8198067ba29e83a91c4eae57b3643ddbfc7b395ad65fcd7c96a44fcadd",
+        "diff_sha256": "79e8d1a62865cb5d5ebea7252c25bcaa3d0a8ea66a96e1e4c2c70a69632a5d9a",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "crates/vibe-install/src/visibility_projection.rs",
+        "blob_sha256": "e2bad4d7dfce2575230b84bc9aeb7afd36e7b46078e51df235e588221bc94f15",
+        "diff_sha256": "6a55845ae0d561aa19c32add3126205363c05eab23b07276dd7d1ac62cd5fd31",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "crates/vibe-workspace/src/extension_world.rs",
+        "blob_sha256": "682527e5560ffe661382375192eef895c7cde93a8135805ecbea1537181f34f5",
+        "diff_sha256": "792c45ec1fec47edd34a16923ae6ab68f91fb40aee6fcc59c9e65cd2dcf0e27b",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "crates/vibe-workspace/src/lib.rs",
+        "blob_sha256": "6ec89fbb08f8c71b3f33ff9195890868eae4460f55b8071dff951e44d0950cff",
+        "diff_sha256": "90a303d7d3a153bd94da9e953afbc96c5416d86ab6eea5596f081dcf89d200aa",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "crates/vibe-workspace/src/source_query/capture.rs",
+        "blob_sha256": "9e6c1fdf2309cb3b4436bd5bfb8b03ff98c79ee91737743be018051b6f33ce8d",
+        "diff_sha256": "7f6a70ff90ea70801370f8fdd69cc104139ca30860aa116cbfafca449910cecd",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "crates/vibe-workspace/src/source_query/m_01_b_1_cases.rs",
+        "blob_sha256": "699eda6f67cd6d8ad9fa6a7673af2430d06f41caef2fa08fc13f428205d73542",
+        "diff_sha256": "71fbd53342dc76279ef2b178612adc390ed3983073fe208de58314ecc735e7fd",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "crates/vibe-workspace/src/source_query/mod.rs",
+        "blob_sha256": "11840de3fe99fc442dec73f40961e59058ec373a4a87e05b029491eef205020b",
+        "diff_sha256": "5fc28e20affce387fd566a62cb12ea7e33c7a22ef0d902afda53219deeeb10cc",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "crates/vibe-workspace/src/source_query/visibility.rs",
+        "blob_sha256": "b06b5ba23c9b64b0be2c709084f10483b373cbd28a348ff4a3016556e2f8509d",
+        "diff_sha256": "7a0b41bd6ec94d2baea7882167cdea65507739fddd1083b737a53352b81d9f67",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      },
+      {
+        "revision": "e695bc76e2d5cb063742c26b6809247c19c85b74",
+        "path": "vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+        "blob_sha256": "eaa47210e4aa0bebb2e5add330f1886eb8e7e13972ea823887f2f99834c38408",
+        "diff_sha256": "a6b275bf7908ed57aa28777eab8459f36255081f1a06ab136a81313b89c2f662",
+        "extent": "changed production/test/spec lines with supporting context; hash identifies full blob, not a whole-file review claim"
+      }
+    ],
+    "tests_inspected": [
+      "member_self_and_admitted_dependency_bind_exact_captured_roots",
+      "missing_capture_is_unavailable_without_provider_or_cache_effect",
+      "hidden_and_unselected_sources_never_gain_a_capture_grant",
+      "descriptor_or_manifest_identity_mismatch_refuses_prepared_capture",
+      "hidden_manifest_capture_cannot_widen_the_owner_visibility_input",
+      "public_raw_visible_set_cannot_promote_private_transitive_member",
+      "member_self_is_its_own_host_in_an_empty_selected_world",
+      "a_visible_id_outside_this_owner_cannot_be_selected",
+      "PreparedVisibleSourceAuthority doctest: private transitive, graph root/edge/version drift and direct positive",
+      "prepare_visible_source_authority doctest: missing capture/requested invisible refusal"
+    ],
+    "prior_source_observations": [
+      "Existing owner/selected world and visibility analysis existed, but no source_query binding module."
+    ],
+    "introduced_source_observations": [
+      "BoundSourceInputs recomputes owner visibility over captured epoch-matched manifests, checks requested subset and filters hidden outputs.",
+      "Prepared captures rehash supplied bytes/size and bind manifest/root/version/descriptor identities without provider/hydration port.",
+      "Separate install wrapper checks member graph roots/membership/versions/ordered edges and remains private-field authority carrier."
+    ],
+    "final_source_observations": [
+      "Live CLI/MCP source query goes through WitnessedSourceWorld and workspace BoundSourceInputs; selected visibility/capture semantics survive.",
+      "PreparedVisibleSourceAuthority and prepare_visible_source_authority have only definitions/reexports/Debug/doctest references found; no production consumer at pin.",
+      "Later preparation/continuity actually captures selected membership/lock/descriptor snapshots; public SourceProven branch remains unavailable."
+    ],
+    "main_transfer_state": [
+      "Main has owner worlds/core visibility/install projection and selected resolver callers, but no B1 source query capture/service family.",
+      "F01/F03 are not selected membership/visibility/descriptor proofs.",
+      "Preserve reachability-vs-visibility and logical-vs-captured distinctions at actual owner seam; do not import unused outer wrapper as prerequisite."
+    ],
+    "pinned_descendant_paths": [
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-install/src/lib.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-install/src/visibility_projection.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-workspace/src/source_query/capture.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-workspace/src/source_query/mod.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-workspace/src/source_query/visibility.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/service.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/service/preparation.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/service/preparation/dependencies.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-workspace/src/source_query/capture/continuity/service/preparation/membership.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-cli/src/commands/spec/mod.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      },
+      {
+        "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+        "path": "crates/vibe-mcp/src/tools/read_spec.rs",
+        "extent": "relevant named functions/call-path portions only; no review-credit for whole introducing commit"
+      }
+    ],
+    "main_comparator_paths": [
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/paths.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/observation.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/lookup.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/resolver/glob.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/embed.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/embed/read.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-spec/src/doctree.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-lifecycle/src/agent/resolver.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-workspace/src/extension_world.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-install/src/visibility_projection.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/component.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/project/pinned.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      },
+      {
+        "revision": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+        "path": "crates/vibe-safefs/src/file/source_read.rs",
+        "extent": "relevant source functions/definitions described in Markdown report"
+      }
+    ],
+    "evidence_references": [
+      "/tmp/nst-history-m01-address-review.md",
+      "e695bc76e2d5cb063742c26b6809247c19c85b74:vibevm/vibespecs/common/PROP-070-resource-resolution.xml",
+      "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/features/F01-source-paths.md",
+      "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/features/F03-source-observations.md"
+    ]
+  }
+]

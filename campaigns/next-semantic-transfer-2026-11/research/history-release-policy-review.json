@@ -1,0 +1,210 @@
+{
+  "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "main_comparator": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+  "report": "campaigns/next-semantic-transfer-2026-11/research/history-release-policy-review.md",
+  "commit_count": 13,
+  "runtime_validation": "not-run",
+  "acceptance": "none; root review required",
+  "rows": [
+    {
+      "sha": "cbedec9051d6ea40d80c7c9d676a2c5748e7a63a",
+      "subject": "docs(tool): use the published Linux codegen archive",
+      "reviewed_paths": [
+        "vibevm/vibepacks/org.vibevm.ai-native/jtd-codegen/v1.0.0/README.md"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Replace tarball install with zip/unzip/chmod, HTTP failure and archive cleanup.",
+      "classification": "documentation-repair",
+      "review_level": "bounded-record-document-content-classified",
+      "current_source_observation": "Final v1.1.0 README retains correction; main v1.0.0 already has zip/unzip/chmod.",
+      "exclusions_uncertainty": "No asset download or installer execution; only remaining curl -f/cleanup differences observed.",
+      "report_section": "R1"
+    },
+    {
+      "sha": "7a9833dd01bba2df125b2557cd4dd8e3e9505e8c",
+      "subject": "docs(release): accept scoped bootstrap contribution records",
+      "reviewed_paths": [
+        "vibevm/vibespecs/changes/local-source-retrieval/release-impact.json",
+        "vibevm/vibespecs/changes/originating-publication-ownership/release-impact.json",
+        "vibevm/vibespecs/changes/preview-accounting-foundation/release-impact.json",
+        "vibevm/vibespecs/changes/source-traceability-maintenance/release-impact.json"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Accept four bootstrap accounts with exact central-review references; add existing publish_new_in failure-boundary impact.",
+      "classification": "scoped-contribution-record-acceptance",
+      "review_level": "bounded-record-document-content-classified",
+      "current_source_observation": "Final central-review hashes match; create_new.rs delegates to proved publication and checks originating identity.",
+      "exclusions_uncertainty": "Reviews absent at acceptance commit but retained at pin; accepted account is not runtime or DP2 acceptance.",
+      "report_section": "R2"
+    },
+    {
+      "sha": "a7b3612387bbc2d1518b78cd30ce9f1db95040af",
+      "subject": "docs(release): account for bootstrap record publication",
+      "reviewed_paths": [
+        "vibevm/vibespecs/changes/bootstrap-accounting-record-maintenance/release-impact.json"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Add accepted no-impact record for publication of four prior contribution accounts.",
+      "classification": "accounting-of-accounting",
+      "review_level": "bounded-record-document-content-classified",
+      "current_source_observation": "Final referenced central review hash matches and explicitly retains separate native/docs/runtime obligations.",
+      "exclusions_uncertainty": "Review absent at record commit; no native checker executed. No feature is delivered by accounting metadata.",
+      "report_section": "R2"
+    },
+    {
+      "sha": "e084af6bb24d0fe26cf784c0fe2096d71ab059a9",
+      "subject": "docs(policy): bind mutable next version and public distribution hold",
+      "reviewed_paths": [
+        "VIBEVM-SPEC.md",
+        "vibevm/vibespecs/common/PROP-000.xml",
+        "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+        "vibevm/vibespecs/modules/vibe-resolver/PROP-003-dep-evolution.xml"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Replace no-users/current-1.0 premise with DP1 users, mutable NEXT 1.1 line, retained identities and public hold.",
+      "classification": "historical-policy-reconciliation",
+      "review_level": "bounded-contract-content-classified",
+      "current_source_observation": "Final source retains policy; target PROP-000 lacks this NEXT cohort/hold block.",
+      "exclusions_uncertainty": "No migration/schema/slot change implemented; historical version/authority is not current owner authorization.",
+      "report_section": "R3"
+    },
+    {
+      "sha": "ffb8ff8bcf171dd49173265f3ba2d5f5b3ebefeb",
+      "subject": "docs(publish): define exact subject and effect plan",
+      "reviewed_paths": [
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Define exact subject, framed digest, complete pure effect partitions, smoke statuses and distinct approval/journal.",
+      "classification": "publication-contract-introduction",
+      "review_level": "bounded-contract-content-classified",
+      "current_source_observation": "Final public subject/plan validators exist; private protected call driver says no public/CLI invocation; incumbent release path remains.",
+      "exclusions_uncertainty": "Source-only partial inspection; current plan is schema 3; no remote or smoke execution.",
+      "report_section": "R5"
+    },
+    {
+      "sha": "4f664bd2ca0cde13dc749936bfe02f7c353833f5",
+      "subject": "docs(next): retain M06A interval impact candidates",
+      "reviewed_paths": [
+        "vibevm/vibespecs/changes/distribution-smoke-preparation/release-impact.json",
+        "vibevm/vibespecs/changes/explicit-source-interpretation-and-migration/release-impact.json",
+        "vibevm/vibespecs/changes/fake-publication-owner-journal/release-impact.json",
+        "vibevm/vibespecs/changes/fixed-local-build-package-and-linked-output/release-impact.json",
+        "vibevm/vibespecs/changes/init-package-link-and-format/release-impact.json",
+        "vibevm/vibespecs/changes/local-source-cache-attestation/release-impact.json",
+        "vibevm/vibespecs/changes/ordinary-commonmark-structure-and-exports/release-impact.json",
+        "vibevm/vibespecs/changes/protected-install-tree-witness-and-attach/release-impact.json",
+        "vibevm/vibespecs/changes/protected-validate-lifecycle/release-impact.json",
+        "vibevm/vibespecs/changes/raw-xml-resources-and-selected-slot-map/release-impact.json",
+        "vibevm/vibespecs/changes/reserved-bound-deploy-bridge/release-impact.json",
+        "vibevm/vibespecs/changes/reserved-owner-lifetime-and-retired-attach/release-impact.json",
+        "vibevm/vibespecs/changes/selected-source-consumer-routing/release-impact.json"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Add thirteen bounded interval impact records separating public APIs, opt-in source changes, fixed owners and unverified documentation/platform claims.",
+      "classification": "candidate-impact-inventory",
+      "review_level": "bounded-record-document-content-classified",
+      "current_source_observation": "All thirteen remain candidate with only unverified evidence at pin; fixed Cargo constants and test-only offline dispatch boundaries confirmed.",
+      "exclusions_uncertainty": "Most named implementation routes not audited; source/query/installer main overlap remains open; records do not prove their claims.",
+      "report_section": "R4"
+    },
+    {
+      "sha": "384574ec80b402391d9fa666aa4ffc13060672fa",
+      "subject": "docs(next): account for public publication journal root borrow",
+      "reviewed_paths": [
+        "vibevm/vibespecs/changes/fake-publication-owner-journal/release-impact.json"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Recognize public LifecycleLease::publication_journal_project API and change user/docs impact to impact.",
+      "classification": "impact-undercount-correction",
+      "review_level": "bounded-record-document-content-classified",
+      "current_source_observation": "lease.rs:244-249 publicly returns held Project and documents no remote authority; target lacks accessor.",
+      "exclusions_uncertainty": "No live publication route implied; no runtime tests.",
+      "report_section": "R4"
+    },
+    {
+      "sha": "15ceff71e64a8ffbd0eaf9afd03cbf92d4ea66fe",
+      "subject": "docs(publish): bind exact successor release metadata",
+      "reviewed_paths": [
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Bind desired target/tag/draft/name/body/prerelease to effect plan and independent post-observation; reject silent old-epoch upgrade.",
+      "classification": "exact-successor-contract-correction",
+      "review_level": "bounded-contract-content-classified",
+      "current_source_observation": "Final planner carries fields and calls.rs compares full successor metadata.",
+      "exclusions_uncertainty": "Private driver, later schema 3; no public protected execution proven.",
+      "report_section": "R5"
+    },
+    {
+      "sha": "5e15c1784fe6b97b0b5f176f89709ac80f4d8be5",
+      "subject": "docs(publish): name epoch-two plan digest",
+      "reviewed_paths": [
+        "vibevm/vibespecs/common/PROP-073-publication-authority.xml"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Rename effect-plan digest epoch-one to epoch-two.",
+      "classification": "epoch-label-correction",
+      "review_level": "bounded-contract-content-classified",
+      "current_source_observation": "Final planner uses schema 3; this is a historical correction rather than a current standalone format feature.",
+      "exclusions_uncertainty": "No runtime/code change in commit; complete format migration not reviewed.",
+      "report_section": "R5"
+    },
+    {
+      "sha": "8b2a5f31c6c975066c33286c77c5f66eb74ef4f7",
+      "subject": "docs(publish): require protected package Git owner journal",
+      "reviewed_paths": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Require package-specific pre-effect journal, exact payload/refs/objects, separate create/push and uncertain-response recovery.",
+      "classification": "protected-package-owner-contract",
+      "review_level": "bounded-contract-content-classified",
+      "current_source_observation": "Private create/push drivers record Pending and compare responses/observations; create driver explicitly lacks live/public route.",
+      "exclusions_uncertainty": "Main ordinary publisher is byte-identical; no complete protected-user journey audited.",
+      "report_section": "R6"
+    },
+    {
+      "sha": "45a44c43480c29848dd2a35114822f699ae72073",
+      "subject": "docs(publish): bind exact protected Git object bytes",
+      "reviewed_paths": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Bind exact commit/tag bytes and retained parent closure; verify type/size/SHA/OID; matching no-op creates no new tag.",
+      "classification": "git-object-custody-contract",
+      "review_level": "bounded-contract-content-classified",
+      "current_source_observation": "Selected object cold-inspection code verifies retained commit/tag type/size/bytes; parentless and existing-main entry points exist.",
+      "exclusions_uncertainty": "Parent closure implementation and all profiles not fully audited; no Git command executed by audit.",
+      "report_section": "R6"
+    },
+    {
+      "sha": "eb55c8f3799519258db0fa9da874381a44d24d6b",
+      "subject": "docs(publish): require scoped package Git approval",
+      "reviewed_paths": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Separate Ready from authority; host-selected exact Mode A approval, shared one-use marker and fresh expiry check.",
+      "classification": "scoped-approval-contract",
+      "review_level": "bounded-contract-content-classified",
+      "current_source_observation": "ApprovalHome selects settings Project; redeem.rs rechecks bytes/root/Ready/expiry and creates/readbacks marker.",
+      "exclusions_uncertainty": "Historical hold is not new authority; full trust-root and cross-domain collision audit not performed.",
+      "report_section": "R6"
+    },
+    {
+      "sha": "11a714b748f3eee1679ef9327385a8ccd3cd5c08",
+      "subject": "docs(publish): define protected package Git no-op",
+      "reviewed_paths": [
+        "vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml"
+      ],
+      "diff_read": "complete",
+      "brief_change": "Define NoEffectCompleted distinct from push Landed; two stable exact observations, no write or approval redemption.",
+      "classification": "no-effect-attribution-contract",
+      "review_level": "bounded-contract-content-classified",
+      "current_source_observation": "Private result path uses two local-bare observations and no approval parameter; ordinary publisher exists identically on main.",
+      "exclusions_uncertainty": "Arbitrary hosted remote no-op support unproved; no runtime or native platform evidence.",
+      "report_section": "R6"
+    }
+  ]
+}

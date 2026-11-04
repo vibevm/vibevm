@@ -1,0 +1,655 @@
+[
+  {
+    "sha": "bd5f645278852197bd715346cb22539f490add2a",
+    "subject": "docs(api): define domain authority and observability obligations",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "dcebb0518432d075ededff2a16fb79a0ee694ff62a27b702f56cc9681a4a0e04",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Adds six planned laws: existing domain owners, observation completeness/provenance, view epochs, independent observation/authorization/redaction axes, nonautomatic transport seams, finite authority-map consistency.",
+    "bounded_classification": "Expands planned domain-authority/observability duties; explicitly denies delivered facade or second universal engine.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-mcp/src/tools/migration_plan.rs",
+        "crates/vibe-orchestrator/src/machine_view/page_wire.rs"
+      ],
+      "observation": "Selected concrete implementations preserve domain delegation and unverified observations; universal operation/model closure was not established."
+    },
+    "main_comparison": "Main has incumbent domain owners and MCP tools; exact PROP-080 path is absent.",
+    "exclusions_uncertainty": "No exhaustive authority-map, API catalogue or ETO implementation audit. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F1",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "dc1fc9de708f1398612ff00ecc4a0254fcf4bc94",
+    "subject": "docs(release): accept scoped architecture source contributions",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/changes/architecture-law-traceability/release-impact.json",
+      "vibevm/vibespecs/changes/mailbox-proof-citation/release-impact.json",
+      "vibevm/vibespecs/changes/role-classification-eto-laws/release-impact.json"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "03b1ddfdb54300be0f91d63744bcdc1e44a43816645b4bb990add88e42264175",
+    "review_level": "bounded-record-content-classified",
+    "change": "Creates three release-impact records separating desired source laws from unchanged mailbox citation and source-index maintenance; accepted statuses expressly exclude new runtime guards/full API delivery.",
+    "bounded_classification": "Scoped historical acceptance record; no runtime implementation in this commit.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "docs/releases/developer-preview-1-to-2/evidence/architecture-source-review.md",
+        "docs/releases/developer-preview-1-to-2/evidence/architecture-verification.md",
+        "docs/releases/developer-preview-1-to-2/evidence/architecture-central-review.md"
+      ],
+      "observation": "All three final evidence files were fully read; their SHA-256 matches all three unique cited hashes. They describe source/index checks and one unchanged mailbox test, conditional source acceptance and implementation still due. Files are absent at dc1fc9de (exit128), introduced later at 62161a91c."
+    },
+    "main_comparison": "Main retained owners are not replaced by acceptance of prototype source law; comparison does not import these records as feature acceptance.",
+    "exclusions_uncertainty": "Historical test/index assertions were not rerun; original baseline/after capture bodies and full subjects were not independently audited in this batch. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F1",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "b47093da9b28d77230af2d8ccbec50fc11caa96c",
+    "subject": "docs(migrate): bind strict text-only planning and preflight carriers",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "be40cd4389689282e2e1d594141972df2e6dd4bb18deadf0ffb7f568a241ba3d",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Adds strict epoch-one migration-plan request/report/error, explicit absent/epoch_1 markers, schema/preflight/domain distinction, early CLI and context-free MCP. Revises lockfile freshness and no-wire-changes prose to original scope.",
+    "bounded_classification": "Adds pure planning carrier; narrows legacy blanket statements.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-cli/src/main.rs",
+        "crates/vibe-cli/src/commands/refactor/machine_entry.rs",
+        "crates/vibe-mcp/src/tools/migration_plan.rs"
+      ],
+      "observation": "main.rs:62 runs the two migration machine entries before config promotion/tracing; MCP run ignores ServerContext and calls plan_migration_value, preserving typed preflight/questions/refusal."
+    },
+    "main_comparison": "Main refactor enum has source conversion only; existing MCP seam can host new tools without replacing dispatcher.",
+    "exclusions_uncertainty": "Pure domain planner recipes, nested generator implementation and isolated startup tests were not executed/reviewed fully. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F2",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "e7239e444c256db65bdc141fdb7a22d53a51390a",
+    "subject": "docs(mcp): scope original lockfile tool claims to their shipped slice",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "8ca86b0b4374dbabd44dda583a53c21ae20a684b12f52344b1cfc49c18860319",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Scopes read-mostly/no-wire-change and group-qualified input convention to original M1.7 integration/three lockfile-derived tools.",
+    "bounded_classification": "Narrows overbroad historical descriptions; no new runtime claim.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-mcp/src/tools.rs",
+        "crates/vibe-mcp/src/tools/migration_plan.rs"
+      ],
+      "observation": "Pinned default_tools registers migration planner/operation alongside legacy tools; planner accepts source_text and selections rather than package-ref inputs."
+    },
+    "main_comparison": "Main default_tools already has more than original three tools; original-slice wording is preferable to blanket input assumptions.",
+    "exclusions_uncertainty": "No exhaustive per-tool lockfile-loading or compatibility audit. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F2",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "2e028a18e3df2b645f4b13418e648e79452c4d30",
+    "subject": "docs(mcp): revise requirements for context-free planning carriers",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "867ab045247374b0726f6951f6e69ba938340e49ff32b04f252c1a7f873595b9",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Advances PROP-015 server/tools/errors requirement markers r1→r2 for context-free planning and structured preflight; executable bytes unchanged.",
+    "bounded_classification": "Requirement-version bookkeeping for real semantic extension.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-mcp/src/tools/migration_plan.rs",
+        "crates/vibe-mcp/src/tools/output.rs"
+      ],
+      "observation": "Final planning route has structured preflight and separate executed outcomes; final generic output has explicit presence mode added by later work."
+    },
+    "main_comparison": "Main already has executed result/failure output but not this migration cell.",
+    "exclusions_uncertainty": "Revision labels including impl/done are not test evidence; historical exact-revision trace map was not checked. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F2",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "ecaca53663949f9513fa28d59db0a526143391d6",
+    "subject": "docs(migrate): require explicit null evidence in operation reports",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-044-change-native-formats.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "7558223762a55daad0dc4f6af7980738c05abfa877b67ed0ea5e1fbe880eb76d",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Makes intent/before/after/diff/error/barrier evidence required nullable; explicit null means unavailable and omitted keys refuse; requirement r2→r3 without wire/product epoch change.",
+    "bounded_classification": "Wire representation correction motivated by generator constraint.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-wire/src/generated/migration/e1/operation_report/mod.rs"
+      ],
+      "observation": "OperationReport:63 and Guarantees:258 use deny_unknown_fields and required_nullable deserializers on named fields; output represents absent evidence explicitly."
+    },
+    "main_comparison": "Main has no inspected migration-operation report module/route; transfer only alongside a chosen migration capability.",
+    "exclusions_uncertainty": "Historical optional-plus-nullable generator refusal is stated in commit, not reproduced by a codegen run or generator-source audit. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F2",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "6cb74b58ee0d773e57cf09dd952966f0e34b594c",
+    "subject": "docs(migrate): define explicit CLI and context-bound MCP admission",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "5f4d97163822c64de3b3e308ada1b953ec0a8e380dd425351f62c2c3b38100d0",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Defines explicit CLI apply/inspect/recover and trusted MCP project/file/recovery-store grant, cache disjointness, strict decode before runtime and truthful effects/exit channels.",
+    "bounded_classification": "Adds bounded write admission after pure planning.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-mcp/src/context/migration.rs",
+        "crates/vibe-mcp/src/tools/migration_operation.rs",
+        "crates/vibe-cli/src/commands/refactor/machine_entry.rs"
+      ],
+      "observation": "Context builder retains configured authority; grant lookup refuses absent configuration; tool strict-decodes/schema-checks before binding authority and calling shared execute_manifest_migration_json."
+    },
+    "main_comparison": "Main has source-conversion refactor verbs and MCP tool seam; no equivalent inspected manifest operation entry.",
+    "exclusions_uncertainty": "Grant internals partly read; filesystem no-follow/disjointness, recovery runtime and all platform behavior not audited or tested. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F2",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "9c1f497c48530625f6976786baddddfc4a8bbb4d",
+    "subject": "docs(migrate): retain invariant evidence in diagnostic-only failures",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "3a953a5ba28efa2b4c781fddfa28118454d3833b0ba53f7e793a08a20b01daeb",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Restricts one-normal-report rule to validated results; invalid retained report emits labelled diagnostic-only executed failure, no structuredContent, while explicit JSON null remains present.",
+    "bounded_classification": "Closes post-effect reporting hole without erasing evidence.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-mcp/src/tools/migration_operation.rs",
+        "crates/vibe-mcp/src/tools/output.rs",
+        "crates/vibe-cli/src/commands/refactor/migration_operation.rs"
+      ],
+      "observation": "MCP render_result retains failure.report in labelled unvalidated diagnostic; ToolOutput::executed_failure_text sets structured_present=false while normal constructors set true. CLI render_failure writes original evidence."
+    },
+    "main_comparison": "Main ToolOutput already has executed and executed_failure; new delta is diagnostic-only mode/preflight, not the entire tool abstraction.",
+    "exclusions_uncertainty": "Dispatcher full path and deliberately inconsistent-report tests were not executed; legacy into_parts requires callers honor has_structured. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F2",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "aa34969920a72ee29a8be5fb01333409aba2b07c",
+    "subject": "feat(spec): define captured entity and location contracts",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "c1d3bee5be24a4a02643487e5b2b1b7283ba1b39d47dda34de0355f378b5fc2e",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Separates logical/source/observation/occurrence axes; defines non-atomic composite capture, projection-bound pages and opaque resource locations with explicit position basis.",
+    "bounded_classification": "Adds concrete provenance/occurrence contracts, not source authenticity proof.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-core/src/machine_view/identity.rs",
+        "crates/vibe-orchestrator/src/machine_view/paging.rs",
+        "crates/vibe-orchestrator/src/machine_view/page_wire.rs"
+      ],
+      "observation": "Identity structs separate axes; entity constructor checks occurrence observation. Process-local cursor keys use exact Arc identity plus scope/filter/stamps. Wire local-page success remains OwnerCursorStatus::Unverified."
+    },
+    "main_comparison": "Exact machine_view modules absent in inspected main paths; existing domain navigation is not thereby claimed absent.",
+    "exclusions_uncertainty": "Location/URI mapping, composite snapshot implementation and real editor consumer were not inspected. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F3",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "1fa6b91f32f8c3f0131d511bdf5dcb8bcf501b8d",
+    "subject": "fix(spec): bind page occurrences through owner provenance",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "f0e057fc1634a529322294aa2f3fced143a94c0a99ec9f90d1dadccbbff8ed43",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Requires exact projection-local occurrence join, forbids reuse of one occurrence reference for distinct rows, and requires explicit owner source-to-capture binding instead of equal opaque spelling.",
+    "bounded_classification": "Tightens wrong-equality and occurrence reuse semantics.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-orchestrator/src/machine_view/page_session.rs"
+      ],
+      "observation": "Lines169–249 validate bindings against snapshot, refuse duplicate/conflicting binding, reused entity and occurrence mismatch; binding comments explicitly deny byte authentication."
+    },
+    "main_comparison": "No equivalent inspected main machine page-session module; preserve invariant when adopting navigation independently of transport.",
+    "exclusions_uncertainty": "Bounded constructor inspection only; complete cursor lifecycle, source authenticity and consumers unverified. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F3",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "d536041d5192a8441a63721429579ba96ac29830",
+    "subject": "feat(spec): define on-demand framed machine sessions",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "59c6ce681d859d9df9f76d02fe520bc5ad493e43d6ef17607bff89b6fc190632",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Defines 4-byte big-endian bounded JSON frames, actual finite negotiation, assigned session contexts and separate legacy MCP/one-shot routes; no daemon implied.",
+    "bounded_classification": "Adds optional protocol reach with explicit coexistence.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-mcp/src/machine_session/framing.rs",
+        "crates/vibe-mcp/src/machine_session/state/negotiation.rs",
+        "crates/vibe-mcp/src/lib.rs"
+      ],
+      "observation": "Framing checks eight-MiB cap before allocation and validates UTF8/shape/epoch; negotiation checks offered versions/schemas/encoding, assigned context and target before UnvalidatedRequest."
+    },
+    "main_comparison": "Main lib.rs preserves fixed MCP2024-11-05; no machine_session module at same path.",
+    "exclusions_uncertainty": "Domain dispatch/complete context construction and all negotiated mode capabilities not exhaustively reviewed; no live protocol run. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F3",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "48f3f79fcb93c8ee21300f64736887595e71d179",
+    "subject": "docs(api): bind reservation to journal recovery",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "b05bd78f5b807a5de562ccd4247f8e5173459b59c856073a0dfe86fd7f5bb30f",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Permits separate reservation/journal files under one lease; retry initializes only reserved identity if journal absent; present/uncertain journal forbids fresh invocation; both must be proven before effect.",
+    "bounded_classification": "Refines recovery between two durable records.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-lifecycle/src/state/submission.rs",
+        "crates/vibe-lifecycle/src/mechanism/package/journal/execution.rs"
+      ],
+      "observation": "Created/Existing/Retired are distinct from Pending/Ready; package execution rechecks reserved plan/Ready and writes a separate verified completion after actual output."
+    },
+    "main_comparison": "Main has LifecycleStateStore/general package owner but not inspected machine submission index/journal paths.",
+    "exclusions_uncertainty": "All reservation implementations and crash windows were not audited; no interruption test run. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F4",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "0ef17ab5563424c9020632164bab52b6375d9434",
+    "subject": "feat(environment): specify opt-in target-bound operations",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "bed1b6086581ae9a300ad4be6ce50cf39feb8dca046a6d30579fe09671a7b742",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Binds environment/generation/target/principal/root capabilities across effect chain; preserves unbound legacy behavior and defers physical alias/storage fence proof.",
+    "bounded_classification": "Adds opt-in target identity while retaining legacy domain.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+      ],
+      "observation": "Lines94–103 refuse wire-only execute_bound_deploy_targets with BoundRootAdmissionUnavailable; separate host-admitted route begins112; following receipt/intent/sidecar validation compares bindings."
+    },
+    "main_comparison": "Main retains ordinary deployment; exact environment binding/module contract absent from inspected comparator.",
+    "exclusions_uncertainty": "Full host admission, provider behavior, physical storage fences and cross-target delivery not reviewed/tested. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F6",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "578c535dd3849fb192d6d718012d11e5d5eae965",
+    "subject": "docs(api): distinguish lifecycle header from terminal result",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "ea8e1aa9b900f860c28a47cbd5a7a2871f8c07975691ee1172b7d7e0064e12e0",
+    "review_level": "bounded-contract-content-classified",
+    "change": "States freshness header is not terminal journal: matching run ID plus EOF/interruption cannot imply success or authorize a second effect; reservation req r3→r4.",
+    "bounded_classification": "Narrows false completion inference.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter.rs",
+        "crates/vibe-lifecycle/src/state/submission.rs"
+      ],
+      "observation": "Adapter distinguishes Pending/header observations and retained lifecycle outcome; reservation admission Ready is expressly separate from completion."
+    },
+    "main_comparison": "Main retains lifecycle state/run identity; protected retry/outcome route is additional, not evidence all ordinary lifecycle lacked state.",
+    "exclusions_uncertainty": "Partial adapter read; all outcome-marker corruption/freshness edge cases unverified. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F4",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "b6004684c7d1c83707c764a6539a416dc14ec670",
+    "subject": "feat(specs): define bounded live owner observation contract",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "d053a87eabcdb639cae2697f5d336741e75c99bdd50b8640e401cbe6fc0ae88e",
+    "review_level": "bounded-contract-content-classified",
+    "change": "ContinueCurrentDispatch survives observer loss only while owner process lives; exact live binding before effects, attach without writer/redispatch, terminal evidence revalidation, panic not Running, detach not cancellation.",
+    "bounded_classification": "Adds bounded live owner/observer lifetime, not durable daemon.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter/live_owner.rs"
+      ],
+      "observation": "Attach checks Weak owner identity, coordinates and physical root then inspect; stopped/panicked owner transitions from running, cold path reacquires lease and attaches existing retained run."
+    },
+    "main_comparison": "Main ordinary lifecycle and trace owners exist; exact live-owner module absent in inspected comparator.",
+    "exclusions_uncertainty": "Selected spans only; control/stream/evidence modules and native process tests not audited/run. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F4",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "810b7687aac1416c14af5f5978e1b91688a7d096",
+    "subject": "docs(spec): keep local lifecycle values in one envelope",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "2c464e2074f2def050afd86f1169c3eea27cb1555ceca41554c5e1f23ab8fe7a",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Reuses OperationEnvelope Input/Result/Error inside existing SessionFrame for exact lifecycle formats, preserves mode negotiation and separates reply publication from provider completion.",
+    "bounded_classification": "Explicitly avoids parallel envelope grammar.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-mcp/src/machine_session/package.rs",
+        "crates/vibe-mcp/src/machine_session/state/negotiation.rs",
+        "crates/vibe-cli/src/commands/machine_session.rs"
+      ],
+      "observation": "Final negotiated sessions enforce nested offered format/context; package counterpart demonstrates same envelope/frame reuse and owner-derived effect projection; CLI has fixed lifecycle mode."
+    },
+    "main_comparison": "Main has no corresponding framed-session path but already has one-shot/MCP lifecycle.",
+    "exclusions_uncertainty": "Fixed lifecycle envelope.rs and fixed session runner were not fully inspected; package counterpart is corroboration, not proof of all lifecycle actions. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F5",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "a9ecc70f91ae5e2ca6a286578067090b48b5da9b",
+    "subject": "docs(spec): bind CLI lifecycle reattachment to host scope",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "fe1498cfb7097093cd87f04beb865fab0af29ec231ffe8c7f9ef7da0e4d72abc",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Separates stable submission scope from ephemeral outer IDs; host pointer binds physical root, namespace/policy/expiry; reattach cannot restore approval, mint replacement or store results.",
+    "bounded_classification": "Adds durable authority pointer to preserve same-key across restarts.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-orchestrator/src/machine_submission/cli_grant.rs"
+      ],
+      "observation": "CliGrantService builds root-correlated cli-host:e1 scope, issues Issuing→Issued under lease, rejects missing pointer when C1 scope exists, and reattach is lookup plus current policy/recheck."
+    },
+    "main_comparison": "No equivalent inspected main cli_grant module; incumbent lifecycle lease/state remain owners to reconcile.",
+    "exclusions_uncertainty": "Partial source spans; record IO/durability/native recovery tests not fully inspected or rerun. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F5",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "9907b46625ab3da29b431450a10260e930970758",
+    "subject": "docs(spec): define cooperative CLI fixed host authority",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "34dac81734bdd4389bfd854051996280b06c470180a02a3c4cf98dd136de136e",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Uses explicit absolute project root/lease, physical-root target, project-local principal and explicit policy; denies OS-user auth/hostile shared-project isolation or silent permissions.",
+    "bounded_classification": "Narrows security claim to cooperative local host.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-cli/src/commands/machine_session.rs",
+        "crates/vibe-orchestrator/src/machine_submission/cli_grant.rs"
+      ],
+      "observation": "CLI validates exclusive issue/reattach modes/TTL/matching permissions/absolute root; grant documents no OS-user authentication and binds root correlation."
+    },
+    "main_comparison": "Main has no inspected fixed-mode session composer; existing CLI authority should not be replaced by assumed authenticated principal strings.",
+    "exclusions_uncertainty": "Native permissions/hostile writer controls and complete CLI validation were not tested; cooperative boundary is explicit. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F5",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "bde72bd216c510a4d8f5a73291c2d560ee621381",
+    "subject": "docs(spec): bind fixed Validate force to admitted C1 intent",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "3bfbe506be87b53a8156b253eea2d7ef7cedf7b5f2fd21633aceb31750cd0fda",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Only exact generated request/approval/current policy permits fixed Validate force; admitted wrapper binds bit; same key same intent attaches, changed force refuses; base capture remains comparison data.",
+    "bounded_classification": "Binds requested force to canonical intent, not retry novelty.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter.rs"
+      ],
+      "observation": "Lines853–862 compare request force/trace to admitted profile; run identity receives actual flags and later lifecycle request is cloned into protected execution."
+    },
+    "main_comparison": "Main ordinary lifecycle already has force semantics; new scope is exact protected approval/replay propagation.",
+    "exclusions_uncertainty": "Approval issuer/wrapper codec and all same-key/freshness tests were not independently audited/run. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F5",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "ccde5f3e9479dcfed46b04bb6c46e280fcd166f7",
+    "subject": "docs(spec): scope first protected package machine operation",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "7aa4c28dcac93694ef58139dfc44924592c6ac592d40894504d5d4ec12ebd005",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Selects only source.bin→target/vibe-package/launcher/launcher.bin, target launcher; owner reserves/Ready/capsule/completion, existing key cold attaches, no outer reservation or arbitrary route.",
+    "bounded_classification": "Explicitly selects fixed demonstrator and defers general package.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-lifecycle/src/mechanism/package/journal/execution.rs",
+        "crates/vibe-orchestrator/src/machine_operation/fixed_package/dispatch.rs"
+      ],
+      "observation": "Execution calls fixed owner reservation, checks source/Ready/intent, verifies one actual output/A2 and publishes completion; route delegates submit/inspect without its own result store."
+    },
+    "main_comparison": "Main already executes general authored package targets; protected same-key guarantee is new, fixed names are not general package API.",
+    "exclusions_uncertainty": "Owner intent/capsule internals and generalization/native behavior not fully inspected; fixed route is not completed general journey. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F4",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "e4c5a1753d8b1034901d2c7f0dffa20e724d99de",
+    "subject": "docs(spec): bind fixed package to registered machine values",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "340389d3d6e29ed1a9ac274d843cd07e5c1edb3c0ed350e9c29991fcb1feeca3",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Registers request/reply/error for package-static-file; request only submit/inspect key; trusted host owns root/scope/time; Completed only from owner verification and post-admission Err cannot imply no effects.",
+    "bounded_classification": "Adds exact fixed-operation wire carriers with truthful partial effects.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-orchestrator/src/machine_operation/fixed_package/dispatch.rs"
+      ],
+      "observation": "Dispatch strict-decodes/schema/key, compares root and calls owner; failure retains owner observation/effects_may_have_begun and classifies Landed/Uncertain/Unavailable/None."
+    },
+    "main_comparison": "Main general package output exists, new closed formats add protected operation surface.",
+    "exclusions_uncertainty": "Exact generated request/reply roots and all semantic projection branches were not fully inspected; dispatch read is not runtime conformance. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F4",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "0bc3e7034862d3352fb44ce770b0b05e38d92343",
+    "subject": "docs(spec): bind fixed package to a separate local frame mode",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "90672fc33631a3a30f834791d108233c60d35935f4333405769c38a0978a429b",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Negotiates only package-supported format set with no lifecycle questions/stream/replay/control claim; outer IDs bind but do not replace durable C1 scope; failed publication retains owner evidence.",
+    "bounded_classification": "Adds separate host-granted package mode while reusing framing.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-mcp/src/machine_session/package.rs",
+        "crates/vibe-mcp/src/machine_session/state/negotiation.rs"
+      ],
+      "observation": "Package runner requires fixed_package_bridge, compares root, calls FixedPackageRoute::exchange_local, mirrors owner effect truth into frame outcome; runner uses supplied IO with no listener."
+    },
+    "main_comparison": "Main has no machine package session at this path; ordinary package does not require it.",
+    "exclusions_uncertainty": "Complete mode construction/capability constants and lost-response tests were not audited/run. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F4",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "8f07e186da945136a1d34829ac4f3bbb81a08385",
+    "subject": "docs(spec): bind fixed Validate trace to owner execution",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "09c83063b54e408b3d4f4bb26246962b2dcc9df282c66d956c7f3399c915530d",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Fixed Validate trace uses admitted wrapper intent, same-key replay, incumbent trace funnel after Ready, exactly-once finalization and retained failure evidence; trace failure cannot erase script effects.",
+    "bounded_classification": "Binds trace side effects to exact approval while preserving original execution truth.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-orchestrator/src/machine_submission/lifecycle_adapter.rs"
+      ],
+      "observation": "Adapter compares admitted trace, prepares trace after source/Ready-related fences, lends recorder to protected execution, finalizes and retains uncertain original post-effect error (1838–2034)."
+    },
+    "main_comparison": "Main already has TracePreparation/prepare/finalize ownership; new feature is protected option/replay linkage, not tracing from zero.",
+    "exclusions_uncertainty": "Trace/finalization fault tests and concurrent policy races not run; no general trace grant inferred. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F5",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "c63fdf1caa8151cad64dddfcf69f5b839618b000",
+    "subject": "docs(spec): separate package CLI authority from Validate",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "f5d450b5b18a06c48d729eab502827cb5c1b650d0308edf4799cda3693b996ee",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Package gets domain-separated pointer/C1 namespace, fixed target/policy, Issuing fence and current-policy check; old-key inspection survives revocation; Validate cannot authorize copy. Shared private IO kernel remains a stated revisit option.",
+    "bounded_classification": "Separates authority correctly but repeats grant storage mechanics.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-orchestrator/src/machine_submission/cli_grant.rs",
+        "crates/vibe-orchestrator/src/machine_submission/package_grant.rs"
+      ],
+      "observation": "Both implement separate near-parallel issue/reattach/pointer workflows; package hardcodes launcher and vibe-cli/fixed-package/e1 with cli-package-host hash/path domains."
+    },
+    "main_comparison": "Main has neither inspected grant module; transfer can evaluate private mechanism reuse while preserving different grants.",
+    "exclusions_uncertainty": "No verified safe refactor or deletion proposed; full IO helpers, current-policy submit boundary and native cases not fully reviewed. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F5",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  },
+  {
+    "sha": "817c5ab27af08336fac0acdd806bfdc8e456ea4e",
+    "subject": "docs(machine): preserve Deploy recovery after host drift",
+    "source_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "target_pin": "90e3e3f267e4d59514ddbbae845bf6bedfe7307b",
+    "reviewed_paths": [
+      "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+    ],
+    "diff_read_scope": "full changed-file diff; surrounding pinned code reads bounded as stated",
+    "diff_sha256": "7baf18ecdf853d14ca711eb90788239c393e57b6312c36ad68b0f64c1ad9c410",
+    "review_level": "bounded-contract-content-classified",
+    "change": "Deploy reattach after manifest/profile/policy/generation drift may yield only read-only old-key host; new effects require reconstructed current trusted bindings; malformed/uncertain pointer never reissues.",
+    "bounded_classification": "Repairs recovery availability without reauthorizing drifted host.",
+    "current_source_observation": {
+      "level": "source-observed; not runtime proof",
+      "paths": [
+        "crates/vibe-orchestrator/src/machine_submission/deploy_grant.rs"
+      ],
+      "observation": "DeployGrantAttachment is Active or RecoveryOnly; reattach299–329 chooses recovery on current mismatch and rereads pointer under lease; current_matches385–406 compares manifest/profile/generation/policy."
+    },
+    "main_comparison": "Main ordinary deployment exists; no inspected machine Deploy grant equivalent; preserve recovery/new-effect asymmetry independently of full framing.",
+    "exclusions_uncertainty": "No cold native execution; complete Deploy CLI/provider and storage validation chain not audited. No builds/tests/services/Git or product writes; no acceptance.",
+    "report_section": "F6",
+    "report": "campaigns/next-semantic-transfer-2026-11/research/history-machine-policy-review.md"
+  }
+]
