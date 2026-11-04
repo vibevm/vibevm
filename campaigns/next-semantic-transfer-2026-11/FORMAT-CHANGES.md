@@ -164,3 +164,11 @@ Generated `vibe.lock` root snapshot остаётся unique по координ�
 ## Шаблон следующей записи
 
 Записывать: ID/дата; статус; base/commit; released range или Unreleased; exact keys/types/значение; old/new example; затронутые команды (явно проверить install -g, update, modify, import, project install); совместимость обоих направлений; migration/recovery; record/wire/schema versions; tests и ограничения. Изменение только semantics/validation тоже фиксировать, даже если TOML-ключи не поменялись.
+
+## FMT-006 — Original input на requires edge (дизайн, Unreleased)
+
+Статус: только дизайн/следующий implementation atom, ещё не принято parser. Предлагается nested `configuration` в существующей inline `[requires.packages."<coordinate>"]`: required `policy = "require-selection" | "use-declared-defaults"`, optional profile, features additions, default_features=true, selections и typed public parameters. Registry/git/path/version.var и link/access/friend/exclude должны сохранять этот input. Отсутствие и `members=[]` не смешиваются. No client-supplied instance/domain/owner keys.
+
+Для common feature rows добавляется явная `visibility = "public" | "internal"` (default public), чтобы представлять legacy private nodes без magic underscore в общем kernel. При явной миграции legacy `_helper` его private interface нужно обозначить internal. Старые `[features]` сохраняют прежнее underscore правило.
+
+Новые поля относятся к source intent; lock7/index3 и receipts не меняются автоматически. `vibe install -g` не становится workspace consumer: его app operation input и источник package requirements имеют разные владельцы. Пока новые source inputs не подключены к runtime, обычные consumers обязаны явно отказать до apply, не потерять intent. Точная final grammar, migration examples и command impact дополняются после реализации/проверок.

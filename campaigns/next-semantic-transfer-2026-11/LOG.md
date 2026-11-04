@@ -352,3 +352,11 @@ Authored main integration tests прошли11reader+4publicCLI. Core conform0fi
 ## 2026-11-04 — Authored admission committed
 
 Source admission/validation принят commitda741ee16. Все33amended hashes совпали с committed HEAD, evidence сохранены, live cwd/exe/fd users отсутствовали. Временный common-authored-definitions worktree удалён, отсутствие каталога и Git registry entry проверено. FORMAT-CHANGES FMT-004 дополнен точным commit hash. Новых releases/push/изменений lock7/index3 не было. Следующий frontier — исходные consumer answers на actual requires edge, применение profiles/parameters, binding к выбранному определению и подключение actual runtime вместо временных guards; вся common feature остаётся active.
+
+## 2026-11-04 — Продолжение: original intent на реальной requires edge
+
+Предыдущий goal turn — progress: source admission принят da741ee16, журнал форматов/canonical evidence сохранены, task worktree удалён. Текущий main25cf65ef7 проверен; только исходный untracked doc.web остаётся. Goal-service теперь действительно active.
+
+Следующий дизайн фиксирует intent в существующей inline requires declaration, с required default policy, explicit profile, ordinary feature additions/default_features, exact/additive selections с omitted/empty и public typed parameters. Consumer identity берётся из реального node+declaration; прежние environment/target/instance labels прототипа не возвращаются. Исходники подтвердили: Requires decoder уже отвергает дубли normalized coordinates, в том числе cross-bucket; прежнее предположение о возможном first-wins здесь заменено наблюдаемым правилом. Serializer новой metadata должен также отвергать dangling keys.
+
+Normalization применяет только явно названный profile, затем overlays одного consumer, сохраняя исходную запись отдельно. Она не выдаётся за candidate/default binding, host path validation или исполнение. Чтобы общий формат мог честно представлять legacy private feature interface, добавляется явная visibility=public/internal; `_` остаётся legacy adapter policy, а не магическим глобальным правилом. Direct additions проверяют public; package-owned profile/implication/choice interfaces могут ссылаться на internal backing nodes. Это не разрешение на новое source access control.
