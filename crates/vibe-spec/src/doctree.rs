@@ -19,6 +19,7 @@ use std::ops::Range;
 use crate::directives::Directives;
 
 mod fence;
+pub use fence::fenced_code_lines;
 pub(crate) use fence::{FenceSnapshot, FenceTracker, fence_mask};
 mod invariant;
 mod selection;

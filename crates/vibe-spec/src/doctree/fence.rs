@@ -54,6 +54,23 @@ impl FenceTracker {
     }
 }
 
+/// Mark canonical Vibe fenced-code lines, including both delimiters.
+/// This uses the same fence owner as directive parsing, without copying lines.
+///
+/// ```
+/// let text = "ordinary\n~~~text\n<!-- embed: example -->\n~~~~\nafter";
+/// assert_eq!(vibe_spec::fenced_code_lines(text), [false, true, true, true, false]);
+/// assert_eq!(vibe_spec::fenced_code_lines(&text.replace('\n', "\r\n")),
+///            vibe_spec::fenced_code_lines(text));
+/// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION"
+)]
+pub fn fenced_code_lines(text: &str) -> Vec<bool> {
+    let mut tracker = FenceTracker::default();
+    text.lines().map(|line| tracker.classify(line)).collect()
+}
+
 /// A precomputed mask marking lines inside fenced code blocks, including the
 /// fence lines themselves.
 pub(crate) fn fence_mask(lines: &[String]) -> Vec<bool> {
@@ -112,6 +129,10 @@ mod tests {
         .collect();
         let expected = vec![true, true, true, true, false, true, true, true, true, false];
         assert_eq!(fence_mask(&lines), expected);
+        assert_eq!(fenced_code_lines(&lines.join("\n")), expected);
+        assert_eq!(fenced_code_lines(&lines.join("\r\n")), expected);
+        assert!(fenced_code_lines("").is_empty());
+        assert_eq!(fenced_code_lines("\n"), [false]);
 
         let mut tracker = FenceTracker::default();
         let actual: Vec<bool> = lines.iter().map(|line| tracker.classify(line)).collect();

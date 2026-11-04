@@ -14331,8 +14331,53 @@
       "item_kind": "enum",
       "line": 31,
       "symbol": "vibe_cli::commands::tree::artifacts::StaticDecompileError",
-      "end_line": 59,
-      "fingerprint": "tok1:6292b13bb3dcf9abcfedda722d05e450fb1ce0261c18fec31892a7f105da4e7c"
+      "end_line": 66,
+      "fingerprint": "tok1:3eba6924b74a97d02661ac2f37e79b0de8eaa85e9414b4e2d6b33ad720381276"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/artifacts/embeds.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::commands::tree::artifacts::embeds",
+      "end_line": 3,
+      "fingerprint": "tok1:5f89f6c9106dc50f423676466f421d68df81061e95a8af0872cbe54c3c5a5eb6"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/artifacts/embeds.rs",
+      "item_kind": "fn",
+      "line": 47,
+      "symbol": "vibe_cli::commands::tree::artifacts::embeds::scan",
+      "end_line": 99,
+      "fingerprint": "tok1:39174089844aec571e508d05656fc59bb55ceba51448f1612a6c41d90872f0c0"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/artifacts/markers.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::commands::tree::artifacts::markers",
+      "end_line": 3,
+      "fingerprint": "tok1:5f89f6c9106dc50f423676466f421d68df81061e95a8af0872cbe54c3c5a5eb6"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/artifacts/markers.rs",
+      "item_kind": "struct",
+      "line": 12,
+      "symbol": "vibe_cli::commands::tree::artifacts::markers::Marker",
+      "end_line": 22,
+      "fingerprint": "tok1:5dbf88e1dae2a4e7ed1bbaf83a9134c19fada3bf4ba9d2abd877b108f5b434a4"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/artifacts/markers.rs",
+      "item_kind": "fn",
+      "line": 74,
+      "symbol": "vibe_cli::commands::tree::artifacts::markers::collect",
+      "end_line": 151,
+      "fingerprint": "tok1:ac82882dec0aabb2a1326e4baa647d196e66932d660ae765c302e9358f252d16"
     },
     {
       "crate_name": "vibe-cli",
@@ -17294,6 +17339,96 @@
       "symbol": "vibe_cli::tests::lifecycle_package::failure::package_binding_failure_stops_every_later_contribution",
       "end_line": 60,
       "fingerprint": "tok1:2ea62f02321e1cc218d00ed31c4d37d1d052ff7ff11e83376f917a7d27526e7e"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_cli::tests::tree_nested_attribution",
+      "end_line": 4,
+      "fingerprint": "tok1:5f89f6c9106dc50f423676466f421d68df81061e95a8af0872cbe54c3c5a5eb6"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "item_kind": "fn",
+      "line": 160,
+      "symbol": "vibe_cli::tests::tree_nested_attribution::actual_expansion_owner_nested_payload_keeps_outer_and_inner_spans",
+      "end_line": 211,
+      "fingerprint": "tok1:99be4ce6f92a09cb72722f316b4d73636aac57dc325bab502a98fe3e134f4510"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "item_kind": "fn",
+      "line": 424,
+      "symbol": "vibe_cli::tests::tree_nested_attribution::adjacent_static_provenance_refuses_without_panicking",
+      "end_line": 469,
+      "fingerprint": "tok1:a617a0f6840d0de9cf71c627064b0fd4133c65eb8e5746a56648e237b147d9ac"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "item_kind": "fn",
+      "line": 213,
+      "symbol": "vibe_cli::tests::tree_nested_attribution::authored_three_level_nested_tape_retains_all_occurrences_across_regions",
+      "end_line": 231,
+      "fingerprint": "tok1:53c33490828bb0266c66a079d0d7aa5f01268f50049ba31324004b6cc361732a"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "item_kind": "fn",
+      "line": 514,
+      "symbol": "vibe_cli::tests::tree_nested_attribution::expanded_inline_static_c1_marker_is_literal_prose",
+      "end_line": 524,
+      "fingerprint": "tok1:209fface3305a9946e9076a7a7986ea9164bb5e0420d77c5652b49ae748ac49b"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "item_kind": "fn",
+      "line": 503,
+      "symbol": "vibe_cli::tests::tree_nested_attribution::expanded_inline_static_legacy_marker_is_literal_prose",
+      "end_line": 512,
+      "fingerprint": "tok1:7ef65d1c7923614b200a199902ef9455abb5cc10dcc61959413f2a9b36f5c731"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "item_kind": "fn",
+      "line": 331,
+      "symbol": "vibe_cli::tests::tree_nested_attribution::fenced_literal_markers_preserve_real_expanded_occurrences",
+      "end_line": 375,
+      "fingerprint": "tok1:63f7e312ee8f3ae291b95aac04bb28d243128f5116da99d14f2a165f21160dbd"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "item_kind": "fn",
+      "line": 392,
+      "symbol": "vibe_cli::tests::tree_nested_attribution::fenced_static_and_embed_examples_do_not_split_or_attribute",
+      "end_line": 410,
+      "fingerprint": "tok1:2c683d53ab6bfafacbd5dfb070e57019a6dce304ec187689e6dca899e465d74c"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "item_kind": "fn",
+      "line": 260,
+      "symbol": "vibe_cli::tests::tree_nested_attribution::malformed_reserved_markers_refuse_with_exact_line_context",
+      "end_line": 329,
+      "fingerprint": "tok1:21ec8995a8aa9fadde866fe3850cfc1d5cbe5b9903e6c093be305976fbaed115"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "item_kind": "fn",
+      "line": 377,
+      "symbol": "vibe_cli::tests::tree_nested_attribution::nested_repeated_address_has_two_independent_occurrences",
+      "end_line": 390,
+      "fingerprint": "tok1:53e6965f5143fb1dda10f8e31520a8844906f80eb35369cda56c1d57f1acc493"
     },
     {
       "crate_name": "vibe-core",
@@ -39032,6 +39167,15 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/doctree/fence.rs",
+      "item_kind": "fn",
+      "line": 57,
+      "symbol": "vibe_spec::doctree::fence::fenced_code_lines",
+      "end_line": 72,
+      "fingerprint": "tok1:3a7327387558b57884ffe65297e780948cb51dd08b4a6f4c6ec997e10ba23d4a"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/doctree/selection.rs",
       "item_kind": "mod",
       "line": 2,
@@ -49096,6 +49240,46 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/tree/artifacts/embeds.rs",
+      "from_symbol": "vibe_cli::commands::tree::artifacts::embeds",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/artifacts/embeds.rs",
+      "from_symbol": "vibe_cli::commands::tree::artifacts::embeds::scan",
+      "line": 49,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/artifacts/markers.rs",
+      "from_symbol": "vibe_cli::commands::tree::artifacts::markers",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/artifacts/markers.rs",
+      "from_symbol": "vibe_cli::commands::tree::artifacts::markers::Marker",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#static-decompile",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/artifacts/markers.rs",
+      "from_symbol": "vibe_cli::commands::tree::artifacts::markers::collect",
+      "line": 77,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/tree/build.rs",
       "from_symbol": "vibe_cli::commands::tree::build",
       "line": 9,
@@ -51839,6 +52023,86 @@
       "line": 10,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FAILURE-BY-PHASE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "from_symbol": "vibe_cli::tests::tree_nested_attribution",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "from_symbol": "vibe_cli::tests::tree_nested_attribution::actual_expansion_owner_nested_payload_keeps_outer_and_inner_spans",
+      "line": 161,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "from_symbol": "vibe_cli::tests::tree_nested_attribution::adjacent_static_provenance_refuses_without_panicking",
+      "line": 425,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#static-decompile",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "from_symbol": "vibe_cli::tests::tree_nested_attribution::authored_three_level_nested_tape_retains_all_occurrences_across_regions",
+      "line": 214,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "from_symbol": "vibe_cli::tests::tree_nested_attribution::expanded_inline_static_c1_marker_is_literal_prose",
+      "line": 515,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "from_symbol": "vibe_cli::tests::tree_nested_attribution::expanded_inline_static_legacy_marker_is_literal_prose",
+      "line": 504,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "from_symbol": "vibe_cli::tests::tree_nested_attribution::fenced_literal_markers_preserve_real_expanded_occurrences",
+      "line": 332,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "from_symbol": "vibe_cli::tests::tree_nested_attribution::fenced_static_and_embed_examples_do_not_split_or_attribute",
+      "line": 393,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "from_symbol": "vibe_cli::tests::tree_nested_attribution::malformed_reserved_markers_refuse_with_exact_line_context",
+      "line": 261,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "from_symbol": "vibe_cli::tests::tree_nested_attribution::nested_repeated_address_has_two_independent_occurrences",
+      "line": 378,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
       "verb": "verifies"
     },
     {
@@ -71708,6 +71972,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/doctree/fence.rs",
+      "from_symbol": "vibe_spec::doctree::fence::fenced_code_lines",
+      "line": 66,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-spec/src/doctree/selection.rs",
@@ -115805,7 +116077,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:fea4ce143c1153c3bb75f2f1c7160a7117e1567658c92ab71fdb50b26fb9437f",
+      "content_hash": "sha256:37199d4094be3b9b337e9fbb2547716d5dd8eda4891ffd5a4dc7174a27d238e0",
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "PROP-036: `vibe tree` — the spec-tree analyzer",
@@ -115877,7 +116149,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:1a386c6a20a7462ed8108491a847aace48b373556c0eab17ce1dd2f0151893be",
+      "content_hash": "sha256:667f24228f3ba59248918987f26fe5175967642e24ed651ccfa07e8c3bc3284a",
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "2. Decisions",
@@ -116273,7 +116545,7 @@
     },
     {
       "anchor": "static-decompile",
-      "content_hash": "sha256:2da5e19deb82e23ed5a648cd9f4cf5e483bba3906075a466d45c2864b7cce828",
+      "content_hash": "sha256:4e2cf51b6fe6744934a032c679a6c146642d765b45a68fba034645b5c322f6bc",
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "2.8 STATIC.md decompilation",
@@ -116300,10 +116572,10 @@
     },
     {
       "anchor": "EMBED-SPAN-ATTRIBUTION",
-      "content_hash": "sha256:bcc520d1ee3f5730ce95fe7f2a3f2fbe4303fb48f66b8d93731c63fd25bc7521",
+      "content_hash": "sha256:49ef4908a3f13a35ee7cb3b9ecfa7cbb4eb8ff38987698042a9d14fef294a89f",
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
-      "heading": "Attribute every well-formed reserved embed occurrence in opening/source order, including repeated addresses, with one-based file-relative inclusive marker lines. Nonempty opening and closing addresses match exactly; a closer never renames an opener, and a pair cannot cross contribution boundaries. Unexpected, mismatched/crossed, empty or unclosed reserved embed controls produce a line-located parse error through the existing tree error surface, not an invented or silently incomplete clean attribution. Complete standalone controls outside the canonical Vibe fenced-code mask are provenance; fenced examples of embed or static markers are literal and cannot open, close or split contributions. Reuse the same fence owner as directive parsing and retain c1 provenance decoding. This corrects attribution within the existing v1 model, not compiler generation, target resolution, source authenticity or exact body-byte measurement. @status:spec/done",
+      "heading": "Attribute every well-formed reserved embed occurrence in opening/source order, including repeated addresses, with one-based file-relative inclusive marker lines. Nonempty opening and closing addresses match exactly; a closer never renames an opener, and a pair cannot cross contribution boundaries. Unexpected, mismatched/crossed, empty or unclosed reserved embed controls produce a line-located parse error through the existing tree error surface, not an invented or silently incomplete clean attribution. Complete standalone controls outside the canonical Vibe fenced-code mask are provenance; fenced examples of embed or static markers are literal and cannot open, close or split contributions. Reuse the same fence owner as directive parsing and retain c1 provenance decoding. Static provenance requires whitespace-only opening-line prefix and closing-line suffix; valid inline/prose examples do not split a contribution. Adjacent or overlapping provenance frames refuse with line context before any invalid body slice, while multiline c1 frames remain supported. This corrects attribution within the existing v1 model, not compiler generation, target resolution, source authenticity or exact body-byte measurement. @status:impl/done",
       "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION"
     },
