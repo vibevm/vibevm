@@ -100255,7 +100255,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:4b114ecb322d4c13e31571345afde591c4be86450ce012720b0747092ef16adf",
+      "content_hash": "sha256:468128e8f281323e07e449ac755b692a33eda4067d5e52d9ef144429813c38f8",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -100606,7 +100606,7 @@
     },
     {
       "anchor": "app-runtime",
-      "content_hash": "sha256:4ec6d93114bc8c3bddcfd5a862da2096fbf70f72269f23dc31abeebaa77ee6b6",
+      "content_hash": "sha256:9b4b2b71610f665889fd543df2be719dfd2c73b5e760d28763fa55d43a28fdbd",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "6.1 Selected-installer implementation boundary",
@@ -100633,10 +100633,10 @@
     },
     {
       "anchor": "APP-CONFIGURATION-CONTINUATION",
-      "content_hash": "sha256:4a77c3a11812e69a7c79f61e9c13337703b3915008767168182efd4ff3a0f0c2",
+      "content_hash": "sha256:63e3fb4f580f01e966b54465e419bc5a6f7953fd0273d4b49526d7aac785439c",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "The existing pending work owner retains public original input and operation context before dependency descent. Canonical app resume names an exact package key and operation generation in the actual home; it reuses saved input rather than replaying raw argv or mutable input files. Existing explicit manual resume retains its current-work selector with its weaker generation guarantee, while consuming saved new-format input instead of new deltas. Deliberate reopening of completed retained work uses a new generation. Optional step failure is not by itself an unfinished operation; step evidence and operation completion remain distinct. Secret resupply remains ephemeral and proves presence, not equality with an earlier value. Linked pending children precede indexed-completion shortcuts. Maintenance keeps its actual predecessor and removal/publication phase; uncertain external removal is not automatically repeated or certified. Delegated result reuse checks the actual prepared prompt/task context before rewriting its envelope, without claiming whole-source authentication. Whole-import continuation retains its finite cohort/cursor and arrangement policy; row continuation is not whole-import completion. New continuation metadata uses an explicit steps version even for legacy syntax; older work remains labeled with its weaker provenance. Index writes preserve v3 legacy records faithfully and use v4 when rich data requires it; no read-time migration or silent old projection is permitted. @status:spec/done",
+      "heading": "The existing pending work owner retains public original input and operation context before dependency descent. Canonical app resume names an exact package key and operation generation in the actual home; it reuses saved input rather than replaying raw argv or mutable input files. Existing explicit manual resume retains its current-work selector with its weaker generation guarantee, while consuming saved new-format input instead of new deltas. Deliberate reopening of completed retained work uses a new generation. Optional step failure is not by itself an unfinished operation; step evidence and operation completion remain distinct. Secret resupply remains ephemeral and proves presence, not equality with an earlier value. Explicit resupply is scoped to its application operation and may strengthen Default/Absent provision; the value-free new requirement is retained before suffix effects so later continuation cannot silently default it. Original prefix provenance is not rewritten, and parent answers are never broadcast to same-named child parameters. Linked pending children precede indexed-completion shortcuts. Maintenance keeps its actual predecessor and removal/publication phase; uncertain external removal is not automatically repeated or certified. Delegated result reuse checks the actual prepared prompt/task context before rewriting its envelope, without claiming whole-source authentication. Whole-import continuation owns one independent finite cohort under app-work, addressed by exact home/operation through app import --resume; it is not stored in a package execution slot. It retains classified public rows, cursor/outcomes/current child and arrangement policy; terminal refusals are recorded before releasing execution work for legitimate later retries. Exact mixed-parent references keep application and cohort identities distinct, with no fake installed record or duplicate cohort store. Row continuation is not whole-import completion. Application continuation metadata uses an explicit steps version even for legacy syntax, while cohort work has its own versioned record; older work remains labeled with its weaker provenance. Index writes preserve v3 legacy records faithfully and use v4 when rich data requires it; no read-time migration or silent old projection is permitted. @status:spec/done",
       "line": 52,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION"
     },
