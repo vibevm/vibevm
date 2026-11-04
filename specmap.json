@@ -99558,7 +99558,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f4cf2d6c1524bee4394f511eb803cd6ca415e6dcf847e47104706b84e3f76bc5",
+      "content_hash": "sha256:47baaef394e92562853cce84d78c4faaf8d119ad555afd0cd1d6c22cf1f70e0e",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -99864,7 +99864,7 @@
     },
     {
       "anchor": "persistence",
-      "content_hash": "sha256:1fe5b945de0f9a85b47c418c0534d48fb2106ac9b03729d87dddad27302db6b1",
+      "content_hash": "sha256:df74a988de646e6ba67b4b0f2be425b6e7c7f634decd417e7def01a6f8aee11d",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "6. Existing owners retain the state",
@@ -99891,10 +99891,10 @@
     },
     {
       "anchor": "LEGACY-APP-COMPATIBILITY",
-      "content_hash": "sha256:2a86e7c309d04013c7d123bbdc6d6cf00b2ad8bfa972449cf0eb15a9491e2dbc",
+      "content_hash": "sha256:a0019d942288d20aa0b983f637ac9e7a3aa397785b1a773339082ad040b44fa2",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "Legacy app declarations retain demonstrated feature-tree/default/profile/flag/modify behavior. A valid active legacy exclusive group still has its unique default; inactive groups may be empty. Older installation records carry effective choices, not richer original intent or default-consent provenance they never stored. Compatibility lowering states exactly what is known and preserves that behavior; richer requests retain their stronger distinctions. A package kind alone never selects a weaker interpretation of the same rich definition. @status:spec/done",
+      "heading": "Legacy app declarations retain demonstrated feature-tree/default/profile/flag/modify behavior. A valid active legacy exclusive group still has its unique default; inactive groups may be empty. Older installation records carry effective choices, not richer original intent or default-consent provenance they never stored. Old records also lack historical secret-provision provenance; legacy fallback behavior remains explicitly weaker and must not be relabeled as a known absence/default receipt. New operations record actual value-free provision and enforce resupply when it is known. Compatibility lowering states exactly what is known and preserves that behavior; richer requests retain their stronger distinctions. A package kind alone never selects a weaker interpretation of the same rich definition. @status:spec/done",
       "line": 46,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-APP-COMPATIBILITY"
     },
@@ -99909,7 +99909,7 @@
     },
     {
       "anchor": "app-runtime",
-      "content_hash": "sha256:c0ae8721f45a4a102e98cdb8e1a6eb7a4ae2d18f31ae8be344e710027249385a",
+      "content_hash": "sha256:d41256ff9c37f7afad4dc8b9bd73daf7be2f3d53fcf7567f60c511f009bad620",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "6.1 Selected-installer implementation boundary",
@@ -99936,12 +99936,30 @@
     },
     {
       "anchor": "APP-CONFIGURATION-CONTINUATION",
-      "content_hash": "sha256:dcec10b32e5ef6bc3ea2c383f325d4785048ea5f3ba48cf458ac7495a467f05f",
+      "content_hash": "sha256:4a77c3a11812e69a7c79f61e9c13337703b3915008767168182efd4ff3a0f0c2",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "The existing pending work owner retains public original input and operation context before dependency descent. Canonical app resume names an exact package key and operation generation in the actual home; it reuses saved input rather than replaying raw argv or mutable input files. Secret resupply remains ephemeral and proves presence, not equality with an earlier value. Linked pending children precede indexed-completion shortcuts. Maintenance keeps its actual predecessor and removal/publication phase; uncertain external removal is not automatically repeated or certified. Delegated result reuse checks the actual prepared prompt/task context before rewriting its envelope, without claiming whole-source authentication. Whole-import continuation retains its finite cohort/cursor and arrangement policy; row continuation is not whole-import completion. New continuation metadata uses an explicit steps version even for legacy syntax; older work remains labeled with its weaker provenance. Index writes preserve v3 legacy records faithfully and use v4 when rich data requires it; no read-time migration or silent old projection is permitted. @status:spec/done",
+      "heading": "The existing pending work owner retains public original input and operation context before dependency descent. Canonical app resume names an exact package key and operation generation in the actual home; it reuses saved input rather than replaying raw argv or mutable input files. Existing explicit manual resume retains its current-work selector with its weaker generation guarantee, while consuming saved new-format input instead of new deltas. Deliberate reopening of completed retained work uses a new generation. Optional step failure is not by itself an unfinished operation; step evidence and operation completion remain distinct. Secret resupply remains ephemeral and proves presence, not equality with an earlier value. Linked pending children precede indexed-completion shortcuts. Maintenance keeps its actual predecessor and removal/publication phase; uncertain external removal is not automatically repeated or certified. Delegated result reuse checks the actual prepared prompt/task context before rewriting its envelope, without claiming whole-source authentication. Whole-import continuation retains its finite cohort/cursor and arrangement policy; row continuation is not whole-import completion. New continuation metadata uses an explicit steps version even for legacy syntax; older work remains labeled with its weaker provenance. Index writes preserve v3 legacy records faithfully and use v4 when rich data requires it; no read-time migration or silent old projection is permitted. @status:spec/done",
       "line": 52,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION"
+    },
+    {
+      "anchor": "portable-configuration",
+      "content_hash": "sha256:a4410dc5db697a557abe1fd558e05dd262da5ee2eebe51b5662fb50cc730d643",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "6.2 Portable configuration remains a required consumer",
+      "line": 54,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#portable-configuration"
+    },
+    {
+      "anchor": "APP-CONFIGURATION-PORTABILITY",
+      "content_hash": "sha256:edea1a73432f168a14131a6985953ef8c4cf5c5c6d5b50138e328aa8778fa843",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "A rich installed configuration must not be flattened into legacy portable effective features/public parameters while claiming its original, dormant, exact/additive or default-basis meaning survived. Complete common application support includes a separately designed generated portable format, compatible legacy reading and actual export/import roundtrips, with secret values excluded and required resupply explicit. Host-dependent paths and changed installer/definition scope require stated transfer semantics, not guessed identity from matching local names. Until that consumer is implemented, the legacy portable route refuses unrepresentable rich state before writes; valid legacy import continuation remains its own supported boundary. This temporary refusal does not close the common configuration feature. @status:spec/done",
+      "line": 55,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-PORTABILITY"
     },
     {
       "anchor": "acceptance",
@@ -99949,7 +99967,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "7. Finished means a working shared system",
-      "line": 54,
+      "line": 57,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#acceptance"
     },
     {
@@ -99958,7 +99976,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Acceptance requires the existing public application wizard scenario and app update/modify behavior to pass; the same ordinary package request to work through console and serialized external answers without host bootstrap; all cardinalities and omitted/empty/default policies; dormant switch-away/switch-back; additive/exact multi-consumer conflicts; candidate backtracking without effect/default leakage; integrated forwarding/subskill/config effects; typed parameters and redaction; persistence followed by install/update/reconfiguration; stale definition refusals without writes; and a PackageKind-driven matrix of supported views and effects, including read-only and consent-only boundaries. Structural/schema success and counts are supporting checks, not substitutes for these user outcomes. @status:spec/done",
-      "line": 55,
+      "line": 58,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#ACCEPTANCE"
     },
     {
@@ -99967,7 +99985,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "8. Rationale and rejected alternatives",
-      "line": 57,
+      "line": 60,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#decisions"
     },
     {
