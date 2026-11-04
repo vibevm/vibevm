@@ -2,6 +2,7 @@
 """Validate architectural inventory and links, never product implementation."""
 import argparse
 import collections
+import hashlib
 import json
 from pathlib import Path
 
@@ -26,7 +27,9 @@ def main():
     assert len(accepted) == 113
     assert data["meta"]["sourcePin"] == inventory["source_commit"]
     for row in rows:
-        assert row["sourceAssessment"] == source[row["id"]]["status"]
+        # The architectural judgment is pinned; current status is an explicit
+        # visualization overlay, not a rewrite of that judgment on every tick.
+        assert row["sourceAssessment"] in {"implemented", "partial", "planned-only", "unknown"}
         for key in ("title", "goal", "provided", "evidenceLevel"):
             assert row[key], (row["id"], key)
         assert "required" in row  # A foundational task may have no new prerequisite.
@@ -91,6 +94,53 @@ def main():
         expected = json.loads(json.dumps(data))
         for row in expected["tasks"]:
             row.pop("historicalEdgeDispositions", None)
+        if "contentRevision" in ui["meta"]:
+            transfers = {row["old_task_id"]: row for row in crosswalk["rows"]}
+            for row in expected["tasks"]:
+                original = source[row["id"]]
+                row["sourceAssessment"] = original["status"]
+                overlay = {"source": {
+                    "status": original["status"],
+                    "evidence": original.get("evidence", []),
+                    "missing": original.get("missing", []),
+                    "runtimeVerified": original.get("runtime_verified", False),
+                }}
+                row["transferStatus"] = "outside-old113"
+                overlay["transfer"] = {"status": "outside-old113"}
+                if row["prototypeAccepted"]:
+                    transfer = transfers[row["id"]]
+                    row["transferStatus"] = transfer["status"]
+                    overlay["transfer"] = {
+                        "status": transfer["status"],
+                        "acceptedMainCommits": transfer.get("accepted_main_commits", []),
+                        "transferredScope": transfer.get("transferred_scope", ""),
+                        "unmetOrUnverified": transfer.get("unmet_or_unverified", ""),
+                    }
+                row["statusOverlay"] = overlay
+            for key, field, selected in (
+                ("sourceAssessmentCounts", "sourceAssessment", expected["tasks"]),
+                ("prototypeAcceptedSourceCounts", "sourceAssessment", [r for r in expected["tasks"] if r["prototypeAccepted"]]),
+                ("transferCountsOld113", "transferStatus", [r for r in expected["tasks"] if r["prototypeAccepted"]]),
+            ):
+                expected["meta"][key] = dict(collections.Counter(r[field] for r in selected))
+            status = json.loads((args.visualization / "status.json").read_text())
+            assert status["ok"], "updater reports a failed refresh"
+            for key in ("refreshedAt", "currentMainHead", "statusSourceUpdatedAt", "contentRevision", "snapshotId", "statusBasis"):
+                assert ui["meta"][key] == status[key], ("snapshot mismatch", key)
+                expected["meta"][key] = status[key]
+            assert ui["meta"]["statusSources"] == status["sources"]
+            for key, path in (
+                ("architecture", here / "map.json"),
+                ("inventory", here.parent / "source-inventory.json"),
+                ("crosswalk", here.parent / "research/old113-transfer-crosswalk.json"),
+            ):
+                assert status["sources"][key]["sha256"] == hashlib.sha256(path.read_bytes()).hexdigest(), ("stale source", key)
+            expected["meta"]["statusSources"] = status["sources"]
+            expected["meta"]["overlayPolicy"] = "exact task IDs; architecture pins/generatedAt/layers/edges/historical113 unchanged"
+            status_script = (args.visualization / "status.js").read_text()
+            status_prefix = "window.VIBEVM_ARCHITECTURE_STATUS = "
+            assert status_script.startswith(status_prefix) and status_script.endswith(";\n")
+            assert json.loads(status_script[len(status_prefix):-2]) == status
         assert ui == expected, "visualization data diverged from canonical map"
         script = (args.visualization / "data.js").read_text()
         prefix = "window.VIBEVM_ARCHITECTURE_DATA = "
