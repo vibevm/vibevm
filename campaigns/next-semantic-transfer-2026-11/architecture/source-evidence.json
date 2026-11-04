@@ -1,0 +1,730 @@
+[
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/environment/roles.rs",
+    "sha256": "0ebeca4ff938556db689552c375b56a8f82209835c9aa1358b62d65cacbe5792",
+    "scope": "1-175,253-427: pure role constructors, definition/lock/execution/target distinctions"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/environment/layout.rs",
+    "sha256": "40659ac92a30fa639bc82d2c8850c370f77732d035086541e87fec2f4180a811",
+    "scope": "1-146: injected root-role model and explicit Unverified binding"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/environment/exact.rs",
+    "sha256": "1b800085791a8ccfcf67b6795ff25a6d56c887dc6ebf093edad26a4fc2ce3a9b",
+    "scope": "50-121,128-190 and symbol inventory: selected target role and hash-frame primitive; rest not inspected"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/environment/legacy.rs",
+    "sha256": "adc86119ed2e73053d7bf68b159fee31485eb7ff0964c1972ec2326735a011be",
+    "scope": "38-116 and symbol inventory: missing-input classification, no inferred target/closure"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/manifest/migration.rs",
+    "sha256": "bc4a51ff896492e7525e9c481ab7aeb52817c4b4cfbffbe0e33f9cb4a0491b75",
+    "scope": "99-202 and symbol inventory: plan/output/recipe selection, pure entry; later writers excluded"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-workspace/src/migration_application/runtime.rs",
+    "sha256": "9350b4817ebdea667768a0661df2603d1fdf264e72a7439292b0282ef5f2a2c5",
+    "scope": "1-126: incumbent journal/effect/durability owner; application/recovery full bodies not re-audited"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/binding.rs",
+    "sha256": "a6d5beab875beffc06190a960ff4ae52144f42153a21622ae66150f508dc87f9",
+    "scope": "31-108,226-313,462-512: pinned roots vs trusted fields, host mode and destination reobservation"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+    "sha256": "d0b4b847baac6ef0e61566c9d71664e7afa4e81c5dad5037e53e20171b9c5b15",
+    "scope": "cached/hash inventory only; contract references not re-audited"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-resolver/src/features/configuration.rs",
+    "sha256": "614dfa8ad2d2ac3bdc0d99ce804d6a4c13797408fed9a685ba4d849870f4af95",
+    "scope": "1-145: pure consumer-instance joining and group resolution"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-workspace/src/source_query/capture.rs",
+    "sha256": "d16ef66a6d264ba690ebc898f035fb9c9b9da8d5c64b3178ab35970fc99e4b2e",
+    "scope": "59-140: supplied captures and selected-world manifest join"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/manifest/source_descriptor/mod.rs",
+    "sha256": "eab0327054485fc6b22adf7786c51a471c3092e43bfaa48cd6e419c38094230e",
+    "scope": "1-107: pure interpretation/media/role/loading and selector declarations"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-safefs/src/file/source_read.rs",
+    "sha256": "ea7ebdc001ff0adf1306921a5f486a7eec8deec5e9e2025ad07af6a7580c507b",
+    "scope": "48-125: held source reading/identity recheck; shared source policy"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-safefs/src/project.rs",
+    "sha256": "92ae6680cd5172324aced5eadb43c4317558f32a47fd76352f0eab22260b535c",
+    "scope": "public capability API inventory; bodies reused from earlier accepted review, no new full audit"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-core/src/configuration/choices/model.rs",
+    "sha256": "de4a483c8226d27782a42b0886d91bac4c0b5bfb229adde3d6cab80b16e92870",
+    "scope": "1-75: pure model and constructor validation; confirms uncommitted delta method not accepted yet"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-core/src/manifest/configuration.rs",
+    "sha256": "de9831f38e9c89b69b1df46d367492f7046fe69811d539290e2ff3a6d6b150d5",
+    "scope": "hash-bound incumbent definition owner, declaration API inspected previously; no new full audit"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+    "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83",
+    "scope": "30-96: typed original request and shape validation"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-spec/src/resolver/observation.rs",
+    "sha256": "50867896231ed4598c4ce3bbef2b2c8524ed33d27bab5054b33135459d034a50",
+    "scope": "125-205: held installed-slot lookup and shared document locator"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-spec/src/resolver/glob.rs",
+    "sha256": "9f5658954e4efd7ecc2ed0fe51703c094f0beffa8d07803e4798df52ef06c259",
+    "scope": "26-101: selected-world enumeration and fixed group authority"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-lifecycle/src/lease.rs",
+    "sha256": "1bf56bd04383fba75cfb1a8102dbbbc7b65b7497cb5024ba4710b0cc9bf7eaca",
+    "scope": "80-125: existing root/selected-node mutation continuity diagnostics"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+    "sha256": "45a04e330da696e5914cc6fb317d984e8bd9b47ccf48dba205c3943f9802354d",
+    "scope": "1-87: receipt recheck under existing domain lock"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+    "sha256": "c40c5d061eda4de25e719764e70b422398076a6219e714eda55f41c6a74cce83",
+    "scope": "hash-bound existing protocol only; not re-audited"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-install/src/apply/file_guard.rs",
+    "sha256": "44f42872491bc6981dc3c1a7dc5ee487f2f34afc4fb57bc9d04a17b43117ac1b",
+    "scope": "21-83: capture/owned metadata guard boundary; earlier full accepted review remains evidence"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-cli/src/commands/tree/artifacts.rs",
+    "sha256": "61cf400e00facf82a690ef88d0c51c3b1946d8af3997c464dba61d568db64c5f",
+    "scope": "hash-bound accepted current tree owner from earlier full implementation review; no new full runtime"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-app/src/settings.rs",
+    "sha256": "73620a48ca9a9e2dd2dc607686736fcc8b0909ddaa7ee6fcd411546c8a6b3aa3",
+    "scope": "42-87: explicit project/user roots and mutation lock; doc wording not proof of work-path placement"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/manifest/package/features/constraints.rs",
+    "sha256": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+    "scope": "1-13,160-215: actual import of environment identity subset and OwnerEdge/ConfigurationInstance"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-package-source/src/source/transaction.rs",
+    "sha256": "750332db0a1257e4e5c6aa61d017c59595da0802feb82fc5175207c54475aa3b",
+    "scope": "1-90: metadata facade delegates incumbent source provider; no all-catalog proof claimed"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+    "sha256": "b13c7516929498a3e0d314b4e3648865b89301ca757d91eb71b5b1e294ea6ab7",
+    "scope": "268-325: actual configured solver unsupported cells and candidate catalog"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-workspace/src/boot_debugger/measurement.rs",
+    "sha256": "72ffcadc9d9abaf2df7e26d5fc76fe8753b8bfe533e12e41dd51fd6fece1bfd5",
+    "scope": "1-90: exact/estimated/unavailable values and streamed bytes/scalars"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-workspace/src/boot_debugger/static_summary.rs",
+    "sha256": "d8b3d1bcbb9c5eb31ae1f42752af6ab431930411677a791d4285413ec98813aa",
+    "scope": "184-253: raw nested marker stack and legacy body measurements"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-specdoc/src/commonmark.rs",
+    "sha256": "f6b19557d0e4a3f2497a98ccfc47d56238f695c6a11a3f166e9cfba0f526de3e",
+    "scope": "1-45: ordinary structural parser boundary/snapshot nodes; full parser not audited"
+  },
+  {
+    "group": "foundations",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-specdoc/src/xml_data.rs",
+    "sha256": "c9340cecd7c2c166fc1990363999b20a96ccb605bdb2f69cc2ce9216ade7e56e",
+    "scope": "1-51: separate raw-preserved inspection/limits; rest not audited"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-workspace/src/bins.rs",
+    "sha256": "c78dd144e3b90013e9449a56b92713b4bc5460aa1f6421938ab33d3b0dd0d27c",
+    "scope": "E03: DeclaredBinary::artifact lines 234–251 and binary declarations"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-lifecycle/src/artifacts.rs",
+    "sha256": "06273e0b8b4d29864944dfcc938ab3ff16da3c88571f7fffbe847400d6e6448f",
+    "scope": "E01: validate_shape lines 1–105"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-lifecycle/src/artifacts/observe.rs",
+    "sha256": "d5d26237d2409bba48fda2a146e48cb008b86ff0ed3b61dd9d62ea7ebb187dd4",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-lifecycle/src/mechanism/build/record.rs",
+    "sha256": "fafe4e9a63efc5a7455e90feed7a4e779fefd9f6ff855f181200309d317f6c52",
+    "scope": "E02: full file"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+    "sha256": "9ff511b8e72445929584ee64a1b0516d636c89b523672ce6b9713c3244326774",
+    "scope": "E04: ownership 1–120; Transaction::apply 109–200"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+    "sha256": "45a04e330da696e5914cc6fb317d984e8bd9b47ccf48dba205c3943f9802354d",
+    "scope": "E04: ownership 1–120; Transaction::apply 109–200"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "sha256": "64be7003ef6458f4407148e218270072d6c4bc837ceeff24c412db30c77e6618",
+    "scope": "E05: delegated_transition owner and park path 146–199"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "xtask/src/dist/mod.rs",
+    "sha256": "e0a00a4b9b2225a43aec289cfaea087792ff1f057a3a39f7a6c9c4ba28b2d2f9",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "xtask/src/dist/release.rs",
+    "sha256": "38d52bfc9239faeba9f8629d839895dddb9fd3935a1d9f457a582fdc8da639db",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+    "sha256": "79be30821dba08ab1fdf03d320f4400ff9eb7d69557ef8223729b412d399132b",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-workspace/src/bins.rs",
+    "sha256": "c78dd144e3b90013e9449a56b92713b4bc5460aa1f6421938ab33d3b0dd0d27c",
+    "scope": "E03: DeclaredBinary::artifact lines 234–251 and binary declarations"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/artifacts.rs",
+    "sha256": "06273e0b8b4d29864944dfcc938ab3ff16da3c88571f7fffbe847400d6e6448f",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/artifacts/observe.rs",
+    "sha256": "5d532f6cb570ee6cc9de19ed16e49ab997ee8615d9864fd1cd6ffe3b6a8a643f",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/build/record.rs",
+    "sha256": "fafe4e9a63efc5a7455e90feed7a4e779fefd9f6ff855f181200309d317f6c52",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/build/journal.rs",
+    "sha256": "78f32f665698ad83b57d321af4d4364c20fbc6f037aec01a73b82a5687356939",
+    "scope": "E08: journal constants/fixed_target/subject selector 20–65,338–385; driver 45–75; prepare_with 267–292"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+    "sha256": "eaa8900c123f3022c902ca2e1f452e8ea035589205c24942ff863f406078c52c",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+    "sha256": "ad9d8ca8c26465686968238df25b3e48dfeab78606c0e6d8db7648f98ce5fbbd",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/binding.rs",
+    "sha256": "a6d5beab875beffc06190a960ff4ae52144f42153a21622ae66150f508dc87f9",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/runner/invocation.rs",
+    "sha256": "d5e557c617dc7bd67f0e8f628e02d3e9cedd3d6cfdf0c68c1e27f79c06b72f8c",
+    "scope": "E06: comparable_completion and validate_invocation_prefix 30–135"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/runner/hosted.rs",
+    "sha256": "bd6e76c68fa99438724b22a99a60d870cc605c5d894e7041255dd011fd08f0a7",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/manifest/change/full_pass.rs",
+    "sha256": "20b04b48e48e2781b2059782def882704144b3e7d2a55f421c9ef7266cf3aa43",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-orchestrator/src/change/full_pass.rs",
+    "sha256": "99f2f0caaa001424e1c36e788be08dc6af4b3df17bc6eda921811acb5c51da25",
+    "scope": "E07: full full_pass.rs; apply prepare/run lines 1–45"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-cli/src/commands/change/apply.rs",
+    "sha256": "c96dc876182e6db32458d6e84ff74b8fcc5b6753e455d8674a9edd266df9fd26",
+    "scope": "E07: full full_pass.rs; apply prepare/run lines 1–45"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/environment/roles.rs",
+    "sha256": "0ebeca4ff938556db689552c375b56a8f82209835c9aa1358b62d65cacbe5792",
+    "scope": "E11: full roles; future_target_modes_are_describable_but_operations_unsupported 430–466"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/environment/tests.rs",
+    "sha256": "9c01e27e60ccb68686ae1897fb0fc2b314058b7f564bd951aff35b1946a1d3a5",
+    "scope": "E11: full roles; future_target_modes_are_describable_but_operations_unsupported 430–466"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-publish/src/publication_full_plan/calls/driver.rs",
+    "sha256": "327d27a46cc6cd4b8fde445cae884d5a73c229a17078a7f14d5e187dd5a2a92e",
+    "scope": "E08: journal constants/fixed_target/subject selector 20–65,338–385; driver 45–75; prepare_with 267–292"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-publish/src/publication_full_plan/calls/owner.rs",
+    "sha256": "e727132ebbd064f82b9d9723bb7d9d9c0add577d3fa1d5325ccb9d394b01c243",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "xtask/src/dist/mod.rs",
+    "sha256": "2204134baa811d73559c23571ed43b834b732528ca6a2bbcee8b5ac9b9f230cc",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "xtask/src/dist/release.rs",
+    "sha256": "ae6e1fcf3aaa734d80d0d255712921906001575270d6fb09a06fa029e02fc8b9",
+    "scope": "E08: journal constants/fixed_target/subject selector 20–65,338–385; driver 45–75; prepare_with 267–292"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-publish/src/publication_subject.rs",
+    "sha256": "d3356a16345a53db3fcf57d10b1abb5084d74a871469a0a6099a2ef14e84eaa9",
+    "scope": "E12: require_apply_ready_default_smoke 400–421; evaluator 178–210 and mode symbols"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-publish/src/publication_authority.rs",
+    "sha256": "a0dd88793345bb02bab82a58f2139dcceb92e8a3db32c84e694ae0286c089094",
+    "scope": "E12: require_apply_ready_default_smoke 400–421; evaluator 178–210 and mode symbols"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic/plan.rs",
+    "sha256": "45d536acf14685758d1d41188122018d34c3977c857fce40eb02ec4f1ba395a2",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/generic/grant.rs",
+    "sha256": "2540d7885cf9b0b48452a478e95ec5c2b585f31f20ce85cff324b4d1aab12585",
+    "scope": "E09: full grant; preparation 25–135 and plan 136–180"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/client_commands.rs",
+    "sha256": "1e2a99b2ba11165b213a902c0b4198e04e01553ee9e23a906ace1870a1e22d88",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-workspace/src/derivatives.rs",
+    "sha256": "1da82b5ec73dfd347d62859bdb318580d83ed96e92242e9dc1dde0ee895943f1",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-workspace/src/derivatives/materialize.rs",
+    "sha256": "cf5ca834a6903e7027a229937e7dfdffbd12babb4642231bc05ee97329557f26",
+    "scope": "E10: full compatibility; capture_retained/membership and derive admission 1–140"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-workspace/src/derivatives/compatibility.rs",
+    "sha256": "0cdd315c34532fd82be409e485442da451447361fc57081405e9fed714e5a879",
+    "scope": "E10: full compatibility; capture_retained/membership and derive admission 1–140"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs",
+    "sha256": "b54a04462cc0509b3ac1cfecfcb980810b229baa8ca2558d6f03db3a40b68442",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+    "sha256": "ab85011cd156fe4ed65b0f62b227bcf4742536837262df05b3cc7ce8f07121bb",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-agent-projection/src/client_capabilities.rs",
+    "sha256": "89ae44f464ee0a89ddf1274dcc0a224919faecf7bd1b58dc59d50f3da9fca2b2",
+    "scope": "captured not yet read"
+  },
+  {
+    "group": "runtime",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/mechanism/deploy/prepared_query.rs",
+    "sha256": "761a2f7bcf2475a5486de33aeff95f9818463e9c0068b7c0bc512bd854e3d8b0",
+    "scope": "E09: full grant; preparation 25–135 and plan 136–180"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-requirements/src/query.rs",
+    "sha256": "54c455e87e4e4223cf853ba3f8a76994d7fdfe13827e496184d57dc30a574750",
+    "scope": "1-125 query validation/default/limit/context boundary"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/progress-core/src/terminal.rs",
+    "sha256": "94e71194695c5186d1003e02852ce5aea87d459077c8dec9156e245fd7b01432",
+    "scope": "1-125 actual resolve_terminal/observe_artifact branches"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-lifecycle/src/lease.rs",
+    "sha256": "1bf56bd04383fba75cfb1a8102dbbbc7b65b7497cb5024ba4710b0cc9bf7eaca",
+    "scope": "110-168 actual acquire and held root ownership"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-safefs/src/file/owned.rs",
+    "sha256": "1d69dae35550a1ead0bb9f9c5d31c43f060bc73ab37adf540867fd2d14f938fe",
+    "scope": "150-200 actual atomic-owned publication/result stages; targeted receipt identity search"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-install/src/apply/file_guard.rs",
+    "sha256": "44f42872491bc6981dc3c1a7dc5ee487f2f34afc4fb57bc9d04a17b43117ac1b",
+    "scope": "139-172 actual undo/receipt/third-state refusal; function inventory"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-scrape/src/inventory.rs",
+    "sha256": "bd492e20648951faab300cd13b55ce471f6a449ba5dae0fbb6f81bfd54b3ea1f",
+    "scope": "26-105 actual enumeration/file identity/directory recheck"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-workspace/src/compile_trace/open.rs",
+    "sha256": "f3417566e72b4e8e06f0ea5512c2caba4db53e70e2be77b60c291dc9e154d1a3",
+    "scope": "actual prepare/existing_only lock call search and prior bounded review confirmation"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "xtask/src/codegen/mod.rs",
+    "sha256": "608a80b5b9ecd9f2c69c25f32c530cc8c060f89231f3424acfbf87e8e3cfdb26",
+    "scope": "83-111 and145-167 registry/vocabulary/staging actual driver"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-safefs/src/file/source_read.rs",
+    "sha256": "ea7ebdc001ff0adf1306921a5f486a7eec8deec5e9e2025ad07af6a7580c507b",
+    "scope": "source read API/body reviewed in immediately preceding fixed-main reviews; hash identity only in this batch"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/vibevm",
+    "pin": "778b700fd2e9ee7d09c73b9de864ecc71b1aba3f",
+    "path": "crates/vibe-cli/src/commands/tree/mod.rs",
+    "sha256": "ce8a6f9d614e6d7e537fc54447d4b7b962fc376d5f8dc92b0dad351805a1c244",
+    "scope": "run and snapshot/state bodies reviewed in prior fixed-main batch; hash identity only now"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-core/src/manifest/change/identity.rs",
+    "sha256": "beb8b6453452b597f0bab4e5b5ac27997dd75d3d40c37a325e4fa1b0795e5f67",
+    "scope": "1-170 actual normative filter/recipe/field framing; no IO identity construction"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-requirements/src/complete.rs",
+    "sha256": "775404833546bfd3bd8b0b2ed2932c8556d32a6d87be674041a1e0ea8975a9e9",
+    "scope": "1-150 actual retained inventory/manifest/pin/descriptor gaps observation"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-orchestrator/src/machine_view/snapshot.rs",
+    "sha256": "77a77851a6f3ebd90edd45e9d1d5152478128e1afeb3f02e95e27cebe6bcc70a",
+    "scope": "1-192 complete compose including optional axes and unverified multiowner result"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-orchestrator/src/document_analysis/capture.rs",
+    "sha256": "f89d84953082d67f7dd4a2fd418a0f60b74606259652301b46074ee7fa24d608",
+    "scope": "1-135 actual client freeze and separate disk/overlay bytes"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-orchestrator/src/document_analysis/edit/fence.rs",
+    "sha256": "b853ce817a3b03f8cee8a06372bc55b8bc078e85a6388f97ab526f076c163f56",
+    "scope": "1-215 collect/validate/reserve/ready/acknowledge actual registered-client fencing"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-orchestrator/src/machine_submission.rs",
+    "sha256": "c84f022e707b0bbc7a8f7847a18170e21fe27b5f4743f09287a00d336a43583a",
+    "scope": "SubmissionJournal and submit72-88,192-225,259-309 actual reserve/readback/ready/invoke/replay order"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "crates/vibe-lifecycle/src/runner/invocation.rs",
+    "sha256": "d5e557c617dc7bd67f0e8f628e02d3e9cedd3d6cfdf0c68c1e27f79c06b72f8c",
+    "scope": "comparable_completion43-100 actual original input/output witness equality"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "xtask/src/bin/preview-transition-check/bindings.rs",
+    "sha256": "2d0a8f1fcb1fc59e31c39e6865260c2e4df64a5e9c627c5cc31a8e65098751aa",
+    "scope": "native_record/bound_record7-56 actual nonnormative role and exact record hash join"
+  },
+  {
+    "group": "coordination",
+    "repo": "/fast/git/v/vibevm-next",
+    "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+    "path": "xtask/src/bin/preview-transition-check/readiness.rs",
+    "sha256": "5f40b5e6cd6bd8acf6a7405c4bae3881b8c52ee0ae4b4d036a6891d4efd79e60",
+    "scope": "1-125 actual pending/unsupported readiness branches, not authoritative linked adapter"
+  }
+]
