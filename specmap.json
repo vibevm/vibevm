@@ -147556,7 +147556,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a666811682dd69606cb6b5a339dd53643da7d7f5a223b6ed4caabd6cd9b79c63",
+      "content_hash": "sha256:6bca4bb33d529e1d80af710b7fe120e838745baf0b5f3efe8b4288f6289f830b",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker",
@@ -147988,7 +147988,7 @@
     },
     {
       "anchor": "addressing",
-      "content_hash": "sha256:9cc7775d451b151cf6b11c42286ed88d7a39343b67a554ecdfe1dcf6dcef582c",
+      "content_hash": "sha256:4a7b727833355b86073ab4ef689a8d56fd10a365c6c21b7c65cbc7cfc301ce5f",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "6. `spec://` addressing and the resolver (\"router\")",
@@ -148122,12 +148122,30 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
     },
     {
+      "anchor": "URI-UNIQUE-SELECTION",
+      "content_hash": "sha256:34257f7e2800f1baaeba223cf5327d1d4314cb86b1b96afca779c5f5ceb33814",
+      "doc_path": "modules/vibe-workspace/PROP-035",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+      "heading": "A requested Markdown tree path resolves uniquely: its first anchor must be unique in the existing flat search, and each subsequent segment must identify one direct child of the selected parent. Ambiguity is a named failure, not first-match content or not-found. Unrequested duplicates do not invalidate an otherwise unique Markdown selection; qualified same-leaf paths under distinct unique parents remain valid. Empty path still selects the whole document. Existing XML whole-document ID validation is unchanged. Source projection and checked selection consume the same held observation, without another parser/read. @status:spec/done",
+      "line": 104,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-UNIQUE-SELECTION"
+    },
+    {
+      "anchor": "SOURCE-GLOB-BINDING",
+      "content_hash": "sha256:3d085a9f621b415ff6b801ca96fd78c6a809cbd26fdbfdbc59394838edce6086",
+      "doc_path": "modules/vibe-workspace/PROP-035",
+      "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+      "heading": "A package-name pattern retains its fixed group authority and explicit version selector. Membership is checked against the same coordinate/root/version the emitted point address denotes. With an explicitly selected world, enumerate its applicable dependency coordinates and exact roots only; unrelated installed slots cannot affect membership, and a requested version that conflicts with a matching selected coordinate refuses. Otherwise enumerate the requested group's materialized slots: absent layout, unmatched names, empty version sets and genuinely missing requested documents/versions are nonmembers; malformed, unsafe or unreadable matching slots and nonabsence document failures refuse. Explicit pattern versions are honored, never discarded into newest; without a pin the ordinary newest-installed rule and versionless spelling remain. This replaces the obsolete group-blind lexical-survivor rule now that point resolution and slots are group-qualified. Keep sorted output, legal empty sets, direct self behavior and one expansion path shared by fold/cycle checking. These are finite source observations, not a whole-pattern or whole-closure snapshot across later mutations. @status:spec/done",
+      "line": 105,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-GLOB-BINDING"
+    },
+    {
       "anchor": "ROUTER-EXTENDS-SPECMAP",
       "content_hash": "sha256:4cdf9cda749d05b552151b5e7fd5dcee1a55be1d4b803110b2e433a73329ceb0",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "The router extends the `specmap.json` index (already a `uri↔file` table) rather than duplicating it. @status:impl/done",
-      "line": 104,
+      "line": 106,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#ROUTER-EXTENDS-SPECMAP"
     },
     {
@@ -148136,7 +148154,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Resolver path validation decision, 2026-11-03",
-      "line": 107,
+      "line": 109,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#lookup-path-decision"
     },
     {
@@ -148145,7 +148163,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Source observation decision, 2026-11-04",
-      "line": 110,
+      "line": 112,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#source-read-decision"
     },
     {
@@ -148154,7 +148172,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "7. The three directives",
-      "line": 113,
+      "line": 115,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#directives"
     },
     {
@@ -148163,7 +148181,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Common shape: `#<directive> [options] <specpath>`, where `specpath` is a `spec://` address (§6) — a section, or a whole file. @status:impl/done",
-      "line": 115,
+      "line": 117,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIRECTIVE-SHAPE"
     },
     {
@@ -148172,7 +148190,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Every file referenced by any directive MUST be declared in the package's `vibe.toml` (the directive graph and the manifest cannot disagree). <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 116,
+      "line": 118,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIRECTIVE-MANIFEST-AGREE"
     },
     {
@@ -148181,7 +148199,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "The directive instructions are among the first things loaded, in every project, package, and library (§13). @status:spec/done",
-      "line": 117,
+      "line": 119,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DIRECTIVES-FIRST-LOADED"
     },
     {
@@ -148190,7 +148208,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "7.1 `#embed` — the macro (materialization-time)",
-      "line": 119,
+      "line": 121,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#embed"
     },
     {
@@ -148199,7 +148217,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "The simplest preprocessor directive: splice one section (or whole file) into another — a C-macro substitution over `spec://` addresses. @status:impl/done",
-      "line": 120,
+      "line": 122,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-DEF"
     },
     {
@@ -148208,7 +148226,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Fires at materialization** (`vibe install` into `vibedeps`) **and** must be fully expanded during `STATIC.md` compilation. **No unexpanded `#embed` may survive in a compiled `STATIC.md`.** @status:impl/done",
-      "line": 122,
+      "line": 124,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-FIRES"
     },
     {
@@ -148217,7 +148235,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Mode-independent.** `#embed` is purely a materialization concern — it produces the same text in both build modes. Therefore `vibedeps` stores embeds **already expanded**, while `#use`/`#source` (mode-dependent) remain as directives. This split removes a large part of the ordering problem: embeds are fixed early and identically for both executors. @status:impl/done",
-      "line": 123,
+      "line": 125,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-MODE-INDEPENDENT"
     },
     {
@@ -148226,7 +148244,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Contract-section rule.** An `#embed` targeting a `contract`-section of a `normal` package inherits the full **`#source` compilation rules** (§7.3) for that paragraph — so the merged (contract+source) text is what gets spliced. @status:impl/done",
-      "line": 124,
+      "line": 126,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-CONTRACT-RULE"
     },
     {
@@ -148235,7 +148253,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Unrestricted otherwise.** `#embed` may splice any paragraph of any spec, or a whole spec (including `format = \"simple\"`), with no structural checks. @status:impl/done",
-      "line": 125,
+      "line": 127,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-UNRESTRICTED"
     },
     {
@@ -148244,7 +148262,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Arbitrary granularity** (§5). Algorithmic; the tool of building highly-optimized statically-assembled package hierarchies — its main purpose. @status:impl/done",
-      "line": 126,
+      "line": 128,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-PURPOSE"
     },
     {
@@ -148253,7 +148271,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "7.2 `#use` — the dependency edge (tree-shaking)",
-      "line": 129,
+      "line": 131,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#use"
     },
     {
@@ -148262,7 +148280,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "The harder directive: pull only the packages actually needed. @status:impl/done",
-      "line": 130,
+      "line": 132,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-DEF"
     },
     {
@@ -148271,7 +148289,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Problem it solves.** Specs refer to entities defined elsewhere, often without an explicit link, and linking constantly is tedious. Without `#use`, the smallest script would have to pull the whole standard library. @status:spec/done",
-      "line": 132,
+      "line": 134,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#use-problem"
     },
     {
@@ -148280,7 +148298,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Tree-shaking default.** A `format = \"normal\"` package that nobody `#use`s does not participate — not read, not used, anywhere. The moment any text does `#use spec://…`, that package **enters the build** and MUST be linked **before** its user in topological order. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 133,
+      "line": 135,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-TREE-SHAKING"
     },
     {
@@ -148289,7 +148307,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Structural mode.** `#use` is an instruction to read the target's content **when it is needed** — not eagerly, but definitely **before using anything inside it**. Reads **cascade**: `a` `#use`s `b`, `b` `#use`s `c`, so using `a` loads `b` and `c` transitively. The cascade is what lets a big package be entered through one file and expand from there, rather than loaded whole. @status:spec/done",
-      "line": 134,
+      "line": 136,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-STRUCTURAL"
     },
     {
@@ -148298,7 +148316,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Inline mode.** The same, statically: the `#use`d library's text is **fully copied higher up in `STATIC.md`** so it is available before the user. @status:impl/done",
-      "line": 135,
+      "line": 137,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-INLINE"
     },
     {
@@ -148307,7 +148325,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Granularity.** Pulls the whole top-level anchored ancestor of the addressed node (§5). @status:impl/done",
-      "line": 136,
+      "line": 138,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-GRANULARITY"
     },
     {
@@ -148316,7 +148334,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Contract-section rule.** A `#use` into a `contract`-section of a `normal` package inherits the `#source` rules (§7.3). Otherwise `#use` may pull any paragraph or whole spec (even `simple`) with no structural checks. @status:impl/done",
-      "line": 137,
+      "line": 139,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-CONTRACT-RULE"
     },
     {
@@ -148325,7 +148343,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**The `as` clause (B-011, owner-approved 2026-08-04).** `#use [options] <specpath> as <Alias>` additionally binds `<Alias>` — an identifier under the anchor-segment grammar (§6) — to the directive's address. The alias is **file-scoped** (visible throughout the declaring file regardless of declaration position, never exported, never inherited by `#use`-ers); two declarations of one alias name in one file are a compile error. The alias binds to the **address**, never to any compiled text — so it survives splicing and any later cleaning of the compiled lane. A trailing `as` clause is ignored by pre-B-011 scanners (the token tail after the address was never parsed), so the clause is backward-compatible by construction. @status:spec/work",
-      "line": 138,
+      "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-AS-ALIAS"
     },
     {
@@ -148334,7 +148352,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "7.3 `#source` — contract↔implementation virtual linking",
-      "line": 141,
+      "line": 143,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#source"
     },
     {
@@ -148343,7 +148361,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Like a C++ interface, but with section-level merging. `contract` sections are the exposed surface; `#source` names the file(s) that implement them. Sections are treated as the analogue of class methods, needing a merge (in the static build) or virtual-lookup (in structural mode) mechanism. @status:impl/done",
-      "line": 142,
+      "line": 144,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-DEF"
     },
     {
@@ -148352,7 +148370,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Merge algorithm, per section (by matching `{#tag}`): @status:impl/done",
-      "line": 143,
+      "line": 145,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#merge-algorithm-lead"
     },
     {
@@ -148361,7 +148379,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**In contract, absent in source** — structural: a full part of the spec, readable at will; static: compiled into the build whole. @status:impl/done",
-      "line": 145,
+      "line": 147,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-CONTRACT-ONLY"
     },
     {
@@ -148370,7 +148388,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**In source, absent in contract** — always counted; structural: readable at will; static: compiled in whole. *(Calling a section that exists only in the implementation is poor taste, but permitted — we deliberately impose no `private`/`public` access control.)* @status:impl/done",
-      "line": 146,
+      "line": 148,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-SOURCE-ONLY"
     },
     {
@@ -148379,7 +148397,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**In both, same `{#tag}`** — merged by the tag's mode: @status:impl/done",
-      "line": 147,
+      "line": 149,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-BOTH"
     },
     {
@@ -148388,7 +148406,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**`:replace`** — `# name {#tag} :replace` — the contract text is ignored; the source text is canonical (read by the agent / put in the static build; an already-read contract text is explicitly superseded). @status:impl/done",
-      "line": 148,
+      "line": 150,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-REPLACE"
     },
     {
@@ -148397,7 +148415,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**`:add`** — `# name {#tag} :add` — the result is the **sum**: contract text first, then source text. Static: compile the concatenation. Structural: the agent reads both and weights them equally. @status:impl/done",
-      "line": 149,
+      "line": 151,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-ADD"
     },
     {
@@ -148406,7 +148424,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Default is `:add`** (absent a `:`-suffix) — so the interface text need not be duplicated to appear in the result. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 150,
+      "line": 152,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MERGE-DEFAULT-ADD"
     },
     {
@@ -148415,7 +148433,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Fact inheritance** *(fact amendment, owner-ratified 2026-07-24 — closes F-022)*: @status:impl/done",
-      "line": 152,
+      "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#fact-inheritance-lead"
     },
     {
@@ -148424,7 +148442,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Section fate by default.** Facts ride their section: `:add` carries both sides' facts into the sum; `:replace` supersedes the contract's facts — text and fact anchors together. @status:impl/done",
-      "line": 154,
+      "line": 156,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FACT-SECTION-FATE"
     },
     {
@@ -148433,7 +148451,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Per-fact override.** Within a merged `:add` section, a source fact redeclaring a contract fact's `##<ID>` **overrides** it: the contract fact's span is dropped from the merged output and the source's is canonical (last-wins in contract→source order). One id, one unit — redeclaration IS the override gesture, so refining a single statement never requires `:replace`-ing the whole section. @status:impl/done",
-      "line": 155,
+      "line": 157,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FACT-OVERRIDE"
     },
     {
@@ -148442,7 +148460,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**The merged view holds uniqueness.** After merging, the compiler re-runs the anchor-uniqueness check — fact and heading ids, one namespace — over the merged document; a surviving duplicate (a non-override collision across sections, or fact-vs-heading) is a **build error**, never a warning. Per-file cleanliness of the inputs does not exempt the merged output. *(Precision, from the implementation review 2026-07-24: the gate flags a repeat only when at least one occurrence is a fact leaf — a pure heading-vs-heading repeat is the `:add` concatenation's own artifact (both section versions legitimately carry the same `{#tag}`), not a collision.)* @status:impl/done",
-      "line": 156,
+      "line": 158,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FACT-MERGED-UNIQUENESS"
     },
     {
@@ -148451,7 +148469,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**A target with unique element ids defines a repeated heading label once (B-206, 2026-11-02).** The tolerated heading-vs-heading repeat survives qualify as one label on two headings, which the Markdown target writes as it is. The XML target gives that label to the FIRST heading — the contract's, first in `:add` order, and the occurrence the document tree indexes and a `(#label)` link reaches — and emits every later heading with the same label as an unanchored continuation, so both targets define the same qualified labels and the same fact ids. A fact sharing a label is still the collision ##FACT-MERGED-UNIQUENESS refuses. @status:impl/done",
-      "line": 157,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#XML-CONTINUED-HEADING"
     },
     {
@@ -148460,7 +148478,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Several sources, and the plugin form** *(B-056, owner-ruled 2026-08-04, built 2026-08-05)*: @status:impl/done",
-      "line": 159,
+      "line": 161,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#sequence-lead"
     },
     {
@@ -148469,7 +148487,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**A contract may declare more than one `#source`, and every one is honoured, in declaration order.** The algorithm above reads \"the source\" as that sequence: for an anchor `a`, let `S(a)` be the sub-sequence of sources carrying a section at `a`, in the order the directives were written (a glob contributing its members sorted). Before this the compiler took the FIRST `#source` and dropped the rest without a word — the silence B-055 (closed by `bc88e530`) recorded. @status:impl/done",
-      "line": 161,
+      "line": 163,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-SEQUENCE"
     },
     {
@@ -148478,7 +148496,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**`:replace` from ANY source discards the contract text only; the sources still sum among themselves, in order.** Over a sequence `:replace` stops being \"whose text is canonical\" and becomes a flag, after which two sources both carrying it is not a conflict to adjudicate. With one source the result is byte-identical to ##MERGE-REPLACE, so the generalisation is backward compatible. @status:impl/done",
-      "line": 162,
+      "line": 164,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-REPLACE-IS-A-FLAG"
     },
     {
@@ -148487,7 +148505,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Per-fact override widens to the union over `S(a)`.** A contract fact is dropped when ANY member redeclares its id — one id, one unit, and whoever redeclares it takes it. Two sources redeclaring one id is not a fold question: both survive into the merged text and @fact:FACT-MERGED-UNIQUENESS fails on the duplicate, loudly. @status:impl/done",
-      "line": 163,
+      "line": 165,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-FACT-OVERRIDE-IS-A-UNION"
     },
     {
@@ -148496,7 +148514,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**A source-only section declared by two sources is an error, and the asymmetry is deliberate.** A source section matching a contract anchor is an *addition* to something already declared, so summing is right; a source-only section is a *new declaration*, and two of them are two definitions of one name — declaration is idempotent, definition is not (the ODR parallel §9 draws). **Where it is caught matters:** @fact:FACT-MERGED-UNIQUENESS sees a document whose provenance is already gone and deliberately tolerates a repeated heading (that shape is the legitimate `:add` artefact), so the collision is judged in the fold, which still knows which source brought what. @status:impl/done",
-      "line": 164,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-ONLY-IS-A-DEFINITION"
     },
     {
@@ -148505,7 +148523,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**The fold follows `#source` recursively under §9's cycle law, and it carries an include guard.** A source that itself declares `#source` folds before it merges into its parent; a cycle among contracts is legal and its not-yet-folded member contributes nothing (the forward declaration); a cycle touching an implementation is a build error naming the path. This is @fact:NO-DEADLOCK-INVARIANT reaching the fold — the same walker, one more edge set, never a second traversal. **The guard is not bookkeeping:** visiting a shared node once does not make its TEXT appear once, because the fold is textual inclusion — without a guard a diamond carries the shared body in along both paths, and a shared source declaring a fact then fails the uniqueness check, turning an ordinary composition into an un-buildable error. A node's text therefore enters the composed document exactly once, by the first path in fold order. @status:impl/done",
-      "line": 165,
+      "line": 167,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-RECURSION"
     },
     {
@@ -148514,7 +148532,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**The plugin form.** A `#source` address may carry a `*` in the package-NAME half; it names every installed package whose name matches AND that carries the addressed document, expanded in sorted order — so the composed document is a pure function of (tree, lockfile). A glob matching nothing is a legal empty set, never a missing source; a pointed address still fails loudly when its target is absent. Both the fold and the cycle guard read a document's `#source` edges through one function, so the graph the guard judges is the graph the fold walks. @status:impl/done",
-      "line": 166,
+      "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-GLOB"
     },
     {
@@ -148523,7 +148541,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "7.4 In-place use — the `@spec://` sigil",
-      "line": 169,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#in-place-use"
     },
     {
@@ -148532,7 +148550,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Implicit dependency without an explicit `#use`, made precise by a sigil: @status:impl/done",
-      "line": 170,
+      "line": 172,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#in-place-lead"
     },
     {
@@ -148541,7 +148559,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**`@spec://…`** (an `@` before `spec`) is an **in-place use**: the agent MUST read it (mandatory), exactly as if a `#use` had been declared at the top of the file. **Amendment (2026-08-24, the normal-flip ruling):** the obligation is the AGENT's, not the AOT compiler's — a `@spec` target is **never spliced** into a compiled lane; the address itself is the compiled artefact, and the §2 equivalence invariant is carried by the agent's read obligation. (Splicing every `@spec` realised ##OPEN-CLOSURE-EXPLOSION on the first normal-format host build: the lane grew 250 KB → 2.5 MB off prose pointers.) Only an explicit `#use` is a compiler splice edge. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author,agent\"/>",
-      "line": 172,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#AT-SPEC-MANDATORY"
     },
     {
@@ -148550,7 +148568,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Bare `spec://…`** (no `@`) is at the agent's discretion — read it if useful, skip it otherwise. (A future algorithmic agent narrows this further.) <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author,agent\"/>",
-      "line": 173,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#BARE-SPEC-DISCRETIONARY"
     },
     {
@@ -148559,7 +148577,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Read once.** An `@spec` target is read only on **first** encounter, never re-read blindly — see the read-set (§below). <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"agent\"/>",
-      "line": 174,
+      "line": 176,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#READ-ONCE"
     },
     {
@@ -148568,7 +148586,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Resolution order.** Collect all explicit `#use` into a map, enrich it with the `@spec` in-place uses, then act on the combined map. @status:impl/done",
-      "line": 175,
+      "line": 177,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#IN-PLACE-RESOLUTION-ORDER"
     },
     {
@@ -148577,7 +148595,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**`@!<Alias>` (B-011, owner-approved 2026-08-04)** is the aliased twin of `@spec://…`: a **mandatory** in-place use of the address the file's `as`-declared alias binds to (§7.2), with identical read-once / read-set semantics. `@!X` where `X` is not declared in the file is a compile error naming the file's known aliases. In the compiled static lane every `@!X` is rewritten to the full `@spec://…` address it denotes — the compiled output is self-describing without the alias table and resolvable after any cleaning; structural mode reads the declaration and the sigil directly. @status:spec/work",
-      "line": 176,
+      "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#AT-BANG-IS-AN-ALIASED-IN-PLACE-USE"
     },
     {
@@ -148586,7 +148604,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**The short-reference lookup rule (B-011).** An *unqualified* label reference (an intra-document `(#x)` link) resolves against exactly two scopes, in order: (1) the anchor namespace of the containing document; (2) the file's declared aliases. Found in neither, or in both: a **compile error listing the candidates** — the resolver never widens the search and never picks silently. @status:spec/work",
-      "line": 177,
+      "line": 179,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SHORT-LABEL-LOOKUP-IS-TWO-SCOPE"
     },
     {
@@ -148595,7 +148613,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**The read-set (surviving compaction).** To honour \"read once\" across an agent's context compaction, a persistent, file-based **read-set** (`.vibe/session/read-set.json` or equivalent) records `{ specpath, content_hash }` on each read; the `content_hash` is reused from specmap, so a *changed* section is re-read. @status:spec/done",
-      "line": 180,
+      "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#READ-SET"
     },
     {
@@ -148604,7 +148622,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "A first-loaded instruction (§13) tells the agent to consult the read-set before reading and append after — this survives compaction because the boot instructions are re-read. @status:spec/done",
-      "line": 181,
+      "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#read-set-boot-instruction"
     },
     {
@@ -148613,7 +148631,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Crucially the read-set records *what exists and where*, **not what is currently in context**: compaction evicts the *text* but not the *fact*, and reads are cheap (files sit in `vibedeps`). @status:spec/done",
-      "line": 182,
+      "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#read-set-records-existence"
     },
     {
@@ -148622,7 +148640,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "So the rule is: read an `@spec` target if (a) it is not in the read-set, **or** (b) it is, but its content is no longer in context. @status:spec/done",
-      "line": 183,
+      "line": 185,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#READ-SET-RULE"
     },
     {
@@ -148631,7 +148649,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "A clean solution without a harness compaction signal is out of scope; the file-based read-set plus a boot instruction is the pragmatic floor, and the future algorithmic agent keeps the read-set rigorously. Mental model: a **linker symbol table, but for what has been read**. @status:spec/done",
-      "line": 184,
+      "line": 186,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#read-set-floor"
     },
     {
@@ -148640,7 +148658,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "8. The compilation pipeline — the standard order",
-      "line": 188,
+      "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#pipeline"
     },
     {
@@ -148649,7 +148667,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "The single ordering standard both executors follow (the \"procedure of macro-substitution\" the owner asked to pin down): @status:impl/done",
-      "line": 189,
+      "line": 191,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#pipeline-lead"
     },
     {
@@ -148658,7 +148676,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Parse.** Build the IR tree (§5) of every participating file; collect all directives with their positions. @status:impl/done",
-      "line": 191,
+      "line": 193,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#PIPE-PARSE"
     },
     {
@@ -148667,7 +148685,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Build the use-graph and topologically sort.** Nodes = document sections (or packages, at the coarser tier); edges = explicit `#use` declarations only — an `@spec` in-place use is the agent's read edge, never a compiler splice (§7.4 amendment 2026-08-24). Topological order = every dependency before its dependent. **Absorbed nodes (READ-ONCE over overlapping spans, 2026-08-24):** two closure nodes of one doc may nest (a whole-doc node beside a section inside it); a node whose text is wholly contained in a same-doc sibling's is absorbed — emitted once with its ancestor, never twice. @status:impl/done",
-      "line": 192,
+      "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#PIPE-USE-GRAPH"
     },
     {
@@ -148676,7 +148694,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Source-merge.** For every `contract` section, resolve `#source` (§7.3) into its effective (merged) body. This runs **before** embed because an embed may target a merged contract section (§7.1). @status:impl/done",
-      "line": 193,
+      "line": 195,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#PIPE-SOURCE-MERGE"
     },
     {
@@ -148685,7 +148703,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Embed-expand.** Apply `#embed` (§7.1) as textual substitution, **top-down within a file**, in **topological order over the embed-graph across files** (a package is fully compiled — its source-merge and its own embeds done — before it is embedded), **recursively to a fixed point**, with cycle guards (§9). @status:impl/done",
-      "line": 194,
+      "line": 196,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#PIPE-EMBED-EXPAND"
     },
     {
@@ -148694,7 +148712,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Qualify (B-011, owner-approved 2026-08-04; per-node refinement — the B-006 rider, owner-approved 2026-08-04).** For the static build only: rewrite label definitions — heading `{#x}` and fact `##X`, one namespace (§7.3) — to the qualified form `<origin-slug>--<original>` (the slug is the lowercased `<group>/<name>` with dots and the joiner mapped to `-`/`--`; the original tail keeps its case), **per node, each node under its own authoring origin**: a compiled closure that splices cross-origin nodes qualifies every node under the origin that authored it, never the carrying entry's — provenance is never re-attributed by splicing. An intra-closure `(#x)` link rewrites to the qualified name of the **defining** node (so a cross-origin link stays resolvable under the two-scope lookup); a `simple` contribution is one node, where this reduces to B-011's original whole-contribution rewrite. Full `spec://` addresses, `@spec` uses, directive lines, and fenced content are never touched. The qualified name is a pure function of `(origin, original label)` — independent of splice order and composition, which is what makes late lane additions append-only. `@!X` rewrites to its full address here (§7.4). **Multi-doc rider (2026-08-24):** a closure node whose doc-path lies OUTSIDE the package's contract homes (`boot/`, `contract/`) qualifies with its doc in the slug — `<origin-slug>--<doc-seg-doc-seg…>--<original>`, a pure function of `(origin, doc, label)` — so two docs of one package cannot collide on the near-universal anchors (`root`, `summary`); contract-home nodes keep the plain origin slug, so every existing boot-snippet unit is byte-stable. **Definition positions (2026-08-24):** the qualify pass recognises every position the fact frontends do — the lead of a paragraph or list item, a table CELL opening (a table bar followed by the `@fact` sigil and `:ID …`, the K6.5 cell grain), and a blockquote lead (`> ` followed by the `@fact` sigil and `:ID …`, the `<quote>` projection) — one namespace, all renamed. @status:spec/work",
-      "line": 195,
+      "line": 197,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#PIPE-QUALIFY"
     },
     {
@@ -148703,7 +148721,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Emit.** Concatenate in topological order with open/close markers (§11), prefixed by the resolution preamble and the tombstone table (§11). For the static build: `STATIC.md`. For structural: the loader consults the same order lazily. @status:impl/done",
-      "line": 196,
+      "line": 198,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#PIPE-EMIT"
     },
     {
@@ -148712,7 +148730,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Determinism: independent nodes are tie-broken by a stable key (category → boot-snippet slot → fully-qualified name), as PROP-034 §2.3 already specifies for the emission layer. @status:impl/done",
-      "line": 198,
+      "line": 200,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#PIPE-DETERMINISM"
     },
     {
@@ -148721,7 +148739,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "9. Cycles and guards",
-      "line": 200,
+      "line": 202,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#cycles"
     },
     {
@@ -148730,7 +148748,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "The owner's C++ intuition made precise. In C++ two distinct mechanisms are at work: an `#include` cycle is broken by **include guards** (idempotent re-inclusion becomes a no-op), and mutual recursion of *types* is resolved by **forward declaration** — a *declaration* needs no *definition*. \"Including only interfaces never deadlocks\" precisely because declarations can close a cycle without bodies. Mapped onto us: @status:impl/done",
-      "line": 201,
+      "line": 203,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#cycles-intuition"
     },
     {
@@ -148739,7 +148757,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**`#embed` cycle → hard error.** `#embed` is `#include` without a guard, so a cycle is an infinite substitution. We **forbid** it: a guard keyed on the `specpath` currently on the expansion stack detects it, aborts compilation, and emits **debug info naming the full cycle path** (`A → B → A`). (Owner-required: the guard's firing is reported, not silent.) @status:impl/done",
-      "line": 203,
+      "line": 205,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-CYCLE-ERROR"
     },
     {
@@ -148748,7 +148766,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**`#use` cycle between contracts → allowed** (the forward-declaration case). Because a contract is small and self-contained, static mode breaks the cycle by **emitting the contracts before any source bodies**. Structural mode is \"read when needed\", so a contract-level cycle simply resolves lazily. @status:impl/done",
-      "line": 204,
+      "line": 206,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-CYCLE-ALLOWED"
     },
     {
@@ -148757,7 +148775,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**`#use` cycle that needs a source body to compile itself → error** (the \"incomplete type where a complete type is required\" case). @status:impl/done",
-      "line": 205,
+      "line": 207,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#USE-BODY-CYCLE-ERROR"
     },
     {
@@ -148766,7 +148784,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Invariant.** The **contract layer is where cycles are legal; the source layer is where topological order is mandatory.** This is the theoretical no-deadlock guarantee: as long as the contract hierarchy is acyclic-under-`#embed` and no source body participates in a `#use` cycle, the build always terminates. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 207,
+      "line": 209,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#NO-DEADLOCK-INVARIANT"
     },
     {
@@ -148775,7 +148793,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "10. Link tables — the vtable analogue *(provisional)*",
-      "line": 209,
+      "line": 211,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#link-tables"
     },
     {
@@ -148784,7 +148802,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "The owner's C++-virtual-dispatch analogy, held for the implementation task. Inline mode ≈ a non-virtual / devirtualized call (bound statically, no runtime indirection); structural mode ≈ a virtual call (late-bound at runtime); a **link table ≈ a vtable** — a table the compiler builds once so the runtime dispatches cheaply instead of searching. @status:spec/work",
-      "line": 210,
+      "line": 212,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#LINK-TABLE-ANALOGY"
     },
     {
@@ -148793,7 +148811,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Concretely: at **install-time** (or a dedicated compile phase) build, by code, the graph edges the structural executor otherwise lacks — @status:spec/work",
-      "line": 211,
+      "line": 213,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#link-tables-build-lead"
     },
     {
@@ -148802,7 +148820,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "an **anchor-index** per document (the IR tree, addressable), @status:spec/work",
-      "line": 213,
+      "line": 215,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#TABLE-ANCHOR-INDEX"
     },
     {
@@ -148811,7 +148829,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "a **contract→source map** (the real edges behind every `#source`), @status:spec/work",
-      "line": 214,
+      "line": 216,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#TABLE-CONTRACT-SOURCE"
     },
     {
@@ -148820,7 +148838,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "the **use-graph**, @status:spec/work",
-      "line": 215,
+      "line": 217,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#TABLE-USE-GRAPH"
     },
     {
@@ -148829,7 +148847,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "and persist them to a file table (a sibling/extension of `specmap.json`). The structural agent then **consults a cheap on-disk table instead of building the graph in context** — which directly answers the objection that the structural executor \"lacks global knowledge because the project is too big for the agent's context\": the edges are built by the compiler, not the agent. A bonus: hand-drawn `#source` edges become **verifiable** — the table knows the real edges and can flag divergence. This reuses the specmap infrastructure rather than adding a parallel one. Kept provisional and folded into the implementation task per the owner. @status:spec/work",
-      "line": 217,
+      "line": 219,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#link-tables-persist"
     },
     {
@@ -148838,7 +148856,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "11. Markers in compiled output",
-      "line": 219,
+      "line": 221,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#markers"
     },
     {
@@ -148847,7 +148865,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "When a file's text is placed into a static file (e.g. `STATIC.md`), a path comment is added **both before and after** it (today only *before* — the after-comment is the closing tag). Around a package body (which contains several files) the same: a package-open comment, then many file open/close comments inside, then a package-close comment. @status:impl/done",
-      "line": 221,
+      "line": 223,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-CLOSE-MARKERS"
     },
     {
@@ -148856,7 +148874,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "This makes `STATIC.md` **reversible** — a compiled artifact can be decomposed back to its constituent files and packages, giving the same bidirectional traceability specmap already provides for code. @status:impl/done",
-      "line": 222,
+      "line": 224,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#STATIC-REVERSIBLE"
     },
     {
@@ -148865,7 +148883,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Compiled labels are origin-qualified (B-011).** A compiled block's heading anchors and fact ids carry the §8 qualify phase's `<origin-slug>--` prefix, so the compiled document's label namespace is collision-free by construction; reversibility survives because the block's own marker key names the origin, and stripping that block's prefix restores the source labels. @status:spec/work",
-      "line": 223,
+      "line": 225,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#COMPILED-LABELS-ARE-QUALIFIED"
     },
     {
@@ -148874,7 +148892,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**The header carries the resolution preamble, first (B-011, owner addition 2026-08-04).** The compiled lane opens with a short generated preamble — the qualified-label convention, the alias semantics, the two-scope lookup rule, «unresolved short name → the tombstone table below», and «full addresses resolve against package sources, never against this file» — placed as the first lines of the first file a session reads, because boot files are re-read every session and after compaction, which is what makes the rules un-forgettable. @status:spec/work",
-      "line": 224,
+      "line": 226,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#STATIC-HEADER-RESOLUTION-PREAMBLE"
     },
     {
@@ -148883,7 +148901,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**The tombstone table sits directly under the header.** Every short name the qualify phase renamed is listed with its qualified heirs and their origins — a retired name never vanishes silently (the addressable-specs tombstone law applied to renames). A resolver that misses a short splice anchor answers with these candidates, never with emptiness. @status:spec/work",
-      "line": 225,
+      "line": 227,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#STATIC-TOMBSTONE-TABLE"
     },
     {
@@ -148892,7 +148910,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**The compiled lane is not a citation target (B-011, §6.1 layer 1 of the design).** A `spec://` address whose document path names a generated `STATIC.md` is an illegal target for authored text — the lane is a cache; source-of-truth is the package source. The directive compiler rejects such an address; the gate lints the tree for them. @status:spec/work",
-      "line": 226,
+      "line": 228,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"
     },
     {
@@ -148901,7 +148919,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "12. Transitive static — folding in PROP-034",
-      "line": 229,
+      "line": 231,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#transitive-inline"
     },
     {
@@ -148910,7 +148928,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "`static-transitive` may be set at the top of a package hierarchy; then every element below it in the dependency graph is pulled `static`, **regardless of what it declared before**. Since the visibility layer landed (2026-08-23, PROP-050 §3), «below it» means *below it within the effective set E(R)*: the fold walks visible edges only and never widens visibility (PROP-050 ##FORCING-NEVER-WIDENS). @status:impl/done",
-      "line": 231,
+      "line": 233,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#STATIC-TRANSITIVE-FOLD"
     },
     {
@@ -148919,7 +148937,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "This is safe precisely because the static build is algorithmic, not LLM-driven, and loses nothing. It is the path to large highly-optimized builds. @status:impl/done",
-      "line": 232,
+      "line": 234,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#transitive-safety"
     },
     {
@@ -148928,7 +148946,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "This is PROP-034 §2.1/§2.3 (transitive links + dedup + topological order + cycle rejection), which becomes the **emission layer** of this compiler: after §8's pipeline resolves directives, PROP-034's linker deduplicates and dependency-orders the node list into `STATIC.md` / `INDEX.md`. @status:impl/done",
-      "line": 235,
+      "line": 237,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMISSION-LAYER"
     },
     {
@@ -148937,7 +148955,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "`transitive-static` / `transitive-dynamic` remain reserved (no use case yet), but the graph analyzer is built to operate at that level. @status:spec/done",
-      "line": 236,
+      "line": 238,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#transitive-variants-reserved"
     },
     {
@@ -148946,7 +148964,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "13. The structural loader — the \"first instructions\"",
-      "line": 239,
+      "line": 241,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#loader-prompt"
     },
     {
@@ -148955,7 +148973,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Until hard algorithmic agents exist (§14), structural mode is executed by an LLM following instructions. @status:spec/done",
-      "line": 241,
+      "line": 243,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#LOADER-LLM-EXECUTED"
     },
     {
@@ -148964,7 +148982,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Those instructions — how to honour `#use`, `#embed`, `#source`, `@spec`, and the read-set — MUST load **first, everywhere**: in every project, package, and library vibevm manages. @status:spec/done",
-      "line": 242,
+      "line": 244,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#LOADER-FIRST-EVERYWHERE"
     },
     {
@@ -148973,7 +148991,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "A project or package **without** them is considered **broken**; the project- and package-creation tools MUST check for and inject them. This is one of the most critical loading mechanisms — nothing works without it. @status:spec/done",
-      "line": 243,
+      "line": 245,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#LOADER-BROKEN-WITHOUT"
     },
     {
@@ -148982,7 +149000,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**The resolution rules are part of the first instructions (B-011, owner addition 2026-08-04).** The first-loaded text includes the B-011 resolution rules: qualified-label convention and short↔qualified derivation, alias (`as` / `@!`) semantics, the two-scope lookup with fail-with-candidates, the tombstone table's role, and «full addresses resolve against package sources under `vibedeps/`, never against a compiled lane». B-011 wires this contract into a live boot for the first time — until it lands, the loader instructions remain the `structural-loader.xml` hold. @status:spec/work",
-      "line": 244,
+      "line": 246,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#LOADER-RESOLUTION-RULES"
     },
     {
@@ -148991,7 +149009,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Inline compilation, by contrast, needs no LLM and can build the whole thing algorithmically today; its tooling is what remains to be built (the current `STATIC.md` machinery is naive by comparison). @status:spec/done",
-      "line": 245,
+      "line": 247,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#inline-tooling-note"
     },
     {
@@ -149000,7 +149018,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "14. Future algorithmic agents",
-      "line": 248,
+      "line": 250,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#future-agents"
     },
     {
@@ -149009,7 +149027,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "We are preparing for purpose-built algorithmic agents that run alongside Claude Code (and in specific cases instead of it) and honour every directive (`#use`, `#embed`, `#source`) rigidly and unconditionally. @status:spec/done",
-      "line": 250,
+      "line": 252,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FUTURE-ALGORITHMIC-AGENTS"
     },
     {
@@ -149018,7 +149036,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "The design must not assume only an LLM executor: the directive semantics (§7), the pipeline (§8), and the link tables (§10) are all specified so a deterministic agent can execute them. Remember this executor is coming. @status:spec/done",
-      "line": 251,
+      "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#DESIGN-FOR-DETERMINISTIC"
     },
     {
@@ -149027,7 +149045,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "15. Migration",
-      "line": 254,
+      "line": 256,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#migration"
     },
     {
@@ -149036,7 +149054,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "Incremental, safety-first (owner-set): @status:impl/done",
-      "line": 255,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#migration-lead"
     },
     {
@@ -149045,7 +149063,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Build and test on a demo fixture corpus first** — throwaway packages exercising `simple`/`normal`, `contract`/`source`, `#embed`/`#use`/`#source`, cycles, and `@spec`. These are **not** real packages, and experimenting on them must never break vibevm itself. @status:impl/done",
-      "line": 257,
+      "line": 259,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MIG-DEMO-FIRST"
     },
     {
@@ -149054,7 +149072,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Migrate real packages gradually**, improving them onto the new format one at a time. @status:spec/done",
-      "line": 258,
+      "line": 260,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MIG-GRADUAL"
     },
     {
@@ -149063,7 +149081,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Convert vibevm itself last:** first the whole of `org.vibevm.world`, and only then (if at all) the core feature specs. With `simple` as the default (§3) there is **no blast radius** — an un-migrated package keeps loading as `simple` (whole), so conversion to `normal` is per-package and opt-in, never a flag-day. @status:spec/done",
-      "line": 259,
+      "line": 261,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#MIG-VIBEVM-LAST"
     },
     {
@@ -149072,7 +149090,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "16. Open questions",
-      "line": 262,
+      "line": 264,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#open"
     },
     {
@@ -149081,7 +149099,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Equivalence testing (§2).** Differential testing of the static vs structural executors — real, empirical, experiment-heavy; **planned separately**, meaningless before a working base exists. The static compiler is the reference semantics in the meantime. @status:spec/work",
-      "line": 264,
+      "line": 266,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-EQUIVALENCE"
     },
     {
@@ -149090,7 +149108,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**`@spec` read-set across compaction (§7.4).** No clean solution without a harness compaction signal; the file-based read-set + boot instruction is the floor. Revisit if the harness exposes a compaction event. @status:spec/work",
-      "line": 265,
+      "line": 267,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-READ-SET-COMPACTION"
     },
     {
@@ -149099,7 +149117,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**XML frontend (§5).** Timing and the exact IR mapping; the data structures are designed for it now, the frontend is built later. @status:spec/work",
-      "line": 266,
+      "line": 268,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-XML-FRONTEND"
     },
     {
@@ -149108,7 +149126,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Implicit-reference closure explosion (§7.4) — REALISED AND RESOLVED (2026-08-24).** The first normal-format host build spliced every `@spec` target and grew the lane tenfold (250 KB → 2.5 MB). Resolution: `@spec` is the agent's read edge, never a compiler splice (the §7.4 amendment); only explicit `#use` splices. The compiled lane returned to snippet size (+3% for the cell-fact tombstones). @status:impl/done",
-      "line": 267,
+      "line": 269,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-CLOSURE-EXPLOSION"
     },
     {
@@ -149117,7 +149135,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Link tables (§10).** Whether they land at install-time, static-compile-time, or a separate phase — folded into the implementation task. @status:spec/work",
-      "line": 268,
+      "line": 270,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-LINK-TABLES"
     },
     {
@@ -149126,7 +149144,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**Deferred deliberately, by owner ruling 2026-07-29, and this records the reason so nobody re-derives it.** Built today: the graph and a deterministic dump (`crates/vibe-spec/src/link_table.rs`). Not built: the persisted on-disk format and the structural consumer. The tables are **the vtable of the §13 structural executor** — a prebuilt index so a late-bound reader dispatches instead of searching — and this project does not run that mode, so they are an optimisation of navigation cost, never a precondition of correctness. Meanwhile `#embed spec://…` resolves and splices at compile time (`render_static` → `expand_embeds`), and an `@spec://` pointer that costs a lookup is strictly better than the confidently wrong relative path it replaced. Building the layer mid-refactor would create code the refactor then has to refactor. @status:spec/done",
-      "line": 269,
+      "line": 271,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#LINK-TABLES-ARE-DEFERRED-WITH-A-NAMED-TRIGGER"
     },
     {
@@ -149135,7 +149153,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**What promotes it, so the deferral cannot quietly become permanent:** either `@spec://` pointers in the boot lane are MEASURED to cost a reader more than the lane saves, or the §13 structural loader is opened — whichever comes first. Either makes the searching real rather than hypothetical; until one fires, the cost being optimised away is a cost nobody has paid. @status:spec/done",
-      "line": 270,
+      "line": 272,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#LINK-TABLES-PROMOTION-TRIGGER"
     },
     {
@@ -149144,7 +149162,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**No access control (§7.3).** We deliberately omit `private`/`public`. Confirm this holds once real packages exercise cross-contract calls. @status:spec/work",
-      "line": 271,
+      "line": 273,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-NO-ACCESS-CONTROL"
     },
     {
@@ -149153,7 +149171,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**`dynamic-transitive` (§12).** Inherited from PROP-034 §5; still reserved. @status:spec/work",
-      "line": 272,
+      "line": 274,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-DYNAMIC-TRANSITIVE"
     },
     {
@@ -149162,7 +149180,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "17. Version history",
-      "line": 275,
+      "line": 277,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#history"
     },
     {
@@ -149171,7 +149189,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**2026-07-14 — drafted (owner-requested), provisional.** Captures the \"static-compiler vision\" design dialogue: two build modes as AOT/JIT with the equivalence invariant (§2); `simple`/`normal` package formats (§3); the `contract`/`source` split (§4); the hierarchical document IR with MD and future-XML frontends (§5); the unified `spec://` grammar and the deterministic router (§6); the three directives `#embed` / `#use` / `#source` plus the `@spec` in-place-use sigil and the read-set (§7); the five-phase compilation pipeline and the embed-ordering standard (§8); the C++-derived cycle rules and the contract-layer no-deadlock invariant (§9); link tables as the vtable analogue (§10, provisional); reversible open/close markers (§11); `transitive-inline` folding in PROP-034 as the emission layer (§12); the first-loaded structural loader (§13); the future algorithmic executor (§14); and the demo-corpus-first, vibevm-last migration (§15). Implementation begins with the router (§6) under this contract. @status:spec/done",
-      "line": 277,
+      "line": 279,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-DRAFTED"
     },
     {
@@ -149180,7 +149198,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**2026-07-15 — implemented, and the default flipped to `simple`.** §5–§13 shipped as the `vibe-spec` crate and wired into `bootgen` (the payoff: `render_inline` runs `expand_embeds`, guarded); `transitive-inline` (§12) landed on `LinkType`. **§3's default changed from `normal` to `simple`** (owner decision): a forgotten `format` must fail *safe* (over-load, visibly working) rather than *silent* (a `normal` no-op), which also removes the §15 migration blast radius. Still open and under review: the `link` × `format` interaction (does a `normal` + `static` edge read eagerly or lazily?). @status:spec/done",
-      "line": 278,
+      "line": 280,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-IMPLEMENTED"
     },
     {
@@ -149189,7 +149207,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**2026-07-16 — link-type rename (owner decision), the `link` set shrinks to two.** `LinkType::Inline → Static` (the verbatim `STATIC.md` lane — \"the static compiler\"), `Static → Dynamic` (the default, a by-reference `INDEX.md` read with an optional `when`), and the old `Dynamic` removed — a conditional load is now just a `dynamic` entry carrying a `when`. `inline-transitive → static-transitive`; `INLINE.md → STATIC.md`; `render_inline → render_static`; `compile_inline → compile_static`. Pure terminology, aligning vibevm with the CS static/dynamic-linking standard so \"the static compiler\" reads naturally; shipped across `vibe-core`, `vibe-workspace`, `vibe-spec`, the package manifests, and these specs. @status:spec/done",
-      "line": 279,
+      "line": 281,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-RENAME"
     },
     {
@@ -149198,7 +149216,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**2026-08-04 — deterministic loading: qualified splice, aliases, the lookup rule (B-011, owner-approved).** The owner's highest-priority build lands its contract: the §8 pipeline gains the **qualify** phase (labels become `<origin-slug>--<original>`, a pure function of origin — splice-order-independent, append-only under late dynamic lane additions); §7.2 gains the `as <Alias>` clause and §7.4 the `@!Alias` mandatory in-place use plus the two-scope short-reference lookup (fail with candidates, never a silent pick); §11 gains the qualified-label, resolution-preamble, tombstone-table, and lane-is-not-a-citation-target facts; §13's first instructions gain the resolution rules as named content (the owner's priority-placement addition). Design rationale and the fork record: `vibevm/vibespecs/design/deterministic-loading-aliasing.xml`; the commissioning entry: `BACKLOG.md` B-011. PROP-009 §2.3's «verbatim concatenation» becomes «anchor-qualified concatenation» in the same landing. @status:spec/work",
-      "line": 280,
+      "line": 282,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-B011-ALIASING"
     },
     {
@@ -149207,7 +149225,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**2026-07-20 — `normal + static` compiled end to end; the `link × format` question resolved.** The `[package].format` field now **parses** (`PackageFormat` in `vibe-core`, default `simple`, `deny_unknown_fields`-clean), **threads** through the boot model (`DependencyBoot` / `UnitInput` → `BootEntry`, both emission paths), and **drives** the static renderer: a `normal`-format contribution pulled `static` is **compiled** to its `#use` / `#source`-resolved, tree-shaken, dependency-ordered closure (`vibe-workspace::boot_artifacts::normal::compile_normal_entry`, seeded at the contract's whole-document address and delegating to the shipped `vibe_spec::compile_static`), where a `simple` one stays a verbatim concatenation. This **resolves the open `link × format` question** raised in the 2026-07-15 entry (\"does a `normal + static` edge read eagerly or lazily?\"): it is **eager** — the tree-shaken, `#source`-merged closure is AOT-compiled into `STATIC.md`, which is the equivalence-invariant reading (§2), never the whole file. The default stays `simple`, so an un-migrated tree's static lane is byte-identical (§3/§15). `normal + dynamic` — the structural / JIT loader (§13) — is still pending; only the static (AOT) executor honours the format so far. @status:spec/done",
-      "line": 281,
+      "line": 283,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-NORMAL-STATIC"
     },
     {
@@ -149216,7 +149234,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "**2026-11-02 — the XML static lane compiles a merge that shares anchors (B-206).** `emit:static-xml` refused a `#source` merge sharing any anchor with its contract, two `{#root}` titles included, because both headings qualified to one label and the XML pivot admits one element per id; the Markdown target compiled the same package. §7.3 gains ##XML-CONTINUED-HEADING: the first heading keeps the label and later ones continue it unanchored, so both targets define the same labels. @status:spec/done",
-      "line": 282,
+      "line": 284,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-B206-XML-MERGE"
     },
     {
