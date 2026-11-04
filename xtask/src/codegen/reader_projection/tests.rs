@@ -70,8 +70,11 @@ fn strict_schema() -> Value {
 fn projected_schema() -> Value {
     json!({
         "metadata": {"x-vocabularies": ["payload"]},
+        "optionalProperties": {
+            "optionalPayload": {"ref":"payload", "metadata":{"x-reader-projection":"permissive"}}
+        },
         "properties": {
-            "payload": {
+            "camelPayload": {
                 "ref": "payload",
                 "metadata": {"x-reader-projection": "permissive"}
             }
@@ -99,6 +102,22 @@ struct Fixture {
 }
 
 fn generate_fixture(owner_role: &str, ordinary: bool) -> Result<Fixture> {
+    generate_fixture_policy(owner_role, None, ordinary)
+}
+
+fn generate_fixture_policy(
+    owner_role: &str,
+    policy: Option<&str>,
+    ordinary: bool,
+) -> Result<Fixture> {
+    generate_fixture_policies(owner_role, policy, None, ordinary)
+}
+fn generate_fixture_policies(
+    owner_role: &str,
+    policy: Option<&str>,
+    output_policy: Option<&str>,
+    ordinary: bool,
+) -> Result<Fixture> {
     let temp = tempfile::tempdir()?;
     let root = temp.path().to_path_buf();
     let schemas = root.join("schemas");
@@ -116,11 +135,17 @@ fn generate_fixture(owner_role: &str, ordinary: bool) -> Result<Fixture> {
         "schemas/strict_payload.jtd.json",
         owner_role,
     );
+    if let Some(policy) = policy {
+        registry.push_str(&format!("unknown_fields='{policy}'\n"));
+    }
     registry.push_str(&record(
         "projected-request",
         "schemas/projected_request.jtd.json",
         "many",
     ));
+    if let Some(policy) = output_policy {
+        registry.push_str(&format!("unknown_fields='{policy}'\n"));
+    }
     let mut schema_paths = vec![
         schemas.join("projected_request.jtd.json"),
         schemas.join("strict_payload.jtd.json"),
@@ -264,9 +289,11 @@ fn projection_formatter_refuses_missing_and_failed_rustfmt() -> Result<()> {
     std::fs::create_dir_all(live_file.parent().unwrap())?;
     std::fs::write(&live_file, "pub struct Live;\n")?;
     let projection = ProjectionUse {
+        optional: false,
         target: "payload".to_string(),
         owner_type: "Projected".to_string(),
         rust_field: "payload".to_string(),
+        wire_field: "payload".into(),
         location: "$.properties.payload".to_string(),
         closure: BTreeSet::new(),
     };
@@ -314,6 +341,10 @@ fn ordinary_mixed_policy_still_refuses_through_the_full_driver() {
 fn invalid_marker_shapes_and_values_refuse() {
     let fragments = BTreeSet::from(["payload".to_string()]);
     for (schema, needle) in [
+        (
+            json!({"properties":{"payload":{"ref":"payload","nullable":true,"metadata":{"x-reader-projection":"permissive"}}}}),
+            "nullable projected refs are not supported",
+        ),
         (
             json!({"properties":{"payload":{"type":"string","metadata":{"x-reader-projection":"permissive"}}}}),
             "only on a JTD `ref`",
@@ -449,9 +480,11 @@ fn strict_consumer_and_missing_strict_owner_refuse() {
     .unwrap();
     let schema = temp.path().join("schemas/strict_request.jtd.json");
     let projection = ProjectionUse {
+        optional: false,
         target: "payload".to_string(),
         owner_type: "StrictRequest".to_string(),
         rust_field: "payload".to_string(),
+        wire_field: "payload".into(),
         location: "$.properties.payload".to_string(),
         closure: BTreeSet::from(["payload".to_string()]),
     };
@@ -463,7 +496,7 @@ fn strict_consumer_and_missing_strict_owner_refuse() {
     };
     let strict = validate_policies(temp.path(), &[(schema, strict_resolution)])
         .expect_err("a strict consumer may not request a permissive projection");
-    assert!(format!("{strict:#}").contains("registry-permissive consumer"));
+    assert!(format!("{strict:#}").contains("registered public consumer"));
 
     let missing = generate_fixture("many", false)
         .err()
@@ -486,4 +519,18 @@ fn a_marker_in_the_canonical_fragment_is_never_silently_unconsumed() {
     .expect_err("projection belongs to a consumer site, never the canonical home");
     let message = error.to_string();
     assert!(message.contains("payload") && message.contains("consumed exactly once"));
+}
+
+#[test]
+fn explicit_public_deny_owns_one_strict_shared_type_with_output_projection() -> Result<()> {
+    let fixture = generate_fixture_policy("many", Some("deny"), false)?;
+    let shared = std::fs::read_to_string(fixture.generated.join("shared/mod.rs"))?;
+    assert!(shared.contains("#[serde(deny_unknown_fields)]\npub struct Payload"));
+    compile_and_run_generated(&fixture)
+}
+
+#[test]
+fn explicit_public_deny_root_retains_its_named_permissive_field() -> Result<()> {
+    let fixture = generate_fixture_policies("many", Some("deny"), Some("deny"), false)?;
+    compile_generated::compile_and_run_generated_with_outer_policy(&fixture, true)
 }

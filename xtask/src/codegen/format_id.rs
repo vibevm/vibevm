@@ -70,17 +70,19 @@ pub(crate) fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
                 path.display()
             );
         }
-        let unknown_fields = entry
-            .get("unknown_fields")
-            .and_then(toml::Value::as_str)
-            .map(str::to_owned)
-            .unwrap_or_else(|| {
-                if foreign_parsers == "none" {
-                    "deny".to_owned()
-                } else {
-                    "allow".to_owned()
-                }
-            });
+        let unknown_fields = match entry.get("unknown_fields") {
+            Some(value) => value
+                .as_str()
+                .with_context(|| {
+                    format!(
+                        "{}: [format.{id}].unknown_fields must be a string allow|deny",
+                        path.display()
+                    )
+                })?
+                .to_owned(),
+            None if foreign_parsers == "none" => "deny".to_owned(),
+            None => "allow".to_owned(),
+        };
         if !matches!(unknown_fields.as_str(), "allow" | "deny") {
             bail!(
                 "`{}`: `[format.{id}].unknown_fields` must be allow|deny, got `{unknown_fields}`",
@@ -107,36 +109,6 @@ pub(crate) fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
         });
     }
     Ok(entries)
-}
-
-pub(crate) fn schema_denies_unknown_fields(root: &Path, schema: &Path) -> Result<bool> {
-    let relative = schema
-        .strip_prefix(root)
-        .with_context(|| {
-            format!(
-                "schema `{}` is outside `{}`",
-                schema.display(),
-                root.display()
-            )
-        })?
-        .to_string_lossy()
-        .replace('\\', "/");
-    let entries = load_format_registry(root)?;
-    let matching = entries
-        .iter()
-        .filter(|entry| entry.schema == relative)
-        .collect::<Vec<_>>();
-    if matching.is_empty() {
-        bail!("schema `{relative}` has no format registry owner");
-    }
-    let policy = matching[0].unknown_fields.as_str();
-    if matching
-        .iter()
-        .any(|entry| entry.unknown_fields.as_str() != policy)
-    {
-        bail!("schema `{relative}` has registry owners with conflicting unknown_fields policies");
-    }
-    Ok(policy == "deny")
 }
 
 fn require_str(entry: &toml::Value, id: &str, key: &str, path: &Path) -> Result<String> {

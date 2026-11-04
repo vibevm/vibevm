@@ -120,7 +120,10 @@ fn strictness_fixture(rows: &[(&str, &str, &str)]) -> Result<SharedStrictness> {
     let mut resolved: std::collections::BTreeMap<PathBuf, BTreeSet<String>> =
         std::collections::BTreeMap::new();
     for (schema, role, fragment) in rows {
-        roles.insert(PathBuf::from(schema), role.to_string());
+        roles.insert(
+            PathBuf::from(schema),
+            if *role == "none" { "deny" } else { "allow" }.to_string(),
+        );
         resolved
             .entry(PathBuf::from(schema))
             .or_default()

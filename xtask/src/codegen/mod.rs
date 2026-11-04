@@ -149,7 +149,7 @@ pub(crate) fn run_codegen() -> Result<()> {
     let mut vocabularies = Vocabularies::load(&vocabularies_path(&root))?;
 
     // Reader strictness, one registry for the whole run: the map from
-    // schema path to `foreign_parsers` role (`formats/REGISTRY.toml`,
+    // schema path to effective `unknown_fields` policy (`formats/REGISTRY.toml`,
     // parsed by the one loader `format_id` already owns) is built once
     // here exactly like the vocabularies, and every schema below is
     // ruled on through it — the strictness pass refuses a schema the
@@ -321,8 +321,8 @@ fn generate_into(
         // schema's `x-default` (and its two Box-free defaults), then
         // complete final field chunks move per explicit `x-wire-order`
         // while the generator's original struct names remain, then
-        // the structs of `foreign_parsers = "none"` formats take
-        // `#[serde(deny_unknown_fields)]` per the registry's role, then
+        // the structs of effective `unknown_fields = "deny"` formats take
+        // `#[serde(deny_unknown_fields)]` per the resolved registry policy, then
         // the vocabularies open per the schema's `x-vocabulary`. The pass
         // order is a rule, not a taste: boxing, snake-casing,
         // map-ordering, empty-policy, optional-shapes, wire-order, and strictness

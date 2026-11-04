@@ -202,3 +202,17 @@ fn registry_records_are_complete_and_computed_honestly() {
         assert!(repo_root().join(relative).is_file(), "{relative} exists");
     }
 }
+
+#[test]
+fn scrape_public_report_is_strict_except_its_declared_health_projection() {
+    let stream = serde_json::json!({"bytes":"0","head":"","redacted":false,"sha256":"0".repeat(64),"tail":"","truncated":false,"utf8":true});
+    let row = serde_json::json!({"argv":[],"findings":[],"id":"check","network_verified":false,"phase":"before","stderr":stream,"stdout":stream,"step":"none","terminal":"pass","tests_skipped":false});
+    let mut report = document("valid/report-minimal.json");
+    report["health"] = serde_json::json!([row]);
+    let canonical = report.clone();
+    report["health"][0]["future_health_field"] = serde_json::json!(true);
+    let read: ScrapeReport = serde_json::from_value(report.clone()).unwrap();
+    assert_eq!(serde_json::to_value(read).unwrap(), canonical);
+    report["future_report_field"] = serde_json::json!(true);
+    assert!(serde_json::from_value::<ScrapeReport>(report).is_err());
+}

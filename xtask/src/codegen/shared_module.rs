@@ -48,8 +48,8 @@
 //! that is not byte-identical; a fragment whose consumers disagree on
 //! reader strictness (the strictness pass rules through the registry
 //! per schema, while a fragment is shared across schemas — unanimous
-//! `none` consumers make the shared block strict, no `none` consumer
-//! leaves it permissive, and a mixture refuses); and the counter — the
+//! effective `deny` consumers make the shared block strict, unanimous
+//! `allow` leaves it permissive, and a mixture refuses); and the counter — the
 //! declarations a module loses must equal the closure its schema
 //! pulled, and the tree's unique names must not move.
 
@@ -97,12 +97,12 @@ impl SharedStrictness {
     }
 }
 
-/// Compute one policy per fragment from the registry roles of every
-/// schema in the resolved-closure map. A unanimous `none` set is
-/// strict, a set with no `none` member is permissive, and a mixture is
+/// Compute one policy per fragment from effective unknown-field policies of
+/// every ordinary consumer. Unanimous `deny` is strict, unanimous `allow`
+/// is permissive, and a mixture is
 /// refused with both consumer sets named.
 ///
-/// Fed by the run's schema → closure map and the registry; the roles
+/// Fed by the run's schema → closure map and the registry; effective policies
 /// are read through the one registry loader (`format_id`), the same
 /// loader `Strictness` builds its map from, so the two can never
 /// disagree. A schema no record claims is not refused here — its own
@@ -120,7 +120,7 @@ pub(super) fn guard_shared_strictness(
         entries
             .iter()
             .find(|entry| entry.schema == key)
-            .map(|entry| entry.foreign_parsers.clone())
+            .map(|entry| entry.unknown_fields.clone())
     };
     policies_from_resolutions(
         resolved
@@ -131,7 +131,7 @@ pub(super) fn guard_shared_strictness(
 }
 
 /// Pure join of the two inputs production already owns: resolved
-/// schema closures and the registry's role lookup. Keeping it separate
+/// schema closures and the registry's effective-policy lookup. Keeping it separate
 /// makes the unanimous and mixed laws testable without a second
 /// registry parser or a hand-maintained fragment list.
 fn policies_from_resolutions<'a, I, F>(resolved: I, mut role_of: F) -> Result<SharedStrictness>
@@ -170,12 +170,12 @@ fn classify_fragment(
 ) -> Result<FragmentReaderPolicy> {
     let strict: Vec<&str> = consumers
         .iter()
-        .filter(|(_, role)| role == "none")
+        .filter(|(_, role)| role == "deny")
         .map(|(schema, _)| schema.as_str())
         .collect();
     let permissive: Vec<&str> = consumers
         .iter()
-        .filter(|(_, role)| role != "none")
+        .filter(|(_, role)| role != "deny")
         .map(|(schema, _)| schema.as_str())
         .collect();
     if strict.is_empty() {
@@ -187,9 +187,8 @@ fn classify_fragment(
     bail!(
         "vocabulary `{fragment}` has mixed registered reader policy, so \
          its one shared block cannot be both strict and permissive.\n\
-         Strict consumers (`foreign_parsers = \"none\"`): {}\n\
-         Permissive consumers (`foreign_parsers = \"ours\"` or \
-         `\"many\"`): {}\n\
+         Strict consumers (`unknown_fields = \"deny\"`): {}\n\
+         Permissive consumers (`unknown_fields = \"allow\"`): {}\n\
          Fix: give every registered consumer of `{fragment}` the same \
          strictness class, or stop sharing the fragment across those \
          formats, then run `cargo xtask codegen`.",
@@ -201,7 +200,7 @@ fn classify_fragment(
 /// Apply the computed per-fragment policy at the strictness slot of
 /// the shared module's normal post-processing pipeline. The routing
 /// fold is the same one the replacement uses; policy itself was
-/// computed solely from registry roles and resolved closures. A strict
+/// computed solely from effective registry policies and resolved closures. A strict
 /// enum or alias is recognised but copied, because the serde container
 /// attribute is valid only on generated structs.
 pub(super) fn apply_shared_strictness(

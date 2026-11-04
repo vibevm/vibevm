@@ -179,12 +179,7 @@ pub(crate) fn rewrite_generated(
             projections,
         } => {
             let ruled = apply_strictness(&wire_ordered, &name, schema, registry)?;
-            let projected = super::reader_projection::apply_projected_copy_strictness(
-                &ruled,
-                &name,
-                projections,
-            )?;
-            apply_registry_unknown_field_policy(&projected, &name, schema)?
+            super::reader_projection::apply_projected_copy_strictness(&ruled, &name, projections)?
         }
         StrictnessSource::Shared(shared) => {
             super::shared_module::apply_shared_strictness(&wire_ordered, &name, shared)?
@@ -197,40 +192,6 @@ pub(crate) fn rewrite_generated(
     super::write::write_generated(file, &canonical)
         .with_context(|| format!("writing the post-processed {name}"))?;
     Ok(())
-}
-
-fn apply_registry_unknown_field_policy(src: &str, file: &str, schema: &Path) -> Result<String> {
-    let Some(root) = schema
-        .ancestors()
-        .find(|ancestor| ancestor.join("formats/REGISTRY.toml").is_file())
-    else {
-        // Unit fixtures use synthetic schema paths. Their caller-provided
-        // Strictness remains the whole policy, exactly as before.
-        return Ok(src.to_owned());
-    };
-    if !super::format_id::schema_denies_unknown_fields(root, schema)? {
-        return Ok(src.to_owned());
-    }
-
-    let mut out = String::with_capacity(src.len() + src.len() / 32);
-    let mut previous = "";
-    for chunk in src.split_inclusive('\n') {
-        let body = chunk.trim_end_matches(['\r', '\n']);
-        let text = body.trim();
-        if text.starts_with("pub struct ") && previous != "#[serde(deny_unknown_fields)]" {
-            let indent = &body[..body.len() - body.trim_start().len()];
-            out.push_str(indent);
-            out.push_str("#[serde(deny_unknown_fields)]\n");
-        }
-        out.push_str(chunk);
-        previous = text;
-    }
-    if !out.contains("#[serde(deny_unknown_fields)]") {
-        bail!(
-            "{file}: registry requires unknown_fields = deny, but generated output has no structs"
-        );
-    }
-    Ok(out)
 }
 
 /// The pass proper, over text, so the tests drive exactly what production

@@ -127,11 +127,11 @@ fn two_roles_on_one_schema_refuse_naming_both() -> Result<()> {
         "names the schema: {msg}"
     );
     assert!(
-        msg.contains("index-entry") && msg.contains("many"),
+        msg.contains("index-entry") && msg.contains("allow"),
         "names the first record with its role: {msg}"
     );
     assert!(
-        msg.contains("index-primary") && msg.contains("none"),
+        msg.contains("index-primary") && msg.contains("deny"),
         "names the second record with its role: {msg}"
     );
     assert!(
@@ -318,5 +318,35 @@ fn a_struct_without_the_pinned_derive_line_refuses() -> Result<()> {
         msg.contains("strictness.rs") && msg.contains("cargo xtask codegen"),
         "says what to do: {msg}"
     );
+    Ok(())
+}
+
+#[test]
+fn explicit_public_deny_is_the_effective_reader_policy() -> Result<()> {
+    let root = scratch_root(
+        &(record("input", "schemas/input.jtd.json", "many") + "unknown_fields='deny'\n"),
+        &["schemas/input.jtd.json"],
+    )?;
+    let rules = Strictness::load(root.path())?;
+    let out = apply_strictness(
+        WHOLE_FILE,
+        "input/mod.rs",
+        &root.path().join("schemas/input.jtd.json"),
+        &rules,
+    )?;
+    assert_eq!(out.matches("#[serde(deny_unknown_fields)]").count(), 2);
+    Ok(())
+}
+
+#[test]
+fn explicit_non_string_reader_policy_never_silently_defaults() -> Result<()> {
+    let root = scratch_root(
+        &(record("input", "schemas/input.jtd.json", "many") + "unknown_fields=true\n"),
+        &["schemas/input.jtd.json"],
+    )?;
+    let error = Strictness::load(root.path())
+        .err()
+        .expect("wrong policy type must refuse");
+    assert!(error.to_string().contains("unknown_fields"));
     Ok(())
 }

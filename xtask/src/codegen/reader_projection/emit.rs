@@ -185,7 +185,7 @@ fn inject_attributes(
     for (index, projection) in projections.iter().enumerate() {
         if wanted
             .insert(
-                (&projection.owner_type, &projection.rust_field),
+                (&projection.owner_type, &projection.wire_field),
                 (index, functions[index].as_str()),
             )
             .is_some()
@@ -200,17 +200,28 @@ fn inject_attributes(
     }
     let mut consumed = vec![0usize; projections.len()];
     let mut current_struct: Option<String> = None;
+    let mut wire_name: Option<String> = None;
     let mut output = String::with_capacity(source.len() + projections.len() * 96);
     for chunk in source.split_inclusive('\n') {
         let body = chunk.trim_end_matches(['\r', '\n']);
         let text = body.trim();
+        if let Some(rename) = text
+            .strip_prefix("#[serde(rename = \"")
+            .and_then(|s| s.strip_suffix("\")]"))
+        {
+            wire_name = Some(rename.into());
+        }
         if let Some(name) = struct_name(text) {
+            wire_name = None;
             current_struct = Some(name.to_string());
         } else if body == "}" {
             current_struct = None;
+            wire_name = None;
         }
+        let actual_wire =
+            field_name(text).map(|field| wire_name.take().unwrap_or_else(|| field.into()));
         if let Some(owner) = current_struct.as_deref()
-            && let Some(field) = field_name(text)
+            && let Some(field) = actual_wire.as_deref()
             && let Some((index, function)) = wanted.get(&(owner, field))
         {
             let indent = &body[..body.len() - body.trim_start().len()];
@@ -252,9 +263,22 @@ fn emit_adapter(
     );
     output.push_str(DUPLICATE_SAFE_VALUE);
     for (index, projection) in projections.iter().enumerate() {
-        let rust_type = emitted_name(&projection.target);
+        let shared_type = format!(
+            "crate::generated::shared::{}",
+            emitted_name(&projection.target)
+        );
+        let rust_type = if projection.optional {
+            format!("Option<{shared_type}>")
+        } else {
+            shared_type
+        };
+        let wrap = if projection.optional {
+            ".map(Some)"
+        } else {
+            ""
+        };
         output.push_str(&format!(
-            "    pub(super) fn {}<'de, D>(deserializer: D) -> Result<crate::generated::shared::{rust_type}, D::Error>\n    where\n        D: serde::Deserializer<'de>,\n    {{\n        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;\n        prune_{}(&mut value);\n        serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)\n    }}\n\n",
+            "    pub(super) fn {}<'de, D>(deserializer: D) -> Result<{rust_type}, D::Error>\n    where\n        D: serde::Deserializer<'de>,\n    {{\n        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;\n        prune_{}(&mut value);\n        serde_json::from_value(value){wrap}.map_err(<D::Error as serde::de::Error>::custom)\n    }}\n\n",
             functions[index],
             rust_field(&projection.target),
         ));

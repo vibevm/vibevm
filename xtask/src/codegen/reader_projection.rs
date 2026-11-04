@@ -1,6 +1,6 @@
 //! Schema-declared reader projections for one shared strict fragment.
 //!
-//! A permissive format may place `"x-reader-projection": "permissive"`
+//! A registered public format may place `"x-reader-projection": "permissive"`
 //! in the metadata of an object-member `ref`. The shared fragment stays the
 //! one strict generated type. This layer emits a consumer-local serde adapter
 //! from the resolved JTD closure: it removes unknown object members at every
@@ -33,6 +33,8 @@ pub(crate) struct ProjectionUse {
     pub(crate) target: String,
     pub(crate) owner_type: String,
     pub(crate) rust_field: String,
+    pub(crate) wire_field: String,
+    pub(crate) optional: bool,
     pub(crate) location: String,
     pub(crate) closure: BTreeSet<String>,
 }
@@ -150,7 +152,7 @@ fn discover_markers(value: &Value, location: &str, found: &mut Vec<String>) {
 fn scan_form(
     form: &Value,
     owner_type: &str,
-    member: Option<&str>,
+    member: Option<(&str, bool)>,
     location: &str,
     context: &mut ScanContext<'_>,
 ) -> Result<()> {
@@ -181,12 +183,18 @@ fn scan_form(
                 context.schema.display()
             );
         };
-        let Some(field) = member else {
+        let Some((field, optional)) = member else {
             bail!(
                 "schema {} at {location}: projected `ref` `{target}` is not an object-member field; reader projection is a field adapter and every marker must be consumed exactly once.",
                 context.schema.display()
             );
         };
+        if object.get("nullable") == Some(&Value::Bool(true)) {
+            bail!(
+                "schema {} at {location}: nullable projected refs are not supported; use a nonnullable optional field or add a typed nullable adapter before declaring this shape",
+                context.schema.display()
+            );
+        }
         if !context.fragment_names.contains(target) {
             bail!(
                 "schema {} at {location}: projected `ref` `{target}` is not a shared fragment in `formats/vocabularies.json`.",
@@ -199,6 +207,8 @@ fn scan_form(
             target: target.to_string(),
             owner_type: owner_type.to_string(),
             rust_field: rust_field(field),
+            wire_field: field.into(),
+            optional,
             location: location.to_string(),
             closure: BTreeSet::new(),
         });
@@ -209,7 +219,7 @@ fn scan_form(
     }
 
     let nested_owner;
-    let child_owner = if let Some(field) = member
+    let child_owner = if let Some((field, _)) = member
         && object.get("ref").is_none()
         && (object.contains_key("properties")
             || object.contains_key("optionalProperties")
@@ -250,7 +260,13 @@ fn scan_form(
         if let Some(properties) = object.get(block).and_then(Value::as_object) {
             for (field, child) in properties {
                 let child_location = format!("{location}.{block}.{field}");
-                scan_form(child, child_owner, Some(field), &child_location, context)?;
+                scan_form(
+                    child,
+                    child_owner,
+                    Some((field, block == "optionalProperties")),
+                    &child_location,
+                    context,
+                )?;
             }
         }
     }
@@ -279,28 +295,40 @@ pub(crate) fn validate_policies(root: &Path, resolved: &[(PathBuf, Resolved)]) -
         entries
             .iter()
             .find(|entry| entry.schema == key)
-            .map(|entry| entry.foreign_parsers.as_str())
+            .map(|entry| entry.unknown_fields.as_str())
     };
 
+    let public_reader = |schema: &Path| {
+        let relative = schema
+            .strip_prefix(root)
+            .unwrap_or(schema)
+            .display()
+            .to_string()
+            .replace('\\', "/");
+        entries
+            .iter()
+            .find(|entry| entry.schema == relative)
+            .is_some_and(|entry| entry.foreign_parsers != "none")
+    };
     for (schema, resolution) in resolved {
         if resolution.projections.is_empty() {
             continue;
         }
-        let Some(role) = role_of(schema) else {
+        let Some(_policy) = role_of(schema) else {
             bail!(
                 "schema {} declares `{MARKER}` but no registered format owns it; projection policy cannot be computed.",
                 schema.display()
             );
         };
-        if role == "none" {
+        if !public_reader(schema) {
             bail!(
-                "schema {} declares `{MARKER}` while its registered consumer is strict (`foreign_parsers = \"none\"`); projection is legal only in a registry-permissive consumer.",
+                "schema {} declares `{MARKER}` while its registered consumer is private (`foreign_parsers = \"none\"`); projection is legal only in a registered public consumer.",
                 schema.display()
             );
         }
         for projection in &resolution.projections {
             let owner = resolved.iter().any(|(candidate, candidate_resolution)| {
-                role_of(candidate) == Some("none")
+                role_of(candidate) == Some("deny")
                     && candidate_resolution
                         .ordinary_vocabularies
                         .contains(&projection.target)
