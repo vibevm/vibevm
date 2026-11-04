@@ -1,0 +1,33 @@
+# Apply file ownership: bounded publication and checked undo
+
+Root decision,2026-11-04, after actual public apply reproduced1normal control and4third-state failures at77b645ff7. This is implementation design, not acceptance. The target is the three metadata files the incumbent apply already writes: selected manifest, workspace lock and its provenance sidecar. Their parents may differ. Reuse those owners; no whole-slot before-image store, durable recovery engine or generalized transaction framework.
+
+## Guarantee and its limit
+
+Retain the ordinary no-third-state rollback result. An observed later byte change, replacement object, symlink/special file or new hardlink must not be overwritten or followed by undo. A guard that never published must not perform undo. Publication errors distinguish definitely-before-publication from possibly-published. Original operation failure and any undo conflict must both be visible; never claim all files restored when a conflict remains.
+
+This increment uses held no-follow observations and atomic whole-file publication inside the existing cooperating command lease. It is NOT a portable kernel compare-and-swap on an occupied name. There remains a final observation-to-rename/unlink window against an uncooperative concurrent writer. Do not call it race-free/hostile-writer safe or hide that limit in API naming or tests. No arbitrary OS-crash recovery, all-files atomicity or inode/link-topology restoration claim is introduced. Stronger platform expected-state mutation remains separate work; refusing all normal Linux updates is not this fix.
+
+## One preparation and publication owner
+
+Capture admissible before-state through the existing held parent/no-follow machinery, including bytes, mode and object identity. Preflight all potentially written metadata targets before this apply's first metadata/slot mutation. Keep the existing mutation policy: an initially linked/reparse/special/shared-link destination is refused clearly rather than truncated. Read-only shared package source support remains unchanged. Existing regular targets retain permission mode; new files retain the established creation-mode behavior. No silent fixed64MiB source cap is introduced.
+
+Expose a small pure core rendering seam taking the in-memory Manifest/Lock/provenance value and the CAPTURED prior decoration text. Reuse current serialization/comment merge and provenance ordering. Prepare the exact after bytes or explicit Absence before publication; generated_at is chosen once. Apply must not call a writer that rereads arbitrary current decoration, and must not define its own after-image from an after-write reopen. Keep unrelated ordinary core writer APIs compatible; this is an additive render seam consumed by guarded apply, not a broad writer rewrite.
+
+Check captured before-state still matches before publishing. For the manifest, compare captured recognized semantic input with the planned pre-merge manifest before serializing the requested changes; a changed semantic input is not merely new decoration. Preserve existing root/version constraints and selected-node ownership. Unknown decoration is not authorization to adopt changed semantic data.
+
+The filesystem owner supplies an additive owned-publication result by reusing its atomic staging path. Retain the handle/opaque identity of the newly created stage BEFORE rename, together with the intended bytes/mode and publication stage. Keep the handle through undo/disarm so identity cannot be inferred from whichever object occupies the final name later. On a possibly-published failure retain the same evidence. Do not add identity fields guessed by reopening the destination, and do not globally change existing logical publication APIs into ownership grants. Existing callers remain source-compatible.
+
+## Checked undo
+
+FileGuard (or a small private three-file holder) starts without undo authority. After own publication it remembers that exact published object and intended after-state. Before undo, inspect current name through the held parent and compare kind/link rules, held object identity, bytes and mode. A mismatch preserves current state and returns/reports conflict; equal bytes on a different object do not authorize restoration. BeforePublication performs no undo. A current symlink is never followed; hardlink siblings are never truncated.
+
+Restore prior regular bytes/mode by atomic replacement only after the owned-after observation matches. If prior was absent, remove only after that ownership observation. If this apply intentionally removed provenance, restore prior bytes only by the existing atomic no-replace creation route while the name is absent; never overwrite a new occupant. Do not silently arm a guard around an unchanged/never-published path. Explicit error-path undo must preserve the original error and report any conflict through the incumbent error/report boundary; Drop may retain a checked best-effort fallback for unwinding, never an unconditional write/remove.
+
+The ordinary slot transaction remains authoritative for slot rollback. Do not change its order/semantics, retain post-durability disarm before post-install hooks, and do not make a later post-hook error undo a committed install. Failures during early capture/render cannot touch files not written by this apply.
+
+## Required proof and compatibility record
+
+Turn the five actual-apply probes green; preserve ordinary CLI rollback. Add finite tests for prior absence, definitely-before-publication error, same-byte replacement during publication verification, partial lock/provenance recording, empty-provenance removal, exact prepared decoration, changed input before publication, independent selected/workspace parents and mode preservation. Test initial unsupported target kinds before effects. Keep source-reader hardlink controls; mutation refusal is not a global path/ID restriction. Cover additional APIs with meaningful tests, not hand-reimplemented algorithms. Native claims require native execution; no final-CAS-window test is claimed solved.
+
+No vibe.toml keys or lock/provenance schema versions change. This tightens write/rollback admission and may newly refuse unsafe linked metadata targets that old ambient writes followed/truncated. FORMAT-CHANGES must explain the exact behavior, supported target boundary, residual race window and corrective action (use an ordinary owned metadata file), without pretending all source reads became single-link-only. Root reviews the proposed small API shape before filesystem publication edits, then reviews the full candidate and integrated gates. The full campaign and crash-recovery/package-configuration obligations remain open.

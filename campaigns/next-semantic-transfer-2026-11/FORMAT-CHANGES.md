@@ -308,3 +308,9 @@ Existing manual --resume is retained as a current-work selector with weaker stal
 Rich portable export/import is not implemented by the first candidate. Legacy portable routes must refuse unrepresentable rich state before effects rather than flatten it. A separate required portable-format atom remains before common configuration completion; existing legacy portable public/effective data and weaker secret provenance are preserved. No portable epoch number is assigned by this note.
 
 FMT-009 secret-default clarification: authored defaults/choices/labels remain public definition data under the existing contract. A definition snapshot/hash may retain that literal; evaluated secret values and supplied overrides remain excluded/redacted. This does not change legacy describe and does not conceal credentials authored into a public manifest default. New origin metadata describes the current binding; it never invents older secret-provision history.
+
+## FMT-011 — Apply metadata ownership and rollback (design only, Unreleased)
+
+No vibe.toml keys or lock/provenance schema change. Planned correction replaces ambient truncate/remove rollback with prepared bytes and observed owned-publication checks for selected manifest, workspace lock and provenance. Initial symlink/reparse/special/shared-link mutation targets refuse before effects under existing mutation policy; ordinary read-only shared source remains supported. Standard regular-file rollback and permissions must remain valid. Later byte/object/link substitutions are preserved with a conflict, rather than silently overwritten. A guard that never wrote does not undo.
+
+This is a bounded cooperative observation/publication guarantee, not portable hostile-race CAS, full crash recovery or multi-file atomicity. The final compare→mutation window remains explicit. Implementation/API/test evidence is still pending; no storage journal or new user format is introduced by the design.
