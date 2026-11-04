@@ -86087,7 +86087,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f8f53567bc4ae935fafaf70f3a9929e318ecfa2e82322398585296461d7b0511",
+      "content_hash": "sha256:6ee8be54abfd99e395bc3a6141b920dae44311e1ee598ca2a0f60fdfeb849dee",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -86321,7 +86321,7 @@
     },
     {
       "anchor": "machinery",
-      "content_hash": "sha256:87bdb83715353138e616c05882dcce1c518091d0fb4424f24773c5d143583c04",
+      "content_hash": "sha256:2e970f19b49ea1a43925e530c5367db54c1eb167aca911862cb589bd3abb7525",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "4. The machinery",
@@ -86348,10 +86348,10 @@
     },
     {
       "anchor": "M-SCHEMA-DESCRIBES-FORM",
-      "content_hash": "sha256:fb87299a453eb138c205094696543e950d6c6c4dee8ee046abbc37e5cab8ddc6",
+      "content_hash": "sha256:39ddcaa9e8994fc3cc4879d7a3972496566be36919291cde1ee6f7041d9077f5",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
-      "heading": "**4.2 Schemas describe form; the generator owns\npolicy.** One schema per format per epoch (`schemas/<format>/e<N>/…`). The\nschema language (JTD today) is chosen for *poverty*, not power: an agent cannot\nwrite a half-tagged union or a conditional schema in it. Everything the\nlanguage cannot express — strictness, open vocabularies with preserved unknown\nvalues, skip-empty conventions, canonical ordering, determinism — is emitted by\n**our own generator layer**, which is a first-class component of this project.\nA third-party generator's expressiveness never decides our policy. Measured\n2026-08-09: stock `jtd-codegen 0.4.1` handles tagged unions (`#[serde(tag)]`)\nbut emits closed vocabularies and `Option<Box<…>>` optionals — exactly the gap\nthe layer exists to close. Local types, shared-vocabulary joins and consumer-site reader projections must consume the same effective unknown_fields policy from the one registry loader; a later local override must not disagree with an earlier shared-policy decision. @status:spec/plan",
+      "heading": "**4.2 Schemas describe form; the generator owns\npolicy.** One schema per format per epoch (`schemas/<format>/e<N>/…`). The\nschema language (JTD today) is chosen for *poverty*, not power: an agent cannot\nwrite a half-tagged union or a conditional schema in it. Everything the\nlanguage cannot express — strictness, open vocabularies with preserved unknown\nvalues, skip-empty conventions, canonical ordering, determinism — is emitted by\n**our own generator layer**, which is a first-class component of this project.\nA third-party generator's expressiveness never decides our policy. Measured\n2026-08-09: stock `jtd-codegen 0.4.1` handles tagged unions (`#[serde(tag)]`)\nbut emits closed vocabularies and `Option<Box<…>>` optionals — exactly the gap\nthe layer exists to close. Local types, ordinary shared-vocabulary joins and strict canonical-owner lookup must consume the same effective unknown_fields policy from the one registry loader; a later local override must not disagree with an earlier shared-policy decision. An explicit consumer-site permissive projection is a named-field exception, not a change to that default: existing public ours/many consumers may retain a strict outer document with a permissive field (the scrape-report health projection), while private none consumers remain ineligible. A strict submitted-input contract has no such permissive projections. @status:spec/plan",
       "line": 228,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-SCHEMA-DESCRIBES-FORM"
     },
