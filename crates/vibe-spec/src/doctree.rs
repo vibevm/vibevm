@@ -21,7 +21,9 @@ use crate::directives::Directives;
 mod fence;
 pub(crate) use fence::{FenceSnapshot, FenceTracker, fence_mask};
 mod invariant;
+mod selection;
 pub(crate) use invariant::DocTreeInvariantError;
+pub use selection::AnchorAmbiguity;
 
 /// An index into a [`DocTree`]'s node arena.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

@@ -101,7 +101,7 @@ pub use compiler::observer::{
     EmissionKind, StageDeltaEvent, defer_emission,
 };
 pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
-pub use doctree::{DocTree, Node, NodeId, NodeKind};
+pub use doctree::{AnchorAmbiguity, DocTree, Node, NodeId, NodeKind};
 pub use embed::{
     EmbedError, FsSectionSource, ResolvedSourceMetadata, SectionSource, expand_embeds,
 };

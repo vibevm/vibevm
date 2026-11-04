@@ -6,59 +6,14 @@
 //! doc-path means inside one root — including the lossy `PROP-NNN` /
 //! `FEAT-NNN` prefix-scan and the one-document-one-form refusal.
 
-use std::fs;
 use std::path::{Path, PathBuf};
 
 use super::ResolveError;
-
-/// Resolve a doc-path (relative to a `spec/` root) to a spec-source file —
-/// either serialisation (`.md` or `.xml`; a document's address does not
-/// depend on its form, PROP-045 ##ADDRESSING-UNCHANGED) — inverting the
-/// `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan. `X.md` + `X.xml`
-/// beside each other is a [`ResolveError::PairCollision`]: one document,
-/// one form, and the resolver never guesses which half of a split brain
-/// to read.
-pub(super) fn resolve_doc(base_spec: &Path, doc_path: &str) -> Result<PathBuf, ResolveError> {
-    resolve_doc_with_formats(base_spec, doc_path, &[]).map(|resolved| resolved.path)
-}
 
 pub(super) struct ResolvedDoc {
     pub(super) path: PathBuf,
     pub(super) extension: String,
     pub(super) physical_stem: String,
-}
-
-pub(super) fn resolve_doc_with_formats(
-    base_spec: &Path,
-    doc_path: &str,
-    active_formats: &[String],
-) -> Result<ResolvedDoc, ResolveError> {
-    let (dir, last) = match doc_path.rsplit_once('/') {
-        Some((d, l)) => (base_spec.join(d), l),
-        None => (base_spec.to_path_buf(), doc_path),
-    };
-
-    let candidates = if is_id_stem(last) {
-        read_dir_or_empty(&dir)
-            .map(|entry| entry.path())
-            .filter(|path| id_file_matches_with_formats(path, last, active_formats))
-            .collect()
-    } else {
-        let mut candidates = vec![
-            base_spec.join(format!("{doc_path}.md")),
-            base_spec.join(format!("{doc_path}.xml")),
-        ];
-        candidates.extend(
-            active_formats
-                .iter()
-                .map(|format| base_spec.join(format!("{doc_path}.{format}"))),
-        );
-        candidates.sort();
-        candidates.dedup();
-        candidates.retain(|candidate| candidate.is_file());
-        candidates
-    };
-    select_doc(base_spec, doc_path, active_formats, &candidates)
 }
 
 pub(super) fn select_doc(
@@ -228,6 +183,7 @@ pub(crate) const LEGACY_VIBEDEPS_ROOT: &str = "vibedeps";
 /// (the fallback also names the legacy root in `DocNotFound` errors on
 /// a tree that carries neither — the pre-relayout message, byte for
 /// byte).
+#[cfg(test)]
 pub(crate) fn specs_root_under(base: &Path) -> PathBuf {
     let new = base.join(NEW_SPECS_ROOT);
     if new.is_dir() {
@@ -240,6 +196,7 @@ pub(crate) fn specs_root_under(base: &Path) -> PathBuf {
 /// The dependency-slot root of whichever layout is live under `base`:
 /// `vibevm/vibedeps` when it exists, else the legacy `vibedeps`
 /// (same probe discipline as [`specs_root_under`]).
+#[cfg(test)]
 pub(crate) fn vibedeps_root_under(base: &Path) -> PathBuf {
     let new = base.join(NEW_VIBEDEPS_ROOT);
     if new.is_dir() {
@@ -305,12 +262,6 @@ pub(super) fn is_id_stem(s: &str) -> bool {
         return false;
     };
     (kind == "PROP" || kind == "FEAT") && !num.is_empty() && num.bytes().all(|b| b.is_ascii_digit())
-}
-
-/// Iterate a directory's entries, yielding nothing if it is unreadable or
-/// absent (the resolver degrades to "not found", never panics).
-pub(super) fn read_dir_or_empty(dir: &Path) -> impl Iterator<Item = fs::DirEntry> {
-    fs::read_dir(dir).into_iter().flatten().flatten()
 }
 
 /// The PROP-052 half of [`canonical_doc_path`]: both physical layouts

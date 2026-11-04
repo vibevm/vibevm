@@ -18,6 +18,59 @@ use crate::agent::{PromptRequest, SelectedWorldPromptResolver};
 const GROUP: &str = "org.demo";
 const PROMPT: &str = "spec://org.demo/tools/common/PROMPT-001#root";
 
+#[test]
+fn actual_prompt_refuses_ambiguous_requested_anchor_but_keeps_qualified_leaf_paths() {
+    let world = World::build();
+    let file = world
+        .provider_root
+        .join("vibevm/vibespecs/common/PROMPT-001.md");
+    fs::write(
+        &file,
+        "# First {#same}\nFIRST_ONLY\n# Second {#same}\nSECOND_ONLY\n",
+    )
+    .unwrap();
+    let error = world
+        .resolver()
+        .resolve(&world.request("spec://org.demo/tools/common/PROMPT-001#same"))
+        .unwrap_err();
+    assert!(
+        error.contains("ambiguous") && error.contains("same") && error.contains("PROMPT-001"),
+        "{error}"
+    );
+    fs::write(&file, "# Left {#left}\n## Leaf {#leaf}\nLEFT_BODY\n# Right {#right}\n## Leaf {#leaf}\nRIGHT_BODY\n").unwrap();
+    let resolved = world
+        .resolver()
+        .resolve(&world.request("spec://org.demo/tools/common/PROMPT-001#right.leaf"))
+        .unwrap();
+    assert!(resolved.text.contains("RIGHT_BODY") && !resolved.text.contains("LEFT_BODY"));
+}
+
+#[test]
+fn actual_prompt_embed_refuses_an_ambiguous_selected_dependency_anchor() {
+    let world = World::build();
+    fs::write(
+        world
+            .provider_root
+            .join("vibevm/vibespecs/common/PROMPT-001.md"),
+        "# Prompt {#root}\n#embed spec://org.demo/lib/common/NOTE-001#same\n",
+    )
+    .unwrap();
+    let dependency = &world.selected[&(GROUP.into(), "lib".into())].root;
+    fs::write(
+        dependency.join("vibevm/vibespecs/common/NOTE-001.md"),
+        "# First {#same}\nFIRST_ONLY\n# Second {#same}\nSECOND_ONLY\n",
+    )
+    .unwrap();
+    let error = world
+        .resolver()
+        .resolve(&world.request(PROMPT))
+        .unwrap_err();
+    assert!(
+        error.contains("ambiguous") && error.contains("NOTE-001"),
+        "{error}"
+    );
+}
+
 #[cfg(unix)]
 #[test]
 #[specmark::spec(

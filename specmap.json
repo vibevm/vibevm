@@ -24778,9 +24778,9 @@
       "crate_name": "vibe-lifecycle",
       "file": "crates/vibe-lifecycle/src/agent/tests/resolver.rs",
       "item_kind": "fn",
-      "line": 21,
+      "line": 74,
       "symbol": "vibe_lifecycle::agent::tests::resolver::actual_prompt_refuses_same_byte_replacement_during_source_read",
-      "end_line": 41,
+      "end_line": 94,
       "fingerprint": "tok1:b8a5ca0831cd8c77c4fd44adb4e6f9f605750fe8b2dd55d6c0879ce40ae6e0e7"
     },
     {
@@ -38825,6 +38825,15 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/doctree/selection.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::doctree::selection",
+      "end_line": 4,
+      "fingerprint": "tok1:559b7f56456a2ee87e448767535241666832c49b3a63d0f853dbec447bdc578b"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/embed/read.rs",
       "item_kind": "mod",
       "line": 2,
@@ -39131,6 +39140,15 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/resolver/glob.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_spec::resolver::glob",
+      "end_line": 8,
+      "fingerprint": "tok1:462db69e11a9125f425fe2efd680aacf26e377731be1573623e7edb14dac1e44"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/resolver/observation.rs",
       "item_kind": "mod",
       "line": 2,
@@ -39190,7 +39208,7 @@
       "line": 23,
       "symbol": "vibe_spec::resolver::paths::package_component",
       "end_line": 37,
-      "fingerprint": "tok1:9c554b14bf636e216f2140830746c8f295a0b45528486938e2e8dcc190df1ec6"
+      "fingerprint": "tok1:77c39f9167894fa56778da7ed3649f9d1ecd2f0b9e11cf2724ae7d70e310d3bf"
     },
     {
       "crate_name": "vibe-spec",
@@ -58429,7 +58447,7 @@
     {
       "file": "crates/vibe-lifecycle/src/agent/tests/resolver.rs",
       "from_symbol": "vibe_lifecycle::agent::tests::resolver::actual_prompt_refuses_same_byte_replacement_during_source_read",
-      "line": 23,
+      "line": 76,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
       "verb": "verifies"
@@ -71283,6 +71301,14 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-spec/src/doctree/selection.rs",
+      "from_symbol": "vibe_spec::doctree::selection",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-UNIQUE-SELECTION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-spec/src/embed/read.rs",
       "from_symbol": "vibe_spec::embed::read",
       "line": 2,
@@ -71585,6 +71611,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#INTER-PASS-VERIFIER",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-spec/src/resolver/glob.rs",
+      "from_symbol": "vibe_spec::resolver::glob",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-GLOB-BINDING",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-spec/src/resolver/observation.rs",
@@ -147556,7 +147590,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6bca4bb33d529e1d80af710b7fe120e838745baf0b5f3efe8b4288f6289f830b",
+      "content_hash": "sha256:22ede884c7bde6beed11e45c95751b5400c988046938dfa15f87a21655954365",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker",
@@ -147988,7 +148022,7 @@
     },
     {
       "anchor": "addressing",
-      "content_hash": "sha256:4a7b727833355b86073ab4ef689a8d56fd10a365c6c21b7c65cbc7cfc301ce5f",
+      "content_hash": "sha256:d26937cc10b9c944145f9a7db3b6e420b66270e5de3c829272cf933086f43927",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "6. `spec://` addressing and the resolver (\"router\")",
@@ -148123,19 +148157,19 @@
     },
     {
       "anchor": "URI-UNIQUE-SELECTION",
-      "content_hash": "sha256:34257f7e2800f1baaeba223cf5327d1d4314cb86b1b96afca779c5f5ceb33814",
+      "content_hash": "sha256:5de6cb02b8185ebf0be49306fa8066cb534bbce5e1b0a2f8e3ab1fa09d9a5fce",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
-      "heading": "A requested Markdown tree path resolves uniquely: its first anchor must be unique in the existing flat search, and each subsequent segment must identify one direct child of the selected parent. Ambiguity is a named failure, not first-match content or not-found. Unrequested duplicates do not invalidate an otherwise unique Markdown selection; qualified same-leaf paths under distinct unique parents remain valid. Empty path still selects the whole document. Existing XML whole-document ID validation is unchanged. Source projection and checked selection consume the same held observation, without another parser/read. @status:spec/done",
+      "heading": "A requested Markdown tree path resolves uniquely: its first anchor must be unique in the existing flat search, and each subsequent segment must identify one direct child of the selected parent. Ambiguity is a named failure, not first-match content or not-found. Unrequested duplicates do not invalidate an otherwise unique Markdown selection; qualified same-leaf paths under distinct unique parents remain valid. Empty path still selects the whole document. Existing XML whole-document ID validation is unchanged. Source projection and checked selection consume the same held observation, without another parser/read. @status:impl/done",
       "line": 104,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-UNIQUE-SELECTION"
     },
     {
       "anchor": "SOURCE-GLOB-BINDING",
-      "content_hash": "sha256:3d085a9f621b415ff6b801ca96fd78c6a809cbd26fdbfdbc59394838edce6086",
+      "content_hash": "sha256:df8e2e7ef22f833d6963d98b8280c4f2d84b1364f7328a199be1176fba0c5015",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
-      "heading": "A package-name pattern retains its fixed group authority and explicit version selector. Membership is checked against the same coordinate/root/version the emitted point address denotes. With an explicitly selected world, enumerate its applicable dependency coordinates and exact roots only; unrelated installed slots cannot affect membership, and a requested version that conflicts with a matching selected coordinate refuses. Otherwise enumerate the requested group's materialized slots: absent layout, unmatched names, empty version sets and genuinely missing requested documents/versions are nonmembers; malformed, unsafe or unreadable matching slots and nonabsence document failures refuse. Explicit pattern versions are honored, never discarded into newest; without a pin the ordinary newest-installed rule and versionless spelling remain. This replaces the obsolete group-blind lexical-survivor rule now that point resolution and slots are group-qualified. Keep sorted output, legal empty sets, direct self behavior and one expansion path shared by fold/cycle checking. These are finite source observations, not a whole-pattern or whole-closure snapshot across later mutations. @status:spec/done",
+      "heading": "A package-name pattern retains its fixed group authority and explicit version selector. Membership is checked against the same coordinate/root/version the emitted point address denotes. With an explicitly selected world, enumerate its applicable dependency coordinates and exact roots only; unrelated installed slots cannot affect membership, and a requested version that conflicts with a matching selected coordinate refuses. Otherwise enumerate the requested group's materialized slots: absent layout, unmatched names, empty version sets and genuinely missing requested documents/versions are nonmembers; malformed, unsafe or unreadable matching slots and nonabsence document failures refuse. Explicit pattern versions are honored, never discarded into newest; without a pin the ordinary newest-installed rule and versionless spelling remain. This replaces the obsolete group-blind lexical-survivor rule now that point resolution and slots are group-qualified. Keep sorted output, legal empty sets, direct self behavior and one expansion path shared by fold/cycle checking. These are finite source observations, not a whole-pattern or whole-closure snapshot across later mutations. @status:impl/done",
       "line": 105,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-GLOB-BINDING"
     },

@@ -1,141 +1,112 @@
-//! Pattern expansion — a `*` in a package name enumerates the installed set
-//! (B-056, the plugin form: `#source spec://org.vibevm.plugins/plugin-*`).
-//!
-//! A point `spec://` address names one file; a pattern
-//! `spec://<group>/<name-with-*>/<doc>` names the **set** of installed packages
-//! whose name matches the glob and which carry that document. This module turns
-//! the pattern into the sorted, deterministic list of concrete addresses it
-//! denotes.
-//!
-//! The laws (the owner's decisions, implemented literally):
-//!
-//! 1. The pattern lives only in the package **name**. `*` matches any run of
-//!    bytes, including the empty run; several `*` are allowed; there are no
-//!    other metacharacters — `?` and `[...]` are ordinary characters.
-//! 2. The group does not participate in matching. The resolver finds a slot by
-//!    name suffix (the group is absent from a `vibedeps/` directory name), so a
-//!    group in the pattern could not affect which slots match — it is carried
-//!    into the result addresses unchanged, nothing more.
-//! 3. Membership is two halves: the name matches **and** the document is
-//!    present. A package whose name matched but which lacks the address's
-//!    document is simply not a member — the set is *defined* by both halves of
-//!    the address, exactly as the name defines the first.
-//! 4. An empty set is legal. A glob that matches nothing is `Ok(vec![])`, never
-//!    a "source not found" error.
-//! 5. Sorting is mandatory — by package name, byte order, before the addresses
-//!    are built. One tree + one lockfile ⇒ one result.
-//! 6. Each member's version is the freshest installed (B-028). No second
-//!    version rule is invented.
-//! 7. Point-resolving a pattern is a loud error, not a quiet miss: `resolve_file`
-//!    refuses a pattern and points at `expand_pattern`.
+//! Package-name patterns in one fixed group and the resolver's actual source world.
+//! Selected mode enumerates only selected dependencies. Ordinary installed mode
+//! uses a held dependency layout and the same document/version lookup as points.
+//! Only true absence excludes a member; broken or ambiguous matches refuse.
 
-use std::path::{Path, PathBuf};
+specmark::scope!(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-GLOB-BINDING"
+);
 
+use super::{FileResolver, ResolveError};
 use crate::address::{Authority, SpecAddress};
+#[cfg(test)]
+use std::path::Path;
 
-use super::{
-    FileResolver, ResolveError, read_dir_or_empty, resolve_doc, specs_root_under, version_order,
-    vibedeps_root_under,
-};
-
-/// Is `addr` a pattern — a `spec://` address whose package **name** carries a
-/// glob `*`? Only the name may carry a pattern (law 1); a `*` anywhere else is
-/// a literal character. Point resolution refuses a pattern (it names a set, not
-/// a file); [`FileResolver::expand_pattern`] expands it.
-///
-/// This is a free function (not a method on `SpecAddress`) by the perimeter:
-/// `address.rs` is out of scope, and co-locating the predicate with the matcher
-/// keeps the glob vocabulary in one module. It is re-exported at the crate root
-/// so the pipeline (its next consumer) reaches it as `vibe_spec::is_pattern`.
+/// Whether the package NAME (and only it) contains a wildcard.
 pub fn is_pattern(addr: &SpecAddress) -> bool {
     matches!(&addr.authority, Authority::Package { name, .. } if name.contains('*'))
 }
 
 impl FileResolver {
-    /// Expand a pattern address (a `*` in the package name) into the concrete
-    /// addresses it names — sorted by package name (byte order) and
-    /// deterministic. Each member's version is the freshest installed (B-028);
-    /// each member carries the pattern's group, doc-path, and anchor. A pattern
-    /// that matches nothing is the empty vector (law 4), never an error.
-    ///
-    /// A non-pattern address is treated as a pattern that matches exactly
-    /// itself, so this is the uniform "what addresses does this denote" oracle.
+    /// Expand within the fixed group and the same world used by point reads.
+    /// Preserve explicit package/revision pins. Without a package pin, ordinary
+    /// installed lookup uses its existing newest rule and versionless spelling.
+    /// A non-pattern still denotes exactly itself; a true empty set is legal.
     pub fn expand_pattern(&self, addr: &SpecAddress) -> Result<Vec<SpecAddress>, ResolveError> {
-        // A non-pattern address denotes exactly itself: return it before any
-        // directory scan, so expansion is a total oracle (its docblock promise).
-        // Scanning vibedeps/ instead would silently drop an address whose
-        // document lives outside vibedeps/ — above all a self-coordinate
-        // address, which resolves under ws_root/spec and never has a vibedeps/
-        // slot. Silent source loss is exactly the defect class B-055 closes.
-        // A point address still fails loudly where it belongs: in resolve_file.
         if !is_pattern(addr) {
             return Ok(vec![addr.clone()]);
         }
         super::paths::source(&addr.doc_path, &[])?;
-        // A pattern always carries a package name; an undotted host authority is
-        // never a pattern (is_pattern is false for it), so it returned above.
-        let Authority::Package { group, name, .. } = &addr.authority else {
+        let Authority::Package {
+            group,
+            name: pattern,
+            version,
+        } = &addr.authority
+        else {
             return Ok(Vec::new());
         };
-        let pat = name.as_str();
-
-        // Scan every vibedeps/ slot, split each directory name on its LAST
-        // dot into `<group>.<name>` (РТ-3; the slot is identity-keyed and the
-        // name is a single dot-free LDH label, so the last dot is always the
-        // boundary), and keep the package name where it matches the pattern.
-        // The group is not consulted (РТ-2): slots are matched by name, and
-        // matching stays group-blind even now that the directory carries one.
-        let vibedeps = vibedeps_root_under(&self.ws_root);
-        let mut matched: Vec<(String, PathBuf)> = Vec::new();
-        for entry in read_dir_or_empty(&vibedeps) {
-            let slot_dir = entry.path();
-            if !slot_dir.is_dir() {
-                continue;
+        let mut out = Vec::new();
+        if let Some(selected) = &self.selected {
+            for (candidate_group, name) in selected.keys() {
+                if candidate_group != group
+                    || !name_matches(pattern, name)
+                    || self.is_self(group, name)
+                {
+                    continue;
+                }
+                let concrete = build_address(addr, name)?;
+                if member(self.locate_source(&concrete, &[]).map(|_| ()))? {
+                    out.push(concrete);
+                }
             }
-            let Some(dir_name) = slot_dir.file_name().and_then(|s| s.to_str()) else {
-                continue;
-            };
-            // Cut on the LAST dot: left = group, right = package name (the
-            // name never contains a dot; the group may contain many).
-            let Some((_group, pkg_name)) = dir_name.rsplit_once('.') else {
-                continue; // not a `<group>.<name>` slot
-            };
-            if pkg_name.is_empty() || !name_matches(pat, pkg_name) {
-                continue;
+        } else {
+            if let Some(version) = version {
+                super::paths::version(version)?;
             }
-            matched.push((pkg_name.to_string(), slot_dir));
-        }
-
-        // Sort BEFORE building the addresses (law 5). The key is the pair
-        // (package name, slot directory name): a shared name under several
-        // kinds is indistinguishable by address (it carries no kind), so the
-        // names collapse either way — but sorting on the slot dir too means the
-        // survivor is chosen by rule (the lexicographically-smallest slot),
-        // never by the filesystem's read order. One tree ⇒ one result.
-        matched.sort_by(|a, b| match a.0.cmp(&b.0) {
-            std::cmp::Ordering::Equal => a.1.cmp(&b.1),
-            ord => ord,
-        });
-        matched.dedup_by(|a, b| a.0 == b.0);
-
-        let mut out: Vec<SpecAddress> = Vec::new();
-        for (name, slot_dir) in matched {
-            // Membership (law 3): name matched AND the document is present in
-            // the freshest installed version (law 6 — B-028, no second version
-            // rule). A matched package missing the doc is not a member; this is
-            // not silent swallowing — both halves of the address define the set.
-            let Some(spec_root) = freshest_spec_root(&slot_dir) else {
-                continue; // no version installed → not a resolvable member
+            let Some(slots) = self.installed_slots()? else {
+                return Ok(out);
             };
-            if resolve_doc(&spec_root, &addr.doc_path).is_ok()
-                && let Some(concrete) = build_address(group, &name, &addr.doc_path, &addr.anchor)
-            {
-                out.push(concrete);
+            let mut names = slots
+                .names()?
+                .into_iter()
+                .filter_map(|slot| {
+                    let (candidate_group, name) = slot.rsplit_once('.')?;
+                    (candidate_group == group
+                        && !name.is_empty()
+                        && name_matches(pattern, name)
+                        && !self.is_self(group, name))
+                    .then(|| name.to_owned())
+                })
+                .collect::<Vec<_>>();
+            names.sort();
+            for name in names {
+                let concrete = build_address(addr, &name)?;
+                if member(slots.locate_document(group, &name, version.as_deref(), &addr.doc_path))?
+                {
+                    out.push(concrete);
+                }
             }
-            // (Kept as two conditions so a doc-miss never builds an address.)
         }
         Ok(out)
     }
+}
+
+fn member(result: Result<(), ResolveError>) -> Result<bool, ResolveError> {
+    match result {
+        Ok(()) => Ok(true),
+        Err(ResolveError::DocNotFound { .. } | ResolveError::PackageSlotNotFound(_)) => Ok(false),
+        Err(error) => Err(error),
+    }
+}
+
+/// Rebuild the concrete identity without discarding any selector data.
+fn build_address(pattern: &SpecAddress, name: &str) -> Result<SpecAddress, ResolveError> {
+    let mut concrete = pattern.clone();
+    if let Authority::Package {
+        name: selected_name,
+        ..
+    } = &mut concrete.authority
+    {
+        *selected_name = name.into();
+    }
+    let mut raw = concrete.without_pin();
+    if let Some(revision) = concrete.pinned_r {
+        raw.push_str(&format!("~r{revision}"));
+    }
+    SpecAddress::parse(&raw).map_err(|error| ResolveError::SourceObservation {
+        path: raw,
+        reason: format!("matching coordinate cannot form a concrete source address: {error}"),
+    })
 }
 
 /// Does `pattern` (a package-name glob) match `name`? `*` matches any run of
@@ -175,60 +146,11 @@ fn name_matches(pattern: &str, name: &str) -> bool {
     pi == pat.len()
 }
 
-/// The specs root of the freshest installed version under `slot_dir`, or
-/// `None` when the slot holds no version directory. Reuses
-/// `version_order::newest` (B-028) so there is one version rule, not two. A
-/// directory whose name does not start with a digit is not a version candidate.
-fn freshest_spec_root(slot_dir: &Path) -> Option<PathBuf> {
-    let candidates: Vec<String> = read_dir_or_empty(slot_dir)
-        .filter_map(|e| {
-            let p = e.path();
-            if !p.is_dir() {
-                return None;
-            }
-            let n = p.file_name()?.to_str()?;
-            n.chars()
-                .next()
-                .is_some_and(|c| c.is_ascii_digit())
-                .then_some(n.to_string())
-        })
-        .collect();
-    let newest = version_order::newest(candidates.iter().map(String::as_str))?;
-    Some(specs_root_under(&slot_dir.join(newest)))
-}
-
-/// Build the canonical concrete address for a matched package and round-trip it
-/// through `SpecAddress::parse` so its `raw` is consistent (РТ-4 — construct the
-/// canonical string and parse it, rather than assembling the struct field by
-/// field). The address carries the pattern's group, doc-path, and anchor, the
-/// matched name, and **no** version pin (law 6: the freshest is chosen at
-/// resolve time) or revision pin. Returns `None` only if a matched directory
-/// name cannot form a legal address (e.g. it carries whitespace) — which does
-/// not occur in real vibedeps slots — so such a name is skipped rather than
-/// failing the whole expansion (law 4 stays total).
-fn build_address(
-    group: &str,
-    name: &str,
-    doc_path: &str,
-    anchor: &[String],
-) -> Option<SpecAddress> {
-    let mut s = String::from("spec://");
-    s.push_str(group);
-    s.push('/');
-    s.push_str(name);
-    s.push('/');
-    s.push_str(doc_path);
-    if !anchor.is_empty() {
-        s.push('#');
-        s.push_str(&anchor.join("."));
-    }
-    SpecAddress::parse(&s).ok()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::SelfCoordinate;
+    use crate::resolver::{specs_root_under, vibedeps_root_under};
     use std::fs;
 
     /// A self coordinate that none of the test package names collide with — the
@@ -371,10 +293,9 @@ mod tests {
     }
 
     #[test]
-    fn g7_hyphen_split_on_first_hyphen() {
-        // G7 (РТ-3): `plugin-*` matches the package `plugin-alpha` (directory
-        // flow-plugin-alpha), NOT the package `alpha` (directory flow-alpha) —
-        // the cut is on the FIRST hyphen: kind | name.
+    fn g7_qualified_slot_preserves_hyphenated_package_name() {
+        // The last dot separates the qualified group from its package name;
+        // a hyphen inside plugin-alpha is part of that name.
         let ws = tempfile::TempDir::new().unwrap();
         make_plugin(ws.path(), "org.vibevm.plugins", "plugin-alpha", &["1.0.0"]); // …plugins.plugin-alpha
         make_plugin(ws.path(), "org.vibevm.plugins", "alpha", &["1.0.0"]); // …plugins.alpha → name "alpha"
@@ -482,7 +403,7 @@ mod tests {
             &SpecAddress::parse("spec://org.vibevm.plugins/abc/d").unwrap()
         ));
         // A `*` in the group does not make the address a pattern (the group
-        // does not participate in matching — РТ-2).
+        // is a fixed namespace, not wildcard syntax).
         assert!(!is_pattern(
             &SpecAddress::parse("spec://org.*/abc/d").unwrap()
         ));

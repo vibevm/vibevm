@@ -31,9 +31,13 @@ pub(super) fn package_component(
     let slot = format!("{group}.{name}");
     component("package slot", &slot)?;
     if let Some(version) = version {
-        component("slot version", version)?;
+        self::version(version)?;
     }
     Ok(slot)
+}
+
+pub(super) fn version(value: &str) -> Result<(), ResolveError> {
+    component("slot version", value)
 }
 
 fn component(field: &'static str, value: &str) -> Result<(), ResolveError> {

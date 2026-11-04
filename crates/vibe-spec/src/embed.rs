@@ -298,7 +298,14 @@ fn project_bytes(file: &Path, bytes: &[u8], origin: &str) -> Result<String, Stri
 
 fn resolve_section(src: &str, file: &Path, addr: &SpecAddress) -> Result<String, String> {
     let tree = DocTree::parse(src);
-    let node = match tree.resolve_path(&addr.anchor) {
+    let selected = tree.resolve_unique_path(&addr.anchor).map_err(|error| {
+        format!(
+            "ambiguous requested anchor path `{}` in {}: {error}",
+            addr.anchor.join("."),
+            file.display()
+        )
+    })?;
+    let node = match selected {
         Some(node) => node,
         None => {
             // B-011 §6.1 layer 3: a missed short anchor answers with its

@@ -338,6 +338,7 @@ mod lookup;
 mod observation;
 mod paths;
 pub use lookup::canonical_doc_path;
+#[cfg(test)]
 pub(crate) use lookup::{specs_root_under, vibedeps_root_under};
 pub(crate) use observation::SourceLocation;
 
@@ -355,7 +356,6 @@ pub(crate) use lookup::{
 };
 #[cfg(test)]
 use lookup::{id_file_matches, is_id_stem};
-use lookup::{read_dir_or_empty, resolve_doc};
 
 /// Version ordering for the freshest-installed rule (B-028): `newest` selects
 /// the semver-newest installed version for an unpinned address.
