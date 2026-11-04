@@ -172,3 +172,9 @@ Generated `vibe.lock` root snapshot остаётся unique по координ�
 Для common feature rows добавляется явная `visibility = "public" | "internal"` (default public), чтобы представлять legacy private nodes без magic underscore в общем kernel. При явной миграции legacy `_helper` его private interface нужно обозначить internal. Старые `[features]` сохраняют прежнее underscore правило.
 
 Новые поля относятся к source intent; lock7/index3 и receipts не меняются автоматически. `vibe install -g` не становится workspace consumer: его app operation input и источник package requirements имеют разные владельцы. Пока новые source inputs не подключены к runtime, обычные consumers обязаны явно отказать до apply, не потерять intent. Точная final grammar, migration examples и command impact дополняются после реализации/проверок.
+
+## FMT-007 — Secret references в step templates (дизайн, Unreleased)
+
+Статус: только дизайн/следующий atom. Новых TOML-ключей не требуется; ужесточается значение existing secret=true: framework-interpreted `$param:ID`/`${param:ID}` не смогут использовать secret parameter. Это затронет inline copy/env/agent/file_present fields и активный prompt_file, включая `vibe install -g`. Альтернатива для предназначенного выполнения — существующий `VIBE_PARAM_<ID>` в recipe/shell, без нового secret transport в agent/native.
+
+Escaped `$$param:ID` остаётся literal. Direct parameter conditions остаются допустимыми. Неактивный agent prompt_file не читается только ради этой проверки; активный читается и удерживается до выполнения, чтобы mutable file не менял уже проверенный prompt. Это не исправление hosted raw-argv replay и не sandbox произвольного child output. Exact before/after/public command evidence будет добавлен при acceptance.
