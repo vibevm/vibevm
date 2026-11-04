@@ -426,3 +426,19 @@ Two bounded source reviews promoted with root decisions: common-app-runtime-seam
 Corrections made during review: same-definition config-value references cannot conflict in value, so no invented conflict subsystem/test; path validation changes must check the old realization rather than rebase it; DefaultUse alone misses dormant/absent automatic reliance; a parent needs pending input before a child can park; indexed finish-parked children are unfinished; default/parameter provenance and operation generation are necessary data, not inferred from effective booleans. A dedicated home-aware app resume replaces the earlier proposal to sanitize and replay raw argv, and supplies the missing project-child route. Import needs its actual finite loop cursor, not a generic scheduler. Secret resupply cannot prove old-value equality and source locators cannot prove whole-tree authentication.
 
 The generator already supports explicit unknown_fields through its loader and a late local stamp, but three earlier shared/projection decisions still re-infer policy from foreign_parsers. Root authorizes only alignment with the existing effective policy; no new registry axis/serializer. Existing defaults remain. Whole app implementation is one active parent with concrete stages; none closes the broader all-kind solver/effect/persistence campaign.
+
+### Selected-installer implementation started
+
+Design commit90e3e3f26 passed specmap --check:9060units/4738items/3978edges,0blocking findings,43known warnings. A clean isolated candidate at that base was provisioned with its own reflink target; one native implementation worker received the complete quiet packet. Current local atom NST-APP-COMMON-VERTICAL owns the whole selected-installer journey, including continuation. No source implementation or new format acceptance is inferred from task launch. Root retains review/integration and task-copy cleanup; broader all-kind configured solver/loading and history audit remain open.
+
+## 2026-11-04 — Runtime implementation: signed integer contract correction
+
+The previous goal turn made progress: env identity8f84aefb9 accepted/cleaned, complete app design90e3e3f26 committed, one implementation writer started. Current main/worktree state and live worker rechecked; no duplicate writer started.
+
+Worker found an actual normative mismatch before wire implementation: PROP044#M-WIDE-INTEGERS-AS-STRINGS stated a general wide-integer rule using the unsigned-only phrase no sign, while existing common ParameterValue::Integer is signed i64. Root clarified canonical signed decimal: optional minus only for negative, no plus/leading zeros/negative zero, exact i64 bounds. Existing unsigned counters retain their no-sign grammar. This is a correction of overgeneralized wording, not a new integer type or permission to use lossy float64. Implementation and endpoint/admission tests remain with the active candidate.
+
+### History audit continues beside the single implementation writer
+
+Three native read-only review packets now cover4M01 code commits,13release/distribution doc-policy commits and25nonoverlapping machine/API doc-policy commits. Selection came from actual inventory-only rows and their category/path metadata. Reports must inspect content, distinguish changed contracts from executed behavior and enumerate exclusions. Historical instructions are examined as data, not reinstalled as rules. Source remains pinned7fe6376c with its five dirty files untouched. No review-level counters or source acceptance changed merely because work was assigned. The common-app worktree remains the only product implementation writer.
+
+Signed integer wording clarification passed specmap --check with0blocking findings and43known warnings; source/wire implementation is still pending in the active candidate.

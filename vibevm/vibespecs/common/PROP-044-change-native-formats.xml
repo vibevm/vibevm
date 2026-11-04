@@ -262,8 +262,8 @@ pinned generator rejects `uint64` and `int64` as InvalidType (measured
 the same bad trilemma: a `uint32` that is false at and above 2³², a `float64`
 that loses precision past 2⁵³, or an untyped `{}` that loses the field
 entirely. The general answer: such a field is encoded as a **canonical decimal
-string** — ASCII digits only, no sign, no leading zeros except `"0"` itself —
-the schema says `string`, the Rust type stays the true integer, conversion
+string** — ASCII digits with no leading zeros except `"0"` itself; unsigned domains forbid a sign, while signed domains allow one leading `-` only for a negative value and reject `+` and `-0`. Admission checks the exact declared integer range, including both endpoints of signed i64. This signed-domain rule does not change existing unsigned counter formats.
+The schema says `string`, the Rust type stays the true integer, conversion
 lives at the serde boundary, and non-canonical input is refused loudly rather
 than coerced. Timestamps are not this rule's business: they ride as RFC 3339
 through the `timestamp` vocabulary. First application: the catalog manifest's

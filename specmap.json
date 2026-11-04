@@ -86087,7 +86087,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:5a4382f4dc27774e6203e6f653c18c8e5a785774889ad9d48153007c3955dba8",
+      "content_hash": "sha256:f8f53567bc4ae935fafaf70f3a9929e318ecfa2e82322398585296461d7b0511",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -86321,7 +86321,7 @@
     },
     {
       "anchor": "machinery",
-      "content_hash": "sha256:0268fc218bc16ecc9f7379e623cd4c398341b43df82800ec7de9b13fc4f4155c",
+      "content_hash": "sha256:87bdb83715353138e616c05882dcce1c518091d0fb4424f24773c5d143583c04",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "4. The machinery",
@@ -86375,10 +86375,10 @@
     },
     {
       "anchor": "M-WIDE-INTEGERS-AS-STRINGS",
-      "content_hash": "sha256:4f8d2d3c2cd1c52cc5bb64255aa3147984def48c23e20a6834b59c4a3ba07126",
+      "content_hash": "sha256:72b233c6c2beedbb6e5d56b2891ca13d2695dca723ce49294ca51cf9d9e587e6",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
-      "heading": "**4.2b Integers wider than 32 bits ride the\nwire as decimal strings** *(owner ruling 2026-08-20, the B-091 fork answered\nonce and generally)*. JTD (RFC 8927) has no 64-bit integer type at all — the\npinned generator rejects `uint64` and `int64` as InvalidType (measured\n2026-08-15) — so every field wider than 32 bits would otherwise re-litigate\nthe same bad trilemma: a `uint32` that is false at and above 2³², a `float64`\nthat loses precision past 2⁵³, or an untyped `{}` that loses the field\nentirely. The general answer: such a field is encoded as a **canonical decimal\nstring** — ASCII digits only, no sign, no leading zeros except `\"0\"` itself —\nthe schema says `string`, the Rust type stays the true integer, conversion\nlives at the serde boundary, and non-canonical input is refused loudly rather\nthan coerced. Timestamps are not this rule's business: they ride as RFC 3339\nthrough the `timestamp` vocabulary. First application: the catalog manifest's\nfile `size` (`formats/breaks/003.md`). <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
+      "heading": "**4.2b Integers wider than 32 bits ride the\nwire as decimal strings** *(owner ruling 2026-08-20, the B-091 fork answered\nonce and generally)*. JTD (RFC 8927) has no 64-bit integer type at all — the\npinned generator rejects `uint64` and `int64` as InvalidType (measured\n2026-08-15) — so every field wider than 32 bits would otherwise re-litigate\nthe same bad trilemma: a `uint32` that is false at and above 2³², a `float64`\nthat loses precision past 2⁵³, or an untyped `{}` that loses the field\nentirely. The general answer: such a field is encoded as a **canonical decimal\nstring** — ASCII digits with no leading zeros except `\"0\"` itself; unsigned domains forbid a sign, while signed domains allow one leading `-` only for a negative value and reject `+` and `-0`. Admission checks the exact declared integer range, including both endpoints of signed i64. This signed-domain rule does not change existing unsigned counter formats.\nThe schema says `string`, the Rust type stays the true integer, conversion\nlives at the serde boundary, and non-canonical input is refused loudly rather\nthan coerced. Timestamps are not this rule's business: they ride as RFC 3339\nthrough the `timestamp` vocabulary. First application: the catalog manifest's\nfile `size` (`formats/breaks/003.md`). <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"dev\"/>",
       "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS"
     },
