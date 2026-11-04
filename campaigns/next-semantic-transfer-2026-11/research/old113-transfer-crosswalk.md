@@ -2,7 +2,7 @@
 
 Main pin `a344c6389fdb60a8db075f60b8a7c89712572916`; unaccepted common-app candidate excluded. Read-only, no builds or tests.
 
-**Counting result:** 113 old accepted IDs verified. This bounded audit maps **15 partial accepted overlaps**, **17 scopes with no accepted campaign delivery**, and **81 not yet reconciled**. **0 complete old IDs have been proved by this audit; the exact total is not established.** This is an evidence lower bound, not “nothing transferred” and not a verdict that all old tasks fail. M-01-A.3 may already be complete once its exact caller/fixture matrix is checked.
+**Current counting result:** 113 old accepted IDs verified: **1 full semantic transfer,14partial accepted overlaps,17scopes with no accepted campaign delivery,81not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). **The exact global completed total remains unestablished; at least1is proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -30,7 +30,9 @@ Accepted mapping: F01, F03, F05; commits 504b42f76, 6dafbac72, df040becb.
 
 Exact old clause: “Drive/UNC/ADS/device roots, trailing dots, control bytes and NFC/case aliases cannot escape or silently alias.” (explicit_task_negative_case_and_steps).
 
-### M-01-A.3 — Preserve failures across compiler and prompt callers
+### M-01-A.3 — Preserve failures across compiler and prompt callers — accepted full
+
+**Root disposition supersedes the preliminary evidence gap below:** complete at its original internal-caller boundary, with compositional test limits explicitly recorded in [M-01-A.3 acceptance](m01-a3-transfer-acceptance.md).
 
 Accepted mapping: F03, F05; commits 6dafbac72, df040becb.
 
