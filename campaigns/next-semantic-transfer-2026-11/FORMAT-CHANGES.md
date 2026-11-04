@@ -325,7 +325,7 @@ Rollback conflicts retain both the original failure and conflict details; an obs
 
 Acceptance evidence:662distinct candidate tests/docs; main public apply19+direct guard3+actual CLI rollback1+owned docs4 all passed. Fmt, scoped conform0new and final map check0blocking passed. No full-platform or general recovery acceptance is inferred.
 
-## FMT-012 — Nested committed-boot attribution (accepted, Unreleased)
+## FMT-012 — Nested committed-boot attribution (Unreleased; 7ed7e7256)
 
 No vibe.toml keys, install -g flags, lock/index epochs or tree JSON v1 shape change. The `vibe tree` correction retains all nested/repeated embed occurrences with exact existing inclusive line coordinates, in opening order. Flat valid generated arrays retain their order. Fenced marker examples remain literal, using the existing Vibe fence grammar for both static contribution and embed discovery. Valid inline/prose static samples no longer split contributions; actual provenance requires whitespace-only opening-line prefix and closing-line suffix, preserving multiline c1 frames.
 

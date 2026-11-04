@@ -1,5 +1,7 @@
 # F08 — Truthful nested committed-boot attribution
 
+Accepted commit:7ed7e7256. Exact seven-file snapshot verified against committed HEAD; temporary worktree/target removed and registry absence confirmed. Evidence retained.
+
 ## Need and source judgment
 
 The existing tree's single open-marker slot lost outer embeds and could rename an opening using a mismatched closer. Its unit test called nested contained only one pair; valid v1 JSON did not prove complete attribution. Actual FsSectionSource→expand_embeds→CLI reproduction lost A[2..12] while retaining only B[6..10]. The prototype's matching stack was useful, but its raw scanner still confused literal examples with provenance.
