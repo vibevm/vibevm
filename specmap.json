@@ -99133,7 +99133,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:b446d0ab046bc0d6cc38eac272476a9f2d4c09a152e99afb9b87faaab8b06621",
+      "content_hash": "sha256:80d17c9da69b154662c8bae4c7afc3670542cc3aa7385f2cd2776c816846ad75",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -99169,7 +99169,7 @@
     },
     {
       "anchor": "model",
-      "content_hash": "sha256:80a07c48859cd25f4e898d3eb49f83fd21141b62eb43bf830367c855b4dd1298",
+      "content_hash": "sha256:ea3b2ea54c17fad15c267a435045f5170e67aa9d64ded6465b9f62711bae3252",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "2. Shared data and validation",
@@ -99231,12 +99231,30 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#CHOICE-CORE"
     },
     {
+      "anchor": "AUTHORED-DEFINITIONS",
+      "content_hash": "sha256:3b3109685a72ed38a58ca876165e6d596954c8befc7027107ba1822b21763dbe",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "The ordinary Manifest reader, parser, validator and serializer retain one optional ConfigurationDecl at [configuration] for package scope and the same type under an actual installer option for installation scope. There is no profile-selected alternate manifest decoder or lossy rich-to-legacy source projection. A common declaration contains ordered feature/group/parameter/profile definitions and declared typed config-value data. Feature relations use the shared feature kernel; choice groups use the shared choice core. Groups explicitly declare mode choice (defaults and positive guards) or closure (fallback and parent-derived activity), with no ambiguous defaults interpretation. Parameter declarations reuse existing typed validation/canonicalization. Profiles carry ordinary feature seeds, group answers and public typed parameter presets; explicit per-consumer answers override that consumer's profile before independent consumers merge. Unknown references are rejected even on dormant branches. @status:spec/done",
+      "line": 16,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-DEFINITIONS"
+    },
+    {
+      "anchor": "AUTHORED-SCOPES",
+      "content_hash": "sha256:dfee46ee163d1e0d74919c9c38179d17e2ca94ca633ea36dfdaff65a337161db",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "Absent common declarations preserve all existing legacy inputs. Within one scope, common configuration conflicts with nonempty legacy features (and installer profiles/parameters); two graph definitions are never silently combined or prioritized. Unrelated manifest/installer fields retain their meaning. Package scope and selected installer scope remain distinct real operation contexts even when local IDs coincide. All nine package kinds can describe/evaluate data; doc/remap definitions cannot acquire dependency, subskill loading or execution authority through configuration. Remap consent and doc read/cache boundaries remain in their current owners. Ordinary effect consumers must refuse an unsupported common declaration explicitly before apply instead of silently treating its legacy projection as empty; such a refusal is a temporary implementation boundary, not completed user support. @status:spec/done",
+      "line": 17,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-SCOPES"
+    },
+    {
       "anchor": "intent",
       "content_hash": "sha256:0537eed6620a23390f06a017de4690f6f863798bf8c6cede4dbc964ddf7ad75d",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "3. Preserve what the consumer asked for",
-      "line": 17,
+      "line": 19,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#intent"
     },
     {
@@ -99245,7 +99263,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "A computed feature set does not replace the request. Omitted selection, explicit empty selection, additive intent and exact intent remain distinguishable through evaluation, persistence and reconfiguration. Disabling a guard makes an answer dormant; it does not erase it or let it activate its own guard. Removed or invalid explicit/dormant answers require a named reconfiguration response, not silent filtering in the rich contract. @status:spec/done",
-      "line": 18,
+      "line": 20,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#ORIGINAL-INTENT"
     },
     {
@@ -99254,7 +99272,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "A declared default is data, not universal permission to use it. Require-selection and use-declared-defaults are explicit policies. Explicit empty never becomes omitted and never silently takes a default. A missing mandatory selection returns questions without effects. A generic confirmation flag such as assume-yes is not a semantic answer. When a choice follows a shown default, its retained receipt identifies that definition/default; a changed semantic default requires rediscovery rather than backtracking into a different answer. @status:spec/done",
-      "line": 19,
+      "line": 21,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DEFAULT-CONSENT"
     },
     {
@@ -99263,7 +99281,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "The domain owner groups real consumers of one actual configuration instance before calling the common evaluator. Each consumer-owned member belongs to one choice group; this restriction does not apply to overlapping closure constraints. Additive selections union; exact selections must agree and bound additive requests over currently active, eligible members. Ineligible member answers remain dormant in the original request and do not conflict until eligible. Omitted versus explicit selection and additive versus exact strength are independent: an absent group entry normalizes to omitted/additive, while an explicit omitted/exact entry applies any consented defaults as an exact set. Conflict names the contributing consumers/declarations. Different real instances can be evaluated independently. A client-provided label cannot manufacture another physical instance or waive another consumer's requirement. Current workspace and application-home ownership are reused; unused environment/lock/target identity layers from the prototype are not prerequisites of the pure evaluator. @status:spec/done",
-      "line": 20,
+      "line": 22,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#CONSUMER-MERGE"
     },
     {
@@ -99272,7 +99290,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "A package candidate's definition and effects belong to that candidate. Rejected candidate effects and default receipts do not leak into a selected older candidate. Explicit stable answers remain hard constraints where compatible; backtracking does not choose a new semantic answer for the user. Definition identity for a split describe/evaluate/apply interaction is checked against the definition actually used. It is a stale-input check, not an authentication token or a new durable host process. @status:spec/done",
-      "line": 21,
+      "line": 23,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY"
     },
     {
@@ -99281,7 +99299,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "4. One result, explicit incompleteness",
-      "line": 23,
+      "line": 25,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#evaluation"
     },
     {
@@ -99290,7 +99308,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Evaluation returns original intent separately from effective features, active and dormant selections, parameter values, implication reasons, required questions and conflicts. Unresolved or conflicting configurations publish no partial effect expansion. One deterministic rule set resolves local feature closure and group constraints; adapters do not reimplement another checkbox evaluator. Declared order is retained for presentation, while identity/merge comparisons are order-independent where order carries no meaning. @status:spec/done",
-      "line": 24,
+      "line": 26,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#EVALUATION"
     },
     {
@@ -99299,7 +99317,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Typed parameter answers are values, not manufactured feature identifiers. They retain bounds, validation, origin and secret handling. A feature's declared config effect and a user parameter remain distinct; conflicting effects refuse without partial merging. Host-dependent path validation is supplied by the actual planning host. The shared library does not read ambient environment to decide a dependency or choice. @status:spec/done",
-      "line": 25,
+      "line": 27,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PARAMETERS-ARE-VALUES"
     },
     {
@@ -99308,7 +99326,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Application steps consume the evaluated app configuration through their existing planner and runner. Package dependency activation, strong/weak forwarding, subskills and config effects remain with the existing feature/resolver/install owners, consuming the same validated selection. A pure forwarding test does not establish configured-install support: every advertised effect must reach a real supported route. Config-value effects select declared typed data for plan inspection, persistence/replay and before/after comparison; they do not implicitly authorize arbitrary runtime or config-file writes. An execution destination is required only when a separately declared effect actually promises one. Unsupported source/target modes refuse explicitly before mutation and remain visible obligations; no registry-only or fixture-only slice is advertised as universal coverage. @status:spec/done",
-      "line": 26,
+      "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS"
     },
     {
@@ -99317,7 +99335,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "5. Console, GUI and agent-facing consumers",
-      "line": 28,
+      "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#surfaces"
     },
     {
@@ -99326,7 +99344,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "The common description exposes enough data to render feature trees, radio/multi-select groups, profiles, typed parameter controls, defaults, eligibility and reasons. Console questions and external answers use the same definition and evaluator. The external flow is describe → submit answers/evaluate → domain plan → supported apply/read operation. Required follow-up questions are returned as data. A graphical tool never needs to scrape terminal prose or start a configuration host to answer them. @status:spec/done",
-      "line": 29,
+      "line": 31,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN"
     },
     {
@@ -99335,7 +99353,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "CLI, structured JSON and MCP adapters call the same library capability. Existing application console widgets and prompt conventions are reused where applicable. Declared options can be inspected for every PackageKind; applying a result respects the selected operation's existing domain boundary. A package with no options has an explicit empty definition; unsupported operations and unknown answers do not masquerade as successful no-ops. @status:spec/done",
-      "line": 30,
+      "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SURFACE-PARITY"
     },
     {
@@ -99344,7 +99362,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Existing application describe/plan documents and valid flags retain their established meaning. Rich common definitions and evaluations receive a separately versioned, generated machine contract rather than extra unknown fields in an old closed schema. Old views are faithful adapters for what they can represent; they must not relabel a new semantic rule as an old one. No model completion or human prose parsing participates in wire validation. @status:spec/done",
-      "line": 31,
+      "line": 33,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#WIRE-COMPATIBILITY"
     },
     {
@@ -99353,7 +99371,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Framework-owned descriptions, plans, progress records and persisted configuration omit secret answer values. They may report presence and redaction. Values needed for execution remain ephemeral inputs to the authorized domain operation. This does not claim to sandbox arbitrary package-authored child code or prevent it from emitting its own data. Secret marking is not converted into a persisted plaintext or reusable public digest by generalization. @status:spec/done",
-      "line": 32,
+      "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-BOUNDARY"
     },
     {
@@ -99362,7 +99380,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Errors for a parameter marked secret omit the supplied raw value, canonical value, resolved path and opaque prompt-error text; parameter/option identifiers and safe reason classes remain available. Public parameters retain useful diagnostics. Classified parameter Debug output redacts the marked value. Attended secret input uses hidden entry before type-specific visible widgets, and empty input may retain a supplied default/preset. Authored defaults, choices and labels remain public definition data. These rules do not imply that template interpolation, replay argv, arbitrary child output or unclassified malformed CLI arguments are safe; the complete secret boundary requires its remaining consumers to be verified. @status:impl/done",
-      "line": 33,
+      "line": 35,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#SECRET-DIAGNOSTICS"
     },
     {
@@ -99371,7 +99389,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "6. Existing owners retain the state",
-      "line": 35,
+      "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#persistence"
     },
     {
@@ -99380,7 +99398,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Project dependency choices belong to the selected consumer's authored configuration; application choices belong to their existing installation owner; other supported domains retain their existing state owners or explicit request-local result. Package source definitions are not edited to store a consumer answer. No parallel global choice database is created. Plan and apply use the same normalized intent; an answer is not discarded by rereading an older manifest before it is recorded. @status:spec/done",
-      "line": 36,
+      "line": 38,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE"
     },
     {
@@ -99389,7 +99407,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Install, update and modify preserve relevant explicit and dormant intent, diagnose removed choices/new mandatory groups and validate changed definitions before effects. Root constraints from other consumers remain binding. Required persistence and domain execution are included in acceptance, not deferred after a successful UI test. Existing domain interruption/rollback/resume guarantees are stated honestly and are not silently replaced with one generic recovery protocol. @status:spec/done",
-      "line": 37,
+      "line": 39,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#RECONFIGURATION"
     },
     {
@@ -99398,7 +99416,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Legacy app declarations retain demonstrated feature-tree/default/profile/flag/modify behavior. A valid active legacy exclusive group still has its unique default; inactive groups may be empty. Older installation records carry effective choices, not richer original intent or default-consent provenance they never stored. Compatibility lowering states exactly what is known and preserves that behavior; richer requests retain their stronger distinctions. A package kind alone never selects a weaker interpretation of the same rich definition. @status:spec/done",
-      "line": 38,
+      "line": 40,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-APP-COMPATIBILITY"
     },
     {
@@ -99407,7 +99425,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "The existing package FeaturesTable is lowered into the same feature kernel. Its default is a real named feature, default and explicit seeds union, all-features initially selects public names only, and private underscore-prefixed names remain reachable through local implications while direct public requests refuse them. Positive implication cycles terminate. Existing exclusive sets are independent at-most-one closure constraints without fallback or app-style direct replacement; empty legacy sets are no-ops. The adapter preserves valid literal identifiers rather than inventing another identity encoding. Definition validation checks every local reference and activation syntax, including dormant/private branches, without treating an all-features activation conflict as an invalid definition. Existing dependency/forwarding/subskill values are projected from the shared resolved set, never through another production closure walk. This adapter preserves the current feature algebra; real solver/effect consumers remain separately required and are not implied by a populated expansion struct. @status:impl/done",
-      "line": 39,
+      "line": 41,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#LEGACY-PACKAGE-COMPATIBILITY"
     },
     {
@@ -99416,7 +99434,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "7. Finished means a working shared system",
-      "line": 41,
+      "line": 43,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#acceptance"
     },
     {
@@ -99425,7 +99443,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Acceptance requires the existing public application wizard scenario and app update/modify behavior to pass; the same ordinary package request to work through console and serialized external answers without host bootstrap; all cardinalities and omitted/empty/default policies; dormant switch-away/switch-back; additive/exact multi-consumer conflicts; candidate backtracking without effect/default leakage; integrated forwarding/subskill/config effects; typed parameters and redaction; persistence followed by install/update/reconfiguration; stale definition refusals without writes; and a PackageKind-driven matrix of supported views and effects, including read-only and consent-only boundaries. Structural/schema success and counts are supporting checks, not substitutes for these user outcomes. @status:spec/done",
-      "line": 42,
+      "line": 44,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#ACCEPTANCE"
     },
     {
@@ -99434,7 +99452,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "8. Rationale and rejected alternatives",
-      "line": 44,
+      "line": 46,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#decisions"
     },
     {

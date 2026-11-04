@@ -308,3 +308,15 @@ Secret candidate6files проверен против полного diff/untrack
 ### Secret diagnostics accepted gate
 
 Main publicCLI7/7 прошёл, fmt/core+app+CLI conform/specmap+check exit0. Conform0new findings; прежние nonblocking observations сохранены (core0/app1/CLI67). Map9048units/4715items/3955edges,0suspects/0gated orphans/0unresolved host edges,43known warnings. Все6integrated source hashes совпали с reviewed candidate. Принимается SECRET-DIAGNOSTICS; общий SECRET-BOUNDARY остаётся spec/done с незакрытой реализацией templates/replay. Ни Password PTY, ни native-platform pass не заявлены.
+
+## 2026-11-04 — Закрыты оба прерванных implementation atoms
+
+Secret diagnostics принят commitd0c961277. Все6source hashes проверены против committed HEAD; raw evidence вынесены, live cwd/exe/fd users отсутствовали, временный worktree удалён и registry absence подтверждён. Оба кандидата, сохранённых до остановки, интегрированы. Current frontier — обычное authored configuration через единый Manifest reader, actual consumer intent и последующее подключение install/persistence/surfaces; кампания не завершена.
+
+Campaign structural verify после двух интеграций exit0:222task records, исходная source classification95implemented/49partial/72planned-only/6unknown, commit index присутствует. Сам checker явно отвечает product_acceptance=not established by this check. Исторический inventory не переписан под новые результаты и не объявлен завершённым semantic audit.
+
+## 2026-11-04 — Authored definitions: выбран один обычный admission path
+
+Read-only design input сохранён в research/common-authored-shape-design.md. Root принимает единый ConfigurationDecl в package [configuration] и selected installer option.configuration с явными scopes. Они проходят обычные ManifestWire/read/parse/validate/serialize; отдельный profile/epoch decoder и rich→legacy потеря metadata не переносятся. В одном scope rich и nonempty legacy feature/parameter/profile definitions конфликтуют, все остальные manifest fields сохраняются. Parameter validation/canonicalization переиспользуется; arbitrary config runtime writer не появляется.
+
+Следующий атом завершает source admission/normalized evaluation и не объявляется полным пользовательским install. Пока consumer не подключён, он обязан явно отказать до apply, а не успешным no-op проигнорировать богатую декларацию. После него следуют actual edge intent, candidate/default binding, install persistence и общие console/machine consumers. Закрытые lock/index/wire formats не меняются молча в этом атоме.
