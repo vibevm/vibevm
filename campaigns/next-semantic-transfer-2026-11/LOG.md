@@ -396,3 +396,9 @@ Main joint publicCLI6/6 прошёл. Fmt/core+app+CLI conform exit0,0new; incum
 ## 2026-11-04 — Закрытие двух принятых рабочих копий
 
 Authored intent принят237f7bf2b, secret templates —eefe840b8. Все22и14final source hashes проверены против committed snapshots, отчёты/RED/GREEN/commands/digests сохранены вне copies. Обе временные copies удалены после проверки отсутствия live users; отсутствие каталогов и registry entries подтверждено. FORMAT-CHANGES дополнен обоими accepted hashes. Полная кампания active: следующий frontier — actual common evaluation/planning и persistence/UI, чтобы заменить временные unsupported guards рабочими consumers. Source/data слой не выдаётся за завершённую установку.
+
+## 2026-11-04 — Environment identity: runtime подтверждение
+
+Standalone reproduction выполнил6реальных CLI plan/install -g команд в isolated registry/home/settings, все exit0. Plan/index сохраняли a-b и a.b, но child видел только VIBE_FEATURE_A_B и VIBE_PARAM_A_B; порядок declarations менял победителя. При выбранном a-b и позднем выключенном a.b child видел0. Distinct a-b/a-c control сохранил оба значения. Binary SHA сохранён; precommit mtime сам по себе не доказывает ни stale, ни exact-HEAD provenance; проверены неизменные соответствующие source paths. Report/evidence: research/app-env-identity-reproduction.md и local artifacts.
+
+Root выбирает scoped correction: один application-domain projection helper, проверка representability/injectivity для options с declared recipe/shell consumer (включая expanded hooks). В таких options проверяются все feature/parameter declarations независимо, потому что inactive feature тоже экспортируется0. Feature и parameter prefixes не конфликтуют между собой; разные options самостоятельны. Options без этого consumer и generic/package literal IDs не получают нового ограничения. Это реальная consumer-boundary ошибка, не ошибка уже общего feature kernel.

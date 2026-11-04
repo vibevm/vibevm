@@ -245,3 +245,9 @@ Commands: **vibe install -g** проверен реальными CLI scenarios.
 Evidence: actual RED core1/runtime1/public2; в старом -g earlier step и outbox успевали появиться, а изменённый recipe prompt_file подменял показанный prompt. После исправления actual dependency/earlier-step sentinels/work/outbox/index отсутствуют при refusal exit2, canary не попадает в output; replacement recipe действительно меняет файл, но envelope содержит ADMITTED_PROMPT. Candidate75distinct tests/docs, включая10existing agent cases и1wizard. Main joint CLI4common-format+2secret-template, fmt,3scoped conform0new и specmap --check0blocking/43known warnings прошли.
 
 Это не исправление hosted raw-argv replay, optional-secret resume, batch/modify/import/dependency continuation, unclassified malformed CLI input или arbitrary child output. SECRET-BOUNDARY остаётся незавершённой общей обязанностью.
+
+## FMT-008 — Уникальность app environment names (дизайн, Unreleased)
+
+Следующий scoped fix, ещё не принят. Синтаксис ID не меняется глобально; у installer options с recipe/shell (включая expanded hooks) будет проверяться текущая проекция ID в VIBE_FEATURE_/VIBE_PARAM_: ASCII uppercase, dash/dot→underscore. a-b и a.b дают один ключ и должны отказать с обоими IDs/key, вместо прежней зависимости от declaration order. Feature и parameter namespaces раздельны; options без такого consumer и package/generic literal IDs не ограничиваются.
+
+Migration: явно переименовать один неоднозначный ID и его references/profile/conditions/flags/intent; обычные environment spellings сохраняются. Никакого автоматического encoding/renaming или нового JSON env transport. Изменение касается plan/install -g и общих app planners; public CLI negative/positive evidence будет внесено после реализации.
