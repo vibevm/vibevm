@@ -1,0 +1,2463 @@
+{
+  "schema": 1,
+  "scope": "Bounded old accepted task criterion crosswalk, not global completion certificate",
+  "main_pin": "a344c6389fdb60a8db075f60b8a7c89712572916",
+  "prototype_contract_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "source_plan_private": {
+    "path": "user-local recovered Zap evidence; see research/old113-transfer-crosswalk.md",
+    "sha256": "72d5ddf1f3ed8651c57a3891105853b64ffb67045b92879a7cfde29bcfb54b5b",
+    "raw_private_records_not_exported": true
+  },
+  "denominator": {
+    "inventory_tasks": 222,
+    "remaining_original_tasks": 109,
+    "accepted_complement": 113,
+    "cross_checked_graph_statuses": true
+  },
+  "counts": {
+    "partial": 15,
+    "not-transferred": 17,
+    "unknown": 81,
+    "full": 0,
+    "already_main": 0
+  },
+  "minimum_proven_complete_old_tasks": 0,
+  "exact_global_complete_total": "not established",
+  "important": "0 is the proven lower bound under strict full-task criteria, not a claim of no delivered capability. Partial overlaps are not task closures; unknown rows are not assumed absent. not-transferred means no accepted campaign delivery for named scope, not absence of all baseline helpers. No already-main full-task equivalence proved.",
+  "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
+  "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
+  "inputs": [
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/source-inventory.json",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "c0f4e7c2d7ee9fb9aae7c84b4a20df14dd96bad0422bec9e7aebf59f82dc161a"
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/LOG.md",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "c9317aca68799a07ab1358bec96dfcea922c209d07abf6b2de892b81dc5cca50"
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F01-source-paths.md",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "c3e36cf6a740093ae2a3a8b8821f9944aa3ce7835304b9d754f86f97c1bd67c6"
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F02-workspace-constraints.md",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "beacb0dcd67001713f226cd14740ae6125e77af39303fe03299f1227d58e80ea"
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F03-source-observations.md",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "1bbf85aa3ff6758bf821abf70a4db3f8fc0ddcfa00fe3c56796407a1c6d7b473"
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F04-common-configuration.md",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "d616cc8137e865cb426622b48ea772f1b3ee90acac3f72b6a3139278c815bc26"
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F05-source-selection.md",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "8ca9fbc1f9c54abfccafcc787493c7bc5aa1f53723a1783c00601a04cd3714e6"
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F06-apply-file-rollback.md",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "71e7aed60092db6823c7a0492becf778bce79f228866d76851b6409db478c22a"
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F07-inline-anchor-opacity.md",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "c840cb4a3686994ed56eff409a685eaec50208fc2971b93fe44eb51ac16dc451"
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F08-boot-attribution.md",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "c56a272426a4968c8f20c6568f79155b035b78748a3e628edf4b4ec73fc0b1d8"
+    },
+    {
+      "path": "crates/vibe-safefs/src/file/source_read.rs",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "ea7ebdc001ff0adf1306921a5f486a7eec8deec5e9e2025ad07af6a7580c507b",
+      "inspection": "C1 actual public API/body and held-byte consumer path; source reader signature/identity/digest targeted search"
+    },
+    {
+      "path": "crates/vibe-spec/src/embed/read.rs",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "8e9a4bb733be25cb79a179f0827a9059104b4c50437e4c0afd3ebfa2cdcf2e97",
+      "inspection": "C1 actual public API/body and held-byte consumer path; source reader signature/identity/digest targeted search"
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver/observation.rs",
+      "commit": "a344c6389fdb60a8db075f60b8a7c89712572916",
+      "sha256": "50867896231ed4598c4ce3bbef2b2c8524ed33d27bab5054b33135459d034a50",
+      "inspection": "C1 actual public API/body and held-byte consumer path; source reader signature/identity/digest targeted search"
+    }
+  ],
+  "contract_inputs": [
+    {
+      "path": "campaigns/next/tasks/M-01-A.json",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "8b75fa4f75863517f7931fff8d4f94d981ad0e2554ed669319a90c4cf68fd40c"
+    },
+    {
+      "path": "campaigns/next/tasks/M-01-C.json",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "85d353e476a7dcb1af1cf02156e86c26265536709795b3934a35d0e96872441c"
+    },
+    {
+      "path": "campaigns/next/tasks/M-01-E.json",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "9e223e2e158d58b2568fe23656fe82a7da55f18fe8413cc425cc77ce0e217bf8"
+    },
+    {
+      "path": "campaigns/next/tasks/M-05-A.json",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "9864d729ae192376b3b928e35ce02117bed4e2a6c3e98fc2a964e59b7a6c21df"
+    },
+    {
+      "path": "campaigns/next/tasks/M-05-B.json",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "56b98edca74ecf8e16cf525a5b5fbec69365487f5c7f41de1afa4f5211be67a0"
+    },
+    {
+      "path": "campaigns/next/tasks/M-05-C.json",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "487b5759883b167aca3051f0d9afd88e532be961d11276f07be7c28680e271f7"
+    },
+    {
+      "path": "campaigns/next/tasks/M-05-D.json",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "c62526ad692d0f466caaed214b87008f6b10985a77be6d254ce123f8659e948c"
+    },
+    {
+      "path": "campaigns/next/tasks/M-05-E.json",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "32a40b39db6e672e62e851f67eaf4dcd43330cd72d9bdd71b5406886af2b94d2"
+    },
+    {
+      "path": "campaigns/next/tasks/M-06-B.json",
+      "commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "58c6bd67f9b547704606a0eb1592b67890637be75a717bc5116fb19ec0c2b13d"
+    }
+  ],
+  "accepted_commits": {
+    "504b42f76": {
+      "sha": "504b42f76c981d0e266ac67017f6850e38045a46",
+      "ancestor_of_main_pin": true,
+      "subject": "fix(spec): keep address paths inside their selected roots",
+      "feature": "F01"
+    },
+    "075d38cb2": {
+      "sha": "075d38cb2dd51359929e38e5bff1fc447806eecd",
+      "ancestor_of_main_pin": true,
+      "subject": "fix(install): honor every workspace consumer constraint",
+      "feature": "F02"
+    },
+    "6dafbac72": {
+      "sha": "6dafbac7248cb0794033da702a40d09e979a1040",
+      "ancestor_of_main_pin": true,
+      "subject": "fix(spec): observe source bytes without claiming write ownership",
+      "feature": "F03"
+    },
+    "c20b6bc89": {
+      "sha": "c20b6bc8945ad4ff971db4ba8a2e9b1aa8645424",
+      "ancestor_of_main_pin": true,
+      "subject": "refactor(configuration): share the app feature closure",
+      "feature": "F04"
+    },
+    "033a4236d": {
+      "sha": "033a4236dcc295261ff5080d77fdefd6d3ce9bf1",
+      "ancestor_of_main_pin": true,
+      "subject": "feat(configuration): preserve shared consumer choice intent",
+      "feature": "F04"
+    },
+    "5af2eadc8": {
+      "sha": "5af2eadc8736338a84eae8c9211dbc2a35a8641c",
+      "ancestor_of_main_pin": true,
+      "subject": "refactor(features): share package closure and validate dormant definitions",
+      "feature": "F04"
+    },
+    "d0c961277": {
+      "sha": "d0c96127713021194581d71d634ae4dd4135c275",
+      "ancestor_of_main_pin": true,
+      "subject": "fix(app): omit secret answers from diagnostics",
+      "feature": "F04"
+    },
+    "da741ee16": {
+      "sha": "da741ee16315ab368c47eebd20db493bb97934d7",
+      "ancestor_of_main_pin": true,
+      "subject": "feat(manifest): retain common configuration definitions",
+      "feature": "F04"
+    },
+    "237f7bf2b": {
+      "sha": "237f7bf2bde418a041df184ce721c5e3bc4e0a42",
+      "ancestor_of_main_pin": true,
+      "subject": "feat(configuration): preserve original dependency input",
+      "feature": "F04"
+    },
+    "eefe840b8": {
+      "sha": "eefe840b8a13bd5e7b2a08a38779bb580dcf48f1",
+      "ancestor_of_main_pin": true,
+      "subject": "fix(app): prepare prompts without secret interpolation",
+      "feature": "F04"
+    },
+    "8f84aefb9": {
+      "sha": "8f84aefb9cf94d7e875c6d25eb26b90a1d22a319",
+      "ancestor_of_main_pin": true,
+      "subject": "fix(app): reject ambiguous step environment names",
+      "feature": "F04"
+    },
+    "df040becb": {
+      "sha": "df040becb965d0a05b3ebd18b8bd758646eef6a3",
+      "ancestor_of_main_pin": true,
+      "subject": "fix(spec): preserve source identity in pattern and anchor selection",
+      "feature": "F05"
+    },
+    "50a4630aa": {
+      "sha": "50a4630aa3a41c008025c9ade5d34a668b3659ac",
+      "ancestor_of_main_pin": true,
+      "subject": "fix(install): preserve third states during metadata rollback",
+      "feature": "F06"
+    },
+    "d6147a94d": {
+      "sha": "d6147a94d83910b7c319247dc01cd980325a9e67",
+      "ancestor_of_main_pin": true,
+      "subject": "fix(facts): keep quoted anchors opaque across warm caches",
+      "feature": "F07"
+    },
+    "7ed7e7256": {
+      "sha": "7ed7e72568c9463137196beacc7bf538aeb236cd",
+      "ancestor_of_main_pin": true,
+      "subject": "fix(tree): preserve nested attribution and literal marker examples",
+      "feature": "F08"
+    }
+  },
+  "rows": [
+    {
+      "old_task_id": "M-01-A.1",
+      "title": "Freeze address grammar and compatibility corpus",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make accepted spellings and ambiguous lookup behavior executable before public reads.\nAcceptance criteria: Corpus maps every supported/legacy spelling to a stable result or typed refusal.; No guessed first-match or unsafe compatibility fallback remains.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F01",
+        "F05"
+      ],
+      "accepted_main_commits": [
+        "504b42f76c981d0e266ac67017f6850e38045a46",
+        "df040becb965d0a05b3ebd18b8bd758646eef6a3"
+      ],
+      "transferred_scope": "Portable lexical checks, unique scoped anchors and truthful selected/pinned patterns.",
+      "unmet_or_unverified": "Verify all supported old/new address meanings and ambiguity/refusal corpus against the accepted target compatibility contract. Resource-export and unsupported-revision handling from explicit old steps have no criterion-complete accepted mapping here; absence of ResourceAddress type and literal percent behavior are not failures.",
+      "exact_contract": {
+        "goal": "Make accepted spellings and ambiguous lookup behavior executable before public reads.",
+        "steps": [
+          "Inventory current URI/stem/anchor spellings and capture examples before editing.",
+          "Define permanent exact scheme, authority, version, Vibe path, resource-export and unsupported-revision rules.",
+          "Implement validated construction and explicit legacy conversion; add accepted/refused corpus entries."
+        ],
+        "positive_cases": [
+          "Qualified selected dependency and unique abbreviated stem resolve canonically."
+        ],
+        "negative_cases": [
+          "Percent encoding, empty segments, wrong version and duplicate stems refuse with distinct reasons."
+        ],
+        "acceptance": [
+          "Corpus maps every supported/legacy spelling to a stable result or typed refusal.",
+          "No guessed first-match or unsafe compatibility fallback remains."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-01-A.json",
+      "criterion_counter": {
+        "basis": "explicit_task_steps",
+        "exact_old_clause": "Define permanent exact scheme, authority, version, Vibe path, resource-export and unsupported-revision rules.",
+        "gap_or_evidence_limit": "F01/F05 deliberately retain parser/canonical_doc_path and do not claim the complete grammar/corpus. The missing ResourceAddress type alone is not a failure; missing verified semantics/corpus is what remains."
+      },
+      "implemented_coverage": "Portable lexical checks, unique scoped anchors and truthful selected/pinned patterns.",
+      "remaining_behavior": "Verify all supported old/new address meanings and ambiguity/refusal corpus against the accepted target compatibility contract. Resource-export and unsupported-revision handling from explicit old steps have no criterion-complete accepted mapping here; absence of ResourceAddress type and literal percent behavior are not failures.",
+      "superseded_obligations": [
+        {
+          "old_clause": "Percent encoding ... refuse with distinct reasons.",
+          "target_decision": "Existing literal percent spellings deliberately remain literal; no new public parser grammar is imposed merely to match prototype.",
+          "reference": "features/F01-source-paths.md Change and rationale / Proven scope; LOG.md F01 acceptance (504b42f76).",
+          "counts_as_remaining": false
+        }
+      ]
+    },
+    {
+      "old_task_id": "M-01-A.2",
+      "title": "Unify portable component containment",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make address lookup use the existing filesystem identity boundary.\nAcceptance criteria: Rejected components cause no out-of-root observation.; One shared component authority replaces local blacklists.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F01",
+        "F03",
+        "F05"
+      ],
+      "accepted_main_commits": [
+        "504b42f76c981d0e266ac67017f6850e38045a46",
+        "6dafbac7248cb0794033da702a40d09e979a1040",
+        "df040becb965d0a05b3ebd18b8bd758646eef6a3"
+      ],
+      "transferred_scope": "Existing shared declarant-path authority plus held/no-follow source traversal.",
+      "unmet_or_unverified": "Exact old steps include NFC/case alias distinctions and native/portable aliases. F05 explicitly leaves portable sibling aliases open; no full old contract equivalence.",
+      "exact_contract": {
+        "goal": "Make address lookup use the existing filesystem identity boundary.",
+        "steps": [
+          "Compare URI validation with shared safefs portable/NFC/case rules.",
+          "Route physical lookup through shared validated components without normalizing distinct logical names.",
+          "Add native and portable cases for Windows special paths and Unicode aliases."
+        ],
+        "positive_cases": [
+          "Nested portable path stays under its admitted root."
+        ],
+        "negative_cases": [
+          "Drive/UNC/ADS/device roots, trailing dots, control bytes and NFC/case aliases cannot escape or silently alias."
+        ],
+        "acceptance": [
+          "Rejected components cause no out-of-root observation.",
+          "One shared component authority replaces local blacklists."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-01-A.json",
+      "criterion_counter": {
+        "basis": "explicit_task_negative_case_and_steps",
+        "exact_old_clause": "Drive/UNC/ADS/device roots, trailing dots, control bytes and NFC/case aliases cannot escape or silently alias.",
+        "gap_or_evidence_limit": "The two short acceptance bullets alone overlap strongly with F01/F03. Exact old task additionally says add native and portable Unicode-alias cases; F05 explicitly leaves portable sibling aliases open. No missing ResourceAddress type is used as a counter. This is a real explicit old-scope gap, not an invented whole-source-service requirement."
+      },
+      "implemented_coverage": "Existing shared declarant-path authority plus held/no-follow source traversal.",
+      "remaining_behavior": "Exact old steps include NFC/case alias distinctions and native/portable aliases. F05 explicitly leaves portable sibling aliases open; no full old contract equivalence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-01-A.3",
+      "title": "Preserve failures across compiler and prompt callers",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Finish shared lookup semantics at existing integration points.\nAcceptance criteria: Every inventoried caller has a result/refusal fixture.; No alternate lookup path bypasses containment.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F03",
+        "F05"
+      ],
+      "accepted_main_commits": [
+        "6dafbac7248cb0794033da702a40d09e979a1040",
+        "df040becb965d0a05b3ebd18b8bd758646eef6a3"
+      ],
+      "transferred_scope": "Real filesystem/embed/compiler and prompt consumers tested with typed refusals.",
+      "unmet_or_unverified": "F03/F05 supply real compiler/embed/prompt tests and may satisfy this narrow task. This bounded audit did not join the original caller inventory against every fixture. Full resource-query grammar/service is NOT a criterion of this task and must not be used to deny completion. Mark partial/provisional pending that matrix; no specific uncorrected caller is established here.",
+      "exact_contract": {
+        "goal": "Finish shared lookup semantics at existing integration points.",
+        "steps": [
+          "Trace the compiler/embed/prompt call sites cited by the baseline.",
+          "Replace first-match and guessed not-found handling with typed lookup results.",
+          "Characterize unchanged valid content and distinguish absent, unreadable, ambiguous and unstable outcomes per caller."
+        ],
+        "positive_cases": [
+          "Existing valid embed and provider prompt retain their content."
+        ],
+        "negative_cases": [
+          "Unreadable source never becomes not-found; duplicate anchor never succeeds."
+        ],
+        "acceptance": [
+          "Every inventoried caller has a result/refusal fixture.",
+          "No alternate lookup path bypasses containment."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-01-A.json",
+      "criterion_counter": {
+        "basis": "unverified_acceptance_matrix_not_demonstrated_behavior_gap",
+        "exact_old_clause": "Every inventoried caller has a result/refusal fixture.",
+        "gap_or_evidence_limit": "F03/F05 supply real compiler/embed/prompt tests and may satisfy this narrow task. This bounded audit did not join the original caller inventory against every fixture. Full resource-query grammar/service is NOT a criterion of this task and must not be used to deny completion. Mark partial/provisional pending that matrix; no specific uncorrected caller is established here."
+      },
+      "implemented_coverage": "Real filesystem/embed/compiler and prompt consumers tested with typed refusals.",
+      "remaining_behavior": "F03/F05 supply real compiler/embed/prompt tests and may satisfy this narrow task. This bounded audit did not join the original caller inventory against every fixture. Full resource-query grammar/service is NOT a criterion of this task and must not be used to deny completion. Mark partial/provisional pending that matrix; no specific uncorrected caller is established here.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-01-B.1",
+      "title": "Construct selected visible-source authority",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Queries consume an opaque prepared world instead of arbitrary lock rows.\nAcceptance criteria: Authority contains the exact admitted roots and capture identities.; Empty-cache construction records zero provider effects.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Opaque prepared visible-source authority/capture service not delivered by F01/F03/F05 (private point locator expressly is not that object).",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Opaque prepared visible-source authority/capture service not delivered by F01/F03/F05 (private point locator expressly is not that object).",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-01-B.2",
+      "title": "Retain world and membership witnesses",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Prevent mixed worlds and unrelated broken members from contaminating point queries.\nAcceptance criteria: Race fixtures never return a mixed observation.; Unavailable reasons identify the actual boundary without leaking sensitive paths.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Full source-world/membership witness service remains outside accepted source slices.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Full source-world/membership witness service remains outside accepted source slices.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-01-C.1",
+      "title": "Retain file observation for digest and parsing",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Use one safely held source observation for every returned byte and identity.\nAcceptance criteria: Result states its measured stability window without claiming hostile-ABA prevention.; No query creates locks, directories or COW copies.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F03"
+      ],
+      "accepted_main_commits": [
+        "6dafbac7248cb0794033da702a40d09e979a1040"
+      ],
+      "transferred_scope": "One retained source buffer feeds builtin parsing/custom text; bounded observation and purity rules documented/tested.",
+      "unmet_or_unverified": "Specific useful old promise still unestablished independently of the rejected laws: task step says compute raw digest and parsing input from the same buffer; positive case says exact bytes and matching digest. At pinned main, the accepted source reader returns Vec<u8>; SourceLocation::read returns Vec<u8>; actual FsSectionSource::read_location feeds those bytes into projection/section parsing or UTF-8 and returns text/metadata, without computing/exposing an associated raw digest on this route. No accepted mapping demonstrates a separate real consumer receiving/verifying that same-observation digest. This is a narrowly identified observable-digest/evidence gap, NOT a requirement to recreate a proof wrapper. Root must decide whether that digest behavior remains useful required scope or is explicitly superseded; no blanket global source framework is required. If superseded, this row needs reassessment, not automatic partial status.",
+      "exact_contract": {
+        "goal": "Use one safely held source observation for every returned byte and identity.",
+        "steps": [
+          "Retain root/parent/file capabilities and read through the existing safe seam.",
+          "Compute raw digest and parsing input from the same buffer or retained stream.",
+          "Define pre/post stability witnesses and honest unavailable handling without weakening single-link ownership."
+        ],
+        "positive_cases": [
+          "Stable regular file yields exact bytes and matching digest."
+        ],
+        "negative_cases": [
+          "Links, reparse points, hardlinks or concurrent replacement cannot silently receive stable success."
+        ],
+        "acceptance": [
+          "Result states its measured stability window without claiming hostile-ABA prevention.",
+          "No query creates locks, directories or COW copies."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-01-C.json",
+      "criterion_counter": {
+        "basis": "explicit_task_step_and_positive_case",
+        "exact_old_clause": "Compute raw digest and parsing input from the same buffer or retained stream.",
+        "gap_or_evidence_limit": "Specific useful old promise still unestablished independently of the rejected laws: task step says compute raw digest and parsing input from the same buffer; positive case says exact bytes and matching digest. At pinned main, the accepted source reader returns Vec<u8>; SourceLocation::read returns Vec<u8>; actual FsSectionSource::read_location feeds those bytes into projection/section parsing or UTF-8 and returns text/metadata, without computing/exposing an associated raw digest on this route. No accepted mapping demonstrates a separate real consumer receiving/verifying that same-observation digest. This is a narrowly identified observable-digest/evidence gap, NOT a requirement to recreate a proof wrapper. Root must decide whether that digest behavior remains useful required scope or is explicitly superseded; no blanket global source framework is required. If superseded, this row needs reassessment, not automatic partial status."
+      },
+      "implemented_coverage": "Actual read_source_bytes_in holds parent/file identity, compares two passes and closing/reopened observations, returns the observed bytes; FsSectionSource read_location parses/projects exactly that buffer or exact held overlay. Real Linux read/link/replacement and pure-source tests are accepted in F03. No reread is required by the parser.",
+      "remaining_behavior": "Specific useful old promise still unestablished independently of the rejected laws: task step says compute raw digest and parsing input from the same buffer; positive case says exact bytes and matching digest. At pinned main, the accepted source reader returns Vec<u8>; SourceLocation::read returns Vec<u8>; actual FsSectionSource::read_location feeds those bytes into projection/section parsing or UTF-8 and returns text/metadata, without computing/exposing an associated raw digest on this route. No accepted mapping demonstrates a separate real consumer receiving/verifying that same-observation digest. This is a narrowly identified observable-digest/evidence gap, NOT a requirement to recreate a proof wrapper. Root must decide whether that digest behavior remains useful required scope or is explicitly superseded; no blanket global source framework is required. If superseded, this row needs reassessment, not automatic partial status.",
+      "superseded_obligations": [
+        {
+          "old_clause": "Define ... handling without weakening single-link ownership; hardlinks ... cannot silently receive stable success.",
+          "target_decision": "Read-only source bytes intentionally allow shared regular inodes; strict single-link state/mutation readers remain separate.",
+          "reference": "LOG.md:115-119 URI-OBSERVED-SOURCE-READ decision; F03 Implemented behavior; accepted6dafbac72.",
+          "counts_as_remaining": false
+        },
+        {
+          "old_clause": "Pre/post stability witnesses as a returned proof/authority carrier.",
+          "target_decision": "Existing source consumers need consistent bytes; root explicitly rejected a new proof/authority object. Documented observation window plus measured refusal checks is a valid replacement, not missing delivery.",
+          "reference": "LOG.md:115-119 says new source consumer gets consistent bytes and needs no proof/authority object; F03 API returns bytes by design.",
+          "counts_as_remaining": false
+        }
+      ]
+    },
+    {
+      "old_task_id": "M-01-C.2",
+      "title": "Prove membership against trusted captured source",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Separate local record agreement from independent source proof.\nAcceptance criteria: Tamper matrix distinguishes record-only, payload-only and coordinated changes.; No additional local digest is mistaken for authentication.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Independent source membership/authentication proof not delivered; cards expressly exclude authentication/proof.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Independent source membership/authentication proof not delivered; cards expressly exclude authentication/proof.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-01-C.3",
+      "title": "Bind builtin converter and overlay provenance",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Prove transformed returned bytes using existing pure conversion.\nAcceptance criteria: Every transformation between source and returned representation is inspectable.; Source/raw/representation hashes remain distinct.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F03"
+      ],
+      "accepted_main_commits": [
+        "6dafbac7248cb0794033da702a40d09e979a1040"
+      ],
+      "transferred_scope": "Builtin conversion and exact overlay consume held bytes without a fallback read.",
+      "unmet_or_unverified": "No complete inspectable transformation chain or separate source/raw/representation hash result delivered by this accepted slice.",
+      "exact_contract": {
+        "goal": "Prove transformed returned bytes using existing pure conversion.",
+        "steps": [
+          "Run only pure builtin conversion over verified capture bytes in memory.",
+          "Bind descriptor, converter recipe, authorized overlay and source-output map.",
+          "Compare materialized output before assigning derivation-proven; expose carriers reusable by later M-10.",
+          "Preserve source-neutral stem/anchor locator and canonical SpecDoc IR content hash across equivalent Markdown/XML materializations; version schema rather than reinterpret existing specmap fields."
+        ],
+        "positive_cases": [
+          "Declared Vibe XML has a named converter and exact output proof.",
+          "Equivalent Markdown/XML forms retain the same canonical node hash; query-time locator resolves the actual installed slot extension and line range."
+        ],
+        "negative_cases": [
+          "Converter/overlay/output drift refuses; native conversion never runs implicitly.",
+          "Source-only line/path and raw-byte hash are never presented as a materialized slot location or cross-form semantic drift."
+        ],
+        "acceptance": [
+          "Every transformation between source and returned representation is inspectable.",
+          "Source/raw/representation hashes remain distinct."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-01-C.json",
+      "criterion_counter": {
+        "basis": "explicit_acceptance",
+        "exact_old_clause": "Every transformation between source and returned representation is inspectable.",
+        "gap_or_evidence_limit": "Second criterion: Source/raw/representation hashes remain distinct. Held-buffer conversion alone does not establish these observable outputs; no whole-query subsystem requirement added."
+      },
+      "implemented_coverage": "Builtin conversion and exact overlay consume held bytes without a fallback read.",
+      "remaining_behavior": "No complete inspectable transformation chain or separate source/raw/representation hash result delivered by this accepted slice.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-01-C.4",
+      "title": "Report failed source conversion at install",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make failed Markdown-to-XML conversion observable, recorded and optionally fatal while preserving default install availability.\nAcceptance criteria: Warning and check issue name the failed file and same diagnostic class as facts check; default install remains available.; Strict mode fails before committed install state changes; slot record and closure diff expose exact conversion outcomes.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "No accepted warning/strict install-conversion outcome/closure-diff slice mapped in F01-F08.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "No accepted warning/strict install-conversion outcome/closure-diff slice mapped in F01-F08.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-01-D.1",
+      "title": "Extract classified units, sections and raw resources",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Expose source content without inventing facts in ordinary data.\nAcceptance criteria: Every result identifies descriptor, capture, representation and location basis.; Ordinary data has no accidental fact facets.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Complete classified source query result with descriptor/capture/representation/location not delivered.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Complete classified source query result with descriptor/capture/representation/location not delivered.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-01-D.2",
+      "title": "Publish generated source-query service and adapters",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make canonical service, CLI and MCP share the same validated contract.\nAcceptance criteria: Surface parity compares validated success/error payloads.; Generated contracts and corpus agree with their registry.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Generated source-query CLI/MCP/service contract and full parity remain open.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Generated source-query CLI/MCP/service contract and full parity remain open.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-01-E.1",
+      "title": "Exercise native and portable filesystem adversaries",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Prove path/observation behavior with real temporary filesystem fixtures.\nAcceptance criteria: Case inventory distinguishes executed native cases from unavailable ones.; Refusals preserve all fixture state.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F01",
+        "F03",
+        "F05"
+      ],
+      "accepted_main_commits": [
+        "504b42f76c981d0e266ac67017f6850e38045a46",
+        "6dafbac7248cb0794033da702a40d09e979a1040",
+        "df040becb965d0a05b3ebd18b8bd758646eef6a3"
+      ],
+      "transferred_scope": "Linux real filesystem adversaries, replacement/links, duplicate anchors and portable lexical controls recorded.",
+      "unmet_or_unverified": "Old cases additionally include Unicode aliases and cancellation of large authorized responses; full inventory not closed. Native Windows/macOS explicitly unavailable, which is honestly recorded rather than waived.",
+      "exact_contract": {
+        "goal": "Prove path/observation behavior with real temporary filesystem fixtures.",
+        "steps": [
+          "Create owned path/alias/anchor/enumeration adversarial fixtures.",
+          "Run supported native link/reparse/replacement cases and portable equivalents separately.",
+          "Record unsupported host primitives rather than infer another platform's execution."
+        ],
+        "positive_cases": [
+          "Unique nested source resolves; large authorized response supports cancellation."
+        ],
+        "negative_cases": [
+          "Traversal/ADS/device/Unicode aliases, duplicate anchors, unreadable enumeration and mid-read replacement refuse."
+        ],
+        "acceptance": [
+          "Case inventory distinguishes executed native cases from unavailable ones.",
+          "Refusals preserve all fixture state."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-01-E.json",
+      "criterion_counter": {
+        "basis": "explicit_task_cases",
+        "exact_old_clause": "Unique nested source resolves; large authorized response supports cancellation.",
+        "gap_or_evidence_limit": "Negative task case explicitly includes Unicode aliases. Missing native Windows execution alone is NOT a failure: task allows recording unsupported primitives. Full cancellation/alias case mapping remains unverified."
+      },
+      "implemented_coverage": "Linux real filesystem adversaries, replacement/links, duplicate anchors and portable lexical controls recorded.",
+      "remaining_behavior": "Old cases additionally include Unicode aliases and cancellation of large authorized responses; full inventory not closed. Native Windows/macOS explicitly unavailable, which is honestly recorded rather than waived.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-01-E.2",
+      "title": "Close source delivery with purity and expectation parity",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Demonstrate zero hidden effects and exact integrity outcomes across surfaces.\nAcceptance criteria: Zero-effect counters accompany matching CLI/MCP/service results.; Integrity strength and unavailable proof remain explicit.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Whole source-query CLI/MCP/service purity and integrity parity remains open.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Whole source-query CLI/MCP/service purity and integrity parity remains open.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-02-A.1",
+      "title": "Create a native origin and two local binding fixtures",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Demonstrate reusable package intent with independent project-owned refinements.\nAcceptance criteria: Fixture report lists package fact addresses and separate local fact addresses.; Package bytes remain identical across both consumers.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-02-A.2",
+      "title": "Prove binding independence from adoption and personal plans",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Establish which existing observations may inform a change without owning it.\nAcceptance criteria: Bindings contain no owner/current/done scheduler state.; Changing personal-plan fixture bytes leaves shared intent identity unchanged.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-02-B.1",
+      "title": "Implement immutable change directory and document roles",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make authored change grammar durable under the configured spec root.\nAcceptance criteria: Authored fixture round-trips preserve comments/user values through the migration path.; ID and role validation is shared, not duplicated per surface.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-02-B.2",
+      "title": "Separate intent and work graph identities",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Implement meaningful-input hashing without making work into runtime state.\nAcceptance criteria: Counterexamples show independent intent/work identities with stable framing.; Graph outputs predecessors and needs, never completion or scheduling verdicts.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-02-B.3",
+      "title": "Integrate saved-state and overlay change analysis",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Reuse M-16 editing boundaries for a safe change reader and future writer.\nAcceptance criteria: Analysis results identify the exact overlay/disk snapshot and location basis.; No new editor coordination or writer authority duplicates M-16.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-02-C.1",
+      "title": "Retain accepted origin captures and explicit rebase",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Keep change origin stable across mutable package updates.\nAcceptance criteria: Origin/rebase reports show exact old/new capture and affected fact addresses.; Package slots and historical accepted evidence remain unchanged.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-02-C.2",
+      "title": "Provide a complete same-snapshot fact selection seam",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Prevent paginated or truncated requirements from masquerading as complete change scope.\nAcceptance criteria: Selected-address inventory equals observed complete universe or lists exact gaps.; Existing neutral query semantics and limits remain explicit compatibility behavior.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-02-D.1",
+      "title": "Implement no-overwrite change scaffolding",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Create a local change from an exact origin through one prepared saved-state write.\nAcceptance criteria: Prepared diff matches authored created files and declared IDs.; Scaffolding does not adopt package facts or start lifecycle execution.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-02-D.2",
+      "title": "Expose check, show and coverage through shared services",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Finish useful read-only change access without a second verdict engine.\nAcceptance criteria: All surfaces return one semantic result and typed failures.; M-02 is usable without starting or migrating an execution.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-03-A.1",
+      "title": "Separate production from ordinary build and verify",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Implement the accepted public invocation law including prerequisite effects.\nAcceptance criteria: Invocation matrix covers ordinary/scoped commands and their complete prerequisite prefix.; Historical evidence is not relabelled with new semantics.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-A.1",
+      "title": "Characterize root union and Fresh request loss",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Capture actual multi-consumer and fast-path behavior before changing resolution.\nAcceptance criteria: Fixtures name every incoming consumer constraint and observed fast-path decision.; Confirmed gaps have failing/characterizing tests before solver edits.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F02"
+      ],
+      "accepted_main_commits": [
+        "075d38cb2dd51359929e38e5bff1fc447806eecd"
+      ],
+      "transferred_scope": "RED/GREEN multi-consumer constraints, held roots, selected-node scope, retries and Fresh kind guards.",
+      "unmet_or_unverified": "Old task also characterizes bare-install Fresh when only requested features change. F02 explicitly limited to registry/workspace constraints; feature/request identity portion has no complete mapped gate here.",
+      "exact_contract": {
+        "goal": "Capture actual multi-consumer and fast-path behavior before changing resolution.",
+        "steps": [
+          "Build minimal fixtures with two workspace roots requesting one package under different constraints.",
+          "Record root deduplication and bare-install Fresh behavior when only requested features change.",
+          "Add regression characterizations and distinguish confirmed defects from hypotheses; do not silently rewrite lock semantics yet."
+        ],
+        "positive_cases": [
+          "Explicit roots preserve unrelated held roots and existing dependency requirements."
+        ],
+        "negative_cases": [
+          "A member constraint or newly requested feature cannot disappear behind first-wins/Fresh."
+        ],
+        "acceptance": [
+          "Fixtures name every incoming consumer constraint and observed fast-path decision.",
+          "Confirmed gaps have failing/characterizing tests before solver edits."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-05-A.json",
+      "criterion_counter": {
+        "basis": "explicit_task_step",
+        "exact_old_clause": "Record root deduplication and bare-install Fresh behavior when only requested features change.",
+        "gap_or_evidence_limit": "F02 proves consumer constraints and other Fresh checks; its reviewed evidence does not map this feature-only Fresh characterization. This is an evidence gap, not proof no such test exists anywhere in main."
+      },
+      "implemented_coverage": "RED/GREEN multi-consumer constraints, held roots, selected-node scope, retries and Fresh kind guards.",
+      "remaining_behavior": "Old task also characterizes bare-install Fresh when only requested features change. F02 explicitly limited to registry/workspace constraints; feature/request identity portion has no complete mapped gate here.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-A.2",
+      "title": "Characterize feature syntax and solver capabilities",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Map supported activation semantics and conditional solver failure cases.\nAcceptance criteria: Capability matrix reports implemented semantics and explicit unsupported combinations.; Conditional repros do not rely on a magic iteration count as proof.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F04"
+      ],
+      "accepted_main_commits": [
+        "c20b6bc8945ad4ff971db4ba8a2e9b1aa8645424",
+        "033a4236dcc295261ff5080d77fdefd6d3ce9bf1",
+        "5af2eadc8736338a84eae8c9211dbc2a35a8641c",
+        "d0c96127713021194581d71d634ae4dd4135c275",
+        "da741ee16315ab368c47eebd20db493bb97934d7",
+        "237f7bf2bde418a041df184ce721c5e3bc4e0a42",
+        "eefe840b8a13bd5e7b2a08a38779bb580dcf48f1",
+        "8f84aefb9cf94d7e875c6d25eb26b90a1d22a319"
+      ],
+      "transferred_scope": "Legacy app/package feature characterization, all-features/exclusive and differential cases.",
+      "unmet_or_unverified": "No accepted full naive/SAT/resolvo capability matrix plus wrong-version and negated conditional characterization mapped to this old task.",
+      "exact_contract": {
+        "goal": "Map supported activation semantics and conditional solver failure cases.",
+        "steps": [
+          "Exercise qualified dependency/feature parsing, weak forwarding, exclusive/all-features and requires_any behavior.",
+          "Inventory actual supported naive/SAT/resolvo entry routes from their existing dispatch; report capability gaps explicitly.",
+          "Characterize wrong-version/name-present and negated conditional combinations before introducing new activation."
+        ],
+        "positive_cases": [
+          "Legacy exclusive remains at-most-one and requires_any remains technical OR."
+        ],
+        "negative_cases": [
+          "All-features is not definition validity for constrained groups.",
+          "Qualified names and weak forwarding cannot be split or activated incorrectly."
+        ],
+        "acceptance": [
+          "Capability matrix reports implemented semantics and explicit unsupported combinations.",
+          "Conditional repros do not rely on a magic iteration count as proof."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-05-A.json",
+      "criterion_counter": {
+        "basis": "explicit_task_step",
+        "exact_old_clause": "Inventory actual supported naive/SAT/resolvo entry routes from their existing dispatch; report capability gaps explicitly.",
+        "gap_or_evidence_limit": "Accepted package feature differential work is insufficient to prove this exact backend/conditional characterization scope. No additional runtime feature-delivery criterion is imposed on this characterization task."
+      },
+      "implemented_coverage": "Legacy app/package feature characterization, all-features/exclusive and differential cases.",
+      "remaining_behavior": "No accepted full naive/SAT/resolvo capability matrix plus wrong-version and negated conditional characterization mapped to this old task.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-B.1",
+      "title": "Implement one typed feature-effect algebra",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Represent optional dependencies and forwarding without a second choices grammar.\nAcceptance criteria: Normalized algebra has no duplicated choices.requires dependency engine.; Legacy syntax lowers through one typed representation.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F04"
+      ],
+      "accepted_main_commits": [
+        "c20b6bc8945ad4ff971db4ba8a2e9b1aa8645424",
+        "033a4236dcc295261ff5080d77fdefd6d3ce9bf1",
+        "5af2eadc8736338a84eae8c9211dbc2a35a8641c",
+        "d0c96127713021194581d71d634ae4dd4135c275",
+        "da741ee16315ab368c47eebd20db493bb97934d7",
+        "237f7bf2bde418a041df184ce721c5e3bc4e0a42",
+        "eefe840b8a13bd5e7b2a08a38779bb580dcf48f1",
+        "8f84aefb9cf94d7e875c6d25eb26b90a1d22a319"
+      ],
+      "transferred_scope": "One common closure kernel, package/app legacy lowering, typed authored effects admission.",
+      "unmet_or_unverified": "Stable dependency activation/strong-weak forwarding and actual induced effects not connected end to end; accepted cards explicitly limit foreign binding and effect consumers.",
+      "exact_contract": {
+        "goal": "Represent optional dependencies and forwarding without a second choices grammar.",
+        "steps": [
+          "Define stable dependency declaration IDs and local feature references under the permanent PROP-003 contract.",
+          "Implement effects for dependency activation, strong/weak target-feature requests, exported subskills and declared config values.",
+          "Keep source/version/link/visibility metadata once on dependency declarations; option aliases remain package-local."
+        ],
+        "positive_cases": [
+          "One effect set activates an optional dependency and forwards requested features."
+        ],
+        "negative_cases": [
+          "Undeclared target IDs, malformed qualified refs and weak-only activation without its dependency refuse or stay dormant as defined."
+        ],
+        "acceptance": [
+          "Normalized algebra has no duplicated choices.requires dependency engine.",
+          "Legacy syntax lowers through one typed representation."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-05-B.json",
+      "criterion_counter": {
+        "basis": "explicit_goal_steps_positive_case",
+        "exact_old_clause": "One effect set activates an optional dependency and forwards requested features.",
+        "gap_or_evidence_limit": "Task goal and steps explicitly include dependency activation, strong/weak target-feature requests, exports/config values and once-owned dependency declarations. Common closure evaluation and local effect projection do not prove that specified algebra/consumer behavior. Not rejected merely because it lacks a whole subsystem."
+      },
+      "implemented_coverage": "One common closure kernel, package/app legacy lowering, typed authored effects admission.",
+      "remaining_behavior": "Stable dependency activation/strong-weak forwarding and actual induced effects not connected end to end; accepted cards explicitly limit foreign binding and effect consumers.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-B.2",
+      "title": "Add constrained groups and consumer resolution domains",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make semantic choices explicit while retaining environment and target roles.\nAcceptance criteria: Generated requests retain owner edge/domain/target and choice provenance.; Defaults are explicit consumer policy inputs, never solver preferences.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F04"
+      ],
+      "accepted_main_commits": [
+        "c20b6bc8945ad4ff971db4ba8a2e9b1aa8645424",
+        "033a4236dcc295261ff5080d77fdefd6d3ce9bf1",
+        "5af2eadc8736338a84eae8c9211dbc2a35a8641c",
+        "d0c96127713021194581d71d634ae4dd4135c275",
+        "da741ee16315ab368c47eebd20db493bb97934d7",
+        "237f7bf2bde418a041df184ce721c5e3bc4e0a42",
+        "eefe840b8a13bd5e7b2a08a38779bb580dcf48f1",
+        "8f84aefb9cf94d7e875c6d25eb26b90a1d22a319"
+      ],
+      "transferred_scope": "Choice cardinality/guards, original/dormant/exact/additive/default inputs and real requires-edge source admission.",
+      "unmet_or_unverified": "Generated requests carrying original owner edge/domain/target and candidate-bound choice provenance are not delivered across ordinary configured solver routes; app candidate excluded.",
+      "exact_contract": {
+        "goal": "Make semantic choices explicit while retaining environment and target roles.",
+        "steps": [
+          "Consume accepted M-14 resolution-domain/target/dependency-role carriers instead of inventing a global package instance.",
+          "Define four cardinalities, positive same-package acyclic guards, explicit defaults and consumer requested selections.",
+          "Distinguish omission, explicit empty selection, dormant branch intent and exact shared-instance conflict; keep backend-native version identities outside Vibe SemVer conversion."
+        ],
+        "positive_cases": [
+          "Separate environments may select different configurations; same shared instance combines additive requests."
+        ],
+        "negative_cases": [
+          "Conflicting exact selections name both consumers; unsupported cross-package/expression guards refuse.",
+          "All-features cannot select constrained members implicitly."
+        ],
+        "acceptance": [
+          "Generated requests retain owner edge/domain/target and choice provenance.",
+          "Defaults are explicit consumer policy inputs, never solver preferences."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-05-B.json",
+      "criterion_counter": {
+        "basis": "explicit_acceptance",
+        "exact_old_clause": "Generated requests retain owner edge/domain/target and choice provenance.",
+        "gap_or_evidence_limit": "Defaults are explicit consumer policy inputs is partly implemented, but the first criterion is not established by pure ChoiceModel plus authored inputs. Exact task additionally consumes M14 domain/target carriers. No unrelated full app criterion added."
+      },
+      "implemented_coverage": "Choice cardinality/guards, original/dormant/exact/additive/default inputs and real requires-edge source admission.",
+      "remaining_behavior": "Generated requests carrying original owner edge/domain/target and candidate-bound choice provenance are not delivered across ordinary configured solver routes; app candidate excluded.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-B.3",
+      "title": "Implement syntax-preserving feature migration",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Deliver deterministic old-to-new authored conversion using M-13 migration primitives.\nAcceptance criteria: Migration code and fixtures demonstrate preserved syntax/intent rather than prose instructions.; Running a completed conversion again makes no change.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "No accepted executable syntax-preserving idempotent migration; authored admission is not migration.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "No accepted executable syntax-preserving idempotent migration; authored admission is not migration.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-C.1",
+      "title": "Freeze candidate metadata for one resolution transaction",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Prevent mutable same-version metadata and repeated discovery from changing a solve.\nAcceptance criteria: Catalog identity is reproducible and inspected through ETO.; Source corruption and candidate incompatibility have different outcomes.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Prototype transaction catalog binding remains transfer work; no accepted F04 configured solver integration.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Prototype transaction catalog binding remains transfer work; no accepted F04 configured solver integration.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-C.2",
+      "title": "Make activation candidate-conditioned and backtrackable",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Scope feature and choice implications to the candidate that introduced them.\nAcceptance criteria: Counterexample fixtures compare selected graph and all derived activation effects.; Conflict evidence retains the consumer and candidate reasons.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Candidate-conditioned configured solving/backtracking not delivered by common closure/choice kernel.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Candidate-conditioned configured solving/backtracking not delivered by common closure/choice kernel.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-C.3",
+      "title": "Use normalized requests across every solve route",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Prevent visibility retry and metadata paths from losing constraints or selected edges.\nAcceptance criteria: Route parity fixtures produce identical selected graph or equivalent typed conflicts.; Every graph edge has a selected declaration/provider provenance.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F02",
+        "F04"
+      ],
+      "accepted_main_commits": [
+        "075d38cb2dd51359929e38e5bff1fc447806eecd",
+        "c20b6bc8945ad4ff971db4ba8a2e9b1aa8645424",
+        "033a4236dcc295261ff5080d77fdefd6d3ce9bf1",
+        "5af2eadc8736338a84eae8c9211dbc2a35a8641c",
+        "d0c96127713021194581d71d634ae4dd4135c275",
+        "da741ee16315ab368c47eebd20db493bb97934d7",
+        "237f7bf2bde418a041df184ce721c5e3bc4e0a42",
+        "eefe840b8a13bd5e7b2a08a38779bb580dcf48f1",
+        "8f84aefb9cf94d7e875c6d25eb26b90a1d22a319"
+      ],
+      "transferred_scope": "All real workspace consumer constraints retained through retry; normalized input data admitted.",
+      "unmet_or_unverified": "Same immutable request/catalog across every solve/metadata/conditional route and selected declaration/provider provenance on every graph edge not integrated by these slices.",
+      "exact_contract": {
+        "goal": "Prevent visibility retry and metadata paths from losing constraints or selected edges.",
+        "steps": [
+          "Thread the same immutable request/catalog through solve, manifest_of, solve_masked and conditional/visibility routes.",
+          "Retain all root constraints and actual capability/OR-provider choices in the final graph.",
+          "Expose backend capability refusal without fallback; keep incomplete conditional combinations explicitly unsupported."
+        ],
+        "positive_cases": [
+          "Visibility retry preserves the same consumer requests and exact choices as initial solving."
+        ],
+        "negative_cases": [
+          "First-wins dedup, reconstructed old manifest or unsupported backend cannot silently drop requested effects."
+        ],
+        "acceptance": [
+          "Route parity fixtures produce identical selected graph or equivalent typed conflicts.",
+          "Every graph edge has a selected declaration/provider provenance."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-05-C.json",
+      "criterion_counter": {
+        "basis": "explicit_acceptance",
+        "exact_old_clause": "Every graph edge has a selected declaration/provider provenance.",
+        "gap_or_evidence_limit": "F02 constraints are real coverage; they do not establish this criterion or exact step threading the same request/catalog through solve/manifest_of/solve_masked/conditional/visibility."
+      },
+      "implemented_coverage": "All real workspace consumer constraints retained through retry; normalized input data admitted.",
+      "remaining_behavior": "Same immutable request/catalog across every solve/metadata/conditional route and selected declaration/provider provenance on every graph edge not integrated by these slices.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-D.1",
+      "title": "Persist requested intent separately from resolved configuration",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make lock replay explain exact choices, captures and selected technical edges.\nAcceptance criteria: Lock round-trip reconstructs requested versus resolved semantics distinctly.; Every induced edge explains its source declaration and consumer intent.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F04"
+      ],
+      "accepted_main_commits": [
+        "c20b6bc8945ad4ff971db4ba8a2e9b1aa8645424",
+        "033a4236dcc295261ff5080d77fdefd6d3ce9bf1",
+        "5af2eadc8736338a84eae8c9211dbc2a35a8641c",
+        "d0c96127713021194581d71d634ae4dd4135c275",
+        "da741ee16315ab368c47eebd20db493bb97934d7",
+        "237f7bf2bde418a041df184ce721c5e3bc4e0a42",
+        "eefe840b8a13bd5e7b2a08a38779bb580dcf48f1",
+        "8f84aefb9cf94d7e875c6d25eb26b90a1d22a319"
+      ],
+      "transferred_scope": "Original ConfigurationIntentDecl survives requires-edge authored round-trip and target-aware normalization.",
+      "unmet_or_unverified": "Supporting input boundary only: no complete requested-vs-resolved configuration lock round-trip, capture/domain/target or induced-edge explanations accepted. Do not count this as persistence delivery.",
+      "exact_contract": {
+        "goal": "Make lock replay explain exact choices, captures and selected technical edges.",
+        "steps": [
+          "Serialize authored-request digest separately from active/dormant resolved selections and feature closure.",
+          "Record exact owner capture/definition, resolution domain/target, induced dependencies and selected capability providers.",
+          "Add reader migration/refusal and canonical ordering through existing generated format machinery."
+        ],
+        "positive_cases": [
+          "Lock preserves explicit choices and actual provider edges for offline replay."
+        ],
+        "negative_cases": [
+          "Same-version changed definition or lost request digest cannot be accepted as exact replay.",
+          "Derived selections cannot become the only authored authority."
+        ],
+        "acceptance": [
+          "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
+          "Every induced edge explains its source declaration and consumer intent."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-05-D.json",
+      "criterion_counter": {
+        "basis": "explicit_acceptance",
+        "exact_old_clause": "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
+        "gap_or_evidence_limit": "Requires-source intent round-trip is a supporting input slice, not the requested lock round-trip. Both the absence and partial label are scoped to that distinction."
+      },
+      "implemented_coverage": "Original ConfigurationIntentDecl survives requires-edge authored round-trip and target-aware normalization.",
+      "remaining_behavior": "Supporting input boundary only: no complete requested-vs-resolved configuration lock round-trip, capture/domain/target or induced-edge explanations accepted. Do not count this as persistence delivery.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-D.2",
+      "title": "Connect feature and subskill activation to real consumers",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make selected contributions reach visibility, loading and projection while preserving source bytes.\nAcceptance criteria: End-to-end fixture observes contribution activation, not only a populated field.; Changing activation leaves captured package bytes unchanged.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F04"
+      ],
+      "accepted_main_commits": [
+        "c20b6bc8945ad4ff971db4ba8a2e9b1aa8645424",
+        "033a4236dcc295261ff5080d77fdefd6d3ce9bf1",
+        "5af2eadc8736338a84eae8c9211dbc2a35a8641c",
+        "d0c96127713021194581d71d634ae4dd4135c275",
+        "da741ee16315ab368c47eebd20db493bb97934d7",
+        "237f7bf2bde418a041df184ce721c5e3bc4e0a42",
+        "eefe840b8a13bd5e7b2a08a38779bb580dcf48f1",
+        "8f84aefb9cf94d7e875c6d25eb26b90a1d22a319"
+      ],
+      "transferred_scope": "Common local evaluation connects existing legacy app/package consumers; dormant input projection available.",
+      "unmet_or_unverified": "Full selected feature/subskill contribution activation into visibility/loading/projection remains explicitly required; populated effect fields are not actual consumer proof.",
+      "exact_contract": {
+        "goal": "Make selected contributions reach visibility, loading and projection while preserving source bytes.",
+        "steps": [
+          "Carry active feature/subskill exports into effective contribution selection and owning projection consumers.",
+          "Preserve full package materialization; activation changes effective contributions only.",
+          "Retain dormant branch selections as authored intent while disabling their effects and diagnose removed dormant options."
+        ],
+        "positive_cases": [
+          "Activated subskill appears in the real loading/projection result and lock provenance."
+        ],
+        "negative_cases": [
+          "Inactive branch contributes no effects; dormant removed option reports drift.",
+          "Unselected package files are not physically filtered from captured source."
+        ],
+        "acceptance": [
+          "End-to-end fixture observes contribution activation, not only a populated field.",
+          "Changing activation leaves captured package bytes unchanged."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-05-D.json",
+      "criterion_counter": {
+        "basis": "explicit_acceptance",
+        "exact_old_clause": "End-to-end fixture observes contribution activation, not only a populated field.",
+        "gap_or_evidence_limit": "F04 expressly leaves selected subskill/loading contribution consumers open. The task itself requires this, not an added whole-framework completion bar."
+      },
+      "implemented_coverage": "Common local evaluation connects existing legacy app/package consumers; dormant input projection available.",
+      "remaining_behavior": "Full selected feature/subskill contribution activation into visibility/loading/projection remains explicitly required; populated effect fields are not actual consumer proof.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-E.1",
+      "title": "Check request freshness before fast paths and expose pure discovery",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make changed user intent visible before install can report Fresh.\nAcceptance criteria: Fast-path decisions cite request/definition identity.; Discovery purity counters show no authored/cache mutation.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Configured request/definition freshness before Fresh and pure discovery not delivered by input-only admission.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Configured request/definition freshness before Fresh and pure discovery not delivered by input-only admission.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-E.2",
+      "title": "Implement exact reinstall and intent-preserving update",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Distinguish replay from reconfiguration when definitions change.\nAcceptance criteria: Replay/update reports distinguish exact reuse from changed semantic inputs.; No new option is selected as an incidental solver decision.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Full exact configured reinstall/intent-preserving update not accepted; app candidate excluded.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Full exact configured reinstall/intent-preserving update not accepted; app candidate excluded.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-E.3",
+      "title": "Make configuration apply and removal recoverable",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Validate whole-world effects before writing and protect shared dependencies.\nAcceptance criteria: Failure injection covers each manifest/lock/slot/boot boundary and retained recovery state.; Removal plan explains affected dependents before any deletion.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F06"
+      ],
+      "accepted_main_commits": [
+        "50a4630aa3a41c008025c9ade5d34a668b3659ac"
+      ],
+      "transferred_scope": "Bounded safe manifest/lock/provenance publication and truthful rollback conflicts through actual apply/hosted caller.",
+      "unmet_or_unverified": "Task explicitly still requires failure coverage across manifest/lock/slot/boot with retained recovery outcomes and a removal plan explaining affected dependents before deletion. F06 proves bounded metadata rollback and real caller refusal, not removal or all these outcomes. No old journal mechanism is mandatory.",
+      "exact_contract": {
+        "goal": "Validate whole-world effects before writing and protect shared dependencies.",
+        "steps": [
+          "Build a complete solve/trust/collision/effect plan with captured before-images and request/catalog preconditions.",
+          "Apply manifest/lock/owned slot/boot prefixes through the existing journal; report non-reversible hook effects accurately.",
+          "For removal recompute desired/reverse closure and distinguish explicit roots/shared dependencies before deleting owned state."
+        ],
+        "positive_cases": [
+          "Branch switch preserves a dependency still required by another root.",
+          "Removal of an unused explicit root keeps shared transitive dependencies."
+        ],
+        "negative_cases": [
+          "Unsat/NeedsSelection/catalog drift refuses before writes.",
+          "Interrupted multi-file apply or hook failure cannot report complete rollback without proof."
+        ],
+        "acceptance": [
+          "Failure injection covers each manifest/lock/slot/boot boundary and retained recovery state.",
+          "Removal plan explains affected dependents before any deletion."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-05-E.json",
+      "criterion_counter": {
+        "basis": "explicit_acceptance",
+        "exact_old_clause": "Removal plan explains affected dependents before any deletion.",
+        "gap_or_evidence_limit": "F06 metadata rollback does not establish removal, and its bounded three-file before-images do not cover the separately explicit manifest/lock/slot/boot retained recovery criterion."
+      },
+      "implemented_coverage": "Bounded safe manifest/lock/provenance publication and truthful rollback conflicts through actual apply/hosted caller.",
+      "remaining_behavior": "Task explicitly still requires failure coverage across manifest/lock/slot/boot with retained recovery outcomes and a removal plan explaining affected dependents before deletion. F06 proves bounded metadata rollback and real caller refusal, not removal or all these outcomes. No old journal mechanism is mandatory.",
+      "superseded_obligations": [
+        {
+          "old_clause": "Captured before-images through existing journal, as implemented by prototype broad recovery images.",
+          "target_decision": "F06 uses incumbent transaction plus three real file owners; no broad recovery-image store required.",
+          "reference": "F06 Change/design and Proven boundary, accepted50a4630aa.",
+          "counts_as_remaining": false
+        }
+      ]
+    },
+    {
+      "old_task_id": "M-05-E.4",
+      "title": "Implement attended and unattended choice interaction",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Expose explicit selection through TTY and machine clients without inferred answers.\nAcceptance criteria: CLI/service/MCP produce the same request and prepared effect graph.; Machine invocation completes or returns typed input requirements without waiting on TTY.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Complete common CLI/service/MCP interaction not accepted; app candidate excluded.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Complete common CLI/service/MCP interaction not accepted; app candidate excluded.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-F.1",
+      "title": "Express Redbook variants in its existing 1.1.0",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Dogfood the accepted continuity group and additions without global conflicts.\nAcceptance criteria: Local graph shows exactly one continuity branch with preserved addon semantics.; No version bump or external publication occurs in this task.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "No accepted Redbook configuration/continuity dogfood slice in F01-F08.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "No accepted Redbook configuration/continuity dogfood slice in F01-F08.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-F.2",
+      "title": "Migrate existing Redbook consumers and branch intent",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Replace manual exclusions without losing shared or dormant choices.\nAcceptance criteria: Before/after graph and comments demonstrate preserved consumer meaning.; Current consumer migration does not manufacture future version or publication approval.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "No accepted Redbook consumer migration slice in F01-F08.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "No accepted Redbook consumer migration slice in F01-F08.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-G.1",
+      "title": "Prove supported solver and workspace parity",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Close candidate and configuration behavior across actually supported backends.\nAcceptance criteria: Backend matrix records exact exercised modes and unsupported ones.; Final graph retains actual selected technical providers.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Full configured solver/backend/workspace parity not accepted by kernel unit/differential gates.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Full configured solver/backend/workspace parity not accepted by kernel unit/differential gates.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-05-G.2",
+      "title": "Close transaction and Redbook coexistence regressions",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Verify failure recovery, independent WAL/MUP use and current version policy.\nAcceptance criteria: M-05 gates include real contribution activation, recovery and exact replay.; Every failed prefix has a retained typed disposition, not a silent repair.",
+      "status": "not-transferred",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Whole M05 activation/recovery/replay and failed-prefix coexistence exit not accepted.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Whole M05 activation/recovery/replay and failed-prefix coexistence exit not accepted.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-A.1",
+      "title": "Define explicit source interpretation and its migration",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Place source classification before every semantic consumer.\nAcceptance criteria: Reader and executable migration land together with preserved comments/values.; One descriptor identity is available to downstream scanner/resolver/converter consumers.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-A.2",
+      "title": "Implement structural ordinary Markdown",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make ordinary Markdown navigable while preserving literal Vibe syntax.\nAcceptance criteria: Structural view and raw content point to the same captured document.; No CommonMark node acquires normative Vibe fact authority.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-A.3",
+      "title": "Preserve XML-data and opaque resources",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Keep data bytes and logical resources distinct from Vibe XML conversion.\nAcceptance criteria: Install/derive/read round-trips preserve data bytes exactly.; Optional structure failure does not invalidate unrelated facts.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-A.4",
+      "title": "Route all source consumers through descriptors",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Eliminate remaining suffix-only semantic fallback in the initial product path.\nAcceptance criteria: Consumer inventory has no unclassified semantic path.; Existing equivalent Vibe fixtures preserve canonical output and status/void meaning.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-B.1",
+      "title": "Capture the existing boot graph and inclusion provenance",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Expose actual source/contribution/occurrence structure without replacing compiler IR.\nAcceptance criteria: Full authorized child traversal reconstructs the captured graph.; Provenance previously available only as text is structured.",
+      "status": "partial",
+      "accepted_main_features": [
+        "F08"
+      ],
+      "accepted_main_commits": [
+        "7ed7e72568c9463137196beacc7bf538aeb236cd"
+      ],
+      "transferred_scope": "Real committed-boot tree retains nested/repeated occurrences and typed malformed attribution failures.",
+      "unmet_or_unverified": "Exact old behavior beyond F08: source positions and exact capture/snapshot identities plus authorized graph traversal and retained-versus-live inspection. F08 handles committed nested/repeated marker spans, not that captured graph. Full interactive debugger is NOT an added criterion for this task.",
+      "exact_contract": {
+        "goal": "Expose actual source/contribution/occurrence structure without replacing compiler IR.",
+        "steps": [
+          "Extract shared semantic graph construction from CLI-local summaries using existing compiler/observer data.",
+          "Retain repeated occurrences, inclusion chains, source positions and exact capture/snapshot identities.",
+          "Separate reading retained traces from live capture; missing/evicted/unreadable data is explicit, not silently recomputed."
+        ],
+        "positive_cases": [
+          "Repeated contribution has distinct occurrences linked to one logical source.",
+          "Selecting a fragment reveals the exact why-included chain."
+        ],
+        "negative_cases": [
+          "Map collapse cannot hide repeated inclusion; unchecked refs cannot be labelled unresolved.",
+          "Retained inspection cannot acquire a trace writer or rerun providers."
+        ],
+        "acceptance": [
+          "Full authorized child traversal reconstructs the captured graph.",
+          "Provenance previously available only as text is structured."
+        ]
+      },
+      "contract_source": "campaigns/next/tasks/M-06-B.json",
+      "criterion_counter": {
+        "basis": "explicit_task_step",
+        "exact_old_clause": "Retain repeated occurrences, inclusion chains, source positions and exact capture/snapshot identities.",
+        "gap_or_evidence_limit": "F08 corrects occurrences/inclusion markers but expressly stays committed-artifact decoding, without full captured identity graph. This task does NOT require full interactive debugger delivery; that broader family cannot be the criterion used to reject it."
+      },
+      "implemented_coverage": "Real committed-boot tree retains nested/repeated occurrences and typed malformed attribution failures.",
+      "remaining_behavior": "Exact old behavior beyond F08: source positions and exact capture/snapshot identities plus authorized graph traversal and retained-versus-live inspection. F08 handles committed nested/repeated marker spans, not that captured graph. Full interactive debugger is NOT an added criterion for this task.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-B.2",
+      "title": "Calculate exact and qualified boot measurements",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Measure content and occurrences without imposing a token quota.\nAcceptance criteria: Measurement report names basis, recipe and unknown portions.; Large corpus can be traversed without hidden total boot cap.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-C.1",
+      "title": "Expose debugger requests, snapshots and progress",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Use the shared service protocol for structured debugger input and output.\nAcceptance criteria: Structured input exists, not only --json output.; Progress/error/state envelopes agree with the shared operation model.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-C.2",
+      "title": "Deliver the standalone interactive boot inspector",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make tree/detail/source/compare usable on the shared debugger model.\nAcceptance criteria: Headless viewer and API report the same nodes, provenance and differences.; Standalone D-007 viewer exists; no IDE plugin/MVP is introduced.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-D.1",
+      "title": "Define hypothetical world capture and pure builtin preview",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Compute legal scenarios from frozen inputs using existing resolver/compiler semantics.\nAcceptance criteria: Candidate graph is derived by the same authority as real resolution/compiler.; Manifest/lock/slots/canonical boot remain unchanged.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-D.2",
+      "title": "Separate effectful preparation from snapshot inspection",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make missing sources and native stages explicit admitted preparation work.\nAcceptance criteria: Effect counters distinguish prepare from pure inspect/compare.; Partial preparation failures retain typed outcome and reusable captured evidence where valid.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-E.1",
+      "title": "Compute marginal contribution including shared dependencies",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Compare complete baseline and candidate closures rather than summing package sizes.\nAcceptance criteria: Every delta links to exact baseline/candidate graph and contribution identities.; Static and dynamic costs remain separately reported.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-E.2",
+      "title": "Expose install, remove and reconfigure scenarios",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make preinstall what-if useful across conditions and branch changes.\nAcceptance criteria: Each scenario is inspectable before install and produces no project writes.; Machine clients can reproduce the viewer's comparison using captured inputs.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-F.1",
+      "title": "Integrate derivatives and full debugger surface parity",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Close source-to-local-derivative-to-boot provenance across all interfaces.\nAcceptance criteria: Equivalent requests agree on structured nodes/metrics/diagnostics across surfaces.; Whole authorized structure is reachable without human-only hidden fields.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-F.2",
+      "title": "Prove scale, snapshot integrity and unchanged boot law",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Validate the complete debugger under large captures and concurrent changes.\nAcceptance criteria: Scale evidence separates result size from transport chunk limits and records memory/cancellation outcomes.; M-06 exit includes interactive UI, structured input/output and dependency-aware preview.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-G.1",
+      "title": "Verify cross-package normal directives and authored boot semantics",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Classify normal versus simple package directives and document the authored-project boot boundary without claiming the simple literal case is a bug.\nAcceptance criteria: Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.1; Classify normal versus simple package directives and document the authored-project boot boundary without claiming the simple literal case is a bug.; Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-G.2",
+      "title": "Preserve XML host dialect and derived dependency state during init",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.\nAcceptance criteria: Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.2; Make vibe init package add its own slot without converting the host XML boot lane or writing generated state into vibedeps.; Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-06-G.3",
+      "title": "Exclude generated slot lanes and protect authored workspace members",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.\nAcceptance criteria: Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.3; Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.; Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-07-A.1",
+      "title": "Bind publication plans to exact subjects",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Extend the existing distribution evidence chain with a canonical prepared-publication subject and effect plan.\nAcceptance criteria: Plan and corpus show exact binding from source to all bundles and destinations.; Filesystem/network spies show plan construction performs no publication.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-07-A.2",
+      "title": "Evaluate A approvals and disabled B policy",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Implement the shared pure authorization decision for an exact prepared plan.\nAcceptance criteria: A and B evaluator examples use one plan model and yield explicit reason codes.; Default construction leaves live B disabled; no secret values enter reports.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-08-A.1",
+      "title": "Characterize legacy projection ownership lanes",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Freeze existing per-operation behavior before replacing the fixed client catalog.\nAcceptance criteria: A per-surface matrix links each row to an executable characterization case.; Fixtures use injected homes and preserve unrelated configuration.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-08-A.2",
+      "title": "Specify four client contracts from exact versions",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Define the required Claude Code, Codex, OpenCode and Qwen Code contracts without implying untested support.\nAcceptance criteria: The matrix distinguishes observed facts, proposed adapter data and unexecuted gates.; Every mandatory lifecycle scenario has a concrete future isolated proof.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-08-B.1",
+      "title": "Separate hydration and probes from pure planning",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make adapter inspection operate only on admitted prepared captures.\nAcceptance criteria: Operation spies and byte snapshots prove empty-cache query purity.; CLI/MCP identify missing preparation with the same typed reason.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-08-B.2",
+      "title": "Resolve bridge sources against their captured root",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Fix any demonstrated hydrated source-root mismatch without inventing an unobserved bug.\nAcceptance criteria: Evidence identifies the actual source root and verifies complete projected membership.; No product fix is claimed unless the counterexample demonstrated the defect.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-08-C.1",
+      "title": "Load external client requests through an open map",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Replace catalog lock-in with schema-validated package requests and compatibility adapters.\nAcceptance criteria: A fixture descriptor is consumed by the same core binary before and after package addition.; Generated schema and compatibility corpus cover the map transition.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-08-C.2",
+      "title": "Execute closed generic file and config operations",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Issue and enforce exact host grants for new package-defined destinations and keys.\nAcceptance criteria: Positive fixture requires a real issued exact grant; removing it prevents writes.; Physical whole-document locks coexist with logical member ownership.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-08-C.3",
+      "title": "Preserve receipt ownership through upgrade and revocation",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Extend existing receipts for external descriptors without losing safe inverse operations.\nAcceptance criteria: Crash, changed-receipt and missing-provider scenarios retain exact partial/recovery status.; Each receipt family retains its owner and compatibility reader.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-08-D.1",
+      "title": "Admit typed client commands and executable identity",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Define command artifacts that expose effects without making the data renderer a shell.\nAcceptance criteria: Fixture runner observes only the approved executable/argv/environment/cwd.; Plan exposes active content and process effects before admission.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-08-D.2",
+      "title": "Connect admitted commands to full deployment lifecycle",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Run plan/apply/verify/recover/remove through the existing engine and universal operation service.\nAcceptance criteria: External surfaces agree on exact resources, authority decision and terminal/partial status.; All lifecycle verbs have executable behavior; plan-only is not acceptance.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-10-A.1",
+      "title": "Define the required derivative family matrix",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make general local derivatives concrete across all source interpretations without a demand-permission gate.\nAcceptance criteria: Canonical family matrix names actual source mechanisms and executable case requirements.; No original capture or upstream identity is edited.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-10-A.2",
+      "title": "Choose one reusable derivative operation boundary",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Integrate derive operations with source proof and artifact ownership instead of adding another truth store.\nAcceptance criteria: One owning service has explicit input/output/effect boundaries for every operation.; Dependency direction remains acyclic; no second resolver/compiler is introduced.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-10-B.1",
+      "title": "Define authored bindings and exact derivative provenance",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Implement the typed authored binding and distinct base/local/result identities.\nAcceptance criteria: Strict schemas/corpus cover authored and generated carriers.; Stored result retains a complete navigable base→local→result chain.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-10-B.2",
+      "title": "Separate compatibility from activation authority",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Implement independent compatibility and effect-admission decisions for local derivatives.\nAcceptance criteria: Creation, compatibility and activation have separate machine states and cases.; Refusal leaves local source intact and original slot unchanged.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-10-C.1",
+      "title": "Implement inert derive, show and diff across files and trees",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Materialize local derivative results with complete resource membership and byte-preserving data handling.\nAcceptance criteria: Every family has a real result and exact source/result inventory.; Passive operations have zero process/network/install side effects.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-10-C.2",
+      "title": "Implement explicit rebase and guarded authored apply",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Preserve old provenance while rebasing a local derivative onto a newly selected base.\nAcceptance criteria: Same-version base drift cannot silently change applicability.; Failure injection preserves authored source and truthful completed/pending effects.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-10-D.1",
+      "title": "Expose derivatives in source and boot inspection",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Connect exact derivative provenance to source queries and debugger views.\nAcceptance criteria: CLI/API/MCP inspection agrees on identity, bytes and completeness.; All required families appear in the debugger/source proof matrix.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-10-D.2",
+      "title": "Prove derivative activation, revocation and recovery",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Deliver the full active-resource path under new authority and retained artifact/receipt ownership.\nAcceptance criteria: Evidence joins exact derivative result, grant, artifact, observed effect and receipt.; General families and downstream active/inert paths satisfy M-10 exit.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-13-A.1",
+      "title": "Map current lifecycle, resolver and source consumers",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "unknown",
+      "historical_graph_description": "Create an exact factual starting map for the known behavior/authority gaps before architectural changes.\nAcceptance criteria: The map distinguishes source facts, inference, owner rule and required runtime evidence.; No product code, generated lane or user state changed.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-13-A.2",
+      "title": "Census active owned versions and data boundaries",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "unknown",
+      "historical_graph_description": "Identify exactly which active own manifests/policies may change while excluding foreign/history/generated data.\nAcceptance criteria: Census includes an explicit denominator and exact per-file proposed perimeter.; Any extra manifest binding needed for exhaustive coverage is named for the root.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-13-B.1",
+      "title": "Reconcile source policy and apply the bounded active-owned 1.1.0 floor",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Make the accepted owner policy authoritative without rewriting historical or foreign identities.\nAcceptance criteria: Permanent source anchors state each accepted policy and its exact scope.; No generated STATIC/INDEX or standing-rule semantics is manually edited. Root may correct only verified operational slot paths in instruction mirrors, kept byte-identical across AGENTS/CLAUDE/GEMINI.; The separately bounded 1.1.0 metadata/path subatom has exact before/after and exclusion evidence under full parent accountability; no migration engine, graduation or public activation is inferred.; Current owner hold: no public Git push, mirror fan-out, PR creation, release or package publication until a fresh explicit owner grant. Mandatory local implementation, isolated proof, complete prepared batches and readiness remain required.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-13-B.2",
+      "title": "Reconcile lifecycle roles, source semantics and ETO law",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Install the accepted architectural source rules before dependent APIs and implementations.\nAcceptance criteria: Source rules align with all retained decisions, including D-025/D-026 and open D-022.; Later feature atoms can cite permanent governing anchors rather than campaign prose.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-13-C.1",
+      "title": "Implement pure versioned migration planning",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Parse and plan deterministic authored-format migrations while preserving owner syntax and values.\nAcceptance criteria: Repeated planning over exact input gives identical output/diff identity.; Fixture coverage demonstrates genuine transforms and no-op/ambiguity cases.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-13-C.2",
+      "title": "Expose migration plans and input requirements as machine values",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Connect the migration planner to strict request/report contracts and structured one-shot surfaces.\nAcceptance criteria: Plan/report contract has generated validation and usable examples.; No dependency on completed M-16-B is introduced; later facade adapts these owned domain contracts.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-13-D.1",
+      "title": "Implement guarded migration apply and recovery",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Apply a validated migration on Linux, macOS and Windows with retained before-state, explicitly scoped coordinated concurrency guarantees and truthful interrupted-state recovery.\nAcceptance criteria: Runnable fixtures cover real before→after reader behavior, preservation and recovery.; Generated report/errors retain exact source/target/effect state across process exit.; Product documentation and generated reports distinguish coordinated guarantees, external-writer limits and measured native-platform proof; all three platforms have working implementation paths.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-13-D.2",
+      "title": "Reconcile current active-owned 1.1.0 metadata within the refreshed census",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Apply only the exact active-owned manifest/constraint changes identified by M-13-A.\nAcceptance criteria: Per-file before/after census proves exactly which active-owned items changed.; Foreign/history/fixture/epoch exclusion checks show no collateral version edits.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-14-A.1",
+      "title": "Separate definition, executor and target identities",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Freeze the environment roles and compatibility interpretation before existing host-based consumers acquire new fields.\nAcceptance criteria: Each identity has named inputs and owned authority; no environment becomes a new package kind or stewardship DB.; Pure construction needs neither Docker nor a host HOME lookup.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-14-A.2",
+      "title": "Centralize environment layout and prefix policy",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Provide one injected layout/root policy for user profiles and offline targets without scattering machine paths through providers.\nAcceptance criteria: Every environment root has one layout constructor and callers receive explicit bindings.; No root privilege broker, live system mutation or pacman policy is introduced.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-14-B.1",
+      "title": "Generate environment and realization wire contracts",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Bind exact lock, payload inventory and realized closure identities to the shared M-16 schema conventions.\nAcceptance criteria: Generated types and retained records use one schema source and explicit epochs.; Metadata capabilities are explicit; unsupported privileged nodes cannot be silently dropped.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-14-B.2",
+      "title": "Migrate legacy identity and supply-path readers",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Preserve old record meanings while adding exact build inputs, prefix constraints and replaceable source/cache locators.\nAcceptance criteria: Every migration has explicit unavailable/needs-input outcomes for absent proof.; No source/registry/cache transport requires GitHub by contract.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-14-C.1",
+      "title": "Carry the target binding through local operation seams",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Carry an opt-in target binding through strict local operation records and refuse bound effects until the physical owner grants pinned roots.\nAcceptance criteria: Target binding survives the typed request/plan/journal/receipt/inspection carrier and legacy None remains byte-compatible.; Bound effects without admitted physical roots refuse before recovery/provider; no successful native or builtin effect is claimed by C.1.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-14-C.2",
+      "title": "Fence aliased roots and stale target generations",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Fence aliased physical roots and stale target generations with pinned, lock-scoped capabilities; preserve safe refusal before the first bound effect.\nAcceptance criteria: Equivalent physical roots conflict under the cooperating-writer destination lock while disjoint roots can be admitted independently.; Disposable-root tests verify alias retarget and stale-generation refusal without touching the developer HOME.; Pinned source/settings/bin/store capabilities and bound sidecar carriers are ready; no successful bound effect is claimed by C.2.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-14-C.3",
+      "title": "Apply the first host-admitted bound builtin through the incumbent engine",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Thread a host-issued effect grant and pinned roots through the incumbent deploy transaction for the first successful local UserProfile vibe-bin operation.\nAcceptance criteria: One real bound builtin apply uses pinned roots and the incumbent transaction, produces physical output and a bound receipt in each of two disposable homes.; Same-root aliases conflict under the physical fence; mismatched/stale grants refuse before effect.; After possible publication without receipt, retained intent and partial/uncertain truth are observable; no unsupported bound provider is enabled.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-A.1",
+      "title": "Census public operations and semantic model families",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Create an exact whole-product denominator for external access before designing protocol wrappers.\nAcceptance criteria: No identified command/action/model lacks a disposition and domain owner.; The register is interface coverage only, not a requirements engine or scheduler.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-A.2",
+      "title": "Map domain authority and ETO compatibility boundaries",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Specify extraction seams and complete semantic observability without a new universal graph engine or IDE product.\nAcceptance criteria: All D-025/D-026 obligations are assigned without replacing resolver/compiler/journals.; The design identifies exact source families for downstream M-16/M-17 work.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-B.1",
+      "title": "Generate strict operation and capability contracts",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Provide one validated registry/facade request/result/error/event surface for every domain.\nAcceptance criteria: Capability implementation status, contextual availability and authorization are separate fields.; No eval/shell endpoint or duplicate domain engine appears.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-B.2",
+      "title": "Define entity, composite snapshot and source-location views",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Give external clients exact, navigable model identities without pretending all changing domains are one atomic snapshot.\nAcceptance criteria: A client can navigate provenance without unrestricted host paths or false atomicity claims.; Every incomplete/inconsistent mapping has a typed reason.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-B.3",
+      "title": "Negotiate the local transport and trusted contexts",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Publish a precise on-demand machine-session framing/handshake contract compatible with existing MCP boundaries.\nAcceptance criteria: Framing and handshake are documented from executable behavior.; No permanent daemon, LSP/DAP adapter, IDE plugin or MVP is introduced.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-C.1",
+      "title": "Reserve scoped submissions before effects",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Establish durable pre-effect reservation and fixture-journal replay for the new machine submission path; real domain recovery and surface adapters follow in C.2/C.4.\nAcceptance criteria: Fixture effect never starts before reservation, matching durable journal identity and journal-ready marker are proven.; Dedup index references the fixture domain journal, does not store execution results, and never claims existing default-lifecycle or CLI/MCP protection.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-C.2",
+      "title": "Link short-lived operation owners to domain recovery",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Retain inspectable truthful outcomes across API exit, EOF and execution-owner crashes; add missing pre-effect owner journals for direct build, package and remote publication before those domains are protected machine submissions.\nAcceptance criteria: Durable identity and recovery evidence survive transport lifetime.; No permanent autonomous service or multi-run scheduler is required.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-C.2.1",
+      "title": "Bind reserved lifecycle execution to retained outcomes",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Make an owner-selected lifecycle run journal-ready before scratch, install or handler effects, then retain its per-run truthful outcome for retry/attach.\nAcceptance criteria: Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.1; Make an owner-selected lifecycle run journal-ready before scratch, install or handler effects, then retain its per-run truthful outcome for retry/attach.; Focused positive and negative cases pass; no other domain is claimed by this child.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-C.2.2",
+      "title": "Journal direct build and package effects",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Add domain-owned pre-effect identity, partial truth and recovery to direct build/package paths before enabling protected machine submission.\nAcceptance criteria: Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.2; Add domain-owned pre-effect identity, partial truth and recovery to direct build/package paths before enabling protected machine submission.; Focused positive and negative cases pass; no other domain is claimed by this child.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-C.2.3",
+      "title": "Link deploy journals to reserved operation owners",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Join the incumbent deploy intent/checkpoint/sidecar/receipt chain to C.1 run identity and inspectable recovery without duplicating its transaction engine.\nAcceptance criteria: Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.3; Join the incumbent deploy intent/checkpoint/sidecar/receipt chain to C.1 run identity and inspectable recovery without duplicating its transaction engine.; Focused positive and negative cases pass; no other domain is claimed by this child.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-C.2.4",
+      "title": "Journal remote publication and reconcile owner lifetime",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Give remote publication its own pre-effect run journal and retained partial result, then prove cross-domain attach/EOF/crash semantics without a daemon.\nAcceptance criteria: Read complete task contract campaigns/next/tasks/M-16-C.2.json#M-16-C.2.4; Give remote publication its own pre-effect run journal and retained partial result, then prove cross-domain attach/EOF/crash semantics without a daemon.; Focused positive and negative cases pass; no other domain is claimed by this child.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-C.3",
+      "title": "Multiplex progress, queries and cooperative controls",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Keep machine sessions responsive during long operations with bounded replay and honest cancellation.\nAcceptance criteria: Stream ordering domains and cancellation capability limits are explicit.; Stopping trace observation never falsely cancels the underlying build.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-C.4",
+      "title": "Expose typed input and admission across all adapters",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Remove machine-mode TTY/prose decisions and fixed startup defaults that hide per-operation capability.\nAcceptance criteria: Machine mode has no hidden TTY prompt or omitted per-operation option.; Public A/future B and exact target/effect grants remain unchanged.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-D.1",
+      "title": "Analyze immutable client-scoped document overlays",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Run pure validation/navigation/configuration/boot preview over one disk-plus-buffer capture without saving it.\nAcceptance criteria: Queries for one analysis use exactly the same captured disk/overlay/world inputs.; No cross-client buffer leakage or implicit provider invocation occurs.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-D.2",
+      "title": "Convert positions and invalidate captured views honestly",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Provide accurate editor locations and resnapshot behavior across Unicode, generated resources and missed watches.\nAcceptance criteria: Every diagnostic location identifies its exact source/projection revision and basis.; No total object/boot cap is introduced by paging.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "M-16-D.3",
+      "title": "Enforce saved-state edits with a cooperative barrier",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Separate buffer edit proposals from service-managed disk mutation and fence registered editors through commit.\nAcceptance criteria: Cleanliness guarantee is limited to registered participating buffers. Existing expected-snapshot checks under the cooperative lifecycle lease refuse observed disk drift; atomic publication is not destination-content CAS and cannot exclude an unregistered writer changing the file after the final comparison and before replacement. Retain truthful partial/uncertain outcomes and third-state-preserving recovery.; A dirty-buffer plan never becomes admitted solely because its content was later saved.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "NEXT-PREVIEW-BASE.1",
+      "title": "Capture the actual Developer Preview 1 starting state",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Retain the exact source, package and interface baseline from which the authorized implementation starts.\nAcceptance criteria: DP1 refers to the actual pre-implementation boundary and each included source/package is exactly identifiable or explicitly unrecoverable with a blocker.; The initial capability/surface denominator and scope exclusions are retained in permanent evidence; no unavailable run is marked passed.; Provisional capture has not been presented as schema-validated before BASE.2.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "NEXT-PREVIEW-BASE.2",
+      "title": "Define permanent release accounting and deterministic validators",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Create the permanent contract and generated machine-readable formats independently of future change and migration runtimes.\nAcceptance criteria: Permanent laws, registered schemas, generated readers, tested command grammar and meaningful nonzero semantic tests are available before BASE.3.; The bootstrap dependency direction is acyclic: later domain services adopt these records; these tools do not depend on their future implementation.; Schema/codegen work and application behavior are committed separately under PROP-044; generated files are never edited by hand.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "NEXT-PREVIEW-BASE.3",
+      "title": "Require contribution records before central acceptance",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Make missing release and documentation accounting visible from the first implementation contribution.\nAcceptance criteria: Every future milestone acceptance has an executable accounting check and a central semantic review obligation tied to actual contributions.; Temporary task references and permanent release facts are explicitly separated and removal of the bridge does not lose change identity.; All nonzero semantic cases pass; the preserved original implementation task contracts remain unchanged.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "NEXT-PREVIEW-BIND.1",
+      "title": "Adopt bootstrap release records in native change roles",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "implemented",
+      "historical_graph_description": "Reuse the already retained change identities and evidence when M-02 change documents become available.\nAcceptance criteria: All retained bootstrap IDs and bytes survive adoption with exact before/after witnesses.; Native change analysis and permanent accounting tools read the same records; no second ledger acquires authority.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    },
+    {
+      "old_task_id": "NEXT-PREVIEW-BIND.2",
+      "title": "Connect format migrations and capability surfaces to release impacts",
+      "old_zap_status": "accepted",
+      "source_inventory_status": "partial",
+      "historical_graph_description": "Link existing domain-owned change machinery to the permanent release record without duplicating journals or protocols.\nAcceptance criteria: All applicable migration and capability links resolve to their domain-owned permanent records and exact supported behavior.; Release accounting is mechanically readable without a new IDE client, universal operation protocol or duplicated runtime journal.",
+      "status": "unknown",
+      "accepted_main_features": [],
+      "accepted_main_commits": [],
+      "transferred_scope": null,
+      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
+      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
+      "superseded_obligations": []
+    }
+  ],
+  "ancillary_accepted_changes": [
+    {
+      "feature": "F07",
+      "commit": "d6147a94d83910b7c319247dc01cd980325a9e67",
+      "why_not_old_task_count": "Inline fact-anchor opacity and cache correction is a real accepted fix, but not completion of old ordinary CommonMark/source classification task M-06-A.2."
+    },
+    {
+      "feature": "F04 secret/env fixes",
+      "why_not_old_task_count": "Real accepted improvements; no whole old task inferred from their labels."
+    }
+  ],
+  "count_caution": "The 0 complete lower bound is epistemic, not evidence all 113 fail. In particular M-01-A.3 could be complete once original caller inventory is reconciled. No missing type-name or broader subsystem requirement is used as a criterion substitute.",
+  "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
+  "version_note": "Initial report reconstructed byte-for-byte by its preserved generator and saved as -before-root-correction; first criterion review preserved as -after-criterion-review. This current version separates superseded laws from behavior/evidence."
+}
