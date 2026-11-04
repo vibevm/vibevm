@@ -58,6 +58,596 @@ pub struct AbsorptionStatePlanned {
 #[serde(deny_unknown_fields)]
 pub struct AbsorptionStateUnplanned {}
 
+/// Effective agent delivery mode after inherit has been resolved.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationAgentMode {
+    #[serde(rename = "interactive")]
+    Interactive,
+
+    #[serde(rename = "unattended")]
+    Unattended,
+}
+
+/// A verified execution parent or finite import cohort continuation.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ApplicationContinuationTarget {
+    #[serde(rename = "application")]
+    Application(Box<ApplicationContinuationTargetApplication>),
+
+    #[serde(rename = "import")]
+    Import(Box<ApplicationContinuationTargetImport>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationContinuationTargetApplication {
+    pub target: ApplicationPendingTarget,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationContinuationTargetImport {
+    pub row: u32,
+
+    pub target: ApplicationImportTarget,
+}
+
+/// Retained public executor/resolver policy for the finite cohort, without
+/// argv, environment or answers.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationImportContext {
+    pub lookup: ApplicationPendingLookup,
+
+    pub offline: bool,
+
+    pub hosted: bool,
+
+    #[serde(rename = "assumeYes")]
+    pub assume_yes: bool,
+
+    #[serde(rename = "agentExternal")]
+    pub agent_external: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub agent: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationImportPhase {
+    #[serde(rename = "arrangement")]
+    Arrangement,
+
+    #[serde(rename = "complete")]
+    Complete,
+
+    #[serde(rename = "running")]
+    Running,
+}
+
+/// Exact user-home finite import cohort target; not a package coordinate.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationImportTarget {
+    pub home: String,
+
+    pub operation: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationPendingChildScope {
+    #[serde(rename = "build")]
+    Build,
+
+    #[serde(rename = "runtime")]
+    Runtime,
+}
+
+/// Actual selected application requirement and optional started continuation,
+/// retained before dependency effects.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingChild {
+    pub requirement: String,
+
+    pub key: String,
+
+    pub scope: ApplicationPendingChildScope,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub step: Option<String>,
+
+    pub option: String,
+
+    pub commands: Vec<String>,
+
+    pub hidden: bool,
+
+    pub installed: bool,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub source: Option<ApplicationPendingSource>,
+
+    #[serde(rename = "recordIdentity")]
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub record_identity: Option<String>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub target: Option<ApplicationPendingTarget>,
+
+    pub completed: bool,
+}
+
+/// application pending collection.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingCollection {
+    pub name: String,
+
+    pub launchers: Vec<String>,
+}
+
+/// application pending import.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingImport {
+    pub rows: Vec<ApplicationPendingImportRow>,
+
+    pub cursor: u32,
+
+    #[serde(rename = "skipInstalled")]
+    pub skip_installed: bool,
+
+    #[serde(rename = "acceptLicense")]
+    pub accept_license: bool,
+
+    pub collections: Vec<ApplicationPendingCollection>,
+
+    pub pins: Vec<ApplicationPendingPin>,
+
+    pub launchers: Vec<ApplicationPendingLauncher>,
+
+    #[serde(rename = "arrangementDone")]
+    pub arrangement_done: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub registry: Option<String>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub current: Option<ApplicationPendingTarget>,
+
+    pub results: Vec<ApplicationPendingImportResult>,
+
+    pub auto: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationPendingImportResultAction {
+    #[serde(rename = "installed")]
+    Installed,
+
+    #[serde(rename = "refused")]
+    Refused,
+
+    #[serde(rename = "skipped")]
+    Skipped,
+}
+
+/// Completed disposition of one finite legacy import row.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingImportResult {
+    pub key: String,
+
+    pub action: ApplicationPendingImportResultAction,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub option: Option<String>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub code: Option<String>,
+
+    pub message: String,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub target: Option<ApplicationPendingTarget>,
+
+    #[serde(rename = "rowIndex")]
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub row_index: Option<u32>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationPendingImportRowMark {
+    #[serde(rename = "auto")]
+    Auto,
+
+    #[serde(rename = "manual")]
+    Manual,
+}
+
+/// application pending import row.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingImportRow {
+    pub key: String,
+
+    pub installer: String,
+
+    pub features: Vec<String>,
+
+    pub parameters: BTreeMap<String, String>,
+
+    #[serde(rename = "licenseAccepted")]
+    pub license_accepted: bool,
+
+    pub held: bool,
+
+    pub hidden: bool,
+
+    pub mark: ApplicationPendingImportRowMark,
+
+    pub source: ApplicationPendingSource,
+
+    pub platform: String,
+
+    pub arch: String,
+
+    pub definition: String,
+
+    #[serde(rename = "agentModes")]
+    pub agent_modes: BTreeMap<String, ApplicationAgentMode>,
+}
+
+/// application pending launcher.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingLauncher {
+    pub key: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hidden: Option<bool>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub icon: Option<String>,
+}
+
+/// The actual existing resolver policy for not-yet-planned descendants; never
+/// used to reselect a retained binding.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ApplicationPendingLookup {
+    #[serde(rename = "caller")]
+    Caller(Box<ApplicationPendingLookupCaller>),
+
+    #[serde(rename = "chain")]
+    Chain(Box<ApplicationPendingLookupChain>),
+
+    #[serde(rename = "project")]
+    Project(Box<ApplicationPendingLookupProject>),
+
+    #[serde(rename = "registry")]
+    Registry(Box<ApplicationPendingLookupRegistry>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingLookupCaller {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingLookupChain {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub embedded: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingLookupProject {
+    pub root: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingLookupRegistry {
+    pub root: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationPendingOperationKind {
+    #[serde(rename = "install")]
+    Install,
+
+    #[serde(rename = "modify")]
+    Modify,
+
+    #[serde(rename = "update")]
+    Update,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationPendingOperationProvenance {
+    #[serde(rename = "captured")]
+    Captured,
+
+    #[serde(rename = "legacy-effective-only")]
+    LegacyEffectiveOnly,
+}
+
+/// application pending operation.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingOperation {
+    pub target: ApplicationPendingTarget,
+
+    pub kind: ApplicationPendingOperationKind,
+
+    pub source: ApplicationPendingSource,
+
+    pub request: ApplicationPendingRequest,
+
+    pub phase: ApplicationPendingOperationPhase,
+
+    #[serde(rename = "executionIdentity")]
+    pub execution_identity: String,
+
+    pub prompts: BTreeMap<String, String>,
+
+    pub children: Vec<ApplicationPendingChild>,
+
+    #[serde(rename = "secretRequired")]
+    pub secret_required: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub predecessor: Option<String>,
+
+    #[serde(rename = "predecessorIdentity")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub predecessor_identity: Option<String>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub parent: Option<ApplicationContinuationTarget>,
+
+    pub provenance: ApplicationPendingOperationProvenance,
+
+    #[serde(rename = "agentModes")]
+    pub agent_modes: BTreeMap<String, ApplicationAgentMode>,
+
+    /// Expected public installation-record identity, fixed before index
+    /// publication.
+    #[serde(rename = "publicationRecord")]
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub publication_record: Option<String>,
+
+    #[serde(rename = "predecessorLaunchers")]
+    pub predecessor_launchers: Vec<String>,
+
+    pub lookup: ApplicationPendingLookup,
+
+    pub retirements: Vec<ApplicationPendingRetirement>,
+}
+
+/// Stable phase of the retained application operation.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationPendingOperationPhase {
+    #[serde(rename = "complete")]
+    Complete,
+
+    #[serde(rename = "dependencies")]
+    Dependencies,
+
+    #[serde(rename = "placed")]
+    Placed,
+
+    #[serde(rename = "placing")]
+    Placing,
+
+    #[serde(rename = "prepared")]
+    Prepared,
+
+    #[serde(rename = "published")]
+    Published,
+
+    #[serde(rename = "publishing")]
+    Publishing,
+
+    #[serde(rename = "removed")]
+    Removed,
+
+    #[serde(rename = "removing")]
+    Removing,
+
+    #[serde(rename = "retiring")]
+    Retiring,
+
+    #[serde(rename = "running")]
+    Running,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationPendingPinTarget {
+    #[serde(rename = "favorites")]
+    Favorites,
+
+    #[serde(rename = "taskbar")]
+    Taskbar,
+}
+
+/// application pending pin.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingPin {
+    pub target: ApplicationPendingPinTarget,
+
+    pub launchers: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationPendingRequestMark {
+    #[serde(rename = "auto")]
+    Auto,
+
+    #[serde(rename = "manual")]
+    Manual,
+}
+
+/// application pending request.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingRequest {
+    pub platform: String,
+
+    pub arch: String,
+
+    pub installer: String,
+
+    pub force: bool,
+
+    #[serde(rename = "acceptLicense")]
+    pub accept_license: bool,
+
+    #[serde(rename = "keepWork")]
+    pub keep_work: bool,
+
+    pub hidden: bool,
+
+    pub mark: ApplicationPendingRequestMark,
+
+    #[serde(rename = "purgePrevious")]
+    pub purge_previous: bool,
+
+    pub enabled: Vec<String>,
+
+    pub disabled: Vec<String>,
+
+    pub parameters: BTreeMap<String, String>,
+
+    pub features: Vec<String>,
+
+    #[serde(rename = "secretProvided")]
+    pub secret_provided: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub profile: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub library: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub configuration: Option<ConfigurationRecord>,
+
+    #[serde(rename = "requiredBy")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub required_by: Option<ApplicationPendingRequiredBy>,
+
+    #[serde(rename = "publicSet")]
+    pub public_set: BTreeMap<String, String>,
+
+    #[serde(rename = "restartFrom")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub restart_from: Option<String>,
+
+    pub offline: bool,
+
+    pub hosted: bool,
+
+    #[serde(rename = "assumeYes")]
+    pub assume_yes: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub agent: Option<String>,
+
+    #[serde(rename = "secretOrigins")]
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub secret_origins: BTreeMap<String, ConfigurationParameterOrigin>,
+
+    #[serde(rename = "agentExternal")]
+    pub agent_external: bool,
+}
+
+/// application pending required by.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingRequiredBy {
+    pub package: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub step: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationPendingRetirementState {
+    #[serde(rename = "queued")]
+    Queued,
+
+    #[serde(rename = "removed")]
+    Removed,
+
+    #[serde(rename = "removing")]
+    Removing,
+}
+
+/// One bound post-publication old-version removal obligation; Removing is
+/// explicitly uncertain after interruption.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingRetirement {
+    pub key: String,
+
+    #[serde(rename = "expectedRecord")]
+    pub expected_record: String,
+
+    pub state: ApplicationPendingRetirementState,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationPendingSourceKind {
+    #[serde(rename = "acquired-store")]
+    AcquiredStore,
+
+    #[serde(rename = "directory")]
+    Directory,
+
+    #[serde(rename = "local-registry")]
+    LocalRegistry,
+
+    #[serde(rename = "project-slot")]
+    ProjectSlot,
+}
+
+/// application pending source.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingSource {
+    pub directory: String,
+
+    pub kind: ApplicationPendingSourceKind,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub registry: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub project: Option<String>,
+}
+
+/// application pending target.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPendingTarget {
+    pub home: String,
+
+    pub key: String,
+
+    pub operation: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub project: Option<String>,
+}
+
 /// One accumulated lifecycle artifact supplied as handler input. The engine-
 /// owned `phase` distinguishes it from a reply artifact.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -496,6 +1086,963 @@ pub struct CompileTraceReport {
     /// status vocabulary's, not the writer's choice.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub run_path: Option<String>,
+}
+
+/// Common configuration cardinality.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConfigurationCardinality {
+    #[serde(rename = "exactly-one")]
+    ExactlyOne,
+
+    #[serde(rename = "one-or-more")]
+    OneOrMore,
+
+    #[serde(rename = "zero-or-more")]
+    ZeroOrMore,
+
+    #[serde(rename = "zero-or-one")]
+    ZeroOrOne,
+}
+
+/// Common configuration consumer.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationConsumer {
+    pub key: String,
+
+    pub policy: ConfigurationPolicy,
+
+    pub answers: BTreeMap<String, ConfigurationSelection>,
+}
+
+/// Common configuration data.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationData {
+    pub name: String,
+
+    pub value: ConfigurationValue,
+
+    pub features: Vec<String>,
+}
+
+/// Common configuration default use.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationDefaultUse {
+    pub consumer: String,
+
+    pub group: String,
+
+    pub declared: Vec<String>,
+
+    pub intent: ConfigurationIntent,
+}
+
+/// Common configuration definition.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationDefinition {
+    pub features: Vec<ConfigurationFeature>,
+
+    pub groups: Vec<ConfigurationGroup>,
+
+    pub parameters: Vec<ConfigurationParameter>,
+
+    pub profiles: Vec<ConfigurationProfile>,
+
+    #[serde(rename = "configValues")]
+    pub config_values: BTreeMap<String, ConfigurationValue>,
+}
+
+/// Common configuration effect.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ConfigurationEffect {
+    #[serde(rename = "config-value")]
+    ConfigValue(Box<ConfigurationEffectConfigValue>),
+
+    #[serde(rename = "dependency")]
+    Dependency(Box<ConfigurationEffectDependency>),
+
+    #[serde(rename = "forward")]
+    Forward(Box<ConfigurationEffectForward>),
+
+    #[serde(rename = "subskill")]
+    Subskill(Box<ConfigurationEffectSubskill>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationEffectConfigValue {
+    pub name: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationEffectDependency {
+    pub target: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConfigurationEffectForwardStrength {
+    #[serde(rename = "strong")]
+    Strong,
+
+    #[serde(rename = "weak")]
+    Weak,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationEffectForward {
+    pub feature: String,
+
+    pub strength: ConfigurationEffectForwardStrength,
+
+    pub target: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationEffectSubskill {
+    pub path: String,
+}
+
+/// Common configuration evaluation.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationEvaluation {
+    pub definition: String,
+
+    pub input: ConfigurationInput,
+
+    #[serde(rename = "normalizedConsumers")]
+    pub normalized_consumers: Vec<ConfigurationConsumer>,
+
+    pub controls: Vec<ConfigurationGroupControl>,
+
+    pub defaults: Vec<ConfigurationDefaultUse>,
+
+    pub questions: Vec<ConfigurationQuestion>,
+
+    pub problems: Vec<ConfigurationProblem>,
+
+    pub parameters: Vec<ConfigurationParameterResult>,
+
+    pub reliance: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolved: Option<ConfigurationResolved>,
+
+    /// Resolved local feature graph only; not whole-configuration readiness or
+    /// permission to execute.
+    #[serde(rename = "featureResult")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub feature_result: Option<ConfigurationFeatureResult>,
+}
+
+/// Common configuration feature.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationFeature {
+    pub id: String,
+
+    pub name: String,
+
+    pub visibility: ConfigurationVisibility,
+
+    pub required: bool,
+
+    pub default: bool,
+
+    pub requires: Vec<String>,
+
+    pub guards: Vec<ConfigurationGuard>,
+
+    pub effects: Vec<ConfigurationEffect>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub parent: Option<String>,
+}
+
+/// Common configuration feature result.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationFeatureResult {
+    pub selected: Vec<String>,
+
+    pub implied: Vec<ConfigurationImplication>,
+}
+
+/// Common configuration group.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "mode")]
+pub enum ConfigurationGroup {
+    #[serde(rename = "choice")]
+    Choice(Box<ConfigurationGroupChoice>),
+
+    #[serde(rename = "closure")]
+    Closure(Box<ConfigurationGroupClosure>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationGroupChoice {
+    pub cardinality: ConfigurationCardinality,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub defaults: Option<ConfigurationMembers>,
+
+    pub guards: Vec<ConfigurationGuard>,
+
+    pub id: String,
+
+    pub members: Vec<String>,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationGroupClosure {
+    pub cardinality: ConfigurationCardinality,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub fallback: Option<ConfigurationMembers>,
+
+    pub id: String,
+
+    pub members: Vec<String>,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+}
+
+/// Common configuration group control.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationGroupControl {
+    pub id: String,
+
+    pub active: bool,
+
+    pub cardinality: ConfigurationCardinality,
+
+    pub members: Vec<ConfigurationMemberControl>,
+
+    pub projections: Vec<ConfigurationProjection>,
+
+    #[serde(rename = "blockedBy")]
+    pub blocked_by: Vec<ConfigurationGuard>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub selection: Option<ConfigurationMembers>,
+}
+
+/// Common configuration guard.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ConfigurationGuard {
+    #[serde(rename = "group")]
+    Group(Box<ConfigurationGuardGroup>),
+
+    #[serde(rename = "member")]
+    Member(Box<ConfigurationGuardMember>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationGuardGroup {
+    pub id: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationGuardMember {
+    pub id: String,
+}
+
+/// Common configuration implication.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationImplication {
+    pub feature: String,
+
+    pub reason: ConfigurationImplicationReason,
+}
+
+/// Common configuration implication reason.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ConfigurationImplicationReason {
+    #[serde(rename = "group-default")]
+    GroupDefault(Box<ConfigurationImplicationReasonGroupDefault>),
+
+    #[serde(rename = "parent")]
+    Parent(Box<ConfigurationImplicationReasonParent>),
+
+    #[serde(rename = "required")]
+    Required(Box<ConfigurationImplicationReasonRequired>),
+
+    #[serde(rename = "requires")]
+    Requires(Box<ConfigurationImplicationReasonRequires>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationImplicationReasonGroupDefault {
+    pub group: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationImplicationReasonParent {
+    pub child: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationImplicationReasonRequired {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub parent: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationImplicationReasonRequires {
+    pub feature: String,
+}
+
+/// Common configuration input.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationInput {
+    pub intent: ConfigurationSourceInput,
+
+    #[serde(rename = "disabledFeatures")]
+    pub disabled_features: Vec<String>,
+}
+
+/// Common configuration intent.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConfigurationIntent {
+    #[serde(rename = "additive")]
+    Additive,
+
+    #[serde(rename = "exact")]
+    Exact,
+}
+
+/// Common configuration member control.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationMemberControl {
+    pub id: String,
+
+    pub eligible: bool,
+
+    #[serde(rename = "requestedBy")]
+    pub requested_by: Vec<String>,
+
+    #[serde(rename = "blockedBy")]
+    pub blocked_by: Vec<ConfigurationGuard>,
+}
+
+/// Literal local member IDs; null at a nullable reference means no declared or
+/// supplied set.
+pub type ConfigurationMembers = Vec<String>;
+
+/// Common configuration parameter.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationParameter {
+    pub id: String,
+
+    pub name: String,
+
+    #[serde(rename = "type")]
+    pub type_: ConfigurationParameterType,
+
+    pub required: bool,
+
+    pub choices: Vec<ConfigurationParameterChoice>,
+
+    #[serde(rename = "mustExist")]
+    pub must_exist: bool,
+
+    pub secret: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub default: Option<ConfigurationValue>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub min: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub max: Option<String>,
+}
+
+/// Common configuration parameter choice.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationParameterChoice {
+    pub value: String,
+
+    pub name: String,
+}
+
+/// Common configuration parameter origin.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ConfigurationParameterOrigin {
+    #[serde(rename = "absent")]
+    Absent(Box<ConfigurationParameterOriginAbsent>),
+
+    #[serde(rename = "default")]
+    Default(Box<ConfigurationParameterOriginDefault>),
+
+    #[serde(rename = "explicit")]
+    Explicit(Box<ConfigurationParameterOriginExplicit>),
+
+    #[serde(rename = "legacy-effective")]
+    LegacyEffective(Box<ConfigurationParameterOriginLegacyEffective>),
+
+    #[serde(rename = "profile")]
+    Profile(Box<ConfigurationParameterOriginProfile>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationParameterOriginAbsent {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationParameterOriginDefault {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationParameterOriginExplicit {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationParameterOriginLegacyEffective {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationParameterOriginProfile {
+    pub profile: String,
+}
+
+/// Common configuration parameter result.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "privacy")]
+pub enum ConfigurationParameterResult {
+    #[serde(rename = "public")]
+    Public(Box<ConfigurationParameterResultPublic>),
+
+    #[serde(rename = "secret")]
+    Secret(Box<ConfigurationParameterResultSecret>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationParameterResultPublic {
+    pub id: String,
+
+    pub origin: ConfigurationParameterOrigin,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub source: Option<ConfigurationValue>,
+
+    #[serde(rename = "type")]
+    pub type_: ConfigurationParameterType,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub value: Option<ConfigurationValue>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationParameterResultSecret {
+    pub id: String,
+
+    pub origin: ConfigurationParameterOrigin,
+
+    pub provided: bool,
+
+    pub resupply: bool,
+}
+
+/// Common configuration parameter type.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConfigurationParameterType {
+    #[serde(rename = "bool")]
+    Bool,
+
+    #[serde(rename = "choice")]
+    Choice,
+
+    #[serde(rename = "integer")]
+    Integer,
+
+    #[serde(rename = "path")]
+    Path,
+
+    #[serde(rename = "string")]
+    String,
+}
+
+/// Common configuration policy.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConfigurationPolicy {
+    #[serde(rename = "require-selection")]
+    RequireSelection,
+
+    #[serde(rename = "use-declared-defaults")]
+    UseDeclaredDefaults,
+}
+
+/// Common configuration problem.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ConfigurationProblem {
+    #[serde(rename = "additive-outside-exact")]
+    AdditiveOutsideExact(Box<ConfigurationProblemAdditiveOutsideExact>),
+
+    #[serde(rename = "cardinality")]
+    Cardinality(Box<ConfigurationProblemCardinality>),
+
+    #[serde(rename = "chosen-loss")]
+    ChosenLoss(Box<ConfigurationProblemChosenLoss>),
+
+    #[serde(rename = "duplicate-consumer")]
+    DuplicateConsumer(Box<ConfigurationProblemDuplicateConsumer>),
+
+    #[serde(rename = "duplicate-member")]
+    DuplicateMember(Box<ConfigurationProblemDuplicateMember>),
+
+    #[serde(rename = "exact-disagreement")]
+    ExactDisagreement(Box<ConfigurationProblemExactDisagreement>),
+
+    #[serde(rename = "feature")]
+    Feature(Box<ConfigurationProblemFeature>),
+
+    #[serde(rename = "input")]
+    Input(Box<ConfigurationProblemInput>),
+
+    #[serde(rename = "invalid-consumer")]
+    InvalidConsumer(Box<ConfigurationProblemInvalidConsumer>),
+
+    #[serde(rename = "parameter")]
+    Parameter(Box<ConfigurationProblemParameter>),
+
+    #[serde(rename = "scope")]
+    Scope(Box<ConfigurationProblemScope>),
+
+    #[serde(rename = "stale-definition")]
+    StaleDefinition(Box<ConfigurationProblemStaleDefinition>),
+
+    #[serde(rename = "unchosen-activation")]
+    UnchosenActivation(Box<ConfigurationProblemUnchosenActivation>),
+
+    #[serde(rename = "unknown-group")]
+    UnknownGroup(Box<ConfigurationProblemUnknownGroup>),
+
+    #[serde(rename = "unknown-member")]
+    UnknownMember(Box<ConfigurationProblemUnknownMember>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemAdditiveOutsideExact {
+    #[serde(rename = "additiveConsumer")]
+    pub additive_consumer: String,
+
+    #[serde(rename = "exactConsumer")]
+    pub exact_consumer: String,
+
+    #[serde(rename = "exactMembers")]
+    pub exact_members: Vec<String>,
+
+    pub group: String,
+
+    pub outside: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemCardinality {
+    pub cardinality: ConfigurationCardinality,
+
+    pub consumers: Vec<String>,
+
+    pub group: String,
+
+    pub members: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemChosenLoss {
+    pub members: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemDuplicateConsumer {
+    pub consumer: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemDuplicateMember {
+    pub consumer: String,
+
+    pub group: String,
+
+    pub member: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemExactDisagreement {
+    #[serde(rename = "firstConsumer")]
+    pub first_consumer: String,
+
+    #[serde(rename = "firstMembers")]
+    pub first_members: Vec<String>,
+
+    pub group: String,
+
+    #[serde(rename = "secondConsumer")]
+    pub second_consumer: String,
+
+    #[serde(rename = "secondMembers")]
+    pub second_members: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConfigurationProblemFeatureCode {
+    #[serde(rename = "cardinality")]
+    Cardinality,
+
+    #[serde(rename = "disabled-ancestor")]
+    DisabledAncestor,
+
+    #[serde(rename = "disabled-implied")]
+    DisabledImplied,
+
+    #[serde(rename = "enabled-and-disabled")]
+    EnabledAndDisabled,
+
+    #[serde(rename = "explicit-cardinality")]
+    ExplicitCardinality,
+
+    #[serde(rename = "replacement")]
+    Replacement,
+
+    #[serde(rename = "unknown")]
+    Unknown,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConfigurationProblemFeatureStage {
+    #[serde(rename = "closure")]
+    Closure,
+
+    #[serde(rename = "input")]
+    Input,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemFeature {
+    pub code: ConfigurationProblemFeatureCode,
+
+    pub feature: String,
+
+    pub members: Vec<String>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub reason: Option<ConfigurationImplicationReason>,
+
+    pub stage: ConfigurationProblemFeatureStage,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub group: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub related: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemInput {
+    pub field: String,
+
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemInvalidConsumer {
+    pub consumer: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemParameter {
+    pub id: String,
+
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemScope {
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemStaleDefinition {
+    pub actual: String,
+
+    pub expected: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemUnchosenActivation {
+    pub members: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemUnknownGroup {
+    pub consumer: String,
+
+    pub group: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProblemUnknownMember {
+    pub consumer: String,
+
+    pub group: String,
+
+    pub member: String,
+}
+
+/// Common configuration profile.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProfile {
+    pub id: String,
+
+    pub name: String,
+
+    pub default: bool,
+
+    pub features: Vec<String>,
+
+    pub selections: BTreeMap<String, ConfigurationSelection>,
+
+    pub parameters: BTreeMap<String, ConfigurationValue>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConfigurationProjectionOrigin {
+    #[serde(rename = "declared-defaults")]
+    DeclaredDefaults,
+
+    #[serde(rename = "explicit")]
+    Explicit,
+
+    #[serde(rename = "unanswered")]
+    Unanswered,
+}
+
+/// Common configuration projection.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationProjection {
+    pub consumer: String,
+
+    pub intent: ConfigurationIntent,
+
+    pub origin: ConfigurationProjectionOrigin,
+
+    pub eligible: Vec<String>,
+
+    pub dormant: Vec<String>,
+}
+
+/// Common configuration question.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ConfigurationQuestion {
+    #[serde(rename = "choice")]
+    Choice(Box<ConfigurationQuestionChoice>),
+
+    #[serde(rename = "parameter")]
+    Parameter(Box<ConfigurationQuestionParameter>),
+
+    #[serde(rename = "review")]
+    Review(Box<ConfigurationQuestionReview>),
+
+    #[serde(rename = "secret-resupply")]
+    SecretResupply(Box<ConfigurationQuestionSecretResupply>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationQuestionChoice {
+    pub cardinality: ConfigurationCardinality,
+
+    pub consumers: Vec<String>,
+
+    #[serde(rename = "eligibleMembers")]
+    pub eligible_members: Vec<String>,
+
+    pub group: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationQuestionParameter {
+    pub id: String,
+
+    pub secret: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationQuestionReview {
+    pub current: String,
+
+    #[serde(rename = "currentDefinition")]
+    pub current_definition: ConfigurationDefinition,
+
+    pub previous: String,
+
+    #[serde(rename = "previousDefinition")]
+    pub previous_definition: ConfigurationDefinition,
+
+    pub reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationQuestionSecretResupply {
+    pub id: String,
+}
+
+/// configuration record.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationRecord {
+    pub definition: ConfigurationDefinition,
+
+    pub evaluation: ConfigurationEvaluation,
+}
+
+/// Common configuration resolved.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationResolved {
+    pub features: ConfigurationFeatureResult,
+
+    pub parameters: Vec<ConfigurationParameterResult>,
+
+    pub data: Vec<ConfigurationData>,
+}
+
+/// Common configuration selection.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationSelection {
+    pub intent: ConfigurationIntent,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub members: Option<ConfigurationMembers>,
+}
+
+/// Common configuration source input.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationSourceInput {
+    pub policy: ConfigurationPolicy,
+
+    pub features: Vec<String>,
+
+    #[serde(rename = "defaultFeatures")]
+    pub default_features: bool,
+
+    pub selections: BTreeMap<String, ConfigurationSelection>,
+
+    pub parameters: BTreeMap<String, ConfigurationValue>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub profile: Option<String>,
+}
+
+/// Common configuration value.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ConfigurationValue {
+    #[serde(rename = "bool")]
+    Bool(Box<ConfigurationValueBool>),
+
+    #[serde(rename = "integer")]
+    Integer(Box<ConfigurationValueInteger>),
+
+    #[serde(rename = "text")]
+    Text(Box<ConfigurationValueText>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationValueBool {
+    pub value: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationValueInteger {
+    pub value: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConfigurationValueText {
+    pub value: String,
+}
+
+/// Common configuration visibility.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ConfigurationVisibility {
+    #[serde(rename = "internal")]
+    Internal,
+
+    #[serde(rename = "public")]
+    Public,
 }
 
 /// Conflicts projection: packages this version cannot coexist with.

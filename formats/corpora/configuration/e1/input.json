@@ -1,0 +1,14 @@
+{
+  "protocol": "vibe-configuration-input/1",
+  "input": {
+    "intent": {
+      "policy": "require-selection",
+      "features": [],
+      "defaultFeatures": false,
+      "selections": {},
+      "parameters": {},
+      "profile": "preset"
+    },
+    "disabledFeatures": []
+  }
+}

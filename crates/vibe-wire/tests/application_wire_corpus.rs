@@ -35,12 +35,27 @@ fn application_index_rejects_unknown_members() {
 }
 
 #[test]
-fn registry_exposes_the_epoch_two_index() {
-    assert_eq!(FormatId::ApplicationIndex.epoch(), 2);
+fn registry_exposes_distinct_current_and_legacy_index_epochs() {
+    assert_eq!(FormatId::ApplicationIndex.epoch(), 3);
+    assert_eq!(FormatId::ApplicationIndexV3.epoch(), 2);
     assert_eq!(
         FormatId::ApplicationIndex.unknown_fields(),
         UnknownFields::Deny
     );
+}
+
+/// Recovery means deletion and reprojection without human input, not readability.
+#[test]
+fn registry_preserves_authoritative_input_and_continuation_state() {
+    assert!(!FormatId::ConfigurationInput.recoverable());
+    assert!(FormatId::ConfigurationDescription.recoverable());
+    assert!(FormatId::ConfigurationEvaluation.recoverable());
+    assert!(FormatId::ConfigurationAppPlan.recoverable());
+    assert!(!FormatId::ApplicationSteps.recoverable());
+    assert!(FormatId::ApplicationStepsV1.recoverable());
+    assert!(!FormatId::ApplicationImportWork.recoverable());
+    assert!(!FormatId::ApplicationIndex.recoverable());
+    assert!(!FormatId::ApplicationIndexV3.recoverable());
 }
 
 /// `vibe app outdated --json` (`vibe-app-outdated/1`, PROP-065

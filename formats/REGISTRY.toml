@@ -393,23 +393,24 @@ sunset = "none"
 
 # ── User-local application durable/exchange records, PROP-059 ───────────────
 [format.application-index]
+epoch = 3
+schema = "schemas/application/e3/index.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e3"
+sunset = "none"
+
+# The kept work directory's exact continuation state (PROP-065 `#execution`).
+# Generation, publication and uncertain retirement evidence cannot be rebuilt
+# by restarting installation; read only by vibe.
+[format.application-steps]
 epoch = 2
-schema = "schemas/application/e2/index.jtd.json"
+schema = "schemas/application/e2/steps.jtd.json"
 recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/application/e2"
-sunset = "none"
-
-# The kept work directory's step state (PROP-065 `#execution`): rebuildable
-# by restarting the installation, read only by vibe.
-[format.application-steps]
-epoch = 1
-schema = "schemas/application/e1/steps.jtd.json"
-recoverable = true
-foreign_parsers = "none"
-unknown_fields = "deny"
-corpus = "formats/corpora/application/e1"
 sunset = "none"
 
 # The summary of one run record directory (PROP-065 `#runs`): read by
@@ -1487,4 +1488,67 @@ schema = "schemas/hello/e1/hello.jtd.json"
 recoverable = true
 foreign_parsers = "many"
 corpus = "none"
+sunset = "none"
+
+[format.configuration-input]
+epoch = 1
+schema = "schemas/configuration/e1/input.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/configuration/e1"
+sunset = "none"
+
+[format.configuration-description]
+epoch = 1
+schema = "schemas/configuration/e1/description.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "allow"
+corpus = "formats/corpora/configuration/e1"
+sunset = "none"
+
+[format.configuration-evaluation]
+epoch = 1
+schema = "schemas/configuration/e1/evaluation.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "allow"
+corpus = "formats/corpora/configuration/e1"
+sunset = "none"
+
+[format.configuration-app-plan]
+epoch = 1
+schema = "schemas/configuration/e1/app_plan.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "allow"
+corpus = "formats/corpora/configuration/e1"
+sunset = "none"
+
+[format.application-index-v3]
+epoch = 2
+schema = "schemas/application/e2/index.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e2"
+sunset = "none"
+
+[format.application-steps-v1]
+epoch = 1
+schema = "schemas/application/e1/steps.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
+sunset = "none"
+
+[format.application-import-work]
+epoch = 1
+schema = "schemas/application/e1/import_work.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
 sunset = "none"

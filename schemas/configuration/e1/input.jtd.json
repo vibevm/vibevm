@@ -1,0 +1,29 @@
+{
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "input": {
+      "ref": "configuration_input"
+    }
+  },
+  "metadata": {
+    "x-wire-order": [
+      "protocol",
+      "input",
+      "expectedDefinition"
+    ],
+    "x-rust-type": "ConfigurationSubmission",
+    "x-vocabularies": [
+      "configuration_input"
+    ]
+  },
+  "optionalProperties": {
+    "expectedDefinition": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  }
+}

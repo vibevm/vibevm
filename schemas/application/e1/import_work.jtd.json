@@ -1,0 +1,36 @@
+{
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "target": {
+      "ref": "application_import_target"
+    },
+    "phase": {
+      "ref": "application_import_phase"
+    },
+    "context": {
+      "ref": "application_import_context"
+    },
+    "cohort": {
+      "ref": "application_pending_import"
+    }
+  },
+  "metadata": {
+    "x-wire-order": [
+      "protocol",
+      "target",
+      "phase",
+      "context",
+      "cohort"
+    ],
+    "x-vocabularies": [
+      "application_import_context",
+      "application_import_phase",
+      "application_import_target",
+      "application_pending_import"
+    ],
+    "description": "The sole finite legacy-import continuation under the existing application-work owner.",
+    "x-rust-type": "ImportWork"
+  }
+}

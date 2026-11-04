@@ -1,0 +1,239 @@
+{
+  "protocol": "vibe-app-configuration-plan/1",
+  "package": {
+    "group": "org.example",
+    "name": "corpus",
+    "version": "1.0.0"
+  },
+  "option": "main",
+  "platform": "linux",
+  "arch": "x86_64",
+  "configuration": {
+    "definition": "configuration-semantic/1:sha256:78e759d2d0783776c4475d92ca3581c8facfcf4d058797979acc592fff24eceb",
+    "input": {
+      "intent": {
+        "policy": "require-selection",
+        "features": [],
+        "defaultFeatures": false,
+        "selections": {},
+        "parameters": {},
+        "profile": "preset"
+      },
+      "disabledFeatures": []
+    },
+    "normalizedConsumers": [
+      {
+        "key": "installer",
+        "policy": "require-selection",
+        "answers": {
+          "mode": {
+            "intent": "exact",
+            "members": [
+              "a"
+            ]
+          }
+        }
+      }
+    ],
+    "controls": [
+      {
+        "id": "mode",
+        "active": true,
+        "cardinality": "zero-or-one",
+        "members": [
+          {
+            "id": "a",
+            "eligible": true,
+            "requestedBy": [
+              "installer"
+            ],
+            "blockedBy": []
+          }
+        ],
+        "projections": [
+          {
+            "consumer": "installer",
+            "intent": "exact",
+            "origin": "explicit",
+            "eligible": [
+              "a"
+            ],
+            "dormant": []
+          }
+        ],
+        "blockedBy": [],
+        "selection": [
+          "a"
+        ]
+      }
+    ],
+    "defaults": [],
+    "questions": [],
+    "problems": [],
+    "parameters": [
+      {
+        "privacy": "public",
+        "id": "n",
+        "origin": {
+          "kind": "profile",
+          "profile": "preset"
+        },
+        "source": {
+          "kind": "integer",
+          "value": "-3"
+        },
+        "type": "integer",
+        "value": {
+          "kind": "integer",
+          "value": "-3"
+        }
+      },
+      {
+        "privacy": "public",
+        "id": "flag",
+        "origin": {
+          "kind": "default"
+        },
+        "source": {
+          "kind": "bool",
+          "value": false
+        },
+        "type": "bool",
+        "value": {
+          "kind": "bool",
+          "value": false
+        }
+      },
+      {
+        "privacy": "secret",
+        "id": "token",
+        "origin": {
+          "kind": "default"
+        },
+        "provided": false,
+        "resupply": false
+      }
+    ],
+    "reliance": [
+      "parameter:flag",
+      "parameter:n",
+      "parameter:token",
+      "profile"
+    ],
+    "resolved": {
+      "features": {
+        "selected": [
+          "a",
+          "b"
+        ],
+        "implied": [
+          {
+            "feature": "b",
+            "reason": {
+              "kind": "requires",
+              "feature": "a"
+            }
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "privacy": "public",
+          "id": "n",
+          "origin": {
+            "kind": "profile",
+            "profile": "preset"
+          },
+          "source": {
+            "kind": "integer",
+            "value": "-3"
+          },
+          "type": "integer",
+          "value": {
+            "kind": "integer",
+            "value": "-3"
+          }
+        },
+        {
+          "privacy": "public",
+          "id": "flag",
+          "origin": {
+            "kind": "default"
+          },
+          "source": {
+            "kind": "bool",
+            "value": false
+          },
+          "type": "bool",
+          "value": {
+            "kind": "bool",
+            "value": false
+          }
+        },
+        {
+          "privacy": "secret",
+          "id": "token",
+          "origin": {
+            "kind": "default"
+          },
+          "provided": false,
+          "resupply": false
+        }
+      ],
+      "data": [
+        {
+          "name": "mode",
+          "value": {
+            "kind": "text",
+            "value": "example-data"
+          },
+          "features": [
+            "a"
+          ]
+        }
+      ]
+    },
+    "featureResult": {
+      "selected": [
+        "a",
+        "b"
+      ],
+      "implied": [
+        {
+          "feature": "b",
+          "reason": {
+            "kind": "requires",
+            "feature": "a"
+          }
+        }
+      ]
+    }
+  },
+  "execution": {
+    "result": "owned",
+    "downloadBytes": 0,
+    "unknownSizes": 0,
+    "steps": [
+      {
+        "id": "build",
+        "title": "Build",
+        "kind": "recipe",
+        "phase": "prepare",
+        "needs": [],
+        "optional": false,
+        "action": "run"
+      },
+      {
+        "id": "finish",
+        "title": "Finish",
+        "kind": "agent",
+        "phase": "finish",
+        "needs": [],
+        "optional": false,
+        "action": "run",
+        "agentMode": "unattended"
+      }
+    ],
+    "warnings": []
+  }
+}

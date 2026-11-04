@@ -186,6 +186,134 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "app_plan",
+      "end_line": 419
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 82,
+      "symbol": "app_plan::action",
+      "end_line": 90
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 217,
+      "symbol": "app_plan::byte_count",
+      "end_line": 223
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 242,
+      "symbol": "app_plan::dependency",
+      "end_line": 287
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 233,
+      "symbol": "app_plan::dependency_action",
+      "end_line": 241
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 354,
+      "symbol": "app_plan::execution",
+      "end_line": 417
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 100,
+      "symbol": "app_plan::feature",
+      "end_line": 139
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 151,
+      "symbol": "app_plan::implication",
+      "end_line": 171
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 197,
+      "symbol": "app_plan::license",
+      "end_line": 216
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 53,
+      "symbol": "app_plan::package",
+      "end_line": 72
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 172,
+      "symbol": "app_plan::parameter",
+      "end_line": 196
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 91,
+      "symbol": "app_plan::phase",
+      "end_line": 99
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 73,
+      "symbol": "app_plan::result",
+      "end_line": 81
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 140,
+      "symbol": "app_plan::rule",
+      "end_line": 150
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 224,
+      "symbol": "app_plan::scope",
+      "end_line": 232
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 288,
+      "symbol": "app_plan::step",
+      "end_line": 353
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application_alternatives.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -2386,6 +2514,246 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "description",
+      "end_line": 1248
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 61,
+      "symbol": "description::application",
+      "end_line": 117
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 845,
+      "symbol": "description::byte_count",
+      "end_line": 851
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 742,
+      "symbol": "description::choice",
+      "end_line": 757
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 868,
+      "symbol": "description::condition",
+      "end_line": 931
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 443,
+      "symbol": "description::env_set",
+      "end_line": 458
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 629,
+      "symbol": "description::feature",
+      "end_line": 684
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 237,
+      "symbol": "description::form",
+      "end_line": 245
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 130,
+      "symbol": "description::icon_file",
+      "end_line": 162
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 163,
+      "symbol": "description::icon_set",
+      "end_line": 183
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 118,
+      "symbol": "description::icon_slot",
+      "end_line": 129
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 264,
+      "symbol": "description::installer_option",
+      "end_line": 416
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 735,
+      "symbol": "description::integer",
+      "end_line": 741
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 459,
+      "symbol": "description::launcher",
+      "end_line": 612
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 203,
+      "symbol": "description::launcher_action",
+      "end_line": 236
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 184,
+      "symbol": "description::launcher_kind",
+      "end_line": 193
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 194,
+      "symbol": "description::launcher_source",
+      "end_line": 202
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 829,
+      "symbol": "description::license",
+      "end_line": 844
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 41,
+      "symbol": "description::package",
+      "end_line": 60
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 852,
+      "symbol": "description::param_equals",
+      "end_line": 867
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 758,
+      "symbol": "description::parameter",
+      "end_line": 828
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 723,
+      "symbol": "description::parameter_type",
+      "end_line": 734
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 255,
+      "symbol": "description::phase",
+      "end_line": 263
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 685,
+      "symbol": "description::profile",
+      "end_line": 722
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 613,
+      "symbol": "description::public_command",
+      "end_line": 628
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 426,
+      "symbol": "description::requirement",
+      "end_line": 442
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 246,
+      "symbol": "description::result",
+      "end_line": 254
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 417,
+      "symbol": "description::scope",
+      "end_line": 425
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 932,
+      "symbol": "description::source_input",
+      "end_line": 977
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "item_kind": "schema-def",
+      "line": 978,
+      "symbol": "description::step",
+      "end_line": 1237
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/doc_chapters.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -2818,6 +3186,14 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/evaluation.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "evaluation",
+      "end_line": 22
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/extensions_analyze.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -3154,11 +3530,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e1/import_work.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "import_work",
+      "end_line": 36
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema",
       "line": 1,
       "symbol": "index",
       "end_line": 231
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "index",
+      "end_line": 869
     },
     {
       "crate_name": "<schema>",
@@ -3178,6 +3570,14 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 80,
+      "symbol": "index::accepted_license",
+      "end_line": 95
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/compiler_trace_index/e1/index.jtd.json",
       "item_kind": "schema-def",
       "line": 60,
@@ -3194,11 +3594,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 587,
+      "symbol": "index::authored_commands",
+      "end_line": 622
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
       "line": 88,
       "symbol": "index::env_entry",
       "end_line": 103
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 222,
+      "symbol": "index::env_entry",
+      "end_line": 265
     },
     {
       "crate_name": "<schema>",
@@ -3210,11 +3626,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 203,
+      "symbol": "index::env_op",
+      "end_line": 212
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
       "line": 126,
       "symbol": "index::icon_set",
       "end_line": 136
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 318,
+      "symbol": "index::icon_set",
+      "end_line": 370
     },
     {
       "crate_name": "<schema>",
@@ -3226,11 +3658,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 623,
+      "symbol": "index::installation",
+      "end_line": 867
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
       "line": 25,
       "symbol": "index::interpreter",
       "end_line": 28
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 58,
+      "symbol": "index::interpreter",
+      "end_line": 67
     },
     {
       "crate_name": "<schema>",
@@ -3258,11 +3706,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 412,
+      "symbol": "index::launcher",
+      "end_line": 570
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
       "line": 137,
       "symbol": "index::launcher_action",
       "end_line": 148
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 371,
+      "symbol": "index::launcher_action",
+      "end_line": 411
     },
     {
       "crate_name": "<schema>",
@@ -3274,11 +3738,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 299,
+      "symbol": "index::launcher_kind",
+      "end_line": 308
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
       "line": 122,
       "symbol": "index::launcher_source",
       "end_line": 125
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 309,
+      "symbol": "index::launcher_source",
+      "end_line": 317
     },
     {
       "crate_name": "<schema>",
@@ -3290,11 +3770,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 155,
+      "symbol": "index::mark",
+      "end_line": 163
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
       "line": 21,
       "symbol": "index::method",
       "end_line": 24
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 44,
+      "symbol": "index::method",
+      "end_line": 57
     },
     {
       "crate_name": "<schema>",
@@ -3306,11 +3802,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 68,
+      "symbol": "index::outcome",
+      "end_line": 79
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
       "line": 104,
       "symbol": "index::package",
       "end_line": 111
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 266,
+      "symbol": "index::package",
+      "end_line": 285
     },
     {
       "crate_name": "<schema>",
@@ -3346,6 +3858,14 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 146,
+      "symbol": "index::phase",
+      "end_line": 154
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/compiler_trace_index/e1/index.jtd.json",
       "item_kind": "schema-def",
       "line": 45,
@@ -3362,11 +3882,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 571,
+      "symbol": "index::public_command",
+      "end_line": 586
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
       "line": 66,
       "symbol": "index::requirement",
       "end_line": 79
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 173,
+      "symbol": "index::requirement",
+      "end_line": 202
     },
     {
       "crate_name": "<schema>",
@@ -3383,6 +3919,14 @@
       "line": 62,
       "symbol": "index::scope",
       "end_line": 65
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 164,
+      "symbol": "index::scope",
+      "end_line": 172
     },
     {
       "crate_name": "<schema>",
@@ -3418,6 +3962,14 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 286,
+      "symbol": "index::slot",
+      "end_line": 298
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
       "line": 40,
@@ -3426,11 +3978,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 96,
+      "symbol": "index::step_record",
+      "end_line": 145
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e2/index.jtd.json",
       "item_kind": "schema-def",
       "line": 84,
       "symbol": "index::value_kind",
       "end_line": 87
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e3/index.jtd.json",
+      "item_kind": "schema-def",
+      "line": 213,
+      "symbol": "index::value_kind",
+      "end_line": 221
     },
     {
       "crate_name": "<schema>",
@@ -3455,6 +4023,14 @@
       "line": 53,
       "symbol": "init_report::outcome_action",
       "end_line": 62
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/configuration/e1/input.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "input",
+      "end_line": 29
     },
     {
       "crate_name": "<schema>",
@@ -6467,11 +7043,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "steps",
+      "end_line": 394
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e1/steps.jtd.json",
       "item_kind": "schema-def",
       "line": 117,
       "symbol": "steps::agent_mode",
       "end_line": 120
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 330,
+      "symbol": "steps::agent_mode",
+      "end_line": 338
     },
     {
       "crate_name": "<schema>",
@@ -6483,11 +7075,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 349,
+      "symbol": "steps::agent_run",
+      "end_line": 392
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e1/steps.jtd.json",
       "item_kind": "schema-def",
       "line": 121,
       "symbol": "steps::agent_status",
       "end_line": 124
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 339,
+      "symbol": "steps::agent_status",
+      "end_line": 348
     },
     {
       "crate_name": "<schema>",
@@ -6499,11 +7107,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 286,
+      "symbol": "steps::env_entry",
+      "end_line": 329
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e1/steps.jtd.json",
       "item_kind": "schema-def",
       "line": 93,
       "symbol": "steps::env_op",
       "end_line": 96
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 267,
+      "symbol": "steps::env_op",
+      "end_line": 276
     },
     {
       "crate_name": "<schema>",
@@ -6515,11 +7139,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 86,
+      "symbol": "steps::interpreter",
+      "end_line": 95
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e1/steps.jtd.json",
       "item_kind": "schema-def",
       "line": 25,
       "symbol": "steps::outcome",
       "end_line": 28
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 74,
+      "symbol": "steps::outcome",
+      "end_line": 85
     },
     {
       "crate_name": "<schema>",
@@ -6531,11 +7171,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 54,
+      "symbol": "steps::package",
+      "end_line": 73
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e1/steps.jtd.json",
       "item_kind": "schema-def",
       "line": 52,
       "symbol": "steps::remap_row",
       "end_line": 68
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 185,
+      "symbol": "steps::remap_row",
+      "end_line": 222
     },
     {
       "crate_name": "<schema>",
@@ -6547,11 +7203,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 223,
+      "symbol": "steps::served_by",
+      "end_line": 244
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e1/steps.jtd.json",
       "item_kind": "schema-def",
       "line": 33,
       "symbol": "steps::step",
       "end_line": 51
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 96,
+      "symbol": "steps::step",
+      "end_line": 184
     },
     {
       "crate_name": "<schema>",
@@ -6563,11 +7235,27 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 245,
+      "symbol": "steps::step_input",
+      "end_line": 266
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e1/steps.jtd.json",
       "item_kind": "schema-def",
       "line": 97,
       "symbol": "steps::value_kind",
       "end_line": 100
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/steps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 277,
+      "symbol": "steps::value_kind",
+      "end_line": 285
     },
     {
       "crate_name": "<schema>",
@@ -11120,6 +11808,15 @@
       "symbol": "vibe_cli",
       "end_line": 7,
       "fingerprint": "tok1:3d17a49e51ebae39705b51735a7cfe625fc43cc0555f031c6d6adb0735534ccb"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/bin/vibe-app-proxy/index.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_cli::bin::vibe-app-proxy::index",
+      "end_line": 4,
+      "fingerprint": "tok1:88aa0acbcfc04c022ccaf595833eb4e104cc1055b96229ade43d3d72577fc0ec"
     },
     {
       "crate_name": "vibe-cli",
@@ -42258,6 +42955,14 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/configuration/e1/app_plan.jtd.json",
+      "from_symbol": "app_plan",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/application_alternatives.jtd.json",
       "from_symbol": "application_alternatives",
       "line": 1,
@@ -42522,6 +43227,14 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/configuration/e1/description.jtd.json",
+      "from_symbol": "description",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#describe",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/doc_chapters.jtd.json",
       "from_symbol": "doc_chapters",
       "line": 1,
@@ -42635,6 +43348,14 @@
     },
     {
       "file": "schemas/application/e2/index.jtd.json",
+      "from_symbol": "index",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#index",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/application/e3/index.jtd.json",
       "from_symbol": "index",
       "line": 1,
       "provenance": "authored",
@@ -43380,6 +44101,14 @@
     },
     {
       "file": "schemas/application/e1/steps.jtd.json",
+      "from_symbol": "steps",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#execution",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/application/e2/steps.jtd.json",
       "from_symbol": "steps",
       "line": 1,
       "provenance": "authored",
@@ -46373,6 +47102,14 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/bin/vibe-app-proxy/index.rs",
+      "from_symbol": "vibe_cli::bin::vibe-app-proxy::index",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#proxy",
       "verb": "implements"
     },
     {

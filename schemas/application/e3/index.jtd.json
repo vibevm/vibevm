@@ -1,0 +1,869 @@
+{
+  "metadata": {
+    "description": "The one user-application inventory: installations by key and the global default of each slot.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#index"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application::e3::index"
+    },
+    "x-rust-type": "ApplicationIndex",
+    "x-wire-order": [
+      "protocol",
+      "installations",
+      "slots"
+    ],
+    "x-vocabularies": [
+      "configuration_record",
+      "application_pending_target",
+      "configuration_parameter_origin"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "installations": {
+      "values": {
+        "ref": "installation"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "slots": {
+      "values": {
+        "ref": "slot"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "method": {
+      "enum": [
+        "shell",
+        "zip",
+        "tar_gz",
+        "exe",
+        "msi",
+        "source_build",
+        "steps"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "interpreter": {
+      "enum": [
+        "posix_sh",
+        "windows_cmd",
+        "windows_powershell"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "outcome": {
+      "enum": [
+        "done",
+        "skipped",
+        "failed",
+        "delegated",
+        "interrupted"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "accepted_license": {
+      "metadata": {
+        "x-wire-order": [
+          "name",
+          "acceptedAt"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "acceptedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "step_record": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "kind",
+          "phase",
+          "outcome",
+          "uninstall",
+          "forceUninstall",
+          "interpreter"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "outcome": {
+          "ref": "outcome"
+        }
+      },
+      "optionalProperties": {
+        "phase": {
+          "ref": "phase",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "uninstall": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "forceUninstall": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "interpreter": {
+          "ref": "interpreter",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "phase": {
+      "enum": [
+        "prepare",
+        "finish"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "mark": {
+      "enum": [
+        "manual",
+        "auto"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "scope": {
+      "enum": [
+        "build",
+        "runtime"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "requirement": {
+      "metadata": {
+        "description": "One application package this installation requires (PROP-065#app-dependencies): the authored spelling, the installation key it resolved to, its scope and the step that asked for it (absent for an option-level requirement).",
+        "x-wire-order": [
+          "package",
+          "key",
+          "scope",
+          "step"
+        ]
+      },
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "scope": {
+          "ref": "scope"
+        }
+      },
+      "optionalProperties": {
+        "step": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "env_op": {
+      "enum": [
+        "set",
+        "unset",
+        "path_prepend"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "value_kind": {
+      "enum": [
+        "string",
+        "expand_string"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "env_entry": {
+      "metadata": {
+        "description": "One applied durable environment change of an env step (PROP-065#env-step), removed exactly by uninstall and modify. `previous` / `previousKind` keep a Windows value the change replaced.",
+        "x-wire-order": [
+          "step",
+          "op",
+          "name",
+          "value",
+          "previous",
+          "previousKind"
+        ]
+      },
+      "properties": {
+        "step": {
+          "type": "string"
+        },
+        "op": {
+          "ref": "env_op"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "value": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "previous": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "previousKind": {
+          "ref": "value_kind",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "package": {
+      "metadata": {
+        "x-wire-order": [
+          "group",
+          "name",
+          "version"
+        ]
+      },
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "slot": {
+      "metadata": {
+        "x-wire-order": [
+          "default"
+        ]
+      },
+      "properties": {
+        "default": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    },
+    "launcher_kind": {
+      "enum": [
+        "gui",
+        "tui",
+        "command"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "launcher_source": {
+      "enum": [
+        "authored",
+        "desktop-entry"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "icon_set": {
+      "metadata": {
+        "x-wire-order": [
+          "svg",
+          "png",
+          "ico",
+          "icns",
+          "symbolic",
+          "maskable"
+        ],
+        "description": "An icon set of PROP-059#menu: path templates by slot, rasters keyed by decimal pixel size."
+      },
+      "optionalProperties": {
+        "svg": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "png": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "ico": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "icns": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "symbolic": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "maskable": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false
+          }
+        }
+      }
+    },
+    "launcher_action": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "name",
+          "args",
+          "icon",
+          "iconSet"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "args": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "icon": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "iconSet": {
+          "ref": "icon_set",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "launcher": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "name",
+          "description",
+          "executable",
+          "args",
+          "workingDirectory",
+          "icon",
+          "iconSet",
+          "terminal",
+          "default",
+          "kind",
+          "menu",
+          "categories",
+          "keywords",
+          "genericName",
+          "windowClass",
+          "mimeTypes",
+          "names",
+          "descriptions",
+          "actions",
+          "source"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "executable": {
+          "type": "string"
+        },
+        "args": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "terminal": {
+          "type": "boolean"
+        },
+        "default": {
+          "type": "boolean"
+        }
+      },
+      "optionalProperties": {
+        "description": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "workingDirectory": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "icon": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The short-form icon path; absent when the launcher has an icon set."
+          }
+        },
+        "iconSet": {
+          "ref": "icon_set",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "kind": {
+          "ref": "launcher_kind",
+          "metadata": {
+            "x-default": null,
+            "description": "Absent in a record written before kinds existed: read as tui when terminal, otherwise gui."
+          }
+        },
+        "menu": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false
+          }
+        },
+        "categories": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "keywords": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "genericName": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "windowClass": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "mimeTypes": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "names": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "descriptions": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "actions": {
+          "elements": {
+            "ref": "launcher_action"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "source": {
+          "ref": "launcher_source",
+          "metadata": {
+            "x-default": null,
+            "description": "authored, or desktop-entry for a launcher derived through launchers_from (PROP-059#desktop-entries); absent means authored."
+          }
+        }
+      }
+    },
+    "public_command": {
+      "metadata": {
+        "x-wire-order": [
+          "name",
+          "launcher"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "launcher": {
+          "type": "string"
+        }
+      }
+    },
+    "authored_commands": {
+      "metadata": {
+        "x-wire-order": [
+          "uninstall",
+          "forceUninstall",
+          "update",
+          "interpreter"
+        ]
+      },
+      "optionalProperties": {
+        "uninstall": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "forceUninstall": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "update": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "interpreter": {
+          "ref": "interpreter",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "installation": {
+      "metadata": {
+        "x-wire-order": [
+          "slot",
+          "package",
+          "option",
+          "platform",
+          "arch",
+          "method",
+          "library",
+          "directory",
+          "appRoot",
+          "portable",
+          "launchers",
+          "publicCommands",
+          "commands",
+          "features",
+          "parameters",
+          "license",
+          "icon",
+          "iconSet",
+          "menuGroup",
+          "categories",
+          "keywords",
+          "steps",
+          "hidden",
+          "mark",
+          "requires",
+          "requiredBy",
+          "env",
+          "held",
+          "replaced",
+          "supersededBy",
+          "configuration",
+          "pending",
+          "secretOrigins"
+        ]
+      },
+      "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "package": {
+          "ref": "package"
+        },
+        "option": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "arch": {
+          "type": "string"
+        },
+        "method": {
+          "ref": "method"
+        },
+        "portable": {
+          "type": "boolean"
+        },
+        "launchers": {
+          "elements": {
+            "ref": "launcher"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "publicCommands": {
+          "elements": {
+            "ref": "public_command"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "commands": {
+          "ref": "authored_commands"
+        }
+      },
+      "optionalProperties": {
+        "library": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "directory": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "appRoot": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "features": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "parameters": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "license": {
+          "ref": "accepted_license",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "icon": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "iconSet": {
+          "ref": "icon_set",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "menuGroup": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "categories": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "keywords": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "steps": {
+          "elements": {
+            "ref": "step_record"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "hidden": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false,
+            "description": "Installed without exposure (PROP-059#hidden-installations): no proxy, no alternative, never the default."
+          }
+        },
+        "mark": {
+          "ref": "mark",
+          "metadata": {
+            "x-default": null,
+            "description": "manual when the user asked for it by name, auto when a requirement pulled it in (PROP-065#uninstall-tree); absent means manual."
+          }
+        },
+        "requires": {
+          "elements": {
+            "ref": "requirement"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "requiredBy": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The installation keys whose recorded requirements name this one."
+          }
+        },
+        "env": {
+          "elements": {
+            "ref": "env_entry"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "held": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false,
+            "description": "Skipped by a bulk update and reported as held by outdated (PROP-065#update-and-rollback)."
+          }
+        },
+        "replaced": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The installation key this update replaced."
+          }
+        },
+        "supersededBy": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "A previous installation kept hidden after an update until the next successful update of its slot; names the key that replaced it."
+          }
+        },
+        "configuration": {
+          "ref": "configuration_record",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "pending": {
+          "ref": "application_pending_target",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "secretOrigins": {
+          "values": {
+            "ref": "configuration_parameter_origin"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        }
+      }
+    }
+  }
+}

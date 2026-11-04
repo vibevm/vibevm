@@ -8,9 +8,9 @@ use std::fs;
 use std::path::{Component, Path, PathBuf};
 
 use serde::Deserialize;
-use vibe_wire::generated::application::e2::index as wire;
+#[path = "index.rs"]
+mod index;
 
-const INDEX_PROTOCOL: &str = "vibe-user-applications/3";
 const LIBRARY_MARKER: &str = "vibe-library.toml";
 const DEFAULT_LIBRARY: &str = "default";
 
@@ -119,27 +119,20 @@ pub(crate) fn home_of(exe: &Path) -> Result<PathBuf, String> {
         })
 }
 
-fn read_index(home: &Path) -> Result<wire::ApplicationIndex, String> {
+fn read_index(home: &Path) -> Result<index::ApplicationIndex, String> {
     let path = home.join("applications").join("index.json");
     let bytes =
         fs::read(&path).map_err(|error| format!("reading `{}` failed: {error}", path.display()))?;
-    let index: wire::ApplicationIndex = serde_json::from_slice(&bytes).map_err(|error| {
+    index::read(&bytes).map_err(|error| {
         format!(
             "application index `{}` is unreadable: {error}",
             path.display()
         )
-    })?;
-    if index.protocol != INDEX_PROTOCOL {
-        return Err(format!(
-            "application index protocol `{}` is not `{INDEX_PROTOCOL}`",
-            index.protocol
-        ));
-    }
-    Ok(index)
+    })
 }
 
 /// An owned root from its library and directory, an external root as recorded.
-fn app_root(home: &Path, key: &str, record: &wire::Installation) -> Result<PathBuf, String> {
+fn app_root(home: &Path, key: &str, record: &index::Installation) -> Result<PathBuf, String> {
     match (&record.library, &record.directory, &record.app_root) {
         (Some(library), Some(directory), None) => {
             if directory
@@ -251,7 +244,7 @@ pub(crate) struct Vars<'a> {
 }
 
 fn expand_launcher(
-    launcher: &wire::Launcher,
+    launcher: &index::Launcher,
     app_root: &Path,
     home: &Path,
 ) -> Result<Launch, String> {

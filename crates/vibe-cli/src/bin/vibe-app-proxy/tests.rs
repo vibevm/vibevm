@@ -179,3 +179,24 @@ fn placeholders_take_the_caller_arguments() {
         ["--x", "a.txt", "b.txt"]
     );
 }
+
+#[test]
+fn current_index_routing_preserves_the_legacy_default_and_session_selection() {
+    let (_dir, home) = home();
+    let proxy = home.join("opt/bin/tool");
+    let default = resolve(&proxy, "tool", None).unwrap();
+    let session = resolve(&proxy, "tool", Some("tool=org.example/beta@1.0.0")).unwrap();
+    let path = home.join("applications/index.json");
+    let mut index: serde_json::Value = serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
+    index["protocol"] = "vibe-user-applications/4".into();
+    index["installations"]["org.example/alpha@1.0.0"]["secretOrigins"] =
+        serde_json::json!({"token":{"kind":"absent"}});
+    let bytes = serde_json::to_vec(&index).unwrap();
+    fs::write(&path, &bytes).unwrap();
+    assert_eq!(resolve(&proxy, "tool", None).unwrap(), default);
+    assert_eq!(
+        resolve(&proxy, "tool", Some("tool=org.example/beta@1.0.0")).unwrap(),
+        session
+    );
+    assert_eq!(fs::read(&path).unwrap(), bytes);
+}

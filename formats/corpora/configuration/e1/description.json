@@ -1,0 +1,170 @@
+{
+  "protocol": "vibe-configuration-description/1",
+  "package": {
+    "group": "org.example",
+    "name": "corpus",
+    "version": "1.0.0"
+  },
+  "application": {
+    "id": "corpus",
+    "portable": true
+  },
+  "options": [
+    {
+      "id": "main",
+      "name": "Main",
+      "platform": "linux",
+      "platformName": "Linux",
+      "arch": "x86_64",
+      "form": "steps",
+      "result": "owned",
+      "portable": true,
+      "launchers": [],
+      "publicCommands": [],
+      "features": [],
+      "defaultFeatures": [],
+      "profiles": [],
+      "parameters": [],
+      "steps": [
+        {
+          "id": "build",
+          "title": "Build",
+          "kind": "recipe",
+          "phase": "prepare",
+          "optional": false,
+          "when": [],
+          "unless": [],
+          "needs": [],
+          "script": "build.sh"
+        },
+        {
+          "id": "finish",
+          "title": "Finish",
+          "kind": "agent",
+          "phase": "finish",
+          "optional": false,
+          "when": [],
+          "unless": [],
+          "needs": [],
+          "prompt": "Complete this authored-format fixture.",
+          "required": true
+        }
+      ],
+      "configuration": {
+        "features": [
+          {
+            "id": "a",
+            "name": "A",
+            "visibility": "public",
+            "required": false,
+            "default": false,
+            "requires": [
+              "b"
+            ],
+            "guards": [],
+            "effects": [
+              {
+                "kind": "config-value",
+                "name": "mode"
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "name": "B",
+            "visibility": "public",
+            "required": false,
+            "default": false,
+            "requires": [],
+            "guards": [],
+            "effects": []
+          }
+        ],
+        "groups": [
+          {
+            "mode": "choice",
+            "cardinality": "zero-or-one",
+            "defaults": [],
+            "guards": [],
+            "id": "mode",
+            "members": [
+              "a"
+            ],
+            "name": "Mode"
+          }
+        ],
+        "parameters": [
+          {
+            "id": "n",
+            "name": "Count",
+            "type": "integer",
+            "required": false,
+            "choices": [],
+            "mustExist": false,
+            "secret": false,
+            "default": {
+              "kind": "integer",
+              "value": "-7"
+            },
+            "min": "-10",
+            "max": "10"
+          },
+          {
+            "id": "flag",
+            "name": "Flag",
+            "type": "bool",
+            "required": false,
+            "choices": [],
+            "mustExist": false,
+            "secret": false,
+            "default": {
+              "kind": "bool",
+              "value": false
+            }
+          },
+          {
+            "id": "token",
+            "name": "Token",
+            "type": "string",
+            "required": false,
+            "choices": [],
+            "mustExist": false,
+            "secret": true,
+            "default": {
+              "kind": "text",
+              "value": "example-public-definition-literal"
+            }
+          }
+        ],
+        "profiles": [
+          {
+            "id": "preset",
+            "name": "Preset",
+            "default": false,
+            "features": [],
+            "selections": {
+              "mode": {
+                "intent": "exact",
+                "members": [
+                  "a"
+                ]
+              }
+            },
+            "parameters": {
+              "n": {
+                "kind": "integer",
+                "value": "-3"
+              }
+            }
+          }
+        ],
+        "configValues": {
+          "mode": {
+            "kind": "text",
+            "value": "example-data"
+          }
+        }
+      }
+    }
+  ]
+}

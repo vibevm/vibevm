@@ -1,0 +1,419 @@
+{
+  "metadata": {
+    "description": "Version 1 installation plan from vibe app plan --json and vibe install --plan-only --json: the chosen option, result and features and every step as run or skip with its reason, computed without downloading or running anything.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#plan"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::configuration::e1::app_plan"
+    },
+    "x-wire-order": [
+      "protocol",
+      "package",
+      "option",
+      "platform",
+      "arch",
+      "configuration",
+      "execution"
+    ],
+    "x-vocabularies": [
+      "configuration_evaluation",
+      "application_agent_mode"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "configuration": {
+      "ref": "configuration_evaluation",
+      "metadata": {
+        "x-reader-projection": "permissive"
+      }
+    },
+    "package": {
+      "ref": "package"
+    },
+    "option": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string"
+    },
+    "arch": {
+      "type": "string"
+    }
+  },
+  "optionalProperties": {
+    "execution": {
+      "ref": "execution"
+    }
+  },
+  "definitions": {
+    "package": {
+      "metadata": {
+        "x-wire-order": [
+          "group",
+          "name",
+          "version"
+        ]
+      },
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "result": {
+      "enum": [
+        "owned",
+        "external"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "action": {
+      "enum": [
+        "run",
+        "skip"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "phase": {
+      "enum": [
+        "prepare",
+        "finish"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "feature": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "name",
+          "default",
+          "chosen",
+          "parent",
+          "implied"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "default": {
+          "type": "boolean"
+        },
+        "chosen": {
+          "type": "boolean"
+        }
+      },
+      "optionalProperties": {
+        "parent": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "implied": {
+          "ref": "implication",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "rule": {
+      "enum": [
+        "parent",
+        "requires",
+        "required",
+        "exclusive_default"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "implication": {
+      "metadata": {
+        "x-wire-order": [
+          "rule",
+          "by"
+        ]
+      },
+      "properties": {
+        "rule": {
+          "ref": "rule"
+        }
+      },
+      "optionalProperties": {
+        "by": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "parameter": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "value",
+          "secret"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "secret": {
+          "type": "boolean"
+        }
+      },
+      "optionalProperties": {
+        "value": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "license": {
+      "metadata": {
+        "x-wire-order": [
+          "name",
+          "file",
+          "accepted"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "accepted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "byte_count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      }
+    },
+    "scope": {
+      "enum": [
+        "build",
+        "runtime"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "dependency_action": {
+      "enum": [
+        "use",
+        "install"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "dependency": {
+      "metadata": {
+        "x-wire-order": [
+          "package",
+          "key",
+          "scope",
+          "step",
+          "action",
+          "hidden",
+          "commands"
+        ]
+      },
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "scope": {
+          "ref": "scope"
+        },
+        "action": {
+          "ref": "dependency_action"
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "commands": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      },
+      "optionalProperties": {
+        "step": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "step": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "title",
+          "kind",
+          "phase",
+          "needs",
+          "optional",
+          "action",
+          "reason",
+          "note",
+          "agentMode"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "phase": {
+          "ref": "phase"
+        },
+        "needs": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "optional": {
+          "type": "boolean"
+        },
+        "action": {
+          "ref": "action"
+        }
+      },
+      "optionalProperties": {
+        "reason": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "note": {
+          "type": "string",
+          "metadata": {
+            "description": "What a reader has to know about a step that WILL run \u2014 today only PROP-066#not-covered's marking of a recipe step that needs the network under a `deny` policy: what such a script downloads on its own is outside vibe's fetches and outside the rows, so the reader sees it before the build starts.",
+            "x-default": null
+          }
+        },
+        "agentMode": {
+          "ref": "application_agent_mode",
+          "metadata": {
+            "x-reader-projection": "permissive",
+            "x-default": null
+          }
+        }
+      }
+    },
+    "execution": {
+      "properties": {
+        "result": {
+          "ref": "result"
+        },
+        "downloadBytes": {
+          "ref": "byte_count"
+        },
+        "unknownSizes": {
+          "type": "uint32"
+        },
+        "steps": {
+          "elements": {
+            "ref": "step"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "warnings": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      },
+      "optionalProperties": {
+        "dependencies": {
+          "elements": {
+            "ref": "dependency"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The required application packages (PROP-065#app-dependencies), each ahead of the step that needs it; an entry without `step` is required by the option and precedes every step."
+          }
+        },
+        "appRoot": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "license": {
+          "ref": "license",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      },
+      "metadata": {
+        "x-wire-order": [
+          "result",
+          "appRoot",
+          "license",
+          "downloadBytes",
+          "unknownSizes",
+          "dependencies",
+          "steps",
+          "warnings"
+        ]
+      }
+    }
+  }
+}

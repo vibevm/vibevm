@@ -1,0 +1,22 @@
+{
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "evaluation": {
+      "ref": "configuration_evaluation",
+      "metadata": {
+        "x-reader-projection": "permissive"
+      }
+    }
+  },
+  "metadata": {
+    "x-wire-order": [
+      "protocol",
+      "evaluation"
+    ],
+    "x-vocabularies": [
+      "configuration_evaluation"
+    ]
+  }
+}

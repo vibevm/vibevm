@@ -207,17 +207,10 @@ fn the_same_key_with_different_decisions_refuses() -> Result<()> {
     Ok(())
 }
 
-/// The real data, walked: the vocabulary home — wrapped as
-/// `definitions`, exactly where `Vocabularies::resolve` places every
-/// fragment — yields 53 site occurrences after the documentation card and
-/// relations (PROP-057 §4, §5, §7) joined the bridge-provenance surface:
-/// `title`, `abstract`, `documentation`, `translates` and `media` on
-/// `version_entry`, `primary` on `documentation_entry`, and the three
-/// image paths on `media_entry`. It includes the two legal diamonds
-/// (`describes` and
-/// `description` each live in both `subskill_entry` and `version_entry`
-/// with the same decision), so the map holds one key per pair while the
-/// tally counts all four.
+/// The real vocabulary home yields104 optional scalar/structure occurrences.
+/// The prior53 remain; common configuration and private continuation vocabulary
+/// add51. This census walks vocabulary definitions, not public app-work schemas.
+/// Repeated compatible keys count at each declared site.
 #[test]
 fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     // One `..` deeper than the parent module's own paths: `include_str!`
@@ -227,7 +220,7 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
             .expect("the vocabulary home parses");
     let doc_shapes = shapes(json!({ "definitions": home }))?;
     assert_eq!(
-        doc_shapes.sites, 53,
+        doc_shapes.sites, 104,
         "the real shared home includes every promoted optional site"
     );
     Ok(())

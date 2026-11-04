@@ -1,0 +1,59 @@
+{
+  "protocol": "vibe-app-import-work/1",
+  "target": {
+    "home": "/tmp/nst-common-app-format-capture/home",
+    "operation": "20261104T162511.433567306Z-773989-0"
+  },
+  "phase": "running",
+  "context": {
+    "lookup": {
+      "kind": "chain",
+      "embedded": "/tmp/nst-common-app-format-capture/registry"
+    },
+    "offline": true,
+    "hosted": true,
+    "assumeYes": true,
+    "agentExternal": true,
+    "agent": "external"
+  },
+  "cohort": {
+    "rows": [
+      {
+        "key": "org.example/portable@1.0.0",
+        "installer": "main",
+        "features": [],
+        "parameters": {},
+        "licenseAccepted": false,
+        "held": false,
+        "hidden": false,
+        "mark": "manual",
+        "source": {
+          "directory": "/tmp/nst-common-app-format-capture/registry/org.example/portable/v1.0.0",
+          "kind": "local-registry",
+          "registry": "/tmp/nst-common-app-format-capture/registry"
+        },
+        "platform": "linux",
+        "arch": "x86_64",
+        "definition": "legacy-import-definition/1:sha256:559fb49fe529dec2e60c994a8561a2dca4d25b316e35a9b42668dac2800afa34",
+        "agentModes": {
+          "finish": "unattended"
+        }
+      }
+    ],
+    "cursor": 0,
+    "skipInstalled": false,
+    "acceptLicense": false,
+    "collections": [],
+    "pins": [],
+    "launchers": [],
+    "arrangementDone": false,
+    "registry": "/tmp/nst-common-app-format-capture/registry",
+    "current": {
+      "home": "/tmp/nst-common-app-format-capture/home",
+      "key": "org.example/portable@1.0.0",
+      "operation": "20261104T162511.437927404Z-773989-1"
+    },
+    "results": [],
+    "auto": []
+  }
+}

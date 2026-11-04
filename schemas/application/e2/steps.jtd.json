@@ -1,0 +1,394 @@
+{
+  "metadata": {
+    "description": "The step state of one installation work directory, rewritten after each step: the package coordinate, option and features it belongs to and the outcome of every step reached.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#execution"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application::e2::steps"
+    },
+    "x-rust-type": "StepsFile",
+    "x-wire-order": [
+      "protocol",
+      "package",
+      "option",
+      "features",
+      "steps",
+      "operation"
+    ],
+    "x-vocabularies": [
+      "application_pending_operation"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "package": {
+      "ref": "package"
+    },
+    "option": {
+      "type": "string"
+    },
+    "features": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "steps": {
+      "elements": {
+        "ref": "step"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "operation": {
+      "ref": "application_pending_operation"
+    }
+  },
+  "definitions": {
+    "package": {
+      "metadata": {
+        "x-wire-order": [
+          "group",
+          "name",
+          "version"
+        ]
+      },
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "outcome": {
+      "enum": [
+        "done",
+        "skipped",
+        "failed",
+        "delegated",
+        "interrupted"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "interpreter": {
+      "enum": [
+        "posix_sh",
+        "windows_cmd",
+        "windows_powershell"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "step": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "kind",
+          "outcome",
+          "reason",
+          "started",
+          "finished",
+          "uninstall",
+          "forceUninstall",
+          "interpreter",
+          "agent",
+          "env",
+          "inputs"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "outcome": {
+          "ref": "outcome"
+        }
+      },
+      "optionalProperties": {
+        "reason": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "started": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "finished": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "uninstall": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "forceUninstall": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "interpreter": {
+          "ref": "interpreter",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "agent": {
+          "ref": "agent_run",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "env": {
+          "elements": {
+            "ref": "env_entry"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "inputs": {
+          "elements": {
+            "ref": "step_input"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        }
+      }
+    },
+    "remap_row": {
+      "metadata": {
+        "description": "The remap row that chose a candidate (PROP-066#provenance): its layer, the file or package that declared it, its position there, and its reason.",
+        "x-wire-order": [
+          "layer",
+          "source",
+          "index",
+          "reason"
+        ]
+      },
+      "properties": {
+        "layer": {
+          "enum": [
+            "user_package",
+            "project_package",
+            "local",
+            "invocation"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "source": {
+          "type": "string"
+        },
+        "index": {
+          "type": "uint32"
+        }
+      },
+      "optionalProperties": {
+        "reason": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "served_by": {
+      "metadata": {
+        "description": "Which candidate served one input's bytes and the remap row that chose it (PROP-066#provenance); absent `row` means the artifact's own declared origin served it.",
+        "x-wire-order": [
+          "target",
+          "row"
+        ]
+      },
+      "properties": {
+        "target": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "row": {
+          "ref": "remap_row",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "step_input": {
+      "metadata": {
+        "description": "One verified input of the step and, optionally, where its bytes came from (PROP-066#provenance). Additive: a reader of an older steps.json simply sees no inputs.",
+        "x-wire-order": [
+          "name",
+          "servedBy"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "servedBy": {
+          "ref": "served_by",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "env_op": {
+      "enum": [
+        "set",
+        "unset",
+        "path_prepend"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "value_kind": {
+      "enum": [
+        "string",
+        "expand_string"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "env_entry": {
+      "metadata": {
+        "description": "One durable environment change an env step applied (PROP-065#env-step).",
+        "x-wire-order": [
+          "step",
+          "op",
+          "name",
+          "value",
+          "previous",
+          "previousKind"
+        ]
+      },
+      "properties": {
+        "step": {
+          "type": "string"
+        },
+        "op": {
+          "ref": "env_op"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "value": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "previous": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "previousKind": {
+          "ref": "value_kind",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "agent_mode": {
+      "enum": [
+        "interactive",
+        "unattended"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "agent_status": {
+      "enum": [
+        "ok",
+        "fail",
+        "parked"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "agent_run": {
+      "metadata": {
+        "description": "One agent hook run of the step (PROP-064#record): the agent, the mode, the run directory holding the envelope, and when it ended the duration and the answer.",
+        "x-wire-order": [
+          "agent",
+          "mode",
+          "envelope",
+          "durationMs",
+          "status",
+          "message"
+        ]
+      },
+      "properties": {
+        "agent": {
+          "type": "string"
+        },
+        "mode": {
+          "ref": "agent_mode"
+        },
+        "envelope": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "durationMs": {
+          "type": "uint32",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "status": {
+          "ref": "agent_status",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "message": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}
