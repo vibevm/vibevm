@@ -115635,7 +115635,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d131dcd412bc7cf4f57ac93457ec74553465284d543f7b72a9c63debbc31547a",
+      "content_hash": "sha256:fea4ce143c1153c3bb75f2f1c7160a7117e1567658c92ab71fdb50b26fb9437f",
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "PROP-036: `vibe tree` — the spec-tree analyzer",
@@ -115707,7 +115707,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:cc1582c481934fc177fedb57a23fd705f16c0b45467af47d11815f32c979e6d4",
+      "content_hash": "sha256:1a386c6a20a7462ed8108491a847aace48b373556c0eab17ce1dd2f0151893be",
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "2. Decisions",
@@ -116103,7 +116103,7 @@
     },
     {
       "anchor": "static-decompile",
-      "content_hash": "sha256:a36327b96cbe381e786d40d58dd3a7b7d1a4fe3c7cbc1faf4516983c2d949a8b",
+      "content_hash": "sha256:2da5e19deb82e23ed5a648cd9f4cf5e483bba3906075a466d45c2864b7cce828",
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "2.8 STATIC.md decompilation",
@@ -116129,12 +116129,21 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPANS"
     },
     {
+      "anchor": "EMBED-SPAN-ATTRIBUTION",
+      "content_hash": "sha256:bcc520d1ee3f5730ce95fe7f2a3f2fbe4303fb48f66b8d93731c63fd25bc7521",
+      "doc_path": "modules/vibe-cli/PROP-036",
+      "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
+      "heading": "Attribute every well-formed reserved embed occurrence in opening/source order, including repeated addresses, with one-based file-relative inclusive marker lines. Nonempty opening and closing addresses match exactly; a closer never renames an opener, and a pair cannot cross contribution boundaries. Unexpected, mismatched/crossed, empty or unclosed reserved embed controls produce a line-located parse error through the existing tree error surface, not an invented or silently incomplete clean attribution. Complete standalone controls outside the canonical Vibe fenced-code mask are provenance; fenced examples of embed or static markers are literal and cannot open, close or split contributions. Reuse the same fence owner as directive parsing and retain c1 provenance decoding. This corrects attribution within the existing v1 model, not compiler generation, target resolution, source authenticity or exact body-byte measurement. @status:spec/done",
+      "line": 153,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION"
+    },
+    {
       "anchor": "DEDICATED-DECOMPILER",
       "content_hash": "sha256:7a3995374086fc43c8dc570de09113739c5f80df3d82a8403e9f4a8f6a8c5722",
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "This is a **dedicated** decompiler for the on-disk\n  `vibe:static` open-marker format — it is not `vibe_spec::decompile()`, which\n  parses the distinct `vibe:begin`/`vibe:end` compiler format and returns empty on\n  `STATIC.md`. @status:spec/done",
-      "line": 153,
+      "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#DEDICATED-DECOMPILER"
     },
     {
@@ -116143,7 +116152,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "2.9 In-place `@spec` collection",
-      "line": 159,
+      "line": 160,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#in-place-specs"
     },
     {
@@ -116152,7 +116161,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "`vibe tree` collects the in-place boot-lane spec markers (REQ): `@spec://` uses\n  and `#use` / `#embed` / `#source` directives, via the canonical fence-aware\n  `vibe_spec::Directives::parse`. @status:spec/done",
-      "line": 161,
+      "line": 162,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#INPLACE-COLLECTION"
     },
     {
@@ -116161,7 +116170,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "A bare `spec://` (no `@`) is discretionary and is\n  **not** collected. @status:spec/done",
-      "line": 164,
+      "line": 165,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#BARE-SPEC-SKIPPED"
     },
     {
@@ -116170,7 +116179,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "(Out of scope: the `#[spec(...)]` code-traceability surface —\n  that is PROP-014.) @status:spec/done",
-      "line": 166,
+      "line": 167,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#inplace-oos"
     },
     {
@@ -116179,7 +116188,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "2.10 Diagnostics",
-      "line": 170,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#diagnostics"
     },
     {
@@ -116188,7 +116197,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "`vibe tree` reports, non-fatally (REQ: never aborts rendering on these): @status:spec/done",
-      "line": 171,
+      "line": 172,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#DIAG-NON-FATAL"
     },
     {
@@ -116197,7 +116206,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**stale-artifacts** — the committed lanes disagree with a fresh `EffectiveBoot`\n  recompute (the tree needs `vibe reinstall`). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 173,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#DIAG-STALE-ARTIFACTS"
     },
     {
@@ -116206,7 +116215,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**root-drift** — `vibe.lock` `meta.root_dependencies` disagrees with the root\n  `vibe.toml` `[requires.packages]` (the lock is behind). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 175,
+      "line": 176,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#DIAG-ROOT-DRIFT"
     },
     {
@@ -116215,7 +116224,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "Each diagnostic carries a severity, a stable code, a message, and an optional\nlocator. @status:spec/done",
-      "line": 178,
+      "line": 179,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#DIAG-SHAPE"
     },
     {
@@ -116224,7 +116233,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "2.11 The interactive TUI",
-      "line": 181,
+      "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui"
     },
     {
@@ -116233,7 +116242,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "On a tty (default), `vibe tree` is an interactive pseudographic browser (REQ).\nContract: @status:spec/done",
-      "line": 182,
+      "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TUI-DEFAULT"
     },
     {
@@ -116242,7 +116251,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**Navigation:** `↑`/`↓` move the selection (the table scrolls to keep it\n  visible; the selected row is highlighted); `←`/`→` pan horizontally when the\n  tree is wider than the viewport. @status:spec/done",
-      "line": 185,
+      "line": 186,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TUI-NAVIGATION"
     },
     {
@@ -116251,7 +116260,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**The key bindings sketched in this section are superseded.** This §2.11 is\n  the analyzer-era sketch; the shipped keymap is [PROP-037](PROP-037-tree-tui.xml)\n  Spec 2's F-key scheme, and it is normative there — this section names the\n  *capabilities*, never the keys. @status:impl/done",
-      "line": 188,
+      "line": 189,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TUI-KEYMAP-SUPERSEDED"
     },
     {
@@ -116260,7 +116269,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**Folding:** the selected node folds and unfolds (shipped as the\n  `fold.toggle` action, [PROP-037 §13.5](PROP-037-tree-tui.xml#actions)). The\n  whole-tree fold sketched here was **not carried into Spec 2 and does not\n  ship** — the action catalogue has `fold.toggle` only. @status:impl/done",
-      "line": 192,
+      "line": 193,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TUI-FOLDING"
     },
     {
@@ -116269,7 +116278,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**Detail:** `Enter` opens a modal showing the row's full detail vertically\n  (name, group, version, kind, load type, transitive + why, condition full text,\n  STATIC.md membership, source, content hash, dependencies, boot file);\n  `Esc` closes it. Quitting is `Esc` plus a confirm dialog\n  ([PROP-037 §7.4](PROP-037-tree-tui.xml)), not the bare `q` this sketch assumed. @status:impl/done",
-      "line": 196,
+      "line": 197,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TUI-DETAIL"
     },
     {
@@ -116278,7 +116287,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**Ordering** (shown in the status line): **topological** (the analysis\n  order, default) ↔ **alphabetical**. Chosen from the F2 sort menu\n  ([PROP-037 §7.2](PROP-037-tree-tui.xml), which replaces any bare mode-cycle key). @status:impl/done",
-      "line": 201,
+      "line": 202,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TUI-ORDERING"
     },
     {
@@ -116287,7 +116296,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**Display mode:** (a) all-together tree; (b) two stacked\n  sub-tables `static dependencies` / `dynamic dependencies` (a header line each);\n  (c) two tabs `Static` / `Dynamic`, with a swappable static/dynamic priority in\n  (b) and (c). Modes are chosen from the F3 menu and tabs switch with\n  `Shift`+arrows ([PROP-037 §4.4 / §5.3](PROP-037-tree-tui.xml)). @status:impl/done",
-      "line": 204,
+      "line": 205,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TUI-DISPLAY-MODES"
     },
     {
@@ -116296,7 +116305,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**Status line:** current ordering · current display mode · the `STATIC.md` size\n  indicator (§2.6). @status:spec/done",
-      "line": 209,
+      "line": 210,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TUI-STATUS-LINE"
     },
     {
@@ -116305,7 +116314,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**Fallback:** non-tty and `--plain` render a static ASCII tree; `--json` the\n  JSON — neither enters interactive mode. @status:spec/done",
-      "line": 211,
+      "line": 212,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#TUI-FALLBACK"
     },
     {
@@ -116314,7 +116323,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "2.12 The graph is a DAG",
-      "line": 215,
+      "line": 216,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#dag"
     },
     {
@@ -116323,7 +116332,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "The dependency graph has diamonds (a shared package reached by several parents). @status:spec/done",
-      "line": 217,
+      "line": 218,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#dag-diamonds"
     },
     {
@@ -116332,7 +116341,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "`vibe tree` renders each package under each parent, marks a re-occurrence with a\n  trailing `(*)` and does not re-expand it, and cycle-guards the walk on the\n  package's qualified `group/name` (REQ). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 218,
+      "line": 219,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#DAG-RENDERING"
     },
     {
@@ -116341,7 +116350,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "The flat display modes (§2.11) collapse\n  the DAG to one row per package. @status:spec/done",
-      "line": 221,
+      "line": 222,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#DAG-FLAT-COLLAPSE"
     },
     {
@@ -116350,7 +116359,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "2.13 Project resolution — VibeTree works from anywhere",
-      "line": 225,
+      "line": 226,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#project-resolution"
     },
     {
@@ -116359,7 +116368,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "`vibe tree` shows a project's tree, so it needs one — but a GUI launcher\n(`VibeTree.exe` / a Start-menu shortcut) or an arbitrary shell may sit\noutside any project. The launchers live in the `vibevm-term` products repo with\nvibeterm and vibeframe ([PROP-019 §STEP-VIBE-ONLY](../../common/PROP-019-version-manager.xml)),\nand are governed there — this host contract only specifies what `vibe tree` does\nwhen invoked from outside a project. @status:impl/done",
-      "line": 226,
+      "line": 227,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#project-needed"
     },
     {
@@ -116368,7 +116377,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "Resolution order for the **human** surfaces (the TUI and\n`-t`; **not** `--json`, a scripting surface resolved strictly from `--path`)\n(REQ): @status:spec/done",
-      "line": 232,
+      "line": 233,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#RESOLUTION-ORDER"
     },
     {
@@ -116377,7 +116386,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**The given path** — `--path` (default: cwd, walked up for `vibe.toml`). On\n   success it is **recorded as the last project** (`vibe.tree.last-project`, an\n   L1 setting), so a later context-free launch reopens it. An explicit `--path`\n   that is not a project is a hard error — never silently redirected. @status:spec/done",
-      "line": 236,
+      "line": 237,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#RES-GIVEN-PATH"
     },
     {
@@ -116386,7 +116395,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**The remembered last project** — when the cwd is not a project and no\n   explicit `--path` was given, the recorded `last-project` opens (if it is still\n   a project). @status:spec/done",
-      "line": 240,
+      "line": 241,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#RES-LAST-PROJECT"
     },
     {
@@ -116395,7 +116404,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**A folder picker** — a `-t` (VibeTree / GUI) launch with neither of the above\n   opens a native folder chooser; the pick is recorded as the last project.\n   Cancelling is a clean no-op (no error dialog), never a failure. @status:spec/done",
-      "line": 243,
+      "line": 244,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#RES-FOLDER-PICKER"
     },
     {
@@ -116404,7 +116413,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "A console launch (no `-t`) with neither a cwd project nor a memory keeps the\noriginal `run vibe init` guidance. @status:spec/done",
-      "line": 247,
+      "line": 248,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#console-fallback"
     },
     {
@@ -116413,7 +116422,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "3. Data sources",
-      "line": 251,
+      "line": 252,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#data-sources"
     },
     {
@@ -116422,7 +116431,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "`vibe tree` joins, using the canonical parsers (REQ — no re-implemented format\nreaders where a `vibe-*` crate already parses it): @status:spec/done",
-      "line": 252,
+      "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#CANONICAL-PARSERS"
     },
     {
@@ -116431,7 +116440,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**graph** — `vibe.lock` (`vibe_core::manifest::Lockfile`): roots from\n  `meta.root_dependencies`, edges from each `LockedPackage.dependencies`. @status:spec/done",
-      "line": 255,
+      "line": 256,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#SRC-GRAPH"
     },
     {
@@ -116440,7 +116449,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**links** — the node manifests (`vibe_core` `Requires`): consumer\n  `declared_link` + the target's `[boot_snippet]` suggested link + `when`. @status:spec/done",
-      "line": 257,
+      "line": 258,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#SRC-LINKS"
     },
     {
@@ -116449,7 +116458,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**effective lanes + sizes** — the committed `vibevm/vibespecs/boot/STATIC.xml` +\n  `vibevm/vibespecs/boot/INDEX.md`. @status:spec/done",
-      "line": 259,
+      "line": 260,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#SRC-LANES"
     },
     {
@@ -116458,7 +116467,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**cross-check** — `vibe_workspace` `EffectiveBoot` (for the stale-artifacts\n  diagnostic). @status:spec/done",
-      "line": 261,
+      "line": 262,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#SRC-CROSS-CHECK"
     },
     {
@@ -116467,7 +116476,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**in-place specs** — `vibe_spec::Directives::parse`. @status:spec/done",
-      "line": 263,
+      "line": 264,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#SRC-INPLACE"
     },
     {
@@ -116476,7 +116485,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "4. Non-goals",
-      "line": 266,
+      "line": 267,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#non-goals"
     },
     {
@@ -116485,7 +116494,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**The runtime skill / prompt** — inferring what the agent *actually* loaded at\n  runtime (the `loading spec://…` convention, `.vibe/` logging, multi-agency) is\n  deferred to `tool:org.vibevm.core/package-tree`. @status:spec/done",
-      "line": 268,
+      "line": 269,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#NG-RUNTIME-SKILL"
     },
     {
@@ -116494,7 +116503,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**A GUI client** — deferred to the same future package; the `--json` schema is\n  its contract. @status:spec/done",
-      "line": 271,
+      "line": 272,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#NG-GUI-CLIENT"
     },
     {
@@ -116503,7 +116512,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**Spec-graph validation** — `vibe tree` attributes and reports; it does not\n  validate `spec://` targets. @status:spec/done",
-      "line": 273,
+      "line": 274,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#NG-SPEC-VALIDATION"
     },
     {
@@ -116512,7 +116521,7 @@
       "doc_path": "modules/vibe-cli/PROP-036",
       "file": "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
       "heading": "**Mutation** — never; see §2.1. @status:spec/done",
-      "line": 275,
+      "line": 276,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#NG-MUTATION"
     },
     {

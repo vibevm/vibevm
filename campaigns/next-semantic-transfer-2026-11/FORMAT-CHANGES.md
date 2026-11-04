@@ -322,3 +322,11 @@ Apply now replaces metadata atomically, retaining existing Unix mode and ordinar
 Rollback conflicts retain both the original failure and conflict details; an observed hosted park cannot hide them as clean delegation. Diagnostics name retained run/tasks and state categories without file contents/digests. No install -g flag, app index or app continuation format changes are introduced by this slice; package acquisition paths using guarded install apply inherit its admission and failure behavior. Direct global-app continuation acceptance remains separate under FMT-009. Linux candidate tests passed; native Windows/macOS runtime and the final uncooperative-writer window remain unverified/unsolved respectively.
 
 Acceptance evidence:662distinct candidate tests/docs; main public apply19+direct guard3+actual CLI rollback1+owned docs4 all passed. Fmt, scoped conform0new and final map check0blocking passed. No full-platform or general recovery acceptance is inferred.
+
+## FMT-012 — Nested committed-boot attribution (design only, Unreleased)
+
+No vibe.toml keys, install -g flags, lock/index epochs or tree JSON v1 shape change. Planned `vibe tree` correction retains all nested/repeated embed occurrences with exact existing inclusive line coordinates, in opening order. Flat valid generated arrays retain their order. Fenced marker examples become literal rather than provenance, using the existing Vibe fence grammar for both static contribution and embed discovery.
+
+Malformed reserved embed pairs (unexpected/mismatched/crossed/empty/unclosed or crossing a contribution) will fail with line context through the existing tree error envelope. Previously some returned success while dropping spans or substituting the closer's address; empty-close shorthand was accepted. Corrective action: fix or regenerate malformed artifacts; quote documentation examples in fenced code. Compiler output already emits nonempty matching addresses. No automatic artifact rewrite occurs.
+
+Proposed additive Rust API: vibe_spec::fenced_code_lines(&str) -> Vec<bool>, sharing the existing FenceTracker and including delimiter lines. No new dependency is needed. Implementation and final compatibility tests are pending; this does not deliver the full boot debugger, ordinary source inspector or exact byte measurements. Design: research/boot-tree-attribution-design.md.
