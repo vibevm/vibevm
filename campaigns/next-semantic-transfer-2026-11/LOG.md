@@ -1204,3 +1204,23 @@ Root verified12 pinned optional-contract blobs and17/18 main hashes; PROP-069 dr
 Added three spec/done (not impl/done) PROP-069 facts for optional declarations, owner-local activation and dormant source/context admission; FMT-021 records the proposed source-format delta as unimplemented. Root inspected existing lock schema7 strict readers, root-satisfiability Fresh shortcut and point-reinstall exact-byte guard. Sent the integration worker the concrete reader obligations: rich request drift must not pass Fresh, record fields must not be silently lost, and old-reader rejection must be distinguished from new-reader legacy support. No lock schema choice or positive source activation has yet been accepted.
 
 Root traceability validation: existing xtask binary initially refused because CARGO_MANIFEST_DIR was unset (exit1, no map write). Re-ran with the actual xtask directory; generation and --check both exit0:9084units/5124items/4279edges,0gatedorphans/0unresolvedhost,43existingwarnings. Four added units are the planned section and three facts; no implementation coverage is manufactured. No Cargo/build/test was run for this documentation increment.
+
+
+### 2026-11-05 — root inspected all three resolvo dependency projections
+
+Direct source trace finds unconditional resolution_requires consumers in resolvo_engine/provider.rs get_dependencies, mod.rs chosen-output construction, and capabilities.rs prescan. The latter enumerates candidate versions before solving and skips lookup failures; simply filtering the final graph would still contact inactive optional sources. Existing provider manifests cache and repeated solve_hard recommendation trials must retain candidate-bound original/evaluated meaning without rejected-trial residue. These concrete integration obligations were sent to the primary before source activation; this is source evidence, not a runtime failure claim. Main source remains unchanged.
+
+
+### 2026-11-05 — positive runtime oracle reviewed; source gate released
+
+Root read independent /tmp/nst-positive-runtime-oracle.md and checked real UserScratch isolation, existing hook fixture and layout helpers. Promoted the bounded oracle as research/common-package-positive-runtime-oracle.md: OFF/ON must differ in actual owner edges, slots, hooks and generated static-transitive boot; mandatory base stays, whole source bytes stay, original request must be distinct from effective features and survive a fresh process. No runtime result yet. The oracle worker now prepares a Rust fixture outside the repo; the primary alone owns source integration and the main Cargo slot. Root removed its extra ACK gate: after saving the concrete design the primary may start the agreed coherent workspace-consumer/candidate/lock/cold-replay vertical. Wider transitive forwarding/source/UI obligations remain open, not redefined as completed.
+
+
+### 2026-11-05 — implementation started after root design review
+
+Root read the complete positive design and independent Rust test candidate. Approved coherent initial runtime and strict legacy7/rich8 distinction, with faithful reader closure; rejected treating highest semver before feasibility as assumed default consent. A separate read-only worker now checks pinned ordinary-authored default binding. Primary has begun optional declaration/core source edits in main and owns the sole Cargo slot. Independent fixture is still /tmp-only and requires actual typed original-record assertions before persistence acceptance. The design is promoted as research/common-package-positive-design.md with explicit root dispositions in common-package-positive-decisions.md. No positive runtime gate has run or passed yet.
+
+
+### 2026-11-05 — first declaration gate, not runtime acceptance
+
+Root inspected optional-first.log:2passed/0failed/686filtered, covering strict flag types/dangling metadata plus four source spellings with true/false round-trip. Actual workspace version.var finalization is not established by that parser test. Primary was reminded to cover optional-only manifests in unsupported-route admission so the new parser cannot silently feed legacy unconditional resolution. No parser-only acceptance or historical task promotion. Independent test candidate remains outside repo until primary integrates real rich-lock assertions.

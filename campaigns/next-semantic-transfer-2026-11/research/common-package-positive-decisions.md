@@ -18,3 +18,7 @@ Root checked all 12 immutable prototype blobs in the optional-contract JSON agai
 ## Execution
 
 The existing package-adapter worker is preparing the precise integration design and file ownership without source edits or Cargo. Root retains architecture review and acceptance. F15/A0 remains accepted; A1–A5 remain incomplete. No historical task count changes from these decisions.
+
+## Implementation review, 2026-11-05
+
+The companion common-package-positive-design.md is the reviewed proposal, with these root dispositions: its first coherent fixed workspace consumer/local registry/copy/resolvo runtime is authorized as an increment, not the campaign endpoint. Strict legacy7 plus rich8 reading, lossless legacy7 writes and explicit rich8 writes are approved; no read-time migration or discard-rich-lock recovery. Rich writer acceptance includes Fresh, point replay and actual boot/read closure. The proposed highest-version automatic-consent basis is **not approved**: a separate pinned-source review is underway. Explicit no-auto input can proceed; unsupported default reliance must refuse truthfully until resolved. Avoid unused future consumer/forwarding API shapes with no actual owner. Transitive forwarding and broader source/surface support remain required follow-on work.
