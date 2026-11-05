@@ -1478,3 +1478,15 @@ Root read final proof/report and verified its source/evidence manifest. Same-res
 ### 2026-11-06 — physical grounding is insufficient for activation
 
 Root reviewed v2 report and verified its source/evidence hashes before archival. Combined current-source v1/v2 run:8PASS/4deliberateFAIL/0ignored. One decreasing-rank authored witness per nonroot excludes unowned/reverse/rootless physical support while preserving a rooted hard cycle. Yet unseeded C.on→A→Q.blue→C.on remains a real RED: all local core results and actual input/reachability assertions pass without an external/required activation seed. Seeded controls pass. This is a finite model counterexample, not a shipped F16 bug (forwarding still refuses there). Archived v2 and promoted report; next bounded hypothesis grounds activation causes separately, without declaring a general discovery strategy ready.
+
+
+### 2026-11-06 — independent G1 foundation proceeds alongside transitive proof
+
+Root re-read the prior G1 clause review and delegated current-source revalidation plus actual normal/direct-transitive duplicate fixture to the existing implementation worker. Initial scope is dedicated test/registration only; production patch follows root review of a real RED and owner plan. This boot/compiler foundation is independent of the private transitive solver proof and needed by later effective loading. G2 remains acceptedF13, G3 separate, no old113 closure from delegation. Main and private Cargo targets remain distinct.
+
+
+### 2026-11-06 — causal activation proof reviewed; production discovery remains open
+
+Root read v3 source and report, verified all15 frozen hashes and archived the full non-target probe with per-file hashes. v3 has3PASS; combined current source11PASS/4preserved old-encodingFAIL/0ignored. Separate decreasing-rank causal proofs reject unseeded forced activation while preserving off and actual external/required seeded cycles with redundant original input intact. This accepts finite expressiveness only: five hand-grounded facts are not a general discovery/lowering algorithm. Next bounded design examines immutable lazy discovery, alternative causes, nonmonotonic merge and omitted recommendation/OR/capability provenance. Source archive: local context evidence/2026-11-06/transitive-proof-v3. No shipped behavior or format changed by this proof.
+
+G1 implementation authorized after root reviewed actual compiler/boot RED: umbrella/direct contributions duplicate normal sections; four discriminator controls passed. Worker owns local plan_stream coverage plus cohesive helper/tests, preserving source identities, captured variants, uncovered preamble/siblings and shared validation replay. Actual installed-route proof remains required before acceptance.
