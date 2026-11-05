@@ -142,8 +142,13 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
         .with_context(|| format!("re-fetching `{package}` for point re-derivation"))?;
     // A repair re-derives the bytes the lock pins, never newer ones.
     pin::require_locked_bytes(locked, &cached)?;
-    vibe_install::configuration_admission::workspace_inputs(&workspace, project_root, &manifest)?;
-    vibe_install::configuration_admission::package_manifest(&pkgref, &cached.manifest)?;
+    vibe_install::configuration_admission::locked_workspace(
+        &workspace,
+        project_root,
+        &manifest,
+        &lockfile,
+    )?;
+    lockfile.configuration_for(locked, &cached.manifest)?;
 
     let mode = match cached
         .manifest
@@ -281,13 +286,13 @@ fn run_inner(
     // against a tree the identity and the trace were never prepared for.
     let proven = selection.prove()?;
     let workspace = proven.workspace();
-    vibe_install::configuration_admission::workspace_inputs(
+    let lockfile = load_lockfile(&workspace.root)?;
+    vibe_install::configuration_admission::locked_workspace(
         workspace,
         proven.root(),
         proven.manifest(),
+        &lockfile,
     )?;
-
-    let lockfile = load_lockfile(&workspace.root)?;
     // The workspace ROOT's manifest, from the tree already in hand.
     let spec_format = crate::commands::install::resolve_spec_format(
         &workspace.root_manifest,

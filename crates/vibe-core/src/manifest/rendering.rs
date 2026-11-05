@@ -31,7 +31,7 @@ impl Lockfile {
     /// assert!(rendered.contains("fixed-time"));
     /// ```
     pub fn render_with_comments(&self, previous: Option<&str>) -> Result<String> {
-        render_toml(self, previous)
+        render_toml(&self.for_write()?, previous)
     }
 }
 

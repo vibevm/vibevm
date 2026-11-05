@@ -3,6 +3,9 @@
 use super::*;
 
 impl From<Requires> for RequiresWire {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#OPTIONAL-DECLARATIONS"
+    )]
     fn from(r: Requires) -> Self {
         let mut packages: BTreeMap<String, RequiresPackageEntryWire> = BTreeMap::new();
         for p in &r.packages {
@@ -19,6 +22,10 @@ impl From<Requires> for RequiresWire {
                 .as_ref()
                 .and_then(|g| r.configurations.get(&link_key(g, p.name.as_str())))
                 .cloned();
+            let optional = p
+                .group
+                .as_ref()
+                .and_then(|g| r.optional.get(&link_key(g, p.name.as_str())).copied());
             let constraint = version_spec_to_constraint_str(&p.version);
             // A registry dep carrying per-edge metadata needs the inline
             // form so every explicit declaration survives round-trip.
@@ -27,6 +34,7 @@ impl From<Requires> for RequiresWire {
                 || friend.is_some()
                 || exclude.is_some()
                 || configuration.is_some()
+                || optional.is_some()
             {
                 RequiresPackageEntryWire::Inline(Box::new(InlinePackageDepWire {
                     version: Some(VersionFieldWire::Constraint(constraint)),
@@ -35,6 +43,7 @@ impl From<Requires> for RequiresWire {
                     friend,
                     exclude,
                     configuration,
+                    optional,
                     ..Default::default()
                 }))
             } else {
@@ -74,6 +83,7 @@ impl From<Requires> for RequiresWire {
                 friend: r.friend_flags.get(&link_key(&g.group, &g.name)).copied(),
                 exclude: r.excludes.get(&link_key(&g.group, &g.name)).cloned(),
                 configuration: r.configurations.get(&link_key(&g.group, &g.name)).cloned(),
+                optional: r.optional.get(&link_key(&g.group, &g.name)).copied(),
             };
             packages.insert(key, RequiresPackageEntryWire::Inline(Box::new(inline)));
         }
@@ -90,6 +100,7 @@ impl From<Requires> for RequiresWire {
                 friend: r.friend_flags.get(&link_key(&p.group, &p.name)).copied(),
                 exclude: r.excludes.get(&link_key(&p.group, &p.name)).cloned(),
                 configuration: r.configurations.get(&link_key(&p.group, &p.name)).cloned(),
+                optional: r.optional.get(&link_key(&p.group, &p.name)).copied(),
                 ..Default::default()
             };
             packages.insert(key, RequiresPackageEntryWire::Inline(Box::new(inline)));
@@ -103,6 +114,7 @@ impl From<Requires> for RequiresWire {
                 friend: r.friend_flags.get(&link_key(&v.group, &v.name)).copied(),
                 exclude: r.excludes.get(&link_key(&v.group, &v.name)).cloned(),
                 configuration: r.configurations.get(&link_key(&v.group, &v.name)).cloned(),
+                optional: r.optional.get(&link_key(&v.group, &v.name)).copied(),
                 ..Default::default()
             };
             packages.insert(key, RequiresPackageEntryWire::Inline(Box::new(inline)));
@@ -127,6 +139,9 @@ impl From<Requires> for RequiresWire {
 impl TryFrom<RequiresWire> for Requires {
     type Error = String;
 
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#OPTIONAL-DECLARATIONS"
+    )]
     fn try_from(w: RequiresWire) -> std::result::Result<Self, Self::Error> {
         let mut packages: Vec<PackageRef> = Vec::new();
         let mut git_packages: Vec<GitPackageDep> = Vec::new();
@@ -137,6 +152,7 @@ impl TryFrom<RequiresWire> for Requires {
         let mut friend_flags: BTreeMap<String, bool> = BTreeMap::new();
         let mut excludes: BTreeMap<String, Vec<String>> = BTreeMap::new();
         let mut configurations = BTreeMap::new();
+        let mut optional = BTreeMap::new();
         for (key, entry) in w.packages {
             let (kind, group, name) = parse_pkgref_key(&key).map_err(|e| e.to_string())?;
             match entry {
@@ -148,6 +164,9 @@ impl TryFrom<RequiresWire> for Requires {
                     );
                 }
                 RequiresPackageEntryWire::Inline(inline) => {
+                    if let Some(value) = inline.optional {
+                        optional.insert(link_key(&group, &name), value);
+                    }
                     if let Some(input) = &inline.configuration {
                         input
                             .validate_shape_at(
@@ -248,6 +267,7 @@ impl TryFrom<RequiresWire> for Requires {
             friend_flags,
             excludes,
             configurations,
+            optional,
         })
     }
 }

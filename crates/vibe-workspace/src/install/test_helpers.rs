@@ -75,6 +75,7 @@ pub(super) fn dep_with_boot(
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     };
     (dep, pkg)
 }

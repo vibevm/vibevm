@@ -51,6 +51,7 @@ pub use apply::{
     apply_with_spec_format_and_hook_output, apply_with_spec_format_and_lifecycle_observed,
     apply_with_spec_format_and_lifecycle_observed_traced,
     apply_with_spec_format_and_lifecycle_observed_traced_prepared, publish_admitted_manifest,
+    publish_empty_legacy_lock,
 };
 pub use error::Error;
 pub use events::{NullObserver, PlanEvent, PlanObserver};
@@ -60,7 +61,7 @@ pub use lifecycle::{
     SlotLifecyclePlan, SlotLifecyclePlanEntry, SlotLifecycleReport,
 };
 pub use plan::{
-    InstallRequest, Plan, PlannedInstall, plan, plan_prepared_with_spec_format,
+    InstallRequest, Plan, PlannedInstall, freshness_prepared, plan, plan_prepared_with_spec_format,
     plan_prepared_without_publication, plan_with_spec_format,
 };
 pub use record::{
@@ -160,6 +161,33 @@ pub trait InstallSource {
     /// Run the depsolver against this source, returning the full
     /// transitive graph the pipeline will fetch and materialise.
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError>;
+
+    /// Resolve actual common consumer inputs through the selected supported cell.
+    /// The operation-owned snapshot must be reused for held and masked retries.
+    /// Legacy implementations explicitly refuse instead of dropping intent.
+    fn solve_configured(
+        &self,
+        _roots: &[PackageRef],
+        _snapshot: &vibe_resolver::configuration::ConfigurationSnapshot,
+        _blocked: &BTreeSet<(String, String)>,
+    ) -> Result<ResolvedGraph, SolveError> {
+        Err(vibe_resolver::DepProviderError::Configuration(
+            vibe_core::manifest::PackageConfigurationError::Unsupported {
+                package: "workspace dependency graph".into(),
+                reason: "the selected source/solver does not consume package configuration".into(),
+            },
+        )
+        .into())
+    }
+
+    /// Actual configured selection already bound during this planning solve.
+    /// A legacy source returns none; callers still enforce package admission.
+    fn configuration_for_node(
+        &self,
+        _node: &vibe_resolver::ResolvedNode,
+    ) -> Result<Option<vibe_core::manifest::PackageConfiguration>, SolveError> {
+        Ok(None)
+    }
 
     /// Read one solved package's manifest through the source's metadata-only
     /// provider path. This must never fetch or materialise package content.

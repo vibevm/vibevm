@@ -1224,3 +1224,235 @@ Root read the complete positive design and independent Rust test candidate. Appr
 ### 2026-11-05 — first declaration gate, not runtime acceptance
 
 Root inspected optional-first.log:2passed/0failed/686filtered, covering strict flag types/dangling metadata plus four source spellings with true/false round-trip. Actual workspace version.var finalization is not established by that parser test. Primary was reminded to cover optional-only manifests in unsupported-route admission so the new parser cannot silently feed legacy unconditional resolution. No parser-only acceptance or historical task promotion. Independent test candidate remains outside repo until primary integrates real rich-lock assertions.
+
+
+### 2026-11-05 — defaults policy resolved without inventing prototype support
+
+Pinned-source reviewer found ordinary authored adapter require_selection with no default bindings; the shown path binds one exact admitted candidate with explicit allow_defaults. Root rejected highest-version-before-feasibility as unsupported inference and selected a concrete common-package extension: first unbound authored defaults may bind the final feasible candidate, whereas shown/retained basis must not be renewed by reread/-y. Added spec/done PACKAGE-DEFAULT-BASIS, notified primary; no runtime acceptance. Interim optional-only admission now appears in source; root inspected the new shared workspace/package guard.
+
+
+### 2026-11-05 — root caught unresolved-candidate classification before acceptance
+
+In-flight resolvo provider mapped all PackageConfigurationError::Unresolved to Dependencies::Unknown without a recorded error. The core variant currently bundles questions/conflicts/invalid answers into a formatted reason. Source inspection therefore predicts an otherwise feasible newer candidate requiring input could be discarded for an older question-free candidate, contrary to PACKAGE-DEFAULT-BASIS. This is a code-review finding, not a runtime RED. Primary instructed to preserve typed distinctions and selected unanswered state; no parsing diagnostic strings. Required discriminator: newest viable candidate asks, older does not; solver must not silently avoid the question. Positive runtime remains unaccepted.
+
+
+### 2026-11-05 — unresolved candidate correction observed in source
+
+Root re-read the live patch: NeedsSelection is now separate from Incompatible/Invalid; unresolved candidate viability uses a mandatory-only derived view, and validate_selected refuses its result before an executable graph escapes. The earlier blanket Unresolved→Unknown branch is gone. No runtime verdict inferred. Primary requested four solver discriminators: viable-newer question preserved, independently unsatisfiable-newer question discarded with its candidate, stable explicit incompatibility permits older compatible candidate, malformed source remains error.
+
+
+### 2026-11-05 — five candidate gates and rich-reader closure review
+
+Root read resolver-candidates-first.log and all five test bodies:5passed/104filtered. Actual resolvo with fixture provider confirms selected questions, independent-unsatisfiable fallback, stable explicit incompatibility, malformed source refusal and no enumeration/edge for inactive optional target. This is not CLI/effects/lock acceptance. Root read and promoted the finite reader audit, independently inspected both UnsupportedLockfile→empty loaders and remap readerror→empty. Eighteen reader snapshot hashes checked; drift at promotion: []. Primary must address both loaders before rich writer activation; remap precedence and post-durability reporting are distinct owner obligations. Accepted minimal lock configuration map references actual package row authority without a second source store.
+
+
+### 2026-11-05 — parallel remap fix and masked-solver parity review
+
+Primary explicitly released composition/remap.rs and dedicated tests; history worker owns only that bounded reader/consent fix, with no Cargo while primary owns the slot. Root source review found configured provider masks only requires.packages, whereas existing visibility_projection mask also handles alternatives/recommends/installer requirements/source metadata. Sent exact parity obligation: share existing semantic transformation at a proper lower owner, keep original snapshot unmasked, do not ship a second partial mask for legacy descendants. No runtime RED or acceptance inferred.
+
+
+### 2026-11-05 — rich lock association review catches version-constraint gap
+
+Root inspected new lockfile/configuration.rs before acceptance. Present checks align configuration IDs/features/edge targets but only compare locked edge version with target row, not original declaration constraint. Predicted counterexample: original dep^2, actual target1.0, locked edge=1.0 passes those checks despite violating retained requirement. Primary instructed to validate active original constraint/kind against the exact locked target and test malformed wildcard/nonexact edge where exact pin required. Source-review evidence only; no runtime failure claimed.
+
+
+### 2026-11-05 — cross-owner legacy regeneration conflict identified
+
+Primary preserved known no-rich schema1–6 install regeneration; core read rejects rich records under old epochs before returning UnsupportedLockfile. Root noticed new strict remap project_required admission runs before command execution and would reject those same known legacy locks before install's regeneration path. Both owners notified to coordinate one narrow recognized-legacy exception, never generic Unsupported→empty or a second parser. Required actual CLI old6 install control, alongside malformed/future/rich-under-old refusals. This is source integration review, not a reported test failure.
+
+
+### 2026-11-05 — known legacy exception settled; panel revision72
+
+Root/primary/remap worker agreed exact UnsupportedLockfile found1..6 compatibility exception after strict core rich-underold rejection. No new partial lock reader; old unsupported remap-layer meaning remains historical empty, not newly claimed faithful interpretation. Current/future/malformed distinctions must be proven by actual CLI gates. Root reviewed shared visibility-mask extraction: both ordinary/configured routes now target one lower resolver transformation covering alternatives/recommends/conditional/app requirements and metadata. Source review only; final runtime parity outstanding. Local plan72 and Documents panel refreshed, accepted task counts unchanged.
+
+
+### 2026-11-05 — format registry no longer labels rich lock silently recoverable
+
+Root inspected format.lockfile and found recoverable=true inherited from the effective-only lock. Rich original/basis state cannot be assumed recoverable from current inputs, so registry classification changed to false; existing registry epoch1 remains distinct from actual TOML schema7/8. Added planned PROP-002#LF-CONFIGURED-STATE with faithful7/8 reader/writer and source-bound association obligations, preserving historical examples. XML/TOML parse checks passed; full map/runtime acceptance awaits source freeze.
+
+
+### 2026-11-05 — source-bound fetch and original constraints now visible
+
+Root re-read candidate: rich lock admission now compares exact selected pins and original declared version/kind; configured fetch compares actual fetched manifest to the captured original and bounds initial activation to ordinary file-registry copy. Shared visibility projection has one owner. Runtime and compatibility gates still pending. Root highlighted admission timing: prospective record/graph mismatch must refuse before hooks/materialisation, not first in final for_write after effects. Explicit domain/OR/conditional/application dependency admission is being kept separate from the bounded first path.
+
+
+### 2026-11-05 — first integrated CLI compile exposes annotation error
+
+Root observed cli-compile-first.log compiler diagnostic at composition/remap.rs351: duplicate implements in one specmark attribute is invalid (expected r/reason after first relation). The remap writer owns the correction to separate attributes and the analogous repeated-verifies test annotations; primary will retry only after that correction, with no concurrent source writers. This is an actual compile failure, not a semantic runtime RED. Root also reviewed Fresh original-consumer comparison and pre-return prospective lock validation; source-level timing is now connected, runtime gates pending.
+
+
+### 2026-11-05 — remap handback reviewed; typed CLI original-record oracle integrated
+
+Root read remap report/source/test and verified the two final hashes against main (1698d698124beff6d2bf73948862d0d310dbc456056e5e22a71b5a284516aa41; d486750147bedc513157e397838a0541c894ade12d034a1a6f6e092cc78db215). Remap worker returned both files to primary; no concurrent second source writer remains. Five actual CLI tests authored, not yet run; first integrated annotation compile101 and correction retained in evidence. Root also inspected optional CLI assert_original_record: actual authored input deep-compared to typed schema8 record, original feature additions kept separate from chosen group member, active dependency causes checked before/after fresh-process invocation. Runtime pass still pending.
+
+
+### 2026-11-05 — first actual optional CLI gate fails response parsing
+
+cli-optional-first.log reached both real CLI invocations after compilation:0passed/2failed. Both commands passed the status-success assertion but serde_json::from_slice rejected trailing characters at lines14/18. Graph/slot/hook/boot/original-record assertions had not run, so command success is not feature acceptance. Root requested full stdout/stderr capture and comparison with existing install JSON contract before changing oracle/parser; do not silently drop trailing data to manufacture a pass. Failure classification (fixture expectation versus product output) remains pending.
+
+
+### 2026-11-05 — JSON failure classified as our fixture mistake
+
+Root independently decoded both captured stdout files completely: install:plan, lifecycle:plan, install:closure-diff, one terminal install(ok=true); no trailing non-JSON. Existing report.rs intentionally defers previews then flushes them before completion. Our one-document oracle was wrong. Primary fixed only the test to parse every JSON document through EOF and validate expected preview/unique terminal shape; CLI protocol unchanged. Repeat cli-optional-second.log is underway; graph/state assertions were not reached in the failed runs.
+
+
+### 2026-11-05 — first positive ordinary configured-package CLI milestone
+
+Root inspected cli-optional-second.log:2passed/0failed, actual OFF/ON authored install through CLI, lock owner edges, slots/payload, hook counts, static-transitive generated boot, intact source, typed original request distinct from effective features, second fresh process with no hook repetition. This is the first runtime proof of the bounded explicit/no-auto local-copy package path. Prior0/2 fixture JSON errors remain recorded. Not full A1–A5/F04 or historical-task completion: adversarial original-intent drift, missing/corrupt record, replay/reinstall, remap/legacy gates and static/spec checks remain; forwarding/defaults/parameters/subskills/other source/surface work remains separate.
+
+
+### 2026-11-05 — root flags stale-path missing-record reconstruction risk
+
+Source review: configuration_freshness marks current rich input with no lock record Stale, while locked_packages source-bound admission was visibly in the Fresh branch. Existing rich8 with a deleted configuration entry could therefore re-solve/reconstruct instead of refusing lost retained state. Sent exact cold CLI mutation oracle to primary; this is a predicted bypass, not an observed runtime RED. Required distinction: admitted reconfiguration versus missing historical state, preserving legitimate first install/legacy7 and exact pinned missing-slot repair. A separate read-only next-step review now considers candidate-conditioned transitive consumers without delaying current fixed-consumer acceptance.
+
+
+### 2026-11-05 — actual missing-record RED confirms stale-path bypass
+
+Root read missing-record-red.log and test body:0passed/1failed/3filtered. After a real successful rich8 install, the test removes only the configuration map entry while retaining schema8 and installed source. Actual second install exits0, reports unchanged closure and rewrites the missing retained record instead of refusing. This confirms the earlier source-predicted bypass; it is a product bug, not the JSON fixture issue. Primary correcting existing-world admission before stale/solve routing. Required GREEN preserves corrupt lock bytes, static boot and hook counts on refusal, with exact pinned missing-slot repair kept distinct.
+
+
+### 2026-11-05 — transitive-consumer cache boundary documented
+
+Root read bounded next-stage memo, checked 7 source fingerprints; current drift: []. Promoted research/common-package-transitive-next.md as source assessment, not approved production encoding. Existing resolvo caches dependencies by immutable SolvableId; changing a target consumer map under the same ID cannot retract rejected parent input. Distinct immutable state identity is an integration seam, but finite discovery and absence/support equivalence remain unproven; full subset enumeration is not accepted as scalable design. Required later small same-resolvo counterexamples cover parent backtracking, owner-local weak forwarding, phantom consumer prevention and single physical instance. Current explicit fixed-consumer runtime acceptance remains separate.
+
+
+### 2026-11-05 — missing-record RED→GREEN and intent-only persistence
+
+Root inspected cli-optional-reader-first.log:4passed/0failed. Existing OFF/ON+cold controls stay green; exact→additive original input change with the same graph survives replan and another process; deleting retained rich8 record now refuses and preserves corrupted lock bytes, generated boot and hook counts. Source-bound existing-world admission runs before stale/solve selection and can use pinned store when a slot is missing. Exact-store/missing-slot, remap and broader compatibility/static gates remain unaccepted. Prior missing-record product RED retained separately, not relabeled fixture failure.
+
+
+### 2026-11-05 — candidate changelog prepared with explicit limits
+
+Root wrote formats/breaks/008.md for reviewed optional source grammar, original-versus-resolved lock8, faithful7/knownlegacy exceptions and candidate Rust consumer changes. Marked candidate/unreleased, with four observed CLI cases separate from pending maintenance/static/wider capability gates. No new install-g grammar or all-source/all-kind completion claimed. FMT-021 heading now says candidate/not accepted; earlier design chronology retained.
+
+
+### 2026-11-05 — maintenance panel7/8; combined missing-slot refusal diagnostic pending
+
+Root inspected cli-maintenance-first.log and maintenance.rs:7passed/1failed. Newly passing actual cases cover missing-slot repair preserving original input, altered-store pin refusal, and cold boot regeneration with registry unavailable. Combined missing-record+missing-slot install did return failure, but its test checked stdout alone for the expected diagnostic and failed at line123; actual cause requires both-stream capture. Reinstall/no-mutation assertions after that line were not reached. Remap target did not run because Cargo stopped on this failing target. No blanket8/8 or remap acceptance claimed.
+
+
+### 2026-11-05 — combined missing-slot/record refusal confirmed
+
+Root inspected missing-store-record-diagnostic.log:focused1PASS/7filtered. Captured stdout is empty; stderr is the existing JSON refusal carrying InvalidLockfile/no lock record. The earlier line123 failure was our stdout-only oracle, not incorrect product refusal. Corrected combined diagnostic check now reaches and passes reinstall refusal plus slot/lock/boot/hook preservation. No product error-channel change. Eight distinct optional/maintenance cases have positive evidence across the7+1 runs; do not sum repeated earlier controls or infer remap results.
+
+
+### 2026-11-05 — acceptance backscan of the bounded design
+
+Root compared passing one-consumer CLI8 evidence with the reviewed first-boundary design. Outstanding concrete gates include two actual workspace consumers (compatible merge and exact conflict/no writes), a newer candidate rejected because of a selected optional effect (the existing resolver fallback uses mandatory dependencies/questions), actual fetch-metadata drift, and original-constraint lock mutations. Sent the finite required list to primary before static/freeze; these were design promises, not added broader forwarding/default capability. Requested remaining-gate list to avoid indefinite test expansion or counting repeated happy paths as coverage.
+
+
+### 2026-11-05 — preliminary traceability map and root revision correction
+
+Existing xtask binary generation exited0 but reported one gated orphan (PackageConfigurationInputs), so this is NOT a clean acceptance gate. Snapshot:9086units/5164items/4321edges,0unresolvedhost,43knownwarnings. Primary assigned accurate alias linkage, no suppression. Root's new normative LF-CONFIGURED-STATE changed the containing lockfile section under old r1; root corrected its own missing revision bump to r2 instead of calling semantic work editorial. Source remains moving, and final fresh map/check must be rerun at freeze.
+
+
+### 2026-11-05 — lock17 panel catches obsolete latest-versus-legacy expectation
+
+Root read core-lock-first.log and three new test bodies:16passed/1failed/674filtered. New rich roundtrip, original version/kind/exact-pin and malformed association/old-rich refusal cases pass. Existing empty_lockfile_has_v7_defaults compares actual7 to CURRENT_SCHEMA_VERSION now8, contradicting deliberate legacy-only7 writer policy. Primary instructed to correct that obsolete test expectation explicitly, not change production empty writes to8. Sequential runner stopped before resolver/workspace/drift/visibility/remap gates; no downstream PASS inferred.
+
+
+### 2026-11-05 — workspace test handback and remaining mutation/consumer boundaries
+
+Root read both workspace child tests and verified frozen source hash d022f2374e042ec2421e84c95f532c10b2b5d3dc28a4715498626672ca0f1bbf. Real members share one driver; compatible union/cold persistence and exact conflict/semantic file snapshot are unrun until primary registers them. Primary found uninstall removes package rows without rich record handling; root rejected blanket whole-world refusal. Agreed bounded pre-effect refusal for selected configured package or affected configured closure, preserving unrelated legacy removal and source metadata cleanup; actual controls pending. Root additionally flagged an unproven fixed-consumer boundary: a bare transitive package edge into a separately workspace-configured target may be omitted from the original consumer map. Primary to prove neutral semantics or enforce explicit unsupported selected-edge boundary before effects; no full transitive engine added to this slice.
+
+Follow-up on bare transitive consumers: primary pointed to the already-present selected graph edge guard. Root re-read ConfiguredProvider::validate_selected and confirmed it refuses any selected package edge into a target with fixed common input, including bare P→Q. The earlier concern is therefore not an observed missing guard; the remaining task is its concrete CLI no-effects discriminator.
+
+
+### 2026-11-05 — failed source observations belong to the same snapshot
+
+Primary found successful manifests/version lists were memoized but acquisition errors were not. Capability prescan may skip an error and later read changed candidate bytes during get_dependencies, violating the agreed immutable operation observation. Root approved caching failures in the same operation-local snapshot, separate from derived masked/evaluation state, with a focused changing-provider RED→GREEN. No persistent catalog or change to unrelated legacy source retry policy. This is finite current-contract completion before freeze, not wider configuration support.
+
+
+### 2026-11-05 — lock17 green; recommendation fixture grammar corrected next
+
+Root inspected core-lock-second.log:17passed/0failed after explicit legacy7 expectation correction. Resolver-candidates-second:6passed/1failed; the new activated-optional-unsatisfiable newer candidate test passes with selected-only graph/effects. Recommendation isolation case fails while building its manifest: recommends.packages expects a sequence, but the fixture used requires-style map syntax. This is a test authoring error, not a recommendation runtime failure; primary correcting fixture only, preserving existing grammar. Remaining runner stages are not proven by this partial result.
+
+
+### 2026-11-05 — snapshot acquisition RED and exact source inventory
+
+Root read snapshot-error-red.log:0passed/1failed; failing first metadata observation was replaced by later valid content and produced Ok graph. Primary's operation-local source-error/version-result memoization is now in source; repeat pending. Root supplied Git-derived inventory of75 modified/new Rust files across8crates for scoped formatting/static checks, excluding docs/map/formats and original doc.web. Inventory hashes are explicitly in-flight, not frozen acceptance. No broad rewrite or new persistent source catalog authorized.
+
+
+### 2026-11-05 — resolver8 and actual workspace finalization pass
+
+Root inspected resolver-candidates-third.log:8passed/0failed/104filtered, including source-error-cache RED→GREEN, corrected recommendation fixture and optional-effect backtracking. Workspace-finalization log:1passed/542filtered; actual loader retains configuration/optional metadata through version.var resolution, unlike prior parser-only evidence. Next configured_planning drift target failed to compile (E0603, private layout_paths helper), so drift behavior did not run. Primary instructed to use existing public fixture path API without widening production visibility. Remaining gates await that test-only API correction.
+
+
+### 2026-11-05 — source drift/visibility green; remap2/5 exposes two integration seams
+
+Root inspected configured-source-drift-second1PASS and incumbent visibility8PASS. Remap-first2PASS/3FAIL: expected layer hyphen differs from actual established JSON underscore (fixture); absent-lock priority winner is wrong relative to intended priority100 control (diagnosis pending); known old6 install fails earlier strict lifecycle effective-world reader before regeneration. Root traced offers low→high ordering versus Locator row-local index tie-break as a possible lost source-order cause, not yet a runtime-cause verdict. Assigned read-only remap/lifecycle diagnosis to the former worker while primary runs package/workspace tests. No test weakening or broad non-install legacy bypass authorized.
+
+
+### 2026-11-05 — consolidated public configuration panel12/12
+
+Root inspected cli-workspace-boundaries-first.log:12passed/0failed in one actual CLI target. Includes OFF/ON/cold, original-only change, missing/corrupt store/record maintenance, no-registry boot replay, actual two-member additive merge/cold retained inputs, incompatible exact/no semantic changes, bare transitive-consumer refusal, and affected-uninstall refusal versus unrelated legacy removal success. This supersedes the fragmented8-case checkpoint for this candidate scope; not12additional cases. Remap2/5 outstanding (wire fixture spelling, priority diagnosis, early lifecycle old6 admission); required static/spec/final source gates still pending.
+
+
+### 2026-11-05 — remap priority cause and old6 timing refined
+
+Read-only diagnosis confirms valid authored priorities0/100, low→high offer ordering, separate LoadedSources with local index0, and Locator tie-break using only local index. Root approved minimal private source-ordinal plus local-index ranking, retaining source-local provenance and existing same-source index behavior; core locator/mod/new tests released to history worker, no Cargo until handback. Corrected earlier old6 timing interpretation: source trace puts failing Default world read AFTER EmptyWorld native regeneration in the durable callback, not a prelude. Preferred fix actually publishes a supported empty legacy7 lock for recognized old regeneration through the existing FileGuard publication owner; true no-lock empty projects stay no-lock, global strict readers are not relaxed. Primary owns that separate orchestration change.
+
+
+### 2026-11-05 — priority source handback verified
+
+Root read priority patch/report/three pure tests and verified all three file hashes against main. Constructor privately records source ordinals; rank preserves specificity/scope/layer, then source ordinal/local index. Provenance and flattened RowRef position stay unchanged, including manually reversed same-source index behavior. Worker returned source ownership to primary; runtime/core/CLI regressions still pending. Root approved shared Lockfile::parse_str/read admission for classifying the exact FileGuard-captured legacy bytes before atomic supported-empty7 publication, avoiding a second decoder or rereading different bytes.
+
+
+### 2026-11-05 — remap and legacy publication gates green
+
+Root read core-lock-parse17PASS, full core-remap-priority35PASS (includes3new), legacy-publication2PASS (test bodies inspected), remap-second6PASS. Actual old6 CLI now produces readable supported7 and ordinary no-lock install stays no-lock. Captured current/future/rich/malformed/absent data is not overwritten by the legacy helper. Root regenerated exact inventory80Rustfiles (previous75 plus5verified additions). Primary moves to incumbent compatibility and scopedstatic checks. Completion backscan retains one original-design scenario: sameproject ON→OFF with independent actual root retaining the dependency; initial OFF/ON in separateprojects and intent-only samegraph do not prove that transition. Plan75 reflects green remap boundary, no final/historical task acceptance yet.
+
+
+### 2026-11-05 — F15 legacy fixture must not silently become rich8
+
+Root inspected legacy-install failure selected_legacy_target_can_replace_an_old_common_definition and seed() body: the historical F15 no-record in-place fixture used CURRENT_SCHEMA_VERSION, now8. It therefore claimed a rich retained world and correctly hit missing-record admission. Primary instructed to pin that legacy fixture to7 instead of weakening8 protection; prospective legacy-target repair behavior must still pass. The included-by-path metadata_guard target also warns about newly unused publication helper; any lint handling must remain specific to its test inclusion context, not suppress production warnings.
+
+
+### 2026-11-05 — configured incremental in-place bypass found at final review
+
+Root traced PlanningSource::check_fetch versus delegated prepare_in_place and fetch::try_in_place_incremental. A legacy in-place node in a separately configured graph bypassed both captured-manifest equality and the declared first-slice local-copy restriction; ordinary package_manifest admission does not detect changed legacy requires. Primary confirmed source hole. Root approved pre-delegation configured-mode refusal (legacy None unchanged), with an actual mixed real-Git discriminator; common-in-place alone is not sufficient because it already refused. Narrow RegistryError::Configuration carrying existing core error approved for truthful typed refusal instead of falsely blaming absent backend or malformed metadata; terminal/fallback classification and added registry static scope required. Runtime reproduction/green still pending.
+
+
+### 2026-11-05 — mixed real-Git configured mode reproduces bypass
+
+Root inspected mixed-in-place-red.log summary and full fixture source:0passed/1failed/4filtered, planner returned Ready for a real legacy Git in-place slot reached from a separately configured local-copy driver. Actual metadata providers and real prepared Git source were used, not fake PreparedInPlace. This confirms the earlier wrapper bypass. New discriminator requires typed Configuration Unsupported before prepare delegation, zero raw placement calls, original HEAD/config/worktree and no hook. GREEN pending; genuine legacy7 controls must remain intact.
+
+
+### 2026-11-05 — unsupported custom source retains refusal under new typed route
+
+Root inspected legacy-install-second prepared_planning sibling test: actual refusal is now configured source/solver Unsupported wrapped with consumer context, while the assertion expected pre-runtime ConfigurationInputUnsupported. Required properties remain exact typed cause, actual member/target, no legacy solver calls, no Fresh/project writes and no synthetic parameter canary in diagnostics. Primary instructed to update that intentional capability-boundary expectation without restoring blanket rich-input rejection or weakening to generic is_err. Also requested the original design's missing-registry bare install check in the existing cold case; reinstall alone is not proof of install's no-source-query path.
+
+
+### 2026-11-05 — mixed in-place RED→GREEN with legacy controls
+
+Root read the full target outcomes in legacy-install-second.log, not only its failing tail: incremental_in_place5PASS includes actual mixed configured-copy/legacy-Git pre-prepare refusal, unchanged legacy deferral/refusal and selected-legacy replacement of old common source under genuine7. metadata_guard5PASS includes relocated legacy-publication assertion and incumbent ownership/race checks. Both configured prepare and raw materialise wrappers now return truthful typed Configuration Unsupported before delegation. The later prepared_planning8/9 failure remains only the specific old outer-error expectation already assigned for correction; entire runner is not green yet.
+
+
+### 2026-11-05 UTC — selected effect kind remains an assertion
+
+Primary spotted selected effect target kind ignored when the actual requires declaration leaves kind unspecified. Root read existing validate_scope (asserted kind, disagreement check when both spelled) and confirmed prefix is an assertion, not an inert alias. Approved deriving selected effect assertions from retained definitions and checking actual locked target kind in the same prospective/read association owner, with a bounded mutation/control test. No new field or solver; inactive effect adds no lookup/activation. Runtime result pending. Mixed in-place5 and metadata guard5 were already green in the legacy panel; unsupported custom-source test is being updated to its exact new typed refusal, retaining no-write/no-canary guarantees.
+
+
+### 2026-11-06 — actual apply-time sibling input drift regression
+
+Root read legacy-install-third.log and review_cases fixture:root_constraints25PASS/1FAIL; adding sibling common input after planning returned successful ApplyReport and materialized/regenerated the project. Positive admission had replaced the old blanket refusal without comparing rediscovered inputs to the prepared snapshot. This is a real product regression. Primary added exact original per-target/node comparison at prepublication metadata admission, including newly added bare consumers for configured targets, with value-free ConfigurationInputChanged diagnostics. Compatible purelegacy version changes remain under existing constraint checks; no re-evaluation at apply. Source reviewed, repeat runtime pending.
+
+
+### 2026-11-06 — apply drift26 green; no-registry install obstruction reproduced
+
+Root read effect-kind-green3PASS and apply-input-drift-second26PASS. First apply-input-drift-green filename was misleading:25/26, refusing but naming the authorized selected-root delta rather than changed sibling. Primary overlaid the planned selected declaration delta for comparison; second26 confirms exact changed consumer plus byte-preservation and legacy constraint controls. Cold-no-registry0/1 proves bare install eagerly opens missing LocalRegistry during MultiRegistryResolver construction before Fresh; earlier no-registry reinstall did not prove this path. Root approved shared source-free Fresh eligibility reused by planner/orchestrator with the same one held-world/admission/publication/resume branch, not a fake source, weakened registry constructor, duplicated solver or catalog. Actual new cold repeat pending.
+
+
+### 2026-11-06 — cold install without registry GREEN
+
+Root read cold-no-registry-second1PASS and actual test order: rename registry, bare install succeeds with unchanged lock/hooks, THEN delete static boot, reinstall reconstructs it with unchanged lock/hooks. Source-free Fresh helper is shared with planner; same held-world/publication/resume/callback branch remains, LocalRegistry stays strict. Legacy-orchestrator31/32 refuses common provider before source-delta publication but old fixture expects install::ConfigurationUnsupported and uses CURRENT for historical no-record state. Primary to pin intendedlegacy7 and assert actual exact typed refusal/no-write/stage0 control; no guard weakening.
+
+
+### 2026-11-06 — runtime candidate summarized; static gates underway
+
+Root verified compat-sixth receipts and named log outcomes: CLI optional13, old admission7, Git4/update2/reinstall5/git-delta1/uninstall17, source cells31, freshness24 all exit0; orchestrator32 separately verified. Wrote F16 runtime-candidate record with concrete user effects, reuse choices, real REDs versus fixture mistakes, evidence limits and explicit broader obligations. Updated008 candidate wording/API notes; no acceptance promotion yet. Exact current Git inventory91 Rust paths supplied to primary. Worker reports all9conform scopes0new and two mechanical strictclippy corrections; affected repeats/publicdoctests are pending root verification.
+
+
+### 2026-11-06 — F16 root acceptance review complete
+
+Verified91worker source hashes,76rawlog hashes and15receipt hashes; only two inert post-runtime static changes were confirmed. Root added3precise optional-declaration links in2files, proved bodies unchanged, and passed affectedfmt/clippy/conform. Exact OPTIONAL-DECLARATIONS and LF-CONFIGURED-STATE facts promoted; wider facts remain incomplete. Final map/check9086units5193items4353edges,0gatedorphans0unresolvedhost43knownwarnings. Root caught its own omitted generated metadata after recoverable=false: normal codegen changed only FormatId::Lockfile true→false;183other inspected generatedfiles and146inputs unchanged. Formatregistry2tests and wire-diff reporting gate passed; no schema/corpus shift. Source and scope accepted for F16; staged codegen and exact local commit remain the closing mechanics. No fullF04/old113 closure or public push claimed.

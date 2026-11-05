@@ -93,6 +93,7 @@ fn unselected_member_and_package_unit_enter_the_carried_build_plan() {
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     }];
     let world = ExtensionWorldEpoch::from_resolution(root.path(), &resolution)
         .expect("member dependency world");

@@ -229,7 +229,9 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
                 // verified against the selected set — the clean
                 // CapabilityUnmet verdict (PROP-017 §3).
                 capabilities::verify(&selected)?;
-                Ok(build_resolved_graph(&root_order, chosen, &obsolete))
+                let graph = build_resolved_graph(&root_order, chosen, &obsolete);
+                self.provider.validate_selected(&graph)?;
+                Ok(graph)
             }
             Err(UnsolvableOrCancelled::Unsolvable(conflict)) => Err(SolveError::Unsatisfiable {
                 explanation: conflict.display_user_friendly(&solver).to_string(),

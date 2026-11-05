@@ -33,13 +33,14 @@ pub(in crate::install) fn read_durable_resolution(
 
     lock.packages
         .iter()
-        .map(|package| durable_row(workspace_root, package))
+        .map(|package| durable_row(workspace_root, package, &lock))
         .collect()
 }
 
 fn durable_row(
     workspace_root: &Path,
     package: &vibe_core::manifest::LockedPackage,
+    lock: &vibe_core::manifest::Lockfile,
 ) -> Result<ResolvedDep, WorkspaceError> {
     let slot = match package.materialization {
         vibe_core::manifest::Materialization::InPlace => {
@@ -164,6 +165,12 @@ fn durable_row(
         })
         .collect::<Result<Vec<_>, WorkspaceError>>()?;
 
+    let configuration = lock
+        .configuration_for(package, &manifest)
+        .map_err(|source| WorkspaceError::Manifest {
+            path: slot.join(Manifest::FILENAME),
+            source: Box::new(source),
+        })?;
     Ok(ResolvedDep {
         kind: package.kind,
         group: package.group.clone(),
@@ -178,5 +185,6 @@ fn durable_row(
         via_override: package.via_override.clone(),
         source_mutable: false,
         in_place_changed: None,
+        configuration,
     })
 }

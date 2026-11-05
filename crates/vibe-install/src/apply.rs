@@ -49,6 +49,18 @@ use file_guard::MetadataFiles;
 pub fn publish_admitted_manifest(root: &Path, before: &Manifest, after: &Manifest) -> Result<()> {
     file_guard::publish_admitted_manifest(root, before, after)
 }
+/// Publish a known legacy empty lock through the same owned metadata boundary
+/// used by apply, before a regenerated-world callback rereads it.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LF-CONFIGURED-STATE"
+)]
+pub fn publish_empty_legacy_lock(
+    root: &Path,
+    expected_schema: u32,
+    replacement: &vibe_core::manifest::Lockfile,
+) -> Result<()> {
+    file_guard::publish_empty_legacy_lock(root, expected_schema, replacement)
+}
 use metadata::apply_with_spec_format_and_slot_lifecycle;
 use native::NativeApplyPreparation;
 
@@ -405,7 +417,11 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     //    seam takes the in-memory value for the selected node and discovers
     //    the rest of the tree around it.
     // The selected-manifest projection and siblings were admitted before publication.
-    crate::configuration_admission::workspace_inputs(&workspace, &project_root, &manifest)?;
+    crate::configuration_admission::workspace_inputs_for_install(
+        &workspace,
+        &project_root,
+        &manifest,
+    )?;
     // Check the siblings this discovery actually read before slot effects.
     // Deferred in-place refresh below preserves the solver's version/kind;
     // it only refreshes the source manifest and materialization provenance.

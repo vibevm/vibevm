@@ -117,6 +117,9 @@ pub struct Requires {
     pub excludes: BTreeMap<String, Vec<String>>,
     /// Original consumer input, keyed by the actual normalized requires edge.
     pub configurations: BTreeMap<String, crate::manifest::ConfigurationIntentDecl>,
+    /// Explicit optionality of an actual requires declaration. Omission is
+    /// mandatory; an explicit false is retained rather than normalized away.
+    pub optional: BTreeMap<String, bool>,
 }
 
 impl Requires {
@@ -132,6 +135,7 @@ impl Requires {
             && self.friend_flags.is_empty()
             && self.excludes.is_empty()
             && self.configurations.is_empty()
+            && self.optional.is_empty()
     }
 
     /// Return every root dependency's `(group, name)` identity in a single

@@ -12,10 +12,20 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub enum Error {
+    #[error(transparent)]
+    PackageConfiguration(#[from] vibe_core::manifest::PackageConfigurationError),
+
     #[error(
         "this operation does not yet evaluate configuration input from consumer `{consumer}` for dependency `{dependency}` (violates REQ spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-INTENT; fix surface: connect original consumer input before installation planning)"
     )]
     ConfigurationInputUnsupported {
+        consumer: String,
+        dependency: String,
+    },
+    #[error(
+        "configuration participation/input for dependency `{dependency}` from `{consumer}` changed after planning (violates REQ spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE; fix: replan from the current requires declarations before applying)"
+    )]
+    ConfigurationInputChanged {
         consumer: String,
         dependency: String,
     },

@@ -18,12 +18,12 @@ fn configuration_intent_survives_version_finalization_without_merging_nodes() {
         "vibe.toml",
         "[project]\nname='root'\nversion='0.1.0'\n[workspace]\nmembers=['a','b']\n[workspace.versions]\nshared='^1'\n",
     );
-    for (node, members) in [("a", ""), ("b", ",members=[]")] {
+    for (node, members, optional) in [("a", "", true), ("b", ",members=[]", false)] {
         write(
             root,
             format!("{node}/vibe.toml"),
             &format!(
-                "[project]\nname='{node}'\nversion='0.1.0'\n[requires.packages.'org.example/shared']\nversion.var='shared'\nlink='dynamic'\n[requires.packages.'org.example/shared'.configuration]\npolicy='require-selection'\nselections.mode={{intent='exact'{members}}}\n"
+                "[project]\nname='{node}'\nversion='0.1.0'\n[requires.packages.'org.example/shared']\nversion.var='shared'\nlink='dynamic'\noptional={optional}\n[requires.packages.'org.example/shared'.configuration]\npolicy='require-selection'\nselections.mode={{intent='exact'{members}}}\n"
             ),
         );
     }
@@ -33,6 +33,11 @@ fn configuration_intent_survives_version_finalization_without_merging_nodes() {
     for (name, original) in [("a", &original_a), ("b", &original_b)] {
         let current = &ws.member_by_rel_path(name).unwrap().manifest;
         assert!(current.requires.var_packages.is_empty());
+        assert_eq!(current.requires.optional, original.requires.optional);
+        assert_eq!(
+            current.requires.optional.get("org.example/shared"),
+            Some(&(name == "a"))
+        );
         assert_eq!(
             current.requires.packages[0].to_string(),
             "org.example/shared@^1"

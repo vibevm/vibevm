@@ -1037,10 +1037,12 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# Rust-owned TOML; meta.schema_version is the in-file compatibility discriminator.
+# Rich retained configuration/basis cannot be silently rebuilt from current inputs.
 [format.lockfile]
 epoch = 1
 schema = "none"
-recoverable = true
+recoverable = false
 foreign_parsers = "ours"
 corpus = "none"
 sunset = "none"

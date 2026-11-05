@@ -160,6 +160,7 @@ impl Fixture {
                 via_override: None,
                 source_mutable: false,
                 in_place_changed: None,
+                configuration: None,
             },
             vibe_workspace::install::ResolvedDep {
                 kind: PackageKind::Tool,
@@ -182,6 +183,7 @@ impl Fixture {
                 via_override: None,
                 source_mutable: false,
                 in_place_changed: None,
+                configuration: None,
             },
         ];
         let (world, lowering, sidecar) = must(

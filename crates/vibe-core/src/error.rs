@@ -223,9 +223,14 @@ pub enum Error {
     #[error(
         "unsupported vibe.lock schema version {found} — expected {expected} \
          (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#lockfile-schema; \
-          fix: regenerate with `vibe install`)"
+          fix: use a reader supporting this lock version; preserve accepted configuration inputs)"
     )]
     UnsupportedLockfile { found: u32, expected: u32 },
+
+    #[error(
+        "invalid vibe.lock: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE; fix: restore the consistent pinned lock/source or explicitly reconfigure; do not discard accepted inputs)"
+    )]
+    InvalidLockfile { reason: String },
 
     #[error(
         "failed to read file at {path} \

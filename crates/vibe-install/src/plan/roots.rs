@@ -16,6 +16,7 @@ use crate::fetched::Fetched;
 pub(super) struct ConsumerRequirement {
     consumer: String,
     requirement: PackageRef,
+    configuration: Option<vibe_core::manifest::ConfigurationIntentDecl>,
 }
 
 pub(super) struct RootRequirements {
@@ -76,6 +77,15 @@ impl RootRequirements {
             .map(|requirement| ConsumerRequirement {
                 consumer: format!("{selected}/vibe.toml (explicit request)"),
                 requirement: requirement.clone(),
+                configuration: workspace
+                    .iter_nodes()
+                    .find(|(rel, _)| *rel == selected)
+                    .and_then(|(_, node)| {
+                        node.requires
+                            .configurations
+                            .get(&requirement.qualified_name())
+                    })
+                    .cloned(),
             })
             .collect();
         for (rel, node) in workspace.iter_nodes() {
@@ -86,6 +96,11 @@ impl RootRequirements {
                 declarations.push(ConsumerRequirement {
                     consumer: format!("{rel}/vibe.toml"),
                     requirement: requirement.clone(),
+                    configuration: node
+                        .requires
+                        .configurations
+                        .get(&requirement.qualified_name())
+                        .cloned(),
                 });
             }
             // Source routing remains the provider's owner. A plain version
@@ -93,6 +108,11 @@ impl RootRequirements {
             for git in &node.requires.git_packages {
                 declarations.push(ConsumerRequirement {
                     consumer: format!("{rel}/vibe.toml (git source)"),
+                    configuration: node
+                        .requires
+                        .configurations
+                        .get(&format!("{}/{}", git.group, git.name))
+                        .cloned(),
                     requirement: PackageRef::new(
                         git.kind,
                         Some(git.group.clone()),
@@ -103,6 +123,23 @@ impl RootRequirements {
             }
         }
         Ok(Self { declarations })
+    }
+
+    pub(super) fn configuration_inputs(
+        &self,
+    ) -> vibe_resolver::configuration::PackageConfigurationInputs {
+        let mut inputs = vibe_resolver::configuration::PackageConfigurationInputs::new();
+        for declaration in &self.declarations {
+            let consumer = declaration
+                .consumer
+                .strip_suffix(" (explicit request)")
+                .unwrap_or(&declaration.consumer);
+            inputs
+                .entry(declaration.requirement.qualified_name())
+                .or_default()
+                .insert(consumer.to_owned(), declaration.configuration.clone());
+        }
+        inputs
     }
 
     pub(super) fn authored(&self) -> Vec<PackageRef> {

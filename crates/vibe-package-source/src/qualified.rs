@@ -186,6 +186,15 @@ impl InstallSource for RegistryPackageSource {
         self.resolver.solve(roots)
     }
 
+    fn solve_configured(
+        &self,
+        roots: &[PackageRef],
+        snapshot: &vibe_resolver::configuration::ConfigurationSnapshot,
+        blocked: &BTreeSet<(String, String)>,
+    ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+        self.resolver.solve_configured(roots, snapshot, blocked)
+    }
+
     fn manifest_of(
         &self,
         pkg: &PackageRef,

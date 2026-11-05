@@ -30,13 +30,24 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
         expected.as_deref(),
         progress,
     )?;
-    crate::configuration_admission::package_manifest(&pkgref, &cached.manifest)?;
+    let configuration = source.configuration_for_node(node)?;
+    crate::configuration_admission::admitted_package(
+        pkgref.qualified_name(),
+        &cached.manifest,
+        configuration.as_ref(),
+    )?;
     let req = if node.is_root {
         tailor_feature_request(root_features, &cached.manifest.features)
     } else {
         FeatureRequest::default()
     };
-    let feature_expansion = expand_features(&cached.manifest.features, &req)?;
+    let feature_expansion = match &configuration {
+        Some(record) => vibe_resolver::FeatureExpansion {
+            active_features: record.features.iter().cloned().collect(),
+            ..Default::default()
+        },
+        None => expand_features(&cached.manifest.features, &req)?,
+    };
     let embedded_sources =
         vibe_registry::lock_embedded_sources_with(&cached.manifest.embedded_sources, offline)?;
     Ok(Fetched {
@@ -48,6 +59,7 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
         },
         embedded_sources,
         in_place: None,
+        configuration,
     })
 }
 
@@ -178,6 +190,7 @@ pub(super) fn try_in_place_incremental<S: InstallSource + ?Sized>(
         },
         embedded_sources,
         in_place: Some(prepared),
+        configuration: None,
     }))
 }
 

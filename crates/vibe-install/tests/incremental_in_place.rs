@@ -12,7 +12,7 @@ use std::process::Command;
 use std::sync::Arc;
 
 use tempfile::TempDir;
-use vibe_core::manifest::{CURRENT_SCHEMA_VERSION, Lockfile, Manifest, NamingConvention};
+use vibe_core::manifest::{Lockfile, Manifest, NamingConvention};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
@@ -278,7 +278,7 @@ impl Fixture {
             &self.project,
             "vibe.lock",
             &format!(
-                "[meta]\ngenerated_by='vibe test'\ngenerated_at='2026-11-05T00:00:00Z'\nschema_version={CURRENT_SCHEMA_VERSION}\n[[package]]\nkind='feat'\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nsource_url={}\nsource_ref={}\ncontent_hash={}\nsource_kind='registry'\nresolved_commit={}\nmaterialization='in-place'\n",
+                "[meta]\ngenerated_by='vibe test'\ngenerated_at='2026-11-05T00:00:00Z'\nschema_version=7\n[[package]]\nkind='feat'\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nsource_url={}\nsource_ref={}\ncontent_hash={}\nsource_kind='registry'\nresolved_commit={}\nmaterialization='in-place'\n",
                 quoted(&placed.source_uri),
                 quoted(&placed.source_ref),
                 quoted(&placed.content_hash),
@@ -500,3 +500,6 @@ fn selected_legacy_target_can_replace_an_old_common_definition() {
     f.assert_provenance(f.source.prepared.borrow().last().unwrap());
     f.assert_no_reclone();
 }
+
+#[path = "incremental_in_place/configured.rs"]
+mod configured;

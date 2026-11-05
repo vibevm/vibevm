@@ -125,3 +125,45 @@ fn configuration_input_serialize_error_names_the_actual_edge_and_field_without_v
         "{displayed}"
     );
 }
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#OPTIONAL-DECLARATIONS")]
+fn optional_declarations_roundtrip_every_source_and_explicit_false() {
+    for source in [
+        "version='^1'",
+        "path='../dep',version='^1'",
+        "git='https://example.com/dep',rev='abc'",
+        "version.var='family'",
+    ] {
+        for optional in [true, false] {
+            let text = format!(
+                "[packages]\n'flow:org.example/dep'={{{source},optional={optional},link='dynamic',configuration={{policy='require-selection',default_features=false}}}}"
+            );
+            let parsed: Requires = toml::from_str(&text).unwrap();
+            assert_eq!(parsed.optional.get("org.example/dep"), Some(&optional));
+            let encoded = toml::to_string(&parsed).unwrap();
+            assert!(
+                encoded.contains(&format!("optional = {optional}")),
+                "{encoded}"
+            );
+            assert_eq!(toml::from_str::<Requires>(&encoded).unwrap(), parsed);
+        }
+    }
+    let legacy: Requires = toml::from_str("[packages]\n'org.example/dep'='^1'").unwrap();
+    assert!(legacy.optional.is_empty());
+    assert!(!toml::to_string(&legacy).unwrap().contains("optional"));
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#OPTIONAL-DECLARATIONS")]
+fn optional_declaration_metadata_refuses_wrong_type_and_dangling_key() {
+    for value in ["'true'", "1", "[]", "{}"] {
+        let text = format!("[packages]\n'org.example/dep'={{version='*',optional={value}}}");
+        assert!(toml::from_str::<Requires>(&text).is_err(), "{text}");
+    }
+    let mut value = Requires::default();
+    value.optional.insert("org.example/missing".into(), false);
+    assert!(!value.is_empty());
+    let error = toml::to_string(&value).unwrap_err().to_string();
+    assert!(error.contains("org.example/missing") && error.contains("no declared requires edge"));
+}

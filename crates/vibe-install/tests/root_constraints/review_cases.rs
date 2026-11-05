@@ -151,10 +151,13 @@ fn changed_sibling_common_input_refuses_apply_before_selected_publication() {
         },
     )
     .unwrap_err();
-    assert!(matches!(
-        error,
-        vibe_install::Error::ConfigurationInputUnsupported { .. }
-    ));
+    assert!(
+        matches!(
+            &error,
+            vibe_install::Error::ConfigurationInputChanged { consumer, dependency } if consumer=="member/vibe.toml" && dependency=="org.constraints/x"
+        ),
+        "{error}"
+    );
     assert_eq!(
         files(&f.root),
         before,

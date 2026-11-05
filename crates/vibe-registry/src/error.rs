@@ -38,6 +38,9 @@ use crate::git_backend::GitError;
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
 )]
 pub enum RegistryError {
+    #[error(transparent)]
+    Configuration(#[from] vibe_core::manifest::PackageConfigurationError),
+
     #[error(
         "registry root `{0}` does not exist or is not a directory \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model; \

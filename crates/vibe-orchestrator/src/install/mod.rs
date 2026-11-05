@@ -252,10 +252,18 @@ pub fn execute_prepared(
     // exit codes belong to the surface; what the core knows is that a surface
     // may record a declaration here and that a failure is the surface's own
     // error, unchanged.
-    vibe_install::configuration_admission::workspace_inputs(&workspace, &project_root, &manifest)?;
+    vibe_install::configuration_admission::workspace_inputs_for_install(
+        &workspace,
+        &project_root,
+        &manifest,
+    )?;
     let authored_before = manifest.clone();
     manifest_mutation.apply(&mut manifest, &mut workspace, &project_root)?;
-    vibe_install::configuration_admission::workspace_inputs(&workspace, &project_root, &manifest)?;
+    vibe_install::configuration_admission::workspace_inputs_for_install(
+        &workspace,
+        &project_root,
+        &manifest,
+    )?;
 
     // ---- the registry epoch: SEED, then LOAD, exactly once ---------------
     //
@@ -272,19 +280,25 @@ pub fn execute_prepared(
     // expensive half (it inspects registry state and credentials).
     let environment = environment.prepare()?;
     let lockfile_path = workspace.root.join(Lockfile::FILENAME);
-    // An unsupported-schema lock reads as EMPTY on the install path: install
-    // is the regeneration verb the schema policy names, so it must never
-    // refuse to run because the artifact it is about to rewrite is outdated.
-    let lockfile_snapshot = if lockfile_path.exists() {
+    // Only recognized legacy schemas1–6 may regenerate. Rich/current/future
+    // lock state must never be replaced with an empty world on read failure.
+    let (lockfile_snapshot, legacy_schema) = if lockfile_path.exists() {
         match Lockfile::read(&lockfile_path) {
-            Ok(lock) => lock,
-            Err(vibe_core::Error::UnsupportedLockfile { .. }) => {
-                Lockfile::empty(generated_by(), vibe_core::timestamp::now_utc())
-            }
+            Ok(lock) => (lock, None),
+            Err(vibe_core::Error::UnsupportedLockfile {
+                found: found @ 1..=6,
+                ..
+            }) => (
+                Lockfile::empty(generated_by(), vibe_core::timestamp::now_utc()),
+                Some(found),
+            ),
             Err(other) => return Err(other.into()),
         }
     } else {
-        Lockfile::empty(generated_by(), vibe_core::timestamp::now_utc())
+        (
+            Lockfile::empty(generated_by(), vibe_core::timestamp::now_utc()),
+            None,
+        )
     };
     // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, 2026-08-24): a bare install
     // over a workspace whose `[requires]` union is empty is a fresh
@@ -296,10 +310,15 @@ pub fn execute_prepared(
             node.requires.packages.is_empty() && node.requires.git_packages.is_empty()
         })
         && lockfile_snapshot.meta.root_dependencies.is_empty()
+        && (lockfile_snapshot.meta.schema_version < vibe_core::manifest::CURRENT_SCHEMA_VERSION
+            || lockfile_snapshot.packages.is_empty())
     {
         observer.narrate(InstallNarration::EmptyWorld);
         if manifest != authored_before {
             vibe_install::publish_admitted_manifest(&project_root, &authored_before, &manifest)?;
+        }
+        if let Some(schema) = legacy_schema {
+            vibe_install::publish_empty_legacy_lock(&workspace.root, schema, &lockfile_snapshot)?;
         }
         let boot_task = progress.task("Generating boot artifacts for the empty world");
         let (nodes, native) = regenerate_native_world(
@@ -326,33 +345,8 @@ pub fn execute_prepared(
     // snapshot, taken beside the lock snapshot so one read point feeds
     // the whole diff. Sampled again after a successful apply below.
     let lanes_before = observer.lane_sizes(&workspace.root);
-    // The source is built from the ONE environment snapshot, and only here: a
-    // chain that never reaches this point never pays for the composition.
-    let resolver = sources.build(PackageSourceBuild {
-        progress: &progress,
-        manifest: &manifest,
-        embedded_root: environment.embedded_root.as_deref(),
-        project_root: &project_root,
-        global: &environment.global,
-        offline,
-        locked: &lockfile_snapshot.packages,
-    })?;
-
-    // Parse the CLI pkgrefs and qualify short names at the input
-    // boundary (PROP-008 §2.6) — manifests only ever store the
-    // qualified form, and the orchestrator requires it.
-    let cli_roots: Vec<PackageRef> = args
-        .packages
-        .iter()
-        .map(|raw| PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`")))
-        .collect::<Result<_>>()?;
-    let cli_roots: Vec<PackageRef> = cli_roots
-        .iter()
-        .map(|r| resolver.qualify(r, &lockfile_snapshot))
-        .collect::<Result<_>>()?;
-
     let request = InstallRequest {
-        roots: cli_roots,
+        roots: Vec::new(),
         features: FeatureRequest {
             explicit: args.features.clone(),
             no_defaults: args.no_default_features,
@@ -364,19 +358,64 @@ pub fn execute_prepared(
         offline,
     };
 
-    // The PREPARED planner, over the two values this command already owns.
-    // The compatibility wrapper would re-read the selected `vibe.toml` — the
-    // value a `--git` delta just changed in memory — and re-discover a tree
-    // different from the one whose source delta is being admitted.
-    let plan = vibe_install::plan_prepared_without_publication(
-        resolver.as_ref(),
-        &project_root,
-        &mut manifest,
-        &mut workspace,
-        request,
-        spec_format,
-        observer.plan_events(),
-    )?;
+    // Source-free Fresh admission precedes expensive/possibly unavailable
+    // registry construction. Both results enter the SAME Fresh/Ready owner below.
+    let source_free_fresh = args.packages.is_empty()
+        && vibe_install::freshness_prepared(
+            &project_root,
+            &manifest,
+            &workspace,
+            &request,
+            &lockfile_snapshot,
+            spec_format,
+        )?
+        .is_fresh();
+    let (plan, resolver) = if source_free_fresh {
+        (Plan::Fresh, None)
+    } else {
+        // The source is built from the ONE environment snapshot, and only here: a
+        // chain that never reaches this point never pays for the composition.
+        let resolver = sources.build(PackageSourceBuild {
+            progress: &progress,
+            manifest: &manifest,
+            embedded_root: environment.embedded_root.as_deref(),
+            project_root: &project_root,
+            global: &environment.global,
+            offline,
+            locked: &lockfile_snapshot.packages,
+        })?;
+
+        // Parse the CLI pkgrefs and qualify short names at the input
+        // boundary (PROP-008 §2.6) — manifests only ever store the
+        // qualified form, and the orchestrator requires it.
+        let cli_roots: Vec<PackageRef> = args
+            .packages
+            .iter()
+            .map(|raw| PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`")))
+            .collect::<Result<_>>()?;
+        let cli_roots: Vec<PackageRef> = cli_roots
+            .iter()
+            .map(|r| resolver.qualify(r, &lockfile_snapshot))
+            .collect::<Result<_>>()?;
+
+        // The PREPARED planner, over the two values this command already owns.
+        // The compatibility wrapper would re-read the selected `vibe.toml` — the
+        // value a `--git` delta just changed in memory — and re-discover a tree
+        // different from the one whose source delta is being admitted.
+        let plan = vibe_install::plan_prepared_without_publication(
+            resolver.as_ref(),
+            &project_root,
+            &mut manifest,
+            &mut workspace,
+            InstallRequest {
+                roots: cli_roots,
+                ..request
+            },
+            spec_format,
+            observer.plan_events(),
+        )?;
+        (plan, Some(resolver))
+    };
     match plan {
         Plan::Fresh => {
             // PROP-011 §2.2 — application is just a whole-tree boot
@@ -459,6 +498,9 @@ pub fn execute_prepared(
         // function stays the shape of the DECISION (empty / fresh / ready)
         // rather than of the largest branch.
         Plan::Ready(planned) => {
+            let resolver = resolver
+                .as_ref()
+                .context("a Ready install has no prepared source")?;
             if manifest != authored_before {
                 vibe_install::publish_admitted_manifest(
                     &project_root,

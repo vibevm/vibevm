@@ -352,6 +352,38 @@ pub(crate) fn solve_masked_cell(
     }
 }
 
+/// Configured resolution uses the selected existing solver and source resource;
+/// unsupported cells refuse rather than silently becoming the default solver.
+pub(crate) fn solve_configured_cell(
+    flags: &SelectionFlags,
+    resource: ProviderResource<'_>,
+    roots: &[vibe_core::PackageRef],
+    snapshot: &vibe_resolver::configuration::ConfigurationSnapshot,
+    blocked: &std::collections::BTreeSet<(String, String)>,
+) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+    if flags.solver.value == "resolvo" {
+        match resource {
+            ProviderResource::Local(registry) => {
+                return snapshot.solve(LocalRegistryDepProvider::new(registry), roots, blocked);
+            }
+            ProviderResource::Multi(registry) => {
+                return snapshot.solve(MultiRegistryDepProvider::new(registry), roots, blocked);
+            }
+            ProviderResource::Embedded { .. } => {}
+        }
+    }
+    Err(vibe_resolver::DepProviderError::Configuration(
+        vibe_core::manifest::PackageConfigurationError::Unsupported {
+            package: "workspace dependency graph".into(),
+            reason: format!(
+                "configured source/solver cell {}/{} is not connected",
+                flags.provider.value, flags.solver.value
+            ),
+        },
+    )
+    .into())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

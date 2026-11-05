@@ -340,3 +340,46 @@ fn combine<const N: usize>(primary: Error, guards: [&mut FileGuard; N]) -> Error
         }
     }
 }
+
+/// Replace only a captured known pre-configuration lock with an admitted empty
+/// supported world. A newly readable/rich/future file is never overwritten.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LF-CONFIGURED-STATE"
+)]
+pub(crate) fn publish_empty_legacy_lock(
+    root: &Path,
+    expected_schema: u32,
+    replacement: &vibe_core::manifest::Lockfile,
+) -> Result<()> {
+    let path = root.join(vibe_core::manifest::Lockfile::FILENAME);
+    let mut guard = FileGuard::capture(&path)?;
+    let text = guard
+        .previous_text()?
+        .ok_or_else(|| failure(&path, "legacy lock disappeared before regeneration"))?;
+    if !(1..=6).contains(&expected_schema)
+        || !replacement.packages.is_empty()
+        || !replacement.remaps.is_empty()
+        || !replacement.configurations.is_empty()
+        || !replacement.meta.root_dependencies.is_empty()
+    {
+        return Err(failure(
+            &path,
+            "legacy empty-world publication requires a known old epoch and empty admitted replacement",
+        ));
+    }
+    match vibe_core::manifest::Lockfile::parse_str(text) {
+        Err(vibe_core::Error::UnsupportedLockfile { found, .. }) if found == expected_schema => {}
+        _ => {
+            return Err(failure(
+                &path,
+                "captured lock is no longer the known legacy schema; retain its current state",
+            ));
+        }
+    }
+    let rendered = replacement.render_with_comments(Some(text))?;
+    guard
+        .publish(Some(&rendered))
+        .map_err(|error| combine(error, [&mut guard]))?;
+    guard.disarm();
+    Ok(())
+}

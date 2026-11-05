@@ -113,6 +113,7 @@ impl Fixture {
             via_override: None,
             source_mutable: false,
             in_place_changed: None,
+            configuration: None,
         }];
         Self {
             _dir: dir,

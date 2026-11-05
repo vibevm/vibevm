@@ -81,6 +81,7 @@ fn ready_prepares_after_materialisation_and_preinstall_from_the_supplied_resolut
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     }];
     let workspace = test_ok!(Workspace::load(root.path()), "workspace");
     let target = crate::vibedeps::slot_abs_path(

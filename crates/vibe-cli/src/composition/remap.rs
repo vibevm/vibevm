@@ -27,13 +27,15 @@
 //! layer, the way every optional configuration layer behaves. A malformed
 //! or missing `--remap` / `VIBE_REMAP` file is a hard error: the operator
 //! named it on this invocation, so swallowing a typo would silently fetch
-//! from the public hosts the file existed to replace.
+//! from the public hosts the file existed to replace. Project-lock failures
+//! also refuse before consent; only core-classified legacy epochs1..6 retain
+//! their historical empty project-package layer.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#layers");
 
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, bail};
 use vibe_core::manifest::{Manifest, MirrorSection, OverrideSection, RegistrySection};
 use vibe_core::remap::{
     Layer, LoadedSource, Locator, default_raw_file_rows, env_remap_files, rows_from_file,
@@ -287,10 +289,9 @@ fn registry_tables(
 /// `main` reads the two environment variables and passes them in, so the
 /// one sanctioned ambient-env root keeps every `env::var` of the CLI; the
 /// settings home and the current directory are resolved here because
-/// neither is an environment read. A layer that cannot be read is a
-/// warning on stderr
-/// and an absent layer — the behaviour of every optional configuration
-/// layer; a `--remap` file that cannot be read is fatal, because the
+/// neither is an environment read. An unreadable optional settings layer
+/// produces a warning and contributes no rows. Project-lock authority is
+/// admitted before consent; a `--remap` file that cannot be read is fatal, because the
 /// operator named it on this command line and a run that quietly fetched
 /// from the public hosts instead would be the worst possible answer.
 pub(crate) fn install(ctx: &crate::output::Context, inputs: Inputs<'_>) -> Result<()> {
@@ -345,12 +346,15 @@ pub(crate) struct Inputs<'a> {
 /// rows of an already accepted package still apply (nothing about this run
 /// changes what the user agreed to), and an unanswered one stays
 /// unanswered.
-#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#layers-packages")]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#layers-packages")]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#consent")]
 fn accepted_offers(
     ctx: &crate::output::Context,
     inputs: &Inputs<'_>,
     project_root: Option<&Path>,
 ) -> Result<Vec<(Layer, vibe_core::remap::RemapPackage)>> {
+    // Admit the project layer before opening or mutating the consent owner.
+    let required = project_required(project_root)?;
     let mut home = match crate::commands::remap::RemapHome::open() {
         Ok(home) => home,
         // No resolvable home is no accepted package, which is the
@@ -371,7 +375,6 @@ fn accepted_offers(
     // layers (`PROP-066#layers`), and the lock is what says which ones
     // those are — pinned there so every clone of the project is offered
     // the same list.
-    let required = project_required(project_root);
     Ok(accepted
         .into_iter()
         .map(|package| {
@@ -385,18 +388,46 @@ fn accepted_offers(
         .collect())
 }
 
-/// The remap packages the project's lock pins (`PROP-066#layers-packages`).
-fn project_required(project_root: Option<&Path>) -> Vec<String> {
+/// Read the exact project-required layer before consent can change. Only a
+/// genuinely absent project/lock or a core-classified legacy epoch1..6 contributes
+/// the historical empty layer. Malformed, rich-invalid and future locks refuse.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#layers-packages")]
+fn project_required(project_root: Option<&Path>) -> Result<Vec<String>> {
     let Some(root) = project_root else {
-        return Vec::new();
+        return Ok(Vec::new());
     };
     let lock = root.join(vibe_core::manifest::Lockfile::FILENAME);
-    if !lock.exists() {
-        return Vec::new();
+    let metadata = match std::fs::symlink_metadata(&lock) {
+        Ok(metadata) => metadata,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(Vec::new()),
+        Err(error) => {
+            return Err(error).with_context(|| format!(
+                "violates REQ spec://org.vibevm.core/vibevm/common/PROP-066#layers-packages: cannot inspect project lock `{}`; fix surface: restore access to the project lock before resolving remap layers",
+                lock.display()
+            ));
+        }
+    };
+    if !metadata.file_type().is_file() {
+        bail!(
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-066#layers-packages: project lock `{}` is not a regular file; fix surface: restore the project lock before resolving remap layers",
+            lock.display()
+        );
     }
-    vibe_core::manifest::Lockfile::read(&lock)
-        .map(|lockfile| lockfile.remaps.into_iter().map(|row| row.package).collect())
-        .unwrap_or_default()
+    let lockfile = match vibe_core::manifest::Lockfile::read(&lock) {
+        Ok(lockfile) => lockfile,
+        // Core rejects malformed values and rich state under old epochs before
+        // this typed classification. Preserve only the old regeneration boundary.
+        Err(vibe_core::Error::UnsupportedLockfile { found: 1..=6, .. }) => {
+            return Ok(Vec::new());
+        }
+        Err(error) => {
+            return Err(error).with_context(|| format!(
+                "violates REQ spec://org.vibevm.core/vibevm/common/PROP-066#layers-packages: cannot read project lock `{}`; fix surface: restore a readable supported project lock before resolving remap layers",
+                lock.display()
+            ));
+        }
+    };
+    Ok(lockfile.remaps.into_iter().map(|row| row.package).collect())
 }
 
 /// Whether an unanswered remap offer is a question for this run

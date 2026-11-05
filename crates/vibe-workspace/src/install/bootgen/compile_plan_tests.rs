@@ -227,6 +227,7 @@ fn resolved(root: &Path, name: &str) -> ResolvedDep {
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     }
 }
 

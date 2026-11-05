@@ -229,8 +229,9 @@ content_hash = "sha256:abc"
 #[test]
 fn empty_lockfile_has_v7_defaults() {
     let lf = Lockfile::empty("vibe 0.1.0-dev", "2026-05-21T00:00:00Z");
-    assert_eq!(lf.meta.schema_version, CURRENT_SCHEMA_VERSION);
-    assert_eq!(CURRENT_SCHEMA_VERSION, 7);
+    assert_eq!(lf.meta.schema_version, LEGACY_SCHEMA_VERSION);
+    assert_eq!(LEGACY_SCHEMA_VERSION, 7);
+    assert_eq!(CURRENT_SCHEMA_VERSION, 8);
     assert!(lf.meta.solver.is_none());
     assert!(lf.packages.is_empty());
 
@@ -255,7 +256,7 @@ fn read_accepts_current_version() {
     "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#lockfile",
     r = 1
 )]
-fn read_rejects_non_current_version() {
+fn read_rejects_pre_seven_version() {
     // A pre-v7 lockfile is rejected outright — no legacy reader, no
     // migration. The fix is to regenerate with `vibe install`.
     let dir = tempfile::tempdir().unwrap();
@@ -271,7 +272,7 @@ fn read_rejects_non_current_version() {
             err,
             crate::error::Error::UnsupportedLockfile {
                 found: 6,
-                expected: 7
+                expected: CURRENT_SCHEMA_VERSION
             }
         ),
         "{err}"

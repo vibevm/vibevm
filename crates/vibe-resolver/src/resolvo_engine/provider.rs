@@ -263,6 +263,11 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p, 
         };
         let manifest = match self.provider.fetch_manifest(&group, &name, &version) {
             Ok(m) => m,
+            Err(DepProviderError::Configuration(
+                error @ vibe_core::manifest::PackageConfigurationError::Incompatible { .. },
+            )) => {
+                return Dependencies::Unknown(self.pool.intern_string(error.to_string()));
+            }
             Err(e) => {
                 self.record_error(e);
                 return Dependencies::Unknown(self.pool.intern_string("manifest fetch failed"));

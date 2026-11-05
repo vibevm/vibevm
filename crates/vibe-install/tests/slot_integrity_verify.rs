@@ -696,6 +696,7 @@ fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     };
     let verifier =
         production_slot_verify::RegistrySlotVerifier::from_fetched(&[fetched::Fetched { cached }]);

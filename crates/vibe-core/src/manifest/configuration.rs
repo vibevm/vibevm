@@ -9,6 +9,8 @@ use std::collections::BTreeMap;
 
 mod intent;
 mod lower;
+mod package;
+pub use package::{PackageConfiguration, PackageConfigurationError};
 mod semantic;
 mod validate;
 mod vocabulary;

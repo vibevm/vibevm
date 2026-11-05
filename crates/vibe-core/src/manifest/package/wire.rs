@@ -194,6 +194,8 @@ pub(in crate::manifest::package) struct InlinePackageDepWire {
     exclude: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     configuration: Option<crate::manifest::ConfigurationIntentDecl>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    optional: Option<bool>,
 }
 
 /// The `version` field of an inline `[requires.packages]` entry — either a

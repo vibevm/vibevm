@@ -364,6 +364,7 @@ fn lifecycle_provider_drives_real_pending_fact_join_through_bound_analyzer() {
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     }];
     let lowered = vibe_workspace::extension_world::lower_owner_runtimes(
         &workspace,

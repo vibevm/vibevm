@@ -6,11 +6,10 @@
 //!
 //! # Schema version
 //!
-//! [`CURRENT_SCHEMA_VERSION`] is the one and only supported version.
-//! vibevm is pre-release and breaks lockfile compatibility freely; there is
-//! no migration path and none is needed. [`Lockfile::read`] rejects a
-//! `vibe.lock` whose `schema_version` is anything else — the fix is always
-//! to regenerate it with `vibe install`.
+//! Schema7 retains legacy effective-only meaning. Schema8 additionally retains
+//! original common package inputs and evaluated results. Both read strictly;
+//! reading never migrates. Writers use7 only when all retained data fits; rich
+//! state requires8. Unknown future schemas must not be discarded as empty.
 //!
 //! # Identity vs. source_url
 //!
@@ -37,19 +36,14 @@ use crate::provenance::{SourceUrl, TraceId};
 
 use super::{Materialization, read_toml, write_toml};
 
-/// The current — and only supported — lockfile schema version.
-///
-/// vibevm is pre-release and breaks lockfile compatibility freely. A
-/// `vibe.lock` whose `schema_version` is not exactly this value is rejected
-/// by [`Lockfile::read`]; the next `vibe install` regenerates it.
-///
-/// History (for the record only — earlier versions are not read):
-/// `1` M0/M1.1 · `2` per-package registries · `3` PROP-003 features ·
-/// `4` PROP-007 workspace path-source (`source_kind = "path"`) ·
-/// `5` PROP-008 qualified naming (the per-package `group` field) ·
-/// `6` PROP-050 visibility provenance · `7` immutable embedded-source
-/// provenance for reference-backed packages.
-pub const CURRENT_SCHEMA_VERSION: u32 = 7;
+/// Latest supported lock schema. Schema7 remains readable without inventing
+/// original requests; schema8 carries common package configuration. Ordinary
+/// legacy-only writes retain7. Rich locks cannot be regenerated as empty.
+pub const CURRENT_SCHEMA_VERSION: u32 = 8;
+/// Legacy effective-only lock, still read and written when lossless.
+pub const LEGACY_SCHEMA_VERSION: u32 = 7;
+mod configuration;
+mod io;
 
 fn is_false(b: &bool) -> bool {
     !*b
@@ -67,7 +61,7 @@ fn is_false(b: &bool) -> bool {
 /// // A fresh lockfile carries no packages and the current schema.
 /// let lf = Lockfile::empty("vibe 0.1.0", "2026-01-01T00:00:00Z");
 /// assert!(lf.packages.is_empty());
-/// assert_eq!(lf.meta.schema_version, vibe_core::manifest::CURRENT_SCHEMA_VERSION);
+/// assert_eq!(lf.meta.schema_version, 7);
 /// // Lookups are by the (group, name) identity; nothing is locked yet.
 /// let group = vibe_core::Group::parse("org.vibevm").unwrap();
 /// assert!(lf.find(&group, "wal").is_none());
@@ -83,6 +77,11 @@ pub struct Lockfile {
 
     #[serde(default, rename = "package", skip_serializing_if = "Vec::is_empty")]
     pub packages: Vec<LockedPackage>,
+
+    /// Original incoming package requests and their evaluated result, associated
+    /// with the existing exact package rows. Present only in schema8.
+    #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
+    pub configurations: std::collections::BTreeMap<String, super::PackageConfiguration>,
 
     /// `[[remap]]` — the remap packages the project requires
     /// (`PROP-066#layers-packages`), resolved and pinned here so every
@@ -137,7 +136,7 @@ pub struct LockedRemap {
 ///     schema_version = 7
 ///     solver = "resolvo-0.x"
 /// "#).unwrap();
-/// assert_eq!(m.schema_version, CURRENT_SCHEMA_VERSION);
+/// assert_eq!(m.schema_version, 7);
 /// assert_eq!(m.solver.as_deref(), Some("resolvo-0.x"));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -502,7 +501,7 @@ impl Lockfile {
             meta: LockfileMeta {
                 generated_by: generated_by.into(),
                 generated_at: generated_at.into(),
-                schema_version: CURRENT_SCHEMA_VERSION,
+                schema_version: LEGACY_SCHEMA_VERSION,
                 solver: None,
                 root_dependencies: Vec::new(),
                 language_chain: Vec::new(),
@@ -510,38 +509,9 @@ impl Lockfile {
                 virtual_capabilities: Vec::new(),
             },
             packages: Vec::new(),
+            configurations: Default::default(),
             remaps: Vec::new(),
         }
-    }
-
-    pub fn read(path: impl AsRef<Path>) -> Result<Self> {
-        let lockfile: Lockfile = read_toml(path)?;
-        if lockfile.meta.schema_version != CURRENT_SCHEMA_VERSION {
-            return Err(crate::error::Error::UnsupportedLockfile {
-                found: lockfile.meta.schema_version,
-                expected: CURRENT_SCHEMA_VERSION,
-            });
-        }
-        // `find`/`find_mut`/`remove` below treat `(group, name)` as a
-        // unique key — first match wins. A lockfile carrying duplicate
-        // identities would make those lookups silently
-        // position-dependent; the solver never emits duplicates, so a
-        // duplicate here means a hand-edited or corrupted file.
-        debug_assert!(
-            lockfile
-                .packages
-                .iter()
-                .map(|p| (&p.group, &p.name))
-                .collect::<std::collections::BTreeSet<_>>()
-                .len()
-                == lockfile.packages.len(),
-            "lockfile carries duplicate (group, name) identities"
-        );
-        Ok(lockfile)
-    }
-
-    pub fn write(&self, path: impl AsRef<Path>) -> Result<()> {
-        write_toml(path, self)
     }
 
     /// Find an installed package by its `(group, name)` identity.
@@ -563,6 +533,7 @@ impl Lockfile {
             .packages
             .iter()
             .position(|p| p.group == *group && p.name == name)?;
+        self.configurations.remove(&format!("{group}/{name}"));
         Some(self.packages.remove(idx))
     }
 }

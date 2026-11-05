@@ -62,6 +62,9 @@ pub struct ResolvedDep {
     /// is every copy/hardlink dependency and every fresh clone still awaiting
     /// placement.
     pub in_place_changed: Option<bool>,
+    /// Original package input and evaluated dependency selection, validated
+    /// against this row's actual manifest before effects or durable boot replay.
+    pub configuration: Option<vibe_core::manifest::PackageConfiguration>,
 }
 
 /// The verdict of a `slot_integrity = verify` spot-check on a present

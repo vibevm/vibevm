@@ -39,21 +39,23 @@ pub struct Fetched {
     /// Exact prospective source retained until apply. None means the package
     /// was fetched normally; Some binds deferred checkout to admitted bytes.
     pub in_place: Option<vibe_registry::PreparedInPlace>,
+    pub configuration: Option<vibe_core::manifest::PackageConfiguration>,
 }
 
 /// Load the workspace lockfile, or an empty one stamped with the
 /// caller's identity when none exists yet.
 ///
-/// A lockfile on an unsupported schema version reads as *empty* here, not as
+/// An explicitly recognized pre-configuration schema1–6 reads as *empty* here, not as
 /// an error: `vibe install` is the regeneration path the schema policy names
 /// («the fix is always to regenerate with `vibe install`»), so it must never
 /// refuse to run because the artifact it is about to rewrite is outdated.
-/// Every other reader keeps the strict rejection.
+/// Schema7/8 are read faithfully; malformed or future state is never discarded.
+/// Every other reader keeps strict version admission.
 pub(crate) fn load_or_empty_lockfile(root: &Path, generated_by: &str) -> Result<Lockfile> {
     let path = root.join(Lockfile::FILENAME);
     if path.exists() {
         match Lockfile::read(&path) {
-            Err(vibe_core::Error::UnsupportedLockfile { .. }) => {}
+            Err(vibe_core::Error::UnsupportedLockfile { found: 1..=6, .. }) => {}
             other => return Ok(other?),
         }
     }

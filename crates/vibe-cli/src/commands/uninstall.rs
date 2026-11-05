@@ -70,6 +70,18 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
         group,
         &pkgref.name,
     )?;
+    let selected_key = format!("{group}/{}", pkgref.name);
+    if let Some((owner, _)) = lockfile.configurations.iter().find(|(owner, record)| {
+        **owner == selected_key
+            || plan.removed.iter().any(|row| {
+                let removed = format!("{}/{}", row.group, row.name);
+                removed == **owner || record.active_dependencies.contains(&removed)
+            })
+    }) {
+        return Err(vibe_core::manifest::PackageConfigurationError::Unsupported {
+            package:owner.clone(),reason:"uninstall would change a retained configured instance/consumer or selected dependency; configuration-aware removal is not connected".into(),
+        }.into());
+    }
     let package_removed = plan
         .removed
         .iter()

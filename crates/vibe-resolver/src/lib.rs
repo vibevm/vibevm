@@ -84,6 +84,9 @@ pub use local_registry_provider::LocalRegistryDepProvider;
 pub use multi_registry_provider::MultiRegistryDepProvider;
 pub use naive::NaiveDepSolver;
 pub use resolvo_engine::ResolvoDepSolver;
+pub mod configuration;
+mod visibility_mask;
+pub use visibility_mask::mask_manifest_edges;
 
 pub use error::SolveError;
 pub(crate) use kind_check::assert_kind_matches;
@@ -227,6 +230,14 @@ pub trait DepProvider {
         name: &str,
         version: &semver::Version,
     ) -> Result<Manifest, DepProviderError>;
+
+    /// Validate the selected graph without changing candidate selection. A
+    /// missing configuration answer is returned here, not encoded as permission
+    /// to backtrack to an older question-free definition. Called per hard solve,
+    /// so a declined optional recommendation does not corrupt the retained graph.
+    fn validate_selected(&self, _graph: &ResolvedGraph) -> Result<(), DepProviderError> {
+        Ok(())
+    }
 }
 
 /// A [`DepProvider`] that can also enumerate every available version of a
@@ -348,11 +359,14 @@ pub trait DepSolver {
 ///      fix: check the name, or add the registry that hosts it to [[registry]])",
 /// );
 /// ```
-#[derive(Debug, Error)]
+#[derive(Debug, Clone, Error)]
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
 )]
 pub enum DepProviderError {
+    #[error(transparent)]
+    Configuration(#[from] vibe_core::manifest::PackageConfigurationError),
+
     #[error(
         "package `{group}/{name}` is not available in any configured registry \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \

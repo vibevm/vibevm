@@ -281,8 +281,9 @@ fn finish_ready(tail: ReadyTail<'_>, mut run: InstallRun) -> InstallRun {
     // widening is a reviewed event, not a silent seep. Emitted ahead
     // of the final report so the `--json` stream keeps the report as
     // its last document. A read failure of the just-written lock
-    // skips the diff rather than failing the completed install.
-    if let Ok(new_lock) = Lockfile::read(tail.lockfile_path) {
+    // reports an explicit post-durability notice; it cannot claim rollback.
+    match Lockfile::read(tail.lockfile_path) {
+        Ok(new_lock) => {
         let lanes_after = tail.observer.lane_sizes(tail.lane_root);
         tail.observer.narrate(InstallNarration::ClosureDiff {
             old: tail.lockfile_snapshot,
@@ -290,6 +291,8 @@ fn finish_ready(tail: ReadyTail<'_>, mut run: InstallRun) -> InstallRun {
             lanes_before: tail.lanes_before,
             lanes_after: &lanes_after,
         });
+        }
+        Err(error) => run.notices.push(format!("installation was applied, but the written lock could not be read for closure comparison: {error}; restore/check the lock before another operation")),
     }
     run.packages_resolved = tail.packages_resolved;
     // The APPLY's progress and hooks, on both paths: what this invocation made

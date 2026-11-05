@@ -43,6 +43,7 @@ fn dep_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     };
     (dep, pkg)
 }
@@ -192,6 +193,7 @@ fn dep_with_post_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     };
     (dep, pkg)
 }
@@ -284,6 +286,7 @@ fn apply_resolution_places_an_in_place_package_in_an_unversioned_slot() {
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     };
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
@@ -399,6 +402,7 @@ fn dep_in_place_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDi
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     };
     (dep, pkg)
 }
@@ -551,6 +555,7 @@ fn already_placed_in_place_slot_runs_hook_without_moving() {
         via_override: None,
         source_mutable: false,
         in_place_changed: Some(true),
+        configuration: None,
     };
 
     let out = materialise_resolution(

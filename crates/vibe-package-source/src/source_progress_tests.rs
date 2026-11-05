@@ -393,3 +393,14 @@ fn embedded_precedence_retains_local_short_circuit_and_provenance() {
         }
     }
 }
+
+#[test]
+fn configured_operation_refusal_is_not_a_registry_absence() {
+    let error = RegistryError::Configuration(
+        vibe_core::manifest::PackageConfigurationError::Unsupported {
+            package: "org.test/owner".into(),
+            reason: "operation adapter is not connected".into(),
+        },
+    );
+    assert!(!super::is_registry_absent(&error));
+}

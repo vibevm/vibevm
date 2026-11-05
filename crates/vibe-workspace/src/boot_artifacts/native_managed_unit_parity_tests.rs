@@ -64,6 +64,7 @@ fn unit_fixture() -> (Fixture, DependencyProviderId) {
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     }];
     let world = must(
         ExtensionWorldEpoch::from_resolution(root.path(), &resolution),

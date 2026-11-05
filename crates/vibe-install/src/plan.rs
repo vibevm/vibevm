@@ -198,11 +198,15 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
     let selected = roots::selected_node(workspace, project_root)?;
-    crate::configuration_admission::workspace_inputs(workspace, project_root, manifest)?;
+    crate::configuration_admission::workspace_inputs_for_install(
+        workspace,
+        project_root,
+        manifest,
+    )?;
     request.roots = roots::unique_requests(&request.roots)?;
     let lockfile = load_or_empty_lockfile(&workspace.root, &request.generated_by)?;
+    crate::configuration_admission::retained_before_planning(source, workspace, &lockfile)?;
     let before_migration = manifest.clone();
-    let mut migration_pending = false;
     let mut workspace_before_migration = None;
 
     // PROP-003 §2.7 language chain (caller override > project [i18n]).
@@ -224,10 +228,26 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
         migrate_selected_node(workspace, project_root, &migrated);
         // Seed the semantic world before resolution; physical publication is
         // permitted only at a successful, fully admitted plan boundary.
-        migration_pending = true;
     }
     let result = (|| {
         let requirements = roots::RootRequirements::collect(workspace, &selected, &request.roots)?;
+        let inputs = requirements.configuration_inputs();
+        let configured = inputs
+            .values()
+            .any(|consumers| consumers.values().any(Option::is_some));
+        if configured
+            && (request.features.all
+                || request.features.no_defaults
+                || !request.features.explicit.is_empty())
+        {
+            return Err(configured::mixed_flags());
+        }
+        let planning_source = configured::PlanningSource {
+            source,
+            configuration: configured
+                .then(|| vibe_resolver::configuration::ConfigurationSnapshot::new(inputs)),
+        };
+        let source = &planning_source;
         let roots = requirements.authored();
         let root_count = requirements.package_count();
 
@@ -265,26 +285,17 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
         // version drift inside a constraint. An explicit
         // `vibe install <pkgref>` always runs the full pipeline.
         if request.roots.is_empty() {
-            let ws = &*workspace;
-            match vibe_workspace::freshness::check(ws, &lockfile) {
-                vibe_workspace::freshness::Freshness::Fresh
-                    if slots_match_spec_format(&ws.root, &lockfile, spec_format) =>
-                {
-                    requirements.check_locked_kinds(&lockfile)?;
-                    if migration_pending {
-                        crate::configuration_admission::locked_packages(workspace, &lockfile)?;
-                    }
+            match freshness_prepared(
+                project_root,
+                manifest,
+                workspace,
+                &request,
+                &lockfile,
+                spec_format,
+            )? {
+                vibe_workspace::freshness::Freshness::Fresh => {
                     resolution_task.skip("vibe.lock is fresh");
                     return Ok(Plan::Fresh);
-                }
-                vibe_workspace::freshness::Freshness::Fresh => {
-                    observer.on(PlanEvent::Reresolving {
-                        reason: format!(
-                            "materialised spec representation is not {}",
-                            spec_format.as_str()
-                        ),
-                    });
-                    solve_roots = vibe_workspace::freshness::hold_pins(&roots, &lockfile);
                 }
                 vibe_workspace::freshness::Freshness::Stale(reason) => {
                     observer.on(PlanEvent::Reresolving {
@@ -468,11 +479,12 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
                         &workspace.root,
                     ),
                     in_place_changed: None,
+                    configuration: f.configuration.clone(),
                 }
             })
             .collect();
 
-        Ok(Plan::Ready(Box::new(PlannedInstall {
+        let planned = PlannedInstall {
             project_root: project_root.to_path_buf(),
             request,
             manifest: manifest.clone(),
@@ -484,7 +496,9 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
             // exact tree that produced this plan.
             workspace: workspace.clone(),
             progress,
-        })))
+        };
+        crate::configuration_admission::planned(&planned)?;
+        Ok(Plan::Ready(Box::new(planned)))
     })();
     if result.is_err()
         && let Some(original_workspace) = workspace_before_migration
@@ -503,6 +517,9 @@ use fetch::{expand_conditional_deps, fetch_or_defer};
 
 mod roots;
 mod selection;
-use selection::{
-    migrate_selected_node, refuse_read_only_kinds, slots_match_spec_format, visibility_root_id,
-};
+use selection::{migrate_selected_node, refuse_read_only_kinds, visibility_root_id};
+
+mod configured;
+
+mod fresh;
+pub use fresh::freshness_prepared;

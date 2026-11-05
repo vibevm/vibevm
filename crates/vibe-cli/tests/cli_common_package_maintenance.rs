@@ -230,9 +230,17 @@ impl Fixture {
             String::from_utf8_lossy(&output.stdout),
             String::from_utf8_lossy(&output.stderr)
         );
+        let retained_refusal = match label {
+            "installed-provider" => diagnostic.contains(&format!("package `{PACKAGE}` requires retained configuration but has no lock record"))
+                && diagnostic.contains("PROP-069#PERSISTENCE"),
+            "force-input" => diagnostic.contains(&format!("retained input changed (`{PACKAGE}` original configuration is not recorded in vibe.lock)"))
+                && diagnostic.contains("PROP-069#EFFECT-CONSUMERS"),
+            _ => false,
+        };
         let refused = !output.status.success()
             && (diagnostic.contains("does not yet evaluate common configuration")
-                || diagnostic.contains("does not yet evaluate configuration input"));
+                || diagnostic.contains("does not yet evaluate configuration input")
+                || retained_refusal);
         let hook = self.project.join("maintenance-hook.txt").exists();
         let facts = serde_json::json!({"exit":output.status.code(),"configuration_refused":refused,"hook_ran":hook,"changed_project_semantic_paths":changed,"project":self.project,"settings":self.user.settings,"registry_cache":self.user.cache,"note":"root .vibe cache/trace/lifecycle metadata is recorded separately; no zero-all-IO claim"});
         fs::write(

@@ -118,6 +118,7 @@ fn fixture() -> (tempfile::TempDir, Manifest, Vec<ResolvedDep>) {
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     };
     (project, host, vec![dep])
 }

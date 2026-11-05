@@ -193,5 +193,7 @@ fn drop_requires(manifest: &mut Manifest, group: &Group, name: &str) -> bool {
     r.accesses.remove(&id);
     r.friend_flags.remove(&id);
     r.excludes.remove(&id);
+    r.optional.remove(&id);
+    r.configurations.remove(&id);
     *r != before
 }

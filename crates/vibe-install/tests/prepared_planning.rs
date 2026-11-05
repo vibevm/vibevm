@@ -532,7 +532,7 @@ fn prepared_sibling_configuration_input_refuses_before_solve_or_fresh() {
     let source = RecordingSource::default();
     let error = plan_prepared(&source, root, &mut manifest, &mut workspace, request()).unwrap_err();
     assert!(
-        matches!(&error,vibe_install::Error::ConfigurationInputUnsupported{consumer,dependency} if consumer=="member/vibe.toml" && dependency=="org.example/target"),
+        matches!(&error,vibe_install::Error::ConsumerConstraints {declarations,source: vibe_resolver::SolveError::Provider(vibe_resolver::DepProviderError::Configuration(vibe_core::manifest::PackageConfigurationError::Unsupported {..}))} if declarations==&["member/vibe.toml: org.example/target@*"]),
         "{error}"
     );
     assert!(!error.to_string().contains("SYN_NOT_IN_DIAGNOSTIC"));

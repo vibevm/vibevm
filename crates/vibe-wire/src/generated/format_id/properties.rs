@@ -595,7 +595,7 @@ impl FormatId {
             FormatId::LlmOpenaiCompatibleChatRequest => true,
             FormatId::LlmOpenaiCompatibleChatResponse => true,
             FormatId::Llms => true,
-            FormatId::Lockfile => true,
+            FormatId::Lockfile => false,
             FormatId::Manifest => false,
             FormatId::McpLifecycleTasks => true,
             FormatId::McpTools => true,

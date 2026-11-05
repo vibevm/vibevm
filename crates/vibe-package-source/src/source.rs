@@ -144,6 +144,23 @@ impl InstallSource for InstallResolver {
         dep_solver(&flags, self.provider_resource()).solve(roots)
     }
 
+    fn solve_configured(
+        &self,
+        roots: &[PackageRef],
+        snapshot: &vibe_resolver::configuration::ConfigurationSnapshot,
+        blocked: &BTreeSet<(String, String)>,
+    ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+        let (provider_cell, solver_override) = self.cell_selection();
+        let flags = selection_flags(provider_cell, solver_override);
+        crate::cells::solve_configured_cell(
+            &flags,
+            self.provider_resource(),
+            roots,
+            snapshot,
+            blocked,
+        )
+    }
+
     fn manifest_of(
         &self,
         pkg: &PackageRef,

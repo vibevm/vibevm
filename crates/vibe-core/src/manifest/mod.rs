@@ -42,7 +42,7 @@ pub use configuration::{
     ConfigurationDecl, ConfigurationEffect, ConfigurationFeatureDecl,
     ConfigurationFeatureVisibility, ConfigurationGroupDecl, ConfigurationGuard,
     ConfigurationIntentDecl, ConfigurationProfileDecl, ConfigurationSelection, ForwardStrength,
-    NormalizedConfigurationInput,
+    NormalizedConfigurationInput, PackageConfiguration, PackageConfigurationError,
 };
 pub use consumer::{ConsumerNode, NodeRole};
 pub use declarant_path::{

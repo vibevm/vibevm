@@ -54,6 +54,8 @@ use super::row::{RemapKey, RemapRow, RemapScope, RemapTarget, UnmatchedPolicy};
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
 pub struct Locator {
     rows: Vec<RemapRow>,
+    // Constructor-owned parallel order; public provenance stays source-local.
+    source_ordinals: Vec<usize>,
     registries: Vec<(String, String)>,
     policy: UnmatchedPolicy,
     sources: Vec<(Layer, String, UnmatchedPolicy)>,
@@ -66,15 +68,21 @@ impl Locator {
     /// (`PROP-066#policy`).
     pub fn from_sources(sources: Vec<LoadedSource>, registries: Vec<(String, String)>) -> Self {
         let mut rows = Vec::new();
+        let mut source_ordinals = Vec::new();
         let mut policy = UnmatchedPolicy::Allow;
         let mut seen = Vec::new();
-        for source in sources {
+        for (ordinal, source) in sources.into_iter().enumerate() {
             policy = policy.strictest(source.policy);
             seen.push((source.layer, source.source, source.policy));
-            rows.extend(source.rows);
+            for row in source.rows {
+                rows.push(row);
+                source_ordinals.push(ordinal);
+            }
         }
+        debug_assert_eq!(rows.len(), source_ordinals.len());
         Locator {
             rows,
+            source_ordinals,
             registries,
             policy,
             sources: seen,
@@ -266,20 +274,32 @@ impl Locator {
 
     /// Every matching row, sorted into winning order
     /// (`PROP-066#precedence`): most specific key, longest prefix among
-    /// prefixes, scoped over unscoped, higher layer, later row.
+    /// prefixes, scoped over unscoped, higher layer, later loaded source, then
+    /// later source-local row index. Provenance indexes are never renumbered.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#precedence")]
     fn matching(&self, artifact: &Artifact) -> Vec<Found> {
+        debug_assert_eq!(self.rows.len(), self.source_ordinals.len());
         let mut found: Vec<Found> = self
             .rows
             .iter()
+            .zip(&self.source_ordinals)
             .enumerate()
-            .filter_map(|(position, row)| self.match_one(position, row, artifact))
+            .filter_map(|(position, (row, ordinal))| {
+                self.match_one(position, *ordinal, row, artifact)
+            })
             .collect();
         found.sort_by_key(|found| std::cmp::Reverse(found.rank));
         found
     }
 
     /// Whether one row matches, and what it resolves the artifact to.
-    fn match_one(&self, position: usize, row: &RemapRow, artifact: &Artifact) -> Option<Found> {
+    fn match_one(
+        &self,
+        position: usize,
+        source_ordinal: usize,
+        row: &RemapRow,
+        artifact: &Artifact,
+    ) -> Option<Found> {
         if !scope_applies(row.scope.as_ref(), artifact) {
             return None;
         }
@@ -341,6 +361,7 @@ impl Locator {
                 prefix_len,
                 row.scope.as_ref().map_or(0, RemapScope::specificity),
                 row.from.layer.rank(),
+                source_ordinal,
                 row.from.index,
             ),
             row: RowRef {
@@ -357,7 +378,7 @@ impl Locator {
 
 /// A matched row plus the sort key that orders it.
 struct Found {
-    rank: (u8, usize, u8, u8, usize),
+    rank: (u8, usize, u8, u8, usize, usize),
     row: RowRef,
     key: RemapKey,
     target: RemapTarget,

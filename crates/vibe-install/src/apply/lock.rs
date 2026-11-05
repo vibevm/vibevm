@@ -32,6 +32,7 @@ pub(super) fn record_lock(
     //    replaced wholesale.
     let resolved_language: Option<String> = language_chain.first().cloned().filter(|l| l != "en");
     lockfile.packages.clear();
+    lockfile.configurations.clear();
     for f in fetched {
         let resolved = resolution
             .iter()
@@ -50,6 +51,12 @@ pub(super) fn record_lock(
                     .into(),
                 )
             })?;
+        if let Some(configuration) = &f.configuration {
+            lockfile.configurations.insert(
+                format!("{}/{}", f.cached.resolved.group, f.cached.resolved.name),
+                configuration.clone(),
+            );
+        }
         lockfile.packages.push(locked_package_from_fetched(
             f,
             resolved,

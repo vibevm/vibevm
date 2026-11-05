@@ -33,7 +33,14 @@ pub(super) fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Size
         &planned.project_root,
         &planned.manifest,
     )?;
-    crate::configuration_admission::workspace_inputs(
+    crate::configuration_admission::workspace_inputs_for_install(
+        &workspace,
+        &planned.project_root,
+        &planned.manifest,
+    )?;
+
+    crate::configuration_admission::unchanged_inputs(
+        &planned.workspace,
         &workspace,
         &planned.project_root,
         &planned.manifest,

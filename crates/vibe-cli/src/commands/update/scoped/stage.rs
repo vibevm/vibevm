@@ -254,6 +254,7 @@ pub(super) fn preflight_world(
             via_override: None,
             source_mutable: false,
             in_place_changed: None,
+            configuration: None,
         });
     }
     let world = vibe_orchestrator::provisional_world(workspace, lockfile, &selected)?;
@@ -287,6 +288,7 @@ fn project_rows(workspace: &Workspace, updated: &[Resolved]) -> Vec<ResolvedDep>
                     &workspace.root,
                 ),
                 in_place_changed: *in_place_changed,
+                configuration: None,
             },
         )
         .collect()

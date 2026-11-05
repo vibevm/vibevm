@@ -185,7 +185,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
             fetching.fail("locked package refetch failed");
             return Err(mismatch);
         }
-        vibe_install::configuration_admission::package_manifest(&pkgref, &cached.manifest)?;
+        let configuration = lockfile.configuration_for(locked, &cached.manifest)?;
         source_hashes.insert(
             (cached.resolved.group.clone(), cached.resolved.name.clone()),
             cached.content_hash.clone(),
@@ -217,6 +217,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
                 &workspace.root,
             ),
             in_place_changed: None,
+            configuration,
         });
         package.finish();
         fetching.set_progress(

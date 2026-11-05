@@ -54,6 +54,7 @@ pub fn provisional_world(
                 locked.group, locked.name, locked.version
             )
         })?;
+        let configuration = lockfile.configuration_for(locked, &manifest)?;
         world.push(ResolvedDep {
             kind: locked.kind,
             group: locked.group.clone(),
@@ -77,6 +78,7 @@ pub fn provisional_world(
             via_override: locked.via_override.clone(),
             source_mutable: false,
             in_place_changed: None,
+            configuration,
         });
     }
     for dep in updated {

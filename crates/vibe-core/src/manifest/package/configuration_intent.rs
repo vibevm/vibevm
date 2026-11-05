@@ -7,6 +7,9 @@ use serde::{Serialize, Serializer};
 use std::collections::BTreeSet;
 
 impl Requires {
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#OPTIONAL-DECLARATIONS"
+    )]
     pub(crate) fn validate_configuration_metadata(&self) -> Result<(), String> {
         let mut declared = BTreeSet::new();
         for (group, name) in self.iter_pkgrefs() {
@@ -15,6 +18,13 @@ impl Requires {
                 if !declared.insert(key.clone()) {
                     return Err(format!("dependency `{key}` declared more than once"));
                 }
+            }
+        }
+        for key in self.optional.keys() {
+            if !declared.contains(key) {
+                return Err(format!(
+                    "optional flag for `{key}` has no declared requires edge"
+                ));
             }
         }
         for (key, input) in &self.configurations {

@@ -124,3 +124,28 @@ fn admitted_migration_uses_owned_publication_and_preserves_changed_source() {
         changed
     );
 }
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LF-CONFIGURED-STATE"
+)]
+fn known_legacy_empty_publication_is_supported_and_preserves_decoration() {
+    let root = tempfile::tempdir().unwrap();
+    let path = root.path().join("vibe.lock");
+    std::fs::write(
+        &path,
+        "# operator decoration\n[meta]\ngenerated_by='old'\ngenerated_at='old'\nschema_version=6\n",
+    )
+    .unwrap();
+    let replacement = vibe_core::manifest::Lockfile::empty("fixture", "fixed");
+    guards::publish_empty_legacy_lock(root.path(), 6, &replacement).unwrap();
+    assert_eq!(
+        vibe_core::manifest::Lockfile::read(&path).unwrap(),
+        replacement
+    );
+    assert!(
+        std::fs::read_to_string(path)
+            .unwrap()
+            .contains("# operator decoration")
+    );
+}

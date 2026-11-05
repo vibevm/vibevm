@@ -4,7 +4,7 @@ use super::*;
 use std::collections::BTreeSet;
 use vibe_core::{
     Group, PackageRef,
-    manifest::{CURRENT_SCHEMA_VERSION, Lockfile, Manifest, SpecFormat},
+    manifest::{Lockfile, Manifest, SpecFormat},
 };
 use vibe_registry::{CachedPackage, RegistryError};
 use vibe_resolver::{ResolvedGraph, SolveError};
@@ -100,7 +100,7 @@ fn fresh_source_delta_waits_for_actual_provider_admission() {
             declaration.push_str("\n[configuration]\n");
         }
         std::fs::write(slot.join("vibe.toml"), declaration).unwrap();
-        std::fs::write(root.join("vibe.lock"),format!("[meta]\ngenerated_by='fixture'\ngenerated_at='2026-11-05T00:00:00Z'\nschema_version={CURRENT_SCHEMA_VERSION}\nroot_dependencies=['org.example/provider@=1.0.0']\n[[package]]\nkind='flow'\ngroup='org.example'\nname='provider'\nversion='1.0.0'\nsource_url='https://example.invalid/provider'\ncontent_hash='{hash}'\n")).unwrap();
+        std::fs::write(root.join("vibe.lock"),format!("[meta]\ngenerated_by='fixture'\ngenerated_at='2026-11-05T00:00:00Z'\nschema_version=7\nroot_dependencies=['org.example/provider@=1.0.0']\n[[package]]\nkind='flow'\ngroup='org.example'\nname='provider'\nversion='1.0.0'\nsource_url='https://example.invalid/provider'\ncontent_hash='{hash}'\n")).unwrap();
         let root = resolve_project_root(&root).unwrap();
         let selection = SelectedManifest::read(&root).prepare();
         let inspected = vibe_workspace::Workspace::discover(&root).unwrap();
@@ -135,7 +135,7 @@ fn fresh_source_delta_waits_for_actual_provider_admission() {
             assert!(
                 error.chain().any(|e| matches!(
                     e.downcast_ref::<vibe_install::Error>(),
-                    Some(vibe_install::Error::ConfigurationUnsupported { .. })
+                    Some(vibe_install::Error::Core(vibe_core::Error::InvalidLockfile {reason})) if reason.contains("org.example/provider") && reason.contains("no lock record")
                 )),
                 "{error:#}"
             );

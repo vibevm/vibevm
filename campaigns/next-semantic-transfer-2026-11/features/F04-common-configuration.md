@@ -103,3 +103,8 @@ Real RED proves earlier work/outbox publication with secret prompt expansion and
 The existing app transport collapsed distinct IDs a-b/a.b despite correct plan/index data. One core application projection owner now checks portable, injective names for every declared feature/parameter in options with expanded recipe/shell consumers; runtime protects programmatic plans before work publication. Literal IDs elsewhere and all noncolliding exported names remain unchanged. This is a main-app consumer defect exposed while generalizing inputs, not evidence that the shared evaluator lost data.
 
 Candidate89distinct tests/docs plus clippy/fmt/diff passed. Root reviewed all13source hashes, production consumers and tests; main publicCLI2/2+app2/2+core16/16, fmt, scoped conform0new and specmap --check0blocking/43known warnings passed. APP-ENV-IDENTITY is implemented. FORMAT-CHANGES FMT-008 states the exact -g/migration/API boundary. F04 remains active; full selected-installer evaluation/persistence/UI and the broader package consumers are not established by this fix.
+
+
+## Current accepted boundaries after F16
+
+Earlier paragraphs are chronological checkpoints. F12 selected-installer runtime and F14 full portability are accepted. F16 now supplies ordinary explicit fixed-workspace package choices through actual dependency installation, lock8 original state and cold replay, with source/admission/legacy controls. F04 remains active: the full cross-kind/transitive/default/parameter/effective-loading/interactive contract is not inferred from these bounded deliveries. See F16 for exact evidence and remaining routes.

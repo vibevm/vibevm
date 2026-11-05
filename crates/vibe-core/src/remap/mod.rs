@@ -85,3 +85,7 @@ mod tests;
 #[cfg(test)]
 #[path = "tests_packages.rs"]
 mod tests_packages;
+
+#[cfg(test)]
+#[path = "tests_source_precedence.rs"]
+mod tests_source_precedence;

@@ -66,6 +66,7 @@ fn a_compiler_failure_fails_the_scope_and_preserves_the_error() {
             via_override: None,
             source_mutable: false,
             in_place_changed: None,
+            configuration: None,
         };
         let ws = Workspace::load(ws_dir.path()).unwrap();
         (ws_dir, ws, vec![broken], src)

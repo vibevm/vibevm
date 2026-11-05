@@ -181,6 +181,7 @@ pub(crate) fn resolved(root: &Path, name: &str, hash: &str, dependencies: &[&str
         via_override: None,
         source_mutable: false,
         in_place_changed: None,
+        configuration: None,
     }
 }
 

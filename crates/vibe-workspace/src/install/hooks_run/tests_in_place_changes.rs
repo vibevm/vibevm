@@ -94,6 +94,7 @@ fn already_placed(changed: bool) -> (TempDir, ResolvedDep) {
         via_override: None,
         source_mutable: false,
         in_place_changed: Some(changed),
+        configuration: None,
     };
     (workspace, dep)
 }

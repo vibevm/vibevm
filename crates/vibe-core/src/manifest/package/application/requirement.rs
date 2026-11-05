@@ -179,12 +179,25 @@ pub fn application_requirements(
 
 impl crate::manifest::Manifest {
     /// The package edges a dependency resolver follows from this manifest:
-    /// every `[requires.packages]` entry, then every application package an
+    /// mandatory `[requires.packages]` entries, then every application package an
     /// installer option or step requires (`PROP-065#app-dependencies`: a
     /// required application is a transitive dependency like any other).
     /// An identical spelling appears once.
     pub fn resolution_requires(&self) -> Vec<crate::PackageRef> {
-        let mut edges = self.requires.packages.clone();
+        let mut edges: Vec<_> = self
+            .requires
+            .packages
+            .iter()
+            .filter(|p| {
+                !self
+                    .requires
+                    .optional
+                    .get(&p.qualified_name())
+                    .copied()
+                    .unwrap_or(false)
+            })
+            .cloned()
+            .collect();
         for (requirement, _) in application_requirements(&self.installer_options) {
             let Ok(reference) = crate::PackageRef::parse(requirement.package()) else {
                 continue;
