@@ -171,6 +171,9 @@ pub fn resume_slot_continuation(
     let lockfile = Lockfile::read(workspace.lockfile_path())
         .context("reading the lockfile to rebuild a parked slot run")?;
     let world = crate::install::provisional_world(workspace, &lockfile, &[])?;
+    vibe_install::configuration_admission::workspace_inputs(workspace, project_root, manifest)?;
+    vibe_install::configuration_admission::resolved_packages(&world)?;
+
     let targets: Vec<(String, String, String)> = continuation
         .targets
         .iter()

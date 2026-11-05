@@ -5,20 +5,11 @@ fn apply(
     source: &Source,
     planned: Box<vibe_install::PlannedInstall>,
 ) -> Result<(), vibe_install::Error> {
-    vibe_install::apply(
-        source,
-        *planned,
-        SlotIntegrity::Verify,
-        &HookPolicy {
-            allowed_groups: vec![],
-            allow_hooks: false,
-        },
-    )
-    .map(|_| ())
+    vibe_install::apply(source, *planned, SlotIntegrity::Verify, &hook_policy()).map(|_| ())
 }
 
 #[test]
-fn initial_unsafe_metadata_refuses_before_any_publication_or_source_callback() {
+fn initial_unsafe_metadata_refuses_before_any_publication_or_hook() {
     for name in ["vibe.toml", "vibe.lock", "vibe.lock.provenance"] {
         for kind in ["symlink", "hardlink", "directory"] {
             let (temp, source, planned) = prepared(Case::Complete);
@@ -35,7 +26,7 @@ fn initial_unsafe_metadata_refuses_before_any_publication_or_source_callback() {
                 _ => fs::create_dir(&path).unwrap(),
             }
             assert!(apply(&source, planned).is_err(), "{name}/{kind}");
-            assert_eq!(source.calls.get(), 0);
+            assert_eq!(source.calls(), 0);
             assert_eq!(fs::read(&sentinel).unwrap(), before);
             if name != "vibe.toml" {
                 assert_eq!(
@@ -54,7 +45,7 @@ fn changed_recognized_manifest_input_refuses_before_effects() {
     fs::write(temp.path().join("vibe.toml"), &changed).unwrap();
     let error = apply(&source, planned).unwrap_err();
     assert!(error.to_string().contains("recognized semantics changed"));
-    assert_eq!(source.calls.get(), 0);
+    assert_eq!(source.calls(), 0);
     assert_eq!(
         fs::read_to_string(temp.path().join("vibe.toml")).unwrap(),
         changed
@@ -71,7 +62,7 @@ fn definitely_before_publication_keeps_original_object_and_bytes() {
     vibe_safefs::fail_before_publish(None);
     let error = result.unwrap_err();
     assert!(!matches!(error, vibe_install::Error::RollbackFailed { .. }));
-    assert_eq!(source.calls.get(), 0);
+    assert_eq!(source.calls(), 0);
     assert_eq!(
         identity(&path),
         before_id,
@@ -97,7 +88,7 @@ fn same_byte_replacement_during_verification_is_a_conflict_not_our_receipt() {
     let error = apply(&source, planned).unwrap_err();
     vibe_safefs::arm_before_publish_verify(None);
     assert!(matches!(error, vibe_install::Error::RollbackFailed { .. }));
-    assert_eq!(source.calls.get(), 0);
+    assert_eq!(source.calls(), 0);
     let (bytes, id) = kept.lock().unwrap().take().unwrap();
     let path = temp.path().join("vibe.toml");
     assert_eq!(fs::read(&path).unwrap(), bytes);
@@ -113,8 +104,8 @@ fn rollback_preserves_mode_and_captured_comment_decoration() {
     fs::set_permissions(&path, fs::Permissions::from_mode(0o640)).unwrap();
     let error = apply(&source, planned).unwrap_err();
     assert!(!matches!(error, vibe_install::Error::RollbackFailed { .. }));
-    let observation = source.observation.borrow();
-    let published = observation.as_ref().unwrap()["published"].as_str().unwrap();
+    let observation = source.observation();
+    let published = observation["published"].as_str().unwrap();
     assert!(published.contains("# operator header") && published.contains("# operator footer"));
     assert_eq!(fs::read_to_string(&path).unwrap(), decorated);
     assert_eq!(
@@ -136,7 +127,7 @@ fn partial_lock_publication_rolls_back_prior_absence_and_manifest() {
         !matches!(error, vibe_install::Error::RollbackFailed { .. }),
         "{error}"
     );
-    assert_eq!(source.calls.get(), 1);
+    assert_eq!(source.calls(), 1);
     assert!(
         !lock.exists(),
         "owned after-image must restore prior absence"
@@ -206,7 +197,7 @@ fn invalid_utf8_lock_or_provenance_refuses_before_manifest_effects() {
         let error = apply(&source, planned).unwrap_err();
         assert!(error.to_string().contains("not UTF-8"));
         assert!(error.to_string().contains(name));
-        assert_eq!(source.calls.get(), 0);
+        assert_eq!(source.calls(), 0);
         assert_eq!(
             fs::read_to_string(temp.path().join("vibe.toml")).unwrap(),
             BEFORE

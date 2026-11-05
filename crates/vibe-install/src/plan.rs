@@ -94,10 +94,9 @@ pub struct PlannedInstall {
 /// Plan an install transaction over `source` for the project at
 /// `project_root` (which must already contain a `vibe.toml`).
 ///
-/// Read-mostly: the single deliberate write is the case-c migration
-/// (an undeclared workspace's entry manifest seeded from `vibe.lock`'s
-/// `meta.root_dependencies` and persisted before solving, so a panic
-/// mid-solve cannot lose it — PROP-002 §2.7).
+/// Read-mostly: case-c migration seeds the in-memory consumer before solving.
+/// Its authored write follows successful candidate admission; failed planning
+/// preserves the original manifest and the lock snapshot available for retry.
 pub fn plan<S: InstallSource + ?Sized>(
     source: &S,
     project_root: &Path,
@@ -111,7 +110,7 @@ pub fn plan<S: InstallSource + ?Sized>(
 ///
 /// The COMPATIBILITY shape: it performs its one legacy read of the selected
 /// manifest and its one legacy discovery, then delegates to
-/// [`plan_prepared_with_spec_format`], which holds the algorithm. A caller
+/// [`plan_prepared_with_spec_format`], the prepared compatibility entrypoint. A caller
 /// that already owns those two values calls the prepared sibling directly and
 /// touches the disk for neither.
 pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
@@ -136,9 +135,45 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
     )
 }
 
+/// Plan from prepared values and publish any successful legacy migration only
+/// after all consumed candidates are admitted. Failed plans leave both the
+/// physical manifest and the caller's source snapshots unchanged.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
+pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
+    source: &S,
+    project_root: &Path,
+    manifest: &mut Manifest,
+    workspace: &mut Workspace,
+    request: InstallRequest,
+    spec_format: SpecFormat,
+    observer: &dyn PlanObserver,
+) -> Result<Plan> {
+    let before = manifest.clone();
+    let original_workspace = workspace.clone();
+    let result = plan_prepared_without_publication(
+        source,
+        project_root,
+        manifest,
+        workspace,
+        request,
+        spec_format,
+        observer,
+    )?;
+    if *manifest != before
+        && let Err(error) = crate::apply::publish_admitted_manifest(project_root, &before, manifest)
+    {
+        *manifest = before;
+        *workspace = original_workspace;
+        return Err(error);
+    }
+    Ok(result)
+}
+
 /// Plan an install from values the caller ALREADY owns.
 ///
-/// This is the real planning algorithm, and it reads neither the selected
+/// This is the real planning algorithm without authored-file publication.
+/// Its operation owner may commit the admitted raw snapshot after success.
+/// It reads neither the selected
 /// `vibe.toml` nor the workspace tree: `manifest` is the raw selected manifest
 /// (unexpanded, the shape `[i18n]`, visibility and the case-c migration write
 /// operate on) and `workspace` is the finalised tree (expanded, the shape the
@@ -146,13 +181,14 @@ pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
 /// wrapper used to re-`discover` now consults the supplied tree instead.
 ///
 /// Both are taken by `&mut` because case-c migration is a real mutation: it
-/// seeds the raw manifest from the lockfile, persists it, and applies the same
+/// seeds the raw manifest from the lockfile in memory and applies the same
 /// concrete requirement delta to the exact selected node of the finalised
 /// tree. It is a delta and not a wholesale copy on purpose — the finalised
 /// node has had `[workspace.versions]` placeholders resolved, and overwriting
 /// it with the raw table would undo that.
 #[allow(clippy::too_many_arguments)]
-pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
+pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
     source: &S,
     project_root: &Path,
     manifest: &mut Manifest,
@@ -162,9 +198,12 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
     let selected = roots::selected_node(workspace, project_root)?;
-    roots::reject_configuration_inputs(workspace, &selected, manifest)?;
+    crate::configuration_admission::workspace_inputs(workspace, project_root, manifest)?;
     request.roots = roots::unique_requests(&request.roots)?;
     let lockfile = load_or_empty_lockfile(&workspace.root, &request.generated_by)?;
+    let before_migration = manifest.clone();
+    let mut migration_pending = false;
+    let mut workspace_before_migration = None;
 
     // PROP-003 §2.7 language chain (caller override > project [i18n]).
     let language_chain = build_language_chain(request.language.as_deref(), manifest);
@@ -180,262 +219,280 @@ pub fn plan_prepared_with_spec_format<S: InstallSource + ?Sized>(
         observer.on(PlanEvent::MigratingRequires {
             entries: migrated.len(),
         });
+        workspace_before_migration = Some(workspace.clone());
         manifest.requires.packages.clone_from(&migrated);
-        manifest.write(project_root.join(Manifest::FILENAME))?;
         migrate_selected_node(workspace, project_root, &migrated);
+        // Seed the semantic world before resolution; physical publication is
+        // permitted only at a successful, fully admitted plan boundary.
+        migration_pending = true;
     }
-    let requirements = roots::RootRequirements::collect(workspace, &selected, &request.roots)?;
-    let roots = requirements.authored();
-    let root_count = requirements.package_count();
+    let result = (|| {
+        let requirements = roots::RootRequirements::collect(workspace, &selected, &request.roots)?;
+        let roots = requirements.authored();
+        let root_count = requirements.package_count();
 
-    // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, the 2026-08-24 ruling): zero
-    // dependencies is a fresh project, not an error — regenerate the boot
-    // artifacts of the empty world and report the fresh shape.
-    if roots.is_empty() {
-        return Ok(Plan::Fresh);
-    }
-
-    let progress = observer.progress();
-    let resolution_task = progress.task("Resolving dependencies");
-    resolution_task.detail(format!(
-        "{} root package{} from {} consumer declarations",
-        root_count,
-        if root_count == 1 { "" } else { "s" },
-        roots.len()
-    ));
-
-    // Authored requirements remain unchanged for fallback and diagnostics.
-    let mut solve_roots = if request.roots.is_empty() {
-        roots.clone()
-    } else {
-        requirements.held(&lockfile, &request.roots)
-    };
-
-    // PROP-011 §2.2 — the freshness fast path. When no explicit pkgref
-    // was given (the install-from-manifest shape) and `vibe.lock` is
-    // already a correct resolution of every node's `[requires]`, the
-    // depsolver — a registry walk over the network — is skipped
-    // entirely: the resolution is the lock, and application is just a
-    // whole-tree boot regeneration (cheap, self-healing — PROP-011
-    // §2.4). This is also what makes `vibe install`
-    // lockfile-respecting: a fresh lock is honoured verbatim, with no
-    // version drift inside a constraint. An explicit
-    // `vibe install <pkgref>` always runs the full pipeline.
-    if request.roots.is_empty() {
-        let ws = &*workspace;
-        match vibe_workspace::freshness::check(ws, &lockfile) {
-            vibe_workspace::freshness::Freshness::Fresh
-                if slots_match_spec_format(&ws.root, &lockfile, spec_format) =>
-            {
-                requirements.check_locked_kinds(&lockfile)?;
-                resolution_task.skip("vibe.lock is fresh");
-                return Ok(Plan::Fresh);
-            }
-            vibe_workspace::freshness::Freshness::Fresh => {
-                observer.on(PlanEvent::Reresolving {
-                    reason: format!(
-                        "materialised spec representation is not {}",
-                        spec_format.as_str()
-                    ),
-                });
-                solve_roots = vibe_workspace::freshness::hold_pins(&roots, &lockfile);
-            }
-            vibe_workspace::freshness::Freshness::Stale(reason) => {
-                observer.on(PlanEvent::Reresolving {
-                    reason: reason.clone(),
-                });
-                // PROP-011 §5.3 — minimum churn: hold the locked
-                // version of every root the change did not touch, so
-                // re-resolution moves only the changed dependency and
-                // its subtree.
-                solve_roots = vibe_workspace::freshness::hold_pins(&roots, &lockfile);
-            }
+        // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, the 2026-08-24 ruling): zero
+        // dependencies is a fresh project, not an error — regenerate the boot
+        // artifacts of the empty world and report the fresh shape.
+        if roots.is_empty() {
+            return Ok(Plan::Fresh);
         }
-    }
 
-    // 2. Run the depsolver.
-    observer.on(PlanEvent::ResolvingRoots { roots: root_count });
-    let mut strict_roots = solve_roots.clone();
-    let graph = match source.solve(&solve_roots) {
-        Ok(graph) => graph,
-        Err(e) if solve_roots != roots => {
-            // PROP-011 §5.3 — the pin-held set over-constrained: a
-            // changed dependency is incompatible with a held pin. Fall
-            // back to a full, free re-resolve.
-            observer.on(PlanEvent::HeldPinsConflicted {
-                error: e.to_string(),
-            });
-            strict_roots.clone_from(&roots);
-            match source.solve(&roots) {
-                Ok(graph) => graph,
-                Err(error) => {
-                    resolution_task.fail("dependency resolution failed");
-                    return Err(requirements.solve_error(error));
+        let progress = observer.progress();
+        let resolution_task = progress.task("Resolving dependencies");
+        resolution_task.detail(format!(
+            "{} root package{} from {} consumer declarations",
+            root_count,
+            if root_count == 1 { "" } else { "s" },
+            roots.len()
+        ));
+
+        // Authored requirements remain unchanged for fallback and diagnostics.
+        let mut solve_roots = if request.roots.is_empty() {
+            roots.clone()
+        } else {
+            requirements.held(&lockfile, &request.roots)
+        };
+
+        // PROP-011 §2.2 — the freshness fast path. When no explicit pkgref
+        // was given (the install-from-manifest shape) and `vibe.lock` is
+        // already a correct resolution of every node's `[requires]`, the
+        // depsolver — a registry walk over the network — is skipped
+        // entirely: the resolution is the lock, and application is just a
+        // whole-tree boot regeneration (cheap, self-healing — PROP-011
+        // §2.4). This is also what makes `vibe install`
+        // lockfile-respecting: a fresh lock is honoured verbatim, with no
+        // version drift inside a constraint. An explicit
+        // `vibe install <pkgref>` always runs the full pipeline.
+        if request.roots.is_empty() {
+            let ws = &*workspace;
+            match vibe_workspace::freshness::check(ws, &lockfile) {
+                vibe_workspace::freshness::Freshness::Fresh
+                    if slots_match_spec_format(&ws.root, &lockfile, spec_format) =>
+                {
+                    requirements.check_locked_kinds(&lockfile)?;
+                    if migration_pending {
+                        crate::configuration_admission::locked_packages(workspace, &lockfile)?;
+                    }
+                    resolution_task.skip("vibe.lock is fresh");
+                    return Ok(Plan::Fresh);
+                }
+                vibe_workspace::freshness::Freshness::Fresh => {
+                    observer.on(PlanEvent::Reresolving {
+                        reason: format!(
+                            "materialised spec representation is not {}",
+                            spec_format.as_str()
+                        ),
+                    });
+                    solve_roots = vibe_workspace::freshness::hold_pins(&roots, &lockfile);
+                }
+                vibe_workspace::freshness::Freshness::Stale(reason) => {
+                    observer.on(PlanEvent::Reresolving {
+                        reason: reason.clone(),
+                    });
+                    // PROP-011 §5.3 — minimum churn: hold the locked
+                    // version of every root the change did not touch, so
+                    // re-resolution moves only the changed dependency and
+                    // its subtree.
+                    solve_roots = vibe_workspace::freshness::hold_pins(&roots, &lockfile);
                 }
             }
         }
-        Err(e) => {
-            resolution_task.fail("dependency resolution failed");
-            return Err(requirements.solve_error(e));
-        }
-    };
 
-    let root_id = visibility_root_id(manifest);
-    let effective = resolve_effective(source, &strict_roots, manifest, &root_id, graph)
-        .map_err(|e| requirements.contextualize(e))?;
-    let graph = effective.graph;
-    let mut visibility_analysis = effective.analysis;
-    let _visibility_iterations = effective.iterations;
+        // 2. Run the depsolver.
+        observer.on(PlanEvent::ResolvingRoots { roots: root_count });
+        let mut strict_roots = solve_roots.clone();
+        let graph = match source.solve(&solve_roots) {
+            Ok(graph) => graph,
+            Err(e) if solve_roots != roots => {
+                // PROP-011 §5.3 — the pin-held set over-constrained: a
+                // changed dependency is incompatible with a held pin. Fall
+                // back to a full, free re-resolve.
+                observer.on(PlanEvent::HeldPinsConflicted {
+                    error: e.to_string(),
+                });
+                strict_roots.clone_from(&roots);
+                match source.solve(&roots) {
+                    Ok(graph) => graph,
+                    Err(error) => {
+                        resolution_task.fail("dependency resolution failed");
+                        return Err(requirements.solve_error(error));
+                    }
+                }
+            }
+            Err(e) => {
+                resolution_task.fail("dependency resolution failed");
+                return Err(requirements.solve_error(e));
+            }
+        };
 
-    if graph.packages.len() > root_count {
-        observer.on(PlanEvent::GraphSolved {
-            roots: root_count,
-            total: graph.packages.len(),
-        });
-    }
-    resolution_task.detail(format!(
-        "selected {} package{} before conditional expansion",
-        graph.packages.len(),
-        if graph.packages.len() == 1 { "" } else { "s" }
-    ));
-    resolution_task.finish();
+        let root_id = visibility_root_id(manifest);
+        let effective = resolve_effective(source, &strict_roots, manifest, &root_id, graph)
+            .map_err(|e| requirements.contextualize(e))?;
+        let graph = effective.graph;
+        let mut visibility_analysis = effective.analysis;
+        let _visibility_iterations = effective.iterations;
 
-    // 3. Phase one — fetch every node, pin features per node. We need
-    //    the full graph + every fetched manifest before we can build
-    //    the activation context, since context probes (`if_present`,
-    //    `if_provides`, `if_describes_match`) depend on the union of
-    //    capabilities, interfaces, and PURLs across the graph.
-    //
-    //    Fetched payload lands in the machine-global store
-    //    (`~/.vibe/cache/`, PROP-010 §2.7) — resolved here, once per
-    //    plan, through the settings chokepoint. The project no longer
-    //    has a `.vibe/cache/` copy: the store IS the source
-    //    `vibedeps/` materialises from.
-    let store_root = store::store_root()?;
-    let mut fetched: Vec<Fetched> = Vec::with_capacity(graph.packages.len());
-    let fetch_task = progress.task("Fetching package content");
-    for node in graph.iter() {
-        fetch_task.detail(format!("{}/{}@{}", node.group, node.name, node.version));
-        fetched.push(fetch_or_defer(
-            source,
-            node,
-            &lockfile,
-            &store_root,
-            &request.features,
-            &workspace.root,
-            request.offline,
-            &fetch_task.progress(),
-        )?);
-        fetch_task.set_progress(fetched.len() as u64, None, "packages");
-    }
-
-    // The read-only kind stops here, before anything is materialised.
-    // A package's kind lives inside its own bytes, so this is the first
-    // point in the install where it is known at all — and the last one
-    // before `apply` writes a slot (PROP-057
-    // `##KIND-DOC-NOT-INSTALLED`).
-    refuse_read_only_kinds(&fetched)?;
-
-    // Visibility check: warn if a requested feature was accepted by no
-    // root package.
-    if !request.features.explicit.is_empty() {
-        let accepted: BTreeSet<&str> = fetched
-            .iter()
-            .filter(|f| f.meta.is_root)
-            .flat_map(|f| f.feature_expansion.active_features.iter())
-            .map(|s| s.as_str())
-            .collect();
-        let unmatched: Vec<String> = request
-            .features
-            .explicit
-            .iter()
-            .filter(|f| !accepted.contains(f.as_str()))
-            .cloned()
-            .collect();
-        if !unmatched.is_empty() {
-            observer.on(PlanEvent::FeaturesUnmatched {
-                features: unmatched,
+        if graph.packages.len() > root_count {
+            observer.on(PlanEvent::GraphSolved {
+                roots: root_count,
+                total: graph.packages.len(),
             });
         }
-    }
+        resolution_task.detail(format!(
+            "selected {} package{} before conditional expansion",
+            graph.packages.len(),
+            if graph.packages.len() == 1 { "" } else { "s" }
+        ));
+        resolution_task.finish();
 
-    // 4. Conditional dependency expansion — fixed-point loop.
-    expand_conditional_deps(
-        source,
-        &roots,
-        &strict_roots,
-        &lockfile,
-        &store_root,
-        project_root,
-        &workspace.root,
-        &language_chain,
-        &request.features,
-        request.offline,
-        manifest,
-        &root_id,
-        &mut fetched,
-        &mut visibility_analysis,
-        observer,
-        &fetch_task,
-    )
-    .map_err(|e| requirements.contextualize(e))?;
-    requirements.check_fetched_kinds(&fetched)?;
-    fetch_task.set_progress(fetched.len() as u64, Some(fetched.len() as u64), "packages");
-    fetch_task.finish();
+        // 3. Phase one — fetch every node, pin features per node. We need
+        //    the full graph + every fetched manifest before we can build
+        //    the activation context, since context probes (`if_present`,
+        //    `if_provides`, `if_describes_match`) depend on the union of
+        //    capabilities, interfaces, and PURLs across the graph.
+        //
+        //    Fetched payload lands in the machine-global store
+        //    (`~/.vibe/cache/`, PROP-010 §2.7) — resolved here, once per
+        //    plan, through the settings chokepoint. The project no longer
+        //    has a `.vibe/cache/` copy: the store IS the source
+        //    `vibedeps/` materialises from.
+        let store_root = store::store_root()?;
+        let mut fetched: Vec<Fetched> = Vec::with_capacity(graph.packages.len());
+        let fetch_task = progress.task("Fetching package content");
+        for node in graph.iter() {
+            fetch_task.detail(format!("{}/{}@{}", node.group, node.name, node.version));
+            fetched.push(fetch_or_defer(
+                source,
+                node,
+                &lockfile,
+                &store_root,
+                &request.features,
+                &workspace.root,
+                request.offline,
+                &fetch_task.progress(),
+            )?);
+            fetch_task.set_progress(fetched.len() as u64, None, "packages");
+        }
 
-    // 5. Build the resolution — every fetched package as a
-    //    `ResolvedDep` the workspace orchestrator materialises. The
-    //    loading model materialises a package's tree verbatim, so the
-    //    per-file activation context is no longer consulted at install
-    //    time.
-    let resolution: Vec<ResolvedDep> = fetched
-        .iter()
-        .map(|f| {
-            let coordinate = format!("{}/{}", f.cached.resolved.group, f.cached.resolved.name);
-            let provenance = visibility_analysis.effective.get(&coordinate);
-            ResolvedDep {
-                kind: f.cached.package_meta().kind,
-                group: f.cached.resolved.group.clone(),
-                name: f.cached.resolved.name.clone(),
-                version: f.cached.resolved.version.clone(),
-                content_dir: f.cached.cache_dir.clone(),
-                source_hash: Some(ContentHash::from_validated(f.cached.content_hash.clone())),
-                embedded_sources: f.embedded_sources.clone(),
-                manifest: f.cached.manifest.clone(),
-                // A `[requires.packages]` dependency pkgref is
-                // group-qualified (PROP-008 §2.6).
-                requires: f
-                    .meta
-                    .dependencies
-                    .iter()
-                    .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
-                    .collect(),
-                admitted_by: provenance.map(|witness| match witness.rule {
-                    ProvenanceRule::RootEdge => "root-edge".to_string(),
-                    ProvenanceRule::PublicChain => "public-chain".to_string(),
-                    ProvenanceRule::FriendsChain => "friends-chain".to_string(),
-                }),
-                via_override: provenance.and_then(|witness| witness.via_override.clone()),
-                // Mutable iff an in-workspace `file://` self-hosting source (§2.6).
-                source_mutable: is_in_workspace_file_source(&f.cached.source_uri, &workspace.root),
-                in_place_changed: None,
+        // The read-only kind stops here, before anything is materialised.
+        // A package's kind lives inside its own bytes, so this is the first
+        // point in the install where it is known at all — and the last one
+        // before `apply` writes a slot (PROP-057
+        // `##KIND-DOC-NOT-INSTALLED`).
+        refuse_read_only_kinds(&fetched)?;
+
+        // Visibility check: warn if a requested feature was accepted by no
+        // root package.
+        if !request.features.explicit.is_empty() {
+            let accepted: BTreeSet<&str> = fetched
+                .iter()
+                .filter(|f| f.meta.is_root)
+                .flat_map(|f| f.feature_expansion.active_features.iter())
+                .map(|s| s.as_str())
+                .collect();
+            let unmatched: Vec<String> = request
+                .features
+                .explicit
+                .iter()
+                .filter(|f| !accepted.contains(f.as_str()))
+                .cloned()
+                .collect();
+            if !unmatched.is_empty() {
+                observer.on(PlanEvent::FeaturesUnmatched {
+                    features: unmatched,
+                });
             }
-        })
-        .collect();
+        }
 
-    Ok(Plan::Ready(Box::new(PlannedInstall {
-        project_root: project_root.to_path_buf(),
-        request,
-        manifest: manifest.clone(),
-        lockfile,
-        language_chain,
-        fetched,
-        resolution,
-        // A value, not a rediscovery: apply and the slot lifecycle work on the
-        // exact tree that produced this plan.
-        workspace: workspace.clone(),
-        progress,
-    })))
+        // 4. Conditional dependency expansion — fixed-point loop.
+        expand_conditional_deps(
+            source,
+            &roots,
+            &strict_roots,
+            &lockfile,
+            &store_root,
+            project_root,
+            &workspace.root,
+            &language_chain,
+            &request.features,
+            request.offline,
+            manifest,
+            &root_id,
+            &mut fetched,
+            &mut visibility_analysis,
+            observer,
+            &fetch_task,
+        )
+        .map_err(|e| requirements.contextualize(e))?;
+        requirements.check_fetched_kinds(&fetched)?;
+        fetch_task.set_progress(fetched.len() as u64, Some(fetched.len() as u64), "packages");
+        fetch_task.finish();
+
+        // 5. Build the resolution — every fetched package as a
+        //    `ResolvedDep` the workspace orchestrator materialises. The
+        //    loading model materialises a package's tree verbatim, so the
+        //    per-file activation context is no longer consulted at install
+        //    time.
+        let resolution: Vec<ResolvedDep> = fetched
+            .iter()
+            .map(|f| {
+                let coordinate = format!("{}/{}", f.cached.resolved.group, f.cached.resolved.name);
+                let provenance = visibility_analysis.effective.get(&coordinate);
+                ResolvedDep {
+                    kind: f.cached.package_meta().kind,
+                    group: f.cached.resolved.group.clone(),
+                    name: f.cached.resolved.name.clone(),
+                    version: f.cached.resolved.version.clone(),
+                    content_dir: f.cached.cache_dir.clone(),
+                    source_hash: Some(ContentHash::from_validated(f.cached.content_hash.clone())),
+                    embedded_sources: f.embedded_sources.clone(),
+                    manifest: f.cached.manifest.clone(),
+                    // A `[requires.packages]` dependency pkgref is
+                    // group-qualified (PROP-008 §2.6).
+                    requires: f
+                        .meta
+                        .dependencies
+                        .iter()
+                        .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
+                        .collect(),
+                    admitted_by: provenance.map(|witness| match witness.rule {
+                        ProvenanceRule::RootEdge => "root-edge".to_string(),
+                        ProvenanceRule::PublicChain => "public-chain".to_string(),
+                        ProvenanceRule::FriendsChain => "friends-chain".to_string(),
+                    }),
+                    via_override: provenance.and_then(|witness| witness.via_override.clone()),
+                    // Mutable iff an in-workspace `file://` self-hosting source (§2.6).
+                    source_mutable: is_in_workspace_file_source(
+                        &f.cached.source_uri,
+                        &workspace.root,
+                    ),
+                    in_place_changed: None,
+                }
+            })
+            .collect();
+
+        Ok(Plan::Ready(Box::new(PlannedInstall {
+            project_root: project_root.to_path_buf(),
+            request,
+            manifest: manifest.clone(),
+            lockfile,
+            language_chain,
+            fetched,
+            resolution,
+            // A value, not a rediscovery: apply and the slot lifecycle work on the
+            // exact tree that produced this plan.
+            workspace: workspace.clone(),
+            progress,
+        })))
+    })();
+    if result.is_err()
+        && let Some(original_workspace) = workspace_before_migration
+    {
+        *manifest = before_migration;
+        *workspace = original_workspace;
+    }
+    result
 }
 
 /// The acquisition half of planning — fetch/defer helpers and the

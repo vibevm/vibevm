@@ -23,7 +23,7 @@ use vibe_install::InstallProgress;
 use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use vibe_workspace::Workspace;
 use vibe_workspace::compile_trace::TraceRun;
-use vibe_workspace::install::regenerate_boot_traced;
+use vibe_workspace::install::regenerate_boot_from_traced;
 use vibe_workspace::vibedeps;
 
 use crate::cli::ReinstallArgs;
@@ -48,6 +48,7 @@ pub(super) struct Plain<'a> {
     pub(super) lease: &'a std::sync::Arc<LifecycleLease>,
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallDraft> {
     let Plain {
         args,
@@ -73,6 +74,8 @@ pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallD
         );
     }
 
+    let full_world = vibe_orchestrator::provisional_world(workspace, lockfile, &[])?;
+    vibe_install::configuration_admission::resolved_packages(&full_world)?;
     let node_count = workspace.iter_nodes().count();
     ctx.heading(&format!(
         "\nReinstall — regenerate boot artifacts for {node_count} node{} from vibedeps/.",
@@ -145,7 +148,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Plain<'_>) -> Result<ReinstallD
     };
 
     let boot = ctx.progress().task("Regenerating workspace boot artifacts");
-    let nodes = match regenerate_boot_traced(workspace, spec_format, trace) {
+    let nodes = match regenerate_boot_from_traced(workspace, &full_world, spec_format, trace) {
         Ok(nodes) => {
             boot.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
             boot.finish();

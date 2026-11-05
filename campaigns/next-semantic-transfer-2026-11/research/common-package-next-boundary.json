@@ -1,0 +1,781 @@
+{
+  "status": "read_only_source_assessment_not_runtime_or_acceptance",
+  "time_utc": "2026-11-05T12:12:59.603389+00:00",
+  "main_head_file_observation": "3acbd53038aea07010aff86d67c5e2fcc5b9c7a5",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "main_files": [
+    {
+      "path": "vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec",
+      "bytes": 22719,
+      "lines": 131
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "sha256": "6e4cd52bd22d980f4beb918e6765925e299f283c13080bd92f609024c9b9e7cb",
+      "bytes": 43971,
+      "lines": 75
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/ARCHITECTURE.md",
+      "sha256": "9def306f1f1d042d6d116285ba50ec454f3333a6b9f51e0884445aba751c70e1",
+      "bytes": 12670,
+      "lines": 57
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/source-inventory.json",
+      "sha256": "c0f4e7c2d7ee9fb9aae7c84b4a20df14dd96bad0422bec9e7aebf59f82dc161a",
+      "bytes": 149121,
+      "lines": 3024
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/architecture/map.json",
+      "sha256": "92acac1460e578ef44fdef2b9ef22ce305d6a22ae0bdfb3d0984950bca34c305",
+      "bytes": 1043865,
+      "lines": 903
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/research/old113-transfer-crosswalk.md",
+      "sha256": "75ff7571b88bed5d6894f2f40f3ee5d803968a8d18dae16baca2235f7ab60947",
+      "bytes": 21393,
+      "lines": 231
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/configuration.rs",
+      "sha256": "6513e765102ce62a57389f2438b4406b25550d00682159c48ffb0d314200e288",
+      "bytes": 8067,
+      "lines": 215
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/configuration/lower.rs",
+      "sha256": "d27b3bf38135e1f2dd3ba2ca95921cd0b3534301468d07d43024a62a907e95c3",
+      "bytes": 3611,
+      "lines": 90
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83",
+      "bytes": 9526,
+      "lines": 236
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/configuration/validate.rs",
+      "sha256": "24c2f03b357584d0a17a256247092b2c83995f2439c4dfc11c92dbe46266ba00",
+      "bytes": 10759,
+      "lines": 258
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/capabilities.rs",
+      "sha256": "891de63352dd7b1c51a75c2e584661892981926f8ed055d14623e87d9ce8419f",
+      "bytes": 13718,
+      "lines": 342
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/configuration_intent.rs",
+      "sha256": "8348bd7d33789945ec7a34476ea21acad3d8e504edc178e639f2dc42d12c3d92",
+      "bytes": 1711,
+      "lines": 48
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/application/requirement.rs",
+      "sha256": "906f5a0ba580681d1a2361954fdb781f9f252e6ce2e6aa227d1599669fd129dc",
+      "bytes": 7392,
+      "lines": 198
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/lockfile.rs",
+      "sha256": "acc1516c4c6edaead839f7461f9fba5fc46af62de06f67d525c63bf8baa1bf0d",
+      "bytes": 25216,
+      "lines": 599
+    },
+    {
+      "path": "crates/vibe-resolver/src/features.rs",
+      "sha256": "e9fb6d732be0378c30a60d491522de47b30855fad584dcef7a8b41ea77737e8c",
+      "bytes": 17604,
+      "lines": 517
+    },
+    {
+      "path": "crates/vibe-resolver/src/features/compiled.rs",
+      "sha256": "ad67e1f6eb7c06266447c39bc6dbbc19a025c00c84efae7dc00fc08eab36477d",
+      "bytes": 6595,
+      "lines": 181
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+      "sha256": "41f555b597f1470dbe4be515c002c89f45593a1f083d43ae1947690ea1758d67",
+      "bytes": 14950,
+      "lines": 372
+    },
+    {
+      "path": "crates/vibe-install/src/lib.rs",
+      "sha256": "d7395204845f9ce6161083c45e2f7fbcc2c21d513c1464da9baa7be0f1e16fab",
+      "bytes": 7629,
+      "lines": 190
+    },
+    {
+      "path": "crates/vibe-install/src/plan.rs",
+      "sha256": "94f2e2bd7e3a1d9fd7403071fd62d316a561ad760228e4013c6cb04faffebded",
+      "bytes": 18824,
+      "lines": 451
+    },
+    {
+      "path": "crates/vibe-install/src/plan/roots.rs",
+      "sha256": "e290a7d290dd14f6cc8b66b5496a370b05b1a0ac1726add5e5b041a16fa5e850",
+      "bytes": 7531,
+      "lines": 221
+    },
+    {
+      "path": "crates/vibe-install/src/plan/fetch.rs",
+      "sha256": "44c5392a3ab2762e244c42324ef98a4b7e852bb1587eab5ed30a8edfc3751b9b",
+      "bytes": 15786,
+      "lines": 395
+    },
+    {
+      "path": "crates/vibe-install/src/record.rs",
+      "sha256": "bce7ba32c7ea319dcdad40d60c8526dea4a79c7f1d0b58c7cd12054c8423c6b9",
+      "bytes": 17022,
+      "lines": 417
+    },
+    {
+      "path": "crates/vibe-install/src/apply/lock.rs",
+      "sha256": "25f14eb4c686c8b7ead02626ebb741d6b30e3a45e1344c9fe2125993c0b5b823",
+      "bytes": 3368,
+      "lines": 84
+    },
+    {
+      "path": "crates/vibe-install/src/apply/metadata.rs",
+      "sha256": "0265f06072f76c3fc832b86d531fb88c3a6d860e007067e8f05f37ff75e45d90",
+      "bytes": 3690,
+      "lines": 99
+    },
+    {
+      "path": "crates/vibe-install/src/error.rs",
+      "sha256": "aabfa4417da6847b6989568e16191cc8a80a1e9909f87e23255541c02655a6c2",
+      "bytes": 9284,
+      "lines": 207
+    },
+    {
+      "path": "crates/vibe-install/src/visibility_projection.rs",
+      "sha256": "a4cb0d4cea4586e560f22ce62fbba35edee83f1e3c3907688ee53da2752ba12b",
+      "bytes": 17276,
+      "lines": 499
+    },
+    {
+      "path": "crates/vibe-workspace/src/freshness.rs",
+      "sha256": "6890e0c5185ebae13b79e3670c4328e823f201906b34b75904e588631d09cd04",
+      "bytes": 26234,
+      "lines": 596
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen.rs",
+      "sha256": "b0f2c2c64e8e8716778ec6ab03e4a571bf2b6edcf1ca2976824aa6d9b764a3a0",
+      "bytes": 23057,
+      "lines": 600
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/materialised_read.rs",
+      "sha256": "f23d1ac72eb37df5da5735535d59b1beafb598a43a69c15024fa1f98b77ef818",
+      "bytes": 7031,
+      "lines": 182
+    },
+    {
+      "path": "crates/vibe-app/src/configuration/evaluate.rs",
+      "sha256": "1ec0ed30f8a6e86c8e80483ec7c4fca56ad5acd3332fe12f8c1d7337560cd6b9",
+      "bytes": 13037,
+      "lines": 326
+    },
+    {
+      "path": "crates/vibe-app/src/configuration/parameters.rs",
+      "sha256": "df57a56701136be02b2004fb279ad17fc558b26a049dc4dec53aac8d51429300",
+      "bytes": 12718,
+      "lines": 327
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update.rs",
+      "sha256": "935a0075e695eecaf992fd1561076322c6392ac1ae1b16fc3486242453bf0c4e",
+      "bytes": 5202,
+      "lines": 129
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update/inputs.rs",
+      "sha256": "4bb5b470d3f3c72bdf5104ec50da123b8e017d210cb81df148368ed38838a4d4",
+      "bytes": 5349,
+      "lines": 136
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update/scoped.rs",
+      "sha256": "a5429487501f3ee2613e326cef7a76147e208a0842a7f01c6c59efa5de79a1f7",
+      "bytes": 19612,
+      "lines": 495
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update/scoped/stage.rs",
+      "sha256": "78f206737c8b8f79b7ee340058b7ad173c8fe029e234b91484779a0f8c8dafe2",
+      "bytes": 9871,
+      "lines": 239
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update/scoped/apply.rs",
+      "sha256": "5015d4410fa11f89b34e1f048d12a26dcc4032ae8c2f2a01ecde946f811f34ce",
+      "bytes": 18916,
+      "lines": 456
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/reinstall.rs",
+      "sha256": "6a4c93149c57418f68a19c62652f1c3abeef0fa47a0456685ec2812582a2b8e2",
+      "bytes": 11909,
+      "lines": 326
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/reinstall/force.rs",
+      "sha256": "e5de58a8661b4b0b3723ff3a5a72c8d3b510866240f9a4af80145f8f51082914",
+      "bytes": 18933,
+      "lines": 481
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/show/features.rs",
+      "sha256": "a868655b072a9294dfbaa9c56ea21a6d8b5788b94c85858fc29d62afed6954e8",
+      "bytes": 2642,
+      "lines": 94
+    },
+    {
+      "path": "crates/vibe-cli/tests/cli_registry_mgmt.rs",
+      "sha256": "e7573d33f43aba523578761acca9bd45e92fa9658222370db98f70ee7e465ab9",
+      "bytes": 135691,
+      "lines": 4096
+    },
+    {
+      "path": "crates/vibe-install/tests/prepared_planning.rs",
+      "sha256": "891c324c918a5051d8fbed44896e087ece62eba0c2172855253ffff2791b4d67",
+      "bytes": 20399,
+      "lines": 568
+    },
+    {
+      "path": "crates/vibe-install/tests/doc_kind_refusal.rs",
+      "sha256": "d762c102a712fab4cd8faad6c9bf6569955645d96963781e7c564796cceb5051",
+      "bytes": 11433,
+      "lines": 309
+    },
+    {
+      "path": "crates/vibe-install/tests/incremental_in_place.rs",
+      "sha256": "4f307cbf4b8cf5f3930ad24dd8e3cfd62f1dc35659b74c1efb4b40716bfe49c3",
+      "bytes": 14825,
+      "lines": 398
+    },
+    {
+      "path": "formats/REGISTRY.toml",
+      "sha256": "cfb1e40078b3ceca130853714d3ad2d2b7c51ddcb9c746610cfb1337d013a2f7",
+      "bytes": 53517,
+      "lines": 1590
+    }
+  ],
+  "prototype_blobs": [
+    {
+      "path": "campaigns/next/tasks/M-05-D.json",
+      "sha256": "c62526ad692d0f466caaed214b87008f6b10985a77be6d254ce123f8659e948c",
+      "bytes": 16256,
+      "lines": 201
+    },
+    {
+      "path": "campaigns/next/tasks/M-05-E.json",
+      "sha256": "32a40b39db6e672e62e851f67eaf4dcd43330cd72d9bdd71b5406886af2b94d2",
+      "bytes": 24307,
+      "lines": 296
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/install/choices.rs",
+      "sha256": "51f22ea8f3c921c62f5a70d478449e5c73b195ee0f798fcc2f625bdd2cbedf17",
+      "bytes": 18109,
+      "lines": 461
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/install/direct.rs",
+      "sha256": "880945cd7caeb812cf47ba4159dfa63af507bd903537916eaab4e03219918ea1",
+      "bytes": 15042,
+      "lines": 383
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/install/mod.rs",
+      "sha256": "55dd26e26c3412076d0b2229fa3918924176d571e29f219ab09f25def4b7ec55",
+      "bytes": 3147,
+      "lines": 67
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/reinstall.rs",
+      "sha256": "e9785d0cac63cd8e27e6b2ec82918f86273ca983fe00b475af697f8239087237",
+      "bytes": 13452,
+      "lines": 365
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/update.rs",
+      "sha256": "22dc5b383386dd507745dc41cbaf43f24873f5d3aedc7fe7d7438c5e829a7709",
+      "bytes": 6255,
+      "lines": 152
+    },
+    {
+      "path": "crates/vibe-install/src/authored_configuration.rs",
+      "sha256": "2e4bfa7858f77b3fb4f30c5363d39b2c540cb9a5c5554833dfd43687980ecb51",
+      "bytes": 4540,
+      "lines": 103
+    },
+    {
+      "path": "crates/vibe-install/src/evolution.rs",
+      "sha256": "24d493585145c459d1cec2a0dbc195fd928243bfceb7951a9f24ae659fa7fd3d",
+      "bytes": 32653,
+      "lines": 782
+    },
+    {
+      "path": "crates/vibe-install/src/plan/transaction.rs",
+      "sha256": "67e27001dd63af97ff6a6971cdd04ee67f697aa8b09b5072a22607c93f86c10d",
+      "bytes": 4184,
+      "lines": 116
+    },
+    {
+      "path": "crates/vibe-install/src/plan.rs",
+      "sha256": "1495b9b494c3f1c491d9aec3a408fbbed5a9c72884df24e108b014a39a143fea",
+      "bytes": 32869,
+      "lines": 800
+    },
+    {
+      "path": "crates/vibe-install/src/record/m_05_d_1_cases.rs",
+      "sha256": "6d6e68766674044ffafca81895121e8f4c6999f62de729a8a4fe8466c2e38bba",
+      "bytes": 33098,
+      "lines": 953
+    },
+    {
+      "path": "crates/vibe-install/src/record.rs",
+      "sha256": "53482faf61a96341bfa0e0fb4756bf89a3c99d4fae67966fefb11257fa7ff89c",
+      "bytes": 32250,
+      "lines": 706
+    },
+    {
+      "path": "crates/vibe-orchestrator/src/install/configured_source.rs",
+      "sha256": "4c6edede4442564fa8eee546578a7b2753179ea167005140dddc62f95e54eb1f",
+      "bytes": 3501,
+      "lines": 95
+    },
+    {
+      "path": "crates/vibe-resolver/src/features/configuration.rs",
+      "sha256": "614dfa8ad2d2ac3bdc0d99ce804d6a4c13797408fed9a685ba4d849870f4af95",
+      "bytes": 13331,
+      "lines": 307
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "sha256": "b13c7516929498a3e0d314b4e3648865b89301ca757d91eb71b5b1e294ea6ab7",
+      "bytes": 36751,
+      "lines": 837
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/request.rs",
+      "sha256": "ffe87ab2a3a1817b9a50b39ca43d8e4ba16062f86dba78f6334c243731e027e1",
+      "bytes": 15302,
+      "lines": 381
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/effective_subskills/m_05_d_2_cases.rs",
+      "sha256": "5be74bcddb520c52b5ca884be7fbdfd38e7242998901f1f59d0bccf64856a3b6",
+      "bytes": 2822,
+      "lines": 84
+    },
+    {
+      "path": "crates/vibe-workspace/src/install/bootgen/effective_subskills.rs",
+      "sha256": "33ae4c8889131f2fd47fd689dabb49039eb8be9c8d0917d83239569c805fe4a0",
+      "bytes": 13501,
+      "lines": 345
+    }
+  ],
+  "contracts": [
+    {
+      "id": "M-05-D.1",
+      "title": "Persist requested intent separately from resolved configuration",
+      "goal": "Make lock replay explain exact choices, captures and selected technical edges.",
+      "steps": [
+        "Serialize authored-request digest separately from active/dormant resolved selections and feature closure.",
+        "Record exact owner capture/definition, resolution domain/target, induced dependencies and selected capability providers.",
+        "Add reader migration/refusal and canonical ordering through existing generated format machinery."
+      ],
+      "acceptance": [
+        "Lock round-trip reconstructs requested versus resolved semantics distinctly.",
+        "Every induced edge explains its source declaration and consumer intent."
+      ],
+      "old113_accepted": true,
+      "source_implemented": true,
+      "runtime_verified_in_this_audit": false,
+      "hard_prerequisites": [
+        "M-05-B.2",
+        "M-05-C.3"
+      ],
+      "interfaces_not_blanket_runtime_gates": [
+        "M-14-A.1",
+        "M-14-B.1"
+      ]
+    },
+    {
+      "id": "M-05-D.2",
+      "title": "Connect feature and subskill activation to real consumers",
+      "goal": "Make selected contributions reach visibility, loading and projection while preserving source bytes.",
+      "steps": [
+        "Carry active feature/subskill exports into effective contribution selection and owning projection consumers.",
+        "Preserve full package materialization; activation changes effective contributions only.",
+        "Retain dormant branch selections as authored intent while disabling their effects and diagnose removed dormant options."
+      ],
+      "acceptance": [
+        "End-to-end fixture observes contribution activation, not only a populated field.",
+        "Changing activation leaves captured package bytes unchanged."
+      ],
+      "old113_accepted": true,
+      "source_implemented": true,
+      "runtime_verified_in_this_audit": false,
+      "hard_prerequisites": [
+        "M-05-D.1"
+      ],
+      "interfaces_not_blanket_runtime_gates": [
+        "M-06-A.4"
+      ]
+    },
+    {
+      "id": "M-05-E.1",
+      "title": "Check request freshness before fast paths and expose pure discovery",
+      "goal": "Make changed user intent visible before install can report Fresh.",
+      "steps": [
+        "Compute request/definition freshness before bare-install shortcut.",
+        "Implement cached choices/catalog discovery through the M-16 service boundary.",
+        "Expose candidate definition/effects/defaults without selecting, fetching or writing; explicit preparation remains separate."
+      ],
+      "acceptance": [
+        "Fast-path decisions cite request/definition identity.",
+        "Discovery purity counters show no authored/cache mutation."
+      ],
+      "old113_accepted": true,
+      "source_implemented": true,
+      "runtime_verified_in_this_audit": false,
+      "hard_prerequisites": [
+        "M-05-C.1",
+        "M-05-B.2"
+      ],
+      "interfaces_not_blanket_runtime_gates": [
+        "M-05-D.1",
+        "M-16-B.2",
+        "M-16-C.4"
+      ]
+    },
+    {
+      "id": "M-05-E.2",
+      "title": "Implement exact reinstall and intent-preserving update",
+      "goal": "Distinguish replay from reconfiguration when definitions change.",
+      "steps": [
+        "Route reinstall to exact captures and locked selections without solving or picking defaults.",
+        "Keep authored choices during update and produce exact definition/payload/induced-graph diff.",
+        "Require explicit reconfiguration for removed options/new required groups; preserve force/assume-yes meanings."
+      ],
+      "acceptance": [
+        "Replay/update reports distinguish exact reuse from changed semantic inputs.",
+        "No new option is selected as an incidental solver decision."
+      ],
+      "old113_accepted": true,
+      "source_implemented": true,
+      "runtime_verified_in_this_audit": false,
+      "hard_prerequisites": [
+        "M-05-D.1",
+        "M-05-E.1"
+      ],
+      "interfaces_not_blanket_runtime_gates": [
+        "M-01-B.2"
+      ]
+    },
+    {
+      "id": "M-05-E.3",
+      "title": "Make configuration apply and removal recoverable",
+      "goal": "Validate whole-world effects before writing and protect shared dependencies.",
+      "steps": [
+        "Build a complete solve/trust/collision/effect plan with captured before-images and request/catalog preconditions.",
+        "Apply manifest/lock/owned slot/boot prefixes through the existing journal; report non-reversible hook effects accurately.",
+        "For removal recompute desired/reverse closure and distinguish explicit roots/shared dependencies before deleting owned state."
+      ],
+      "acceptance": [
+        "Failure injection covers each manifest/lock/slot/boot boundary and retained recovery state.",
+        "Removal plan explains affected dependents before any deletion."
+      ],
+      "old113_accepted": true,
+      "source_implemented": true,
+      "runtime_verified_in_this_audit": false,
+      "hard_prerequisites": [
+        "M-05-D.1",
+        "M-05-E.2"
+      ],
+      "interfaces_not_blanket_runtime_gates": [
+        "M-13-D.1",
+        "M-14-C.2",
+        "M-16-C.2.2"
+      ]
+    },
+    {
+      "id": "M-05-E.4",
+      "title": "Implement attended and unattended choice interaction",
+      "goal": "Expose explicit selection through TTY and machine clients without inferred answers.",
+      "steps": [
+        "Build TTY radio/checkbox discovery from the same captured definition/effects model as machine requests.",
+        "Require explicit selections or explicit allow-defaults unattended; no JSON/non-TTY prompt and no assume-yes semantic answer.",
+        "Expose exact typed NeedsSelection/questions and prepared plan through M-16 operations; save applied intent."
+      ],
+      "acceptance": [
+        "CLI/service/MCP produce the same request and prepared effect graph.",
+        "Machine invocation completes or returns typed input requirements without waiting on TTY."
+      ],
+      "old113_accepted": true,
+      "source_implemented": true,
+      "runtime_verified_in_this_audit": false,
+      "hard_prerequisites": [
+        "M-05-B.2",
+        "M-05-E.3"
+      ],
+      "interfaces_not_blanket_runtime_gates": [
+        "M-16-B.1",
+        "M-16-C.4"
+      ]
+    }
+  ],
+  "reachable_today": [
+    {
+      "id": "R1",
+      "status": "actual authored reader/library boundary",
+      "path": "crates/vibe-core/src/manifest/package/configuration_intent.rs:10; configuration/intent.rs:122",
+      "finding": "Requires.configurations preserves original edge input, source kinds and workspace identity; normalize_input produces existing FeatureInput/ConsumerChoices/typed public parameters. Not execution or lock persistence."
+    },
+    {
+      "id": "R2",
+      "status": "ordinary install explicit refusal",
+      "path": "crates/vibe-install/src/plan.rs:165; plan/roots.rs:204; plan/fetch.rs:32,141",
+      "finding": "Workspace rich input rejected before migration/Fresh/solve; fetched and in-place common package definitions and transitive rich input rejected before normal apply. Registry/cache acquisition can precede fetched-definition refusal, so not a global no-I/O claim."
+    },
+    {
+      "id": "R3",
+      "status": "legacy behavior reaches actual lock/display",
+      "path": "crates/vibe-install/src/plan/fetch.rs:47; record.rs:326; apply/lock.rs:64; crates/vibe-cli/src/commands/show/features.rs:33",
+      "finding": "Legacy selected active_features persists and is visible. active_deps/dep_features/weak_dep_features/active_subskills are produced/projected in resolver but no production consumer outside that module was found."
+    },
+    {
+      "id": "R4",
+      "status": "static reachable counterpath, unexecuted",
+      "path": "crates/vibe-cli/src/commands/update/scoped.rs:210-280; scoped/stage.rs:109; scoped/apply.rs:206-226; update/inputs.rs:75-114",
+      "finding": "Scoped update solves/fetches independently and rebuilds a lock row from new source while retaining old effective features. No common definition/input guard found in actual callees. Legacy v1 to common-config v2 can pass this path without common evaluation; whole update delegates guarded install."
+    },
+    {
+      "id": "R5",
+      "status": "separate replay owner, not common support",
+      "path": "crates/vibe-cli/src/commands/reinstall.rs:141; reinstall/force.rs:143; crates/vibe-core/src/manifest/lockfile.rs:51,421",
+      "finding": "Reinstall uses locked version/content checks, not original rich configuration; new configured lock writer must not be enabled until this owner reads/guards its meaning. This is not evidence every reinstall currently corrupts records."
+    }
+  ],
+  "missing_seams": [
+    {
+      "id": "G1",
+      "kind": "missing narrow semantic prerequisite",
+      "finding": "Current dependency/forward effects name existing requires entries, while resolution_requires makes all such entries unconditional and Requires has no optional bit. Prototype uses explicit optional declarations. Root must define mandatory versus activatable edges; do not infer optionality from an effect reference or import prototype grammar implicitly.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/configuration.rs:147",
+        "crates/vibe-core/src/manifest/configuration/validate.rs:208",
+        "crates/vibe-core/src/manifest/package/capabilities.rs:71",
+        "crates/vibe-core/src/manifest/package/application/requirement.rs:186",
+        "prototype:crates/vibe-resolver/src/resolvo_engine/configuration.rs:66,457-491"
+      ]
+    },
+    {
+      "id": "G2",
+      "kind": "adapt current owners",
+      "finding": "One real workspace/dependency instance must retain all actual consumers. Add candidate-scoped normalized input and selected definition/content identity through solve, held retry, masked visibility and conditional re-solves; one existing solver, no client-created domains.",
+      "evidence": [
+        "crates/vibe-install/src/plan/roots.rs",
+        "crates/vibe-install/src/lib.rs:161",
+        "crates/vibe-resolver/src/resolvo_engine/provider.rs:257",
+        "prototype:crates/vibe-resolver/src/resolvo_engine/request.rs:26"
+      ]
+    },
+    {
+      "id": "G3",
+      "kind": "shared evaluation adaptation",
+      "finding": "Reuse core compile_choices/normalize_input/choice merge and typed parameter validation. App evaluator is not directly generic: hardcoded installer consumer and data-only effect admission; extract/parameterize actual shared responsibility while keeping app adapter behavior. Multi-consumer parameter reconciliation needs real owner evidence.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/configuration/lower.rs:28",
+        "crates/vibe-core/src/manifest/configuration/intent.rs:122",
+        "crates/vibe-app/src/configuration/evaluate.rs:101,284-307"
+      ]
+    },
+    {
+      "id": "G4",
+      "kind": "new durable meaning in existing store",
+      "finding": "Lock retains effective features and package/source edges, not per-consumer original input, defaults/definition basis or rich selected effects. Extend existing typed lock owner with explicit compatibility before writer activation; preserve intent distinctly from resolved results. Current format.lockfile is schema=none; do not assume app generated DTO can be dropped into core.",
+      "evidence": [
+        "crates/vibe-core/src/manifest/lockfile.rs:304,421",
+        "crates/vibe-install/src/record.rs:294-337",
+        "formats/REGISTRY.toml:1040"
+      ]
+    },
+    {
+      "id": "G5",
+      "kind": "real effect consumers",
+      "finding": "Dependency activation and strong/weak forwarding must affect the selected graph; subskills must affect existing effective boot/MCP loading with intact source bytes. Retired install-time copying and empty legacy subskills_active are deliberate, not a request to restore that mechanism.",
+      "evidence": [
+        "crates/vibe-resolver/src/features.rs:96",
+        "crates/vibe-cli/tests/cli_registry_mgmt.rs:1086-1094",
+        "prototype:crates/vibe-workspace/src/install/bootgen/effective_subskills.rs:37,132-164"
+      ]
+    },
+    {
+      "id": "G6",
+      "kind": "maintenance/admission",
+      "finding": "Freshness precedes current legacy solve; common source is currently refused. Future writer requires request/default-basis freshness before fast paths, exact replay and intent-preserving update, including the separate scoped-update branch and borrowed transaction owners.",
+      "evidence": [
+        "crates/vibe-install/src/plan.rs:220-257",
+        "crates/vibe-workspace/src/freshness.rs:67",
+        "crates/vibe-cli/src/commands/update/scoped.rs:210",
+        "prototype:crates/vibe-install/src/plan.rs:363-390",
+        "prototype:crates/vibe-install/src/evolution.rs:447-468"
+      ]
+    },
+    {
+      "id": "G7",
+      "kind": "actual user surfaces",
+      "finding": "Ordinary authored input can be first input carrier, but full contract still requires normal console/external questions and apply/result parity, not the prototype caller-supplied host. Same typed evaluation must feed plan/apply without rereading away answers.",
+      "evidence": [
+        "vibevm/vibespecs/common/PROP-069-common-configuration.xml:7,35-37,45",
+        "prototype:crates/vibe-cli/src/commands/install/direct.rs:137",
+        "prototype:crates/vibe-install/src/authored_configuration.rs:11,91"
+      ]
+    }
+  ],
+  "reuse_classification": [
+    {
+      "classification": "reuse",
+      "items": [
+        "ConfigurationDecl / ConfigurationIntentDecl / semantic_fingerprint / existing feature and choice kernels",
+        "Workspace root constraints and real consumer identity; existing source/resolver factories",
+        "Existing lock/source provenance, cooperative transaction/metadata undo, slot/materialization and boot owners"
+      ]
+    },
+    {
+      "classification": "adapt",
+      "items": [
+        "Prototype candidate-local selected effects and edge provenance, translated to main grammar/current shared kernels",
+        "Requested/resolved lock distinction and freshness checks",
+        "Effective subskill loading/projection from full slots; no legacy copy rows",
+        "Shared evaluator/parameter host boundary currently inside vibe-app; preserve existing app adapter"
+      ]
+    },
+    {
+      "classification": "new main seam",
+      "items": [
+        "Candidate-bound package request carrying all real consumer inputs through every solver route",
+        "Typed package lock configuration record and actual maintenance/readers",
+        "Normalized mandatory/optional declaration policy, once root settles exact semantics",
+        "Normal non-app public question/answer route"
+      ]
+    },
+    {
+      "classification": "do not transfer by default",
+      "items": [
+        "Manual choice-host/capture service as prerequisite to ordinary local configure",
+        "Client-supplied environment/domain/instance labels as independent physical authority",
+        "New solver, global configuration store, universal environment/deployment runtime",
+        "Install-time subskill byte pruning/copying or automatic Agent Skill conversion"
+      ]
+    }
+  ],
+  "recommended_next_atom": {
+    "name": "Shared unsupported-common admission for scoped package maintenance before effects",
+    "status": "architecture-ready bounded safety prerequisite; not positive configured-package delivery",
+    "why": "Normal install already promises explicit refusal; scoped update has an independent reachable bypass. Close it using existing errors and actual selected/candidate manifests before activating any new rich writer. This is correctness, not an easier replacement for solver/effect integration.",
+    "files": [
+      "crates/vibe-install/src/plan/roots.rs",
+      "crates/vibe-install/src/plan/fetch.rs",
+      "crates/vibe-install/src/lib.rs",
+      "crates/vibe-install/src/configuration_admission.rs (proposed shared guard, not an evaluator/store)",
+      "crates/vibe-cli/src/commands/update/scoped.rs",
+      "crates/vibe-cli/src/commands/update/scoped/stage.rs",
+      "crates/vibe-cli/tests/cli_common_package_maintenance.rs (proposed actual CLI discriminator)",
+      "crates/vibe-install/tests/prepared_planning.rs",
+      "crates/vibe-install/tests/doc_kind_refusal.rs",
+      "crates/vibe-install/tests/incremental_in_place.rs"
+    ],
+    "prerequisites": [
+      "Reuse exact existing ConfigurationInputUnsupported / ConfigurationUnsupported errors and preserve value-free diagnostics.",
+      "Pre-solve workspace guard and complete selected-candidate guard before confirmation/staging/pruning/hook/boot/lock writes; prospective in-place source must be assessed before materialise_in_place mutates the checkout. If exact prospective metadata is unavailable, refuse honestly before mutation.",
+      "Keep ordinary legacy update controls passing; source/cache reads and trace bookkeeping are not project semantic effects and must be reported separately."
+    ],
+    "user_benefit": "A scoped update cannot report success after silently ignoring newly authored/common package choices or a new configured candidate. Existing installation and its lock/boot remain intact on unsupported input.",
+    "discriminator": [
+      "Actual CLI install legacy flow 1.0.0 with authored ^1 constraint from isolated local registry; then add 1.1.0 with valid common configuration and a canary hook. Run scoped update. Expect explicit configuration refusal; assert exact manifest/lock/slot/boot hashes unchanged and hook absent. The current inspected code predicts failure of this oracle; no runtime RED was run.",
+      "Add configuration intent only to a sibling workspace requires edge; scoped update must refuse before source solve/effects and not erase or ignore that consumer.",
+      "Repeat candidate/transitive and in-place forms at their real pre-effect seam; prove no checkout advance before refusal. Whole update/normal install remain refusal controls; legacy v2 remains successful control."
+    ],
+    "not_claimed": [
+      "No old M05 task closed by guard",
+      "No configuration effect support",
+      "No decision to use data-only install as the next positive feature"
+    ]
+  },
+  "prerequisite_dag": [
+    {
+      "id": "A0",
+      "capability": "Close current independent maintenance admission hole",
+      "depends_on": [],
+      "track": "safety prerequisite; can run independently of positive design"
+    },
+    {
+      "id": "A1",
+      "capability": "Settle typed required/optional edge meaning + actual instance/source identity",
+      "depends_on": [],
+      "track": "semantic interface; pure core already present, no full M14 runtime gate"
+    },
+    {
+      "id": "A2",
+      "capability": "Bind all real consumers to candidate-local shared evaluation through existing resolver routes",
+      "depends_on": [
+        "A1"
+      ],
+      "track": "implementation foundation"
+    },
+    {
+      "id": "A3",
+      "capability": "Durable requested versus resolved/default-basis/edge record + reader/freshness/replay admission",
+      "depends_on": [
+        "A2"
+      ],
+      "track": "state foundation; writer couples to its actual readers and apply owner"
+    },
+    {
+      "id": "A4",
+      "capability": "Consume selected graph/forwarding and effective subskills/config-data through actual owners",
+      "depends_on": [
+        "A2",
+        "A3"
+      ],
+      "track": "effects; may co-land with writer if no truthful independent activated boundary"
+    },
+    {
+      "id": "A5",
+      "capability": "Ordinary authored/console/external install and intent-preserving update/replay with failure gates",
+      "depends_on": [
+        "A0",
+        "A3",
+        "A4"
+      ],
+      "track": "user journey; generic M16 transports and full M14 environments not prerequisites"
+    }
+  ],
+  "alternatives": {
+    "data_only": "Not recommended as automatic delivery/priority. No current non-app config-value consumer was found beyond declared data and app-specific evaluation. A typed field, lock persistence or inspection alone does not establish the requested cross-kind journey. A data-only slice is legitimate only if root identifies the actual consuming plan/diff/replay contract and it is a necessary shared foundation; cannot bypass A1/A2 for dependency/forward/subskill effects.",
+    "first_positive_vertical": "After A1 is decided, ordinary authored non-app package input\u2192candidate-aware selected effect graph\u2192durable original/resolved record\u2192actual dependency and/or effective loading output, with cold replay/update and no-leak backtracking discriminators. Co-land tightly coupled reader/writer/consumer activation where necessary; do not advertise all kinds/modes from one registry fixture."
+  },
+  "runtime_checks_executed": 0,
+  "source_mutations": 0,
+  "git_operations": "read-only object show/ls-tree/grep in pinned prototype only; no index/ref/worktree changes",
+  "limits": [
+    "All six selected D/E rows are in original accepted113 per canonical map; implemented inventory is source evidence, not fresh runtime pass.",
+    "No global old113 completion count or status edits.",
+    "Main source files may move after snapshot; hashes bound every cited source family.",
+    "No full boot, unrelated plans, network, builders, agents or dirty prototype worktree reads."
+  ],
+  "end_drift": []
+}

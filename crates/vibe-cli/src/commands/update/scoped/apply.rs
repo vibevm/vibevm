@@ -53,6 +53,7 @@ pub(super) struct ScopedApply<'a> {
     pub(super) measured: &'a mut Measured,
     pub(super) identity: &'a UpdateIdentity,
     pub(super) project_root: &'a Path,
+    pub(super) manifest: &'a vibe_core::manifest::Manifest,
     pub(super) workspace: &'a Workspace,
     pub(super) metadata: &'a RunMetadata,
     pub(super) spec_format: SpecFormat,
@@ -75,12 +76,14 @@ pub(super) struct ScopedApply<'a> {
     pub(super) agent: &'a std::sync::Arc<dyn vibe_lifecycle::AgentBackend>,
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<UpdateDraft> {
     let ScopedApply {
         lifecycle,
         measured,
         identity,
         project_root,
+        manifest,
         workspace,
         metadata,
         spec_format,
@@ -96,6 +99,9 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         lanes_before,
         agent,
     } = inputs;
+
+    vibe_install::configuration_admission::workspace_inputs(workspace, project_root, manifest)?;
+    vibe_install::configuration_admission::resolved_packages(full_world)?;
 
     // Remove every superseded slot, recording each real removal as it happens.
     // The transfer into the run is unconditional and comes BEFORE the `?`: a

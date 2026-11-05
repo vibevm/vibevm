@@ -44,8 +44,8 @@ impl InstallManifestMutation for CliGitSourceMutation<'_> {
         if self.args.git.is_none() {
             return Ok(());
         }
-        // Built once, applied to the STORED RAW snapshot, and persisted from
-        // that same value — no second read of a file this command is rewriting.
+        // Built once and applied to the STORED RAW snapshot. Publication belongs
+        // to the operation owner after selected candidate admission.
         let dep = apply_git_source_flag(self.args, manifest, project_root)
             .context("recording --git declaration to vibe.toml")?;
         // Then the SAME delta is replayed onto the finalised node inside the
@@ -61,7 +61,7 @@ impl InstallManifestMutation for CliGitSourceMutation<'_> {
         let workspace_root = workspace.root.display().to_string();
         let selected = selected_node_manifest_mut(workspace, project_root).with_context(|| {
             format!(
-                "recording --git declaration to vibe.toml: the loaded workspace rooted at                  `{workspace_root}` does not contain the selected node `{}`, so the                  declaration just written could not be replayed onto the tree this install                  resolves against",
+                "recording --git declaration to vibe.toml: the loaded workspace rooted at                  `{workspace_root}` does not contain the selected node `{}`, so the                  prepared declaration could not be replayed onto the tree this install                  resolves against",
                 project_root.display(),
             )
         })?;

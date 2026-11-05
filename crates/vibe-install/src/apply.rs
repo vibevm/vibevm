@@ -5,10 +5,11 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use std::collections::BTreeSet;
+use std::path::Path;
 use std::sync::Arc;
 
 use vibe_core::PackageRef;
-use vibe_core::manifest::SpecFormat;
+use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_lifecycle::process::StreamMode;
 use vibe_lifecycle::{LifecycleLease, LifecycleRunHandle, RunMetadata};
@@ -42,6 +43,12 @@ mod metadata;
 mod native;
 use deferred::materialise_deferred_in_place;
 use file_guard::MetadataFiles;
+/// Commit an admitted prepared source delta without overwriting a changed
+/// selected manifest. The caller owns candidate admission before this write.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
+pub fn publish_admitted_manifest(root: &Path, before: &Manifest, after: &Manifest) -> Result<()> {
+    file_guard::publish_admitted_manifest(root, before, after)
+}
 use metadata::apply_with_spec_format_and_slot_lifecycle;
 use native::NativeApplyPreparation;
 
@@ -286,6 +293,7 @@ fn apply_with_spec_format_and_lifecycle_observed_traced_prepared_inner<
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
     native: Option<NativeApplyPreparation<'_>>,
 ) -> Result<PreparedApplyReport> {
+    crate::configuration_admission::planned(&planned)?;
     let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, seams, lease)?;
     let lifecycle_run = lifecycle.run_handle();
     let applied = apply_with_spec_format_and_slot_lifecycle(
@@ -363,6 +371,7 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     // the workspace apply's boot regeneration and no further.
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
     native: Option<NativeApplyPreparation<'_>>,
+    workspace: Workspace,
     files: &mut MetadataFiles,
 ) -> Result<PreparedApplyReport> {
     let PlannedInstall {
@@ -395,7 +404,8 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     //    concurrent writer decide what this command installed. The preloaded
     //    seam takes the in-memory value for the selected node and discovers
     //    the rest of the tree around it.
-    let workspace = Workspace::discover_with_selected_manifest(&project_root, &manifest)?;
+    // The selected-manifest projection and siblings were admitted before publication.
+    crate::configuration_admission::workspace_inputs(&workspace, &project_root, &manifest)?;
     // Check the siblings this discovery actually read before slot effects.
     // Deferred in-place refresh below preserves the solver's version/kind;
     // it only refreshes the source manifest and materialization provenance.

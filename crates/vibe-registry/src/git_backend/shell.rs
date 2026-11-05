@@ -25,7 +25,7 @@ use std::process::{Command, Output};
 use std::sync::{Arc, OnceLock};
 use std::time::Duration;
 
-use super::{GitBackend, GitError};
+use super::{GitBackend, GitError, GitPreparedRevision};
 
 /// `git` subprocess backend.
 ///
@@ -243,6 +243,55 @@ impl ShellGit {
 }
 
 impl GitBackend for ShellGit {
+    fn origin_url(&self, dest: &Path) -> Result<String, GitError> {
+        prepared::origin(self, dest)
+    }
+
+    fn recorded_origin_url(&self, dest: &Path) -> Result<String, GitError> {
+        prepared::recorded_origin(self, dest)
+    }
+
+    fn prepare_ref(
+        &self,
+        url: &str,
+        reference: &str,
+        reuse: Option<&Path>,
+        objects: &Path,
+        destination: &Path,
+    ) -> Result<GitPreparedRevision, GitError> {
+        self.preflight()?;
+        prepared::prepare(self, url, reference, reuse, objects, destination)
+    }
+
+    fn file_at_commit(
+        &self,
+        objects: &Path,
+        commit: &str,
+        path: &str,
+    ) -> Result<Vec<u8>, GitError> {
+        self.run(&["show", &format!("{commit}:{path}")], Some(objects))
+            .map(|o| o.stdout)
+    }
+
+    fn apply_prepared_ref(
+        &self,
+        objects: &Path,
+        revision: &GitPreparedRevision,
+        origin: &str,
+        authenticated_origin: Option<&str>,
+        dest: &Path,
+        refresh: bool,
+    ) -> Result<(), GitError> {
+        prepared::apply(
+            self,
+            objects,
+            revision,
+            origin,
+            authenticated_origin,
+            dest,
+            refresh,
+        )
+    }
     fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
         self.preflight()?;
         checkout::bootstrap(self, url, refname, dest)
@@ -484,6 +533,7 @@ use tar::extract_single_file_from_tar;
 
 /// Clone/fetch and ref-kind-aware checkout mechanics.
 mod checkout;
+mod prepared;
 
 /// The HTTPS single-file read that runs before `git archive` on the two
 /// hosts that serve one, and the rules that keep its misses honest.

@@ -36,14 +36,9 @@ pub struct Fetched {
     /// Apply records these exact inputs without making a second network
     /// decision after dependency-slot mutation begins.
     pub embedded_sources: Vec<LockedEmbeddedSource>,
-    /// `true` iff this is a re-resolve of an already-present `in-place`
-    /// package (PROP-022 §2.4) that the plan deferred rather than re-cloned:
-    /// `cached` was built from the existing slot (manifest read locally,
-    /// network-free), and [`apply`](crate::apply) performs the incremental
-    /// `git fetch` against the live `.git` post-confirmation. `false` for a
-    /// normally-fetched package — including a *fresh* in-place install, which
-    /// still clones once and moves the clone into the slot.
-    pub in_place_incremental: bool,
+    /// Exact prospective source retained until apply. None means the package
+    /// was fetched normally; Some binds deferred checkout to admitted bytes.
+    pub in_place: Option<vibe_registry::PreparedInPlace>,
 }
 
 /// Load the workspace lockfile, or an empty one stamped with the

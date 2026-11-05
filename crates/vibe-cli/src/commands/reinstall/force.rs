@@ -75,6 +75,7 @@ pub(super) struct Forced<'a> {
     pub(super) lease: &'a std::sync::Arc<LifecycleLease>,
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<ReinstallDraft> {
     if inputs.lockfile.packages.is_empty() {
         return regenerate_only(ctx, &inputs);
@@ -184,6 +185,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
             fetching.fail("locked package refetch failed");
             return Err(mismatch);
         }
+        vibe_install::configuration_admission::package_manifest(&pkgref, &cached.manifest)?;
         source_hashes.insert(
             (cached.resolved.group.clone(), cached.resolved.name.clone()),
             cached.content_hash.clone(),

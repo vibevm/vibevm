@@ -22,6 +22,26 @@ pub mod transfers;
 
 pub use shell::ShellGit;
 
+/// The fetched object, its peeled commit and the actual ref namespace.
+/// These identifiers describe one prepared source; applying does not resolve
+/// the remote reference again.
+///
+/// ```
+/// use vibe_registry::git_backend::GitPreparedRevision;
+/// fn identities(revision: &GitPreparedRevision) -> (&str, &str) {
+///     (&revision.object, &revision.commit)
+/// }
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
+pub struct GitPreparedRevision {
+    pub object: String,
+    pub commit: String,
+    pub reference: String,
+    /// Actual future slot, used to reject mutable checkout-local attribute inputs.
+    pub destination: std::path::PathBuf,
+}
+
 /// Errors a [`GitBackend`] operation may surface.
 ///
 /// Variants correspond to stderr patterns stable enough to key on.
@@ -32,6 +52,28 @@ pub use shell::ShellGit;
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
 )]
 pub enum GitError {
+    #[error(
+        "checkout at `{path}` has no origin remote (violates spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION; fix: configure the checkout origin or a reachable registry mirror and prepare again)"
+    )]
+    OriginMissing { path: std::path::PathBuf },
+    #[error(
+        "this git backend does not implement immutable prepared checkouts (violates spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION; fix: use a backend that supports prepared source admission)"
+    )]
+    PreparedCheckoutUnsupported,
+    /// A prepared source cannot establish the authoritative checkout invariant.
+    #[error(
+        "prepared checkout refused: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION; fix: correct the source or checkout attributes and prepare again)"
+    )]
+    PreparedCheckout { reason: String },
+    /// The requested object was acquired, but inspecting that exact source
+    /// failed. This phase is terminal: another source cannot replace it.
+    #[error(
+        "acquired source validation failed (violates spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION; fix: correct the acquired source or checkout inputs and prepare again): {source}"
+    )]
+    PreparedValidation {
+        #[source]
+        source: Box<GitError>,
+    },
     #[error(
         "the `git` executable is not available on PATH; install git \
          (https://git-scm.com/downloads) and retry \
@@ -167,6 +209,57 @@ pub enum GitError {
 /// # Ok::<(), GitError>(())
 /// ```
 pub trait GitBackend: Send + Sync {
+    /// Read the actual origin used by an existing checkout refresh.
+    fn origin_url(&self, _dest: &Path) -> Result<String, GitError> {
+        Err(GitError::PreparedCheckoutUnsupported)
+    }
+
+    /// Read Git's stored origin spelling before URL rewrites. Fresh local clones
+    /// record an absolute origin even when their caller used a relative source.
+    fn recorded_origin_url(&self, _dest: &Path) -> Result<String, GitError> {
+        Err(GitError::PreparedCheckoutUnsupported)
+    }
+
+    /// Capture exact objects in an operation-owned bare view. Existing-origin
+    /// acquisition may write only objects/FETCH_HEAD in `reuse`, retaining its
+    /// native transport context without changing HEAD, index, config, named refs
+    /// or worktree. The borrowed original object store must remain available
+    /// until the bound candidate has been applied or dropped. After the requested
+    /// object is acquired, wrap inspection failures in [`GitError::PreparedValidation`]
+    /// so a caller cannot replace that invalid source with a mirror.
+    fn prepare_ref(
+        &self,
+        _url: &str,
+        _reference: &str,
+        _reuse: Option<&Path>,
+        _objects: &Path,
+        _destination: &Path,
+    ) -> Result<GitPreparedRevision, GitError> {
+        Err(GitError::PreparedCheckoutUnsupported)
+    }
+
+    /// Read a file from the exact prepared commit, without a worktree checkout.
+    fn file_at_commit(
+        &self,
+        _objects: &Path,
+        _commit: &str,
+        _path: &str,
+    ) -> Result<Vec<u8>, GitError> {
+        Err(GitError::PreparedCheckoutUnsupported)
+    }
+
+    /// Apply only the captured object/commit from the held local object repository.
+    fn apply_prepared_ref(
+        &self,
+        _objects: &Path,
+        _revision: &GitPreparedRevision,
+        _origin: &str,
+        _authenticated_origin: Option<&str>,
+        _dest: &Path,
+        _refresh: bool,
+    ) -> Result<(), GitError> {
+        Err(GitError::PreparedCheckoutUnsupported)
+    }
     /// Clone `url` (checked out at `refname`) into `dest`.
     ///
     /// The caller guarantees `dest` is either empty or absent. On error,

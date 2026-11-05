@@ -14,9 +14,8 @@ use crate::cli::InstallArgs;
 /// `--git-token-env` flags. Validates the flag combination, parses
 /// the single positional pkgref, builds a `GitPackageDep`, merges it
 /// into `manifest.requires.git_packages` (replacing any prior entry
-/// for the same `(kind, name)`), and persists the manifest before
-/// resolving so a panic mid-resolve cannot leave the on-disk
-/// declaration out of sync. Removes any conflicting registry-resolved
+/// for the same `(kind, name)`) in memory. The operation owner publishes
+/// the admitted raw snapshot after planning. Removes any conflicting registry-resolved
 /// entry for the same pkgref to keep `manifest.requires` in a valid
 /// shape (no duplicate `(kind, name)` between `packages` and
 /// `git_packages`).
@@ -37,7 +36,7 @@ use crate::cli::InstallArgs;
 pub(super) fn apply_git_source_flag(
     args: &InstallArgs,
     manifest: &mut Manifest,
-    project_root: &std::path::Path,
+    _project_root: &std::path::Path,
 ) -> Result<vibe_core::manifest::GitPackageDep> {
     use vibe_core::manifest::{AuthKind, GitPackageDep, GitRefKind};
 
@@ -110,10 +109,9 @@ pub(super) fn apply_git_source_flag(
     // The (group, name) dedup discipline across `requires.packages` /
     // `requires.git_packages` lives in the orchestrator now — the CLI
     // translates flags into the typed dep and hands it over, then
-    // persists before resolving so a panic mid-resolve cannot strand the
-    // declaration off disk.
+    // retains the source delta in memory. The command owner publishes it only
+    // after every selected package candidate has passed admission.
     vibe_install::record_git_source(manifest, dep.clone());
-    manifest.write(project_root.join(Manifest::FILENAME))?;
     Ok(dep)
 }
 
@@ -209,17 +207,11 @@ mod git_replay_tests {
         );
         assert!(raw.requires.packages.is_empty());
 
-        // A disk mutation AFTER the snapshot: it must not reach the write.
-        std::fs::write(
-            member.join(Manifest::FILENAME),
-            "[package]\ngroup = \"org.demo\"\nname = \"IMPOSTOR\"\nkind = \"flow\"\n\
-             version = \"9.9.9\"\n",
-        )
-        .unwrap();
-
-        // The delta, applied to the raw value and persisted from it.
+        let before = raw.clone();
+        // Preparing the delta does not write; successful admitted publication
+        // preserves the raw placeholder rather than serializing the loaded tree.
         vibe_install::record_git_source(&mut raw, dep());
-        raw.write(member.join(Manifest::FILENAME)).unwrap();
+        vibe_install::publish_admitted_manifest(&member, &before, &raw).unwrap();
 
         // And the SAME delta replayed onto the exact selected finalised node.
         let replayed = selected_node_manifest_mut(&mut workspace, &selected)
@@ -237,7 +229,15 @@ mod git_replay_tests {
         assert_eq!(
             persisted.package.as_ref().unwrap().name.as_str(),
             "member",
-            "and the post-snapshot disk mutation was NOT copied into the write",
+            "the original selected identity is retained",
+        );
+
+        let changed = "[package]\ngroup='org.demo'\nname='other'\nkind='flow'\nversion='9.9.9'\n";
+        std::fs::write(member.join(Manifest::FILENAME), changed).unwrap();
+        assert!(vibe_install::publish_admitted_manifest(&member, &before, &raw).is_err());
+        assert_eq!(
+            std::fs::read_to_string(member.join(Manifest::FILENAME)).unwrap(),
+            changed
         );
 
         // --- the finalised half -------------------------------------------

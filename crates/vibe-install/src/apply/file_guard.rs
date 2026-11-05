@@ -221,6 +221,36 @@ pub(super) struct MetadataFiles {
     pub provenance: FileGuard,
 }
 
+/// Publish the admitted legacy requires seed through the existing owned-file
+/// receipt. Failed planning never reaches this boundary; changed source bytes
+/// still refuse instead of being overwritten by a stale prepared snapshot.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
+pub(crate) fn publish_admitted_manifest(
+    root: &Path,
+    expected: &Manifest,
+    replacement: &Manifest,
+) -> Result<()> {
+    let path = root.join(Manifest::FILENAME);
+    let mut guard = FileGuard::capture(&path)?;
+    let text = guard.previous_text()?;
+    if text
+        .and_then(|text| Manifest::parse_str(text).ok())
+        .as_ref()
+        != Some(expected)
+    {
+        return Err(failure(
+            &path,
+            "selected manifest changed before admitted migration publication",
+        ));
+    }
+    let rendered = replacement.render_with_comments(text)?;
+    guard
+        .publish(Some(&rendered))
+        .map_err(|error| combine(error, [&mut guard]))?;
+    guard.disarm();
+    Ok(())
+}
+
 impl MetadataFiles {
     pub fn capture(
         selected: &Path,

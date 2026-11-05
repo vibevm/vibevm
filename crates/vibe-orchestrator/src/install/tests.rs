@@ -400,3 +400,7 @@ fn the_two_observation_ports_are_distinct_traits() {
 /// The agreement gates and the registry epoch — split out at the line budget.
 #[path = "tests/gates.rs"]
 mod gates;
+
+#[cfg(test)]
+#[path = "tests/admission.rs"]
+mod admission;

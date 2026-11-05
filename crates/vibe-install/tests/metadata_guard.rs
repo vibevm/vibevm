@@ -99,3 +99,28 @@ fn prior_absence_does_not_authorize_removing_a_third_state() {
         "other"
     );
 }
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
+fn admitted_migration_uses_owned_publication_and_preserves_changed_source() {
+    let (temp, mut files) = fixture();
+    files.disarm();
+    let expected = Manifest::parse_str(MANIFEST).unwrap();
+    let mut replacement = expected.clone();
+    replacement
+        .requires
+        .packages
+        .push(vibe_core::PackageRef::parse("org.example/tool@1").unwrap());
+    guards::publish_admitted_manifest(temp.path(), &expected, &replacement).unwrap();
+    assert_eq!(
+        Manifest::read(temp.path().join("vibe.toml")).unwrap(),
+        replacement
+    );
+    let changed = "[project]\nname='changed-by-other-actor'\nversion='1.0.0'\n";
+    fs::write(temp.path().join("vibe.toml"), changed).unwrap();
+    assert!(guards::publish_admitted_manifest(temp.path(), &expected, &replacement).is_err());
+    assert_eq!(
+        fs::read_to_string(temp.path().join("vibe.toml")).unwrap(),
+        changed
+    );
+}

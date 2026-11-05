@@ -12,6 +12,8 @@ use crate::store::{self, InsertOutcome};
 
 mod bring;
 use bring::BringIntent;
+mod prepared;
+pub use prepared::PreparedInPlace;
 
 impl GitPerPackageRegistry {
     /// Bring the per-package clone at `package_clone_dir(kind, name)`

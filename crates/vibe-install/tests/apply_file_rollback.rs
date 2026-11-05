@@ -1,27 +1,21 @@
-//! Actual apply rollback ownership probes; all interleavings use the public source seam.
+//! Actual apply rollback ownership probes through the ordinary pre-install hook.
 #![cfg(unix)]
-
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO");
-
-use std::cell::{Cell, RefCell};
+use serde_json::{Value, json};
 use std::collections::BTreeSet;
 use std::fs;
 use std::os::unix::fs::{MetadataExt, symlink};
 use std::path::{Path, PathBuf};
-
-use serde_json::{Value, json};
 use vibe_core::manifest::{CURRENT_SCHEMA_VERSION, Manifest};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
-use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError};
+use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError, ResolvedPackage};
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
 use vibe_workspace::hooks::HookPolicy;
-
 const BEFORE: &str = "[project]\nname='rollback-probe'\nversion='0.1.0'\n";
-const FAILURE: &str = "SYNTHETIC_DEFERRED_FAILURE_AFTER_INTERLEAVING";
-const PACKAGE: &str = "[package]\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nkind='feat'\nmaterialization='in-place'\n";
-
+const FAILURE_EXIT: i32 = 37;
+const PACKAGE: &str = "[package]\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nkind='feat'\n";
 #[derive(Clone, Copy, Debug)]
 enum Case {
     Unchanged,
@@ -31,15 +25,33 @@ enum Case {
     Symlink,
     Hardlink,
 }
-
 struct Source {
     root: PathBuf,
-    case: Case,
-    calls: Cell<usize>,
-    observation: RefCell<Option<Value>>,
-    wanted: RefCell<String>,
+    cache: tempfile::TempDir,
+    declaration: String,
 }
-
+impl Source {
+    fn calls(&self) -> usize {
+        fs::read_to_string(self.root.join("hook-calls"))
+            .unwrap_or_default()
+            .lines()
+            .count()
+    }
+    fn observation(&self) -> Value {
+        serde_json::from_slice(&fs::read(self.root.join("hook-observation.json")).unwrap()).unwrap()
+    }
+}
+fn graph() -> ResolvedGraph {
+    ResolvedGraph {
+        packages: vec![ResolvedNode {
+            group: Group::parse("org.vibevm").unwrap(),
+            name: "giant".into(),
+            version: "1.0.0".parse().unwrap(),
+            dependencies: vec![],
+            is_root: true,
+        }],
+    }
+}
 fn identity(path: &Path) -> Value {
     let m = fs::symlink_metadata(path).unwrap();
     json!({"dev":m.dev(),"ino":m.ino(),"links":m.nlink(),"symlink":m.file_type().is_symlink()})
@@ -48,29 +60,39 @@ fn identity(path: &Path) -> Value {
 impl InstallSource for Source {
     fn resolve_and_fetch(
         &self,
-        _: &PackageRef,
+        p: &PackageRef,
         _: &Path,
         _: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
-        panic!("fixture must use deferred materialise_in_place, not fetching")
-    }
-
-    fn solve(&self, _: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
-        Ok(ResolvedGraph {
-            packages: vec![ResolvedNode {
-                group: Group::parse("org.vibevm").unwrap(),
-                name: "giant".into(),
+        Ok(CachedPackage {
+            resolved: ResolvedPackage {
+                group: p.group.clone().unwrap(),
+                name: p.name.to_string(),
                 version: "1.0.0".parse().unwrap(),
-                dependencies: vec![],
-                is_root: true,
-            }],
+                source_dir: self.cache.path().to_owned(),
+            },
+            cache_dir: self.cache.path().to_owned(),
+            manifest: Manifest::parse_str(&self.declaration).unwrap(),
+            content_hash: vibe_registry::compute_content_hash(self.cache.path()).unwrap(),
+            source_uri: format!("file://{}", self.cache.path().display()),
+            fetched_from: None,
+            registry_name: None,
+            source_ref: None,
+            resolved_commit: None,
+            overridden: false,
+            is_git_source: false,
+            is_path_source: false,
+            is_embedded: false,
+            is_local: true,
+            via_redirect: None,
         })
     }
-
-    fn manifest_of(&self, _: &PackageRef) -> Result<Manifest, SolveError> {
-        Ok(Manifest::parse_str(PACKAGE).unwrap())
+    fn solve(&self, _: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        Ok(graph())
     }
-
+    fn manifest_of(&self, _: &PackageRef) -> Result<Manifest, SolveError> {
+        Ok(Manifest::parse_str(&self.declaration).unwrap())
+    }
     fn solve_masked(
         &self,
         roots: &[PackageRef],
@@ -78,115 +100,146 @@ impl InstallSource for Source {
     ) -> Result<ResolvedGraph, SolveError> {
         self.solve(roots)
     }
-
     fn materialise_in_place(
         &self,
         _: &PackageRef,
-        slot: &Path,
+        _: &Path,
     ) -> Result<InPlaceMaterialised, RegistryError> {
-        self.calls.set(self.calls.get() + 1);
-        assert_eq!(
-            slot,
-            self.root
-                .join(vibe_core::layout::current_vibedeps_root())
-                .join("org.vibevm.giant")
-        );
-        let path = self.root.join("vibe.toml");
-        let published = fs::read_to_string(&path).unwrap();
-        assert_ne!(published, BEFORE, "actual apply must have published B");
-        assert!(published.contains("org.vibevm/giant"));
-        Manifest::parse_str(&published).unwrap();
-        let published_identity = identity(&path);
-        let changed = format!("{published}\n# SYNTHETIC_OTHER_ACTOR_C\n");
-        Manifest::parse_str(&changed).unwrap();
-        let sibling = self.root.join("synthetic-sibling.toml");
-        let wanted = match self.case {
-            Case::Unchanged | Case::Complete => BEFORE.to_owned(),
-            Case::Edited => {
-                fs::write(&path, &changed).unwrap();
-                assert_eq!(identity(&path), published_identity);
-                changed
-            }
-            Case::ReplacedSameBytes => {
-                let replacement = self.root.join("replacement.tmp");
-                fs::write(&replacement, &published).unwrap();
-                fs::rename(&replacement, &path).unwrap();
-                assert_ne!(identity(&path)["ino"], published_identity["ino"]);
-                published.clone()
-            }
-            Case::Symlink => {
-                fs::write(&sibling, &changed).unwrap();
-                fs::remove_file(&path).unwrap();
-                symlink(&sibling, &path).unwrap();
-                assert!(
-                    fs::symlink_metadata(&path)
-                        .unwrap()
-                        .file_type()
-                        .is_symlink()
-                );
-                changed
-            }
-            Case::Hardlink => {
-                fs::write(&sibling, &changed).unwrap();
-                fs::remove_file(&path).unwrap();
-                fs::hard_link(&sibling, &path).unwrap();
-                assert_eq!(identity(&path), identity(&sibling));
-                assert_eq!(identity(&path)["links"], 2);
-                changed
-            }
-        };
-        *self.wanted.borrow_mut() = wanted.clone();
-        *self.observation.borrow_mut() = Some(json!({
-            "case":format!("{:?}",self.case), "before":BEFORE,
-            "published":published,"published_identity":published_identity,
-            "interleaved":fs::read_to_string(&path).unwrap(),
-            "interleaved_identity":identity(&path), "wanted_after_error":wanted,
-            "sibling_before_error":sibling.exists().then(||fs::read_to_string(&sibling).unwrap())
-        }));
-        if matches!(self.case, Case::Complete) {
-            return Ok(InPlaceMaterialised {
-                source_uri: "https://example.test/giant.git".into(),
-                source_ref: "v1.0.0".into(),
-                resolved_commit: Some("1111111111111111111111111111111111111111".into()),
-                content_hash: "sha256:0000".into(),
-                changed: false,
-                manifest: Manifest::parse_str(PACKAGE).unwrap(),
-            });
-        }
-        Err(RegistryError::MalformedMeta {
-            path: slot.join("vibe.toml"),
-            reason: FAILURE.into(),
-        })
+        panic!("copy fixture must reach its actual pre-install hook, never in-place placement")
     }
 }
 
-fn write(root: &Path, name: impl AsRef<Path>, body: &str) {
-    let p = root.join(name);
-    fs::create_dir_all(p.parent().unwrap()).unwrap();
-    fs::write(p, body).unwrap();
+/// This ignored item is an executable fixture, not an extra coverage test.
+/// Only the real package hook launches it in a separate process with exact paths.
+#[test]
+#[ignore = "fixture helper invoked by the actual pre-install hook"]
+fn hook_fixture_interleaving() {
+    let root =
+        PathBuf::from(std::env::var_os("VIBE_UNDO_FIXTURE_ROOT").expect("hook fixture root"));
+    assert!(root.is_absolute());
+    let expected =
+        PathBuf::from(std::env::var_os("VIBE_UNDO_FIXTURE_MARKER").expect("hook fixture marker"));
+    assert_eq!(expected.parent(), Some(root.as_path()));
+    assert_eq!(fs::read(&expected).unwrap(), b"exact rollback fixture");
+    let case = match std::env::var("VIBE_UNDO_FIXTURE_CASE").unwrap().as_str() {
+        "Unchanged" => Case::Unchanged,
+        "Complete" => Case::Complete,
+        "Edited" => Case::Edited,
+        "ReplacedSameBytes" => Case::ReplacedSameBytes,
+        "Symlink" => Case::Symlink,
+        "Hardlink" => Case::Hardlink,
+        other => panic!("unknown fixture cut {other}"),
+    };
+    let path = root.join("vibe.toml");
+    let published = fs::read_to_string(&path).unwrap();
+    assert_ne!(published, BEFORE, "actual apply must have published B");
+    assert!(published.contains("org.vibevm/giant"));
+    Manifest::parse_str(&published).unwrap();
+    let published_identity = identity(&path);
+    let changed = format!("{published}\n# SYNTHETIC_OTHER_ACTOR_C\n");
+    Manifest::parse_str(&changed).unwrap();
+    let sibling = root.join("synthetic-sibling.toml");
+    let wanted = match case {
+        Case::Unchanged | Case::Complete => BEFORE.to_owned(),
+        Case::Edited => {
+            fs::write(&path, &changed).unwrap();
+            assert_eq!(identity(&path), published_identity);
+            changed
+        }
+        Case::ReplacedSameBytes => {
+            let replacement = root.join("replacement.tmp");
+            fs::write(&replacement, &published).unwrap();
+            fs::rename(&replacement, &path).unwrap();
+            assert_ne!(identity(&path)["ino"], published_identity["ino"]);
+            published.clone()
+        }
+        Case::Symlink => {
+            fs::write(&sibling, &changed).unwrap();
+            fs::remove_file(&path).unwrap();
+            symlink(&sibling, &path).unwrap();
+            assert!(
+                fs::symlink_metadata(&path)
+                    .unwrap()
+                    .file_type()
+                    .is_symlink()
+            );
+            changed
+        }
+        Case::Hardlink => {
+            fs::write(&sibling, &changed).unwrap();
+            fs::remove_file(&path).unwrap();
+            fs::hard_link(&sibling, &path).unwrap();
+            assert_eq!(identity(&path), identity(&sibling));
+            assert_eq!(identity(&path)["links"], 2);
+            changed
+        }
+    };
+    let observation = json!({
+        "case":format!("{:?}",case), "before":BEFORE,
+        "published":published,"published_identity":published_identity,
+        "interleaved":fs::read_to_string(&path).unwrap(),
+        "interleaved_identity":identity(&path), "wanted_after_error":wanted,
+        "sibling_before_error":sibling.exists().then(||fs::read_to_string(&sibling).unwrap())
+    });
+
+    fs::write(
+        root.join("hook-observation.json"),
+        serde_json::to_vec(&observation).unwrap(),
+    )
+    .unwrap();
+    let calls = root.join("hook-calls");
+    let previous = fs::read_to_string(&calls).unwrap_or_default();
+    fs::write(calls, format!("{previous}called\n")).unwrap();
 }
 
+fn write(root: &Path, name: impl AsRef<Path>, body: &str) {
+    let path = root.join(name);
+    fs::create_dir_all(path.parent().unwrap()).unwrap();
+    fs::write(path, body).unwrap();
+}
+fn shell_quote(value: &str) -> String {
+    format!("'{}'", value.replace('\'', "'\"'\"'"))
+}
+fn hook_policy() -> HookPolicy {
+    HookPolicy {
+        allowed_groups: vec!["org.vibevm".into()],
+        allow_hooks: false,
+    }
+}
 fn prepared(case: Case) -> (tempfile::TempDir, Source, Box<vibe_install::PlannedInstall>) {
     let temp = tempfile::tempdir().unwrap();
     let root = temp.path();
     write(root, "vibe.toml", BEFORE);
-    let lock = format!(
-        "[meta]\ngenerated_by='rollback probe'\ngenerated_at='2026-11-04T00:00:00Z'\nschema_version={CURRENT_SCHEMA_VERSION}\n[[package]]\nkind='feat'\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nsource_url='https://example.test/giant.git'\ncontent_hash='sha256:0000'\nsource_kind='registry'\nresolved_commit='1111111111111111111111111111111111111111'\nmaterialization='in-place'\n"
-    );
-    write(root, "vibe.lock", &lock);
-    let slot = vibe_core::layout::current_vibedeps_root();
-    write(root, slot.join("org.vibevm.giant/vibe.toml"), PACKAGE);
     write(
         root,
-        slot.join("org.vibevm.giant/.git/HEAD"),
-        "ref: refs/heads/main\n",
+        "vibe.lock",
+        &format!(
+            "[meta]\ngenerated_by='rollback probe'\ngenerated_at='2026-11-04T00:00:00Z'\nschema_version={CURRENT_SCHEMA_VERSION}\n"
+        ),
     );
+    write(root, "hook-fixture-marker", "exact rollback fixture");
+    let cache = tempfile::tempdir().unwrap();
+    let declaration = format!("{PACKAGE}\n[hooks]\npre-install='hooks/interleave'\n");
+    write(cache.path(), "vibe.toml", &declaration);
+    write(cache.path(), "payload.txt", "actual cached copy source");
+    let program = std::env::current_exe().unwrap();
+    let script = format!(
+        "set -eu\nVIBE_UNDO_FIXTURE_ROOT={} VIBE_UNDO_FIXTURE_MARKER={} VIBE_UNDO_FIXTURE_CASE={} {} --ignored --exact hook_fixture_interleaving --nocapture --test-threads=1\nexit {}\n",
+        shell_quote(root.to_str().unwrap()),
+        shell_quote(root.join("hook-fixture-marker").to_str().unwrap()),
+        shell_quote(&format!("{case:?}")),
+        shell_quote(program.to_str().unwrap()),
+        if matches!(case, Case::Complete) {
+            0
+        } else {
+            FAILURE_EXIT
+        }
+    );
+    write(cache.path(), "hooks/interleave.sh", &script);
     let source = Source {
-        root: root.to_path_buf(),
-        case,
-        calls: Cell::new(0),
-        observation: RefCell::new(None),
-        wanted: RefCell::new(String::new()),
+        root: root.to_owned(),
+        cache,
+        declaration,
     };
     let request = InstallRequest {
         roots: vec![PackageRef::parse("org.vibevm/giant").unwrap()],
@@ -198,30 +251,50 @@ fn prepared(case: Case) -> (tempfile::TempDir, Source, Box<vibe_install::Planned
     };
     let Plan::Ready(planned) = vibe_install::plan(&source, root, request, &NullObserver).unwrap()
     else {
-        panic!("explicit root must produce a real apply plan");
+        panic!("explicit root must plan")
     };
-    assert_eq!(source.calls.get(), 0, "plan must defer source mutation");
+    assert_eq!(source.calls(), 0, "planning must not run the mutation hook");
     (temp, source, planned)
 }
-
+fn assert_hook_failure(error: &vibe_install::Error) {
+    fn workspace_code(error: &vibe_workspace::WorkspaceError) -> Option<i32> {
+        match error {
+            vibe_workspace::WorkspaceError::Hook(
+                vibe_workspace::hooks::HookError::PreInstallFailed { code, .. },
+            ) => Some(*code),
+            vibe_workspace::WorkspaceError::InstallRollback { primary, .. } => {
+                workspace_code(primary)
+            }
+            _ => None,
+        }
+    }
+    fn code(error: &vibe_install::Error) -> Option<i32> {
+        match error {
+            vibe_install::Error::Workspace(error) => workspace_code(error),
+            vibe_install::Error::RollbackFailed { primary, .. } => code(primary),
+            vibe_install::Error::SlotFailed { source, .. } => code(source),
+            _ => None,
+        }
+    }
+    assert_eq!(
+        code(error),
+        Some(FAILURE_EXIT),
+        "original typed hook failure must survive: {error}"
+    );
+    assert!(error.to_string().contains("pre-install"));
+    assert!(error.to_string().contains(&format!("exit {FAILURE_EXIT}")));
+}
 fn probe(case: Case) {
     let (temp, source, planned) = prepared(case);
     let root = temp.path();
     let lock = fs::read_to_string(root.join("vibe.lock")).unwrap();
-    let error = match vibe_install::apply(
-        &source,
-        *planned,
-        SlotIntegrity::Verify,
-        &HookPolicy {
-            allowed_groups: vec![],
-            allow_hooks: false,
-        },
-    ) {
-        Ok(_) => panic!("synthetic deferred source error must fail actual apply"),
+    let error = match vibe_install::apply(&source, *planned, SlotIntegrity::Verify, &hook_policy())
+    {
+        Ok(_) => panic!("actual pre-install hook error must fail actual apply"),
         Err(error) => error,
     };
-    assert_eq!(source.calls.get(), 1);
-    assert!(error.to_string().contains(FAILURE), "{error}");
+    assert_eq!(source.calls(), 1);
+    assert_hook_failure(&error);
     assert_eq!(
         matches!(error, vibe_install::Error::RollbackFailed { .. }),
         !matches!(case, Case::Unchanged),
@@ -231,9 +304,9 @@ fn probe(case: Case) {
     let sibling = root.join("synthetic-sibling.toml");
     let after = fs::read_to_string(&path).unwrap();
     let after_identity = identity(&path);
-    let mut observation = source.observation.borrow_mut().take().unwrap();
+    let mut observation = source.observation();
     observation["apply_error"] = json!(error.to_string());
-    observation["callback_calls"] = json!(source.calls.get());
+    observation["hook_calls"] = json!(source.calls());
     observation["after"] = json!(after);
     observation["after_identity"] = after_identity.clone();
     observation["lock_unchanged"] =
@@ -251,13 +324,13 @@ fn probe(case: Case) {
     }
     assert_eq!(
         after,
-        *source.wanted.borrow(),
+        observation["wanted_after_error"].as_str().unwrap(),
         "failed apply must preserve third-state bytes; control must restore A"
     );
     if sibling.exists() {
         assert_eq!(
             fs::read_to_string(sibling).unwrap(),
-            *source.wanted.borrow()
+            observation["wanted_after_error"].as_str().unwrap()
         );
     }
 }

@@ -40,7 +40,24 @@ impl ShellGit {
         remote: Remote<'_>,
         repository: &Path,
     ) -> Result<Output, GitError> {
-        let mut argv: Vec<&str> = Vec::with_capacity(args.len() + 1);
+        self.run_transferring_with_prefix(&[], args, cwd, remote, repository)
+    }
+
+    /// Preserve transfer accounting when global Git options select an object
+    /// repository while the process keeps the source's original working context.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION"
+    )]
+    pub(super) fn run_transferring_with_prefix(
+        &self,
+        prefix: &[&str],
+        args: &[&str],
+        cwd: Option<&Path>,
+        remote: Remote<'_>,
+        repository: &Path,
+    ) -> Result<Output, GitError> {
+        let mut argv: Vec<&str> = Vec::with_capacity(prefix.len() + args.len() + 1);
+        argv.extend(prefix);
         argv.extend(args.first());
         argv.push("--progress");
         argv.extend(args.iter().skip(1));

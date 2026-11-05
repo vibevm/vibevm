@@ -1,107 +1,117 @@
-//! Integration test for the deferred incremental `in-place` materialisation
-//! (PROP-022 §2.4) on the **general install** re-resolve — the canonical
-//! `vibe update <pkg>` incremental path extended to the full plan/apply
-//! pipeline. Proves that when the lockfile already records a package as
-//! `in-place` and its slot is present, `plan` does NOT re-clone it
-//! (`resolve_and_fetch` is never called for it) and `apply` instead drives the
-//! incremental `git fetch` through `materialise_in_place`, leaving the live
-//! slot in place.
-//!
-//! Integration-grain because the crate sets `[lib] test = false` (Windows UAC
-//! installer detection, PROP-007 §9.5): the binary name carries no `install`
-//! substring.
+//! Real local Git preparation feeds the general install deferred apply owner.
+//! Solve/fetch counters are fixture observations; commits, hashes, manifests and
+//! changed/no-op outcomes come from the actual registry preparation/materializer.
+//! This integration target avoids Windows UAC's installer-name test restriction.
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION");
 
 use std::cell::{Cell, RefCell};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::process::Command;
+use std::sync::Arc;
 
 use tempfile::TempDir;
-use vibe_core::manifest::{CURRENT_SCHEMA_VERSION, Lockfile, Manifest};
+use vibe_core::manifest::{CURRENT_SCHEMA_VERSION, Lockfile, Manifest, NamingConvention};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
-use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError};
+use vibe_registry::{
+    CachedPackage, GitPerPackageRegistry, InPlaceMaterialised, PreparedInPlace, RegistryError,
+    ShellGit,
+};
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
 use vibe_workspace::hooks::HookPolicy;
 
-/// The commit the simulated incremental fetch reports — distinct from the
-/// lockfile's recorded commit so the test can prove apply rewrote the lockfile
-/// from the fresh fetch, not the provisional plan value.
-const FETCHED_COMMIT: &str = "2222222222222222222222222222222222222222";
-
-/// An `InstallSource` that records which path each node took. A deferred
-/// in-place package must reach `materialise_in_place` and never
-/// `resolve_and_fetch` — recording both lets the test assert exactly that.
-struct MockSource {
-    graph: ResolvedGraph,
-    fetched: RefCell<Vec<String>>,
-    placed: RefCell<Vec<(String, PathBuf)>>,
-    changed: Cell<bool>,
+#[derive(Debug, Clone)]
+struct PreparedObservation {
+    slot: PathBuf,
+    commit: String,
+    content_hash: String,
+    source_uri: String,
+    source_ref: String,
 }
 
-impl InstallSource for MockSource {
+/// Only graph selection is mocked. Source preparation uses actual local Git.
+struct Source {
+    registry: GitPerPackageRegistry,
+    version: RefCell<semver::Version>,
+    fetched: RefCell<Vec<String>>,
+    prepared: RefCell<Vec<PreparedObservation>>,
+    unbound_placements: Cell<usize>,
+}
+impl Source {
+    fn graph(&self) -> ResolvedGraph {
+        ResolvedGraph {
+            packages: vec![ResolvedNode {
+                group: Group::parse("org.vibevm").unwrap(),
+                name: "giant".into(),
+                version: self.version.borrow().clone(),
+                dependencies: vec![],
+                is_root: true,
+            }],
+        }
+    }
+}
+impl InstallSource for Source {
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,
-        _store_root: &Path,
-        _expected_hash: Option<&str>,
+        _store: &Path,
+        _expected: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
-        // A deferred in-place package must never reach the re-clone path; if it
-        // does, record the call and surface an error so the test fails loudly.
         self.fetched.borrow_mut().push(pkgref.name.to_string());
         Err(RegistryError::UnknownPackage {
-            group: pkgref
-                .group
-                .clone()
-                .unwrap_or_else(|| Group::parse("org.test").unwrap()),
+            group: pkgref.group.clone().unwrap(),
             name: pkgref.name.to_string(),
         })
     }
-
     fn solve(&self, _roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
-        Ok(self.graph.clone())
+        Ok(self.graph())
     }
-
-    fn manifest_of(&self, _pkg: &PackageRef) -> Result<Manifest, SolveError> {
-        Manifest::parse_str(
-            "[package]\ngroup = \"org.vibevm\"\nname = \"giant\"\nkind = \"feat\"\nversion = \"1.0.0\"\n",
-        )
-        .map_err(|error| vibe_resolver::DepProviderError::Other(error.to_string()).into())
-    }
-
     fn solve_masked(
         &self,
         _roots: &[PackageRef],
         _blocked: &BTreeSet<(String, String)>,
     ) -> Result<ResolvedGraph, SolveError> {
-        Ok(self.graph.clone())
+        Ok(self.graph())
     }
-
+    fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
+        let read = || {
+            let selected = self.registry.resolve(pkg)?;
+            self.registry
+                .fetch_dep_manifest(&selected.group, &selected.name, &selected.version)
+        };
+        read().map_err(|e: RegistryError| {
+            vibe_resolver::DepProviderError::Other(e.to_string()).into()
+        })
+    }
+    fn prepare_in_place(
+        &self,
+        pkg: &PackageRef,
+        slot: &Path,
+    ) -> Result<PreparedInPlace, RegistryError> {
+        let selected = self.registry.resolve(pkg)?;
+        let prepared = self.registry.prepare_in_place(&selected, slot)?;
+        self.prepared.borrow_mut().push(PreparedObservation {
+            slot: prepared.slot().to_owned(),
+            commit: prepared.resolved_commit().into(),
+            content_hash: prepared.content_hash().into(),
+            source_uri: prepared.source_uri().into(),
+            source_ref: prepared.source_ref().into(),
+        });
+        Ok(prepared)
+    }
     fn materialise_in_place(
         &self,
-        pkgref: &PackageRef,
+        pkg: &PackageRef,
         slot: &Path,
     ) -> Result<InPlaceMaterialised, RegistryError> {
-        self.placed
-            .borrow_mut()
-            .push((pkgref.name.to_string(), slot.to_path_buf()));
-        // Simulate an incremental `git fetch`: the slot already carries `.git`
-        // + manifest, so we only read the manifest back — nothing is moved or
-        // re-cloned, exactly as an up-to-date incremental update behaves.
-        let manifest = Manifest::read(slot.join(Manifest::FILENAME)).map_err(|e| {
-            RegistryError::MalformedMeta {
-                path: slot.join(Manifest::FILENAME),
-                reason: e.to_string(),
-            }
-        })?;
-        Ok(InPlaceMaterialised {
-            source_uri: "https://example.test/giant.git".to_string(),
-            source_ref: "v1.0.0".to_string(),
-            resolved_commit: Some(FETCHED_COMMIT.to_string()),
-            content_hash: "sha256:feedface".to_string(),
-            changed: self.changed.get(),
-            manifest,
+        self.unbound_placements
+            .set(self.unbound_placements.get() + 1);
+        Err(RegistryError::PreparedInPlace {
+            path: slot.to_owned(),
+            reason: format!("unexpected unbound placement of {pkg}"),
         })
     }
 }
@@ -111,263 +121,333 @@ fn write(root: &Path, rel: &str, body: &str) {
     fs::create_dir_all(path.parent().unwrap()).unwrap();
     fs::write(path, body).unwrap();
 }
+fn git(root: &Path, args: &[&str]) -> String {
+    let out = Command::new("git")
+        .current_dir(root)
+        .env("GIT_CONFIG_NOSYSTEM", "1")
+        .env(
+            "GIT_CONFIG_GLOBAL",
+            if cfg!(windows) { "NUL" } else { "/dev/null" },
+        )
+        .args([
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "-c",
+            "commit.gpgsign=false",
+            "-c",
+            "tag.gpgsign=false",
+            "-c",
+            "protocol.file.allow=always",
+        ])
+        .args(args)
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "git {args:?}: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    String::from_utf8(out.stdout).unwrap().trim().into()
+}
+
+/// Keep backend Git subprocesses independent of user aliases, hooks and signing.
+fn backend(root: &Path) -> ShellGit {
+    write(root, "empty-gitconfig", "");
+    let wrapper = root.join(if cfg!(windows) {
+        "fixture-git.cmd"
+    } else {
+        "fixture-git"
+    });
+    let body = if cfg!(windows) {
+        "@echo off\r\nset GIT_CONFIG_NOSYSTEM=1\r\nset GIT_CONFIG_GLOBAL=%~dp0empty-gitconfig\r\ngit -c core.hooksPath=\"%~dp0empty-hooks\" -c protocol.file.allow=always %*\r\nexit /b %errorlevel%\r\n"
+    } else {
+        "#!/bin/sh\nfixture_root=$(CDPATH= cd -- \"$(dirname -- \"$0\")\" && pwd) || exit 1\nexport GIT_CONFIG_NOSYSTEM=1\nexport GIT_CONFIG_GLOBAL=\"$fixture_root/empty-gitconfig\"\nexec git -c core.hooksPath=\"$fixture_root/empty-hooks\" -c protocol.file.allow=always \"$@\"\n"
+    };
+    fs::write(&wrapper, body).unwrap();
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(&wrapper, fs::Permissions::from_mode(0o755)).unwrap();
+    }
+    ShellGit::new().with_binary(wrapper)
+}
+
+struct Fixture {
+    _temp: TempDir,
+    project: PathBuf,
+    upstream: PathBuf,
+    slot: PathBuf,
+    source: Source,
+}
+impl Fixture {
+    fn new() -> Self {
+        let temp = TempDir::new().unwrap();
+        let project = temp.path().join("project");
+        let upstream = temp.path().join("org/org.vibevm.giant.git");
+        fs::create_dir_all(&upstream).unwrap();
+        git(&upstream, &["init", "--initial-branch=main"]);
+        // Disable hooks in the fixture repository without changing user config.
+        let hooks = temp.path().join("empty-hooks");
+        fs::create_dir(&hooks).unwrap();
+        git(
+            &upstream,
+            &["config", "core.hooksPath", hooks.to_str().unwrap()],
+        );
+        write(
+            &project,
+            "vibe.toml",
+            "[project]\nname='demo'\nversion='0.0.1'\n",
+        );
+        let registry = GitPerPackageRegistry::open_with(
+            "fixture",
+            upstream.parent().unwrap().to_str().unwrap(),
+            "main",
+            NamingConvention::Fqdn,
+            &temp.path().join("cache"),
+            Arc::new(backend(temp.path())),
+            0,
+        )
+        .unwrap();
+        let slot = project
+            .join(vibe_core::layout::current_vibedeps_root())
+            .join("org.vibevm.giant");
+        Self {
+            _temp: temp,
+            project,
+            upstream,
+            slot,
+            source: Source {
+                registry,
+                version: RefCell::new(semver::Version::parse("1.0.0").unwrap()),
+                fetched: RefCell::new(vec![]),
+                prepared: RefCell::new(vec![]),
+                unbound_placements: Cell::new(0),
+            },
+        }
+    }
+    fn publish(&self, version: &str, extra: &str) -> String {
+        write(
+            &self.upstream,
+            "vibe.toml",
+            &format!(
+                "[package]\ngroup='org.vibevm'\nname='giant'\nkind='feat'\nversion='{version}'\nmaterialization='in-place'\n\n[hooks]\npre-install='hooks/prepare'\npost-install='hooks/finalise'\n{extra}"
+            ),
+        );
+        write(&self.upstream, "SENTINEL", "tracked source must survive\n");
+        write(&self.upstream, "payload.txt", version);
+        for phase in ["prepare", "finalise"] {
+            write(
+                &self.upstream,
+                &format!("hooks/{phase}.sh"),
+                "printf '%s\\n' \"$VIBE_HOOK_PHASE\" >> hook.log\n",
+            );
+            write(
+                &self.upstream,
+                &format!("hooks/{phase}.ps1"),
+                "$env:VIBE_HOOK_PHASE | Add-Content -Path hook.log\n",
+            );
+        }
+        git(&self.upstream, &["add", "-A"]);
+        git(&self.upstream, &["commit", "-m", "fixture version"]);
+        git(&self.upstream, &["tag", &format!("v{version}")]);
+        *self.source.version.borrow_mut() = semver::Version::parse(version).unwrap();
+        git(&self.upstream, &["rev-parse", "HEAD"])
+    }
+    fn seed(&self) -> InPlaceMaterialised {
+        let selected = self
+            .source
+            .registry
+            .resolve(&PackageRef::parse("org.vibevm/giant@=1.0.0").unwrap())
+            .unwrap();
+        let prepared = self
+            .source
+            .registry
+            .prepare_in_place(&selected, &self.slot)
+            .unwrap();
+        let placed = prepared.materialise().unwrap();
+        assert!(placed.changed);
+        assert_eq!(
+            git(&self.slot, &["rev-parse", "HEAD"]),
+            prepared.resolved_commit()
+        );
+        // JSON string quoting is also valid for these TOML basic-string fields.
+        let quoted = |text: &str| serde_json::to_string(text).unwrap();
+        write(
+            &self.project,
+            "vibe.lock",
+            &format!(
+                "[meta]\ngenerated_by='vibe test'\ngenerated_at='2026-11-05T00:00:00Z'\nschema_version={CURRENT_SCHEMA_VERSION}\n[[package]]\nkind='feat'\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nsource_url={}\nsource_ref={}\ncontent_hash={}\nsource_kind='registry'\nresolved_commit={}\nmaterialization='in-place'\n",
+                quoted(&placed.source_uri),
+                quoted(&placed.source_ref),
+                quoted(&placed.content_hash),
+                quoted(placed.resolved_commit.as_deref().unwrap()),
+            ),
+        );
+        write(
+            &self.slot,
+            ".git/sentinel",
+            "same repository must survive\n",
+        );
+        placed
+    }
+    fn plan(&self) -> Result<Plan, vibe_install::Error> {
+        vibe_install::plan(
+            &self.source,
+            &self.project,
+            InstallRequest {
+                roots: vec![PackageRef::parse("org.vibevm/giant").unwrap()],
+                features: FeatureRequest::default(),
+                language: None,
+                exact: false,
+                generated_by: "vibe test".into(),
+                offline: true,
+            },
+            &NullObserver,
+        )
+    }
+    fn ready(&self) -> Box<vibe_install::PlannedInstall> {
+        match self.plan().unwrap() {
+            Plan::Ready(plan) => plan,
+            Plan::Fresh => panic!("explicit-root install must produce a real plan"),
+        }
+    }
+    fn assert_no_reclone(&self) {
+        assert!(self.source.fetched.borrow().is_empty());
+        assert_eq!(self.source.unbound_placements.get(), 0);
+        assert_eq!(
+            fs::read_to_string(self.slot.join(".git/sentinel")).unwrap(),
+            "same repository must survive\n"
+        );
+        assert_eq!(
+            fs::read_to_string(self.slot.join("SENTINEL")).unwrap(),
+            "tracked source must survive\n"
+        );
+    }
+    fn assert_provenance(&self, expected: &PreparedObservation) {
+        let lock = Lockfile::read(self.project.join("vibe.lock")).unwrap();
+        let giant = lock
+            .find(&Group::parse("org.vibevm").unwrap(), "giant")
+            .unwrap();
+        assert!(giant.materialization.is_in_place());
+        assert_eq!(
+            giant.resolved_commit.as_deref(),
+            Some(expected.commit.as_str())
+        );
+        assert_eq!(giant.content_hash.as_str(), expected.content_hash);
+        assert_eq!(giant.source_url.as_str(), expected.source_uri);
+        assert_eq!(
+            giant.source_ref.as_deref(),
+            Some(expected.source_ref.as_str())
+        );
+        assert_eq!(git(&self.slot, &["rev-parse", "HEAD"]), expected.commit);
+    }
+}
+fn policy() -> HookPolicy {
+    HookPolicy {
+        allowed_groups: vec!["org.vibevm".into()],
+        allow_hooks: false,
+    }
+}
 
 #[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 fn general_install_defers_in_place_instead_of_recloning() {
-    let tmp = TempDir::new().unwrap();
-    let root = tmp.path();
-
-    // A standalone project manifest — one-node workspace.
-    write(
-        root,
-        "vibe.toml",
-        "[project]\nname = \"demo\"\nversion = \"0.0.1\"\n",
+    let f = Fixture::new();
+    let first_commit = f.publish("1.0.0", "");
+    let original = f.seed();
+    assert_eq!(
+        original.resolved_commit.as_deref(),
+        Some(first_commit.as_str())
     );
-
-    // The lockfile already records `org.vibevm/giant` as an in-place package,
-    // at whatever schema the reader accepts today. The recorded commit differs
-    // from FETCHED_COMMIT so the test can tell the rewritten lockfile apart
-    // from this provisional value.
-    write(
-        root,
-        "vibe.lock",
-        &format!(
-            "[meta]\n\
-         generated_by = \"vibe test\"\n\
-         generated_at = \"2026-06-27T00:00:00Z\"\n\
-         schema_version = {CURRENT_SCHEMA_VERSION}\n\n\
-         [[package]]\n\
-         kind = \"feat\"\n\
-         name = \"giant\"\n\
-         group = \"org.vibevm\"\n\
-         version = \"1.0.0\"\n\
-         source_url = \"https://example.test/giant.git\"\n\
-         content_hash = \"sha256:0000\"\n\
-         source_kind = \"registry\"\n\
-         resolved_commit = \"1111111111111111111111111111111111111111\"\n\
-         materialization = \"in-place\"\n"
-        ),
-    );
-    write(
-        root,
-        "vibevm/vibedeps/org.vibevm.giant/hooks/prepare.sh",
-        "printf '%s\\n' \"$VIBE_HOOK_PHASE\" >> hook.log\n",
-    );
-    write(
-        root,
-        "vibevm/vibedeps/org.vibevm.giant/hooks/finalise.sh",
-        "printf '%s\\n' \"$VIBE_HOOK_PHASE\" >> hook.log\n",
-    );
-    write(
-        root,
-        "vibevm/vibedeps/org.vibevm.giant/hooks/prepare.ps1",
-        "$env:VIBE_HOOK_PHASE | Add-Content -Path hook.log\n",
-    );
-    write(
-        root,
-        "vibevm/vibedeps/org.vibevm.giant/hooks/finalise.ps1",
-        "$env:VIBE_HOOK_PHASE | Add-Content -Path hook.log\n",
-    );
-
-    // The present in-place slot: a git working tree (`.git`) with the package's
-    // manifest and a sentinel that must survive (proof nothing was moved).
-    write(
-        root,
-        "vibevm/vibedeps/org.vibevm.giant/.git/HEAD",
-        "ref: refs/heads/main\n",
-    );
-    write(
-        root,
-        "vibevm/vibedeps/org.vibevm.giant/vibe.toml",
-        "[package]\n\
-         group = \"org.vibevm\"\n\
-         name = \"giant\"\n\
-         kind = \"feat\"\n\
-         version = \"1.0.0\"\n\
-         materialization = \"in-place\"\n\n\
-         [hooks]\n\
-         pre-install = \"hooks/prepare\"\n\
-         post-install = \"hooks/finalise\"\n",
-    );
-    write(
-        root,
-        "vibevm/vibedeps/org.vibevm.giant/SENTINEL",
-        "must survive",
-    );
-
-    let source = MockSource {
-        graph: ResolvedGraph {
-            packages: vec![ResolvedNode {
-                group: Group::parse("org.vibevm").unwrap(),
-                name: "giant".to_string(),
-                version: semver::Version::parse("1.0.0").unwrap(),
-                dependencies: vec![],
-                is_root: true,
-            }],
-        },
-        fetched: RefCell::new(Vec::new()),
-        placed: RefCell::new(Vec::new()),
-        changed: Cell::new(false),
-    };
-
-    let request = InstallRequest {
-        roots: vec![PackageRef::parse("org.vibevm/giant").unwrap()],
-        features: FeatureRequest::default(),
-        language: None,
-        exact: false,
-        generated_by: "vibe test".to_string(),
-        offline: false,
-    };
-
-    // Plan: the in-place giant is deferred, NOT re-cloned.
-    let plan = vibe_install::plan(&source, root, request, &NullObserver).expect("plan succeeds");
-    let planned = match plan {
-        Plan::Ready(p) => p,
-        Plan::Fresh => panic!("explicit-root install must produce a real resolution, not Fresh"),
-    };
-    assert!(
-        source.fetched.borrow().is_empty(),
-        "an already-present in-place package must NOT be re-cloned via resolve_and_fetch; \
-         got calls for {:?}",
-        source.fetched.borrow(),
-    );
-
-    // Apply: the incremental fetch runs through materialise_in_place.
-    let policy = HookPolicy {
-        allowed_groups: vec!["org.vibevm".to_string()],
-        allow_hooks: false,
-    };
-    let applied = vibe_install::apply(&source, *planned, SlotIntegrity::Verify, &policy)
-        .expect("apply succeeds");
+    let plan = f.ready();
+    assert_eq!(f.source.prepared.borrow().len(), 1);
+    assert_eq!(f.source.prepared.borrow()[0].slot, f.slot);
+    let first = f.source.prepared.borrow()[0].clone();
+    assert_eq!(first.content_hash, original.content_hash);
+    assert_eq!(git(&f.slot, &["rev-parse", "HEAD"]), first_commit);
+    f.assert_no_reclone();
+    let applied = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
     assert!(applied.outcome.hook_reports.is_empty());
     assert!(applied.post_install_reports.is_empty());
     assert!(
-        !root
-            .join(vibe_core::layout::current_vibedeps_root())
-            .join("org.vibevm.giant/hook.log")
-            .exists(),
-        "Some(false) must suppress both hook phases"
+        !f.slot.join("hook.log").exists(),
+        "actual no-op suppresses both hook phases"
     );
+    f.assert_provenance(&first);
+    f.assert_no_reclone();
 
-    // materialise_in_place was the path taken — exactly once, against the slot.
-    let placed = source.placed.borrow();
+    let next_commit = f.publish("1.1.0", "");
+    assert_ne!(next_commit, first_commit);
+    let plan = f.ready();
+    assert_eq!(f.source.prepared.borrow().len(), 2);
+    let next = f.source.prepared.borrow()[1].clone();
+    assert_eq!(next.commit, next_commit);
+    assert_ne!(next.content_hash, first.content_hash);
     assert_eq!(
-        placed.len(),
-        1,
-        "in-place giant must be incrementally materialised once"
+        git(&f.slot, &["rev-parse", "HEAD"]),
+        first_commit,
+        "prepare must not checkout the new revision"
     );
-    assert_eq!(placed[0].0, "giant");
-    assert_eq!(
-        placed[0].1,
-        root.join(vibe_core::layout::current_vibedeps_root())
-            .join("org.vibevm.giant"),
-        "the incremental fetch must target the unversioned in-place slot",
-    );
-
-    // The live slot was updated in place, never moved or re-cloned: its `.git`
-    // and the sentinel both survive.
-    assert!(
-        root.join(vibe_core::layout::current_vibedeps_root())
-            .join("org.vibevm.giant/.git/HEAD")
-            .is_file(),
-        "the in-place slot's git working tree must survive an incremental update",
-    );
-    assert!(
-        root.join(vibe_core::layout::current_vibedeps_root())
-            .join("org.vibevm.giant/SENTINEL")
-            .is_file(),
-        "an incrementally-updated in-place slot must not be moved or cleared",
-    );
-
-    // The rewritten lockfile records the freshly-fetched commit (PROP-022 §2.5),
-    // proving apply folded the incremental result back rather than keeping the
-    // provisional plan value.
-    let lock = Lockfile::read(root.join("vibe.lock")).expect("rewritten lockfile parses");
-    let giant = lock
-        .find(&Group::parse("org.vibevm").unwrap(), "giant")
-        .expect("giant survives in the rewritten lockfile");
-    assert!(giant.materialization.is_in_place());
-    assert_eq!(giant.resolved_commit.as_deref(), Some(FETCHED_COMMIT));
-    drop(placed);
-
-    source.changed.set(true);
-    let request = InstallRequest {
-        roots: vec![PackageRef::parse("org.vibevm/giant").unwrap()],
-        features: FeatureRequest::default(),
-        language: None,
-        exact: false,
-        generated_by: "vibe test".to_string(),
-        offline: false,
-    };
-    let planned = match vibe_install::plan(&source, root, request, &NullObserver).unwrap() {
-        Plan::Ready(planned) => planned,
-        Plan::Fresh => panic!("explicit-root install must stay actionable"),
-    };
-    let applied = vibe_install::apply(&source, *planned, SlotIntegrity::Verify, &policy).unwrap();
+    let applied = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
     assert_eq!(applied.outcome.hook_reports.len(), 1);
     assert_eq!(applied.post_install_reports.len(), 1);
-    let log = fs::read_to_string(
-        root.join(vibe_core::layout::current_vibedeps_root())
-            .join("org.vibevm.giant/hook.log"),
-    )
-    .unwrap();
     assert_eq!(
-        log.lines().collect::<Vec<_>>(),
+        fs::read_to_string(f.slot.join("hook.log"))
+            .unwrap()
+            .lines()
+            .collect::<Vec<_>>(),
         ["pre-install", "post-install"]
     );
+    f.assert_provenance(&next);
+    f.assert_no_reclone();
 }
 
-#[cfg(test)]
+/// Snapshot worktree bytes independently of Git status; preparation may add
+/// object/FETCH_HEAD metadata, but every other Git/worktree byte stays bound.
+fn worktree(path: &Path) -> BTreeMap<PathBuf, Vec<u8>> {
+    fn walk(root: &Path, at: &Path, out: &mut BTreeMap<PathBuf, Vec<u8>>) {
+        for entry in fs::read_dir(at).unwrap() {
+            let path = entry.unwrap().path();
+            let relative = path.strip_prefix(root).unwrap();
+            let parts = relative
+                .components()
+                .map(|c| c.as_os_str())
+                .collect::<Vec<_>>();
+            if parts
+                .windows(2)
+                .any(|pair| pair[0] == ".git" && (pair[1] == "objects" || pair[1] == "FETCH_HEAD"))
+            {
+                continue;
+            }
+            if path.is_dir() {
+                walk(root, &path, out);
+            } else {
+                out.insert(
+                    path.strip_prefix(root).unwrap().into(),
+                    fs::read(path).unwrap(),
+                );
+            }
+        }
+    }
+    let mut out = BTreeMap::new();
+    walk(path, path, &mut out);
+    out
+}
 fn deferred_common_refusal(source_input: bool) {
-    let tmp = TempDir::new().unwrap();
-    let root = tmp.path();
-    write(
-        root,
-        "vibe.toml",
-        "[project]\nname='demo'\nversion='0.1.0'\n",
-    );
-    let lock = format!(
-        "[meta]\ngenerated_by='vibe test'\ngenerated_at='2026-11-04T00:00:00Z'\nschema_version={CURRENT_SCHEMA_VERSION}\n[[package]]\nkind='feat'\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nsource_url='https://example.test/giant.git'\ncontent_hash='sha256:0000'\nsource_kind='registry'\nresolved_commit='1111111111111111111111111111111111111111'\nmaterialization='in-place'\n"
-    );
-    write(root, "vibe.lock", &lock);
-    write(
-        root,
-        "vibevm/vibedeps/org.vibevm.giant/.git/HEAD",
-        "ref: refs/heads/main\n",
-    );
+    let f = Fixture::new();
+    let old = f.publish("1.0.0", "");
+    f.seed();
     let declaration = if source_input {
-        "[package]\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nkind='feat'\nmaterialization='in-place'\n[requires.packages.'org.example/dep']\nversion='*'\nconfiguration={policy='require-selection'}\n"
+        "\n[requires.packages.'org.example/dep']\nversion='*'\nconfiguration={policy='require-selection'}\n"
     } else {
-        "[package]\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nkind='feat'\nmaterialization='in-place'\n[configuration]\n"
+        "\n[configuration]\n"
     };
-    write(
-        root,
-        "vibevm/vibedeps/org.vibevm.giant/vibe.toml",
-        declaration,
-    );
-    let source = MockSource {
-        graph: ResolvedGraph {
-            packages: vec![ResolvedNode {
-                group: Group::parse("org.vibevm").unwrap(),
-                name: "giant".into(),
-                version: semver::Version::parse("1.0.0").unwrap(),
-                dependencies: vec![],
-                is_root: true,
-            }],
-        },
-        fetched: RefCell::new(vec![]),
-        placed: RefCell::new(vec![]),
-        changed: Cell::new(false),
-    };
-    let request = InstallRequest {
-        roots: vec![PackageRef::parse("org.vibevm/giant").unwrap()],
-        features: FeatureRequest::default(),
-        language: None,
-        exact: false,
-        generated_by: "vibe test".into(),
-        offline: true,
-    };
-    let error = vibe_install::plan(&source, root, request, &NullObserver).unwrap_err();
+    f.publish("1.1.0", declaration);
+    let before = worktree(&f.project);
+    let config = fs::read(f.slot.join(".git/config")).unwrap();
+    let error = f.plan().unwrap_err();
     assert!(
         if source_input {
             matches!(
@@ -379,20 +459,44 @@ fn deferred_common_refusal(source_input: bool) {
         },
         "{error}"
     );
-    assert!(source.fetched.borrow().is_empty());
-    assert!(source.placed.borrow().is_empty());
-    assert_eq!(fs::read_to_string(root.join("vibe.lock")).unwrap(), lock);
     assert_eq!(
-        fs::read_to_string(root.join("vibevm/vibedeps/org.vibevm.giant/vibe.toml")).unwrap(),
-        declaration
+        f.source.prepared.borrow().len(),
+        1,
+        "object preparation precedes actual target admission"
     );
+    assert_eq!(git(&f.slot, &["rev-parse", "HEAD"]), old);
+    assert_eq!(worktree(&f.project), before);
+    assert_eq!(fs::read(f.slot.join(".git/config")).unwrap(), config);
+    assert!(!f.slot.join("hook.log").exists());
+    f.assert_no_reclone();
 }
-
 #[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 fn deferred_common_definition_refuses_without_reclone_or_mutating_existing_state() {
     deferred_common_refusal(false);
 }
 #[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 fn deferred_original_input_refuses_without_reclone_or_mutating_existing_state() {
     deferred_common_refusal(true);
+}
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
+fn selected_legacy_target_can_replace_an_old_common_definition() {
+    let f = Fixture::new();
+    f.publish("1.0.0", "\n[configuration]\n");
+    f.seed();
+    f.publish("1.1.0", "");
+    let plan = f.ready();
+    let applied = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
+    assert_eq!(applied.outcome.hook_reports.len(), 1);
+    assert_eq!(applied.post_install_reports.len(), 1);
+    assert!(
+        Manifest::read(f.slot.join("vibe.toml"))
+            .unwrap()
+            .configuration
+            .is_none()
+    );
+    f.assert_provenance(f.source.prepared.borrow().last().unwrap());
+    f.assert_no_reclone();
 }

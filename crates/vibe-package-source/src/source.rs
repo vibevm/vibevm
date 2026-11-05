@@ -163,6 +163,39 @@ impl InstallSource for InstallResolver {
         solve_masked_cell(&flags, self.provider_resource(), roots, blocked)
     }
 
+    fn prepare_in_place(
+        &self,
+        pkgref: &PackageRef,
+        slot: &std::path::Path,
+    ) -> Result<vibe_registry::PreparedInPlace, RegistryError> {
+        let unsupported = || {
+            let group = pkgref
+                .group
+                .clone()
+                .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
+            Err(RegistryError::InPlaceUnsupported {
+                group,
+                name: pkgref.name.to_string(),
+            })
+        };
+        match self {
+            InstallResolver::Local(..) => unsupported(),
+            InstallResolver::Multi(registry, _) => {
+                let resolution = registry.resolve_for(pkgref, ResolutionPurpose::CheckoutSource)?;
+                registry.prepare_in_place(&resolution, slot)
+            }
+            InstallResolver::Embedded {
+                declared: Some(registry),
+                ..
+            } => match registry.resolve_for(pkgref, ResolutionPurpose::CheckoutSource) {
+                Ok(resolution) => registry.prepare_in_place(&resolution, slot),
+                Err(error) if is_registry_absent(&error) => unsupported(),
+                Err(error) => Err(error),
+            },
+            InstallResolver::Embedded { declared: None, .. } => unsupported(),
+        }
+    }
+
     fn materialise_in_place(
         &self,
         pkgref: &PackageRef,

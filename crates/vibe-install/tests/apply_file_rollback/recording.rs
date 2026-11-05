@@ -4,7 +4,6 @@ use std::os::unix::fs::PermissionsExt;
 use vibe_registry::ResolvedPackage;
 
 pub(super) struct MirrorSource {
-    solver: Source,
     cache: tempfile::TempDir,
     declaration: String,
 }
@@ -17,15 +16,15 @@ impl MirrorSource {
 }
 
 impl InstallSource for MirrorSource {
-    fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
-        self.solver.solve(roots)
+    fn solve(&self, _: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        Ok(graph())
     }
     fn solve_masked(
         &self,
-        roots: &[PackageRef],
-        blocked: &BTreeSet<(String, String)>,
+        _: &[PackageRef],
+        _: &BTreeSet<(String, String)>,
     ) -> Result<ResolvedGraph, SolveError> {
-        self.solver.solve_masked(roots, blocked)
+        Ok(graph())
     }
     fn manifest_of(&self, _: &PackageRef) -> Result<Manifest, SolveError> {
         Ok(Manifest::parse_str(&self.declaration).unwrap())
@@ -79,22 +78,11 @@ pub(super) fn fixture(workspace: bool) -> (tempfile::TempDir, MirrorSource, Path
     };
     write(&selected, "vibe.toml", BEFORE);
     let cache = tempfile::tempdir().unwrap();
-    write(
-        cache.path(),
-        "vibe.toml",
-        &PACKAGE.replace("materialization='in-place'\n", ""),
-    );
+    write(cache.path(), "vibe.toml", PACKAGE);
     write(cache.path(), "payload.txt", "SYNTHETIC_PACKAGE_PAYLOAD");
     let source = MirrorSource {
-        solver: Source {
-            root: root.to_owned(),
-            case: Case::Complete,
-            calls: Cell::new(0),
-            observation: RefCell::new(None),
-            wanted: RefCell::new(String::new()),
-        },
         cache,
-        declaration: PACKAGE.replace("materialization='in-place'\n", ""),
+        declaration: PACKAGE.into(),
     };
     (temp, source, selected)
 }

@@ -1,15 +1,9 @@
-//! The staging region of a scoped `vibe update`: the first durable mutation,
+//! The staging region of a scoped `vibe update`: the first checkout mutation,
 //! and the run that will own everything after it.
 //!
-//! Two things happen here and they are ordered on purpose. The deferred
-//! in-place updates run first — each one `git fetch`-es a slot onto its own
-//! working tree, which is irreversible — and only then is the resolution
-//! completed, the provisional world built and the slot lifecycle constructed.
-//!
-//! That ordering is why the accumulator exists. Between the first fetch and the
-//! lifecycle there is no run to record anything, so every mutation is written
-//! into [`Measured`] AS IT HAPPENS rather than after the loop: a fetch that
-//! succeeds followed by one that does not must leave the first one reported.
+//! Every candidate and the complete provider world were admitted before this
+//! region. Bound in-place preparations run first; the accumulator records each
+//! successful checkout before lifecycle construction and later materialization.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
@@ -17,14 +11,14 @@ use anyhow::{Context, Result};
 use std::path::Path;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::{ContentHash, Group, PackageRef};
-use vibe_install::{InstallSlotLifecycle, InstallSource};
+use vibe_install::InstallSlotLifecycle;
 use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_workspace::Workspace;
 use vibe_workspace::install::ResolvedDep;
 use vibe_workspace::vibedeps;
 
-use crate::commands::install::{InstallResolver, LifecycleSlotObserver};
+use crate::commands::install::LifecycleSlotObserver;
 use crate::output;
 
 use super::super::lifecycle;
@@ -33,15 +27,17 @@ use super::{Resolved, SourceHashes};
 
 /// A subtree node the scoped update will refresh **in place** rather than
 /// re-fetch: the lockfile already records it as `in-place` (PROP-022 §2.4) and
-/// its slot is present, so it is `git fetch`-ed onto its own `.git` after
-/// confirmation instead of re-cloned.
+/// its slot is present. The admitted immutable preparation is applied after
+/// confirmation without another source/ref selection.
 pub(super) struct PendingInPlace {
+    pub(super) prepared: vibe_registry::PreparedInPlace,
     pub(super) pkgref: PackageRef,
     pub(super) group: Group,
     pub(super) name: String,
     pub(super) version: semver::Version,
     pub(super) registry: Option<String>,
     pub(super) dependencies: Vec<PackageRef>,
+    pub(super) embedded_sources: Vec<vibe_core::manifest::LockedEmbeddedSource>,
 }
 
 /// What the staging region produced: the run, and the world it runs over.
@@ -58,17 +54,16 @@ pub(super) struct Staged {
 }
 
 pub(super) struct Stage<'a> {
-    pub(super) resolver: &'a InstallResolver,
     pub(super) workspace: &'a Workspace,
     pub(super) project_root: &'a Path,
     pub(super) manifest: &'a Manifest,
-    pub(super) lockfile: &'a Lockfile,
     pub(super) metadata: &'a RunMetadata,
     /// The command's mutation lease: the slot run staged here is built on
     /// the ONE acquisition the update boundary made.
     pub(super) lease: &'a std::sync::Arc<LifecycleLease>,
     pub(super) updated: Vec<Resolved>,
     pub(super) pending_in_place: Vec<PendingInPlace>,
+    pub(super) full_world: Vec<ResolvedDep>,
 }
 
 /// Perform the deferred in-place updates and build the run they belong to.
@@ -82,15 +77,14 @@ pub(super) fn stage(
     inputs: Stage<'_>,
 ) -> Result<Staged> {
     let Stage {
-        resolver,
         workspace,
         project_root,
         manifest,
-        lockfile,
         metadata,
         lease,
         mut updated,
         pending_in_place,
+        mut full_world,
     } = inputs;
     // Confirmed — perform the deferred incremental in-place updates, then fold
     // each into the same `updated` set so the resolution / lockfile / hook flow
@@ -104,9 +98,11 @@ pub(super) fn stage(
         let package = in_place
             .progress()
             .task(format!("Refreshing {}/{}", p.group, p.name));
-        let slot = vibedeps::in_place_slot_abs_path(&workspace.root, &p.group, &p.name);
-        let placed = match resolver
-            .materialise_in_place(&p.pkgref, &slot)
+        vibe_install::configuration_admission::package_manifest(&p.pkgref, p.prepared.manifest())?;
+        let slot = p.prepared.slot().to_path_buf();
+        let placed = match p
+            .prepared
+            .materialise()
             .with_context(|| format!("updating in-place `{}/{}`", p.group, p.name))
         {
             Ok(placed) => placed,
@@ -152,7 +148,12 @@ pub(super) fn stage(
             is_local: false,
             via_redirect: None,
         };
-        updated.push((cached, p.dependencies, Some(placed.changed), Vec::new()));
+        updated.push((
+            cached,
+            p.dependencies,
+            Some(placed.changed),
+            p.embedded_sources,
+        ));
         package.finish();
         in_place.set_progress((index + 1) as u64, Some(in_place_total as u64), "packages");
     }
@@ -165,7 +166,102 @@ pub(super) fn stage(
     // Build the partial resolution for the subtree — the form the shared
     // materialise + hook flow consumes (the same `ResolvedDep` shape
     // `vibe install` hands to `apply_resolution`).
-    let resolution: Vec<ResolvedDep> = updated
+    let resolution = project_rows(workspace, &updated);
+
+    let source_hashes = SourceHashes(
+        updated
+            .iter()
+            .map(|(cached, _, _, _)| {
+                (
+                    (cached.resolved.group.clone(), cached.resolved.name.clone()),
+                    cached.content_hash.clone(),
+                )
+            })
+            .collect(),
+    );
+    for replacement in &resolution {
+        if let Some(row) = full_world
+            .iter_mut()
+            .find(|row| row.group == replacement.group && row.name == replacement.name)
+        {
+            *row = replacement.clone();
+        }
+    }
+    vibe_install::configuration_admission::resolved_packages(&full_world)?;
+    // The PREPARED constructor: this command already owns the tree its identity
+    // and its trace were selected against, so the wrapper's own discovery would
+    // be a second read of a tree this run has already started changing.
+    let slot_lifecycle = InstallSlotLifecycle::from_projection_observed_prepared(
+        project_root,
+        manifest,
+        &full_world,
+        &resolution,
+        workspace,
+        metadata.clone(),
+        lifecycle::stream_mode(ctx),
+        vibe_install::SlotLifecycleSeams {
+            observer: std::sync::Arc::new(LifecycleSlotObserver::new(ctx, metadata.clone())),
+            // Built from the values this command already holds — no
+            // discovery, no second manifest read.
+            agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
+                &workspace.root,
+                manifest,
+            )),
+        },
+        lease.clone(),
+    )?;
+    Ok(Staged {
+        lifecycle: slot_lifecycle,
+        full_world,
+        resolution,
+        source_hashes,
+        updated,
+    })
+}
+
+/// Read the full provider world before any selected checkout is advanced.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
+pub(super) fn preflight_world(
+    workspace: &Workspace,
+    lockfile: &Lockfile,
+    updated: &[Resolved],
+    pending: &[PendingInPlace],
+) -> Result<Vec<ResolvedDep>> {
+    let mut selected = project_rows(workspace, updated);
+    for candidate in pending {
+        let manifest = candidate.prepared.manifest();
+        let package = manifest
+            .package
+            .as_ref()
+            .context("prepared in-place source lacks package metadata")?;
+        selected.push(ResolvedDep {
+            kind: package.kind,
+            group: candidate.group.clone(),
+            name: candidate.name.clone(),
+            version: candidate.version.clone(),
+            content_dir: candidate.prepared.slot().to_path_buf(),
+            source_hash: Some(ContentHash::from_validated(
+                candidate.prepared.content_hash().to_owned(),
+            )),
+            embedded_sources: candidate.embedded_sources.clone(),
+            manifest: manifest.clone(),
+            requires: candidate
+                .dependencies
+                .iter()
+                .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
+                .collect(),
+            admitted_by: None,
+            via_override: None,
+            source_mutable: false,
+            in_place_changed: None,
+        });
+    }
+    let world = vibe_orchestrator::provisional_world(workspace, lockfile, &selected)?;
+    vibe_install::configuration_admission::resolved_packages(&world)?;
+    Ok(world)
+}
+fn project_rows(workspace: &Workspace, updated: &[Resolved]) -> Vec<ResolvedDep> {
+    updated
         .iter()
         .map(
             |(cached, deps, in_place_changed, embedded_sources)| ResolvedDep {
@@ -193,47 +289,5 @@ pub(super) fn stage(
                 in_place_changed: *in_place_changed,
             },
         )
-        .collect();
-
-    let source_hashes = SourceHashes(
-        updated
-            .iter()
-            .map(|(cached, _, _, _)| {
-                (
-                    (cached.resolved.group.clone(), cached.resolved.name.clone()),
-                    cached.content_hash.clone(),
-                )
-            })
-            .collect(),
-    );
-    let provisional_world = vibe_orchestrator::provisional_world(workspace, lockfile, &resolution)?;
-    // The PREPARED constructor: this command already owns the tree its identity
-    // and its trace were selected against, so the wrapper's own discovery would
-    // be a second read of a tree this run has already started changing.
-    let slot_lifecycle = InstallSlotLifecycle::from_projection_observed_prepared(
-        project_root,
-        manifest,
-        &provisional_world,
-        &resolution,
-        workspace,
-        metadata.clone(),
-        lifecycle::stream_mode(ctx),
-        vibe_install::SlotLifecycleSeams {
-            observer: std::sync::Arc::new(LifecycleSlotObserver::new(ctx, metadata.clone())),
-            // Built from the values this command already holds — no
-            // discovery, no second manifest read.
-            agent: std::sync::Arc::new(crate::commands::lifecycle::install_agent_backend(
-                &workspace.root,
-                manifest,
-            )),
-        },
-        lease.clone(),
-    )?;
-    Ok(Staged {
-        lifecycle: slot_lifecycle,
-        full_world: provisional_world,
-        resolution,
-        source_hashes,
-        updated,
-    })
+        .collect()
 }

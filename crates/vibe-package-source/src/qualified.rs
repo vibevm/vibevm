@@ -201,6 +201,14 @@ impl InstallSource for RegistryPackageSource {
         self.resolver.solve_masked(roots, blocked)
     }
 
+    fn prepare_in_place(
+        &self,
+        pkgref: &PackageRef,
+        slot: &Path,
+    ) -> Result<vibe_registry::PreparedInPlace, RegistryError> {
+        self.resolver.prepare_in_place(pkgref, slot)
+    }
+
     fn materialise_in_place(
         &self,
         pkgref: &PackageRef,

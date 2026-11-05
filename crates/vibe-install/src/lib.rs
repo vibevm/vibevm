@@ -36,6 +36,7 @@ use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError};
 use vibe_resolver::{ResolvedGraph, SolveError};
 
 mod apply;
+pub mod configuration_admission;
 mod error;
 mod events;
 mod fetched;
@@ -49,7 +50,7 @@ pub use apply::{
     ApplyReport, PreparedApplyReport, SlotLifecycleSeams, apply, apply_with_spec_format,
     apply_with_spec_format_and_hook_output, apply_with_spec_format_and_lifecycle_observed,
     apply_with_spec_format_and_lifecycle_observed_traced,
-    apply_with_spec_format_and_lifecycle_observed_traced_prepared,
+    apply_with_spec_format_and_lifecycle_observed_traced_prepared, publish_admitted_manifest,
 };
 pub use error::Error;
 pub use events::{NullObserver, PlanEvent, PlanObserver};
@@ -60,7 +61,7 @@ pub use lifecycle::{
 };
 pub use plan::{
     InstallRequest, Plan, PlannedInstall, plan, plan_prepared_with_spec_format,
-    plan_with_spec_format,
+    plan_prepared_without_publication, plan_with_spec_format,
 };
 pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
@@ -164,6 +165,25 @@ pub trait InstallSource {
     /// provider path. This must never fetch or materialise package content.
     fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError>;
 
+    /// Bind prospective in-place bytes and their immutable source revision
+    /// without changing the project checkout. Protected consumers admit the
+    /// returned manifest before calling its bound `materialise` operation.
+    /// A metadata-only lookup or the old slot is not this proof.
+    fn prepare_in_place(
+        &self,
+        pkgref: &PackageRef,
+        _slot: &Path,
+    ) -> Result<vibe_registry::PreparedInPlace, RegistryError> {
+        let group = pkgref
+            .group
+            .clone()
+            .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
+        Err(RegistryError::InPlaceUnsupported {
+            group,
+            name: pkgref.name.to_string(),
+        })
+    }
+
     /// Re-run the selected solver cell while masking the named
     /// `parent -> target` edges in every parent manifest it reads.
     fn solve_masked(
@@ -176,10 +196,10 @@ pub trait InstallSource {
     /// `slot`: a fresh `git clone --recurse-submodules` when the slot is
     /// absent, an incremental `git fetch` + checkout when it already carries
     /// `.git`. Bypasses the cache clone + the `.git`-stripped `copy`,
-    /// so a version bump on a giant repo transfers only changed objects. Used
-    /// by scoped `vibe update <pkg>` and the general `vibe install` re-resolve
-    /// (via [`apply`](crate::apply), which defers the in-place fetch past the
-    /// plan) for a package the lockfile records as in-place. Returns the slot's
+    /// so a version bump on a giant repo transfers only changed objects.
+    /// This compatibility/source operation does not perform package configuration
+    /// admission. Protected install/update consumers use `prepare_in_place`
+    /// followed by its bound materialisation instead. Returns the slot's
     /// manifest + provenance for the lockfile; a source with no git backend
     /// (the local-directory registry) errors.
     fn materialise_in_place(

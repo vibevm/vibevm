@@ -9,6 +9,7 @@ use super::{
 };
 
 #[allow(clippy::too_many_arguments)]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 pub(super) fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Sized>(
     source: &S,
     mut planned: PlannedInstall,
@@ -25,8 +26,19 @@ pub(super) fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Size
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
     native: Option<NativeApplyPreparation<'_>>,
 ) -> Result<PreparedApplyReport> {
+    crate::configuration_admission::planned(&planned)?;
     let before_manifest = planned.manifest.clone();
     let manifest_changed = prepare_manifest(&mut planned)?;
+    let workspace = vibe_workspace::Workspace::discover_with_selected_manifest(
+        &planned.project_root,
+        &planned.manifest,
+    )?;
+    crate::configuration_admission::workspace_inputs(
+        &workspace,
+        &planned.project_root,
+        &planned.manifest,
+    )?;
+
     let mut files = MetadataFiles::capture(
         &planned.project_root,
         &planned.workspace.lockfile_path(),
@@ -42,6 +54,7 @@ pub(super) fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Size
         observer,
         trace,
         native,
+        workspace,
         &mut files,
     )
     .map_err(|error| files.undo_all(error))

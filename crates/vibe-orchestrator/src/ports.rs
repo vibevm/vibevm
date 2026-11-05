@@ -277,8 +277,9 @@ pub trait PackageSource: vibe_install::InstallSource {
 /// fn takes(_: &dyn InstallManifestMutation) {}
 /// ```
 pub trait InstallManifestMutation {
-    /// Apply the surface's mutation to the snapshot and replay it onto the
-    /// loaded tree. A surface with nothing to record does nothing.
+    /// Apply a source delta to the in-memory snapshot and loaded tree only.
+    /// The install owner publishes it after candidate admission. A surface
+    /// with nothing to record does nothing; this callback must not write it.
     fn apply(
         &self,
         manifest: &mut Manifest,

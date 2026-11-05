@@ -1115,3 +1115,75 @@ Root extra real-CLI stdin gate passed: A supplied-secret install/export→B --se
 Local main commit34866ac87833179d530b86b6881de1bf60bd5be5 contains116reviewed files for full selected-installer portability. After commit, tracked tree clean; original untracked doc.web remains untouched. Local plan67 marks only NST-COMMON-PORTABLE accepted and moves current focus to NST-COMMON-EFFECTS architecture review; fullF04 and historical113 scope remain open. Documents dashboard refreshed automatically to plan67. No push/PR/release performed under NST-D8.
 
 Next read-only review distinguishes mandatory/optional requires semantics and domain-neutral evaluation from app-specific policy; it also found a candidate scoped-update path bypassing existing unsupported-configuration admission. Test-first confirmation and bounded common-owner correction are next, followed by actual configured non-app effects rather than declaring a refusal guard to be delivery. Full report/source evidence pending root review.
+
+
+### 2026-11-05 — non-app boundary reviewed; scoped maintenance RED
+
+Root verified44main source hashes and19pinned prototype blobs and promoted the source assessment/design into repository research. Normal prototype authored install/update fallback exists; data-only persistence is not chosen as an easier substitute for full effects. Retired install-time subskill copying stays retired. The positive A1–A5 dependency route is now explicit in ARCHITECTURE.md.
+
+Actual CLI probe final2PASS/2FAIL: scoped configured candidate and sibling authored input both returned success, ran the canary hook and changed project lock/slots/boot. Legacy update and whole/direct refusal controls passed; first whole-update Fresh-control mistake retained separately. Test source frozen, no production change. Root approved one shared workspace/candidate admission owner and exact ephemeral source prepare/apply for in-place before project mutation, preserving legacy incremental paths. PACKAGE-ADMISSION added as spec/plan before implementation. Source/cache I/O is not mislabeled as project semantic mutation. Registry/source and install/CLI writers must agree exact API/ownership before edits; one Cargo slot.
+
+A0 source mechanism split agreed: registry/package-source worker prepares an immutable actual Git object/peeled commit/ref and manifest in ephemeral cache objects, then applies that identity to its bound slot; install/orchestrator/CLI worker owns shared admission and consumers. Existing APIs/cache/backend owners are reused. Source prepare must not advance or clean the project checkout; fallback occurs before admission only. Narrowly unverifiable checkout transforms of authoritative vibe.toml must refuse before mutation, not weaken the claim through a post-checkout check or global filter disabling. Default/legacy checkout compatibility needs actual controls. The exact4case CLI RED source hash was verified and report/evidence archived under common-package-maintenance-red.
+
+
+### 2026-11-05 — implementation dispatch corrected; prepared source review
+
+Root found the admission design agent still completed: send_message had delivered the ruling but did not trigger its next implementation turn. Root corrected this with followup_task; registry/backend work had continued independently. This was root scheduling error, not a crashed worker. Install/orchestrator/CLI and registry/package-source owners now coordinate the exact trait seam, with registry-only Cargo ownership until source handback.
+
+Root reviewed initial object-only Git preparation against incumbent namespace handling: tag-first/branch/exact behavior agrees. Existing token-env bootstrap/submodule and clone-beside swap-on-success semantics remain required controls; plain-origin timing must not accidentally break authenticated relative submodules. Prepared object lifetime must not leave dangling alternates in the resulting slot. These are source review obligations, not runtime passes.
+
+
+### 2026-11-05 — selected-target oracle and first registry gate
+
+Root corrected its stale test packet wording: negative in-place admission must inspect the actual prepared target, not reject an unrelated old slot definition before preparation. Workspace authored-input guards still precede preparation; cache/object acquisition is allowed separately from unchanged project HEAD/worktree/lock guarantees. Real Git fixture migration preserves those meaningful oracles and legacy controls.
+
+Registry worker reports first focused actual7PASS/1fixture failure: preflight leaves dirty checkout intact, captured identity survives source/ref change, refresh preserves .git, actual origin/mirror and object lifetime/EOL controls pass. UTF-16 fixture failed in git add before production; correction is test encoding, not weaker oracle. Root source review also identified origin_url(...).ok() error collapse; worker adds typed missing-origin distinction rather than treating every inspection error as known absence. No final registry/whole A0 acceptance yet.
+
+
+### 2026-11-05 — incremental tests now use actual Git state
+
+Frozen incremental_in_place.rs migration hash verified and archived. Four source-only cases replace fake .git/HEAD and invented materialisation identities with real local Git preparation/apply, preserving no-op/changed hooks, .git sentinel and provenance oracles. Unsupported prepared-target negatives preserve exact typed refusal and unchanged project state; an unrelated old common definition does not poison a valid legacy replacement. Formatting passed; these tests have not yet run. Ownership returned to primary for the integrated gate after registry Cargo release.
+
+
+### 2026-11-05 — additional prepared-source compatibility REDs
+
+Root read actual registry gate logs: initial fixture encoding correction led to a passing panel; expanded12-case panel then had10PASS/2realRED. Fresh SHA256 remote failed because preparation initialized SHA1; a prospective checkout-local attribute file changed manifest transformation while the old override masked it during preparation. Root did not treat passing ordinary cases as proof of these modes. Worker fixes preparation object-format inheritance and explicitly refuses unverifiable authoritative-manifest transform surfaces before project writes, preserving ordinary EOL/other-file behavior. Logs/command receipts archived under prepared-inplace-first-gates. Consumer admission/test wiring exists but remains uncompiled until the registry worker releases its Cargo slot.
+
+
+### 2026-11-05 — migration publication and remaining source parity
+
+Root checked LF-REQUIRES-SEEDING: seeding before resolution is canonical; eager physical publication before failure was an implementation comment. Approved in-memory seeding plus publication only on admitted Ready/Fresh, preserving no-solve locked Fresh and restoring caller/file state on planning failure. Canonical PACKAGE-ADMISSION and FMT-020 record the timing change explicitly.
+
+Prepared source reached15new/2incumbent/2docs PASS and registry clippy0, but worker then proved a narrow relative-origin regression: old git handles ~/upstream, slot.join normalization did not. Git-native original-cwd/held-git-dir route is being checked; no ad hoc tilde parser. Registry/backend ownership remains separate. New source-only CLI in-place tests assigned, including batch admission before the first checkout; no claim mechanism tests alone cover the CLI stage.
+
+
+### 2026-11-05 — owner-requested idle main build cleanup
+
+Current df before cleanup had already recovered to76GiB free, unlike earlier ENOSPC snapshot. Main target wasidle133.9minutes with no /proc executable/cwd/fd users, standardCACHEDIR.TAG and Cargooutputlayout; no LLBC/log specialfiles found. Preserved target/conform evidence before correct absolute offline cargo clean from /. Exit0 removed421983files/37.9GiB apparent, target absent; df then112GiBfree. Active vibevm-app-r127 Windows build untouched. Bounded scan of /fast/git/v and /fast/tmp found registry caches only, which were preserved. Receipt under local evidence/2026-11-05/cache-cleanup-main-1845. No builds/tests launched for cleanup.
+
+
+### 2026-11-05 — resume after cleanup with native transport-context correction
+
+Both workers restarted with followup_task after their saved ENOSPC checkpoints; source/consumer ownership retained. Root approved original-repository object/FETCH_HEAD-only acquisition to preserve native local/conditional transport and credential behavior, after the real same-origin/different-commit counterexample. No ad hoc Git config translation or new durable store. Source-only qualification is now canonical PACKAGE-ADMISSION/FMT-020, including exact exclusions for semantic Git state; previous ordinary prepared GREENs do not prove this corrected route. Pure admission errors use a typed prepared refusal, and such errors must not trigger mirror searching.
+
+
+### 2026-11-05 — prepared source transport and phase routing verified
+
+Root read production transport19PASS and rechecked all15final source hashes. The same-origin transport RED is closed by original Git-context acquisition, with exact permitted objects/FETCH_HEAD footprint and preserved semantic Git state. A later real1PASS/2RED demonstrated missing acquired manifest/attribute-read failure falling through to a valid mirror; explicit phase routing now passes23prepared tests and preserves original typed causes. Existing39ShellGit/2in-place/2doctest evidence remains separately scoped; finalregistryclippy/fmt0. Frozen reports/gates archived under prepared-inplace-final. Consumer owner reports final12CLI and legacy git-source4/update2/reinstall5/raw-delta1 PASS; final source/static acceptance remains pending.
+
+
+### 2026-11-05 — consumer/static checkpoint and Fresh ordering review
+
+Root read strict clippy command receipts: install, orchestrator and selected CLI exit0. Current post-source-correction CLI12 and legacy git-source4/update2/reinstall5/raw-delta1 results are archived separately from earlier snapshots. Root inspected orchestrator ordering and found combined source-delta publication before Fresh consumed-provider projection; requested a real programmatic Fresh/source-delta oracle and moving publication after admission of the same held world, retaining Plan::Fresh/no-solve semantics. Primary wrote the oracle before changing order; conform source amendments remain in progress. No whole A0 acceptance yet.
+
+
+### 2026-11-05 — Fresh publication ordering real RED corrected
+
+The public execute_prepared test reproduced root's source finding: a typed unsupported-provider refusal was returned, but the authored project name had already been published. Primary moved Fresh source-delta publication after admission of the held resolution, reusing that same vector for regeneration; Ready publication remains after admitted plan, empty world remains distinct. Paired legacy Fresh control preserves no-solve/no-fetch behavior. Corrected orchestrator install32PASS reported; raw Fresh logs archived. This closes an actual ordering defect, not merely annotation debt. Final static/doctest/freeze work remains.
+
+
+### 2026-11-05 — root A0/F15 final source review
+
+All49consumer/source candidate hashes and32consumer log hashes match; separately verified15registry paths. Final source is frozen. Install69/orchestrator32/CLI12 and legacy4/2/5/raw-delta1 panels, source23 and scoped incumbent/doc/static results are accepted at their stated boundaries, not summed with nested helper/repeated outputs. Fresh map9080units5124items4279edges,0gatedorphans0unresolvedhost43knownwarnings. PACKAGE-ADMISSION promoted to impl/done at this safety boundary; F15 and Unreleased007 record API/timing/transform/source-context changes. A final map/check and exact staging precede local commit; broader configured runtime and historical113 contracts remain open.
+
+Root final map/check after status promotion exited0:9080units/5124taggeditems/4279edges,0gatedorphans/0unresolvedhost,43existingwarnings. F15 accepted at its stated safety/source/API boundary. Exact reviewed source+research/spec/format files are staged for local commit; unrelated doc.web remains excluded. No public push under NST-D8.

@@ -10,6 +10,7 @@ use vibe_workspace::vibedeps;
 /// Resolve-and-fetch one solved node, expanding its features. Roots
 /// get the caller's feature request tailored to what the package
 /// declares; transitives get the default set.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 pub(super) fn fetch_node<S: InstallSource + ?Sized>(
     source: &S,
     node: &ResolvedNode,
@@ -29,17 +30,7 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
         expected.as_deref(),
         progress,
     )?;
-    if cached.manifest.configuration.is_some() {
-        return Err(Error::ConfigurationUnsupported {
-            package: format!("{}/{}", node.group, node.name),
-        });
-    }
-    if let Some(dependency) = cached.manifest.requires.configurations.keys().next() {
-        return Err(Error::ConfigurationInputUnsupported {
-            consumer: format!("package {}/{}", node.group, node.name),
-            dependency: dependency.clone(),
-        });
-    }
+    crate::configuration_admission::package_manifest(&pkgref, &cached.manifest)?;
     let req = if node.is_root {
         tailor_feature_request(root_features, &cached.manifest.features)
     } else {
@@ -56,17 +47,13 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
             is_root: node.is_root,
         },
         embedded_sources,
-        in_place_incremental: false,
+        in_place: None,
     })
 }
 
-/// Fetch one solved node, OR — when it re-resolves an already-present
-/// `in-place` package (PROP-022 §2.4) — defer it: build its [`Fetched`] from
-/// the existing slot with NO network re-clone, leaving the incremental
-/// `git fetch` to [`apply`](crate::apply). This is what keeps a giant in-place
-/// repo (Chromium-scale) from being re-cloned on every full-pipeline install;
-/// only a *fresh* in-place package (no slot yet) clones, and every
-/// copy/hardlink package fetches exactly as before.
+/// Fetch a solved node, or retain an exact prospective in-place preparation.
+/// Preparation can acquire source/cache objects, but changes no project slot.
+/// Every selected manifest is admitted before the plan can be confirmed.
 // Keep the existing planner inputs explicit; progress adds observation only.
 #[allow(clippy::too_many_arguments)]
 pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
@@ -79,7 +66,14 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
     offline: bool,
     progress: &vibe_core::progress::Progress,
 ) -> Result<Fetched> {
-    match try_in_place_incremental(node, lockfile, workspace_root, root_features)? {
+    match try_in_place_incremental(
+        source,
+        node,
+        lockfile,
+        workspace_root,
+        root_features,
+        offline,
+    )? {
         Some(fetched) => Ok(fetched),
         None => fetch_node(
             source,
@@ -93,30 +87,22 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
     }
 }
 
-/// If `node` re-resolves a package the lockfile already records as `in-place`
-/// (PROP-022 §2.4) whose project slot is present, build its [`Fetched`] from
-/// that slot WITHOUT a network re-clone — the deferred incremental update runs
-/// against the live `.git` in [`apply`](crate::apply), post-confirmation, so a
-/// declined plan never advances the slot's commit (the plan stays
-/// read-mostly). Returns `None` for anything else — a fresh in-place install
-/// (no slot yet; restored by a re-clone per §2.7), or any copy/hardlink
-/// package — so the caller fetches it normally.
-///
-/// The provisional `cached.cache_dir` IS the slot — the "already placed"
-/// signal `materialise_resolution` reads to run the hook and skip the move
-/// (§2.4). Reading the slot's manifest is local and network-free; its
-/// provenance is carried from the lockfile and overwritten by
-/// [`apply`](crate::apply) with the freshly-fetched values once the
-/// incremental `git fetch` has run.
+/// An existing in-place slot may be refreshed only through a source-bound
+/// preparation. The old slot establishes a usable base, not the target
+/// declaration; features and conditional metadata use the admitted candidate.
+/// Missing/unreadable bases retain the ordinary fresh-fetch fallback.
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
     r = 1
 )]
-pub(super) fn try_in_place_incremental(
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
+pub(super) fn try_in_place_incremental<S: InstallSource + ?Sized>(
+    source: &S,
     node: &ResolvedNode,
     lockfile: &Lockfile,
     workspace_root: &Path,
     root_features: &FeatureRequest,
+    offline: bool,
 ) -> Result<Option<Fetched>> {
     let Some(old) = lockfile.find(&node.group, &node.name) else {
         return Ok(None);
@@ -134,21 +120,25 @@ pub(super) fn try_in_place_incremental(
     // Read the live slot's manifest locally (no network) for the resolution,
     // conditional-dep, and feature passes. A slot with no readable `[package]`
     // table is not a trustworthy incremental base — re-clone it instead.
-    let manifest = match Manifest::read(slot.join(Manifest::FILENAME)) {
-        Ok(m) if m.package.is_some() => m,
+    match Manifest::read(slot.join(Manifest::FILENAME)) {
+        Ok(m) if m.package.is_some() => {}
         _ => return Ok(None),
-    };
-    if manifest.configuration.is_some() {
-        return Err(Error::ConfigurationUnsupported {
-            package: format!("{}/{}", node.group, node.name),
-        });
     }
-    if let Some(dependency) = manifest.requires.configurations.keys().next() {
-        return Err(Error::ConfigurationInputUnsupported {
-            consumer: format!("package {}/{}", node.group, node.name),
-            dependency: dependency.clone(),
-        });
+    let pkgref = exact_pinned_pkgref(node);
+    let prepared = source.prepare_in_place(&pkgref, &slot)?;
+    if prepared.slot() != slot {
+        return Err(vibe_registry::RegistryError::MalformedMeta {
+            path: slot,
+            reason: "prepared in-place source belongs to another destination".into(),
+        }
+        .into());
     }
+
+    crate::configuration_admission::package_manifest(&pkgref, prepared.manifest())?;
+    let manifest = prepared.manifest().clone();
+    let embedded_sources =
+        vibe_registry::lock_embedded_sources_with(&manifest.embedded_sources, offline)?;
+
     let req = if node.is_root {
         tailor_feature_request(root_features, &manifest.features)
     } else {
@@ -164,18 +154,14 @@ pub(super) fn try_in_place_incremental(
         },
         cache_dir: slot,
         manifest,
-        // Carried from the lockfile so the provisional describes the *current*
-        // slot; apply overwrites all four once the incremental fetch lands the
-        // resolved commit (PROP-022 §2.5).
-        content_hash: old.content_hash.as_str().to_string(),
-        source_uri: old.source_url.as_str().to_string(),
-        // The provisional describes the slot as the lock left it, and the
-        // lock never carries the remapped URL (`PROP-066#provenance`): the
-        // incremental fetch below records where these bytes came from.
+        // Prospective identity is retained with its preparation; this path is
+        // not consumed as materialized content until the bound apply succeeds.
+        content_hash: prepared.content_hash().to_owned(),
+        source_uri: prepared.source_uri().to_owned(),
         fetched_from: None,
         registry_name: old.registry.clone(),
-        source_ref: old.source_ref.clone(),
-        resolved_commit: old.resolved_commit.clone(),
+        source_ref: Some(prepared.source_ref().to_owned()),
+        resolved_commit: Some(prepared.resolved_commit().to_owned()),
         overridden: false,
         is_git_source: false,
         is_path_source: false,
@@ -190,8 +176,8 @@ pub(super) fn try_in_place_incremental(
             dependencies: node.dependencies.clone(),
             is_root: node.is_root,
         },
-        embedded_sources: old.embedded_sources.clone(),
-        in_place_incremental: true,
+        embedded_sources,
+        in_place: Some(prepared),
     }))
 }
 

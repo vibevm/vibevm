@@ -142,6 +142,9 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
         .with_context(|| format!("re-fetching `{package}` for point re-derivation"))?;
     // A repair re-derives the bytes the lock pins, never newer ones.
     pin::require_locked_bytes(locked, &cached)?;
+    vibe_install::configuration_admission::workspace_inputs(&workspace, project_root, &manifest)?;
+    vibe_install::configuration_admission::package_manifest(&pkgref, &cached.manifest)?;
+
     let mode = match cached
         .manifest
         .package
@@ -252,6 +255,7 @@ fn execute_after_open(
     }
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 fn run_inner(
     ctx: &output::Context,
     execution: Execution,
@@ -277,6 +281,11 @@ fn run_inner(
     // against a tree the identity and the trace were never prepared for.
     let proven = selection.prove()?;
     let workspace = proven.workspace();
+    vibe_install::configuration_admission::workspace_inputs(
+        workspace,
+        proven.root(),
+        proven.manifest(),
+    )?;
 
     let lockfile = load_lockfile(&workspace.root)?;
     // The workspace ROOT's manifest, from the tree already in hand.

@@ -66,6 +66,7 @@ fn regenerate_native_world(
     metadata: &RunMetadata,
     lease: &LifecycleLease,
 ) -> Result<(Vec<String>, outcome::NativeInstallContext)> {
+    vibe_install::configuration_admission::resolved_packages(resolution)?;
     let (world, lowering, sidecar) =
         crate::world::prepare_owner_runtime_inputs(project_root, workspace, resolution)?;
     let platform = vibe_lifecycle::native::NativePlatform::current()?;
@@ -251,7 +252,10 @@ pub fn execute_prepared(
     // exit codes belong to the surface; what the core knows is that a surface
     // may record a declaration here and that a failure is the surface's own
     // error, unchanged.
+    vibe_install::configuration_admission::workspace_inputs(&workspace, &project_root, &manifest)?;
+    let authored_before = manifest.clone();
     manifest_mutation.apply(&mut manifest, &mut workspace, &project_root)?;
+    vibe_install::configuration_admission::workspace_inputs(&workspace, &project_root, &manifest)?;
 
     // ---- the registry epoch: SEED, then LOAD, exactly once ---------------
     //
@@ -294,6 +298,9 @@ pub fn execute_prepared(
         && lockfile_snapshot.meta.root_dependencies.is_empty()
     {
         observer.narrate(InstallNarration::EmptyWorld);
+        if manifest != authored_before {
+            vibe_install::publish_admitted_manifest(&project_root, &authored_before, &manifest)?;
+        }
         let boot_task = progress.task("Generating boot artifacts for the empty world");
         let (nodes, native) = regenerate_native_world(
             &project_root,
@@ -359,9 +366,9 @@ pub fn execute_prepared(
 
     // The PREPARED planner, over the two values this command already owns.
     // The compatibility wrapper would re-read the selected `vibe.toml` — the
-    // very file a `--git` run rewrote a few lines above — and re-discover the
-    // tree that rewrite was replayed into.
-    let plan = vibe_install::plan_prepared_with_spec_format(
+    // value a `--git` delta just changed in memory — and re-discover a tree
+    // different from the one whose source delta is being admitted.
+    let plan = vibe_install::plan_prepared_without_publication(
         resolver.as_ref(),
         &project_root,
         &mut manifest,
@@ -383,6 +390,14 @@ pub fn execute_prepared(
             // difference a single snapshot exists to refuse.
             let resolution = provisional_world(&workspace, &lockfile_snapshot, &[])
                 .context("projecting the exact fresh install world")?;
+            vibe_install::configuration_admission::resolved_packages(&resolution)?;
+            if manifest != authored_before {
+                vibe_install::publish_admitted_manifest(
+                    &project_root,
+                    &authored_before,
+                    &manifest,
+                )?;
+            }
             let (nodes, native) = regenerate_native_world(
                 &project_root,
                 &workspace,
@@ -443,28 +458,37 @@ pub fn execute_prepared(
         // apply, the slot-failure carrier and the closure diff — so this
         // function stays the shape of the DECISION (empty / fresh / ready)
         // rather than of the largest branch.
-        Plan::Ready(planned) => ready::apply(
-            ready::ReadyApply {
-                project_root: &project_root,
-                workspace: &workspace,
-                resolver: resolver.as_ref(),
-                planned: *planned,
-                slot_integrity,
-                spec_format,
-                lockfile_path: &lockfile_path,
-                lockfile_snapshot: &lockfile_snapshot,
-                lanes_before: &lanes_before,
-                run_metadata: &run_metadata,
-                confirm_gate,
-                observer,
-                agent: &agent,
-                trace,
-            },
-            lifecycle_run,
-            after_durable_world
-                .take()
-                .context("internal: install durable-world callback already consumed")?,
-        ),
+        Plan::Ready(planned) => {
+            if manifest != authored_before {
+                vibe_install::publish_admitted_manifest(
+                    &project_root,
+                    &authored_before,
+                    &manifest,
+                )?;
+            }
+            ready::apply(
+                ready::ReadyApply {
+                    project_root: &project_root,
+                    workspace: &workspace,
+                    resolver: resolver.as_ref(),
+                    planned: *planned,
+                    slot_integrity,
+                    spec_format,
+                    lockfile_path: &lockfile_path,
+                    lockfile_snapshot: &lockfile_snapshot,
+                    lanes_before: &lanes_before,
+                    run_metadata: &run_metadata,
+                    confirm_gate,
+                    observer,
+                    agent: &agent,
+                    trace,
+                },
+                lifecycle_run,
+                after_durable_world
+                    .take()
+                    .context("internal: install durable-world callback already consumed")?,
+            )
+        }
     }
 }
 

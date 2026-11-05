@@ -144,12 +144,44 @@ impl MultiRegistryResolver {
         }
     }
 
-    /// Place a registry-served `in-place` package directly into its project
-    /// `slot` (PROP-022 §2.4) — a fresh clone, or an incremental `git fetch`
-    /// on an existing slot — bypassing the cache clone + `copy`. Routes
-    /// to the [`GitPerPackageRegistry`] that resolved the package. The special
-    /// source kinds (override / git-source / path-source / redirect) are not
-    /// in-place candidates; they keep the move-based `copy` path.
+    /// Prepare a registry-served in-place candidate without changing its slot.
+    /// Special sources keep their existing non-in-place materialization routes.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION"
+    )]
+    pub fn prepare_in_place(
+        &self,
+        resolution: &MultiResolution,
+        slot: &Path,
+    ) -> Result<crate::PreparedInPlace, RegistryError> {
+        if resolution.overridden
+            || resolution.is_path_source
+            || resolution.is_git_source
+            || resolution.via_redirect.is_some()
+            || resolution.from_store
+        {
+            return Err(RegistryError::PreparedInPlace { path: slot.to_path_buf(), reason: "this special source route has no registry-bound prepared in-place identity; its existing non-in-place route remains available".into() });
+        }
+        let registry = resolution.registry_name.as_deref();
+        let source = self
+            .sources
+            .iter()
+            .find(|source| Some(source.name()) == registry)
+            .ok_or_else(|| RegistryError::UnknownPackage {
+                group: resolution.resolved.group.clone(),
+                name: resolution.resolved.name.clone(),
+            })?;
+        match source {
+            RegistrySource::Git(registry) => registry.prepare_in_place(&resolution.resolved, slot),
+            RegistrySource::Local(_) => Err(RegistryError::InPlaceUnsupported {
+                group: resolution.resolved.group.clone(),
+                name: resolution.resolved.name.clone(),
+            }),
+        }
+    }
+
+    /// Compatibility placement API. Pre-effect admission uses `prepare_in_place`
+    /// and applies its retained candidate without resolving the source again.
     pub fn materialise_in_place(
         &self,
         resolution: &MultiResolution,

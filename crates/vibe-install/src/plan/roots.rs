@@ -199,23 +199,3 @@ pub(super) fn migration_roots(lock: &Lockfile) -> Result<Vec<PackageRef>> {
 pub(super) fn raw_has_declarations(manifest: &Manifest) -> bool {
     !manifest.requires.is_empty()
 }
-
-/// Refuse source intent before the legacy planner can migrate, solve or return Fresh.
-pub(super) fn reject_configuration_inputs(
-    workspace: &Workspace,
-    selected: &str,
-    raw: &Manifest,
-) -> Result<()> {
-    for (consumer, node) in workspace
-        .iter_nodes()
-        .chain(std::iter::once((selected, raw)))
-    {
-        if let Some(dependency) = node.requires.configurations.keys().next() {
-            return Err(Error::ConfigurationInputUnsupported {
-                consumer: format!("{consumer}/vibe.toml"),
-                dependency: dependency.clone(),
-            });
-        }
-    }
-    Ok(())
-}

@@ -38,6 +38,10 @@ impl SlotLifecycleObserver for Observer {
     fn outcome(&self, report: &SlotLifecycleReport) -> Result<(), String> {
         if self.change && report.status == "delegated" {
             let published = fs::read_to_string(&self.path).unwrap();
+            assert_ne!(
+                published, BEFORE,
+                "selected manifest must be published before park observation"
+            );
             assert!(published.contains("org.vibevm/giant"));
             fs::write(
                 &self.path,

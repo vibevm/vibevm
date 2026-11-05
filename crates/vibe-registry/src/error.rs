@@ -214,6 +214,11 @@ pub enum RegistryError {
     )]
     InPlaceUnsupported { group: Group, name: String },
 
+    #[error(
+        "prepared in-place source at `{path}` cannot be applied: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION; fix: prepare and admit the actual source again)"
+    )]
+    PreparedInPlace { path: PathBuf, reason: String },
+
     /// A store entry that was about to become the materialisation source
     /// no longer hashes to the lockfile pin (PROP-010 §2.7 — a mismatch is
     /// named, never swallowed). Our code never rewrites an entry, so bytes

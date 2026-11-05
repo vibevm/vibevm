@@ -4,16 +4,17 @@
 //! ## Three regions, and what a failure owes in each
 //!
 //! ```text
-//! 1. read / resolve / fetch / confirm   nothing durable yet
-//! 2. stage: in-place fetch, lifecycle   the accumulator alone
+//! 1. read / resolve / prepare / confirm   no project semantic effects yet
+//! 2. stage: bound checkout, lifecycle   the accumulator alone
 //! 3. apply: prune, materialise, boot    the accumulator JOINED with the run
 //! ```
 //!
-//! Region 1 touches nothing the operator can observe: the solve is arithmetic
-//! and the fetch lands in the machine-global store. A failure there really did
-//! move nothing, so the command's empty fallback draft is the truth.
+//! Region 1 may acquire cache/Git objects and FETCH_HEAD in the original slot
+//! context. It does not advance HEAD/index/refs/config or the worktree, publish
+//! authored inputs, or run hooks/boot. Its empty semantic progress is truthful;
+//! it is not a claim that acquisition performed no I/O.
 //!
-//! Region 2 is where the project starts changing — `materialise_in_place`
+//! Region 2 is where project semantic state starts changing — `materialise_in_place`
 //! advances a slot's own working tree — and it happens BEFORE an
 //! [`vibe_install::InstallSlotLifecycle`] exists to record it. That is exactly
 //! why [`measured::Measured`] exists: from the first mutation, every failure
@@ -118,6 +119,7 @@ pub(super) fn execute_after_open(
     }
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 fn run(
     ctx: &output::Context,
     execution: Execution,
@@ -145,6 +147,7 @@ fn run(
         proven.workspace(),
     );
 
+    vibe_install::configuration_admission::workspace_inputs(workspace, &project_root, &manifest)?;
     let mut lockfile = load_lockfile(&workspace.root)?;
     // PROP-050 ##VERIFY-LOCK-DIFF — the scoped update's own pre-apply
     // snapshot: the lock as loaded (before the entry replacements below
@@ -253,7 +256,19 @@ fn run(
             && old.materialization.is_in_place()
             && vibedeps::is_in_place_slot(&workspace.root, &old.group, &node.name)
         {
+            let slot = vibedeps::in_place_slot_abs_path(&workspace.root, &old.group, &node.name);
+            let prepared = resolver.prepare_in_place(&pkgref, &slot)?;
+            if prepared.slot() != slot {
+                bail!("prepared in-place source belongs to another destination");
+            }
+
+            vibe_install::configuration_admission::package_manifest(&pkgref, prepared.manifest())?;
             pending_in_place.push(PendingInPlace {
+                embedded_sources: vibe_registry::lock_embedded_sources_with(
+                    &prepared.manifest().embedded_sources,
+                    offline,
+                )?,
+                prepared,
                 pkgref,
                 group: node.group.clone(),
                 name: node.name.clone(),
@@ -273,8 +288,9 @@ fn run(
                 return Err(error.into());
             }
         };
+        vibe_install::configuration_admission::package_manifest(&pkgref, &cached.manifest)?;
         let embedded_sources =
-            vibe_registry::lock_embedded_sources(&cached.manifest.embedded_sources)?;
+            vibe_registry::lock_embedded_sources_with(&cached.manifest.embedded_sources, offline)?;
         updated.push((cached, node.dependencies.clone(), None, embedded_sources));
         package.finish();
         fetching.set_progress((index + 1) as u64, Some(graph_len as u64), "packages");
@@ -284,11 +300,12 @@ fn run(
     // a failure draft must be able to say how big the run was even when the
     // set itself was moved into the staging below.
     let resolved = updated.len() + pending_in_place.len();
+    let full_world = stage::preflight_world(workspace, &lockfile, &updated, &pending_in_place)?;
     if !confirm(ctx, &args, resolved)? {
         return Err(InstallError::UserDeclined.into());
     }
 
-    // ---- region 2: the first durable mutation ----------------------------
+    // ---- region 2: the first project semantic mutation ----------------------------
     let mut measured = Measured::default();
     // The command's ONE agent backend, shared by the staged apply and any
     // continuation it services.
@@ -299,15 +316,14 @@ fn run(
         ctx,
         &mut measured,
         Stage {
-            resolver: &resolver,
             manifest: &manifest,
             workspace,
             project_root: &project_root,
-            lockfile: &lockfile,
             metadata: &metadata,
             lease: &lease,
             updated,
             pending_in_place,
+            full_world,
         },
     );
     let staged = match staged {
@@ -333,6 +349,7 @@ fn run(
             measured: &mut measured,
             identity: &identity,
             project_root: &project_root,
+            manifest: &manifest,
             workspace,
             metadata: &metadata,
             spec_format,
