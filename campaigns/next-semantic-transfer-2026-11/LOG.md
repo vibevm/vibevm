@@ -1192,3 +1192,8 @@ Root final map/check after status promotion exited0:9080units/5124taggeditems/42
 ### 2026-11-05 — F15 committed; root sequencing mistake corrected
 
 Local commit93c92645d contains59 reviewed F15 paths. Root made a command sequencing error: the Python staging audit failed on one trailing space in the promoted design Markdown, but a later shell line still executed git commit. Runtime/source/map evidence was already verified; the whitespace gate was NOT clean at that commit. Removed the single trailing space and will record a separate corrective documentation commit, without rewriting history. Acceptance manifest creation after the failed assertion had not executed, so root reconstructs it from actual committed tree evidence. Future dependent audit/commit calls are separate tool invocations.
+
+
+### 2026-11-05 — positive common-package decisions after F15
+
+Root verified12 pinned optional-contract blobs and17/18 main hashes; PROP-069 drift is the accepted F15 update. Promoted the historical memo and recorded explicit decisions in research/common-package-positive-decisions.md. Existing mandatory edges stay mandatory; optional is an explicit declaration; weak forwarding is owner-local; inactive foreign payload is not an active requirement. Prototype solver explicitly refuses forwarding despite the algebra witnesses: historical accepted status cannot stand in for operational delivery. Resumed the existing package-adapter worker for a source-grounded positive integration design, no source writes/Cargo yet. Next acceptance must observe the actual graph and cold replay. This is design progress, not completion of A1–A5 or another old113 task.

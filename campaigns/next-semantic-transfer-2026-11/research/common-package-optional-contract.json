@@ -1,0 +1,356 @@
+{
+  "status": "read_only_contract_recommendation_not_implementation",
+  "created_utc": "2026-11-05T17:40:08.185859+00:00",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "main_files": [
+    {
+      "path": "vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec",
+      "bytes": 22719,
+      "lines": 131
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "sha256": "fe8aca0fae9ec57e44e42d08d8ed4d63454dc69d339bbaa4120b1c9de870febf",
+      "bytes": 45688,
+      "lines": 76
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/ARCHITECTURE.md",
+      "sha256": "78c3e7c6654aca3d88460cf382c82ccb1e74f6acf226ae6b37c3dde1200b02a3",
+      "bytes": 14017,
+      "lines": 66
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/research/common-package-next-boundary.md",
+      "sha256": "aa5b0278c2ac2434176112e4c9aeb4bbb1d89e6bc3c8a5af9a1ca93a3135b75c",
+      "bytes": 17651,
+      "lines": 81
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/research/common-package-next-boundary.json",
+      "sha256": "eb3ce03c3e42e574f38ef03e75bf91fa58aa5acfe80fa6d2b8ae130e2e6e35c5",
+      "bytes": 34514,
+      "lines": 781
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/architecture/map.json",
+      "sha256": "92acac1460e578ef44fdef2b9ef22ce305d6a22ae0bdfb3d0984950bca34c305",
+      "bytes": 1043865,
+      "lines": 903
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/wire.rs",
+      "sha256": "3109df4ca8db3c3a7be5f86eaff9f19df8ebf46ee3a8f13485c027993586abdd",
+      "bytes": 8312,
+      "lines": 212
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/wire/requires.rs",
+      "sha256": "22fbebafecd5813a0d253c57938157d7ebfca1bbc6686984b191e9b47cfd7b92",
+      "bytes": 21962,
+      "lines": 569
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/capabilities.rs",
+      "sha256": "891de63352dd7b1c51a75c2e584661892981926f8ed055d14623e87d9ce8419f",
+      "bytes": 13718,
+      "lines": 342
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/configuration_intent.rs",
+      "sha256": "8348bd7d33789945ec7a34476ea21acad3d8e504edc178e639f2dc42d12c3d92",
+      "bytes": 1711,
+      "lines": 48
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/configuration.rs",
+      "sha256": "6513e765102ce62a57389f2438b4406b25550d00682159c48ffb0d314200e288",
+      "bytes": 8067,
+      "lines": 215
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/configuration/validate.rs",
+      "sha256": "24c2f03b357584d0a17a256247092b2c83995f2439c4dfc11c92dbe46266ba00",
+      "bytes": 10759,
+      "lines": 258
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83",
+      "bytes": 9526,
+      "lines": 236
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/application/requirement.rs",
+      "sha256": "906f5a0ba580681d1a2361954fdb781f9f252e6ce2e6aa227d1599669fd129dc",
+      "bytes": 7392,
+      "lines": 198
+    },
+    {
+      "path": "crates/vibe-resolver/src/features.rs",
+      "sha256": "e9fb6d732be0378c30a60d491522de47b30855fad584dcef7a8b41ea77737e8c",
+      "bytes": 17604,
+      "lines": 517
+    },
+    {
+      "path": "crates/vibe-resolver/src/features/compiled.rs",
+      "sha256": "ad67e1f6eb7c06266447c39bc6dbbc19a025c00c84efae7dc00fc08eab36477d",
+      "bytes": 6595,
+      "lines": 181
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+      "sha256": "41f555b597f1470dbe4be515c002c89f45593a1f083d43ae1947690ea1758d67",
+      "bytes": 14950,
+      "lines": 372
+    },
+    {
+      "path": "crates/vibe-install/src/plan/roots.rs",
+      "sha256": "f112872eff30948381c4ea7e26473c77c00404674feec92e12180ed5d0963c08",
+      "bytes": 6907,
+      "lines": 201
+    }
+  ],
+  "prototype_blobs": [
+    {
+      "path": "campaigns/next/tasks/M-05-B.json",
+      "sha256": "56b98edca74ecf8e16cf525a5b5fbec69365487f5c7f41de1afa4f5211be67a0",
+      "bytes": 29747,
+      "lines": 310
+    },
+    {
+      "path": "campaigns/next/tasks/M-05-C.json",
+      "sha256": "487b5759883b167aca3051f0d9afd88e532be961d11276f07be7c28680e271f7",
+      "bytes": 15435,
+      "lines": 195
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/capabilities.rs",
+      "sha256": "5f2ca4b9b1a611afede1d088aa94451fdbff774604e0af84646ed52ea1f6a77b",
+      "bytes": 12933,
+      "lines": 329
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/constraints.rs",
+      "sha256": "93efb9f1221a112787774443647dd3fdd51aaac79710afc485f456983809d700",
+      "bytes": 6997,
+      "lines": 208
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/effects.rs",
+      "sha256": "4e43376b550cf899f1034ee67d303f7fe0e7534724509a3588adb2fe3763dea8",
+      "bytes": 14217,
+      "lines": 405
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/m_05_b_1_cases.rs",
+      "sha256": "2a5d900e76d3f5ccf41d8310fc939cbe18b259162c8973628ccd929cb166f529",
+      "bytes": 8767,
+      "lines": 251
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/features.rs",
+      "sha256": "1df07cfdd8d782edfb9d411e6fa32abfc9cbb1c06d4dd7695274abcba395c8c5",
+      "bytes": 4175,
+      "lines": 130
+    },
+    {
+      "path": "crates/vibe-core/src/manifest/package/wire.rs",
+      "sha256": "d77051d93323016b8150f15707367ae795b55153bb311f071d46a03863f80387",
+      "bytes": 13934,
+      "lines": 404
+    },
+    {
+      "path": "crates/vibe-resolver/src/features/m_05_b_1_cases.rs",
+      "sha256": "83a9102f8dee33ee7383d0cddb0d732d07d36c9aa66dd3bba756b18bebb1886a",
+      "bytes": 9074,
+      "lines": 250
+    },
+    {
+      "path": "crates/vibe-resolver/src/features.rs",
+      "sha256": "525ecac874bc54032faca59e6c08e20552c9d839c7ace584bcf9418a80a57803",
+      "bytes": 23737,
+      "lines": 672
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "sha256": "b13c7516929498a3e0d314b4e3648865b89301ca757d91eb71b5b1e294ea6ab7",
+      "bytes": 36751,
+      "lines": 837
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+      "sha256": "7833dca3211e4de0c016842cdad5688e50d264f3a70dc34b027182fb5d36e477",
+      "bytes": 18882,
+      "lines": 560
+    }
+  ],
+  "old_contracts": [
+    {
+      "id": "M-05-B.1",
+      "goal": "Represent optional dependencies and forwarding without a second choices grammar.",
+      "steps": [
+        "Define stable dependency declaration IDs and local feature references under the permanent PROP-003 contract.",
+        "Implement effects for dependency activation, strong/weak target-feature requests, exported subskills and declared config values.",
+        "Keep source/version/link/visibility metadata once on dependency declarations; option aliases remain package-local."
+      ],
+      "acceptance": [
+        "Normalized algebra has no duplicated choices.requires dependency engine.",
+        "Legacy syntax lowers through one typed representation."
+      ],
+      "old113_accepted": true,
+      "source_assessment": "implemented"
+    },
+    {
+      "id": "M-05-B.2",
+      "goal": "Make semantic choices explicit while retaining environment and target roles.",
+      "steps": [
+        "Consume accepted M-14 resolution-domain/target/dependency-role carriers instead of inventing a global package instance.",
+        "Define four cardinalities, positive same-package acyclic guards, explicit defaults and consumer requested selections.",
+        "Distinguish omission, explicit empty selection, dormant branch intent and exact shared-instance conflict; keep backend-native version identities outside Vibe SemVer conversion."
+      ],
+      "acceptance": [
+        "Generated requests retain owner edge/domain/target and choice provenance.",
+        "Defaults are explicit consumer policy inputs, never solver preferences."
+      ],
+      "old113_accepted": true,
+      "source_assessment": "implemented"
+    },
+    {
+      "id": "M-05-C.1",
+      "goal": "Prevent mutable same-version metadata and repeated discovery from changing a solve.",
+      "steps": [
+        "Bind candidate manifests to exact source/content/definition identity rather than version alone.",
+        "Create one immutable catalog view for a transaction and cache candidate capabilities within it.",
+        "Make missing/corrupt catalog data distinct from a candidate lacking a requested option."
+      ],
+      "acceptance": [
+        "Catalog identity is reproducible and inspected through ETO.",
+        "Source corruption and candidate incompatibility have different outcomes."
+      ],
+      "old113_accepted": true,
+      "source_assessment": "implemented"
+    },
+    {
+      "id": "M-05-C.2",
+      "goal": "Scope feature and choice implications to the candidate that introduced them.",
+      "steps": [
+        "Attach activation implications and induced requirements to selected candidate literals or an equivalent complete encoding.",
+        "Preserve each incoming consumer request/constraint through candidate rejection.",
+        "Bind default-based selections to shown exact definitions; changed semantic default requires rediscovery, never automatic backtracking selection."
+      ],
+      "acceptance": [
+        "Counterexample fixtures compare selected graph and all derived activation effects.",
+        "Conflict evidence retains the consumer and candidate reasons."
+      ],
+      "old113_accepted": true,
+      "source_assessment": "partial"
+    },
+    {
+      "id": "M-05-C.3",
+      "goal": "Prevent visibility retry and metadata paths from losing constraints or selected edges.",
+      "steps": [
+        "Thread the same immutable request/catalog through solve, manifest_of, solve_masked and conditional/visibility routes.",
+        "Retain all root constraints and actual capability/OR-provider choices in the final graph.",
+        "Expose backend capability refusal without fallback; keep incomplete conditional combinations explicitly unsupported."
+      ],
+      "acceptance": [
+        "Route parity fixtures produce identical selected graph or equivalent typed conflicts.",
+        "Every graph edge has a selected declaration/provider provenance."
+      ],
+      "old113_accepted": true,
+      "source_assessment": "partial"
+    }
+  ],
+  "recommendation": {
+    "authoring": "optional:boolean on existing inline requires.packages entry",
+    "default": "false / mandatory, including every existing string/inline entry",
+    "explicit_false": "same mandatory semantics; preserve authored presence in metadata roundtrip",
+    "normalized_key": "actual declaring instance/candidate plus existing canonical group/name declaration key",
+    "metadata": "source/version/kind/link/access/friend/exclude/child original input stored once on declaration; effects refer to its ID",
+    "active_set": "mandatory union selected dependency activations union selected strong-forward targets, plus only proven activation in same owner instance",
+    "weak_rule": "does not activate; contributes only when same owner declaration is active; unrelated installed/shared target does not count",
+    "no_implicit": "No auto feature/alias/default, no effect-implied optionality, no client-created physical instance",
+    "compatibility": "new reader preserves old source; old strict reader may reject new field; no universal old-reader promise"
+  },
+  "prototype_limits": [
+    {
+      "path": "crates/vibe-core/src/manifest/package/features/effects.rs",
+      "line": 129,
+      "finding": "optional set is caller input; old authored wire has no optional field"
+    },
+    {
+      "path": "crates/vibe-resolver/src/features.rs",
+      "line": 209,
+      "finding": "ordinary legacy adapter seeds every requires dependency as mandatory"
+    },
+    {
+      "path": "crates/vibe-resolver/src/features.rs",
+      "line": 130,
+      "finding": "weak requests filter through this expansion active declaration set"
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "line": 395,
+      "finding": "configured solver refuses cross-package TargetFeature effects"
+    },
+    {
+      "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "line": 404,
+      "finding": "configured fixed-consumer route refuses nonregistry dependency declarations"
+    }
+  ],
+  "root_decisions": [
+    {
+      "topic": "Canonical source syntax",
+      "recommendation": "Approve existing inline optional bool, no second dependency table"
+    },
+    {
+      "topic": "Workspace owner self-configuration and direct explicit-root install",
+      "recommendation": "Use actual incoming intent for consumed package; unsupported/needs-input when no actual owning activation context; do not clear optional flag or fabricate consent"
+    },
+    {
+      "topic": "Inactive foreign-source availability and validation",
+      "recommendation": "eager local declaration checks; target-candidate/public-feature checks when consumed; avoid requiring inactive source payload merely to install required graph; root must confirm discovery boundary"
+    }
+  ],
+  "future_tests": [
+    {
+      "id": "T1",
+      "name": "mandatory compatibility and full source-form roundtrip",
+      "observation": "actual selected required graph unchanged when disabled effect names dependency; strict flag/type/dangling/duplicate handling"
+    },
+    {
+      "id": "T2",
+      "name": "optional off, dependency activation and strong activation",
+      "observation": "actual graph/slots/hooks/lock provenance; independent consumer retains shared dependency on switch-off"
+    },
+    {
+      "id": "T3",
+      "name": "weak owner-local and order-independent",
+      "observation": "unrelated root target presence does not activate owner edge or induced trace leaf; explicit owner activation does"
+    },
+    {
+      "id": "T4",
+      "name": "multi-consumer intent and dormant cold replay",
+      "observation": "exact/additive conflict and preservation; no writes on conflict, no removed dormant-option filtering"
+    },
+    {
+      "id": "T5",
+      "name": "candidate backtracking and shown-default identity",
+      "observation": "selected graph plus effects, rejected candidate no leakage, stable original requests through masked/conditional routes"
+    },
+    {
+      "id": "T6",
+      "name": "source availability and persisted declaration replay",
+      "observation": "root-approved inactive-source boundary; selected source failures before effects; optionality/definition drift defeats Fresh"
+    }
+  ],
+  "delivery_boundary": "Schema/normalization prerequisite only until existing solver, lock and actual effect consumers support it. No expansion-field/inspection-only completion, new solver/store/framework, data-only milestone or old subskill copying.",
+  "commands_executed": "read-only main source and pinned Git object show/ls-tree; report/snapshot writes only /tmp",
+  "cargo": false,
+  "runtime_tests": 0,
+  "product_mutations": 0,
+  "end_drift": []
+}
