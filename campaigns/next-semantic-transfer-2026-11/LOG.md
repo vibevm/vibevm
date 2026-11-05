@@ -1456,3 +1456,8 @@ Root verified compat-sixth receipts and named log outcomes: CLI optional13, old 
 ### 2026-11-06 — F16 root acceptance review complete
 
 Verified91worker source hashes,76rawlog hashes and15receipt hashes; only two inert post-runtime static changes were confirmed. Root added3precise optional-declaration links in2files, proved bodies unchanged, and passed affectedfmt/clippy/conform. Exact OPTIONAL-DECLARATIONS and LF-CONFIGURED-STATE facts promoted; wider facts remain incomplete. Final map/check9086units5193items4353edges,0gatedorphans0unresolvedhost43knownwarnings. Root caught its own omitted generated metadata after recoverable=false: normal codegen changed only FormatId::Lockfile true→false;183other inspected generatedfiles and146inputs unchanged. Formatregistry2tests and wire-diff reporting gate passed; no schema/corpus shift. Source and scope accepted for F16; staged codegen and exact local commit remain the closing mechanics. No fullF04/old113 closure or public push claimed.
+
+
+### 2026-11-06 — F16 committed and dashboard refreshed
+
+Implementation/spec/format acceptance is committed as f4f965fd9f961eaa154f63d9a6de5b3904f0feb9 (107 paths). Root verified every committed blob against the acceptance manifest; staged check-codegen exited0 and no owned unstaged changes remained. Final evidence archived under current local context evidence/2026-11-06/common-package-explicit-root-acceptance. Plan76 marks NST-PACKAGE-EXPLICIT accepted and Documents dashboard refreshed. Original doc.web untracked dependency remains untouched; no temporary worktree or public push. Common configuration and historical113 remain incomplete; next candidate is the bounded same-resolvo transitive-consumer proof, not acceptance of its untested encoding.

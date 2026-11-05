@@ -1,6 +1,6 @@
 # F16 — Explicit package configuration through ordinary install and replay
 
-Status: root-reviewed and accepted at the bounded runtime described here; local commit records this accepted snapshot. F04/common configuration and the original M05 contracts are not closed by this increment.
+Status: root-reviewed and accepted at the bounded runtime described here. Implementation commit: `f4f965fd9f961eaa154f63d9a6de5b3904f0feb9`. F04/common configuration and the original M05 contracts are not closed by this increment.
 
 ## User result
 
