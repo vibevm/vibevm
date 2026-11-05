@@ -1473,3 +1473,8 @@ Root checked choices/evaluate.rs: cardinality/questions are evaluated after acti
 ### 2026-11-06 — transitive proof rejects ungrounded support encodings
 
 Root read final proof/report and verified its source/evidence manifest. Same-resolvo all-controls run exits101:4positive families PASS and3deliberate counterexamples FAIL,0ignored. Owner-controlled finite absence works; removing that controller permits phantom input, and reverse support→parent passes selected-input equality but fails original-edge reachability. No result repair or production claim. Separate source audit establishes main has no shared DAG guarantee and dependencies/is_root omit recommends/OR/capability support; production grounding cannot assume those fields are a complete support graph. Reports promoted under research; source/raw evidence archived in local evidence/2026-11-06/transitive-proof-v1. Probe retained temporarily for the next bounded refinement, with root cleanup ownership unchanged.
+
+
+### 2026-11-06 — physical grounding is insufficient for activation
+
+Root reviewed v2 report and verified its source/evidence hashes before archival. Combined current-source v1/v2 run:8PASS/4deliberateFAIL/0ignored. One decreasing-rank authored witness per nonroot excludes unowned/reverse/rootless physical support while preserving a rooted hard cycle. Yet unseeded C.on→A→Q.blue→C.on remains a real RED: all local core results and actual input/reachability assertions pass without an external/required activation seed. Seeded controls pass. This is a finite model counterexample, not a shipped F16 bug (forwarding still refuses there). Archived v2 and promoted report; next bounded hypothesis grounds activation causes separately, without declaring a general discovery strategy ready.
