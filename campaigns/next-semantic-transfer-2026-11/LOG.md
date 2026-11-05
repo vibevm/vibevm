@@ -1461,3 +1461,15 @@ Verified91worker source hashes,76rawlog hashes and15receipt hashes; only two ine
 ### 2026-11-06 — F16 committed and dashboard refreshed
 
 Implementation/spec/format acceptance is committed as f4f965fd9f961eaa154f63d9a6de5b3904f0feb9 (107 paths). Root verified every committed blob against the acceptance manifest; staged check-codegen exited0 and no owned unstaged changes remained. Final evidence archived under current local context evidence/2026-11-06/common-package-explicit-root-acceptance. Plan76 marks NST-PACKAGE-EXPLICIT accepted and Documents dashboard refreshed. Original doc.web untracked dependency remains untouched; no temporary worktree or public push. Common configuration and historical113 remain incomplete; next candidate is the bounded same-resolvo transitive-consumer proof, not acceptance of its untested encoding.
+
+
+### 2026-11-06 — next foundation: executable transitive-consumer proof started
+
+After accepted F16, root verified main head6995fa631 and only original doc.web untracked. Delegated a bounded standalone same-resolvo0.11 proof with a private temporary target; production source stays unchanged. Required cases test rejected-parent retraction, owner-local forwarding, no phantom consumer and one actual target instance, using the existing core merge where applicable. Hand-enumerated states are permitted only to test expressiveness, never claimed as a scalable production catalog. No outcome yet; root owns evidence promotion and temporary probe cleanup.
+
+Root checked choices/evaluate.rs: cardinality/questions are evaluated after active consumer merge. A real second consumer can satisfy an omitted require-selection request for the shared instance; the next proof must reject phantom/unselected contributions, not invent a new per-consumer mandatory-answer rule. This distinction was sent to the proof worker before its oracle is written.
+
+
+### 2026-11-06 — transitive proof rejects ungrounded support encodings
+
+Root read final proof/report and verified its source/evidence manifest. Same-resolvo all-controls run exits101:4positive families PASS and3deliberate counterexamples FAIL,0ignored. Owner-controlled finite absence works; removing that controller permits phantom input, and reverse support→parent passes selected-input equality but fails original-edge reachability. No result repair or production claim. Separate source audit establishes main has no shared DAG guarantee and dependencies/is_root omit recommends/OR/capability support; production grounding cannot assume those fields are a complete support graph. Reports promoted under research; source/raw evidence archived in local evidence/2026-11-06/transitive-proof-v1. Probe retained temporarily for the next bounded refinement, with root cleanup ownership unchanged.
