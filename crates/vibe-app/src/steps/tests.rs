@@ -95,6 +95,8 @@ fn run(
     let parameters = Default::default();
     let secret_origins = Default::default();
     plan(&PlanInput {
+        import_scope: None,
+        transfer: None,
         agent_modes: None,
         configuration: None,
         resolved,
@@ -488,3 +490,7 @@ fn legacy_effective_values_do_not_become_common_intent_from_partial_flags_or_ter
         );
     }
 }
+
+#[cfg(test)]
+#[path = "tests/portable_transfer.rs"]
+mod portable_transfer;

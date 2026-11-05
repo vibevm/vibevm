@@ -15,9 +15,10 @@ fn run(
 ) -> EvaluatedConfiguration {
     let path = |s: &str| root.join(s);
     evaluate(EvaluationRequest {
+        history_use: crate::configuration::HistoryUse::Local,
         definition: d,
         input: i,
-        previous,
+        previous: previous.map(crate::configuration::ConfigurationHistory::from),
         replacement,
         reviewed: false,
         expected_definition: None,
@@ -131,6 +132,7 @@ fn secret_answers_are_rejected_before_public_echo_and_resupply_is_not_equality()
     let i = input("policy='require-selection'\ndefault_features=false");
     let provided = vec![("token".into(), "CANARY_SECRET".into())];
     let first = evaluate(EvaluationRequest {
+        history_use: crate::configuration::HistoryUse::Local,
         definition: &d,
         input: &i,
         previous: None,
@@ -171,6 +173,7 @@ fn secret_default_is_usable_but_never_substitutes_for_previously_supplied_secret
     let again = run(&d, &i, Some(&first.record), false, dir.path());
     assert!(again.record.evaluation.resolved.is_some());
     let supplied = evaluate(EvaluationRequest {
+        history_use: crate::configuration::HistoryUse::Local,
         definition: &d,
         input: &i,
         previous: None,
@@ -310,9 +313,10 @@ fn accepted_basis_review_revalidates_prior_path_for_default_profile_and_explicit
         definition.parameters[0].must_exist = true;
         let path = |value: &str| b.path().join(value);
         let checked = evaluate(EvaluationRequest {
+            history_use: crate::configuration::HistoryUse::Local,
             definition: &definition,
             input: &input,
-            previous: Some(&first.record),
+            previous: Some((&first.record).into()),
             replacement: false,
             reviewed: true,
             expected_definition: None,
@@ -383,9 +387,10 @@ fn removing_the_last_automatic_choice_or_parameter_requires_review_until_accepte
                 .any(|q| matches!(q, w::ConfigurationQuestion::Review(_)))
         );
         let accepted = evaluate(EvaluationRequest {
+            history_use: crate::configuration::HistoryUse::Local,
             definition: &definition,
             input: &input,
-            previous: Some(&old.record),
+            previous: Some((&old.record).into()),
             replacement: false,
             reviewed: true,
             expected_definition: None,
@@ -416,6 +421,7 @@ fn hidden_required_secret_prompt_can_keep_public_default_but_never_prior_explici
         Ok(None)
     };
     let first = evaluate(EvaluationRequest {
+        history_use: crate::configuration::HistoryUse::Local,
         definition: &definition,
         input: &input,
         previous: None,
@@ -433,6 +439,7 @@ fn hidden_required_secret_prompt_can_keep_public_default_but_never_prior_explici
         matches!(&first.record.evaluation.parameters[0],w::ConfigurationParameterResult::Secret(p) if !p.provided&&matches!(p.origin,w::ConfigurationParameterOrigin::Default(_)))
     );
     let supplied = evaluate(EvaluationRequest {
+        history_use: crate::configuration::HistoryUse::Local,
         definition: &definition,
         input: &input,
         previous: None,
@@ -450,9 +457,10 @@ fn hidden_required_secret_prompt_can_keep_public_default_but_never_prior_explici
         Ok(None)
     };
     let second = evaluate(EvaluationRequest {
+        history_use: crate::configuration::HistoryUse::Local,
         definition: &definition,
         input: &input,
-        previous: Some(&supplied.record),
+        previous: Some((&supplied.record).into()),
         replacement: false,
         reviewed: false,
         expected_definition: None,

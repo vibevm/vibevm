@@ -156,7 +156,6 @@ pub(super) fn begin(
         home: pending::actual_home(ctx.settings)?,
         operation: pending::generation(),
     };
-    let directory = path(ctx.settings, &target.operation)?;
     let document = ImportWork {
         protocol: PROTOCOL.into(),
         target,
@@ -175,30 +174,33 @@ pub(super) fn begin(
         cohort: cohort.state.clone(),
     };
     let bytes = encode(ctx.settings, &document)?;
-    fs::create_dir_all(directory.parent().ok_or_else(|| {
-        failure(
-            ctx.settings,
-            &document.target.operation,
-            "import namespace has no parent directory",
-        )
-    })?)
-    .map_err(|_| {
-        failure(
-            ctx.settings,
-            &document.target.operation,
-            "cannot create import work namespace",
-        )
-    })?;
-    fs::create_dir(&directory).map_err(|_| {
-        failure(
-            ctx.settings,
-            &document.target.operation,
-            "cannot reserve import generation",
-        )
-    })?;
-    if let Err(error) = crate::settings::write_atomic(&directory.join("import.json"), &bytes) {
+    reserve(
+        ctx.settings,
+        &document.target.operation,
+        &bytes,
+        ctx.on_notice,
+    )?;
+    Ok(document)
+}
+
+pub(super) fn reserve(
+    settings: &SettingsRoot,
+    id: &str,
+    bytes: &[u8],
+    on_notice: Option<&dyn Fn(&str)>,
+) -> Result<(), AppError> {
+    let directory = path(settings, id)?;
+    fs::create_dir_all(
+        directory
+            .parent()
+            .ok_or_else(|| failure(settings, id, "import namespace has no parent directory"))?,
+    )
+    .map_err(|_| failure(settings, id, "cannot create import work namespace"))?;
+    fs::create_dir(&directory)
+        .map_err(|_| failure(settings, id, "cannot reserve import generation"))?;
+    if let Err(error) = crate::settings::write_atomic(&directory.join("import.json"), bytes) {
         if let Err(cleanup) = discard_unpublished(&directory)
-            && let Some(notice) = ctx.on_notice
+            && let Some(notice) = on_notice
         {
             notice(&format!(
                 "unpublished import reservation {} could not be removed: {cleanup}",
@@ -207,7 +209,7 @@ pub(super) fn begin(
         }
         return Err(error.into());
     }
-    Ok(document)
+    Ok(())
 }
 
 #[cfg(test)]

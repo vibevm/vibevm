@@ -101,15 +101,13 @@ pub(crate) fn link_child(
     row: u32,
     child: &w::ApplicationPendingTarget,
 ) -> Result<(), AppError> {
-    let mut document = store::load(settings, &parent.operation)?;
-    if &document.target != parent
-        || document.cohort.cursor != row
+    let mut document = super::full_store::load(settings, &parent.operation)?;
+    if document.target() != parent
+        || document.cursor() != row
         || document
-            .cohort
-            .rows
-            .get(row as usize)
-            .is_none_or(|r| r.key != child.key)
-        || document.cohort.current.as_ref().is_some_and(|t| t != child)
+            .root_key(row as usize)
+            .is_none_or(|key| key != child.key)
+        || document.current().is_some_and(|t| t != child)
     {
         return Err(store::failure(
             settings,
@@ -131,8 +129,8 @@ pub(crate) fn link_child(
             "child has no matching backward row ownership",
         ));
     }
-    document.cohort.current = Some(child.clone());
-    store::save(settings, &document)
+    document.set_current(Some(child.clone()));
+    super::full_store::save(settings, &document)
 }
 
 pub(super) fn release(
@@ -152,6 +150,17 @@ pub(super) fn release(
             "execution result has no original row index",
         ));
     };
+    release_target(lock, settings, owner, target, row, refused)
+}
+
+pub(super) fn release_target(
+    lock: &crate::MutationLock,
+    settings: &SettingsRoot,
+    owner: &w::ApplicationImportTarget,
+    target: &w::ApplicationPendingTarget,
+    row: u32,
+    refused: bool,
+) -> Result<(), AppError> {
     let package = pending::coordinate(&target.key)?;
     let work = pending::work(settings, &package);
     let Some(state) = StepsFile::load(&work)? else {

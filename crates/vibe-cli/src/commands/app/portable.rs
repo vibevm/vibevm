@@ -9,9 +9,9 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#portable-set");
 
 use anyhow::{Context, Result, bail};
-use vibe_app::{ImportAction, Index, OperationContext, PortableExport, SettingsRoot};
+use vibe_app::{ImportAction, Index, OperationContext, SettingsRoot};
 use vibe_wire::generated::application_import::{ApplicationImport, License, Refused, Skipped};
-use vibe_wire::generated::apps_manifest::{ApplicationMark, AppsManifest};
+use vibe_wire::generated::apps_manifest::ApplicationMark;
 
 use super::agents::{AgentSetup, report_parked};
 use super::display::StepDisplay;
@@ -21,40 +21,19 @@ use crate::cli::{AppExportArgs, AppImportArgs, AppStepArgs};
 use crate::output;
 use crate::output::language::{Role, Stream, paint};
 
-/// `vibe app export`: the set as TOML on stdout or in `--output`, or as
-/// JSON with `--json`.
+#[path = "portable/export.rs"]
+mod export;
+#[path = "portable/full.rs"]
+mod full;
+#[path = "portable/pending.rs"]
+mod pending;
+/// Render a portable export through the separately owned output adapter.
 pub(super) fn export(
     ctx: &output::Context,
     home: &SettingsRoot,
     args: &AppExportArgs,
 ) -> Result<()> {
-    let request = PortableExport {
-        all: args.all,
-        arrangement: !args.installations_only,
-    };
-    let set = vibe_app::portable_set(home, &request)?;
-    let text = if ctx.is_json() {
-        format!("{}\n", serde_json::to_string_pretty(&set)?)
-    } else {
-        vibe_app::portable_toml(&set)?
-    };
-    let Some(path) = &args.output else {
-        if ctx.is_json() {
-            return ctx.emit_json(&set);
-        }
-        print!("{text}");
-        return Ok(());
-    };
-    std::fs::write(path, text).with_context(|| format!("writing {}", path.display()))?;
-    if ctx.is_json() {
-        return ctx.emit_json(&set);
-    }
-    ctx.trailer(&format!(
-        "exported {} application(s) · {}",
-        set.application.len(),
-        path.display()
-    ));
-    Ok(())
+    export::run(ctx, home, args)
 }
 
 /// The rows of one import as they end.
@@ -72,8 +51,11 @@ struct Tally {
 
 impl Tally {
     fn add_results(&mut self, cohort: &vibe_app::PreparedImport) {
+        self.add_rows(cohort.results());
+    }
+    fn add_rows(&mut self, rows: &[vibe_wire::generated::shared::ApplicationPendingImportResult]) {
         use vibe_wire::generated::shared::ApplicationPendingImportResultAction as Action;
-        for row in cohort.results() {
+        for row in rows {
             match row.action {
                 Action::Installed => self
                     .installed
@@ -110,17 +92,55 @@ pub(super) fn import(
              drop --path, and add project applications with `vibe install`)"
         );
     }
-    if let Some(id) = &args.resume {
-        return resume_import(ctx, id, offline);
+    let stdin_count = [
+        args.file.as_deref(),
+        args.target_input.as_deref(),
+        args.secret_input.as_deref(),
+    ]
+    .into_iter()
+    .flatten()
+    .filter(|p| *p == std::path::Path::new("-"))
+    .count();
+    if stdin_count > 1 {
+        bail!("only one portable/target/secret input may consume stdin");
     }
+    if let Some(id) = &args.resume {
+        return resume_import(ctx, id, offline, args.secret_input.as_deref());
+    }
+    let secrets = if let Some(path) = &args.secret_input {
+        vibe_app::parse_import_secrets(&read_secret_input(path)?)?
+    } else {
+        vibe_app::ImportSecrets::default()
+    };
+    let target = if let Some(path) = &args.target_input {
+        vibe_app::parse_import_target(&read_input(path)?)?
+    } else {
+        vibe_wire::generated::application::e1::import_input::ImportTargetInput {
+            protocol: "vibe-app-import-input/1".into(),
+            applications: Default::default(),
+        }
+    };
     let path = args
         .file
         .as_ref()
         .context("import needs FILE or --resume OPERATION_ID")?;
     let file = path.display().to_string();
-    let text = std::fs::read_to_string(path)
-        .map_err(|error| vibe_app::AppError::from(portable_invalid(&file, &error)))?;
-    let set = vibe_app::parse_portable(&file, &text)?;
+    let bytes = read_input(path)?;
+    let text = std::str::from_utf8(&bytes)
+        .map_err(|_| portable_invalid(&file, &"portable file must be UTF-8"))?;
+    let set = match vibe_app::parse_portable_document(&file, text)? {
+        vibe_app::PortableDocument::Full(set) => {
+            return full::run(ctx, args, offline, &set, &target, &secrets);
+        }
+        vibe_app::PortableDocument::Legacy(set) => {
+            if args.target_input.is_some() || args.secret_input.is_some() {
+                bail!(
+                    "scoped portable inputs require a full --configuration export; legacy import does not consume them"
+                );
+            }
+            set
+        }
+    };
     let settings = global::settings_root()?;
     // `--registry` comes first and a package it does not carry falls
     // through to the configured registries — the embedded-registry rule.
@@ -247,7 +267,13 @@ pub(super) fn import(
         })?;
         tally.add_results(&prepared);
     }
-    report(ctx, &settings, &set, args.dry_run, &tally)?;
+    report(
+        ctx,
+        &settings,
+        (set.collection.len(), set.pin.len(), set.launcher.len()),
+        args.dry_run,
+        &tally,
+    )?;
     Ok((!tally.refused.is_empty()).then_some(1))
 }
 
@@ -275,25 +301,14 @@ pub(super) fn report_retained(
 ) -> Result<Option<i32>> {
     let mut tally = Tally::default();
     tally.add_results(cohort);
-    let set = AppsManifest {
-        protocol: vibe_app::APPS_PROTOCOL.into(),
-        exported: String::new(),
-        home: vibe_wire::generated::apps_manifest::AppsManifestHome::User,
-        platform: String::new(),
-        arch: String::new(),
-        application: vec![],
-        collection: vec![],
-        pin: vec![],
-        launcher: vec![],
-    };
-    report(ctx, settings, &set, false, &tally)?;
+    report(ctx, settings, (0, 0, 0), false, &tally)?;
     Ok((!tally.refused.is_empty()).then_some(1))
 }
 
 fn report(
     ctx: &output::Context,
     settings: &SettingsRoot,
-    set: &AppsManifest,
+    arrangement: (usize, usize, usize),
     dry_run: bool,
     tally: &Tally,
 ) -> Result<()> {
@@ -321,6 +336,7 @@ fn report(
                 })
                 .collect(),
             licenses: tally.licenses.clone(),
+            pending: None,
         });
     }
     let mut lines: Vec<String> = Vec::new();
@@ -351,14 +367,14 @@ fn report(
             ));
         }
     }
-    if dry_run && !(set.collection.is_empty() && set.pin.is_empty() && set.launcher.is_empty()) {
+    if dry_run && arrangement != (0, 0, 0) {
         lines.push(paint(
             Role::Dim,
             &format!(
                 "arrangement: {} collection(s), {} pinned list(s), {} override(s) restored after the installations",
-                set.collection.len(),
-                set.pin.len(),
-                set.launcher.len()
+                arrangement.0,
+                arrangement.1,
+                arrangement.2
             ),
         ));
     }
@@ -383,11 +399,30 @@ fn report(
     Ok(())
 }
 
-fn resume_import(ctx: &output::Context, id: &str, offline: bool) -> Result<Option<i32>> {
+fn resume_import(
+    ctx: &output::Context,
+    id: &str,
+    offline: bool,
+    secret_input: Option<&std::path::Path>,
+) -> Result<Option<i32>> {
     use vibe_wire::generated::shared::ApplicationPendingLookup as Lookup;
     let settings = global::settings_root()?;
-    let info = vibe_app::import_resume_info(&settings, id)?;
-    let agents = AgentSetup::for_import(ctx, &info)?;
+    let inspected = vibe_app::inspect_import_resume(&settings, id)?;
+    if !inspected.full && secret_input.is_some() {
+        bail!(
+            "legacy cohort does not consume scoped secret files; continue its exact application operation"
+        );
+    }
+    let secrets = if inspected.cleanup_only {
+        // Finalization does not reopen an ephemeral answer file that may no longer exist.
+        vibe_app::ImportSecrets::default()
+    } else if let Some(path) = secret_input {
+        vibe_app::parse_import_secrets(&read_secret_input(path)?)?
+    } else {
+        vibe_app::ImportSecrets::default()
+    };
+    let agents = AgentSetup::for_import_resume(ctx, &inspected)?;
+    let info = &inspected.context;
     let packages = Packages {
         settings: settings.clone(),
         registry: match &info.lookup {
@@ -429,8 +464,82 @@ fn resume_import(ctx: &output::Context, id: &str, offline: bool) -> Result<Optio
                 &observe,
             )
         };
-        report_parked(ctx, vibe_app::resume_import(&operation, id))
+        if inspected.full {
+            report_parked(ctx, vibe_app::resume_full_import(&operation, id, &secrets))
+                .map(Resumed::Full)
+        } else {
+            report_parked(ctx, vibe_app::resume_import(&operation, id)).map(Resumed::Legacy)
+        }
     });
+    if let Err(error) = &result {
+        let prefix = vibe_app::inspect_import_resume(&settings, id)?.results;
+        if let Some(exit) = emit_input_required(ctx, &settings, error, &prefix)? {
+            return Ok(Some(exit));
+        }
+    }
     let cohort = display.report(ctx, result)?;
-    report_retained(ctx, &settings, &cohort)
+    match cohort {
+        Resumed::Legacy(cohort) => report_retained(ctx, &settings, &cohort),
+        Resumed::Full(cohort) => {
+            let mut tally = Tally::default();
+            tally.add_rows(cohort.results());
+            report(ctx, &settings, (0, 0, 0), false, &tally)?;
+            Ok((!tally.refused.is_empty()).then_some(1))
+        }
+    }
+}
+enum Resumed {
+    Legacy(vibe_app::PreparedImport),
+    Full(vibe_app::PreparedFullImport),
+}
+
+fn read_input(path: &std::path::Path) -> Result<Vec<u8>> {
+    if path == std::path::Path::new("-") {
+        use std::io::Read;
+        let mut bytes = Vec::new();
+        std::io::stdin().read_to_end(&mut bytes)?;
+        Ok(bytes)
+    } else {
+        Ok(std::fs::read(path).with_context(|| format!("reading {}", path.display()))?)
+    }
+}
+
+fn emit_input_required(
+    ctx: &output::Context,
+    settings: &SettingsRoot,
+    error: &vibe_app::AppError,
+    prefix: &[vibe_wire::generated::shared::ApplicationPendingImportResult],
+) -> Result<Option<i32>> {
+    if let vibe_app::AppError::Configuration(
+        vibe_app::configuration::ConfigurationError::ImportInputRequired {
+            target,
+            key,
+            parameters,
+        },
+    ) = error
+    {
+        return pending::emit_pending(
+            ctx,
+            settings,
+            target,
+            &vibe_wire::generated::shared::ApplicationImportWaitingInput {
+                key: key.clone(),
+                parameters: parameters.clone(),
+            },
+            prefix,
+        );
+    }
+    Ok(None)
+}
+
+/// Secret input locations and I/O error chains are outside public diagnostics.
+fn read_secret_input(path: &std::path::Path) -> Result<Vec<u8>> {
+    let result = if path == std::path::Path::new("-") {
+        use std::io::Read;
+        let mut bytes = Vec::new();
+        std::io::stdin().read_to_end(&mut bytes).map(|_| bytes)
+    } else {
+        std::fs::read(path)
+    };
+    result.map_err(|_| anyhow::anyhow!("cannot read scoped secret input; supply a readable secret document or use standard input"))
 }

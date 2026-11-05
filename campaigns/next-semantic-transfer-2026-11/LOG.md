@@ -869,3 +869,242 @@ The actual first implementation separates borrowed historical definition/fingerp
 This is an incumbent behavior check, not portable acceptance. Root identified a crucial next boundary: the current parameter consumer reuses a matching history realization. Imported source-host A realization must not enter that reuse path as if it were admitted on B. The portable adapter must keep historical diagnostics separate from explicit B binding while preserving ordinary local maintenance reuse. The A-path-deleted/B-cwd discriminator remains mandatory. Full DTO/export/import/cohort implementation continues under the single source writer.
 
 The portable writer reported that it had delayed concrete DTO edits while designing the seam; root requested a concise transition table and actual coding instead of another broad design report. The resulting checkpoint keeps the finite cohort owner, separates pre-effect questions from terminal refusal, and binds immutable imported context into the existing execution identity only when present. Root approved this direction with explicit old-None byte compatibility, exclusion of mutable progress/current secret obligations, retention of immutable value-free source provision meaning, and no authentication claim. This advances the implementation boundary without inventing another store or generic execution authority.
+
+The portable writer produced three actual public schemas and15new compact vocabulary fragments, preserving all170prior entries. First ordinary generation exited1 at optional nullable description: no absent-and-null rule exists. Root rejected removing the nullable declaration while retaining a permissive decoder and instead approved a per-field explicit alias with strict legality/collision checks. Raw emitter inspection found a single Option<Box<T>>, not an assumed nested Option; its first missing-output-directory probe was a setup error, then corrected. Required/optional field identity and optional-nonnull/nullable collisions must be checked against the real pipeline. Independent fixture preparation produced42JSON/TOML semantic pairs plus contexts/controls;93syntax parses passed, but no product decoder/evaluator PASS is inferred.
+
+A bounded independent source/raw-emitter review checked15new fragments and19nullable sites. It disproved a possible nullable-bit stitching key: the pinned emitter gives the same optional scalar structure in both cases. Root retained wire/class/presence with exact decision collision refusal, and separated direct collection handling in empty_policy from ref aliases in optional_shapes. This avoids false precision from owner-name heuristics and avoids silently tightening preexisting null admission. No compiled decoder PASS is claimed by this read-only review.
+
+The optional-shapes third run passes30cases, including a compiled actual-pipeline JSON/TOML fixture. Root inspected its assertions: missing required-nullable field refuses; new aliases equate omitted/null and export omission; present empty list/map and false/zero/empty text survive; inherited legacy optional-label null behavior remains. This is generator-fixture evidence, not a full apps2 roundtrip. Earlier25PASS/2FAIL covered an altered moved-pin diagnostic and the real104→123site census; both were corrected without weakening the old104scope. An intermediate nonexistent fixture FormatOwner variant caused compile failure, separately retained.
+
+Full codegen's second attempt stopped on new mapping-level x-wire-order metadata: anonymous discriminator payloads have no deterministic generated struct name in the existing owner. Root classified this as new-schema annotation misuse, not a needed feature, and directed removal from those mapping objects while retaining legitimate root/named-definition ordering. Root also inspected the new null-alias legality walker and found a grammar ownership bug: dictionary entries named metadata/properties could be mistaken for schema keywords or skipped. Traversal must distinguish schema nodes from definitions/mapping dictionaries, with a named-metadata negative witness. These are current implementation review corrections, not defects attributed to the historical prototype.
+
+The named-dictionary validator defect now has an actual0/1RED and a grammar-aware correction. Fourth optional-shapes run passes31cases including the compiled JSON/TOML witness. A separate read-only two-file review found no further correction, verified unchanged snapshot hashes, and confirmed arbitrary dictionary names cannot masquerade as schema keywords. Root released the review hold so the sole writer continues DTO/domain conversion rather than duplicating generator work. Full portable runtime remains unaccepted.
+
+Root inspected the actual new portable history/input adapters. Conversions copy typed fields rather than serialize through an opaque payload; selection-map entries survive omitted members. TransportedHistory.view explicitly exposes no reusable local realization from A, while its diagnostic value remains in the portable data. The reused canonical parameter validator performs lexical/type checks, not source-host existence/absolute-path checks. Root requested concrete malformed-history tests for unknown reliance kinds and inconsistent profile/source references, grounded in historical producer meaning rather than current target membership or an invented complete replay. Target B binding/readiness and whole operation integration remain pending.
+
+First actual portable-history codec run compiled but produced1PASS/2FAIL before the intended roundtrip because the fixture declared invalid underscored parameter IDs. Valid hyphenated IDs corrected the fixture without weakening identifier rules. Second run passes3actual codec/history cases; filtered integration targets executed0 and are not counted. Root observed typed JSON/TOML/history admission and source-path disappearance scope, not full apps2 CLI installation. Public origin/source consistency now reuses the existing public_source derivation owner, and malformed reliance cases are checked against historical meaning. Whole export/import/maintenance remains unfinished.
+
+Root checked actual legacy export code and its public regression: a manual editor with features/parameters plus an empty Auto toolchain exports apps/1 without the dependency unless --all. The new full exporter separates root selection from Manual ownership, since a hidden Manual can be carried only as a dependency. Root approved explicit roots and kept legacy-only automatic format compatibility; complete legacy closure is available through explicit --configuration. Existing arrangement writers use the home mutation lock, so coherent full export reuses that owner. This is concrete compatibility/selection design, not a claim that full export/import is already accepted.
+
+After a continuation the primary worker was observed pending_init, with no owned Cargo processes; root resumed the same handle rather than creating a duplicate. It confirmed restoration and released the unwritten library full-export slice. Root assigned only portable/full_export.rs and its tests to a second worker; document/schema/import/parent registration remain primary-owned. Cargo runs are explicitly coordinated. The shared enum/interface and one-lock snapshot rule were agreed before either writer overlaps the seam. Additional all-mode guard: an orphan Auto common row selected as data must trigger full2 without becoming a job; legacy-only automatic exports retain prior validation scope.
+
+The split exporter has actual source in portable/full_export.rs: one-lock selection/version/arrangement snapshot, explicit roots, exact closure and readiness through existing work readers. Root read the implementation and requested characterization of completed old-version work absent from the current index, separately from unfinished unpublished replacement; conservative refusal must not accidentally label historical completion as an active operation. Root also required sharing pure full-document semantic validation before output with the incoming reader, because older index structural admission is weaker than the new portable origin/reliance checks. Neither item is counted as a demonstrated runtime failure before its discriminator runs.
+
+Root reviewed the concrete document and scoped-input code. Version dispatch is typed; target replacement checks the existing input protocol, exact recipients are canonical keys, and secret decoding discards Serde error payload/source chains before moving values into a nonserializable redacted owner. The existing document-initial log has8passing tests (three history codec cases, four legacy portable controls and one scoped-secret diagnostic case), not8new end-to-end imports. Export now calls the shared full-document validation. The completed-old-work concern was confirmed reachable because removal does not delete app-work; exporter no longer equates absence of that old version in current index with an unfinished Complete operation. A real lifecycle discriminator and9export tests are prepared, with the shared Cargo slot coordinated before execution.
+
+Root read the bounded exporter handback and verified both final source hashes.9library tests passed with actual operation owners, including optional failure, completed removed old-version residue and unfinished unindexed replacement. Clippy was not run for the isolated slice because parent wiring still contains in-progress unused symbols; it remains an integrated gate, not a suppressed failure. Ownership returned to primary. The v2 cohort readiness adapter must account for affected dependency bindings, not only manual cursor roots, and full CLI/no-truncate/import acceptance remains outstanding.
+
+Root inspected actual configuration/transfer.rs and HistoryUse::Transfer evaluator/parameter branches. Missing B path binding becomes an unresolved question; supplied binding uses existing native absolute/existence checks without A/cwd fallback, and source/origin stays separate. Unknown/nonpath/secret binding IDs refuse before output. Source Explicit secret provision still requires resupply even with an explicit public replacement. Public-to-secret reclassification and stale replacement/review guards precede evaluation. These are source-verified boundaries; root requested the actual A-absent/cwd/origin/resupply/privacy discriminators before acceptance. The first all-target compile reports a missing new field in a test initializer (E0063), an integration mistake, not a semantic product RED.
+
+The target-transfer implementation is source-ready but not yet behaviorally accepted. Root/primary released only the new transfer/tests.rs to the completed exporter worker, with stable implementation API and explicit Cargo-slot coordination. Tests must construct real source history and inspect actual B evaluation, including absent A paths, no resolver fallback, retained origins, required review and Explicit-secret obligations. Primary retains all implementation/registration/private-state files. This avoids both duplicate writers and a pause of private import work while narrow behavior checks are authored.
+
+Actual target transfer tests pass7/7 on first registered run, with real source evaluation/encode/target preparation and no fabricated ready record. Root read the report and verified the frozen test hash: A directories absent, B fallback forbidden, original/profile/default origins retained, later local reuse independent of new resolver, missing/relative/invalid bindings unresolved/refused, current versus stale basis review, optional Explicit-secret resupply even under public replacement, privacy reclassification and dormant/omitted/empty/additive preservation. Native/CLI/full-cohort claims remain outside this library evidence. Test ownership returned to primary.
+
+CLI exporter split found another concrete seam: generic ctx.emit_json decorates objects with invocation metadata, while full apps2 is a closed portable document. Root approved a raw fallible Full document write using the same precomputed text as the file, preserving legacy decoration separately; a --json --unattended actual parse-back case must pin it. Global output machinery is not being redesigned.
+
+Private2 source/facade now exists with explicit Legacy/Full worlds, typed binding map, roots and waiting-input metadata; no fabricated old fields. Root requested two concrete follow-through checks before state acceptance: queued optional explicit secret answers for future rows must not silently fall back after an earlier park, and inspection must distinguish informational orphan Auto data from actual affected binding scope. Neither is inferred solved merely from schema existence.
+
+The CLI export worker reports actual gate0:4new full-export scenarios plus8incumbent portable cases pass. They exercise configured Auto closure, typed JSON/TOML/stdout/file output, secret absence, legacy automatic compatibility, explicit full selection and no truncation during failed replacement. Raw Full stdout avoids generic invocation decoration and is accepted by the actual closed reader. Full import/maintenance/cohort acceptance remains pending; dependency warnings from unconnected primary app inputs are not suppressed or called a clean integrated gate.
+
+
+### 2026-11-05 — owner-requested old incremental cache cleanup
+
+Primary worker explicitly released Cargo slot; process check found no cargo/rustc/rustdoc. Removed 781 incremental directories whose latest directory/file mtime was before local 2026-11-05 00:00:00, totaling 26169395995 logical bytes. Observed free-space increase 24704970752 bytes. Current incremental entries, deps, binaries, source and evidence retained. Receipt: `/home/olegchir/.vibe/steward/contexts/3211e1fa-8e38-41b4-8aed-b0e17fcaadd3/evidence/2026-11-05/cache-cleanup-incremental.json`. No tests run for cache deletion.
+
+
+### 2026-11-05 — root verification of portable CLI export checkpoint
+
+Read the frozen three-file report and exact gate evidence; verified all three source hashes and all four raw log hashes against live bytes. Archived report/manifest/evidence and logs under `/home/olegchir/.vibe/steward/contexts/3211e1fa-8e38-41b4-8aed-b0e17fcaadd3/evidence/2026-11-05/portable-cli-export-review`. Export-only evidence: four new and eight incumbent CLI tests passed; scoped clippy exit0 with four unconnected app-owner warnings (not a -D-warnings acceptance), conform/fmt exit0. Full JSON stdout deliberately bypasses decorated emit_json because added context members violate the closed portable schema; legacy output behavior retained. Independent read-only exporter review assigned. Full import/store/dependency consumers still incomplete; no full portability acceptance or campaign count increase.
+
+
+### 2026-11-05 — portable legacy public/secret classification gap found in review
+
+Independent read-only exporter review identified, and root source inspection confirmed, `portable/document.rs::validate_full` LegacyEffective branch validates secretOrigins alone without rejecting overlap with public parameters. A contradictory incoming row can retain a known-secret ID in a public value map and be serialized again. This is an input admission defect, not proof that a correctly stored installed secret is exported. Primary source owner was asked to reject overlap with a value-free error and add JSON/TOML regression coverage; no fix or passing test claimed yet.
+
+
+### 2026-11-05 — full cohort dispatch checkpoint and format record
+
+Observed new `operations/import/full_store.rs` dispatches strict private1/private2 readers and validates home, generation, cursor and exact result ownership. Work inspection, child link and continuation ownership consumers now use a Legacy/Full view. This is an unaccepted intermediate patch: legacy execution driver remains, full execution is not demonstrated. Root requested shared portable row/edge validation at the retained boundary and proof that waiting recipients belong to active reachable work. Updated FMT-019 to describe implemented export/generator evidence separately from still-pending full import; no vibe.toml or install-g syntax change.
+
+
+### 2026-11-05 — continuation call-site review identifies two premature preparation gates
+
+Reviewed nine concrete call sites with thirteen source hashes; report archived at `/home/olegchir/.vibe/steward/contexts/3211e1fa-8e38-41b4-8aed-b0e17fcaadd3/evidence/2026-11-05/portable-continuation-review/nst-portable-continuation-callsite-review.md`. Existing import resume asks for retained executor before inspecting terminal/arrangement phase; its row loop admits source before acknowledging an already-complete exact child. These can block otherwise record-owned finalization when unused inputs disappear. Existing application continuation already bypasses source/input/executor for exact Complete or narrowly validated cleanup-only states; preserve that working behavior. The dependency resolver installed-newest shortcut and child default request both need full binding integration; changing resolver alone is insufficient. Primary received exact report. These are source-derived regression requirements, not newly passed runtime tests.
+
+
+### 2026-11-05 — bounded admission fix ownership split
+
+Primary explicitly released only portable/document.rs and a new portable/document/tests.rs to the exporter reviewer for a narrow implementation atom. Requested shared validate_rows retains all exact row/edge/root checks and additionally rejects public/known-secret overlap; both full portable parsing and retained private2 work will use that same admission. Reviewer does no Cargo work while primary owns the changing integration graph. Primary retains driver/dependencies/resume and sole build slot. No global index contract tightening or separate portable owner is introduced. Fix/tests are not yet reported complete.
+
+Exporter/input review report received, root read and SHA256 verified: `/home/olegchir/.vibe/steward/contexts/3211e1fa-8e38-41b4-8aed-b0e17fcaadd3/evidence/2026-11-05/portable-cli-export-review/nst-portable-export-independent-review.md`. One concrete E1/P2 admission finding; no further finding in bounded library scope. CLI portion is explicitly same-author self-review, not independent corroboration; root previously inspected its source/raw logs. Moving full_export cohort facade must still pass private2 integration tests; old private1 evidence alone is insufficient.
+
+
+### 2026-11-05 — overlap correction source reviewed; tests pending
+
+Two-file correction frozen and root reviewed; exact hashes verified and source/report archived under `/home/olegchir/.vibe/steward/contexts/3211e1fa-8e38-41b4-8aed-b0e17fcaadd3/evidence/2026-11-05/portable-overlap-fix`. Shared validate_rows retains row identity, Manual root selection, requirement version/closure and configured-history checks; it now refuses public values for IDs declared in secretOrigins without formatting the value. Two substantive JSON/TOML and row-admission regression tests added. Scoped rustfmt passes; no Cargo compile/test yet. Ownership returned to primary for full-store call integration and focused gates. This closes E1 in source only, not in accepted runtime evidence.
+
+
+### 2026-11-05 — exact old-format source preservation check
+
+Compared current registry against HEAD: archived apps-manifest-v1 and application-import-work-v1 retain every old metadata field exactly, including recoverable classification. Both original schema files remain byte-identical to HEAD (SHA256 receipt in user-local evidence/2026-11-05/portable-old-format-preservation.json). This is source/metadata preservation evidence only; it does not substitute for old persisted-cohort runtime tests after consumer integration.
+
+
+### 2026-11-05 — root corrects oversized execution packet
+
+Root intentionally interrupted the live primary task to repartition ownership, not because a polling timeout proved a crash. The broad implementation packet had concentrated facade, preparation, driver, dependencies and continuation in one writer while reviewers were idle. Primary confirmed no unsaved code, identified a concrete remaining `.held` caller error after the agent-modes facade migration, released full_store.rs plus new full_store/tests.rs, and retained the remaining implementation. Root assigned the released reader/validation tests atom to the existing reviewer with a read-only fence until primary finishes its first cargo check. Primary next checkpoint is compilation of actual facade consumers followed by one real configured-root execution path; full goal and required dependency/resume coverage remain unchanged.
+
+
+Facade compilation checkpoint: root read and archived /tmp/nst-full-portable/facade-check-fixed.log (Finished dev2.98s, five dead-code warnings). Held-state consumer now reads the selected root through the versioned owner rather than incorrectly treating its agent-modes map as a full row. Log supports compilation only; full preparation/execution and runtime tests remain pending. Read-only fence lifted for the two-file full_store validation atom after no active Cargo process was observed; primary informed to avoid concurrent builds during that edit.
+
+Primary confirmed facade cargo check terminal exit0; continues PortableTransfer → InstallRequest → PlanInput → existing common evaluator integration with no parallel Cargo or store-file edits.
+
+
+### 2026-11-05 — delegated file ownership violation during mechanical initializer edit
+
+Primary reported its broad PlanInput initializer loop called write_text even on unchanged app files, including explicitly released full_store.rs/test paths. No intended semantic edit there, but overlapping writes could have lost the delegated patch; root does not infer safety from intent. Blanket writes stopped; primary restricted to explicit owned/changed paths. Store worker notified to compare actual bytes with its intended patch and report/repair any lost edits. No concurrent Cargo is allowed until store freeze. Root also flagged public transfer plus ordinary configuration/features ambiguity: new early transfer branch must reject conflicting submitted inputs rather than silently discard them.
+
+Ownership incident disposition: store worker confirmed it had made reads only and had not written any source/test patch before the blanket write; no worker edit was lost. It will capture a fresh preimage before its first write. Initial reads were not separately hashed, so exact pre/post byte identity is not claimed. The ownership violation remains recorded even though this occurrence caused no lost worker patch.
+
+
+### 2026-11-05 — root review of transfer/planner integration
+
+Observed new PortableTransfer passed through InstallRequest and PlanInput into the existing common evaluator, with value-free required secret IDs separate from source history. Source review identified a boundary hole in the still-changing patch: the legacy installer branch rejects ordinary common configuration but did not reject the new transfer field, which could silently ignore transported history. Primary asked to refuse transfer for a non-common selected installer and reject conflicting ordinary configuration/feature edits rather than drop them. Unknown/nonsecret ephemeral parameter IDs are already refused by the shared evaluator. These are integration review findings; no new runtime pass claimed.
+
+
+### 2026-11-05 — full preparation implementation reviewed before acceptance
+
+New full_prepare draft now classifies exact application candidates and captures public bindings before effects. Root found two required corrections: its full evaluation currently rejects missing secrets before durable cohort creation instead of preserving a resumable waiting state; and candidate rows are checked by key only before cloning, so the actual candidate row must equal the admitted document row (selected installer must also belong to the resolved source). Prompting secret input for unused carried Auto data is not an actual-operation scope. Primary notified with exact source conditions. No full preparation or first-root runtime acceptance yet.
+
+
+### 2026-11-05 — full-store validation source freeze verified
+
+Root read the two-file patch/report and verified both frozen hashes; archived source and evidence under `/home/olegchir/.vibe/steward/contexts/3211e1fa-8e38-41b4-8aed-b0e17fcaadd3/evidence/2026-11-05/portable-full-store-review`. Shared row admission and phase checks now implemented. Six test definitions cover actual closed v1/v2 files, nonempty legacy equality/no rewrite, edge/secret overlap/phase/private identity refusal and invalid-save preservation. No Cargo/test execution yet; source-only review accepted as candidate. Ownership/build fence returned to primary for actual focused tests. Remaining planner-test worker writes only an unregistered new file, so it does not block current compiled graph.
+
+
+### 2026-11-05 — planner regression source reviewed and fixture corrected
+
+Root reviewed four planner test definitions using actual A evaluation→portable encoding→ordinary B planner. Identified invalid underscore parameter IDs in the initial fixture, matching a previously learned identifier constraint; worker corrected to hyphens and verified actual fixture installer main. This was a test-source mistake, not an executed product RED. Corrected hash verified and archived under `/home/olegchir/.vibe/steward/contexts/3211e1fa-8e38-41b4-8aed-b0e17fcaadd3/evidence/2026-11-05/portable-planner-tests`. File remains unregistered/unrun; primary owns later module registration. Root acquired Cargo slot with compiled graph held stable and launched document/store gates separately.
+
+
+### 2026-11-05 — first root focused test gate fails at compile
+
+Actual cargo test --offline --locked -p vibe-app --lib portable::document::tests:: -- --test-threads=1 exited101. Compiler E0063: operations/pending/input.rs:158 InstallRequest constructor missing the new transfer field. No test executed. Root returned Cargo/source fence to primary with exact failure, preserving the log/hash under evidence/2026-11-05/portable-full-store-review. The earlier facade cargo check passed before subsequent transfer field integration; that prior pass does not certify current graph. Ordinary restored requests and full-cohort scope recovery must remain distinct.
+
+
+### 2026-11-05 — public-only preflight discriminator resolved from existing evaluator
+
+Root inspected actual parameter resolution: missing secret yields SecretResupply or Parameter(secret=true) question; invalid values yield a problem. Supplied primary with concrete reuse rule: no preflight secret prompt/answers; only secret questions may remain after public preparation, no problems, no fabricated resolved state. Added the requirement to implementation decisions. This resolves the preparation/waiting ambiguity without a second evaluator or new wire question format; actual execution gate remains pending.
+
+
+### 2026-11-05 — initial full root execution draft exists, not wired acceptance
+
+Root inspected operations/import/full.rs initial source draft. It composes the ordinary installer and the same retained cohort slot, acknowledges exact completed child publication before source admission, and records a missing-secret waiting state. Dependency and legacy-effective execution currently explicitly refuse as temporary first-root slice boundaries; they remain required work, not accepted restrictions or a narrower definition of completion. Root requested first focused compilation/tests before growing this draft further. No import_full runtime journey has passed.
+
+
+### 2026-11-05 — registered first-root integration compile findings
+
+Primary registered the initial root path and corrected missing InstallRequest.transfer. First-root cargo check exposed wrong module qualification for restore_arrangement_locked (E0425); the locked helper must be called through portable, not replaced by the self-locking public helper. Next focused document test compilation exited101 on planner fixture importing private configuration::vocabulary (E0603), before tests ran. Root requested fixture construction through existing public submission/typed input rather than widening production visibility for a test. Captured initial logs/command evidence in portable-continuation-review. Actual A→export→B first-root integration tests assigned as an unregistered new-file atom; current dependency/resume gaps remain required.
+
+
+### 2026-11-05 — focused consumer gates pass 12 distinct tests
+
+After fixing the pending request initializer and private-helper fixture import, actual three cargo test gates exited0: document2 + full_store6 + planner4. Root read raw outputs and command receipts, archived log hashes and eleven relevant current source snapshots under `/home/olegchir/.vibe/steward/contexts/3211e1fa-8e38-41b4-8aed-b0e17fcaadd3/evidence/2026-11-05/portable-focused-consumers`. This proves JSON/TOML overlap refusal, shared row/edge/phase/private validation and old-file no-migration behavior, and actual transferred-history→ordinary B planner origin/path preservation with A removed. No install_full execution, full resume, dependency composition or full campaign acceptance is inferred. One dead-code warning remains for not-yet-used import facade helpers.
+
+
+### 2026-11-05 — ordinary continuation baseline capture delegated
+
+Root inspected execution-context serialization and its checkpoint/resume callers; no imported-scope field has been added yet. Assigned a bounded existing-binary, isolated-home capture of a genuine no-import keep-work operation before the digest extension, to prove ordinary None-scope compatibility against actual old persisted bytes rather than duplicate the hashing function in a test. No Cargo/product writes or current user-home mutation authorized for that capture. Current library gates may continue; requested preservation of the existing CLI binary until captured. Actual A→B install/waiting/candidate-drift tests are concurrently being written in one unregistered file.
+
+Baseline discriminator correction before acceptance: a successful Complete keep-work record is insufficient to prove resume identity compatibility because terminal continuation bypasses execution-context recomputation. Root instructed capture of a genuinely unfinished shell operation gated by an external marker, with source declaration unchanged between failure and eventual retry. The later new-binary resume must actually traverse identity verification; merely reading an old record or returning nothing-to-resume will not count.
+
+
+### 2026-11-05 — real first-root test source ready; dependency seam delegated
+
+Root reviewed/hash-verified three unregistered/unrun integration test definitions: actual A install/export→B import with payload receipt/path origins, missing previously supplied optional secret retains exact cohort waiting before effects, altered same-key history refuses before work. Archived source/report in portable-first-root-tests. Dependency composition now split into exclusive new import/bindings.rs and existing operations/deps.rs for the prior reader reviewer, after old-context baseline capture. Primary retains context/driver/pending/identity/CLI. Immutable scope identity includes canonical cohort target, roots and bindings; excludes mutable secret requirements/answers/results/waiting. Packet /tmp/nst-portable-bindings-worker.md; actual runtime dependency acceptance remains pending.
+
+
+### 2026-11-05 — real old ordinary continuation baseline captured
+
+Existing CLI binary copied/hash-pinned, no build. In isolated VIBE_SETTINGS/HOME an actual install --keep-work exited1/finish_failed: prepare Done, required finish Failed on absent fixed release-marker. Actual steps2 Install/Published, parentNone/childrenempty, index4 exact pending target. Stored execution identity `app-execution-context/1:sha256:aec84ee308730e346cb07ff4f5c9ec296ee4fe19f3c264a91c08a252fe5e63a8`. Root verified 23 raw evidence hashes and absent marker; archived small raw records/report under `/home/olegchir/.vibe/steward/contexts/3211e1fa-8e38-41b4-8aed-b0e17fcaadd3/evidence/2026-11-05/portable-old-context`, single executable remains at /tmp/nst-portable-old-context-baseline/vibe-old. Source/home paths remain fixed. New-binary resume NOT run; digest compatibility still unproven. Initial incompatible project-only flag refusal and reporting-script absent-field mistake remain disclosed.
+
+
+### 2026-11-05 — first actual full-root install journey passes three tests
+
+Root read first-root-runtime.log:3 passed/0 failed. Genuine A install→export→B preparation/import produced the B payload receipt and preserved original input/default origin/lexical source after source data removal; missing previously supplied optional secret saved exact waiting cohort before effects; altered same-key candidate history refused before work. Archived raw log/hash and four post-gate source snapshots under portable-first-root-tests. These are library Linux single-configured-root tests, not full CLI/dependency/resume acceptance. Temporary dependency/legacy execution refusals remain to be removed with real implementations. Combined new focused evidence now12 boundary/planner tests +3 actual first-root tests, without increasing historical transferred-task count.
+
+
+### 2026-11-05 — current plan/dashboard checkpoint and dependency reuse decision
+
+Refreshed complete local plan to revision64, preserving all62 node identities/states/mandates and current active atom. Replaced stale portable no-epoch/no-code evidence with current15-test runtime boundary and explicit remaining CLI/dependency/resume/old-binary gates; prior text retained in plan-before-portable-runtime-r64.toml. Goal renderer exit0. Verified Documents/vibevm-architecture/status.json automatically refreshed to plan64, ok=true, with current evidence; no historical task completion count changed.
+
+Dependency comparator direction approved: reuse only exact imported key plus compatible target declaration/original typed input/public evaluation and value-free secret obligations, preserving Manual. Secret-only questions can be evaluated without invented resolved state; problems/public questions refuse. A supplied new opaque answer cannot be proved equal by ID/provided bit, so do not silently discard it under same-key reuse; require explicit modification/skip route, never hash answers. Separate unregistered dependency-journey test file assigned for actual exact-vs-newer, conflicting-same-key, shared-child and Manual controls.
+
+
+### 2026-11-05 — target-only dependency export-readiness review gap
+
+Root inspected full-export readiness and the current pure affected_keys accessor. The latter walks imported source roots/edges only. When a reviewed target introduces a new dependency, a relevant not-yet-started exact child can exist only in retained parent operation.children, before a child work directory exists; source-only cohort relevance can miss that family. Primary notified to include actual retained child-plan identities in the full-export readiness integration and exercise the cut before child work begins. This is a source-derived integration obligation, not an observed runtime failure or a reason to add another dependency store.
+
+
+### 2026-11-05 — dependency seam coordination verified
+
+Root explicitly checked for a stale write/build fence; dependency worker confirmed WRITE released and active implementation, no Cargo. Remaining implementation seams agreed with primary: held metadata applied at actual publication and typed ImportInputRequired carrying exact cohort target/key/parameter IDs, rather than fake common evaluations or parsing reason strings. New answer supplied for an already-installed dependency is not silently treated as equal; comparator caveat retained. This is an implementation contract checkpoint, not a runtime pass or acceptance.
+
+
+### 2026-11-05 — dependency comparator source review corrections
+
+Read initial bindings.rs. Flagged an invalid Rust guarded alternative pattern (binding variable present in only one arm) for correction before compile. More importantly clarified source Auto→target Manual visibility/held preservation, and distinguished same-cohort completed-child reuse from unrelated preexisting opaque-secret compatibility. Otherwise a shared secret-bearing child would be refused for the second root merely because the scoped input map still contains its IDs. Exact retained publication/ancestor proof is required; primary owns any needed pending helper. Decisions recorded without weakening original-input comparison or claiming runtime success. Four real dependency test definitions frozen, still unrun.
+
+
+### 2026-11-05 — same-cohort grandchild proof requires bounded retention
+
+Primary identified actual existing retirement behavior: completing an intermediate application retires descendants and loses their attempt correlation before a later root can reuse them. Root approved FULL2-only completed-subtree retention until cohort completion, followed by existing retirement cleanup; no separate DB or guessed parent labels. Root requires exact imported-scope-bound context2 encoding review, source-free terminal proof and crash/cleanup tests, while None-scope context1 remains unchanged and will be checked with the captured old unfinished CLI operation. This is an implementation direction, not runtime acceptance.
+
+
+### 2026-11-05 — bindings source handback and context2 framing review
+
+Bindings/deps worker froze and released two files; root archived report/manifest and compared current hashes in portable-bindings-review/root-current-hashes.json. No worker Cargo/runtime claim. Source context2 includes imported scope inside actual hash preimage; None omits the new field, retaining the v1 algorithm. Root flagged outcome-aware traversal in completed_binding: a terminal Refused root is not an Installed publication, though verified completed descendants can still matter. Also flagged imported dependency agent-mode fallback: pending/direct-root modes alone do not cover not-yet-started dependencies after cohort resume. Primary owns both integration fixes. Runtime tests and old unfinished binary gate remain required.
+
+
+### 2026-11-05 — four actual dependency journeys pass after fixture PATH correction
+
+First registered binding compile reported missing helper visibility and wrong execution field name; primary corrected these integration errors. First dependency run failed all4 during source A setup, recipe exit127, before import: fixture search_path=None made StepPaths::child_env retain dependency-only PATH while recipe called external mkdir. Corrected fixture supplies explicit /usr/bin:/bin; production environment policy unchanged. Second run:4 passed/0 failed, raw logs read by root and hashed/archived in portable-dependency-tests. Verified exactchild1 versus installednewer2, same-key config conflict beforeparent effects with child preserved, two compatible distinct ranges sharing one install, and Manual reuse without rerun or hidden/held changes. Existing public hold setter exercises held=true. Captured7post-gate source files. Combined new focused boundary evidence19distinct tests (12+3+4), not full portable/CLI/resume acceptance.
+
+Primary confirmed full-deps-second terminal exit0. Local plan advanced65 with19focused tests and explicit remaining shared-secret/grandchild/resume/CLI gates; task states/counts unchanged, renderer exit0. Primary has now written full recovery/direct-child scope restoration for subsequent review and runtime qualification.
+
+
+### 2026-11-05 — promote portable decisions into canonical PROP-069
+
+Following owner traceability question, added6 explicit spec/plan facts: PORTABLE-PREFLIGHT, PORTABLE-INSTALLED-REUSE, PORTABLE-CONTEXT-IDENTITY, PORTABLE-RETAINED-SUBTREE, PORTABLE-WAITING-REPORT, PORTABLE-FINALIZATION. These promote previously recorded preparation, metadata/secret reuse, context identity, finite receipt/retirement, typed waiting and source-free finalization rules into canonical specification. XML parse and unique IDs checked; text-only fact grammar retained. Existing5 portable facts/IDs preserved. No impl/done promotion; final extractor/specmap and code/test links still required. Approved finite successful-descendant receipts only with same-key invalidation/ownership protection, since public record identity alone cannot detect every opaque secret replacement.
+
+
+### 2026-11-05 — actual CLI waiting, deep resume and old-binary compatibility evidence
+
+Root read raw gates: CLI waiting4 then preview-extended5 PASS; deep resume first2PASS/1fixture failure (`$vibe_home` used in raw shell instead of an actual absolute marker), corrected deep3PASS and footprint-extended4PASS; shared legacy admission repeat8PASS (not8newtests). Public pending output is typed non-success with honest installed prefix; old public response omission and permissive/public versus closed/private readers tested. Deep library tests cover configured secret child through legacy middle, missing secret resumed without public files, direct child finish resume then removed child source and secret-free cohort completion, and target-only planned dependency export refusal. Distinct current focused groups total28 (12+3+4+5+4); repeats not double-counted.
+
+Root independently inspected new CLI old-operation receipt: exit0, exact work/steps.json phaseComplete, original execution-context/1 digest unchanged, pending absent in actual index. This genuinely resumed captured unfinished Install/Published state, not a terminal shortcut. The initial reporting rglob picked a historical run snapshot; primary corrected to exact work state, disclosed in receipt. Archived all evidence under portable-resume-and-cli. Full independent-row receipts, broader CLI maintenance and final traceability remain open.
+
+
+### 2026-11-05 — direct traceability links added in a fenced source window
+
+Read-only audit captured60files and distinguished live drift (initial zero new links became7implements/2documents before freeze). After primary released Cargo/compiled graph, root added/repointed only specmark item attributes in16files: receipt ownership, completed reuse, finalization, pending report, history/transfer/store entrypoints and behavioral waiting/store/transfer/deep tests. Exact stripped-source equality proves no function-body edits; manifest/preimages and audit archived in portable-trace-links. Source fence returned immediately after edit. Dedicated context-identity verifies/drift test remains explicit debt; external old CLI receipt is real evidence but not fabricated as a Rust test link. Authoritative new specmap remains pending. Canonical finalization wording now distinguishes publication/effect verification from terminal generation-safe retirement.
+
+Primary disclosed parent rustfmt without skip_children during receipt delegation; worker verified all3post-format hashes match frozen snapshots, no lost edit. Unsafe invocation remains a coordination failure, not an acceptable workflow. Receipt first runtime gate has2behavioralRED: target-only receipt outside imported closure; matching released/unpublished Refused P rejected on later dependency retry. Primary fixing exact generation/scope/Refused ownership recognition, not arbitrary Complete/unpublished acceptance.
+
+
+### 2026-11-05 — recovery/privacy/roundtrip tail evidence and actual failures
+
+Archived raw logs/hashes in portable-recovery-tail. Actual public JSON/TOML roundtrip2PASS includes A-path deletion, explicit B rebind, profile/dormant/None/empty/additive state, different-cwd modify/force repair/update/re-export. Receipt2PASS covers failed P→successful G/M reservation→later Q retries P, protected opaque replacement/uninstall and cleanup; mutation oracles strengthened to exact retained-owner error plus unchanged index/payload in subsequent affected gate. Store first6PASS/2RED proved missing prefix outcomes and orphan/unstarted waiting admission; corrected8PASS. CLI secret privacy7PASS includes filename/body redaction and no retained-state mutation. First context probe was2PASS despite a predicted RED; empty-answer extension produced1RED and was fixed by pre-checkpoint scope validation; affected dependency/receipt/context12PASS. Receipt recovery3PASS uses reconstructed known cuts from actual execution evidence and actual chmod cleanup failure, not an OS-crash claim. Broad library first212PASS/1FAIL was an outdated expectation of configuration_unresolved rather than the deliberately typed import_input_required; stronger typed target/key/IDs oracle is now written, full rerun pending at this checkpoint.
+
+Active-only target preparation ruling approved: validate whole source purely, then only selected source closure may query/prepare targets; inactive rows remain operator data, explicit inactive submissions refuse. Retained bindings never pruned on read. Direct target-only app resume may admit only its validated current recipient as ephemeral input outside imported bindings, never broadcast or weaken whole-cohort file admission. These later corrections need their actual gates and final review.
+
+
+### 2026-11-05 — owner-requested Documents architecture refresh
+
+Updated local plan66 with current frozen110-file candidate, verified final test/static counts, fresh9079/5062/4216 map result and explicit remaining root acceptance/staging gates; no historical task state/count promoted. Refreshed Documents/vibevm-architecture via its installed updater, updated current-node Russian label, confirmed matching data/status snapshot/content revisions. Corrected stale minimum1 caveat to derive current full2 lower bound from authoritative crosswalk. Python9fixture checks passed; Node validator passed after narrowly allowing only that derived caveat while retaining exact pins/topology/all other caveats. Initial verification helper looked for snapshotId at wrong data level; corrected to meta.snapshotId, no artifact corruption. Initial validators intentionally rejected changed caveat under old immutable-all-caveats assumption; updated only this declared overlay rule. Hourly/path services remain active.
+
+
+### 2026-11-05 — root accepts F14 selected-installer portability
+
+Verified all110worker source hashes and88log hashes; corrected one release-note overstatement calling the legacy public reader strict (its prior tolerances remain). Explicitly staged116reviewed paths, excluding original doc.web. Fresh post-format specmap/check exit0:9079units/5062taggeditems/4216edges,0gatedorphans/0unresolvedhost,43knownwarnings. Ordinary staged check-codegen exit0; no unstaged generated changes. Root accepts the scoped consumer described in F14 and promotes its11PORTABLE facts to impl/done; final map is regenerated for that status change. This is not full F04/all-kind solver/113-task campaign acceptance. Public push/PR/release remain outside NST-D8; local commit follows gates.
+
+Root extra real-CLI stdin gate passed: A supplied-secret install/export→B --secret-input - succeeds; competing stdin consumers refuse before index mutation. Synthetic answers absent from stdout/stderr. Receipt archived in portable-root-acceptance/stdin-receipt.json.

@@ -93,6 +93,86 @@ pub struct ApplicationContinuationTargetImport {
     pub target: ApplicationImportTarget,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationFullImport {
+    pub roots: Vec<String>,
+
+    pub bindings: BTreeMap<String, ApplicationPortableBinding>,
+
+    pub cursor: u32,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub current: Option<ApplicationPendingTarget>,
+
+    pub results: Vec<ApplicationPendingImportResult>,
+
+    #[serde(rename = "skipInstalled")]
+    pub skip_installed: bool,
+
+    #[serde(rename = "acceptLicense")]
+    pub accept_license: bool,
+
+    pub collections: Vec<ApplicationPendingCollection>,
+
+    pub pins: Vec<ApplicationPendingPin>,
+
+    pub launchers: Vec<ApplicationPendingLauncher>,
+
+    #[serde(rename = "arrangementDone")]
+    pub arrangement_done: bool,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub waiting: Option<ApplicationImportWaitingInput>,
+
+    /// Mutable value-free supplied-ID obligations, including explicitly
+    /// supplied future bindings; excluded from immutable binding digest.
+    #[serde(rename = "secretRequirements")]
+    pub secret_requirements: BTreeMap<String, Vec<String>>,
+
+    #[serde(rename = "completedBindings")]
+    pub completed_bindings: BTreeMap<String, ApplicationImportCompletedBinding>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ApplicationImportCompletedBindingState {
+    #[serde(rename = "captured")]
+    Captured,
+
+    #[serde(rename = "detached")]
+    Detached,
+
+    #[serde(rename = "reparented")]
+    Reparented,
+}
+
+/// Finite successful descendant proof retained across terminal ancestor
+/// refusal; mutable transfer progress is excluded from immutable import scope.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationImportCompletedBinding {
+    pub target: ApplicationPendingTarget,
+
+    #[serde(rename = "publicationRecord")]
+    pub publication_record: String,
+
+    pub scope: String,
+
+    #[serde(rename = "originRoot")]
+    pub origin_root: ApplicationPendingTarget,
+
+    #[serde(rename = "originRow")]
+    pub origin_row: u32,
+
+    #[serde(rename = "previousParent")]
+    pub previous_parent: ApplicationPendingTarget,
+
+    #[serde(rename = "previousParentOwner")]
+    pub previous_parent_owner: ApplicationContinuationTarget,
+
+    pub state: ApplicationImportCompletedBindingState,
+}
+
 /// Retained public executor/resolver policy for the finite cohort, without
 /// argv, environment or answers.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -133,6 +213,14 @@ pub struct ApplicationImportTarget {
     pub home: String,
 
     pub operation: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationImportWaitingInput {
+    pub key: String,
+
+    pub parameters: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -646,6 +734,32 @@ pub struct ApplicationPendingTarget {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub project: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationPortableBinding {
+    pub application: PortableApplication,
+
+    pub source: ApplicationPendingSource,
+
+    pub installer: String,
+
+    pub platform: String,
+
+    pub arch: String,
+
+    pub definition: String,
+
+    #[serde(rename = "configurationDefinition")]
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub configuration_definition: Option<String>,
+
+    #[serde(rename = "agentModes")]
+    pub agent_modes: BTreeMap<String, ApplicationAgentMode>,
+
+    #[serde(rename = "targetInput")]
+    pub target_input: PortableTargetInput,
 }
 
 /// One accumulated lifecycle artifact supplied as handler input. The engine-
@@ -3656,6 +3770,360 @@ impl<'de> Deserialize<'de> for PackageKind {
             _ => PackageKind::Unknown(wire),
         })
     }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PortableApplicationMark {
+    #[serde(rename = "auto")]
+    Auto,
+
+    #[serde(rename = "manual")]
+    Manual,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableApplication {
+    pub key: String,
+
+    pub installer: String,
+
+    pub platform: String,
+
+    pub arch: String,
+
+    pub mark: PortableApplicationMark,
+
+    pub held: bool,
+
+    pub hidden: bool,
+
+    #[serde(rename = "licenseAccepted")]
+    pub license_accepted: bool,
+
+    pub configuration: PortableConfigurationState,
+
+    pub requires: Vec<PortableRequirement>,
+}
+
+/// Portable omission-based configuration definition. Canonical current JSON
+/// grammar remains unchanged.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationDefinition {
+    pub features: Vec<PortableConfigurationFeature>,
+
+    pub groups: Vec<PortableConfigurationGroup>,
+
+    pub parameters: Vec<PortableConfigurationParameter>,
+
+    pub profiles: Vec<PortableConfigurationProfile>,
+
+    #[serde(rename = "configValues")]
+    pub config_values: BTreeMap<String, ConfigurationValue>,
+}
+
+/// Portable omission-based configuration feature. Canonical current JSON
+/// grammar remains unchanged.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationFeature {
+    pub id: String,
+
+    pub name: String,
+
+    pub visibility: ConfigurationVisibility,
+
+    pub required: bool,
+
+    pub default: bool,
+
+    pub requires: Vec<String>,
+
+    pub guards: Vec<ConfigurationGuard>,
+
+    pub effects: Vec<ConfigurationEffect>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub parent: Option<String>,
+}
+
+/// Portable omission-based configuration group. Canonical current JSON grammar
+/// remains unchanged.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "mode")]
+pub enum PortableConfigurationGroup {
+    #[serde(rename = "choice")]
+    Choice(Box<PortableConfigurationGroupChoice>),
+
+    #[serde(rename = "closure")]
+    Closure(Box<PortableConfigurationGroupClosure>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationGroupChoice {
+    pub cardinality: ConfigurationCardinality,
+
+    pub guards: Vec<ConfigurationGuard>,
+
+    pub id: String,
+
+    pub members: Vec<String>,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub defaults: Option<ConfigurationMembers>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationGroupClosure {
+    pub cardinality: ConfigurationCardinality,
+
+    pub id: String,
+
+    pub members: Vec<String>,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fallback: Option<ConfigurationMembers>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationHistory {
+    pub definition: PortableConfigurationDefinition,
+
+    pub fingerprint: String,
+
+    pub input: PortableConfigurationInput,
+
+    pub reliance: Vec<String>,
+
+    pub parameters: Vec<PortableParameterHistory>,
+}
+
+/// Portable omission-based configuration input. Canonical current JSON grammar
+/// remains unchanged.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationInput {
+    pub intent: PortableConfigurationSourceInput,
+
+    #[serde(rename = "disabledFeatures")]
+    pub disabled_features: Vec<String>,
+}
+
+/// Portable omission-based configuration parameter. Canonical current JSON
+/// grammar remains unchanged.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationParameter {
+    pub id: String,
+
+    pub name: String,
+
+    #[serde(rename = "type")]
+    pub type_: ConfigurationParameterType,
+
+    pub required: bool,
+
+    pub choices: Vec<ConfigurationParameterChoice>,
+
+    #[serde(rename = "mustExist")]
+    pub must_exist: bool,
+
+    pub secret: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default: Option<ConfigurationValue>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub min: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub max: Option<String>,
+}
+
+/// Portable omission-based configuration profile. Canonical current JSON
+/// grammar remains unchanged.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationProfile {
+    pub id: String,
+
+    pub name: String,
+
+    pub default: bool,
+
+    pub features: Vec<String>,
+
+    pub selections: BTreeMap<String, PortableConfigurationSelection>,
+
+    pub parameters: BTreeMap<String, ConfigurationValue>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+}
+
+/// Portable omission-based configuration selection. Canonical current JSON
+/// grammar remains unchanged.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationSelection {
+    pub intent: ConfigurationIntent,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub members: Option<ConfigurationMembers>,
+}
+
+/// Portable omission-based configuration source input. Canonical current JSON
+/// grammar remains unchanged.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationSourceInput {
+    pub policy: ConfigurationPolicy,
+
+    pub features: Vec<String>,
+
+    #[serde(rename = "defaultFeatures")]
+    pub default_features: bool,
+
+    pub selections: BTreeMap<String, PortableConfigurationSelection>,
+
+    pub parameters: BTreeMap<String, ConfigurationValue>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub profile: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum PortableConfigurationState {
+    #[serde(rename = "configured")]
+    Configured(Box<PortableConfigurationStateConfigured>),
+
+    #[serde(rename = "legacy-effective")]
+    LegacyEffective(Box<PortableConfigurationStateLegacyEffective>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationStateConfigured {
+    pub history: PortableConfigurationHistory,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableConfigurationStateLegacyEffective {
+    pub features: Vec<String>,
+
+    pub parameters: BTreeMap<String, String>,
+
+    #[serde(rename = "secretOrigins")]
+    pub secret_origins: BTreeMap<String, ConfigurationParameterOrigin>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "privacy")]
+pub enum PortableParameterHistory {
+    #[serde(rename = "public")]
+    Public(Box<PortableParameterHistoryPublic>),
+
+    #[serde(rename = "secret")]
+    Secret(Box<PortableParameterHistorySecret>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableParameterHistoryPublic {
+    pub id: String,
+
+    pub origin: ConfigurationParameterOrigin,
+
+    #[serde(rename = "type")]
+    pub type_: ConfigurationParameterType,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub realization: Option<ConfigurationValue>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source: Option<ConfigurationValue>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableParameterHistorySecret {
+    pub id: String,
+
+    pub origin: ConfigurationParameterOrigin,
+
+    pub provided: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PortableRequirementScope {
+    #[serde(rename = "build")]
+    Build,
+
+    #[serde(rename = "runtime")]
+    Runtime,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableRequirement {
+    pub package: String,
+
+    pub key: String,
+
+    pub scope: PortableRequirementScope,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub step: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableTargetInput {
+    #[serde(rename = "pathBindings")]
+    pub path_bindings: BTreeMap<String, String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub installer: Option<String>,
+
+    #[serde(rename = "reviewDefinition")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub review_definition: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub configuration: Option<PortableTargetReplacement>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PortableTargetReplacement {
+    pub protocol: String,
+
+    pub input: ConfigurationInput,
+
+    #[serde(rename = "expectedDefinition")]
+    pub expected_definition: String,
 }
 
 /// The selected project identity and source roots supplied to a lifecycle or

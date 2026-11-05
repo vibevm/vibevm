@@ -29,6 +29,8 @@ fn checked(
     let origins = Default::default();
     let features = [];
     plan(&PlanInput {
+        import_scope: None,
+        transfer: None,
         agent_modes: None,
         configuration: input,
         resolved: r,

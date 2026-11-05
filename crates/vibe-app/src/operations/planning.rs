@@ -79,24 +79,32 @@ pub(super) fn plan_option_with_modes(
             request.accept_license,
         )
     };
-    let agent_modes = pending.map(|op| &op.agent_modes).or(modes).map(|modes| {
-        modes
-            .iter()
-            .map(|(id, mode)| {
-                (
-                    id.clone(),
-                    match mode {
-                        vibe_wire::generated::shared::ApplicationAgentMode::Interactive => {
-                            crate::RunMode::Interactive
-                        }
-                        vibe_wire::generated::shared::ApplicationAgentMode::Unattended => {
-                            crate::RunMode::Unattended
-                        }
-                    },
-                )
-            })
-            .collect::<std::collections::BTreeMap<_, _>>()
-    });
+    let agent_modes = pending
+        .map(|op| &op.agent_modes)
+        .or(modes)
+        .or_else(|| {
+            ctx.import_scope
+                .and_then(|scope| scope.binding(&resolved.package.key()))
+                .map(|binding| &binding.agent_modes)
+        })
+        .map(|modes| {
+            modes
+                .iter()
+                .map(|(id, mode)| {
+                    (
+                        id.clone(),
+                        match mode {
+                            vibe_wire::generated::shared::ApplicationAgentMode::Interactive => {
+                                crate::RunMode::Interactive
+                            }
+                            vibe_wire::generated::shared::ApplicationAgentMode::Unattended => {
+                                crate::RunMode::Unattended
+                            }
+                        },
+                    )
+                })
+                .collect::<std::collections::BTreeMap<_, _>>()
+        });
     // Original/prefix provision metadata remains unchanged in steps2. The
     // monotonic current resupply list only strengthens the planner's requirement.
     let mut secret_origins = previous.map(|p| p.secret_origins.clone());
@@ -130,6 +138,8 @@ pub(super) fn plan_option_with_modes(
         ..p
     });
     let plan = steps::plan(&PlanInput {
+        import_scope: ctx.import_scope.map(|s| s.fingerprint()),
+        transfer: request.transfer.as_ref(),
         agent_modes: agent_modes.as_ref(),
         configuration: request.configuration.as_ref(),
         resolved,

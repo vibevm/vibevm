@@ -34,7 +34,12 @@ struct Context<'a> {
     kind: &'a str,
     steps: Vec<Step<'a>>,
     dependencies: Vec<Dependency<'a>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    import_scope: Option<&'a str>,
 }
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTEXT-IDENTITY"
+)]
 pub(super) fn execution(
     settings: &SettingsRoot,
     resolved: &ResolvedPackage,
@@ -51,6 +56,7 @@ pub(super) fn execution(
             .map_err(|e| failure(settings, &resolved.package, e.to_string()))?,
     )?;
     let value = Context {
+        import_scope: plan.import_scope.as_deref(),
         home,
         source,
         package: resolved.package.key(),
@@ -96,10 +102,13 @@ pub(super) fn execution(
     let mut hash = Sha256::new();
     hash.update(b"vibevm.app.execution-context/v1\0");
     hash.update(bytes);
-    Ok(format!(
-        "app-execution-context/1:sha256:{:x}",
-        hash.finalize()
-    ))
+    Ok(match plan.import_scope.as_deref() {
+        None => format!("app-execution-context/1:sha256:{:x}", hash.finalize()),
+        Some(scope) => format!(
+            "app-execution-context/2:{scope}:sha256:{:x}",
+            hash.finalize()
+        ),
+    })
 }
 
 pub(super) fn predecessor(index: &crate::Index, key: &str) -> Result<Option<String>, String> {
@@ -119,4 +128,21 @@ fn record_digest(
     hash.update(b"vibevm.app.predecessor/v1\0");
     hash.update(bytes);
     Ok(format!("app-predecessor/1:sha256:{:x}", hash.finalize()))
+}
+
+/// The retained scope component is also part of the context bytes hashed above.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTEXT-IDENTITY"
+)]
+pub(super) fn matches_import(value: &str, scope: &str) -> bool {
+    value
+        .strip_prefix("app-execution-context/2:")
+        .and_then(|v| v.strip_prefix(scope))
+        .and_then(|v| v.strip_prefix(":sha256:"))
+        .is_some_and(|hash| {
+            hash.len() == 64
+                && hash
+                    .bytes()
+                    .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+        })
 }

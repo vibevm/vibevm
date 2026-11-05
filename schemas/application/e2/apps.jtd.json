@@ -1,0 +1,182 @@
+{
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "exported": {
+      "type": "string"
+    },
+    "home": {
+      "enum": [
+        "user",
+        "project"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "platform": {
+      "type": "string"
+    },
+    "arch": {
+      "type": "string"
+    },
+    "application": {
+      "elements": {
+        "ref": "portable_application"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "roots": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Exact selected Manual roots, separate from carried rows and ownership."
+      }
+    }
+  },
+  "metadata": {
+    "x-wire-order": [
+      "protocol",
+      "exported",
+      "home",
+      "platform",
+      "arch",
+      "roots",
+      "application",
+      "collection",
+      "pin",
+      "launcher"
+    ],
+    "x-rust-type": "AppsManifest",
+    "x-vocabularies": [
+      "portable_application"
+    ],
+    "description": "Full typed application configuration, source history and exact required Auto edges. None exports as omission; declared nullable optional fields accept JSON null as an alias.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY"
+    }
+  },
+  "optionalProperties": {
+    "collection": {
+      "elements": {
+        "ref": "collection"
+      },
+      "metadata": {
+        "x-empty": "omit"
+      }
+    },
+    "pin": {
+      "elements": {
+        "ref": "pin"
+      },
+      "metadata": {
+        "x-empty": "omit"
+      }
+    },
+    "launcher": {
+      "elements": {
+        "ref": "launcher"
+      },
+      "metadata": {
+        "x-empty": "omit"
+      }
+    }
+  },
+  "definitions": {
+    "collection": {
+      "metadata": {
+        "description": "One named, ordered collection of launcher keys, as `vibe app collection` keeps it.",
+        "x-wire-order": [
+          "name",
+          "launchers"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "launchers": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "pin": {
+      "metadata": {
+        "description": "One ordered pinned list, named as `vibe app pin --to` names it.",
+        "x-wire-order": [
+          "target",
+          "launchers"
+        ]
+      },
+      "properties": {
+        "target": {
+          "enum": [
+            "taskbar",
+            "favorites"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "launchers": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "launcher": {
+      "metadata": {
+        "description": "One user override of a launcher with only what the user changed: a name of their own, hidden from menus, an icon file of their own.",
+        "x-wire-order": [
+          "key",
+          "name",
+          "hidden",
+          "icon"
+        ]
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "name": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "x-null-alias": "absent"
+          },
+          "nullable": true
+        },
+        "hidden": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false
+          }
+        },
+        "icon": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "x-null-alias": "absent"
+          },
+          "nullable": true
+        }
+      }
+    }
+  }
+}

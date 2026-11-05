@@ -1,0 +1,28 @@
+{
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "applications": {
+      "values": {
+        "ref": "portable_target_input"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "metadata": {
+    "x-wire-order": [
+      "protocol",
+      "applications"
+    ],
+    "x-rust-type": "ImportTargetInput",
+    "x-vocabularies": [
+      "portable_target_input"
+    ],
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT"
+    }
+  }
+}

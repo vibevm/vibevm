@@ -20,7 +20,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use anyhow::{Result, bail};
 
-use super::{Decision, OptionalShapes, ShapeClass};
+use super::{Decision, OptionalShapes, Required, ShapeClass};
 
 /// The skip attribute the pinned emission writes over every
 /// `optionalProperties` field — the anchor this pass replaces when it
@@ -103,7 +103,12 @@ pub(super) fn apply_with_shapes(src: &str, file: &str, shapes: &OptionalShapes) 
                 .unwrap_or(ident)
                 .to_string();
             let class = classify_payload(inner, &decls, file, line, ident)?;
-            let decision = lookup(shapes, &wire, class, file, line, ident, inner)?;
+            let required = if attrs.iter().any(|(_, _, attr)| *attr == OPTION_SKIP) {
+                Required::Optional
+            } else {
+                Required::Required
+            };
+            let decision = lookup(shapes, &wire, (class, required), file, line, ident, inner)?;
             match decision {
                 Decision::OptionValue => {
                     emit_rewritten_run(&attrs, &mut out, file, line, ident, OPTION_FORM)?;
@@ -175,16 +180,35 @@ pub(super) fn apply_with_shapes(src: &str, file: &str, shapes: &OptionalShapes) 
 fn lookup(
     shapes: &OptionalShapes,
     wire: &str,
-    class: ShapeClass,
+    shape: (ShapeClass, Required),
     file: &str,
     line: usize,
     ident: &str,
     inner: &str,
 ) -> Result<Decision> {
-    if let Some(decision) = shapes.map.get(&(wire.to_string(), class)).copied() {
+    let (class, required) = shape;
+    if let Some(decision) = shapes
+        .map
+        .get(&(wire.to_string(), class, required))
+        .copied()
+    {
         return Ok(decision);
     }
-    if let Some((_, other)) = shapes.map.keys().find(|(name, _)| name == wire) {
+    if required == Required::Optional
+        && shapes
+            .map
+            .get(&(wire.to_string(), class, Required::Required))
+            == Some(&Decision::RequiredNullable)
+    {
+        bail!(
+            "{file}:{line}: the required-nullable field `{ident}` carries a skip attribute the pinned emission does not write; fix the emission or schema before codegen"
+        );
+    }
+    if let Some((_, other, _)) = shapes
+        .map
+        .keys()
+        .find(|(name, _, req)| name == wire && *req == required)
+    {
         bail!(
             "{file}:{line}: the generated field `{ident}` carries the payload \
              `{inner}` (a {}), but the schema keys `{wire}` as a {} — the \

@@ -20,15 +20,15 @@ pub(super) fn imports(
         let document = import::load(settings, &id)?;
         let path = import::store::path(settings, &id)?;
         rows.push(wire::ImportEntry {
-            target: document.target,
+            target: document.target().clone(),
             path: path.display().to_string(),
-            phase: document.phase,
-            cursor: document.cohort.cursor,
-            total: u32::try_from(document.cohort.rows.len())
+            phase: document.phase().clone(),
+            cursor: document.cursor(),
+            total: u32::try_from(document.root_count())
                 .map_err(|_| import::store::failure(settings, &id, "too many retained rows"))?,
             changed: changed(&path),
             bytes: tree_bytes(&path),
-            current: document.cohort.current,
+            current: document.current().cloned(),
         });
     }
     Ok(rows)
@@ -57,25 +57,37 @@ pub fn clean_import(settings: &SettingsRoot, id: &str) -> Result<wire::Applicati
     let mut listing = work_import(settings, id)?;
     let document = import::load(settings, id)?;
     let mut visited = std::collections::BTreeSet::new();
-    if let Some(target) = &document.cohort.current {
+    if let Some(target) = document.current() {
         collect(
             settings,
             target,
-            &pending::import_reference(&document.target, document.cohort.cursor),
+            &pending::import_reference(document.target(), document.cursor()),
             &mut visited,
             &mut listing.entries,
         )?;
     }
-    for result in &document.cohort.results {
+    for result in document.results() {
+        if !document.inspect_result(settings, result)? {
+            continue;
+        }
         if let (Some(target), Some(row)) = (&result.target, result.row_index) {
             collect(
                 settings,
                 target,
-                &pending::import_reference(&document.target, row),
+                &pending::import_reference(document.target(), row),
                 &mut visited,
                 &mut listing.entries,
             )?;
         }
+    }
+    for (target, row) in document.receipt_targets() {
+        collect(
+            settings,
+            target,
+            &pending::import_reference(document.target(), row),
+            &mut visited,
+            &mut listing.entries,
+        )?;
     }
     cleanup(lock, settings, &mut listing, false)?;
     Ok(listing)
@@ -188,15 +200,21 @@ pub(super) fn cleanup(
     }
     for cohort in &listing.imports {
         let document = import::load(settings, &cohort.target.operation)?;
-        if document.target != cohort.target {
+        if document.target() != &cohort.target {
             return Err(import::store::failure(
                 settings,
                 &cohort.target.operation,
                 "selected cohort target changed",
             ));
         }
-        targets.extend(document.cohort.current);
-        targets.extend(document.cohort.results.into_iter().filter_map(|r| r.target));
+        targets.extend(
+            document
+                .receipt_targets()
+                .into_iter()
+                .map(|(target, _)| target.clone()),
+        );
+        targets.extend(document.current().cloned());
+        targets.extend(document.results().iter().filter_map(|r| r.target.clone()));
     }
     // Removing work deliberately abandons only matching pending references. Real
     // installation/step evidence remains; future fresh repair is not blocked by

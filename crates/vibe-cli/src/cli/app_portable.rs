@@ -6,25 +6,19 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#portable-set");
 
 use std::path::PathBuf;
 
-/// `vibe app export`.
-#[derive(Debug, Clone, clap::Args)]
-pub struct AppExportArgs {
-    /// Write the set to this file instead of standard output.
-    #[arg(long, short = 'o', value_name = "FILE")]
-    pub output: Option<PathBuf>,
-
-    /// Include hidden installations and those a requirement pulled in.
-    #[arg(long)]
-    pub all: bool,
-
-    /// Leave the launcher arrangement (collections, pins, overrides) out.
-    #[arg(long)]
-    pub installations_only: bool,
-}
+#[path = "app_portable/export.rs"]
+mod export;
+pub use export::AppExportArgs;
 
 /// `vibe app import`.
 #[derive(Debug, Clone, clap::Args)]
 pub struct AppImportArgs {
+    /// Per-exact-key public target decisions; fixed before the cohort starts.
+    #[arg(long, value_name = "FILE", conflicts_with = "resume")]
+    pub target_input: Option<PathBuf>,
+    /// Ephemeral per-application secret answers; '-' consumes stdin once.
+    #[arg(long, value_name = "FILE")]
+    pub secret_input: Option<PathBuf>,
     /// The set `vibe app export` wrote (TOML, or JSON from `--json`).
     #[arg(required_unless_present = "resume", conflicts_with = "resume")]
     pub file: Option<PathBuf>,

@@ -5,10 +5,24 @@ use crate::{
     AppError, FeatureRequest, ImportAction, Index, InstallRequest, PreparedImport, SettingsRoot,
 };
 use vibe_wire::generated::{apps_manifest as wire, shared as w};
+pub(crate) mod bindings;
+pub(crate) mod document;
+pub use bindings::ImportScope;
+mod completed;
+mod full;
+mod inspection;
+pub(crate) mod receipts;
+mod recovery;
+pub(crate) use completed::completed_binding;
+pub(crate) use inspection::effect_keys;
+pub(crate) use recovery::scope_from_state;
+pub use recovery::{ImportResumeInfo, inspect_import_resume};
+mod full_store;
+pub use full::{import_full, resume_full_import};
 mod rows;
 pub(crate) mod store;
+pub(crate) use full_store::load;
 pub(crate) use rows::link_child;
-pub(crate) use store::load;
 
 /// Install the preclassified finite cohort; its work identity is independent of
 /// every package row, so an earlier failed package can later be retried as a dependency.
@@ -34,7 +48,7 @@ pub fn import_resume_info(
     settings: &SettingsRoot,
     id: &str,
 ) -> Result<w::ApplicationImportContext, AppError> {
-    Ok(load(settings, id)?.context)
+    Ok(load(settings, id)?.context().clone())
 }
 /// Resume a user-home cohort. Secret answers belong to an exact child operation;
 /// this API deliberately has no unscoped parameter map.
@@ -44,7 +58,7 @@ pub fn import_resume_info(
 pub fn resume_import(ctx: &OperationContext<'_>, id: &str) -> Result<PreparedImport, AppError> {
     let held = ctx.settings.lock()?;
     let lock = &held;
-    let mut document = load(ctx.settings, id)?;
+    let mut document = store::load(ctx.settings, id)?;
     let saved = &document.context;
     let selected = if saved.hosted || saved.agent.is_none() {
         None
@@ -366,26 +380,32 @@ fn refused(
         row,
         w::ApplicationPendingImportResultAction::Refused,
         Some(error.code().into()),
-        match error {
-            AppError::Step(crate::StepError::Failed { step, kind, .. })
-            | AppError::Step(crate::StepError::FinishFailed { step, kind, .. }) => format!(
-                "{kind} step `{step}` failed ({}). Historical application attempt {}; inspect `vibe app runs {} -g` for retained step output before choosing a fresh retry",
-                error.code(),
-                target
-                    .as_ref()
-                    .map_or("not checkpointed", |t| t.operation.as_str()),
-                row.key
-            ),
-            _ if error.code() == "choice_differs" => error.to_string(),
-            _ => format!(
-                "import row refused ({}); inspect `vibe app errors` for this refusal and `vibe app runs {} -g` for any retained execution log",
-                error.code(),
-                row.key
-            ),
-        },
+        refusal_message(&row.key, error, target.as_ref()),
         target,
     )
 }
+fn refusal_message(
+    key: &str,
+    error: &AppError,
+    target: Option<&w::ApplicationPendingTarget>,
+) -> String {
+    match error {
+        AppError::Step(crate::StepError::Failed { step, kind, .. })
+        | AppError::Step(crate::StepError::FinishFailed { step, kind, .. }) => format!(
+            "{kind} step `{step}` failed ({}). Historical application attempt {}; inspect `vibe app runs {} -g` for retained step output before choosing a fresh retry",
+            error.code(),
+            target.map_or("not checkpointed", |t| t.operation.as_str()),
+            key
+        ),
+        _ if error.code() == "choice_differs" => error.to_string(),
+        _ => format!(
+            "import row refused ({}); inspect `vibe app errors` for this refusal and `vibe app runs {} -g` for any retained execution log",
+            error.code(),
+            key
+        ),
+    }
+}
+
 fn note(key: String, message: String) -> w::ApplicationPendingImportResult {
     w::ApplicationPendingImportResult {
         key,

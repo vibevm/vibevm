@@ -97,6 +97,16 @@ pub(crate) fn restore_locked(
     settings: &SettingsRoot,
     set: &wire::AppsManifest,
 ) -> Result<Vec<(String, String)>, AppError> {
+    restore_parts(settings, &set.collection, &set.pin, &set.launcher)
+}
+
+/// Apply only arrangement data; no synthetic portable document is needed.
+pub(crate) fn restore_parts(
+    settings: &SettingsRoot,
+    collections: &[wire::Collection],
+    pins: &[wire::Pin],
+    launchers: &[wire::Launcher],
+) -> Result<Vec<(String, String)>, AppError> {
     let index = Index::load(settings)?;
     let mut layer = UserLaunchers::load(settings)?;
     let mut skipped: Vec<(String, String)> = Vec::new();
@@ -112,7 +122,7 @@ pub(crate) fn restore_locked(
         }
         false
     };
-    for collection in &set.collection {
+    for collection in collections {
         let keys: Vec<&String> = collection
             .launchers
             .iter()
@@ -140,7 +150,7 @@ pub(crate) fn restore_locked(
             }
         }
     }
-    for pin in &set.pin {
+    for pin in pins {
         let target = match pin.target {
             wire::PinTarget::Taskbar => PinTarget::Taskbar,
             wire::PinTarget::Favorites => PinTarget::Favorites,
@@ -153,7 +163,7 @@ pub(crate) fn restore_locked(
             }
         }
     }
-    for row in &set.launcher {
+    for row in launchers {
         if !usable(&row.key) {
             continue;
         }

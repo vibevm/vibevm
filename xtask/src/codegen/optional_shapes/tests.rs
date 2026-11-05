@@ -408,3 +408,7 @@ mod stitch;
 
 #[path = "tests/union.rs"]
 mod union;
+
+#[cfg(test)]
+#[path = "tests/null_alias.rs"]
+mod null_alias;

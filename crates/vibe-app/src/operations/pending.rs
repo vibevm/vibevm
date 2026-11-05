@@ -28,7 +28,7 @@ mod import;
 mod input;
 pub(super) use dependencies::{ack_child, bound_child, link_child, resolve_binding};
 pub use drive::{ResumeInfo, ResumeRequest, resume, resume_info};
-pub(super) use drive::{continue_target, manual};
+pub(super) use drive::{continue_target, continue_target_with_parameters, manual};
 pub(super) use import::{ack_import, finish_import_row};
 
 #[derive(Clone, Copy)]
@@ -367,7 +367,9 @@ fn finish(
     let children = work_retirement::prepare(settings, &state, false)?;
     state.pending_mut(settings)?.phase = w::ApplicationPendingOperationPhase::Complete;
     state.save(&work(settings, &package))?;
-    work_retirement::release(lock, settings, children)?;
+    if continuation::retaining_full_import(settings, &state)?.is_none() {
+        work_retirement::release(lock, settings, children)?;
+    }
     if !keep {
         fs::remove_dir_all(work(settings, &package))
             .map_err(|e| failure(settings, &package, e.to_string()))?;
@@ -490,4 +492,23 @@ pub(crate) fn valid_operation(id: &str) -> bool {
             .bytes()
             .all(|b| b.is_ascii_alphanumeric() || b"-._".contains(&b))
         && !matches!(id, "." | "..")
+}
+
+pub(crate) fn matches_import_scope(state: &StepsFile, fingerprint: &str) -> bool {
+    state
+        .operation
+        .as_ref()
+        .is_some_and(|op| identity::matches_import(&op.execution_identity, fingerprint))
+}
+
+pub(crate) fn full_import_owner(
+    settings: &SettingsRoot,
+    state: &StepsFile,
+) -> Result<Option<w::ApplicationImportTarget>, AppError> {
+    continuation::retaining_full_import(settings, state).map(|owner| {
+        owner.and_then(|v| match v {
+            w::ApplicationContinuationTarget::Import(v) => Some(v.target),
+            _ => None,
+        })
+    })
 }

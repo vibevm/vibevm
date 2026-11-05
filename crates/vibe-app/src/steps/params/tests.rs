@@ -286,6 +286,7 @@ fn classified_parameter_debug_redacts_only_the_secret_value() {
         "ParamValue { id: \"answer\", value: \"[redacted]\", secret: true }"
     );
     let plan = crate::steps::Plan {
+        import_scope: None,
         secret_provided: vec![],
         secret_origins: Default::default(),
         configuration: None,

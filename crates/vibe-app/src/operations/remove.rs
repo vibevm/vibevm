@@ -247,6 +247,21 @@ pub(super) fn remove_with_boundary(
         .get(key)
         .cloned()
         .ok_or_else(|| AppError::not_installed(ctx.settings, key))?;
+    // Full-import receipts reserve their exact successful execution while the
+    // finite cohort may still consume it. Removal cannot erase that protection.
+    let work = super::pending::work(ctx.settings, &installation.package);
+    if let Some(state) = crate::steps::StepsFile::load(&work)?
+        && let Some(owner) = super::pending::full_import_owner(ctx.settings, &state)?
+    {
+        return Err(super::pending::failure(
+            ctx.settings,
+            &installation.package,
+            format!(
+                "installation is reserved by unfinished full import {}; finish or explicitly clean that cohort before removal",
+                owner.operation
+            ),
+        ));
+    }
     let key = key.to_owned();
     let root = match &installation.location {
         Location::Owned { library, .. } => match storage.availability(library) {

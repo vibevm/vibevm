@@ -156,6 +156,7 @@ pub(crate) fn restore(
         Start::Resume
     };
     Ok(InstallRequest {
+        transfer: None,
         configuration: None,
         choice: InstallChoice {
             platform: Some(op.request.platform.clone()),

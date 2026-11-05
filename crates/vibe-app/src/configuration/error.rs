@@ -5,6 +5,12 @@
 )]
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#INPUT-NORMALIZATION")]
 pub enum ConfigurationError {
+    #[error("import `{operation}` needs fresh scoped secret input for `{key}` (spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-SECRET-INPUT); fix: continue the same import with --secret-input", operation = .target.operation)]
+    ImportInputRequired {
+        target: vibe_wire::generated::shared::ApplicationImportTarget,
+        key: String,
+        parameters: Vec<String>,
+    },
     #[error(
         "portable format `{format}` cannot represent retained common configuration for {operation} of `{package}` (spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-JOURNEY); use direct configuration input until a typed rich portable format is available"
     )]

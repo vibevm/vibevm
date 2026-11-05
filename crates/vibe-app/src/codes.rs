@@ -181,6 +181,7 @@ codes!(LIFECYCLE, LifecycleError [] {
 });
 
 codes!(CONFIGURATION, ConfigurationError [] {
+    ImportInputRequired => "import_input_required", Refusal, "the retained import needs fresh scoped secret input";
     UnsupportedFormat => "configuration_portable_unsupported", Refusal, "the legacy portable format cannot represent common configuration";
     Unresolved => "configuration_unresolved", Refusal, "common configuration requires answers or default-basis review";
     Invalid => "configuration_input_invalid", Refusal, "common configuration input is invalid";

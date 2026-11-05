@@ -168,6 +168,18 @@ fn continue_saved(
         }
         return super::super::update::retirement::resume(lock, ctx, state);
     }
+    let scope_answers =
+        crate::ImportSecrets::single(op.target.key.clone(), incoming.parameters.clone());
+    let restored = if ctx.import_scope.is_none() {
+        super::super::import::scope_from_state(ctx.settings, state, &scope_answers)?
+    } else {
+        None
+    };
+    let scoped = OperationContext {
+        import_scope: ctx.import_scope.or(restored.as_ref()),
+        ..*ctx
+    };
+    let ctx = &scoped;
     let resolved = source(ctx, op)?;
     let option = resolved
         .options

@@ -190,7 +190,7 @@ executable='$app_bin/last'
 }
 
 #[test]
-fn rich_portable_refusals_preserve_output_and_preflight_every_import_row() {
+fn legacy_import_preflight_refuses_rich_but_export_retains_full_original_history() {
     let r = AppRegistry::new();
     package(&r, "first", "");
     package(
@@ -220,7 +220,7 @@ name='Extra'
     ok(&r.app(
         &["install", "-g"],
         "org.example/rich",
-        &["--json", "--offline", "--unattended"],
+        &["--json", "--offline", "--unattended", "--feature", "extra"],
     ));
     let output_file = r.root.path().join("preserve.toml");
     fs::write(&output_file, "KEEP EXACTLY\n").unwrap();
@@ -231,9 +231,28 @@ name='Extra'
         output_file.to_str().unwrap(),
         "--json",
     ]);
-    let (_, error) = refused(&output);
-    assert_eq!(error["code"], "configuration_portable_unsupported");
-    assert_eq!(fs::read_to_string(output_file).unwrap(), "KEEP EXACTLY\n");
+    ok(&output);
+    let bytes = fs::read_to_string(output_file).unwrap();
+    let vibe_app::PortableDocument::Full(full) =
+        vibe_app::parse_portable_document("export", &bytes).unwrap()
+    else {
+        panic!("rich export must use apps2")
+    };
+    assert_eq!(full.roots, ["org.example/rich@1.0.0"]);
+    let vibe_wire::generated::shared::PortableConfigurationState::Configured(configured) =
+        &full.application[0].configuration
+    else {
+        panic!("full history must not flatten to legacy effective values")
+    };
+    assert_eq!(configured.history.input.intent.features, ["extra"]);
+    assert!(
+        configured
+            .history
+            .definition
+            .features
+            .iter()
+            .any(|feature| feature.id == "extra")
+    );
 }
 
 #[test]

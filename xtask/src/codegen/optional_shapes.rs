@@ -48,7 +48,7 @@
 //! The stitch: the schema side classifies each site by its RESOLVED form
 //! (a `ref` follows the document's own `definitions` — the vocabulary
 //! substitution has placed every fragment there by now) and keys its
-//! decision by (wire name, class); the Rust side classifies each
+//! decision by (wire name, class, declared requiredness); the Rust side classifies each
 //! `Option<Box<…>>` field by its payload type (a primitive, or a local
 //! `pub type` alias resolving to one, against a `pub struct` the file
 //! declares) and cross-checks the class from both sides — a divergence
@@ -69,6 +69,7 @@ use anyhow::{Context, Result, bail};
 use serde_json::{Map, Value};
 
 mod emit;
+mod null_alias;
 
 use emit::apply_with_shapes;
 
@@ -149,7 +150,7 @@ impl Decision {
 /// Which `properties` block a member lives in — visible from both sides
 /// of the stitch, and the difference between an absent key the writer
 /// may omit and a null it must write.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 enum Required {
     /// A member of `properties`: JTD makes it mandatory on the wire.
     Required,
@@ -158,13 +159,13 @@ enum Required {
 }
 
 /// What the schema side of the stitch read out of one resolved schema:
-/// every site's decision keyed by (wire name, class), plus the NUMBER OF
+/// every site's decision keyed by (wire name, class, declared requiredness), plus the NUMBER OF
 /// SITES (not of distinct keys) the pass rules on — the tally the
 /// Rust-side scanner must meet exactly, the tripwire that keeps a
 /// silently skipped field from passing for processed.
 #[derive(Debug)]
 struct OptionalShapes {
-    map: BTreeMap<(String, ShapeClass), Decision>,
+    map: BTreeMap<(String, ShapeClass, Required), Decision>,
     sites: usize,
 }
 
@@ -191,10 +192,11 @@ fn shape_decisions(resolved: &Path, schema: &Path) -> Result<OptionalShapes> {
 /// The same read over an already-parsed document, so the tests drive the
 /// pure half without scratch files.
 fn decisions_from_doc(doc: &Value, schema: &Path) -> Result<OptionalShapes> {
+    null_alias::validate(doc, schema)?;
     let definitions = doc.get("definitions").and_then(Value::as_object);
     let mut sites: Vec<Site<'_>> = Vec::new();
     collect_sites(doc, "", &mut sites);
-    let mut map: BTreeMap<(String, ShapeClass), Decision> = BTreeMap::new();
+    let mut map: BTreeMap<(String, ShapeClass, Required), Decision> = BTreeMap::new();
     // The tally counts the sites this pass RULES ON — a collection
     // member is a site of the walk but not of this pass, and the Rust
     // side's counter never sees it (the empty-policy pass collapsed it),
@@ -207,7 +209,7 @@ fn decisions_from_doc(doc: &Value, schema: &Path) -> Result<OptionalShapes> {
             continue;
         };
         counted += 1;
-        let key = (site.wire.clone(), class);
+        let key = (site.wire.clone(), class, site.required);
         if let Some(existing) = map.get(&key) {
             if *existing != decision {
                 bail!(
@@ -306,6 +308,17 @@ fn site_decision(
     schema: &Path,
 ) -> Result<Option<(ShapeClass, Decision)>> {
     let form = resolve_form(site.node, definitions, &site.path, schema)?;
+    if null_alias::declared(site.node) {
+        let class = if form.contains_key("elements") || form.contains_key("values") {
+            if !site.node.contains_key("ref") {
+                return Ok(None);
+            }
+            ShapeClass::Collection
+        } else {
+            classify_form(form, &site.path, schema)?
+        };
+        return Ok(Some((class, Decision::OptionValue)));
+    }
     if form.contains_key("elements") || form.contains_key("values") {
         if site.required == Required::Required
             && site.node.get("nullable") == Some(&Value::Bool(true))

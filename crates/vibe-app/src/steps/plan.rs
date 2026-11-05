@@ -134,6 +134,8 @@ pub(crate) struct Previous<'a> {
 
 /// Everything one plan is computed from.
 pub(crate) struct PlanInput<'a> {
+    pub import_scope: Option<&'a str>,
+    pub transfer: Option<&'a crate::configuration::PortableTransfer>,
     pub agent_modes: Option<&'a BTreeMap<String, crate::RunMode>>,
     pub configuration: Option<&'a crate::configuration::ConfigurationSubmission>,
     pub resolved: &'a ResolvedPackage,
@@ -194,6 +196,8 @@ pub struct PlannedStep {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
 pub struct Plan {
+    /// Immutable finite import meaning, absent for ordinary operations.
+    pub import_scope: Option<String>,
     /// Legacy secret origins captured by this operation; common records own their own metadata.
     pub secret_origins:
         BTreeMap<String, vibe_wire::generated::shared::ConfigurationParameterOrigin>,
@@ -308,7 +312,7 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
                 BTreeMap::new(),
             )
         } else {
-            if input.configuration.is_some() {
+            if input.configuration.is_some() || input.transfer.is_some() {
                 return Err(crate::configuration::ConfigurationError::Invalid {
                     option: option.id.clone(),
                     reason: "this installer has no common configuration definition".into(),
@@ -407,6 +411,7 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         &work,
     );
     Ok(Plan {
+        import_scope: input.import_scope.map(str::to_owned),
         secret_provided,
         secret_origins,
         configuration,

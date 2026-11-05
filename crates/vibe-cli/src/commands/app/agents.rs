@@ -60,6 +60,22 @@ impl AgentSetup {
         Self::for_saved(ctx, info.hosted, info.agent_external, info.agent.as_deref())
     }
 
+    pub(crate) fn for_import_resume(
+        ctx: &output::Context,
+        info: &vibe_app::ImportResumeInfo,
+    ) -> Result<Self> {
+        if info.cleanup_only {
+            return Ok(Self {
+                config: AgentsConfig::default(),
+                selected: None,
+                hosted: false,
+                assume_yes: false,
+                show: !ctx.is_machine_progress(),
+                attended: global::attended(ctx),
+            });
+        }
+        Self::for_import(ctx, &info.context)
+    }
     pub(crate) fn for_import(
         ctx: &output::Context,
         info: &vibe_wire::generated::shared::ApplicationImportContext,

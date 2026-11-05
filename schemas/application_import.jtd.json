@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Version 1 answer of vibe app import --json (PROP-059#portable-set): the installations the import installed (or, under --dry-run, would install), the rows it skipped with the reason, the rows it refused with the stable error code and message, and the licences the rows it installs (or would install) still need accepted, with the absolute path of each text so a caller shows it before the run. A skipped row whose key carries `#` is a launcher of the arrangement that could not be restored. Any refused row makes the command exit 1.",
+    "description": "Version 1 answer of vibe app import --json (PROP-059#portable-set): the installations the import installed (or, under --dry-run, would install), the rows it skipped with the reason, the rows it refused with the stable error code and message, and the licences the rows it installs (or would install) still need accepted, with the absolute path of each text so a caller shows it before the run. A skipped row whose key carries `#` is a launcher of the arrangement that could not be restored. Any refused row makes the command exit 1. A pending input request exits 2, retains completed prefix results, and identifies the exact import operation and application requiring input.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set"
     },
@@ -15,7 +15,12 @@
       "installed",
       "skipped",
       "refused",
-      "licenses"
+      "licenses",
+      "pending"
+    ],
+    "x-vocabularies": [
+      "application_import_target",
+      "application_import_waiting_input"
     ]
   },
   "properties": {
@@ -117,6 +122,34 @@
           "type": "string"
         }
       }
+    },
+    "pending": {
+      "metadata": {
+        "x-rust-type": "Pending",
+        "x-wire-order": [
+          "target",
+          "input"
+        ]
+      },
+      "properties": {
+        "target": {
+          "ref": "application_import_target",
+          "metadata": {
+            "x-reader-projection": "permissive"
+          }
+        },
+        "input": {
+          "ref": "application_import_waiting_input",
+          "metadata": {
+            "x-reader-projection": "permissive"
+          }
+        }
+      }
+    }
+  },
+  "optionalProperties": {
+    "pending": {
+      "ref": "pending"
     }
   }
 }

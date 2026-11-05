@@ -14,6 +14,43 @@ pub(crate) fn prepare(input: &PlanInput<'_>) -> Result<EvaluatedConfiguration, A
         .configuration
         .as_ref()
         .ok_or_else(|| invalid(&option.id, "no common definition".into()))?;
+    if let Some(transfer) = input.transfer {
+        if input.configuration.is_some() || !input.request.is_empty() {
+            return Err(invalid(&option.id,"portable transfer and ordinary configuration/feature inputs are mutually exclusive".into()));
+        }
+        if transfer
+            .target
+            .installer
+            .as_ref()
+            .is_some_and(|id| id != &option.id)
+        {
+            return Err(invalid(
+                &option.id,
+                "portable target decision names another installer".into(),
+            ));
+        }
+        let result = super::transfer::prepare_required(
+            super::transfer::TransferRequest {
+                definition,
+                history: &transfer.history,
+                target: &transfer.target,
+                ephemeral: input.parameters,
+                facts: input.facts,
+                prompt: input.prompts.parameter.filter(|_| input.attended),
+            },
+            &transfer.required_secrets,
+        )
+        .map_err(|reason| invalid(&option.id, reason))?;
+        return if result.record.evaluation.resolved.is_some() {
+            Ok(result)
+        } else {
+            Err(ConfigurationError::Unresolved {
+                option: format!("{}/{}", input.resolved.package.key(), option.id),
+                evaluation: Box::new(result.record.evaluation),
+            }
+            .into())
+        };
+    }
     let previous = input.previous.and_then(|p| p.configuration);
     let mut edited = input::edit(
         definition,
@@ -237,9 +274,10 @@ pub(crate) fn prepare(input: &PlanInput<'_>) -> Result<EvaluatedConfiguration, A
     let mut answered = std::collections::BTreeSet::new();
     loop {
         let result = evaluate(EvaluationRequest {
+            history_use: crate::configuration::HistoryUse::Local,
             definition,
             input: &edited.input,
-            previous,
+            previous: previous.map(super::ConfigurationHistory::from),
             replacement: fresh,
             reviewed,
             expected_definition: input

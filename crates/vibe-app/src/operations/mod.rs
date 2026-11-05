@@ -9,7 +9,10 @@ mod apply;
 pub(crate) mod import;
 mod install;
 mod planning;
-pub use import::{import_cohort, import_resume_info, resume_import};
+pub use import::{
+    ImportResumeInfo, ImportScope, import_cohort, import_full, import_resume_info,
+    inspect_import_resume, resume_full_import, resume_import,
+};
 pub use install::install;
 use install::install_locked;
 pub use planning::{configuration_plan, plan};
@@ -62,6 +65,8 @@ use apply::Applied;
 #[derive(Clone, Copy)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub struct OperationContext<'a> {
+    /// Immutable public bindings of one verified finite import, with ephemeral scoped answers.
+    pub import_scope: Option<&'a crate::ImportScope<'a>>,
     pub settings: &'a SettingsRoot,
     /// Relay child stdout to stderr so a JSON envelope stays clean.
     pub json: bool,
@@ -155,6 +160,8 @@ impl OperationContext<'_> {
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub struct InstallRequest {
+    /// Historical portable meaning for target reassessment, never fresh default approval.
+    pub transfer: Option<crate::configuration::PortableTransfer>,
     /// Complete common input; absent maintenance input reuses the retained original.
     pub configuration: Option<crate::configuration::ConfigurationSubmission>,
     pub choice: InstallChoice,

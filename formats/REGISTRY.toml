@@ -89,9 +89,18 @@ sunset = "none"
 # child's process id, command line and log path.
 # `vibe app export` / `vibe app import` (PROP-059 `#portable-set`): the
 # portable set of a home's applications and launcher arrangement, written as
-# TOML (or JSON with --json). It is a projection of the index and the user
-# layer, so a lost copy is exported again.
+# TOML (or JSON with --json). Full2 is retained operator transfer intent;
+# archived1 preserves its original projection classification.
 [format.apps-manifest]
+epoch = 2
+schema = "schemas/application/e2/apps.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e2"
+sunset = "none"
+
+[format.apps-manifest-v1]
 epoch = 1
 schema = "schemas/apps_manifest.jtd.json"
 recoverable = true
@@ -1545,10 +1554,37 @@ corpus = "formats/corpora/application/e1"
 sunset = "none"
 
 [format.application-import-work]
+epoch = 2
+schema = "schemas/application/e2/import_work.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e2"
+sunset = "none"
+
+[format.application-import-work-v1]
 epoch = 1
 schema = "schemas/application/e1/import_work.jtd.json"
 recoverable = false
 foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
+sunset = "none"
+
+[format.application-import-input]
+epoch = 1
+schema = "schemas/application/e1/import_input.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
+sunset = "none"
+
+[format.application-import-secrets]
+epoch = 1
+schema = "schemas/application/e1/import_secrets.jtd.json"
+recoverable = false
+foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/application/e1"
 sunset = "none"

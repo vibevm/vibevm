@@ -9,7 +9,8 @@ use serde::{Deserialize, Serialize};
 /// still need accepted, with the absolute path of each text so a caller shows
 /// it before the run. A skipped row whose key carries `#` is a launcher of the
 /// arrangement that could not be restored. Any refused row makes the command
-/// exit 1.
+/// exit 1. A pending input request exits 2, retains completed prefix results,
+/// and identifies the exact import operation and application requiring input.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ApplicationImport {
     pub protocol: String,
@@ -25,7 +26,14 @@ pub struct ApplicationImport {
     pub refused: Vec<Refused>,
 
     pub licenses: Vec<License>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pending: Option<Pending>,
 }
+
+pub use crate::generated::shared::ApplicationImportTarget;
+
+pub use crate::generated::shared::ApplicationImportWaitingInput;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct License {
@@ -34,6 +42,17 @@ pub struct License {
     pub name: String,
 
     pub file: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Pending {
+    #[serde(deserialize_with = "__reader_projection::deserialize_application_import_target_0")]
+    pub target: ApplicationImportTarget,
+
+    #[serde(
+        deserialize_with = "__reader_projection::deserialize_application_import_waiting_input_1"
+    )]
+    pub input: ApplicationImportWaitingInput,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -50,4 +69,152 @@ pub struct Skipped {
     pub key: String,
 
     pub reason: String,
+}
+
+#[doc(hidden)]
+#[allow(clippy::collapsible_if, unused_variables)]
+mod __reader_projection {
+    #[derive(Clone, Copy)]
+    struct NoDuplicateValue;
+
+    impl<'de> serde::de::DeserializeSeed<'de> for NoDuplicateValue {
+        type Value = serde_json::Value;
+
+        fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            deserializer.deserialize_any(NoDuplicateValueVisitor)
+        }
+    }
+
+    struct NoDuplicateValueVisitor;
+
+    impl<'de> serde::de::Visitor<'de> for NoDuplicateValueVisitor {
+        type Value = serde_json::Value;
+
+        fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            formatter.write_str("a JSON value without duplicate object members")
+        }
+
+        fn visit_bool<E>(self, value: bool) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Bool(value))
+        }
+
+        fn visit_i64<E>(self, value: i64) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Number(value.into()))
+        }
+
+        fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Number(value.into()))
+        }
+
+        fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>
+        where
+            E: serde::de::Error,
+        {
+            serde_json::Number::from_f64(value)
+                .map(serde_json::Value::Number)
+                .ok_or_else(|| E::custom("non-finite JSON number"))
+        }
+
+        fn visit_str<E>(self, value: &str) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::String(value.to_string()))
+        }
+
+        fn visit_string<E>(self, value: String) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::String(value))
+        }
+
+        fn visit_none<E>(self) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Null)
+        }
+
+        fn visit_unit<E>(self) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Null)
+        }
+
+        fn visit_some<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)
+        }
+
+        fn visit_newtype_struct<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)
+        }
+
+        fn visit_seq<A>(self, mut sequence: A) -> Result<Self::Value, A::Error>
+        where
+            A: serde::de::SeqAccess<'de>,
+        {
+            let mut items = Vec::new();
+            while let Some(item) = sequence.next_element_seed(NoDuplicateValue)? {
+                items.push(item);
+            }
+            Ok(serde_json::Value::Array(items))
+        }
+
+        fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+        where
+            A: serde::de::MapAccess<'de>,
+        {
+            let mut object = serde_json::Map::new();
+            while let Some(key) = map.next_key::<String>()? {
+                if object.contains_key(&key) {
+                    return Err(<A::Error as serde::de::Error>::custom(
+                        "duplicate object member",
+                    ));
+                }
+                let value = map.next_value_seed(NoDuplicateValue)?;
+                object.insert(key, value);
+            }
+            Ok(serde_json::Value::Object(object))
+        }
+    }
+
+    pub(super) fn deserialize_application_import_target_0<'de, D>(
+        deserializer: D,
+    ) -> Result<crate::generated::shared::ApplicationImportTarget, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_application_import_target(&mut value);
+        serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    pub(super) fn deserialize_application_import_waiting_input_1<'de, D>(
+        deserializer: D,
+    ) -> Result<crate::generated::shared::ApplicationImportWaitingInput, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_application_import_waiting_input(&mut value);
+        serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    fn prune_application_import_target(value: &mut serde_json::Value) {
+        let Some(object) = value.as_object_mut() else {
+            return;
+        };
+        object.retain(|key, _| matches!(key.as_str(), "home" | "operation"));
+    }
+
+    fn prune_application_import_waiting_input(value: &mut serde_json::Value) {
+        let Some(object) = value.as_object_mut() else {
+            return;
+        };
+        object.retain(|key, _| matches!(key.as_str(), "key" | "parameters"));
+        if let Some(child) = object.get_mut("parameters") {
+            if let Some(items) = child.as_array_mut() {
+                for item in items {}
+            }
+        }
+    }
 }

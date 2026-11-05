@@ -742,31 +742,39 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "application_import",
-      "end_line": 122
+      "end_line": 155
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_import.jtd.json",
       "item_kind": "schema-def",
-      "line": 101,
+      "line": 106,
       "symbol": "application_import::license",
-      "end_line": 120
+      "end_line": 125
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_import.jtd.json",
       "item_kind": "schema-def",
-      "line": 81,
+      "line": 126,
+      "symbol": "application_import::pending",
+      "end_line": 148
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application_import.jtd.json",
+      "item_kind": "schema-def",
+      "line": 86,
       "symbol": "application_import::refused",
-      "end_line": 100
+      "end_line": 105
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_import.jtd.json",
       "item_kind": "schema-def",
-      "line": 65,
+      "line": 70,
       "symbol": "application_import::skipped",
-      "end_line": 80
+      "end_line": 85
     },
     {
       "crate_name": "<schema>",
@@ -1719,6 +1727,38 @@
       "line": 228,
       "symbol": "application_work::retention",
       "end_line": 243
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/apps.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "apps",
+      "end_line": 182
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/apps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 91,
+      "symbol": "apps::collection",
+      "end_line": 112
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/apps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 141,
+      "symbol": "apps::launcher",
+      "end_line": 180
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/apps.jtd.json",
+      "item_kind": "schema-def",
+      "line": 113,
+      "symbol": "apps::pin",
+      "end_line": 140
     },
     {
       "crate_name": "<schema>",
@@ -3554,11 +3594,35 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/application/e1/import_input.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "import_input",
+      "end_line": 28
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e1/import_secrets.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "import_secrets",
+      "end_line": 31
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/application/e1/import_work.jtd.json",
       "item_kind": "schema",
       "line": 1,
       "symbol": "import_work",
       "end_line": 36
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/application/e2/import_work.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "import_work",
+      "end_line": 38
     },
     {
       "crate_name": "<schema>",
@@ -9778,16 +9842,16 @@
       "item_kind": "enum",
       "line": 2,
       "symbol": "vibe_app::configuration::error::ConfigurationError",
-      "end_line": 27,
-      "fingerprint": "tok1:3e215f15e34df8e63f52b22f63560ac43b108ce7fa3c036dbd73a096fb220fe4"
+      "end_line": 33,
+      "fingerprint": "tok1:92bceb100ebb81f5ab1b51936298b70effe3e0e9d02ec74ea27919b96524605a"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/configuration/evaluate.rs",
       "item_kind": "struct",
-      "line": 28,
+      "line": 29,
       "symbol": "vibe_app::configuration::evaluate::EvaluatedConfiguration",
-      "end_line": 34,
+      "end_line": 35,
       "fingerprint": "tok1:c33ba99296eff0e9513636009dcf76abc73e1fdfc4606646730e596eb60503a6"
     },
     {
@@ -9796,17 +9860,53 @@
       "item_kind": "struct",
       "line": 8,
       "symbol": "vibe_app::configuration::evaluate::EvaluationRequest",
-      "end_line": 27,
-      "fingerprint": "tok1:a7f395cf5c39e7e13449ec758b96468127ab2c2cbd258ae299296eb1b645fd84"
+      "end_line": 28,
+      "fingerprint": "tok1:69cb39aefb75e402245bf962b7dc29fc862f92d23a276a1fb0c1cae0fe2866c7"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/configuration/evaluate.rs",
       "item_kind": "fn",
-      "line": 35,
+      "line": 36,
       "symbol": "vibe_app::configuration::evaluate::evaluate",
-      "end_line": 272,
-      "fingerprint": "tok1:71f1610504ac8d83a2b1c3b7d78185d1d01b90e91d39b56b4b3881c5b7b31429"
+      "end_line": 283,
+      "fingerprint": "tok1:52df78c883508a282735c0343a831cf0d032e934c831a9a22ddb5dc28b7f9280"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/history.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::configuration::history",
+      "end_line": 2,
+      "fingerprint": "tok1:b142e1f160cad2f13c24b4baaaf382a7b4094e0b9d08751efe3e295fd3092dbf"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/history.rs",
+      "item_kind": "struct",
+      "line": 5,
+      "symbol": "vibe_app::configuration::history::ConfigurationHistory",
+      "end_line": 15,
+      "fingerprint": "tok1:046df85569f3e9761f6d380476a8d7ad563c0647ee48d7d88b4d50e6fab0dcb9"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/history.rs",
+      "item_kind": "enum",
+      "line": 17,
+      "symbol": "vibe_app::configuration::history::HistoricalParameter",
+      "end_line": 35,
+      "fingerprint": "tok1:1b08756abdc51cde98f67b10d2c787873a60622e8be5494356d983dcd539b2a4"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/history.rs",
+      "item_kind": "enum",
+      "line": 73,
+      "symbol": "vibe_app::configuration::history::HistoryUse",
+      "end_line": 83,
+      "fingerprint": "tok1:757f5bfa56650d8c0911650b005dad9fdb98467e6c34306891456f892bfdb136"
     },
     {
       "crate_name": "vibe-app",
@@ -9816,6 +9916,132 @@
       "symbol": "vibe_app::configuration::input::parse_submission",
       "end_line": 28,
       "fingerprint": "tok1:b232913ec6a6f18a266af7e3b01283b591740604a6a0a118b11389d232791216"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/portable.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::configuration::portable",
+      "end_line": 2,
+      "fingerprint": "tok1:b142e1f160cad2f13c24b4baaaf382a7b4094e0b9d08751efe3e295fd3092dbf"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/portable.rs",
+      "item_kind": "fn",
+      "line": 78,
+      "symbol": "vibe_app::configuration::portable::decode",
+      "end_line": 193,
+      "fingerprint": "tok1:b4a3b2a6b321160cdba938b1dce1f08d532992d448d80b258952ba96c382d976"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/portable.rs",
+      "item_kind": "fn",
+      "line": 46,
+      "symbol": "vibe_app::configuration::portable::encode",
+      "end_line": 77,
+      "fingerprint": "tok1:37a8256d1506f8c4d7121b996ee04aa4969e02e637aa266320b86f6d2f120133"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::configuration::transfer",
+      "end_line": 2,
+      "fingerprint": "tok1:d7fdb20a0d529f057ee3c2a810df30c0ac6e5a38919063f61f55cd0e2260be82"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer.rs",
+      "item_kind": "struct",
+      "line": 91,
+      "symbol": "vibe_app::configuration::transfer::PortableTransfer",
+      "end_line": 99,
+      "fingerprint": "tok1:d933849b9d4972a3d7d823e603fea221f81811a723cab4d6450764d912b23445"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer.rs",
+      "item_kind": "fn",
+      "line": 17,
+      "symbol": "vibe_app::configuration::transfer::prepare",
+      "end_line": 22,
+      "fingerprint": "tok1:adf110b2072de0ec2533eb6b40ffebb9201b5541a58dd94fd6ea55a6a197ccbc"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer.rs",
+      "item_kind": "fn",
+      "line": 23,
+      "symbol": "vibe_app::configuration::transfer::prepare_required",
+      "end_line": 85,
+      "fingerprint": "tok1:560b00358937917ac8da2ff9fcbba0e5eea3bba612f5e0e3bc9478915d59e160"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "item_kind": "fn",
+      "line": 173,
+      "symbol": "vibe_app::configuration::transfer::tests::absent_source_host_rebinds_all_origins_then_local_maintenance_keeps_b",
+      "end_line": 245,
+      "fingerprint": "tok1:05cc37e2a428ace9991c950928a796d7d98c2fd12e2b1f8df895e2b10e1b3f1b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "item_kind": "fn",
+      "line": 325,
+      "symbol": "vibe_app::configuration::transfer::tests::changed_automatic_definition_needs_current_review_or_bound_replacement",
+      "end_line": 381,
+      "fingerprint": "tok1:28a71806a1aec72ddba12c25553acc29513bfdef30283c186f4ee8b444648373"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "item_kind": "fn",
+      "line": 247,
+      "symbol": "vibe_app::configuration::transfer::tests::even_optional_nonexistent_path_needs_explicit_target_binding",
+      "end_line": 266,
+      "fingerprint": "tok1:9437365386bd5ddc5203d8b7e918170db9b52560fc8d3a770a03b5fe0f9b7ecd"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "item_kind": "fn",
+      "line": 383,
+      "symbol": "vibe_app::configuration::transfer::tests::optional_explicit_secret_requires_resupply_even_with_public_target_replacement",
+      "end_line": 454,
+      "fingerprint": "tok1:da47a83f3e99fda58912d4163b50741a3a2948bef615d02669b04700a3f60e36"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "item_kind": "fn",
+      "line": 456,
+      "symbol": "vibe_app::configuration::transfer::tests::public_to_secret_reclassification_and_ephemeral_public_inputs_refuse_without_values",
+      "end_line": 492,
+      "fingerprint": "tok1:6779851af8d8b97188f6c5e82d41e9a116ee84a07823a7c4d9cfc8dc9a5c2123"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "item_kind": "fn",
+      "line": 268,
+      "symbol": "vibe_app::configuration::transfer::tests::target_binding_validation_refuses_relative_missing_unknown_nonpath_secret_and_absent",
+      "end_line": 323,
+      "fingerprint": "tok1:7bed186754967668a8076f72a500f2c7190267fb72b71a5570d0aa7091b12c11"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "item_kind": "fn",
+      "line": 494,
+      "symbol": "vibe_app::configuration::transfer::tests::target_preparation_retains_dormant_omitted_and_explicit_empty_answers",
+      "end_line": 550,
+      "fingerprint": "tok1:82053f678188ae28997ed307d881a777d70b7772f4d93b89b2d85c70c01fa22f"
     },
     {
       "crate_name": "vibe-app",
@@ -10550,45 +10776,45 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/mod.rs",
       "item_kind": "enum",
-      "line": 187,
+      "line": 194,
       "symbol": "vibe_app::operations::Command",
-      "end_line": 196,
+      "end_line": 203,
       "fingerprint": "tok1:4fc34953fecb0bc8dd1380838609199e2c8b9e727f516d22a92c8728e4371230"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/mod.rs",
       "item_kind": "struct",
-      "line": 154,
+      "line": 159,
       "symbol": "vibe_app::operations::InstallRequest",
-      "end_line": 185,
-      "fingerprint": "tok1:299d32a8c4963463f1ff45d0565c517fd4455c546892aa478148aa9a7744469f"
+      "end_line": 192,
+      "fingerprint": "tok1:b62d2a350c1616ac7ec60b25ca1715ca7834e9b8f6ed1d6a6af9b24e847922c8"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/mod.rs",
       "item_kind": "struct",
-      "line": 61,
+      "line": 64,
       "symbol": "vibe_app::operations::OperationContext",
-      "end_line": 117,
-      "fingerprint": "tok1:67634e71edc69e5970227b13c86f18698c99619f0487f552905d0c9d4c737cf0"
+      "end_line": 122,
+      "fingerprint": "tok1:9c79dd025b0a05bb7ae0f0000a7db3b94350910bee7c030e7192b613848468a0"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/mod.rs",
       "item_kind": "struct",
-      "line": 198,
+      "line": 205,
       "symbol": "vibe_app::operations::Outcome",
-      "end_line": 211,
+      "end_line": 218,
       "fingerprint": "tok1:eda59408d1379dfc7d278e9e8c444375f107783451a89b84cd962c068516a39b"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/mod.rs",
       "item_kind": "enum",
-      "line": 119,
+      "line": 124,
       "symbol": "vibe_app::operations::ResolverScope",
-      "end_line": 132,
+      "end_line": 137,
       "fingerprint": "tok1:82a95bdb76eed1d6e6c4ca3456607b37c8d70ab6313892610c08a7ab43101ae4"
     },
     {
@@ -10638,30 +10864,462 @@
     },
     {
       "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/bindings.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::operations::import::bindings",
+      "end_line": 2,
+      "fingerprint": "tok1:301defb16a5192caa04ec4b049176777f33a40238e00480bac78652f0c48972f"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/bindings.rs",
+      "item_kind": "struct",
+      "line": 17,
+      "symbol": "vibe_app::operations::import::bindings::ImportScope",
+      "end_line": 28,
+      "fingerprint": "tok1:09607303912b1b6f05c63edd95938f643b9e80dd5acee0485b22c2d6f688d320"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/bindings.rs",
+      "item_kind": "fn",
+      "line": 50,
+      "symbol": "vibe_app::operations::import::bindings::ImportScope<'a>::admit_lookup",
+      "end_line": 68,
+      "fingerprint": "tok1:75b1e288b6791bfaea23967580b7f14e9391724e7eea42e579246a4e83d90ee2"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/bindings.rs",
+      "item_kind": "fn",
+      "line": 347,
+      "symbol": "vibe_app::operations::import::bindings::ImportScope<'a>::compatible",
+      "end_line": 480,
+      "fingerprint": "tok1:dba893e5a18529c2fa48fb578c1256643522cededa8aa03cfe39074636ff50fd"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/bindings/context.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::operations::import::bindings::context",
+      "end_line": 2,
+      "fingerprint": "tok1:6061daec69749e107376f6f35fa14223586cc2b4fbab6716fe9e5f5517a5b81a"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/bindings/context.rs",
+      "item_kind": "fn",
+      "line": 7,
+      "symbol": "vibe_app::operations::import::bindings::context::ImportScope<'a>::new",
+      "end_line": 25,
+      "fingerprint": "tok1:984c41618cf6301e50aa60c13f2b33d898be314aaf8f6c2449b71276c9c8def1"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/completed.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::operations::import::completed",
+      "end_line": 2,
+      "fingerprint": "tok1:1466122056e239b4b7702efd2a814f038838351ab9a2fbda7700133e61d1a908"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/completed.rs",
+      "item_kind": "fn",
+      "line": 6,
+      "symbol": "vibe_app::operations::import::completed::completed_binding",
+      "end_line": 54,
+      "fingerprint": "tok1:3a85166533819e526afefd302514f3d04b5e79cf8ea918fa77692070ca808740"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/completed.rs",
+      "item_kind": "fn",
+      "line": 55,
+      "symbol": "vibe_app::operations::import::completed::walk",
+      "end_line": 148,
+      "fingerprint": "tok1:8ab04c2a943b91245c9b586e8cb173a6dcd91fd8696e3a5ddc872a4e5a38cd2f"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/document.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::operations::import::document",
+      "end_line": 2,
+      "fingerprint": "tok1:7f2c8ab81cf34b828a6cae82430e6b400dd75403b6f7d9bcdfecf6f14c3fa097"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::operations::import::full",
+      "end_line": 2,
+      "fingerprint": "tok1:7f2c8ab81cf34b828a6cae82430e6b400dd75403b6f7d9bcdfecf6f14c3fa097"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full.rs",
+      "item_kind": "fn",
+      "line": 11,
+      "symbol": "vibe_app::operations::import::full::import_full",
+      "end_line": 59,
+      "fingerprint": "tok1:f530126b91192617b2d996be344b81aaa4a9942122c4c2704b04c98468554dd7"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full.rs",
+      "item_kind": "fn",
+      "line": 60,
+      "symbol": "vibe_app::operations::import::full::resume_full_import",
+      "end_line": 187,
+      "fingerprint": "tok1:7f1e2645e1e3db0fae058e7d093dcc355462d63e006dc5f78b9092f395fffc5a"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::operations::import::full::settlement",
+      "end_line": 2,
+      "fingerprint": "tok1:e88869337bd5ac87b5fed4ba2768cefbffe13ed623048d96e295aebac66777ff"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "item_kind": "fn",
+      "line": 5,
+      "symbol": "vibe_app::operations::import::full::settlement::finish",
+      "end_line": 73,
+      "fingerprint": "tok1:2b2a054cf369e23c6347f939bb2341c09ddc7275bd33b5a78105454583f71c90"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "item_kind": "fn",
+      "line": 110,
+      "symbol": "vibe_app::operations::import::full::settlement::release_application",
+      "end_line": 130,
+      "fingerprint": "tok1:5825b4b05cdb02fd08c35301cc914a9fb545d9d366b9bf8abfb4dd8035a6ef39"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "item_kind": "fn",
+      "line": 96,
+      "symbol": "vibe_app::operations::import::full::settlement::release_complete",
+      "end_line": 109,
+      "fingerprint": "tok1:3e849cb50978c239588c8a2963bb177491a64b4db04f0ad12cd39372bdb1a83a"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "item_kind": "fn",
+      "line": 290,
+      "symbol": "vibe_app::operations::import::full::settlement::release_refused",
+      "end_line": 320,
+      "fingerprint": "tok1:45f00acc6fbaccd17ea1b1c086bb414e10b27e5da88ae4e7fb848268aa244c30"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "item_kind": "fn",
+      "line": 244,
+      "symbol": "vibe_app::operations::import::full::settlement::settle_error",
+      "end_line": 289,
+      "fingerprint": "tok1:c8921753e7525a0ea9c3fdda154da4892ed99d4eadc09c8f624b93c7dc4fb52d"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "item_kind": "fn",
+      "line": 322,
+      "symbol": "vibe_app::operations::import::full::settlement::verify_scope",
+      "end_line": 356,
+      "fingerprint": "tok1:e8f09a46402bc52bb9882236f5882da9fc885014c6780da74ad0215338cacf44"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "item_kind": "fn",
+      "line": 223,
+      "symbol": "vibe_app::operations::import::full::settlement::wait_error",
+      "end_line": 242,
+      "fingerprint": "tok1:3c700f5f9495477dc0efe77594f5cd71aa7bdeb6d65e1c2a22d4042579cc7595"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::operations::import::full_store",
+      "end_line": 2,
+      "fingerprint": "tok1:7f2c8ab81cf34b828a6cae82430e6b400dd75403b6f7d9bcdfecf6f14c3fa097"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store.rs",
+      "item_kind": "fn",
+      "line": 7,
+      "symbol": "vibe_app::operations::import::full_store::load",
+      "end_line": 30,
+      "fingerprint": "tok1:8fbcfe32146ed5dde9decea9c37158b354cc5cefe62d48f8bc010a582bb16437"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store.rs",
+      "item_kind": "fn",
+      "line": 37,
+      "symbol": "vibe_app::operations::import::full_store::save_full",
+      "end_line": 58,
+      "fingerprint": "tok1:a70f76a021d66b28c8e1420c7fe6e5abd7c07fe7297824a8af60cef221f63c16"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "item_kind": "fn",
+      "line": 317,
+      "symbol": "vibe_app::operations::import::full_store::tests::arrangement_and_complete_require_settled_roots_without_current_or_waiting",
+      "end_line": 356,
+      "fingerprint": "tok1:301c0a88f83ddd4cf522d820d379ba6c8ed7d8339818a34ad77d5c5c3ece399b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "item_kind": "fn",
+      "line": 408,
+      "symbol": "vibe_app::operations::import::full_store::tests::both_closed_readers_reject_unknown_fields_and_missing_required_nullable_members",
+      "end_line": 426,
+      "fingerprint": "tok1:2039c21e8ac836aa6d2bb53fe69119adce03d48bfa3c122efa9ed13f83cccb03"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "item_kind": "fn",
+      "line": 214,
+      "symbol": "vibe_app::operations::import::full_store::tests::closed_v1_and_v2_read_exact_bytes_without_migration_or_source_access",
+      "end_line": 233,
+      "fingerprint": "tok1:be98f98275718f3d741a60b857ec2827d503eada03fb5d74218ca3d85a6e499f"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "item_kind": "fn",
+      "line": 428,
+      "symbol": "vibe_app::operations::import::full_store::tests::invalid_full_save_cannot_replace_existing_closed_record",
+      "end_line": 437,
+      "fingerprint": "tok1:74bfa03bd8b8a3b0c070669371354079dee70568ed15044bf088549e7b60ef01"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "item_kind": "fn",
+      "line": 358,
+      "symbol": "vibe_app::operations::import::full_store::tests::private_map_identity_waiting_and_outcome_checks_remain_enforced",
+      "end_line": 406,
+      "fingerprint": "tok1:5f74184cd1648b0f62a52918cb39b29ca2af62459bf19098a52795359dbe44a0"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "item_kind": "fn",
+      "line": 439,
+      "symbol": "vibe_app::operations::import::full_store::tests::settled_cursor_requires_exactly_one_outcome_for_every_prefix_root",
+      "end_line": 448,
+      "fingerprint": "tok1:a468ef4d998b531a6315eb045e6660457da49ce31f62b5bfd478bb5c5fd7acb8"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "item_kind": "fn",
+      "line": 235,
+      "symbol": "vibe_app::operations::import::full_store::tests::shared_row_admission_rejects_missing_inconsistent_edges_roots_and_secret_overlap",
+      "end_line": 315,
+      "fingerprint": "tok1:876ec6b99fe8d11afc3e90404cae3e65220d97266d0ea33b7cd4c531586e5245"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "item_kind": "fn",
+      "line": 449,
+      "symbol": "vibe_app::operations::import::full_store::tests::waiting_cannot_authorize_an_unused_orphan_or_unstarted_descendant",
+      "end_line": 469,
+      "fingerprint": "tok1:31627aa92f2b432b9c3b79eef8280cfda9d4b4934f428ae7aa43280dea60bfff"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/full_store.rs",
+      "item_kind": "fn",
+      "line": 59,
+      "symbol": "vibe_app::operations::import::full_store::validate",
+      "end_line": 176,
+      "fingerprint": "tok1:57d85bf237264ba2811a724e3e477eea987d178071445be40c70c9da0c589ae8"
+    },
+    {
+      "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/import.rs",
       "item_kind": "fn",
-      "line": 13,
+      "line": 27,
       "symbol": "vibe_app::operations::import::import_cohort",
-      "end_line": 28,
+      "end_line": 42,
       "fingerprint": "tok1:f0053680f58c0fcb75c1318a0256a1c83eebce3efd57019597c43afbbca2e494"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/import.rs",
       "item_kind": "fn",
-      "line": 29,
+      "line": 43,
       "symbol": "vibe_app::operations::import::import_resume_info",
-      "end_line": 38,
-      "fingerprint": "tok1:b58de1c0a2f0b6390c2d54f5ccf1233ba25535e28e77a9481446f259ab73788b"
+      "end_line": 52,
+      "fingerprint": "tok1:4fac8817e6785d416fd935f2f50aff644045811284ddf7988067db0808fba281"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::operations::import::receipts",
+      "end_line": 2,
+      "fingerprint": "tok1:8db041e393c33d97f0b231adf8f742baabc7570d3f48308f63ddf9d18dd080f7"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "fn",
+      "line": 393,
+      "symbol": "vibe_app::operations::import::receipts::check_old_edge",
+      "end_line": 436,
+      "fingerprint": "tok1:dfde5675cda633b5f3cdf1964c54deb44ea6a8bf17323785b8361d81c1345758"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "fn",
+      "line": 214,
+      "symbol": "vibe_app::operations::import::receipts::collect",
+      "end_line": 329,
+      "fingerprint": "tok1:9a2ead2ab07c6a904efb9eacee49f6daeb58befd135c2bb2e6241795c66a4cab"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "fn",
+      "line": 489,
+      "symbol": "vibe_app::operations::import::receipts::completed",
+      "end_line": 505,
+      "fingerprint": "tok1:9d319f5117d1dd740d5b8d0c34654528b3233b30e40b33d63be1a624dde99924"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "fn",
+      "line": 509,
+      "symbol": "vibe_app::operations::import::receipts::family_ready",
+      "end_line": 586,
+      "fingerprint": "tok1:61b2cf0f54aa13d23a6400edebbcd5b3606a4eaef5f2c29f16ab122e49b745be"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_app::operations::import::receipts::owns",
+      "end_line": 105,
+      "fingerprint": "tok1:b4d6870e62a0778dbe6cdbff2b1ae76866fc4473026f458e56cc8f15ab7f54bf"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "fn",
+      "line": 107,
+      "symbol": "vibe_app::operations::import::receipts::preserve",
+      "end_line": 197,
+      "fingerprint": "tok1:279a50484fa9161d9331c02082dbe567a993d199a342075db97ee78972149604"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "fn",
+      "line": 438,
+      "symbol": "vibe_app::operations::import::receipts::prove",
+      "end_line": 487,
+      "fingerprint": "tok1:c66c53e00bbdbbd7fa106eb5cd0760d4443662e60b8b52717fc6c7a2487b57c6"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "fn",
+      "line": 331,
+      "symbol": "vibe_app::operations::import::receipts::recover",
+      "end_line": 370,
+      "fingerprint": "tok1:0cdd77fed30fad2efd4db3e63a7472c0c3a9eaf173b581aab8f3e8e3c74db53f"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "fn",
+      "line": 372,
+      "symbol": "vibe_app::operations::import::receipts::set_state",
+      "end_line": 391,
+      "fingerprint": "tok1:efd706a4b1b6aa76c68ad64177dc150eda9e5cd2d57a7c406e05fe91f3a99df0"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "item_kind": "fn",
+      "line": 17,
+      "symbol": "vibe_app::operations::import::receipts::validate",
+      "end_line": 93,
+      "fingerprint": "tok1:80caa1b0e7b5bc655723ee8ff61b02e4affb730365f83290f9ba09f4c691f007"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/recovery.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::operations::import::recovery",
+      "end_line": 2,
+      "fingerprint": "tok1:e88869337bd5ac87b5fed4ba2768cefbffe13ed623048d96e295aebac66777ff"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/recovery.rs",
+      "item_kind": "struct",
+      "line": 6,
+      "symbol": "vibe_app::operations::import::recovery::ImportResumeInfo",
+      "end_line": 14,
+      "fingerprint": "tok1:731db22b1f374ae0ecc00af87c6a4d41d8273e304781aa8725209f5a38e5a309"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/recovery.rs",
+      "item_kind": "fn",
+      "line": 15,
+      "symbol": "vibe_app::operations::import::recovery::inspect_import_resume",
+      "end_line": 44,
+      "fingerprint": "tok1:974eb7701a53840c4a547f1d0ee2f7119bf97e08f0243958e17dd0d32febc8af"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/import/recovery.rs",
+      "item_kind": "fn",
+      "line": 45,
+      "symbol": "vibe_app::operations::import::recovery::scope_from_state",
+      "end_line": 69,
+      "fingerprint": "tok1:4ec2396632782e5b7eff2da7b208b137f2b6a10efe696116a271f13b0e72d350"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/import.rs",
       "item_kind": "fn",
-      "line": 39,
+      "line": 53,
       "symbol": "vibe_app::operations::import::resume_import",
-      "end_line": 81,
-      "fingerprint": "tok1:6e156f051a7561c9d7b2895d3aa28875ccfda2ab9e390198129285813d2b9104"
+      "end_line": 95,
+      "fingerprint": "tok1:eb919403a805be160a5d592f4227d37b0beb27ef53c7c7fa6b3504c50876dde4"
     },
     {
       "crate_name": "vibe-app",
@@ -10800,11 +11458,29 @@
     },
     {
       "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/pending/identity.rs",
+      "item_kind": "fn",
+      "line": 40,
+      "symbol": "vibe_app::operations::pending::identity::execution",
+      "end_line": 112,
+      "fingerprint": "tok1:d3b585a8c9aef9e595056b8b22c2ca95b47a888880ff4654fec876cb2e8c43be"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/operations/pending/identity.rs",
+      "item_kind": "fn",
+      "line": 133,
+      "symbol": "vibe_app::operations::pending::identity::matches_import",
+      "end_line": 148,
+      "fingerprint": "tok1:963c3d498bbd070c05396796484c54ceb1ef771de30dbd84934974ed8a212617"
+    },
+    {
+      "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/operations/planning.rs",
       "item_kind": "fn",
-      "line": 161,
+      "line": 171,
       "symbol": "vibe_app::operations::planning::configuration_plan",
-      "end_line": 205,
+      "end_line": 215,
       "fingerprint": "tok1:3604593583c41da8b4324a35eaf06b862b8dc4c6d1a9d59e844e7ada0574b64f"
     },
     {
@@ -10901,27 +11577,27 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/portable.rs",
       "item_kind": "enum",
-      "line": 187,
+      "line": 217,
       "symbol": "vibe_app::portable::ImportAction",
-      "end_line": 197,
+      "end_line": 227,
       "fingerprint": "tok1:cc2a8db3bf6975e64dab93a62a8b7457cebb7ae9abd578162efcfcb29619bd20"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/portable.rs",
       "item_kind": "struct",
-      "line": 199,
+      "line": 229,
       "symbol": "vibe_app::portable::ImportInstall",
-      "end_line": 210,
+      "end_line": 240,
       "fingerprint": "tok1:30c27a6c40a5842bd3e05432065806261e66f48e78d6a1cea8921a7c7a70090e"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/portable.rs",
       "item_kind": "struct",
-      "line": 57,
+      "line": 76,
       "symbol": "vibe_app::portable::PortableExport",
-      "end_line": 66,
+      "end_line": 85,
       "fingerprint": "tok1:55d881eedaf8fb28411fb6ca151e5cb7fd1b0c1c7c845008c69438a9153d4432"
     },
     {
@@ -10971,29 +11647,497 @@
     },
     {
       "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::portable::document",
+      "end_line": 2,
+      "fingerprint": "tok1:b142e1f160cad2f13c24b4baaaf382a7b4094e0b9d08751efe3e295fd3092dbf"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "item_kind": "enum",
+      "line": 7,
+      "symbol": "vibe_app::portable::document::PortableDocument",
+      "end_line": 13,
+      "fingerprint": "tok1:4cd0ce202bb464bfc40c115c5e4aea443633cadd97660f19d5f0eb1f437a39f4"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "item_kind": "fn",
+      "line": 15,
+      "symbol": "vibe_app::portable::document::PortableDocument::application_count",
+      "end_line": 22,
+      "fingerprint": "tok1:4852cf233d9eff660bb7d28c224c5a59a1d0061f6cc1e545d23175312ec5dcae"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "item_kind": "fn",
+      "line": 23,
+      "symbol": "vibe_app::portable::document::PortableDocument::json",
+      "end_line": 35,
+      "fingerprint": "tok1:8495532cd739ec8f747646376e50a79f1066c635544f12ff14c53320df1ff5df"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "item_kind": "fn",
+      "line": 36,
+      "symbol": "vibe_app::portable::document::PortableDocument::toml",
+      "end_line": 43,
+      "fingerprint": "tok1:632dbe13c0d2510feba316d9015df29985da825beb4a37c1b7332c21b5303949"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "item_kind": "fn",
+      "line": 60,
+      "symbol": "vibe_app::portable::document::parse_portable_document",
+      "end_line": 100,
+      "fingerprint": "tok1:b0787821dec471ba078e026a85074bf29d2b99da4427a01d94227a20c93e2446"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "item_kind": "fn",
+      "line": 195,
+      "symbol": "vibe_app::portable::document::selected_import_keys",
+      "end_line": 201,
+      "fingerprint": "tok1:116e98f822cc82d7db8e46a2fb37db1322983e912445e946932cf7c61e67e250"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/document/tests.rs",
+      "item_kind": "fn",
+      "line": 58,
+      "symbol": "vibe_app::portable::document::tests::legacy_public_secret_overlap_refuses_json_and_toml_without_echoing_the_value",
+      "end_line": 91,
+      "fingerprint": "tok1:40aff6c35a5078abbb543f787f8485961d29bf865751eb44f2089a91c1007f24"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/document/tests.rs",
+      "item_kind": "fn",
+      "line": 93,
+      "symbol": "vibe_app::portable::document::tests::shared_row_admission_keeps_root_identity_and_required_edge_checks",
+      "end_line": 132,
+      "fingerprint": "tok1:ef3b5dad55e3d091fedc49eda6374ad651875123b859d82f59014eb3df94755a"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "item_kind": "fn",
+      "line": 108,
+      "symbol": "vibe_app::portable::document::validate_rows",
+      "end_line": 190,
+      "fingerprint": "tok1:e9b0605c22aa6a785bc643e3cf59bd1f895d9598c942854d8b4d27470f29d307"
+    },
+    {
+      "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/portable.rs",
       "item_kind": "fn",
-      "line": 212,
+      "line": 145,
+      "symbol": "vibe_app::portable::export_portable",
+      "end_line": 154,
+      "fingerprint": "tok1:e0d0f11a56bd1511194254b16a464f2db8c70061de24b6273dff0106982b66e7"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_context_tests.rs",
+      "item_kind": "fn",
+      "line": 5,
+      "symbol": "vibe_app::portable::full_context_tests::changed_future_binding_refuses_before_resupply_checkpoint_or_effects",
+      "end_line": 50,
+      "fingerprint": "tok1:68bdcd0c52d1afa4c8b8548a0b7183de00edaf345cd7adb5c53856f6bbc58b02"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_context_tests.rs",
+      "item_kind": "fn",
+      "line": 52,
+      "symbol": "vibe_app::portable::full_context_tests::immutable_scope_changes_for_roots_and_history_but_not_current_secret_answers",
+      "end_line": 120,
+      "fingerprint": "tok1:75ebac6ded0f4b32e7dc0b0d16538ea8742a63b74d06e59cb1ac624385343417"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_app::portable::full_dependency_resume_tests",
+      "end_line": 3,
+      "fingerprint": "tok1:7f2c8ab81cf34b828a6cae82430e6b400dd75403b6f7d9bcdfecf6f14c3fa097"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "item_kind": "fn",
+      "line": 257,
+      "symbol": "vibe_app::portable::full_dependency_resume_tests::deep_legacy_and_direct_roots_share_one_scoped_secret_child",
+      "end_line": 271,
+      "fingerprint": "tok1:31ac3d07b2bed6e311a3e7470eec67b5a225ac6be9210a5e8bb2dd33b2a76921"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "item_kind": "fn",
+      "line": 327,
+      "symbol": "vibe_app::portable::full_dependency_resume_tests::direct_child_finish_resume_allows_later_cohort_reuse_without_child_source_or_secret",
+      "end_line": 384,
+      "fingerprint": "tok1:8b8087fc78f05db7e6ad75a3806bbc78d76688bb7aa4725f92b23916ac8cae1b"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "item_kind": "fn",
+      "line": 446,
+      "symbol": "vibe_app::portable::full_dependency_resume_tests::direct_resume_of_target_only_child_uses_only_its_exact_ephemeral_answers",
+      "end_line": 508,
+      "fingerprint": "tok1:1c77d071b055f4c8632a001478dca9fa96a16082cc62abb25b3da684ab324777"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "item_kind": "fn",
+      "line": 386,
+      "symbol": "vibe_app::portable::full_dependency_resume_tests::full_export_sees_target_only_dependency_before_its_work_starts",
+      "end_line": 436,
+      "fingerprint": "tok1:2bf6538bccb929814000493dee2c9e16923528f7b472c003fdd5a92e6e4c0adc"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "item_kind": "fn",
+      "line": 273,
+      "symbol": "vibe_app::portable::full_dependency_resume_tests::missing_deep_secret_retains_real_owner_chain_then_resumes_without_public_files",
+      "end_line": 325,
+      "fingerprint": "tok1:ec4814302bac9c3b8fe54cde0d65b8db2fd0fddb0d2d74a8da3433e2ef634a4e"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_app::portable::full_dependency_tests",
+      "end_line": 3,
+      "fingerprint": "tok1:301defb16a5192caa04ec4b049176777f33a40238e00480bac78652f0c48972f"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_tests.rs",
+      "item_kind": "fn",
+      "line": 314,
+      "symbol": "vibe_app::portable::full_dependency_tests::compatible_existing_manual_child_is_reused_without_demotion_or_rerun",
+      "end_line": 360,
+      "fingerprint": "tok1:ed127c348c85246dcdff1a42b60ee9d42acc196961cef53090b36dcdd5561db0"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_tests.rs",
+      "item_kind": "fn",
+      "line": 299,
+      "symbol": "vibe_app::portable::full_dependency_tests::compatible_roots_consume_the_imported_exact_child_once",
+      "end_line": 312,
+      "fingerprint": "tok1:d121fae428d153f9afb77ed2c2c18f2e3d8d7e1f3f2fd242497faa6b677b825e"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_tests.rs",
+      "item_kind": "fn",
+      "line": 270,
+      "symbol": "vibe_app::portable::full_dependency_tests::conflicting_same_key_child_refuses_before_parent_effect_and_preserves_the_child",
+      "end_line": 297,
+      "fingerprint": "tok1:ed84b6ae713a0f401f710c398b4f0f429f8a78c29b2e4d0bbeb6aa8757ee6bd7"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_dependency_tests.rs",
+      "item_kind": "fn",
+      "line": 233,
+      "symbol": "vibe_app::portable::full_dependency_tests::imported_exact_configured_child_beats_a_newer_satisfying_installed_version",
+      "end_line": 268,
+      "fingerprint": "tok1:31ef905415072eeb3e3c8f3f285a81a19dff5f851b10e6fb9c462b12a43b48d5"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_export.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::portable::full_export",
+      "end_line": 2,
+      "fingerprint": "tok1:b142e1f160cad2f13c24b4baaaf382a7b4094e0b9d08751efe3e295fd3092dbf"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_export.rs",
+      "item_kind": "fn",
+      "line": 18,
+      "symbol": "vibe_app::portable::full_export::export",
+      "end_line": 152,
+      "fingerprint": "tok1:3df3e7a0d22cc247e8cd647b69ef2e3e89319286ab41ccba7cf85b409616efa9"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_import_tests.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_app::portable::full_import_tests",
+      "end_line": 4,
+      "fingerprint": "tok1:7f2c8ab81cf34b828a6cae82430e6b400dd75403b6f7d9bcdfecf6f14c3fa097"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_import_tests.rs",
+      "item_kind": "fn",
+      "line": 208,
+      "symbol": "vibe_app::portable::full_import_tests::actual_a_install_export_then_b_import_preserves_input_and_executes_bound_payload",
+      "end_line": 282,
+      "fingerprint": "tok1:7f0d35037f0d2f9a24816b7a1409f98a7b7cec52a774eef3b2446c4915e85601"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_import_tests.rs",
+      "item_kind": "fn",
+      "line": 301,
+      "symbol": "vibe_app::portable::full_import_tests::missing_previously_supplied_secret_keeps_exact_cohort_waiting_before_effects",
+      "end_line": 380,
+      "fingerprint": "tok1:c0d78847760b6227ab6b101959c864b24798e5a18a7de46eb26a96f2fc4c52d3"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_import_tests.rs",
+      "item_kind": "fn",
+      "line": 382,
+      "symbol": "vibe_app::portable::full_import_tests::same_key_candidate_with_altered_history_refuses_before_cohort_or_effects",
+      "end_line": 417,
+      "fingerprint": "tok1:863121291a34104180de612f45832338bdf4054127cfa174ad1bc638b5d1e365"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_lookup_tests.rs",
+      "item_kind": "fn",
+      "line": 4,
+      "symbol": "vibe_app::portable::full_lookup_tests::target_only_query_refuses_changed_route_before_callback_then_accepts_saved_route",
+      "end_line": 51,
+      "fingerprint": "tok1:f5b4e5771203d93ed720d478928399f65a6535e18db05f2b5b76b86a636e6c03"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_prepare.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::portable::full_prepare",
+      "end_line": 2,
+      "fingerprint": "tok1:7f2c8ab81cf34b828a6cae82430e6b400dd75403b6f7d9bcdfecf6f14c3fa097"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_prepare.rs",
+      "item_kind": "struct",
+      "line": 19,
+      "symbol": "vibe_app::portable::full_prepare::FullImportCandidate",
+      "end_line": 24,
+      "fingerprint": "tok1:27e12e886e7de629b3f4b03c00a900db4d0223f648b85d8bd458adda458f1a2d"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_prepare.rs",
+      "item_kind": "struct",
+      "line": 25,
+      "symbol": "vibe_app::portable::full_prepare::FullImportPreparation",
+      "end_line": 34,
+      "fingerprint": "tok1:0d968fb0af333cd85a9eb17d1c37e63587f20239ad01fc5b852c3c38d423cffc"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_prepare.rs",
+      "item_kind": "struct",
+      "line": 12,
+      "symbol": "vibe_app::portable::full_prepare::PreparedFullImport",
+      "end_line": 18,
+      "fingerprint": "tok1:4d2769a7e4ccdda24cfe5de87e7d94f2a0c4ed02724865cc3d543e94be80c715"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_prepare.rs",
+      "item_kind": "fn",
+      "line": 38,
+      "symbol": "vibe_app::portable::full_prepare::prepare_full_import",
+      "end_line": 260,
+      "fingerprint": "tok1:6e6e437caac7e30be4edca361b4a3bd712439afe52fbd7c5a2d86d5bd66df4d9"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_preview.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::portable::full_preview",
+      "end_line": 2,
+      "fingerprint": "tok1:85c220866ba8ef4c22576a125a4186ecaf4367c4cfae23ecebb6690c04dab957"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_preview.rs",
+      "item_kind": "enum",
+      "line": 6,
+      "symbol": "vibe_app::portable::full_preview::FullImportPreview",
+      "end_line": 13,
+      "fingerprint": "tok1:43efa14ddd4924530c7f377ca62efbe8573fc9844d9d9f775c6cb0f9aea7e4f2"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_preview.rs",
+      "item_kind": "fn",
+      "line": 14,
+      "symbol": "vibe_app::portable::full_preview::preview_full_import",
+      "end_line": 75,
+      "fingerprint": "tok1:9f52e81c5f406c77682416d9d268679ff58855600f9a3cf16e9dafdb95ddf656"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_receipt_recovery_tests.rs",
+      "item_kind": "fn",
+      "line": 204,
+      "symbol": "vibe_app::portable::full_receipt_recovery_tests::completed_cohort_cleanup_reopens_without_sources_or_consuming_repeated_answers",
+      "end_line": 240,
+      "fingerprint": "tok1:6ca6feb8ccd9fdb90ed1501adcdb504391251e2f90723375bd37f2f03520ec70"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_receipt_recovery_tests.rs",
+      "item_kind": "fn",
+      "line": 150,
+      "symbol": "vibe_app::portable::full_receipt_recovery_tests::missing_captured_edge_or_changed_publication_refuses_before_future_root_effects",
+      "end_line": 197,
+      "fingerprint": "tok1:11d2c3b7931714dcac96aa4ab45bf110c1bf796bdc3e9e934ac5d3aa1f2b35da"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_receipt_recovery_tests.rs",
+      "item_kind": "fn",
+      "line": 123,
+      "symbol": "vibe_app::portable::full_receipt_recovery_tests::public_resume_recovers_captured_moved_and_unlinked_transfer_cuts",
+      "end_line": 149,
+      "fingerprint": "tok1:cce7998e5322a92df47ab02f85b95085dbca48b76e6a658da999ea38a4176981"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_refused_tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_app::portable::full_refused_tests",
+      "end_line": 3,
+      "fingerprint": "tok1:8db041e393c33d97f0b231adf8f742baabc7570d3f48308f63ddf9d18dd080f7"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_refused_tests.rs",
+      "item_kind": "fn",
+      "line": 169,
+      "symbol": "vibe_app::portable::full_refused_tests::refused_root_does_not_manufacture_imported_receipts_for_target_only_children",
+      "end_line": 199,
+      "fingerprint": "tok1:9b7029cd257ad08848ee1d83d5df170a235f02f35308875a47e482216574d72c"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_refused_tests.rs",
+      "item_kind": "fn",
+      "line": 52,
+      "symbol": "vibe_app::portable::full_refused_tests::refused_root_retry_reuses_reserved_successful_secret_descendants",
+      "end_line": 167,
+      "fingerprint": "tok1:ba054c15405ecf62dfe96247fa3aa1c52147000b228eda0fa8d967fcc3606fb8"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/full_target_only_tests.rs",
+      "item_kind": "fn",
+      "line": 4,
+      "symbol": "vibe_app::portable::full_target_only_tests::ordinary_child_question_is_not_mislabeled_as_root_secret_input",
+      "end_line": 56,
+      "fingerprint": "tok1:11d960a1fd1c6a08478514e6f0b67e020b1f8e5ecd2584ef423b6e4814905660"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable.rs",
+      "item_kind": "fn",
+      "line": 242,
       "symbol": "vibe_app::portable::import_action",
-      "end_line": 296,
+      "end_line": 326,
       "fingerprint": "tok1:be300b7f1191d6f5ecbddb10b83fd00dd2a70da0bd883b435aaa65a1da62d308"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/portable.rs",
       "item_kind": "fn",
-      "line": 298,
+      "line": 328,
       "symbol": "vibe_app::portable::import_license",
-      "end_line": 333,
+      "end_line": 363,
       "fingerprint": "tok1:e4d6c07d87443c9447ad36e791acd8c326769a8ad5a2ace39fbd6881975c9cef"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/inputs.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::portable::inputs",
+      "end_line": 2,
+      "fingerprint": "tok1:a85e2fd0db7a7e9126fd7f322697e88f906d935b9b5bde4785f75a7bfbee9163"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/inputs.rs",
+      "item_kind": "struct",
+      "line": 9,
+      "symbol": "vibe_app::portable::inputs::ImportSecrets",
+      "end_line": 15,
+      "fingerprint": "tok1:3aa1b6b975b886ac0d24b2b68df34570dbd14e55072a601c39f43074992f6d8e"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/inputs.rs",
+      "item_kind": "fn",
+      "line": 43,
+      "symbol": "vibe_app::portable::inputs::parse_import_secrets",
+      "end_line": 71,
+      "fingerprint": "tok1:4f7e41302536efd098c2503ccaa2127c2ac48e0ac402a05ccc3b494fe0f33eea"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/inputs.rs",
+      "item_kind": "fn",
+      "line": 72,
+      "symbol": "vibe_app::portable::inputs::parse_import_target",
+      "end_line": 108,
+      "fingerprint": "tok1:2f0c42034924b24964faf20e1c4dc8ca1bbf61c1032221f94695f92c469925d7"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/legacy_target.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::portable::legacy_target",
+      "end_line": 2,
+      "fingerprint": "tok1:d7fdb20a0d529f057ee3c2a810df30c0ac6e5a38919063f61f55cd0e2260be82"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/portable/legacy_target.rs",
+      "item_kind": "fn",
+      "line": 14,
+      "symbol": "vibe_app::portable::legacy_target::public",
+      "end_line": 83,
+      "fingerprint": "tok1:96ab573141498056950c581612220c962c4ab5a2bbab08e99e6f5a74a5c38a1d"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/portable.rs",
       "item_kind": "fn",
-      "line": 68,
+      "line": 87,
       "symbol": "vibe_app::portable::portable_set",
-      "end_line": 124,
+      "end_line": 143,
       "fingerprint": "tok1:b6efdbab58da2755f4b00cc8a58dc913645d272d9dc41e7ef159b2569e66eaad"
     },
     {
@@ -11389,8 +12533,8 @@
       "item_kind": "fn",
       "line": 269,
       "symbol": "vibe_app::steps::params::tests::classified_parameter_debug_redacts_only_the_secret_value",
-      "end_line": 338,
-      "fingerprint": "tok1:c819eb62ecd0554f6e581407a6a9a3dcf34680452746111c8e4ea2a20b04076a"
+      "end_line": 339,
+      "fingerprint": "tok1:7fcdde9935c61935e5f95d91af8ea6401a991b3a5d2c9a6789bb95d9b44e972c"
     },
     {
       "crate_name": "vibe-app",
@@ -11459,10 +12603,10 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 193,
+      "line": 195,
       "symbol": "vibe_app::steps::plan::Plan",
-      "end_line": 229,
-      "fingerprint": "tok1:3174da671212f55462aaad658aacfbba85654976c367d598d9147eb16eaf46f2"
+      "end_line": 233,
+      "fingerprint": "tok1:603ae0717a80532691cae8012603a842c2cdd452a9f578093bf2d1b497f67516"
     },
     {
       "crate_name": "vibe-app",
@@ -11477,18 +12621,18 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 172,
+      "line": 174,
       "symbol": "vibe_app::steps::plan::PlannedStep",
-      "end_line": 191,
+      "end_line": 193,
       "fingerprint": "tok1:95365abf88d7e35a84195066ff831ee855884b93d8461b0f14bdf38c8dde62c6"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/plan.rs",
       "item_kind": "struct",
-      "line": 160,
+      "line": 162,
       "symbol": "vibe_app::steps::plan::RequiredBy",
-      "end_line": 170,
+      "end_line": 172,
       "fingerprint": "tok1:4b3b4e3a00c3ffc45ae5d43a3660b4ff91e1f32544e12a3d856fccec94829393"
     },
     {
@@ -11655,6 +12799,51 @@
     },
     {
       "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/tests/portable_transfer.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_app::steps::tests::portable_transfer",
+      "end_line": 3,
+      "fingerprint": "tok1:d7fdb20a0d529f057ee3c2a810df30c0ac6e5a38919063f61f55cd0e2260be82"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/tests/portable_transfer.rs",
+      "item_kind": "fn",
+      "line": 222,
+      "symbol": "vibe_app::steps::tests::portable_transfer::portable_configured_history_cannot_fall_through_a_legacy_installer",
+      "end_line": 242,
+      "fingerprint": "tok1:c66bfb463547502aaf5de592a7a1b0f63039dc5212db2260230ae0ebec1ec168"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/tests/portable_transfer.rs",
+      "item_kind": "fn",
+      "line": 199,
+      "symbol": "vibe_app::steps::tests::portable_transfer::portable_planner_refuses_ordinary_configuration_or_feature_inputs",
+      "end_line": 220,
+      "fingerprint": "tok1:001014d7fb1d9ce0b4f653317023ffce24460868d77ddeb4b1be8c909220c1e8"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/tests/portable_transfer.rs",
+      "item_kind": "fn",
+      "line": 244,
+      "symbol": "vibe_app::steps::tests::portable_transfer::portable_target_installer_must_match_the_actual_planned_option",
+      "end_line": 262,
+      "fingerprint": "tok1:78f3352c5dfaece4e3f0f2d17af59715c1ea72c3d47b6f6e86f444d7a6956842"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/steps/tests/portable_transfer.rs",
+      "item_kind": "fn",
+      "line": 157,
+      "symbol": "vibe_app::steps::tests::portable_transfer::transported_source_history_reaches_target_planner_with_original_input_and_origins",
+      "end_line": 197,
+      "fingerprint": "tok1:03cc7fd580b63d83d8db6d6302d4a85f50594b225a069f38997b6fca40e04516"
+    },
+    {
+      "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/steps/work.rs",
       "item_kind": "mod",
       "line": 7,
@@ -11677,8 +12866,8 @@
       "item_kind": "fn",
       "line": 50,
       "symbol": "vibe_app::steps::work::cohorts::clean_import",
-      "end_line": 82,
-      "fingerprint": "tok1:2990065ba6eb019ad886be36df0c502863da2cd5af63d53935d4557548e0fbc7"
+      "end_line": 94,
+      "fingerprint": "tok1:9c03c77a3023dd3b99413ecc8b04281bbafece803b5d705a0a3050045a92ccaa"
     },
     {
       "crate_name": "vibe-app",
@@ -12219,6 +13408,24 @@
       "symbol": "vibe_cli::cli::app_portable",
       "end_line": 5,
       "fingerprint": "tok1:6a1c3e426751509c94b2dc555e9418279a90ff99f0d0db9bd3ecb1becd9ac383"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/app_portable/export.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::cli::app_portable::export",
+      "end_line": 2,
+      "fingerprint": "tok1:b142e1f160cad2f13c24b4baaaf382a7b4094e0b9d08751efe3e295fd3092dbf"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/app_portable/export.rs",
+      "item_kind": "struct",
+      "line": 4,
+      "symbol": "vibe_cli::cli::app_portable::export::AppExportArgs",
+      "end_line": 23,
+      "fingerprint": "tok1:25669c81b17598a7885e5f05bbde5c81f611eea67d34c47337e530e08c303179"
     },
     {
       "crate_name": "vibe-cli",
@@ -12849,6 +14056,42 @@
       "symbol": "vibe_cli::commands::app::portable",
       "end_line": 9,
       "fingerprint": "tok1:6a1c3e426751509c94b2dc555e9418279a90ff99f0d0db9bd3ecb1becd9ac383"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/portable/export.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::app::portable::export",
+      "end_line": 2,
+      "fingerprint": "tok1:b142e1f160cad2f13c24b4baaaf382a7b4094e0b9d08751efe3e295fd3092dbf"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/portable/export.rs",
+      "item_kind": "fn",
+      "line": 7,
+      "symbol": "vibe_cli::commands::app::portable::export::run",
+      "end_line": 47,
+      "fingerprint": "tok1:2b2d03ba402da801db4f2ee8c5aaaf841844cf82ff402bb27820e1988e8534bc"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/portable/pending.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::app::portable::pending",
+      "end_line": 2,
+      "fingerprint": "tok1:970ce2a3db8c4987bfec63bf439b113c57e10cacfb026e2b40eb3b4994781241"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/app/portable/pending.rs",
+      "item_kind": "fn",
+      "line": 11,
+      "symbol": "vibe_cli::commands::app::portable::pending::emit_pending",
+      "end_line": 77,
+      "fingerprint": "tok1:1fc76f0358893216d08a42652008223ab7b1bcebc0e377c2d9afa4417eee415a"
     },
     {
       "crate_name": "vibe-cli",
@@ -17619,6 +18862,177 @@
       "symbol": "vibe_cli::tests::cli_app_env_identity",
       "end_line": 3,
       "fingerprint": "tok1:ed984288d37c11b9c2b036d848f09531e7fcfef4c981698b89fcb0fe765061c8"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_export.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::tests::cli_app_full_export",
+      "end_line": 3,
+      "fingerprint": "tok1:b142e1f160cad2f13c24b4baaaf382a7b4094e0b9d08751efe3e295fd3092dbf"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_export.rs",
+      "item_kind": "fn",
+      "line": 103,
+      "symbol": "vibe_cli::tests::cli_app_full_export::common_install_auto_exports_parseable_json_and_toml_without_secret_answers",
+      "end_line": 140,
+      "fingerprint": "tok1:51f6cbd3cf983f23b3ca865756f56b48666c4a6319e9395adcb652f85aae8789"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_export.rs",
+      "item_kind": "fn",
+      "line": 142,
+      "symbol": "vibe_cli::tests::cli_app_full_export::configured_auto_child_selects_full_even_when_the_manual_root_is_legacy",
+      "end_line": 152,
+      "fingerprint": "tok1:73071e5fae5b1c759c29d6e69ca672f1162d2edc9b88d41f66a23c5e271edd82"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_export.rs",
+      "item_kind": "fn",
+      "line": 70,
+      "symbol": "vibe_cli::tests::cli_app_full_export::explicit_full_export_preserves_legacy_default_and_adds_actual_required_rows",
+      "end_line": 101,
+      "fingerprint": "tok1:f76e3b1bb5cef2df14773980480b2cb5aa5e44fc720cea7b0a5e075d03b51b76"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_export.rs",
+      "item_kind": "fn",
+      "line": 154,
+      "symbol": "vibe_cli::tests::cli_app_full_export::unfinished_real_replacement_refuses_export_without_truncating_output",
+      "end_line": 198,
+      "fingerprint": "tok1:44960874284b882717cf7d8331e467e9dd8a78940231b2e97d6003c6fee176bf"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_orphans.rs",
+      "item_kind": "fn",
+      "line": 124,
+      "symbol": "vibe_cli::tests::cli_app_full_orphans::all_auto_empty_roots_do_not_resolve_sources_or_invent_installations",
+      "end_line": 163,
+      "fingerprint": "tok1:80c40dd2040220da0e4618e47fe325a2447969557180f3971036265cedd0c8cc"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_orphans.rs",
+      "item_kind": "fn",
+      "line": 81,
+      "symbol": "vibe_cli::tests::cli_app_full_orphans::explicit_inputs_for_unused_rows_refuse_without_starting_a_job",
+      "end_line": 123,
+      "fingerprint": "tok1:060bc1f36b60790765cdfccb22bb23e8fd83c79c714f4444032d6d8494a97e28"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_orphans.rs",
+      "item_kind": "fn",
+      "line": 46,
+      "symbol": "vibe_cli::tests::cli_app_full_orphans::unused_auto_without_target_source_or_path_binding_is_not_consumed",
+      "end_line": 80,
+      "fingerprint": "tok1:92a6fbb931bd9558c338af9f7d825cf56d8172c30c75121cfda942405311f805"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_roundtrip.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::tests::cli_app_full_roundtrip",
+      "end_line": 3,
+      "fingerprint": "tok1:b142e1f160cad2f13c24b4baaaf382a7b4094e0b9d08751efe3e295fd3092dbf"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_roundtrip.rs",
+      "item_kind": "fn",
+      "line": 367,
+      "symbol": "vibe_cli::tests::cli_app_full_roundtrip::full_json_cli_roundtrip_and_maintenance_keep_profile_dormant_intent_and_bound_path",
+      "end_line": 371,
+      "fingerprint": "tok1:79430da279f5743fbe81a9662c44bcb073094aa69df1e06c0f8b680d411e434f"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_full_roundtrip.rs",
+      "item_kind": "fn",
+      "line": 372,
+      "symbol": "vibe_cli::tests::cli_app_full_roundtrip::full_toml_cli_roundtrip_and_maintenance_keep_profile_dormant_intent_and_bound_path",
+      "end_line": 376,
+      "fingerprint": "tok1:ff678ec3b21babb430b1efe8788a2d09dc2dfdffdad2f10fb9eee9a3793f1c43"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::tests::cli_app_import_waiting",
+      "end_line": 3,
+      "fingerprint": "tok1:b142e1f160cad2f13c24b4baaaf382a7b4094e0b9d08751efe3e295fd3092dbf"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "item_kind": "fn",
+      "line": 196,
+      "symbol": "vibe_cli::tests::cli_app_import_waiting::full_dry_run_reports_missing_input_and_matching_rows_without_creating_work",
+      "end_line": 248,
+      "fingerprint": "tok1:60541a9d338c7d1c57d15ebdb590ee64224f858d34d4a5ce8838e3961052f4cb"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_cli::tests::cli_app_import_waiting::full_import_waits_with_exact_target_and_completed_prefix_in_json",
+      "end_line": 163,
+      "fingerprint": "tok1:dda7c35fa55f52f25cbcbee4e63942347fd2f10db709e8d08c53da4d93fe818d"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "item_kind": "fn",
+      "line": 250,
+      "symbol": "vibe_cli::tests::cli_app_import_waiting::future_optional_secret_offer_survives_two_waits_without_cross_key_broadcast",
+      "end_line": 358,
+      "fingerprint": "tok1:80f6e2e98e6f92a5084bf3b80e8d6f5a666578cd0f9957300f5b13d91454330a"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "item_kind": "fn",
+      "line": 165,
+      "symbol": "vibe_cli::tests::cli_app_import_waiting::human_waiting_names_the_exact_resume_operation_and_required_ids",
+      "end_line": 194,
+      "fingerprint": "tok1:1a8cf24ad8a80db72b82dfa50a4803bea188ff4c4c755b4bb70954bc94e055df"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "item_kind": "fn",
+      "line": 25,
+      "symbol": "vibe_cli::tests::cli_app_import_waiting::old_response_without_pending_round_trips_without_a_new_member",
+      "end_line": 34,
+      "fingerprint": "tok1:c7b59b77892580210eecc7d166e35a3fed7c9383704751d55398ea9a48e867c1"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "item_kind": "fn",
+      "line": 36,
+      "symbol": "vibe_cli::tests::cli_app_import_waiting::public_pending_projects_future_members_but_private_fragments_stay_closed",
+      "end_line": 60,
+      "fingerprint": "tok1:76aabd4cf0f5cd08f2f081468a9ccfc52ac936cf3be419dd53aacd431bef363b"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "item_kind": "fn",
+      "line": 360,
+      "symbol": "vibe_cli::tests::cli_app_import_waiting::secret_file_locations_and_malformed_values_never_enter_public_errors",
+      "end_line": 429,
+      "fingerprint": "tok1:30438f1307d971e0dc7c0a820d6a190e2b852d5e6e3fa1a4bff265e50c7001d8"
     },
     {
       "crate_name": "vibe-cli",
@@ -43458,6 +44872,14 @@
       "verb": "implements"
     },
     {
+      "file": "schemas/application/e2/apps.jtd.json",
+      "from_symbol": "apps",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
       "file": "schemas/apps_manifest.jtd.json",
       "from_symbol": "apps_manifest",
       "line": 1,
@@ -43639,6 +45061,30 @@
       "line": 1,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#CUSTOM-JSON-PROTOCOL",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/application/e1/import_input.jtd.json",
+      "from_symbol": "import_input",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/application/e1/import_secrets.jtd.json",
+      "from_symbol": "import_secrets",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-SECRET-INPUT",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/application/e2/import_work.jtd.json",
+      "from_symbol": "import_work",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
       "verb": "implements"
     },
     {
@@ -45520,7 +46966,7 @@
     {
       "file": "crates/vibe-app/src/configuration/evaluate.rs",
       "from_symbol": "vibe_app::configuration::evaluate::EvaluatedConfiguration",
-      "line": 30,
+      "line": 31,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#EVALUATION",
       "verb": "documents"
@@ -45536,10 +46982,42 @@
     {
       "file": "crates/vibe-app/src/configuration/evaluate.rs",
       "from_symbol": "vibe_app::configuration::evaluate::evaluate",
-      "line": 37,
+      "line": 38,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/history.rs",
+      "from_symbol": "vibe_app::configuration::history",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/history.rs",
+      "from_symbol": "vibe_app::configuration::history::ConfigurationHistory",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/history.rs",
+      "from_symbol": "vibe_app::configuration::history::HistoricalParameter",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/history.rs",
+      "from_symbol": "vibe_app::configuration::history::HistoryUse",
+      "line": 76,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "documents"
     },
     {
       "file": "crates/vibe-app/src/configuration/input.rs",
@@ -45548,6 +47026,134 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-JOURNEY",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/portable.rs",
+      "from_symbol": "vibe_app::configuration::portable",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/portable.rs",
+      "from_symbol": "vibe_app::configuration::portable::decode",
+      "line": 78,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/portable.rs",
+      "from_symbol": "vibe_app::configuration::portable::encode",
+      "line": 46,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer.rs",
+      "from_symbol": "vibe_app::configuration::transfer",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer.rs",
+      "from_symbol": "vibe_app::configuration::transfer::PortableTransfer",
+      "line": 94,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer.rs",
+      "from_symbol": "vibe_app::configuration::transfer::prepare",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer.rs",
+      "from_symbol": "vibe_app::configuration::transfer::prepare_required",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "from_symbol": "vibe_app::configuration::transfer::tests::absent_source_host_rebinds_all_origins_then_local_maintenance_keeps_b",
+      "line": 174,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "from_symbol": "vibe_app::configuration::transfer::tests::changed_automatic_definition_needs_current_review_or_bound_replacement",
+      "line": 326,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "from_symbol": "vibe_app::configuration::transfer::tests::even_optional_nonexistent_path_needs_explicit_target_binding",
+      "line": 248,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "from_symbol": "vibe_app::configuration::transfer::tests::optional_explicit_secret_requires_resupply_even_with_public_target_replacement",
+      "line": 385,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-SECRET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "from_symbol": "vibe_app::configuration::transfer::tests::optional_explicit_secret_requires_resupply_even_with_public_target_replacement",
+      "line": 384,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "from_symbol": "vibe_app::configuration::transfer::tests::public_to_secret_reclassification_and_ephemeral_public_inputs_refuse_without_values",
+      "line": 458,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-SECRET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "from_symbol": "vibe_app::configuration::transfer::tests::public_to_secret_reclassification_and_ephemeral_public_inputs_refuse_without_values",
+      "line": 457,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "from_symbol": "vibe_app::configuration::transfer::tests::target_binding_validation_refuses_relative_missing_unknown_nonpath_secret_and_absent",
+      "line": 269,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/transfer/tests.rs",
+      "from_symbol": "vibe_app::configuration::transfer::tests::target_preparation_retains_dormant_omitted_and_explicit_empty_answers",
+      "line": 495,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-app/src/derive.rs",
@@ -46273,7 +47879,7 @@
     {
       "file": "crates/vibe-app/src/operations/mod.rs",
       "from_symbol": "vibe_app::operations::Command",
-      "line": 189,
+      "line": 196,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "documents"
@@ -46281,7 +47887,7 @@
     {
       "file": "crates/vibe-app/src/operations/mod.rs",
       "from_symbol": "vibe_app::operations::InstallRequest",
-      "line": 156,
+      "line": 161,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "documents"
@@ -46289,7 +47895,7 @@
     {
       "file": "crates/vibe-app/src/operations/mod.rs",
       "from_symbol": "vibe_app::operations::OperationContext",
-      "line": 63,
+      "line": 66,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "documents"
@@ -46297,7 +47903,7 @@
     {
       "file": "crates/vibe-app/src/operations/mod.rs",
       "from_symbol": "vibe_app::operations::Outcome",
-      "line": 200,
+      "line": 207,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#commands",
       "verb": "documents"
@@ -46305,7 +47911,7 @@
     {
       "file": "crates/vibe-app/src/operations/mod.rs",
       "from_symbol": "vibe_app::operations::ResolverScope",
-      "line": 121,
+      "line": 126,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION",
       "verb": "documents"
@@ -46351,9 +47957,273 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-app/src/operations/import/bindings.rs",
+      "from_symbol": "vibe_app::operations::import::bindings",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-AUTO-BINDINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/bindings.rs",
+      "from_symbol": "vibe_app::operations::import::bindings::ImportScope",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/bindings.rs",
+      "from_symbol": "vibe_app::operations::import::bindings::ImportScope<'a>::admit_lookup",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/bindings.rs",
+      "from_symbol": "vibe_app::operations::import::bindings::ImportScope<'a>::compatible",
+      "line": 347,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-INSTALLED-REUSE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/bindings/context.rs",
+      "from_symbol": "vibe_app::operations::import::bindings::context",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTEXT-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/bindings/context.rs",
+      "from_symbol": "vibe_app::operations::import::bindings::context::ImportScope<'a>::new",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTEXT-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/completed.rs",
+      "from_symbol": "vibe_app::operations::import::completed",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-INSTALLED-REUSE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/completed.rs",
+      "from_symbol": "vibe_app::operations::import::completed::completed_binding",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-INSTALLED-REUSE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/completed.rs",
+      "from_symbol": "vibe_app::operations::import::completed::walk",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-INSTALLED-REUSE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/document.rs",
+      "from_symbol": "vibe_app::operations::import::document",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full.rs",
+      "from_symbol": "vibe_app::operations::import::full",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full.rs",
+      "from_symbol": "vibe_app::operations::import::full::import_full",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full.rs",
+      "from_symbol": "vibe_app::operations::import::full::resume_full_import",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "from_symbol": "vibe_app::operations::import::full::settlement",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "from_symbol": "vibe_app::operations::import::full::settlement::finish",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "from_symbol": "vibe_app::operations::import::full::settlement::release_application",
+      "line": 110,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "from_symbol": "vibe_app::operations::import::full::settlement::release_complete",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "from_symbol": "vibe_app::operations::import::full::settlement::release_refused",
+      "line": 290,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "from_symbol": "vibe_app::operations::import::full::settlement::settle_error",
+      "line": 246,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "from_symbol": "vibe_app::operations::import::full::settlement::verify_scope",
+      "line": 323,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTEXT-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full/settlement.rs",
+      "from_symbol": "vibe_app::operations::import::full::settlement::wait_error",
+      "line": 223,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store.rs",
+      "from_symbol": "vibe_app::operations::import::full_store",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::load",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::save_full",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::tests::arrangement_and_complete_require_settled_roots_without_current_or_waiting",
+      "line": 318,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::tests::both_closed_readers_reject_unknown_fields_and_missing_required_nullable_members",
+      "line": 409,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::tests::closed_v1_and_v2_read_exact_bytes_without_migration_or_source_access",
+      "line": 215,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::tests::invalid_full_save_cannot_replace_existing_closed_record",
+      "line": 429,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::tests::private_map_identity_waiting_and_outcome_checks_remain_enforced",
+      "line": 359,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::tests::settled_cursor_requires_exactly_one_outcome_for_every_prefix_root",
+      "line": 440,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::tests::shared_row_admission_rejects_missing_inconsistent_edges_roots_and_secret_overlap",
+      "line": 236,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store/tests.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::tests::waiting_cannot_authorize_an_unused_orphan_or_unstarted_descendant",
+      "line": 450,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/full_store.rs",
+      "from_symbol": "vibe_app::operations::import::full_store::validate",
+      "line": 59,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-app/src/operations/import.rs",
       "from_symbol": "vibe_app::operations::import::import_cohort",
-      "line": 15,
+      "line": 29,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION",
       "verb": "implements"
@@ -46361,15 +48231,135 @@
     {
       "file": "crates/vibe-app/src/operations/import.rs",
       "from_symbol": "vibe_app::operations::import::import_resume_info",
-      "line": 30,
+      "line": 44,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION",
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts::check_old_edge",
+      "line": 393,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts::collect",
+      "line": 214,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts::completed",
+      "line": 489,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts::family_ready",
+      "line": 509,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts::owns",
+      "line": 97,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts::preserve",
+      "line": 109,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts::prove",
+      "line": 438,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts::recover",
+      "line": 333,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts::set_state",
+      "line": 372,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/receipts.rs",
+      "from_symbol": "vibe_app::operations::import::receipts::validate",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/recovery.rs",
+      "from_symbol": "vibe_app::operations::import::recovery",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/recovery.rs",
+      "from_symbol": "vibe_app::operations::import::recovery::ImportResumeInfo",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/recovery.rs",
+      "from_symbol": "vibe_app::operations::import::recovery::inspect_import_resume",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/import/recovery.rs",
+      "from_symbol": "vibe_app::operations::import::recovery::scope_from_state",
+      "line": 45,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-app/src/operations/import.rs",
       "from_symbol": "vibe_app::operations::import::resume_import",
-      "line": 41,
+      "line": 55,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION",
       "verb": "implements"
@@ -46495,9 +48485,25 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-app/src/operations/pending/identity.rs",
+      "from_symbol": "vibe_app::operations::pending::identity::execution",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTEXT-IDENTITY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/operations/pending/identity.rs",
+      "from_symbol": "vibe_app::operations::pending::identity::matches_import",
+      "line": 134,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTEXT-IDENTITY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-app/src/operations/planning.rs",
       "from_symbol": "vibe_app::operations::planning::configuration_plan",
-      "line": 162,
+      "line": 172,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-JOURNEY",
       "verb": "implements"
@@ -46585,7 +48591,7 @@
     {
       "file": "crates/vibe-app/src/portable.rs",
       "from_symbol": "vibe_app::portable::ImportAction",
-      "line": 189,
+      "line": 219,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set",
       "verb": "documents"
@@ -46593,7 +48599,7 @@
     {
       "file": "crates/vibe-app/src/portable.rs",
       "from_symbol": "vibe_app::portable::ImportInstall",
-      "line": 201,
+      "line": 231,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set",
       "verb": "documents"
@@ -46601,7 +48607,7 @@
     {
       "file": "crates/vibe-app/src/portable.rs",
       "from_symbol": "vibe_app::portable::PortableExport",
-      "line": 59,
+      "line": 78,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set",
       "verb": "documents"
@@ -46647,9 +48653,377 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "from_symbol": "vibe_app::portable::document",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "from_symbol": "vibe_app::portable::document::PortableDocument",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "from_symbol": "vibe_app::portable::document::PortableDocument::application_count",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "from_symbol": "vibe_app::portable::document::PortableDocument::json",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "from_symbol": "vibe_app::portable::document::PortableDocument::toml",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "from_symbol": "vibe_app::portable::document::parse_portable_document",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "from_symbol": "vibe_app::portable::document::selected_import_keys",
+      "line": 197,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/document/tests.rs",
+      "from_symbol": "vibe_app::portable::document::tests::legacy_public_secret_overlap_refuses_json_and_toml_without_echoing_the_value",
+      "line": 59,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/document/tests.rs",
+      "from_symbol": "vibe_app::portable::document::tests::shared_row_admission_keeps_root_identity_and_required_edge_checks",
+      "line": 94,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/document.rs",
+      "from_symbol": "vibe_app::portable::document::validate_rows",
+      "line": 109,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable.rs",
+      "from_symbol": "vibe_app::portable::export_portable",
+      "line": 147,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_context_tests.rs",
+      "from_symbol": "vibe_app::portable::full_context_tests::changed_future_binding_refuses_before_resupply_checkpoint_or_effects",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTEXT-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_context_tests.rs",
+      "from_symbol": "vibe_app::portable::full_context_tests::immutable_scope_changes_for_roots_and_history_but_not_current_secret_answers",
+      "line": 53,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTEXT-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_resume_tests",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_resume_tests::deep_legacy_and_direct_roots_share_one_scoped_secret_child",
+      "line": 258,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_resume_tests::direct_child_finish_resume_allows_later_cohort_reuse_without_child_source_or_secret",
+      "line": 328,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_resume_tests::direct_resume_of_target_only_child_uses_only_its_exact_ephemeral_answers",
+      "line": 447,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_resume_tests::full_export_sees_target_only_dependency_before_its_work_starts",
+      "line": 387,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_resume_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_resume_tests::missing_deep_secret_retains_real_owner_chain_then_resumes_without_public_files",
+      "line": 274,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_tests",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-AUTO-BINDINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_tests::compatible_existing_manual_child_is_reused_without_demotion_or_rerun",
+      "line": 315,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-INSTALLED-REUSE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_tests::compatible_roots_consume_the_imported_exact_child_once",
+      "line": 300,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-AUTO-BINDINGS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_tests::conflicting_same_key_child_refuses_before_parent_effect_and_preserves_the_child",
+      "line": 271,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-INSTALLED-REUSE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_dependency_tests.rs",
+      "from_symbol": "vibe_app::portable::full_dependency_tests::imported_exact_configured_child_beats_a_newer_satisfying_installed_version",
+      "line": 234,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-AUTO-BINDINGS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_export.rs",
+      "from_symbol": "vibe_app::portable::full_export",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_export.rs",
+      "from_symbol": "vibe_app::portable::full_export::export",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_import_tests.rs",
+      "from_symbol": "vibe_app::portable::full_import_tests",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_import_tests.rs",
+      "from_symbol": "vibe_app::portable::full_import_tests::actual_a_install_export_then_b_import_preserves_input_and_executes_bound_payload",
+      "line": 209,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_import_tests.rs",
+      "from_symbol": "vibe_app::portable::full_import_tests::missing_previously_supplied_secret_keeps_exact_cohort_waiting_before_effects",
+      "line": 302,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-SECRET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_import_tests.rs",
+      "from_symbol": "vibe_app::portable::full_import_tests::same_key_candidate_with_altered_history_refuses_before_cohort_or_effects",
+      "line": 383,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_lookup_tests.rs",
+      "from_symbol": "vibe_app::portable::full_lookup_tests::target_only_query_refuses_changed_route_before_callback_then_accepts_saved_route",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_prepare.rs",
+      "from_symbol": "vibe_app::portable::full_prepare",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_prepare.rs",
+      "from_symbol": "vibe_app::portable::full_prepare::FullImportCandidate",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_prepare.rs",
+      "from_symbol": "vibe_app::portable::full_prepare::FullImportPreparation",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_prepare.rs",
+      "from_symbol": "vibe_app::portable::full_prepare::PreparedFullImport",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_prepare.rs",
+      "from_symbol": "vibe_app::portable::full_prepare::prepare_full_import",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_preview.rs",
+      "from_symbol": "vibe_app::portable::full_preview",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_preview.rs",
+      "from_symbol": "vibe_app::portable::full_preview::FullImportPreview",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_preview.rs",
+      "from_symbol": "vibe_app::portable::full_preview::preview_full_import",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_receipt_recovery_tests.rs",
+      "from_symbol": "vibe_app::portable::full_receipt_recovery_tests::completed_cohort_cleanup_reopens_without_sources_or_consuming_repeated_answers",
+      "line": 205,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_receipt_recovery_tests.rs",
+      "from_symbol": "vibe_app::portable::full_receipt_recovery_tests::missing_captured_edge_or_changed_publication_refuses_before_future_root_effects",
+      "line": 151,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_receipt_recovery_tests.rs",
+      "from_symbol": "vibe_app::portable::full_receipt_recovery_tests::public_resume_recovers_captured_moved_and_unlinked_transfer_cuts",
+      "line": 124,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_refused_tests.rs",
+      "from_symbol": "vibe_app::portable::full_refused_tests",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_refused_tests.rs",
+      "from_symbol": "vibe_app::portable::full_refused_tests::refused_root_does_not_manufacture_imported_receipts_for_target_only_children",
+      "line": 170,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_refused_tests.rs",
+      "from_symbol": "vibe_app::portable::full_refused_tests::refused_root_retry_reuses_reserved_successful_secret_descendants",
+      "line": 53,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/full_target_only_tests.rs",
+      "from_symbol": "vibe_app::portable::full_target_only_tests::ordinary_child_question_is_not_mislabeled_as_root_secret_input",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-app/src/portable.rs",
       "from_symbol": "vibe_app::portable::import_action",
-      "line": 234,
+      "line": 264,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set",
       "verb": "implements"
@@ -46657,15 +49031,63 @@
     {
       "file": "crates/vibe-app/src/portable.rs",
       "from_symbol": "vibe_app::portable::import_license",
-      "line": 306,
+      "line": 336,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set",
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-app/src/portable/inputs.rs",
+      "from_symbol": "vibe_app::portable::inputs",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-SECRET-INPUT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/inputs.rs",
+      "from_symbol": "vibe_app::portable::inputs::ImportSecrets",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-SECRET-INPUT",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/inputs.rs",
+      "from_symbol": "vibe_app::portable::inputs::parse_import_secrets",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-SECRET-INPUT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/inputs.rs",
+      "from_symbol": "vibe_app::portable::inputs::parse_import_target",
+      "line": 72,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/legacy_target.rs",
+      "from_symbol": "vibe_app::portable::legacy_target",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/portable/legacy_target.rs",
+      "from_symbol": "vibe_app::portable::legacy_target::public",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-app/src/portable.rs",
       "from_symbol": "vibe_app::portable::portable_set",
-      "line": 78,
+      "line": 97,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set",
       "verb": "implements"
@@ -47081,7 +49503,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::Plan",
-      "line": 195,
+      "line": 197,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
       "verb": "documents"
@@ -47097,7 +49519,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::PlannedStep",
-      "line": 174,
+      "line": 176,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#plan",
       "verb": "documents"
@@ -47105,7 +49527,7 @@
     {
       "file": "crates/vibe-app/src/steps/plan.rs",
       "from_symbol": "vibe_app::steps::plan::RequiredBy",
-      "line": 164,
+      "line": 166,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#app-dependencies",
       "verb": "documents"
@@ -47253,6 +49675,46 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-065#templates",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/tests/portable_transfer.rs",
+      "from_symbol": "vibe_app::steps::tests::portable_transfer",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/tests/portable_transfer.rs",
+      "from_symbol": "vibe_app::steps::tests::portable_transfer::portable_configured_history_cannot_fall_through_a_legacy_installer",
+      "line": 223,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/tests/portable_transfer.rs",
+      "from_symbol": "vibe_app::steps::tests::portable_transfer::portable_planner_refuses_ordinary_configuration_or_feature_inputs",
+      "line": 200,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/tests/portable_transfer.rs",
+      "from_symbol": "vibe_app::steps::tests::portable_transfer::portable_target_installer_must_match_the_actual_planned_option",
+      "line": 245,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/steps/tests/portable_transfer.rs",
+      "from_symbol": "vibe_app::steps::tests::portable_transfer::transported_source_history_reaches_target_planner_with_original_input_and_origins",
+      "line": 158,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-app/src/steps/work.rs",
@@ -47763,6 +50225,22 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/cli/app_portable/export.rs",
+      "from_symbol": "vibe_cli::cli::app_portable::export",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/cli/app_portable/export.rs",
+      "from_symbol": "vibe_cli::cli::app_portable::export::AppExportArgs",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "documents"
     },
     {
       "file": "crates/vibe-cli/src/cli/cache.rs",
@@ -48327,6 +50805,38 @@
       "line": 9,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#portable-set",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/portable/export.rs",
+      "from_symbol": "vibe_cli::commands::app::portable::export",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/portable/export.rs",
+      "from_symbol": "vibe_cli::commands::app::portable::export::run",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/portable/pending.rs",
+      "from_symbol": "vibe_cli::commands::app::portable::pending",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-WAITING-REPORT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/app/portable/pending.rs",
+      "from_symbol": "vibe_cli::commands::app::portable::pending::emit_pending",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-WAITING-REPORT",
       "verb": "implements"
     },
     {
@@ -52635,6 +55145,158 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-ENV-IDENTITY",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_export.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_export",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_export.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_export::common_install_auto_exports_parseable_json_and_toml_without_secret_answers",
+      "line": 104,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_export.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_export::configured_auto_child_selects_full_even_when_the_manual_root_is_legacy",
+      "line": 143,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_export.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_export::explicit_full_export_preserves_legacy_default_and_adds_actual_required_rows",
+      "line": 71,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_export.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_export::unfinished_real_replacement_refuses_export_without_truncating_output",
+      "line": 155,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_orphans.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_orphans::all_auto_empty_roots_do_not_resolve_sources_or_invent_installations",
+      "line": 125,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_orphans.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_orphans::explicit_inputs_for_unused_rows_refuse_without_starting_a_job",
+      "line": 82,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_orphans.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_orphans::unused_auto_without_target_source_or_path_binding_is_not_consumed",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_roundtrip.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_roundtrip",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_roundtrip.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_roundtrip::full_json_cli_roundtrip_and_maintenance_keep_profile_dormant_intent_and_bound_path",
+      "line": 368,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_full_roundtrip.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_full_roundtrip::full_toml_cli_roundtrip_and_maintenance_keep_profile_dormant_intent_and_bound_path",
+      "line": 373,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_import_waiting",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_import_waiting::full_dry_run_reports_missing_input_and_matching_rows_without_creating_work",
+      "line": 197,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_import_waiting::full_import_waits_with_exact_target_and_completed_prefix_in_json",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-WAITING-REPORT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_import_waiting::future_optional_secret_offer_survives_two_waits_without_cross_key_broadcast",
+      "line": 251,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-SECRET-INPUT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_import_waiting::human_waiting_names_the_exact_resume_operation_and_required_ids",
+      "line": 166,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-WAITING-REPORT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_import_waiting::old_response_without_pending_round_trips_without_a_new_member",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-WAITING-REPORT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_import_waiting::public_pending_projects_future_members_but_private_fragments_stay_closed",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-WAITING-REPORT",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_app_import_waiting.rs",
+      "from_symbol": "vibe_cli::tests::cli_app_import_waiting::secret_file_locations_and_malformed_values_never_enter_public_errors",
+      "line": 361,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-WAITING-REPORT",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-cli/tests/cli_app_secret_errors.rs",
@@ -101594,7 +104256,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f7b1d4fcc8c23cbcdc091b48b1923529c93dcfdbbf0d8f1954ee462428d129e6",
+      "content_hash": "sha256:5360b382c17533dfd72276c4d6e72c9cf34fd9dd7b696556587d8d393ec6357d",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "PROP-069 — Common configuration: definitions, intent, evaluation and user surfaces",
@@ -101981,7 +104643,7 @@
     },
     {
       "anchor": "portable-configuration",
-      "content_hash": "sha256:034a676237c7c90413c43a611d33d8265703420eacc71b2686b2b990e960138c",
+      "content_hash": "sha256:1aa1c1e80db518d6435df33f14db83be5ec8abfb4abcaaeb781b47b2b1f41e5d",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "6.2 Portable configuration remains a required consumer",
@@ -101990,48 +104652,102 @@
     },
     {
       "anchor": "PORTABLE-HISTORY",
-      "content_hash": "sha256:50f51bedc4c695110f39efdb645339bb9d23e7f41af6301327d22a9a79286102",
+      "content_hash": "sha256:1622637b4d9bd6ca0d7cb6f1f0fa7f820b8538b6f949ac6a02f8dfb3c4608b7d",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "Full application portability retains original input, typed historical definition and fingerprint, automatic reliance, parameter origins and lexical sources, and value-free secret provision. Historical data never authorizes target readiness. A narrow history view serves local records and portable input without fabricated resolved fields. The new typed portable grammar may encode None by omission while preserving selection objects, explicit empty sets and typed false/zero/empty values; canonical common JSON admission is unchanged. @status:spec/plan",
+      "heading": "Full application portability retains original input, typed historical definition and fingerprint, automatic reliance, parameter origins and lexical sources, and value-free secret provision. Historical data never authorizes target readiness. A narrow history view serves local records and portable input without fabricated resolved fields. The new typed portable grammar may encode None by omission while preserving selection objects, explicit empty sets and typed false/zero/empty values; canonical common JSON admission is unchanged. @status:impl/done",
       "line": 55,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY"
     },
     {
       "anchor": "PORTABLE-TARGET-INPUT",
-      "content_hash": "sha256:6f71b4a25565d1c7b85c3ad13bd681e8f8381ecbfffa5f38aca46e004b46b798",
+      "content_hash": "sha256:32cc1458374742d0fdc63cab18d42d88ea96396b23fe62ee983cff23e5acf7be",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "Target option choice, explicit native absolute Path bindings and exact current-definition review are separate from source history. A source portable file is not a fresh defaults approval. Rebinding preserves source/profile/default meaning and validates the actual target path; it never checks that the source-host path exists or silently anchors it to the importing cwd. An explicit target configuration replacement is a new target decision bound to the current definition. @status:spec/plan",
+      "heading": "Target option choice, explicit native absolute Path bindings and exact current-definition review are separate from source history. A source portable file is not a fresh defaults approval. Rebinding preserves source/profile/default meaning and validates the actual target path; it never checks that the source-host path exists or silently anchors it to the importing cwd. An explicit target configuration replacement is a new target decision bound to the current definition. @status:impl/done",
       "line": 56,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-TARGET-INPUT"
     },
     {
       "anchor": "PORTABLE-SECRET-INPUT",
-      "content_hash": "sha256:af6bf26512d781f4e295d7c67a93ecc68a11e1be13fb8fe81da45046850f0ada",
+      "content_hash": "sha256:4e7503f23a06bfc4d5517af027dbd9baeed63b148f97abd497f290d3aaca818d",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "Portable files and public target input contain no runtime secret answers or answer digests. Secret inputs and prompts are ephemeral and scoped to an exact application within the operation. Known Explicit provision requires resupply when consumed, including optional secrets; recorded provision obligations cannot fall back silently after a park. Target privacy reclassification refuses before public persistence. Diagnostic errors do not echo unclassified supplied values. @status:spec/plan",
+      "heading": "Portable files and public target input contain no runtime secret answers or answer digests. Secret inputs and prompts are ephemeral and scoped to an exact application within the operation. Known Explicit provision requires resupply when consumed, including optional secrets; recorded provision obligations cannot fall back silently after a park. Target privacy reclassification refuses before public persistence. Diagnostic errors do not echo unclassified supplied values. @status:impl/done",
       "line": 57,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-SECRET-INPUT"
     },
     {
       "anchor": "PORTABLE-AUTO-BINDINGS",
-      "content_hash": "sha256:51696db50f45ae7a0293b14c27aa95f198da645df8f53cd24f280d0aec7a603e",
+      "content_hash": "sha256:00ee86b4979da9b4fe7f8916ca6fd56ccf5e1cb7bc77567769e51c7b7bc8f6b7",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "A full exported Manual-root set includes its recorded required Auto closure, including legacy intermediates with configured descendants. Imported exact bindings precede installed-first shortcuts, without creating a second solver. Compatible ranges for one exact key share an installation; incompatible configurations refuse before effects. Existing Manual marks are not demoted, unused Auto rows are not gratuitous Manual installs, and held/hidden/arrangement restoration uses its existing owner without edge-order dependence. @status:spec/plan",
+      "heading": "A full exported Manual-root set includes its recorded required Auto closure, including legacy intermediates with configured descendants. Imported exact bindings precede installed-first shortcuts, without creating a second solver. Compatible ranges for one exact key share an installation; incompatible configurations refuse before effects. Existing Manual marks are not demoted, unused Auto rows are not gratuitous Manual installs, and held/hidden/arrangement restoration uses its existing owner without edge-order dependence. @status:impl/done",
       "line": 58,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-AUTO-BINDINGS"
     },
     {
       "anchor": "PORTABLE-CONTINUATION",
-      "content_hash": "sha256:9be151025eec4e2f30f3bb682d566d0e492995dcd4459fb4cd5acbabdb7d77b8",
+      "content_hash": "sha256:c0edb28f27f6fa95543801ed41496ad07455a259a07ba83f4986946e7165c515",
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
-      "heading": "Full import uses the existing finite cohort and ordinary application/dependency work. Public target inputs are fixed before consumption; only ephemeral scoped secrets are resupplied. Once work begins, original portable/target files may disappear without causing public-input replay. Direct child continuation recovers the same import binding scope. Questions are not success, and missing work after uncertain effects is not permission to restart. Exact old private work remains readable when the state format advances; reads do not migrate. Completed finalization does not prepare unused source, executors or secrets. @status:spec/plan",
+      "heading": "Full import uses the existing finite cohort and ordinary application/dependency work. Public target inputs are fixed before consumption; only ephemeral scoped secrets are resupplied. Once work begins, original portable/target files may disappear without causing public-input replay. Direct child continuation recovers the same import binding scope. Questions are not success, and missing work after uncertain effects is not permission to restart. Exact old private work remains readable when the state format advances; reads do not migrate. Completed finalization does not prepare unused source, executors or secrets. @status:impl/done",
       "line": 59,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION"
+    },
+    {
+      "anchor": "PORTABLE-PREFLIGHT",
+      "content_hash": "sha256:2caf3158a875c39a05f0a53fee2f4de5c99c6de0ef2a4c892d9114183c00a075",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "Public preparation uses the existing evaluator without consuming secret answers or prompting unused rows. The whole source document is validated purely, but only selected roots and their recorded dependency closure query or prepare target packages. Inactive carried rows remain operator data; explicit target or secret submissions for them refuse as unused. Existing retained binding worlds are never pruned or rewritten on read. Problems and public choice, path or review questions prevent admission. SecretResupply and secret Parameter questions may remain, without a fabricated resolved record. Actual execution consumes only its exact application answers; missing input retains the cohort cursor and exact current attempt with value-free waiting obligations. Supplied-ID obligations survive interruption but are not immutable source history or answer equality evidence. Preview performs the same relevant admission and decision checks without reserving work, inventing an operation identity or reporting unresolved work as a successful installation. @status:impl/done",
+      "line": 60,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-PREFLIGHT"
+    },
+    {
+      "anchor": "PORTABLE-INSTALLED-REUSE",
+      "content_hash": "sha256:e4450340ead175b888702505d41e9c03615209119ae7462c255a052867a2da5d",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "Imported exact dependency bindings precede installed-newest lookup. Reuse requires compatible target declaration, original typed input including dormant selections, public origins and realizations, and known value-free secret provision. An imported Auto dependency may reuse an existing compatible Manual installation while retaining that installation's Manual mark, visibility and held policy. A fresh opaque answer cannot prove equality with an unrelated installed secret; it requires explicit reconciliation rather than silent discard. A child already completed by the same verified cohort is reused without rerunning or consuming its answer again, using exact attempt, ancestry and publication evidence rather than a bare key match. @status:impl/done",
+      "line": 61,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-INSTALLED-REUSE"
+    },
+    {
+      "anchor": "PORTABLE-CONTEXT-IDENTITY",
+      "content_hash": "sha256:41d0a3faa41fb0a49a2b6a5ad9aa6c68629dccf1343aa64ca897ef2b82af8566",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "An imported operation binds the canonical cohort target, immutable selected roots and typed bindings into its execution-context identity. Cursor, results, waiting state, current availability, mutable resupply obligations and runtime secret answers or their digests are excluded from that immutable meaning. The full-scope representation exposes its scope component and includes that component in the hashed context. An absent import scope retains the previous execution-context bytes and hash. This is drift detection, not authentication of editable storage. Old-operation compatibility must be demonstrated by actual new-binary continuation of genuinely unfinished old work, not a terminal shortcut. @status:impl/done",
+      "line": 62,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTEXT-IDENTITY"
+    },
+    {
+      "anchor": "PORTABLE-RETAINED-SUBTREE",
+      "content_hash": "sha256:984226817898cd089daf9edc0858b366715229e47536e233f3da08a9e44baf40",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "A full import retains successful descendant attempt evidence until cohort completion so later roots and direct child continuation can prove shared-child completion without reopening already-consumed sources or secrets. Final retirement uses the existing work owner. A Refused ancestor is not an Installed result and must remain retryable by a later independent row. Before releasing such an ancestor, verified successful descendant receipts may be saved atomically inside the same finite cohort. Receipts bind exact targets, published identity and immutable scope; they are not a second store. New same-key execution must invalidate a receipt or be blocked by retained ownership, including changes to opaque secrets that may leave public metadata unchanged. Changed records, pending or unindexed replacements and uncertain effects never become success through a receipt. @status:impl/done",
+      "line": 63,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-RETAINED-SUBTREE"
+    },
+    {
+      "anchor": "PORTABLE-WAITING-REPORT",
+      "content_hash": "sha256:856a57fc4aaeec9c7726a01cccb80a24f7c1a0e661920ebae938a031b3fdcf25",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "The public import response may add an optional typed pending object containing the exact cohort target and value-free application/input identifiers. Existing response fields and completed prefix results remain truthful; absent pending preserves the old response shape. Waiting returns non-success and is not encoded as Installed, Skipped or terminal Refused. Public references use the existing explicit reader projections without weakening canonical private readers. No supplied secret value, raw secret document, secret-input filename or replay argument vector enters retained work or public diagnostics. @status:impl/done",
+      "line": 64,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-WAITING-REPORT"
+    },
+    {
+      "anchor": "PORTABLE-FINALIZATION",
+      "content_hash": "sha256:d42dab21ee878a6a4efb7e40a20e4c44acae05cceb1405ce7ab8cb7a35fae56c",
+      "doc_path": "common/PROP-069",
+      "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+      "heading": "Resume inspects exact retained state before acquiring unused execution inputs. Nonterminal continuation restores the retained lookup, executor, offline posture and per-step delivery choices, including dependencies not started before interruption. Completed publication acknowledgement, arrangement and record-owned cleanup do not reopen unused source, executor or secret-input files and do not consume repeated answers for completed operations. Exact generation and ancestry checks remain mandatory; publication acknowledgement and continued effects verify their required published identity and uncertainty boundaries. Retirement never follows a replacement generation. Full export readiness includes relevant retained child plans, including target-only dependencies whose work has not started, rather than considering only source-document edges. @status:impl/done",
+      "line": 65,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-FINALIZATION"
     },
     {
       "anchor": "APP-CONFIGURATION-PORTABILITY",
@@ -102039,7 +104755,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "A rich installed configuration must not be flattened into legacy portable effective features/public parameters while claiming its original, dormant, exact/additive or default-basis meaning survived. Complete common application support includes a separately designed generated portable format, compatible legacy reading and actual export/import roundtrips, with secret values excluded and required resupply explicit. Host-dependent paths and changed installer/definition scope require stated transfer semantics, not guessed identity from matching local names. Until that consumer is implemented, the legacy portable route refuses unrepresentable rich state before writes; valid legacy import continuation remains its own supported boundary. This temporary refusal does not close the common configuration feature. @status:spec/done",
-      "line": 60,
+      "line": 66,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-PORTABILITY"
     },
     {
@@ -102048,7 +104764,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "7. Finished means a working shared system",
-      "line": 62,
+      "line": 68,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#acceptance"
     },
     {
@@ -102057,7 +104773,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "Acceptance requires the existing public application wizard scenario and app update/modify behavior to pass; the same ordinary package request to work through console and serialized external answers without host bootstrap; all cardinalities and omitted/empty/default policies; dormant switch-away/switch-back; additive/exact multi-consumer conflicts; candidate backtracking without effect/default leakage; integrated forwarding/subskill/config effects; typed parameters and redaction; persistence followed by install/update/reconfiguration; stale definition refusals without writes; and a PackageKind-driven matrix of supported views and effects, including read-only and consent-only boundaries. Structural/schema success and counts are supporting checks, not substitutes for these user outcomes. @status:spec/done",
-      "line": 63,
+      "line": 69,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#ACCEPTANCE"
     },
     {
@@ -102066,7 +104782,7 @@
       "doc_path": "common/PROP-069",
       "file": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
       "heading": "8. Rationale and rejected alternatives",
-      "line": 65,
+      "line": 71,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#decisions"
     },
     {

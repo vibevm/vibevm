@@ -12,7 +12,8 @@ use vibe_wire::generated::shared as w;
 pub struct EvaluationRequest<'a> {
     pub definition: &'a m::ConfigurationDecl,
     pub input: &'a w::ConfigurationInput,
-    pub previous: Option<&'a w::ConfigurationRecord>,
+    pub previous: Option<super::ConfigurationHistory<'a>>,
+    pub history_use: super::HistoryUse<'a>,
     /// A newly submitted complete input may bind the current definition directly.
     pub replacement: bool,
     /// Explicit review of changed automatic basis; does not re-anchor parameter sources.
@@ -53,6 +54,19 @@ pub fn evaluate(request: EvaluationRequest<'_>) -> Result<EvaluatedConfiguration
             return Err(format!(
                 "parameter `{id}` is not a declared secret parameter"
             ));
+        }
+    }
+    if let super::HistoryUse::Transfer { path_bindings, .. } = request.history_use {
+        for id in path_bindings.keys() {
+            if !d
+                .parameters
+                .iter()
+                .any(|p| &p.id == id && !p.secret && p.kind == m::ParameterType::Path)
+            {
+                return Err(format!(
+                    "target binding `{id}` is not a declared public Path parameter"
+                ));
+            }
         }
     }
     let fingerprint = d
@@ -155,9 +169,9 @@ pub fn evaluate(request: EvaluationRequest<'_>) -> Result<EvaluatedConfiguration
         }
     }
     if !request.replacement
-        && let Some(previous) = request.previous
+        && let Some(previous) = request.previous.as_ref()
     {
-        for reliance in &previous.evaluation.reliance {
+        for reliance in previous.reliance {
             if let Some(id) = reliance.strip_prefix("closure:") {
                 let group = d.groups.iter().find_map(|g| match g {
                     m::ConfigurationGroupDecl::Closure {
@@ -178,7 +192,8 @@ pub fn evaluate(request: EvaluationRequest<'_>) -> Result<EvaluatedConfiguration
         parameters::Parameters {
             definition: d,
             input: &input,
-            previous: request.previous,
+            previous: request.previous.as_ref(),
+            history_use: request.history_use,
             replacement: request.replacement,
             fresh: request.fresh_parameters,
             ephemeral: request.ephemeral,
@@ -188,9 +203,9 @@ pub fn evaluate(request: EvaluationRequest<'_>) -> Result<EvaluatedConfiguration
         &mut out,
     );
     if !request.replacement
-        && let Some(previous) = request.previous
+        && let Some(previous) = request.previous.as_ref()
     {
-        for reason in &previous.evaluation.reliance {
+        for reason in previous.reliance {
             let retain = if let Some(id) = reason.strip_prefix("choice:") {
                 let still_automatic = input.policy == k::ChoicePolicy::UseDeclaredDefaults
                     && normalized
@@ -229,21 +244,17 @@ pub fn evaluate(request: EvaluationRequest<'_>) -> Result<EvaluatedConfiguration
     out.reliance.dedup();
     if !request.replacement
         && !request.reviewed
-        && let Some(previous) = request.previous
+        && let Some(previous) = request.previous.as_ref()
     {
-        let changed_basis =
-            previous.evaluation.definition != out.definition && !out.reliance.is_empty();
-        let new_reliance = out
-            .reliance
-            .iter()
-            .any(|r| !previous.evaluation.reliance.contains(r));
+        let changed_basis = previous.fingerprint != out.definition && !out.reliance.is_empty();
+        let new_reliance = out.reliance.iter().any(|r| !previous.reliance.contains(r));
         if changed_basis || new_reliance {
             out.questions
                 .push(w::ConfigurationQuestion::Review(Box::new(
                     w::ConfigurationQuestionReview {
                         previous_definition: previous.definition.clone(),
                         current_definition: definition::definition(d),
-                        previous: previous.evaluation.definition.clone(),
+                        previous: previous.fingerprint.to_owned(),
                         current: out.definition.clone(),
                         reasons: out.reliance.clone(),
                     },

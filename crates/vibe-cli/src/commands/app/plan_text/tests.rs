@@ -19,6 +19,7 @@ fn required(package: &str, step: Option<&str>, installed: bool) -> PlannedDepend
 
 fn plan(steps: Vec<PlannedStep>, dependencies: Vec<PlannedDependency>) -> Plan {
     Plan {
+        import_scope: None,
         configuration: None,
         secret_origins: Default::default(),
         secret_provided: Vec::new(),

@@ -6,6 +6,8 @@
 
 pub mod agent_hook;
 pub mod agent_hook_result;
+pub mod import_input;
+pub mod import_secrets;
 pub mod import_work;
 pub mod run;
 pub mod steps;

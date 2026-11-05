@@ -206,6 +206,7 @@ pub(super) fn operation<'a>(
 ) -> OperationContext<'a> {
     let attended = attended(ctx);
     OperationContext {
+        import_scope: None,
         settings,
         json: ctx.is_json(),
         offline,
@@ -271,6 +272,7 @@ pub(super) fn plan_request(
     answers: &AppChoiceArgs,
 ) -> Result<InstallRequest> {
     Ok(InstallRequest {
+        transfer: None,
         configuration: super::configuration::read(answers)?,
         choice,
         library: None,

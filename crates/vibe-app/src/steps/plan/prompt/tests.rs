@@ -36,6 +36,8 @@ fn planned(root: &Path, extra: &str, hosted: bool) -> Result<crate::steps::Plan,
     .unwrap();
     let settings = SettingsRoot::new(&root.join("settings"));
     plan(&PlanInput {
+        import_scope: None,
+        transfer: None,
         agent_modes: None,
         configuration: None,
         resolved: &resolved,

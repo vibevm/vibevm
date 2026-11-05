@@ -33,11 +33,30 @@ use crate::steps::PlanLicense;
 #[path = "portable/arrangement.rs"]
 mod arrangement;
 pub(crate) mod continuation;
+mod document;
+pub(crate) use document::{active_keys, validate_rows};
+#[path = "portable/full_export.rs"]
+mod full_export;
+pub(crate) mod full_prepare;
+mod full_preview;
+pub use full_preview::{FullImportPreview, preview_full_import};
+mod inputs;
+mod legacy_target;
 pub use continuation::{ImportCandidate, PreparedImport, import_row, prepare_import};
 pub(crate) use continuation::{arrangement as import_arrangement, definition as import_definition};
+pub use document::{
+    FULL_APPS_PROTOCOL, PortableDocument, parse_portable_document, selected_import_keys,
+};
+pub use full_prepare::{
+    FullImportCandidate, FullImportPreparation, PreparedFullImport, prepare_full_import,
+};
+pub use inputs::{ImportSecrets, parse_import_secrets, parse_import_target};
+pub(crate) use legacy_target::public as legacy_target_public;
 
 pub use arrangement::restore_arrangement;
-pub(crate) use arrangement::restore_locked as restore_arrangement_locked;
+pub(crate) use arrangement::{
+    restore_locked as restore_arrangement_locked, restore_parts as restore_arrangement_parts,
+};
 
 /// The protocol tag of the portable set.
 pub const APPS_PROTOCOL: &str = "vibe-apps/1";
@@ -121,6 +140,17 @@ pub fn portable_set(
         arrangement::export_into(&UserLaunchers::load(settings)?, &mut set);
     }
     Ok(set)
+}
+
+/// Export the compatible legacy world automatically, or complete configuration
+/// and exact required closure when requested or needed by retained rich data.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-HISTORY")]
+pub fn export_portable(
+    settings: &SettingsRoot,
+    request: &PortableExport,
+    force_full: bool,
+) -> Result<PortableDocument, AppError> {
+    full_export::export(settings, request, force_full)
 }
 
 fn row_of(record: &Installation) -> wire::Application {
@@ -410,3 +440,11 @@ pub fn import_choice(row: &wire::Application, options: &[InstallerOptionDecl]) -
         InstallChoice::default()
     }
 }
+
+#[cfg(test)]
+#[path = "portable/full_import_tests.rs"]
+mod full_import_tests;
+
+#[cfg(test)]
+#[path = "portable/full_dependency_tests.rs"]
+mod full_dependency_tests;

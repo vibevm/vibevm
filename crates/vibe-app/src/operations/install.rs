@@ -102,7 +102,7 @@ fn install_entered(
         .as_ref()
         .zip(import_parent.as_ref())
         .map(|(owner, (_, row))| {
-            if owner.cohort.cursor != *row {
+            if owner.cursor() != *row {
                 return Err(pending::failure(
                     ctx.settings,
                     &resolved.package,
@@ -110,10 +110,8 @@ fn install_entered(
                 ));
             }
             owner
-                .cohort
-                .rows
-                .get(*row as usize)
-                .filter(|r| r.key == key)
+                .agent_modes(*row as usize)
+                .filter(|_| owner.root_key(*row as usize) == Some(key.as_str()))
                 .ok_or_else(|| {
                     pending::failure(
                         ctx.settings,
@@ -130,10 +128,7 @@ fn install_entered(
         request,
         previous,
         &index,
-        (
-            saved.and_then(|s| s.operation.as_ref()),
-            import_row.map(|r| &r.agent_modes),
-        ),
+        (saved.and_then(|s| s.operation.as_ref()), import_row),
     )?;
     apply::admit_agents(ctx, resolved, &plan, request, saved)?;
     let target = if let Some(state) = saved {
@@ -226,8 +221,15 @@ fn install_entered(
         retire_env(ctx, &key, prior, &applied.installation)?;
     }
     let replaced = prior.is_some();
-    if let Some(row) = import_row {
-        applied.installation.lifecycle.held = row.held;
+    if let Some(held) = owner_state
+        .as_ref()
+        .zip(import_parent.as_ref())
+        .and_then(|(owner, (_, row))| owner.held(*row as usize))
+    {
+        applied.installation.lifecycle.held = held;
+    }
+    if let Some(binding) = ctx.import_scope.and_then(|scope| scope.binding(&key)) {
+        applied.installation.lifecycle.held = binding.application.held;
     }
     let finish_failure = applied.finish_failure.take();
     let resumable_failure = request.keep_work

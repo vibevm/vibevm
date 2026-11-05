@@ -207,7 +207,8 @@ fn the_same_key_with_different_decisions_refuses() -> Result<()> {
     Ok(())
 }
 
-/// The real vocabulary home yields104 optional scalar/structure occurrences.
+/// The real vocabulary home retains104 canonical sites,19 public portable
+/// sites and3 required-nullable fields in the new full-import work owners.
 /// The prior53 remain; common configuration and private continuation vocabulary
 /// add51. This census walks vocabulary definitions, not public app-work schemas.
 /// Repeated compatible keys count at each declared site.
@@ -218,9 +219,51 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     let home: Value =
         serde_json::from_str(include_str!("../../../../../formats/vocabularies.json"))
             .expect("the vocabulary home parses");
+    let full_work = [
+        "application_full_import",
+        "application_portable_binding",
+        "application_import_waiting_input",
+        "application_import_completed_binding",
+    ];
+    let public_and_old = home
+        .as_object()
+        .unwrap()
+        .iter()
+        .filter(|(name, _)| !full_work.contains(&name.as_str()))
+        .map(|(k, v)| (k.clone(), v.clone()))
+        .collect::<serde_json::Map<_, _>>();
+    let old = public_and_old
+        .iter()
+        .filter(|(name, _)| !name.starts_with("portable_"))
+        .map(|(k, v)| (k.clone(), v.clone()))
+        .collect::<serde_json::Map<_, _>>();
+    assert_eq!(
+        shapes(json!({"definitions":old}))?.sites,
+        104,
+        "all pre-portable sites retain their exact census"
+    );
+    assert_eq!(
+        shapes(json!({"definitions":public_and_old}))?.sites,
+        123,
+        "public portable vocabulary adds exactly19 transformation sites"
+    );
+    for (owner, fields) in [
+        ("application_full_import", vec!["current", "waiting"]),
+        (
+            "application_portable_binding",
+            vec!["configurationDefinition"],
+        ),
+    ] {
+        for field in fields {
+            assert_eq!(
+                home[owner]["properties"][field]["nullable"], true,
+                "the extra work site is a declared required-nullable field: {owner}.{field}"
+            );
+        }
+    }
     let doc_shapes = shapes(json!({ "definitions": home }))?;
     assert_eq!(
-        doc_shapes.sites, 104,
+        doc_shapes.sites, 126,
         "the real shared home includes every promoted optional site"
     );
     Ok(())

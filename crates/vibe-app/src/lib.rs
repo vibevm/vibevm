@@ -108,10 +108,13 @@ pub use operations::{
     resume, resume_import, resume_info, rollback, uninstall, update,
 };
 pub use portable::{
-    APPS_PROTOCOL, IMPORT_PROTOCOL, ImportAction, ImportCandidate, ImportInstall, PortableExport,
-    PreparedImport, import_action, import_choice, import_license, import_row, parse_portable,
-    portable_set, portable_toml, prepare_import, restore_arrangement,
+    APPS_PROTOCOL, FULL_APPS_PROTOCOL, IMPORT_PROTOCOL, ImportAction, ImportCandidate,
+    ImportInstall, ImportSecrets, PortableDocument, PortableExport, PreparedImport, import_action,
+    import_choice, import_license, import_row, parse_import_secrets, parse_import_target,
+    parse_portable, parse_portable_document, portable_set, portable_toml, prepare_import,
+    restore_arrangement,
 };
+pub use portable::{FullImportPreview, export_portable, preview_full_import, selected_import_keys};
 pub use proxies::{proxy_file_name, sync as sync_proxies, sync_locked as sync_proxies_locked};
 pub use resolve::{
     ResolvedPackage, from_global, from_local_registry, from_manifest, local_registry_carries,
@@ -134,3 +137,12 @@ pub use storage::{
     StorageConfig, add as storage_add, attach as storage_attach, create_library,
     detach as storage_detach, gc as storage_gc, listing as storage_list, relocate as storage_move,
 };
+
+pub use operations::import_full;
+pub use portable::{
+    FullImportCandidate, FullImportPreparation, PreparedFullImport, prepare_full_import,
+};
+
+pub use operations::ImportScope;
+
+pub use operations::{ImportResumeInfo, inspect_import_resume, resume_full_import};
