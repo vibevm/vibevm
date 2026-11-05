@@ -1197,3 +1197,10 @@ Local commit93c92645d contains59 reviewed F15 paths. Root made a command sequenc
 ### 2026-11-05 — positive common-package decisions after F15
 
 Root verified12 pinned optional-contract blobs and17/18 main hashes; PROP-069 drift is the accepted F15 update. Promoted the historical memo and recorded explicit decisions in research/common-package-positive-decisions.md. Existing mandatory edges stay mandatory; optional is an explicit declaration; weak forwarding is owner-local; inactive foreign payload is not an active requirement. Prototype solver explicitly refuses forwarding despite the algebra witnesses: historical accepted status cannot stand in for operational delivery. Resumed the existing package-adapter worker for a source-grounded positive integration design, no source writes/Cargo yet. Next acceptance must observe the actual graph and cold replay. This is design progress, not completion of A1–A5 or another old113 task.
+
+
+### 2026-11-05 — positive contract traceability and lock review
+
+Added three spec/done (not impl/done) PROP-069 facts for optional declarations, owner-local activation and dormant source/context admission; FMT-021 records the proposed source-format delta as unimplemented. Root inspected existing lock schema7 strict readers, root-satisfiability Fresh shortcut and point-reinstall exact-byte guard. Sent the integration worker the concrete reader obligations: rich request drift must not pass Fresh, record fields must not be silently lost, and old-reader rejection must be distinguished from new-reader legacy support. No lock schema choice or positive source activation has yet been accepted.
+
+Root traceability validation: existing xtask binary initially refused because CARGO_MANIFEST_DIR was unset (exit1, no map write). Re-ran with the actual xtask directory; generation and --check both exit0:9084units/5124items/4279edges,0gatedorphans/0unresolvedhost,43existingwarnings. Four added units are the planned section and three facts; no implementation coverage is manufactured. No Cargo/build/test was run for this documentation increment.

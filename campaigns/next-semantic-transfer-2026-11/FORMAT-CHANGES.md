@@ -428,3 +428,8 @@ Legacy case-c requires migration still seeds the in-memory request before solvin
 FMT-020 source identity refinement: the same origin URL can resolve different bytes under slot-local Git transport configuration. Existing-slot preparation therefore uses native original-repository transport, allowing only bounded object/FETCH_HEAD cache metadata before admission; HEAD/index/config/named refs/worktree and hooks remain unchanged. Pure prepared-source refusals have their own typed error rather than a fabricated failed Git command. Admission/manifest errors must not be hidden by a mirror fallback.
 
 FMT-020 root acceptance boundary: F15 consistently admits actual package inputs/candidates before project semantic effects, with exact prepared in-place source and explicit Git-cache exception. No positive generic configured-package runtime is inferred. The definitive Unreleased compatibility/API account is formats/breaks/007.md.
+
+
+## FMT-021 — Explicit optional package declarations (design; not implemented)
+
+Planned existing inline requires.packages key: optional:boolean, omitted=false. Explicit false remains authored metadata; registry/git/path/version.var share one declaration owner. New readers must retain old mandatory meaning; old strict manifest readers may reject the new key. No install-g grammar change has been implemented or accepted. Lock representation/version and maintenance-reader changes are still being designed and will be logged before writer activation. Canonical planned facts: PROP-069 OPTIONAL-DECLARATIONS, OWNER-LOCAL-ACTIVATION, DORMANT-SOURCE-BOUNDARY. Parser/schema alone will not be counted as delivery.
