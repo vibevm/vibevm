@@ -1108,3 +1108,10 @@ Updated local plan66 with current frozen110-file candidate, verified final test/
 Verified all110worker source hashes and88log hashes; corrected one release-note overstatement calling the legacy public reader strict (its prior tolerances remain). Explicitly staged116reviewed paths, excluding original doc.web. Fresh post-format specmap/check exit0:9079units/5062taggeditems/4216edges,0gatedorphans/0unresolvedhost,43knownwarnings. Ordinary staged check-codegen exit0; no unstaged generated changes. Root accepts the scoped consumer described in F14 and promotes its11PORTABLE facts to impl/done; final map is regenerated for that status change. This is not full F04/all-kind solver/113-task campaign acceptance. Public push/PR/release remain outside NST-D8; local commit follows gates.
 
 Root extra real-CLI stdin gate passed: A supplied-secret install/export→B --secret-input - succeeds; competing stdin consumers refuse before index mutation. Synthetic answers absent from stdout/stderr. Receipt archived in portable-root-acceptance/stdin-receipt.json.
+
+
+### 2026-11-05 — F14 committed; next architectural boundary started
+
+Local main commit34866ac87833179d530b86b6881de1bf60bd5be5 contains116reviewed files for full selected-installer portability. After commit, tracked tree clean; original untracked doc.web remains untouched. Local plan67 marks only NST-COMMON-PORTABLE accepted and moves current focus to NST-COMMON-EFFECTS architecture review; fullF04 and historical113 scope remain open. Documents dashboard refreshed automatically to plan67. No push/PR/release performed under NST-D8.
+
+Next read-only review distinguishes mandatory/optional requires semantics and domain-neutral evaluation from app-specific policy; it also found a candidate scoped-update path bypassing existing unsupported-configuration admission. Test-first confirmation and bounded common-owner correction are next, followed by actual configured non-app effects rather than declaring a refusal guard to be delivery. Full report/source evidence pending root review.
