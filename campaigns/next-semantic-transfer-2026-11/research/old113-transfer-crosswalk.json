@@ -15,15 +15,15 @@
     "cross_checked_graph_statuses": true
   },
   "counts": {
-    "partial": 24,
+    "partial": 27,
     "full": 9,
-    "not-transferred": 16,
-    "unknown": 64,
+    "not-transferred": 18,
+    "unknown": 59,
     "already_main": 0
   },
   "minimum_proven_complete_old_tasks": 9,
   "exact_global_complete_total": "not established; at least 9",
-  "important": "At least9 full old tasks proved;24partial,16not-transferred,64unknown. Neutral D1 accepted with refined coordination/platform limits; no full source interpretation or campaign completion inferred.",
+  "important": "At least 9 full old tasks proved; 27 partial, 18 not-transferred, 59 unknown. Five M02 rows reconciled by source audit; no new full task or runtime acceptance.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -948,14 +948,37 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Reuse M-16 editing boundaries for a safe change reader and future writer.\nAcceptance criteria: Analysis results identify the exact overlay/disk snapshot and location basis.; No new editor coordination or writer authority duplicates M-16.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "accepted_main_commits": [
+        "940f93db4115c83484916849580f085d47c4b8ae"
+      ],
+      "transferred_scope": "Accepted saved role-byte reads and independent intent/work identities; no client overlay snapshot analysis.",
+      "unmet_or_unverified": "Adapt change parser to shared M16 client dirty/saved snapshots and coordination epochs; do not invent competing editor protocol. Full clause matrix: research/m02-remaining-transfer-review.json. Source-only review, no fresh runtime acceptance.",
+      "implemented_coverage": "Accepted saved role-byte reads and independent intent/work identities; no client overlay snapshot analysis.",
+      "remaining_behavior": "Adapt change parser to shared M16 client dirty/saved snapshots and coordination epochs; do not invent competing editor protocol.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Reuse M-16 editing boundaries for a safe change reader and future writer.",
+        "steps": [
+          "Connect change parsing to the accepted source/overlay snapshot interface.",
+          "Allow pure diagnostics over a client's dirty change documents without updating authored files or lock.",
+          "Prepare future authored changes only from saved captured state; revalidate buffer/disk epochs through the existing writer coordination contract."
+        ],
+        "positive_cases": [
+          "Two clients analyze different dirty refinements without cross-client leakage."
+        ],
+        "negative_cases": [
+          "Dirty or changed affected document produces save-required/stale before writes.",
+          "A saved buffer does not automatically authorize an older dirty-buffer plan."
+        ],
+        "acceptance": [
+          "Analysis results identify the exact overlay/disk snapshot and location basis.",
+          "No new editor coordination or writer authority duplicates M-16."
+        ]
+      },
+      "review_evidence": "research/m02-remaining-transfer-review.json",
+      "review_main_pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c"
     },
     {
       "old_task_id": "M-02-C.1",
@@ -963,14 +986,37 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Keep change origin stable across mutable package updates.\nAcceptance criteria: Origin/rebase reports show exact old/new capture and affected fact addresses.; Package slots and historical accepted evidence remain unchanged.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "accepted_main_commits": [
+        "940f93db4115c83484916849580f085d47c4b8ae"
+      ],
+      "transferred_scope": "Accepted exact origin declarations and nonpublishing saved identity analysis; no resolved retained origin or rebase service.",
+      "unmet_or_unverified": "Compare accepted origin against selected exact source captures and prepare explicit fact rebase; no mutable latest substitution. Full clause matrix: research/m02-remaining-transfer-review.json. Source-only review, no fresh runtime acceptance.",
+      "implemented_coverage": "Accepted exact origin declarations and nonpublishing saved identity analysis; no resolved retained origin or rebase service.",
+      "remaining_behavior": "Compare accepted origin against selected exact source captures and prepare explicit fact rebase; no mutable latest substitution.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Keep change origin stable across mutable package updates.",
+        "steps": [
+          "Resolve each origin against M-01 exact captures and store accepted identity in authored change intent.",
+          "Compare current selected capture to accepted origin without replacing it silently.",
+          "Implement explicit rebase preparation with old/new fact identity diff and saved-state preconditions."
+        ],
+        "positive_cases": [
+          "Reinstall reuses the accepted origin capture; explicit rebase binds a new one."
+        ],
+        "negative_cases": [
+          "Same-version changed content reports origin-drift.",
+          "Missing retained origin cannot be replaced by newest SemVer."
+        ],
+        "acceptance": [
+          "Origin/rebase reports show exact old/new capture and affected fact addresses.",
+          "Package slots and historical accepted evidence remain unchanged."
+        ]
+      },
+      "review_evidence": "research/m02-remaining-transfer-review.json",
+      "review_main_pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c"
     },
     {
       "old_task_id": "M-02-C.2",
@@ -978,14 +1024,35 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Prevent paginated or truncated requirements from masquerading as complete change scope.\nAcceptance criteria: Selected-address inventory equals observed complete universe or lists exact gaps.; Existing neutral query semantics and limits remain explicit compatibility behavior.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Existing neutral query preserves explicit truncation and per-source facts; no complete selected-address observation over one retained multi-source set.",
+      "unmet_or_unverified": "First among these five: complete exact fact selection over one retained source set, preserving bounded neutral query compatibility; source interpretation/capture prerequisite must be accepted. Full clause matrix: research/m02-remaining-transfer-review.json. Source-only review, no fresh runtime acceptance.",
+      "implemented_coverage": "Existing neutral query preserves explicit truncation and per-source facts; no complete selected-address observation over one retained multi-source set.",
+      "remaining_behavior": "First among these five: complete exact fact selection over one retained source set, preserving bounded neutral query compatibility; source interpretation/capture prerequisite must be accepted.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Prevent paginated or truncated requirements from masquerading as complete change scope.",
+        "steps": [
+          "Add exact-address batch/internal complete observation over one captured source set.",
+          "Preserve missing/unavailable/unclassified distinctions and explicit out-of-scope omissions.",
+          "Use snapshot-bound pagination where necessary; refuse mixed captures and propagate completeness to change analysis."
+        ],
+        "positive_cases": [
+          "A fact set larger than the existing query page limit is completely selected.",
+          "Spec-only requirements stay representable."
+        ],
+        "negative_cases": [
+          "Truncated pages, changed membership and unresolved selected facts cannot appear complete."
+        ],
+        "acceptance": [
+          "Selected-address inventory equals observed complete universe or lists exact gaps.",
+          "Existing neutral query semantics and limits remain explicit compatibility behavior."
+        ]
+      },
+      "review_evidence": "research/m02-remaining-transfer-review.json",
+      "review_main_pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c"
     },
     {
       "old_task_id": "M-02-D.1",
@@ -993,14 +1060,34 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Create a local change from an exact origin through one prepared saved-state write.\nAcceptance criteria: Prepared diff matches authored created files and declared IDs.; Scaffolding does not adopt package facts or start lifecycle execution.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "No accepted no-overwrite change scaffold operation; existing-file migration writer is only a prerequisite.",
+      "unmet_or_unverified": "After capture/completeness/saved-editor admission: prepared no-overwrite scaffold via incumbent filesystem ownership/recovery; not one-file replacement pretending to create a directory. Full clause matrix: research/m02-remaining-transfer-review.json. Source-only review, no fresh runtime acceptance.",
+      "implemented_coverage": "No accepted no-overwrite change scaffold operation; existing-file migration writer is only a prerequisite.",
+      "remaining_behavior": "After capture/completeness/saved-editor admission: prepared no-overwrite scaffold via incumbent filesystem ownership/recovery; not one-file replacement pretending to create a directory.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Create a local change from an exact origin through one prepared saved-state write.",
+        "steps": [
+          "Prepare new --from output from one selected origin/node and the accepted parser/hash contract.",
+          "Validate destination absence, role paths, captured origin and writer preconditions before creating anything.",
+          "Apply owned files with retained before-state/journal semantics; return exact created artifacts and partial failure truth."
+        ],
+        "positive_cases": [
+          "A new scaffold references origin facts and adds only local roles/refinement."
+        ],
+        "negative_cases": [
+          "Existing change directory, dirty affected buffer or stale origin refuses without overwrite."
+        ],
+        "acceptance": [
+          "Prepared diff matches authored created files and declared IDs.",
+          "Scaffolding does not adopt package facts or start lifecycle execution."
+        ]
+      },
+      "review_evidence": "research/m02-remaining-transfer-review.json",
+      "review_main_pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c"
     },
     {
       "old_task_id": "M-02-D.2",
@@ -1008,14 +1095,35 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Finish useful read-only change access without a second verdict engine.\nAcceptance criteria: All surfaces return one semantic result and typed failures.; M-02 is usable without starting or migrating an execution.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "No accepted shared change check/show/coverage service; neutral requirements query remains a separate useful prerequisite.",
+      "unmet_or_unverified": "After read domains: one pure change report with thin generated CLI/MCP/service adapters; can precede effectful scaffolding, no second verdict engine. Full clause matrix: research/m02-remaining-transfer-review.json. Source-only review, no fresh runtime acceptance.",
+      "implemented_coverage": "No accepted shared change check/show/coverage service; neutral requirements query remains a separate useful prerequisite.",
+      "remaining_behavior": "After read domains: one pure change report with thin generated CLI/MCP/service adapters; can precede effectful scaffolding, no second verdict engine.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Finish useful read-only change access without a second verdict engine.",
+        "steps": [
+          "Register generated change query request/results using the canonical M-16 service facade.",
+          "Implement check/show/coverage joins with exact origin/local provenance, completeness and separate work/evidence axes.",
+          "Add CLI/MCP/service parity including schema/unknown-field/refusal cases and empty-cache purity."
+        ],
+        "positive_cases": [
+          "Two changes sharing an origin expose different local intent with the same package capture."
+        ],
+        "negative_cases": [
+          "Work edge, adoption flag or incomplete result cannot become a satisfied verdict.",
+          "Read queries never install or mutate personal/adoption state."
+        ],
+        "acceptance": [
+          "All surfaces return one semantic result and typed failures.",
+          "M-02 is usable without starting or migrating an execution."
+        ]
+      },
+      "review_evidence": "research/m02-remaining-transfer-review.json",
+      "review_main_pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c"
     },
     {
       "old_task_id": "M-03-A.1",
@@ -4390,6 +4498,6 @@
   ],
   "count_caution": "The proven lower bound is 9 complete tasks. Unknown means criterion-complete transfer has not been established, not that implementation is absent. Partial tasks are not weighted completion percentages. No missing type-name or broader subsystem requirement substitutes for original semantic criteria.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
-  "version_note": "Latest accepted review includes neutral M13D1: 9 full, 24 partial, 16 not-transferred, 64 unknown. Current M06A1 work is unaccepted and does not increase these counts; exact global completed total remains unestablished.",
-  "latest_scoped_review_main_pin": "a4b322150c494e5d7245252ace109b7be9e62c1a"
+  "version_note": "Five remaining M02 rows reviewed against exact contracts: 3 partial and 2 not-transferred replace unknown. Counts: 9 full, 27 partial, 18 not-transferred, 59 unknown. Current M06A1 remains unaccepted.",
+  "latest_scoped_review_main_pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c"
 }

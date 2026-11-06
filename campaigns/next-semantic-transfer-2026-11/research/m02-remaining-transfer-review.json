@@ -1,0 +1,1245 @@
+{
+  "scope": [
+    "M-02-B.3",
+    "M-02-C.1",
+    "M-02-C.2",
+    "M-02-D.1",
+    "M-02-D.2"
+  ],
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "main_pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+  "mode": "read-only source audit; no tests or acceptance promotion",
+  "proposed_counts": {
+    "full": 0,
+    "partial": 3,
+    "not-transferred": 2,
+    "unknown": 0
+  },
+  "rows": [
+    {
+      "old_task_id": "M-02-B.3",
+      "title": "Integrate saved-state and overlay change analysis",
+      "proposed_status": "partial",
+      "exact_contract": {
+        "id": "M-02-B.3",
+        "title": "Integrate saved-state and overlay change analysis",
+        "goal": "Reuse M-16 editing boundaries for a safe change reader and future writer.",
+        "read_paths": [
+          "crates/vibe-requirements/src/query.rs",
+          "crates/vibe-mcp/src/context.rs",
+          "crates/vibe-specdoc/src/load.rs",
+          "crates/vibe-requirements/Cargo.toml",
+          "crates/vibe-requirements/src/lib.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs"
+        ],
+        "write_paths": [
+          "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+          "crates/vibe-requirements/src/change/",
+          "crates/vibe-orchestrator/src/change/",
+          "crates/vibe-requirements/Cargo.toml",
+          "crates/vibe-requirements/src/lib.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs"
+        ],
+        "steps": [
+          "Connect change parsing to the accepted source/overlay snapshot interface.",
+          "Allow pure diagnostics over a client's dirty change documents without updating authored files or lock.",
+          "Prepare future authored changes only from saved captured state; revalidate buffer/disk epochs through the existing writer coordination contract."
+        ],
+        "positive_cases": [
+          "Two clients analyze different dirty refinements without cross-client leakage."
+        ],
+        "negative_cases": [
+          "Dirty or changed affected document produces save-required/stale before writes.",
+          "A saved buffer does not automatically authorize an older dirty-buffer plan."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "Analysis results identify the exact overlay/disk snapshot and location basis.",
+          "No new editor coordination or writer authority duplicates M-16."
+        ],
+        "safe_stop": "Discard overlays without saving; no execution or closure writes.",
+        "commit_subject": "feat(change): bind analysis to document snapshots",
+        "notes": [
+          "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+          "Permanent destination: vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+          "TO CREATE: m_02_b_3_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+          "PROPOSED orchestrator src/change/; consume M-16 interfaces, do not create competing overlay protocols.",
+          "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Connect change parsing to the accepted source/overlay snapshot interface.",
+          "assessment": "partial",
+          "reason": "Saved parser retains manifest/role bytes; no source/overlay snapshot interface.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/read.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Allow pure diagnostics over a client's dirty change documents without updating authored files or lock.",
+          "assessment": "missing",
+          "reason": "No client-scoped dirty-document analysis input/service.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/read.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Prepare future authored changes only from saved captured state; revalidate buffer/disk epochs through the existing writer coordination contract.",
+          "assessment": "missing",
+          "reason": "Pure saved migration proposal has no buffer/disk epoch coordination; M13D1 is a disk writer barrier.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/read.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Two clients analyze different dirty refinements without cross-client leakage.",
+          "assessment": "missing",
+          "reason": "No two-client dirty refinement service or fixture.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/read.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Dirty or changed affected document produces save-required/stale before writes.",
+          "assessment": "missing",
+          "reason": "No change dirty-buffer save-required/stale admission.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/read.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "A saved buffer does not automatically authorize an older dirty-buffer plan.",
+          "assessment": "missing",
+          "reason": "No client epoch identity to invalidate earlier dirty plan after save.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/read.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Analysis results identify the exact overlay/disk snapshot and location basis.",
+          "assessment": "partial",
+          "reason": "Retained per-file bytes/paths exist; overlay/disk snapshot ID and location basis absent.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/read.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "No new editor coordination or writer authority duplicates M-16.",
+          "assessment": "unverified",
+          "reason": "No duplicate editor protocol only because no joined editor implementation; not completion.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/read.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Discard overlays without saving; no execution or closure writes.",
+          "assessment": "partial",
+          "reason": "Existing saved read is nonpublishing; overlays are absent.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/read.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml"
+          ]
+        }
+      ],
+      "checks": "Not executed: source-only audit. Historical commands are not runtime evidence.",
+      "bounded_next_atom": "Adapt change parser to shared M16 client dirty/saved snapshots and coordination epochs; do not invent competing editor protocol."
+    },
+    {
+      "old_task_id": "M-02-C.1",
+      "title": "Retain accepted origin captures and explicit rebase",
+      "proposed_status": "partial",
+      "exact_contract": {
+        "id": "M-02-C.1",
+        "title": "Retain accepted origin captures and explicit rebase",
+        "goal": "Keep change origin stable across mutable package updates.",
+        "read_paths": [
+          "crates/vibe-requirements/src/query.rs",
+          "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+          "crates/vibe-install/src/record.rs",
+          "crates/vibe-requirements/Cargo.toml",
+          "crates/vibe-requirements/src/lib.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs"
+        ],
+        "write_paths": [
+          "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+          "crates/vibe-requirements/src/change/",
+          "crates/vibe-orchestrator/src/change/",
+          "crates/vibe-requirements/Cargo.toml",
+          "crates/vibe-requirements/src/lib.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs"
+        ],
+        "steps": [
+          "Resolve each origin against M-01 exact captures and store accepted identity in authored change intent.",
+          "Compare current selected capture to accepted origin without replacing it silently.",
+          "Implement explicit rebase preparation with old/new fact identity diff and saved-state preconditions."
+        ],
+        "positive_cases": [
+          "Reinstall reuses the accepted origin capture; explicit rebase binds a new one."
+        ],
+        "negative_cases": [
+          "Same-version changed content reports origin-drift.",
+          "Missing retained origin cannot be replaced by newest SemVer."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "Origin/rebase reports show exact old/new capture and affected fact addresses.",
+          "Package slots and historical accepted evidence remain unchanged."
+        ],
+        "safe_stop": "Return drift/unavailable with a reviewable rebase plan.",
+        "commit_subject": "feat(change): retain exact origin and rebase intent",
+        "notes": [
+          "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+          "Permanent destination: vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+          "TO CREATE: m_02_c_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+          "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Resolve each origin against M-01 exact captures and store accepted identity in authored change intent.",
+          "assessment": "partial",
+          "reason": "Strict ChangeOrigin stores exact pin and declared hashes, but no capture resolution/proof.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-requirements/src/sources.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Compare current selected capture to accepted origin without replacing it silently.",
+          "assessment": "missing",
+          "reason": "No current selected capture versus accepted origin comparison owner.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-requirements/src/sources.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Implement explicit rebase preparation with old/new fact identity diff and saved-state preconditions.",
+          "assessment": "missing",
+          "reason": "No old/new fact diff or saved-state rebase preparation.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-requirements/src/sources.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Reinstall reuses the accepted origin capture; explicit rebase binds a new one.",
+          "assessment": "missing",
+          "reason": "No change-origin reinstall/rebase integration; generic reinstall is insufficient.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-requirements/src/sources.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Same-version changed content reports origin-drift.",
+          "assessment": "missing",
+          "reason": "No same-version origin-drift result.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-requirements/src/sources.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Missing retained origin cannot be replaced by newest SemVer.",
+          "assessment": "partial",
+          "reason": "Exact pin syntax exists; missing retained capture has no implemented lookup policy.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-requirements/src/sources.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Origin/rebase reports show exact old/new capture and affected fact addresses.",
+          "assessment": "missing",
+          "reason": "No origin/rebase report with old/new captures and affected facts.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-requirements/src/sources.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Package slots and historical accepted evidence remain unchanged.",
+          "assessment": "partial",
+          "reason": "Saved read/proposals preserve slots/evidence; actual rebase path absent.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-requirements/src/sources.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Return drift/unavailable with a reviewable rebase plan.",
+          "assessment": "missing",
+          "reason": "Reviewable drift/unavailable/rebase result absent.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/identity.rs",
+            "crates/vibe-requirements/src/sources.rs"
+          ]
+        }
+      ],
+      "checks": "Not executed: source-only audit. Historical commands are not runtime evidence.",
+      "bounded_next_atom": "Compare accepted origin against selected exact source captures and prepare explicit fact rebase; no mutable latest substitution."
+    },
+    {
+      "old_task_id": "M-02-C.2",
+      "title": "Provide a complete same-snapshot fact selection seam",
+      "proposed_status": "partial",
+      "exact_contract": {
+        "id": "M-02-C.2",
+        "title": "Provide a complete same-snapshot fact selection seam",
+        "goal": "Prevent paginated or truncated requirements from masquerading as complete change scope.",
+        "read_paths": [
+          "crates/vibe-requirements/src/query.rs",
+          "crates/vibe-requirements/src/rows.rs",
+          "crates/vibe-facts/src/scan.rs",
+          "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
+          "crates/vibe-requirements/Cargo.toml",
+          "crates/vibe-requirements/src/lib.rs",
+          "crates/vibe-facts/Cargo.toml",
+          "crates/vibe-facts/src/lib.rs"
+        ],
+        "write_paths": [
+          "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+          "crates/vibe-requirements/src/",
+          "crates/vibe-facts/src/scan.rs",
+          "crates/vibe-requirements/Cargo.toml",
+          "crates/vibe-requirements/src/lib.rs",
+          "crates/vibe-facts/Cargo.toml",
+          "crates/vibe-facts/src/lib.rs"
+        ],
+        "steps": [
+          "Add exact-address batch/internal complete observation over one captured source set.",
+          "Preserve missing/unavailable/unclassified distinctions and explicit out-of-scope omissions.",
+          "Use snapshot-bound pagination where necessary; refuse mixed captures and propagate completeness to change analysis."
+        ],
+        "positive_cases": [
+          "A fact set larger than the existing query page limit is completely selected.",
+          "Spec-only requirements stay representable."
+        ],
+        "negative_cases": [
+          "Truncated pages, changed membership and unresolved selected facts cannot appear complete."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-facts target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-facts <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "Selected-address inventory equals observed complete universe or lists exact gaps.",
+          "Existing neutral query semantics and limits remain explicit compatibility behavior."
+        ],
+        "safe_stop": "Expose incomplete analysis, never allow incomplete data to certify closure.",
+        "commit_subject": "feat(requirements): observe complete change fact scopes",
+        "notes": [
+          "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+          "Permanent destination: vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+          "TO CREATE: m_02_c_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+          "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Add exact-address batch/internal complete observation over one captured source set.",
+          "assessment": "partial",
+          "reason": "Unbounded per-source fact observation exists; no selected-address batch over retained whole source set.",
+          "evidence": [
+            "crates/vibe-facts/src/scan.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/sources.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-requirements/src/tests_query.rs",
+            "crates/vibe-requirements/src/tests_requirements.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Preserve missing/unavailable/unclassified distinctions and explicit out-of-scope omissions.",
+          "assessment": "partial",
+          "reason": "Invalid/unavailable sources and unclassified rows differ; exact missing/out-of-scope inventory absent.",
+          "evidence": [
+            "crates/vibe-facts/src/scan.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/sources.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-requirements/src/tests_query.rs",
+            "crates/vibe-requirements/src/tests_requirements.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Use snapshot-bound pagination where necessary; refuse mixed captures and propagate completeness to change analysis.",
+          "assessment": "missing",
+          "reason": "Query truncates and has no continuation; repeat calls reobserve; no change completeness propagation.",
+          "evidence": [
+            "crates/vibe-facts/src/scan.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/sources.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-requirements/src/tests_query.rs",
+            "crates/vibe-requirements/src/tests_requirements.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "A fact set larger than the existing query page limit is completely selected.",
+          "assessment": "missing",
+          "reason": "No selected set larger than256 through change seam; private pre-truncation vector is not that capability.",
+          "evidence": [
+            "crates/vibe-facts/src/scan.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/sources.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-requirements/src/tests_query.rs",
+            "crates/vibe-requirements/src/tests_requirements.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Spec-only requirements stay representable.",
+          "assessment": "partial",
+          "reason": "Specification kind is preserved by exhaustive mapper; inspected fixture includes all kinds, no dedicated change spec-only scenario.",
+          "evidence": [
+            "crates/vibe-facts/src/scan.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/sources.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-requirements/src/tests_query.rs",
+            "crates/vibe-requirements/src/tests_requirements.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Truncated pages, changed membership and unresolved selected facts cannot appear complete.",
+          "assessment": "partial",
+          "reason": "truncated flag is honest; no joined classifier covers membership drift and missing selected addresses.",
+          "evidence": [
+            "crates/vibe-facts/src/scan.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/sources.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-requirements/src/tests_query.rs",
+            "crates/vibe-requirements/src/tests_requirements.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Selected-address inventory equals observed complete universe or lists exact gaps.",
+          "assessment": "missing",
+          "reason": "No selected-address universe equality or exact gap result.",
+          "evidence": [
+            "crates/vibe-facts/src/scan.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/sources.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-requirements/src/tests_query.rs",
+            "crates/vibe-requirements/src/tests_requirements.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Existing neutral query semantics and limits remain explicit compatibility behavior.",
+          "assessment": "covered",
+          "reason": "Current query has explicit1..256 bound, sorted truncation, neutral metadata semantics and inspected regression assertions.",
+          "evidence": [
+            "crates/vibe-facts/src/scan.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/sources.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-requirements/src/tests_query.rs",
+            "crates/vibe-requirements/src/tests_requirements.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Expose incomplete analysis, never allow incomplete data to certify closure.",
+          "assessment": "partial",
+          "reason": "Bounded query exposes incompleteness; no change closure/report consumes it.",
+          "evidence": [
+            "crates/vibe-facts/src/scan.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/sources.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-requirements/src/tests_query.rs",
+            "crates/vibe-requirements/src/tests_requirements.rs"
+          ]
+        }
+      ],
+      "checks": "Not executed: source-only audit. Historical commands are not runtime evidence.",
+      "bounded_next_atom": "First among these five: complete exact fact selection over one retained source set, preserving bounded neutral query compatibility; source interpretation/capture prerequisite must be accepted."
+    },
+    {
+      "old_task_id": "M-02-D.1",
+      "title": "Implement no-overwrite change scaffolding",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-02-D.1",
+        "title": "Implement no-overwrite change scaffolding",
+        "goal": "Create a local change from an exact origin through one prepared saved-state write.",
+        "read_paths": [
+          "crates/vibe-requirements/src/query.rs",
+          "crates/vibe-core/src/manifest/package.rs",
+          "crates/vibe-safefs/src/file.rs",
+          "crates/vibe-cli/src/cli.rs",
+          "crates/vibe-cli/src/main.rs",
+          "crates/vibe-cli/src/commands/mod.rs",
+          "crates/vibe-cli/Cargo.toml",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs",
+          "crates/vibe-requirements/Cargo.toml",
+          "crates/vibe-requirements/src/lib.rs"
+        ],
+        "write_paths": [
+          "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+          "crates/vibe-orchestrator/src/change/",
+          "crates/vibe-requirements/src/change/",
+          "crates/vibe-cli/src/commands/change/",
+          "crates/vibe-cli/src/cli.rs",
+          "crates/vibe-cli/src/main.rs",
+          "crates/vibe-cli/src/commands/mod.rs",
+          "crates/vibe-cli/Cargo.toml",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs",
+          "crates/vibe-requirements/Cargo.toml",
+          "crates/vibe-requirements/src/lib.rs"
+        ],
+        "steps": [
+          "Prepare new --from output from one selected origin/node and the accepted parser/hash contract.",
+          "Validate destination absence, role paths, captured origin and writer preconditions before creating anything.",
+          "Apply owned files with retained before-state/journal semantics; return exact created artifacts and partial failure truth."
+        ],
+        "positive_cases": [
+          "A new scaffold references origin facts and adds only local roles/refinement."
+        ],
+        "negative_cases": [
+          "Existing change directory, dirty affected buffer or stale origin refuses without overwrite."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "Prepared diff matches authored created files and declared IDs.",
+          "Scaffolding does not adopt package facts or start lifecycle execution."
+        ],
+        "safe_stop": "A prepared scaffold is safe to inspect; reject rather than overwrite.",
+        "commit_subject": "feat(change): scaffold exact origin bindings safely",
+        "notes": [
+          "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+          "Permanent destination: vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+          "TO CREATE: m_02_d_1_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+          "PROPOSED CLI commands/change/; endpoint spelling follows the root service contract.",
+          "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Prepare new --from output from one selected origin/node and the accepted parser/hash contract.",
+          "assessment": "missing",
+          "reason": "No new --from preparation over exact origin/node.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-workspace/src/migration_application.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Validate destination absence, role paths, captured origin and writer preconditions before creating anything.",
+          "assessment": "missing",
+          "reason": "No scaffold destination/origin/editor-precondition admission.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-workspace/src/migration_application.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Apply owned files with retained before-state/journal semantics; return exact created artifacts and partial failure truth.",
+          "assessment": "missing",
+          "reason": "M13D1 replaces one existing approved file and refuses absent target; no multi-artifact creation journal.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-workspace/src/migration_application.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "A new scaffold references origin facts and adds only local roles/refinement.",
+          "assessment": "missing",
+          "reason": "No origin-reference/local-role scaffold output.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-workspace/src/migration_application.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Existing change directory, dirty affected buffer or stale origin refuses without overwrite.",
+          "assessment": "missing",
+          "reason": "No joined existing-dir/dirty-buffer/stale-origin scaffold refusal.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-workspace/src/migration_application.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Prepared diff matches authored created files and declared IDs.",
+          "assessment": "missing",
+          "reason": "No prepared scaffold diff/artifact/ID result.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-workspace/src/migration_application.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Scaffolding does not adopt package facts or start lifecycle execution.",
+          "assessment": "unverified",
+          "reason": "No scaffold route; effect-free parser is not a scaffold implementation.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-workspace/src/migration_application.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "A prepared scaffold is safe to inspect; reject rather than overwrite.",
+          "assessment": "missing",
+          "reason": "Inspectable prepared scaffold absent.",
+          "evidence": [
+            "crates/vibe-core/src/manifest/change/mod.rs",
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-workspace/src/migration_application.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs"
+          ]
+        }
+      ],
+      "checks": "Not executed: source-only audit. Historical commands are not runtime evidence.",
+      "bounded_next_atom": "After capture/completeness/saved-editor admission: prepared no-overwrite scaffold via incumbent filesystem ownership/recovery; not one-file replacement pretending to create a directory."
+    },
+    {
+      "old_task_id": "M-02-D.2",
+      "title": "Expose check, show and coverage through shared services",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-02-D.2",
+        "title": "Expose check, show and coverage through shared services",
+        "goal": "Finish useful read-only change access without a second verdict engine.",
+        "read_paths": [
+          "crates/vibe-requirements/src/query.rs",
+          "crates/vibe-requirements/src/rows.rs",
+          "crates/vibe-cli/src/main.rs",
+          "crates/vibe-mcp/src/tools.rs",
+          "xtask/src/main.rs",
+          ".cargo/config.toml",
+          "crates/vibe-cli/src/cli.rs",
+          "crates/vibe-cli/src/commands/mod.rs",
+          "crates/vibe-cli/Cargo.toml",
+          "crates/vibe-requirements/Cargo.toml",
+          "crates/vibe-requirements/src/lib.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs",
+          "crates/vibe-mcp/Cargo.toml",
+          "crates/vibe-mcp/src/lib.rs",
+          "crates/vibe-wire/Cargo.toml",
+          "crates/vibe-wire/src/lib.rs"
+        ],
+        "write_paths": [
+          "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+          "crates/vibe-requirements/src/change/",
+          "crates/vibe-orchestrator/src/change/",
+          "crates/vibe-cli/src/commands/change/",
+          "crates/vibe-mcp/src/tools/change.rs",
+          "schemas/",
+          "formats/",
+          "crates/vibe-wire/src/",
+          "crates/vibe-mcp/src/tools.rs",
+          "crates/vibe-cli/src/cli.rs",
+          "crates/vibe-cli/src/main.rs",
+          "crates/vibe-cli/src/commands/mod.rs",
+          "crates/vibe-cli/Cargo.toml",
+          "crates/vibe-requirements/Cargo.toml",
+          "crates/vibe-requirements/src/lib.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs",
+          "crates/vibe-mcp/Cargo.toml",
+          "crates/vibe-mcp/src/lib.rs",
+          "crates/vibe-wire/Cargo.toml",
+          "crates/vibe-wire/src/lib.rs"
+        ],
+        "steps": [
+          "Register generated change query request/results using the canonical M-16 service facade.",
+          "Implement check/show/coverage joins with exact origin/local provenance, completeness and separate work/evidence axes.",
+          "Add CLI/MCP/service parity including schema/unknown-field/refusal cases and empty-cache purity."
+        ],
+        "positive_cases": [
+          "Two changes sharing an origin expose different local intent with the same package capture."
+        ],
+        "negative_cases": [
+          "Work edge, adoption flag or incomplete result cannot become a satisfied verdict.",
+          "Read queries never install or mutate personal/adoption state."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-requirements target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-requirements <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-orchestrator target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-orchestrator <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "cargo fmt --all -- --check",
+          "git diff --check",
+          "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check."
+        ],
+        "acceptance": [
+          "All surfaces return one semantic result and typed failures.",
+          "M-02 is usable without starting or migrating an execution."
+        ],
+        "safe_stop": "Accept read-only value while lifecycle/closure remain separate milestones.",
+        "commit_subject": "feat(api): expose change inspection and coverage",
+        "notes": [
+          "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+          "Permanent destination: vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+          "TO CREATE: m_02_d_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+          "PROPOSED MCP tools/change.rs and change schema files; regenerate owned wires rather than hand editing generated code.",
+          "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Register generated change query request/results using the canonical M-16 service facade.",
+          "assessment": "missing",
+          "reason": "No generated change query facade/registration.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Implement check/show/coverage joins with exact origin/local provenance, completeness and separate work/evidence axes.",
+          "assessment": "missing",
+          "reason": "No change check/show/coverage join with exact provenance/completeness/work-evidence axes.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Add CLI/MCP/service parity including schema/unknown-field/refusal cases and empty-cache purity.",
+          "assessment": "missing",
+          "reason": "No change CLI/MCP/service parity or strictness/purity case family.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Two changes sharing an origin expose different local intent with the same package capture.",
+          "assessment": "missing",
+          "reason": "No two-change inspection result exposing shared accepted origin capture.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Work edge, adoption flag or incomplete result cannot become a satisfied verdict.",
+          "assessment": "partial",
+          "reason": "Neutral requirements has no verdict and separate adoption; complete change join absent.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Read queries never install or mutate personal/adoption state.",
+          "assessment": "partial",
+          "reason": "Existing requirements query is read-only with no-new-files assertions; change query absent.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "All surfaces return one semantic result and typed failures.",
+          "assessment": "missing",
+          "reason": "No shared change semantic result across surfaces.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "M-02 is usable without starting or migrating an execution.",
+          "assessment": "missing",
+          "reason": "Parser/identity library exists, but requested check/show/coverage access absent.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Accept read-only value while lifecycle/closure remain separate milestones.",
+          "assessment": "missing",
+          "reason": "Read-only service value absent; parser is a separate accepted boundary.",
+          "evidence": [
+            "crates/vibe-requirements/src/change/mod.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/rows.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "crates/vibe-cli/src/cli.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        }
+      ],
+      "checks": "Not executed: source-only audit. Historical commands are not runtime evidence.",
+      "bounded_next_atom": "After read domains: one pure change report with thin generated CLI/MCP/service adapters; can precede effectful scaffolding, no second verdict engine."
+    }
+  ],
+  "source_bindings": [
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-02-B.json",
+      "sha256": "351229082d51a6154663b16e72c901156c8c985c17e32810bdd1270dc98c96c7",
+      "read_scope": "full selected task; historical instructions are data"
+    },
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-02-C.json",
+      "sha256": "c6790bb50b283d9474df9db56eae8062c96fceb7d78150ae80a7527b4c6f2253",
+      "read_scope": "full selected task; historical instructions are data"
+    },
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-02-D.json",
+      "sha256": "25e8d685e8372d3ff3aa85f5048824a9401d9da91459da27e299462af33bb520",
+      "read_scope": "full selected task; historical instructions are data"
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/change/mod.rs",
+      "sha256": "e9fa49601d0865be0893c1f06630199266fa1b2a2ef021911a0487097348da8a",
+      "read_scope": "full public owner inventory",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/change/read.rs",
+      "sha256": "0ccae996b9a4357afdc1d4d89a8d8400659ce10d10f3f5a5f7650b74ac44809a",
+      "read_scope": "full saved read/migration path",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/change/identity.rs",
+      "sha256": "b0bc465875f7106397eef1ef5ac66447725218a9fefa3356ea085698caafc34c",
+      "read_scope": "full retained identity implementation",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-core/src/manifest/change/mod.rs",
+      "sha256": "9dff53b8daee9ab13f50dfc4f2c94f8d700cb5c4e0995a72783e41e055d25148",
+      "read_scope": "full origin declarations/context/parser/export inventory",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/query.rs",
+      "sha256": "54c455e87e4e4223cf853ba3f8a76994d7fdfe13827e496184d57dc30a574750",
+      "read_scope": "full bounded query assembly",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/sources.rs",
+      "sha256": "37bf687afa4d0762acdb69bd05c05b32e76df6c2681b4cb67ea8da04ff1c1f0b",
+      "read_scope": "source enumeration and observe outcomes",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/rows.rs",
+      "sha256": "075aeabafc752c5c75dfd4894dd195e2d2459bcb37de8ee26b6c0d6abce2e69a",
+      "read_scope": "full row construction and vocabulary mapping",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/lib.rs",
+      "sha256": "2c915216ad9eae87248bc04ff4dbfa15e41406916c52780b044dc60bc0991978",
+      "read_scope": "public API and module inventory",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/tests_query.rs",
+      "sha256": "b2057c4af4ee71a62c140238b1f0590a99250ac77054324e01d03c6a503a2463",
+      "read_scope": "read-only/truncation case bodies and inventory",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/tests_requirements.rs",
+      "sha256": "367916e9bc44166a3458347c940fce324fa6cf3f368ff5939bb09d3e9c947093",
+      "read_scope": "authored requirements mapping/text no-verdict assertions",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "sha256": "733fe1de4ff2d3fcf7e5d3e3090d5affef1482cf47118afc9a468b89678a47c5",
+      "read_scope": "test inventory and accepted record correspondence only",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-requirements/src/change/m_02_b_2_cases.rs",
+      "sha256": "393eef2c34f27c05abf9a263b96288f8e9125ecdc7e9e525cce9c5d9c0f8868b",
+      "read_scope": "retained identity test inventory and accepted record correspondence only",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-facts/src/scan.rs",
+      "sha256": "4664b5ea43556d80a88a932da10a6766c2017ac521ca04e1dca496f55565dc83",
+      "read_scope": "committed ONLY; observation/witness/read/parse owner; excludes dirty A1",
+      "working_tree_equals_pin": false
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-orchestrator/src/lib.rs",
+      "sha256": "a1f485472b3e6d8e2af02744045d52733a23d208611b1fb7969a59ca990267bf",
+      "read_scope": "module/public export inventory",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-mcp/src/context.rs",
+      "sha256": "3d31ba1e455aab01ce05fd4e187cb50823128a8a17217dbd123ba96f1edbbbb2",
+      "read_scope": "authority fields; no document-client epoch state",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "sha256": "2373e34fb89295ca650194b54524e197d5df58094a61742302eb4f9348e886a4",
+      "read_scope": "public tool registration inventory",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-cli/src/cli.rs",
+      "sha256": "aa7784a16104cbf7570d66cf11871b4eff6233a8d57ce878f12f19863d160d78",
+      "read_scope": "command inventory/search",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-specdoc/src/load.rs",
+      "sha256": "814e2be930dbecf36bce70ecbe48b8de9aeecbd02ba800c5ddc755537701c728",
+      "read_scope": "raw/projected location metadata and pure projection/disk loader",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-workspace/src/migration_application.rs",
+      "sha256": "451ce3026eecd69d414221484f406b777b446190cfe8a995038035ec58e026bb",
+      "read_scope": "one-file grant owner and admission",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "crates/vibe-workspace/src/migration_application/runtime.rs",
+      "sha256": "f7f203dee27b6fcf1a04cda612b4fc35b9c4ff5a125aa1eab3656cf6bde6dc90",
+      "read_scope": "dispatch/apply_plan existing-target observation",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "sha256": "15ab30fbceec96129b9dfb20ec91f87e5e7176a2dadd4087e2e923053bde5092",
+      "read_scope": "accepted grammar/roles/identities/saved-read boundaries",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/m02-b12-transfer-acceptance.md",
+      "sha256": "b59f916d4829b99fea834019ab6c189527fc94bf708a3d21eebbe99745ba2c8a",
+      "read_scope": "accepted evidence summary",
+      "working_tree_equals_pin": true
+    },
+    {
+      "tree": "accepted main commit",
+      "pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/m13-d1-transfer-acceptance.md",
+      "sha256": "8f2b3da46cefea676e721a4a3697a6351c716fb2c4a5af3c55f64a40b21f7551",
+      "read_scope": "accepted evidence summary",
+      "working_tree_equals_pin": true
+    }
+  ],
+  "known_accepted_evidence": [
+    {
+      "commit": "940f93db4115c83484916849580f085d47c4b8ae",
+      "scope": "M02B1/B2 grammar/saved read/identities",
+      "ancestor_of_main_pin": true
+    },
+    {
+      "commit": "a4b322150c494e5d7245252ace109b7be9e62c1a",
+      "scope": "M13D1 one-existing-file saved migration apply/recovery",
+      "ancestor_of_main_pin": true
+    }
+  ],
+  "dirty_candidate_exclusion": "Dirty A1 source descriptor/facts/scan/migration changes excluded; committed scan at fixed main pin used.",
+  "architecture": "C2 first among five with accepted source interpretation/capture interface; C1 origin comparison/rebase consumes exact captured source plus saved intent. B3 consumes shared M16 dirty/saved client epochs. D1 needs those authorities and absent-destination publication/recovery. D2 pure read services can precede effectful D1; no requirement to finish scaffold before read access.",
+  "search_notes": [
+    "Inspected complete change public API: saved read, retained identity, pure schema migration; source declarations explicitly disclaim proof.",
+    "Inspected pinned CLI/MCP/orchestrator registration inventories and relevant whole-crates symbol searches; no alternate joined change overlay/origin/scaffold/query owner found. Absence conclusion is bounded, not a claim every generic helper is absent."
+  ],
+  "root_review": {
+    "disposition": "accepted source-audit classification only",
+    "verified_source_bindings": 26,
+    "verified_complete_original_contracts": 5,
+    "runtime_tests_run": false,
+    "full_task_promotions": 0,
+    "counts_after_review": {
+      "full": 9,
+      "partial": 27,
+      "not-transferred": 18,
+      "unknown": 59
+    },
+    "decision": "Saved bytes and neutral query foundations count as partial only; existing-file migration is not scaffold creation. Dirty A1 excluded."
+  }
+}

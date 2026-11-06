@@ -2,7 +2,7 @@
 
 Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. G123 review uses accepted main `5d44c5104`; the later app scope review uses `c5662ee42`, and G2 is accepted in `bc49f1220`. Unaccepted candidates are excluded; source-only reviews do not imply runtime acceptance.
 
-**Current counting result:** 113 old accepted IDs verified: **9 full semantic transfers, 24 partial correspondences, 16 scopes with no accepted campaign delivery, 64 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least9are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **9 full semantic transfers, 27 partial correspondences, 18 scopes with no accepted campaign delivery, 59 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least9are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -266,3 +266,7 @@ Current partition:2full/26partial/18not-transferred/67unknown. Full completion r
 ### 2026-11-06 — original neutral D1 accepted
 
 [D1 acceptance](m13-d1-transfer-acceptance.md) in `a4b322150c494e5d7245252ace109b7be9e62c1a` binds real apply/inspect/complete/restore, process-cut recovery, independent grant surfaces and exact effect/limitation reporting. Original ruling explicitly separates Linux measurements from later Mac/Windows native proof. Current partition:9full/24partial/16not-transferred/64unknown. Source/feature recipes and A1 are not counted by this foundation.
+
+## Five remaining M02 tasks — source reconciliation, 2026-11-06
+
+Root verified all26 pinned source hashes and all five original contracts in [the clause review](m02-remaining-transfer-review.md). B3/C1/C2 are partial; D1/D2 are not transferred. This removes five unknowns without completing any task. Existing saved readers and one-file migration recovery do not provide editor snapshots, retained-origin rebasing, complete fact selection or no-overwrite change scaffolding. D2 read-only inspection can precede D1 creation; C2 consumes accepted source interpretation/capture semantics. No runtime gates were executed by this audit.
