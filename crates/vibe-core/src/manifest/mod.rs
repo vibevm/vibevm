@@ -11,6 +11,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
 
 mod artifact;
+pub mod change;
 mod compile;
 mod configuration;
 mod consumer;
@@ -69,6 +70,7 @@ pub use mechanism::{
     MechanismKeyParseError, MechanismRole, MechanismRoleParseError, MechanismRoutes, ProviderOwner,
     ProviderPin, ProviderPinParseError, is_command_name, is_portable_token,
 };
+pub(crate) use migration::replay_authored_tokens;
 pub use migration::{
     CURRENT_ABSENT, CURRENT_EPOCH1, IDENTITY, LEGACY_ABSENT, ManifestMigrationEpoch,
     ManifestMigrationOutcome, ManifestMigrationPlan, MigrationInputRequirement, MigrationRefusal,

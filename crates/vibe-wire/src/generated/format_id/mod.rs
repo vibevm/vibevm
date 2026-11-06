@@ -34,6 +34,8 @@ pub enum FormatId {
     AppsManifestV1,
     ArtifactRecord,
     BootArtifactTransaction,
+    ChangeManifest,
+    ChangeWork,
     CliAgentList,
     CliAgentPresets,
     CliApplicationAlternatives,

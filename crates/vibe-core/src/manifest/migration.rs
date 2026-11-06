@@ -309,6 +309,14 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
         ManifestMigrationOutcome::Planned(result)
     })
 }
+/// Shared exact-token replay for validated authored-format proposals.
+pub(crate) fn replay_authored_tokens(
+    text: &str,
+    edits: &[MigrationTokenEdit],
+) -> Result<String, MigrationRefusal> {
+    replay_edits(text, edits)
+}
+
 #[cfg(test)]
 mod tests;
 

@@ -1,0 +1,7 @@
+schema=1
+[[items]]
+id='work-first'
+predecessors=['work-second']
+[[items]]
+id='work-second'
+predecessors=['work-first']

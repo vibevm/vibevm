@@ -1056,6 +1056,24 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+[format.change-work]
+epoch = 1
+schema = "none"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/change-work/e1"
+sunset = "none"
+
+[format.change-manifest]
+epoch = 1
+schema = "none"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/change-manifest/e1"
+sunset = "none"
+
 # Rust-owned TOML; meta.schema_version is the in-file compatibility discriminator.
 # Rich retained configuration/basis cannot be silently rebuilt from current inputs.
 [format.lockfile]

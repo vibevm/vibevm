@@ -4575,6 +4575,7 @@ dependencies = [
  "anyhow",
  "core-ai-native-specmark",
  "indexmap",
+ "progress-core",
  "semver",
  "serde",
  "serde_json",
@@ -4981,6 +4982,7 @@ dependencies = [
  "vibe-core",
  "vibe-facts",
  "vibe-lifecycle",
+ "vibe-safefs",
  "vibe-wire",
  "vibe-workspace",
 ]

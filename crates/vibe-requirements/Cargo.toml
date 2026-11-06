@@ -17,6 +17,8 @@ sha2.workspace = true
 thiserror.workspace = true
 # Slot/layout/lock grammars for the source universe — public APIs only.
 vibe-core.workspace = true
+# Retain ordinary source bytes through the shared no-follow reader.
+vibe-safefs.workspace = true
 # The A2a one-read seams: observe_authored_source, Registry::load_with_witnesses.
 vibe-facts.workspace = true
 # Workspace discovery + materialised slot location (never a reverse edge).

@@ -1,0 +1,10 @@
+# Authored structural work; no scheduler state.
+schema = 1
+[[items]]
+id = 'work-verify'
+predecessors = ['work-implement']
+needs = [{kind='verification',target='tests/change.rs'}]
+[[items]]
+id = 'work-implement'
+needs = [{kind='implementation',target='src/change.rs'}]
+touches = ['src/change.rs']

@@ -21112,6 +21112,267 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/mod.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::change",
+      "end_line": 2,
+      "fingerprint": "tok1:e9ded6c7d681e6f6a3167393a000645c26a5d91add7b1a360bb2819bdf6d0bc1"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/mod.rs",
+      "item_kind": "fn",
+      "line": 302,
+      "symbol": "vibe_core::manifest::change::ChangeManifest::parse_str",
+      "end_line": 311,
+      "fingerprint": "tok1:1d836f073cb3d5deba6ec5c94a6ad687b9fcaf1053affff4c98c30b6c9fec2d1"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/identity.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::change::identity",
+      "end_line": 2,
+      "fingerprint": "tok1:ffd2cf7db2c3024e04780cca085087e83f1aeec198ea87f3e34243708b2fbdb9"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/identity.rs",
+      "item_kind": "fn",
+      "line": 106,
+      "symbol": "vibe_core::manifest::change::identity::ChangeManifest::intent_identity",
+      "end_line": 181,
+      "fingerprint": "tok1:99c3b8656c79713c9477d43be37ac885bf036ad198407eecccf5b1647350122a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/identity.rs",
+      "item_kind": "fn",
+      "line": 215,
+      "symbol": "vibe_core::manifest::change::identity::WorkGraph::contribution_identity",
+      "end_line": 237,
+      "fingerprint": "tok1:95e9f46386889935ec59bdf3c92c1f9d3009a4d3f9b7132904df4413418a3258"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/identity.rs",
+      "item_kind": "fn",
+      "line": 203,
+      "symbol": "vibe_core::manifest::change::identity::WorkGraph::identity",
+      "end_line": 214,
+      "fingerprint": "tok1:6144a631dd9729f1eb5c4ce1ca41b90682183ae7e09c1f77c1ad34d8f1275bf4"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 16,
+      "symbol": "vibe_core::manifest::change::m_02_b_1_cases::connected_epoch_one_parse",
+      "end_line": 36,
+      "fingerprint": "tok1:3836facb2bb5baada9ab9aa51a21e84239713f89219d4f1b7202fac6db546bfe"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 307,
+      "symbol": "vibe_core::manifest::change::m_02_b_1_cases::document_address_cannot_turn_literal_filename_into_a_fragment",
+      "end_line": 327,
+      "fingerprint": "tok1:71283d75783ab0d2e69e15ada16fc4eec3a09f2cd97d460ba813000b698e5455"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 87,
+      "symbol": "vibe_core::manifest::change::m_02_b_1_cases::escaping_and_closure_input_roles_refuse",
+      "end_line": 116,
+      "fingerprint": "tok1:ef81934db6f3fd16f38c73dac5f13b59b7040861f56f672066fc3c7d12e6e856"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 117,
+      "symbol": "vibe_core::manifest::change::m_02_b_1_cases::migration_preserves_comments_and_user_values",
+      "end_line": 153,
+      "fingerprint": "tok1:b50a09579d0306bf8b2b3a97454513bef692022cf97cde656e78150eaa20970c"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 154,
+      "symbol": "vibe_core::manifest::change::m_02_b_1_cases::migration_refuses_invalid_target_before_proposal",
+      "end_line": 194,
+      "fingerprint": "tok1:17b07a78aa2c86bfc32e0d94cedc7009be80152e8427437ed2616cb075ae02d7"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 262,
+      "symbol": "vibe_core::manifest::change::m_02_b_1_cases::pilot_profile_and_origin_declarations_have_explicit_boundaries",
+      "end_line": 305,
+      "fingerprint": "tok1:9250b49a35a51cedc4def5f1f48c82d014e58b8987badcc3466bde05d73b7a2a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 240,
+      "symbol": "vibe_core::manifest::change::m_02_b_1_cases::raw_origin_uri_cannot_normalize_into_selected_address",
+      "end_line": 260,
+      "fingerprint": "tok1:6a38c641c93bdb61b3f1d326c3ddaa9a74385058ae2bc3055cf1bdaa6a0d1ace"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 196,
+      "symbol": "vibe_core::manifest::change::m_02_b_1_cases::registered_authored_corpus_matches_shared_validator",
+      "end_line": 238,
+      "fingerprint": "tok1:3dde9befeb8b3e3cc79441b3f777e2f63d58f55cb0c22dfe3a899cd30469708a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 37,
+      "symbol": "vibe_core::manifest::change::m_02_b_1_cases::title_slug_rename_preserves_directory_and_address",
+      "end_line": 58,
+      "fingerprint": "tok1:2b8096a7d64a7a65ea7f8de9e1c92bb7d9022ba41c5436a0051f48f77af0a381"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 59,
+      "symbol": "vibe_core::manifest::change::m_02_b_1_cases::unknown_epochs_and_duplicate_ids_refuse",
+      "end_line": 86,
+      "fingerprint": "tok1:6220b7bdc64137c26df0dc31c0554dd2a65a1cf80a4214cff182f3ba427df1f6"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "item_kind": "fn",
+      "line": 58,
+      "symbol": "vibe_core::manifest::change::m_02_b_2_cases::canonical_graph_order_and_selected_contribution",
+      "end_line": 109,
+      "fingerprint": "tok1:2d75bd6f2367ff3140d60430bd752cd62f39b5285618757c5e4c8230f5d418d4"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "item_kind": "fn",
+      "line": 37,
+      "symbol": "vibe_core::manifest::change::m_02_b_2_cases::connected_structural_graph",
+      "end_line": 57,
+      "fingerprint": "tok1:6e50c483f4e85164e7b6ab36a46abd5937e045e7ed85f2cbeabab0e041308acd"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "item_kind": "fn",
+      "line": 164,
+      "symbol": "vibe_core::manifest::change::m_02_b_2_cases::framed_intent_ignores_cosmetics_work_and_closure",
+      "end_line": 187,
+      "fingerprint": "tok1:b11bb6bc71126717f59b7a19762fa95fdbb5a64649c61fa6388a91dec4536862"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "item_kind": "fn",
+      "line": 251,
+      "symbol": "vibe_core::manifest::change::m_02_b_2_cases::framing_is_unambiguous_and_versioned",
+      "end_line": 273,
+      "fingerprint": "tok1:37b7dc98291c7fa5cca53689eb0f52fa5ee2c3ba95c37284b62754b6df05e760"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "item_kind": "fn",
+      "line": 110,
+      "symbol": "vibe_core::manifest::change::m_02_b_2_cases::graph_refuses_cycle_duplicate_unknown_and_state",
+      "end_line": 163,
+      "fingerprint": "tok1:da6afd6d815b4f3d1c39e388064eabec755e887df97e07b949a193a6ca247e7c"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "item_kind": "fn",
+      "line": 188,
+      "symbol": "vibe_core::manifest::change::m_02_b_2_cases::normative_edit_and_binding_change_invalidate_intent",
+      "end_line": 250,
+      "fingerprint": "tok1:c029ddbfe31bb85b61e8a4a6227fb10ad9ef1a89c020631874589d79a0f06884"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "item_kind": "fn",
+      "line": 275,
+      "symbol": "vibe_core::manifest::change::m_02_b_2_cases::registered_work_corpus_uses_the_actual_structural_reader",
+      "end_line": 306,
+      "fingerprint": "tok1:decc04c9ea87bc75931717c955ce99e09a17093601c3a7ab784c7508306cdf5c"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/migration.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::change::migration",
+      "end_line": 2,
+      "fingerprint": "tok1:eb3e2b1f87650e130417ba9c7c3b0f28b5aad715338f02c19f1d3b5cd5fca972"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/migration.rs",
+      "item_kind": "fn",
+      "line": 43,
+      "symbol": "vibe_core::manifest::change::migration::plan_change_migration",
+      "end_line": 124,
+      "fingerprint": "tok1:f68ca9db3e21e4e06a3e89fff35f77143ef6676cc2b67e0d2deec3a323778d4a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/mod.rs",
+      "item_kind": "fn",
+      "line": 355,
+      "symbol": "vibe_core::manifest::change::validate_change_catalog",
+      "end_line": 370,
+      "fingerprint": "tok1:7b00d1e9d0d6bb36fd49b6c02d4ba50cd58cdd9de6ef5a3d17ff528afbad11c9"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/validation.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::change::validation",
+      "end_line": 2,
+      "fingerprint": "tok1:a37ba200d9e292b80cbcd9b908e0bb1d7aa62d7e91b10daf6134654b5c2637e6"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/work.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::change::work",
+      "end_line": 2,
+      "fingerprint": "tok1:f0bdcf91e9539875b7f621fba14d412c79304c34e1925540aa92bff97eb17b4e"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/change/work.rs",
+      "item_kind": "fn",
+      "line": 79,
+      "symbol": "vibe_core::manifest::change::work::WorkGraph::parse_documents",
+      "end_line": 184,
+      "fingerprint": "tok1:1638772ef94e7c3c7bace6eb8905f25235947cce2b4447ed8eb7eabb4865f163"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/compile.rs",
       "item_kind": "mod",
       "line": 26,
@@ -37444,6 +37705,141 @@
       "symbol": "vibe_requirements",
       "end_line": 57,
       "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/mod.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_requirements::change",
+      "end_line": 2,
+      "fingerprint": "tok1:bc4895e40e520cdadf4bcb346d971d914e51f037d5159f4d67565cb0b7a25ae6"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/identity.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_requirements::change::identity",
+      "end_line": 2,
+      "fingerprint": "tok1:ffd2cf7db2c3024e04780cca085087e83f1aeec198ea87f3e34243708b2fbdb9"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/identity.rs",
+      "item_kind": "fn",
+      "line": 35,
+      "symbol": "vibe_requirements::change::identity::SavedChange::identity_analysis",
+      "end_line": 47,
+      "fingerprint": "tok1:024652d7f5ea16616740770726a9bb24759dd0c5c62ca817a42bf46c6164dd70"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 77,
+      "symbol": "vibe_requirements::change::m_02_b_1_cases::actual_lookup_refuses_missing_role_document_without_writes",
+      "end_line": 89,
+      "fingerprint": "tok1:a029d0bcc672b5e6b15134d257d2fee514f2d9d01e6459b3873d4f74e83ecd88"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 90,
+      "symbol": "vibe_requirements::change::m_02_b_1_cases::actual_saved_migration_preserves_bytes_without_publication",
+      "end_line": 118,
+      "fingerprint": "tok1:b944e34ad261e66e2df6b68fbe8459461d88e3004cfe8f2c91bc7d1df32d354e"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 48,
+      "symbol": "vibe_requirements::change::m_02_b_1_cases::configured_nondefault_root_is_used_by_actual_lookup",
+      "end_line": 76,
+      "fingerprint": "tok1:eed72f560d1cdd266997062cfeefa546736e47b0ec3b3f003073666eca2f5553"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 120,
+      "symbol": "vibe_requirements::change::m_02_b_1_cases::shared_hardlinked_authored_sources_are_observed_without_rewriting",
+      "end_line": 152,
+      "fingerprint": "tok1:3ba674f46349d0d6f8ccc97c9f5b526e0e240588c1219f4db33d546003581194"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "item_kind": "fn",
+      "line": 154,
+      "symbol": "vibe_requirements::change::m_02_b_1_cases::source_links_refuse_without_following_or_publishing",
+      "end_line": 182,
+      "fingerprint": "tok1:758c1b03b6b23a60917ad386d0dd0eea15066bf76830dcc1f6e863b30f75b961"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/m_02_b_2_cases.rs",
+      "item_kind": "fn",
+      "line": 63,
+      "symbol": "vibe_requirements::change::m_02_b_2_cases::actual_saved_lookup_separates_normative_work_and_closure",
+      "end_line": 111,
+      "fingerprint": "tok1:9c8360dfe57805e210dccce7c1056793f4e5b77be9a7ac449ffadcb142209a86"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/m_02_b_2_cases.rs",
+      "item_kind": "fn",
+      "line": 157,
+      "symbol": "vibe_requirements::change::m_02_b_2_cases::missing_normative_observation_refuses",
+      "end_line": 180,
+      "fingerprint": "tok1:6c0465dd31a85e488205ba5acb1a826c4b484ccba730ff7618ed6bb4aec92110"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/m_02_b_2_cases.rs",
+      "item_kind": "fn",
+      "line": 112,
+      "symbol": "vibe_requirements::change::m_02_b_2_cases::selected_work_excludes_unrelated_item_edits",
+      "end_line": 156,
+      "fingerprint": "tok1:cd07514d3651f4312870a773edde8540dc937c424907e1b0f5ef268708da21af"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/read.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_requirements::change::read",
+      "end_line": 2,
+      "fingerprint": "tok1:bc4895e40e520cdadf4bcb346d971d914e51f037d5159f4d67565cb0b7a25ae6"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/read.rs",
+      "item_kind": "enum",
+      "line": 13,
+      "symbol": "vibe_requirements::change::read::SavedChangeError",
+      "end_line": 34,
+      "fingerprint": "tok1:1fc3a2f2d8fdd8bd62f6f622aab393f1c22a715e2879aa49dc7532ca05aee240"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/read.rs",
+      "item_kind": "fn",
+      "line": 139,
+      "symbol": "vibe_requirements::change::read::plan_saved_change_migration",
+      "end_line": 162,
+      "fingerprint": "tok1:ffde86ba0a9a5c6605c614d676744386087d8cb5d07eec19e8ba72ef13631066"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/change/read.rs",
+      "item_kind": "fn",
+      "line": 111,
+      "symbol": "vibe_requirements::change::read::read_saved_change",
+      "end_line": 137,
+      "fingerprint": "tok1:e7cbecd2f35ae3484afdb33425f7d8b6e52417d2ecb9c860ad9a6f00f8d7f3c0"
     },
     {
       "crate_name": "vibe-requirements",
@@ -59093,6 +59489,238 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/manifest/change/mod.rs",
+      "from_symbol": "vibe_core::manifest::change",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/mod.rs",
+      "from_symbol": "vibe_core::manifest::change::ChangeManifest::parse_str",
+      "line": 302,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/identity.rs",
+      "from_symbol": "vibe_core::manifest::change::identity",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/identity.rs",
+      "from_symbol": "vibe_core::manifest::change::identity::ChangeManifest::intent_identity",
+      "line": 108,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/identity.rs",
+      "from_symbol": "vibe_core::manifest::change::identity::WorkGraph::contribution_identity",
+      "line": 215,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/identity.rs",
+      "from_symbol": "vibe_core::manifest::change::identity::WorkGraph::identity",
+      "line": 203,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_1_cases::connected_epoch_one_parse",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_1_cases::document_address_cannot_turn_literal_filename_into_a_fragment",
+      "line": 308,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-DIRECTORY-IDENTITY",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_1_cases::escaping_and_closure_input_roles_refuse",
+      "line": 88,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_1_cases::migration_preserves_comments_and_user_values",
+      "line": 118,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_1_cases::migration_refuses_invalid_target_before_proposal",
+      "line": 155,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_1_cases::pilot_profile_and_origin_declarations_have_explicit_boundaries",
+      "line": 263,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_1_cases::raw_origin_uri_cannot_normalize_into_selected_address",
+      "line": 241,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_1_cases::registered_authored_corpus_matches_shared_validator",
+      "line": 197,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_1_cases::title_slug_rename_preserves_directory_and_address",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_1_cases::unknown_epochs_and_duplicate_ids_refuse",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_2_cases::canonical_graph_order_and_selected_contribution",
+      "line": 59,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_2_cases::connected_structural_graph",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_2_cases::framed_intent_ignores_cosmetics_work_and_closure",
+      "line": 165,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_2_cases::framing_is_unambiguous_and_versioned",
+      "line": 252,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_2_cases::graph_refuses_cycle_duplicate_unknown_and_state",
+      "line": 111,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_2_cases::normative_edit_and_binding_change_invalidate_intent",
+      "line": 189,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "from_symbol": "vibe_core::manifest::change::m_02_b_2_cases::registered_work_corpus_uses_the_actual_structural_reader",
+      "line": 276,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-WORK-DAG",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/migration.rs",
+      "from_symbol": "vibe_core::manifest::change::migration",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-MIGRATION-REPLAY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/migration.rs",
+      "from_symbol": "vibe_core::manifest::change::migration::plan_change_migration",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-MIGRATION-REPLAY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/mod.rs",
+      "from_symbol": "vibe_core::manifest::change::validate_change_catalog",
+      "line": 355,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/validation.rs",
+      "from_symbol": "vibe_core::manifest::change::validation",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-DOCUMENT-ROLES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/work.rs",
+      "from_symbol": "vibe_core::manifest::change::work",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-WORK-DAG",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/change/work.rs",
+      "from_symbol": "vibe_core::manifest::change::work::WorkGraph::parse_documents",
+      "line": 81,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-WORK-DAG",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-core/src/manifest/compile.rs",
       "from_symbol": "vibe_core::manifest::compile",
       "line": 26,
@@ -74042,6 +74670,126 @@
       "line": 57,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/mod.rs",
+      "from_symbol": "vibe_requirements::change",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SAVED-READ",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/identity.rs",
+      "from_symbol": "vibe_requirements::change::identity",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/identity.rs",
+      "from_symbol": "vibe_requirements::change::identity::SavedChange::identity_analysis",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_requirements::change::m_02_b_1_cases::actual_lookup_refuses_missing_role_document_without_writes",
+      "line": 78,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_requirements::change::m_02_b_1_cases::actual_saved_migration_preserves_bytes_without_publication",
+      "line": 91,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_requirements::change::m_02_b_1_cases::configured_nondefault_root_is_used_by_actual_lookup",
+      "line": 49,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_requirements::change::m_02_b_1_cases::shared_hardlinked_authored_sources_are_observed_without_rewriting",
+      "line": 121,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "from_symbol": "vibe_requirements::change::m_02_b_1_cases::source_links_refuse_without_following_or_publishing",
+      "line": 156,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/m_02_b_2_cases.rs",
+      "from_symbol": "vibe_requirements::change::m_02_b_2_cases::actual_saved_lookup_separates_normative_work_and_closure",
+      "line": 64,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/m_02_b_2_cases.rs",
+      "from_symbol": "vibe_requirements::change::m_02_b_2_cases::missing_normative_observation_refuses",
+      "line": 158,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/m_02_b_2_cases.rs",
+      "from_symbol": "vibe_requirements::change::m_02_b_2_cases::selected_work_excludes_unrelated_item_edits",
+      "line": 113,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/read.rs",
+      "from_symbol": "vibe_requirements::change::read",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SAVED-READ",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/read.rs",
+      "from_symbol": "vibe_requirements::change::read::SavedChangeError",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SAVED-READ",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/read.rs",
+      "from_symbol": "vibe_requirements::change::read::plan_saved_change_migration",
+      "line": 139,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SAVED-READ",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/change/read.rs",
+      "from_symbol": "vibe_requirements::change::read::read_saved_change",
+      "line": 111,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SAVED-READ",
       "verb": "implements"
     },
     {
@@ -108437,6 +109185,78 @@
       "heading": "8. Rationale and rejected alternatives",
       "line": 78,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#decisions"
+    },
+    {
+      "anchor": "CHANGE-DIRECTORY-IDENTITY",
+      "content_hash": "sha256:4e995ca8fc0bf8f75c1881a1e68e251fcc3033f048c8a39ddbf3f3a2d37ffc72",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "New generated change IDs are exactly chg- followed by 32lowercase hexadecimal digits. Retained bootstrap IDs also admit nonempty ASCII alphanumeric/hyphen/underscore portable components, except that the chg- namespace keeps its strict hexadecimal grammar. Those strings are immutable IDs, not mutable display slugs; adoption never renames them. The immutable node-relative home is configured-spec-root/changes/id/change.toml; no slug or title enters that directory or a document address. A trusted host supplies a validated project-relative configured spec root, defaulting to the incumbent current layout root. The manifest cannot grant a different root. This parser-level configuration is not a newly implemented project-settings or CLI override. A document-address constructor refuses a literal # in its relative filename because it would manufacture a URI fragment. This does not prohibit that portable stored role path or change general literal-percent address semantics; nested Markdown/XML stems and literal percent sequences are preserved. @status:spec/done",
+      "line": 4,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-DIRECTORY-IDENTITY"
+    },
+    {
+      "anchor": "CHANGE-AUTHORED-GRAMMAR",
+      "content_hash": "sha256:dbd208a10cab4759b1ba390367bf5a705879254138f3a2c850adbcc674bfa411",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "The authored TOML schema1 root contains change identity/selected-node/slug/title, exact qualified origin package pins with captured manifest/document SHA256 declarations and spec fact citations, explicit document rows, and an optional opaque metadata table for user values. Captures are declarations of selected byte identity, not authentication by editable hashes. The selected node must agree with actual trusted consumer context. Origin citations use the bounded literal scheme spec://group/name/document#fact-path, matching the selected origin, with no percent signs, query, user-info, port, Markdown/XML extension or normalized dot segment. This is the authored change-origin declaration grammar, not a replacement for general SpecAddress lookup or its literal-percent compatibility. Unknown epochs, malformed identity/origin and duplicate IDs refuse in the shared core owner before any application. The duplicate-ID catalog validator operates on supplied parsed declarations; no scaffold or mutation route is implemented or claimed by this parser. @status:spec/done",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-AUTHORED-GRAMMAR"
+    },
+    {
+      "anchor": "CHANGE-DOCUMENT-ROLES",
+      "content_hash": "sha256:5ee9f79d3f2f09d864601bcfa92ebf6a719f2c22f2cf9bd9f1bec558f1a61954",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "The closed ordinary change roles are intent, refinement, acceptance, work and closure. Role paths are portable literal paths relative to the immutable change directory and must be unique as declared spellings. This is not an inode-alias proof; distinct hardlinked source names remain valid read inputs. Intent and acceptance must each occur as normative inputs; refinement may be normative input. Work is authored but never normative intent; closure is derived output and must be neither normative nor input. Normative implies input. Role declarations confer no source interpretation or artifact truth. The same declared path cannot serve closure and input roles or become its own proof subject. Release evidence and bound-origin extensions are separate capabilities not admitted by this reader. @status:spec/done",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-DOCUMENT-ROLES"
+    },
+    {
+      "anchor": "CHANGE-MIGRATION-REPLAY",
+      "content_hash": "sha256:cd2b98af8abcfa1d877f327ba812abe6b7f7d5b94094f4dc4d6571bcfba3be23",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "The explicit pilot epoch0 to epoch1 recipe changes only the schema integer token after shared identity/path/role validation. Pilot0 is a frozen change fixture profile, not a claim that former prototype bindings were durable epoch0 manifests. Unknown source/target/recipe refuses; no implicit migration or file write occurs. The change planner reuses M13's exact ordered/non-overlap/original-token replay primitive and revalidates target text. Every untouched byte, comment and opaque user value survives; current epoch1 identity migration is byte-identical. A parser or proposal grants no filesystem application authority. @status:spec/done",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-MIGRATION-REPLAY"
+    },
+    {
+      "anchor": "CHANGE-WORK-DAG",
+      "content_hash": "sha256:cdb32d0526d4b6ff337fb358cde044d7de0a5486a69956795690334a2b7c3f1f",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "A declared input work-role document has its own closed TOML schema1: items with work- plus a lowercase ASCII letter followed by up to 58 lowercase letters/digits/hyphens, predecessor IDs, artifact needs (kind and target declaration), and portable relative touches hints. Need kinds are specification, implementation, verification, documentation, decision, research, plan, disposition and external; targets are nonblank bounded literal declarations, not verified artifacts. IDs are unique across work documents; predecessor IDs must exist, and cycles, duplicate edges/needs/touches and unknown fields including done/owner/current refuse. The graph returns authored predecessors/needs/hints only, never completion, ready-to-run or scheduling verdicts. @status:spec/done",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-WORK-DAG"
+    },
+    {
+      "anchor": "CHANGE-INDEPENDENT-IDENTITIES",
+      "content_hash": "sha256:20149687f9c44499d79618cab66a983a3c682fd7d62bf0bd8e844b20de8ec088",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "Intent recipe sha256:vibe-change-intent-v1 frames schema, immutable change ID, trusted consumer coordinate and selected node, sorted exact origin pins/capture declarations/document citations, and sorted normative role/path/exact retained bytes. Title/slug, opaque metadata, non-normative work, derived closure, observations and run logs are excluded. Exact authored normative bytes are the content boundary: this recipe makes no cross-format or whitespace semantic equivalence claim and authenticates no origin. Missing, extra or duplicate normative observations refuse instead of minting partial intent identity. Work and selected-contribution recipes are sha256:vibe-change-work-v1 and sha256:vibe-change-work-contribution-v1. They frame the same schema/consumer/node/change scope, then canonical ID-ordered items, sorted predecessor IDs, artifact needs sorted by kind spelling then target, and sorted touches. Selected contribution includes explicit sorted roots and their predecessor closure; unrelated items do not enter it. Each digest begins with recipe bytes and NUL epoch=1 NUL; each field frames u64 big-endian label byte length, label, u64 big-endian value byte length and value. Schema uses u32 big-endian; collection counts use u64 big-endian. Digests are sha256: followed by lowercase hex. Distinct recipes separate intent, whole-work and selected-work domains. These identities grant no scheduling or write authority. @status:spec/done",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-INDEPENDENT-IDENTITIES"
+    },
+    {
+      "anchor": "CHANGE-SAVED-READ",
+      "content_hash": "sha256:52d4e2e31457f4fbfa562e25e321ba5089d51c5b1e954a8424f37cd4dd38b4da",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "Saved change reading uses the incumbent held no-follow source read below a trusted selected-node root. The manifest and declared input bytes are retained and reused for identity without reopening disk. Shared regular hardlinks are valid source inputs. Missing/unsafe/unreadable inputs refuse without publication. Each file has the source reader's measured observation window; this is not an atomic whole-change snapshot, hostile-ABA immunity or origin authentication. The configured spec root comes from the trusted caller, not the change manifest. No scaffold, migration apply, editor overlay, scheduler or closure publication is implemented by this read-only boundary. @status:spec/done",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-SAVED-READ"
+    },
+    {
+      "anchor": "CHANGE-FORMAT-BOUNDARY",
+      "content_hash": "sha256:0b126a457e3f97e75bf6cbc9f7d915889a57bf686ff88d950cf2dbd63da6a2a8",
+      "doc_path": "common/PROP-071",
+      "file": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "heading": "The Rust-owned change-manifest and change-work formats are separately registered at epoch 1 with strict unknown-field rejection, no JTD schema and recoverable=false. Their corpora execute the actual shared readers. The ordinary initial change reader admits only the roles and unbound origin capture declarations above; it does not claim compatibility with later prototype release-impact or bound-origin fields. Pilot change epoch 0 is accepted only by the explicitly selected pure migration proposal and requires generated chg- IDs; ordinary parsing admits epoch 1 only. There is no work migration, writer or recovery operation here. @status:spec/done",
+      "line": 11,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-FORMAT-BOUNDARY"
     },
     {
       "anchor": "genre-definition",

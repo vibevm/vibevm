@@ -1,0 +1,32 @@
+# Human header survives migration and identity round-trip.
+schema = 1 # change language epoch
+[change]
+id = "chg-0123456789abcdef0123456789abcdef"
+selected_node = "."
+slug = "first-title"
+title = "Initial user title" # user decoration
+[[origins]]
+package = "feat:org.fixture/reusable-intent@=1.0.0"
+manifest_sha256 = "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+[[origins.documents]]
+address = "spec://org.fixture/reusable-intent/FEAT-001#DELIVERY"
+sha256 = "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+[[documents]]
+role = "intent"
+path = "intent.md"
+normative = true
+input = true
+[[documents]]
+role = "acceptance"
+path = "acceptance.md"
+normative = true
+input = true
+[[documents]]
+role = "closure"
+path = "closure.md"
+normative = false
+input = false
+[metadata]
+user_value = "Preserve me"
+number = 7
+# Human suffix survives too.

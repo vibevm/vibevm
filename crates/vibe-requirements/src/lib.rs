@@ -84,3 +84,6 @@ mod tests_provider;
 mod tests_query;
 #[cfg(test)]
 mod tests_requirements;
+
+/// Authored change declarations observed through held source reads.
+pub mod change;
