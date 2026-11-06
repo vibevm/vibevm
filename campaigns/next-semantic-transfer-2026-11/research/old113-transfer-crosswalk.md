@@ -2,7 +2,7 @@
 
 Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. G123 review uses accepted main `5d44c5104`; the later app scope review uses `c5662ee42`, and G2 is accepted in `bc49f1220`. Unaccepted candidates are excluded; source-only reviews do not imply runtime acceptance.
 
-**Current counting result:** 113 old accepted IDs verified: **7 full semantic transfers, 24 partial correspondences, 16 scopes with no accepted campaign delivery, 66 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least7are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **8 full semantic transfers, 24 partial correspondences, 17 scopes with no accepted campaign delivery, 64 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least8are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -256,3 +256,8 @@ Current partition:2full/26partial/18not-transferred/67unknown. Full completion r
 ### 2026-11-06 — M02B1/B2 accepted
 
 [Exact two-task matrix](m02-b12-transfer-acceptance.md) accepted in `940f93db4115c83484916849580f085d47c4b8ae`. Shared immutable change grammar/pure migration/safe saved reads and independent structural identities pass meaningful counterexamples and format gates. Corrected inherited address # bug and omitted work-format inventory; no writer/scheduler/authentication claim. Current partition:7full/24partial/16not-transferred/66unknown.
+
+
+### 2026-11-06 — neutral C2 accepted, D1 scope reconciled
+
+[C2](m13-c2-transfer-acceptance.md) accepted in `21d7683e027d81f14b2528734dd77bb7da236821` with actual CLI/MCP parity, strict input presence and recipe-consistent results without state effects. [D1 audit](m13-d1-next.md) independently reconciles42source bindings: needed migration journal/apply/recovery domain is not delivered, despite available shared primitives. It moves unknown→not-transferred, not to complete. Current partition:8full/24partial/17not-transferred/64unknown.
