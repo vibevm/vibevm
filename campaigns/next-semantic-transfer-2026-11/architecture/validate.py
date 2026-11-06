@@ -85,7 +85,9 @@ def main():
     hard_count = sum(len(row["hardDependencies"]) for row in rows)
     interface_count = sum(len(row["interfaceDependencies"]) for row in rows)
     assert data["meta"]["hardEdges"] == hard_count == 287
-    assert data["meta"]["interfaceEdges"] == interface_count == 311
+    assert data["meta"]["interfaceEdges"] == interface_count == 312
+    # Exact A1 contract consumes strict domain planning before its apply journey.
+    assert any(e["id"] == "M-13-C.2" for e in by_id["M-06-A.1"]["interfaceDependencies"])
     assert data["meta"]["sourceAssessmentCounts"] == dict(
         collections.Counter(row["sourceAssessment"] for row in rows)
     )
