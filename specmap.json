@@ -19519,6 +19519,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_generated_slot_lanes.rs",
+      "item_kind": "fn",
+      "line": 65,
+      "symbol": "vibe_cli::tests::cli_generated_slot_lanes::install_check_repeat_and_lock_reread_preserve_source_members_and_authored_fragments",
+      "end_line": 196,
+      "fingerprint": "tok1:d240b07de386bca9a52cef1073b5121415f42df4674d2148161043745ecf3b45"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_init/init_package_host_format.rs",
       "item_kind": "mod",
       "line": 5,
@@ -43027,6 +43036,24 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/directives.rs",
+      "item_kind": "fn",
+      "line": 282,
+      "symbol": "vibe_spec::directives::lane_citation_error",
+      "end_line": 308,
+      "fingerprint": "tok1:3afa37d80c376dd12724209dbddc919559f5fe3cb5e9b6e7f956fdd0330c3ca8"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/directives/tests.rs",
+      "item_kind": "fn",
+      "line": 354,
+      "symbol": "vibe_spec::directives::tests::generated_boot_cache_addresses_are_not_directive_targets",
+      "end_line": 385,
+      "fingerprint": "tok1:af84eb2fc5b93ba90173d4f14ecc520402257d2835406fdc9f9ba53338b6b896"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/doctree/fence.rs",
       "item_kind": "fn",
       "line": 57,
@@ -45178,6 +45205,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/node_dependency.rs",
+      "item_kind": "fn",
+      "line": 5,
+      "symbol": "vibe_workspace::install::bootgen::node_dependency::node_dependency_boot",
+      "end_line": 147,
+      "fingerprint": "tok1:37a8eb273c7133dc68970c0a0684adae82a2d3926316aafab914fd779382ea8b"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/owner_plans_tests.rs",
       "item_kind": "fn",
       "line": 5,
@@ -45196,6 +45232,42 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/publication.rs",
+      "item_kind": "fn",
+      "line": 7,
+      "symbol": "vibe_workspace::install::bootgen::publication::publish_node_boot",
+      "end_line": 29,
+      "fingerprint": "tok1:353a18d0cbfda6039e072de2a65d9531912bc7e6c6521ebc188c2fb01d35a7e7"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/publication.rs",
+      "item_kind": "fn",
+      "line": 36,
+      "symbol": "vibe_workspace::install::bootgen::publication::tests::protection_matches_kind_group_name_but_not_version_or_source_path",
+      "end_line": 61,
+      "fingerprint": "tok1:f157b89eb27e4a375e2e30f5bc2aea851d1945a45a3fb8dac8ff218c179cf1a8"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/replay_prepare/tests_covered_zone.rs",
+      "item_kind": "fn",
+      "line": 23,
+      "symbol": "vibe_workspace::install::bootgen::replay_prepare::tests_covered_zone::native_unit_bytes_follow_consumed_artifacts_and_node_pass_stays_owned",
+      "end_line": 85,
+      "fingerprint": "tok1:015fe2a253c19bd7dfcb9f3315e758314a48650f47797b45e2d1071566541018"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/replay_prepare/tests_covered_zone.rs",
+      "item_kind": "fn",
+      "line": 87,
+      "symbol": "vibe_workspace::install::bootgen::replay_prepare::tests_covered_zone::transitive_suggested_multifragment_unit_retains_exact_generated_dependency",
+      "end_line": 146,
+      "fingerprint": "tok1:ed7191d90c7342bb114ff3e7c3d31afd0f3c981b51c88748490b02154f81d128"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/transitive.rs",
       "item_kind": "mod",
       "line": 3,
@@ -45205,20 +45277,29 @@
     },
     {
       "crate_name": "vibe-workspace",
-      "file": "crates/vibe-workspace/src/install/bootgen.rs",
+      "file": "crates/vibe-workspace/src/install/bootgen/transitive.rs",
       "item_kind": "fn",
-      "line": 525,
-      "symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "end_line": 552,
-      "fingerprint": "tok1:c4cfd7121ca24f83cf3f771831a928568312f037b26bc5860b4096d6b3fa50e1"
+      "line": 13,
+      "symbol": "vibe_workspace::install::bootgen::transitive::static_unit_members",
+      "end_line": 50,
+      "fingerprint": "tok1:447c9cae10338c97a06004233856656f4dec6dd9c4946717185eee8ca1c80531"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 293,
+      "line": 400,
+      "symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
+      "end_line": 436,
+      "fingerprint": "tok1:9d08758b1e16a710bbfa572f2ce3046d6e310f18c933ba54f3f2830ac4c1624a"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen.rs",
+      "item_kind": "fn",
+      "line": 301,
       "symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "end_line": 325,
+      "end_line": 333,
       "fingerprint": "tok1:59bcdc58df73e3c62002c8068aa146e54c8502dc4e80f014f5352991cb91c6c5"
     },
     {
@@ -45481,6 +45562,78 @@
       "symbol": "vibe_workspace::install::tests_hooks::untrusted_group_skips_the_hook_without_running_it",
       "end_line": 161,
       "fingerprint": "tok1:31f37eb6001313a1d4312efeb12ec35f8fb95e641c3bc528cf1b0c07d42f7c54"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "item_kind": "fn",
+      "line": 255,
+      "symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::consumer_install_keeps_source_workspace_member_bytes",
+      "end_line": 399,
+      "fingerprint": "tok1:95967cb22d6d7f24265a80fbcf9d8b375f0cf802177e07bb812d1b82dc58a188"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "item_kind": "fn",
+      "line": 193,
+      "symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::explicit_dynamic_link_overrides_static_suggestion_and_keeps_unit_cache",
+      "end_line": 253,
+      "fingerprint": "tok1:7c9a3fa619ac2b19fd720ef24edb126d5b9631c5db473c97cf2b60a45c150b42"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "item_kind": "fn",
+      "line": 185,
+      "symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::node_default_static_link_expands_nested_simple_unit_in_xml_and_markdown",
+      "end_line": 191,
+      "fingerprint": "tok1:c51efe39ee159b16f945893a017736af11064466018e81933ee4dd8cbdb8b82f"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "item_kind": "fn",
+      "line": 437,
+      "symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::ordinary_project_member_keeps_foundation_and_dependency_entrypoint",
+      "end_line": 484,
+      "fingerprint": "tok1:279f1201055b3886ac117b1083fde95ba4772ca875e7a5953755f35936b87c28"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "item_kind": "fn",
+      "line": 401,
+      "symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::standalone_package_root_still_publishes_dependency_boot",
+      "end_line": 435,
+      "fingerprint": "tok1:6930d488790a56f50a20020423901356f6153d59099902b183ab907797b26146"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "item_kind": "fn",
+      "line": 177,
+      "symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::suggested_static_link_expands_nested_simple_unit_in_xml_and_markdown",
+      "end_line": 183,
+      "fingerprint": "tok1:e2b6a8ad7eba185f592b0decd4abc951141c000c612a8df0b33a03d7cd4232c3"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "item_kind": "fn",
+      "line": 486,
+      "symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::unselected_package_member_keeps_its_entrypoint",
+      "end_line": 517,
+      "fingerprint": "tok1:b5a88d80cc996e8a51fdb6f82153d045705d09f409843b75860b5d1b3fb4f923"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "item_kind": "fn",
+      "line": 169,
+      "symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::xml_and_markdown_nested_simple_multifragment_zones_exclude_generated_source_lanes",
+      "end_line": 175,
+      "fingerprint": "tok1:05217889b8f3d8683ebca63c27ce389662c2f0b6121e90baa191be9d74636713"
     },
     {
       "crate_name": "vibe-workspace",
@@ -45916,6 +46069,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "item_kind": "fn",
+      "line": 554,
+      "symbol": "vibe_workspace::vibedeps::derived::is_generated_boot_artifact",
+      "end_line": 573,
+      "fingerprint": "tok1:5e5dc5e62411f2fddcc0c46e96c9dd225983f0fb72e2767f6c4c0d4200f8a191"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/slot_cow.rs",
       "item_kind": "mod",
       "line": 3,
@@ -45931,6 +46093,15 @@
       "symbol": "vibe_workspace::vibedeps::slot_diff",
       "end_line": 3,
       "fingerprint": "tok1:04fdc955ed400e286d2a6811922a01e7aa7befe304e2a3e41f9ef561ad229964"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+      "item_kind": "fn",
+      "line": 535,
+      "symbol": "vibe_workspace::vibedeps::slot_diff::collect_source_files",
+      "end_line": 565,
+      "fingerprint": "tok1:3bd1c3d7ab06986c1c37f9d39de3e401a2d4223e50fa85c8580cb5166dec6502"
     },
     {
       "crate_name": "vibe-workspace",
@@ -46012,6 +46183,15 @@
       "symbol": "vibe_workspace::vibedeps::tests::overlay",
       "end_line": 3,
       "fingerprint": "tok1:ba80ab5fb2c0aa9e3ed4f213fb5389b0b3f108097ebcbebb47dc5f25a290e9ca"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/tests_transformed.rs",
+      "item_kind": "fn",
+      "line": 392,
+      "symbol": "vibe_workspace::vibedeps::tests_transformed::generated_boot_cache_is_excluded_from_every_payload_walk_only_at_its_owned_path",
+      "end_line": 486,
+      "fingerprint": "tok1:8a98ab302a400eaaec1917783e77e70abeeb2b3b7772028d6ef4dcdc74668c9b"
     },
     {
       "crate_name": "xtask",
@@ -57283,6 +57463,30 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#cli",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_generated_slot_lanes.rs",
+      "from_symbol": "vibe_cli::tests::cli_generated_slot_lanes::install_check_repeat_and_lock_reread_preserve_source_members_and_authored_fragments",
+      "line": 66,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_generated_slot_lanes.rs",
+      "from_symbol": "vibe_cli::tests::cli_generated_slot_lanes::install_check_repeat_and_lock_reread_preserve_source_members_and_authored_fragments",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_generated_slot_lanes.rs",
+      "from_symbol": "vibe_cli::tests::cli_generated_slot_lanes::install_check_repeat_and_lock_reread_preserve_source_members_and_authored_fragments",
+      "line": 72,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-cli/tests/cli_init/init_package_host_format.rs",
@@ -78824,6 +79028,22 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-spec/src/directives.rs",
+      "from_symbol": "vibe_spec::directives::lane_citation_error",
+      "line": 289,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#COMPILED-LANE-IS-NOT-A-CITATION-TARGET",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/directives/tests.rs",
+      "from_symbol": "vibe_spec::directives::tests::generated_boot_cache_addresses_are_not_directive_targets",
+      "line": 355,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#COMPILED-LANE-IS-NOT-A-CITATION-TARGET",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-spec/src/doctree/fence.rs",
       "from_symbol": "vibe_spec::doctree::fence::fenced_code_lines",
       "line": 66,
@@ -80839,6 +81059,14 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-workspace/src/install/bootgen/node_dependency.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::node_dependency::node_dependency_boot",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/install/bootgen/owner_plans_tests.rs",
       "from_symbol": "vibe_workspace::install::bootgen::owner_plans_tests::boot_has_no_independent_plan_collector_or_lowerer",
       "line": 6,
@@ -80855,6 +81083,38 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-workspace/src/install/bootgen/publication.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::publication::publish_node_boot",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen/publication.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::publication::tests::protection_matches_kind_group_name_but_not_version_or_source_path",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen/replay_prepare/tests_covered_zone.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::replay_prepare::tests_covered_zone::native_unit_bytes_follow_consumed_artifacts_and_node_pass_stays_owned",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen/replay_prepare/tests_covered_zone.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::replay_prepare::tests_covered_zone::transitive_suggested_multifragment_unit_retains_exact_generated_dependency",
+      "line": 88,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#STATIC-EMITS-ONCE-EACH",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-workspace/src/install/bootgen/transitive.rs",
       "from_symbol": "vibe_workspace::install::bootgen::transitive",
       "line": 3,
@@ -80863,18 +81123,34 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/install/bootgen/transitive.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::transitive::static_unit_members",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 530,
+      "line": 409,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#PLAN-TIME-VALIDATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
+      "line": 405,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#plan-time",
       "verb": "implements",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "line": 294,
+      "line": 302,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
       "verb": "implements",
@@ -81128,6 +81404,78 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate",
       "verb": "verifies",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::consumer_install_keeps_source_workspace_member_bytes",
+      "line": 256,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::consumer_install_keeps_source_workspace_member_bytes",
+      "line": 259,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#PLAN-TIME-VALIDATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::explicit_dynamic_link_overrides_static_suggestion_and_keeps_unit_cache",
+      "line": 194,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::node_default_static_link_expands_nested_simple_unit_in_xml_and_markdown",
+      "line": 186,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::ordinary_project_member_keeps_foundation_and_dependency_entrypoint",
+      "line": 438,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::standalone_package_root_still_publishes_dependency_boot",
+      "line": 402,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::suggested_static_link_expands_nested_simple_unit_in_xml_and_markdown",
+      "line": 178,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::unselected_package_member_keeps_its_entrypoint",
+      "line": 487,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/tests_hybrid/tests_generated_slot_lanes.rs",
+      "from_symbol": "vibe_workspace::install::tests_hybrid::tests_generated_slot_lanes::tests::xml_and_markdown_nested_simple_multifragment_zones_exclude_generated_source_lanes",
+      "line": 170,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-workspace/src/install/tests_hybrid/transaction.rs",
@@ -81532,6 +81880,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "from_symbol": "vibe_workspace::vibedeps::derived::is_generated_boot_artifact",
+      "line": 558,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/vibedeps/slot_cow.rs",
       "from_symbol": "vibe_workspace::vibedeps::slot_cow",
       "line": 3,
@@ -81545,6 +81901,14 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#DIFF-MATERIALISE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+      "from_symbol": "vibe_workspace::vibedeps::slot_diff::collect_source_files",
+      "line": 535,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
       "verb": "implements"
     },
     {
@@ -81623,6 +81987,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/vibedeps/tests_transformed.rs",
+      "from_symbol": "vibe_workspace::vibedeps::tests_transformed::generated_boot_cache_is_excluded_from_every_payload_walk_only_at_its_owned_path",
+      "line": 393,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
+      "verb": "verifies"
     }
   ],
   "schema": 3,
@@ -148662,7 +149034,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:210fb07e2e4dec309202a1450dcf2a00ce8659063f0e2c70c5e873d838f8313e",
+      "content_hash": "sha256:5afe8ef69298bccacb9f625aec0ebbf92d83f3585dc2a1dc5437685f710f09f1",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
       "heading": "PROP-007: Workspace — multi-package projects, recursive nesting, selective publish",
@@ -148788,7 +149160,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:3a2209c561486e3ef9c53e2a52e600c7123fad14f0c8184b182b175955831192",
+      "content_hash": "sha256:b21465e74a621d99923852687ccb470fb32853e3f54df8cb12c9ebbc2c319d52",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
       "heading": "2. Decisions",
@@ -148853,7 +149225,7 @@
     },
     {
       "anchor": "unified-manifest",
-      "content_hash": "sha256:b964514c769f0a1b5a4d395f5ee34ce4bafb307ed8dd53b670fa4af080912611",
+      "content_hash": "sha256:e7d40b995536b099a416bff9aa24825f3ce238a1c3c45b2011b901a5370f8996",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
       "heading": "2.2 Unified manifest — one `vibe.toml`",
@@ -148909,10 +149281,10 @@
     },
     {
       "anchor": "one-file-why",
-      "content_hash": "sha256:116d6d9cae2c8d2f8d77dc1a812795eea67346dc386f0f64678506b41ebe9bf0",
+      "content_hash": "sha256:f9bc067a990c248e31f88d39e5ccd545dcd514ca5cf5db1493917ff7a4f3a20c",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
-      "heading": "**Why one file.** A workspace member is *simultaneously* a locally-developed node and a publishable artifact. Two files would give every member both, each carrying its own `[requires]` — duplication that drifts. One `vibe.toml` with a variable section set is the only coherent shape. @status:spec/done",
+      "heading": "**Why one file.** A workspace member is *simultaneously* a locally-developed node and a publishable artifact. Two files would give every member both, each carrying its own `[requires]` — duplication that drifts. One `vibe.toml` with a variable section set is the only coherent shape. During consumer installation, a selected nonroot package member is an authored source input, not an additional output location merely because it is a workspace node. PROP-009 `##ARTIFACTS-PAIR` defines the typed selection boundary and preserves root, project and unselected-package entrypoints. @status:spec/done",
       "line": 73,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#one-file-why"
     },
@@ -149881,7 +150253,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:fe3166d4c263e6e95f976d726a68e92495cdeff654bf4dd71cc3af87aa3375a6",
+      "content_hash": "sha256:00c2913218776f8ce8013cfaa6577ea0ae94086cc0f8dea77e79103e4be780f1",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "PROP-009: Loading model — computed boot composition and the effective spec",
@@ -150007,7 +150379,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:5a181895d92a84f9ea6f90916603636c56c6fdc39653dbbd25c0ca6e2e7d16d1",
+      "content_hash": "sha256:5ac3e092cadd6a9abbe99cd8d4fb67a93454cdd2ef048b5a0a684823c079e33d",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2. Decisions",
@@ -150133,7 +150505,7 @@
     },
     {
       "anchor": "artifacts",
-      "content_hash": "sha256:010ea53606514456ca7cae3ac5b392c80e930dad5d210965e07d31c600005898",
+      "content_hash": "sha256:2c82e186c2e8cb47443866ddd963a2b5c5ef1e24bb829746f984690ed5c69ebc",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
       "heading": "2.3 Generated boot artifacts",
@@ -150142,10 +150514,10 @@
     },
     {
       "anchor": "ARTIFACTS-PAIR",
-      "content_hash": "sha256:42a5b2b4dc28b42dc182aaa8c5ba929de8aa3419520745f8dbdb23454de65ae1",
+      "content_hash": "sha256:2803e9c9dd763ad6833b7d6dfeaaaa78482f5dca05f2a80a513e39686a46a412",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
-      "heading": "**Decision.** For every entry-point node, `vibe install` generates two artifacts under the node's `vibevm/vibespecs/boot/`: <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
+      "heading": "**Decision.** `vibe install` publishes generated boot artifacts under each consumer entrypoint's `vibevm/vibespecs/boot/`. Publication follows source ownership: a nonroot workspace member carrying `[package]` is protected as authored source when its `(kind, group, name)` matches a selected dependency. Matching ignores version and source-directory spelling, so protection survives an authored-version edit while the durable lock still selects the prior version. Ordinary and native boot publication and managed-redirect preflight use this same ownership decision; they do not write lanes, INDEX, redirects or publication locks into that source member. The root, ordinary project members and unselected package members retain their entrypoints. Dependency unit artifacts remain in consumer-owned materialised slots. The entrypoint artifact pair is: <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
       "line": 49,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR"
     },
@@ -150160,10 +150532,10 @@
     },
     {
       "anchor": "STATIC-EMITS-ONCE-EACH",
-      "content_hash": "sha256:37f496f2bc7478024df694582def03424d0b2c20ea7aecbd27d33c3f3ef9ab75",
+      "content_hash": "sha256:7d58197098445181e84c4e3bc34e1c5f461349478d570058bbb1b190444895f1",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
-      "heading": "**The lane emits each package's text once (B-006, owner-approved 2026-08-04).** A static entry that would embed a compiled unit artifact (a dependency that statically links children, PROP-038 §2.1) is **de-substituted** when every boot-bearing member of its static zone (itself excluded) is already present as an individual static entry of the same lane: a package with its own boot snippet reverts to that snippet — its own text still enters, once; a snippetless aggregator leaves a **generated provenance stub** — one marker comment naming the origin and stating the zone is emitted member-by-member, never a `#use` directive (which would route a mandatory read back into the unit artifact carrying the very duplicate) and never a second copy of the text. An entry with **any** zone member not individually present keeps its unit-artifact substitution whole — the rule removes proven duplicates only and never drops coverage. The decision is a pure function of the lane's entry set and the unit zones — independent of how many consumers pull the package, through which mix of `static` / `static-transitive` / `static-hard` edges, and in what order: the closure walk already emits one entry per package identity, and the single-version invariant (PROP-038 §2.6) makes every copy of a member byte-identical, so covered-zone de-substitution can never lose text. **The stated residual:** under *partial* coverage a member both individually present and embedded in the kept unit artifact is carried twice — accepted deliberately, because the composition layer only chooses paths and never rewrites a unit artifact's content; deduplicating a widely-shared member *inside* unit artifacts is the hoisting plane's job (PROP-038 §2.4–2.5 — a hoisted member's text is replaced by a `#use` marker in every unit that shares it), and the undercounting hoist trigger is recorded at PROP-038's DRIFT-030 review stop, not here. @status:spec/work",
+      "heading": "**The lane emits each package's text once (B-006, owner-approved 2026-08-04).** A static entry that would embed a compiled unit artifact (a dependency that statically links children, PROP-038 §2.1) is **de-substituted** when every boot-bearing member of its static zone (itself excluded) is already present as an individual static entry of the same lane: a package with one unconditional static contribution reverts to that authored contribution — its own text still enters, once; a snippetless aggregator leaves a **generated provenance stub** — one marker comment naming the origin and stating the zone is emitted member-by-member, never a `#use` directive (which would route a mandatory read back into the unit artifact carrying the very duplicate) and never a second copy of the text. A substituted unit with more than one unconditional static contribution remains whole: reducing it to one main snippet would lose fragments. Direct authored-zone projection under PROP-038 `##UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES` avoids substitution by supplying those pieces separately, independent of serialization. An entry with **any** zone member not individually present keeps its unit-artifact substitution whole — the rule removes proven duplicates only and never drops coverage. The decision is a pure function of the lane's entry set and the unit zones — independent of how many consumers pull the package, through which mix of `static` / `static-transitive` / `static-hard` edges, and in what order: the closure walk already emits one entry per package identity, and the single-version invariant (PROP-038 §2.6) makes every copy of a member byte-identical, so covered-zone de-substitution can never lose text. **The stated residual:** under *partial* coverage a member both individually present and embedded in the kept unit artifact is carried twice — accepted deliberately, because the composition layer only chooses paths and never rewrites a unit artifact's content; deduplicating a widely-shared member *inside* unit artifacts is the hoisting plane's job (PROP-038 §2.4–2.5 — a hoisted member's text is replaced by a `#use` marker in every unit that shares it), and the undercounting hoist trigger is recorded at PROP-038's DRIFT-030 review stop, not here. @status:spec/work",
       "line": 52,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#STATIC-EMITS-ONCE-EACH"
     },
@@ -150187,10 +150559,10 @@
     },
     {
       "anchor": "COMPILED-LANE-IS-NOT-A-CITATION-TARGET",
-      "content_hash": "sha256:1b01587065b642e1c79256ae40b5780772f74d8bbabbbe58294f74dd564aec05",
+      "content_hash": "sha256:a09321cddbddf4fc6ed76fd11cdcf41701498e3b55611e286d881b8ae7457b09",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
-      "heading": "**A generated `STATIC.md` is not a citation target** — authored text never cites `spec://…/boot/STATIC#…`; the lane is compiler output, and source-of-truth is the package source under `vibedeps/` (PROP-035 §11's lint, B-011 §6.1). @status:spec/work",
+      "heading": "**Generated boot outputs are not citation targets.** Authored directives reject logical `boot/STATIC`, `boot/INDEX` and direct `boot/.vibe-boot-*` document names under PROP-035 §11's `##COMPILED-LANE-IS-NOT-A-CITATION-TARGET`. The source-of-truth is authored package content, not generated lane, index or publication state. @status:spec/work",
       "line": 55,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"
     },
@@ -152185,7 +152557,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6183d5b5fc9ab9b6d62d266256f5d88c397fcee7e9cfeb82eb922f3f3f4c0a5e",
+      "content_hash": "sha256:7d61fd351b0e34f14f0b9d1cea0417ebd245e89d409434ee006c4b2d879ade93",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml",
       "heading": "PROP-012: The managed redirect block — vibevm as a co-tenant of the agent instruction files",
@@ -152365,7 +152737,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:da6fb26967b7cb0af09170b4a7891e3c7d369e5961984fe23fe9be3add1dc602",
+      "content_hash": "sha256:b8f51a58d2695119673e64c9a7f820ef8a5e49327e0ebe8c9e2c8872cd2714cb",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml",
       "heading": "2. Decisions",
@@ -152652,30 +153024,30 @@
     },
     {
       "anchor": "plan-time",
-      "content_hash": "sha256:7dea7a4ede7b2cef2fbd15bcb6286e74555405c6cf5878f99b6f91b73e0b4257",
+      "content_hash": "sha256:275aadc085017e95109d5bb4cdc95728d73eeda0c08a8a93346ca873f7a96422",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml",
       "heading": "2.5 Validate before mutate",
       "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#plan-time",
       "kind": "req",
-      "revision": 1
+      "revision": 2
     },
     {
       "anchor": "req-plan-time",
-      "content_hash": "sha256:c21f3db089c5e744a95fc0097a6d4c97b2261850acd24dd0855e3d3b500c9d4f",
+      "content_hash": "sha256:fe51ab826234bb2e462e9c9eea8b2cd8fcfea888814aa437e5bf7edd231ee179",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml",
-      "heading": "`req r1` @status:impl/done",
+      "heading": "`req r2` @status:impl/done",
       "line": 89,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#req-plan-time"
     },
     {
       "anchor": "PLAN-TIME-VALIDATION",
-      "content_hash": "sha256:a28c246fad7750f94399ddc440be05ec7c17cb78aadf1b445bbe5e6748dd6f97",
+      "content_hash": "sha256:cdb0760e8208301afa7b053983ed9f30e437c91d18655e852b1bb429286dcb14",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml",
-      "heading": "**Decision.** The well-formedness classification of §2.3 runs at **plan time** — before any `vibedeps/` materialisation or boot-artifact write. @status:impl/done",
+      "heading": "**Decision.** The well-formedness classification of §2.3 runs at **plan time** — before any `vibedeps/` materialisation or boot-artifact write. The preflight set is the set of nodes whose boot/redirect output this operation owns. A selected nonroot package source member protected by PROP-009 `##ARTIFACTS-PAIR` is excluded, including when its authored version differs from the locked selected slot: its source-owned redirect cannot block the consumer operation and is not rewritten. Root, project-member and unselected-package entrypoints remain validated before mutation. @status:impl/done",
       "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#PLAN-TIME-VALIDATION"
     },
@@ -152764,21 +153136,21 @@
     },
     {
       "anchor": "surface",
-      "content_hash": "sha256:5815213a0841a4a47c2e1aee15f894a55c748057b65289825a7aa2c1a2fc670c",
+      "content_hash": "sha256:787d30407dd90a2c0286e20575066b92979c17c9f964c4089b102f1d076dd15c",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml",
       "heading": "3. Command and crate surface",
       "line": 107,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#surface",
       "kind": "design",
-      "revision": 1
+      "revision": 2
     },
     {
       "anchor": "design-surface",
-      "content_hash": "sha256:87289a49e49675cb52272ad7834f0aa5ceb2b1e55a609128569277e541b23d77",
+      "content_hash": "sha256:15e3fe4974bf59adf8c01a81f0c01d2054cee12fe8edd6013d64b35a498e7cef",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml",
-      "heading": "`design r1` @status:impl/done",
+      "heading": "`design r2` @status:impl/done",
       "line": 108,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#design-surface"
     },
@@ -152793,10 +153165,10 @@
     },
     {
       "anchor": "SURF-ORCHESTRATION",
-      "content_hash": "sha256:0e1e57930264efeab78a7868c162a3f3678eb5c1e2edbb59d5ba63906c09560f",
+      "content_hash": "sha256:99c6ed96af65e642dd06ac93b489e56ce1509c60dd24b85a1946231001ca9b8c",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-012-managed-redirect-block.xml",
-      "heading": "**The install orchestration** (`apply_resolution` and the `vibe reinstall` path) — gains the §2.5 plan-time validation pass over every node's instruction files before any mutation. @status:impl/done",
+      "heading": "**The install orchestration** (`apply_resolution` and the `vibe reinstall` path) — runs the §2.5 plan-time validation pass over published entrypoints' instruction files before any mutation, excluding selected nonroot package source members under PROP-009 `##ARTIFACTS-PAIR`. @status:impl/done",
       "line": 111,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#SURF-ORCHESTRATION"
     },
@@ -155501,7 +155873,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:69d529aa2670eb0d35c5d5baa3ed9c8835cbaba760d3c85e7f8b09433a9c7d21",
+      "content_hash": "sha256:1b8a0ea4bd43fcbb9c8eb2fc7375d423efb12ca40f54f7dec760e5ac417e107b",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker",
@@ -155708,7 +156080,7 @@
     },
     {
       "anchor": "formats",
-      "content_hash": "sha256:efc5e5f36a4ec96e9c37c88885106bb0fe4036dd8212caceac40bfab2dfc1db4",
+      "content_hash": "sha256:27eb17db0d63d82e10dd3f3bf10b7359ea01ce3def9f500ffa72a3257f4a9586",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "3. Package formats — `simple` and `normal`",
@@ -155726,10 +156098,10 @@
     },
     {
       "anchor": "FORMAT-SIMPLE",
-      "content_hash": "sha256:de5ce74d80640dc8e264f97ec8e1a2b5ab237ad0a6e809022cb71362e4b588ed",
+      "content_hash": "sha256:94da4508304ee532c276e537f0c50193698af3c4d5950679c6d6478a52abb389",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
-      "heading": "**`format = \"simple\"`** — **the default** (absent `format`, a package is `simple`). Legacy / adapted prompts, carried **whole**, with no VibeVM-specific structure — for importing existing corpora without rewriting them, and the fail-safe posture. Rules: inclusion in `[requires.packages]` means (a) structural — the agent reads the file; (b) static — its text is compiled into the target. If `[boot_snippet].source` names a file, only that file is read/spliced; **absent even that, every file in the package is read/spliced by a recursive walk** — the over-load is the author's problem, the deliberate cost of not adopting `normal`. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
+      "heading": "**`format = \"simple\"`** — **the default** (absent `format`, a package is `simple`). Legacy / adapted prompts, carried **whole**, with no VibeVM-specific structure — for importing existing corpora without rewriting them, and the fail-safe posture. Rules: inclusion in `[requires.packages]` means (a) structural — the agent reads the file; (b) static — its text is compiled into the target. If `[boot_snippet].source` names a file, only that file is read/spliced; **absent even that, every file in the package is read/spliced by a recursive walk** — the over-load is the author's problem, the deliberate cost of not adopting `normal`. Package traversal excludes the slot's generated `vibevm/vibespecs/boot/STATIC.md`, `STATIC.xml`, `INDEX.md`, and direct children of that boot directory whose names start with `.vibe-boot-`. The same exclusion applies to transformed and Mixed materialisation. These are derived publication outputs, never authored package payload; unrelated data files, other dotfiles and nested authored files remain eligible. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
       "line": 44,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE"
     },
@@ -156833,7 +157205,7 @@
     },
     {
       "anchor": "markers",
-      "content_hash": "sha256:147ed67798aa9aa109ae8ad6967aa546997650a4275b2b7b21335a8b2a51ca2c",
+      "content_hash": "sha256:592b2b3736373d9ca77bee51c111df528450c6e2ef313f0faeb34f413ff4a4c4",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
       "heading": "11. Markers in compiled output",
@@ -156887,10 +157259,10 @@
     },
     {
       "anchor": "COMPILED-LANE-IS-NOT-A-CITATION-TARGET",
-      "content_hash": "sha256:69ce233d568d2d8bcf7fb1f00e5541dc0b5a8d87fdb4e818f03f0369e597a859",
+      "content_hash": "sha256:fb431549d2f6f92467f4a95406f5d1a512719fa10ddaeffee748b8cd4855576a",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
-      "heading": "**The compiled lane is not a citation target (B-011, §6.1 layer 1 of the design).** A `spec://` address whose document path names a generated `STATIC.md` is an illegal target for authored text — the lane is a cache; source-of-truth is the package source. The directive compiler rejects such an address; the gate lints the tree for them. @status:spec/work",
+      "heading": "**Generated boot output is not a citation target (B-011, §6.1 layer 1 of the design).** Authored `#use`, `#embed`, `#source` and `@spec://` references cannot target logical document paths `boot/STATIC`, `boot/INDEX`, or a direct `boot/.vibe-boot-*` name; the same direct-child rule applies when `boot` has a preceding path prefix. These name generated cache/publication state, not source-of-truth. Directive parsing refuses them and directs the author to package sources. Names outside that direct boot-output position remain eligible. Document addresses are logical names resolved through the normal Markdown/XML suffix convention; this rule does not introduce an explicit-extension address syntax. @status:spec/work",
       "line": 232,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"
     },
@@ -157220,7 +157592,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:10a998b0790acf865f07f1efbf07380b96f3519a452e95186af933fd8020c5c9",
+      "content_hash": "sha256:0f0de49b46070896a871e02d8b29f64695f2285e9f5f2c0fde4132e376d89aa4",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
       "heading": "PROP-038: Hybrid boot linking — per-package compilation units with soft/hard static edges",
@@ -157337,7 +157709,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:07b275d339400c478de78c279fe20faa2641986bb48d8774662812a95de20ce1",
+      "content_hash": "sha256:7db01f6e148fea2aebf107c4caedaa77ed11b62f9bc56687680fa35eb7146d61",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
       "heading": "2. Decisions",
@@ -157346,7 +157718,7 @@
     },
     {
       "anchor": "units",
-      "content_hash": "sha256:89edd706fbd17444b2186d079913eaaa96b7798caf89109e4ef317c8fc894202",
+      "content_hash": "sha256:63f5712aef640978f1e4ecbd915a048326a02b0c9bcc0aa91fadf3f49b52936b",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
       "heading": "2.1 Every materialised package is a compilation unit",
@@ -157382,16 +157754,16 @@
     },
     {
       "anchor": "UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES",
-      "content_hash": "sha256:62d31dff094da3b1d97193c5126c7239468e53c1c8a3fc70f801721f32380e6e",
+      "content_hash": "sha256:d73a72d0fcb4dc2d653f1092357cd48bafea183b39428c4faedb7c1cc85c1309",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
-      "heading": "The unit artifact serves **dynamic** consumers (an `INDEX.md` reference loads the whole zone through it) and standalone unit reads; a **static** consumer whose lane already compiles the unit's zone member-by-member **elides** the aggregate entry to a provenance stub instead of embedding the artifact — the once-each rule of PROP-009 §2.3 `##STATIC-EMITS-ONCE-EACH` (B-006, owner-approved 2026-08-04), applied at compose time and distinct from §2.4's hoisting, which shares one copy *across* consumers rather than deduplicating within one lane. @status:spec/work",
+      "heading": "A unit artifact serves **dynamic** consumers (an INDEX reference loads the whole zone through it), standalone unit reads, and static entries whose artifact substitution remains necessary. For a directly required unit with no surviving load-time condition and an effective `static`, `static-hard` or `static-transitive` link, node composition projects its resolved static zone into separate authored main-snippet and fragment inputs. Link precedence is consumer declaration, then target suggestion, then node default, then dynamic; an explicit dynamic declaration overrides a static suggestion. Nested zones follow the existing static-zone traversal. Projection is independent of Markdown, XML or Mixed serialization: generated multi-document cache text is not reparsed as one authored simple document, and every retained authored fragment remains present. Genuine substituted entries still use PROP-009's `##STATIC-EMITS-ONCE-EACH` coverage fixpoint; a unit with multiple static contributions must not be reduced to its main snippet alone. This is composition, distinct from hoisting across consumers. **Compiler ownership follows the actual input.** A node assembled from authored zone members does not consume that unit's compiled artifact, including bytes changed by a unit-owned native pass. A retained artifact does carry those changed bytes into its consumer. The node still executes its own selected compile passes in either case; unit passes are not implicitly promoted into node passes. @status:spec/work",
       "line": 31,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES"
     },
     {
       "anchor": "edge-recursion",
-      "content_hash": "sha256:b407604512810dd6cd4006507f0ee8d0fa522803d790387b4d14956abd75681c",
+      "content_hash": "sha256:b4d3d55256cc691f33965fe8de877fc1710534ff415159b18af4cdad9fdb0791",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
       "heading": "2.2 The edge is the linker instruction; compilation is recursive and dynamic-bounded",
@@ -157409,10 +157781,10 @@
     },
     {
       "anchor": "EDGE-STATIC",
-      "content_hash": "sha256:8273261b67c696d22a56fd69ea3e5b6b786cf208e3f0a8f30ae88c580396c34f",
+      "content_hash": "sha256:87a5e22d67ba96ccd799ebdf390aa48937ab16609edb9eeb69ac591044b46e10",
       "doc_path": "modules/vibe-workspace/PROP-038",
       "file": "vibevm/vibespecs/modules/vibe-workspace/PROP-038-hybrid-boot-linking.xml",
-      "heading": "**`static`** — `X`'s `STATIC.md` is compiled into `P`'s `STATIC.md`. Compilation **recurses down** `X`'s own static edges; a nested `dynamic` edge inside `X` breaks the recursion (that target stays an `INDEX.md` reference). `static` therefore **respects** the modes below it. @status:impl/done",
+      "heading": "**`static`** — `X`'s static zone contributes to `P`'s static lane, using authored zone inputs or a retained unit artifact according to §2.1. Compilation **recurses down** `X`'s own static edges; a nested `dynamic` edge inside `X` breaks that recursion (that target stays an INDEX reference). `static` therefore **respects** the modes below it. @status:impl/done",
       "line": 36,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#EDGE-STATIC"
     },
@@ -163931,6 +164303,12 @@
     },
     {
       "code": "overloaded-item",
+      "file": "crates/vibe-cli/tests/cli_generated_slot_lanes.rs",
+      "line": 66,
+      "message": "`vibe_cli::tests::cli_generated_slot_lanes::install_check_repeat_and_lock_reread_preserve_source_members_and_authored_fragments` realises 3 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
+    },
+    {
+      "code": "overloaded-item",
       "file": "crates/vibe-extension-registry/src/tests/view.rs",
       "line": 346,
       "message": "`vibe_extension_registry::tests::view::opaque_indices_preserve_compile_dense_order_native_order_and_row_identity` realises 4 distinct spec points (threshold 3); it likely does too much, or the spec is sliced too fine"
@@ -163986,7 +164364,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
-      "line": 294,
+      "line": 302,
       "message": "edge `vibe_workspace::install::bootgen::verify_boot_graph` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
     },
     {

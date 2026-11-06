@@ -532,6 +532,9 @@ fn write_record_last(slot: &Path, record: &SlotRecord) -> Result<(), WorkspaceEr
         .map_err(|reason| materialisation_error(&slot.join(SLOT_RECORD_FILENAME), reason))
 }
 
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE"
+)]
 fn collect_source_files(
     directory: &Path,
     root: &Path,
@@ -544,6 +547,9 @@ fn collect_source_files(
             continue;
         }
         let source = entry.path();
+        if super::derived::is_generated_boot_artifact(root, &source) {
+            continue;
+        }
         let file_type = entry.file_type().map_err(|error| io_err(&source, error))?;
         if file_type.is_dir() {
             collect_source_files(&source, root, mode, files)?;

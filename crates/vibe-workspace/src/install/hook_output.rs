@@ -119,7 +119,7 @@ fn apply_with_materialise_lifecycle(
     trace: Option<&crate::compile_trace::TraceRun>,
 ) -> Result<InstallOutcome, WorkspaceError> {
     // A malformed instruction block aborts before any mutation.
-    validate_redirect_blocks(workspace)?;
+    validate_redirect_blocks(workspace, resolution)?;
 
     let observer = lifecycle.callback();
     let mut rollback = InstallRollback::new(&workspace.root);
@@ -249,7 +249,7 @@ where
     ) -> Result<P, WorkspaceError>,
     P: crate::extension_world::OwnerNativeCompileProvider,
 {
-    validate_redirect_blocks(workspace)?;
+    validate_redirect_blocks(workspace, resolution)?;
     let mut rollback = InstallRollback::new(&workspace.root);
     let observer = match &lifecycle {
         SlotLifecycleMode::Callback(callback) => Some(*callback),

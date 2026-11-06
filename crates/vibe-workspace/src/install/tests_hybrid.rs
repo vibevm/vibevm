@@ -8,6 +8,9 @@
 #[path = "tests_hybrid/transaction.rs"]
 mod transaction;
 
+#[path = "tests_hybrid/tests_generated_slot_lanes.rs"]
+mod g3_cases;
+
 use super::test_helpers::*;
 use super::*;
 use std::path::Path;

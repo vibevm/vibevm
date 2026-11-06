@@ -5,7 +5,9 @@ use vibe_spec::{
     CompilerNativeCall, CompilerNativeInvoker, CompilerNativeInvokerError,
     CompilerNativeInvokerErrorKind, CompilerNativePolicy,
 };
-use vibe_wire::generated::native::e2::compile_reply::{CompileReply, CompileReplySkip};
+use vibe_wire::generated::native::e2::compile_reply::{
+    CompileReply, CompileReplyOk, CompileReplySkip,
+};
 
 use crate::WorkspaceError;
 use crate::extension_world::{
@@ -18,6 +20,7 @@ use crate::extension_world::{
 #[derive(Clone, Copy)]
 pub(crate) enum Reply {
     Skip,
+    AppendEmitted(&'static str),
     Missing,
     Hard,
 }
@@ -54,7 +57,7 @@ pub(crate) struct FakeBinding {
 }
 
 impl CompilerNativeInvoker for FakeBinding {
-    fn invoke(&self, _call: CompilerNativeCall<'_>) -> Result<Vec<u8>, CompilerNativeInvokerError> {
+    fn invoke(&self, call: CompilerNativeCall<'_>) -> Result<Vec<u8>, CompilerNativeInvokerError> {
         let mut invocations = self.invocations.lock().map_err(|_| {
             CompilerNativeInvokerError::new(
                 CompilerNativeInvokerErrorKind::InvocationFailed,
@@ -64,8 +67,9 @@ impl CompilerNativeInvoker for FakeBinding {
         *invocations += 1;
         drop(invocations);
         match self.reply {
+            Reply::AppendEmitted(marker) => append_emitted_reply(call, marker),
             Reply::Skip => serde_json::to_vec(&CompileReply::Skip(Box::new(CompileReplySkip {
-                envelope: 1,
+                envelope: 2,
                 message: Some("fixture skip".to_owned()),
             })))
             .map_err(|error| {
@@ -84,6 +88,68 @@ impl CompilerNativeInvoker for FakeBinding {
             )),
         }
     }
+}
+
+/// Use the existing canonical byte codec; only the test's emitted bytes move.
+fn append_emitted_reply(
+    call: CompilerNativeCall<'_>,
+    marker: &str,
+) -> Result<Vec<u8>, CompilerNativeInvokerError> {
+    use vibe_wire::behaviour::native_backend::{self, AdmittedBackendReply};
+    use vibe_wire::generated::native::e1::backend_reply::{BackendReply, BackendReplyOk};
+    use vibe_wire::generated::shared::IrV2;
+    let error = |detail: &str| {
+        CompilerNativeInvokerError::new(CompilerNativeInvokerErrorKind::InvocationFailed, detail)
+    };
+    let pass = format!("transform:emitted:{}", call.key());
+    let mut payload = call.into_payload();
+    let IrV2::EmittedArtifact(artifact) = &mut payload else {
+        return Err(error("marker fixture requires emitted IR"));
+    };
+    let encoded = BackendReply::Ok(Box::new(BackendReplyOk {
+        envelope: 1,
+        bytes_b64: artifact.emitted.bytes_b64.clone(),
+        message: None,
+    }));
+    let AdmittedBackendReply::Ok { mut bytes, .. } =
+        native_backend::validate_reply(&encoded).map_err(|failure| error(&failure.to_string()))?
+    else {
+        return Err(error("marker fixture byte decode returned failure"));
+    };
+    if fixture_emitted_digest(&bytes) != artifact.emitted.provenance.bytes_digest {
+        return Err(error(
+            "marker fixture digest framing disagrees with manager input",
+        ));
+    }
+    bytes.extend_from_slice(marker.as_bytes());
+    artifact.emitted.provenance.bytes_digest = fixture_emitted_digest(&bytes);
+    artifact.emitted.provenance.emitted_transforms.push(pass);
+    let BackendReply::Ok(encoded) =
+        native_backend::ok_reply(&bytes, None).map_err(|failure| error(&failure.to_string()))?
+    else {
+        return Err(error("marker fixture byte encode returned failure"));
+    };
+    artifact.emitted.bytes_b64 = encoded.bytes_b64;
+    serde_json::to_vec(&CompileReply::Ok(Box::new(CompileReplyOk {
+        envelope: 2,
+        payload,
+        message: None,
+    })))
+    .map_err(|failure| error(&failure.to_string()))
+}
+
+/// Test-only external-producer spelling of the current emitted-bytes/v1
+/// protocol. Canonical owners: vibe-spec/compiler/emit/digest.rs::bytes_digest
+/// and compiler/digest.rs::StableDigest. Checked against every actual input
+/// before constructing the changed candidate; production keeps its one owner.
+fn fixture_emitted_digest(bytes: &[u8]) -> String {
+    use sha2::{Digest, Sha256};
+    let mut digest = Sha256::new();
+    for field in [b"vibe-spec/emitted-bytes/v1".as_slice(), bytes] {
+        digest.update((field.len() as u64).to_le_bytes());
+        digest.update(field);
+    }
+    format!("{:x}", digest.finalize())
 }
 
 impl CompilerNativeFactBinding for FakeBinding {

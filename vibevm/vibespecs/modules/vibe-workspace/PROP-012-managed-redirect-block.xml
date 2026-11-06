@@ -86,8 +86,8 @@
       <p><manual-once fact="true" status="impl/done">It is a manual configuration the user makes by hand, once; vibevm supplies the polite default and never overrides the choice.</manual-once></p>
     </placement>
     <plan-time title="2.5 Validate before mutate">
-      <p><req-plan-time fact="true" status="impl/done">`req r1`</req-plan-time></p>
-      <p><PLAN-TIME-VALIDATION fact="true" status="impl/done">**Decision.** The well-formedness classification of §2.3 runs at **plan time** — before any `vibedeps/` materialisation or boot-artifact write.</PLAN-TIME-VALIDATION></p>
+      <p><req-plan-time fact="true" status="impl/done">`req r2`</req-plan-time></p>
+      <p><PLAN-TIME-VALIDATION fact="true" status="impl/done">**Decision.** The well-formedness classification of §2.3 runs at **plan time** — before any `vibedeps/` materialisation or boot-artifact write. The preflight set is the set of nodes whose boot/redirect output this operation owns. A selected nonroot package source member protected by PROP-009 `##ARTIFACTS-PAIR` is excluded, including when its authored version differs from the locked selected slot: its source-owned redirect cannot block the consumer operation and is not rewritten. Root, project-member and unselected-package entrypoints remain validated before mutation.</PLAN-TIME-VALIDATION></p>
       <p><FAIL-FAST fact="true" status="impl/done">A malformed block fails the operation **fast and clean**: an install never gets half-applied, with a materialised `vibedeps/` tree and an unwritable redirect. This is the same plan-time-not-apply-time discipline vibevm already applies to its user-owned-path guards.</FAIL-FAST></p>
     </plan-time>
     <content title="2.6 The block content is unchanged — this PROP changes the envelope, not the payload">
@@ -105,10 +105,10 @@
     </content>
   </decisions>
   <surface title="3. Command and crate surface">
-    <p><design-surface fact="true" status="impl/done">`design r1`</design-surface></p>
+    <p><design-surface fact="true" status="impl/done">`design r2`</design-surface></p>
     <facts ordered="false">
       <SURF-BOOT-ARTIFACTS fact="true" status="impl/done">**`vibe-workspace::boot_artifacts`** — the implementation site. `write_boot_artifacts`'s redirect loop changes from a whole-file `fs::write` to a locate-validate-splice. New helpers: locate the block, classify well-formedness, splice the body. `render_redirect` becomes the block-*body* renderer; `REDIRECT_BODY`'s "do not edit" framing moves inside the block.</SURF-BOOT-ARTIFACTS>
-      <SURF-ORCHESTRATION fact="true" status="impl/done">**The install orchestration** (`apply_resolution` and the `vibe reinstall` path) — gains the §2.5 plan-time validation pass over every node's instruction files before any mutation.</SURF-ORCHESTRATION>
+      <SURF-ORCHESTRATION fact="true" status="impl/done">**The install orchestration** (`apply_resolution` and the `vibe reinstall` path) — runs the §2.5 plan-time validation pass over published entrypoints' instruction files before any mutation, excluding selected nonroot package source members under PROP-009 `##ARTIFACTS-PAIR`.</SURF-ORCHESTRATION>
       <SURF-CLI fact="true" status="impl/done">**`vibe-cli`** — `vibe install` / `reinstall` / `uninstall` / `update` surface the malformed-block abort as a clear error; `vibe init` scaffolds each instruction file with a `&lt;vibevm&gt;` block instead of a one-line file.</SURF-CLI>
       <SURF-CHECK fact="true" status="impl/done">**`vibe-check`** — `CheckId::RedirectBlock` reports a malformed `&lt;vibevm&gt;` block (a file with anything other than zero markers or one ordered pair), composing with the boot-directory check.</SURF-CHECK>
       <SURF-EXIT-CODE fact="true" status="spec/work">**Exit code** — the malformed-block abort is conflict-shaped; reusing exit code `3` (package conflict) is the working assumption (§5).</SURF-EXIT-CODE>

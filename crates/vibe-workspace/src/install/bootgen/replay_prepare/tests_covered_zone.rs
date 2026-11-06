@@ -9,7 +9,8 @@
 //! inside it — beside the rolled-back copies. The node then also waited
 //! for a unit artifact it had no reason to embed. The sibling file pins
 //! the replay mechanics on a unit that keeps its artifact for a standing
-//! reason (several static contributions); this one pins that a covered
+//! reason (a transitively selected unit with several static contributions);
+//! this one pins that a covered
 //! zone leaves the node out of a unit replay altogether.
 
 use std::fs;
@@ -18,6 +19,131 @@ use super::prepare_boot_replay;
 use super::tests::{collect_replay, node_file, owner};
 use crate::boot_artifacts::native_managed_tests::{FakeProvider, FakeReplayFactory, Reply};
 use crate::install::tests_epoch_world::native_freshness::native_graph;
+
+/// B-006 ownership: a covered authored lane is independent of unit output;
+/// a retained substituted unit is consumed. The node still runs its own pass.
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES"
+)]
+fn native_unit_bytes_follow_consumed_artifacts_and_node_pass_stays_owned() {
+    use crate::extension_world::OwnerRuntimeId;
+    use crate::install::tests_epoch_world::native_freshness::{
+        COMPILE_NATIVE, native_graph_keeping_top, native_graph_projecting_top, unit_file,
+    };
+    use vibe_core::manifest::SpecFormat;
+    const UNIT: &str = "\n<!-- G3_UNIT_NATIVE_OUTPUT -->\n";
+    const NODE: &str = "\n<!-- G3_NODE_NATIVE_OUTPUT -->\n";
+    for (retained, format) in [
+        (false, SpecFormat::Mixed),
+        (true, SpecFormat::Mixed),
+        (false, SpecFormat::Markdown),
+        (false, SpecFormat::Xml),
+    ] {
+        let graph = if retained {
+            native_graph_keeping_top(COMPILE_NATIVE, COMPILE_NATIVE, "")
+        } else {
+            native_graph_projecting_top(COMPILE_NATIVE, COMPILE_NATIVE, "")
+        };
+        let top = owner(&graph, "top");
+        let root = OwnerRuntimeId::Node {
+            rel: ".".to_owned(),
+        };
+        let mut provider = FakeProvider::new(Reply::Skip)
+            .with_reply(top.clone(), Reply::AppendEmitted(UNIT))
+            .with_reply(root.clone(), Reply::AppendEmitted(NODE));
+        super::super::native_managed::regenerate_boot_from_bound_native(
+            &graph.workspace,
+            &graph.resolution,
+            format,
+            None,
+            &graph.epoch,
+            Some(&mut provider),
+        )
+        .unwrap_or_else(|error| panic!("marker compile retained={retained} {format:?}: {error}"));
+        let filename = crate::boot_artifacts::static_file(format);
+        let unit = fs::read_to_string(unit_file(&graph, "top", filename)).unwrap();
+        let node = fs::read_to_string(node_file(&graph, filename)).unwrap();
+        assert_eq!(unit.matches("G3_UNIT_NATIVE_OUTPUT").count(), 1, "{unit}");
+        assert!(!unit.contains("G3_NODE_NATIVE_OUTPUT"));
+        assert_eq!(
+            node.matches("G3_UNIT_NATIVE_OUTPUT").count(),
+            usize::from(retained),
+            "{node}"
+        );
+        assert_eq!(node.matches("G3_NODE_NATIVE_OUTPUT").count(), 1, "{node}");
+        for body in ["top, continued", "top"] {
+            assert!(node.contains(body), "{body}: {node}");
+        }
+        assert_eq!(provider.owners, [top, root]);
+        eprintln!(
+            "G3 native output retained={retained} {format:?}: unit marker=1; node unit marker={}; node-owned marker=1; native owners={:?}",
+            usize::from(retained),
+            provider.owners
+        );
+    }
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#STATIC-EMITS-ONCE-EACH"
+)]
+fn transitive_suggested_multifragment_unit_retains_exact_generated_dependency() {
+    let graph =
+        crate::install::tests_epoch_world::native_freshness::native_graph_keeping_top("", "", "");
+    let table = super::super::build_unit_table(&graph.workspace.root, &graph.resolution);
+    let with_static = super::super::hybrid_emit::with_static_set(&table);
+    let dependencies = super::super::node_dependency_boot(
+        &graph.workspace.root,
+        &graph.workspace.root_manifest,
+        &graph.resolution,
+        &table,
+        &with_static,
+        vibe_core::manifest::SpecFormat::Mixed,
+    );
+    let mut effective = match crate::boot::compute_effective_boot(crate::boot::NodeBootInputs {
+        own_boot: &[],
+        inherited_foundation: &[],
+        dependencies: &dependencies,
+        default_link: graph.workspace.root_manifest.boot.default_link,
+    }) {
+        Ok(boot) => boot,
+        Err(error) => panic!("retained unit lane: {error}"),
+    };
+    super::super::desubstitute_covered_units(&mut effective, &table);
+    let read_set = effective
+        .entries
+        .iter()
+        .map(|entry| {
+            (
+                entry.origin.as_str(),
+                entry.path.as_str(),
+                entry.unit_substituted,
+                entry.link,
+            )
+        })
+        .collect::<Vec<_>>();
+    eprintln!("G3 retained-unit node read-set: {read_set:?}");
+    assert_eq!(
+        super::node_generated_dependencies(&effective, &with_static).as_ref(),
+        &[(graph.resolution[0].group.clone(), "top".to_owned()),]
+    );
+    assert_eq!(
+        effective
+            .entries
+            .iter()
+            .filter(|entry| entry.unit_substituted)
+            .count(),
+        1
+    );
+    let retained = effective
+        .entries
+        .iter()
+        .find(|entry| entry.unit_substituted)
+        .unwrap_or_else(|| panic!("missing retained top"));
+    assert_eq!(retained.origin, "org.lock/top");
+    assert!(retained.path.ends_with("/boot/STATIC.md"));
+}
 
 #[test]
 fn a_node_whose_nested_zones_are_covered_is_independent_of_unit_replay() {

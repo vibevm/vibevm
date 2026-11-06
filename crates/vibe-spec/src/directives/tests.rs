@@ -352,6 +352,39 @@ fn multiple_at_bang_uses_on_one_line() {
 // ---- R5 (B-011): the compiled lane is not a citation target -----------
 
 #[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"
+)]
+fn generated_boot_cache_addresses_are_not_directive_targets() {
+    for name in [
+        "STATIC",
+        "INDEX",
+        ".vibe-boot-artifacts.lock",
+        ".vibe-boot-stage",
+    ] {
+        for directive in ["#use", "#embed", "#source", "@spec://"] {
+            let text = if directive == "@spec://" {
+                format!("See @spec://org.example/pkg/boot/{name}#root here.\n")
+            } else {
+                format!("{directive} spec://org.example/pkg/boot/{name}#root\n")
+            };
+            let parsed = Directives::parse(&text);
+            assert_eq!(parsed.errors.len(), 1, "{text}: {parsed:?}");
+            assert!(parsed.errors[0].message.contains("not a citation target"));
+        }
+    }
+    for path in [
+        "notes/INDEX",
+        "notes/.vibe-boot-stage",
+        "boot/nested/.vibe-boot-stage",
+        "boot/STATIC-notes",
+    ] {
+        let parsed = Directives::parse(&format!("#use spec://org.example/pkg/{path}#root\n"));
+        assert!(parsed.errors.is_empty(), "{path}: {parsed:?}");
+    }
+}
+
+#[test]
 fn use_into_the_compiled_lane_is_rejected() {
     // A directive whose address names a generated STATIC lane is rejected
     // (PROP-035 §11 ##COMPILED-LANE-IS-NOT-A-CITATION-TARGET).

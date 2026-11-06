@@ -140,7 +140,7 @@ where
     ) -> Result<P, WorkspaceError>,
     P: crate::extension_world::OwnerNativeCompileProvider,
 {
-    validate_redirect_blocks(workspace)?;
+    validate_redirect_blocks(workspace, resolution)?;
     bootgen::regenerate_boot_from_traced_native_prepared(
         workspace,
         resolution,

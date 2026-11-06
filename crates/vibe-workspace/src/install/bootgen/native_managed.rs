@@ -127,6 +127,9 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
         .collect::<Vec<_>>();
     let mut nodes = Vec::new();
     for (rel, manifest) in workspace.iter_nodes() {
+        if !super::publish_node_boot(rel, manifest, resolution) {
+            continue;
+        }
         let node_dir = workspace.node_abs_path(rel);
         let own = node_own_boot(&node_dir, rel)?;
         let inherited = if rel == "." {
@@ -138,6 +141,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             &workspace.root,
             manifest,
             resolution,
+            &table,
             &with_static,
             spec_format,
         );

@@ -388,3 +388,99 @@ fn generated_boot_artifacts_stay_outside_the_legacy_derived_identity() {
 
 #[path = "tests/overlay.rs"]
 mod overlay;
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE"
+)]
+fn generated_boot_cache_is_excluded_from_every_payload_walk_only_at_its_owned_path() {
+    for format in [SpecFormat::Mixed, SpecFormat::Markdown, SpecFormat::Xml] {
+        let workspace = TempDir::new().unwrap();
+        let source = TempDir::new().unwrap();
+        write(source.path(), "vibe.toml", "[package]\nname='sample'\n");
+        for name in [
+            "STATIC.md",
+            "STATIC.xml",
+            "INDEX.md",
+            ".vibe-boot-artifacts.lock",
+            ".vibe-boot-stage",
+        ] {
+            write(
+                source.path(),
+                crate::layout_paths::boot_path(name),
+                "GENERATED_POISON\n",
+            );
+        }
+        for path in [
+            "data/STATIC.xml",
+            "data/INDEX.md",
+            ".notes",
+            "data/.vibe-boot-stage",
+        ] {
+            write(source.path(), path, "authored data bytes\n");
+        }
+        write(
+            source.path(),
+            crate::layout_paths::boot_path("authored.md"),
+            "# Authored\nAUTHORED_BODY\n",
+        );
+        write(
+            source.path(),
+            crate::layout_paths::boot_path("nested/.vibe-boot-note.txt"),
+            "nested authored bytes\n",
+        );
+        materialise_with_spec_format(
+            workspace.path(),
+            &group("org.example"),
+            "sample",
+            &version("1.0.0"),
+            source.path(),
+            CopyMode::Copy,
+            format,
+            &source_hash(),
+        )
+        .unwrap();
+        let slot = slot_abs_path(
+            workspace.path(),
+            &group("org.example"),
+            "sample",
+            &version("1.0.0"),
+        );
+        let record = read_slot_record(&slot).unwrap();
+        for row in &record.files {
+            assert!(
+                !derived::is_generated_boot_artifact(&slot, &slot.join(&row.path)),
+                "{format:?}: {row:?}"
+            );
+        }
+        for path in [
+            "data/STATIC.xml",
+            "data/INDEX.md",
+            ".notes",
+            "data/.vibe-boot-stage",
+        ] {
+            assert_eq!(
+                fs::read(slot.join(path)).unwrap(),
+                b"authored data bytes\n",
+                "{format:?}: {path}"
+            );
+        }
+        assert_eq!(
+            fs::read(slot.join(crate::layout_paths::boot_path("nested/.vibe-boot-note.txt")))
+                .unwrap(),
+            b"nested authored bytes\n"
+        );
+        let authored = slot.join(crate::layout_paths::boot_path(
+            if format == SpecFormat::Xml {
+                "authored.xml"
+            } else {
+                "authored.md"
+            },
+        ));
+        assert!(
+            fs::read_to_string(authored)
+                .unwrap()
+                .contains("AUTHORED_BODY")
+        );
+    }
+}

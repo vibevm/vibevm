@@ -386,6 +386,9 @@ fn collect_files(
             continue;
         }
         let path = entry.path();
+        if is_generated_boot_artifact(root, &path) {
+            continue;
+        }
         let kind = entry.file_type().map_err(|e| io_err(&path, e))?;
         if kind.is_dir() {
             collect_files(&path, root, out)?;
@@ -549,9 +552,12 @@ fn is_spec_document(rel: &Path) -> bool {
 }
 
 /// True for the slot's generated boot artifacts (either `STATIC` spelling and
-/// `INDEX.md`) — projections bootgen regenerates after
+/// `INDEX.md`, and direct `.vibe-boot-*` publication files) — outputs bootgen owns after
 /// materialisation, excluded from the derived hash and the format-purity
 /// claim exactly like the derived manifest itself.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE"
+)]
 pub(crate) fn is_generated_boot_artifact(root: &Path, path: &Path) -> bool {
     let Ok(rel) = path.strip_prefix(root) else {
         return false;
@@ -559,6 +565,11 @@ pub(crate) fn is_generated_boot_artifact(root: &Path, path: &Path) -> bool {
     rel == layout::current_boot_static_md()
         || rel == layout::current_boot_static_xml()
         || rel == layout::current_boot_index()
+        || (rel.parent() == Some(layout::current_boot_dir().as_path())
+            && rel
+                .file_name()
+                .and_then(|name| name.to_str())
+                .is_some_and(|name| name.starts_with(".vibe-boot-")))
 }
 
 fn collect_hash_files(

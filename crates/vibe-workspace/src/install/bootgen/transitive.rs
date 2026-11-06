@@ -8,6 +8,46 @@ use vibe_core::Group;
 use vibe_core::manifest::{LinkType, Manifest};
 
 use super::super::ResolvedDep;
+use crate::boot::hybrid::{UnitId, UnitInput, resolve_zone};
+
+/// Static consumer edges to compiled units need their authored zone members
+/// as separate inputs. A unit STATIC is a generated multi-document lane, not
+/// a simple source document that can be parsed as one contribution.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES"
+)]
+pub(super) fn static_unit_members(
+    node_manifest: &Manifest,
+    resolution: &[ResolvedDep],
+    table: &HashMap<UnitId, UnitInput>,
+    with_static: &HashSet<UnitId>,
+) -> HashSet<UnitId> {
+    let mut members = HashSet::new();
+    for (group, name) in node_manifest.requires.iter_pkgrefs() {
+        let Some(group) = group else { continue };
+        let id = (group.clone(), name.to_string());
+        let selected = resolution
+            .iter()
+            .find(|dep| dep.group == *group && dep.name == name);
+        let link = node_manifest
+            .requires
+            .declared_link(group, name)
+            .or_else(|| selected.and_then(|dep| dep.manifest.boot_snippet.as_ref()?.link))
+            .or(node_manifest.boot.default_link)
+            .unwrap_or_default();
+        if !with_static.contains(&id)
+            || table.get(&id).is_some_and(|unit| unit.when.is_some())
+            || !matches!(
+                link,
+                LinkType::Static | LinkType::StaticHard | LinkType::StaticTransitive
+            )
+        {
+            continue;
+        }
+        members.extend(resolve_zone(&id, table).static_members);
+    }
+    members
+}
 
 /// Every `(group, name)` reachable through a direct `static-transitive` edge:
 /// the edge target and its complete `requires` closure (PROP-035 §12).

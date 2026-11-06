@@ -279,19 +279,25 @@ fn directive_prefix(line: &str) -> Option<(DirectiveKind, &str)> {
     None
 }
 
-/// R5 (B-011, design §6.1 layer 1): the compiled static boot lane
-/// (`boot/STATIC.md`, doc-path form) is a generated cache, not a citation
+/// R5 (B-011, design §6.1 layer 1): generated boot output
+/// (`boot/STATIC`, `boot/INDEX`, direct `boot/.vibe-boot-*`) is not a citation
 /// target — source-of-truth is the package source under the dependency
-/// slots. An address whose document path names it (`boot/STATIC`
-/// or `…/boot/STATIC`) is rejected with a PROP-035 §11
+/// slots. An address whose document path names generated output is rejected with a PROP-035 §11
 /// `##COMPILED-LANE-IS-NOT-A-CITATION-TARGET` citation. The path-boundary check
-/// (`== "boot/STATIC"` or `.ends_with("/boot/STATIC")`) avoids matching an
+/// (a direct child of `boot`) avoids matching an
 /// unrelated stem that merely ends in those letters.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#COMPILED-LANE-IS-NOT-A-CITATION-TARGET"
+)]
 fn lane_citation_error(addr: &SpecAddress) -> Option<String> {
     let p = &addr.doc_path;
-    if p == "boot/STATIC" || p.ends_with("/boot/STATIC") {
+    let generated = p.rsplit_once('/').is_some_and(|(parent, name)| {
+        (parent == "boot" || parent.ends_with("/boot"))
+            && (matches!(name, "STATIC" | "INDEX") || name.starts_with(".vibe-boot-"))
+    });
+    if generated {
         Some(format!(
-            "spec:// address targets the compiled static lane `{addr}` — a generated \
+            "spec:// address targets generated boot output `{addr}` — a generated \
              cache, not a citation target (PROP-035 §11 \
              ##COMPILED-LANE-IS-NOT-A-CITATION-TARGET); cite the package source \
              under vibedeps/ instead"
