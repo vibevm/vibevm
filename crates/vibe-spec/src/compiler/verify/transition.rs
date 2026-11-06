@@ -16,10 +16,13 @@ use super::super::ir::{
 use super::super::pass::AnyIr;
 use super::super::qualify::analyze_absorption;
 use super::{VerificationError, address_label};
+mod embeds;
 
 /// Why a pass output is not a legal transition from its own verified input.
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum TransitionError {
+    #[error("pass changed or erased generated embed provenance for {owner}")]
+    EmbedProvenance { owner: String },
     #[error(
         "a source/document pass rewrote the immutable document identity field `{field}`: expected `{expected}`, got `{actual}`"
     )]
@@ -182,6 +185,7 @@ pub(crate) enum VerificationWitness {
 /// so each part is named separately in the refusal.
 #[derive(Debug, Clone)]
 pub(crate) struct LaneWitness {
+    embeds: embeds::Witness,
     context: ArtifactContext,
     source_node_count: usize,
     source_link_digest: LinkInputDigest,
@@ -195,6 +199,8 @@ pub(crate) struct LaneWitness {
 /// qualification state it must not regress from.
 #[derive(Debug)]
 pub(crate) struct ClosureWitness {
+    embeds: embeds::Witness,
+    may_mint_embeds: bool,
     qualification: QualificationState,
     absorption: AbsorptionWitness,
 }
@@ -246,6 +252,8 @@ pub(super) fn witness(ir: &AnyIr) -> Result<VerificationWitness, VerificationErr
         }),
         AnyIr::Documents(_) => Ok(VerificationWitness::Documents),
         AnyIr::Closure(closure) => Ok(VerificationWitness::Closure(ClosureWitness {
+            embeds: embeds::Witness::closure(closure),
+            may_mint_embeds: closure.pending_embeds.is_some(),
             qualification: closure.qualification,
             absorption: match &closure.absorption {
                 AbsorptionState::Unplanned => AbsorptionWitness::Unplanned {
@@ -271,6 +279,7 @@ pub(super) fn witness(ir: &AnyIr) -> Result<VerificationWitness, VerificationErr
 /// to eliminate by panic.
 pub(crate) fn lane_witness(lane: &LaneIr) -> LaneWitness {
     LaneWitness {
+        embeds: embeds::Witness::lane(lane),
         context: lane.context().clone(),
         source_node_count: lane.source_node_count,
         source_link_digest: lane.source_link_digest.clone(),
@@ -344,6 +353,9 @@ pub(crate) fn verify_lane_transition(
     before: &LaneWitness,
     actual: &LaneIr,
 ) -> Result<(), TransitionError> {
+    before
+        .embeds
+        .verify(&embeds::Witness::lane(actual), false)?;
     immutable(
         LaneProvenanceField::SourceNodeCount,
         &before.source_node_count,
@@ -468,6 +480,9 @@ fn verify_closure_transition(
     witness: &ClosureWitness,
     actual: &ClosureIr,
 ) -> Result<(), VerificationError> {
+    witness
+        .embeds
+        .verify(&embeds::Witness::closure(actual), witness.may_mint_embeds)?;
     let input_applied = matches!(witness.qualification, QualificationState::Applied(_));
     let output_applied = matches!(actual.qualification, QualificationState::Applied(_));
     if input_applied && !output_applied {

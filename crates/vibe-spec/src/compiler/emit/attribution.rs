@@ -74,7 +74,7 @@ pub(crate) fn emission_evidence(witness: &PreEmissionWitness, total_bytes: usize
 /// from the chunk stream (`NormalOpen` brackets), kind from the variant.
 fn contribution_row(
     contribution: &LaneContribution,
-    document: Option<&vibe_specdoc::doc::SpecDoc>,
+    document: Option<&vibe_specdoc::AnnotatedXml>,
 ) -> EmissionContribution {
     let kind = match contribution {
         LaneContribution::Normal { .. } => EmissionKind::Normal,
@@ -93,7 +93,7 @@ fn contribution_row(
             let content = match document {
                 // The XML lane renders each document through the SAME
                 // projection the backend holds for it.
-                Some(prepared) => vibe_specdoc::to_xml(prepared).trim_end().len(),
+                Some(prepared) => prepared.render().trim_end().len(),
                 // The Markdown lane renders the chunk stream through the
                 // one flatten the backend uses.
                 None => static_md::flatten_markdown(chunks).trim_end().len(),
@@ -105,7 +105,7 @@ fn contribution_row(
             // (`InputOccurrence::Simple`, occurrence 0) and rides the
             // lane as its bare node — no open/close brackets to count.
             let content = match document {
-                Some(prepared) => vibe_specdoc::to_xml(prepared).trim_end().len(),
+                Some(prepared) => prepared.render().trim_end().len(),
                 None => static_md::flatten_markdown(chunks).trim_end().len(),
             };
             (content, 1)

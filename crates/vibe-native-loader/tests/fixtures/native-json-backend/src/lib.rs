@@ -19,7 +19,7 @@ fn manifest() -> Manifest {
         extensions: vec![ManifestExtension {
             id: "json".to_owned(),
             point: "compile:pass".to_owned(),
-            ir_schema: Some(1),
+            ir_schema: Some(2),
         }],
     }
 }

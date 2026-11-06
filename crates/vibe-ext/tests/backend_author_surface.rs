@@ -1,3 +1,7 @@
+//! Backend-byte reply remains epoch 1 while native compiler requests use epoch 2.
+//! Contract: `schemas/native/e1/backend_reply.jtd.json`.
+#![cfg(test)]
+
 use std::ffi::CStr;
 
 use vibe_ext::{BackendResponse, CompileRequest, Manifest, ManifestExtension};
@@ -7,7 +11,7 @@ fn manifest() -> Manifest {
         extensions: vec![ManifestExtension {
             id: "backend".into(),
             point: "compile:pass".into(),
-            ir_schema: Some(1),
+            ir_schema: Some(2),
         }],
     }
 }
@@ -23,12 +27,12 @@ vibe_ext::vibe_backend_extension!(manifest = manifest(), handler = backend);
 
 fn request() -> Vec<u8> {
     let mut request: serde_json::Value = serde_json::from_str(include_str!(
-        "../../../formats/corpora/native/e1/compile_request.valid.json"
+        "../../../formats/corpora/native/e2/compile_request.valid.json"
     ))
     .unwrap();
     request["point"] = "compile:pass".into();
     request["payload"] = serde_json::from_str(include_str!(
-        "../../../formats/corpora/compiler_ir/e1/valid/lane_artifact.json"
+        "../../../formats/corpora/compiler_ir/e2/valid/lane_artifact.json"
     ))
     .unwrap();
     serde_json::to_vec(&request).unwrap()

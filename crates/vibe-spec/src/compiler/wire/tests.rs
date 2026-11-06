@@ -2,6 +2,8 @@
 
 mod carriers;
 mod corpus;
+mod corpus_epoch2;
+mod embeds;
 mod emitted_transforms;
 mod fixture;
 mod framing;

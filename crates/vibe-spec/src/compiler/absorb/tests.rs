@@ -14,6 +14,7 @@ fn spec(raw: &str) -> SpecAddress {
 
 fn node(raw: &str, text: &str) -> ClosureDocument {
     ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(raw)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse(text),
@@ -213,6 +214,7 @@ fn shared_all_dead_empty_and_simple_contributions_keep_their_exact_identity() {
         path: "boot/local.md".to_string(),
     };
     let simple_document = ClosureDocument {
+        embeds: None,
         address: simple_address.clone(),
         origin: "host".to_string(),
         tree: DocTree::parse("simple body"),

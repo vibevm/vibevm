@@ -6,7 +6,7 @@ use vibe_spec::{
     CompilerNativeCall, CompilerNativeInvoker, CompilerNativeInvokerErrorKind,
     compiler_native_implementation_digest,
 };
-use vibe_wire::generated::shared::{Ir, Project, World};
+use vibe_wire::generated::shared::{IrV2 as Ir, Project, World};
 
 use crate::execution::effective_config;
 use crate::{
@@ -117,7 +117,7 @@ disable = ["org.example/native#disabled"]
     );
     let config = effective_config(row).unwrap();
     let payload: Ir = serde_json::from_value(serde_json::json!({
-        "shape": "source-document", "ir_schema": 1, "level": "source",
+        "shape": "source-document", "ir_schema": 2, "level": "source",
         "cardinality": "document", "doc": {
             "address": {"kind": "static-entry", "origin": "fixture", "path": "fixture.md"},
             "format": "markdown", "subject": {

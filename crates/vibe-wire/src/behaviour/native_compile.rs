@@ -8,11 +8,11 @@
 
 use std::fmt;
 
-use crate::generated::native::e1::{compile_reply, compile_request};
-use crate::generated::shared::Ir;
+use crate::generated::native::e2::{compile_reply, compile_request};
+use crate::generated::shared::IrV2 as Ir;
 
 /// Epoch accepted by both compiler-native roots.
-pub const ENVELOPE_EPOCH: u32 = 1;
+pub const ENVELOPE_EPOCH: u32 = 2;
 
 /// Maximum bytes copied from an unknown wire scalar into a diagnostic.
 pub const DIAGNOSTIC_SCALAR_BYTES: usize = 128;
@@ -224,13 +224,13 @@ impl fmt::Display for NativeCompileError {
             Self::Envelope { side, found } => {
                 write!(
                     formatter,
-                    "native compile {side} envelope {found}, expected 1"
+                    "native compile {side} envelope {found}, expected 2"
                 )
             }
             Self::IrSchema { side, found } => {
                 write!(
                     formatter,
-                    "native compile {side} IR schema {found}, expected 1"
+                    "native compile {side} IR schema {found}, expected 2"
                 )
             }
             Self::UnsupportedPoint { point } => {
@@ -427,7 +427,7 @@ fn validate_ir(value: &Ir, side: CompileWireSide) -> Result<IrShape, NativeCompi
             },
         ),
     };
-    if ir_schema != 1 {
+    if ir_schema != 2 {
         return Err(NativeCompileError::IrSchema {
             side,
             found: ir_schema,

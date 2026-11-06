@@ -53,6 +53,7 @@ fn legacy_continuation_rejects_an_unlinked_applied_closure() {
     let closure = ClosureIr::testing(
         ArtifactContext::compatibility(StaticCompileMode::Plain),
         vec![ClosureDocument {
+            embeds: None,
             address: DocumentAddress::Spec(address.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse("BODY"),

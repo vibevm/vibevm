@@ -16,6 +16,7 @@ fn spec(raw: &str) -> SpecAddress {
 
 fn node(raw: &str, origin: &str, text: &str) -> ClosureDocument {
     ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(raw)),
         origin: origin.to_string(),
         tree: DocTree::parse(text),
@@ -438,6 +439,7 @@ fn normal_simple_normal_order_and_simple_origin_are_preserved() {
         "# Omega {#root}\n",
     );
     let simple = ClosureDocument {
+        embeds: None,
         address: DocumentAddress::StaticEntry {
             origin: "host".to_string(),
             path: "boot/local.md".to_string(),
@@ -536,6 +538,7 @@ fn absorption_alignment_is_a_private_invariant() {
 #[test]
 fn invalid_simple_alias_state_is_rejected_transactionally() {
     let mut simple = ClosureDocument {
+        embeds: None,
         address: DocumentAddress::StaticEntry {
             origin: "host".to_string(),
             path: "boot/local.md".to_string(),

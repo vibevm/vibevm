@@ -4,8 +4,8 @@ use super::super::ir::{
     LaneIr, LaneNode, LinkFenceSnapshot, StaticCompileMode,
 };
 
-const LANE_DOMAIN: &[u8] = b"vibe-spec/lane-input/v1";
-const CHUNK_DOMAIN: &[u8] = b"vibe-spec/lane-chunks/v1";
+const LANE_DOMAIN: &[u8] = b"vibe-spec/lane-input/v2";
+const CHUNK_DOMAIN: &[u8] = b"vibe-spec/lane-chunks/v2";
 const BYTES_DOMAIN: &[u8] = b"vibe-spec/emitted-bytes/v1";
 
 pub(super) fn lane_digest(lane: &LaneIr) -> LaneInputDigest {
@@ -129,6 +129,7 @@ fn hash_chunk(digest: &mut StableDigest, chunk: &LaneChunk) {
                 fence_before,
                 fence_after,
                 body,
+                embeds,
             } => {
                 digest.byte(1);
                 digest.usize(*contribution);
@@ -140,6 +141,7 @@ fn hash_chunk(digest: &mut StableDigest, chunk: &LaneChunk) {
                 hash_fence(digest, fence_before);
                 hash_fence(digest, fence_after);
                 digest.field(body.as_bytes());
+                digest.field(&embeds.meaning_digest());
             }
             LaneNode::Simple {
                 contribution,
@@ -149,6 +151,7 @@ fn hash_chunk(digest: &mut StableDigest, chunk: &LaneChunk) {
                 fence_before,
                 fence_after,
                 body,
+                embeds,
             } => {
                 digest.byte(2);
                 digest.usize(*contribution);
@@ -158,6 +161,7 @@ fn hash_chunk(digest: &mut StableDigest, chunk: &LaneChunk) {
                 hash_fence(digest, fence_before);
                 hash_fence(digest, fence_after);
                 digest.field(body.as_bytes());
+                digest.field(&embeds.meaning_digest());
             }
         },
         LaneChunk::ForcedNewline {

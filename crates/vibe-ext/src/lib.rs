@@ -10,13 +10,6 @@
 pub use vibe_wire::behaviour::native_backend::BackendReplyError as BackendAuthorError;
 pub use vibe_wire::generated::native::e1::build_reply::BuildReply;
 pub use vibe_wire::generated::native::e1::build_request::BuildRequest;
-pub use vibe_wire::generated::native::e1::compile_reply::{
-    CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip,
-};
-pub use vibe_wire::generated::native::e1::compile_request::{
-    CompileRequest, Ir, IrClosureArtifact, IrDocumentDocument, IrDocumentsArtifact,
-    IrEmittedArtifact, IrLaneArtifact, IrSourceDocument,
-};
 pub use vibe_wire::generated::native::e1::context::{
     Artifact, Context, Execution, Io, Project, Run, RunAgentMode, SlotTarget, World, WorldPackage,
 };
@@ -35,6 +28,15 @@ pub use vibe_wire::generated::native::e1::{
     build_reply, build_request, deploy_reply as mechanism_reply,
     deploy_request as mechanism_request, mechanism_manifest as mechanism_provider, package_reply,
     package_request,
+};
+pub use vibe_wire::generated::native::e2::compile_reply::{
+    CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip,
+};
+pub use vibe_wire::generated::native::e2::compile_request::{
+    CompileRequest, IrV2 as Ir, IrV2ClosureArtifact as IrClosureArtifact,
+    IrV2DocumentDocument as IrDocumentDocument, IrV2DocumentsArtifact as IrDocumentsArtifact,
+    IrV2EmittedArtifact as IrEmittedArtifact, IrV2LaneArtifact as IrLaneArtifact,
+    IrV2SourceDocument as IrSourceDocument,
 };
 
 #[doc(hidden)]

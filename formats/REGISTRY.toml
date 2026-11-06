@@ -617,6 +617,23 @@ sunset = "none"
 # one schema-declared permissive projection for the canonical compiler payload;
 # replies are parsed only by the host and remain strict.
 [format.native-compile-request]
+epoch = 2
+schema = "schemas/native/e2/compile_request.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/native/e2"
+sunset = "none"
+
+[format.native-compile-reply]
+epoch = 2
+schema = "schemas/native/e2/compile_reply.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "formats/corpora/native/e2"
+sunset = "none"
+
+# Retained epoch-1 compiler exchange readers; not execution downgrade paths.
+[format.native-compile-request-v1]
 epoch = 1
 schema = "schemas/native/e1/compile_request.jtd.json"
 recoverable = true
@@ -624,13 +641,14 @@ foreign_parsers = "many"
 corpus = "formats/corpora/native/e1"
 sunset = "none"
 
-[format.native-compile-reply]
+[format.native-compile-reply-v1]
 epoch = 1
 schema = "schemas/native/e1/compile_reply.jtd.json"
 recoverable = true
 foreign_parsers = "none"
 corpus = "formats/corpora/native/e1"
 sunset = "none"
+
 
 [format.native-backend-reply]
 epoch = 1
@@ -737,25 +755,26 @@ unknown_fields = "allow"
 corpus = "formats/corpora/facts-artifact-requirements/e1"
 sunset = "none"
 
-# ── Compiler IR pass wire (1 JTD), PROP-054 §7.4.4 `##WHOLE-IR-WIRE` ─────────
-# The six manager carriers, one contract, one discriminator, no second
-# trace-only IR shape. TODAY this row models exactly one channel: the HOST
-# reader — vibe's own R6.2b domain conversion and the R3.4 trace snapshots.
-# Nothing foreign parses it yet (native invocation is R5/R6, unbuilt), so the
-# reader is strict (`foreign_parsers = "none"` → deny_unknown_fields) and an
-# unknown field is a wire bug rather than forward compatibility; version skew
-# is governed by `ir_schema` at the manifest gate.
-#
-# This row does NOT model both native channel directions, and must not be read
-# as doing so. When foreign native invocation lands, the request the manager
-# hands a plugin acquires genuinely foreign readers while the reply the host
-# parses stays ours — the same split `lifecycle-context` (many) /
-# `lifecycle-reply` (none) already records. Central integration owes that
-# honest representation THEN, without duplicating this IR DTO or schema (one
-# schema, two registry roles is the shape to reach for). Until then, do not
-# weaken this host reader: a permissive host reader buys nothing today and
-# silently drops fields the conversion needs.
+# ── Compiler IR pass wire, PROP-054 §7.4.4 `##WHOLE-IR-WIRE` ──────────────
+# One canonical manager payload per epoch, including trace snapshots. This row
+# models the strict HOST reader/domain conversion, not both native directions.
+# Actual foreign invocation is represented by native-compile-request above
+# (foreign readers, schema-declared permissive projection); native-compile-reply
+# remains host-only and strict. Do not weaken the canonical host reader to model
+# those already separate roles. ir_schema and the native manifest gate govern
+# version skew before invocation; retained historical rows are inspection-only
+# unless the owning pipeline explicitly reconstructs supported execution state.
 [format.compiler-ir]
+epoch = 2
+schema = "schemas/compiler_ir/e2/ir.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+corpus = "formats/corpora/compiler_ir/e2"
+sunset = "none"
+
+# Strict historical inspection of epoch-1 compiler snapshots. This reader
+# does not grant provenance-preserving execution or accept downgraded replies.
+[format.compiler-ir-v1]
 epoch = 1
 schema = "schemas/compiler_ir/e1/ir.jtd.json"
 recoverable = true
@@ -766,8 +785,8 @@ sunset = "none"
 # ── Compile trace index (1 JTD), PROP-054 `##OBS-TRACE` / R3.4 ───────────────
 # The METADATA half of `.vibe/trace/<run-id>/index.json`: scopes, pass
 # invocation events, snapshot FILENAMES and timing aggregates. It embeds no
-# IR payload — the snapshots themselves are `compiler_ir/e1` documents, the
-# one registered snapshot payload contract. Rebuildable without a human
+# IR payload — snapshots carry the registered versioned compiler-IR payload
+# (current e2, retained e1 for historical inspection). Rebuildable without a human
 # (delete the run directory and rerun the compile), and read by developers
 # and tools as raw JSON (`curl`/`jq` over a failed run's directory is the
 # first debugging instrument) — so `many`, permissive object members, and

@@ -170,6 +170,7 @@ fn every_contribution_and_chunk_field_is_load_bearing_in_the_lane_digest() {
             fence_before,
             fence_after,
             body,
+            ..
         } = node.as_mut()
         else {
             unreachable!()

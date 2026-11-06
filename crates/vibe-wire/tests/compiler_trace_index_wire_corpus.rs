@@ -428,10 +428,16 @@ fn compiler_ir_remains_the_only_snapshot_payload_contract() {
     let ir = &formats["compiler-ir"];
     assert_eq!(
         ir.get("schema").unwrap().as_str(),
-        Some("schemas/compiler_ir/e1/ir.jtd.json"),
-        "the snapshot payload contract itself must not have moved"
+        Some("schemas/compiler_ir/e2/ir.jtd.json"),
+        "current snapshots use the current compiler-owned payload contract"
     );
-    assert_eq!(ir.get("epoch").unwrap().as_integer(), Some(1));
+    assert_eq!(ir.get("epoch").unwrap().as_integer(), Some(2));
+    let historical = &formats["compiler-ir-v1"];
+    assert_eq!(
+        historical.get("schema").unwrap().as_str(),
+        Some("schemas/compiler_ir/e1/ir.jtd.json")
+    );
+    assert_eq!(historical.get("epoch").unwrap().as_integer(), Some(1));
 
     // And this format's snapshot member is a plain filename string — no
     // IR payload, no untyped carrier, no map form anywhere in the schema.

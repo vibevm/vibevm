@@ -18,6 +18,7 @@ use crate::compiler::qualify::{
 
 fn ir_node(raw: &str, origin: &str, text: &str) -> ClosureDocument {
     ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(SpecAddress::parse(raw).unwrap()),
         origin: origin.to_string(),
         tree: DocTree::parse(text),
@@ -182,6 +183,7 @@ fn legacy_tail_rejects_a_bypassed_qualify_pass() {
     let closure = ClosureIr::testing(
         ArtifactContext::compatibility(StaticCompileMode::QualifyPerNode),
         vec![ClosureDocument {
+            embeds: None,
             address: DocumentAddress::Spec(address.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse("# Entry {#root}\n"),
@@ -312,6 +314,7 @@ fn top_level_reorder_is_bound_by_seed_meta_and_simple_address() {
     let simple = |path: &str| ClosureContribution::Simple {
         meta: ir_meta("host", "boot/local"),
         document: Box::new(ClosureDocument {
+            embeds: None,
             address: DocumentAddress::StaticEntry {
                 origin: "host".to_string(),
                 path: path.to_string(),

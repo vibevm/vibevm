@@ -1,0 +1,57 @@
+{
+  "envelope": 2,
+  "point": "compile:source",
+  "execution": {
+    "id": "duplicate-payload-key",
+    "package": "org.example/native-compiler",
+    "config": {}
+  },
+  "project": {
+    "root": "C:/work/demo",
+    "name": "demo",
+    "version": "0.1.0",
+    "kind": "tool",
+    "manifest": "vibe.toml",
+    "spec_roots": []
+  },
+  "world": {
+    "lockfile": "vibe.lock",
+    "deps_root": "vibevm/vibedeps",
+    "packages": []
+  },
+  "io": {
+    "scratch": ".vibe/native-compile/example"
+  },
+  "payload": {
+    "shape": "source-document",
+    "cardinality": "document",
+    "doc": {
+      "address": {
+        "kind": "spec",
+        "address": {
+          "anchor": [
+            "root"
+          ],
+          "authority": {
+            "kind": "package",
+            "group": "org.demo",
+            "name": "lib"
+          },
+          "doc_path": "manual/guide.md",
+          "raw": "spec://org.demo/lib/manual/guide.md#root"
+        }
+      },
+      "format": "markdown",
+      "subject": {
+        "declared_path": "boot/10-guide.md",
+        "provider": {
+          "kind": "undetermined"
+        }
+      },
+      "text": "# Guide {#root}\n\n##FACT-A One exact fact.\n\n#use spec://org.demo/lib/manual/part.md\n#use spec://org.demo/lib/manual/part.md#api~r2 as Part\n#embed spec://org.demo/lib/manual/part.md#api as Part\n\nSee @spec://org.demo/lib/manual/part.md#api for details.\n\n## Install {#install}\nBody line.\n"
+    },
+    "ir_schema": 2,
+    "ir_schema": 2,
+    "level": "source"
+  }
+}

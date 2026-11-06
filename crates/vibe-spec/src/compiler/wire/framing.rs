@@ -178,9 +178,30 @@ fn reconcile_markers(
 
     let mut cursor = 0usize;
     let mut fence = FenceTracker::default();
-    for line in body.lines() {
+    let xml_comments = if matches!(syntax, CommentSyntax::Xml) {
+        engine::xml_comment_spans(body)
+            .filter_map(|result| match result {
+                Ok(span) if span.depth == 0 => Some(Ok(span.start)),
+                Ok(_) => None,
+                Err(error) => Some(Err(gate_emit_identity(format!(
+                    "a static-xml tape must have valid XML framing: {}",
+                    display(error)
+                )))),
+            })
+            .collect::<Result<std::collections::BTreeSet<_>, _>>()?
+    } else {
+        std::collections::BTreeSet::new()
+    };
+    let mut offset = 0;
+    for raw_line in body.split_inclusive('\n') {
+        let line_start = offset;
+        offset += raw_line.len();
+        let line = raw_line.trim_end_matches('\n').trim_end_matches('\r');
         let fenced = fence.classify(line);
-        if fenced || !is_marker_line(syntax, line) {
+        if fenced
+            || !is_marker_line(syntax, line)
+            || (matches!(syntax, CommentSyntax::Xml) && !xml_comments.contains(&line_start))
+        {
             continue;
         }
         if expected.get(cursor).is_some_and(|marker| marker == line) {
@@ -206,9 +227,9 @@ fn reconcile_markers(
 /// A contribution-marker line under this backend's comment syntax. Markdown
 /// spells `static`/`elided` and `hoisted` differently — both are contribution
 /// markers, and neither collides with the reversible `vibe:begin`/`vibe:end`
-/// grammar that rides the body. Every engine XML comment rides the encoded
-/// `vibe:c1` channel; the prologue is exact-stripped, so a surviving one is a
-/// marker.
+/// grammar that rides the body. XML uses the encoded `vibe:c1` channel for
+/// both contribution frames and inner embed events; the caller additionally
+/// requires an actual depth-zero comment from the XML token inventory.
 fn is_marker_line(syntax: CommentSyntax, line: &str) -> bool {
     match syntax {
         CommentSyntax::Markdown => {

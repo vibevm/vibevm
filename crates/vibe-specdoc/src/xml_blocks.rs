@@ -115,6 +115,8 @@ impl<'a> Parser<'a> {
                             ));
                         }
                         only_attrs(&a, &[], "tr", at, self)?;
+                        let semantic_row =
+                            self.begin_semantic(crate::xml_annotations::RegionKind::Container);
                         let mut row = Vec::new();
                         if !tr_empty {
                             'cells: loop {
@@ -150,6 +152,7 @@ impl<'a> Parser<'a> {
                             return Err(self.err(at, "a <tr> needs at least one <td>".into()));
                         }
                         rows.push(row);
+                        self.end_semantic(semantic_row)?;
                     }
                 }
                 if rows.is_empty() {
@@ -181,6 +184,7 @@ impl<'a> Parser<'a> {
         at: (usize, usize),
         was_empty: bool,
     ) -> Result<Block> {
+        let semantic = self.begin_semantic(crate::xml_annotations::RegionKind::VerbatimText);
         only_attrs_slot(attrs, &["lang", "fact"], "fence", at, self)?;
         let lang = attrs
             .iter()
@@ -225,6 +229,7 @@ impl<'a> Parser<'a> {
                 }
             }
         }
+        self.end_semantic(semantic)?;
         Ok(Block::Fence { lang, fact, text })
     }
 
@@ -233,6 +238,7 @@ impl<'a> Parser<'a> {
     /// the named form is selected by `fact="true"`. `in_cell` permits the
     /// id-less marked cell in the generic form.
     pub(super) fn unit(&mut self, tag: &str, was_empty: bool, in_cell: bool) -> Result<Unit> {
+        let semantic = self.begin_semantic(crate::xml_annotations::RegionKind::TrimmedText);
         let mut text = String::new();
         let mut fact: Option<Fact> = None;
         if !was_empty {
@@ -331,6 +337,7 @@ impl<'a> Parser<'a> {
             }
         }
         let text = text.trim().to_string();
+        self.end_semantic(semantic)?;
         if tag == "td" && (text.contains('\n') || has_markdown_table_pipe(&text)) {
             let at = self.poss[self.i.saturating_sub(1)];
             return Err(self.err(
@@ -378,6 +385,7 @@ impl<'a> Parser<'a> {
     /// The text of a bare-text leaf (`<title>`): text-only content,
     /// verbatim (a title keeps its spacing; it is one line by nature).
     pub(super) fn leaf_text(&mut self, tag: &str, was_empty: bool) -> Result<String> {
+        let semantic = self.begin_semantic_text();
         let mut text = String::new();
         if !was_empty {
             loop {
@@ -406,6 +414,7 @@ impl<'a> Parser<'a> {
                 }
             }
         }
+        self.end_semantic(semantic)?;
         Ok(text.trim().to_string())
     }
 
@@ -417,6 +426,7 @@ impl<'a> Parser<'a> {
         at: (usize, usize),
         was_empty: bool,
     ) -> Result<StatusEl> {
+        let semantic = self.begin_semantic(crate::xml_annotations::RegionKind::Container);
         only_attrs(
             attrs,
             &[
@@ -457,6 +467,7 @@ impl<'a> Parser<'a> {
                 }
             }
         }
+        self.end_semantic(semantic)?;
         Ok(el)
     }
 }

@@ -17,7 +17,7 @@ use crate::SpecAddress;
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 /// Every valid corpus document that carries a `source_doc` at all — the five

@@ -383,9 +383,12 @@ fn emit_effective(
         && !stale_path.exists()
         && fs::read_to_string(&index)
             .ok()
-            .and_then(|existing| boot_artifacts::read_fingerprint(&existing))
-            .as_deref()
-            == Some(fingerprint);
+            .and_then(|existing| {
+                boot_artifacts::publication::read_unit_index_freshness(&existing).ok()
+            })
+            .is_some_and(|recorded| {
+                recorded.pending.is_none() && recorded.fingerprint == fingerprint
+            });
     if unchanged {
         if let Some(unit_trace) = unit_trace {
             unit_trace.record_fresh_skip(workspace_root);

@@ -25,6 +25,10 @@ fn legacy_continuation_emits_the_close_carrier_body() {
     let closure = ClosureIr::testing(
         ArtifactContext::compatibility(StaticCompileMode::Plain),
         vec![ClosureDocument {
+            embeds: Some(crate::embed::occurrences::EmbedTape::new(
+                "# Closed {#closed}\nCLOSE-BODY",
+                vec![],
+            )),
             address: DocumentAddress::Spec(addr.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse("# Closed {#closed}\nCLOSE-BODY"),

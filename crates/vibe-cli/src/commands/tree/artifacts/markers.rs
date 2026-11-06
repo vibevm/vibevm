@@ -3,6 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#EMBED-SPAN-ATTRIBUTION");
 
 use super::{MARKER_SEP, StaticDecompileError};
+use std::collections::BTreeMap;
 use vibe_specdoc::decode_generated_xml_comment;
 
 const COMMENT_OPEN: &str = "<!--";
@@ -81,6 +82,34 @@ pub(super) fn collect(
     text: &str,
     fenced: &[bool],
 ) -> std::result::Result<Vec<Marker>, StaticDecompileError> {
+    let xml = text
+        .lines()
+        .enumerate()
+        .any(|(index, line)| !fenced[index] && line.starts_with("<?xml "));
+    let xml_comments = if xml {
+        let mut comments = BTreeMap::new();
+        for span in vibe_specdoc::xml_comment_spans(text) {
+            let span = span.map_err(|error| {
+                let line = text[..error.offset.min(text.len())]
+                    .bytes()
+                    .filter(|byte| *byte == b'\n')
+                    .count()
+                    + 1;
+                if error.unclosed_comment {
+                    StaticDecompileError::UnterminatedXmlComment { line }
+                } else {
+                    StaticDecompileError::MalformedEmbed {
+                        line,
+                        reason: error.to_string(),
+                    }
+                }
+            })?;
+            comments.insert(span.start, span);
+        }
+        Some(comments)
+    } else {
+        None
+    };
     let mut markers = Vec::new();
     let mut cursor = 0;
     let mut cursor_line = 0;
@@ -92,7 +121,11 @@ pub(super) fn collect(
         let line_start = text[cursor..start]
             .rfind('\n')
             .map_or(cursor_line_start, |index| cursor + index + 1);
-        if fenced[start_line] {
+        if xml_comments
+            .as_ref()
+            .is_some_and(|comments| comments.get(&start).is_none_or(|span| span.depth != 0))
+            || (!xml && fenced[start_line])
+        {
             // A literal example cannot consume a real comment after its fence,
             // even when the example itself has no XML closing delimiter.
             cursor = start + COMMENT_OPEN.len();

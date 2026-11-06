@@ -231,6 +231,7 @@ fn digest_and_replay_reject_self_asserted_and_post_link_drift() {
 
     let mut body = output.clone();
     body.nodes[0].tree = crate::DocTree::parse("changed");
+    body.nodes[0].embeds = Some(crate::embed::occurrences::EmbedTape::new("changed", vec![]));
     assert!(matches!(
         validate_linked(&body),
         Err(LinkPassError::ReplayMismatch {
@@ -355,4 +356,113 @@ fn inline_backticks_are_line_local_and_only_outside_links_rewrite() {
             "# Definition {#org-demo--a--X}",
         )]
     );
+}
+
+#[test]
+fn same_source_with_distinct_link_context_retains_both_resolved_variants() {
+    let input = closure(
+        StaticCompileMode::QualifyPerNode,
+        vec![
+            normal_node(
+                "spec://org.demo/a/doc#root",
+                "org.demo/a",
+                "# A {#org-demo--a--X}\nA_BODY",
+            ),
+            normal_node(
+                "spec://org.demo/b/doc#root",
+                "org.demo/b",
+                "# B {#org-demo--b--X}\nB_BODY",
+            ),
+            normal_node(
+                "spec://org.demo/shared/doc#root",
+                "org.demo/shared",
+                "# Shared {#org-demo--shared--root}\nSHARED sees (#X)",
+            ),
+        ],
+        vec![
+            normal("org.demo/a", "doc", 0, &[0, 2]),
+            normal("org.demo/b", "doc", 1, &[1, 2]),
+        ],
+        vec![
+            rename("org.demo/a", "X", "org-demo--a--X"),
+            rename("org.demo/b", "X", "org-demo--b--X"),
+        ],
+    );
+    let output = LinkPass::new().run(input).unwrap();
+    let bodies = occurrence_bytes(linked_result(&output));
+    assert!(bodies[1].contains("(#org-demo--a--X)"));
+    assert!(
+        bodies[3].contains("(#org-demo--b--X)"),
+        "second context disappeared: {bodies:?}"
+    );
+    validate_linked(&output).unwrap();
+}
+
+#[test]
+fn repeated_source_cannot_hide_ambiguity_in_a_later_contribution() {
+    let input = closure(
+        StaticCompileMode::QualifyPerNode,
+        vec![
+            normal_node(
+                "spec://org.demo/a/doc#root",
+                "org.demo/a",
+                "# A {#org-demo--a--X}",
+            ),
+            normal_node(
+                "spec://org.demo/b/doc#root",
+                "org.demo/b",
+                "# B {#org-demo--b--X}",
+            ),
+            normal_node(
+                "spec://org.demo/shared/doc#root",
+                "org.demo/shared",
+                "# Shared {#org-demo--shared--root}\n(#X)",
+            ),
+        ],
+        vec![
+            normal("org.demo/a", "doc", 0, &[0, 2]),
+            normal("org.demo/b", "doc", 1, &[1, 0, 2]),
+        ],
+        vec![
+            rename("org.demo/a", "X", "org-demo--a--X"),
+            rename("org.demo/b", "X", "org-demo--b--X"),
+        ],
+    );
+    assert!(matches!(
+        LinkPass::new().run(input),
+        Err(LinkPassError::AmbiguousShortLink {
+            contribution: 1,
+            ..
+        })
+    ));
+}
+
+#[test]
+fn covered_normal_occurrence_keeps_identity_and_reversible_empty_frame() {
+    let input = closure(
+        StaticCompileMode::QualifyPerNode,
+        vec![normal_node(
+            "spec://org.demo/shared/doc#root",
+            "org.demo/shared",
+            "# Shared {#org-demo--shared--root}\nPAYLOAD",
+        )],
+        vec![
+            normal("org.demo/shared", "doc", 0, &[0]),
+            normal("org.demo/shared", "doc", 0, &[0]),
+        ],
+        vec![],
+    );
+    let output = LinkPass::new().run(input).unwrap();
+    let result = linked_result(&output);
+    assert_eq!(result.contributions.len(), 2);
+    assert_eq!(result.occurrences.len(), 2);
+    assert!(
+        matches!(&result.occurrences[1],LinkOccurrence::Normal {contribution:1,occurrence:0,node:ClosureNodeId(0),body,trailing_newline_required:true,..} if body.is_empty())
+    );
+    let blocks = crate::markers::decompile(&linked_text(&output).unwrap());
+    assert_eq!(blocks.len(), 2);
+    assert_eq!(blocks[0].key, blocks[1].key);
+    assert!(blocks[0].body.contains("PAYLOAD"));
+    assert!(blocks[1].body.trim().is_empty());
+    validate_linked(&output).unwrap();
 }

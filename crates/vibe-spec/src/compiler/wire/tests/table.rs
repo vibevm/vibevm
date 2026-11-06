@@ -10,7 +10,7 @@ use super::super::decode;
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 fn base(name: &str) -> serde_json::Value {
@@ -81,7 +81,8 @@ fn scalar_identities_of_every_family() {
         }),
         ("closure alias key", "closure_artifact.json", |d| {
             d["closure"]["nodes"][2]["aliases"][BLANK] =
-                d["closure"]["nodes"][2]["tree"]["directives"]["aliases"]["Part"].clone();
+                base("document_document.json")["doc"]["tree"]["directives"]["aliases"]["Part"]
+                    .clone();
         }),
         ("closure rename original", "closure_artifact.json", |d| {
             d["closure"]["renames"][0]["rename"]["original"] = serde_json::json!(BLANK);
@@ -289,6 +290,9 @@ fn address_and_fence_families_of_every_site() {
             );
         }),
         ("closure alias value", "closure_artifact.json", |d| {
+            d["closure"]["nodes"][2]["tree"]["directives"]["aliases"]["Part"] =
+                base("document_document.json")["doc"]["tree"]["directives"]["aliases"]["Part"]
+                    .clone();
             drift(
                 d,
                 &[
@@ -320,7 +324,8 @@ fn address_and_fence_families_of_every_site() {
             "closure_artifact.json",
             |d| {
                 let mut directive =
-                    d["closure"]["nodes"][2]["tree"]["directives"]["directives"][0].clone();
+                    base("document_document.json")["doc"]["tree"]["directives"]["directives"][0]
+                        .clone();
                 directive["line"] = serde_json::json!(0);
                 directive["address"]["raw"] = serde_json::json!("spec://x/y/z#q");
                 d["closure"]["contributions"][1]["document"]["tree"]["directives"]["directives"] =
@@ -328,8 +333,9 @@ fn address_and_fence_families_of_every_site() {
             },
         ),
         ("simple contribution alias", "closure_artifact.json", |d| {
-            let mut alias =
-                d["closure"]["nodes"][2]["tree"]["directives"]["aliases"]["Part"].clone();
+            let mut alias = base("document_document.json")["doc"]["tree"]["directives"]["aliases"]
+                ["Part"]
+                .clone();
             alias["raw"] = serde_json::json!("spec://x/y/z#q");
             d["closure"]["contributions"][1]["document"]["aliases"]["Part"] = alias;
         }),
@@ -523,12 +529,12 @@ fn address_and_fence_families_of_every_site() {
             );
         }),
         ("link fence delimiter", "closure_artifact.json", |d| {
-            d["closure"]["link"]["result"]["occurrences"][0]["fence_after"]["delimiter"] =
-                serde_json::json!("~~");
+            d["closure"]["link"]["result"]["occurrences"][0]["fence_after"] =
+                serde_json::json!({"state":"open", "delimiter":"~~", "run":3});
         }),
         ("lane fence delimiter", "lane_artifact.json", |d| {
-            d["lane"]["contributions"][0]["chunks"][1]["node"]["fence_after"]["delimiter"] =
-                serde_json::json!("~~");
+            d["lane"]["contributions"][0]["chunks"][1]["node"]["fence_after"] =
+                serde_json::json!({"state":"open", "delimiter":"~~", "run":3});
         }),
     ];
     for (name, base_doc, mutation) in cases {

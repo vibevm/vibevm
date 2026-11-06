@@ -20,7 +20,7 @@ use super::super::{decode, decode_unverified, json, preflight};
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 fn raw(name: &str) -> serde_json::Value {

@@ -6,7 +6,7 @@
 //! like a second declaration collector: it reads no manifest, no registry
 //! row and no filesystem — callers hand it already-typed values only. T5
 //! shipped an EMPTY production catalog; R4.2 registers the first real
-//! behavior, `xml-minify` at epoch 1. The four `test-identity-*` vehicles
+//! behavior, `xml-minify` at epoch 2. The four `test-identity-*` vehicles
 //! still register only in the test cell, so no test scaffolding silently
 //! becomes public manifest vocabulary. `TransformPlan::build` never consults
 //! this registry: the plan stays grammar-only, and off-catalog T2 test
@@ -47,7 +47,7 @@ pub(crate) struct TransformRegistry {
 impl TransformRegistry {
     /// The production catalog: exactly the behaviors that really ship.
     ///
-    /// One row since R4.2 — `xml-minify` at epoch 1, declared for the emitted
+    /// One row since R4.2 — `xml-minify` at epoch 2, declared for the emitted
     /// stage (R4 architecture §8). Registration refuses an invalid name, a
     /// zero epoch or a collision; none can hold for a const-spelled name at a
     /// nonzero epoch entering an empty catalog, so a refusal here would be a

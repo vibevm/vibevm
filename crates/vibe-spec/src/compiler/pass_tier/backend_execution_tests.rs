@@ -12,7 +12,7 @@ use vibe_extension_registry::{
     ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider, collect_extensions,
 };
 use vibe_wire::behaviour::native_backend::{REPLY_CAP_BYTES, ok_reply};
-use vibe_wire::generated::native::e1::compile_reply::{CompileReply, CompileReplyOk};
+use vibe_wire::generated::native::e2::compile_reply::{CompileReply, CompileReplyOk};
 
 use super::lowering::lower_effective_compile_rows;
 use crate::compiler::builtin::{
@@ -156,7 +156,7 @@ impl CompilerNativeInvoker for Invoker<'_> {
                 crate::compiler::emit::emitted_bytes_digest(&emitted.bytes);
             return Ok(
                 serde_json::to_vec(&CompileReply::Ok(Box::new(CompileReplyOk {
-                    envelope: 1,
+                    envelope: 2,
                     payload: crate::compiler::wire::encode_generated(&returned).unwrap(),
                     message: None,
                 })))

@@ -379,3 +379,6 @@ fn final_static_assembly_keeps_one_frame_and_normal_simple_normal_order_in_markd
     );
     vibe_spec::minify_emitted_xml(&xml).expect("strict XML stream accepts generated c1 comments");
 }
+
+#[path = "tests_normal_once.rs"]
+mod normal_once;

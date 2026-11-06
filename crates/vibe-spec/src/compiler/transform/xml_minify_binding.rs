@@ -63,7 +63,7 @@ pub(crate) const XML_MINIFY_NAME: &str = "xml-minify";
 
 /// Its registry-owned behavior epoch (ABI §4: a builtin's epoch is
 /// registry-owned and must bump with observable behavior).
-pub(crate) const XML_MINIFY_EPOCH: u32 = 1;
+pub(crate) const XML_MINIFY_EPOCH: u32 = 2;
 
 /// The `xml-minify` behavior: the segmented emitted-tape adapter over the
 /// strict span-deletion kernel.
@@ -192,8 +192,9 @@ fn minify_tape(tape: &str) -> Result<Cow<'_, str>, XmlMinifyBindingError> {
 
 /// The next engine-framed comment span at or after `from`, or `None`.
 ///
-/// A generated comment always opens a LINE — every emitter writes it that
-/// way — so an opening mid-line is content, not framing. The shared codec
+/// Only an actual top-level XML comment can be an outer frame. Generated
+/// embed comments may occur inside paragraphs, including at line starts.
+/// A frame still opens a line under the existing engine framing law. The shared codec
 /// guarantees an encoded payload contains no `--`, so the first
 /// [`framing::GENERATED_COMMENT_CLOSE`] after an opening really is that
 /// comment's terminator.
@@ -201,17 +202,33 @@ fn next_frame_comment(
     tape: &str,
     from: usize,
 ) -> Result<Option<Range<usize>>, XmlMinifyBindingError> {
-    let mut search = from;
-    while let Some(found) = tape[search..].find(framing::GENERATED_COMMENT_OPEN) {
-        let open = search + found;
-        if open == 0 || tape.as_bytes().get(open - 1) == Some(&b'\n') {
-            let Some(close) = tape[open..].find(framing::GENERATED_COMMENT_CLOSE) else {
-                return Err(XmlMinifyBindingError::UnterminatedFrameComment { offset: open });
-            };
-            let end = open + close + framing::GENERATED_COMMENT_CLOSE.len();
+    for observed in framing::xml_comment_spans(&tape[from..]) {
+        let span = match observed {
+            Ok(span) => span,
+            Err(error) => {
+                let offset = from + error.offset;
+                if error.depth == 0
+                    && error.unclosed_comment
+                    && tape[offset..].starts_with(framing::GENERATED_COMMENT_OPEN)
+                {
+                    return Err(XmlMinifyBindingError::UnterminatedFrameComment { offset });
+                }
+                // The existing strict kernel owns malformed document segments.
+                // Returning no later frame leaves the full remaining gap there.
+                return Ok(None);
+            }
+        };
+        if span.depth != 0 {
+            continue;
+        }
+        let open = from + span.start;
+        let end = from + span.end;
+        if (open == 0 || tape.as_bytes().get(open - 1) == Some(&b'\n'))
+            && tape[open..end].starts_with(framing::GENERATED_COMMENT_OPEN)
+            && tape[open..end].ends_with(framing::GENERATED_COMMENT_CLOSE)
+        {
             return Ok(Some(open..end));
         }
-        search = open + framing::GENERATED_COMMENT_OPEN.len();
     }
     Ok(None)
 }

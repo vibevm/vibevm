@@ -165,6 +165,23 @@ fn verify_request_identity(closure: &ClosureIr) -> Result<(), VerificationError>
 /// Tree shape first for every carrier document, then the anchor gate — the
 /// two phases never interleave, keeping first-failure order deterministic.
 fn verify_trees(closure: &ClosureIr) -> Result<(), VerificationError> {
+    for document in closure
+        .nodes
+        .iter()
+        .chain(
+            closure
+                .contributions
+                .iter()
+                .filter_map(|contribution| match contribution {
+                    ClosureContribution::Simple { document, .. } => Some(document.as_ref()),
+                    _ => None,
+                }),
+        )
+    {
+        if let Some(tape) = &document.embeds {
+            tape.validate(&document.tree.text(document.tree.root()))?;
+        }
+    }
     for (address, tree) in carrier_documents(closure) {
         tree.verify_structure()
             .map_err(|source| VerificationError::DocTree {

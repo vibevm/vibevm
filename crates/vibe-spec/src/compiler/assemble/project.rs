@@ -133,6 +133,7 @@ fn project_normal(
         fence_after,
         body,
         trailing_newline_required,
+        embeds,
     } = current
     else {
         return Err(LaneProjectionError::OccurrenceMismatch {
@@ -175,6 +176,7 @@ fn project_normal(
         fence_before: *fence_before,
         fence_after: *fence_after,
         body: body.clone(),
+        embeds: embeds.clone(),
     })));
     if *trailing_newline_required {
         output.push(LaneChunk::ForcedNewline {
@@ -207,6 +209,7 @@ fn project_simple(
         fence_after,
         body,
         trailing_newline_required,
+        embeds,
     } = current
     else {
         return Err(LaneProjectionError::OccurrenceMismatch {
@@ -225,6 +228,7 @@ fn project_simple(
         fence_before: *fence_before,
         fence_after: *fence_after,
         body: body.clone(),
+        embeds: embeds.clone(),
     })));
     if *trailing_newline_required {
         output.push(LaneChunk::ForcedNewline {

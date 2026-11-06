@@ -43,6 +43,7 @@ pub(super) fn lane(body: &str) -> LaneIr {
                     marker: marker.clone(),
                 },
                 LaneChunk::Node(Box::new(LaneNode::Normal {
+                    embeds: crate::embed::occurrences::EmbedTape::new(body, vec![]),
                     contribution: 0,
                     occurrence: 0,
                     node: ClosureNodeId(0),
@@ -79,6 +80,7 @@ pub(super) fn simple_contribution(index: usize, path: &str, body: &str) -> LaneC
         meta: ContributionMeta::new("org.demo/pkg", path).unwrap(),
         address: address.clone(),
         chunks: vec![LaneChunk::Node(Box::new(LaneNode::Simple {
+            embeds: crate::embed::occurrences::EmbedTape::new(body, vec![]),
             contribution: index,
             occurrence: 0,
             address,
@@ -110,6 +112,7 @@ fn lane_of(entries: &[(usize, &str, &str)]) -> LaneIr {
             marker: marker.clone(),
         });
         chunks.push(LaneChunk::Node(Box::new(LaneNode::Normal {
+            embeds: crate::embed::occurrences::EmbedTape::new(body, vec![]),
             contribution: 0,
             occurrence,
             node: ClosureNodeId(*node),

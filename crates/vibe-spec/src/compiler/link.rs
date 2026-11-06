@@ -18,6 +18,7 @@ use super::pass::{Pass, PassName};
 pub(crate) const LINK_PASS_NAME: &str = "link";
 
 mod digest;
+mod normal_coverage;
 use digest::digest_input;
 
 pub(crate) struct LinkPass {
@@ -66,6 +67,13 @@ pub(crate) fn link_invocations() -> usize {
 
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum LinkPassError {
+    #[error(transparent)]
+    EmbedTape(#[from] crate::embed::occurrences::EmbedTapeError),
+    #[error("link contribution {contribution} occurrence {occurrence} has no captured embed tape")]
+    MissingEmbedTape {
+        contribution: usize,
+        occurrence: usize,
+    },
     #[error("link requires applied qualification state")]
     QualificationPending,
     #[error("link requires named merge and embed to consume their pending state")]
@@ -109,6 +117,12 @@ impl LinkPassError {
             Self::AmbiguousShortLink {
                 label, candidates, ..
             } => crate::pipeline::CompileError::AmbiguousShortLink { label, candidates },
+            other @ (Self::MissingEmbedTape { .. } | Self::EmbedTape(_)) => {
+                crate::pipeline::CompileError::Embed(crate::embed::EmbedError::Unresolved {
+                    addr: "<linked-body>".into(),
+                    reason: other.to_string(),
+                })
+            }
             other => panic!("the built-in link pass returned invalid private state: {other}"),
         }
     }
@@ -130,12 +144,14 @@ enum InputOccurrence {
         address: crate::SpecAddress,
         marker: LinkMarkerKey,
         body: String,
+        embeds: crate::embed::occurrences::EmbedTape,
     },
     Simple {
         contribution: usize,
         occurrence: usize,
         address: DocumentAddress,
         body: String,
+        embeds: crate::embed::occurrences::EmbedTape,
     },
 }
 
@@ -234,6 +250,13 @@ fn plan_stream(closure: &ClosureIr) -> Result<PlannedLink, LinkPassError> {
                         address: current.requested_address.clone(),
                         marker: LinkMarkerKey::from_address(&current.requested_address),
                         body: document.tree.text(document.tree.root()),
+                        embeds: document
+                            .embeds
+                            .clone()
+                            .ok_or(LinkPassError::MissingEmbedTape {
+                                contribution,
+                                occurrence,
+                            })?,
                     });
                 }
             }
@@ -247,6 +270,13 @@ fn plan_stream(closure: &ClosureIr) -> Result<PlannedLink, LinkPassError> {
                     occurrence: 0,
                     address: document.address.clone(),
                     body: document.tree.text(document.tree.root()),
+                    embeds: document
+                        .embeds
+                        .clone()
+                        .ok_or(LinkPassError::MissingEmbedTape {
+                            contribution,
+                            occurrence: 0,
+                        })?,
                 });
             }
             ClosureContribution::Elided { meta } => {
@@ -319,6 +349,7 @@ fn resolve_stream(
     let mut current_contribution = None;
     let mut fence = FenceTracker::default();
     let mut definitions = BTreeMap::new();
+    let mut normal_coverage = normal_coverage::NormalCoverage::default();
     for occurrence in &plan.occurrences {
         let contribution = match occurrence {
             InputOccurrence::Normal { contribution, .. }
@@ -337,10 +368,27 @@ fn resolve_stream(
                 address,
                 marker,
                 body,
+                embeds,
             } => {
                 let fence_before = link_fence_snapshot(fence.snapshot());
-                let body = link_text(body, &mut fence, &definitions, qualified, contribution)?;
+                let linked = link_text(body, &mut fence, &definitions, qualified, contribution)?;
+                let mut embeds = embeds.rewrite_lines(body, &linked)?;
+                let body = linked;
                 let fence_after = link_fence_snapshot(fence.snapshot());
+                // Resolve the entire occurrence before coverage: equal source
+                // text can bind differently, or become ambiguous, in this scope.
+                // Open boundaries remain verbatim so omission cannot change the
+                // fence interpretation of this or a subsequent occurrence.
+                let body = if fence_before == LinkFenceSnapshot::Closed
+                    && fence_after == LinkFenceSnapshot::Closed
+                {
+                    let (projected, retained, retained_empty) =
+                        normal_coverage.project(address, &body, Some(&embeds));
+                    embeds = embeds.retain_lines(&body, &projected, &retained, &retained_empty)?;
+                    projected
+                } else {
+                    body
+                };
                 output.push(LinkOccurrence::Normal {
                     contribution: *contribution,
                     occurrence: *occurrence,
@@ -351,6 +399,7 @@ fn resolve_stream(
                     fence_after,
                     trailing_newline_required: !body.ends_with('\n'),
                     body,
+                    embeds,
                 });
             }
             InputOccurrence::Simple {
@@ -358,9 +407,12 @@ fn resolve_stream(
                 occurrence,
                 address,
                 body,
+                embeds,
             } => {
                 let fence_before = link_fence_snapshot(fence.snapshot());
-                let body = link_text(body, &mut fence, &definitions, qualified, contribution)?;
+                let linked = link_text(body, &mut fence, &definitions, qualified, contribution)?;
+                let embeds = embeds.rewrite_lines(body, &linked)?;
+                let body = linked;
                 let fence_after = link_fence_snapshot(fence.snapshot());
                 output.push(LinkOccurrence::Simple {
                     contribution: *contribution,
@@ -370,6 +422,7 @@ fn resolve_stream(
                     fence_after,
                     trailing_newline_required: !body.ends_with('\n'),
                     body,
+                    embeds,
                 });
             }
         }
@@ -457,16 +510,6 @@ fn rewrite_line(
     Ok(output)
 }
 
-/// Test-only replay seam: the derived link result of a carrier, so the wire
-/// tests can recompute the corpus's linked `input_digest` through production
-/// domain logic instead of trusting a copied constant.
-#[cfg(test)]
-pub(crate) fn derived_link_digest_for_test(closure: &ClosureIr) -> LinkInputDigest {
-    derive_result(closure)
-        .expect("the caller hands this closure to validate_linked first")
-        .input_digest
-}
-
 pub(crate) fn validate_linked(closure: &ClosureIr) -> Result<(), LinkPassError> {
     let expected = derive_result(closure)?;
     let LinkState::Linked(actual) = &closure.link else {
@@ -493,51 +536,6 @@ pub(crate) fn validate_linked(closure: &ClosureIr) -> Result<(), LinkPassError> 
     Ok(())
 }
 
-/// Temporary compatibility serializer. Concrete markers live here only until
-/// named assemble/emit replace this one-seed public-API tail.
-#[cfg(test)]
-pub(crate) fn linked_text(closure: &ClosureIr) -> Result<String, LinkPassError> {
-    validate_linked(closure)?;
-    debug_assert!(matches!(
-        closure.context().frame(),
-        ArtifactFrame::CompatibilityFragment
-    ));
-    let LinkState::Linked(result) = &closure.link else {
-        unreachable!("linked validator accepted only Linked")
-    };
-    let mut output = String::new();
-    for occurrence in &result.occurrences {
-        match occurrence {
-            LinkOccurrence::Normal {
-                marker,
-                body,
-                trailing_newline_required,
-                ..
-            } => {
-                output.push_str(&crate::markers::open(marker.as_str()));
-                output.push('\n');
-                output.push_str(body);
-                if *trailing_newline_required {
-                    output.push('\n');
-                }
-                output.push_str(&crate::markers::close(marker.as_str()));
-                output.push('\n');
-            }
-            LinkOccurrence::Simple {
-                body,
-                trailing_newline_required,
-                ..
-            } => {
-                output.push_str(body);
-                if *trailing_newline_required {
-                    output.push('\n');
-                }
-            }
-        }
-    }
-    Ok(output)
-}
-
 #[cfg(test)]
 #[path = "link/tests.rs"]
 mod tests;
@@ -549,3 +547,6 @@ mod fence_tests;
 #[cfg(test)]
 #[path = "link/test_support.rs"]
 mod test_support;
+
+#[cfg(test)]
+pub(crate) use test_support::{derived_link_digest_for_test, linked_text};

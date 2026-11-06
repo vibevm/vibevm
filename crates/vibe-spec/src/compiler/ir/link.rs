@@ -82,6 +82,7 @@ pub(crate) enum LinkOccurrence {
         fence_before: LinkFenceSnapshot,
         fence_after: LinkFenceSnapshot,
         body: String,
+        embeds: crate::embed::occurrences::EmbedTape,
         trailing_newline_required: bool,
     },
     Simple {
@@ -91,6 +92,7 @@ pub(crate) enum LinkOccurrence {
         fence_before: LinkFenceSnapshot,
         fence_after: LinkFenceSnapshot,
         body: String,
+        embeds: crate::embed::occurrences::EmbedTape,
         trailing_newline_required: bool,
     },
 }

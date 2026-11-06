@@ -33,6 +33,7 @@ pub(super) fn validate_normal(
             fence_before,
             fence_after,
             body,
+            embeds,
             trailing_newline_required,
         } = linked
         else {
@@ -119,6 +120,7 @@ pub(super) fn validate_normal(
             fence_before: lane_before,
             fence_after: lane_after,
             body: lane_body,
+            embeds: lane_embeds,
         } = lane_node.as_ref()
         else {
             return Err(unexpected_chunk(
@@ -162,6 +164,7 @@ pub(super) fn validate_normal(
             "fence after",
         )?;
         chunk_field(lane_body == body, contribution, node_at, "body")?;
+        chunk_field(lane_embeds == embeds, contribution, node_at, "embed tape")?;
 
         if *trailing_newline_required {
             validate_newline(chunks, contribution, occurrence, &mut chunk_index)?;
@@ -221,6 +224,7 @@ pub(super) fn validate_simple(
         fence_before,
         fence_after,
         body,
+        embeds,
         trailing_newline_required,
     } = linked
     else {
@@ -248,6 +252,7 @@ pub(super) fn validate_simple(
         fence_before: lane_before,
         fence_after: lane_after,
         body: lane_body,
+        embeds: lane_embeds,
     } = lane_node.as_ref()
     else {
         return Err(unexpected_chunk(contribution, 0, "simple node", lane_chunk));
@@ -264,6 +269,7 @@ pub(super) fn validate_simple(
     chunk_field(lane_before == fence_before, contribution, 0, "fence before")?;
     chunk_field(lane_after == fence_after, contribution, 0, "fence after")?;
     chunk_field(lane_body == body, contribution, 0, "body")?;
+    chunk_field(lane_embeds == embeds, contribution, 0, "embed tape")?;
     if *trailing_newline_required {
         validate_newline(chunks, contribution, 0, &mut chunk_index)?;
     }

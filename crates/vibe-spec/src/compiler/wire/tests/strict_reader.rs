@@ -14,7 +14,7 @@ const BS: &str = "\u{5c}";
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 /// Every map family plus an ordinary struct member, each with a DIFFERENT
@@ -33,7 +33,7 @@ fn a_duplicate_object_key_is_red_for_every_map_family() {
         "duplicate_key_source_expansions.json",
     ];
     for name in names {
-        let bytes = std::fs::read(corpus().join("invalid").join(name)).unwrap();
+        let bytes = std::fs::read(corpus().join("../e1/invalid").join(name)).unwrap();
         let error = decode(&bytes).unwrap_err().to_string();
         assert!(
             error.contains("duplicate object key"),
@@ -46,7 +46,12 @@ fn a_duplicate_object_key_is_red_for_every_map_family() {
 /// parsing a rendered string.
 #[test]
 fn the_duplicate_key_refusal_is_typed() {
-    let bytes = std::fs::read(corpus().join("invalid").join("duplicate_key_anchors.json")).unwrap();
+    let bytes = std::fs::read(
+        corpus()
+            .join("../e1/invalid")
+            .join("duplicate_key_anchors.json"),
+    )
+    .unwrap();
     match decode(&bytes) {
         Err(IrWireError::StrictReader { detail }) => {
             assert!(

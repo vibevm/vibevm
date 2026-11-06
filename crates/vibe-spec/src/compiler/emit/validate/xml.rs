@@ -10,7 +10,7 @@ use crate::compiler::ir::{ArtifactFrame, LaneContribution, PreEmissionWitness};
 pub(super) fn observation(
     backend: &BackendId,
     witness: &PreEmissionWitness,
-    documents: &[Option<vibe_specdoc::doc::SpecDoc>],
+    documents: &[Option<vibe_specdoc::AnnotatedXml>],
     bytes: &[u8],
 ) -> Result<(), BackendError> {
     let text = std::str::from_utf8(bytes).map_err(|error| {
@@ -86,7 +86,7 @@ fn observe_contribution(
     backend: &BackendId,
     cursor: &mut Cursor<'_>,
     contribution: &LaneContribution,
-    expected_document: Option<&vibe_specdoc::doc::SpecDoc>,
+    expected_document: Option<&vibe_specdoc::AnnotatedXml>,
 ) -> Result<(), BackendError> {
     match contribution {
         LaneContribution::Normal { meta, .. } | LaneContribution::Simple { meta, .. } => {
@@ -99,15 +99,9 @@ fn observe_contribution(
                 )
             })?;
             let observed = take_document(backend, cursor)?;
-            let parsed = vibe_specdoc::from_xml(observed).map_err(|error| {
+            expected_document.observe(observed).map_err(|error| {
                 current_error(backend, format!("invalid XML contribution: {error}"))
             })?;
-            if &parsed != expected_document {
-                return Err(current_error(
-                    backend,
-                    "XML contribution body differs from its pre-emission witness",
-                ));
-            }
             cursor.expect(backend, "\n\n", "XML contribution separator")
         }
         LaneContribution::Elided { meta } => {

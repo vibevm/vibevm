@@ -74,7 +74,7 @@ fn emit_xml(lane: &LaneIr, witness: &PreEmissionWitness) -> Result<String, Backe
                         meta.origin
                     ))
                 })?;
-                let xml = vibe_specdoc::to_xml(document);
+                let xml = document.render();
                 output.push_str(xml.trim_end());
                 output.push_str("\n\n");
             }

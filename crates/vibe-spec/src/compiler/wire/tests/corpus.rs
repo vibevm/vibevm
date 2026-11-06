@@ -12,7 +12,7 @@ use super::super::encode_pretty;
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 fn valid_names() -> Vec<String> {
@@ -65,7 +65,7 @@ fn reader_reds_stay_red_through_decode() {
         "unknown_shape.json",
         "unknown_field.json",
     ] {
-        let bytes = std::fs::read(corpus().join("invalid").join(name)).unwrap();
+        let bytes = std::fs::read(corpus().join("../e1/invalid").join(name)).unwrap();
         assert!(decode(&bytes).is_err(), "{name} must be red");
     }
 }

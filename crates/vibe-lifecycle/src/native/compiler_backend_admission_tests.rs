@@ -56,7 +56,7 @@ fn backend_invocation_requires_and_rechecks_its_exact_admitted_handle() {
         .unwrap();
     let raw = invoker.invoke(marked()).unwrap();
     assert!(
-        serde_json::from_slice::<vibe_wire::generated::native::e1::compile_reply::CompileReply>(
+        serde_json::from_slice::<vibe_wire::generated::native::e2::compile_reply::CompileReply>(
             &raw
         )
         .is_ok()

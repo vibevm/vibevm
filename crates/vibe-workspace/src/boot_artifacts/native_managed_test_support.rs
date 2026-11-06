@@ -5,7 +5,7 @@ use vibe_spec::{
     CompilerNativeCall, CompilerNativeInvoker, CompilerNativeInvokerError,
     CompilerNativeInvokerErrorKind, CompilerNativePolicy,
 };
-use vibe_wire::generated::native::e1::compile_reply::{CompileReply, CompileReplySkip};
+use vibe_wire::generated::native::e2::compile_reply::{CompileReply, CompileReplySkip};
 
 use crate::WorkspaceError;
 use crate::extension_world::{

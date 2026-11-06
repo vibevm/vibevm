@@ -353,8 +353,23 @@ fn observe_markdown_chunks(
                 )));
             }
             LaneChunk::Node(node) => match node.as_ref() {
-                LaneNode::Normal { body, .. } | LaneNode::Simple { body, .. } => {
-                    segments.push(Cow::Borrowed(body));
+                LaneNode::Normal {
+                    body,
+                    embeds,
+                    fence_before,
+                    ..
+                }
+                | LaneNode::Simple {
+                    body,
+                    embeds,
+                    fence_before,
+                    ..
+                } => {
+                    segments.push(Cow::Owned(crate::embed::occurrences::markdown_body(
+                        body,
+                        Some(embeds),
+                        fence_before.markdown(),
+                    )));
                 }
             },
             LaneChunk::ForcedNewline { .. } => segments.push(Cow::Borrowed("\n")),

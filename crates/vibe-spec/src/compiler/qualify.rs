@@ -88,6 +88,8 @@ pub(crate) fn analyze_absorption(
 
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum QualifyPassError {
+    #[error(transparent)]
+    EmbedTape(#[from] crate::embed::occurrences::EmbedTapeError),
     #[error("qualify requires pending qualification state")]
     AlreadyApplied,
     #[error("qualify requires named merge and embed to consume their pending state")]
@@ -284,6 +286,13 @@ fn qualify_closure(input: ClosureIr) -> Result<ClosureIr, QualifyPassError> {
         graph_renames.insert(update.node, update.renames.clone());
         let node = &mut output.nodes[update.node.0];
         if let Some(tree) = update.tree {
+            node.embeds = node
+                .embeds
+                .as_ref()
+                .map(|tape| {
+                    tape.rewrite_lines(&node.tree.text(node.tree.root()), &tree.text(tree.root()))
+                })
+                .transpose()?;
             node.tree = tree;
         }
         node.aliases.clear();
@@ -296,6 +305,16 @@ fn qualify_closure(input: ClosureIr) -> Result<ClosureIr, QualifyPassError> {
             unreachable!("the staged simple contribution kept its identity")
         };
         if let Some(tree) = update.tree {
+            document.embeds = document
+                .embeds
+                .as_ref()
+                .map(|tape| {
+                    tape.rewrite_lines(
+                        &document.tree.text(document.tree.root()),
+                        &tree.text(tree.root()),
+                    )
+                })
+                .transpose()?;
             document.tree = tree;
         }
         document.aliases.clear();

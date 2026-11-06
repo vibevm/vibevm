@@ -57,6 +57,8 @@ pub use compiler::ir::{
     ArtifactPlanError, ArtifactTarget, BackendId, BackendIdError, DocumentProvider,
     EmissionProvenance, EmittedArtifact, emitted_output_fingerprint,
 };
+pub use compiler::recipe::COMPILER_ARTIFACT_RECIPE;
+pub use compiler::wire::history::{HistoricalCompilerIrError, inspect_historical_compiler_ir};
 // The R4.1 T10B adapter seam (PROP-054 `#TRANSFORM-PLAN-IDENTITY`): the
 // workspace lowers one lane owner's effective compile rows into an
 // owner-scoped plan and attaches it to an `ArtifactPlan`. Exactly three names

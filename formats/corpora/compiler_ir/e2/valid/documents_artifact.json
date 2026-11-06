@@ -1,0 +1,275 @@
+{
+  "shape": "documents-artifact",
+  "cardinality": "artifact",
+  "documents": [
+    {
+      "source": {
+        "address": {
+          "kind": "spec",
+          "address": {
+            "anchor": [
+              "root"
+            ],
+            "authority": {
+              "kind": "package",
+              "group": "org.demo",
+              "name": "lib"
+            },
+            "doc_path": "manual/guide.md",
+            "raw": "spec://org.demo/lib/manual/guide.md#root"
+          }
+        },
+        "format": "markdown",
+        "subject": {
+          "declared_path": "boot/10-guide.md",
+          "provider": {
+            "kind": "dependency",
+            "group": "org.demo",
+            "name": "lib"
+          }
+        },
+        "text": "# Guide {#root}\n\n##FACT-A One exact fact.\n\n#use spec://org.demo/lib/manual/part.md\n#use spec://org.demo/lib/manual/part.md#api~r2 as Part\n#embed spec://org.demo/lib/manual/part.md#api as Part\n\nSee @spec://org.demo/lib/manual/part.md#api for details.\n\n## Install {#install}\nBody line.\n"
+      },
+      "tree": {
+        "anchors": {
+          "FACT-A": 2,
+          "install": 3,
+          "root": 1
+        },
+        "directives": {
+          "aliases": {
+            "Part": {
+              "anchor": [
+                "api"
+              ],
+              "authority": {
+                "kind": "package",
+                "group": "org.demo",
+                "name": "lib"
+              },
+              "doc_path": "manual/part.md",
+              "raw": "spec://org.demo/lib/manual/part.md#api~r2",
+              "pinned_r": 2
+            }
+          },
+          "directives": [
+            {
+              "address": {
+                "anchor": [],
+                "authority": {
+                  "kind": "package",
+                  "group": "org.demo",
+                  "name": "lib"
+                },
+                "doc_path": "manual/part.md",
+                "raw": "spec://org.demo/lib/manual/part.md"
+              },
+              "kind": "use",
+              "line": 4,
+              "options": ""
+            },
+            {
+              "address": {
+                "anchor": [
+                  "api"
+                ],
+                "authority": {
+                  "kind": "package",
+                  "group": "org.demo",
+                  "name": "lib"
+                },
+                "doc_path": "manual/part.md",
+                "raw": "spec://org.demo/lib/manual/part.md#api~r2",
+                "pinned_r": 2
+              },
+              "kind": "use",
+              "line": 5,
+              "options": ""
+            }
+          ],
+          "errors": [
+            {
+              "line": 6,
+              "message": "`as` is a `#use` clause, not valid on #embed"
+            }
+          ],
+          "in_place_uses": [
+            {
+              "address": {
+                "anchor": [
+                  "api"
+                ],
+                "authority": {
+                  "kind": "package",
+                  "group": "org.demo",
+                  "name": "lib"
+                },
+                "doc_path": "manual/part.md",
+                "raw": "spec://org.demo/lib/manual/part.md#api"
+              },
+              "line": 8
+            }
+          ]
+        },
+        "duplicate_anchors": [],
+        "lines": [
+          "# Guide {#root}",
+          "",
+          "##FACT-A One exact fact.",
+          "",
+          "#use spec://org.demo/lib/manual/part.md",
+          "#use spec://org.demo/lib/manual/part.md#api~r2 as Part",
+          "#embed spec://org.demo/lib/manual/part.md#api as Part",
+          "",
+          "See @spec://org.demo/lib/manual/part.md#api for details.",
+          "",
+          "## Install {#install}",
+          "Body line."
+        ],
+        "nodes": [
+          {
+            "children": [
+              1
+            ],
+            "heading": "",
+            "heading_line": 0,
+            "kind": "heading",
+            "level": 0,
+            "span": {
+              "end": 12,
+              "start": 0
+            },
+            "trailing": ""
+          },
+          {
+            "children": [
+              2,
+              3
+            ],
+            "heading": "Guide",
+            "heading_line": 0,
+            "kind": "heading",
+            "level": 1,
+            "span": {
+              "end": 12,
+              "start": 0
+            },
+            "trailing": "",
+            "id": "root",
+            "parent": 0
+          },
+          {
+            "children": [],
+            "heading": "",
+            "heading_line": 2,
+            "kind": "fact",
+            "level": 0,
+            "span": {
+              "end": 3,
+              "start": 2
+            },
+            "trailing": "",
+            "id": "FACT-A",
+            "parent": 1
+          },
+          {
+            "children": [],
+            "heading": "Install",
+            "heading_line": 10,
+            "kind": "heading",
+            "level": 2,
+            "span": {
+              "end": 12,
+              "start": 10
+            },
+            "trailing": "",
+            "id": "install",
+            "parent": 1
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "address": {
+          "kind": "spec",
+          "address": {
+            "anchor": [
+              "api"
+            ],
+            "authority": {
+              "kind": "package",
+              "group": "org.demo",
+              "name": "lib"
+            },
+            "doc_path": "manual/part.md",
+            "raw": "spec://org.demo/lib/manual/part.md#api~r2",
+            "pinned_r": 2
+          }
+        },
+        "format": "markdown",
+        "subject": {
+          "declared_path": "boot/20-part.md",
+          "provider": {
+            "kind": "host-coordinate",
+            "group": "org.demo",
+            "name": "app"
+          }
+        },
+        "text": "# Part {#api}\n\nReference body.\n\n```text\nunterminated sample\n"
+      },
+      "tree": {
+        "anchors": {
+          "api": 1
+        },
+        "directives": {
+          "aliases": {},
+          "directives": [],
+          "errors": [],
+          "in_place_uses": []
+        },
+        "duplicate_anchors": [],
+        "lines": [
+          "# Part {#api}",
+          "",
+          "Reference body.",
+          "",
+          "```text",
+          "unterminated sample"
+        ],
+        "nodes": [
+          {
+            "children": [
+              1
+            ],
+            "heading": "",
+            "heading_line": 0,
+            "kind": "heading",
+            "level": 0,
+            "span": {
+              "end": 6,
+              "start": 0
+            },
+            "trailing": ""
+          },
+          {
+            "children": [],
+            "heading": "Part",
+            "heading_line": 0,
+            "kind": "heading",
+            "level": 1,
+            "span": {
+              "end": 6,
+              "start": 0
+            },
+            "trailing": "",
+            "id": "api",
+            "parent": 0
+          }
+        ]
+      }
+    }
+  ],
+  "ir_schema": 2,
+  "level": "document"
+}

@@ -4,7 +4,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR");
 
 use std::collections::{BTreeMap, HashMap, HashSet};
 
-use crate::embed::{EmbedError, expand_with};
+use crate::embed::occurrences::{EmbedTape, EmbedTapeError, ExpandedBody};
+use crate::embed::{EmbedError, expand_annotated};
 use crate::{DirectiveKind, DocTree, SpecAddress};
 
 use super::close::document_origin;
@@ -67,12 +68,18 @@ pub(crate) enum EmbedPassError {
     Embed(#[from] EmbedError),
     #[error("embed observation missing for `{addr}`")]
     MissingObservation { addr: String },
+    #[error(transparent)]
+    Tape(#[from] EmbedTapeError),
 }
 
 impl EmbedPassError {
     pub(crate) fn into_compile_error(self) -> crate::pipeline::CompileError {
         match self {
             Self::Embed(error) => crate::pipeline::CompileError::Embed(error),
+            Self::Tape(error) => crate::pipeline::CompileError::Embed(EmbedError::Unresolved {
+                addr: "<expanded-body>".into(),
+                reason: error.to_string(),
+            }),
             Self::MissingObservation { addr } => {
                 panic!("current closure introduced unobserved embed `{addr}`")
             }
@@ -84,12 +91,14 @@ struct RootUpdate {
     node: ClosureNodeId,
     tree: DocTree,
     aliases: BTreeMap<String, SpecAddress>,
+    embeds: EmbedTape,
 }
 
 struct SimpleUpdate {
     contribution: usize,
     tree: DocTree,
     aliases: BTreeMap<String, SpecAddress>,
+    embeds: EmbedTape,
 }
 
 enum EmbedRoot {
@@ -141,7 +150,7 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
     let mut normal_seen = HashSet::new();
     let mut simple_cache: HashMap<
         super::worklist::DocumentKey,
-        (DocTree, BTreeMap<String, SpecAddress>),
+        (DocTree, BTreeMap<String, SpecAddress>, EmbedTape),
     > = HashMap::new();
     for root in roots {
         match root {
@@ -165,7 +174,9 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
                             missing = Some(addr);
                             Err("missing compiler embed observation".to_string())
                         }
-                        Err(EmbedPassError::Embed(EmbedError::Cycle(_))) => unreachable!(),
+                        Err(
+                            EmbedPassError::Embed(EmbedError::Cycle(_)) | EmbedPassError::Tape(_),
+                        ) => unreachable!(),
                     };
                 let mut edge = |from: &str, ordinal: usize, target: &SpecAddress| {
                     let target_key = target.without_pin();
@@ -180,11 +191,16 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
                     }
                 };
                 let expanded =
-                    expand_with(&normalized, &address.without_pin(), &mut resolve, &mut edge);
+                    expand_annotated(&normalized, &address.without_pin(), &mut resolve, &mut edge);
                 let expanded = finish_expansion(expanded, missing, observed_failure)?;
+                let tree = DocTree::parse(&expanded.text);
+                let embeds = expanded
+                    .tape
+                    .tree_join(&expanded.text, &tree.text(tree.root()))?;
                 updates.push(RootUpdate {
                     node,
-                    tree: DocTree::parse(&expanded),
+                    tree,
+                    embeds,
                     aliases,
                 });
             }
@@ -196,7 +212,7 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
                     unreachable!()
                 };
                 let base = super::worklist::document_key(&document.address);
-                let (tree, aliases) = if let Some(cached) = simple_cache.get(&base) {
+                let (tree, aliases, embeds) = if let Some(cached) = simple_cache.get(&base) {
                     cached.clone()
                 } else {
                     let aliases = document.tree.directives().aliases.clone();
@@ -213,17 +229,24 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
                                 missing = Some(addr);
                                 Err("missing compiler embed observation".to_string())
                             }
-                            Err(EmbedPassError::Embed(EmbedError::Cycle(_))) => unreachable!(),
+                            Err(
+                                EmbedPassError::Embed(EmbedError::Cycle(_))
+                                | EmbedPassError::Tape(_),
+                            ) => unreachable!(),
                         };
                     let mut ignore_edge = |_: &str, _: usize, _: &SpecAddress| {};
-                    let expanded = expand_with(
+                    let expanded = expand_annotated(
                         &document.tree.text(document.tree.root()),
                         &base.label(),
                         &mut resolve,
                         &mut ignore_edge,
                     );
                     let expanded = finish_expansion(expanded, missing, observed_failure)?;
-                    let value = (DocTree::parse(&expanded), aliases);
+                    let tree = DocTree::parse(&expanded.text);
+                    let embeds = expanded
+                        .tape
+                        .tree_join(&expanded.text, &tree.text(tree.root()))?;
+                    let value = (tree, aliases, embeds);
                     simple_cache.insert(base, value.clone());
                     value
                 };
@@ -231,6 +254,7 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
                     contribution,
                     tree,
                     aliases,
+                    embeds,
                 });
             }
         }
@@ -258,6 +282,7 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
             Ok((
                 key,
                 ClosureDocument {
+                    embeds: None,
                     address: DocumentAddress::Spec(observed_address.clone()),
                     origin: document_origin(observed_address),
                     tree: document.tree().clone(),
@@ -270,6 +295,7 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
     for update in updates {
         closure.nodes[update.node.0].tree = update.tree;
         closure.nodes[update.node.0].aliases = update.aliases;
+        closure.nodes[update.node.0].embeds = Some(update.embeds);
     }
     for update in simple_updates {
         let ClosureContribution::Simple { document, .. } =
@@ -279,6 +305,7 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
         };
         document.tree = update.tree;
         document.aliases = update.aliases;
+        document.embeds = Some(update.embeds);
     }
     let mut node_ids: HashMap<String, ClosureNodeId> = closure
         .nodes
@@ -311,10 +338,10 @@ fn embed_closure_in_place(closure: &mut ClosureIr) -> Result<(), EmbedPassError>
 }
 
 fn finish_expansion(
-    expanded: Result<String, EmbedError>,
+    expanded: Result<ExpandedBody, EmbedError>,
     missing: Option<String>,
     observed_failure: Option<EmbedError>,
-) -> Result<String, EmbedPassError> {
+) -> Result<ExpandedBody, EmbedPassError> {
     match expanded {
         Ok(expanded) => Ok(expanded),
         Err(error) => {
@@ -360,6 +387,8 @@ fn resolved_document<'a>(
 }
 
 fn strip_resolved_directives(tree: &DocTree) -> String {
+    // This normalized, already-merged view is the root recursion input.
+    // Embed locators name its line indices; merge carries no authored-file map.
     let strip: HashSet<usize> = tree
         .directives()
         .directives

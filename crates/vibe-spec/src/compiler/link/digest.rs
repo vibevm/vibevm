@@ -2,7 +2,7 @@ use sha2::{Digest, Sha256};
 
 use super::*;
 
-const LINK_DIGEST_DOMAIN: &[u8] = b"vibe-spec/link-input/v2";
+const LINK_DIGEST_DOMAIN: &[u8] = b"vibe-spec/link-input/v3";
 
 pub(super) fn digest_input(closure: &ClosureIr, plan: &PlannedLink) -> LinkInputDigest {
     let mut digest = LinkDigest::new();
@@ -143,6 +143,7 @@ fn hash_occurrence(digest: &mut LinkDigest, occurrence: &InputOccurrence) {
             address,
             marker,
             body,
+            embeds,
         } => {
             digest.byte(0);
             digest.usize(*contribution);
@@ -151,18 +152,21 @@ fn hash_occurrence(digest: &mut LinkDigest, occurrence: &InputOccurrence) {
             digest.field(address.to_string().as_bytes());
             digest.field(marker.as_str().as_bytes());
             digest.field(body.as_bytes());
+            digest.field(&embeds.meaning_digest());
         }
         InputOccurrence::Simple {
             contribution,
             occurrence,
             address,
             body,
+            embeds,
         } => {
             digest.byte(1);
             digest.usize(*contribution);
             digest.usize(*occurrence);
             hash_address(digest, address);
             digest.field(body.as_bytes());
+            digest.field(&embeds.meaning_digest());
         }
     }
 }

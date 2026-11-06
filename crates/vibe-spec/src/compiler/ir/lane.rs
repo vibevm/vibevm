@@ -74,6 +74,7 @@ pub(crate) enum LaneNode {
         fence_before: LinkFenceSnapshot,
         fence_after: LinkFenceSnapshot,
         body: String,
+        embeds: crate::embed::occurrences::EmbedTape,
     },
     Simple {
         contribution: usize,
@@ -83,6 +84,7 @@ pub(crate) enum LaneNode {
         fence_before: LinkFenceSnapshot,
         fence_after: LinkFenceSnapshot,
         body: String,
+        embeds: crate::embed::occurrences::EmbedTape,
     },
 }
 

@@ -18,7 +18,7 @@ use crate::compiler::pass::{AnyIr, Pass};
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 fn carrier(name: &str) -> AnyIr {

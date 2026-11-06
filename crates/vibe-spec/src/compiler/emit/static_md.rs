@@ -130,9 +130,22 @@ pub(crate) fn flatten_markdown(chunks: &[LaneChunk]) -> String {
                 output.push('\n');
             }
             LaneChunk::Node(node) => match node.as_ref() {
-                LaneNode::Normal { body, .. } | LaneNode::Simple { body, .. } => {
-                    output.push_str(body)
+                LaneNode::Normal {
+                    body,
+                    embeds,
+                    fence_before,
+                    ..
                 }
+                | LaneNode::Simple {
+                    body,
+                    embeds,
+                    fence_before,
+                    ..
+                } => output.push_str(&crate::embed::occurrences::markdown_body(
+                    body,
+                    Some(embeds),
+                    fence_before.markdown(),
+                )),
             },
             LaneChunk::ForcedNewline { .. } => output.push('\n'),
         }

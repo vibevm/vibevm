@@ -43,7 +43,7 @@ pub(crate) enum EmissionContributionWitness {
 pub(crate) enum PreparedEmissionTarget {
     Markdown,
     Xml {
-        documents: Vec<Option<vibe_specdoc::doc::SpecDoc>>,
+        documents: Vec<Option<vibe_specdoc::AnnotatedXml>>,
     },
     #[cfg(any(test, feature = "test-support"))]
     Custom,

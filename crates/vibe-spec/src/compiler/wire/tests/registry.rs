@@ -13,7 +13,7 @@ fn schema() -> PathBuf {
 }
 
 fn ir_vocabulary(doc: &serde_json::Value) -> &serde_json::Value {
-    &doc["ir"]
+    &doc["ir_v2"]
 }
 
 #[test]

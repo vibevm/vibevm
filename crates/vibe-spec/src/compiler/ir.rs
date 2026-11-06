@@ -307,6 +307,7 @@ pub(crate) struct ClosureDocument {
     pub(crate) origin: String,
     pub(crate) tree: DocTree,
     pub(crate) aliases: BTreeMap<String, SpecAddress>,
+    pub(crate) embeds: Option<crate::embed::occurrences::EmbedTape>,
 }
 
 /// The three authored dependency relations represented by the closure.

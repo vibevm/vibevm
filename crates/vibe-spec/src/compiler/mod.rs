@@ -21,6 +21,7 @@ pub(crate) mod pass;
 pub(crate) mod pass_tier;
 pub(crate) mod pipeline;
 pub(crate) mod qualify;
+pub(crate) mod recipe;
 pub(crate) mod source_snapshot;
 pub(crate) mod trace;
 pub(crate) mod transform;

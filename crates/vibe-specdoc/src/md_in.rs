@@ -35,12 +35,22 @@ use progress_core::parse::{
     take_fact_id, task_box_len,
 };
 
+pub(crate) mod map;
+
 /// Parse one Markdown document into the pivot IR.
 ///
 /// Fails loudly when the source markup itself has errors (progress-core's
 /// issues, verbatim): the pivot refuses to represent a document whose
 /// spelling no consumer can trust.
 pub fn from_markdown(text: &str) -> Result<SpecDoc> {
+    parse(text, false).map(|(document, _)| document)
+}
+
+pub(crate) fn from_markdown_mapped(text: &str) -> Result<(SpecDoc, map::SourceMap)> {
+    parse(text, true)
+}
+
+fn parse(text: &str, capture: bool) -> Result<(SpecDoc, map::SourceMap)> {
     let parsed = progress_core::parse::parse_document("<specdoc>", text);
     if parsed.error_count() > 0 {
         let errs: Vec<String> = parsed
@@ -58,19 +68,23 @@ pub fn from_markdown(text: &str) -> Result<SpecDoc> {
             ),
         ));
     }
-    Adapter::new(text, &parsed).run()
+    let adapter = Adapter::new(text, &parsed, capture);
+    let document = adapter.run()?;
+    Ok((document, adapter.capture.unwrap_or_default().finish()))
 }
 
 struct Adapter<'a> {
     lines: Vec<&'a str>,
     doc: &'a ParsedDoc,
+    capture: Option<map::Capture>,
 }
 
 impl<'a> Adapter<'a> {
-    fn new(text: &'a str, doc: &'a ParsedDoc) -> Self {
+    fn new(text: &'a str, doc: &'a ParsedDoc, capture: bool) -> Self {
         Adapter {
             lines: text.lines().collect(),
             doc,
+            capture: capture.then(map::Capture::default),
         }
     }
 
@@ -88,6 +102,12 @@ impl<'a> Adapter<'a> {
                 // comments, thematic breaks, YAML frontmatter.
                 BlockKind::Comment => continue,
                 BlockKind::Heading => {
+                    if let Some(capture) = &self.capture {
+                        capture.headings.borrow_mut().push(map::HeadingSource {
+                            start: self.line_offset(b.line_start),
+                            end: self.line_offset(b.line_end + 1),
+                        });
+                    }
                     let u = &self.doc.units[unit_idx];
                     unit_idx += 1;
                     if first_heading && u.level == 1 {
@@ -166,6 +186,16 @@ impl<'a> Adapter<'a> {
             // opener is content.
             lines[1..].join("\n")
         };
+        if let Some(capture) = &self.capture {
+            let start = self.line_offset(b.line_start);
+            let content_start = self.line_offset(b.line_start + 1);
+            capture.texts.borrow_mut().push(map::TextSource {
+                start,
+                end: self.line_offset(b.line_end + 1),
+                bytes: (content_start..=content_start + text.len()).collect(),
+                value: text.clone(),
+            });
+        }
         let fact = self
             .doc
             .blocks
@@ -319,6 +349,7 @@ impl<'a> Adapter<'a> {
             let mut row: Vec<Unit> = Vec::new();
             for (cs, ce) in cells {
                 if text[cs..ce].trim().is_empty() {
+                    self.record_plain(b, cs, ce, text[cs..ce].trim());
                     row.push(Unit {
                         fact: None,
                         text: String::new(),
@@ -330,10 +361,13 @@ impl<'a> Adapter<'a> {
                             placed.push(i);
                             row_facts.remove(0);
                         }
-                        None => row.push(Unit {
-                            fact: None,
-                            text: text[cs..ce].trim().to_string(),
-                        }),
+                        None => {
+                            self.record_plain(b, cs, ce, text[cs..ce].trim());
+                            row.push(Unit {
+                                fact: None,
+                                text: text[cs..ce].trim().to_string(),
+                            });
+                        }
                     }
                 }
             }
@@ -362,6 +396,7 @@ impl<'a> Adapter<'a> {
             strip_marker(&effective[after_anchor..], marker),
             f.requirements.as_ref(),
         );
+        self.record_fact(b, f, &effective, bare);
         let fact = Fact {
             id: f.id.clone(),
             requirements: f.requirements.clone(),
@@ -390,6 +425,15 @@ impl<'a> Adapter<'a> {
                 let blen = task_box_len(after);
                 if blen > 0 && !unit.text.is_empty() {
                     unit.text = format!("{}{}", &after[..blen], unit.text);
+                    if let Some(capture) = &self.capture
+                        && let Some(origin) = capture.texts.borrow_mut().last_mut()
+                    {
+                        let start = self.line_offset(f.line) + mlen;
+                        let mut bytes: Vec<_> = (start..start + blen).collect();
+                        bytes.extend_from_slice(&origin.bytes);
+                        origin.bytes = bytes;
+                        origin.value.clone_from(&unit.text);
+                    }
                 }
             }
         }

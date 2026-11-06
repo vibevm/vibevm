@@ -13,11 +13,12 @@ use vibe_extension_registry::{
     ExtensionRegistry, ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider,
     collect_extensions,
 };
-use vibe_wire::generated::native::e1::compile_reply::{
+use vibe_wire::generated::native::e2::compile_reply::{
     CompileReply, CompileReplyFail, CompileReplyOk,
 };
 use vibe_wire::generated::shared::{
-    AbsorptionState, AbsorptionStateUnplanned, Ir, QualificationState, QualificationStatePending,
+    AbsorptionState, AbsorptionStateUnplanned, IrV2 as Ir, QualificationState,
+    QualificationStatePending,
 };
 
 use super::execution::PassTierExecutionError;
@@ -225,7 +226,7 @@ impl CompilerNativeInvoker for Invoker {
         if matches!(&self.mode, ReplyMode::Fail(failed) if failed == &key) {
             return Ok(
                 serde_json::to_vec(&CompileReply::Fail(Box::new(CompileReplyFail {
-                    envelope: 1,
+                    envelope: 2,
                     message: Some("deliberate".to_owned()),
                 })))
                 .unwrap(),
@@ -252,13 +253,13 @@ impl CompilerNativeInvoker for Invoker {
             closure.closure.renames.clear();
         }
         let reply = CompileReply::Ok(Box::new(CompileReplyOk {
-            envelope: 1,
+            envelope: 2,
             payload,
             message: None,
         }));
         let mut raw = serde_json::to_string(&reply).unwrap();
         if matches!(self.mode, ReplyMode::DuplicateRoot) {
-            raw = raw.replacen("\"envelope\":1", "\"envelope\":1,\"envelope\":1", 1);
+            raw = raw.replacen("\"envelope\":2", "\"envelope\":2,\"envelope\":2", 1);
         }
         Ok(raw.into_bytes())
     }

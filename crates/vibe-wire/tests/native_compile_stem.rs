@@ -1,7 +1,10 @@
+//! Optional frontend stem contract: `schemas/native/e2/compile_request.jtd.json`.
+#![cfg(test)]
+
 use std::path::PathBuf;
 
 use vibe_wire::behaviour::native_compile::{NativeCompileError, validate_request};
-use vibe_wire::generated::native::e1::compile_request::CompileRequest;
+use vibe_wire::generated::native::e2::compile_request::CompileRequest;
 
 fn root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..")
@@ -12,14 +15,14 @@ fn json(relative: &str) -> serde_json::Value {
 }
 
 fn request(point: &str) -> CompileRequest {
-    let mut value = json("formats/corpora/native/e1/compile_request.valid.json");
+    let mut value = json("formats/corpora/native/e2/compile_request.valid.json");
     value["point"] = point.into();
     serde_json::from_value(value).unwrap()
 }
 
 #[test]
 fn schema_generated_type_and_corpus_preserve_the_optional_stem() {
-    let schema = json("schemas/native/e1/compile_request.jtd.json");
+    let schema = json("schemas/native/e2/compile_request.jtd.json");
     assert_eq!(
         schema["optionalProperties"]["frontend_physical_stem"]["type"],
         "string"

@@ -4,6 +4,9 @@ use base64::Engine as _;
 use quick_xml::Reader;
 use quick_xml::events::Event;
 use sha2::{Digest, Sha256};
+use std::sync::atomic::{AtomicUsize, Ordering};
+
+static RAW_INVOCATIONS: AtomicUsize = AtomicUsize::new(0);
 use vibe_ext::{
     CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip, CompileRequest, Ir, Manifest,
     ManifestExtension,
@@ -26,8 +29,9 @@ pub fn fixture_marker() -> &'static str {
 ///
 /// ```
 /// let manifest = vibe_native_loader_compiler_fixture::fixture_manifest();
-/// assert!(manifest.extensions.iter().all(|extension| {
-///     extension.point.starts_with("compile:") && extension.ir_schema == Some(1)
+/// assert!(manifest.extensions.iter().all(|extension| extension.point.starts_with("compile:")));
+/// assert!(manifest.extensions.iter().any(|extension| {
+///     extension.id == "compiler-schema-one" && extension.ir_schema == Some(1)
 /// }));
 /// ```
 pub fn fixture_manifest() -> Manifest {
@@ -40,12 +44,15 @@ pub fn fixture_manifest() -> Manifest {
             ("compiler-after", "compile:pass"),
             ("compiler-manager-source", "compile:source"),
             ("compiler-minify", "compile:emitted"),
+            ("compiler-counter", "compile:pass"),
+            ("compiler-schema-one", "compile:pass"),
         ]
         .into_iter()
         .map(|(id, point)| ManifestExtension {
             id: id.to_owned(),
             point: point.to_owned(),
-            ir_schema: Some(1),
+            // Controlled old declaration in a CURRENT fixture, not an old binary.
+            ir_schema: Some(if id == "compiler-schema-one" { 1 } else { 2 }),
         })
         .collect(),
     }
@@ -60,11 +67,11 @@ pub fn fixture_manifest() -> Manifest {
 /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
 /// let request: CompileRequest = vibe_ext::__serde_json::from_value(
 ///     vibe_ext::__serde_json::json!({
-///         "envelope": 1,
+///         "envelope": 2,
 ///         "execution": {"id": "compiler-skip", "package": "org.example/compiler", "config": {}},
 ///         "io": {"scratch": ".vibe/compile/run"},
 ///         "payload": {
-///             "shape": "source-document", "ir_schema": 1, "level": "source",
+///             "shape": "source-document", "ir_schema": 2, "level": "source",
 ///             "cardinality": "document",
 ///             "doc": {
 ///                 "address": {"kind": "static-entry", "origin": "fixture", "path": "fixture.md"},
@@ -87,12 +94,20 @@ pub fn handle(request: CompileRequest) -> CompileReply {
         return frontend_reply(request);
     }
     match request.execution.id.as_str() {
+        "compiler-counter" => CompileReply::Ok(Box::new(CompileReplyOk {
+            envelope: 2,
+            payload: request.payload,
+            message: Some(format!(
+                "raw invocations: {}",
+                RAW_INVOCATIONS.load(Ordering::SeqCst)
+            )),
+        })),
         "compiler-skip" => CompileReply::Skip(Box::new(CompileReplySkip {
-            envelope: 1,
+            envelope: 2,
             message: Some("deterministic compiler skip".to_owned()),
         })),
         "compiler-fail" => CompileReply::Fail(Box::new(CompileReplyFail {
-            envelope: 1,
+            envelope: 2,
             message: Some("deterministic compiler failure".to_owned()),
         })),
         "compiler-panic" => panic!("deterministic compiler fixture panic"),
@@ -103,19 +118,19 @@ pub fn handle(request: CompileRequest) -> CompileReply {
                     .text
                     .push_str("\nR5.5 real native source marker\n");
                 CompileReply::Ok(Box::new(CompileReplyOk {
-                    envelope: 1,
+                    envelope: 2,
                     payload: Ir::SourceDocument(payload),
                     message: Some("handled compiler-manager-source".to_owned()),
                 }))
             }
             _ => CompileReply::Fail(Box::new(CompileReplyFail {
-                envelope: 1,
+                envelope: 2,
                 message: Some("compiler-manager-source requires source IR".to_owned()),
             })),
         },
         "compiler-minify" | "native" => minify_reply(request),
         _ => CompileReply::Ok(Box::new(CompileReplyOk {
-            envelope: 1,
+            envelope: 2,
             payload: request.payload,
             message: Some(format!("handled {}", request.execution.id)),
         })),
@@ -147,7 +162,7 @@ fn frontend_reply(request: CompileRequest) -> CompileReply {
     };
     let mut payload = vibe_ext::__serde_json::json!({
         "shape": "document-document",
-        "ir_schema": 1,
+        "ir_schema": 2,
         "level": "document",
         "cardinality": "document",
         "doc": {
@@ -175,7 +190,7 @@ fn frontend_reply(request: CompileRequest) -> CompileReply {
         Err(_) => return failed("native frontend could not build document IR"),
     };
     CompileReply::Ok(Box::new(CompileReplyOk {
-        envelope: 1,
+        envelope: 2,
         payload,
         message: Some("handled compiler-ok frontend".to_owned()),
     }))
@@ -197,7 +212,7 @@ fn minify_reply(request: CompileRequest) -> CompileReply {
         Ok(Some(minified)) => minified,
         Ok(None) => {
             return CompileReply::Skip(Box::new(CompileReplySkip {
-                envelope: 1,
+                envelope: 2,
                 message: Some("native XML minify selects only static-xml".to_owned()),
             }));
         }
@@ -206,7 +221,7 @@ fn minify_reply(request: CompileRequest) -> CompileReply {
     payload.emitted.provenance.bytes_digest = emitted_bytes_digest(minified.as_bytes());
     payload.emitted.bytes_b64 = base64::engine::general_purpose::STANDARD.encode(minified);
     CompileReply::Ok(Box::new(CompileReplyOk {
-        envelope: 1,
+        envelope: 2,
         payload: Ir::EmittedArtifact(payload),
         message: Some("native XML minify complete".to_owned()),
     }))
@@ -245,9 +260,38 @@ pub fn minify_for_test(backend: &str, tape: &str) -> Result<Option<String>, Stri
     minify_for_backend(backend, tape)
 }
 
+/// Synthetic structural carrier for real loader/minifier transport tests.
+/// It deliberately does not attest a compiler-produced lane or body origin.
+///
+/// ```
+/// use vibe_ext::Ir;
+/// let Ir::EmittedArtifact(value) =
+///     vibe_native_loader_compiler_fixture::emitted_payload_for_test("<spec/>")?
+/// else { panic!("fixture carrier"); };
+/// assert_eq!(value.ir_schema, 2);
+/// # Ok::<(), vibe_ext::__serde_json::Error>(())
+/// ```
+#[doc(hidden)]
+pub fn emitted_payload_for_test(text: &str) -> Result<Ir, vibe_ext::__serde_json::Error> {
+    vibe_ext::__serde_json::from_value(vibe_ext::__serde_json::json!({
+        "shape": "emitted-artifact", "ir_schema": 2, "level": "emitted", "cardinality": "artifact",
+        "emitted": {
+            "provenance": {
+                "context": { "artifact": "fixture-xml", "target": "static-xml",
+                    "frame": { "kind": "static-lane", "generated_path": "boot/STATIC.xml", "source_root": "vibevm/vibespecs" },
+                    "mode": "qualify-per-node" },
+                "backend": "static-xml", "producer": "emit:static-xml",
+                "source_lane_digest": "0".repeat(64), "renames": [], "contributions": [], "emitted_transforms": [],
+                "bytes_digest": emitted_bytes_digest(text.as_bytes())
+            },
+            "bytes_b64": base64::engine::general_purpose::STANDARD.encode(text)
+        }
+    }))
+}
+
 fn failed(message: &str) -> CompileReply {
     CompileReply::Fail(Box::new(CompileReplyFail {
-        envelope: 1,
+        envelope: 2,
         message: Some(message.to_owned()),
     }))
 }
@@ -259,49 +303,10 @@ struct ElementShape {
 }
 
 fn minify_tape(tape: &str) -> Result<String, String> {
-    let mut rendered = String::with_capacity(tape.len());
-    let mut cursor = 0;
-    while let Some(open) = next_line_comment(tape, cursor) {
-        push_minified_gap(&mut rendered, &tape[cursor..open])?;
-        let close = tape[open..]
-            .find(" -->")
-            .map(|offset| open + offset + " -->".len())
-            .ok_or_else(|| format!("unterminated engine comment at byte {open}"))?;
-        rendered.push_str(&tape[open..close]);
-        cursor = close;
-    }
-    push_minified_gap(&mut rendered, &tape[cursor..])?;
-    Ok(rendered)
-}
-
-fn next_line_comment(tape: &str, from: usize) -> Option<usize> {
-    let mut search = from;
-    while let Some(relative) = tape[search..].find("<!-- ") {
-        let open = search + relative;
-        let line_start = open == 0 || tape.as_bytes().get(open - 1) == Some(&b'\n');
-        let generated = tape[open..].starts_with("<!-- vibe:c1 ")
-            || tape[open..].starts_with("<!-- vibe:transforms ")
-            || tape[open..].starts_with("<!-- vibe:transforms-pending ");
-        if line_start && generated {
-            return Some(open);
-        }
-        search = open + "<!-- ".len();
-    }
-    None
-}
-
-fn push_minified_gap(rendered: &mut String, gap: &str) -> Result<(), String> {
-    let leading = gap.len() - gap.trim_start_matches(is_xml_whitespace).len();
-    if leading == gap.len() {
-        rendered.push_str(gap);
-        return Ok(());
-    }
-    let trailing = gap.len() - gap.trim_end_matches(is_xml_whitespace).len();
-    let core = &gap[leading..gap.len() - trailing];
-    rendered.push_str(&gap[..leading]);
-    rendered.push_str(&minify_document(core)?);
-    rendered.push_str(&gap[gap.len() - trailing..]);
-    Ok(())
+    // The same token owner can read the complete multi-document artifact.
+    // Outside-element framing remains bytes; only eligible interior whitespace
+    // is removed. A paragraph comment or CDATA sample cannot split a document.
+    minify_document(tape)
 }
 
 fn minify_document(document: &str) -> Result<String, String> {
@@ -378,6 +383,31 @@ mod tests {
     use super::*;
 
     #[test]
+    fn line_leading_generated_embeds_and_cdata_are_not_outer_tape_frames() {
+        let paragraph = "<p>alpha\n<!-- vibe:c1 embed: spec://org.probe/p/payload#x -->\nβ\n<!-- vibe:c1 /embed: spec://org.probe/p/payload#x -->\nomega</p>";
+        let literal =
+            "<fence><![CDATA[\n<!-- vibe:c1 vibe:static literal — docs/example -->\n]]></fence>";
+        let tape = format!(
+            "<!-- vibe:c1 frame-one -->\n<?xml version=\"1.0\"?><spec xmlns=\"https://vibevm.org/spec/1\">\n  {paragraph}\n  {literal}\n</spec>\n<!-- vibe:c1 frame-two -->\n<?xml version=\"1.0\"?><spec xmlns=\"https://vibevm.org/spec/1\">\n  <p>second</p>\n</spec>\n"
+        );
+        let output = minify_tape(&tape).expect(
+            "complete XML contributions must not be split at paragraph or CDATA marker lookalikes",
+        );
+        assert!(
+            output.contains(paragraph),
+            "paragraph text/comments remain exact: {output}"
+        );
+        assert!(output.contains(literal), "CDATA remains literal: {output}");
+        assert_eq!(output.matches("<!-- vibe:c1 frame-one -->").count(), 1);
+        assert_eq!(output.matches("<!-- vibe:c1 frame-two -->").count(), 1);
+        assert_eq!(output.matches("<?xml version=\"1.0\"?>").count(), 2);
+        assert!(
+            !output.contains("\n  <p>second"),
+            "ordinary element indentation is still minified"
+        );
+    }
+
+    #[test]
     fn independent_minifier_preserves_mixed_content_cdata_and_comments() {
         let tape = "<!-- vibe:c1 frame -->\n<root>\n  <pure>\n    <a/>\n<!-- keep -->\n    <b/>\n  </pure>\n  <mixed>left <b/> right</mixed>\n  <data><![CDATA[ raw <xml> ]]><b/></data>\n</root>\n";
         let output = minify_tape(tape).unwrap();
@@ -389,5 +419,31 @@ mod tests {
     }
 }
 
+// Fixture-only dispatch instrumentation. The incumbent ABI emitter still owns
+// ABI1 pointers, panic containment and exact-once frees. Generated readers and
+// existing behavior admission remain the protocol owners, just as in the SDK
+// compiler macro; the counter is BEFORE deserialization/handler dispatch.
 #[cfg(feature = "abi")]
-vibe_ext::vibe_compile_extension!(manifest = fixture_manifest(), handler = handle);
+fn __vibe_ext_manifest_value() -> Manifest {
+    fixture_manifest()
+}
+
+#[cfg(feature = "abi")]
+fn __vibe_ext_dispatch(bytes: &[u8]) -> Option<Vec<u8>> {
+    RAW_INVOCATIONS.fetch_add(1, Ordering::SeqCst);
+    let request: CompileRequest = vibe_ext::__serde_json::from_slice(bytes).ok()?;
+    let shape = vibe_ext::__native_compile::validate_request(&request).ok()?;
+    let pass_transition = request.point == "compile:pass";
+    let reply = handle(request);
+    if pass_transition {
+        vibe_ext::__native_compile::validate_reply(&reply).ok()?;
+    } else {
+        vibe_ext::__native_compile::validate_reply_for_shape(shape, &reply).ok()?;
+    }
+    vibe_ext::__serde_json::to_vec(&reply).ok()
+}
+
+#[cfg(feature = "abi")]
+vibe_ext::__vibe_ext_emit_abi!(
+    panic_message = "compiler fixture requires unwind panic containment"
+);

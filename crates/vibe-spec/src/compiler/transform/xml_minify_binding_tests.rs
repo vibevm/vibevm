@@ -107,7 +107,7 @@ fn an_indented_in_document_comment_is_content_and_never_splits_its_document() {
 /// moves this assertion first.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#TRANSFORM-PLAN-IDENTITY")]
-fn the_production_catalog_is_exactly_xml_minify_at_epoch_one_on_the_emitted_stage() {
+fn the_production_catalog_is_exactly_xml_minify_at_epoch_two_on_the_emitted_stage() {
     let registry = TransformRegistry::builtins();
     let catalog = registry.catalog();
     assert_eq!(
@@ -115,11 +115,11 @@ fn the_production_catalog_is_exactly_xml_minify_at_epoch_one_on_the_emitted_stag
             .iter()
             .map(|(name, epoch, stage)| ((*name).to_owned(), *epoch, (*stage).clone()))
             .collect::<Vec<_>>(),
-        vec![("xml-minify".to_owned(), 1, TransformStage::Emitted)],
+        vec![("xml-minify".to_owned(), 2, TransformStage::Emitted)],
         "the production catalog ships exactly the behaviors that exist"
     );
     assert_eq!(XML_MINIFY_NAME, "xml-minify");
-    assert_eq!(XML_MINIFY_EPOCH, 1);
+    assert_eq!(XML_MINIFY_EPOCH, 2);
 }
 
 /// The kernel is a bytes→bytes transform, so EMITTED is the one stage it can

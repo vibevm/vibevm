@@ -1035,6 +1035,63 @@ pub struct ClosureContributionSimple {
     pub meta: ContributionMeta,
 }
 
+/// One top-level contribution after the batch closes into a graph
+/// (`ClosureContribution`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ClosureContributionV2 {
+    #[serde(rename = "elided")]
+    Elided(Box<ClosureContributionV2Elided>),
+
+    #[serde(rename = "hoisted")]
+    Hoisted(Box<ClosureContributionV2Hoisted>),
+
+    #[serde(rename = "normal")]
+    Normal(Box<ClosureContributionV2Normal>),
+
+    #[serde(rename = "simple")]
+    Simple(Box<ClosureContributionV2Simple>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ClosureContributionV2Elided {
+    pub meta: ContributionMeta,
+}
+
+/// A whole-document hoist; the target is an unversioned whole document.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ClosureContributionV2Hoisted {
+    pub meta: ContributionMeta,
+
+    pub target: SpecAddress,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ClosureContributionV2Normal {
+    /// Exact emission sequence; a node id may repeat or be shared by several
+    /// roots.
+    pub emission_order: Vec<ClosureOccurrence>,
+
+    pub meta: ContributionMeta,
+
+    /// Root node index into `closure.nodes`.
+    pub seed: u32,
+
+    pub seed_address: SpecAddress,
+}
+
+/// A simple contribution's whole lowered document, carried outside the graph.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ClosureContributionV2Simple {
+    pub document: ClosureDocumentV2,
+
+    pub meta: ContributionMeta,
+}
+
 /// One closed document payload (`ClosureDocument`): a graph node while
 /// addressed by an id, a simple contribution's lowered payload outside the
 /// graph.
@@ -1045,6 +1102,25 @@ pub struct ClosureDocument {
 
     /// This document's declared `#use … as` bindings.
     pub aliases: BTreeMap<String, SpecAddress>,
+
+    pub origin: String,
+
+    pub tree: DocTree,
+}
+
+/// One closed document payload (`ClosureDocument`): a graph node while
+/// addressed by an id, a simple contribution's lowered payload outside the
+/// graph.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ClosureDocumentV2 {
+    pub address: DocumentAddress,
+
+    /// This document's declared `#use … as` bindings.
+    pub aliases: BTreeMap<String, SpecAddress>,
+
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub embeds: Option<EmbedTape>,
 
     pub origin: String,
 
@@ -1097,6 +1173,39 @@ pub struct ClosureIr {
 
     /// The closure arena; edge/contribution ids index it.
     pub nodes: Vec<ClosureDocument>,
+
+    pub qualification: QualificationState,
+
+    /// Document order per origin.
+    pub renames: Vec<OriginRename>,
+
+    /// Present until the embed expansion has consumed it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pending_embeds: Option<EmbedResolutionSnapshot>,
+
+    /// Present until the source fold has consumed it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pending_sources: Option<SourceResolutionSnapshot>,
+}
+
+/// The ordered multi-seed graph for one final artifact (`ClosureIr`). Nothing
+/// lives in a manager-side table: typestate and snapshots ride the value.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ClosureIrV2 {
+    pub absorption: AbsorptionState,
+
+    pub context: ArtifactContext,
+
+    /// Effective-boot order.
+    pub contributions: Vec<ClosureContributionV2>,
+
+    pub edges: Vec<ClosureEdge>,
+
+    pub link: LinkStateV2,
+
+    /// The closure arena; edge/contribution ids index it.
+    pub nodes: Vec<ClosureDocumentV2>,
 
     pub qualification: QualificationState,
 
@@ -2650,6 +2759,79 @@ pub struct Duration {
     pub saturated: bool,
 }
 
+/// Ordered recursion-minted occurrence. Path identifies directive recursion
+/// in the effective input view; source/directive_line are immutable pre-splice
+/// locators, not raw authored-file coordinates or emitted offsets.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EmbedOccurrence {
+    /// Zero-based line in the effective recursion input before splicing. A
+    /// directive inherited through source merge uses the normalized merged-root
+    /// view, not the original implementation file line.
+    pub directive_line: u32,
+
+    pub end: u32,
+
+    pub intrinsic_empty: bool,
+
+    pub owner: EmbedRegion,
+
+    pub path: Vec<u32>,
+
+    /// Effective recursion-input view identity: a merged normal root after
+    /// resolved directives are removed, or the resolved nested target view. Not
+    /// a raw editable source-file locator.
+    pub source: String,
+
+    pub start: u32,
+
+    pub suppressed: bool,
+
+    pub target: SpecAddress,
+}
+
+/// Containing pre-Embed effective-view coverage region, with independently
+/// mapped output body line-gap bounds. Source merge does not preserve raw
+/// authored-file coordinates.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum EmbedRegion {
+    #[serde(rename = "preamble")]
+    Preamble(Box<EmbedRegionPreamble>),
+
+    #[serde(rename = "unanchored")]
+    Unanchored(Box<EmbedRegionUnanchored>),
+
+    #[serde(rename = "unit")]
+    Unit(Box<EmbedRegionUnit>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EmbedRegionPreamble {
+    pub end: u32,
+
+    pub start: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EmbedRegionUnanchored {
+    pub end: u32,
+
+    pub start: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EmbedRegionUnit {
+    pub anchor: String,
+
+    pub end: u32,
+
+    pub start: u32,
+}
+
 /// Artifact-wide immutable observation of every embed input
 /// (`EmbedResolutionSnapshot`).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -2660,6 +2842,16 @@ pub struct EmbedResolutionSnapshot {
     pub documents: BTreeMap<String, DocumentObservation>,
 
     pub explicit_use_keys: Vec<String>,
+}
+
+/// Generated occurrences bound to the exact associated body bytes; an empty
+/// tape differs from unavailable historical provenance.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct EmbedTape {
+    pub body_digest: String,
+
+    pub occurrences: Vec<EmbedOccurrence>,
 }
 
 /// Immutable upstream provenance declared by a reference-backed bridge package.
@@ -3160,6 +3352,120 @@ pub struct IrSourceDocument {
     pub level: LevelSource,
 }
 
+/// Epoch-2 compiler IR. Typed generated embed occurrences and checked body
+/// association; epoch 1 remains a historical inspection format.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "shape")]
+pub enum IrV2 {
+    #[serde(rename = "closure-artifact")]
+    ClosureArtifact(Box<IrV2ClosureArtifact>),
+
+    #[serde(rename = "document-document")]
+    DocumentDocument(Box<IrV2DocumentDocument>),
+
+    #[serde(rename = "documents-artifact")]
+    DocumentsArtifact(Box<IrV2DocumentsArtifact>),
+
+    #[serde(rename = "emitted-artifact")]
+    EmittedArtifact(Box<IrV2EmittedArtifact>),
+
+    #[serde(rename = "lane-artifact")]
+    LaneArtifact(Box<IrV2LaneArtifact>),
+
+    #[serde(rename = "source-document")]
+    SourceDocument(Box<IrV2SourceDocument>),
+}
+
+/// Level closure, cardinality artifact: the ordered multi-seed graph for
+/// one final artifact (`ClosureIr`), including qualification/absorption/link
+/// typestate and the pending source/embed snapshots.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct IrV2ClosureArtifact {
+    pub cardinality: CardinalityArtifact,
+
+    pub closure: ClosureIrV2,
+
+    pub ir_schema: u32,
+
+    pub level: LevelClosure,
+}
+
+/// Level document, cardinality document: one document's parsed tree beside its
+/// source (`DocumentIr`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct IrV2DocumentDocument {
+    pub cardinality: CardinalityDocument,
+
+    pub doc: DocumentIr,
+
+    pub ir_schema: u32,
+
+    pub level: LevelDocument,
+}
+
+/// Level document, cardinality artifact: the parse worklist after every per-
+/// document pass (`Documents`). Not a sixth level — a real carrier with
+/// artifact cardinality.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct IrV2DocumentsArtifact {
+    pub cardinality: CardinalityArtifact,
+
+    /// Deterministic worklist order; the batch may be empty.
+    pub documents: Vec<DocumentIr>,
+
+    pub ir_schema: u32,
+
+    pub level: LevelDocument,
+}
+
+/// Level emitted, cardinality artifact: final artifact bytes plus manager-owned
+/// immutable provenance (`EmittedIr`). Bytes are canonical standard base64
+/// with padding.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct IrV2EmittedArtifact {
+    pub cardinality: CardinalityArtifact,
+
+    pub emitted: EmittedArtifact,
+
+    pub ir_schema: u32,
+
+    pub level: LevelEmitted,
+}
+
+/// Level lane, cardinality artifact: one complete artifact after linking and
+/// before backend serialisation (`LaneIr`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct IrV2LaneArtifact {
+    pub cardinality: CardinalityArtifact,
+
+    pub ir_schema: u32,
+
+    pub lane: LaneIrV2,
+
+    pub level: LevelLane,
+}
+
+/// Level source, cardinality document: one document's raw text plus its typed
+/// address and frontend format (`SourceIr`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct IrV2SourceDocument {
+    pub cardinality: CardinalityDocument,
+
+    pub doc: SourceDoc,
+
+    /// IR wire schema epoch; 1 in epoch 1. The manager gates a plugin's
+    /// declared schema before any invoke.
+    pub ir_schema: u32,
+
+    pub level: LevelSource,
+}
+
 /// Backend-neutral framing and body chunks for one contribution (`LaneChunk`);
 /// concrete comment or newline bytes stay the emit backend's responsibility.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -3205,6 +3511,58 @@ pub struct LaneChunkNormalClose {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LaneChunkNormalOpen {
+    pub contribution: u32,
+
+    pub marker: String,
+
+    pub occurrence: u32,
+}
+
+/// Backend-neutral framing and body chunks for one contribution (`LaneChunk`);
+/// concrete comment or newline bytes stay the emit backend's responsibility.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum LaneChunkV2 {
+    #[serde(rename = "forced-newline")]
+    ForcedNewline(Box<LaneChunkV2ForcedNewline>),
+
+    #[serde(rename = "node")]
+    Node(Box<LaneChunkV2Node>),
+
+    #[serde(rename = "normal-close")]
+    NormalClose(Box<LaneChunkV2NormalClose>),
+
+    #[serde(rename = "normal-open")]
+    NormalOpen(Box<LaneChunkV2NormalOpen>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneChunkV2ForcedNewline {
+    pub contribution: u32,
+
+    pub occurrence: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneChunkV2Node {
+    pub node: LaneNodeV2,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneChunkV2NormalClose {
+    pub contribution: u32,
+
+    pub marker: String,
+
+    pub occurrence: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneChunkV2NormalOpen {
     pub contribution: u32,
 
     pub marker: String,
@@ -3266,6 +3624,60 @@ pub struct LaneContributionSimple {
     pub meta: ContributionMeta,
 }
 
+/// One top-level contribution in exact effective-boot order, assembled
+/// (`LaneContribution`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum LaneContributionV2 {
+    #[serde(rename = "elided")]
+    Elided(Box<LaneContributionV2Elided>),
+
+    #[serde(rename = "hoisted")]
+    Hoisted(Box<LaneContributionV2Hoisted>),
+
+    #[serde(rename = "normal")]
+    Normal(Box<LaneContributionV2Normal>),
+
+    #[serde(rename = "simple")]
+    Simple(Box<LaneContributionV2Simple>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneContributionV2Elided {
+    pub meta: ContributionMeta,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneContributionV2Hoisted {
+    pub meta: ContributionMeta,
+
+    pub target: SpecAddress,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneContributionV2Normal {
+    pub chunks: Vec<LaneChunkV2>,
+
+    pub meta: ContributionMeta,
+
+    pub seed: u32,
+
+    pub seed_address: SpecAddress,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneContributionV2Simple {
+    pub address: DocumentAddress,
+
+    pub chunks: Vec<LaneChunkV2>,
+
+    pub meta: ContributionMeta,
+}
+
 /// Semantic frame data shared by every concrete lane backend (`LaneFrame`).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -3288,6 +3700,24 @@ pub struct LaneIr {
     pub context: ArtifactContext,
 
     pub contributions: Vec<LaneContribution>,
+
+    pub frame: LaneFrame,
+
+    /// SHA-256 of the link input, 64 lowercase hex chars; validated at
+    /// conversion.
+    pub source_link_digest: String,
+
+    pub source_node_count: u32,
+}
+
+/// One complete artifact after linking and before backend serialisation
+/// (`LaneIr`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneIrV2 {
+    pub context: ArtifactContext,
+
+    pub contributions: Vec<LaneContributionV2>,
 
     pub frame: LaneFrame,
 
@@ -3340,6 +3770,62 @@ pub struct LaneNodeSimple {
     pub body: String,
 
     pub contribution: u32,
+
+    pub fence_after: FenceSnapshot,
+
+    pub fence_before: FenceSnapshot,
+
+    pub occurrence: u32,
+
+    pub origin: String,
+}
+
+/// One exact linked occurrence (`LaneNode`); marker policy is closed by type.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum LaneNodeV2 {
+    #[serde(rename = "normal")]
+    Normal(Box<LaneNodeV2Normal>),
+
+    #[serde(rename = "simple")]
+    Simple(Box<LaneNodeV2Simple>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneNodeV2Normal {
+    pub body: String,
+
+    pub contribution: u32,
+
+    pub embeds: EmbedTape,
+
+    pub fence_after: FenceSnapshot,
+
+    pub fence_before: FenceSnapshot,
+
+    pub marker: String,
+
+    /// Index into the source closure's node arena.
+    pub node: u32,
+
+    pub occurrence: u32,
+
+    pub origin: String,
+
+    pub requested_address: SpecAddress,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneNodeV2Simple {
+    pub address: DocumentAddress,
+
+    pub body: String,
+
+    pub contribution: u32,
+
+    pub embeds: EmbedTape,
 
     pub fence_after: FenceSnapshot,
 
@@ -3489,6 +3975,65 @@ pub struct LinkOccurrenceSimple {
     pub trailing_newline_required: bool,
 }
 
+/// One resolved occurrence (`LinkOccurrence`): semantics only, never backend
+/// marker bytes.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum LinkOccurrenceV2 {
+    #[serde(rename = "normal")]
+    Normal(Box<LinkOccurrenceV2Normal>),
+
+    #[serde(rename = "simple")]
+    Simple(Box<LinkOccurrenceV2Simple>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LinkOccurrenceV2Normal {
+    pub address: SpecAddress,
+
+    pub body: String,
+
+    /// Index of the owning contribution.
+    pub contribution: u32,
+
+    pub embeds: EmbedTape,
+
+    pub fence_after: FenceSnapshot,
+
+    pub fence_before: FenceSnapshot,
+
+    /// Typed reversible-marker key (`LinkMarkerKey`).
+    pub marker: String,
+
+    pub node: u32,
+
+    /// Occurrence index within the contribution.
+    pub occurrence: u32,
+
+    pub trailing_newline_required: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LinkOccurrenceV2Simple {
+    pub address: DocumentAddress,
+
+    pub body: String,
+
+    pub contribution: u32,
+
+    pub embeds: EmbedTape,
+
+    pub fence_after: FenceSnapshot,
+
+    pub fence_before: FenceSnapshot,
+
+    pub occurrence: u32,
+
+    pub trailing_newline_required: bool,
+}
+
 /// Canonical result of linking one whole artifact (`LinkResult`).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -3502,6 +4047,21 @@ pub struct LinkResult {
     pub mode: CompileMode,
 
     pub occurrences: Vec<LinkOccurrence>,
+}
+
+/// Canonical result of linking one whole artifact (`LinkResult`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LinkResultV2 {
+    pub contributions: Vec<LinkContributionWitness>,
+
+    /// SHA-256 of the semantic input, 64 lowercase hex chars; validated at
+    /// conversion.
+    pub input_digest: String,
+
+    pub mode: CompileMode,
+
+    pub occurrences: Vec<LinkOccurrenceV2>,
 }
 
 /// Runtime typestate of the link transform (`LinkState`).
@@ -3524,6 +4084,27 @@ pub struct LinkStateLinked {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LinkStateUnlinked {}
+
+/// Runtime typestate of the link transform (`LinkState`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "state")]
+pub enum LinkStateV2 {
+    #[serde(rename = "linked")]
+    Linked(Box<LinkStateV2Linked>),
+
+    #[serde(rename = "unlinked")]
+    Unlinked(Box<LinkStateV2Unlinked>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LinkStateV2Linked {
+    pub result: LinkResultV2,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LinkStateV2Unlinked {}
 
 /// The card's images as paths inside the package tree (PROP-057 §7). Never
 /// URLs: the local reader serves a proprietary package's images exactly as

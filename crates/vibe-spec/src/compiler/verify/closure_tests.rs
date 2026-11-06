@@ -21,6 +21,7 @@ pub(super) fn address(raw: &str) -> SpecAddress {
 pub(super) fn node(raw: &str, text: &str) -> ClosureDocument {
     let spec = address(raw);
     ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec.clone()),
         origin: document_origin(&spec),
         tree: DocTree::parse(text),

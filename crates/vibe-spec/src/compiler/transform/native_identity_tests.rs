@@ -46,7 +46,7 @@ fn longhand() -> [u8; 32] {
     field(&mut hasher, b"vibe-transform-implementation-v1\0epoch=1\0");
     hasher.update([1]);
     hasher.update(1_u32.to_le_bytes());
-    hasher.update(1_u32.to_le_bytes());
+    hasher.update(2_u32.to_le_bytes());
     hasher.update([1]);
     field(&mut hasher, b"crates/native");
     hasher.update([1]);
@@ -71,9 +71,8 @@ fn native_digest_matches_the_longhand_epoch_one_frame() {
     assert_eq!(
         actual,
         [
-            0x7b, 0x37, 0xb4, 0xa7, 0x58, 0x32, 0x4f, 0xd3, 0x51, 0xec, 0x8b, 0x09, 0x39, 0xb4,
-            0xe2, 0x8b, 0x73, 0x0f, 0xe9, 0x3c, 0xc7, 0x76, 0xf4, 0x59, 0xec, 0x60, 0xd7, 0xb8,
-            0xd1, 0x99, 0xf2, 0xd9,
+            200, 248, 124, 34, 40, 80, 230, 127, 129, 34, 51, 141, 151, 106, 43, 112, 244, 180, 52,
+            78, 86, 175, 143, 113, 15, 157, 218, 186, 13, 86, 248, 195,
         ]
     );
 }

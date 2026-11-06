@@ -2,7 +2,7 @@ use sha2::{Digest, Sha256};
 use vibe_spec::{
     ArtifactInput, ArtifactPlan, ArtifactTarget, SectionSource, SpecAddress, TransformPlan,
 };
-use vibe_wire::generated::native::e1::compile_reply::CompileReply;
+use vibe_wire::generated::native::e2::compile_reply::CompileReply;
 
 use super::*;
 

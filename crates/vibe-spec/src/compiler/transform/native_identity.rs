@@ -18,7 +18,7 @@ use super::plan_digest::IMPLEMENTATION_DIGEST_DOMAIN;
 
 const TAG_IMPLEMENTATION_NATIVE: u8 = 1;
 const NATIVE_ABI_EPOCH: u32 = 1;
-const COMPILER_IR_SCHEMA: u32 = 1;
+const COMPILER_IR_SCHEMA: u32 = 2;
 
 /// The opaque, comparable identity of one authored compiler-native handler.
 ///

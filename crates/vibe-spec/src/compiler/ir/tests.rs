@@ -15,6 +15,7 @@ fn meta(origin: &str) -> ContributionMeta {
 
 fn node(raw: &str, origin: &str, body: &str) -> ClosureDocument {
     ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(raw)),
         origin: origin.to_string(),
         tree: DocTree::parse(body),
@@ -152,6 +153,7 @@ fn one_graph_can_preserve_shared_nodes_and_each_roots_emission_order() {
     let alpha = ClosureNodeId(1);
     let omega = ClosureNodeId(2);
     let simple_document = ClosureDocument {
+        embeds: None,
         address: DocumentAddress::StaticEntry {
             origin: "host".to_string(),
             path: "vibevm/vibespecs/boot/20-local.md".to_string(),
@@ -336,6 +338,7 @@ fn lane_has_one_frame_around_heterogeneous_contributions() {
                         marker: marker.clone(),
                     },
                     LaneChunk::Node(Box::new(LaneNode::Normal {
+                        embeds: crate::embed::occurrences::EmbedTape::new("ALPHA\n", vec![]),
                         contribution: 0,
                         occurrence: 0,
                         node: ClosureNodeId(0),

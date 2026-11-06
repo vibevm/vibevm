@@ -1,0 +1,522 @@
+{
+  "shape": "closure-artifact",
+  "cardinality": "artifact",
+  "closure": {
+    "absorption": {
+      "state": "unplanned"
+    },
+    "context": {
+      "artifact": "demo-backend",
+      "frame": {
+        "kind": "static-lane",
+        "generated_path": "artifacts/demo-backend",
+        "source_root": "vibevm/vibespecs"
+      },
+      "mode": "qualify-per-node",
+      "target": "demo-backend"
+    },
+    "contributions": [
+      {
+        "kind": "normal",
+        "emission_order": [
+          {
+            "node": 0,
+            "requested_address": {
+              "anchor": [
+                "base"
+              ],
+              "authority": {
+                "kind": "host",
+                "name": "demo"
+              },
+              "doc_path": "manual/base.md",
+              "raw": "spec://demo/manual/base.md#base"
+            }
+          },
+          {
+            "node": 1,
+            "requested_address": {
+              "anchor": [
+                "api"
+              ],
+              "authority": {
+                "kind": "package",
+                "group": "org.demo",
+                "name": "lib",
+                "version": "1.2.3"
+              },
+              "doc_path": "manual/notes.md",
+              "raw": "spec://org.demo/lib@1.2.3/manual/notes.md#api"
+            }
+          }
+        ],
+        "meta": {
+          "origin": "org.demo/lib",
+          "path": "manual/notes.md"
+        },
+        "seed": 1,
+        "seed_address": {
+          "anchor": [
+            "api"
+          ],
+          "authority": {
+            "kind": "package",
+            "group": "org.demo",
+            "name": "lib",
+            "version": "1.2.3"
+          },
+          "doc_path": "manual/notes.md",
+          "raw": "spec://org.demo/lib@1.2.3/manual/notes.md#api"
+        }
+      },
+      {
+        "kind": "elided",
+        "meta": {
+          "origin": "org.demo/legacy",
+          "path": "legacy/old.md"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": 1,
+        "kind": "use",
+        "requested_target": {
+          "anchor": [
+            "base"
+          ],
+          "authority": {
+            "kind": "host",
+            "name": "demo"
+          },
+          "doc_path": "manual/base.md",
+          "raw": "spec://demo/manual/base.md#base"
+        },
+        "to": 0
+      }
+    ],
+    "link": {
+      "state": "unlinked"
+    },
+    "nodes": [
+      {
+        "address": {
+          "kind": "spec",
+          "address": {
+            "anchor": [
+              "base"
+            ],
+            "authority": {
+              "kind": "host",
+              "name": "demo"
+            },
+            "doc_path": "manual/base.md",
+            "raw": "spec://demo/manual/base.md#base"
+          }
+        },
+        "aliases": {},
+        "embeds": null,
+        "origin": "demo",
+        "tree": {
+          "anchors": {
+            "base": 1
+          },
+          "directives": {
+            "aliases": {},
+            "directives": [],
+            "errors": [],
+            "in_place_uses": []
+          },
+          "duplicate_anchors": [],
+          "lines": [
+            "# Base {#base}",
+            "",
+            "Shared base body."
+          ],
+          "nodes": [
+            {
+              "children": [
+                1
+              ],
+              "heading": "",
+              "heading_line": 0,
+              "kind": "heading",
+              "level": 0,
+              "span": {
+                "end": 3,
+                "start": 0
+              },
+              "trailing": ""
+            },
+            {
+              "children": [],
+              "heading": "Base",
+              "heading_line": 0,
+              "kind": "heading",
+              "level": 1,
+              "span": {
+                "end": 3,
+                "start": 0
+              },
+              "trailing": "",
+              "id": "base",
+              "parent": 0
+            }
+          ]
+        }
+      },
+      {
+        "address": {
+          "kind": "spec",
+          "address": {
+            "anchor": [
+              "api"
+            ],
+            "authority": {
+              "kind": "package",
+              "group": "org.demo",
+              "name": "lib",
+              "version": "1.2.3"
+            },
+            "doc_path": "manual/notes.md",
+            "raw": "spec://org.demo/lib@1.2.3/manual/notes.md#api"
+          }
+        },
+        "aliases": {},
+        "embeds": null,
+        "origin": "org.demo/lib",
+        "tree": {
+          "anchors": {
+            "DUP": 2,
+            "DUP2": 3,
+            "api": 1
+          },
+          "directives": {
+            "aliases": {},
+            "directives": [
+              {
+                "address": {
+                  "anchor": [
+                    "base"
+                  ],
+                  "authority": {
+                    "kind": "host",
+                    "name": "demo"
+                  },
+                  "doc_path": "manual/base.md",
+                  "raw": "spec://demo/manual/base.md#base"
+                },
+                "kind": "use",
+                "line": 2,
+                "options": ""
+              },
+              {
+                "address": {
+                  "anchor": [
+                    "base"
+                  ],
+                  "authority": {
+                    "kind": "host",
+                    "name": "demo"
+                  },
+                  "doc_path": "manual/base.md",
+                  "raw": "spec://demo/manual/base.md#base"
+                },
+                "kind": "embed",
+                "line": 3,
+                "options": ""
+              },
+              {
+                "address": {
+                  "anchor": [
+                    "base",
+                    "v1"
+                  ],
+                  "authority": {
+                    "kind": "host",
+                    "name": "demo"
+                  },
+                  "doc_path": "manual/base.md",
+                  "raw": "spec://demo/manual/base.md#base.v1"
+                },
+                "kind": "embed",
+                "line": 4,
+                "options": ""
+              },
+              {
+                "address": {
+                  "anchor": [
+                    "base"
+                  ],
+                  "authority": {
+                    "kind": "host",
+                    "name": "demo"
+                  },
+                  "doc_path": "manual/base.md",
+                  "raw": "spec://demo/manual/base.md#base"
+                },
+                "kind": "source",
+                "line": 5,
+                "options": ":add"
+              }
+            ],
+            "errors": [],
+            "in_place_uses": []
+          },
+          "duplicate_anchors": [],
+          "lines": [
+            "# Notes {#api} :replace",
+            "",
+            "#use spec://demo/manual/base.md#base",
+            "#embed spec://demo/manual/base.md#base",
+            "#embed spec://demo/manual/base.md#base.v1",
+            "#source :add spec://demo/manual/base.md#base",
+            "",
+            "##DUP First claim.",
+            "",
+            "##DUP2 Repeated claim."
+          ],
+          "nodes": [
+            {
+              "children": [
+                1
+              ],
+              "heading": "",
+              "heading_line": 0,
+              "kind": "heading",
+              "level": 0,
+              "span": {
+                "end": 10,
+                "start": 0
+              },
+              "trailing": ""
+            },
+            {
+              "children": [
+                2,
+                3
+              ],
+              "heading": "Notes",
+              "heading_line": 0,
+              "kind": "heading",
+              "level": 1,
+              "span": {
+                "end": 10,
+                "start": 0
+              },
+              "trailing": ":replace",
+              "id": "api",
+              "parent": 0
+            },
+            {
+              "children": [],
+              "heading": "",
+              "heading_line": 7,
+              "kind": "fact",
+              "level": 0,
+              "span": {
+                "end": 8,
+                "start": 7
+              },
+              "trailing": "",
+              "id": "DUP",
+              "parent": 1
+            },
+            {
+              "children": [],
+              "heading": "",
+              "heading_line": 9,
+              "kind": "fact",
+              "level": 0,
+              "span": {
+                "end": 10,
+                "start": 9
+              },
+              "trailing": "",
+              "id": "DUP2",
+              "parent": 1
+            }
+          ]
+        }
+      }
+    ],
+    "qualification": {
+      "state": "pending",
+      "mode": "plain"
+    },
+    "renames": [],
+    "pending_embeds": {
+      "discovery_order": [
+        "spec://demo/manual/missing.md"
+      ],
+      "documents": {
+        "spec://demo/manual/missing.md": {
+          "state": "failed",
+          "reason": "embedded document is not present in the selected world",
+          "requested": {
+            "anchor": [],
+            "authority": {
+              "kind": "host",
+              "name": "demo"
+            },
+            "doc_path": "manual/missing.md",
+            "raw": "spec://demo/manual/missing.md"
+          }
+        }
+      },
+      "explicit_use_keys": [
+        "spec://demo/manual/base.md#base",
+        "spec://org.demo/lib@1.2.3/manual/notes.md#api"
+      ]
+    },
+    "pending_sources": {
+      "discovery_order": [
+        "spec://demo/manual/base.md#base",
+        "spec://demo/manual/missing.md"
+      ],
+      "documents": {
+        "spec://demo/manual/base.md#base": {
+          "state": "resolved",
+          "document": {
+            "source": {
+              "address": {
+                "kind": "spec",
+                "address": {
+                  "anchor": [
+                    "base"
+                  ],
+                  "authority": {
+                    "kind": "host",
+                    "name": "demo"
+                  },
+                  "doc_path": "manual/base.md",
+                  "raw": "spec://demo/manual/base.md#base"
+                }
+              },
+              "format": "markdown",
+              "subject": {
+                "declared_path": "manual/base.md",
+                "provider": {
+                  "kind": "host-ungrouped",
+                  "name": "demo"
+                }
+              },
+              "text": "# Base {#base}\n\nShared base body.\n"
+            },
+            "tree": {
+              "anchors": {
+                "base": 1
+              },
+              "directives": {
+                "aliases": {},
+                "directives": [],
+                "errors": [],
+                "in_place_uses": []
+              },
+              "duplicate_anchors": [],
+              "lines": [
+                "# Base {#base}",
+                "",
+                "Shared base body."
+              ],
+              "nodes": [
+                {
+                  "children": [
+                    1
+                  ],
+                  "heading": "",
+                  "heading_line": 0,
+                  "kind": "heading",
+                  "level": 0,
+                  "span": {
+                    "end": 3,
+                    "start": 0
+                  },
+                  "trailing": ""
+                },
+                {
+                  "children": [],
+                  "heading": "Base",
+                  "heading_line": 0,
+                  "kind": "heading",
+                  "level": 1,
+                  "span": {
+                    "end": 3,
+                    "start": 0
+                  },
+                  "trailing": "",
+                  "id": "base",
+                  "parent": 0
+                }
+              ]
+            }
+          }
+        },
+        "spec://demo/manual/missing.md": {
+          "state": "failed",
+          "reason": "no such document in the selected world",
+          "requested": {
+            "anchor": [],
+            "authority": {
+              "kind": "host",
+              "name": "demo"
+            },
+            "doc_path": "manual/missing.md",
+            "raw": "spec://demo/manual/missing.md"
+          }
+        }
+      },
+      "expansions": {
+        "spec://demo/manual/base.md#base": {
+          "state": "resolved",
+          "requested": {
+            "anchor": [
+              "base"
+            ],
+            "authority": {
+              "kind": "host",
+              "name": "demo"
+            },
+            "doc_path": "manual/base.md",
+            "raw": "spec://demo/manual/base.md#base"
+          },
+          "targets": [
+            {
+              "anchor": [
+                "base"
+              ],
+              "authority": {
+                "kind": "host",
+                "name": "demo"
+              },
+              "doc_path": "manual/base.md",
+              "raw": "spec://demo/manual/base.md#base"
+            }
+          ]
+        },
+        "spec://demo/manual/base.md#base.v1": {
+          "state": "failed",
+          "reason": "no node `base.v1` in the embedded document",
+          "requested": {
+            "anchor": [
+              "base",
+              "v1"
+            ],
+            "authority": {
+              "kind": "host",
+              "name": "demo"
+            },
+            "doc_path": "manual/base.md",
+            "raw": "spec://demo/manual/base.md#base.v1"
+          }
+        }
+      },
+      "explicit_use_keys": [
+        "spec://demo/manual/base.md#base",
+        "spec://org.demo/lib@1.2.3/manual/notes.md#api"
+      ]
+    }
+  },
+  "ir_schema": 2,
+  "level": "closure"
+}

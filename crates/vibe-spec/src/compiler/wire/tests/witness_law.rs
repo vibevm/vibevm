@@ -12,7 +12,7 @@ use super::super::{decode, decode_unverified};
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 fn raw(name: &str) -> serde_json::Value {
@@ -250,6 +250,14 @@ fn a_drifted_linked_occurrence_body_is_gate_thirteen() {
         .to_string();
     document["closure"]["link"]["result"]["occurrences"][0]["body"] =
         serde_json::json!(format!("{body} tampered"));
+    // Keep the local body association coherent so this isolates the later
+    // link replay invariant, rather than the earlier stale-tape refusal.
+    use sha2::{Digest, Sha256};
+    document["closure"]["link"]["result"]["occurrences"][0]["embeds"]["body_digest"] = format!(
+        "{:x}",
+        Sha256::digest(format!("{body} tampered").as_bytes())
+    )
+    .into();
     assert_gate("occurrence body", &document, "link-witness-lane");
 }
 
@@ -267,11 +275,11 @@ fn a_lane_with_broken_bracketing_is_gate_thirteen() {
 }
 
 /// A lane whose fence history is discontinuous: the second node claims a
-/// closed fence before, while the first left one open.
+/// open fence before, while the first left it closed.
 #[test]
 fn a_lane_with_a_discontinuous_fence_history_is_gate_thirteen() {
     let mut document = raw("lane_artifact.json");
     document["lane"]["contributions"][0]["chunks"][5]["node"]["fence_before"] =
-        serde_json::json!({"state": "closed"});
+        serde_json::json!({"state": "open", "delimiter":"`", "run":3});
     assert_gate("lane fence history", &document, "link-witness-lane");
 }

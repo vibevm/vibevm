@@ -1,0 +1,112 @@
+{
+  "shape": "emitted-artifact",
+  "cardinality": "artifact",
+  "emitted": {
+    "bytes_b64": "PCEtLSB2aWJldm0vdmliZXNwZWNzL2Jvb3QvU1RBVElDLm1kIOKAlCBnZW5lcmF0ZWQgYnkgdmliZSwgZG8gbm90IGVkaXQuIC0tPgo8IS0tIFRoZSBzdGF0aWMgYm9vdCBsYW5lIChQUk9QLTAwOSDCpzIuMyk6IHRoZSBoaWdoZXN0LXByaW9yaXR5IC0tPgo8IS0tIGNvbnRyaWJ1dGlvbnMsIGNvbXBpbGVkIGFuY2hvci1xdWFsaWZpZWQuIFJlYWQgdGhpcyBmaXJzdCwgaW4gZnVsbC4gLS0+Cgo8IS0tIFJFU09MVVRJT04gUlVMRVMg4oCUIHJlYWQgdGhlc2UgZml2ZSBsaW5lcyBiZWZvcmUgYW55dGhpbmcgZWxzZToKICAxLiBMYWJlbHMgaW4gdGhpcyBmaWxlIGFyZSBxdWFsaWZpZWQ6IDxvcmlnaW4tc2x1Zz4tLTxvcmlnaW5hbD4uIFRoZSBvcmlnaW4KICAgICBpcyBuYW1lZCBieSB0aGUgcHJvdmVuYW5jZSBjb21tZW50IGFib3ZlIGVhY2ggYmxvY2s7IHRoZSBvcmlnaW5hbCBzaG9ydAogICAgIGxhYmVsIGlzIHRoZSB0YWlsIGFmdGVyIHRoZSBsYXN0IGAtLWAuCiAgMi4gQSBzaG9ydCBsYWJlbCB5b3UgY2Fubm90IGZpbmQgaGVyZSDihpIgY2hlY2sgdGhlIFJFTkFNRUQgQU5DSE9SUyB0YWJsZQogICAgIGJlbG93IGZvciBpdHMgcXVhbGlmaWVkIGhlaXJzOyBuZXZlciBndWVzcyBhbW9uZyBsb29rLWFsaWtlcy4KICAzLiBGdWxsIHNwZWM6Ly8gYWRkcmVzc2VzIHJlc29sdmUgYWdhaW5zdCBwYWNrYWdlIFNPVVJDRVMgdW5kZXIgdmliZXZtL3ZpYmVzcGVjcy8sCiAgICAgbmV2ZXIgYWdhaW5zdCB0aGlzIGdlbmVyYXRlZCBmaWxlLiBUaGlzIGZpbGUgaXMgYSBjYWNoZSwgbm90IGEgdGFyZ2V0LgogIDQuIGAjdXNlIHNwZWM6Ly/igKYgYXMgWGAgYmluZHMgYSBmaWxlLWxvY2FsIGFsaWFzOyBgQCFYYCBpcyBhIG1hbmRhdG9yeSByZWFkCiAgICAgb2YgWCdzIHRhcmdldCAoc2FtZSBydWxlcyBhcyBAc3BlYzovL+KApikuIEluIHRoaXMgY29tcGlsZWQgZmlsZSBldmVyeSBAIVgKICAgICBpcyBhbHJlYWR5IHJld3JpdHRlbiB0byBpdHMgZnVsbCBhZGRyZXNzLgogIDUuIEFuIGFtYmlndW91cyBvciB1bnJlc29sdmFibGUgc2hvcnQgcmVmZXJlbmNlIGlzIGFuIEVSUk9SIHRvIHN1cmZhY2Ugd2l0aAogICAgIGNhbmRpZGF0ZXMg4oCUIG5ldmVyIHNpbGVudGx5IHBpY2sgb25lLgotLT4KCjwhLS0gUkVOQU1FRCBBTkNIT1JTIChzaG9ydCDihpIgcXVhbGlmaWVkIGhlaXJzKToKICBGQUNULUEg4oaSIG9yZy1kZW1vLS1saWItLW1hbnVhbC1ndWlkZS1tZC0tRkFDVC1BIChvcmcuZGVtby9saWIpCiAgYXBpIOKGkiBvcmctZGVtby0tbGliLS1tYW51YWwtcGFydC1tZC0tYXBpIChvcmcuZGVtby9saWIpCiAgcm9vdCDihpIgb3JnLWRlbW8tLWxpYi0tbWFudWFsLWd1aWRlLW1kLS1yb290IChvcmcuZGVtby9saWIpCi0tPgoKPCEtLSB2aWJlOnN0YXRpYyBvcmcuZGVtby9saWIg4oCUIG1hbnVhbC9ndWlkZS5tZCAtLT4KCjwhLS0gdmliZTpiZWdpbiBzcGVjOi8vb3JnLmRlbW8vbGliL21hbnVhbC9wYXJ0Lm1kIC0tPgojIFBhcnQgeyNvcmctZGVtby0tbGliLS1tYW51YWwtcGFydC1tZC0tYXBpfQoKUmVmZXJlbmNlIGJvZHkuCgpgYGB0ZXh0CmxpdGVyYWwgc2FtcGxlCmBgYAo8IS0tIHZpYmU6ZW5kIHNwZWM6Ly9vcmcuZGVtby9saWIvbWFudWFsL3BhcnQubWQgLS0+CjwhLS0gdmliZTpiZWdpbiBzcGVjOi8vb3JnLmRlbW8vbGliL21hbnVhbC9ndWlkZS5tZCNyb290IC0tPgojIEd1aWRlIHsjb3JnLWRlbW8tLWxpYi0tbWFudWFsLWd1aWRlLW1kLS1yb290fQoKIyNvcmctZGVtby0tbGliLS1tYW51YWwtZ3VpZGUtbWQtLUZBQ1QtQSBPbmUgZXhhY3QgZmFjdC4KPCEtLSB2aWJlOmVuZCBzcGVjOi8vb3JnLmRlbW8vbGliL21hbnVhbC9ndWlkZS5tZCNyb290IC0tPgoKPCEtLSB2aWJlOnN0YXRpYyBfX2hvc3RfXy9kZW1vIOKAlCB2aWJldm0vdmliZXNwZWNzL2Jvb3QvMDAtY29yZS5tZCAtLT4KCiMgQ29yZSBib290IHJ1bGVzCgpSZWFkIHRoaXMgZmlyc3QuCgo8IS0tIHZpYmU6c3RhdGljIG9yZy5kZW1vL2xlZ2FjeSDigJQgbGVnYWN5L29sZC5tZDsgem9uZSBlbGlkZWQ6IGVtaXR0ZWQgbWVtYmVyLWJ5LW1lbWJlciBpbiB0aGlzIGxhbmUgKG9uY2UtZWFjaCwgQi0wMDYpIC0tPgoKPCEtLSB2aWJlOmhvaXN0ZWQgb3JnLmRlbW8vbGliIOKAlCB0ZXh0IGluIHRoZSByb290IFNUQVRJQy5tZCAtLT4KI3VzZSBzcGVjOi8vb3JnLmRlbW8vbGliCgoKZmlyc3QgZXhwbGljaXQgb3BhcXVlIHJld3JpdGUKc2Vjb25kIGV4cGxpY2l0IG9wYXF1ZSByZXdyaXRlCg==",
+    "provenance": {
+      "backend": "static-md",
+      "bytes_digest": "07be578b0cefc6107ef5bcfe535bd5fe82e2001e9ad995f1d4f46efebe410735",
+      "context": {
+        "artifact": "static-md",
+        "frame": {
+          "kind": "static-lane",
+          "generated_path": "vibevm/vibespecs/boot/STATIC.md",
+          "source_root": "vibevm/vibespecs"
+        },
+        "mode": "qualify-per-node",
+        "target": "static-md"
+      },
+      "contributions": [
+        {
+          "kind": "normal",
+          "chunk_digest": "494421227742be40e6b9e2663d913944c84fb48a48bd6425a41992154697fe30",
+          "meta": {
+            "origin": "org.demo/lib",
+            "path": "manual/guide.md"
+          },
+          "seed": 2,
+          "seed_address": {
+            "anchor": [
+              "root"
+            ],
+            "authority": {
+              "kind": "package",
+              "group": "org.demo",
+              "name": "lib"
+            },
+            "doc_path": "manual/guide.md",
+            "raw": "spec://org.demo/lib/manual/guide.md#root"
+          }
+        },
+        {
+          "kind": "simple",
+          "address": {
+            "kind": "static-entry",
+            "origin": "__host__/demo",
+            "path": "vibevm/vibespecs/boot/00-core.md"
+          },
+          "chunk_digest": "67b40030e28379016820dae1dc719c4766a9a3d9be61d81f7c33cf6635cd6481",
+          "meta": {
+            "origin": "__host__/demo",
+            "path": "vibevm/vibespecs/boot/00-core.md"
+          }
+        },
+        {
+          "kind": "elided",
+          "meta": {
+            "origin": "org.demo/legacy",
+            "path": "legacy/old.md"
+          }
+        },
+        {
+          "kind": "hoisted",
+          "meta": {
+            "origin": "org.demo/lib",
+            "path": "manual/part.md"
+          },
+          "target": {
+            "anchor": [],
+            "authority": {
+              "kind": "package",
+              "group": "org.demo",
+              "name": "lib"
+            },
+            "doc_path": "manual/part.md",
+            "raw": "spec://org.demo/lib/manual/part.md"
+          }
+        }
+      ],
+      "emitted_transforms": [
+        "transform:z-first",
+        "transform:a-second"
+      ],
+      "producer": "emit:static-md",
+      "renames": [
+        {
+          "origin": "org.demo/lib",
+          "rename": {
+            "original": "api",
+            "qualified": "org-demo--lib--manual-part-md--api"
+          }
+        },
+        {
+          "origin": "org.demo/lib",
+          "rename": {
+            "original": "root",
+            "qualified": "org-demo--lib--manual-guide-md--root"
+          }
+        },
+        {
+          "origin": "org.demo/lib",
+          "rename": {
+            "original": "FACT-A",
+            "qualified": "org-demo--lib--manual-guide-md--FACT-A"
+          }
+        }
+      ],
+      "source_lane_digest": "5247e9949e29a97c91ac59edb5f3cd1735054738602c7eda8c53c23707b92970"
+    }
+  },
+  "ir_schema": 2,
+  "level": "emitted"
+}

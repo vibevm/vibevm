@@ -175,6 +175,7 @@ fn merge_closure(mut closure: ClosureIr) -> Result<ClosureIr, MergePassError> {
         };
         let id = ClosureNodeId(closure.nodes.len());
         closure.nodes.push(ClosureDocument {
+            embeds: None,
             address: DocumentAddress::Spec(address.clone()),
             origin: document_origin(address),
             tree: document.tree().clone(),

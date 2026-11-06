@@ -10,22 +10,32 @@ pub(super) fn spec(raw: &str) -> SpecAddress {
 }
 
 pub(super) fn normal_node(raw: &str, origin: &str, body: &str) -> ClosureDocument {
+    let tree = DocTree::parse(body);
     ClosureDocument {
+        embeds: Some(crate::embed::occurrences::EmbedTape::new(
+            &tree.parts().3.join("\n"),
+            vec![],
+        )),
         address: DocumentAddress::Spec(spec(raw)),
         origin: origin.to_string(),
-        tree: DocTree::parse(body),
+        tree,
         aliases: Default::default(),
     }
 }
 
 pub(super) fn simple_node(origin: &str, path: &str, body: &str) -> ClosureDocument {
+    let tree = DocTree::parse(body);
     ClosureDocument {
+        embeds: Some(crate::embed::occurrences::EmbedTape::new(
+            &tree.parts().3.join("\n"),
+            vec![],
+        )),
         address: DocumentAddress::StaticEntry {
             origin: origin.to_string(),
             path: path.to_string(),
         },
         origin: origin.to_string(),
-        tree: DocTree::parse(body),
+        tree,
         aliases: Default::default(),
     }
 }
@@ -169,4 +179,59 @@ pub(super) fn occurrence_bytes(result: &LinkResult) -> Vec<&str> {
             }
         })
         .collect()
+}
+
+/// Test-only replay seam: the derived link result of a carrier, so the wire
+/// tests can recompute the corpus's linked `input_digest` through production
+/// domain logic instead of trusting a copied constant.
+#[cfg(test)]
+pub(crate) fn derived_link_digest_for_test(closure: &ClosureIr) -> LinkInputDigest {
+    derive_result(closure)
+        .expect("the caller hands this closure to validate_linked first")
+        .input_digest
+}
+
+/// Temporary compatibility serializer. Concrete markers live here only until
+/// named assemble/emit replace this one-seed public-API tail.
+#[cfg(test)]
+pub(crate) fn linked_text(closure: &ClosureIr) -> Result<String, LinkPassError> {
+    validate_linked(closure)?;
+    debug_assert!(matches!(
+        closure.context().frame(),
+        ArtifactFrame::CompatibilityFragment
+    ));
+    let LinkState::Linked(result) = &closure.link else {
+        unreachable!("linked validator accepted only Linked")
+    };
+    let mut output = String::new();
+    for occurrence in &result.occurrences {
+        match occurrence {
+            LinkOccurrence::Normal {
+                marker,
+                body,
+                trailing_newline_required,
+                ..
+            } => {
+                output.push_str(&crate::markers::open(marker.as_str()));
+                output.push('\n');
+                output.push_str(body);
+                if *trailing_newline_required {
+                    output.push('\n');
+                }
+                output.push_str(&crate::markers::close(marker.as_str()));
+                output.push('\n');
+            }
+            LinkOccurrence::Simple {
+                body,
+                trailing_newline_required,
+                ..
+            } => {
+                output.push_str(body);
+                if *trailing_newline_required {
+                    output.push('\n');
+                }
+            }
+        }
+    }
+    Ok(output)
 }

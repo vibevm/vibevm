@@ -79,9 +79,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#root");
 pub mod doc;
 pub mod load;
 
+mod annotated;
 mod convert;
+pub use annotated::{AnnotatedXml, SourceComment, from_markdown_annotated};
 mod md_in;
 mod md_out;
+mod xml_annotations;
 mod xml_blocks;
 mod xml_comment;
 mod xml_doc;
@@ -94,6 +97,12 @@ mod xml_in_descent;
 mod xml_in_ids;
 mod xml_out;
 mod xml_out_emit;
+mod xml_positions;
+pub use xml_annotations::{
+    GeneratedXmlComment, SemanticComment, SemanticPosition, generated_xml_comments,
+    observe_annotated_xml,
+};
+pub use xml_annotations::{XmlCommentScanError, XmlCommentSpan, xml_comment_spans};
 mod xml_support;
 
 #[cfg(test)]
@@ -124,7 +133,7 @@ pub use md_in::from_markdown;
 pub use md_out::to_markdown;
 pub use xml_comment::{
     XmlCommentCodecError, decode_generated_xml_comment, decode_generated_xml_comment_payload,
-    encode_generated_xml_comment,
+    encode_generated_xml_comment, frame_generated_xml_comment,
 };
 pub use xml_in::{from_xml, from_xml_with};
 pub use xml_out::to_xml;

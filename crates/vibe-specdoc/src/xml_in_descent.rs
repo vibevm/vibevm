@@ -179,6 +179,7 @@ impl<'a> Parser<'a> {
         was_empty: bool,
         level: usize,
     ) -> Result<Section> {
+        let semantic = self.begin_semantic(crate::xml_annotations::RegionKind::Container);
         if level > 6 {
             return Err(self.err(
                 at,
@@ -214,6 +215,7 @@ impl<'a> Parser<'a> {
             self.mint_heading(id.clone(), at)?;
         }
         if was_empty {
+            self.end_semantic(semantic)?;
             return Ok(s);
         }
         let mut blocks: Vec<(BlockNode, (usize, usize))> = Vec::new();
@@ -298,6 +300,7 @@ impl<'a> Parser<'a> {
         }
         self.validate_fence_bindings(&blocks)?;
         s.blocks = blocks.into_iter().map(|(b, _)| b).collect();
+        self.end_semantic(semantic)?;
         Ok(s)
     }
 
@@ -312,8 +315,10 @@ impl<'a> Parser<'a> {
         at: (usize, usize),
         was_empty: bool,
     ) -> Result<BlockNode> {
+        let semantic = self.begin_semantic(crate::xml_annotations::RegionKind::Container);
         let block = self.block(name, attrs, at, was_empty)?;
         let when = take_when(attrs, at, self)?;
+        self.end_semantic(semantic)?;
         Ok(BlockNode { when, block })
     }
 

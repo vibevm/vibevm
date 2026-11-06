@@ -246,17 +246,19 @@ fn prepare_target(
                 | LaneContribution::Simple { meta, chunks, .. } => {
                     #[cfg(test)]
                     static_xml::record_pivot_call();
-                    let markdown = xml_markdown(chunks);
+                    let (markdown, comments) = xml_markdown(chunks);
                     let markdown = continued_headings::continue_repeated_headings(&markdown);
-                    Some(vibe_specdoc::from_markdown(&markdown).map_err(|error| {
-                        BackendError::Emit {
-                            backend: backend.as_str().to_string(),
-                            reason: format!(
-                                "converting static contribution `{}` to XML: {error}",
-                                meta.origin
-                            ),
-                        }
-                    })?)
+                    Some(
+                        vibe_specdoc::from_markdown_annotated(&markdown, &comments).map_err(
+                            |error| BackendError::Emit {
+                                backend: backend.as_str().to_string(),
+                                reason: format!(
+                                    "converting static contribution `{}` to XML: {error}",
+                                    meta.origin
+                                ),
+                            },
+                        )?,
+                    )
                 }
                 LaneContribution::Elided { .. } | LaneContribution::Hoisted { .. } => None,
             };
@@ -274,20 +276,32 @@ fn prepare_target(
     })
 }
 
-fn xml_markdown(chunks: &[LaneChunk]) -> String {
+fn xml_markdown(chunks: &[LaneChunk]) -> (String, Vec<vibe_specdoc::SourceComment>) {
     let mut output = String::new();
+    let mut comments = Vec::new();
     for chunk in chunks {
         match chunk {
             LaneChunk::NormalOpen { .. } | LaneChunk::NormalClose { .. } => {}
             LaneChunk::Node(node) => match node.as_ref() {
-                LaneNode::Normal { body, .. } | LaneNode::Simple { body, .. } => {
+                LaneNode::Normal { body, embeds, .. } | LaneNode::Simple { body, embeds, .. } => {
+                    let base = output.lines().count();
+                    comments.extend(embeds.boundaries().into_iter().map(|(gap, opening, row)| {
+                        vibe_specdoc::SourceComment {
+                            line_gap: base + gap,
+                            payload: format!(
+                                "{}embed: {}",
+                                if opening { "" } else { "/" },
+                                row.target.without_pin()
+                            ),
+                        }
+                    }));
                     output.push_str(body)
                 }
             },
             LaneChunk::ForcedNewline { .. } => output.push('\n'),
         }
     }
-    output
+    (output, comments)
 }
 
 fn contribution_witnesses(lane: &LaneIr) -> Vec<EmissionContributionWitness> {

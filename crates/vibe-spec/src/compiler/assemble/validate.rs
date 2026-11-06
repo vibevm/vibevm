@@ -9,6 +9,8 @@ use super::super::ir::{
 
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum LaneValidationError {
+    #[error(transparent)]
+    EmbedTape(#[from] crate::embed::occurrences::EmbedTapeError),
     #[error("lane frame does not match its immutable artifact context")]
     FrameContext,
     #[error("lane contribution {contribution} has unsafe {field}")]
@@ -65,6 +67,19 @@ pub(crate) fn validate_shape(lane: &LaneIr) -> Result<LaneShape, LaneValidationE
     validate_frame(lane)?;
     let mut closing_fences = Vec::with_capacity(lane.contributions.len());
     for (contribution, entry) in lane.contributions.iter().enumerate() {
+        if let LaneContribution::Normal { chunks, .. } | LaneContribution::Simple { chunks, .. } =
+            entry
+        {
+            for chunk in chunks {
+                if let LaneChunk::Node(node) = chunk {
+                    let (body, embeds) = match node.as_ref() {
+                        LaneNode::Normal { body, embeds, .. }
+                        | LaneNode::Simple { body, embeds, .. } => (body, embeds),
+                    };
+                    embeds.validate(body)?;
+                }
+            }
+        }
         validate_meta(contribution, entry)?;
         closing_fences.push(match entry {
             LaneContribution::Normal { seed, chunks, .. } => {

@@ -1,3 +1,7 @@
+//! SDK four-symbol ABI witnesses, not native-loader or compiler-domain validation.
+//! Current payload contract: `schemas/native/e2/compile_request.jtd.json`.
+#![cfg(test)]
+
 use std::alloc::{GlobalAlloc, Layout, System};
 use std::ffi::CStr;
 use std::ptr;
@@ -10,9 +14,9 @@ use vibe_ext::{
 };
 
 const VALID_REQUEST: &str =
-    include_str!("../../../formats/corpora/native/e1/compile_request.valid.json");
+    include_str!("../../../formats/corpora/native/e2/compile_request.valid.json");
 const DOCUMENT_IR: &str =
-    include_str!("../../../formats/corpora/compiler_ir/e1/valid/document_document.json");
+    include_str!("../../../formats/corpora/compiler_ir/e2/valid/document_document.json");
 
 struct TrackingAllocator;
 
@@ -60,21 +64,21 @@ fn handle(request: CompileRequest) -> CompileReply {
     HANDLER_CALLS.fetch_add(1, Ordering::SeqCst);
     match request.execution.id.as_str() {
         "compiler-skip" => CompileReply::Skip(Box::new(CompileReplySkip {
-            envelope: 1,
+            envelope: 2,
             message: Some("skip".to_owned()),
         })),
         "compiler-fail" => CompileReply::Fail(Box::new(CompileReplyFail {
-            envelope: 1,
+            envelope: 2,
             message: Some("fail".to_owned()),
         })),
         "compiler-panic" => panic!("compiler handler panic"),
         "bad-reply-envelope" => CompileReply::Ok(Box::new(CompileReplyOk {
-            envelope: 2,
+            envelope: 3,
             payload: request.payload,
             message: None,
         })),
         "changed-shape" => CompileReply::Ok(Box::new(CompileReplyOk {
-            envelope: 1,
+            envelope: 2,
             payload: serde_json::from_str(DOCUMENT_IR).expect("document IR corpus decodes"),
             message: None,
         })),
@@ -82,7 +86,7 @@ fn handle(request: CompileRequest) -> CompileReply {
             let payload = request.payload;
             MOVE_BEFORE.store(payload_allocation(&payload), Ordering::SeqCst);
             let reply = CompileReply::Ok(Box::new(CompileReplyOk {
-                envelope: 1,
+                envelope: 2,
                 payload,
                 message: Some("ok".to_owned()),
             }));
@@ -100,7 +104,7 @@ vibe_ext::vibe_compile_extension!(
         extensions: vec![ManifestExtension {
             id: "compiler-fixture".to_owned(),
             point: "compile:pass".to_owned(),
-            ir_schema: Some(1),
+            ir_schema: Some(2),
         }],
     },
     handler = handle,
@@ -176,7 +180,7 @@ fn exact_symbols_abi_and_stable_compiler_manifest() {
         .expect("generated compiler manifest");
     assert_eq!(manifest.extensions.len(), 1);
     assert!(manifest.extensions[0].point.starts_with("compile:"));
-    assert_eq!(manifest.extensions[0].ir_schema, Some(1));
+    assert_eq!(manifest.extensions[0].ir_schema, Some(2));
 
     // SAFETY: The linked manifest symbol has the same stable-pointer contract.
     let linked = unsafe { linked_vibe_ext_manifest() };
@@ -254,12 +258,19 @@ fn structurally_or_behaviorally_bad_requests_never_call_handler() {
     assert_refused(duplicate.as_bytes());
 
     let mut wrong_envelope = request_value("wrong-envelope");
-    wrong_envelope["envelope"] = 2.into();
+    wrong_envelope["envelope"] = 3.into();
     assert_refused(&serde_json::to_vec(&wrong_envelope).unwrap());
 
     let mut wrong_schema = request_value("wrong-schema");
-    wrong_schema["payload"]["ir_schema"] = 2.into();
+    wrong_schema["payload"]["ir_schema"] = 3.into();
     assert_refused(&serde_json::to_vec(&wrong_schema).unwrap());
+
+    let historical =
+        include_bytes!("../../../formats/corpora/native/e1/compile_request.valid.json");
+    assert_refused(historical);
+    let mut old_schema = request_value("old-schema");
+    old_schema["payload"]["ir_schema"] = 1.into();
+    assert_refused(&serde_json::to_vec(&old_schema).unwrap());
 
     let mut unsupported = request_value("unsupported");
     unsupported["point"] = "vendor:future".into();
@@ -267,6 +278,10 @@ fn structurally_or_behaviorally_bad_requests_never_call_handler() {
 
     let mut mismatch = request_value("mismatch");
     mismatch["point"] = "compile:lane".into();
+    mismatch
+        .as_object_mut()
+        .unwrap()
+        .remove("frontend_physical_stem");
     assert_refused(&serde_json::to_vec(&mismatch).unwrap());
     assert_eq!(HANDLER_CALLS.load(Ordering::SeqCst), 0);
 }
@@ -274,10 +289,16 @@ fn structurally_or_behaviorally_bad_requests_never_call_handler() {
 #[test]
 fn invalid_handler_replies_are_never_published() {
     let _guard = TEST_LOCK.lock().expect("test lock");
+    HANDLER_CALLS.store(0, Ordering::SeqCst);
     assert_refused(&request_bytes("bad-reply-envelope"));
     let mut staged = request_value("changed-shape");
     staged["point"] = "compile:source".into();
+    staged
+        .as_object_mut()
+        .unwrap()
+        .remove("frontend_physical_stem");
     assert_refused(&serde_json::to_vec(&staged).unwrap());
+    assert_eq!(HANDLER_CALLS.load(Ordering::SeqCst), 2);
 }
 
 #[test]

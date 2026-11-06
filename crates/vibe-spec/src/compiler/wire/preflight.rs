@@ -50,7 +50,7 @@ pub(super) fn run(ir: &wire::Ir) -> Result<(), IrWireError> {
     Ok(())
 }
 
-/// Gate 1: `ir_schema == 1` and the level/cardinality belt of the riding
+/// Gate 1: `ir_schema == 2` and the level/cardinality belt of the riding
 /// variant, before anything else looks at the value.
 fn schema(ir: &wire::Ir) -> Result<(), IrWireError> {
     let (value, level, cardinality) = match ir {
@@ -85,7 +85,7 @@ fn schema(ir: &wire::Ir) -> Result<(), IrWireError> {
             matches!(arm.cardinality, wire::CardinalityArtifact::Artifact),
         ),
     };
-    if value != 1 {
+    if value != 2 {
         return Err(super::IrWireError::Schema(value));
     }
     debug_assert!(

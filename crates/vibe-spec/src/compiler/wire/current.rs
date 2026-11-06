@@ -1,0 +1,25 @@
+//! Current strict compiler-IR generated names. Epoch suffixes are wire ownership,
+//! not a second domain model.
+pub(super) use vibe_wire::generated::compiler_ir::e2::ir::*;
+pub(super) use vibe_wire::generated::shared::{
+    ClosureContributionV2 as ClosureContribution,
+    ClosureContributionV2Elided as ClosureContributionElided,
+    ClosureContributionV2Hoisted as ClosureContributionHoisted,
+    ClosureContributionV2Normal as ClosureContributionNormal,
+    ClosureContributionV2Simple as ClosureContributionSimple, ClosureDocumentV2 as ClosureDocument,
+    ClosureIrV2 as ClosureIr, IrV2ClosureArtifact as IrClosureArtifact,
+    IrV2DocumentDocument as IrDocumentDocument, IrV2DocumentsArtifact as IrDocumentsArtifact,
+    IrV2EmittedArtifact as IrEmittedArtifact, IrV2LaneArtifact as IrLaneArtifact,
+    IrV2SourceDocument as IrSourceDocument, LaneChunkV2 as LaneChunk,
+    LaneChunkV2ForcedNewline as LaneChunkForcedNewline, LaneChunkV2Node as LaneChunkNode,
+    LaneChunkV2NormalClose as LaneChunkNormalClose, LaneChunkV2NormalOpen as LaneChunkNormalOpen,
+    LaneContributionV2 as LaneContribution, LaneContributionV2Elided as LaneContributionElided,
+    LaneContributionV2Hoisted as LaneContributionHoisted,
+    LaneContributionV2Normal as LaneContributionNormal,
+    LaneContributionV2Simple as LaneContributionSimple, LaneIrV2 as LaneIr, LaneNodeV2 as LaneNode,
+    LaneNodeV2Normal as LaneNodeNormal, LaneNodeV2Simple as LaneNodeSimple,
+    LinkOccurrenceV2 as LinkOccurrence, LinkOccurrenceV2Normal as LinkOccurrenceNormal,
+    LinkOccurrenceV2Simple as LinkOccurrenceSimple, LinkResultV2 as LinkResult,
+    LinkStateV2 as LinkState, LinkStateV2Linked as LinkStateLinked,
+    LinkStateV2Unlinked as LinkStateUnlinked,
+};

@@ -18,7 +18,7 @@ use super::super::{IrWireError, decode, encode_compact};
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 fn valid(name: &str) -> Vec<u8> {
@@ -26,7 +26,11 @@ fn valid(name: &str) -> Vec<u8> {
 }
 
 fn invalid(name: &str) -> Vec<u8> {
-    std::fs::read(corpus().join("invalid").join(name)).unwrap()
+    assert_eq!(name, "emitted_transform_name_blank.json");
+    let mut value: serde_json::Value =
+        serde_json::from_slice(&valid("emitted_artifact_transformed.json")).unwrap();
+    value["emitted"]["provenance"]["emitted_transforms"][0] = " ".into();
+    serde_json::to_vec(&value).unwrap()
 }
 
 /// The chain of one decoded emitted carrier, as owned strings.
@@ -51,10 +55,7 @@ fn a_carried_transform_chain_survives_the_strict_round_trip_exactly() {
     let bytes = valid("emitted_artifact_transformed.json");
     assert_eq!(
         chain_of(&bytes),
-        [
-            "transform:emitted:org.demo/tools#append",
-            "transform:emitted:org.demo/tools#again",
-        ]
+        ["transform:z-first", "transform:a-second",]
     );
 
     let ir = decode(&bytes).unwrap();
@@ -161,4 +162,27 @@ fn the_chain_round_trips_domain_wire_domain_as_the_same_value() {
         2,
         "and the surviving value really carried a nonempty chain"
     );
+}
+
+#[test]
+fn an_explicit_opaque_rewrite_roundtrips_without_original_backend_framing() {
+    use crate::compiler::{builtin::compile_artifact, ir::ArtifactTarget, pass::PassName};
+    let emitted = compile_artifact(
+        super::fixture::plan_for(ArtifactTarget::StaticXml),
+        &super::fixture::world(),
+    )
+    .unwrap();
+    let rewritten = crate::compiler::transform::emitted_reconstruction::reconstruct(
+        emitted,
+        vec![0, 255, 7],
+        &PassName::new("transform:opaque-rewrite").unwrap(),
+    );
+    let bytes = encode_compact(&AnyIr::Emitted(rewritten.clone())).unwrap();
+    let AnyIr::Emitted(roundtrip) = decode(&bytes).unwrap() else {
+        panic!("emitted carrier");
+    };
+    assert_eq!(roundtrip, rewritten);
+    let mut stripped: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+    stripped["emitted"]["provenance"]["emitted_transforms"] = serde_json::json!([]);
+    assert!(decode(&serde_json::to_vec(&stripped).unwrap()).is_err());
 }

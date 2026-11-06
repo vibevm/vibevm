@@ -62,6 +62,7 @@ fn closure(root: &str, tree: &str, snapshot: SourceResolutionSnapshot) -> Closur
     ClosureIr::testing(
         ArtifactContext::compatibility(StaticCompileMode::Plain),
         vec![ClosureDocument {
+            embeds: None,
             address: DocumentAddress::Spec(address.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse(tree),
@@ -230,6 +231,70 @@ fn merge_consumes_pending_snapshot_then_adds_source_membership() {
 }
 
 #[test]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-GENERATED-PROVENANCE"
+)]
+fn source_contributed_embed_locator_names_the_effective_pre_embed_view() {
+    use crate::compiler::embed::EmbedPass;
+    let root = "spec://org.demo/pkg/contract/api#root";
+    let implementation = "spec://org.demo/pkg/source/impl#impl";
+    let target = "spec://org.demo/pkg/common/payload#payload";
+    let authored_root = format!("# API {{#root}}\nROOT-PROSE\n#source {implementation}\n");
+    let authored_implementation = format!("# Impl {{#impl}}\n#embed {target}\n");
+    let source_snapshot = snapshot(
+        vec![
+            (root, document(root, &authored_root, &authored_root)),
+            (
+                implementation,
+                document(
+                    implementation,
+                    &authored_implementation,
+                    &authored_implementation,
+                ),
+            ),
+        ],
+        vec![(implementation, vec![spec(implementation)])],
+        &[root],
+    );
+    let mut input = closure(root, &authored_root, source_snapshot);
+    input.pending_embeds = Some(EmbedResolutionSnapshot {
+        discovery_order: vec![target.into()],
+        documents: BTreeMap::from([(
+            target.into(),
+            DocumentObservation::resolved(document(target, "PAYLOAD\n", "PAYLOAD\n")),
+        )]),
+        explicit_use_keys: BTreeSet::from([root.into()]),
+    });
+    let merged = MergePass::new().run(input).unwrap();
+    let effective = merged.nodes[0].tree.text(merged.nodes[0].tree.root());
+    assert_eq!(
+        effective,
+        format!(
+            "# API {{#root}}\nROOT-PROSE\n#source {implementation}\n# Impl {{#impl}}\n#embed {target}"
+        )
+    );
+    let output = EmbedPass::new().run(merged).unwrap();
+    let tape = output.nodes[0].embeds.as_ref().unwrap();
+    assert_eq!(tape.occurrences.len(), 1);
+    let occurrence = &tape.occurrences[0];
+    assert_eq!(occurrence.source, root);
+    // Embed removes the resolved #source line before minting locators:
+    // API heading, ROOT-PROSE, Impl heading, then this directive.
+    assert_eq!(occurrence.directive_line, 3);
+    assert_ne!(
+        occurrence.directive_line, 1,
+        "the authored implementation directive was at zero-based line1"
+    );
+    assert_eq!(occurrence.target, spec(target));
+    assert!(
+        output.nodes[0]
+            .tree
+            .text(output.nodes[0].tree.root())
+            .contains("PAYLOAD")
+    );
+}
+
+#[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-054#IR-LEVELS")]
 fn source_target_that_is_already_a_use_node_reuses_its_id() {
     let root = "spec://org.demo/pkg/contract/api#root";
@@ -255,6 +320,7 @@ fn source_target_that_is_already_a_use_node_reuses_its_id() {
         pending,
     );
     input.nodes.push(ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(source)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse("# Shared {#shared}\nSHARED\n"),
@@ -312,6 +378,7 @@ fn final_membership_follows_close_replay_not_scheduler_preorder() {
     );
     let mut input = closure(b, &format!("# B {{#root}}\n#source {source_b}\n"), pending);
     input.nodes.push(ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(a)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse(&format!("# A {{#root}}\n#source {source_a}\n")),

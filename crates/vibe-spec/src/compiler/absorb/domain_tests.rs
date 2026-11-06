@@ -15,6 +15,7 @@ fn spec(raw: &str) -> SpecAddress {
 
 fn spec_node(raw: &str) -> ClosureDocument {
     ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(raw)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse("body"),
@@ -24,6 +25,7 @@ fn spec_node(raw: &str) -> ClosureDocument {
 
 fn static_node(path: &str) -> ClosureDocument {
     ClosureDocument {
+        embeds: None,
         address: DocumentAddress::StaticEntry {
             origin: "host".to_string(),
             path: path.to_string(),

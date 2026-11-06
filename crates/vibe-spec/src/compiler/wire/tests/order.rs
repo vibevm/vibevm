@@ -9,7 +9,7 @@ use super::super::decode;
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 fn raw(name: &str) -> serde_json::Value {
@@ -194,7 +194,7 @@ fn a_simple_contributions_embedded_addresses_beat_its_own_forest_fault() {
         }),
         ("directive", |document| {
             let mut directive =
-                document["closure"]["nodes"][2]["tree"]["directives"]["directives"][0].clone();
+                raw("document_document.json")["doc"]["tree"]["directives"]["directives"][0].clone();
             directive["line"] = serde_json::json!(0);
             directive["address"]["raw"] = serde_json::json!("spec://x/y/z#q");
             document["closure"]["contributions"][1]["document"]["tree"]["directives"]["directives"] =
@@ -202,7 +202,8 @@ fn a_simple_contributions_embedded_addresses_beat_its_own_forest_fault() {
         }),
         ("alias", |document| {
             let mut alias =
-                document["closure"]["nodes"][2]["tree"]["directives"]["aliases"]["Part"].clone();
+                raw("document_document.json")["doc"]["tree"]["directives"]["aliases"]["Part"]
+                    .clone();
             alias["raw"] = serde_json::json!("spec://x/y/z#q");
             document["closure"]["contributions"][1]["document"]["aliases"]["Part"] = alias;
         }),

@@ -47,7 +47,7 @@ fn five_document_world_delivers_exact_native_call_identity_and_payload_5_5_1_1()
         assert_eq!(at.len(), calls);
         assert!(at.iter().all(|record| record.order == order));
         assert!(at.iter().all(|record| record.carrier == carrier));
-        assert!(at.iter().all(|record| record.ir_schema == 1));
+        assert!(at.iter().all(|record| record.ir_schema == 2));
         assert!(at.iter().all(|record| record.config.is_empty()));
     }
 
@@ -229,4 +229,42 @@ fn one_stack_borrowed_invoker_runs_plain_traced_and_observed_entries() {
     compile_artifact_native_traced(plan.clone(), &world.source, &invoker, &sink).unwrap();
     compile_artifact_native_observed(plan, &world.source, &invoker, Arc::new(Sink)).unwrap();
     assert_eq!(invoker.records().len(), 3);
+}
+
+#[test]
+fn destructive_emitted_reply_cannot_replace_manager_owned_history() {
+    let world = fixture_world();
+    let plan = plan(vec![Declared::native("emitted", "compile:emitted")]);
+    let invoker = FakeInvoker::new(ReplyMode::DestructiveEmittedForgery);
+    let emitted = compile_artifact_native(plan, &world.source, &invoker).unwrap();
+    let records = invoker.records();
+    assert_eq!(records.len(), 1);
+    let before =
+        crate::compiler::wire::decode(&serde_json::to_vec(&records[0].payload).unwrap()).unwrap();
+    let crate::compiler::pass::AnyIr::Emitted(before) = before else {
+        panic!("emitted input");
+    };
+    assert_eq!(emitted.bytes(), &[0, 255, 7]);
+    assert_eq!(
+        emitted.provenance().source_lane_digest,
+        before.provenance().source_lane_digest
+    );
+    assert_eq!(
+        emitted.provenance().contributions,
+        before.provenance().contributions
+    );
+    assert_eq!(emitted.provenance().renames, before.provenance().renames);
+    assert_eq!(
+        emitted
+            .provenance()
+            .emitted_transforms
+            .iter()
+            .map(|p| p.as_str())
+            .collect::<Vec<_>>(),
+        vec!["transform:emitted:__host__/demo#emitted"]
+    );
+    assert_eq!(
+        emitted.provenance().bytes_digest,
+        emitted_bytes_digest(emitted.bytes())
+    );
 }

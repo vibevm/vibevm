@@ -1,0 +1,58 @@
+{
+  "shape": "emitted-artifact",
+  "cardinality": "artifact",
+  "emitted": {
+    "bytes_b64": "PCEtLSB2aWJlOmMxIHZpYmV2bS92aWJlc3BlY3MvYm9vdC9TVEFUSUMueG1sIOKAlCBnZW5lcmF0ZWQgYnkgdmliZSwgZG8gbm90IGVkaXQuIC0tPgo8IS0tIHZpYmU6YzEgVGhlIHN0YXRpYyBib290IGxhbmUgKFBST1AtMDA5IMKnMi4zKTogdGhlIGhpZ2hlc3QtcHJpb3JpdHkgLS0+CjwhLS0gdmliZTpjMSBjb250cmlidXRpb25zLCBjb21waWxlZCBhbmNob3ItcXVhbGlmaWVkLiBSZWFkIHRoaXMgZmlyc3QsIGluIGZ1bGwuIC0tPgoKPCEtLSB2aWJlOmMxIFJFU09MVVRJT04gUlVMRVMg4oCUIHJlYWQgdGhlc2UgZml2ZSBsaW5lcyBiZWZvcmUgYW55dGhpbmcgZWxzZToKICAxLiBMYWJlbHMgaW4gdGhpcyBmaWxlIGFyZSBxdWFsaWZpZWQ6IDxvcmlnaW4tc2x1Zz4tJTJEPG9yaWdpbmFsPi4gVGhlIG9yaWdpbgogICAgIGlzIG5hbWVkIGJ5IHRoZSBwcm92ZW5hbmNlIGNvbW1lbnQgYWJvdmUgZWFjaCBibG9jazsgdGhlIG9yaWdpbmFsIHNob3J0CiAgICAgbGFiZWwgaXMgdGhlIHRhaWwgYWZ0ZXIgdGhlIGxhc3QgYC0lMkRgLgogIDIuIEEgc2hvcnQgbGFiZWwgeW91IGNhbm5vdCBmaW5kIGhlcmUg4oaSIGNoZWNrIHRoZSBSRU5BTUVEIEFOQ0hPUlMgdGFibGUKICAgICBiZWxvdyBmb3IgaXRzIHF1YWxpZmllZCBoZWlyczsgbmV2ZXIgZ3Vlc3MgYW1vbmcgbG9vay1hbGlrZXMuCiAgMy4gRnVsbCBzcGVjOi8vIGFkZHJlc3NlcyByZXNvbHZlIGFnYWluc3QgcGFja2FnZSBTT1VSQ0VTIHVuZGVyIHZpYmV2bS92aWJlc3BlY3MvLAogICAgIG5ldmVyIGFnYWluc3QgdGhpcyBnZW5lcmF0ZWQgZmlsZS4gVGhpcyBmaWxlIGlzIGEgY2FjaGUsIG5vdCBhIHRhcmdldC4KICA0LiBgI3VzZSBzcGVjOi8v4oCmIGFzIFhgIGJpbmRzIGEgZmlsZS1sb2NhbCBhbGlhczsgYEAhWGAgaXMgYSBtYW5kYXRvcnkgcmVhZAogICAgIG9mIFgncyB0YXJnZXQgKHNhbWUgcnVsZXMgYXMgQHNwZWM6Ly/igKYpLiBJbiB0aGlzIGNvbXBpbGVkIGZpbGUgZXZlcnkgQCFYCiAgICAgaXMgYWxyZWFkeSByZXdyaXR0ZW4gdG8gaXRzIGZ1bGwgYWRkcmVzcy4KICA1LiBBbiBhbWJpZ3VvdXMgb3IgdW5yZXNvbHZhYmxlIHNob3J0IHJlZmVyZW5jZSBpcyBhbiBFUlJPUiB0byBzdXJmYWNlIHdpdGgKICAgICBjYW5kaWRhdGVzIOKAlCBuZXZlciBzaWxlbnRseSBwaWNrIG9uZS4gLS0+Cgo8IS0tIHZpYmU6YzEgUkVOQU1FRCBBTkNIT1JTIChzaG9ydCDihpIgcXVhbGlmaWVkIGhlaXJzKToKICByb290IOKGkiBvcmctZGVtby0lMkRhbHBoYS0lMkRyb290IChvcmcuZGVtby9hbHBoYSkgLS0+Cgo8IS0tIHZpYmU6YzEgdmliZTpzdGF0aWMgb3JnLmRlbW8vYWxwaGEg4oCUIGJvb3QvZW50cnkubWQgLS0+Cgo8P3htbCB2ZXJzaW9uPSIxLjAiIGVuY29kaW5nPSJVVEYtOCI/Pgo8c3BlYyB4bWxucz0iaHR0cHM6Ly92aWJldm0ub3JnL3NwZWMvMSI+CiAgPHRpdGxlIGlkPSJvcmctZGVtby0tYWxwaGEtLXJvb3QiPkFscGhhPC90aXRsZT4KICA8cD5iZWZvcmUKPCEtLSB2aWJlOmMxIGVtYmVkOiBzcGVjOi8vb3JnLmRlbW8vc2hhcmVkL291dGVyIC0tPk9VVEVSCjwhLS0gdmliZTpjMSBlbWJlZDogc3BlYzovL29yZy5kZW1vL3NoYXJlZC9pbm5lciAtLT5JTk5FUgo8IS0tIHZpYmU6YzEgL2VtYmVkOiBzcGVjOi8vb3JnLmRlbW8vc2hhcmVkL2lubmVyIC0tPkVORAo8IS0tIHZpYmU6YzEgL2VtYmVkOiBzcGVjOi8vb3JnLmRlbW8vc2hhcmVkL291dGVyIC0tPmFmdGVyPC9wPgo8L3NwZWM+Cgo=",
+    "provenance": {
+      "backend": "static-xml",
+      "bytes_digest": "d20d0168b5c4b539597bdde500cecbda58f74f8a2217daa31bcbc8c24e7ee90d",
+      "context": {
+        "artifact": "static-xml",
+        "frame": {
+          "kind": "static-lane",
+          "generated_path": "vibevm/vibespecs/boot/STATIC.xml",
+          "source_root": "vibevm/vibespecs"
+        },
+        "mode": "qualify-per-node",
+        "target": "static-xml"
+      },
+      "contributions": [
+        {
+          "kind": "normal",
+          "chunk_digest": "f8274abe05e0879bb9281804f440c289328f40cd185c4647e8690e085e507c92",
+          "meta": {
+            "origin": "org.demo/alpha",
+            "path": "boot/entry.md"
+          },
+          "seed": 0,
+          "seed_address": {
+            "anchor": [
+              "root"
+            ],
+            "authority": {
+              "kind": "package",
+              "group": "org.demo",
+              "name": "alpha"
+            },
+            "doc_path": "boot/entry",
+            "raw": "spec://org.demo/alpha/boot/entry#root"
+          }
+        }
+      ],
+      "emitted_transforms": [],
+      "producer": "emit:static-xml",
+      "renames": [
+        {
+          "origin": "org.demo/alpha",
+          "rename": {
+            "original": "root",
+            "qualified": "org-demo--alpha--root"
+          }
+        }
+      ],
+      "source_lane_digest": "c882441d0807724634bbd0ffb3203f07e7c17d2eb0725c857f08acd336384ece"
+    }
+  },
+  "ir_schema": 2,
+  "level": "emitted"
+}

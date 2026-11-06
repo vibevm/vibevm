@@ -39,6 +39,53 @@ const HEADER_LINE: &str = "<!-- vibe:transforms org.demo/tools#minify -->";
 /// No document is ever fetched: every contribution is `simple`.
 struct EmptySource;
 
+struct EmbeddedSource;
+impl SectionSource for EmbeddedSource {
+    fn section_text(&self, address: &SpecAddress) -> Result<String, String> {
+        match address.doc_path.as_str() {
+            "outer" => Ok("OUTER\n#embed spec://org.demo/parts/inner\nEND\n".into()),
+            "inner" => Ok("INNER\n".into()),
+            _ => Err("unexpected fixture source".into()),
+        }
+    }
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-GENERATED-PROVENANCE"
+)]
+fn production_minifier_preserves_paragraph_internal_generated_embed_positions() {
+    let input = ArtifactInput::simple(
+        "org.demo/a",
+        "boot/a.md",
+        "# A {#root}\nbefore\n#embed spec://org.demo/parts/outer\nafter\n",
+    )
+    .unwrap();
+    let base = lane_plan(vec![input]);
+    let compile = |plan| {
+        compile_artifact_with_registries(
+            plan,
+            &EmbeddedSource,
+            &BackendRegistry::builtins(),
+            &TransformRegistry::builtins(),
+        )
+        .unwrap()
+    };
+    let plain = compile(base.clone());
+    let minified = compile(base.with_transforms(minify_plan()));
+    let plain_tape = tape(&plain);
+    let minified_tape = tape(&minified);
+    let before = xml_documents(&plain_tape);
+    let after = xml_documents(&minified_tape);
+    assert_eq!(before.len(), 1);
+    assert_eq!(after.len(), 1);
+    let expected = vibe_specdoc::observe_annotated_xml(before[0]).unwrap();
+    let actual = vibe_specdoc::observe_annotated_xml(after[0]).unwrap();
+    assert_eq!(expected.1.len(), 4);
+    assert_eq!(actual, expected);
+    assert_eq!(minified.provenance().emitted_transforms.len(), 1);
+}
+
 impl SectionSource for EmptySource {
     fn section_text(&self, _address: &SpecAddress) -> Result<String, String> {
         Ok(String::new())

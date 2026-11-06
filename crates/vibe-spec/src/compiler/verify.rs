@@ -46,6 +46,8 @@ pub(crate) use transition::{
 /// absorption and link/lane failures keep their existing typed sources.
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum VerificationError {
+    #[error(transparent)]
+    EmbedTape(#[from] crate::embed::occurrences::EmbedTapeError),
     #[error("source identity field `{field}` must not be blank")]
     BlankSourceIdentity { field: &'static str },
     #[error(

@@ -226,9 +226,10 @@ pub(super) fn decode_emitted(
         bytes_digest,
     };
     check_emit_identity(&provenance, &bytes)?;
-    // Builtin tapes carry the engine's own header/marker framing; a custom
-    // target under the compatibility frame stays opaque (identity + digest).
-    if !provenance.context.target().is_custom() {
+    // A named post-backend byte rewrite owns the final bytes, so original
+    // backend framing is no longer promised. Identity and digest still bind
+    // every carrier; untransformed builtin output retains its framing gate.
+    if !provenance.context.target().is_custom() && provenance.emitted_transforms.is_empty() {
         super::framing::builtin(&provenance, &bytes)?;
     }
     Ok(EmittedArtifact { provenance, bytes })

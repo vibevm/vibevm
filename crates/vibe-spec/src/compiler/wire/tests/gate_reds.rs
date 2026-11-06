@@ -9,7 +9,7 @@ use super::super::{CONVERSION_GATES, IrWireError, decode, encode_compact, widen}
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 fn raw(name: &str) -> serde_json::Value {
@@ -40,7 +40,7 @@ fn assert_gate(value: &serde_json::Value, label: &'static str) {
 // ── 1. ir_schema ─────────────────────────────────────────────────────────────
 
 #[test]
-fn an_epoch_other_than_one_is_red() {
+fn an_epoch_other_than_two_is_red() {
     for name in [
         "source_document.json",
         "closure_artifact.json",
@@ -48,10 +48,10 @@ fn an_epoch_other_than_one_is_red() {
         "emitted_artifact.json",
     ] {
         let mut document = raw(name);
-        document["ir_schema"] = serde_json::json!(2);
+        document["ir_schema"] = serde_json::json!(1);
         let bytes = serde_json::to_vec(&document).unwrap();
         assert!(
-            matches!(decode(&bytes), Err(IrWireError::Schema(2))),
+            matches!(decode(&bytes), Err(IrWireError::Schema(1))),
             "{name}"
         );
     }
@@ -182,7 +182,7 @@ fn the_canonical_remainder_spellings_all_ride() {
         (vec![0x00, 0xff], "AP8="),
         (vec![0x00, 0xff, 0x0a], "AP8K"),
     ] {
-        let mut document = raw("emitted_artifact.json");
+        let mut document = raw("emitted_artifact_transformed.json");
         document["emitted"]["bytes_b64"] = serde_json::json!(String::from(canonical));
         document["emitted"]["provenance"]["bytes_digest"] = serde_json::json!(frame(&bytes));
         decode(&serde_json::to_vec(&document).unwrap())
@@ -203,8 +203,8 @@ fn raw_address_drift_is_red() {
 #[test]
 fn a_fence_delimiter_that_is_not_exactly_one_fence_character_is_red() {
     let mut document = raw("lane_artifact.json");
-    document["lane"]["contributions"][0]["chunks"][1]["node"]["fence_after"]["delimiter"] =
-        serde_json::json!("``");
+    document["lane"]["contributions"][0]["chunks"][1]["node"]["fence_after"] =
+        serde_json::json!({"state":"open", "delimiter":"``", "run":3});
     assert_gate(&document, "address-reparse");
 }
 

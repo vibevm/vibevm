@@ -258,6 +258,7 @@ fn close_document(document: &DocumentIr) -> ClosureDocument {
         DocumentAddress::StaticEntry { origin, .. } => origin.clone(),
     };
     ClosureDocument {
+        embeds: None,
         address,
         origin,
         tree: document.tree().clone(),

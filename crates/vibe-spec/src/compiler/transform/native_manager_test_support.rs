@@ -3,10 +3,10 @@ use std::sync::{Arc, Mutex};
 
 use base64::Engine as _;
 use vibe_core::lifecycle::CompilePoint;
-use vibe_wire::generated::native::e1::compile_reply::{
+use vibe_wire::generated::native::e2::compile_reply::{
     CompileReply, CompileReplyFail, CompileReplyOk, CompileReplySkip,
 };
-use vibe_wire::generated::shared::{ArtifactFrame, Ir};
+use vibe_wire::generated::shared::{ArtifactFrame, IrV2 as Ir};
 
 use crate::compiler::artifact_tests::{Fixture, fixture};
 use crate::compiler::backend::BackendRegistry;
@@ -67,6 +67,7 @@ pub(super) enum ReplyMode {
     LawfulSourceMutation,
     TemporaryEmittedProvenance,
     ChangedEmittedBytes,
+    DestructiveEmittedForgery,
 }
 
 pub(super) struct FakeInvoker {
@@ -153,7 +154,7 @@ impl CompilerNativeInvoker for FakeInvoker {
         mutate_payload(&self.mode, &mut payload);
         if matches!(self.mode, ReplyMode::IllegalSkipPayload) {
             return Ok(format!(
-                "{{\"status\":\"skip\",\"envelope\":1,\"payload\":{}}}",
+                "{{\"status\":\"skip\",\"envelope\":2,\"payload\":{}}}",
                 serde_json::to_string(&payload).unwrap()
             )
             .into_bytes());
@@ -161,37 +162,37 @@ impl CompilerNativeInvoker for FakeInvoker {
 
         let mut reply = match self.mode {
             ReplyMode::SkipAll => CompileReply::Skip(Box::new(CompileReplySkip {
-                envelope: 1,
+                envelope: 2,
                 message: Some("not applicable".to_string()),
             })),
             ReplyMode::SkipOrder(order) if call.order() == order => {
                 CompileReply::Skip(Box::new(CompileReplySkip {
-                    envelope: 1,
+                    envelope: 2,
                     message: Some("not applicable".to_string()),
                 }))
             }
             ReplyMode::FailOrder(order) if call.order() == order => {
                 CompileReply::Fail(Box::new(CompileReplyFail {
-                    envelope: 1,
+                    envelope: 2,
                     message: Some("x".repeat(64 * 1024)),
                 }))
             }
             _ => CompileReply::Ok(Box::new(CompileReplyOk {
-                envelope: 1,
+                envelope: 2,
                 payload,
                 message: None,
             })),
         };
         if matches!(self.mode, ReplyMode::WrongEnvelope) {
-            set_envelope(&mut reply, 2);
+            set_envelope(&mut reply, 1);
         }
         let mut raw = serde_json::to_string(&reply).unwrap();
         match self.mode {
             ReplyMode::DuplicateRoot => {
-                raw = raw.replacen("\"envelope\":1", "\"envelope\":1,\"envelope\":1", 1);
+                raw = raw.replacen("\"envelope\":2", "\"envelope\":2,\"envelope\":2", 1);
             }
             ReplyMode::DuplicateIr => {
-                raw = raw.replacen("\"ir_schema\":1", "\"ir_schema\":1,\"ir_schema\":1", 1);
+                raw = raw.replacen("\"ir_schema\":2", "\"ir_schema\":2,\"ir_schema\":2", 1);
             }
             ReplyMode::DuplicateMap => raw = duplicate_anchor_member(&raw),
             ReplyMode::UnknownRoot => raw.insert_str(raw.len() - 1, ",\"future\":true"),
@@ -238,7 +239,16 @@ fn mutate_payload(mode: &ReplyMode, payload: &mut Ir) {
                 .emitted_transforms
                 .push("plugin:temporary".to_string());
         }
-        (ReplyMode::WrongSchema, payload) => set_schema(payload, 2),
+        (ReplyMode::DestructiveEmittedForgery, Ir::EmittedArtifact(value)) => {
+            let bytes = [0, 255, 7];
+            value.emitted.bytes_b64 = base64::engine::general_purpose::STANDARD.encode(bytes);
+            value.emitted.provenance.bytes_digest = hex(emitted_bytes_digest(&bytes));
+            value.emitted.provenance.source_lane_digest = "a".repeat(64);
+            value.emitted.provenance.contributions.clear();
+            value.emitted.provenance.renames.clear();
+            value.emitted.provenance.emitted_transforms = vec!["plugin:forged-history".into()];
+        }
+        (ReplyMode::WrongSchema, payload) => set_schema(payload, 1),
         _ => {}
     }
 }

@@ -144,6 +144,7 @@ fn decode_lane_node(
                 fence_before: decode_fence(&normal.fence_before)?,
                 fence_after: decode_fence(&normal.fence_after)?,
                 body: normal.body.clone(),
+                embeds: super::embeds::decode_required(&normal.embeds, &normal.body)?,
             })
         }
         wire::LaneNode::Simple(simple) => {
@@ -156,6 +157,7 @@ fn decode_lane_node(
                 fence_before: decode_fence(&simple.fence_before)?,
                 fence_after: decode_fence(&simple.fence_after)?,
                 body: simple.body.clone(),
+                embeds: super::embeds::decode_required(&simple.embeds, &simple.body)?,
             })
         }
     }
@@ -343,6 +345,7 @@ fn encode_lane_node(value: &LaneNode) -> Result<wire::LaneNode, IrWireError> {
             fence_before,
             fence_after,
             body,
+            embeds,
         } => wire::LaneNode::Normal(Box::new(wire::LaneNodeNormal {
             contribution: widen("lane node contribution", *contribution)?,
             occurrence: widen("lane node occurrence", *occurrence)?,
@@ -353,6 +356,7 @@ fn encode_lane_node(value: &LaneNode) -> Result<wire::LaneNode, IrWireError> {
             fence_before: encode_fence(*fence_before)?,
             fence_after: encode_fence(*fence_after)?,
             body: body.clone(),
+            embeds: super::embeds::encode_required(embeds)?,
         })),
         LaneNode::Simple {
             contribution,
@@ -362,6 +366,7 @@ fn encode_lane_node(value: &LaneNode) -> Result<wire::LaneNode, IrWireError> {
             fence_before,
             fence_after,
             body,
+            embeds,
         } => wire::LaneNode::Simple(Box::new(wire::LaneNodeSimple {
             contribution: widen("lane node contribution", *contribution)?,
             occurrence: widen("lane node occurrence", *occurrence)?,
@@ -370,6 +375,7 @@ fn encode_lane_node(value: &LaneNode) -> Result<wire::LaneNode, IrWireError> {
             fence_before: encode_fence(*fence_before)?,
             fence_after: encode_fence(*fence_after)?,
             body: body.clone(),
+            embeds: super::embeds::encode_required(embeds)?,
         })),
     })
 }

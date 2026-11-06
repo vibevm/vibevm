@@ -50,6 +50,7 @@ impl<'a> Parser<'a> {
                     Some(_) => {}
                 }
                 let (name, child_attrs, child_at, child_empty) = self.take_start()?;
+                let semantic = self.begin_semantic(crate::xml_annotations::RegionKind::TrimmedText);
                 if !self.is_fact_element(&name, &child_attrs, child_at)? {
                     return Err(self.err(
                         child_at,
@@ -63,6 +64,7 @@ impl<'a> Parser<'a> {
                     fact: Some(fact),
                     text: text.trim().to_string(),
                 });
+                self.end_semantic(semantic)?;
             }
         }
         if items.is_empty() {

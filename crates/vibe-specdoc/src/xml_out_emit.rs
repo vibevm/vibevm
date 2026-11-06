@@ -84,10 +84,17 @@ pub(crate) fn empty(w: &mut W, depth: usize, name: &str, attrs: &[(&str, String)
 
 /// An inline leaf: one line, text untouched between the tags.
 pub(crate) fn inline(w: &mut W, depth: usize, name: &str, attrs: &[(&str, String)], text: &str) {
+    let before = w.position();
     indent(w, depth);
     let _ = w.write_event(Event::Start(bytes_start(name, attrs)));
+    let text_start = w.position();
     let _ = w.write_event(Event::Text(BytesText::from_escaped(esc_text(text))));
     let _ = w.write_event(Event::End(BytesEnd::new(name)));
+    if name == "title" {
+        w.record_heading(before);
+    } else {
+        w.record_text(before, text_start, text);
+    }
 }
 
 pub(crate) fn indent(w: &mut W, depth: usize) {

@@ -13,7 +13,7 @@ use vibe_spec::{
     CompilerNativeInvokerErrorKind, CompilerNativePolicy, compiler_native_implementation_digest,
 };
 use vibe_wire::behaviour::native_compile;
-use vibe_wire::generated::native::e1::compile_request::CompileRequest;
+use vibe_wire::generated::native::e2::compile_request::CompileRequest;
 use vibe_wire::generated::shared::{Execution, Io, Project, World};
 use vibe_workspace::WorkspaceError;
 use vibe_workspace::extension_world::{
@@ -186,7 +186,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
             &prepared.qualified_key,
         )?;
         let request = CompileRequest {
-            envelope: 1,
+            envelope: 2,
             execution: Execution {
                 config: manager_config,
                 id: prepared.row.declaration().id.clone(),

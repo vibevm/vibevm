@@ -1,0 +1,11 @@
+{
+  "metadata": {
+    "x-vocabularies": [
+      "ir_v2"
+    ],
+    "rustOptions": {
+      "package": "vibe_wire::compiler_ir::e2::ir"
+    }
+  },
+  "ref": "ir_v2"
+}

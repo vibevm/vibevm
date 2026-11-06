@@ -89,7 +89,7 @@ fn contains_root(path: &[String], root: &[&str]) -> bool {
 fn only_the_selected_manager_cell_names_compile_native_reply_and_admission_roots() {
     let compiler = compiler_root();
     let roots = [
-        ["vibe_wire", "generated", "native", "e1", "compile_reply"].as_slice(),
+        ["vibe_wire", "generated", "native", "e2", "compile_reply"].as_slice(),
         ["vibe_wire", "behaviour", "native_compile"].as_slice(),
     ];
     for root in roots {

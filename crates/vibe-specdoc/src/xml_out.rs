@@ -23,7 +23,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#materialisation"
 
 use super::xml_out_emit::{bytes_start, empty, end, esc_text, indent, inline, start};
 use crate::doc::{Block, BlockNode, Cond, Fact, Section, SpecDoc, StatusEl, Unit};
-use quick_xml::Writer;
 use quick_xml::events::{BytesDecl, BytesEnd, BytesText, Event};
 
 /// The dialect's namespace — the root attribute that self-identifies a
@@ -72,14 +71,25 @@ pub(crate) fn anchor_is_elementable(anchor: &str) -> bool {
     )
 }
 
-pub(crate) type W = Writer<Vec<u8>>;
+pub(crate) type W = crate::xml_positions::Output;
 /// Owned attribute pairs (`&str` keys, pre-`to_string` values) — one
 /// uniform shape every emitter below speaks.
 type Attrs<'a> = Vec<(&'a str, String)>;
 
 /// Emit a document as dialect XML.
 pub fn to_xml(doc: &SpecDoc) -> String {
-    let mut w = Writer::new(Vec::new());
+    render(doc, false).0
+}
+
+pub(crate) fn render(
+    doc: &SpecDoc,
+    capture: bool,
+) -> (
+    String,
+    Vec<crate::xml_positions::TextSite>,
+    Vec<crate::xml_positions::HeadingSite>,
+) {
+    let mut w = W::new(capture);
     // `let _ =` by contract: the sink is a Vec, which cannot fail.
     let _ = w.write_event(Event::Decl(BytesDecl::new("1.0", Some("UTF-8"), None)));
     let xmlns: Attrs = vec![("xmlns", NS.to_string())];
@@ -102,10 +112,16 @@ pub fn to_xml(doc: &SpecDoc) -> String {
     }
     end(&mut w, 0, "spec");
     let _ = w.write_event(Event::Text(BytesText::from_escaped("\n")));
-    String::from_utf8(w.into_inner()).expect("writer output is UTF-8")
+    let (bytes, texts, headings) = w.finish();
+    (
+        String::from_utf8(bytes).expect("writer output is UTF-8"),
+        texts,
+        headings,
+    )
 }
 
 fn section(w: &mut W, depth: usize, s: &Section) {
+    let before = w.position();
     let mut attrs: Attrs = Vec::new();
     let tag =
         s.id.as_deref()
@@ -119,6 +135,7 @@ fn section(w: &mut W, depth: usize, s: &Section) {
     attrs.push(("title", s.title.clone()));
     push_when(&mut attrs, s.when.as_ref());
     start(w, depth, tag, &attrs);
+    w.record_heading(before);
     if let Some(st) = &s.status {
         empty(w, depth + 1, "status", status_attrs(st).as_slice());
     }
@@ -215,7 +232,9 @@ fn block(w: &mut W, depth: usize, b: &Block, when: Option<&Cond>) {
             }
             push_when(&mut attrs, when);
             if text.is_empty() {
+                let before = w.position();
                 empty(w, depth, "fence", &attrs);
+                w.record_text(before, w.position(), text);
             } else {
                 inline(w, depth, "fence", &attrs, text);
             }
@@ -386,16 +405,24 @@ fn unit_el(
     push_when(&mut attrs, when);
     let Some(f) = u.fact.as_ref().filter(|f| f.is_meaningful()) else {
         if u.text.is_empty() {
+            let before = w.position();
             empty(w, depth, tag, &attrs);
+            w.record_text(before, w.position(), &u.text);
         } else {
             inline(w, depth, tag, &attrs, &u.text);
         }
         return;
     };
+    let before = w.position();
     indent(w, depth);
     let _ = w.write_event(Event::Start(bytes_start(tag, &attrs)));
     fact_element(w, f, &u.text);
     let _ = w.write_event(Event::End(BytesEnd::new(tag)));
+    let after = w.position();
+    if let Some(site) = w.texts.last_mut() {
+        site.before = before;
+        site.after = after;
+    }
 }
 
 /// A verbatim child of the documentation genre: the start/end PAIR always
@@ -408,6 +435,7 @@ fn verbatim(w: &mut W, depth: usize, tag: &str, text: &str) {
 
 /// One generic or named fact element, without a carrier wrapper or indent.
 fn fact_element(w: &mut W, f: &Fact, text: &str) {
+    let before = w.position();
     let fact_tag =
         f.id.as_deref()
             .filter(|id| anchor_is_elementable(id))
@@ -417,8 +445,10 @@ fn fact_element(w: &mut W, f: &Fact, text: &str) {
         fact_tag,
         fact_attrs(f, named).as_slice(),
     )));
+    let text_start = w.position();
     if !text.is_empty() {
         let _ = w.write_event(Event::Text(BytesText::from_escaped(esc_text(text))));
     }
     let _ = w.write_event(Event::End(BytesEnd::new(fact_tag)));
+    w.record_text(before, text_start, text);
 }

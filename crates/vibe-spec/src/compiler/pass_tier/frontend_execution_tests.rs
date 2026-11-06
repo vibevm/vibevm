@@ -11,7 +11,7 @@ use vibe_core::manifest::{
 use vibe_extension_registry::{
     ExtensionWorld, HostExtensionSource, HostIdentity, HostProvider, collect_extensions,
 };
-use vibe_wire::generated::native::e1::compile_reply::{CompileReply, CompileReplyOk};
+use vibe_wire::generated::native::e2::compile_reply::{CompileReply, CompileReplyOk};
 
 use super::lowering::lower_effective_compile_rows;
 use crate::compiler::builtin::{
@@ -237,7 +237,7 @@ impl CompilerNativeInvoker for Invoker {
         let payload = wire::encode_generated(&output).unwrap();
         Ok(
             serde_json::to_vec(&CompileReply::Ok(Box::new(CompileReplyOk {
-                envelope: 1,
+                envelope: 2,
                 payload,
                 message: None,
             })))

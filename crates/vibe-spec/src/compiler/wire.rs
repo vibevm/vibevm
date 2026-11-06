@@ -1,5 +1,5 @@
 //! Strict, lossless conversion between the R3 domain IR and the generated
-//! epoch-1 compiler-IR wire (PROP-054 `##WHOLE-IR-WIRE`).
+//! current compiler-IR wire (PROP-054 `##WHOLE-IR-WIRE`).
 //!
 //! One compiler value has exactly one machine projection: both encoders build
 //! the SAME generated `vibe_wire` value (pretty versus compact is a serializer
@@ -25,15 +25,18 @@ mod address;
 /// formatter beside it.
 pub(super) mod bounded;
 mod closure;
+mod embeds;
 mod emitted;
 mod framing;
+pub(crate) mod history;
 pub(crate) mod json;
 mod lane;
 mod preflight;
 mod staged;
 mod tree;
 
-use vibe_wire::generated::compiler_ir::e1::ir as wire;
+mod current;
+use current as wire;
 
 #[cfg(test)]
 mod tests;
@@ -53,7 +56,7 @@ pub(crate) struct GateSpec {
 pub(crate) const CONVERSION_GATES: [GateSpec; 15] = [
     GateSpec {
         label: "ir-schema",
-        probe: "ir_schema == 1",
+        probe: "ir_schema == 2",
     },
     GateSpec {
         label: "scalar-ids",
@@ -140,7 +143,7 @@ pub(crate) enum IrWireError {
     Reader { detail: String },
     #[error("the strict byte reader rejected the carrier: {detail}")]
     StrictReader { detail: String },
-    #[error("ir_schema must be 1 in epoch 1, got {0}")]
+    #[error("ir_schema must be 2 in epoch 2, got {0}")]
     Schema(u32),
     #[error("conversion gate `{gate}` refused the carrier: {detail}")]
     Gate { gate: &'static str, detail: String },
@@ -148,7 +151,7 @@ pub(crate) enum IrWireError {
     Construction(String),
     #[error("the immutable verifier refused the reconstructed carrier: {0}")]
     Verification(String),
-    #[error("the domain value cannot ride the epoch-1 wire: {0}")]
+    #[error("the domain value cannot ride the current compiler-IR wire: {0}")]
     Encode(String),
 }
 
@@ -221,7 +224,7 @@ pub(super) fn narrow(field: &'static str, value: u32) -> Result<usize, IrWireErr
     usize::try_from(value).map_err(|_| gate(G_ARENA_BOUNDS, format!("{field} overflows usize")))
 }
 
-/// Checked domain→wire index widening; a domain value that cannot fit epoch 1
+/// Checked domain→wire index widening; a domain value that cannot fit the current wire
 /// refuses rather than truncating.
 pub(super) fn widen(field: &'static str, value: usize) -> Result<u32, IrWireError> {
     u32::try_from(value)
@@ -292,7 +295,7 @@ fn verification(source: &VerificationError) -> IrWireError {
 }
 
 fn require_schema(value: u32) -> Result<(), IrWireError> {
-    if value == 1 {
+    if value == 2 {
         Ok(())
     } else {
         Err(IrWireError::Schema(value))
@@ -369,14 +372,14 @@ fn belt(level: bool, cardinality: bool) {
 pub(crate) fn encode_generated(ir: &AnyIr) -> Result<wire::Ir, IrWireError> {
     let value = match ir {
         AnyIr::Source(source) => wire::Ir::SourceDocument(Box::new(wire::IrSourceDocument {
-            ir_schema: 1,
+            ir_schema: 2,
             level: wire::LevelSource::Source,
             cardinality: wire::CardinalityDocument::Document,
             doc: address::encode_source_doc(source),
         })),
         AnyIr::Document(document) => {
             wire::Ir::DocumentDocument(Box::new(wire::IrDocumentDocument {
-                ir_schema: 1,
+                ir_schema: 2,
                 level: wire::LevelDocument::Document,
                 cardinality: wire::CardinalityDocument::Document,
                 doc: tree::encode_document_ir(document)?,
@@ -388,26 +391,26 @@ pub(crate) fn encode_generated(ir: &AnyIr) -> Result<wire::Ir, IrWireError> {
                 batch.push(tree::encode_document_ir(document)?);
             }
             wire::Ir::DocumentsArtifact(Box::new(wire::IrDocumentsArtifact {
-                ir_schema: 1,
+                ir_schema: 2,
                 level: wire::LevelDocument::Document,
                 cardinality: wire::CardinalityArtifact::Artifact,
                 documents: batch,
             }))
         }
         AnyIr::Closure(closure) => wire::Ir::ClosureArtifact(Box::new(wire::IrClosureArtifact {
-            ir_schema: 1,
+            ir_schema: 2,
             level: wire::LevelClosure::Closure,
             cardinality: wire::CardinalityArtifact::Artifact,
             closure: closure::encode_closure(closure)?,
         })),
         AnyIr::Lane(lane) => wire::Ir::LaneArtifact(Box::new(wire::IrLaneArtifact {
-            ir_schema: 1,
+            ir_schema: 2,
             level: wire::LevelLane::Lane,
             cardinality: wire::CardinalityArtifact::Artifact,
             lane: lane::encode_lane(lane)?,
         })),
         AnyIr::Emitted(emitted) => wire::Ir::EmittedArtifact(Box::new(wire::IrEmittedArtifact {
-            ir_schema: 1,
+            ir_schema: 2,
             level: wire::LevelEmitted::Emitted,
             cardinality: wire::CardinalityArtifact::Artifact,
             emitted: emitted::encode_emitted(emitted)?,

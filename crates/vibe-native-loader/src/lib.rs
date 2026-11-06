@@ -72,7 +72,7 @@ pub struct NativeInvocation<'a> {
 /// One compile-specific native invocation over already encoded request bytes.
 ///
 /// The compiler point is closed and typed. Manifest admission always requires
-/// IR schema 1 internally, so callers cannot omit or downgrade that epoch.
+/// IR schema 2 internally, so callers cannot omit or downgrade that epoch.
 /// The returned bytes are owned and are not decoded by this loader.
 ///
 /// ```
@@ -359,7 +359,7 @@ impl NativeLoader {
             library_path,
             extension_id,
             ExtensionPoint::Compile(point),
-            Some(1),
+            Some(2),
             admission::ManifestFamily::Compiler,
         )?;
         Ok(NativeCompiler {

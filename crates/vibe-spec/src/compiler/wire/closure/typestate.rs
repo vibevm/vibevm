@@ -178,6 +178,7 @@ fn decode_link_occurrence(
                 fence_before: lane_fence::decode_fence(&normal.fence_before)?,
                 fence_after: lane_fence::decode_fence(&normal.fence_after)?,
                 body: normal.body.clone(),
+                embeds: super::super::embeds::decode_required(&normal.embeds, &normal.body)?,
                 trailing_newline_required: normal.trailing_newline_required,
             })
         }
@@ -188,6 +189,7 @@ fn decode_link_occurrence(
             fence_before: lane_fence::decode_fence(&simple.fence_before)?,
             fence_after: lane_fence::decode_fence(&simple.fence_after)?,
             body: simple.body.clone(),
+            embeds: super::super::embeds::decode_required(&simple.embeds, &simple.body)?,
             trailing_newline_required: simple.trailing_newline_required,
         }),
     }
@@ -400,6 +402,7 @@ pub(super) fn encode_link_state(value: &LinkState) -> Result<wire::LinkState, Ir
                         fence_before,
                         fence_after,
                         body,
+                        embeds,
                         trailing_newline_required,
                     } => wire::LinkOccurrence::Normal(Box::new(wire::LinkOccurrenceNormal {
                         contribution: widen("occurrence contribution", *contribution)?,
@@ -410,6 +413,7 @@ pub(super) fn encode_link_state(value: &LinkState) -> Result<wire::LinkState, Ir
                         fence_before: lane_fence::encode_fence(*fence_before)?,
                         fence_after: lane_fence::encode_fence(*fence_after)?,
                         body: body.clone(),
+                        embeds: super::super::embeds::encode_required(embeds)?,
                         trailing_newline_required: *trailing_newline_required,
                     })),
                     LinkOccurrence::Simple {
@@ -419,6 +423,7 @@ pub(super) fn encode_link_state(value: &LinkState) -> Result<wire::LinkState, Ir
                         fence_before,
                         fence_after,
                         body,
+                        embeds,
                         trailing_newline_required,
                     } => wire::LinkOccurrence::Simple(Box::new(wire::LinkOccurrenceSimple {
                         contribution: widen("occurrence contribution", *contribution)?,
@@ -427,6 +432,7 @@ pub(super) fn encode_link_state(value: &LinkState) -> Result<wire::LinkState, Ir
                         fence_before: lane_fence::encode_fence(*fence_before)?,
                         fence_after: lane_fence::encode_fence(*fence_after)?,
                         body: body.clone(),
+                        embeds: super::super::embeds::encode_required(embeds)?,
                         trailing_newline_required: *trailing_newline_required,
                     })),
                 });

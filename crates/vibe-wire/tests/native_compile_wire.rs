@@ -1,3 +1,7 @@
+//! DTO structure and transport admission witnesses; compiler-domain validation is separate.
+//! Schemas: `schemas/native/e2/compile_{request,reply}.jtd.json`.
+#![cfg(test)]
+
 use std::any::TypeId;
 use std::collections::BTreeSet;
 use std::path::PathBuf;
@@ -7,7 +11,7 @@ use vibe_wire::behaviour::native_compile::{
     validate_exchange, validate_reply, validate_request,
 };
 use vibe_wire::generated::format_id::{ForeignParsers, FormatId};
-use vibe_wire::generated::native::e1::{compile_reply, compile_request};
+use vibe_wire::generated::native::e2::{compile_reply, compile_request};
 
 fn root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..")
@@ -51,11 +55,11 @@ fn registry_block(id: &str) -> String {
 }
 
 fn payload(name: &str) -> serde_json::Value {
-    json(&format!("formats/corpora/compiler_ir/e1/valid/{name}.json"))
+    json(&format!("formats/corpora/compiler_ir/e2/valid/{name}.json"))
 }
 
 fn request(point: &str, payload: serde_json::Value) -> compile_request::CompileRequest {
-    let mut document = json("formats/corpora/native/e1/compile_request.valid.json");
+    let mut document = json("formats/corpora/native/e2/compile_request.valid.json");
     document["point"] = point.into();
     if point != "compile:pass" {
         document
@@ -70,7 +74,7 @@ fn request(point: &str, payload: serde_json::Value) -> compile_request::CompileR
 fn ok(payload: serde_json::Value) -> compile_reply::CompileReply {
     serde_json::from_value(serde_json::json!({
         "status": "ok",
-        "envelope": 1,
+        "envelope": 2,
         "payload": payload,
     }))
     .expect("ok reply structurally decodes")
@@ -138,25 +142,25 @@ fn registry_and_schemas_pin_the_two_asymmetric_roots() {
             FormatId::NativeCompileRequest,
             "native-compile-request",
             ForeignParsers::Many,
-            "schemas/native/e1/compile_request.jtd.json",
+            "schemas/native/e2/compile_request.jtd.json",
         ),
         (
             FormatId::NativeCompileReply,
             "native-compile-reply",
             ForeignParsers::None,
-            "schemas/native/e1/compile_reply.jtd.json",
+            "schemas/native/e2/compile_reply.jtd.json",
         ),
     ] {
         assert_eq!(format.id(), id);
-        assert_eq!(format.epoch(), 1);
+        assert_eq!(format.epoch(), 2);
         assert!(format.recoverable());
         assert_eq!(format.foreign_parsers(), role);
         let block = registry_block(id);
         assert!(block.contains(&format!("schema = \"{schema}\"")));
-        assert!(block.contains("corpus = \"formats/corpora/native/e1\""));
+        assert!(block.contains("corpus = \"formats/corpora/native/e2\""));
     }
 
-    let request = json("schemas/native/e1/compile_request.jtd.json");
+    let request = json("schemas/native/e2/compile_request.jtd.json");
     assert_eq!(
         keys(&request["properties"]),
         strings(&[
@@ -171,9 +175,9 @@ fn registry_and_schemas_pin_the_two_asymmetric_roots() {
     );
     assert_eq!(
         request["metadata"]["x-vocabularies"],
-        serde_json::json!(["execution", "project", "world", "io", "ir"])
+        serde_json::json!(["execution", "project", "world", "io", "ir_v2"])
     );
-    assert_eq!(request["properties"]["payload"]["ref"], "ir");
+    assert_eq!(request["properties"]["payload"]["ref"], "ir_v2");
     assert_eq!(
         request["properties"]["payload"]["metadata"]["x-reader-projection"],
         "permissive"
@@ -183,18 +187,21 @@ fn registry_and_schemas_pin_the_two_asymmetric_roots() {
         assert!(!keys(&request["properties"]).contains(forbidden));
     }
 
-    let reply = json("schemas/native/e1/compile_reply.jtd.json");
+    let reply = json("schemas/native/e2/compile_reply.jtd.json");
     assert_eq!(reply["discriminator"], "status");
     assert_eq!(keys(&reply["mapping"]), strings(&["ok", "skip", "fail"]));
     assert_eq!(
         reply["metadata"]["x-vocabularies"],
-        serde_json::json!(["ir"])
+        serde_json::json!(["ir_v2"])
     );
     assert_eq!(
         keys(&reply["mapping"]["ok"]["properties"]),
         strings(&["envelope", "payload"])
     );
-    assert_eq!(reply["mapping"]["ok"]["properties"]["payload"]["ref"], "ir");
+    assert_eq!(
+        reply["mapping"]["ok"]["properties"]["payload"]["ref"],
+        "ir_v2"
+    );
     assert!(
         reply["mapping"]["ok"]["properties"]["payload"]
             .get("metadata")
@@ -216,7 +223,7 @@ fn registry_and_schemas_pin_the_two_asymmetric_roots() {
 
 #[test]
 fn request_projection_accepts_forward_members_and_refuses_duplicate_known_keys() {
-    let raw = read("formats/corpora/native/e1/compile_request.valid.json");
+    let raw = read("formats/corpora/native/e2/compile_request.valid.json");
     let parsed: compile_request::CompileRequest = serde_json::from_str(&raw)
         .expect("forward root and recursively nested members are ignored");
     assert_eq!(parsed.point, "compile:pass");
@@ -225,7 +232,7 @@ fn request_projection_accepts_forward_members_and_refuses_duplicate_known_keys()
         IrCarrier::SourceDocument
     );
 
-    let duplicate = read("formats/corpora/native/e1/compile_request.invalid.json");
+    let duplicate = read("formats/corpora/native/e2/compile_request.invalid.json");
     serde_json::from_str::<compile_request::CompileRequest>(&duplicate)
         .expect_err("the projected adapter refuses a duplicate known payload member");
 
@@ -238,10 +245,10 @@ fn request_projection_accepts_forward_members_and_refuses_duplicate_known_keys()
         .expect_err("the projected adapter refuses duplicates recursively");
 
     let compact = serde_json::to_string(&json(
-        "formats/corpora/native/e1/compile_request.valid.json",
+        "formats/corpora/native/e2/compile_request.valid.json",
     ))
     .unwrap();
-    let root_duplicate = duplicate_member(&compact, r#""envelope":1"#);
+    let root_duplicate = duplicate_member(&compact, r#""envelope":2"#);
     serde_json::from_str::<compile_request::CompileRequest>(&root_duplicate)
         .expect_err("the request root refuses a duplicate known member");
 }
@@ -305,7 +312,7 @@ fn every_carrier_refuses_other_known_level_and_cardinality_spellings() {
             changed[field] = substitute.into();
             let raw = serde_json::to_string(&changed).unwrap();
             assert!(
-                serde_json::from_str::<compile_request::Ir>(&raw).is_err(),
+                serde_json::from_str::<compile_request::IrV2>(&raw).is_err(),
                 "{} structurally refuses known {field} spelling {substitute}",
                 case.shape.carrier
             );
@@ -315,7 +322,7 @@ fn every_carrier_refuses_other_known_level_and_cardinality_spellings() {
 
 #[test]
 fn request_structural_and_behavior_invalid_matrix_is_red() {
-    let base = json("formats/corpora/native/e1/compile_request.valid.json");
+    let base = json("formats/corpora/native/e2/compile_request.valid.json");
 
     let mut missing = base.clone();
     missing.as_object_mut().unwrap().remove("payload");
@@ -343,17 +350,17 @@ fn request_structural_and_behavior_invalid_matrix_is_red() {
     ));
 
     let mut wrong_envelope = request("compile:source", payload("source_document"));
-    wrong_envelope.envelope = 2;
+    wrong_envelope.envelope = 3;
     assert!(matches!(
         validate_request(&wrong_envelope),
-        Err(NativeCompileError::Envelope { found: 2, .. })
+        Err(NativeCompileError::Envelope { found: 3, .. })
     ));
 
     let mut wrong_schema = payload("source_document");
-    wrong_schema["ir_schema"] = 2.into();
+    wrong_schema["ir_schema"] = 3.into();
     assert!(matches!(
         validate_request(&request("compile:source", wrong_schema)),
-        Err(NativeCompileError::IrSchema { found: 2, .. })
+        Err(NativeCompileError::IrSchema { found: 3, .. })
     ));
 
     let point = format!("vendor:{}", "é".repeat(200));
@@ -367,6 +374,41 @@ fn request_structural_and_behavior_invalid_matrix_is_red() {
     assert_eq!(unknown.point, point, "the decoded point is never rewritten");
     assert!(error.to_string().len() < 220);
     assert!(!error.to_string().contains("payload"));
+}
+
+#[test]
+fn historical_epochs_decode_but_current_admission_refuses_them() {
+    let historical: compile_request::CompileRequest = serde_json::from_str(&read(
+        "formats/corpora/native/e1/compile_request.valid.json",
+    ))
+    .expect("historical source shape remains structurally readable");
+    assert!(matches!(
+        validate_request(&historical),
+        Err(NativeCompileError::Envelope { found: 1, .. })
+    ));
+    let mut old_schema = request("compile:source", payload("source_document"));
+    let compile_request::IrV2::SourceDocument(value) = &mut old_schema.payload else {
+        unreachable!()
+    };
+    value.ir_schema = 1;
+    assert!(matches!(
+        validate_request(&old_schema),
+        Err(NativeCompileError::IrSchema { found: 1, .. })
+    ));
+
+    let historical: compile_reply::CompileReply =
+        serde_json::from_str(&read("formats/corpora/native/e1/compile_reply.valid.json"))
+            .expect("historical reply is structurally readable");
+    assert!(matches!(
+        validate_reply(&historical),
+        Err(NativeCompileError::Envelope { found: 1, .. })
+    ));
+    let mut old_schema = payload("source_document");
+    old_schema["ir_schema"] = 1.into();
+    assert!(matches!(
+        validate_reply(&ok(old_schema)),
+        Err(NativeCompileError::IrSchema { found: 1, .. })
+    ));
 }
 
 #[test]
@@ -412,14 +454,14 @@ fn unsupported_point_diagnostics_are_control_safe_and_multibyte_bounded() {
 #[test]
 fn reply_discriminator_is_strict_and_behavior_gates_epochs() {
     let valid: compile_reply::CompileReply =
-        serde_json::from_value(json("formats/corpora/native/e1/compile_reply.valid.json")).unwrap();
+        serde_json::from_value(json("formats/corpora/native/e2/compile_reply.valid.json")).unwrap();
     assert_eq!(
         validate_reply(&valid).unwrap().unwrap().carrier,
         IrCarrier::SourceDocument
     );
     assert!(
         serde_json::from_value::<compile_reply::CompileReply>(json(
-            "formats/corpora/native/e1/compile_reply.invalid.json"
+            "formats/corpora/native/e2/compile_reply.invalid.json"
         ))
         .is_err()
     );
@@ -427,7 +469,7 @@ fn reply_discriminator_is_strict_and_behavior_gates_epochs() {
     for status in ["skip", "fail"] {
         let reply: compile_reply::CompileReply = serde_json::from_value(serde_json::json!({
             "status": status,
-            "envelope": 1,
+            "envelope": 2,
             "message": "bounded status-only result",
         }))
         .unwrap();
@@ -436,7 +478,7 @@ fn reply_discriminator_is_strict_and_behavior_gates_epochs() {
         assert!(
             serde_json::from_value::<compile_reply::CompileReply>(serde_json::json!({
                 "status": status,
-                "envelope": 1,
+                "envelope": 2,
                 "payload": payload("source_document"),
             }))
             .is_err(),
@@ -446,29 +488,29 @@ fn reply_discriminator_is_strict_and_behavior_gates_epochs() {
     assert!(
         serde_json::from_value::<compile_reply::CompileReply>(serde_json::json!({
             "status": "ok",
-            "envelope": 1,
+            "envelope": 2,
         }))
         .is_err()
     );
     assert!(
         serde_json::from_value::<compile_reply::CompileReply>(serde_json::json!({
             "status": "future",
-            "envelope": 1,
+            "envelope": 2,
         }))
         .is_err()
     );
 
-    let mut unknown_root = json("formats/corpora/native/e1/compile_reply.valid.json");
+    let mut unknown_root = json("formats/corpora/native/e2/compile_reply.valid.json");
     unknown_root["future"] = true.into();
     assert!(serde_json::from_value::<compile_reply::CompileReply>(unknown_root).is_err());
-    let mut unknown_nested = json("formats/corpora/native/e1/compile_reply.valid.json");
+    let mut unknown_nested = json("formats/corpora/native/e2/compile_reply.valid.json");
     unknown_nested["payload"]["doc"]["future"] = true.into();
     assert!(serde_json::from_value::<compile_reply::CompileReply>(unknown_nested).is_err());
 
     let compact =
-        serde_json::to_string(&json("formats/corpora/native/e1/compile_reply.valid.json")).unwrap();
+        serde_json::to_string(&json("formats/corpora/native/e2/compile_reply.valid.json")).unwrap();
     for (member, boundary) in [
-        (r#""envelope":1"#, "reply root"),
+        (r#""envelope":2"#, "reply root"),
         (
             r#""declared_path":"boot/10-guide.md""#,
             "reply payload nested object",
@@ -485,17 +527,17 @@ fn reply_discriminator_is_strict_and_behavior_gates_epochs() {
     let compile_reply::CompileReply::Ok(value) = &mut wrong_envelope else {
         unreachable!()
     };
-    value.envelope = 2;
+    value.envelope = 3;
     assert!(matches!(
         validate_reply(&wrong_envelope),
-        Err(NativeCompileError::Envelope { found: 2, .. })
+        Err(NativeCompileError::Envelope { found: 3, .. })
     ));
 
     let mut wrong_schema = payload("source_document");
-    wrong_schema["ir_schema"] = 2.into();
+    wrong_schema["ir_schema"] = 3.into();
     assert!(matches!(
         validate_reply(&ok(wrong_schema)),
-        Err(NativeCompileError::IrSchema { found: 2, .. })
+        Err(NativeCompileError::IrSchema { found: 3, .. })
     ));
 }
 
@@ -518,7 +560,7 @@ fn exchange_matrix_is_exhaustive_and_preserves_status_only_replies() {
         for status in ["skip", "fail"] {
             let reply = serde_json::from_value(serde_json::json!({
                 "status": status,
-                "envelope": 1,
+                "envelope": 2,
             }))
             .unwrap();
             assert_eq!(validate_exchange(&request, &reply), Ok(()));
@@ -528,14 +570,19 @@ fn exchange_matrix_is_exhaustive_and_preserves_status_only_replies() {
 
 #[test]
 fn both_roots_reexport_the_one_canonical_compiler_family() {
+    type Current = vibe_wire::generated::compiler_ir::e2::ir::IrV2;
     type Legacy = vibe_wire::generated::compiler_ir::e1::ir::Ir;
-    type Shared = vibe_wire::generated::shared::Ir;
-    assert_eq!(TypeId::of::<Legacy>(), TypeId::of::<Shared>());
-    assert_eq!(TypeId::of::<compile_request::Ir>(), TypeId::of::<Shared>());
-    assert_eq!(TypeId::of::<compile_reply::Ir>(), TypeId::of::<Shared>());
+    type Shared = vibe_wire::generated::shared::IrV2;
+    assert_eq!(TypeId::of::<Current>(), TypeId::of::<Shared>());
+    assert_ne!(TypeId::of::<Legacy>(), TypeId::of::<Shared>());
+    assert_eq!(
+        TypeId::of::<compile_request::IrV2>(),
+        TypeId::of::<Shared>()
+    );
+    assert_eq!(TypeId::of::<compile_reply::IrV2>(), TypeId::of::<Shared>());
 
-    let legacy = read("crates/vibe-wire/src/generated/compiler_ir/e1/ir/mod.rs");
-    let compiler_names: BTreeSet<&str> = legacy
+    let current = read("crates/vibe-wire/src/generated/compiler_ir/e2/ir/mod.rs");
+    let compiler_names: BTreeSet<&str> = current
         .lines()
         .filter_map(|line| {
             line.trim()
@@ -544,8 +591,8 @@ fn both_roots_reexport_the_one_canonical_compiler_family() {
         })
         .collect();
     for module in [
-        "crates/vibe-wire/src/generated/native/e1/compile_request/mod.rs",
-        "crates/vibe-wire/src/generated/native/e1/compile_reply/mod.rs",
+        "crates/vibe-wire/src/generated/native/e2/compile_request/mod.rs",
+        "crates/vibe-wire/src/generated/native/e2/compile_reply/mod.rs",
     ] {
         let source = read(module);
         for line in source.lines().map(str::trim) {
@@ -566,11 +613,11 @@ fn both_roots_reexport_the_one_canonical_compiler_family() {
 #[test]
 fn projection_lint_allowance_is_local_to_the_generated_request_helper() {
     let marker = "#[allow(clippy::collapsible_if, unused_variables)]";
-    let request = read("crates/vibe-wire/src/generated/native/e1/compile_request/mod.rs");
+    let request = read("crates/vibe-wire/src/generated/native/e2/compile_request/mod.rs");
     assert_eq!(request.matches(marker).count(), 1);
     assert!(request.contains(&format!("{marker}\nmod __reader_projection")));
     for module in [
-        "crates/vibe-wire/src/generated/native/e1/compile_reply/mod.rs",
+        "crates/vibe-wire/src/generated/native/e2/compile_reply/mod.rs",
         "crates/vibe-wire/src/generated/native/e1/context/mod.rs",
         "crates/vibe-wire/src/generated/shared/mod.rs",
     ] {
@@ -581,7 +628,7 @@ fn projection_lint_allowance_is_local_to_the_generated_request_helper() {
 
 #[test]
 fn authored_compile_corpus_has_one_valid_and_invalid_document_per_root() {
-    let dir = root().join("formats/corpora/native/e1");
+    let dir = root().join("formats/corpora/native/e2");
     let names: BTreeSet<String> = std::fs::read_dir(dir)
         .unwrap()
         .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())

@@ -17,8 +17,8 @@ use std::fmt;
 use vibe_core::lifecycle::CompilePoint;
 use vibe_core::manifest::ExtensionKey;
 use vibe_wire::behaviour::native_compile::{IrCarrier, NativeCompileError, validate_reply};
-use vibe_wire::generated::native::e1::compile_reply::CompileReply;
-use vibe_wire::generated::shared::Ir;
+use vibe_wire::generated::native::e2::compile_reply::CompileReply;
+use vibe_wire::generated::shared::IrV2 as Ir;
 mod backend;
 pub(crate) use backend::{NativeBackendEntry, NativeBackendError, execute_backend};
 

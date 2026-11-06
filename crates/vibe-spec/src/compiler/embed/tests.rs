@@ -50,6 +50,7 @@ fn closure(root: &str, tree: &str, pending: EmbedResolutionSnapshot) -> ClosureI
     ClosureIr::testing(
         ArtifactContext::compatibility(StaticCompileMode::Plain),
         vec![ClosureDocument {
+            embeds: None,
             address: DocumentAddress::Spec(address.clone()),
             origin: "org.demo/pkg".to_string(),
             tree: DocTree::parse(tree),
@@ -148,6 +149,7 @@ fn accepted_replay_order_not_scheduler_discovery_orders_nodes_and_edges() {
     assert_eq!(pending.discovery_order, vec![a_target, b_target]);
     let mut input = closure(a, &format!("# A {{#root}}\n#embed {a_target}\n"), pending);
     input.nodes.push(ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(b)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse(&format!("# B {{#root}}\n#embed {b_target}\n")),
@@ -206,12 +208,14 @@ fn shared_node_across_contributions_is_expanded_once_at_first_emission_encounter
         snapshot(&[(target, "PIECE")], &[shared, alpha, omega]),
     );
     input.nodes.push(ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(alpha)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse("ALPHA"),
         aliases: Default::default(),
     });
     input.nodes.push(ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(omega)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse("OMEGA"),
@@ -312,6 +316,7 @@ fn embedded_explicit_use_target_reuses_its_id_and_current_tree() {
         pending,
     );
     input.nodes.push(ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(target)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse("# Current {#root}\nCURRENT-TARGET\n"),
@@ -368,6 +373,7 @@ fn nested_explicit_use_replay_keeps_one_edge_per_authored_occurrence() {
         pending,
     );
     input.nodes.push(ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(b)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse(&format!("# B {{#root}}\nCURRENT-B\n#embed {c}\n")),
@@ -440,6 +446,7 @@ fn embedded_source_only_target_reuses_its_id_but_reads_the_snapshot_tree() {
         pending,
     );
     input.nodes.push(ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(target)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse("# Mutated {#root}\nSOURCE-NODE-TREE\n"),
@@ -534,6 +541,7 @@ fn failure_in_a_later_root_leaves_the_entire_closure_unmodified() {
         pending,
     );
     input.nodes.push(ClosureDocument {
+        embeds: None,
         address: DocumentAddress::Spec(spec(second)),
         origin: "org.demo/pkg".to_string(),
         tree: DocTree::parse(&format!("# Second {{#root}}\n#embed {missing}\n")),

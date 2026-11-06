@@ -1,5 +1,5 @@
 use super::*;
-use vibe_wire::generated::native::e1::compile_reply::CompileReply;
+use vibe_wire::generated::native::e2::compile_reply::CompileReply;
 
 #[test]
 fn all_row_order_and_request_authorities_are_exact() {
@@ -49,7 +49,7 @@ fn all_row_order_and_request_authorities_are_exact() {
             expected_payload.clone(),
         ))
         .unwrap();
-    assert_eq!(request.envelope, 1);
+    assert_eq!(request.envelope, 2);
     assert_eq!(request.point, "compile:pass");
     assert_eq!(request.execution.id, "compiler-ok");
     assert_eq!(request.execution.package, all[1].provider().to_string());

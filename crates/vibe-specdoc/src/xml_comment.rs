@@ -14,6 +14,15 @@ const COMMENT_CLOSE: &str = "-->";
 const RESERVED_PREFIX: &str = " vibe:c";
 const C1_PREFIX: &str = " vibe:c1 ";
 
+/// Frame one supplied generated payload as a complete canonical c1 comment.
+/// This does not recognize or reinterpret authored text as provenance.
+pub fn frame_generated_xml_comment(payload: &str) -> String {
+    format!(
+        "{COMMENT_OPEN}{C1_PREFIX}{} {COMMENT_CLOSE}",
+        encode_generated_xml_comment(payload)
+    )
+}
+
 /// A precise refusal raised while decoding a generated XML comment.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum XmlCommentCodecError {

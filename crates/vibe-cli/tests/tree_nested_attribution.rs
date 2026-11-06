@@ -17,6 +17,39 @@ const B: &str = "spec://org.probe/project/common/B#root";
 const C: &str = "spec://org.probe/project/common/C#root";
 const MARKER: &str = "<!-- vibe:static org.probe/project — docs/source.md -->\n";
 
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#XML-GENERATED-EMBED-ATTRIBUTION"
+)]
+fn xml_actual_comments_are_distinct_from_cdata_reserved_lookalikes() {
+    let open = vibe_specdoc::frame_generated_xml_comment(&format!("embed: {A}"));
+    let close = vibe_specdoc::frame_generated_xml_comment(&format!("/embed: {A}"));
+    let inner_open = vibe_specdoc::frame_generated_xml_comment(&format!("embed: {B}"));
+    let inner_close = vibe_specdoc::frame_generated_xml_comment(&format!("/embed: {B}"));
+    let tape = format!(
+        "{MARKER}<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<spec xmlns=\"https://vibevm.org/spec/1\">\n<p><![CDATA[\n<!-- vibe:c9 embed: literal-version -->\n<!-- vibe:c1 vibe:static fake — fake.md -->\n<!-- embed: unmatched-literal -->\n]]></p>\n<p>before{open}outer{inner_open}inner{inner_close}tail{close}after</p>\n</spec>\n"
+    );
+    let line = tape
+        .lines()
+        .position(|line| line.starts_with("<p>before"))
+        .unwrap() as u64
+        + 1;
+    let observation = inspect(
+        "xml_cdata_literal_comments",
+        &tape,
+        true,
+        expected(&[(A, line, line), (B, line, line)]),
+    );
+    assert_occurrences(&observation, &[(A, line, line), (B, line, line)]);
+    assert_eq!(
+        observation["document"]["boot"]["static_md"]["contributions"]
+            .as_array()
+            .unwrap()
+            .len(),
+        1
+    );
+}
+
 fn snapshot(root: &Path) -> BTreeMap<PathBuf, Option<Vec<u8>>> {
     fn walk(root: &Path, here: &Path, rows: &mut BTreeMap<PathBuf, Option<Vec<u8>>>) {
         for entry in fs::read_dir(here).unwrap() {

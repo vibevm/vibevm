@@ -156,6 +156,10 @@ fn decode_closure_document(value: &wire::ClosureDocument) -> Result<ClosureDocum
         aliases.insert(name.clone(), decode_spec_address(address)?);
     }
     Ok(ClosureDocument {
+        embeds: super::embeds::decode(
+            &value.embeds,
+            &decode_doc_tree(&value.tree)?.text(decode_doc_tree(&value.tree)?.root()),
+        )?,
         address: decode_document_address(&value.address)?,
         origin: value.origin.clone(),
         tree: decode_doc_tree(&value.tree)?,
@@ -353,6 +357,7 @@ fn encode_closure_document(value: &ClosureDocument) -> Result<wire::ClosureDocum
         aliases.insert(name.clone(), encode_spec_address(address));
     }
     Ok(wire::ClosureDocument {
+        embeds: super::embeds::encode(&value.embeds)?,
         address: encode_document_address(&value.address),
         origin: value.origin.clone(),
         tree: encode_doc_tree(&value.tree)?,

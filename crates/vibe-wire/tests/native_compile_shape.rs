@@ -1,18 +1,21 @@
+//! Transport shape admission for `schemas/native/e2/compile_reply.jtd.json`.
+#![cfg(test)]
+
 use vibe_wire::behaviour::native_compile::{
     CompileReplyStatus, CompileWireSide, IrCardinality, IrCarrier, IrLevel, IrShape,
     NativeCompileError, validate_reply_for_shape,
 };
-use vibe_wire::generated::native::e1::compile_reply::{
-    CompileReply, CompileReplyOk, CompileReplySkip, Ir,
+use vibe_wire::generated::native::e2::compile_reply::{
+    CompileReply, CompileReplyOk, CompileReplySkip, IrV2 as Ir,
 };
 
 fn ir(name: &str) -> Ir {
     let raw = match name {
         "source" => {
-            include_str!("../../../formats/corpora/compiler_ir/e1/valid/source_document.json")
+            include_str!("../../../formats/corpora/compiler_ir/e2/valid/source_document.json")
         }
         "document" => {
-            include_str!("../../../formats/corpora/compiler_ir/e1/valid/document_document.json")
+            include_str!("../../../formats/corpora/compiler_ir/e2/valid/document_document.json")
         }
         _ => unreachable!(),
     };
@@ -28,14 +31,14 @@ const SOURCE_SHAPE: IrShape = IrShape {
 #[test]
 fn admitted_shape_validates_reply_envelope_schema_status_and_exact_ok_shape() {
     let ok = CompileReply::Ok(Box::new(CompileReplyOk {
-        envelope: 1,
+        envelope: 2,
         payload: ir("source"),
         message: None,
     }));
     assert_eq!(validate_reply_for_shape(SOURCE_SHAPE, &ok), Ok(()));
 
     let changed = CompileReply::Ok(Box::new(CompileReplyOk {
-        envelope: 1,
+        envelope: 2,
         payload: ir("document"),
         message: None,
     }));
@@ -45,14 +48,14 @@ fn admitted_shape_validates_reply_envelope_schema_status_and_exact_ok_shape() {
     ));
 
     let bad_envelope = CompileReply::Skip(Box::new(CompileReplySkip {
-        envelope: 2,
+        envelope: 3,
         message: None,
     }));
     assert_eq!(
         validate_reply_for_shape(SOURCE_SHAPE, &bad_envelope),
         Err(NativeCompileError::Envelope {
             side: CompileWireSide::Reply(CompileReplyStatus::Skip),
-            found: 2,
+            found: 3,
         })
     );
 }

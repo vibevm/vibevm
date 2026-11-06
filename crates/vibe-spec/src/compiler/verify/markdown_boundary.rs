@@ -32,6 +32,7 @@ fn normal_contribution(index: usize, entries: &[(usize, &str, &str)]) -> LaneCon
             marker: marker.clone(),
         });
         chunks.push(LaneChunk::Node(Box::new(LaneNode::Normal {
+            embeds: crate::embed::occurrences::EmbedTape::new(body, vec![]),
             contribution: index,
             occurrence,
             node: ClosureNodeId(*node),

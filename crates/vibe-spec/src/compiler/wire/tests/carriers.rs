@@ -15,7 +15,7 @@ use crate::{DocTree, SpecAddress};
 fn corpus() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../..")
-        .join("formats/corpora/compiler_ir/e1")
+        .join("formats/corpora/compiler_ir/e2")
 }
 
 fn raw(name: &str) -> serde_json::Value {
@@ -193,6 +193,14 @@ fn an_authored_slug_on_a_skipped_node_is_accepted() {
 fn a_coherent_non_golden_opaque_tape_is_accepted() {
     use sha2::{Digest, Sha256};
     let mut document = raw("emitted_artifact.json");
+    // This case supplies a custom backend carrier; builtin framing is tested
+    // separately and cannot certify arbitrary opaque bytes.
+    let provenance = &mut document["emitted"]["provenance"];
+    provenance["context"]["artifact"] = "opaque-test".into();
+    provenance["context"]["target"] = "opaque-test".into();
+    provenance["context"]["frame"]["generated_path"] = "artifacts/opaque-test".into();
+    provenance["backend"] = "opaque-test".into();
+    provenance["producer"] = "pass:org.demo/tools#opaque".into();
     let bytes: Vec<u8> = vec![0x01, 0x02, 0x03];
     let framed = {
         let domain = b"vibe-spec/emitted-bytes/v1";

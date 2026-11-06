@@ -28,6 +28,15 @@ pub(crate) const GENERATED_COMMENT_CLOSE: &str = " -->";
 /// The reserved channel every generated XML comment rides.
 pub(crate) const XML_GENERATED_CHANNEL: &str = "vibe:c1 ";
 
+/// Actual XML token locations for readers of the engine's frame grammar.
+/// Inner comments and CDATA are distinguished by the incumbent token owner.
+pub(crate) fn xml_comment_spans(
+    text: &str,
+) -> impl Iterator<Item = Result<vibe_specdoc::XmlCommentSpan, vibe_specdoc::XmlCommentScanError>> + '_
+{
+    vibe_specdoc::xml_comment_spans(text)
+}
+
 fn generated_comment(syntax: CommentSyntax, payload: &str, layout: Layout) -> String {
     if matches!(syntax, CommentSyntax::Xml) {
         return format!(

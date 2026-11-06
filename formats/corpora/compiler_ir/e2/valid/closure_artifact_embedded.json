@@ -1,0 +1,504 @@
+{
+  "shape": "closure-artifact",
+  "cardinality": "artifact",
+  "closure": {
+    "absorption": {
+      "state": "applied",
+      "plan": {
+        "contributions": [
+          {
+            "kind": "normal",
+            "meta": {
+              "origin": "org.demo/alpha",
+              "path": "boot/entry.md"
+            },
+            "occurrences": [
+              {
+                "absorbed": false,
+                "node": 0,
+                "requested_address": {
+                  "anchor": [
+                    "root"
+                  ],
+                  "authority": {
+                    "kind": "package",
+                    "group": "org.demo",
+                    "name": "alpha"
+                  },
+                  "doc_path": "boot/entry",
+                  "raw": "spec://org.demo/alpha/boot/entry#root"
+                }
+              }
+            ],
+            "seed": 0,
+            "seed_address": {
+              "anchor": [
+                "root"
+              ],
+              "authority": {
+                "kind": "package",
+                "group": "org.demo",
+                "name": "alpha"
+              },
+              "doc_path": "boot/entry",
+              "raw": "spec://org.demo/alpha/boot/entry#root"
+            }
+          }
+        ],
+        "mode": "qualify-per-node"
+      }
+    },
+    "context": {
+      "artifact": "static-xml",
+      "frame": {
+        "kind": "static-lane",
+        "generated_path": "vibevm/vibespecs/boot/STATIC.xml",
+        "source_root": "vibevm/vibespecs"
+      },
+      "mode": "qualify-per-node",
+      "target": "static-xml"
+    },
+    "contributions": [
+      {
+        "kind": "normal",
+        "emission_order": [
+          {
+            "node": 0,
+            "requested_address": {
+              "anchor": [
+                "root"
+              ],
+              "authority": {
+                "kind": "package",
+                "group": "org.demo",
+                "name": "alpha"
+              },
+              "doc_path": "boot/entry",
+              "raw": "spec://org.demo/alpha/boot/entry#root"
+            }
+          }
+        ],
+        "meta": {
+          "origin": "org.demo/alpha",
+          "path": "boot/entry.md"
+        },
+        "seed": 0,
+        "seed_address": {
+          "anchor": [
+            "root"
+          ],
+          "authority": {
+            "kind": "package",
+            "group": "org.demo",
+            "name": "alpha"
+          },
+          "doc_path": "boot/entry",
+          "raw": "spec://org.demo/alpha/boot/entry#root"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "from": 0,
+        "kind": "embed",
+        "requested_target": {
+          "anchor": [],
+          "authority": {
+            "kind": "package",
+            "group": "org.demo",
+            "name": "shared"
+          },
+          "doc_path": "outer",
+          "raw": "spec://org.demo/shared/outer"
+        },
+        "to": 1
+      },
+      {
+        "from": 1,
+        "kind": "embed",
+        "requested_target": {
+          "anchor": [],
+          "authority": {
+            "kind": "package",
+            "group": "org.demo",
+            "name": "shared"
+          },
+          "doc_path": "inner",
+          "raw": "spec://org.demo/shared/inner"
+        },
+        "to": 2
+      }
+    ],
+    "link": {
+      "state": "linked",
+      "result": {
+        "contributions": [
+          {
+            "kind": "normal",
+            "meta": {
+              "origin": "org.demo/alpha",
+              "path": "boot/entry.md"
+            },
+            "occurrence_count": 1,
+            "seed": 0,
+            "seed_address": {
+              "anchor": [
+                "root"
+              ],
+              "authority": {
+                "kind": "package",
+                "group": "org.demo",
+                "name": "alpha"
+              },
+              "doc_path": "boot/entry",
+              "raw": "spec://org.demo/alpha/boot/entry#root"
+            }
+          }
+        ],
+        "input_digest": "120edfd5b9dca22abf2d0e77df470a739db480bc03d77381ee925146240218c3",
+        "mode": "qualify-per-node",
+        "occurrences": [
+          {
+            "kind": "normal",
+            "address": {
+              "anchor": [
+                "root"
+              ],
+              "authority": {
+                "kind": "package",
+                "group": "org.demo",
+                "name": "alpha"
+              },
+              "doc_path": "boot/entry",
+              "raw": "spec://org.demo/alpha/boot/entry#root"
+            },
+            "body": "# Alpha {#org-demo--alpha--root}\nbefore\nOUTER\nINNER\nEND\nafter",
+            "contribution": 0,
+            "embeds": {
+              "body_digest": "04437f3ee71d917cc69f9643a93158662e6018e036173a22c2191c24afda1ea8",
+              "occurrences": [
+                {
+                  "directive_line": 2,
+                  "end": 5,
+                  "intrinsic_empty": false,
+                  "owner": {
+                    "kind": "unit",
+                    "anchor": "root",
+                    "end": 6,
+                    "start": 0
+                  },
+                  "path": [
+                    0
+                  ],
+                  "source": "spec://org.demo/alpha/boot/entry#root",
+                  "start": 2,
+                  "suppressed": false,
+                  "target": {
+                    "anchor": [],
+                    "authority": {
+                      "kind": "package",
+                      "group": "org.demo",
+                      "name": "shared"
+                    },
+                    "doc_path": "outer",
+                    "raw": "spec://org.demo/shared/outer"
+                  }
+                },
+                {
+                  "directive_line": 1,
+                  "end": 4,
+                  "intrinsic_empty": false,
+                  "owner": {
+                    "kind": "preamble",
+                    "end": 5,
+                    "start": 2
+                  },
+                  "path": [
+                    0,
+                    0
+                  ],
+                  "source": "spec://org.demo/shared/outer",
+                  "start": 3,
+                  "suppressed": false,
+                  "target": {
+                    "anchor": [],
+                    "authority": {
+                      "kind": "package",
+                      "group": "org.demo",
+                      "name": "shared"
+                    },
+                    "doc_path": "inner",
+                    "raw": "spec://org.demo/shared/inner"
+                  }
+                }
+              ]
+            },
+            "fence_after": {
+              "state": "closed"
+            },
+            "fence_before": {
+              "state": "closed"
+            },
+            "marker": "spec://org.demo/alpha/boot/entry#root",
+            "node": 0,
+            "occurrence": 0,
+            "trailing_newline_required": true
+          }
+        ]
+      }
+    },
+    "nodes": [
+      {
+        "address": {
+          "kind": "spec",
+          "address": {
+            "anchor": [
+              "root"
+            ],
+            "authority": {
+              "kind": "package",
+              "group": "org.demo",
+              "name": "alpha"
+            },
+            "doc_path": "boot/entry",
+            "raw": "spec://org.demo/alpha/boot/entry#root"
+          }
+        },
+        "aliases": {},
+        "embeds": {
+          "body_digest": "04437f3ee71d917cc69f9643a93158662e6018e036173a22c2191c24afda1ea8",
+          "occurrences": [
+            {
+              "directive_line": 2,
+              "end": 5,
+              "intrinsic_empty": false,
+              "owner": {
+                "kind": "unit",
+                "anchor": "root",
+                "end": 6,
+                "start": 0
+              },
+              "path": [
+                0
+              ],
+              "source": "spec://org.demo/alpha/boot/entry#root",
+              "start": 2,
+              "suppressed": false,
+              "target": {
+                "anchor": [],
+                "authority": {
+                  "kind": "package",
+                  "group": "org.demo",
+                  "name": "shared"
+                },
+                "doc_path": "outer",
+                "raw": "spec://org.demo/shared/outer"
+              }
+            },
+            {
+              "directive_line": 1,
+              "end": 4,
+              "intrinsic_empty": false,
+              "owner": {
+                "kind": "preamble",
+                "end": 5,
+                "start": 2
+              },
+              "path": [
+                0,
+                0
+              ],
+              "source": "spec://org.demo/shared/outer",
+              "start": 3,
+              "suppressed": false,
+              "target": {
+                "anchor": [],
+                "authority": {
+                  "kind": "package",
+                  "group": "org.demo",
+                  "name": "shared"
+                },
+                "doc_path": "inner",
+                "raw": "spec://org.demo/shared/inner"
+              }
+            }
+          ]
+        },
+        "origin": "org.demo/alpha",
+        "tree": {
+          "anchors": {
+            "org-demo--alpha--root": 1
+          },
+          "directives": {
+            "aliases": {},
+            "directives": [],
+            "errors": [],
+            "in_place_uses": []
+          },
+          "duplicate_anchors": [],
+          "lines": [
+            "# Alpha {#org-demo--alpha--root}",
+            "before",
+            "OUTER",
+            "INNER",
+            "END",
+            "after"
+          ],
+          "nodes": [
+            {
+              "children": [
+                1
+              ],
+              "heading": "",
+              "heading_line": 0,
+              "kind": "heading",
+              "level": 0,
+              "span": {
+                "end": 6,
+                "start": 0
+              },
+              "trailing": ""
+            },
+            {
+              "children": [],
+              "heading": "Alpha",
+              "heading_line": 0,
+              "kind": "heading",
+              "level": 1,
+              "span": {
+                "end": 6,
+                "start": 0
+              },
+              "trailing": "",
+              "id": "org-demo--alpha--root",
+              "parent": 0
+            }
+          ]
+        }
+      },
+      {
+        "address": {
+          "kind": "spec",
+          "address": {
+            "anchor": [],
+            "authority": {
+              "kind": "package",
+              "group": "org.demo",
+              "name": "shared"
+            },
+            "doc_path": "outer",
+            "raw": "spec://org.demo/shared/outer"
+          }
+        },
+        "aliases": {},
+        "embeds": null,
+        "origin": "org.demo/shared",
+        "tree": {
+          "anchors": {},
+          "directives": {
+            "aliases": {},
+            "directives": [
+              {
+                "address": {
+                  "anchor": [],
+                  "authority": {
+                    "kind": "package",
+                    "group": "org.demo",
+                    "name": "shared"
+                  },
+                  "doc_path": "inner",
+                  "raw": "spec://org.demo/shared/inner"
+                },
+                "kind": "embed",
+                "line": 1,
+                "options": ""
+              }
+            ],
+            "errors": [],
+            "in_place_uses": []
+          },
+          "duplicate_anchors": [],
+          "lines": [
+            "OUTER",
+            "#embed spec://org.demo/shared/inner",
+            "END"
+          ],
+          "nodes": [
+            {
+              "children": [],
+              "heading": "",
+              "heading_line": 0,
+              "kind": "heading",
+              "level": 0,
+              "span": {
+                "end": 3,
+                "start": 0
+              },
+              "trailing": ""
+            }
+          ]
+        }
+      },
+      {
+        "address": {
+          "kind": "spec",
+          "address": {
+            "anchor": [],
+            "authority": {
+              "kind": "package",
+              "group": "org.demo",
+              "name": "shared"
+            },
+            "doc_path": "inner",
+            "raw": "spec://org.demo/shared/inner"
+          }
+        },
+        "aliases": {},
+        "embeds": null,
+        "origin": "org.demo/shared",
+        "tree": {
+          "anchors": {},
+          "directives": {
+            "aliases": {},
+            "directives": [],
+            "errors": [],
+            "in_place_uses": []
+          },
+          "duplicate_anchors": [],
+          "lines": [
+            "INNER"
+          ],
+          "nodes": [
+            {
+              "children": [],
+              "heading": "",
+              "heading_line": 0,
+              "kind": "heading",
+              "level": 0,
+              "span": {
+                "end": 1,
+                "start": 0
+              },
+              "trailing": ""
+            }
+          ]
+        }
+      }
+    ],
+    "qualification": {
+      "state": "applied",
+      "mode": "qualify-per-node"
+    },
+    "renames": [
+      {
+        "origin": "org.demo/alpha",
+        "rename": {
+          "original": "root",
+          "qualified": "org-demo--alpha--root"
+        }
+      }
+    ]
+  },
+  "ir_schema": 2,
+  "level": "closure"
+}

@@ -162,7 +162,7 @@ fn every_snapshot_is_the_strict_compiler_ir_wire() {
         };
         assert_eq!(event.status, PassStatus::Ok, "only `ok` certifies a file");
         let bytes = std::fs::read(directory.join(name)).expect("the named file is readable");
-        serde_json::from_slice::<vibe_wire::generated::compiler_ir::e1::ir::Ir>(&bytes)
+        serde_json::from_slice::<vibe_wire::generated::compiler_ir::e2::ir::IrV2>(&bytes)
             .unwrap_or_else(|error| panic!("`{name}` is not strict compiler IR: {error}"));
         checked += 1;
     }

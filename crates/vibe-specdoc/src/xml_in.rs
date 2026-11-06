@@ -97,7 +97,21 @@ pub fn from_xml(xml: &str) -> Result<SpecDoc> {
 /// assert!(err.message.contains("documentation vocabulary"));
 /// ```
 pub fn from_xml_with(xml: &str, vocab: Vocabulary) -> Result<SpecDoc> {
-    let mut p = Parser::collect(xml, vocab)?;
+    parse(xml, vocab, false).map(|(doc, _, _)| doc)
+}
+
+type ObservedDocument = (
+    SpecDoc,
+    Vec<crate::xml_annotations::SemanticComment>,
+    Vec<crate::xml_annotations::GeneratedXmlComment>,
+);
+
+pub(super) fn parse_observed(xml: &str) -> Result<ObservedDocument> {
+    parse(xml, Vocabulary::Spec, true)
+}
+
+fn parse(xml: &str, vocab: Vocabulary, observe: bool) -> Result<ObservedDocument> {
+    let mut p = Parser::collect(xml, vocab, observe)?;
     p.skip_ws_text()?;
     let (name, attrs, at, was_empty) = p.take_start()?;
     if name != "spec" {
@@ -109,18 +123,24 @@ pub fn from_xml_with(xml: &str, vocab: Vocabulary) -> Result<SpecDoc> {
         ));
     }
     p.check_root_attrs(&attrs, at)?;
+    let semantic = p.begin_semantic(crate::xml_annotations::RegionKind::Container);
     let doc = if was_empty {
         SpecDoc::default()
     } else {
         p.spec_children()?
     };
+    p.end_semantic(semantic)?;
     p.skip_ws_text()?;
     if p.i < p.evs.len() {
         let at = p.poss[p.i];
         return Err(p.err(at, "content after </spec> — one document, one root".into()));
     }
     p.check_ids()?;
-    Ok(doc)
+    let (semantic, physical) = match p.observation.take() {
+        Some(observation) => observation.finish(&p.evs)?,
+        None => (Vec::new(), Vec::new()),
+    };
+    Ok((doc, semantic, physical))
 }
 
 pub(super) struct Parser<'a> {
@@ -132,22 +152,31 @@ pub(super) struct Parser<'a> {
     pub(super) vocab: Vocabulary,
     /// Every minted id in document order, with its position.
     pub(super) ids: Vec<(String, (usize, usize))>,
+    pub(super) observation: Option<crate::xml_annotations::Observation>,
     _src: &'a str,
 }
 
 impl<'a> Parser<'a> {
-    fn collect(xml: &'a str, vocab: Vocabulary) -> Result<Parser<'a>> {
+    fn collect(xml: &'a str, vocab: Vocabulary, observe: bool) -> Result<Parser<'a>> {
         let mut reader = Reader::from_str(xml);
         let mut evs: Vec<Ev> = Vec::new();
         let mut poss: Vec<(usize, usize)> = Vec::new();
+        let mut observation = observe.then(crate::xml_annotations::Observation::default);
         loop {
+            let start = reader.buffer_position() as usize;
             let ev = reader.read_event().map_err(|e| {
                 let at = pos_of(xml, reader.error_position() as usize);
                 Error::at(at.0, format!("ill-formed XML: {e}"))
             })?;
             let at = pos_of(xml, reader.buffer_position() as usize);
             match ev {
-                Event::Decl(_) | Event::Comment(_) => continue,
+                Event::Decl(_) => continue,
+                Event::Comment(_) => {
+                    if let Some(observation) = &mut observation {
+                        observation.capture(xml, start, reader.buffer_position() as usize, &evs)?;
+                    }
+                    continue;
+                }
                 Event::DocType(_) => {
                     return Err(Error::at(
                         at.0,
@@ -225,6 +254,7 @@ impl<'a> Parser<'a> {
             i: 0,
             vocab,
             ids: Vec::new(),
+            observation,
             _src: xml,
         })
     }

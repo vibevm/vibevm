@@ -1,0 +1,31 @@
+{
+  "shape": "source-document",
+  "cardinality": "document",
+  "doc": {
+    "address": {
+      "kind": "spec",
+      "address": {
+        "anchor": [
+          "api"
+        ],
+        "authority": {
+          "kind": "package",
+          "group": "org.demo",
+          "name": "lib"
+        },
+        "doc_path": "manual/part.md",
+        "raw": "spec://org.demo/lib/manual/part.md#api"
+      }
+    },
+    "format": "markdown",
+    "subject": {
+      "declared_path": "manual/part.md",
+      "provider": {
+        "kind": "unclaimed"
+      }
+    },
+    "text": "# Part {#api}\n\nReference body.\n"
+  },
+  "ir_schema": 2,
+  "level": "source"
+}
