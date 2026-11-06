@@ -25,3 +25,9 @@ The exact original A1 notes and tests require source-plan → actual application
 Accepted M13C1 supplies neutral exact-token planning, not saved apply/recovery. The dependency route is strict neutral C2 request/report transport and thin CLI/MCP planning first, then the actual one-file apply/replay/journal/recovery capability required by A1, then the descriptor reader/source recipe and joined adoption/materialization path. The source audit must name exact interfaces; importing all of M16 is not justified by a final prototype module name. Conversely, in-memory FileGuard rollback cannot be called process-exit recovery.
 
 M13D1's full interruption/platform/surface obligations remain explicit even if A1 exercises only two focused apply cases. Completing that focused A1 journey cannot silently certify all D1 recovery or the whole source interpretation family. Source A2/A3/A4 downstream obligations and prototype gaps remain on the campaign map.
+
+## Implementation-scope clarification
+
+Main's project section currently rejects a sources key, including an empty one. The project absent/empty compatibility rule above is the required policy when that later field lands, not a claim that A1 already accepts project.sources. A1 introduces package declarations only; a valid project-only manifest without that field remains legacy. Unknown project fields refuse rather than silently selecting a policy.
+
+Portable reserved-source admission and payload ownership are separate laws. Source declarations must refuse proven ASCII case aliases of reserved generated boot paths, derived from the canonical path/prefix owner. Exact-case G3 payload filtering remains unchanged: rejecting a declaration alias does not claim that every such physical spelling is generated on Linux.
