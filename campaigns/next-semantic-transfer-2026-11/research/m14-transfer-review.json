@@ -1,0 +1,2285 @@
+{
+  "main_pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "mode": "read-only audit; dirty A1 excluded; no product/ledger changes",
+  "rows": [
+    {
+      "old_task_id": "M-14-A.1",
+      "title": "Separate definition, executor and target identities",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-14-A.1",
+        "title": "Separate definition, executor and target identities",
+        "goal": "Freeze the environment roles and compatibility interpretation before existing host-based consumers acquire new fields.",
+        "read_paths": [
+          "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-025-binary-delivery.xml",
+          "crates/vibe-core/src/manifest/target_when.rs",
+          "crates/vibe-lifecycle/src/native/platform.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+          "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-core/src/manifest/artifact/mod.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-core/src/manifest/target_when.rs",
+          "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+          "crates/vibe-core/src/environment/",
+          "crates/vibe-core/src/lib.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-core/src/manifest/artifact/mod.rs"
+        ],
+        "steps": [
+          "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-076-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+          "Trace each existing host/OS/platform field to its current meaning; list old-reader behavior and exact callers requiring an explicit target later.",
+          "Define EnvironmentDefinition, EnvironmentLock, ExecutionContext, TargetBinding and EnvironmentGeneration as separate identities; distinguish build machine, produced-tool runtime and compiler output target.",
+          "Add pure type constructors and compatibility results for workspace, HOME, offline rootfs and future live targets; preserve existing bare-install behavior and reject unimplemented targets explicitly."
+        ],
+        "positive_cases": [
+          "Existing project install binds to an explicit local target with unchanged semantics.",
+          "A Windows executor can describe a Linux target without selecting a Windows launcher."
+        ],
+        "negative_cases": [
+          "Executor ABI is substituted for target ABI.",
+          "Future live-system capability is advertised as implemented."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "TO CREATE: environment-role and legacy-host-guard contract tests in vibe-core."
+        ],
+        "acceptance": [
+          "Each identity has named inputs and owned authority; no environment becomes a new package kind or stewardship DB.",
+          "Pure construction needs neither Docker nor a host HOME lookup."
+        ],
+        "safe_stop": "Types and compatibility tests are coherent; downstream consumers remain on their explicit legacy interpretation.",
+        "commit_subject": "feat(core): define environment and target identity roles",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; the permanent contract is established at the start of this task; later retirement proves preservation.",
+          "crates/vibe-core/src/environment/ is a proposed small domain module; confirm its parent export before adding files. D-022 remains OPEN and does not block these neutral roles.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-076-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+          "assessment": "missing",
+          "reason": "No accepted PROP076 environment-role contract; meta-distribution vision is an open design input.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Trace each existing host/OS/platform field to its current meaning; list old-reader behavior and exact callers requiring an explicit target later.",
+          "assessment": "partial",
+          "reason": "Legacy meanings can be traced now: native platform=current process ABI, applicability=injected host OS, binary projection=provider-fresh Cargo target; no completed environment-role census accepted.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Define EnvironmentDefinition, EnvironmentLock, ExecutionContext, TargetBinding and EnvironmentGeneration as separate identities; distinguish build machine, produced-tool runtime and compiler output target.",
+          "assessment": "missing",
+          "reason": "No joined distinct definition/lock/executor/target/generation model; app home/context and deploy generation are narrower existing identities.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 4,
+          "exact": "Add pure type constructors and compatibility results for workspace, HOME, offline rootfs and future live targets; preserve existing bare-install behavior and reject unimplemented targets explicitly.",
+          "assessment": "partial",
+          "reason": "Pure NativePlatform/from_pair and TargetWhen constructors exist; no workspace/HOME/rootfs/live-target compatibility model.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Existing project install binds to an explicit local target with unchanged semantics.",
+          "assessment": "missing",
+          "reason": "Existing install is supported but does not bind an explicit environment target identity.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "A Windows executor can describe a Linux target without selecting a Windows launcher.",
+          "assessment": "missing",
+          "reason": "Explicit platform data can describe Linux; actual vibe-bin defaults launcher to NATIVE and has no separate executor/target binding.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Executor ABI is substituted for target ABI.",
+          "assessment": "missing",
+          "reason": "No executor-versus-target ABI invariant in the environment owner.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Future live-system capability is advertised as implemented.",
+          "assessment": "partial",
+          "reason": "No live-system environment capability is currently advertised; positive typed Unsupported contract absent.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Each identity has named inputs and owned authority; no environment becomes a new package kind or stewardship DB.",
+          "assessment": "missing",
+          "reason": "Five identity inputs/authority boundaries not established; no new package kind currently introduced.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Pure construction needs neither Docker nor a host HOME lookup.",
+          "assessment": "partial",
+          "reason": "Existing pure platform/applicability and injected-root constructors do not need Docker/HOME; complete environment construction absent.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Types and compatibility tests are coherent; downstream consumers remain on their explicit legacy interpretation.",
+          "assessment": "missing",
+          "reason": "No complete environment roles/compatibility suite.",
+          "evidence_paths": [
+            "crates/vibe-core/src/manifest/target_when.rs",
+            "crates/vibe-lifecycle/src/native/platform.rs",
+            "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+            "crates/vibe-app/src/select.rs",
+            "crates/vibe-app/src/operations/mod.rs",
+            "crates/vibe-core/src/lib.rs"
+          ]
+        }
+      ],
+      "runtime": "No tests executed; accepted feature receipts are historical evidence only.",
+      "evidence_paths": [
+        "crates/vibe-core/src/manifest/target_when.rs",
+        "crates/vibe-lifecycle/src/native/platform.rs",
+        "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+        "crates/vibe-app/src/select.rs",
+        "crates/vibe-app/src/operations/mod.rs",
+        "crates/vibe-core/src/lib.rs"
+      ]
+    },
+    {
+      "old_task_id": "M-14-A.2",
+      "title": "Centralize environment layout and prefix policy",
+      "proposed_status": "partial",
+      "exact_contract": {
+        "id": "M-14-A.2",
+        "title": "Centralize environment layout and prefix policy",
+        "goal": "Provide one injected layout/root policy for user profiles and offline targets without scattering machine paths through providers.",
+        "read_paths": [
+          "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+          "crates/vibe-core/src/manifest/target_when.rs",
+          "vibevm/vibespecs/modules/vibe-workspace/PROP-025-binary-delivery.xml",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "vibevm/vibespecs/common/PROP-052-directory-layout.xml",
+          "crates/vibe-core/src/layout.rs",
+          "crates/vibe-core/src/settings.rs",
+          "crates/vibe-core/src/manifest/declarant_path.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/tests.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-core/src/environment/",
+          "crates/vibe-core/src/layout.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "crates/vibe-core/src/settings.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/model.rs"
+        ],
+        "steps": [
+          "First add the exact injected-layout/resource/path/prefix policy requirements to permanent PROP-076 and validate its existing canonical readers before executable A2 edits. Desired rules and observed implementation remain separate; no existing roots or provider config are relocated implicitly.",
+          "Locate the existing layout authority named by the baseline and enumerate environment configuration, store, profile, state and cache roots.",
+          "Implement pure root-relative resource identity with environment instance, principal, path/case policy and prefix compatibility; preserve the existing project vibevm/ layout.",
+          "Represent relocatable, prefix-bound and unsupported payload compatibility and reserved future account/service/mount/boot resources; inject selected roots instead of re-reading ambient HOME/PATH."
+        ],
+        "positive_cases": [
+          "Two definitions can share immutable content yet have different target instance/root authority.",
+          "Valid Linux payload components survive Windows control-plane validation."
+        ],
+        "negative_cases": [
+          "A reused pathname silently transfers an old receipt to a different root.",
+          "Arbitrary /usr-oriented binaries are declared HOME-relocatable."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "TO CREATE: injected-root, Linux-path and prefix-compatibility tests."
+        ],
+        "acceptance": [
+          "Every environment root has one layout constructor and callers receive explicit bindings.",
+          "No root privilege broker, live system mutation or pacman policy is introduced."
+        ],
+        "safe_stop": "Layout and compatibility values are tested as data; no deployment or rootfs operation runs.",
+        "commit_subject": "feat(core): centralize environment root and prefix policy",
+        "notes": [
+          "The existing PROP-076 is extended at the start of A2 with its governing layout/path/prefix anchors; later promotion/retirement records proof, not deferred authority.",
+          "crates/vibe-core/src/layout.rs is the existing layout authority named in the baseline architecture; inspect it when the execution packet admits the implementation.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+          "Source-before-execution perimeter amendment: read the existing settings/layout authorities and add only A2 rules in PROP-076. Preserve A1 contract semantics and all existing user/project roots; no settings resolver/provider behavior rewrite is granted by the source addition.",
+          "Exact shared-name adapter amendment: settings.rs may add pure injected-root helpers and route legacy ambient accessors through the same suffix constants without changing precedence or paths. vibebin/store.rs may replace only STORE_DIR/BIN_DIR with aliases; deploy/model.rs may replace only DEPLOY_STATE_DIR with an alias. No provider/configuration/placement/cleanup/activation behavior change or path relocation is granted. Linux payloads never pass through the generic source-portable declarant-path grammar."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "First add the exact injected-layout/resource/path/prefix policy requirements to permanent PROP-076 and validate its existing canonical readers before executable A2 edits. Desired rules and observed implementation remain separate; no existing roots or provider config are relocated implicitly.",
+          "assessment": "missing",
+          "reason": "No accepted canonical injected environment layout/prefix contract.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Locate the existing layout authority named by the baseline and enumerate environment configuration, store, profile, state and cache roots.",
+          "assessment": "covered",
+          "reason": "Existing owners are core layout/settings, app SettingsRoot, Storage and deploy_state_home; explicit root roles are enumerated by this audit.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Implement pure root-relative resource identity with environment instance, principal, path/case policy and prefix compatibility; preserve the existing project vibevm/ layout.",
+          "assessment": "partial",
+          "reason": "Injected user/project roots and library IDs exist; environment instance/principal/target path-case/root-relative resource identity absent.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 4,
+          "exact": "Represent relocatable, prefix-bound and unsupported payload compatibility and reserved future account/service/mount/boot resources; inject selected roots instead of re-reading ambient HOME/PATH.",
+          "assessment": "partial",
+          "reason": "App/deploy callers inject roots and host facts; no relocatable/prefix-bound payload model or reserved future resource capabilities.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Two definitions can share immutable content yet have different target instance/root authority.",
+          "assessment": "partial",
+          "reason": "Project/user app homes can share source cache while mutable homes differ; no immutable environment-definition/target-root authority proof.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Valid Linux payload components survive Windows control-plane validation.",
+          "assessment": "missing",
+          "reason": "Source-portable component rules are not a target Linux payload path policy; no Windows-control/Linux-payload case.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "A reused pathname silently transfers an old receipt to a different root.",
+          "assessment": "partial",
+          "reason": "Library marker and home lock checks detect some mismatches; reused pathname is not pinned root-generation identity.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Arbitrary /usr-oriented binaries are declared HOME-relocatable.",
+          "assessment": "missing",
+          "reason": "No explicit prefix-relocatability classification; arbitrary scripts/external installers are not proven HOME-relocatable.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Every environment root has one layout constructor and callers receive explicit bindings.",
+          "assessment": "partial",
+          "reason": "Existing roots have constructors, but no one environment-wide constructor combines all target roles/bindings.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "No root privilege broker, live system mutation or pacman policy is introduced.",
+          "assessment": "covered",
+          "reason": "No root privilege broker/live system/pacman policy introduced by existing roots.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Layout and compatibility values are tested as data; no deployment or rootfs operation runs.",
+          "assessment": "partial",
+          "reason": "Pure injected root data exists; missing prefix/target compatibility tests prevent full closure.",
+          "evidence_paths": [
+            "crates/vibe-core/src/layout.rs",
+            "crates/vibe-core/src/settings.rs",
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-app/src/storage/mod.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+          ]
+        }
+      ],
+      "runtime": "No tests executed; accepted feature receipts are historical evidence only.",
+      "evidence_paths": [
+        "crates/vibe-core/src/layout.rs",
+        "crates/vibe-core/src/settings.rs",
+        "crates/vibe-app/src/settings.rs",
+        "crates/vibe-app/src/storage/mod.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs"
+      ]
+    },
+    {
+      "old_task_id": "M-14-B.1",
+      "title": "Generate environment and realization wire contracts",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-14-B.1",
+        "title": "Generate environment and realization wire contracts",
+        "goal": "Bind exact lock, payload inventory and realized closure identities to the shared M-16 schema conventions.",
+        "read_paths": [
+          "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+          "crates/vibe-core/src/manifest/package/binary.rs",
+          "crates/vibe-install/src/record.rs",
+          "crates/vibe-lifecycle/src/mechanism/record.rs",
+          "formats/EPOCHS.toml",
+          "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+          "xtask/src/main.rs",
+          ".cargo/config.toml",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-core/src/manifest/artifact/mod.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs"
+        ],
+        "write_paths": [
+          "formats/",
+          "crates/vibe-core/src/environment/",
+          "crates/vibe-core/src/manifest/artifact/",
+          "crates/vibe-lifecycle/src/mechanism/record.rs",
+          "schemas/",
+          "crates/vibe-wire/",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-core/src/manifest/artifact/mod.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs"
+        ],
+        "steps": [
+          "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-076-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+          "Use the existing format registry/codegen conventions and M-16-B envelopes; inventory every request, result, durable receipt and hash carrier that needs the new fields.",
+          "Define dependency roles, native-backend closure, file/link/mode/principal inventory and domain-separated ordered hash frames; distinguish recipe-input and produced-output identities.",
+          "Generate owned wire types/corpora; add wrong-target, unsupported-metadata and reordered-input cases with explicit recipe/schema epochs."
+        ],
+        "positive_cases": [
+          "Equivalent normalized definitions yield the same exact lock identity.",
+          "Changing target ABI or one payload byte changes the appropriate identity."
+        ],
+        "negative_cases": [
+          "A package URL or mutable version string substitutes for captured identity.",
+          "Windows IDs are serialized as Linux payload UID/GID."
+        ],
+        "checks": [
+          "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory."
+        ],
+        "acceptance": [
+          "Generated types and retained records use one schema source and explicit epochs.",
+          "Metadata capabilities are explicit; unsupported privileged nodes cannot be silently dropped."
+        ],
+        "safe_stop": "Schemas and fixtures pass while unimplemented target execution remains explicitly unsupported.",
+        "commit_subject": "feat(formats): add environment realization and payload contracts",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; the permanent contract is established at the start of this task; later retirement proves preservation.",
+          "formats/ writes are limited to registered schemas/corpora/generated bindings for this atom; no unrelated epoch bump. Full root gate remains with the coordinator.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+          "Schema edits use the registered current-atom source under schemas/ and its required registry/codegen plumbing; generate bindings mechanically, with no unrelated format or epoch changes.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-076-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+          "assessment": "missing",
+          "reason": "No accepted PROP076 environment realization/payload contract.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Use the existing format registry/codegen conventions and M-16-B envelopes; inventory every request, result, durable receipt and hash carrier that needs the new fields.",
+          "assessment": "partial",
+          "reason": "Canonical codegen and artifact/deploy schemas exist; environment request/result/receipt/hash-carrier inventory and M16 convention join absent.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Define dependency roles, native-backend closure, file/link/mode/principal inventory and domain-separated ordered hash frames; distinguish recipe-input and produced-output identities.",
+          "assessment": "partial",
+          "reason": "Measured artifact digest and separate producer/freshness exist; no recursive environment closure/file-link-mode-principal inventory/hash recipe.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 4,
+          "exact": "Generate owned wire types/corpora; add wrong-target, unsupported-metadata and reordered-input cases with explicit recipe/schema epochs.",
+          "assessment": "missing",
+          "reason": "No environment/realization schema/corpus/target ABI metadata fixtures.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Equivalent normalized definitions yield the same exact lock identity.",
+          "assessment": "missing",
+          "reason": "No normalized environment definition/exact lock identity.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Changing target ABI or one payload byte changes the appropriate identity.",
+          "assessment": "partial",
+          "reason": "Artifact bytes have actual digest; target ABI has no environment identity binding.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "A package URL or mutable version string substitutes for captured identity.",
+          "assessment": "partial",
+          "reason": "Exact package content hashes exist; no realization claim type preventing URL/version substitution.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Windows IDs are serialized as Linux payload UID/GID.",
+          "assessment": "missing",
+          "reason": "No explicit payload UID/GID versus Windows principal representation.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Generated types and retained records use one schema source and explicit epochs.",
+          "assessment": "missing",
+          "reason": "Existing formats are generated/epoched, but requested environment carriers are absent.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Metadata capabilities are explicit; unsupported privileged nodes cannot be silently dropped.",
+          "assessment": "missing",
+          "reason": "No target metadata capability/privileged-node representation and refusal.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Schemas and fixtures pass while unimplemented target execution remains explicitly unsupported.",
+          "assessment": "missing",
+          "reason": "Environment schema/fixture boundary absent.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-install/src/record.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        }
+      ],
+      "runtime": "No tests executed; accepted feature receipts are historical evidence only.",
+      "evidence_paths": [
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-install/src/record.rs",
+        "schemas/deploy_intent.jtd.json",
+        "schemas/deploy_receipt.jtd.json",
+        "schemas/native/e1/deploy_request.jtd.json"
+      ]
+    },
+    {
+      "old_task_id": "M-14-B.2",
+      "title": "Migrate legacy identity and supply-path readers",
+      "proposed_status": "partial",
+      "exact_contract": {
+        "id": "M-14-B.2",
+        "title": "Migrate legacy identity and supply-path readers",
+        "goal": "Preserve old record meanings while adding exact build inputs, prefix constraints and replaceable source/cache locators.",
+        "read_paths": [
+          "crates/vibe-install/src/record.rs",
+          "crates/vibe-lifecycle/src/mechanism/record.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+          "crates/vibe-package-source/src/source.rs",
+          "crates/vibe-install/src/plan/fetch.rs",
+          "formats/EPOCHS.toml",
+          "xtask/src/main.rs",
+          ".cargo/config.toml",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-install/Cargo.toml",
+          "crates/vibe-install/src/lib.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+        ],
+        "write_paths": [
+          "crates/vibe-core/src/environment/",
+          "crates/vibe-install/src/record.rs",
+          "crates/vibe-lifecycle/src/mechanism/record.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+          "formats/",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-install/Cargo.toml",
+          "crates/vibe-install/src/lib.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml"
+        ],
+        "steps": [
+          "Create representative old records from the characterized schema and state which fields cannot be inferred; mark them legacy rather than synthesizing target or hermetic proof.",
+          "Implement deterministic readers/migration through M-13 primitives, retaining input/output/prefix identities and exact source/mirror/substitution policy.",
+          "Require complete recursive source/build/runtime inputs for new realization claims and keep provider-native versions opaque to Vibe SemVer."
+        ],
+        "positive_cases": [
+          "Known old records remain readable with their original weaker guarantees.",
+          "A same-content mirror can satisfy an exact captured source with retained provenance."
+        ],
+        "negative_cases": [
+          "Legacy existence-only binary becomes verified merely through deserialization.",
+          "A changed prefix or untrusted cache producer is silently accepted."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-install target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-install <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "TO CREATE: old/new record, missing-input and substitute-prefix compatibility fixtures."
+        ],
+        "acceptance": [
+          "Every migration has explicit unavailable/needs-input outcomes for absent proof.",
+          "No source/registry/cache transport requires GitHub by contract."
+        ],
+        "safe_stop": "Legacy/new readers agree with fixtures; no real store or installed environment is migrated during tests.",
+        "commit_subject": "feat(runtime): preserve legacy records across environment schemas",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+          "Actual mirror served_by/origin persistence belongs to M-15-B.2; this atom proves pure legacy classification and substitution policy without claiming the current transport retains the serving mirror."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Create representative old records from the characterized schema and state which fields cannot be inferred; mark them legacy rather than synthesizing target or hermetic proof.",
+          "assessment": "partial",
+          "reason": "Legacy app/work and binary/artifact reader semantics remain; no explicit legacy environment classification inventory or missing-proof representation.",
+          "evidence_paths": [
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-install/src/record.rs",
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-app/src/operations/pending/identity.rs",
+            "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+            "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Implement deterministic readers/migration through M-13 primitives, retaining input/output/prefix identities and exact source/mirror/substitution policy.",
+          "assessment": "partial",
+          "reason": "Exact source hashes, current mirror resolver and F14 compatibility retain real old meaning; no environment identity/prefix migration reader.",
+          "evidence_paths": [
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-install/src/record.rs",
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-app/src/operations/pending/identity.rs",
+            "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+            "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Require complete recursive source/build/runtime inputs for new realization claims and keep provider-native versions opaque to Vibe SemVer.",
+          "assessment": "missing",
+          "reason": "No complete recursive source/build/runtime closure requirement or provider-native version domain in environment realization claims.",
+          "evidence_paths": [
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-install/src/record.rs",
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-app/src/operations/pending/identity.rs",
+            "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+            "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Known old records remain readable with their original weaker guarantees.",
+          "assessment": "partial",
+          "reason": "Known app/record generations preserve weaker historical meaning; no new environment record adapter.",
+          "evidence_paths": [
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-install/src/record.rs",
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-app/src/operations/pending/identity.rs",
+            "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+            "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "A same-content mirror can satisfy an exact captured source with retained provenance.",
+          "assessment": "partial",
+          "reason": "Existing expected-hash mirror selection and caller lock comparison can reproduce content; no target-prefix/producer substitution admission.",
+          "evidence_paths": [
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-install/src/record.rs",
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-app/src/operations/pending/identity.rs",
+            "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+            "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Legacy existence-only binary becomes verified merely through deserialization.",
+          "assessment": "partial",
+          "reason": "No conversion from legacy existence-only record into new environment proof currently exists; explicit new-reader refusal matrix absent.",
+          "evidence_paths": [
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-install/src/record.rs",
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-app/src/operations/pending/identity.rs",
+            "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+            "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "A changed prefix or untrusted cache producer is silently accepted.",
+          "assessment": "missing",
+          "reason": "No target-prefix/trusted cache producer comparison owner.",
+          "evidence_paths": [
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-install/src/record.rs",
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-app/src/operations/pending/identity.rs",
+            "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+            "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Every migration has explicit unavailable/needs-input outcomes for absent proof.",
+          "assessment": "missing",
+          "reason": "No environment migration NeedsInput/unavailable classifications for absent proof.",
+          "evidence_paths": [
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-install/src/record.rs",
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-app/src/operations/pending/identity.rs",
+            "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+            "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "No source/registry/cache transport requires GitHub by contract.",
+          "assessment": "covered",
+          "reason": "Local/Multi/Embedded and mirror owners are not GitHub-only.",
+          "evidence_paths": [
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-install/src/record.rs",
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-app/src/operations/pending/identity.rs",
+            "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+            "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Legacy/new readers agree with fixtures; no real store or installed environment is migrated during tests.",
+          "assessment": "partial",
+          "reason": "Existing compatibility fixtures are evidence for their original owners, not full legacy/new environment reader agreement.",
+          "evidence_paths": [
+            "crates/vibe-package-source/src/source.rs",
+            "crates/vibe-install/src/record.rs",
+            "crates/vibe-lifecycle/src/mechanism/record.rs",
+            "crates/vibe-app/src/operations/pending/identity.rs",
+            "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+            "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+          ]
+        }
+      ],
+      "runtime": "No tests executed; accepted feature receipts are historical evidence only.",
+      "evidence_paths": [
+        "crates/vibe-package-source/src/source.rs",
+        "crates/vibe-install/src/record.rs",
+        "crates/vibe-lifecycle/src/mechanism/record.rs",
+        "crates/vibe-app/src/operations/pending/identity.rs",
+        "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+        "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md"
+      ]
+    },
+    {
+      "old_task_id": "M-14-C.1",
+      "title": "Carry the target binding through local operation seams",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-14-C.1",
+        "title": "Carry the target binding through local operation seams",
+        "goal": "Carry an opt-in target binding through strict local operation records and refuse bound effects until the physical owner grants pinned roots.",
+        "read_paths": [
+          "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+          "crates/vibe-lifecycle/src/native/platform.rs",
+          "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+          "xtask/src/main.rs",
+          ".cargo/config.toml",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+          "crates/vibe-lifecycle/src/native/mod.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "schemas/deploy_intent.jtd.json",
+          "schemas/deploy_receipt.jtd.json",
+          "schemas/native/e1/deploy_request.jtd.json",
+          "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/state/wire.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/native.rs",
+          "crates/vibe-cli/src/commands/deploy.rs",
+          "crates/vibe-orchestrator/src/dispatch/mechanism.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-lifecycle/src/mechanism/deploy/",
+          "crates/vibe-lifecycle/src/native/",
+          "crates/vibe-workspace/src/extension_world.rs",
+          "formats/",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+          "crates/vibe-lifecycle/src/native/mod.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "schemas/",
+          "crates/vibe-wire/",
+          "crates/vibe-cli/src/commands/deploy.rs",
+          "crates/vibe-orchestrator/src/dispatch/mechanism.rs"
+        ],
+        "steps": [
+          "Trace existing deploy/native and extension request carriers, add an optional typed binding without changing legacy local operation meaning or serialized None bytes.",
+          "Use host-issued context/target binding values from M-16 conventions; keep a distinct bound state key, include binding in bound plan hash, and validate intent, receipt, native request and structured inspection equality before replay.",
+          "Refuse bound apply before inverse recovery, provider selection or state creation when no pinned host root/effect grant exists; never derive one from a request body or package descriptor. C.2 supplies the first supported bound effect."
+        ],
+        "positive_cases": [
+          "The same package under two injected instance bindings gets distinct state keys and typed receipt/inspection identities without touching either destination.",
+          "A legacy local compatibility request keeps the incumbent projected files and byte-compatible unbound records."
+        ],
+        "negative_cases": [
+          "A request body path or package descriptor self-grants a new root.",
+          "A copied legacy or other-instance receipt is accepted under a bound key, or unsupported bound apply reaches recovery/provider."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check."
+        ],
+        "acceptance": [
+          "Target binding survives the typed request/plan/journal/receipt/inspection carrier and legacy None remains byte-compatible.",
+          "Bound effects without admitted physical roots refuse before recovery/provider; no successful native or builtin effect is claimed by C.1."
+        ],
+        "safe_stop": "Bound carrier and early-refusal tests pass; first real bound effect and physical alias fencing remain C.2.",
+        "commit_subject": "feat(deploy): bind local effects to environment targets",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+          "The expanded schema/wire/CLI/orchestrator perimeter is limited to the opt-in target-binding carrier and its mechanically required codegen/constructor/validation changes. M-14-C.2 owns physical alias/root-handle fencing.",
+          "The incumbent builtin vibe-bin provider writes through raw paths; C.1 must not enable bound effects merely by pinning an unrelated Project handle. C.2 owns handle-constrained I/O and shared physical locking before the first bound UserProfile apply."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Trace existing deploy/native and extension request carriers, add an optional typed binding without changing legacy local operation meaning or serialized None bytes.",
+          "assessment": "missing",
+          "reason": "DeployExecution/schema fields have roots and legacy identities, no opt-in environment binding carrier.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Use host-issued context/target binding values from M-16 conventions; keep a distinct bound state key, include binding in bound plan hash, and validate intent, receipt, native request and structured inspection equality before replay.",
+          "assessment": "missing",
+          "reason": "DeploymentHome hashes project/package/target only; no bound instance key/plan hash/carrier equality.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Refuse bound apply before inverse recovery, provider selection or state creation when no pinned host root/effect grant exists; never derive one from a request body or package descriptor. C.2 supplies the first supported bound effect.",
+          "assessment": "missing",
+          "reason": "No bound operation admission state; existing strict config refuses authored roots but is not a bound grant path.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "The same package under two injected instance bindings gets distinct state keys and typed receipt/inspection identities without touching either destination.",
+          "assessment": "missing",
+          "reason": "No two injected instance bindings and bound inspection/receipt state keys.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "A legacy local compatibility request keeps the incumbent projected files and byte-compatible unbound records.",
+          "assessment": "partial",
+          "reason": "Legacy operation records remain as before; no bound-versus-None compatibility extension tested.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "A request body path or package descriptor self-grants a new root.",
+          "assessment": "partial",
+          "reason": "Engine-owned settings/user roots and strict provider config already prevent manifest root override; target binding body admission absent.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "A copied legacy or other-instance receipt is accepted under a bound key, or unsupported bound apply reaches recovery/provider.",
+          "assessment": "missing",
+          "reason": "No bound key/instance receipt comparison or bound-before-provider refusal.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Target binding survives the typed request/plan/journal/receipt/inspection carrier and legacy None remains byte-compatible.",
+          "assessment": "missing",
+          "reason": "Binding absent from request/plan/journal/receipt/inspection.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Bound effects without admitted physical roots refuse before recovery/provider; no successful native or builtin effect is claimed by C.1.",
+          "assessment": "missing",
+          "reason": "No bound effects capability/refusal path; current effects are legacy local.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Bound carrier and early-refusal tests pass; first real bound effect and physical alias fencing remain C.2.",
+          "assessment": "missing",
+          "reason": "Bound carrier gate absent; source C1 refers to C2 first effect, superseded by exact C2/C3 split.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "schemas/deploy_intent.jtd.json",
+            "schemas/deploy_receipt.jtd.json",
+            "schemas/native/e1/deploy_request.jtd.json"
+          ]
+        }
+      ],
+      "runtime": "No tests executed; accepted feature receipts are historical evidence only.",
+      "evidence_paths": [
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "schemas/deploy_intent.jtd.json",
+        "schemas/deploy_receipt.jtd.json",
+        "schemas/native/e1/deploy_request.jtd.json"
+      ]
+    },
+    {
+      "old_task_id": "M-14-C.2",
+      "title": "Fence aliased roots and stale target generations",
+      "proposed_status": "partial",
+      "exact_contract": {
+        "id": "M-14-C.2",
+        "title": "Fence aliased roots and stale target generations",
+        "goal": "Fence aliased physical roots and stale target generations with pinned, lock-scoped capabilities; preserve safe refusal before the first bound effect.",
+        "read_paths": [
+          "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+          "crates/vibe-lifecycle/src/lease.rs",
+          "crates/vibe-safefs/src/file.rs",
+          "crates/vibe-safefs/src/component.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+          "crates/vibe-safefs/Cargo.toml",
+          "crates/vibe-safefs/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+          "crates/vibe-cli/src/commands/deploy.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "crates/vibe-safefs/src/project.rs",
+          "crates/vibe-safefs/src/project/pinned.rs",
+          "crates/vibe-safefs/src/file/project_methods.rs",
+          "crates/vibe-safefs/src/file/stable.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+          "schemas/deploy_lock_resources.jtd.json",
+          "schemas/deploy_checkpoints.jtd.json",
+          "schemas/deploy_inverse.jtd.json",
+          "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/sidecar/wire.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/state/inverse.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/inverse_resume.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/ledger.rs",
+          "crates/vibe-wire/src/behaviour/deploy_records/mod.rs",
+          "crates/vibe-lifecycle/src/mechanism/error/deploy.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+          "crates/vibe-lifecycle/src/lease.rs",
+          "crates/vibe-safefs/src/",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+          "crates/vibe-safefs/Cargo.toml",
+          "crates/vibe-safefs/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/",
+          "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/",
+          "crates/vibe-cli/src/commands/deploy.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "schemas/",
+          "formats/",
+          "crates/vibe-wire/",
+          "crates/vibe-lifecycle/src/mechanism/error/deploy.rs"
+        ],
+        "steps": [
+          "Extend the existing physical resource identity/lease boundary to recognize equivalent roots across environment instances.",
+          "Revalidate root handle, principal, generation and resource ownership at admission and commit; keep logical config-member ownership under a shared physical file lock.",
+          "Add temporary-root concurrency/replay tests covering alias roots, relocated directories and third-state changes; record exact partial truth if drift occurs after a landed write.",
+          "Prepare the pinned builtin provider and optional bound sidecar/checkpoint/inverse carriers; refuse actual bound publication until C.3 threads a host grant through the incumbent transaction."
+        ],
+        "positive_cases": [
+          "Disjoint injected homes can proceed independently.",
+          "Two aliases of one root conflict even when their logical instance IDs differ."
+        ],
+        "negative_cases": [
+          "Expired generation or changed root reuses an earlier plan.",
+          "Equal file bytes transfer ownership between receipt families.",
+          "An unsupported or mismatched bound operation reaches a provider effect before C.3."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-safefs <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "TO CREATE: concurrent alias-root and stale-generation replay cases."
+        ],
+        "acceptance": [
+          "Equivalent physical roots conflict under the cooperating-writer destination lock while disjoint roots can be admitted independently.",
+          "Disposable-root tests verify alias retarget and stale-generation refusal without touching the developer HOME.",
+          "Pinned source/settings/bin/store capabilities and bound sidecar carriers are ready; no successful bound effect is claimed by C.2."
+        ],
+        "safe_stop": "Physical fence, pinned capabilities and durable bound carrier tests pass; first actual bound builtin effect remains C.3.",
+        "commit_subject": "fix(deploy): fence alias roots and stale target replay",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+          "Portable contract is PROP-076 #ENVIRONMENT-PHYSICAL-TARGET-FENCE/#ENVIRONMENT-BOUND-BUILTIN/#ENVIRONMENT-PORTABLE-OBSERVATION-LIMIT. Linux/macOS/Windows remain usable under cooperating-writer locks; detected drift becomes typed refusal or partial/uncertain after possible publication. Never claim hostile-writer content CAS.",
+          "A bound provider adapter needs a typed pre-effect refusal for unsupported apply/recover/remove; do not reuse an error that falsely claims a journal or effect outcome.",
+          "C.3 owns engine admission, first successful builtin publication, bound receipt and actual interrupted-effect truth."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Extend the existing physical resource identity/lease boundary to recognize equivalent roots across environment instances.",
+          "assessment": "partial",
+          "reason": "App home OS lock aliases share lock file, deploy locks canonicalize logical resource spelling; no cross-environment pinned physical-root lock identity.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Revalidate root handle, principal, generation and resource ownership at admission and commit; keep logical config-member ownership under a shared physical file lock.",
+          "assessment": "partial",
+          "reason": "Prior/foreign receipt and generation/plan checks plus shared-document lock sets exist; root handle/principal/target generation commit checks absent.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Add temporary-root concurrency/replay tests covering alias roots, relocated directories and third-state changes; record exact partial truth if drift occurs after a landed write.",
+          "assessment": "partial",
+          "reason": "Existing temp-root/persistence tests cover their original scopes; no joined alias-retarget/stale-target-generation/disjoint-target evidence.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 4,
+          "exact": "Prepare the pinned builtin provider and optional bound sidecar/checkpoint/inverse carriers; refuse actual bound publication until C.3 threads a host grant through the incumbent transaction.",
+          "assessment": "missing",
+          "reason": "No admitted pinned source/settings/bin/store bundle or bound sidecar carriers.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Disjoint injected homes can proceed independently.",
+          "assessment": "partial",
+          "reason": "App SettingsRoot supports independent home locks; no environment target-instance admission proof.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Two aliases of one root conflict even when their logical instance IDs differ.",
+          "assessment": "partial",
+          "reason": "Same home alias ordinarily locks same inode; different logical binding/retarget scenarios not established.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Expired generation or changed root reuses an earlier plan.",
+          "assessment": "missing",
+          "reason": "Environment generation/root authority is not a plan input to revalidate.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Equal file bytes transfer ownership between receipt families.",
+          "assessment": "partial",
+          "reason": "Deploy prior/foreign ownership and exact whole receipt comparisons exist; no environment receipt-family proof.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 3,
+          "exact": "An unsupported or mismatched bound operation reaches a provider effect before C.3.",
+          "assessment": "missing",
+          "reason": "No bound pre-effect gate tied to physical target capabilities.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Equivalent physical roots conflict under the cooperating-writer destination lock while disjoint roots can be admitted independently.",
+          "assessment": "partial",
+          "reason": "Current lock domain covers same state/home and normalized resources, not cross-instance root equivalence.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Disposable-root tests verify alias retarget and stale-generation refusal without touching the developer HOME.",
+          "assessment": "missing",
+          "reason": "No disposable bound alias-retarget and stale environment-generation tests.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 3,
+          "exact": "Pinned source/settings/bin/store capabilities and bound sidecar carriers are ready; no successful bound effect is claimed by C.2.",
+          "assessment": "missing",
+          "reason": "No pinned target capability bundle or bound durable sidecar.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Physical fence, pinned capabilities and durable bound carrier tests pass; first actual bound builtin effect remains C.3.",
+          "assessment": "missing",
+          "reason": "Physical bound-target fence not delivered.",
+          "evidence_paths": [
+            "crates/vibe-app/src/settings.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+          ]
+        }
+      ],
+      "runtime": "No tests executed; accepted feature receipts are historical evidence only.",
+      "evidence_paths": [
+        "crates/vibe-app/src/settings.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs"
+      ]
+    },
+    {
+      "old_task_id": "M-14-C.3",
+      "title": "Apply the first host-admitted bound builtin through the incumbent engine",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-14-C.3",
+        "title": "Apply the first host-admitted bound builtin through the incumbent engine",
+        "goal": "Thread a host-issued effect grant and pinned roots through the incumbent deploy transaction for the first successful local UserProfile vibe-bin operation.",
+        "read_paths": [
+          "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+          "crates/vibe-lifecycle/src/lease.rs",
+          "crates/vibe-safefs/src/file.rs",
+          "crates/vibe-safefs/src/component.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+          "crates/vibe-safefs/Cargo.toml",
+          "crates/vibe-safefs/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+          "crates/vibe-cli/src/commands/deploy.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "crates/vibe-safefs/src/project.rs",
+          "crates/vibe-safefs/src/project/pinned.rs",
+          "crates/vibe-safefs/src/file/project_methods.rs",
+          "crates/vibe-safefs/src/file/stable.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/preplan.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/transaction.rs",
+          "schemas/deploy_lock_resources.jtd.json",
+          "schemas/deploy_checkpoints.jtd.json",
+          "schemas/deploy_inverse.jtd.json",
+          "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/sidecar/wire.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/state/inverse.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/inverse_resume.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/ledger.rs",
+          "crates/vibe-wire/src/behaviour/deploy_records/mod.rs",
+          "crates/vibe-lifecycle/src/mechanism/error/deploy.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+          "crates/vibe-lifecycle/src/lease.rs",
+          "crates/vibe-safefs/src/",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+          "crates/vibe-safefs/Cargo.toml",
+          "crates/vibe-safefs/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/",
+          "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+          "crates/vibe-lifecycle/src/mechanism/vibebin/",
+          "crates/vibe-cli/src/commands/deploy.rs",
+          "vibevm/vibespecs/common/PROP-076-environment-model.xml",
+          "schemas/",
+          "formats/",
+          "crates/vibe-wire/",
+          "crates/vibe-lifecycle/src/mechanism/error/deploy.rs"
+        ],
+        "steps": [
+          "Require trusted host admission before inverse recovery, provider selection and state creation; bind the request, plan, physical resources and generation to one live destination lock.",
+          "Use the pinned project artifact, settings, bin and store handles in the incumbent provider apply/verify path; publish payload, launcher and pointer with existing checkpoints and retain the lock through receipt/commit.",
+          "Carry the exact operation binding through intent, pending/committed lock sidecar, checkpoints, inverse, receipt and inspection; legacy None bytes remain unchanged.",
+          "Limit first support to local UserProfile builtin deploy:vibe-bin with project-root artifact evidence and no prior bound generation. Refuse native/plugin/skill, slot/store-relative artifacts and unsupported recovery/remove until equivalent admission exists.",
+          "Report a landed write without final receipt as partial/uncertain with retained intent; never reconstruct bound sidecars from legacy fallback."
+        ],
+        "positive_cases": [
+          "The same package bytes deployed into two disjoint injected homes create distinct physical outputs and bound receipts under their admitted principals.",
+          "Two aliases of one physical root cannot simultaneously publish through distinct logical bindings.",
+          "A legacy unbound operation retains its existing byte-compatible records and behavior."
+        ],
+        "negative_cases": [
+          "Changed request body root, principal, target generation or provider scope reaches a bound effect after grant issuance.",
+          "A copied bound sidecar, checkpoint, inverse or receipt from another instance is replayed.",
+          "An interrupted bound write is reported as no-effects or reconstructed through a legacy fallback.",
+          "Unsupported native/plugin/skill or unadmitted artifact source reaches a bound provider effect."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-safefs target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-safefs <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "TO CREATE: concurrent alias-root and stale-generation replay cases."
+        ],
+        "acceptance": [
+          "One real bound builtin apply uses pinned roots and the incumbent transaction, produces physical output and a bound receipt in each of two disposable homes.",
+          "Same-root aliases conflict under the physical fence; mismatched/stale grants refuse before effect.",
+          "After possible publication without receipt, retained intent and partial/uncertain truth are observable; no unsupported bound provider is enabled."
+        ],
+        "safe_stop": "First supported bound builtin effect and disposable-root replay checks pass; broader recovery and provider families remain explicitly gated.",
+        "commit_subject": "feat(deploy): apply host-admitted bound builtin",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-076-environment-model.xml; forward metadata only until the promotion leaf creates the governing anchor.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+          "Portable contract is PROP-076 #ENVIRONMENT-PHYSICAL-TARGET-FENCE/#ENVIRONMENT-BOUND-BUILTIN/#ENVIRONMENT-PORTABLE-OBSERVATION-LIMIT. Linux/macOS/Windows remain usable under cooperating-writer locks; detected drift becomes typed refusal or partial/uncertain after possible publication. Never claim hostile-writer content CAS.",
+          "First bound effect is local-host-OS UserProfile builtin deploy:vibe-bin with project-root artifact evidence; bound native/plugin/skill and slot/store-relative artifacts remain unavailable until equivalent owner admission. Keep root handles pinned through provider I/O and physical destination lock.",
+          "First bound apply may be limited to no-prior generation and local builtin; interrupted bound recovery must refuse safely until an owner can replay pinned observations. Do not misreport a landed CAS/launcher/pointer write as no-effects."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Require trusted host admission before inverse recovery, provider selection and state creation; bind the request, plan, physical resources and generation to one live destination lock.",
+          "assessment": "missing",
+          "reason": "No host-issued environment effect grant tying request/plan/physical roots/generation.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Use the pinned project artifact, settings, bin and store handles in the incumbent provider apply/verify path; publish payload, launcher and pointer with existing checkpoints and retain the lock through receipt/commit.",
+          "assessment": "partial",
+          "reason": "Incumbent provider publishes measured payload/launcher/pointer with checkpoints; roots are paths/per-call opens, not one retained admitted target bundle.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Carry the exact operation binding through intent, pending/committed lock sidecar, checkpoints, inverse, receipt and inspection; legacy None bytes remain unchanged.",
+          "assessment": "missing",
+          "reason": "No environment operation binding in intent/sidecar/checkpoint/inverse/receipt/inspection.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 4,
+          "exact": "Limit first support to local UserProfile builtin deploy:vibe-bin with project-root artifact evidence and no prior bound generation. Refuse native/plugin/skill, slot/store-relative artifacts and unsupported recovery/remove until equivalent admission exists.",
+          "assessment": "missing",
+          "reason": "No explicit supported local UserProfile bound branch or refusal set for other bound providers.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 5,
+          "exact": "Report a landed write without final receipt as partial/uncertain with retained intent; never reconstruct bound sidecars from legacy fallback.",
+          "assessment": "partial",
+          "reason": "Existing intent/checkpoint recovery has original effect truth; no bound partial-write/carrier fallback law.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "The same package bytes deployed into two disjoint injected homes create distinct physical outputs and bound receipts under their admitted principals.",
+          "assessment": "missing",
+          "reason": "No two disposable homes with host-admitted principal-bound receipts.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Two aliases of one physical root cannot simultaneously publish through distinct logical bindings.",
+          "assessment": "missing",
+          "reason": "No distinct logical environment bindings fenced by same pinned physical-root authority.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 3,
+          "exact": "A legacy unbound operation retains its existing byte-compatible records and behavior.",
+          "assessment": "partial",
+          "reason": "Legacy unbound behavior persists; bound introduction parity not tested.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Changed request body root, principal, target generation or provider scope reaches a bound effect after grant issuance.",
+          "assessment": "missing",
+          "reason": "No issued grant tuple to compare request root/principal/generation/provider drift.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "A copied bound sidecar, checkpoint, inverse or receipt from another instance is replayed.",
+          "assessment": "missing",
+          "reason": "No bound durable record instance comparison.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 3,
+          "exact": "An interrupted bound write is reported as no-effects or reconstructed through a legacy fallback.",
+          "assessment": "missing",
+          "reason": "No interrupted bound write path or explicit no-fallback proof.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 4,
+          "exact": "Unsupported native/plugin/skill or unadmitted artifact source reaches a bound provider effect.",
+          "assessment": "missing",
+          "reason": "No bound unsupported-provider/artifact-source admission gate.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "One real bound builtin apply uses pinned roots and the incumbent transaction, produces physical output and a bound receipt in each of two disposable homes.",
+          "assessment": "missing",
+          "reason": "No first actual host-admitted bound apply.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Same-root aliases conflict under the physical fence; mismatched/stale grants refuse before effect.",
+          "assessment": "missing",
+          "reason": "No joined alias/grant freshness fence.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 3,
+          "exact": "After possible publication without receipt, retained intent and partial/uncertain truth are observable; no unsupported bound provider is enabled.",
+          "assessment": "missing",
+          "reason": "No bound possible-publication/retained-intent truth proof.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "First supported bound builtin effect and disposable-root replay checks pass; broader recovery and provider families remain explicitly gated.",
+          "assessment": "missing",
+          "reason": "First bound effect not delivered.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+            "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+          ]
+        }
+      ],
+      "runtime": "No tests executed; accepted feature receipts are historical evidence only.",
+      "evidence_paths": [
+        "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+        "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+        "crates/vibe-lifecycle/src/mechanism/deploy/state.rs"
+      ]
+    }
+  ],
+  "source_bindings": [
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-14-A.json",
+      "sha256": "4c5f8336d2086c1cb75856a67adef7afdd5650f9a83ff8febeb084e77e56901a",
+      "scope": "complete exact task contracts; checks read as historical data"
+    },
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-14-B.json",
+      "sha256": "c7efc56ea150e65c426e91b433d5617fa40f04238814b2426bc242ffe1cad508",
+      "scope": "complete exact task contracts; checks read as historical data"
+    },
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-14-C.json",
+      "sha256": "f6eff06b8a148710613135296190fea96f6afaf9cfcdd425ee459812c1c1adb7",
+      "scope": "complete exact task contracts; checks read as historical data"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "campaigns/next-semantic-transfer-2026-11/architecture/map.json",
+      "sha256": "04cb37c8435b0d9be3bf92395825b429c86dd723f9fd5b349dc5a5cd8086a3dd",
+      "scope": "seven M14 rows"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/old113-transfer-crosswalk.json",
+      "sha256": "0250c9f5088e2f5729ec256a76d07c27caf3c8c5a38b82e84d76ca970fa8e2b4",
+      "scope": "seven M14 rows"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/environment-targets-metadistribution-question.md",
+      "sha256": "224b1adb2db1656a4d597ed521b6689ada26f131113727b64622c271393c989e",
+      "scope": "full owner vision/design questions, not implementation evidence"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F12-selected-installer-runtime.md",
+      "sha256": "fae355a190be1eca12ae816161e218581dabd0d9fd06ad83d15dd57a4f5c819a",
+      "scope": "full accepted boundary"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F14-full-application-portability.md",
+      "sha256": "5823d5b68767dcaa719fb586b6a0125ada59e79c93c32fd10accdbd460a74ce3",
+      "scope": "full accepted boundary"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F15-package-admission.md",
+      "sha256": "dcb35af97373bab6ae14b9c803841fb54edbd9621bf45ed85c51dc3485f5c484",
+      "scope": "full accepted boundary"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F16-explicit-package-configuration.md",
+      "sha256": "f622458e7651d993b833199b3a3089888b6dc9d3b72083887583f8af7673e333",
+      "scope": "full accepted boundary"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-core/src/lib.rs",
+      "sha256": "d4ef66c97dd75985604fad72609bf59b28b98c7d72340bf4bfb747672e9d2366",
+      "scope": "module export inventory"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-core/src/layout.rs",
+      "sha256": "fcb0f69d161cb846abb72812e21fe049706949c02b567c14d07d7634666e818d",
+      "scope": "project root constants/current layout ownership"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-core/src/settings.rs",
+      "sha256": "2a3e7f56ecaf2dc3148cff20e27c782c602f18724e1e222ce4acf863f02f7106",
+      "scope": "settings_dir and pure settings_dir_from/accessor roots"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-core/src/manifest/target_when.rs",
+      "sha256": "784fe6eedb7884a006aaa2df3792822bd2ccb381e6d809437274e59eb83e7b57",
+      "scope": "pure applicability types and constructor/decide bodies"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-core/src/manifest/artifact/binary_projection.rs",
+      "sha256": "3a6d344725086880e68459433a43581c9a0a24909d58245ba7a65559c85619c5",
+      "scope": "whole pure legacy binary projection"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-core/src/manifest/package/binary.rs",
+      "sha256": "38f2557c0c0b2368d5b4d741ac40d50a1d442579f20c83b0eee337fe3c70739e",
+      "scope": "legacy binary declaration"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/settings.rs",
+      "sha256": "0812a1c5da59bccab095c86e04a0367b38d99f65a62bf7954b13cec8741e9668",
+      "scope": "SettingsRoot constructors/layout/lock/require_home; test excerpts"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/storage/mod.rs",
+      "sha256": "719aacaef382e0d06ca6fd62ccb9ff5089992b539e183054391840f237d80456",
+      "scope": "library identity, marker availability, usable root/create"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/operations/mod.rs",
+      "sha256": "24303abc805a5520e9050fcfc5e781c8844324aac1e015f750574c9a4fbf3b9e",
+      "scope": "OperationContext and public operation API"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/operations/planning.rs",
+      "sha256": "555481af078b0dc911d5bbca1e2a5cca49fafdc83416d2f79887551c4a7a6966",
+      "scope": "common step planner composition and caller-injected choice seams"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/operations/pending/identity.rs",
+      "sha256": "99dca62f683ea8c2df3757558938c1c77e58693c22241c50318dca3212da0339",
+      "scope": "whole execution/predecessor identity owner"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/steps/mod.rs",
+      "sha256": "9e839c7d08d0274769319dc1f2e632ee11f588d75edb7cd779d31772e09bf330",
+      "scope": "public planning owner discovery"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/steps/plan.rs",
+      "sha256": "e05a1e5306a768ee2e4b3e5f94198f388a23a2b9501be0d3ac9544c5da77c439",
+      "scope": "HostFacts/prompts inputs"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/steps/run.rs",
+      "sha256": "78c9d060392a0bdeebb843951bdb7107a7da283be6c42dfd051fe7edafbdb0a2",
+      "scope": "run context/settings/work/vars owner inventory"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/steps/run/environment.rs",
+      "sha256": "cc923e54f8ddf6c929a940b849e52f4d14fdf6eba83341dfed77b9454b1dbd8b",
+      "scope": "whole feature/parameter environment projection"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/steps/env.rs",
+      "sha256": "b74f2019f474ce210d34b8e5a4b972a3e95cc552b81b9b04cec729b97503c72a",
+      "scope": "StepPaths and injected UserEnvironment effects"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/steps/kinds.rs",
+      "sha256": "61ba32c2b6547dd8fabe879155aeb21bab541d4d385b3d4e349d434ea5211f4e",
+      "scope": "source/archive/recipe/shell execution branches"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-app/src/select.rs",
+      "sha256": "f0c760304fe3481e5699233f4b3cdb27794252f60618861237cf7d86d3a8f5d9",
+      "scope": "installer platform/arch selection and detected host calls"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-cli/src/commands/app/global.rs",
+      "sha256": "68b3338174e27d0ca5e583c67a243470476da2769d649fd3bc548c402134ae4a",
+      "scope": "global settings/proxy/source/HostFacts/for_host composition"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-cli/src/commands/install/mod.rs",
+      "sha256": "912d02be296ec4bf890e7df137527dc85a44ecffab5c6bdf51820cee79e1a05b",
+      "scope": "existing install/orchestrator ownership commentary and exports"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/native/platform.rs",
+      "sha256": "1393a683ad438d261df204f152db0eab04d2a626753f67cd1e5929fde29ae3e4",
+      "scope": "whole native platform key/current/suffix owner"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+      "sha256": "891992f38d7944978d0b9fbe5d8893dc34d523f4535518451e3ac91e97dcb5d3",
+      "scope": "DeployExecution roots, project/package identity, generation/output model"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+      "sha256": "45a04e330da696e5914cc6fb317d984e8bd9b47ccf48dba205c3943f9802354d",
+      "scope": "prior and foreign receipt ownership guards"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+      "sha256": "c40c5d061eda4de25e719764e70b422398076a6219e714eda55f41c6a74cce83",
+      "scope": "DeployPlan resource versus physical lock separation"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "sha256": "fd0a248d1b0dbe2c596067f83dd65ac8b1d7be961e3e82d8827856e89d6175d1",
+      "scope": "DeploymentHome identity, destination locks and state-root scope"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/sidecar.rs",
+      "sha256": "3efa4831fa76936b5a844533ab8e8d3435adc0bf7c092c2c13a5560f8cb235a2",
+      "scope": "LockBinding generation/plan/native fields, restart/carrier inventory"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/mechanism/vibebin.rs",
+      "sha256": "41555c76e2a369a2e1955ffe355d7c0098a4feb3a58c7485e5d0528c0463d0a4",
+      "scope": "NATIVE selection and settings-root apply/verify callsites"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/mechanism/vibebin/config.rs",
+      "sha256": "2ca6ebbbeac5bd28ded8bd122653eddf9d35fba43721e50b32e331b0b43b3fef",
+      "scope": "strict engine-owned roots/command config"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/mechanism/vibebin/launcher.rs",
+      "sha256": "85ea6588cf9ef5521709acf33a8a891ad305e66951269601931d4294ce6f6693",
+      "scope": "LauncherFlavour data and NATIVE default"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/mechanism/vibebin/store.rs",
+      "sha256": "42ed2a6cfa92e2dabcdb42d0f4d095dfa8c57c34fb0092786a1e682c5e694497",
+      "scope": "CAS bytes staging/digest, settings join and per-call Project open"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-lifecycle/src/mechanism/record.rs",
+      "sha256": "c9f17c42e77a648932d5036578ce39ed764d77d05344bf4dce7d0acc6c5e6bf4",
+      "scope": "artifact record source/producer/freshness/digest/verification construction"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-install/src/record.rs",
+      "sha256": "bce7ba32c7ea319dcdad40d60c8526dea4a79c7f1d0b58c7cd12054c8423c6b9",
+      "scope": "exact package pins and lock/source record owner"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "crates/vibe-package-source/src/source.rs",
+      "sha256": "6bb2471d452f82b4f13c6993c6f39c80c604c1cdb868ca32a40d3b3e0933285a",
+      "scope": "Local/Multi/Embedded owners and expected-hash mirror contract"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "schemas/deploy_intent.jtd.json",
+      "sha256": "7e67d88e41ff8b13398d99396e84ec379919b31089d0b07bd4acf4e2a520cca9",
+      "scope": "complete property inventory"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "schemas/deploy_receipt.jtd.json",
+      "sha256": "be4a0ada2bdc9f6cfd84918f712c746df7ef5036acbe297bd0eccf349ae72cbd",
+      "scope": "complete property inventory"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "schemas/native/e1/deploy_request.jtd.json",
+      "sha256": "9594c57f386a513a7a1a9301ee214c690b234c2b4ae08e6280a43f0d9a446d20",
+      "scope": "root/definitions inventory"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "vibevm/vibespecs/common/PROP-059-user-applications.xml",
+      "sha256": "06f2cc99236774fcd20277da419e36cf16e5317ec4e3032f9aa288c9898a9378",
+      "scope": "purpose/storage-libraries/commands/project-scope facts"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "sha256": "2211ea34a29b7e693ccede997358d4711f6902cc504fe2bd1f7ea6b4e61002d1",
+      "scope": "plan/execution/env-step/app-dependencies facts"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267",
+      "path": "vibevm/vibespecs/modules/vibe-workspace/PROP-025-binary-delivery.xml",
+      "sha256": "2942b87d4f41693204b6ee24215a30446c55e537b87eaeb22cc3900e0e607771",
+      "scope": "document lookup and legacy binary context"
+    }
+  ],
+  "proposed_counts": {
+    "full": 0,
+    "partial": 3,
+    "not-transferred": 4,
+    "unknown": 0
+  },
+  "status_policy": "Partial means a concrete corresponding sub-obligation has an accepted incumbent owner, not a fraction complete. Existing generic prerequisites alone do not count as delivery of the defining bound operation/schema. Root decides status promotion.",
+  "owner_vision": "Recorded owner preference: extend existing vibe install -g meta-distribution and shared GUI/CLI/agent planning to targets beyond HOME, not a second package manager. Record explicitly remains an open design question, not Docker/rootfs implementation proof.",
+  "next_atom": "M14A1 neutral role/compatibility model and caller meaning census grounded in incumbent app/deploy/install owners. Then A2 pure target layout/path/prefix policy; no effect enabled until C1 binding and C2 physical ownership are joined. Preserve common configuration/evaluation/plan/work/source owners, no parallel environment solver/store.",
+  "contract_disagreement": "C1 says first effect C2, while exact C2 and newly explicit C3 unambiguously reserve first successful bound effect to C3. Treat C1 wording as stale cross-reference; do not enable effects in C1/C2.",
+  "limits": [
+    "No prototype implementation bodies were required to assert main equivalence; exact source contract retained. Historical source inventory unchanged.",
+    "No native Windows/macOS, Docker/rootfs execution or arbitrary prefix relocation tested.",
+    "SettingsRoot replacement alone does not redirect local shell/native installers or host UserEnvironment effects."
+  ],
+  "known_accepted_features": [
+    {
+      "feature": "F12",
+      "commit": "c5662ee420973d006d0b2f019496f58b65eb28a8",
+      "ancestor_of_main_pin": true,
+      "scope": "actual selected-installer configuration/maintenance/continuation",
+      "qualification": "not whole M14 environment acceptance"
+    },
+    {
+      "feature": "F14",
+      "commit": "34866ac87833179d530b86b6881de1bf60bd5be5",
+      "ancestor_of_main_pin": true,
+      "scope": "portable full application configuration/source-target history",
+      "qualification": "not whole M14 environment acceptance"
+    },
+    {
+      "feature": "F15",
+      "commit": "93c92645d5b862a369dfeb967f473859eba3538d",
+      "ancestor_of_main_pin": true,
+      "scope": "consistent package admission and exact source preparation",
+      "qualification": "not whole M14 environment acceptance"
+    },
+    {
+      "feature": "F16",
+      "commit": "f4f965fd9f961eaa154f63d9a6de5b3904f0feb9",
+      "ancestor_of_main_pin": true,
+      "scope": "ordinary explicit configured package install/replay",
+      "qualification": "not whole M14 environment acceptance"
+    }
+  ],
+  "root_review": {
+    "disposition": "accepted source-audit classification only",
+    "verified_source_bindings": 49,
+    "verified_complete_original_contracts": 7,
+    "runtime_tests_run": false,
+    "full_task_promotions": 0
+  }
+}

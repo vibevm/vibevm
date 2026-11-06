@@ -2,7 +2,7 @@
 
 Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. G123 review uses accepted main `5d44c5104`; the later app scope review uses `c5662ee42`, and G2 is accepted in `bc49f1220`. Unaccepted candidates are excluded; source-only reviews do not imply runtime acceptance.
 
-**Current counting result:** 113 old accepted IDs verified: **9 full semantic transfers, 27 partial correspondences, 18 scopes with no accepted campaign delivery, 59 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least9are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **9 full semantic transfers, 30 partial correspondences, 22 scopes with no accepted campaign delivery, 52 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least9are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -270,3 +270,7 @@ Current partition:2full/26partial/18not-transferred/67unknown. Full completion r
 ## Five remaining M02 tasks — source reconciliation, 2026-11-06
 
 Root verified all26 pinned source hashes and all five original contracts in [the clause review](m02-remaining-transfer-review.md). B3/C1/C2 are partial; D1/D2 are not transferred. This removes five unknowns without completing any task. Existing saved readers and one-file migration recovery do not provide editor snapshots, retained-origin rebasing, complete fact selection or no-overwrite change scaffolding. D2 read-only inspection can precede D1 creation; C2 consumes accepted source interpretation/capture semantics. No runtime gates were executed by this audit.
+
+## Seven M14 tasks — environment audit, 2026-11-06
+
+Root verified49 pinned source hashes and7 original contracts in [the environment review](m14-transfer-review.md). A2/B2/C2 are partial; A1/B1/C1/C3 are not transferred. No new full task. Existing global/project installer choices, layout, cache and ownership must be extended, not replaced by another package manager. Root substitution alone does not redirect host commands or native launchers. The original stale C1 cross-reference is interpreted against explicit C2/C3 contracts: first actual bound effect belongs C3.

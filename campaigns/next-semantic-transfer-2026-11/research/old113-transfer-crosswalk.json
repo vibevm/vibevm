@@ -15,15 +15,15 @@
     "cross_checked_graph_statuses": true
   },
   "counts": {
-    "partial": 27,
+    "partial": 30,
     "full": 9,
-    "not-transferred": 18,
-    "unknown": 59,
+    "not-transferred": 22,
+    "unknown": 52,
     "already_main": 0
   },
   "minimum_proven_complete_old_tasks": 9,
   "exact_global_complete_total": "not established; at least 9",
-  "important": "At least 9 full old tasks proved; 27 partial, 18 not-transferred, 59 unknown. Five M02 rows reconciled by source audit; no new full task or runtime acceptance.",
+  "important": "At least 9 full tasks proved; 30 partial, 22 not-transferred, 52 unknown. M02 and M14 source audits reduce unknowns without completing tasks; current A1 remains unaccepted.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -4070,14 +4070,37 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Freeze the environment roles and compatibility interpretation before existing host-based consumers acquire new fields.\nAcceptance criteria: Each identity has named inputs and owned authority; no environment becomes a new package kind or stewardship DB.; Pure construction needs neither Docker nor a host HOME lookup.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Existing platform/applicability values have narrower meanings; no accepted joined environment identity model.",
+      "unmet_or_unverified": "Define and qualify executor, target, definition, lock and generation meaning through actual existing callers, preserving legacy local installation. Full clause matrix: research/m14-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Existing platform/applicability values have narrower meanings; no accepted joined environment identity model.",
+      "remaining_behavior": "Define and qualify executor, target, definition, lock and generation meaning through actual existing callers, preserving legacy local installation.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Freeze the environment roles and compatibility interpretation before existing host-based consumers acquire new fields.",
+        "steps": [
+          "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-076-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+          "Trace each existing host/OS/platform field to its current meaning; list old-reader behavior and exact callers requiring an explicit target later.",
+          "Define EnvironmentDefinition, EnvironmentLock, ExecutionContext, TargetBinding and EnvironmentGeneration as separate identities; distinguish build machine, produced-tool runtime and compiler output target.",
+          "Add pure type constructors and compatibility results for workspace, HOME, offline rootfs and future live targets; preserve existing bare-install behavior and reject unimplemented targets explicitly."
+        ],
+        "positive_cases": [
+          "Existing project install binds to an explicit local target with unchanged semantics.",
+          "A Windows executor can describe a Linux target without selecting a Windows launcher."
+        ],
+        "negative_cases": [
+          "Executor ABI is substituted for target ABI.",
+          "Future live-system capability is advertised as implemented."
+        ],
+        "acceptance": [
+          "Each identity has named inputs and owned authority; no environment becomes a new package kind or stewardship DB.",
+          "Pure construction needs neither Docker nor a host HOME lookup."
+        ]
+      },
+      "review_evidence": "research/m14-transfer-review.json",
+      "review_main_pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267"
     },
     {
       "old_task_id": "M-14-A.2",
@@ -4085,14 +4108,37 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Provide one injected layout/root policy for user profiles and offline targets without scattering machine paths through providers.\nAcceptance criteria: Every environment root has one layout constructor and callers receive explicit bindings.; No root privilege broker, live system mutation or pacman policy is introduced.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Injected app/project SettingsRoot, shared cache and Storage/library layout already exist.",
+      "unmet_or_unverified": "Add explicit target principal, resource identity, path/case and prefix compatibility through existing layout owners. Full clause matrix: research/m14-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Injected app/project SettingsRoot, shared cache and Storage/library layout already exist.",
+      "remaining_behavior": "Add explicit target principal, resource identity, path/case and prefix compatibility through existing layout owners.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Provide one injected layout/root policy for user profiles and offline targets without scattering machine paths through providers.",
+        "steps": [
+          "First add the exact injected-layout/resource/path/prefix policy requirements to permanent PROP-076 and validate its existing canonical readers before executable A2 edits. Desired rules and observed implementation remain separate; no existing roots or provider config are relocated implicitly.",
+          "Locate the existing layout authority named by the baseline and enumerate environment configuration, store, profile, state and cache roots.",
+          "Implement pure root-relative resource identity with environment instance, principal, path/case policy and prefix compatibility; preserve the existing project vibevm/ layout.",
+          "Represent relocatable, prefix-bound and unsupported payload compatibility and reserved future account/service/mount/boot resources; inject selected roots instead of re-reading ambient HOME/PATH."
+        ],
+        "positive_cases": [
+          "Two definitions can share immutable content yet have different target instance/root authority.",
+          "Valid Linux payload components survive Windows control-plane validation."
+        ],
+        "negative_cases": [
+          "A reused pathname silently transfers an old receipt to a different root.",
+          "Arbitrary /usr-oriented binaries are declared HOME-relocatable."
+        ],
+        "acceptance": [
+          "Every environment root has one layout constructor and callers receive explicit bindings.",
+          "No root privilege broker, live system mutation or pacman policy is introduced."
+        ]
+      },
+      "review_evidence": "research/m14-transfer-review.json",
+      "review_main_pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267"
     },
     {
       "old_task_id": "M-14-B.1",
@@ -4100,14 +4146,37 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Bind exact lock, payload inventory and realized closure identities to the shared M-16 schema conventions.\nAcceptance criteria: Generated types and retained records use one schema source and explicit epochs.; Metadata capabilities are explicit; unsupported privileged nodes cannot be silently dropped.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Artifact/deploy schemas and digest primitives are prerequisites, not environment realization contracts.",
+      "unmet_or_unverified": "Define target ABI, complete claimed closure and file/link/mode/principal metadata capabilities in canonical generated contracts. Full clause matrix: research/m14-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Artifact/deploy schemas and digest primitives are prerequisites, not environment realization contracts.",
+      "remaining_behavior": "Define target ABI, complete claimed closure and file/link/mode/principal metadata capabilities in canonical generated contracts.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Bind exact lock, payload inventory and realized closure identities to the shared M-16 schema conventions.",
+        "steps": [
+          "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-076-environment-model.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+          "Use the existing format registry/codegen conventions and M-16-B envelopes; inventory every request, result, durable receipt and hash carrier that needs the new fields.",
+          "Define dependency roles, native-backend closure, file/link/mode/principal inventory and domain-separated ordered hash frames; distinguish recipe-input and produced-output identities.",
+          "Generate owned wire types/corpora; add wrong-target, unsupported-metadata and reordered-input cases with explicit recipe/schema epochs."
+        ],
+        "positive_cases": [
+          "Equivalent normalized definitions yield the same exact lock identity.",
+          "Changing target ABI or one payload byte changes the appropriate identity."
+        ],
+        "negative_cases": [
+          "A package URL or mutable version string substitutes for captured identity.",
+          "Windows IDs are serialized as Linux payload UID/GID."
+        ],
+        "acceptance": [
+          "Generated types and retained records use one schema source and explicit epochs.",
+          "Metadata capabilities are explicit; unsupported privileged nodes cannot be silently dropped."
+        ]
+      },
+      "review_evidence": "research/m14-transfer-review.json",
+      "review_main_pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267"
     },
     {
       "old_task_id": "M-14-B.2",
@@ -4115,14 +4184,36 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Preserve old record meanings while adding exact build inputs, prefix constraints and replaceable source/cache locators.\nAcceptance criteria: Every migration has explicit unavailable/needs-input outcomes for absent proof.; No source/registry/cache transport requires GitHub by contract.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Legacy app/record compatibility and exact source/mirror transport retain their existing guarantees.",
+      "unmet_or_unverified": "Classify missing legacy target/prefix/closure proof without manufacturing it; implement environment migration through incumbent owners. Full clause matrix: research/m14-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Legacy app/record compatibility and exact source/mirror transport retain their existing guarantees.",
+      "remaining_behavior": "Classify missing legacy target/prefix/closure proof without manufacturing it; implement environment migration through incumbent owners.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Preserve old record meanings while adding exact build inputs, prefix constraints and replaceable source/cache locators.",
+        "steps": [
+          "Create representative old records from the characterized schema and state which fields cannot be inferred; mark them legacy rather than synthesizing target or hermetic proof.",
+          "Implement deterministic readers/migration through M-13 primitives, retaining input/output/prefix identities and exact source/mirror/substitution policy.",
+          "Require complete recursive source/build/runtime inputs for new realization claims and keep provider-native versions opaque to Vibe SemVer."
+        ],
+        "positive_cases": [
+          "Known old records remain readable with their original weaker guarantees.",
+          "A same-content mirror can satisfy an exact captured source with retained provenance."
+        ],
+        "negative_cases": [
+          "Legacy existence-only binary becomes verified merely through deserialization.",
+          "A changed prefix or untrusted cache producer is silently accepted."
+        ],
+        "acceptance": [
+          "Every migration has explicit unavailable/needs-input outcomes for absent proof.",
+          "No source/registry/cache transport requires GitHub by contract."
+        ]
+      },
+      "review_evidence": "research/m14-transfer-review.json",
+      "review_main_pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267"
     },
     {
       "old_task_id": "M-14-C.1",
@@ -4130,14 +4221,36 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Carry an opt-in target binding through strict local operation records and refuse bound effects until the physical owner grants pinned roots.\nAcceptance criteria: Target binding survives the typed request/plan/journal/receipt/inspection carrier and legacy None remains byte-compatible.; Bound effects without admitted physical roots refuse before recovery/provider; no successful native or builtin effect is claimed by C.1.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Existing deploy/native carriers have no opt-in environment binding.",
+      "unmet_or_unverified": "Carry binding through plan, intent, receipt and inspection; refuse unadmitted bound effects before recovery/provider/state creation. Full clause matrix: research/m14-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Existing deploy/native carriers have no opt-in environment binding.",
+      "remaining_behavior": "Carry binding through plan, intent, receipt and inspection; refuse unadmitted bound effects before recovery/provider/state creation.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Carry an opt-in target binding through strict local operation records and refuse bound effects until the physical owner grants pinned roots.",
+        "steps": [
+          "Trace existing deploy/native and extension request carriers, add an optional typed binding without changing legacy local operation meaning or serialized None bytes.",
+          "Use host-issued context/target binding values from M-16 conventions; keep a distinct bound state key, include binding in bound plan hash, and validate intent, receipt, native request and structured inspection equality before replay.",
+          "Refuse bound apply before inverse recovery, provider selection or state creation when no pinned host root/effect grant exists; never derive one from a request body or package descriptor. C.2 supplies the first supported bound effect."
+        ],
+        "positive_cases": [
+          "The same package under two injected instance bindings gets distinct state keys and typed receipt/inspection identities without touching either destination.",
+          "A legacy local compatibility request keeps the incumbent projected files and byte-compatible unbound records."
+        ],
+        "negative_cases": [
+          "A request body path or package descriptor self-grants a new root.",
+          "A copied legacy or other-instance receipt is accepted under a bound key, or unsupported bound apply reaches recovery/provider."
+        ],
+        "acceptance": [
+          "Target binding survives the typed request/plan/journal/receipt/inspection carrier and legacy None remains byte-compatible.",
+          "Bound effects without admitted physical roots refuse before recovery/provider; no successful native or builtin effect is claimed by C.1."
+        ]
+      },
+      "review_evidence": "research/m14-transfer-review.json",
+      "review_main_pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267"
     },
     {
       "old_task_id": "M-14-C.2",
@@ -4145,14 +4258,39 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Fence aliased physical roots and stale target generations with pinned, lock-scoped capabilities; preserve safe refusal before the first bound effect.\nAcceptance criteria: Equivalent physical roots conflict under the cooperating-writer destination lock while disjoint roots can be admitted independently.; Disposable-root tests verify alias retarget and stale-generation refusal without touching the developer HOME.; Pinned source/settings/bin/store capabilities and bound sidecar carriers are ready; no successful bound effect is claimed by C.2.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Existing app home locks and deploy resource ownership/sidecars provide real cooperating-writer foundations.",
+      "unmet_or_unverified": "Bind physical target roots, principal and generation across instances with held capabilities, replay/alias fencing and explicit partial truth. Full clause matrix: research/m14-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Existing app home locks and deploy resource ownership/sidecars provide real cooperating-writer foundations.",
+      "remaining_behavior": "Bind physical target roots, principal and generation across instances with held capabilities, replay/alias fencing and explicit partial truth.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Fence aliased physical roots and stale target generations with pinned, lock-scoped capabilities; preserve safe refusal before the first bound effect.",
+        "steps": [
+          "Extend the existing physical resource identity/lease boundary to recognize equivalent roots across environment instances.",
+          "Revalidate root handle, principal, generation and resource ownership at admission and commit; keep logical config-member ownership under a shared physical file lock.",
+          "Add temporary-root concurrency/replay tests covering alias roots, relocated directories and third-state changes; record exact partial truth if drift occurs after a landed write.",
+          "Prepare the pinned builtin provider and optional bound sidecar/checkpoint/inverse carriers; refuse actual bound publication until C.3 threads a host grant through the incumbent transaction."
+        ],
+        "positive_cases": [
+          "Disjoint injected homes can proceed independently.",
+          "Two aliases of one root conflict even when their logical instance IDs differ."
+        ],
+        "negative_cases": [
+          "Expired generation or changed root reuses an earlier plan.",
+          "Equal file bytes transfer ownership between receipt families.",
+          "An unsupported or mismatched bound operation reaches a provider effect before C.3."
+        ],
+        "acceptance": [
+          "Equivalent physical roots conflict under the cooperating-writer destination lock while disjoint roots can be admitted independently.",
+          "Disposable-root tests verify alias retarget and stale-generation refusal without touching the developer HOME.",
+          "Pinned source/settings/bin/store capabilities and bound sidecar carriers are ready; no successful bound effect is claimed by C.2."
+        ]
+      },
+      "review_evidence": "research/m14-transfer-review.json",
+      "review_main_pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267"
     },
     {
       "old_task_id": "M-14-C.3",
@@ -4160,14 +4298,42 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Thread a host-issued effect grant and pinned roots through the incumbent deploy transaction for the first successful local UserProfile vibe-bin operation.\nAcceptance criteria: One real bound builtin apply uses pinned roots and the incumbent transaction, produces physical output and a bound receipt in each of two disposable homes.; Same-root aliases conflict under the physical fence; mismatched/stale grants refuse before effect.; After possible publication without receipt, retained intent and partial/uncertain truth are observable; no unsupported bound provider is enabled.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Existing local builtin publication is not a host-admitted bound environment operation.",
+      "unmet_or_unverified": "Execute the first bound UserProfile builtin via incumbent transaction and pinned roots; prove outputs/receipts in two disposable homes and stale/alias refusal. Full clause matrix: research/m14-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Existing local builtin publication is not a host-admitted bound environment operation.",
+      "remaining_behavior": "Execute the first bound UserProfile builtin via incumbent transaction and pinned roots; prove outputs/receipts in two disposable homes and stale/alias refusal.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Thread a host-issued effect grant and pinned roots through the incumbent deploy transaction for the first successful local UserProfile vibe-bin operation.",
+        "steps": [
+          "Require trusted host admission before inverse recovery, provider selection and state creation; bind the request, plan, physical resources and generation to one live destination lock.",
+          "Use the pinned project artifact, settings, bin and store handles in the incumbent provider apply/verify path; publish payload, launcher and pointer with existing checkpoints and retain the lock through receipt/commit.",
+          "Carry the exact operation binding through intent, pending/committed lock sidecar, checkpoints, inverse, receipt and inspection; legacy None bytes remain unchanged.",
+          "Limit first support to local UserProfile builtin deploy:vibe-bin with project-root artifact evidence and no prior bound generation. Refuse native/plugin/skill, slot/store-relative artifacts and unsupported recovery/remove until equivalent admission exists.",
+          "Report a landed write without final receipt as partial/uncertain with retained intent; never reconstruct bound sidecars from legacy fallback."
+        ],
+        "positive_cases": [
+          "The same package bytes deployed into two disjoint injected homes create distinct physical outputs and bound receipts under their admitted principals.",
+          "Two aliases of one physical root cannot simultaneously publish through distinct logical bindings.",
+          "A legacy unbound operation retains its existing byte-compatible records and behavior."
+        ],
+        "negative_cases": [
+          "Changed request body root, principal, target generation or provider scope reaches a bound effect after grant issuance.",
+          "A copied bound sidecar, checkpoint, inverse or receipt from another instance is replayed.",
+          "An interrupted bound write is reported as no-effects or reconstructed through a legacy fallback.",
+          "Unsupported native/plugin/skill or unadmitted artifact source reaches a bound provider effect."
+        ],
+        "acceptance": [
+          "One real bound builtin apply uses pinned roots and the incumbent transaction, produces physical output and a bound receipt in each of two disposable homes.",
+          "Same-root aliases conflict under the physical fence; mismatched/stale grants refuse before effect.",
+          "After possible publication without receipt, retained intent and partial/uncertain truth are observable; no unsupported bound provider is enabled."
+        ]
+      },
+      "review_evidence": "research/m14-transfer-review.json",
+      "review_main_pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267"
     },
     {
       "old_task_id": "M-16-A.1",
@@ -4498,6 +4664,6 @@
   ],
   "count_caution": "The proven lower bound is 9 complete tasks. Unknown means criterion-complete transfer has not been established, not that implementation is absent. Partial tasks are not weighted completion percentages. No missing type-name or broader subsystem requirement substitutes for original semantic criteria.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
-  "version_note": "Five remaining M02 rows reviewed against exact contracts: 3 partial and 2 not-transferred replace unknown. Counts: 9 full, 27 partial, 18 not-transferred, 59 unknown. Current M06A1 remains unaccepted.",
-  "latest_scoped_review_main_pin": "b1b43b0da96b8d9dea82e86696760bd887b9947c"
+  "version_note": "Seven M14 rows reviewed: 3 partial and 4 not-transferred replace unknown. Counts: 9 full, 30 partial, 22 not-transferred, 52 unknown. Existing meta-distribution is reused as foundation, not counted as complete target binding.",
+  "latest_scoped_review_main_pin": "e356a0cc18b8bc7e876c0e305dbcac32e8903267"
 }
