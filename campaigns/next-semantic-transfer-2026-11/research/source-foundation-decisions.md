@@ -31,3 +31,7 @@ M13D1's full interruption/platform/surface obligations remain explicit even if A
 Main's project section currently rejects a sources key, including an empty one. The project absent/empty compatibility rule above is the required policy when that later field lands, not a claim that A1 already accepts project.sources. A1 introduces package declarations only; a valid project-only manifest without that field remains legacy. Unknown project fields refuse rather than silently selecting a policy.
 
 Portable reserved-source admission and payload ownership are separate laws. Source declarations must refuse proven ASCII case aliases of reserved generated boot paths, derived from the canonical path/prefix owner. Exact-case G3 payload filtering remains unchanged: rejecting a declaration alias does not claim that every such physical spelling is generated on Linux.
+
+## Implemented boundary — 2026-11-06
+
+Original A1 is now [accepted](m06-a1-transfer-acceptance.md) in264b07466. These preceding decisions retain their design/provenance role; project sources, ordinary structure/exports and full classified consumer integration remain the explicitly later boundaries. No blanket source-family completion is implied.

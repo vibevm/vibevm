@@ -1,0 +1,233 @@
+{
+  "status": "accepted",
+  "task": "M-06-A.1",
+  "commit": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "original_contract_path": "campaigns/next/tasks/M-06-A.json",
+  "original_contract_sha256": "0bae32aa41bd306c4d4596ac9faa70f1ea9f6e5c76b947fa93ae6f9cf97d752e",
+  "original_semantics": {
+    "title": "Define explicit source interpretation and its migration",
+    "goal": "Place source classification before every semantic consumer.",
+    "steps": [
+      "Define SourceDescriptor identity/media/interpretation/role/loading/trust and exact-file versus directory-default precedence.",
+      "Implement deterministic legacy declaration migration with the reader in this task by extending the incumbent M-13 planner and replay path; support byte-preserving ordered insertions and multiple edits rather than a second executor.",
+      "Classify conflicting/unknown old intent as NeedsInput; suffix/content sniffing may validate syntax but cannot enable Vibe semantics."
+    ],
+    "positive_cases": [
+      "An explicit file declaration overrides one less-specific directory default."
+    ],
+    "negative_cases": [
+      "Equally applicable conflicting declarations require typed path-specific input; foreign contents do not become specs by extension, and unchanged comments/values survive insertions."
+    ],
+    "acceptance": [
+      "Reader and executable migration land together with preserved comments/values.",
+      "One descriptor identity is available to downstream scanner/resolver/converter consumers."
+    ],
+    "safe_stop": "Keep ambiguous source interpretation unmodified with a typed migration plan."
+  },
+  "committed_files": {
+    "Cargo.lock": "efe1d16cc0dbd3e9b5a682201c1ffcc86c9e00736d365a9935eb53e467a26f4b",
+    "crates/vibe-cli/src/commands/refactor/migration_plan.rs": "7fc60631d2f86171289aa29cedb004ce2a3086cc2c711c24f32566a1cbcbfc4b",
+    "crates/vibe-cli/tests/cli_source_admission.rs": "11a68e605e867a43f99f97bb7c758111f763874b9711e78de8b186154a3b73f9",
+    "crates/vibe-cli/tests/migration_plan.rs": "6b2884d786a73054273b12f81fc026b585cec925b41d9ab4270967492de6a9f1",
+    "crates/vibe-core/src/layout.rs": "dc283c8b0975fe76572bf59be4a79c4896c6e371204df7197269d3e567f9b3ed",
+    "crates/vibe-core/src/manifest/migration.rs": "3e88081757de4749daba89361f5eb7a7ffc579494e8215ac3719d0c9f6a69afb",
+    "crates/vibe-core/src/manifest/migration/profiles.rs": "558246b1624285d41478fa25870e81456cb1e3db7e72d478ae6a277ef654afb6",
+    "crates/vibe-core/src/manifest/migration/source.rs": "f9c4f996de1a95e17646c7e4c3faeb7e5f2a3d6decb8446277a4381ab28b3110",
+    "crates/vibe-core/src/manifest/migration/tests.rs": "5eb6c5676bb6097452d836b9bb016605dd1553aca722251174ca35550d14c04e",
+    "crates/vibe-core/src/manifest/migration/tests_replay.rs": "f9f63eddd338bc2bcc7671a6fda851ec2ac2b4e0d0c8272504c708492ec44f3d",
+    "crates/vibe-core/src/manifest/migration/tests_source.rs": "27864d86697437ef759ebaacda760300df5746621a6392e3c3b1f4c1db6c6ec6",
+    "crates/vibe-core/src/manifest/mod.rs": "1248d6fba98acb172d43a521e7e00f397388bc718a9d457ce63a170fa34bfd8a",
+    "crates/vibe-core/src/manifest/package/meta.rs": "a6755b7133f613a775ca7ee812420bfa42a0718cff9d9d035fa9344c9b01b313",
+    "crates/vibe-core/src/manifest/package/tests.rs": "6cadb178a1dba095452f10aaeeef21983184aebe9a59cbe428a127584f2068af",
+    "crates/vibe-core/src/manifest/package/wire.rs": "e8e84d974da9ca69ca5948f75785b30d3bf83e7e4634a7269de6e7e3077ec617",
+    "crates/vibe-core/src/manifest/source_descriptor/mod.rs": "65e1ccbf7a240b5c571da1166c520eba3027a188567267a9922dbf976bfa10af",
+    "crates/vibe-core/src/manifest/source_descriptor/tests.rs": "e586039958e59acf96234a7fbc432f7812a912144860b1f4e850d86c89ee366e",
+    "crates/vibe-doc/src/citations/sources.rs": "9fdd2b79b534c72081b7a3d126e6731561378193a95e13ff9fcea95953545dbc",
+    "crates/vibe-facts/Cargo.toml": "20e1ff143a1610f191f002f1e39704fe6f3e672086291c5642c8e0373ee41943",
+    "crates/vibe-facts/src/lib.rs": "9ea440e777fddf125991eb7067a90056c274abd58965efe101f6e1cefd2a196e",
+    "crates/vibe-facts/src/scan.rs": "8b85eeb0eceb2f166f827c59997d0962a055e823a9454d941b988d6b73f08e6b",
+    "crates/vibe-facts/src/scan/declared.rs": "992e27ee789376f35c4ef89ffd8bcb575dbb9c5ebcde31ac5c4a5248b655cfb9",
+    "crates/vibe-facts/src/scan/declared/walk.rs": "94d1894d081296e47972b933b738a17807a86f892c4bfcddb4d256b5aa25d651",
+    "crates/vibe-facts/src/scan/declared_capture.rs": "3855b6ecf9dd63c293ed2633ab0534cc3bb6c6a59648458dbddee764512933bd",
+    "crates/vibe-install/src/apply.rs": "c48e89a4393b69e1b8ebbb0244e07ea0fe0b5ba15566205a5a1f7847f6a8f948",
+    "crates/vibe-install/src/apply/metadata.rs": "151f595c4c1f11997bd79bf867e9a5da69b9359e39893d569a27f342f948edc2",
+    "crates/vibe-install/src/lib.rs": "c644bd7965da3cdf0b0b022f78544b6344ff5662c427b4a415739ac1dfb05666",
+    "crates/vibe-install/src/source_admission.rs": "8b1d4633ba781ec17ce203eb28bc44705c0b89336095c26777cd2dc3cf84a731",
+    "crates/vibe-mcp/tests/migration_planning.rs": "1ed2be3944c9fc65cfa3a5c036bc82ec2d921ca58a4ae438a85c6f4d05ce136f",
+    "crates/vibe-spec/src/lib.rs": "4e72581276cbd1b628efbaaf9b4082ef6a3e01a6ffb43c594c205f6a504f248d",
+    "crates/vibe-spec/src/resolver.rs": "d52d68c41dda3c73c5764a1572dda2bbaa740efd34050378b697cbe67515266a",
+    "crates/vibe-spec/src/resolver/observation.rs": "c67d64ad56718ed4d1404d758455cc8490be2a0cbb8d8ba6ff8bb2c37e6e2d30",
+    "crates/vibe-spec/src/resolver/source_policy_tests.rs": "b77491246abcd5531eec6a13f1cc8ecac9c9efda4d90ee36fbc5e913d6525421",
+    "crates/vibe-spec/src/source_policy.rs": "f35c2f273f81688cc3a6d549734223fc13227febf62bee2973c5a65027659a8e",
+    "crates/vibe-spec/src/source_policy/tests.rs": "df05565422e7ac934f638727515029a464e30b152d5ff83caecf8e29bd4fcce0",
+    "crates/vibe-wire/src/generated/migration/e1/plan_report/mod.rs": "4cb1af21377d9edba0cb65227606fca5368e9d75ceb6182afb73ad7fe9af8920",
+    "crates/vibe-wire/src/generated/migration/e1/plan_request/mod.rs": "c67fee9fc77036c4e3df8bef7061a9756f7c319fc08be1ed56710c2e100ce916",
+    "crates/vibe-wire/tests/migration_planning_wire.rs": "155fb269b61b5fbae996806abcd4afefc03f17c3682a28c0ee60e11aedc31b87",
+    "crates/vibe-workspace/src/install.rs": "9c15527f027a869ced68ecb05394c677d95e4eebc19dec0e1acb15da4879de0a",
+    "crates/vibe-workspace/src/install/bootgen.rs": "90cd5ef7169d7d536f0815f6a4044d9a8bb62aadeb26ec0f3becd70923ed35a1",
+    "crates/vibe-workspace/src/install/bootgen/native_managed.rs": "cf0a588b940a373aac64fdc7a813df8a42eee0bd8b0726a2c94f756279e89e1a",
+    "crates/vibe-workspace/src/install/hook_output.rs": "29b8062a1f5227826d559267c40f47662319e64137b1f6434fc5eee67cd441f3",
+    "crates/vibe-workspace/src/install/source_admission.rs": "68ce9cb5606158ccde0a15d73ee14c13591a0d660c3a2a41f8e585052c543099",
+    "crates/vibe-workspace/src/install/source_admission/tests.rs": "fd2d93c0cd3629b3a26cafcef60aa27579142ef34d7dd03268abd04e0f633576",
+    "crates/vibe-workspace/src/migration_planning.rs": "edd76525a48356775722bc25055e07e6404125828b4b859fae28ea2a01ad812b",
+    "crates/vibe-workspace/src/migration_planning/tests.rs": "5559d0e1b60ace8523d4e7adcf80779ba9dc8cf822f7e71c0680e25556d3d90a",
+    "crates/vibe-workspace/src/migration_planning/validation.rs": "d2fbdf1e2c9e21a831a1d413740ebd16e079af33607e62ae34025504331effd2",
+    "crates/vibe-workspace/src/vibedeps.rs": "d96d165ba1a4df496b11dccf5d92475d04976465b3d618a8a996e8387f3bd974",
+    "crates/vibe-workspace/src/vibedeps/slot_record.rs": "1b1325056e0c68262689f36553c3e9320b0c8b86e325f7a9e9a3f57e9e9621f5",
+    "crates/vibe-workspace/src/vibedeps/source_policy.rs": "2e374d77373a86bc58e26f0c88ff6990165a117f03ccc385e65c096359e197d1",
+    "crates/vibe-workspace/src/vibedeps/tests_slot_record.rs": "ef30c0d6d163742296d081fcabb50cd126a2aa56fd52f1ef271df8ec49df4bbe",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/global-question-with-path.json": "d4e667bad6f7e654f6870790d25646896fec361bf2ed7eb1edbce4b35878e0e1",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/source-question-duplicate.json": "0dde19d7e37e512d28f72a3cd7d137a021fd531dd2bdc928d11b7fd0bdd8f5b8",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/source-question-missing-path.json": "edc1f4dd530438948c64a8803bd40a2c9963a5160c6c440d44a6b63bce6a02dd",
+    "formats/corpora/migration-plan-report/e1/semantic-invalid/source-question-path-escape.json": "9cc76c3483b0ac69b5e2478dc2f6acc30647886850f0190f5f71090dff1b6f4e",
+    "formats/corpora/migration-plan-report/e1/valid/needs-input-source.json": "97306c57b75c00145c70d96cbe4852f6ebef9ee39b936fe3bc8abb82a30e37bf",
+    "formats/corpora/migration-plan-request/e1/presence-invalid/source-decisions-null.json": "f4e27f4ae94078281f38fe7e28523f22f0010f4c8c0dbcca1162d53dfa506acc",
+    "formats/corpora/migration-plan-request/e1/semantic-invalid/source-duplicate.json": "25832c5e01deb2ea51e5abfd4407f33f2d0ca6826935cb377f60ddf8b3fd3db0",
+    "formats/corpora/migration-plan-request/e1/semantic-invalid/source-media-mismatch.json": "50bfaeafc0901cbebe173cc386929195c6d2e609e30f4a90fc32c9cacfe9db73",
+    "formats/corpora/migration-plan-request/e1/semantic-invalid/source-path-escape.json": "95dc781d29fe9cda94ff2eb9eec9969238edbaa1b3f2be6d104a6336116957a4",
+    "formats/corpora/migration-plan-request/e1/structural-invalid/source-unknown-interpretation.json": "5c31ebe1afe0845d4966395da0d21a57e36a4feed0d085499485734c67c93a3b",
+    "formats/corpora/migration-plan-request/e1/valid/source-decision.json": "a998e462d6c9e6258c695bb9c56af8b2d4a34f1a641ed6d5b134af1de479fa0c",
+    "formats/vocabularies.json": "0a2f27d811b8e98ce58bfe4cb59e3f221d89250e1e33c47aff5a39b247f7c52b",
+    "schemas/migration/e1/plan_error.jtd.json": "52cf2d4be2f64b8a76a8c462b24e1b0d1c3a4a7de3a8283a147f65f2d9f74ba2",
+    "schemas/migration/e1/plan_report.jtd.json": "a7f7e0645d041f290d3cfe6df028b0011ab4dbced4d30019e0d8972cbd77f5f6",
+    "schemas/migration/e1/plan_request.jtd.json": "063c3e8b84a3ac8ad5798d8da99600484ef60b0e9551cd19efd90b9caece5a64",
+    "vibevm/vibespecs/common/PROP-044-change-native-formats.xml": "3f1f2b52661d5346813db49b43b1c71f5eb4f7ba1ee959270f7e2a0df7771fa9",
+    "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml": "9dd68b9677bf490be870ebfa286087ee53296cddedaeff69a81a2402efb044d4",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml": "22ac2a794d13ac1ac94492ac7b97bcdbb9f8ceddcd7651099db846baf807a4a7",
+    "crates/vibe-workspace/src/migration_planning/source_tests.rs": "cfa002332565f4ade8fc65dec8df4cbc2167aaf8765c3670df86e0eda945e378",
+    "crates/vibe-workspace/src/migration_planning/source_apply_tests.rs": "97f86c65ad345a37e7d68bb5be806d388efc823fb1c99cc98a4d9b051ebaf56d",
+    "crates/vibe-mcp/src/tools/migration_plan/source_tests.rs": "6ca75842b1b4c7e7f87b52f5748b0f14df13ea836c72c77667e8b86dae21abeb",
+    "crates/vibe-mcp/src/tools/migration_plan/tests.rs": "95e46ed8f1b2e18bc8304b8f9d7bc10954942df527dd85eae098757bd1ac5425",
+    "crates/vibe-mcp/src/tools/migration_plan.rs": "cca13615d83a0315b3da6c74be014404150a8a6588ef494e478c7937fe78e605",
+    "crates/vibe-cli/tests/source_migration.rs": "e73d0a2bb64bce81ec9802217c4a9c118a26294e49bd6f4fe6d2b7c5b0136839",
+    "crates/vibe-check/Cargo.toml": "0c34409f12b1698adfcda00735a1c2322ea5e1863f354da27a4e2e84aae5d218",
+    "crates/vibe-check/src/checks/boot_directory.rs": "5f3c8acee38a001e9972ecc4ee469188af3e8f2c4218ffc3d782b9b7e4828036",
+    "crates/vibe-check/src/checks/wal_wellformed.rs": "d4399045202c09c66c8b8ae228f0ce9fb12bce8fad2812e6521d017f6d471143",
+    "crates/vibe-cli/src/commands/progress/grounding.rs": "0ef497620281b31eb2c7db57f5626154f3c5d188ed2e9c751370a7235a86b9e0",
+    "crates/vibe-cli/src/commands/progress/grounding/tests.rs": "ce57d9aa35747218a41550863662406b087e770794ca0fd24a7c10484eb28f1f",
+    "crates/vibe-cli/src/commands/progress/tests.rs": "2c68e4bf6f022cfbfe6afdf635d59f0af9ffc2b3f844402e9068f9b0b93acd71",
+    "crates/vibe-cli/src/commands/refactor/mod.rs": "6a82b5933253e5f2e930a0e0e7f5cf3a4849f6338ad53726501290f34f89d068",
+    "crates/vibe-cli/src/commands/refactor/convert_source.rs": "3fc34c6f3e6cd9316f83ecd33449fccf17d02bb8d9b927e49e373137214f09fb",
+    "crates/vibe-cli/src/commands/refactor/convert_source/policy.rs": "d8b4af475884ba9305224dcbae0450424ce9e6bd8ed5d7744a4068a33017ec17",
+    "crates/vibe-cli/src/commands/refactor/convert_source/policy/tests.rs": "aaa6a0aaedb4d2b237edbb3d2e673a293d7b537aa2b51405ed7f2b940fa7604f",
+    "crates/vibe-cli/src/commands/tree/build.rs": "0c605432392bd38d73b32630ff46da8aa9d97042329ce201bef4113748784dc9",
+    "crates/vibe-cli/src/commands/tree/build/in_place.rs": "49db52c3dbf750049e2681965f748dd046fc01fad21d862d5d1211afe3d84067",
+    "crates/vibe-cli/src/commands/tree/build/tests.rs": "6c1b2f9164a29c2464a4cfd70923b8a18801fdb6eed8e5cf0967290feff4598c",
+    "crates/vibe-doc/src/error.rs": "5a798dbc5087d82ae7c2e0d3e8346b29a28eb815d53b82422fc4e8ece8f71d87",
+    "crates/vibe-doc/src/pages.rs": "2b96acda8d560116ea1dbebb30e32ae754c2605369c945bc57abe6e19322fc1a",
+    "crates/vibe-doc/src/pages/tests.rs": "b26d5c69af314248682f63a46d868628bff3484e6e25a3dbd1cb979acc27fb7f",
+    "crates/vibe-doc/src/citations.rs": "d30445ffd20ae5aaa6b024b6b30dbc4cd9186a2d28124d17da917bd1f366b220",
+    "crates/vibe-doc/src/citations/tests.rs": "e4a294b491ebb79adcb51de1810d04523cfb38299637c176094585af2ecb4778",
+    "crates/vibe-doc/src/translations/borrowed.rs": "d3d8fc7eb023c50a880fd59b9ef829b5742b84c513069917c044a64fa7958025",
+    "crates/vibe-doc/src/translations/tests.rs": "1cb5298cb625e21f20fdb6fa954795c000b4259920d5664de9595e0b896e4f2f",
+    "crates/vibe-doc/src/translations/tests/source_policy.rs": "93beb6c48392e3182381bbbcf0c84941b214af94fbff80a6cfac4b06ca99e1b8",
+    "crates/vibe-doc/src/agent.rs": "7861d33dce5404d6eba386deed6b15e1cadab0827d3848ad7e920a3a14de1f27",
+    "crates/vibe-doc/src/build.rs": "8bb7e1e56ab6f9cf73c15721a9d74d8cae19dda2d2b2a434340202b92d33fc43",
+    "crates/vibe-doc-server/src/routes.rs": "90a1aec9f0e0e79c11fcae41902a228016aabe460b6e94b6603b5ab0b888b4e1",
+    "crates/vibe-doc-server/src/tests.rs": "d612198c4c27cecaffa7b6920ed2bc2e5e5ccce90a4ee28ed55ebe428f1eaac2",
+    "crates/vibe-cli/tests/cli_refactor_convert.rs": "bc5bad5a5043e847510e872fa4aa561dab254b8b8aabf8d9e55c4fab1127e79e",
+    "crates/vibe-cli/Cargo.toml": "c122a2f0dd5219b9f22e581ab883d6df881b49c117d158d30da5a83e5396930a",
+    "crates/vibe-cli/src/commands/facts.rs": "5b5765e458a8b4c15bc9a534ef59da07cf51d364689bd3b6def3b65b882ebc22",
+    "crates/vibe-cli/src/commands/facts/selected.rs": "55fbce9e6f685fd2ef571f36725f49463108bd1a0fa2f7bbefec773fcefe97f0",
+    "crates/vibe-cli/src/commands/facts/selected/tests.rs": "8f623b49411c37e1565ae253ab5d4e7fb65adcb30511a129a9c05c785c482865",
+    "crates/vibe-cli/src/commands/reinstall.rs": "d98b0fcbfac8bf1710b519b75d4f6b2bbcd359349d8c8aa5b27361d03c6acf24",
+    "crates/vibe-cli/tests/cli_facts_declared.rs": "71d235c72367071971168263884bfa1e3fc66b47e1e623fcadf0a1c49526397d",
+    "crates/vibe-safefs/src/file/source_read.rs": "f6452e988efc70acefc553b67ac886c544b4d36d91e0473241b593fc2f0e780f",
+    "crates/vibe-safefs/src/file/source_read_tests.rs": "c81aa063313c6e47159cef935915e81698907eb062fc8c8c809f3faebf396f2c",
+    "crates/vibe-safefs/src/file.rs": "98da33b73b25eb8d433abe5e233158cf7f36b5f8b32df23dd215184c94e0114b",
+    "crates/vibe-safefs/src/lib.rs": "9c7b25e7c794519ae2faa6312c42c01ddf922a8748e8fd1202b3188b6b2c4be1",
+    "crates/vibe-workspace/src/vibedeps/derived.rs": "f4f18eb81808a27193d616d1cae5796c8db37c70cae8433f3ce303b4b39b5ec4",
+    "crates/vibe-workspace/src/vibedeps/derived/materialise.rs": "491b40242834d180ad61d891d01d822bdeefb00d6b3e852ff20d6d1e81031e52",
+    "crates/vibe-workspace/src/vibedeps/slot_diff.rs": "b7c700e99828d57d96b73449b6c135ae8cf619e3bfc9cc71f81d3c0371ad4828",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/placement.rs": "8cf25bcdb686c7bffb8116370ce5a6b16c507c4e6fd922b33afe2d4e8524ff16",
+    "crates/vibe-workspace/src/vibedeps/source_policy/tests.rs": "02eefebafec0c11e769b4cab15a24616c174f7cbe45711a4872b2e64d9a21081",
+    "crates/vibe-workspace/src/vibedeps/tests.rs": "27b3c65b7f6804386f6a58f3f0d0c8075853ff2dc971a2d740858d4a79a3e267",
+    "crates/vibe-workspace/src/vibedeps/tests_transformed.rs": "980a7be27ff7e5c8548cce3c1c9bcef42fee21d09c39a608eae88618b1c91109",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/plan.rs": "058b63b44ffb111a4efd50aebce18589b6aafe76fb6e5be6dbdebe27d57fa95a",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/mode_tests.rs": "bd4e688f1bc3d3b50ebcc63f7295e2c8e2346cd1686c76a9057c8de1b4234432",
+    "specmap.json": "adc2a7d3f75524ded33d18cb1917309d455bae74a3e84db7b050c11c50cc6f0a",
+    "campaigns/next-semantic-transfer-2026-11/FORMAT-CHANGES.md": "e324a5d54d5bad3d26d42fa3a8f169fbe0ad260a97e685706b914bfaa55f4b4c"
+  },
+  "original_clause_evidence": [
+    {
+      "clause": "Define SourceDescriptor identity/media/interpretation/role/loading/trust and exact-file versus directory-default precedence.",
+      "evidence": "Strict shared SourceDescriptor with exact-file/longest component-directory precedence, typed conflict indices, package None versus Some(empty); authored trust refused, runtime provenance separate. Core9 + docs7; canonical PROP072."
+    },
+    {
+      "clause": "Implement deterministic legacy declaration migration with the reader in this task by extending the incumbent M-13 planner and replay path; support byte-preserving ordered insertions and multiple edits rather than a second executor.",
+      "evidence": "Existing C1 token replay supports replacement/deletion/ordered insertion; source recipe preserves original bytes and asks media; core migration26, actual C2/D1/MCP/CLI source12new with31total controls."
+    },
+    {
+      "clause": "Classify conflicting/unknown old intent as NeedsInput; suffix/content sniffing may validate syntax but cannot enable Vibe semantics.",
+      "evidence": "Path-specific source_media question independent of suffix; no descriptor ambiguity guessed. Native/raw dispatch follows declared interpretation, raw/unmatched never mint facts; actual Mixed install/adopt/repeat12CLI + selected5 + legacy7."
+    },
+    {
+      "clause": "Reader and executable migration land together with preserved comments/values.",
+      "evidence": "Reader and executable migration landed in same122path commit; root joined actual CLI16PASS after both review fixes, facts26PASS after root traceability fix."
+    },
+    {
+      "clause": "One descriptor identity is available to downstream scanner/resolver/converter consumers.",
+      "evidence": "One core descriptor/identity and source-policy observation shared by facts/materializer/resolver admission; standalone progress/conversion/tree/check/doc consumers have explicit supported/unsupported boundary. No duplicate selector/world/writer."
+    }
+  ],
+  "review_corrections": [
+    {
+      "id": "A1-BOUNDARY-1",
+      "result": "Actual earlier-hook RED3 to GREEN3; workspace admission8 and actual CLI3arms now preflight predictable declared input failures before package effects."
+    },
+    {
+      "id": "A1-BOUNDARY-2",
+      "result": "Actual0644-to0755 same-byte RED1/control1 to GREEN2; materializer86 passes; recorded observed mode repaired by replacement, unrecorded matching occupant preserved."
+    }
+  ],
+  "root_corrections": [
+    "Overstrong zero-infrastructure CLI oracle corrected against incumbent post-lease snapshot race test; no lifecycle production reorder. Exact off-mode bootstrap allowlist, product sentinels unchanged; optional diagnostic tracing remains separate.",
+    "Actual specmap5orphan failure fixed by shared SOURCE-OBSERVATION-LAW module scope; no ratchet allowance. All9124old spec-unit occurrences retained."
+  ],
+  "gates": {
+    "root_cli": {
+      "passed": 16,
+      "targets": [
+        "cli_facts_declared",
+        "cli_source_admission",
+        "source_migration"
+      ]
+    },
+    "root_facts_lib": 26,
+    "materializer": 86,
+    "safefs_source_read": 10,
+    "hybrid_install": 20,
+    "whole_resolution_admission": 8,
+    "helper_resolver": 9,
+    "core_descriptor": 9,
+    "core_descriptor_docs": 7,
+    "wire_corpus": 6,
+    "scoped_clippy_fmt_conform": "pass; known CLI67 and SafeFS11, no new findings",
+    "specmap": {
+      "spec_units": 9132,
+      "tagged_code_items": 5476,
+      "edges": 4625,
+      "orphan": 0,
+      "unresolved_host": 0,
+      "existing_warnings": 44,
+      "warning_delta": "one line-number shift only"
+    },
+    "staged_codegen": "exit0 deterministic",
+    "staged_wire_diff": {
+      "exit": 0,
+      "regime": "Reporting, public=false",
+      "schemas_changed": 3,
+      "corpora_changed": 11,
+      "other_format_files_changed": 1
+    }
+  },
+  "limits": [
+    "Linux runtime measured; native Windows/macOS qualification unperformed.",
+    "Finite known-declared preflight and per-input rechecks, not whole-install atomicity/hostile ABA/authentication; later source drift may cause partial failure.",
+    "Mixed slot records retain byte hashes only, no persisted metadata proof; matching unrecorded occupants preserve incumbent behavior.",
+    "Normal classified boot, transformed declared consumers, directory census, CommonMark structure/exports, XML-data structure and project source declarations remain A2/A3/A4 responsibilities; no full source family completion.",
+    "No new external dependency, temporary worktree, public push or product version increment."
+  ],
+  "format_note": "FORMAT-CHANGES.md FMT-027"
+}

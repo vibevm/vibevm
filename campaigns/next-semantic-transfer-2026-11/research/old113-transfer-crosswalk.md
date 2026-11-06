@@ -2,7 +2,7 @@
 
 Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. G123 review uses accepted main `5d44c5104`; the later app scope review uses `c5662ee42`, and G2 is accepted in `bc49f1220`. Unaccepted candidates are excluded; source-only reviews do not imply runtime acceptance.
 
-**Current counting result:** 113 old accepted IDs verified: **9 full semantic transfers, 31 partial correspondences, 29 scopes with no accepted campaign delivery, 44 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least9are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **10 full semantic transfers, 33 partial correspondences, 31 scopes with no accepted campaign delivery, 39 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least10are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -278,3 +278,11 @@ Root verified49 pinned source hashes and7 original contracts in [the environment
 ## Eight M10 tasks — derivative audit, 2026-11-06
 
 Root verified31 pinned source hashes and8 original contracts in [the derivative review](m10-transfer-review.md). D1 is partial; seven others are not transferred. No full task promoted. Existing compiler provenance and materializer records are reusable foundations, but adoption statuses are not arbitrary local patches, and preparation that hydrates skills/cache is not a passive read. Preserve one source/compiler/ownership system when adding independent base/local/result lineage.
+
+## Five M16 foundation tasks — source audit, 2026-11-06
+
+Root verified32 pinned hashes and5 original contracts in [the foundation review](m16-foundation-transfer-review.md). B1/B2 partial, A1/A2/B3 not-transferred; no new complete task. Existing strict migration services and source/occurrence identity owners should be reused. Source review identified a concrete MCP query input-schema discrepancy; minimal requests and exact paths are retained for runtime reproduction and repair under B1. Whole framed transport is not a prerequisite for pure domain functions, and snapshot data alone does not grant mutation authority.
+
+## M06A1 accepted — 2026-11-06
+
+Original A1 is full in264b07466: [clause acceptance](m06-a1-transfer-acceptance.md). Root verified122committed files and real source migration/adoption/guard/materializer evidence. Counter rises from9to10full; A1 came from not-transferred, not partial. A2/A3/A4 and the complete source feature remain open.

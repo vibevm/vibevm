@@ -15,15 +15,15 @@
     "cross_checked_graph_statuses": true
   },
   "counts": {
-    "partial": 31,
-    "full": 9,
-    "not-transferred": 29,
-    "unknown": 44,
+    "partial": 33,
+    "full": 10,
+    "not-transferred": 31,
+    "unknown": 39,
     "already_main": 0
   },
-  "minimum_proven_complete_old_tasks": 9,
-  "exact_global_complete_total": "not established; at least 9",
-  "important": "At least 9 full tasks proved; 31 partial, 29 not-transferred, 44 unknown. M02/M14/M10 source audits reduce unknowns without completing tasks; current A1 remains unaccepted.",
+  "minimum_proven_complete_old_tasks": 10,
+  "exact_global_complete_total": "not established; at least 10",
+  "important": "At least 10 full old tasks proved; 33 partial, 31 not-transferred, 39 unknown. Original M06A1 accepted; broader A2/A3/A4 source capabilities remain incomplete.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -2045,13 +2045,15 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Place source classification before every semantic consumer.\nAcceptance criteria: Reader and executable migration land together with preserved comments/values.; One descriptor identity is available to downstream scanner/resolver/converter consumers.",
-      "status": "not-transferred",
+      "status": "full",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "An authored or equivalent explicit interpretation selection before semantic consumption, exact-file vs directory precedence/conflict input, and executable deterministic declaration migration preserving existing comments/values. Main PackageMetaWire has no descriptor/source-export fields; actual load dispatch is suffix-based. No source-classification migration route was found in bounded core/workspace inventory.",
-      "implemented_coverage": "Existing legacy Vibe source reader/converter and strict PackageMetaWire remain; they are not explicit ordinary/Vibe source interpretation selection.",
-      "remaining_behavior": "An authored or equivalent explicit interpretation selection before semantic consumption, exact-file vs directory precedence/conflict input, and executable deterministic declaration migration preserving existing comments/values. Main PackageMetaWire has no descriptor/source-export fields; actual load dispatch is suffix-based. No source-classification migration route was found in bounded core/workspace inventory.",
+      "accepted_main_commits": [
+        "264b0746684bdf4aec0b5d7d09595d79f70287df"
+      ],
+      "transferred_scope": "Explicit package descriptor/presence/selection, executable source-media C1/C2/D1 migration, actual selected Mixed facts adoption, classified reader/materializer admission with preserved copy/hardlink semantics.",
+      "unmet_or_unverified": "None at the exact original bounded A1 scope; A2/A3/A4 consumers and native platform qualification remain separately qualified.",
+      "implemented_coverage": "Explicit package descriptor/presence/selection, executable source-media C1/C2/D1 migration, actual selected Mixed facts adoption, classified reader/materializer admission with preserved copy/hardlink semantics.",
+      "remaining_behavior": "Original A1 complete; full source family remains on A2/A3/A4.",
       "superseded_obligations": [
         {
           "clause": "Every semantic consumer globally classified immediately",
@@ -2061,8 +2063,8 @@
         },
         {
           "clause": "Use incumbent M-13 planner/replay machinery",
-          "decision": "Specific prototype framework is not needed merely to satisfy deterministic safe migration; no target implementation design selected by this review.",
-          "reference": "semantic-transfer rule; no approved removal of migration behavior",
+          "decision": "Accepted target now actually reuses main C1/C2/D1 planner/replay/application; the earlier design-open note is superseded by this verified integration.",
+          "reference": "research/m06-a1-transfer-acceptance.json",
           "counts_as_remaining": false
         }
       ],
@@ -2105,7 +2107,9 @@
           ]
         }
       ],
-      "review_report": "research/m06-transfer-crosswalk-review.md"
+      "review_report": "research/m06-transfer-crosswalk-review.md",
+      "review_evidence": "research/m06-a1-transfer-acceptance.json",
+      "review_main_pin": "264b0746684bdf4aec0b5d7d09595d79f70287df"
     },
     {
       "old_task_id": "M-06-A.2",
@@ -4519,14 +4523,36 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "partial",
       "historical_graph_description": "Create an exact whole-product denominator for external access before designing protocol wrappers.\nAcceptance criteria: No identified command/action/model lacks a disposition and domain owner.; The register is interface coverage only, not a requirements engine or scheduler.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Existing command/model/schema inventories do not form the whole-product capability census.",
+      "unmet_or_unverified": "Enumerate actual public CLI/subcommand/TUI/MCP actions and semantic model families with owners, effects and executable coverage dispositions. Full clause review: research/m16-foundation-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Existing command/model/schema inventories do not form the whole-product capability census.",
+      "remaining_behavior": "Enumerate actual public CLI/subcommand/TUI/MCP actions and semantic model families with owners, effects and executable coverage dispositions.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Create an exact whole-product denominator for external access before designing protocol wrappers.",
+        "steps": [
+          "Enumerate every public CLI/subcommand/TUI semantic action and MCP registration, then trace its owning library, effects and existing structured carriers.",
+          "Enumerate resolver/compiler/trace/lifecycle/receipt/tree/cache/settings/registry/bin/refactor models and all planned M-01 through M-15 operation families; distinguish presentation-only state.",
+          "Create a proposed versioned CapabilityCoverage inventory with stable IDs, owner/schema/source/target/effect/authority/completeness/retention/test columns and explicit unimplemented rows."
+        ],
+        "positive_cases": [
+          "Every discovered registration/model family maps to a stable coverage row.",
+          "Legacy administrative and source-conversion operations remain visible."
+        ],
+        "negative_cases": [
+          "MCP's tool list is treated as the whole product census.",
+          "Matching name counts without an executable path is marked covered."
+        ],
+        "acceptance": [
+          "No identified command/action/model lacks a disposition and domain owner.",
+          "The register is interface coverage only, not a requirements engine or scheduler."
+        ]
+      },
+      "review_evidence": "research/m16-foundation-transfer-review.json",
+      "review_main_pin": "33606d916e3990baa25b58982d311d2429766b79"
     },
     {
       "old_task_id": "M-16-A.2",
@@ -4534,14 +4560,36 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Specify extraction seams and complete semantic observability without a new universal graph engine or IDE product.\nAcceptance criteria: All D-025/D-026 obligations are assigned without replacing resolver/compiler/journals.; The design identifies exact source families for downstream M-16/M-17 work.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Domain records and library seams exist, but no complete transport-neutral authority/observability map.",
+      "unmet_or_unverified": "Map authoritative retained records, domain flows, schema epochs and completeness; distinguish implementation gaps from contextual refusal. Full clause review: research/m16-foundation-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Domain records and library seams exist, but no complete transport-neutral authority/observability map.",
+      "remaining_behavior": "Map authoritative retained records, domain flows, schema epochs and completeness; distinguish implementation gaps from contextual refusal.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Specify extraction seams and complete semantic observability without a new universal graph engine or IDE product.",
+        "steps": [
+          "For each coverage family identify retained authoritative records, currently CLI-local logic, reusable library seams and missing inspection surfaces.",
+          "Reconcile PROP-032/031 proposals with actual commands and define semantic/debug schema epochs, redaction/unavailable reasons and applicability versus implementation-gap states.",
+          "Record transport-neutral discovery/capture/query/prepare/admit/submit/observe/recover flow and per-domain closure requirements; leave LSP/DAP/client adapters, plugins and MVP out."
+        ],
+        "positive_cases": [
+          "Every semantic view links to its owning domain and a proposed executable conformance case.",
+          "Debug schemas can evolve independently while retained data remains interpretable."
+        ],
+        "negative_cases": [
+          "Private debug memory is exposed as a stable ABI.",
+          "A supported feature's missing API is disguised as contextual unsupported."
+        ],
+        "acceptance": [
+          "All D-025/D-026 obligations are assigned without replacing resolver/compiler/journals.",
+          "The design identifies exact source families for downstream M-16/M-17 work."
+        ]
+      },
+      "review_evidence": "research/m16-foundation-transfer-review.json",
+      "review_main_pin": "33606d916e3990baa25b58982d311d2429766b79"
     },
     {
       "old_task_id": "M-16-B.1",
@@ -4549,14 +4597,39 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "partial",
       "historical_graph_description": "Provide one validated registry/facade request/result/error/event surface for every domain.\nAcceptance criteria: Capability implementation status, contextual availability and authorization are separate fields.; No eval/shell endpoint or duplicate domain engine appears.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "accepted_main_commits": [
+        "21d7683e027d81f14b2528734dd77bb7da236821"
+      ],
+      "transferred_scope": "Accepted strict migration library/CLI/MCP contracts provide real reusable generated validation.",
+      "unmet_or_unverified": "Complete operation/descriptor discovery and admission; reproduce/fix MCP query wrong optional types and unknown fields entering the domain despite advertised restrictions. Full clause review: research/m16-foundation-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Accepted strict migration library/CLI/MCP contracts provide real reusable generated validation.",
+      "remaining_behavior": "Complete operation/descriptor discovery and admission; reproduce/fix MCP query wrong optional types and unknown fields entering the domain despite advertised restrictions.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Provide one validated registry/facade request/result/error/event surface for every domain.",
+        "steps": [
+          "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+          "Extend owned JTD registry/codegen with namespaced operation/model/schema descriptors and typed prepared/input/admission/result/error/event unions.",
+          "Validate requests before dispatch and results/errors/events before publication; wrong types, unknown fields and unsupported epochs are explicit refusals.",
+          "Register domain handlers through shared application-service composition; discovery reads retained descriptors and never executes a provider or fetches a schema."
+        ],
+        "positive_cases": [
+          "One domain operation has identical validated shape through library and transport adapters.",
+          "An admitted extension schema is discoverable without native execution."
+        ],
+        "negative_cases": [
+          "Wrong optional argument types silently select defaults.",
+          "An advertised restrictive schema is not enforced at dispatch."
+        ],
+        "acceptance": [
+          "Capability implementation status, contextual availability and authorization are separate fields.",
+          "No eval/shell endpoint or duplicate domain engine appears."
+        ]
+      },
+      "review_evidence": "research/m16-foundation-transfer-review.json",
+      "review_main_pin": "33606d916e3990baa25b58982d311d2429766b79"
     },
     {
       "old_task_id": "M-16-B.2",
@@ -4564,14 +4637,37 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Give external clients exact, navigable model identities without pretending all changing domains are one atomic snapshot.\nAcceptance criteria: A client can navigate provenance without unrestricted host paths or false atomicity claims.; Every incomplete/inconsistent mapping has a typed reason.",
-      "status": "unknown",
+      "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Domain source/observation IDs, compiler occurrences and raw/projected location distinctions are implemented.",
+      "unmet_or_unverified": "Join logical/capture/observation/occurrence identities with compatible retained observations, complete paging and trusted opaque resource/location mappings. Full clause review: research/m16-foundation-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Domain source/observation IDs, compiler occurrences and raw/projected location distinctions are implemented.",
+      "remaining_behavior": "Join logical/capture/observation/occurrence identities with compatible retained observations, complete paging and trusted opaque resource/location mappings.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Give external clients exact, navigable model identities without pretending all changing domains are one atomic snapshot.",
+        "steps": [
+          "First extend the permanent PROP-080 source anchors for logical/capture/observation/occurrence identity, composite snapshot and paging compatibility, and source-location basis with desired-versus-implemented status. Only then add code and focused tests citing those anchors.",
+          "Define separate logical entity, capture/content, observation/snapshot and presentation occurrence references using existing domain IDs where valid.",
+          "Describe CompositeSnapshot as compatible source/world/target/operation observations with completeness; bind filters/pages/children/chunks to one projection and refuse mixed versions.",
+          "Define opaque resource IDs, trusted URI mapping and raw/projection position basis with encoding/revision, including non-UTF8 resources and unavailable source mappings."
+        ],
+        "positive_cases": [
+          "Repeated inclusion shares logical identity but has distinct occurrences.",
+          "All pages from one captured query reconstruct the full authorized structure."
+        ],
+        "negative_cases": [
+          "Wall-clock time or display line is used as exact snapshot identity.",
+          "Projected Markdown positions are presented as original XML locations."
+        ],
+        "acceptance": [
+          "A client can navigate provenance without unrestricted host paths or false atomicity claims.",
+          "Every incomplete/inconsistent mapping has a typed reason."
+        ]
+      },
+      "review_evidence": "research/m16-foundation-transfer-review.json",
+      "review_main_pin": "33606d916e3990baa25b58982d311d2429766b79"
     },
     {
       "old_task_id": "M-16-B.3",
@@ -4579,14 +4675,37 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Publish a precise on-demand machine-session framing/handshake contract compatible with existing MCP boundaries.\nAcceptance criteria: Framing and handshake are documented from executable behavior.; No permanent daemon, LSP/DAP adapter, IDE plugin or MVP is introduced.",
-      "status": "unknown",
+      "status": "not-transferred",
       "accepted_main_features": [],
       "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "transferred_scope": "Legacy MCP and server-independent one-shot domain calls exist, but the separate negotiated framed session does not.",
+      "unmet_or_unverified": "Implement the separate bounded session and trusted assigned contexts while preserving legacy MCP and one-shot library/CLI compatibility. Full clause review: research/m16-foundation-transfer-review.json; source audit only, no new runtime acceptance.",
+      "implemented_coverage": "Legacy MCP and server-independent one-shot domain calls exist, but the separate negotiated framed session does not.",
+      "remaining_behavior": "Implement the separate bounded session and trusted assigned contexts while preserving legacy MCP and one-shot library/CLI compatibility.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "goal": "Publish a precise on-demand machine-session framing/handshake contract compatible with existing MCP boundaries.",
+        "steps": [
+          "First state the separate on-demand framed machine-session, negotiation, trusted-context and MCP-compatibility law in permanent PROP-080 with desired-versus-implemented status. Preserve the existing fixed MCP JSON-RPC initialize and newline stdio protocol as historical executable behavior.",
+          "Implement versioned local framed request/event transport with initialization for API/schema versions, position encoding and streaming/replay/control capabilities.",
+          "Register workspace/member/HOME/container contexts only from the trusted owning surface; requests refer to assigned context/target IDs.",
+          "Map actual negotiated MCP versions/capabilities into the same domain facade while preserving explicit legacy tools; reject malformed frames, unknown versions and unbound roots."
+        ],
+        "positive_cases": [
+          "Two clients negotiate supported versions and independently bind authorized contexts.",
+          "One-shot library/CLI usage remains available without starting a server."
+        ],
+        "negative_cases": [
+          "Caller body path or workspace manifest self-authorizes a new root.",
+          "Initialization reports a fixed unsupported protocol version."
+        ],
+        "acceptance": [
+          "Framing and handshake are documented from executable behavior.",
+          "No permanent daemon, LSP/DAP adapter, IDE plugin or MVP is introduced."
+        ]
+      },
+      "review_evidence": "research/m16-foundation-transfer-review.json",
+      "review_main_pin": "33606d916e3990baa25b58982d311d2429766b79"
     },
     {
       "old_task_id": "M-16-C.1",
@@ -4840,8 +4959,8 @@
       "why_not_old_task_count": "Real accepted improvements; no whole old task inferred from their labels."
     }
   ],
-  "count_caution": "The proven lower bound is 9 complete tasks. Unknown means criterion-complete transfer has not been established, not that implementation is absent. Partial tasks are not weighted completion percentages. No missing type-name or broader subsystem requirement substitutes for original semantic criteria.",
+  "count_caution": "The proven lower bound is 10 complete tasks. Unknown means criterion-complete transfer has not been established, not that implementation is absent. Partial tasks are not weighted completion percentages; useful original semantics, not type names, determine completion.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
-  "version_note": "Eight M10 rows reconciled: D1 partial, seven not-transferred. Counts: 9 full, 31 partial, 29 not-transferred, 44 unknown. Compiler provenance is not generic authored derivative lineage.",
-  "latest_scoped_review_main_pin": "33606d916e3990baa25b58982d311d2429766b79"
+  "version_note": "M06A1 full in264b07466 after joined runtime, independent review corrections and root generated/static gates. M16 foundation audit also reconciled five unknown rows; no whole source-family completion.",
+  "latest_scoped_review_main_pin": "264b0746684bdf4aec0b5d7d09595d79f70287df"
 }

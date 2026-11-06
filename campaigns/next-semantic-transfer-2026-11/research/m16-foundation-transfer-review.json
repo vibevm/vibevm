@@ -1,0 +1,1498 @@
+{
+  "main_pin": "33606d916e3990baa25b58982d311d2429766b79",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "mode": "read-only; no Cargo/network/Git mutations/product edits; dirtyA1 excluded",
+  "rows": [
+    {
+      "old_task_id": "M-16-A.1",
+      "title": "Census public operations and semantic model families",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-16-A.1",
+        "title": "Census public operations and semantic model families",
+        "goal": "Create an exact whole-product denominator for external access before designing protocol wrappers.",
+        "read_paths": [
+          "crates/vibe-cli/src/main.rs",
+          "crates/vibe-cli/src/commands/tree/mod.rs",
+          "crates/vibe-cli/src/commands/tree/model.rs",
+          "crates/vibe-cli/src/commands/refactor/mod.rs",
+          "crates/vibe-mcp/src/tools.rs",
+          "crates/vibe-mcp/src/lib.rs",
+          "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+          "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml"
+        ],
+        "write_paths": [
+          "formats/capability-coverage/",
+          "xtask/src/",
+          "docs/machine-api/"
+        ],
+        "steps": [
+          "Enumerate every public CLI/subcommand/TUI semantic action and MCP registration, then trace its owning library, effects and existing structured carriers.",
+          "Enumerate resolver/compiler/trace/lifecycle/receipt/tree/cache/settings/registry/bin/refactor models and all planned M-01 through M-15 operation families; distinguish presentation-only state.",
+          "Create a proposed versioned CapabilityCoverage inventory with stable IDs, owner/schema/source/target/effect/authority/completeness/retention/test columns and explicit unimplemented rows."
+        ],
+        "positive_cases": [
+          "Every discovered registration/model family maps to a stable coverage row.",
+          "Legacy administrative and source-conversion operations remain visible."
+        ],
+        "negative_cases": [
+          "MCP's tool list is treated as the whole product census.",
+          "Matching name counts without an executable path is marked covered."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-cli target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-cli <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "TO CREATE: registration-to-coverage denominator check in xtask; exact command grammar must be created and verified before use."
+        ],
+        "acceptance": [
+          "No identified command/action/model lacks a disposition and domain owner.",
+          "The register is interface coverage only, not a requirements engine or scheduler."
+        ],
+        "safe_stop": "Census and observed gaps are complete against the inspected baseline; no runtime behavior changes.",
+        "commit_subject": "chore(api): inventory operation and model coverage",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+          "formats/capability-coverage/ and docs/machine-api/ are proposed permanent homes; locate integration in existing registry conventions before creating files.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Enumerate every public CLI/subcommand/TUI semantic action and MCP registration, then trace its owning library, effects and existing structured carriers.",
+          "assessment": "partial",
+          "reason": "CLI dispatcher, refactor/tree owners and MCP14registration list exist; no accepted whole public CLI/subcommand/TUI action census.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/mod.rs",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Enumerate resolver/compiler/trace/lifecycle/receipt/tree/cache/settings/registry/bin/refactor models and all planned M-01 through M-15 operation families; distinguish presentation-only state.",
+          "assessment": "partial",
+          "reason": "Format registry/domain schemas and task architecture list different inventories; no complete public semantic-model/operation denominator joining planned M01-M15.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/mod.rs",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Create a proposed versioned CapabilityCoverage inventory with stable IDs, owner/schema/source/target/effect/authority/completeness/retention/test columns and explicit unimplemented rows.",
+          "assessment": "missing",
+          "reason": "No versioned capability coverage register with owner/schema/effects/authority/completeness/retention/test columns.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/mod.rs",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Every discovered registration/model family maps to a stable coverage row.",
+          "assessment": "missing",
+          "reason": "No stable coverage row/disposition for every registration/model.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/mod.rs",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Legacy administrative and source-conversion operations remain visible.",
+          "assessment": "partial",
+          "reason": "Legacy/refactor/admin commands remain executable/discoverable in CLI source; no coverage rows retain them.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/mod.rs",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "MCP's tool list is treated as the whole product census.",
+          "assessment": "unverified",
+          "reason": "No full product census exists; MCP list cannot be treated as denominator.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/mod.rs",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Matching name counts without an executable path is marked covered.",
+          "assessment": "missing",
+          "reason": "No registration-to-executable coverage checker.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/mod.rs",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "No identified command/action/model lacks a disposition and domain owner.",
+          "assessment": "missing",
+          "reason": "No complete owner/disposition assignment.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/mod.rs",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "The register is interface coverage only, not a requirements engine or scheduler.",
+          "assessment": "partial",
+          "reason": "Existing domain format registry is not a scheduler; requested interface register absent.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/mod.rs",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Census and observed gaps are complete against the inspected baseline; no runtime behavior changes.",
+          "assessment": "missing",
+          "reason": "Census and gaps not complete against full product.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/mod.rs",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-mcp/src/tools.rs",
+            "formats/REGISTRY.toml"
+          ]
+        }
+      ],
+      "runtime": "No tests run. Actual source body and accepted M13C2 receipt only."
+    },
+    {
+      "old_task_id": "M-16-A.2",
+      "title": "Map domain authority and ETO compatibility boundaries",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-16-A.2",
+        "title": "Map domain authority and ETO compatibility boundaries",
+        "goal": "Specify extraction seams and complete semantic observability without a new universal graph engine or IDE product.",
+        "read_paths": [
+          "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+          "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+          "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+          "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+          "crates/vibe-cli/src/commands/tree/build.rs",
+          "crates/vibe-workspace/src/compile_trace.rs",
+          "crates/vibe-workspace/src/extension_world.rs"
+        ],
+        "write_paths": [
+          "docs/machine-api/",
+          "formats/capability-coverage/"
+        ],
+        "steps": [
+          "For each coverage family identify retained authoritative records, currently CLI-local logic, reusable library seams and missing inspection surfaces.",
+          "Reconcile PROP-032/031 proposals with actual commands and define semantic/debug schema epochs, redaction/unavailable reasons and applicability versus implementation-gap states.",
+          "Record transport-neutral discovery/capture/query/prepare/admit/submit/observe/recover flow and per-domain closure requirements; leave LSP/DAP/client adapters, plugins and MVP out."
+        ],
+        "positive_cases": [
+          "Every semantic view links to its owning domain and a proposed executable conformance case.",
+          "Debug schemas can evolve independently while retained data remains interpretable."
+        ],
+        "negative_cases": [
+          "Private debug memory is exposed as a stable ABI.",
+          "A supported feature's missing API is disguised as contextual unsupported."
+        ],
+        "checks": [
+          "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+          "TO CREATE: coverage model/owner/reference consistency check, separate from semantic review."
+        ],
+        "acceptance": [
+          "All D-025/D-026 obligations are assigned without replacing resolver/compiler/journals.",
+          "The design identifies exact source families for downstream M-16/M-17 work."
+        ],
+        "safe_stop": "Reviewed authority/coverage map is ready for permanent specification promotion; no transport is implemented yet.",
+        "commit_subject": "docs(api): define domain authority and observability boundaries",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "For each coverage family identify retained authoritative records, currently CLI-local logic, reusable library seams and missing inspection surfaces.",
+          "assessment": "partial",
+          "reason": "Existing retained domain records and library seams can be traced; CLI-local tree build remains; no full coverage-family authority map.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+            "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-workspace/src/extension_world.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Reconcile PROP-032/031 proposals with actual commands and define semantic/debug schema epochs, redaction/unavailable reasons and applicability versus implementation-gap states.",
+          "assessment": "partial",
+          "reason": "PROP031/032 retain deterministic graph/refactoring design and explicit open work; no all-family semantic/debug epoch and gap-vs-unavailable reconciliation.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+            "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-workspace/src/extension_world.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Record transport-neutral discovery/capture/query/prepare/admit/submit/observe/recover flow and per-domain closure requirements; leave LSP/DAP/client adapters, plugins and MVP out.",
+          "assessment": "missing",
+          "reason": "No complete transport-neutral operation flow and per-domain closure register.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+            "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-workspace/src/extension_world.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Every semantic view links to its owning domain and a proposed executable conformance case.",
+          "assessment": "missing",
+          "reason": "No each-view domain/conformance mapping.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+            "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-workspace/src/extension_world.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Debug schemas can evolve independently while retained data remains interpretable.",
+          "assessment": "partial",
+          "reason": "Existing compiler IR/report/schema epochs are separate; no common debug compatibility/retention policy across all domains.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+            "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-workspace/src/extension_world.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Private debug memory is exposed as a stable ABI.",
+          "assessment": "partial",
+          "reason": "Current typed generated roots avoid equating Rust Debug with wire; no all-domain exposure audit.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+            "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-workspace/src/extension_world.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "A supported feature's missing API is disguised as contextual unsupported.",
+          "assessment": "missing",
+          "reason": "No explicit capability status distinguishing implementation gap from contextual unsupported across product.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+            "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-workspace/src/extension_world.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "All D-025/D-026 obligations are assigned without replacing resolver/compiler/journals.",
+          "assessment": "missing",
+          "reason": "No accepted D025/D026 whole-map assignment; full decision bodies are outside this bounded packet, so no completeness claim.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+            "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-workspace/src/extension_world.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "The design identifies exact source families for downstream M-16/M-17 work.",
+          "assessment": "missing",
+          "reason": "No exact full source-family assignment map for downstream foundations.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+            "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-workspace/src/extension_world.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Reviewed authority/coverage map is ready for permanent specification promotion; no transport is implemented yet.",
+          "assessment": "missing",
+          "reason": "Full authority/coverage map not delivered.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+            "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+            "crates/vibe-cli/src/commands/tree/mod.rs",
+            "crates/vibe-workspace/src/extension_world.rs"
+          ]
+        }
+      ],
+      "runtime": "No tests run. Actual source body and accepted M13C2 receipt only."
+    },
+    {
+      "old_task_id": "M-16-B.1",
+      "title": "Generate strict operation and capability contracts",
+      "proposed_status": "partial",
+      "exact_contract": {
+        "id": "M-16-B.1",
+        "title": "Generate strict operation and capability contracts",
+        "goal": "Provide one validated registry/facade request/result/error/event surface for every domain.",
+        "read_paths": [
+          "crates/vibe-mcp/src/tools.rs",
+          "crates/vibe-mcp/src/tools/query.rs",
+          "crates/vibe-mcp/src/tools/output.rs",
+          "formats/EPOCHS.toml",
+          "crates/vibe-workspace/src/extension_world.rs",
+          "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+          "xtask/src/main.rs",
+          ".cargo/config.toml",
+          "crates/vibe-wire/Cargo.toml",
+          "crates/vibe-wire/src/lib.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs",
+          "crates/vibe-mcp/Cargo.toml",
+          "crates/vibe-mcp/src/lib.rs",
+          "crates/vibe-core/src/manifest/extension.rs",
+          "crates/vibe-core/src/manifest/extension/wire.rs",
+          "crates/vibe-core/src/manifest/extension/tests.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-extension-registry/src/lib.rs",
+          "crates/vibe-extension-registry/src/model.rs",
+          "formats/capability-coverage/coverage-e1.json",
+          "crates/vibe-lifecycle/src/state/tests.rs",
+          "crates/vibe-lifecycle/src/state/tests/discovery_schema.rs",
+          "crates/vibe-workspace/src/extension_world/machine_schema.rs",
+          "crates/vibe-workspace/src/extension_world/machine_schema/tests.rs"
+        ],
+        "write_paths": [
+          "formats/",
+          "crates/vibe-wire/src/",
+          "crates/vibe-orchestrator/src/",
+          "crates/vibe-mcp/src/tools/",
+          "crates/vibe-mcp/src/tools.rs",
+          "schemas/",
+          "crates/vibe-wire/",
+          "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+          "crates/vibe-wire/Cargo.toml",
+          "crates/vibe-wire/src/lib.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs",
+          "crates/vibe-mcp/Cargo.toml",
+          "crates/vibe-mcp/src/lib.rs",
+          "vibevm/vibespecs/common/PROP-054-lifecycle-and-extensions.xml",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-extension-registry/src/lib.rs",
+          "crates/vibe-extension-registry/src/model.rs",
+          "crates/vibe-workspace/src/extension_world.rs",
+          "crates/vibe-workspace/src/lib.rs",
+          "crates/vibe-core/src/manifest/document/tests_extensions.rs",
+          "crates/vibe-core/src/manifest/extension.rs",
+          "crates/vibe-core/src/manifest/extension/tests.rs",
+          "crates/vibe-core/src/manifest/extension/wire.rs",
+          "crates/vibe-extension-registry/src/tests/support.rs",
+          "crates/vibe-install/src/lifecycle/plan.rs",
+          "crates/vibe-lifecycle/src/agent/tests/support.rs",
+          "crates/vibe-lifecycle/src/execution/tests.rs",
+          "crates/vibe-lifecycle/src/handlers/native_tests.rs",
+          "crates/vibe-lifecycle/src/handlers/tests.rs",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/native/compiler_backend_admission_tests.rs",
+          "crates/vibe-lifecycle/src/native/compiler_facts_tests.rs",
+          "crates/vibe-lifecycle/src/native/compiler_tests.rs",
+          "crates/vibe-lifecycle/src/native/tests.rs",
+          "crates/vibe-lifecycle/src/state/fingerprint/declaration.rs",
+          "crates/vibe-lifecycle/src/state/tests/declaration.rs",
+          "crates/vibe-lifecycle/src/state/tests/support.rs",
+          "crates/vibe-orchestrator/src/dispatch/native_mechanism_tests.rs",
+          "crates/vibe-orchestrator/src/world/package_skill.rs",
+          "crates/vibe-spec/src/compiler/pass_tier/backend_execution_tests.rs",
+          "crates/vibe-spec/src/compiler/pass_tier/catalog_tests.rs",
+          "crates/vibe-spec/src/compiler/pass_tier/execution_tests.rs",
+          "crates/vibe-spec/src/compiler/pass_tier/frontend_discovery_tests.rs",
+          "crates/vibe-spec/src/compiler/pass_tier/frontend_execution_tests.rs",
+          "crates/vibe-spec/src/compiler/pass_tier/tests.rs",
+          "crates/vibe-spec/src/compiler/transform/lowering_worlds.rs",
+          "crates/vibe-spec/src/compiler/transform/plan_test_support.rs",
+          "crates/vibe-lifecycle/src/state/tests.rs",
+          "crates/vibe-lifecycle/src/state/tests/discovery_schema.rs",
+          "crates/vibe-workspace/src/extension_world/machine_schema.rs",
+          "crates/vibe-workspace/src/extension_world/machine_schema/tests.rs"
+        ],
+        "steps": [
+          "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+          "Extend owned JTD registry/codegen with namespaced operation/model/schema descriptors and typed prepared/input/admission/result/error/event unions.",
+          "Validate requests before dispatch and results/errors/events before publication; wrong types, unknown fields and unsupported epochs are explicit refusals.",
+          "Register domain handlers through shared application-service composition; discovery reads retained descriptors and never executes a provider or fetches a schema."
+        ],
+        "positive_cases": [
+          "One domain operation has identical validated shape through library and transport adapters.",
+          "An admitted extension schema is discoverable without native execution."
+        ],
+        "negative_cases": [
+          "Wrong optional argument types silently select defaults.",
+          "An advertised restrictive schema is not enforced at dispatch."
+        ],
+        "checks": [
+          "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "TO CREATE: strict request/result/error/event validation corpus."
+        ],
+        "acceptance": [
+          "Capability implementation status, contextual availability and authorization are separate fields.",
+          "No eval/shell endpoint or duplicate domain engine appears."
+        ],
+        "safe_stop": "Contracts and fixture dispatch are validated; real mutating handlers remain behind existing authority.",
+        "commit_subject": "feat(api): generate strict operation and capability schemas",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+          "Write perimeter is limited to the new shared facade and registered schemas; preserve unrelated wire epochs and legacy adapters.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+          "Schema edits use the registered current-atom source under schemas/ and its required registry/codegen plumbing; generate bindings mechanically, with no unrelated format or epoch changes.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+          "Exact extension-schema producer amendment: after source-first PROP-054/PROP-080 law, B.1 may add an optional typed authored operation-schema declaration to the existing ExtensionDecl/strict wire and carry it through the already retained workspace/registry projection without native load. The 29 current ExtensionDecl literal owners are enumerated as exact paths in this packet; edits outside those names require another explicit perimeter amendment. Arbitrary config, native ABI manifest loading, provider fetch/build and synthetic callable status are forbidden. Retained package/source identity and registered format/epoch validation must precede positive descriptor-only discovery; source-observed catalogue rows remain noncallable. The current capability catalogue must be reconciled against actual CLI/MCP additions before claiming a complete denominator.",
+          "Frozen fingerprint test binding: the new optional operation-schema metadata is explicitly excluded from the existing execution-declaration fingerprint under PROP-054, while the authored manifest/source witness changes. state/tests/declaration.rs is at the 600-line ceiling after the mechanical None field, so its focused metadata-exclusion case lives in the exact new state/tests/discovery_schema.rs sibling, registered only through state/tests.rs; do not expand the old file or rewrite the fingerprint epoch.",
+          "Selected-world descriptor projection is bounded to the existing retained ExtensionWorldEpoch/registry row and two exact new workspace leaves, because extension_world.rs is 586 lines. It validates the new authored format IDs/epochs with already generated FormatId values and selected provider/content identities without a second manifest read, native library load, provider build or fetch. Distinguish a registered schema under a lock-bound selected manifest from verified physical-content CAS; unverified host/source remains unavailable with a reason. Emit source-observed/noncallable descriptor data, never handler authorization."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "First create/update the governing permanent anchors in vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml for this task's contract, with desired-versus-implemented status explicit. Only then add executable types or tests citing those anchors. Final promotion/retirement records evidence later; it is not permission to postpone the source contract.",
+          "assessment": "missing",
+          "reason": "No accepted PROP080 common operation/facade contract.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Extend owned JTD registry/codegen with namespaced operation/model/schema descriptors and typed prepared/input/admission/result/error/event unions.",
+          "assessment": "partial",
+          "reason": "Existing JTD FormatId registry/shared vocabularies and domain request/report/error roots exist; no namespaced common operation/model descriptors and unions.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Validate requests before dispatch and results/errors/events before publication; wrong types, unknown fields and unsupported epochs are explicit refusals.",
+          "assessment": "partial",
+          "reason": "Migration request/results are strict; generic MCP dispatcher does not enforce advertised schema and query optional wrong types default (concrete discriminator below).",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 4,
+          "exact": "Register domain handlers through shared application-service composition; discovery reads retained descriptors and never executes a provider or fetches a schema.",
+          "assessment": "partial",
+          "reason": "Lifecycle/migration/query use shared domain owners; no retained callable-status/schema discovery facade or extension operation-schema projection.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "One domain operation has identical validated shape through library and transport adapters.",
+          "assessment": "covered",
+          "reason": "Accepted M13C2 library/CLI/MCP share exact validated domain shape and results.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "An admitted extension schema is discoverable without native execution.",
+          "assessment": "missing",
+          "reason": "ExtensionDecl retains handler/pass metadata but no admitted operation-schema declaration/discovery; native loading not needed for existing retained rows but schema join absent.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Wrong optional argument types silently select defaults.",
+          "assessment": "contradicted",
+          "reason": "query.run optional limit as_u64 failure takes DEFAULT_LIMIT; wrong optional strings are similarly dropped. Source inference, not executed test.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "An advertised restrictive schema is not enforced at dispatch.",
+          "assessment": "contradicted",
+          "reason": "query advertises additionalProperties=false and type constraints, but dispatch/run do not enforce them before domain call.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Capability implementation status, contextual availability and authorization are separate fields.",
+          "assessment": "missing",
+          "reason": "ToolDescriptor has name/description/inputSchema only; implementation/context/authorization not separated common fields.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "No eval/shell endpoint or duplicate domain engine appears.",
+          "assessment": "partial",
+          "reason": "No new eval/shell or duplicate engine introduced by existing strict adapters; common facade absent.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Contracts and fixture dispatch are validated; real mutating handlers remain behind existing authority.",
+          "assessment": "partial",
+          "reason": "One strict domain path works; common contracts and extension discovery not delivered.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/tools/query.rs",
+            "crates/vibe-mcp/src/tools/migration_plan.rs",
+            "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+            "crates/vibe-workspace/src/migration_planning.rs",
+            "crates/vibe-core/src/manifest/extension.rs",
+            "crates/vibe-workspace/src/extension_world.rs",
+            "formats/REGISTRY.toml"
+          ]
+        }
+      ],
+      "runtime": "No tests run. Actual source body and accepted M13C2 receipt only."
+    },
+    {
+      "old_task_id": "M-16-B.2",
+      "title": "Define entity, composite snapshot and source-location views",
+      "proposed_status": "partial",
+      "exact_contract": {
+        "id": "M-16-B.2",
+        "title": "Define entity, composite snapshot and source-location views",
+        "goal": "Give external clients exact, navigable model identities without pretending all changing domains are one atomic snapshot.",
+        "read_paths": [
+          "crates/vibe-cli/src/commands/tree/model.rs",
+          "crates/vibe-cli/src/commands/tree/build.rs",
+          "crates/vibe-spec/src/doctree.rs",
+          "crates/vibe-specdoc/src/load.rs",
+          "crates/vibe-spec/src/compiler/ir.rs",
+          "crates/vibe-mcp/src/context.rs",
+          "crates/vibe-requirements/src/query.rs",
+          "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+          "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+          "vibevm/vibespecs/modules/vibe-cli/PROP-036-package-tree.xml",
+          "docs/machine-api/authority-map.md",
+          "formats/capability-coverage/coverage-e1.json",
+          "xtask/src/bin/authority-map-check/main.rs",
+          "formats/REGISTRY.toml",
+          "formats/EPOCHS.toml",
+          "schemas/machine/e1/operation_descriptor.jtd.json",
+          "schemas/machine/e1/operation_envelope.jtd.json",
+          "xtask/src/main.rs",
+          ".cargo/config.toml",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs",
+          "crates/vibe-wire/Cargo.toml",
+          "crates/vibe-wire/src/lib.rs"
+        ],
+        "write_paths": [
+          "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+          "docs/machine-api/authority-map.md",
+          "schemas/",
+          "crates/vibe-core/src/",
+          "crates/vibe-orchestrator/src/",
+          "crates/vibe-wire/src/",
+          "crates/vibe-wire/tests/",
+          "formats/",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs",
+          "crates/vibe-wire/Cargo.toml",
+          "crates/vibe-wire/src/lib.rs"
+        ],
+        "steps": [
+          "First extend the permanent PROP-080 source anchors for logical/capture/observation/occurrence identity, composite snapshot and paging compatibility, and source-location basis with desired-versus-implemented status. Only then add code and focused tests citing those anchors.",
+          "Define separate logical entity, capture/content, observation/snapshot and presentation occurrence references using existing domain IDs where valid.",
+          "Describe CompositeSnapshot as compatible source/world/target/operation observations with completeness; bind filters/pages/children/chunks to one projection and refuse mixed versions.",
+          "Define opaque resource IDs, trusted URI mapping and raw/projection position basis with encoding/revision, including non-UTF8 resources and unavailable source mappings."
+        ],
+        "positive_cases": [
+          "Repeated inclusion shares logical identity but has distinct occurrences.",
+          "All pages from one captured query reconstruct the full authorized structure."
+        ],
+        "negative_cases": [
+          "Wall-clock time or display line is used as exact snapshot identity.",
+          "Projected Markdown positions are presented as original XML locations."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "TO CREATE: snapshot compatibility, occurrence and location-conversion fixtures."
+        ],
+        "acceptance": [
+          "A client can navigate provenance without unrestricted host paths or false atomicity claims.",
+          "Every incomplete/inconsistent mapping has a typed reason."
+        ],
+        "safe_stop": "Pure models and projections are tested; no watcher or disk mutation is added.",
+        "commit_subject": "feat(api): model captured entities and source locations",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+          "B.2 standalone client values may use four new registered epoch-one roots for entity reference, composite snapshot, bound page and source location. Preserve existing machine envelope and preview capture meanings; generated readers/codegen only, with exact focused structural and semantic cases. Recoverability must reflect an actual owner, not a copied flag.",
+          "Proposed shared-model modules must remain in a dependency-safe existing crate; do not make parser crates depend on lifecycle.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "First extend the permanent PROP-080 source anchors for logical/capture/observation/occurrence identity, composite snapshot and paging compatibility, and source-location basis with desired-versus-implemented status. Only then add code and focused tests citing those anchors.",
+          "assessment": "missing",
+          "reason": "No accepted PROP080 entity/composite/paging/source-location law.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Define separate logical entity, capture/content, observation/snapshot and presentation occurrence references using existing domain IDs where valid.",
+          "assessment": "partial",
+          "reason": "Compiler occurrences, package IDs, source hashes and requirements observation IDs exist separately; no shared navigable entity/capture/observation/occurrence view.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Describe CompositeSnapshot as compatible source/world/target/operation observations with completeness; bind filters/pages/children/chunks to one projection and refuse mixed versions.",
+          "assessment": "missing",
+          "reason": "No CompositeSnapshot compatibility model or bound filters/pages/chunks; bounded queries reobserve each call.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 4,
+          "exact": "Define opaque resource IDs, trusted URI mapping and raw/projection position basis with encoding/revision, including non-UTF8 resources and unavailable source mappings.",
+          "assessment": "partial",
+          "reason": "Raw Markdown versus projected XML notice exists; no opaque resource map with encoding/revision/nonUTF8/unavailable-location states.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Repeated inclusion shares logical identity but has distinct occurrences.",
+          "assessment": "partial",
+          "reason": "F19 recursion path preserves repeated occurrence independent of target/effective-view identity; common external entity projection absent.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "All pages from one captured query reconstruct the full authorized structure.",
+          "assessment": "missing",
+          "reason": "No same-capture pages reconstructing authorized complete structure.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Wall-clock time or display line is used as exact snapshot identity.",
+          "assessment": "covered",
+          "reason": "Requirements observation digest excludes observed_at and binds source/query meaning; F19 occurrence identity is not emitted line position.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Projected Markdown positions are presented as original XML locations.",
+          "assessment": "covered",
+          "reason": "SourceKind::XmlProjected explicitly marks projection-relative locations; F19 documents effective-view rather than raw authored coordinates.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "A client can navigate provenance without unrestricted host paths or false atomicity claims.",
+          "assessment": "partial",
+          "reason": "Existing models expose domain provenance but tree includes root paths; no trusted opaque URI mapping or composite false-atomicity guard.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Every incomplete/inconsistent mapping has a typed reason.",
+          "assessment": "missing",
+          "reason": "No common complete set of typed inconsistent/incomplete mapping reasons.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Pure models and projections are tested; no watcher or disk mutation is added.",
+          "assessment": "partial",
+          "reason": "Domain identity/location models exist; composite client model/paging not delivered.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/tree/model.rs",
+            "crates/vibe-specdoc/src/load.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-requirements/src/query.rs",
+            "crates/vibe-requirements/src/digest.rs"
+          ]
+        }
+      ],
+      "runtime": "No tests run. Actual source body and accepted M13C2 receipt only."
+    },
+    {
+      "old_task_id": "M-16-B.3",
+      "title": "Negotiate the local transport and trusted contexts",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-16-B.3",
+        "title": "Negotiate the local transport and trusted contexts",
+        "goal": "Publish a precise on-demand machine-session framing/handshake contract compatible with existing MCP boundaries.",
+        "read_paths": [
+          "crates/vibe-mcp/src/transport.rs",
+          "crates/vibe-mcp/src/lib.rs",
+          "crates/vibe-mcp/src/context.rs",
+          "crates/vibe-mcp/src/tools.rs",
+          "crates/vibe-mcp/src/tools/machine_operation.rs",
+          "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
+          "crates/vibe-orchestrator/src/machine_operation.rs",
+          "crates/vibe-orchestrator/src/machine_operation/publication.rs",
+          "crates/vibe-workspace/src/migration_planning.rs",
+          "vibevm/vibespecs/common/PROP-018-agentic-standalone-modes.xml",
+          "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+          "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+          "docs/machine-api/README.md",
+          "schemas/machine/e1/operation_envelope.jtd.json",
+          "formats/REGISTRY.toml",
+          "crates/vibe-mcp/Cargo.toml",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs"
+        ],
+        "write_paths": [
+          "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml",
+          "docs/machine-api/README.md",
+          "docs/machine-api/framed-session.md",
+          "schemas/",
+          "crates/vibe-wire/src/",
+          "crates/vibe-wire/tests/",
+          "crates/vibe-mcp/src/machine_session.rs",
+          "crates/vibe-mcp/src/machine_session/",
+          "crates/vibe-mcp/src/transport.rs",
+          "crates/vibe-mcp/src/lib.rs",
+          "crates/vibe-mcp/src/context.rs",
+          "crates/vibe-mcp/src/tools/machine_operation.rs",
+          "crates/vibe-mcp/src/tools/machine_operation/tests.rs",
+          "crates/vibe-orchestrator/src/",
+          "formats/",
+          "crates/vibe-mcp/Cargo.toml",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "crates/vibe-orchestrator/src/lib.rs"
+        ],
+        "steps": [
+          "First state the separate on-demand framed machine-session, negotiation, trusted-context and MCP-compatibility law in permanent PROP-080 with desired-versus-implemented status. Preserve the existing fixed MCP JSON-RPC initialize and newline stdio protocol as historical executable behavior.",
+          "Implement versioned local framed request/event transport with initialization for API/schema versions, position encoding and streaming/replay/control capabilities.",
+          "Register workspace/member/HOME/container contexts only from the trusted owning surface; requests refer to assigned context/target IDs.",
+          "Map actual negotiated MCP versions/capabilities into the same domain facade while preserving explicit legacy tools; reject malformed frames, unknown versions and unbound roots."
+        ],
+        "positive_cases": [
+          "Two clients negotiate supported versions and independently bind authorized contexts.",
+          "One-shot library/CLI usage remains available without starting a server."
+        ],
+        "negative_cases": [
+          "Caller body path or workspace manifest self-authorizes a new root.",
+          "Initialization reports a fixed unsupported protocol version."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "TO CREATE: framing/initialization/context negotiation protocol corpus."
+        ],
+        "acceptance": [
+          "Framing and handshake are documented from executable behavior.",
+          "No permanent daemon, LSP/DAP adapter, IDE plugin or MVP is introduced."
+        ],
+        "safe_stop": "Transport and fake service exchanges pass; long-running action ownership lands in M-16-C.",
+        "commit_subject": "feat(api): negotiate framed sessions and trusted contexts",
+        "notes": [
+          "Planned permanent destination: vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml, reconciled with existing PROP-018/031/032/036/054; forward metadata only.",
+          "Use a separate byte-oriented machine-session adapter and registered epoch-one frame value; do not retrofit MCP's line Transport or fixed initialize. A bounded four-byte big-endian length with a finite maximum precedes UTF-8 JSON decode. Advertise only implemented capabilities; a test fake does not make production streaming/replay/control available. Context/target IDs come only from a trusted composing surface and never from request paths or manifest fields.",
+          "The first pure planner frame exchange must reuse one neutral machine-operation request/result/error publisher owned by vibe-orchestrator, with the existing MCP envelope tool becoming a thin channel adapter. Do not duplicate workspace migration decoding, planning or result replay in the framed session, and do not expose a generic eval/shell route.",
+          "Before B.3 acceptance, document the delivered on-demand framing, handshake, actual capability flags, trusted context-ID boundary, legacy MCP fixed protocol and one-shot reach from executable source and focused receipts. Preserve the incomplete source authentication and persistent-cursor limits; do not describe the fake service as a general action transport.",
+          "Bind the smallest affected target and exact cases before compiling. Discover from source/metadata, then list only the bound target/case and require a nonzero match. Add broader checks only for demonstrated affected behavior that the selected checks cannot establish.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "First state the separate on-demand framed machine-session, negotiation, trusted-context and MCP-compatibility law in permanent PROP-080 with desired-versus-implemented status. Preserve the existing fixed MCP JSON-RPC initialize and newline stdio protocol as historical executable behavior.",
+          "assessment": "partial",
+          "reason": "Legacy MCP newline/fixed initialize behavior exists; separate framed machine-session canonical law absent.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Implement versioned local framed request/event transport with initialization for API/schema versions, position encoding and streaming/replay/control capabilities.",
+          "assessment": "missing",
+          "reason": "No byte-framed versioned session/init/schema/position/capability negotiation.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Register workspace/member/HOME/container contexts only from the trusted owning surface; requests refer to assigned context/target IDs.",
+          "assessment": "partial",
+          "reason": "ServerContext and finite migration authority are trusted constructor inputs; no assigned workspace/member/HOME/container context/target ID registry.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 4,
+          "exact": "Map actual negotiated MCP versions/capabilities into the same domain facade while preserving explicit legacy tools; reject malformed frames, unknown versions and unbound roots.",
+          "assessment": "missing",
+          "reason": "No negotiated session mapping to common facade; existing MCP fixed initialize is preserved legacy, not new negotiation.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Two clients negotiate supported versions and independently bind authorized contexts.",
+          "assessment": "missing",
+          "reason": "No two-client independent negotiated context binding exchange.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "One-shot library/CLI usage remains available without starting a server.",
+          "assessment": "covered",
+          "reason": "Accepted pure library and CLI migration run without server/context startup.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Caller body path or workspace manifest self-authorizes a new root.",
+          "assessment": "partial",
+          "reason": "Finite MCP migration grant rejects payload roots/files differing from configured authority; no generic session context-ID admission.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Initialization reports a fixed unsupported protocol version.",
+          "assessment": "missing",
+          "reason": "No new session version-negotiation response; fixed legacy MCP version is intentional compatibility, not alleged defect.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Framing and handshake are documented from executable behavior.",
+          "assessment": "partial",
+          "reason": "Existing newline/fixed MCP framing is documented/executable; requested independent framing/handshake absent.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "No permanent daemon, LSP/DAP adapter, IDE plugin or MVP is introduced.",
+          "assessment": "covered",
+          "reason": "No permanent daemon/LSP/DAP/plugin/MVP introduced.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Transport and fake service exchanges pass; long-running action ownership lands in M-16-C.",
+          "assessment": "missing",
+          "reason": "Separate framed session/fake service exchange not delivered; no C/D action owner work audited.",
+          "evidence_paths": [
+            "crates/vibe-mcp/src/lib.rs",
+            "crates/vibe-mcp/src/transport.rs",
+            "crates/vibe-mcp/src/context.rs",
+            "crates/vibe-mcp/src/context/migration.rs",
+            "crates/vibe-cli/src/main.rs",
+            "crates/vibe-cli/src/commands/refactor/migration_plan.rs"
+          ]
+        }
+      ],
+      "runtime": "No tests run. Actual source body and accepted M13C2 receipt only."
+    }
+  ],
+  "source_bindings": [
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-16-A.json",
+      "sha256": "3064d1e30dc4021a5577de33b48010a0987a7b3be15fe9b36a715db1232b9ead",
+      "scope": "full exact five task contracts; checks/notes are historical data"
+    },
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-16-B.json",
+      "sha256": "f8c6ed2bb8487440f70b82e8e9bfb316c4002bdda4a565295ae9f9dbc74a625d",
+      "scope": "full exact five task contracts; checks/notes are historical data"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "campaigns/next-semantic-transfer-2026-11/architecture/map.json",
+      "sha256": "04cb37c8435b0d9be3bf92395825b429c86dd723f9fd5b349dc5a5cd8086a3dd",
+      "scope": "five M16 foundation dependency rows"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/old113-transfer-crosswalk.json",
+      "sha256": "0546f52ec9d64d3611ab7fb4ec4bc15d365d16e0117c42da5342b3cb5529009f",
+      "scope": "five M16 rows"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/m13-c2-transfer-acceptance.md",
+      "sha256": "e9d1a6d6874ccada3fa6305616153502fc6b39083d1768009e9a9edef3fb86b3",
+      "scope": "accepted strict one-shot domain transport receipt"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-cli/src/main.rs",
+      "sha256": "d0753a52a77d42ec1cfe82605ade03da1576c02705f931df0a127ceb05a27d53",
+      "scope": "pre-initialization machine entry and command dispatcher inventory"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-cli/src/commands/refactor/mod.rs",
+      "sha256": "484c7b36eb6575e867493dc299f69ed0ca9fbbd593ea331f29d89a3f29f10f42",
+      "scope": "command family/machine_entry routing"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-cli/src/commands/refactor/migration_plan.rs",
+      "sha256": "45f3dada918da9f832e45828aa85a8830534faeb9d61105cf3662414227beb1c",
+      "scope": "whole thin text-only domain adapter"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-cli/src/commands/tree/mod.rs",
+      "sha256": "ce8a6f9d614e6d7e537fc54447d4b7b962fc376d5f8dc92b0dad351805a1c244",
+      "scope": "CLI-local build/model ownership and JSON/TUI distinction"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-cli/src/commands/tree/model.rs",
+      "sha256": "cd4ad907aff4563b210602d6ffe1137abd2a3ab0140607484fbba4906181f652",
+      "scope": "public tree identity/model fields and presentation exclusion"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-mcp/src/lib.rs",
+      "sha256": "3cba212e2e8702707a1c9ff0d87bc196ac98d0bf3186f58d9224f5ea20c02868",
+      "scope": "Server/ToolDescriptor/ToolError registry, initialize, dispatch and result projection"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-mcp/src/transport.rs",
+      "sha256": "49a0d993a2553150d2ddff7ae4e4aa8649baf354d80eb950c7f04529b6aa3b74",
+      "scope": "whole line-delimited adapter and in-memory transport"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-mcp/src/context.rs",
+      "sha256": "3d31ba1e455aab01ce05fd4e187cb50823128a8a17217dbd123ba96f1edbbbb2",
+      "scope": "trusted root/configured migration authority fields"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-mcp/src/context/migration.rs",
+      "sha256": "4606d4b0b2f4f50f057adb0ac0ee2349a26247b8489c14a3b419e5555c65cc91",
+      "scope": "finite explicit grant builder and request equality checks"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-mcp/src/tools.rs",
+      "sha256": "2373e34fb89295ca650194b54524e197d5df58094a61742302eb4f9348e886a4",
+      "scope": "McpTool seam and14default registrations"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-mcp/src/tools/query.rs",
+      "sha256": "47dc7846b94e96e73a1274dcdbf7967a761a8b43c0b1308a577a46fda3406eeb",
+      "scope": "whole descriptor and actual argument admission; source counterexample"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-mcp/src/tools/migration_plan.rs",
+      "sha256": "f979e941cfa0e057e854fe299aca9fd5d47f044552afedbc1969c4163925ecdf",
+      "scope": "strict shared domain decoder and thin result/error adapter"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-mcp/src/tools/output.rs",
+      "sha256": "f9a26c57c32537c98864786c4baf0fd180a2fdace2032b8f972a099a6acf8196",
+      "scope": "executed success/failure/unvalidated channel contract and generic Value carrier"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-mcp/src/tools/lifecycle_run.rs",
+      "sha256": "884545b0306908fe9ee85a650efcc1ea09c7ba92728b2c14856515d1ec99916e",
+      "scope": "strict phase args, descriptor and shared application-service routing"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-workspace/src/migration_planning.rs",
+      "sha256": "33e59b4fcb808f6cfb3988da2406344e37d1dd39100610691a8f076935cd3ad1",
+      "scope": "presence/schema/request/result validation and exact domain recipe reuse"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-workspace/src/extension_world.rs",
+      "sha256": "795e2eeede68daff2acec888139c46e118c1fe7c41f6c8f193e2bd31a266ebd3",
+      "scope": "retained selected manifests, epoch/owner projection and public APIs"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-extension-registry/src/model.rs",
+      "sha256": "a22ef4fe5a9301ec4fab9c6158ef9c91babaa8cf4dea140eae47138b2ed019a1",
+      "scope": "typed provider/host identities and retained registry input model"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-core/src/manifest/extension.rs",
+      "sha256": "93bc551650554b22af74af37d6d72e3b2c190b594d51846cf3b5b8cb69d44fee",
+      "scope": "declaration field inventory; no operation-schema descriptor"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-requirements/src/query.rs",
+      "sha256": "54c455e87e4e4223cf853ba3f8a76994d7fdfe13827e496184d57dc30a574750",
+      "scope": "validated query/context, one observation assembly and bounded/truncated result"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-requirements/src/digest.rs",
+      "sha256": "af009b73e160c3282feaeb6705166745634d6129a5f0ebd41d1fb628b1066c68",
+      "scope": "observation identity excludes clock and binds query/source state"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-specdoc/src/load.rs",
+      "sha256": "814e2be930dbecf36bce70ecbe48b8de9aeecbd02ba800c5ddc755537701c728",
+      "scope": "SourceKind raw/projection location basis and notice"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-spec/src/embed/occurrences.rs",
+      "sha256": "55f5309c01af67ca96e62692f8ce5bd24dd407d578b83c2f50b76f9fd652dc12",
+      "scope": "typed repeated occurrence/effective-view identity, not raw authored positions"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-trace/src/search.rs",
+      "sha256": "20a4e62f1af134bf544341f3c2334985fd53096f4ae97ad3bf049ef60fe07225",
+      "scope": "DEFAULT_LIMIT=50 and query function location; no runtime execution"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-wire/src/lib.rs",
+      "sha256": "25e828a4be24f8a905c00f126ca9f5cc514a41ce0f0b362a1be87d42cf5ddae4",
+      "scope": "canonical JTD-generated shapes/behavior/shared-vocabulary owners"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "formats/REGISTRY.toml",
+      "sha256": "771383b022a28dfbe0c416b371cf80ce53f852c3dbec081535871204390bc857",
+      "scope": "format inventory and codegen policy; not operation coverage denominator"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+      "sha256": "11c90bb3f8a181b7383ca265a03c69ed7b280a7a454924360633f8c142a673e2",
+      "scope": "relevant semantic graph/headless scope facts and open proposal status"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+      "sha256": "ce185e63b6cb015101dd926e02853758bcca80b824dd28f4fd761c7f1ef5da5f",
+      "scope": "deterministic refactoring/domain owner facts and open proposal status"
+    }
+  ],
+  "proposed_counts": {
+    "full": 0,
+    "partial": 2,
+    "not-transferred": 3,
+    "unknown": 0
+  },
+  "known_accepted_evidence": [
+    {
+      "commit": "21d7683e027d81f14b2528734dd77bb7da236821",
+      "scope": "M13C2 strict domain planning/one-shot CLI/MCP parity",
+      "ancestor_of_main_pin": true
+    }
+  ],
+  "concrete_gap": {
+    "name": "MCP query advertised schema not enforced for optional types/unknown fields",
+    "source": [
+      "crates/vibe-mcp/src/tools/query.rs:60-68 descriptor",
+      "crates/vibe-mcp/src/tools/query.rs:73-94 runtime default/domain call",
+      "crates/vibe-mcp/src/lib.rs:293-314 raw dispatch",
+      "crates/vibe-trace/src/search.rs:29 DEFAULT_LIMIT=50"
+    ],
+    "minimal_requests": [
+      {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+          "name": "query",
+          "arguments": {
+            "limit": "wrong"
+          }
+        }
+      },
+      {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/call",
+        "params": {
+          "name": "query",
+          "arguments": {
+            "unexpected": true
+          }
+        }
+      }
+    ],
+    "expected": "Typed invalid-arguments/preflight refusal before invoking trace query because optional limit is present noninteger or unknown field is present.",
+    "actual_from_source": "Wrong limit -> as_u64 None -> DEFAULT_LIMIT50; unknown field ignored. Both paths call vibe_trace::search::query with trusted ctx.project_root. Runtime final result depends on project validity; no successful output or side effect claimed because nothing was executed.",
+    "positive_comparison": "migration_planning::decode_migration_request checks present optional types, generated unknown fields and schema before planner; result validated before publication; MCP/CLI delegate to it.",
+    "action": "Record B1 debt; no patch or runtime reproduction in this audit."
+  },
+  "architecture": "A1/A2 coverage/authority records guide common facade without replacing domain engines. Reuse JTD registry and existing strict domain service seams; fix actual adapter admission parity as bounded B1 work. B2 shared identity/location/composite compatibility is an early pure prerequisite where upper readers need exact joins; it is not a physical grant or a global atomic snapshot. B3 separate on-demand framing follows domain publisher and trusted IDs; existing one-shot APIs do not wait for it. Do not implement later C/D scheduler/editor work here.",
+  "limits": [
+    "No full CLI/TUI census created by this audit; no count-equality assertion is coverage.",
+    "D025/D026 names occur in exact A2 contract; complete decision bodies not supplied/read here, so no full obligation assignment claimed.",
+    "Legacy fixed MCP initialize/newline transport are intentional compatibility in B3 and are not defects solely due version age."
+  ],
+  "root_review": {
+    "disposition": "accepted source-audit classification only",
+    "verified_source_bindings": 32,
+    "verified_complete_original_contracts": 5,
+    "runtime_tests_run": false,
+    "full_task_promotions": 0
+  }
+}

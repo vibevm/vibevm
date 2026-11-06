@@ -1,0 +1,73 @@
+{
+  "task": "A1 independent boundary review",
+  "mode": "read-only source review",
+  "tests_run": false,
+  "acceptance": "root-owned",
+  "findings": [
+    {
+      "id": "A1-BOUNDARY-1",
+      "severity": "P1",
+      "owner": "crates/vibe-workspace/src/install/source_admission.rs:110-156",
+      "title": "Whole-resolution admission omits exact-file/conflict/directory-census validation",
+      "observed": "Only supported operation, Manifest equality/identity and manifest recheck run before effects; per-package SourcePolicy performs omitted input checks later.",
+      "scenario": "Valid earlier dependency followed by a declared Mixed dependency with missing exact input, conflicting rows or unsupported directory row; earlier slot/lifecycle/metadata effects precede predictable refusal.",
+      "call_evidence": [
+        "crates/vibe-workspace/src/install.rs:255-271",
+        "crates/vibe-workspace/src/install.rs:419-432",
+        "crates/vibe-install/src/apply.rs:309",
+        "crates/vibe-install/src/apply.rs:409",
+        "crates/vibe-install/src/apply/metadata.rs:30"
+      ],
+      "runtime_reproduced_by_reviewer": false,
+      "invariant": "PROP-072 SOURCE-INSTALL-BOUNDARY pre-effect admission; only empty lease/run infrastructure exception"
+    },
+    {
+      "id": "A1-BOUNDARY-2",
+      "severity": "P2",
+      "owner": "crates/vibe-workspace/src/vibedeps/slot_diff.rs:254-260",
+      "title": "Hash-only keep eligibility discards observed mode-only changes",
+      "observed": "DiffPlan passes SHA256 only; matching bytes bypass captured-permission placement.",
+      "scenario": "Direct declared Mixed Copy rematerialization after source chmod0644-to0755 preserves old slot0644 because bytes match.",
+      "call_evidence": [
+        "crates/vibe-workspace/src/vibedeps/slot_diff/plan.rs:53-58",
+        "crates/vibe-workspace/src/vibedeps/slot_diff.rs:reconcile_slot"
+      ],
+      "runtime_reproduced_by_reviewer": false,
+      "invariant": "PROP-072 SOURCE-INSTALL-BOUNDARY captured bytes and permissions"
+    }
+  ],
+  "discarded": [
+    {
+      "candidate": "Member rederive config mismatch",
+      "reason": "Incumbent rederive_package uses workspace-root manifest, same as selected admission."
+    }
+  ],
+  "drift": "Ten original named owners unchanged across initial/final hash capture",
+  "sha256": {
+    "crates/vibe-safefs/src/file/source_read.rs": "f6452e988efc70acefc553b67ac886c544b4d36d91e0473241b593fc2f0e780f",
+    "crates/vibe-spec/src/source_policy.rs": "f35c2f273f81688cc3a6d549734223fc13227febf62bee2973c5a65027659a8e",
+    "crates/vibe-workspace/src/vibedeps/source_policy.rs": "8bf2ac6be407070de2f1f4bb098c740a5fa1f809ba058d69d3d136aa20dbe8ac",
+    "crates/vibe-workspace/src/vibedeps/slot_diff.rs": "201d0b88b6fb5b44fd934e58ffa8f9a0bb164c22808f274356cfdbe8f91ce6c9",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/placement.rs": "8cf25bcdb686c7bffb8116370ce5a6b16c507c4e6fd922b33afe2d4e8524ff16",
+    "crates/vibe-workspace/src/vibedeps/derived/materialise.rs": "491b40242834d180ad61d891d01d822bdeefb00d6b3e852ff20d6d1e81031e52",
+    "crates/vibe-workspace/src/vibedeps.rs": "eb385aa23fb92637114948bb02c3d644c44db4e3d528b893dfdbe7791327a2b4",
+    "crates/vibe-workspace/src/install/source_admission.rs": "e051dc9873bd5209d94c6b39eae436396720455b3a576c6bcdac61a3f4d4444f",
+    "crates/vibe-install/src/source_admission.rs": "8b1d4633ba781ec17ce203eb28bc44705c0b89336095c26777cd2dc3cf84a731",
+    "crates/vibe-cli/src/commands/facts/selected.rs": "55fbce9e6f685fd2ef571f36725f49463108bd1a0fa2f7bbefec773fcefe97f0",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/plan.rs": "45da6a02d0f01d2528a725dac1c5ea20464910ee975d5c6154bb122c49a88f99",
+    "crates/vibe-workspace/src/install.rs": "9c15527f027a869ced68ecb05394c677d95e4eebc19dec0e1acb15da4879de0a",
+    "crates/vibe-workspace/src/install/hook_output.rs": "29b8062a1f5227826d559267c40f47662319e64137b1f6434fc5eee67cd441f3",
+    "crates/vibe-install/src/apply.rs": "c48e89a4393b69e1b8ebbb0244e07ea0fe0b5ba15566205a5a1f7847f6a8f948",
+    "crates/vibe-install/src/apply/metadata.rs": "151f595c4c1f11997bd79bf867e9a5da69b9359e39893d569a27f342f948edc2",
+    "crates/vibe-cli/src/commands/facts.rs": "5b5765e458a8b4c15bc9a534ef59da07cf51d364689bd3b6def3b65b882ebc22",
+    "crates/vibe-cli/src/commands/reinstall.rs": "d98b0fcbfac8bf1710b519b75d4f6b2bbcd359349d8c8aa5b27361d03c6acf24"
+  },
+  "root_resolution": {
+    "commit": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+    "status": "both concrete findings reproduced and fixed before acceptance",
+    "A1-BOUNDARY-1": "HookSpy RED3 to GREEN3; whole-resolution8 and actual CLI missing-input refusal verified",
+    "A1-BOUNDARY-2": "Mode RED1/control1 to GREEN2; materializer86; old hardlink and unrecorded collision behavior preserved",
+    "member_config": "discarded; incumbent workspace-root selection retained",
+    "reference": "m06-a1-transfer-acceptance.json"
+  }
+}
