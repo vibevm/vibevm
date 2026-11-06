@@ -1,0 +1,168 @@
+{
+  "head": "adfaa780cf11a1cd65c58e2771ec15b960aad3b1",
+  "sources": [
+    {
+      "path": "crates/vibe-spec/src/embed.rs",
+      "working_sha256": "34690aabd9e02810896baf503f408f1669b8fff23156830e85233fd71959760d",
+      "head_sha256": "34690aabd9e02810896baf503f408f1669b8fff23156830e85233fd71959760d",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/embed.rs",
+      "working_sha256": "ca650499e3c085bd86d9283f399820d945cf6e4bddb69adab6ba18930600593a",
+      "head_sha256": "ca650499e3c085bd86d9283f399820d945cf6e4bddb69adab6ba18930600593a",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/emit.rs",
+      "working_sha256": "ec9e67b9daa3d96ff262dfcd945814c041aab09aad403ae853cb2c3b8ff02364",
+      "head_sha256": "ec9e67b9daa3d96ff262dfcd945814c041aab09aad403ae853cb2c3b8ff02364",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/emit/static_xml.rs",
+      "working_sha256": "9fbcbeb3aba8985293198c6ef230fd7265299568371910ef497e3928cdfcd934",
+      "head_sha256": "9fbcbeb3aba8985293198c6ef230fd7265299568371910ef497e3928cdfcd934",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/emit/validate/xml.rs",
+      "working_sha256": "4289329791519985c433e63c6f199ddc8f1badb933922d3625c018ab81a3c0b1",
+      "head_sha256": "4289329791519985c433e63c6f199ddc8f1badb933922d3625c018ab81a3c0b1",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/ir.rs",
+      "working_sha256": "ef67dd4e7579d52c013d9e90c18ef0327d0bd27b0ba0708a4306c6f9c3e848f2",
+      "head_sha256": "ef67dd4e7579d52c013d9e90c18ef0327d0bd27b0ba0708a4306c6f9c3e848f2",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/ir/lane.rs",
+      "working_sha256": "eb96b3fbd63d5e42b3045a732a340eb4546c2954751a8f2896599047079fa571",
+      "head_sha256": "eb96b3fbd63d5e42b3045a732a340eb4546c2954751a8f2896599047079fa571",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-specdoc/src/doc.rs",
+      "working_sha256": "6ea28341467568037b9587394fdc36ee76021db4660fbe45b548b95c6a6ae41a",
+      "head_sha256": "6ea28341467568037b9587394fdc36ee76021db4660fbe45b548b95c6a6ae41a",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-specdoc/src/md_in.rs",
+      "working_sha256": "738a16ef04edcbdadf9e03581f28129ca8b27ef0b6de959366680a478d0a5d28",
+      "head_sha256": "738a16ef04edcbdadf9e03581f28129ca8b27ef0b6de959366680a478d0a5d28",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-specdoc/src/xml_out_emit.rs",
+      "working_sha256": "25717a694dd5108ec5fdc4fb4aa1b0d4b7332e8d2ebdff45576720dc20e767b3",
+      "head_sha256": "25717a694dd5108ec5fdc4fb4aa1b0d4b7332e8d2ebdff45576720dc20e767b3",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/tree/artifacts/embeds.rs",
+      "working_sha256": "08b37ecd43de2d0794d5d65ec9ce50ea04f6e288158c5258b32ba7b8c154b34f",
+      "head_sha256": "08b37ecd43de2d0794d5d65ec9ce50ea04f6e288158c5258b32ba7b8c154b34f",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/tree/artifacts/markers.rs",
+      "working_sha256": "fc52cb09b12831bb4883aa92c493e87adfdd4031f71e1779e3ba080ebdcb029d",
+      "head_sha256": "fc52cb09b12831bb4883aa92c493e87adfdd4031f71e1779e3ba080ebdcb029d",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/link/normal_coverage.rs",
+      "working_sha256": "4ffa398a49ab0b98ce9adec7221a1e371babb7cc62cdacddd2eaf5d1734fa1c5",
+      "head_sha256": null,
+      "same_as_head": false
+    },
+    {
+      "path": "crates/vibe-cli/tests/tree_nested_attribution.rs",
+      "working_sha256": "7db498e1c3c829696b66ff93db8dcbc42ffea13a8ac915b4c106d0c832cfc887",
+      "head_sha256": "7db498e1c3c829696b66ff93db8dcbc42ffea13a8ac915b4c106d0c832cfc887",
+      "same_as_head": true
+    },
+    {
+      "path": "crates/vibe-cli/tests/cli_normal_directive_once.rs",
+      "working_sha256": "02761d6e66a569ddaec1f0051cb3393c6131434d5e2f2139705421e56bc4185d",
+      "head_sha256": null,
+      "same_as_head": false
+    }
+  ],
+  "prototype": [
+    {
+      "path": "crates/vibe-spec/src/embed.rs",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "ee0c265af5d02592e7c29b90d6e319ea00bc20089b37480b48ba54c6f1c25f05"
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/emit.rs",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "a3b560421dbb655a347bb92f742d3ea3f0307f057d59a04a9824eff5365528c6"
+    },
+    {
+      "path": "crates/vibe-spec/src/compiler/emit/static_xml.rs",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "9fbcbeb3aba8985293198c6ef230fd7265299568371910ef497e3928cdfcd934"
+    },
+    {
+      "path": "crates/vibe-specdoc/src/md_in.rs",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "sha256": "0e78322804e9877d90101d4e4e7538271f5b3a5bc025132de6a7b6cbc41a1331"
+    }
+  ],
+  "captures": [
+    {
+      "directory": "/tmp/nst-g1-probe/cli-artifacts",
+      "xml_sha256": "9abf561d76b3c6f9b28f28cec13d8b1eb45e54702401fec7498e17938946870f",
+      "tree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tree_parse_failure": "Expecting value: line 1 column 1 (char 0)",
+      "tree_stdout_bytes": 0,
+      "body_counts": {
+        "CLI_G1_BETA": 1,
+        "CLI_G1_OUTER": 1,
+        "CLI_G1_INNER": 1,
+        "CLI_G1_SOURCE": 1,
+        "CLI_G1_ALPHA": 1,
+        "CLI_G1_UNCOVERED": 1,
+        "CLI_G1_UMBRELLA": 1
+      },
+      "escaped_embed_lines": [
+        33,
+        36,
+        40,
+        41
+      ]
+    },
+    {
+      "directory": "/tmp/nst-g1-probe/cli-artifacts-second",
+      "xml_sha256": "9abf561d76b3c6f9b28f28cec13d8b1eb45e54702401fec7498e17938946870f",
+      "tree_sha256": "b998a6ee78c5c700d234d269b89cbfb614340f027f482992cde8c73d18201d28",
+      "contributions": 4,
+      "embeds": [
+        [],
+        [],
+        [],
+        []
+      ],
+      "body_counts": {
+        "CLI_G1_BETA": 1,
+        "CLI_G1_OUTER": 1,
+        "CLI_G1_INNER": 1,
+        "CLI_G1_SOURCE": 1,
+        "CLI_G1_ALPHA": 1,
+        "CLI_G1_UNCOVERED": 1,
+        "CLI_G1_UMBRELLA": 1
+      },
+      "escaped_embed_lines": [
+        33,
+        36,
+        40,
+        41
+      ]
+    }
+  ]
+}

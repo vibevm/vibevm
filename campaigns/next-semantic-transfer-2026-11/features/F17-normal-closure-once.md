@@ -1,5 +1,7 @@
 # F17 — Normal closure once-coverage
 
+Implementation commit: `2a9da5c8b2e9ba6b73d2192df1f6b6a541a7f373`; all210integration blobs verified.
+
 Accepted at the documented implementation boundary: runtime, scoped static, deterministic code generation and traceability gates passed. The intended ordinary install behavior is now demonstrated, including rebuild of an older unstamped unit cache. This feature co-lands with F19 because source suppression must preserve typed embed meaning.
 
 During default normal linking, a specification reached through an umbrella and directly contributes each identical source region once. Uncovered preamble, siblings, unanchored regions and legitimate contract/source :add continuations survive. Distinct documents with equal prose, different captured text/reference meaning and separate artifact compilations remain distinct.

@@ -1,8 +1,8 @@
 # Old 113 task semantic-transfer crosswalk
 
-Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. G123 review uses accepted main `5d44c5104`; the later app scope review uses `c5662ee42`, and G2 is accepted in `bc49f1220`. Unaccepted common-app runtime is excluded; the latest review ran no builds or tests.
+Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. G123 review uses accepted main `5d44c5104`; the later app scope review uses `c5662ee42`, and G2 is accepted in `bc49f1220`. Unaccepted candidates are excluded; source-only reviews do not imply runtime acceptance.
 
-**Current counting result:** 113 old accepted IDs verified: **2 full semantic transfers, 24 partial correspondences, 16 scopes with no accepted campaign delivery, 71 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least2are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **3 full semantic transfers, 25 partial correspondences, 18 scopes with no accepted campaign delivery, 67 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least3are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -228,4 +228,16 @@ These are source-derived gaps, not fresh runtime failures. G2 is independent of 
 
 [Four M05 rows](m05-app-transfer-review.md) now reflect the accepted c5662ee42 runtime. D1 remains partial with actual app index/work original-input persistence; E1/E2/E4 move from not-transferred to partial for local inspection/review, real app maintenance and common CLI/PTY/question handling. Root verified38source files,7standing files,2old contract containers and8evidence artifacts. No generic solver/provider-edge lock replay, cache-only discovery purity or MCP/all-kind parity is inferred. No whole M05 task is closed.
 
-[G2 is fully accepted at its original ordinary-init boundary](m06-g2-transfer-acceptance.md) in bc49f1220, with actual XML RED/GREEN, three host variants,37distinct CLI tests and the strengthened existing Tool control. Native Windows qualification stays explicitly open as its original acceptance requires. G1/G3 remain partial. The current total is2full/24partial/16named untransferred/71unknown; exact global completion is still unestablished.
+[G2 is fully accepted at its original ordinary-init boundary](m06-g2-transfer-acceptance.md) in bc49f1220, with actual XML RED/GREEN, three host variants,37distinct CLI tests and the strengthened existing Tool control. Native Windows qualification stays explicitly open as its original acceptance requires. G1/G3 remain partial. At that review boundary the total was2full/24partial/16named untransferred/71unknown; the later M02 audit below supersedes that partition.
+
+
+## M02 source/criterion reconciliation
+
+[Four foundation rows](m02-foundation-audit.md) are now reconciled against97hash-bound source observations. A.1/A.2 become partial because current requirements/adoption/source-coordinate owners cover part of the characterization contract; the exact two-project fixtures and descriptor seam still need current evidence. B.1/B.2 are not transferred in the inspected current manifest/requirements surface: their actual pure change parser, token migration proposal, structural work graph and intent/contribution identities have no corresponding exposed owner. No implementation or runtime completion was added by this audit.
+
+Current partition:2full/26partial/18not-transferred/67unknown. Full completion remains a lower bound of2. The migration subpart needs only M13 pure token replay; full apply/recovery and editor barriers are downstream, not prerequisites of the current pure parser/proposal. The architecture map retains those downstream relations separately.
+
+
+## G1 accepted
+
+[M-06-G.1](m06-g1-transfer-acceptance.md) is accepted in `2a9da5c8b2e9ba6b73d2192df1f6b6a541a7f373` at its original compiler/boot boundary. Native Windows qualification remains explicitly open; it is not a passed platform claim. Current partition:3full/25partial/18not-transferred/67unknown. This closes one old task; F18 internal policy reuse and F19 adjacent typed-provenance completion are not extra historical credits.

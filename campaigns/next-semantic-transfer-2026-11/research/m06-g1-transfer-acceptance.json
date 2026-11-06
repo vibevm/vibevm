@@ -1,0 +1,89 @@
+{
+  "task": "M-06-G.1",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "accepted_main_commit": "2a9da5c8b2e9ba6b73d2192df1f6b6a541a7f373",
+  "disposition": "full at original ordinary compiler/boot boundary",
+  "contract": {
+    "id": "M-06-G.1",
+    "title": "Verify cross-package normal directives and authored boot semantics",
+    "goal": "Classify normal versus simple package directives and document the authored-project boot boundary without claiming the simple literal case is a bug.",
+    "read_paths": [
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+      "crates/vibe-spec/src/directives.rs",
+      "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+      "crates/vibe-workspace/src/boot_artifacts/",
+      "docs/"
+    ],
+    "write_paths": [
+      "crates/vibe-spec/src/directives.rs",
+      "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+      "crates/vibe-workspace/src/boot_artifacts/",
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+      "docs/"
+    ],
+    "steps": [
+      "Build a disposable XML consumer with a normal-format umbrella and two statically required normal packages; test cross-package #use root/solution, #source transit and unresolved-address typed failure.",
+      "Compare the same authored snippet under simple format, where #use remains literal by contract, and verify #embed behavior without conflating the two formats.",
+      "Document that a project-owned static boot file named by INDEX is read as authored instructions rather than compiled as a package snippet; specify #source placement from parser behavior, including section/top-level versus last-line rule."
+    ],
+    "positive_cases": [
+      "Normal cross-package #use inlines the exact target and source closure once; simple retains literal text.",
+      "An unresolved normal #use refuses before committing a changed boot lane."
+    ],
+    "negative_cases": [
+      "The simple literal observation is labeled a confirmed normal-format bug.",
+      "A #source paragraph is silently accepted or relocated without its actual syntax rule."
+    ],
+    "checks": [
+      "SELECT BEFORE DISPATCH: bind the affected vibe-workspace/vibe-cli/vibe-spec target and exact regression cases from source before compiling; use --lib or a named integration target.",
+      "RUN BOUND CHECKS: cargo test -p vibe-workspace --lib <reviewed case> -- --exact or the corresponding affected named target; require one nonzero selected case.",
+      "CONDITIONAL ORACLE: run codegen/specmap only if a changed schema, generator, source index or dependent contract actually requires it; do not use a broad gate from write perimeter alone."
+    ],
+    "acceptance": [
+      "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.1",
+      "Classify normal versus simple package directives and document the authored-project boot boundary without claiming the simple literal case is a bug.",
+      "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."
+    ],
+    "safe_stop": "Keep the regression reproducible in a disposable fixture and report exact unsupported behavior until the affected path is fixed.",
+    "commit_subject": "test(boot): distinguish normal directive reach",
+    "notes": [
+      "Product-neutral regressions observed on a separate local main are hypotheses for this next checkout until disposable current-tree tests prove them. Do not copy fixture-specific package names or publish external package sets.",
+      "Maintain the mutable 1.1.0 cohort and the no-public-Git hold. Bind only affected tests; no mutation suite or routine whole-workspace gate."
+    ]
+  },
+  "clause_evidence": [
+    {
+      "requirement": "XML umbrella with actual normal root/solution use and source transit once",
+      "evidence": "tests_ir_characterization::normal_once7; cli_normal_directive_once2 including local registry/materialized XML and unit caches"
+    },
+    {
+      "requirement": "same authored normal/simple distinction and embed behavior",
+      "evidence": "existing render_static_normal_differs_from_simple_on_the_same_file and render_static_expands_an_embed_directive; full boot/compiler controls"
+    },
+    {
+      "requirement": "unresolved normal use refuses before publication",
+      "evidence": "xml_unresolved_normal_use_refuses_before_replacing_committed_boot_artifacts; rollback8"
+    },
+    {
+      "requirement": "authored INDEX is direct instructions, source placement honest",
+      "evidence": "actual CLI authored INDEX literal control; before-heading/mid-section/leading-whitespace source test; PROP009 AUTHORED-INDEX-BOUNDARY and PROP035 SOURCE-DIRECTIVE-PLACEMENT"
+    },
+    {
+      "requirement": "preserve independent/partial/continued text and typed provenance",
+      "evidence": "once/empty/provenance controls, fullspec1012 checkpoint +focused later gates, actual install/repeat/cache-upgrade/reinstall and tree15"
+    },
+    {
+      "requirement": "review disposable evidence and retain unavailable platform qualification",
+      "evidence": "root210blob receipt plus raw passed/failed logs; native Windows/macOS not run and not waived"
+    }
+  ],
+  "limits": [
+    "No native Windows/macOS execution claim",
+    "Actual controlled current native fixture is not historical binary execution",
+    "G3/source publication, full debugger and ordinary package defaults remain separate",
+    "IR2 correction closes preexisting producer/consumer gap beyond prototype same-route behavior; not credited as another old task"
+  ],
+  "receipt": "user-local evidence/2026-11-06/xml-ir2-acceptance/accepted-manifest.json"
+}

@@ -68,4 +68,24 @@ Positive delivery follows A1 mandatory/optional declarations and real consumer/s
 
 ## F16: first ordinary configured-package runtime accepted
 
-[F16](features/F16-explicit-package-configuration.md) connects the A1 declaration foundation to a bounded A2–A4 runtime and actual authored/cold CLI route: explicit fixed workspace consumers, local-copy sources, optional dependency effects, lock8 original/resolved state and faithful readers. This replaces the blanket refusal only where the real consumer is implemented. It is not completion of A1–A5 or F04. The next transitive-consumer boundary has a [source-grounded assessment](research/common-package-transitive-next.md); its proposed encoding is not yet proven, and mutable consumer maps under cached solvables are not acceptable. Defaults/profile receipts, parameters, effective subskill/data consumers, wider sources, affected removal and interactive surfaces remain visible obligations. Historical task counts do not increase merely because this local atom is accepted.
+[F16](features/F16-explicit-package-configuration.md) connects the A1 declaration foundation to a bounded A2–A4 runtime and actual authored/cold CLI route: explicit fixed workspace consumers, local-copy sources, optional dependency effects, lock8 original/resolved state and faithful readers. This replaces the blanket refusal only where the real consumer is implemented. It is not completion of A1–A5 or F04. The [transitive scope/design review](research/transitive-production-design.md) distinguishes future general forwarding from the pinned prototype's actual fixed-consumer route, which explicitly refuses it. Finite v1–v3 proofs establish limited expressiveness, not a production discovery algorithm or a new transfer prerequisite. The next configuration design targets default/profile consent through the existing fixed-consumer route; mutable consumer maps under cached solvables remain unacceptable. Defaults/profile receipts, parameters, effective subskill/data consumers, wider sources, affected removal and interactive surfaces remain visible obligations. Historical task counts do not increase merely because this local atom is accepted.
+
+
+## G1: normal closure once-coverage under review
+
+[F17 candidate](features/F17-normal-closure-once.md) reuses the compiler link pass and shared validation replay. It suppresses repeated source regions only after resolving each occurrence's links, preserving distinct bindings and diagnostics. Compiler/boot controls are green at the recorded intermediate checkpoint; actual installation, attribution and final gates remain required. Compiled-unit composition and G3 source payload/publication obligations remain distinct. No historical task status is promoted yet.
+
+
+## M02 foundation reconciliation
+
+The [bounded four-task audit](research/m02-foundation-audit.md) separates valid fixture characterization from real pure declaration/identity APIs. Current main has requirements/adoption primitives; exact change parser/work identities remain to transfer. B.1 migration uses M13 pure token replay, not full migration application or editor coordination. The map now has311active interface references and retains the2removed prerequisite links as downstream boundaries;287hard edges are unchanged. This review changes uncertainty accounting, not completed-task totals.
+
+
+## F17/F19 accepted compiler boundary
+
+Committed implementation `2a9da5c8b` delivers normal once-coverage and typed embed provenance through actual XML install/tree/rebuild, with compiler/native IR2 compatibility and compiler-recipe cache invalidation. [F17](features/F17-normal-closure-once.md), [F19](features/F19-typed-embed-provenance.md) and the [G1 clause matrix](research/m06-g1-transfer-acceptance.json) state exact limits. F18 shared automatic-basis policy is separately accepted in497f58a48; ordinary package defaults and successful bound review/retry are the next active boundary. Historical accounting is3full/25partial/18not-transferred/67unknown, not a whole campaign completion.
+
+
+## Current execution priority after G1 acceptance
+
+The next implemented-prototype task is M-06-G.3: generated payload exclusion, authored static-zone projection and source-member publication ownership. This uses the completed compiler foundation and existing workspace owners. The broader fresh-default/review extension remains designed/planned, not a prerequisite of G3 or a reason to delay original113 transfer. Current baseline reproduced4failures/4passing controls; fixes and exact qualification are in progress, without a task-count promotion.

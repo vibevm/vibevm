@@ -1,0 +1,670 @@
+{
+  "schema": 1,
+  "prototype_commit": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "main_head": "adfaa780cf11a1cd65c58e2771ec15b960aad3b1",
+  "runtime_verified": false,
+  "main_files_are_working_tree_bytes_not_asserted_clean": true,
+  "packet_sha256": "746924492be7f0b0b930fa05ed0370d61c6740041b9d561fd815e4fbd0421b01",
+  "sources": [
+    {
+      "tree": "main-working-tree",
+      "path": "vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec",
+      "bytes": 22719
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "sha256": "e676881df0adc17f7179208172cab6aaf687633b48a0a9f16bb28b1d143e383e",
+      "bytes": 45699
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "vibevm/vibespecs/common/PROP-046-adoption-facts-registry.xml",
+      "sha256": "d9a2491ee318d1f12f7bb04d9f9d459575f499a3b7d98772776e23a1708ac6d0",
+      "bytes": 11972
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml",
+      "sha256": "5eb64e91ad2f00b0eee40826748c2a70ca6b7f5c3d3bf49213ad8e0dcf8f91d4",
+      "bytes": 56251
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "campaigns/next-semantic-transfer-2026-11/source-inventory.json",
+      "sha256": "c0f4e7c2d7ee9fb9aae7c84b4a20df14dd96bad0422bec9e7aebf59f82dc161a",
+      "bytes": 149121
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/old113-transfer-crosswalk.json",
+      "sha256": "29f541d23c1aa067bd8fea9de91a93b1515bac2aa8944a40538b6328399ea949",
+      "bytes": 264424
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "campaigns/next-semantic-transfer-2026-11/architecture/map.json",
+      "sha256": "92acac1460e578ef44fdef2b9ef22ce305d6a22ae0bdfb3d0984950bca34c305",
+      "bytes": 1043865
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-requirements/src/lib.rs",
+      "sha256": "68c5e6b7cbb702a98faf90648969658d7c760b6b07f9e2f1ff5b983682b07d16",
+      "bytes": 3416
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-requirements/src/query.rs",
+      "sha256": "54c455e87e4e4223cf853ba3f8a76994d7fdfe13827e496184d57dc30a574750",
+      "bytes": 11513
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-requirements/src/rows.rs",
+      "sha256": "075aeabafc752c5c75dfd4894dd195e2d2459bcb37de8ee26b6c0d6abce2e69a",
+      "bytes": 6130
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-requirements/src/sources.rs",
+      "sha256": "37bf687afa4d0762acdb69bd05c05b32e76df6c2681b4cb67ea8da04ff1c1f0b",
+      "bytes": 13596
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-requirements/src/provider.rs",
+      "sha256": "4e684035aff9b7f29290cf786bac73c734c97f4797015d0fb1e5dc7a3f01f25d",
+      "bytes": 19081
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-requirements/src/digest.rs",
+      "sha256": "af009b73e160c3282feaeb6705166745634d6129a5f0ebd41d1fb628b1066c68",
+      "bytes": 15463
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-requirements/src/tests_requirements.rs",
+      "sha256": "367916e9bc44166a3458347c940fce324fa6cf3f368ff5939bb09d3e9c947093",
+      "bytes": 2471
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-requirements/src/tests_query.rs",
+      "sha256": "b2057c4af4ee71a62c140238b1f0590a99250ac77054324e01d03c6a503a2463",
+      "bytes": 21960
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-requirements/src/tests_followup.rs",
+      "sha256": "89931ef17ba5a13a49bb7739f486cbbca9d4792d4158fc5411f739a7615b6aa3",
+      "bytes": 19305
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "sha256": "332f8eee367678db067d8168689c9edcac72b81d03e6a962a321c89aa9dd1d2a",
+      "bytes": 20373
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-core/src/manifest/declarant_path.rs",
+      "sha256": "00333be7e54ec55ae3c329a07f86fed74fc17cc3b2394917be288bae4ee8eea0",
+      "bytes": 14768
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+      "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83",
+      "bytes": 9526
+    },
+    {
+      "tree": "main-working-tree",
+      "path": "crates/vibe-core/src/manifest/configuration/basis.rs",
+      "sha256": "8d705d4f84446de57859c49cf8018df5fa280701f54b0c7d5ab5f2a09d74a622",
+      "bytes": 9463
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "campaigns/next/tasks/M-02-A.json",
+      "sha256": "9f88ec87bbe87ec724d079add45fc7123c1e6c8609d658903aa70e6f84e44849",
+      "bytes": 8015,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "campaigns/next/tasks/M-02-B.json",
+      "sha256": "351229082d51a6154663b16e72c901156c8c985c17e32810bdd1270dc98c96c7",
+      "bytes": 14715,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/full_pass.rs",
+      "sha256": "20b04b48e48e2781b2059782def882704144b3e7d2a55f421c9ef7266cf3aa43",
+      "bytes": 4723,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/identity.rs",
+      "sha256": "beb8b6453452b597f0bab4e5b5ac27997dd75d3d40c37a325e4fa1b0795e5f67",
+      "bytes": 7893,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/m_02_b_1_cases.rs",
+      "sha256": "123c8595902d779baaa5c150b8c749097a642d5dcdb2021a7941bf6a55be10ab",
+      "bytes": 7777,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/m_02_b_2_cases.rs",
+      "sha256": "aed6cab35dfd0c8bff7aa679ec94d68d9967809b7be6ca4b361485491c5467c5",
+      "bytes": 9416,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/m_02_c_1_cases.rs",
+      "sha256": "1e46ba3c711206f3888553aa24977bdad7425adccafcf38531750ce7f6e8cb16",
+      "bytes": 3961,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/m_03_a_2_cases.rs",
+      "sha256": "edeee16e15a0ce37b6e5eaa54518fa5530907231ecc2f6b374014c54ec77f26f",
+      "bytes": 5014,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/migration.rs",
+      "sha256": "6bf2bfdef4fa58e5a0fa61ef4c9c1cfdb9e03679637e448a24dcd743afd78f47",
+      "bytes": 3161,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/mod.rs",
+      "sha256": "fea0495cdb36a17335f86bea1e6b6c16e2744d6288be5afd20d74c4d69482757",
+      "bytes": 9201,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/preview_bind_cases.rs",
+      "sha256": "422e85bcf777e870d2edf8e3a0490b1599d5d92b81ca895b0196143f4bd20e0d",
+      "bytes": 4687,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/rebase.rs",
+      "sha256": "4b3b248dd36a65abab59f26ae078143dece7ee6b127c27d005530226f4ae2e5d",
+      "bytes": 9646,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/validation.rs",
+      "sha256": "898381e24aa96dbfbcd666e5c04af95d8ed66acc8d700621240eda969e41d93a",
+      "bytes": 9475,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/change/work.rs",
+      "sha256": "40e43ed6751b5d4376774ec1145b029ec13e0920fc01bf7e66feda31da460dc0",
+      "bytes": 7617,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/captured.rs",
+      "sha256": "bfabcb5c577c8fbbafeeb349adbd52e80ea40a365ff2073bfe52751c5031937c",
+      "bytes": 1170,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/evidence.rs",
+      "sha256": "4e97c510a7d4ad1c0aa82702d24ef52a645efb717e72127a45de5cc7e2927f3a",
+      "bytes": 1647,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/identity.rs",
+      "sha256": "ad595afc9bb213dd04b92070803957c5db7cbac6b64d5b7d59b8718eac1a5d84",
+      "bytes": 2658,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/inspection.rs",
+      "sha256": "7f7ba39c60b8a766fdcb5f34f5d1930e03a2204169c78912391925daf95d1387",
+      "bytes": 1976,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/m_02_a_1_cases.rs",
+      "sha256": "4f9923d82a93a340200893f93f83d287ec30d7ed1daa95a771e655d5106ea7ba",
+      "bytes": 13599,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/m_02_a_2_cases.rs",
+      "sha256": "c9dcfac9524d9d46590334fb099f13704b02d698ab864b482625182c95db369e",
+      "bytes": 14554,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/m_02_b_1_cases.rs",
+      "sha256": "d9eba8d62feeaafb1d67e067b85eea1ca431f0889c7ab72f28e282e9d3c162ab",
+      "bytes": 4006,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/m_02_b_2_cases.rs",
+      "sha256": "3fdebe9548fd5c33ec9e49bbe6c36c1bebad7621cfe3a774f41cdf06da42fc4b",
+      "bytes": 5934,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/m_02_b_3_cases.rs",
+      "sha256": "dbd6bc5e2fe80fb3768c270ddec70c322563f594e8365e97b5cecc2eee1da9bb",
+      "bytes": 3030,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/m_02_c_1_cases.rs",
+      "sha256": "cb171a607eb2393a9e8f249ce5e6858b9cda51c904d62e62285120aae0948b8b",
+      "bytes": 14485,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/m_02_d_1_cases.rs",
+      "sha256": "db73a459073c8a411da4afa75ee4eb74c68c3f78cfc32a99ab365e969a849585",
+      "bytes": 3199,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/m_02_d_2_cases.rs",
+      "sha256": "7fbdc8fe1b269652cf78b8d6e474724214c2aff307140105f32995500fde99af",
+      "bytes": 742,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/mod.rs",
+      "sha256": "b7a076f7b5ecb9c6eceb2ac1c24c20154f035fac6cf41f2f5e598b53e1326d92",
+      "bytes": 1258,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/origin.rs",
+      "sha256": "ec02e7c65e38a2f8b83c32603aa5e148845c138fd087bb8f2e61c41b85362d8b",
+      "bytes": 10078,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/preview_bind_cases.rs",
+      "sha256": "61583260fc3a380d11f20e39766ec04910224a7fbec2d80db667bce5f77575a2",
+      "bytes": 6038,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/read.rs",
+      "sha256": "f92826eff275ed185db7a2cf8778f6261d894d5c2a91ffe502a51d50eca7d49f",
+      "bytes": 5188,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/scaffold.rs",
+      "sha256": "576ac5bcb3c7250cc1a327bcb14bdbbedc4e2dafbb92f268e7df019995881fdd",
+      "bytes": 4802,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/change/selection.rs",
+      "sha256": "a95e719ed876414ba4fd28509f29ff202dbcd0e8ef3569550ddc6ab0878dfa05",
+      "bytes": 2419,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/complete.rs",
+      "sha256": "775404833546bfd3bd8b0b2ed2932c8556d32a6d87be674041a1e0ea8975a9e9",
+      "bytes": 9970,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/complete/m_02_c_2_cases.rs",
+      "sha256": "8b0a497e0012259d27db91fed867393ff212c639be5549beb3ffaf032904621a",
+      "bytes": 19867,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/complete/selection.rs",
+      "sha256": "e7338023cf005daed0de0abfec59320821c2d8ba3eb4785223fb33842fce3ea1",
+      "bytes": 8739,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/digest.rs",
+      "sha256": "fecfb68090ef4749fc8fb16e85fd23696e560748fbb8ac02ed36cd0255904e5b",
+      "bytes": 15518,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/error.rs",
+      "sha256": "be1ca0c31cd776b94649153ee0de2aa0df7d847ba44714236cd6597455234df4",
+      "bytes": 4928,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/lib.rs",
+      "sha256": "77ad6a2afed4c396bd12c60ee99e15e429a910bedc6f853175d393a0e624085d",
+      "bytes": 3627,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/provider.rs",
+      "sha256": "4e684035aff9b7f29290cf786bac73c734c97f4797015d0fb1e5dc7a3f01f25d",
+      "bytes": 19081,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/query.rs",
+      "sha256": "54c455e87e4e4223cf853ba3f8a76994d7fdfe13827e496184d57dc30a574750",
+      "bytes": 11513,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/rows.rs",
+      "sha256": "075aeabafc752c5c75dfd4894dd195e2d2459bcb37de8ee26b6c0d6abce2e69a",
+      "bytes": 6130,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/sources.rs",
+      "sha256": "d0726beff633fb44fa2a0b26c660998bf5a9164a9beac239e5a02664e2513663",
+      "bytes": 14882,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/sources/declared.rs",
+      "sha256": "29b5f5f238aa4748f407024ec807b338d5343afd0fe7ff865940cc402beb0d22",
+      "bytes": 11372,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/tests_digest.rs",
+      "sha256": "1d48d1108f3985d791c523524ea3062c0ec6d2f94bc84aa7df1c30f071bd35fa",
+      "bytes": 13443,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/tests_followup.rs",
+      "sha256": "89931ef17ba5a13a49bb7739f486cbbca9d4792d4158fc5411f739a7615b6aa3",
+      "bytes": 19305,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/tests_provider.rs",
+      "sha256": "489dc9b5d5255534ac5fb492f7396e82fc40b4c0eb03ff86d40649ad744729af",
+      "bytes": 15153,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/tests_query.rs",
+      "sha256": "2e4deffb79ae749c3749bb27a36abd1638415567ac6f8234bc8edbf6b1610213",
+      "bytes": 22233,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/tests_query/slot_fixture.rs",
+      "sha256": "61dc559e130e6bf428e5c28a30efd774972cec6116618ec64f3fc745a25e8bb3",
+      "bytes": 1380,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/tests_query_declared.rs",
+      "sha256": "24d22b2acfb958b9d885035ba96e8fa8895d37e73e3d41937732cc53d49a85c4",
+      "bytes": 14795,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/tests_requirements.rs",
+      "sha256": "367916e9bc44166a3458347c940fce324fa6cf3f368ff5939bb09d3e9c947093",
+      "bytes": 2471,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/src/text.rs",
+      "sha256": "b28b4fb5a2d5b6a8c899f4be621ca41066c5908406bf3ba6cd7d68194bb160ae",
+      "bytes": 6989,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/alpha/change.toml",
+      "sha256": "c137645c4efeefb06364003d70e80b9508a5436bb063543c00cbe0793c4b5806",
+      "bytes": 624,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/alpha/vibe.toml",
+      "sha256": "5d1c94e2ab004b142698236795a6e0bf7f94542c34d1f3c511f2fb1690cac4dd",
+      "bytes": 132,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/alpha/vibevm/vibespecs/CHANGE-001.md",
+      "sha256": "4bf3ffdb0dc6ed424190ad8c876e932e3f6c6dc5a45618a0b548829c0c778c39",
+      "bytes": 399,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/beta/change.toml",
+      "sha256": "e8eac054549f696d43179e59d7de6f7d0c790ec74d6141db30679401123f4ba3",
+      "bytes": 619,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/beta/vibe.toml",
+      "sha256": "a1e05820237b8c608ef2f46462cf803a3658b42366d921ec51a5c903dadd1f53",
+      "bytes": 131,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/beta/vibevm/vibespecs/CHANGE-001.md",
+      "sha256": "40b93fe8912ee2abf0b136a6492df88d876b92ab307bd8387627148e7435e98b",
+      "bytes": 436,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/evidence/known-artifacts.json",
+      "sha256": "87a2588aadf7d389077b94cefff3aeae3b26724e670678761cc18b1de9855cfd",
+      "bytes": 111,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/evidence/work-refs-only.json",
+      "sha256": "0de05a9b6eb2069addb255bdffd43cbc085d690224a82dd5a023941cfecb82d4",
+      "bytes": 90,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/origin/vibe.toml",
+      "sha256": "a5c4f00d85494c5204d63844b9301e67de7942991d09cfa32036f9efdfd5d19b",
+      "bytes": 264,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/origin/vibevm/vibespecs/FEAT-001-native-intent.md",
+      "sha256": "1ab39442b0c61d1ed64d816a41dab9f9237ef2e11debf18fcdc3c4ccc70eceb8",
+      "bytes": 295,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/personal/plan-after.toml",
+      "sha256": "1cae27ca5a2c42231233f7e71f41c14829cf8e1613764b82e31687fbe9f3031a",
+      "bytes": 337,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-requirements/tests/fixtures/change/personal/plan-before.toml",
+      "sha256": "87e88096966ef7b3e052ad1456d111a43582abb5a12fca9026b4efef274f491a",
+      "bytes": 242,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "vibevm/vibespecs/common/PROP-071-change-bindings-and-closure.xml",
+      "sha256": "a941a781322d389e0e0558d420206d45f9ad4af23bd736e468c896227e0a3f5d",
+      "bytes": 25328,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "sha256": "7fae63324f8ddfa042647c9efd08161ede3edeb84afd6a7d23178cd110913a1f",
+      "bytes": 20423,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/migration.rs",
+      "sha256": "bc4a51ff896492e7525e9c481ab7aeb52817c4b4cfbffbe0e33f9cb4a0491b75",
+      "bytes": 21837,
+      "inspection": "body read or bounded caller search; fixture/contract hash binding"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "formats/corpora/change-manifest/e1/retained-preview.json",
+      "sha256": "bb3b8ba4d8f6a33d14f387575ca552fbd9ea02b9f3fe97bc584500b43786c18c",
+      "bytes": 21560,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "formats/corpora/change-manifest/e1/semantic-gap/closure-input.toml",
+      "sha256": "d0b07e0173616d4d51d4b9a96ca6547a27cab6b766e7a3a1473b9ef865007de6",
+      "bytes": 886,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "formats/corpora/change-manifest/e1/semantic-gap/escaping-role.toml",
+      "sha256": "9ae151679c6178078b59e3be68828c422c841b3c00ce2b6dbb2cea06153a7415",
+      "bytes": 891,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "formats/corpora/change-manifest/e1/semantic-gap/invalid-content-binding.toml",
+      "sha256": "40071099ec042828061e7fee96a4ae6efe1cd0ec9852595671ef07ebb9e89019",
+      "bytes": 961,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "formats/corpora/change-manifest/e1/semantic-gap/unknown-epoch.toml",
+      "sha256": "e988a0a101e6365c3e058ec9f178f3d3d14794d8e987ff5305a1f62b837494b3",
+      "bytes": 888,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "formats/corpora/change-manifest/e1/structural-invalid/unknown-field.toml",
+      "sha256": "45efc881a779a2447f764c85ecb12dad97b5d01c41ab3c358392e1548cded3dd",
+      "bytes": 911,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "formats/corpora/change-manifest/e1/valid/bound-origin.toml",
+      "sha256": "4d39962133bc9172892e98de4619c092e2230e82f1e93992044cc54e23df1d12",
+      "bytes": 1014,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "formats/corpora/change-manifest/e1/valid/representative.toml",
+      "sha256": "42fda3983897edd4d529b10b93c02a8c18d4ace8051ccd0e9a43cdfc52daac56",
+      "bytes": 888,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "formats/REGISTRY.toml",
+      "sha256": "2ec413f611f13a9a92606356d64a8dda2b1c9e52ca5b98193d65c7b77a5913b0",
+      "bytes": 64076,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "sha256": "7fae63324f8ddfa042647c9efd08161ede3edeb84afd6a7d23178cd110913a1f",
+      "bytes": 20423,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    },
+    {
+      "tree": "prototype-pin",
+      "path": "crates/vibe-core/src/manifest/migration.rs",
+      "sha256": "bc4a51ff896492e7525e9c481ab7aeb52817c4b4cfbffbe0e33f9cb4a0491b75",
+      "bytes": 21837,
+      "inspection": "amended exact corpus, registry stanza, or replay owner body"
+    }
+  ],
+  "report_sha256": "bf078e60a2662dc81a8e4b287888cbfe85a932c8272949753cdd4991293f027a"
+}

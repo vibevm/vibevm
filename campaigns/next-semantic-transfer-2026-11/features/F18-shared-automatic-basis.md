@@ -1,6 +1,6 @@
 # F18 — Shared automatic-basis policy (foundation)
 
-Root accepted at the shared core/app foundation boundary; local commit is recorded below after publication. This is not delivery of package defaults/profile review.
+Accepted local implementation commit: `497f58a48` (10 source/map/feature paths). Root verified committed blobs against the acceptance receipt. The temporary isolated verification worktree was removed and its absence checked. This is not delivery of package defaults/profile review.
 
 The existing app evaluator now consumes one pure core policy for automatic reliance, retained-history carry and review decisions. Ordinary applications keep their existing results and wire records. The shared owner will support the package adapter without copying the app's choice/review logic or moving app state into a global store.
 

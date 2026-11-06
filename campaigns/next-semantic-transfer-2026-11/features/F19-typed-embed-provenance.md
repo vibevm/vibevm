@@ -1,5 +1,7 @@
 # F19 — Typed embed provenance through real compiled artifacts
 
+Implementation commit: `2a9da5c8b2e9ba6b73d2192df1f6b6a541a7f373`; all210integration blobs verified.
+
 Accepted at the documented implementation boundary: runtime, scoped static, deterministic code generation and traceability gates passed. This closes a preexisting producer/consumer gap exposed during F17, not a claim that the prototype already solved it.
 
 The previous expander reduced source provenance to comment-looking text. XML projection either discarded standalone comments or escaped them into paragraphs, so schema-valid tree output could lose every embed. F08's earlier accepted scanner tests used a synthetic wrapper and correctly did not claim the real XML install path. Copying that scanner was insufficient.

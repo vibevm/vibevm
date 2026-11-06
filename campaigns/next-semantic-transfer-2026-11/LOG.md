@@ -1550,3 +1550,109 @@ Root reviewed current fixture and cli-third.log: install/repeat actual-unit fing
 ### 2026-11-06 — broader G1 compatibility controls pass, XML end-to-end remains RED
 
 Root read completed g1-control-receipts and raw logs: compiler::649PASS, boot_artifacts::tests41PASS, existing tree_nested_attribution14PASS, all exit0. These panels overlap earlier targeted checks and are not additive completion counts. Existing tree compatibility proves the retained scanner contract, not XML projection; new actual install nested attribution remains unmet. Worker identified parent boot_artifacts.rs crossing600lines solely from4-line test registration (baseline597); root approved moving registration into the cohesive existing tests_ir_characterization owner, preserving original parent and rerunning the moved nonzero filter instead of shaving whitespace or disabling the rule.
+
+
+### 2026-11-06 — frozen G1 verified; complete XML producer/consumer correction authorized
+
+Root verified7final G1 source hashes and140evidence hashes and archived the full checkpoint under local evidence/2026-11-06/g1-frozen-before-xml. Read XML design and verified all15HEAD-presence/hash bindings,4prototype blobs and2capture pairs;14current source files match, while the active CLI fixture differs from the earlier audit snapshot. Root verifier initially mishandled an explicitly absent HEAD file, corrected that check, and did not treat fixture drift as unchanged evidence. Existing source-loss finding is bound by unchanged production owners and real captures. Root authorized the full typed expansion→checked passes→annotated XML→tree correction and standalone loss reproduction. Semantic text must remain exact; bounded actual canonical XML comments can be placed inside paragraphs without promoting escaped prose. Compiler-IR schema/epoch changes require the concrete compatibility proposal before generation. No scanner-only workaround or full acceptance.
+
+
+### 2026-11-06 — standalone XML loss reproduced; compiler IR epoch2 candidate authorized
+
+Actual standalone-layout install/repeat/reinstall discriminator also fails0/1 on absent tree embeds (standalone-red.log exit101); paragraph and standalone loss are now both runtime evidence. Root inspected current compiler-ir registry and approved epoch2/ir_schema2 for typed occurrence data with e1 schema/corpus/generated retention and strict historical inspection. Active execution must not accept old replies as provenance-preserving; rebuild from actual owning inputs or refuse. Root changed only the active compiler-ir registry row to e2 as an in-progress candidate; implementation worker owns e2 schema/converters/generation. recoverable=true and foreign_parsers=none stay unchanged pending evidence of actual foreign readers. This affects compiler snapshot/transform data, not vibe.toml or install -g authored syntax. Generated artifacts and format gates remain pending; no format acceptance yet.
+
+
+### 2026-11-06 — reviewed defaults route decided; shared core/app foundation starts
+
+Root inspected actual install materialization-confirmation and app evaluation owners, then recorded package-defaults-implementation-decisions.md. Semantic review is a separate default-defer port; approved package-only review-input flag and same typed MCP acknowledgment bind actual scope/input/history/exact candidate/source/semantic and declared-effect meaning. Presentation must not promise unresolved target versions. Report compatibility and exact automatic-lock9 shape remain explicit gates, not silently additive assumptions. Assigned disjoint core/app policy extraction with a real app consumer and unchanged app wire/host/secret behavior; no package/wire/CLI activation yet. XML worker retains exclusive main Cargo/codegen, and root will schedule foundation verification after source readiness.
+
+
+### 2026-11-06 — typed embed carrier starts; root reviews zero-width ownership
+
+Worker introduced recursion-minted body/tape and kept public expand_embeds as a renderer over that result; existing family reports20PASS after one mechanical clone compile fix. Closure/Link/Lane integration is actively compile-incomplete, not accepted. Root source review found retain_lines kept an intrinsic empty embed whenever any unrelated document line survived, permitting an attribution ghost. Worker agrees to correct this. Root additionally challenged a proposed nearest-line rule: an empty embed in authored preamble cannot be assigned to the first heading merely because no output text precedes it; suppressing that heading while retaining a later sibling must not decide preamble ownership accidentally. These are source-derived cases awaiting executable proof. Coverage equality also must account for meaningful generated provenance without fresh IDs defeating genuine once suppression.
+
+Shared basis worker froze the old app evaluator as an independent test-only parity oracle and is extracting typed consumer versus instance reliance, leaving parameter reasons adapter-owned. No Cargo is authorized there while compiler integration owns the build slot.
+
+
+### 2026-11-06 — provenance contracts and honest current checkpoint
+
+Root added candidate spec/work anchors PROP035#EMBED-GENERATED-PROVENANCE/#EMBED-COVERAGE-OWNERSHIP and PROP036#XML-GENERATED-EMBED-ATTRIBUTION for the actual producer→transform→XML→tree path. Existing F08 raw-reader acceptance remains unchanged and narrow. The new contracts require independent content/provenance validation, actual directive ownership for empty occurrences, provenance-aware once equivalence and bounded actual XML-comment decoding. Compiler integration is intentionally compile-incomplete while owners are being aligned; the earlier20passing legacy-expander tests are not final-source runtime evidence. Separately corrected two stale narrative count strings in old113 crosswalk after recomputing all113row statuses:2full/24partial/16not-transferred/71unknown; no row or task count was promoted.
+
+
+### 2026-11-06 — codegen correctly refuses an unregistered historical schema
+
+First e2 codegen stopped before publication because root had changed the active compiler-ir row without adding the retained e1 schema's inspection reader row. I omitted that registry dependency. Root checked existing application historical-reader registrations and added format.compiler-ir-v1 with the prior epoch1 schema/corpus, recoverable=true and foreign_parsers=none. No generator-policy bypass, reader weakening or e1 pruning. Worker can now rerun normal generation; strict historical inspection remains distinct from e2 execution authority.
+
+
+### 2026-11-06 — IR2 compatibility includes the actual native envelope consumers
+
+Root inspected ArtifactCompilerNativeInvoker and existing native-compile-request/reply registry rows. Foreign invocation already exists with a permissive request projection and strict host reply; the old compiler-ir comment calling it future work was stale. Corrected that comment without weakening reader policy. Root instructed implementation to preserve historical native e1 payload shapes, carry IR2 through actual envelope/admission consumers coherently, and refuse old native declarations before invoke. Additional envelope epoch rows require a concrete proposal; merely changing the snapshot serializer would miss this consumer.
+
+
+### 2026-11-06 — bounded shared-basis gates pass; compiler slot returned
+
+After the XML worker explicitly yielded the build slot, basis worker ran core-only policy4PASS and public doctests10PASS, both nonzero and exit0; root read the raw logs. No unrelated compiler failure was used as basis evidence. Slot returned to XML implementation for e2 generation. Existing app evaluator and frozen-reference parity remain unrun until the full compiler dependency graph is coherent. Shared basis is not accepted as app-parity-proven or package defaults delivered. Root registered active native request/reply2 and historical1 with their separate reader policies, retaining backend-byte reply1 and low-level FFI/lifecycle boundaries.
+
+
+### 2026-11-06 — epoch compatibility contract linked; basis checkpoint archived
+
+Root verified8frozen shared-basis sources and3gate receipts, then archived source preimages/current copies and logs under local evidence/2026-11-06/shared-basis-core-checkpoint. App parity remains pending. Added candidate PROP054#IR-EMBED-PROVENANCE-EPOCH for source/wire/admission links; corrected trace-registry commentary to distinguish current e2 and historical e1 snapshots. Worker reports typed recursion→Closure→qualify→link→coverage→Lane wiring and e2 conversions written; annotated specdoc/source-map writer seam and native/e2/validator plumbing remain compile-incomplete. These are implementation observations, not acceptance.
+
+
+### 2026-11-06 — historical schema and vocabulary preservation checked independently
+
+Root compared all tracked compiler_ir/e1 and native/e1 schema/corpus files plus three generated payload modules against HEAD:49files byte-identical. Parsed all189preexisting vocabulary entries and confirmed their values unchanged;14new versioned/carrier entries are additive siblings. Generated namespace root-list banners changed mechanically with schema discovery, distinct from payload/schema mutation. Receipt: local evidence/2026-11-06/ir2-historical-source-audit.json. This is a source compatibility checkpoint during implementation, not final generator/runtime acceptance; old/new strict readers, before-invoke refusal and actual XML attribution still need execution.
+
+
+### 2026-11-06 — annotated writer preserves semantics; independent reader ownership delegated
+
+Specdoc projection tests now4PASS after a first1PASS/3FAIL run exposed a payload-encoder/full-comment-framer mix-up; failures remain recorded. Root source review found another gap: observer early-return on an empty expected tape could accept injected actual c1 provenance because ordinary XML parsing ignores comments. Root requested explicit empty-tape negative. Exact stripped-byte equality also narrows legal semantic-equivalent native XML formatting; it is only an intermediate checkpoint, not the final compatibility law. Primary requested a disjoint reader task. Root assigned finish_secret_diagnostics only the incumbent XML reader/helpers plus private semantic-annotation module, with same-parser semantic node/text positions and equivalent-format/misplaced/injected/literal tests. Primary retains writer/annotated/compiler/native/tree and main Cargo/codegen; no concurrent reader-file writers.
+
+
+### 2026-11-06 — exact historical foundation audit proceeds without expanding implementation scope
+
+While XML and basis code owners work, root assigned a bounded read-only reconciliation of original accepted M-02-A.1/A.2/B.1/B.2, currently unknown in the113task crosswalk. The packet names exact main/pinned source allowlists and forbids runtime/source/state mutation. It examines reusable origin/local bindings, authored change roles and independent intent/work identity from actual source/callers, not completion labels or field existence. This is required campaign scope accounting, not authorization for a new framework or implementation priority. Root retains row/status promotion after review.
+
+
+### 2026-11-06 — preserve suppressed occurrence identity; historical fixture scope stays honest
+
+Primary is adding explicit suppressed disposition to the same typed tape so a transformation cannot disguise silent annotation loss as intentional removal. Suppressed rows retain original identity internally but emit no boundaries; intrinsic emptiness remains independent. Root requires suppression/remap to agree with actual coverage/transformation, not merely an asserted boolean.
+
+M02 reviewer found fixture-characterization rather than a production API for A.1/A.2. Root cautioned that those tasks explicitly request fixtures, so characterization is not itself a defect; distinguish fulfilled narrow criteria from broader feature claims. A packet gap omitted the exact migration corpus/token-replay files; root supplied11named pinned paths rather than authorizing broad boot or arbitrary reads. No historical task rows/counts changed.
+
+
+### 2026-11-06 — first real XML install journeys GREEN; cached upgrade remains required
+
+Root read typed-cli-first.log:2/2PASS, both paragraph-adjacent and standalone embeddings through ordinary install/repeat/unitreuse/treev1/deleted-lane reinstall and unchanged source snapshots. Reader6source hashes independently verified and archived; semantic observer8/fullspecdoc126/docs10 passed at its checkpoint. This is first real typed-path success, not final acceptance. Primary found old unit reuse only bound graph fingerprint, not compiler recipe. Root approved shared checked recipe metadata and exact comment spelling; added PROP038#COMPILER-RECIPE-FRESHNESS and FMT022/break009 upgrade notes. Old unstamped cache→rebuild→secondreuse and failure preservation are required; fresh-only2PASS cannot prove them.
+
+App evaluator15/transfer7 now pass; its first compile failure was a test-only frozen-oracle HistoryUse alias, fixed without altering the frozen body. Core/app conform has0new findings; app strictclippy encountered the compiler-owned unused helper, which primary removed. Wire-only epoch tests delegated to the frozen reader worker in one new test file, with schema/domain limits explicit and Cargo serialized.
+
+
+### 2026-11-06 — F18 shared basis accepted and committed independently
+
+Root reviewed the8owned source/test paths, verified final hashes and independently normalized the frozen reference function (only visibility/name/format differ). A temporary detached HEAD-plus8files checkout ran the existing built specmap owner without Cargo:9086units/5209tagged/4369edges,0gatedorphans/0unresolvedhost,43knownwarnings; regenerate andcheck both exit0. Committed exactly8source paths+their isolated specmap+F18 card as497f58a48. Core4/doctests10 and app evaluator15/transfer7 pass, exact core/app lib+tests strictclippy0, conform0new andfmt0. No XML candidate source or format was included in that commit. Verified9temporary changes against committed blobs, removed the ordinary verification worktree and verified directory/registry absence. Permanent evidence: local evidence/2026-11-06/shared-basis-acceptance. This accepts the shared app-consumed policy foundation, not ordinary package defaults/review transport and not another full old113 task.
+
+
+### 2026-11-06 — root traceability gate catches specification form error
+
+Full working-tree specmap/check exposed3new public lexical-helper orphans and32host unresolved edges. I had written XML-GENERATED-EMBED-ATTRIBUTION as a named XML element although that reserved/non-elementable spelling requires generic fact id form; basic ElementTree well-formedness had not checked the project dialect. This excluded99existing PROP036 units. Corrected only its element form, preserving the ID/meaning. Added the actual XML token inventory contract and module scope for its3public helper items; no exemption/baseline/dead-anchor workaround. Also clarified source/directive positions as effective normalized pre-Embed views, not raw authored edit coordinates, and recorded minifier identity2. Final map/check rerun follows.
+
+
+### 2026-11-06 — complete consumer review and prepared compiler acceptance
+
+Root verified194primary source/schema/generated entries and64raw log hashes, plus9SDK/corpus final paths;32additional generated namespace changes are only schema-root banners/nativee2routing, with FormatId verified through final generation gates. Additional consumer conform found one real fixture helper expect; it now returns Result, and fixture2/registration2/DLL4/docs5 plus native-loader conform pass. Full map correction passes9095units/5235tagged/4393edges,0orphans/0hostunresolved,43knownwarnings. Prepared9proven fact promotions and4revision2 current-contract corrections, with effective pre-Embed locator meaning and distinct opaque post-emission authority explicit. F17/F19 cards now describe demonstrated behavior and remaining qualification; final staged codegen/wire/index/commit gates still pending.
+
+
+### 2026-11-06 — root removes an invented fact-revision attribute
+
+My acceptance preparation incorrectly added r="2" to4named XML facts. The project dialect has no such attribute, so PROP054/038 vanished from the map and1663host edges became unresolved. I inspected the actual xmlspec minter and prior lockfile revision change: fact units carry no revision field; req r2 belongs to an explicitly versioned section-kind line, not a new XML attribute. Removed only the unsupported attributes, retaining the corrected current contract text and original fact IDs. Earlier log wording about4revision2 fact corrections is superseded. Final source/index gates must pass again; no parser/gate policy was weakened.
+
+
+### 2026-11-06 — F17/F19 committed and G1 exact task accepted
+
+Accepted compiler implementation/spec/format/index commit2a9da5c8b2e9ba6b73d2192df1f6b6a541a7f373 contains210exact reviewed paths; root verified every committed blob against receipt. Final map/check9095units5235tagged4393edges,0orphans0hostunresolved43knownwarnings; deterministic stagedcodegen and pre-public reporting wire-diff passed. Full root markup mistakes/fixes, source-semantic boundaries, native SDK/loader tests, old-cache upgrade, minifier/CDATA regressions and rejected multiplicity design are retained in evidence/2026-11-06/xml-ir2-acceptance. Re-read exactM06G1 contract and bound eachclause; accepted that one original task with unavailable nativeWindows explicitlyopen. Old113partition now3full25partial18not-transferred67unknown. M02review changedclassification only; F18foundation/F19adjacentfix add no extra historicaltask credits. Nextactive boundary is complete package defaults/profile basis plus actual reviewed retry. No publicpush/release, no active temporary worktree created by this acceptance.
+
+
+### 2026-11-06 — original113 task G3 takes priority and reproduces actual failures
+
+After the owner asked about low original113 completion, root chose exact existing M06G3 before the broader fresh-default/review extension. That design remains planned; accepted F18 stays intact. Re-read the full pinned G3 contract and issued a bounded implementation packet over incumbent source traversal/boot-zone/publication owners. Initial packet creation referenced a nonexistent core layout directory; corrected the source list before dispatch, without source changes. Worker reproduced4FAIL/4PASS in8reviewed cases: XML static nested/multi-fragment paths parse generated STATIC.xml as one document, and selected source-member installation really rewrites instruction files, boot INDEX and a boot transaction lock. Existing classifier reuse is sufficient; no new core predicate/framework is currently needed. Implementation proceeds toward all three original obligations, preserving the existing fragment-retention and dynamic/root/project/unselected controls. No completion count changed.
