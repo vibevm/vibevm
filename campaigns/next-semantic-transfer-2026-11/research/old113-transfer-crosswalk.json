@@ -16,14 +16,14 @@
   },
   "counts": {
     "partial": 24,
-    "full": 5,
-    "not-transferred": 18,
+    "full": 7,
+    "not-transferred": 16,
     "unknown": 66,
     "already_main": 0
   },
-  "minimum_proven_complete_old_tasks": 5,
-  "exact_global_complete_total": "not established; at least 5",
-  "important": "At least5 full old tasks proved;24partial,18not-transferred,66unknown. Neutral M13C1 accepted at its exact original boundary; later recipe integrations remain separate.",
+  "minimum_proven_complete_old_tasks": 7,
+  "exact_global_complete_total": "not established; at least 7",
+  "important": "At least7 full old tasks proved;24partial,16not-transferred,66unknown. B1/B2 accepted at original bounded contracts; no whole campaign completion inferred.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -778,13 +778,15 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Make authored change grammar durable under the configured spec root.\nAcceptance criteria: Authored fixture round-trips preserve comments/user values through the migration path.; ID and role validation is shared, not duplicated per surface.",
-      "status": "not-transferred",
+      "status": "full",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Implement and consume the stable ID/role/origin parser and pure syntax-preserving migration proposal via existing owners; migration needs narrow M13 token replay, not full apply/editor machinery. Catalog duplicate-check must have a real consumer when catalog/write operations claim that guarantee.",
-      "implemented_coverage": "No equivalent authored ChangeManifest/WorkGraph/intent-contribution identity owner is exposed by inspected current main manifest/requirements APIs; shared portability and facts primitives already exist.",
-      "remaining_behavior": "Implement and consume the stable ID/role/origin parser and pure syntax-preserving migration proposal via existing owners; migration needs narrow M13 token replay, not full apply/editor machinery. Catalog duplicate-check must have a real consumer when catalog/write operations claim that guarantee.",
+      "accepted_main_commits": [
+        "940f93db4115c83484916849580f085d47c4b8ae"
+      ],
+      "transferred_scope": "Immutable authored change parser/context/roles, exact pure migration and saved no-follow source reading.",
+      "unmet_or_unverified": "No whole-change atomicity, origin authentication, scheduling or write authority claimed; runtime platform Linux.",
+      "implemented_coverage": "Exact original task boundary accepted; see criterion matrix.",
+      "remaining_behavior": "No original task gap; later origin/full-pass/release/scaffold/overlay/apply responsibilities remain separate.",
       "superseded_obligations": [],
       "exact_contract": {
         "id": "M-02-B.1",
@@ -855,8 +857,10 @@
           "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
         ]
       },
-      "review_evidence": "research/m02-foundation-audit.md;97hash-bound source observations; no runtime execution in this audit",
-      "review_scope": "Source/criterion reconciliation only; no fresh runtime, no whole-task completion, no new implementation commit."
+      "review_evidence": "research/m02-b12-transfer-acceptance.md/.json",
+      "review_scope": "Source/criterion reconciliation only; no fresh runtime, no whole-task completion, no new implementation commit.",
+      "review_main_pin": "940f93db4115c83484916849580f085d47c4b8ae",
+      "review_disposition": "Root accepted after source/test/spec/format review, independent vector and staged gates."
     },
     {
       "old_task_id": "M-02-B.2",
@@ -864,13 +868,15 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Implement meaningful-input hashing without making work into runtime state.\nAcceptance criteria: Counterexamples show independent intent/work identities with stable framing.; Graph outputs predecessors and needs, never completion or scheduling verdicts.",
-      "status": "not-transferred",
+      "status": "full",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Implement structural work DAG and separately framed intent/work/contribution identities over validated actual normative/work inputs; retain exact-byte meaning and pure saved/captured adapters, not scheduler state.",
-      "implemented_coverage": "No equivalent authored ChangeManifest/WorkGraph/intent-contribution identity owner is exposed by inspected current main manifest/requirements APIs; shared portability and facts primitives already exist.",
-      "remaining_behavior": "Implement structural work DAG and separately framed intent/work/contribution identities over validated actual normative/work inputs; retain exact-byte meaning and pure saved/captured adapters, not scheduler state.",
+      "accepted_main_commits": [
+        "940f93db4115c83484916849580f085d47c4b8ae"
+      ],
+      "transferred_scope": "Independent normative/work/contribution identities, canonical structural DAG, saved/retained byte perturbation proofs.",
+      "unmet_or_unverified": "No whole-change atomicity, origin authentication, scheduling or write authority claimed; runtime platform Linux.",
+      "implemented_coverage": "Exact original task boundary accepted; see criterion matrix.",
+      "remaining_behavior": "No original task gap; later origin/full-pass/release/scaffold/overlay/apply responsibilities remain separate.",
       "superseded_obligations": [],
       "exact_contract": {
         "id": "M-02-B.2",
@@ -931,8 +937,10 @@
           "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
         ]
       },
-      "review_evidence": "research/m02-foundation-audit.md;97hash-bound source observations; no runtime execution in this audit",
-      "review_scope": "Source/criterion reconciliation only; no fresh runtime, no whole-task completion, no new implementation commit."
+      "review_evidence": "research/m02-b12-transfer-acceptance.md/.json",
+      "review_scope": "Source/criterion reconciliation only; no fresh runtime, no whole-task completion, no new implementation commit.",
+      "review_main_pin": "940f93db4115c83484916849580f085d47c4b8ae",
+      "review_disposition": "Root accepted after source/test/spec/format review, independent vector and staged gates."
     },
     {
       "old_task_id": "M-02-B.3",
@@ -4136,5 +4144,5 @@
   "count_caution": "The 0 complete lower bound is epistemic, not evidence all 113 fail. In particular M-01-A.3 could be complete once original caller inventory is reconciled. No missing type-name or broader subsystem requirement is used as a criterion substitute.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
   "version_note": "M01A3 and M06G2 full. Four M05 partial scopes updated after accepted app runtime.2full/24partial/16named untransferred/71unknown; exact global completed total remains unestablished.",
-  "latest_scoped_review_main_pin": "f56a4cba60e502416d194f6fc3677e51a1ad2e45"
+  "latest_scoped_review_main_pin": "940f93db4115c83484916849580f085d47c4b8ae"
 }

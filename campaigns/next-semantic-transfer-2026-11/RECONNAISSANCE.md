@@ -50,3 +50,15 @@ Counterevidence matters: explicit refusals protect users from unsupported operat
 ## Verification boundary
 
 No product build/test gate has run for this campaign yet. Findings above are source-observed. Inventory reports and old runtime receipts remain evidence to review, not fresh runtime proof. Next: recover Zap's durable plan, reconcile all historical task records and commits, then choose a feature only after necessity/design review.
+
+## 2026-11-06 — additional causes observed during foundation transfer
+
+These are bounded engineering findings, not claims about the previous model's mental state or a blanket verdict on the prototype.
+
+- **Specification evidence can outrun the test.** M13's permanent text claimed historical rename rehearsal; the retained historical scalar case actually asserts refusal, while positive package cases are synthetic. Target M13C1 preserves the useful exact-edit planner and corrects that evidence claim. See research/m13-foundation-review.md and accepted f56a4cba6.
+- **A final module can mix several architectural stages.** Prototype migration.rs combines neutral replay with source, typed-feature and Redbook recipes. Main already chose a different configuration owner. Copying the final file would import competing semantics and future prerequisites. The neutral planner was separated; later recipes remain explicit transfer obligations, not empty placeholders.
+- **An implemented grammar can be omitted from compatibility inventory.** B2 has a closed work TOML schema1 parser, but the prototype registry names only change-manifest. The transfer completes work-format registration and actual corpus validation instead of treating parser presence as full format integration. B1/B2 acceptance is recorded in 940f93db4.
+- **Validation from one domain can be mistaken for another.** The prototype change address constructor accepts a portable filename containing #, then interpolates it into a spec URI, where # changes meaning. A fresh target regression reproduced the wrong address; constructor-only refusal fixes it without banning valid stored paths or changing general literal-percent URI semantics. RED/GREEN evidence is retained in nst-change-address logs; final B1/B2 acceptance is recorded in 940f93db4.
+- **Read ownership needs explicit selection.** The prototype saved-change adapter uses a mutation-oriented snapshot type. Main's existing source reader intentionally accepts hardlinks and offers a finite per-file observation window. The transfer uses that owner and tests real hardlink/symlink cases; it does not invent whole-change atomicity or authentication from editable hashes.
+
+These findings support a practical review rule: verify the complete useful behavior and each actual consumer, retain good existing target owners, and separate an unimplemented guarantee from a different but sufficient implementation. Task counts, copied type names, corpus existence and green narrow tests are not substitutes for that review.
