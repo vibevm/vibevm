@@ -15,15 +15,15 @@
     "cross_checked_graph_statuses": true
   },
   "counts": {
-    "partial": 25,
-    "full": 3,
+    "partial": 24,
+    "full": 4,
     "not-transferred": 18,
     "unknown": 67,
     "already_main": 0
   },
-  "minimum_proven_complete_old_tasks": 3,
-  "exact_global_complete_total": "not established; at least 3",
-  "important": "At least 3 full old tasks proved; 25 partial, 18 not transferred, 67 unknown. G1 accepted at its exact original boundary; no whole campaign completion is inferred.",
+  "minimum_proven_complete_old_tasks": 4,
+  "exact_global_complete_total": "not established; at least 4",
+  "important": "At least4 full old tasks proved;24partial,18not-transferred,67unknown. G3 accepted at its exact original boundary; no whole campaign completion inferred.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -2910,13 +2910,15 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.\nAcceptance criteria: Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.3; Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.; Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
-      "status": "partial",
+      "status": "full",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": "Already-main generated-hash exclusion, compiled STATIC citation refusal and multi-fragment preservation in fixpoint; actual shared boot generator and transaction owner.",
-      "unmet_or_unverified": "Exclude exact generated artifacts from both package source traversals; prevent static simple multi-fragment units being reparsed as generated multi-document specs by projecting their authored static closure; protect selected typed package source members in ordinary/native publication and redirect preflight, retaining root/project/unselected behavior.",
-      "implemented_coverage": "Already-main generated-hash exclusion, compiled STATIC citation refusal and multi-fragment preservation in fixpoint; actual shared boot generator and transaction owner.",
-      "remaining_behavior": "Exclude exact generated artifacts from both package source traversals; prevent static simple multi-fragment units being reparsed as generated multi-document specs by projecting their authored static closure; protect selected typed package source members in ordinary/native publication and redirect preflight, retaining root/project/unselected behavior.",
+      "accepted_main_commits": [
+        "c266a5b62db5c6221c90734a3ddc4119eede3542"
+      ],
+      "transferred_scope": "Generated boot payload/citation exclusion, authored static-zone projection and selected source-member publication protection; exact original G3 accepted.",
+      "unmet_or_unverified": "No blocking gap at original boundary; native Windows qualification explicitly open.",
+      "implemented_coverage": "Generated boot payload/citation exclusion, authored static-zone projection and selected source-member publication protection; exact original G3 accepted.",
+      "remaining_behavior": "No blocking gap at original task boundary; unavailable native Windows qualification remains explicitly open.",
       "superseded_obligations": [],
       "exact_contract": {
         "id": "M-06-G.3",
@@ -2970,6 +2972,133 @@
         ]
       },
       "criterion_review": [
+        {
+          "kind": "steps",
+          "index": 1,
+          "exact": "Reproduce a simple package with static requires under an XML consumer, nested static zones and a multi-fragment zone; compare the current next tree with the reported main-only fixpoint behavior.",
+          "assessment": "covered",
+          "analysis": "Current accepted source/runtime/spec evidence supersedes the earlier source-only gap assessment; see exact clause matrix.",
+          "evidence": [
+            "research/m06-g3-transfer-acceptance.md",
+            "research/m06-g3-transfer-acceptance.json",
+            "commit:c266a5b62"
+          ]
+        },
+        {
+          "kind": "steps",
+          "index": 2,
+          "exact": "Classify generated slot boot/STATIC.*, INDEX.md and .vibe-boot-* as derived artifacts outside authored package traversal and #use targets; retain every authored fragment exactly once, including static_boot_count greater than one.",
+          "assessment": "covered",
+          "analysis": "Current accepted source/runtime/spec evidence supersedes the earlier source-only gap assessment; see exact clause matrix.",
+          "evidence": [
+            "research/m06-g3-transfer-acceptance.md",
+            "research/m06-g3-transfer-acceptance.json",
+            "commit:c266a5b62"
+          ]
+        },
+        {
+          "kind": "steps",
+          "index": 3,
+          "exact": "In a disposable workspace whose members are source package slots, snapshot each member and run install/check; either prove no source mutation or fix output placement so generated host lanes and lock records stay in the consumer-owned derived location.",
+          "assessment": "covered",
+          "analysis": "Current accepted source/runtime/spec evidence supersedes the earlier source-only gap assessment; see exact clause matrix.",
+          "evidence": [
+            "research/m06-g3-transfer-acceptance.md",
+            "research/m06-g3-transfer-acceptance.json",
+            "commit:c266a5b62"
+          ]
+        },
+        {
+          "kind": "positive_cases",
+          "index": 1,
+          "exact": "XML and Markdown consumers install the same authored static closure without parsing a generated multi-document lane as one spec.",
+          "assessment": "covered",
+          "analysis": "Current accepted source/runtime/spec evidence supersedes the earlier source-only gap assessment; see exact clause matrix.",
+          "evidence": [
+            "research/m06-g3-transfer-acceptance.md",
+            "research/m06-g3-transfer-acceptance.json",
+            "commit:c266a5b62"
+          ]
+        },
+        {
+          "kind": "positive_cases",
+          "index": 2,
+          "exact": "Source member directories remain byte-identical after consumer install; package check does not read a generated lane as an authored single document.",
+          "assessment": "covered",
+          "analysis": "Current accepted source/runtime/spec evidence supersedes the earlier source-only gap assessment; see exact clause matrix.",
+          "evidence": [
+            "research/m06-g3-transfer-acceptance.md",
+            "research/m06-g3-transfer-acceptance.json",
+            "commit:c266a5b62"
+          ]
+        },
+        {
+          "kind": "negative_cases",
+          "index": 1,
+          "exact": "A generated slot STATIC.xml/INDEX/.vibe-boot file enters simple package content or becomes a #use target.",
+          "assessment": "covered",
+          "analysis": "Current accepted source/runtime/spec evidence supersedes the earlier source-only gap assessment; see exact clause matrix.",
+          "evidence": [
+            "research/m06-g3-transfer-acceptance.md",
+            "research/m06-g3-transfer-acceptance.json",
+            "commit:c266a5b62"
+          ]
+        },
+        {
+          "kind": "negative_cases",
+          "index": 2,
+          "exact": "Dropping a substituted multi-fragment unit loses authored content; install writes host cache files into vibepacks source members.",
+          "assessment": "covered",
+          "analysis": "Current accepted source/runtime/spec evidence supersedes the earlier source-only gap assessment; see exact clause matrix.",
+          "evidence": [
+            "research/m06-g3-transfer-acceptance.md",
+            "research/m06-g3-transfer-acceptance.json",
+            "commit:c266a5b62"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 1,
+          "exact": "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.3",
+          "assessment": "covered",
+          "analysis": "Current accepted source/runtime/spec evidence supersedes the earlier source-only gap assessment; see exact clause matrix.",
+          "evidence": [
+            "research/m06-g3-transfer-acceptance.md",
+            "research/m06-g3-transfer-acceptance.json",
+            "commit:c266a5b62"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 2,
+          "exact": "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.",
+          "assessment": "covered",
+          "analysis": "Current accepted source/runtime/spec evidence supersedes the earlier source-only gap assessment; see exact clause matrix.",
+          "evidence": [
+            "research/m06-g3-transfer-acceptance.md",
+            "research/m06-g3-transfer-acceptance.json",
+            "commit:c266a5b62"
+          ]
+        },
+        {
+          "kind": "acceptance",
+          "index": 3,
+          "exact": "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived.",
+          "assessment": "accepted at original boundary; native Windows explicitly open",
+          "analysis": "Current accepted source/runtime/spec evidence supersedes the earlier source-only gap assessment; see exact clause matrix.",
+          "evidence": [
+            "research/m06-g3-transfer-acceptance.md",
+            "research/m06-g3-transfer-acceptance.json",
+            "commit:c266a5b62"
+          ]
+        }
+      ],
+      "architecture": "Package payload-selection boundary + static boot-zone lowering + node publication ownership. These are three linked responsibilities within old G3; no new compiler framework, global snapshot or app state needed.",
+      "review_main_pin": "c266a5b62db5c6221c90734a3ddc4119eede3542",
+      "review_evidence": "research/m06-g3-transfer-acceptance.md/.json",
+      "review_disposition": "Root accepted G3 after production/source/test review, runtime receipts and final specification gates.",
+      "acceptance_record": "research/m06-g3-transfer-acceptance.md",
+      "historical_criterion_review": [
         {
           "kind": "steps",
           "index": 1,
@@ -3093,11 +3222,7 @@
             "bounded source/test ledger"
           ]
         }
-      ],
-      "architecture": "Package payload-selection boundary + static boot-zone lowering + node publication ownership. These are three linked responsibilities within old G3; no new compiler framework, global snapshot or app state needed.",
-      "review_main_pin": "5d44c51045fbcc8809db50fc677e950bb60d2d52",
-      "review_evidence": "research/m06-g123-transfer-review.md/.json",
-      "review_disposition": "Root accepted bounded partial classification; coverage already existed in main, no new runtime code or test execution in this review"
+      ]
     },
     {
       "old_task_id": "M-07-A.1",
@@ -3939,5 +4064,5 @@
   "count_caution": "The 0 complete lower bound is epistemic, not evidence all 113 fail. In particular M-01-A.3 could be complete once original caller inventory is reconciled. No missing type-name or broader subsystem requirement is used as a criterion substitute.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
   "version_note": "M01A3 and M06G2 full. Four M05 partial scopes updated after accepted app runtime.2full/24partial/16named untransferred/71unknown; exact global completed total remains unestablished.",
-  "latest_scoped_review_main_pin": "2a9da5c8b2e9ba6b73d2192df1f6b6a541a7f373"
+  "latest_scoped_review_main_pin": "c266a5b62db5c6221c90734a3ddc4119eede3542"
 }

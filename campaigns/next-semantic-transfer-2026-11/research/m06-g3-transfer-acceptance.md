@@ -1,0 +1,28 @@
+# M-06-G.3 — acceptance review in progress
+
+**Accepted** in `c266a5b62db5c6221c90734a3ddc4119eede3542` at the original task boundary. Root verified all26 committed source/spec/index blobs. Final index/check:9095units/5255tagged items/4417edges,0gated orphans/0unresolved host edges. The44warnings include43 prior warnings and the justified joined CLI three-obligation diagnostic; no suppression. Original113 accounting is now4full/24partial/18not-transferred/67unknown.
+
+Source contract: immutable prototype `7fe6376ccef7f321302a8f18610fcb0c9cc2686f`, `campaigns/next/tasks/M-06-G.json`, task M-06-G.3. Historical environment/version commands are not current instructions. The complete source clause review is in [the G1/G2/G3 review](m06-g123-transfer-review.md).
+
+| Original obligation | Candidate implementation and observed evidence | Remaining acceptance work |
+|---|---|---|
+| Simple static requires, nested and multi-fragment zones under XML; retain all fragments | `static_unit_members` uses incumbent unit-table zone resolution; `node_dependency_boot` projects authored main and fragments for static members. Tests cover declared, suggested and node-default static links in XML/Markdown/Mixed, explicit dynamic inverse, and once-only authored markers. Existing more-than-one-fragment retention guard stays intact. Baseline XML failed by parsing generated multidocument output as one source; final install scope122PASS. | Reviewed; passed |
+| Exclude generated STATIC.md/xml, INDEX.md and direct .vibe-boot-* from authored traversal | Existing generated-artifact classifier now serves both transformed and Mixed walks. `generated_boot_cache_is_excluded_from_every_payload_walk_only_at_its_owned_path` checks all3formats with generated poison, authored boot content, unrelated STATIC/INDEX, ordinary dotfiles and nested generated-prefix-looking data. Transformed scope9PASS. | Reviewed; passed |
+| Refuse generated directive targets | Logical boot/STATIC, boot/INDEX and direct boot/.vibe-boot-* rejected by the incumbent directive admission guard; directives31PASS, including all directive kinds and unrelated paths. Root inspected physical resolver: logical stems receive appended format extensions; no extension bypass demonstrated. | Reviewed; passed |
+| Source package workspace members stay byte-identical through consumer install/check | `publish_node_boot` protects only nonroot package members matching selected kind/group/name, irrespective source path/version drift; ordinary/native publication and redirect validation share the predicate. Real CLI `install_check_repeat_and_lock_reread_preserve_source_members_and_authored_fragments` exercises XML/Markdown/Mixed, whole source path→bytes snapshots, poisoned cache, malformed source-owned launcher, repeat install and durable lock reread after authored version drift. | Reviewed; passed |
+| Preserve legitimate consumer outputs and typed identity boundaries | Root package, ordinary project member and unselected package controls still publish; helper tests distinguish kind/group/name mismatches. Bound Linux native regeneration exercises selected-source protection. | No native Windows/macOS result claimed |
+| Review positive/negative evidence; keep unavailable Windows proof open | Root archived48 raw reports/logs/manifests/SARIF files with SHA256 under local evidence/2026-11-06/g3-acceptance. Four initial failures reproduced actual XML/source-mutation defects; controls passed. | Accepted in the commit above; Windows qualification explicitly remains open |
+
+## Native transformation ownership and rejected shortcuts
+
+A serialization-only Mixed exception was rejected and removed. Three replay fixtures were rebound to a genuinely retained unit through root→dynamic wrapper→dynamic top; their rollback/replay assertions remain unchanged. A new read-set oracle proves the exact consumed generated unit. This distinguishes authored static-zone input from retained artifact input without changing semantics based on output format.
+
+The content-changing marker characterization has4arms: direct Mixed/Markdown/XML projections retain node-owned transformation but omit unit-only output; the retained-wrapper Mixed route consumes unit-only output and also retains node-owned transformation. Actual owner visits are top-unit then root-node. This proves the tested ownership boundary, not retained multidocument XML or external platform execution. Final targeted replay11/native-managed9 and scoped Clippy/fmt/Conform passed.
+
+An existing native fixture used envelope1 with generated e2 types; its one-line correction is distinct from production G3. Marker fixture failures were stale/framing-incorrect emitted digest and omitted candidate transformation history. They were corrected against canonical domain-framed digest and admission rules without production relaxation. They are fixture mistakes, not evidence of product defects.
+
+## Format and scope
+
+No authored vibe.toml, install -g configuration, lock schema, compiler IR or native protocol format is changed by G3. No new framework, dependency or source-query service is introduced. Source-member exclusion is not a blanket ban on nonroot outputs. Generated-file exclusion is not broad dotfile/data pruning.
+
+Final worker receipts report install122, transformed9, directives31, joined named CLI4, spec doctests8/workspace31 and scoped strict Clippy/fmt/Conform. These scopes overlap and are not additive task counts. Workspace/spec Conform0, CLI67existing/0new. Source hashes tie execution evidence to the reviewed candidate; subsequent specmark-only changes must receive their own relevant gates.

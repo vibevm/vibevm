@@ -2,7 +2,7 @@
 
 Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. G123 review uses accepted main `5d44c5104`; the later app scope review uses `c5662ee42`, and G2 is accepted in `bc49f1220`. Unaccepted candidates are excluded; source-only reviews do not imply runtime acceptance.
 
-**Current counting result:** 113 old accepted IDs verified: **3 full semantic transfers, 25 partial correspondences, 18 scopes with no accepted campaign delivery, 67 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least3are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **4 full semantic transfers, 24 partial correspondences, 18 scopes with no accepted campaign delivery, 67 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least4are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -241,3 +241,8 @@ Current partition:2full/26partial/18not-transferred/67unknown. Full completion r
 ## G1 accepted
 
 [M-06-G.1](m06-g1-transfer-acceptance.md) is accepted in `2a9da5c8b2e9ba6b73d2192df1f6b6a541a7f373` at its original compiler/boot boundary. Native Windows qualification remains explicitly open; it is not a passed platform claim. Current partition:3full/25partial/18not-transferred/67unknown. This closes one old task; F18 internal policy reuse and F19 adjacent typed-provenance completion are not extra historical credits.
+
+
+### 2026-11-06 — G3 exact original boundary accepted
+
+[M-06-G.3](m06-g3-transfer-acceptance.md) accepted in `c266a5b62db5c6221c90734a3ddc4119eede3542`: generated payload/citation exclusion, authored nested static fragments, selected source-member byte preservation through install/check/repeat and durable-lock version drift. Root reviewed26committed hashes and final specification links. Native Windows stays explicitly open. Current partition:4full/24partial/18not-transferred/67unknown.

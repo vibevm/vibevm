@@ -1,0 +1,284 @@
+{
+  "task": "M-13-C.1",
+  "mode": "read-only source audit; no runtime execution",
+  "main_head": "2340ce81a518eca6473e0d6050bc90fe80658fbe",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "exact_contract": {
+    "id": "M-13-C.1",
+    "title": "Implement pure versioned migration planning",
+    "goal": "Parse and plan deterministic authored-format migrations while preserving owner syntax and values.",
+    "read_paths": [
+      "crates/vibe-core/src/manifest/package.rs",
+      "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+      "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+      "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+      "xtask/src/main.rs",
+      ".cargo/config.toml",
+      "crates/vibe-core/Cargo.toml",
+      "crates/vibe-core/src/lib.rs",
+      "crates/vibe-core/src/manifest/mod.rs",
+      "crates/vibe-workspace/Cargo.toml",
+      "crates/vibe-workspace/src/lib.rs"
+    ],
+    "write_paths": [
+      "crates/vibe-core/src/manifest/",
+      "crates/vibe-workspace/src/",
+      "schemas/",
+      "formats/",
+      "crates/vibe-wire/",
+      "crates/vibe-core/Cargo.toml",
+      "crates/vibe-core/src/lib.rs",
+      "crates/vibe-core/src/manifest/mod.rs",
+      "crates/vibe-workspace/Cargo.toml",
+      "crates/vibe-workspace/src/lib.rs"
+    ],
+    "steps": [
+      "Define a source-version registry with a frozen recognized epoch-less grammar and deterministic transform chain; unknown input is a typed refusal.",
+      "Retain a syntax-preserving representation for authored TOML/text so comments, ordering and owner selections survive planned edits.",
+      "Produce validated in-memory before/after diffs and typed NeedsInput for ambiguity; do not implement SourceDescriptor or feature-specific converters before their own reader atoms."
+    ],
+    "positive_cases": [
+      "A recognized legacy fixture yields deterministic planned changes with comments/values preserved.",
+      "A current-format input yields an explicit no-op plan."
+    ],
+    "negative_cases": [
+      "Unknown version, ambiguous selection and malformed syntax refuse before filesystem effects.",
+      "No LLM or heuristic default chooses missing authored intent."
+    ],
+    "checks": [
+      "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+      "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+      "cargo fmt --all -- --check",
+      "git diff --check"
+    ],
+    "acceptance": [
+      "Repeated planning over exact input gives identical output/diff identity.",
+      "Fixture coverage demonstrates genuine transforms and no-op/ambiguity cases."
+    ],
+    "safe_stop": "Pure executable migration planner is complete; no authored file changed by plan.",
+    "commit_subject": "feat(migrate): plan deterministic syntax-preserving format changes",
+    "notes": [
+      "Exact module/type/epoch names are settled inside this task's approved perimeter. SourceDescriptor converter belongs to M-06-A, feature converter to M-05-B.",
+      "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+      "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+    ]
+  },
+  "source_bindings": [
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-13-C.json",
+      "sha256": "9686da092670f533164ed6d4466cee4d611ded45fa6089bc3f084f347b8155c2",
+      "bytes": 18003,
+      "review_scope": "full M13C1 contract; M13C2 context only"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-core/src/manifest/migration.rs",
+      "sha256": "bc4a51ff896492e7525e9c481ab7aeb52817c4b4cfbffbe0e33f9cb4a0491b75",
+      "bytes": 21837,
+      "review_scope": "full implementation"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-core/src/manifest/migration/tests.rs",
+      "sha256": "c198f0ffe324efd5586ade9b692808f96ca41f08ab927787d998205cc6575f4c",
+      "bytes": 17167,
+      "review_scope": "full implementation/assertions"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-core/src/manifest/migration/features.rs",
+      "sha256": "da4618ef2113dbd6f8fa18bdfcf057db3d32223732effafebeae9d79c0da17f5",
+      "bytes": 18043,
+      "review_scope": "full implementation"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-core/src/manifest/migration/source.rs",
+      "sha256": "7d24038d43c9315a2e10e4847415f563ff38683374d8580bb88a3066f4b700e0",
+      "bytes": 5013,
+      "review_scope": "full implementation"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-core/src/manifest/migration/redbook.rs",
+      "sha256": "f5bb7cd14ccc52cf11b3e8777b73b9437d375569c3520e576351e473c51ba88d",
+      "bytes": 9947,
+      "review_scope": "full implementation"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-core/src/manifest/migration/m_05_b_3_cases.rs",
+      "sha256": "f30e818f2f860b12d049b8cca40c2afabcc098e4d482eafbaabe7bdd58b7e956",
+      "bytes": 9696,
+      "review_scope": "test name/assertion inventory only"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-core/src/manifest/migration/tests_source.rs",
+      "sha256": "16fc09457d512acab7315004dfb192e7db8b08e3b15a7e4a84319a08a906662f",
+      "bytes": 6022,
+      "review_scope": "test name/assertion inventory only"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "sha256": "7fae63324f8ddfa042647c9efd08161ede3edeb84afd6a7d23178cd110913a1f",
+      "bytes": 20423,
+      "review_scope": "exports/replay adapter lines40-100"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-core/src/manifest/change/migration.rs",
+      "sha256": "6bf2bfdef4fa58e5a0fa61ef4c9c1cfdb9e03679637e448a24dcd743afd78f47",
+      "bytes": 3161,
+      "review_scope": "full implementation"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/migration_planning.rs",
+      "sha256": "00bbf76afc7b4bd3739fb038e7ff17a4d2d7e36c6fea9f5e3353becd6a62fdb0",
+      "bytes": 21902,
+      "review_scope": "core_outcome/project_core lines215-290"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-orchestrator/src/migration/mod.rs",
+      "sha256": "79f154655fdca5a30a80e3a7ffcc57a6b259c338780fdbfd1d61daf6ad0ffad6",
+      "bytes": 2162,
+      "review_scope": "full public facade bodies"
+    },
+    {
+      "tree": "prototype",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "sha256": "d8011e357e673a845035cf192e0f182288b6731f9b0776c1dc67a2ab45cd924e",
+      "bytes": 74993,
+      "review_scope": "MANIFEST-MIGRATION-PLAN and MIGRATION-TAXONOMY elements"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/src/manifest/mod.rs",
+      "sha256": "332f8eee367678db067d8168689c9edcac72b81d03e6a962a321c89aa9dd1d2a",
+      "bytes": 20373,
+      "review_scope": "module/export inventory, parsing/writing distinction"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/src/manifest/package.rs",
+      "sha256": "8acdb9878183470b4bb0a4607d8fd877cb575a5ca56e5587358650450613162e",
+      "bytes": 21541,
+      "review_scope": "Materialization definition/deserializer lines245-325"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/src/manifest/package/tests.rs",
+      "sha256": "72bb44fd4b29453ca80e8f1a1a631746ac487bab8eb2d207c3982296d5e5e409",
+      "bytes": 15480,
+      "review_scope": "snapshot refusal test source search"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/src/manifest/document.rs",
+      "sha256": "b5c469b1676fcc19d78c0d03c4d0ddef30845313793f85e426740d715d62642d",
+      "bytes": 24322,
+      "review_scope": "parse_str lines450-505 and configuration/source field search"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/src/manifest/package/features.rs",
+      "sha256": "47e349293c6cd48e03a80c2fd51368ad2327ddd2fec2d0c6309f865938ac2196",
+      "bytes": 4051,
+      "review_scope": "full legacy FeaturesTable owner"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/src/manifest/configuration.rs",
+      "sha256": "f55d20d3a4a7a2ae1aee4606a76f1e7dea036ce0f7db21c1ae3109eb0a0cd525",
+      "bytes": 8163,
+      "review_scope": "public configuration declarations and typed effects"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/src/manifest/configuration/lower.rs",
+      "sha256": "d27b3bf38135e1f2dd3ba2ca95921cd0b3534301468d07d43024a62a907e95c3",
+      "bytes": 3611,
+      "review_scope": "full compile_choices implementation"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/src/manifest/configuration/package.rs",
+      "sha256": "ab2fc832a1fbc91a49ac0dae726cd0eec630ad4db26a29eb333ab2fd3e39c1b2",
+      "bytes": 14254,
+      "review_scope": "evaluate/evaluate_parts admission, explicit-input limitations"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/src/manifest/configuration/semantic.rs",
+      "sha256": "0e433d6c75c5d56ff48928927fc68cbc1f989a7a4081644013f51a2c3c065b6d",
+      "bytes": 8705,
+      "review_scope": "semantic fingerprint owner excerpt; not audited exhaustively"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/src/manifest/decor.rs",
+      "sha256": "b10cd1943466e3aed90da2059e6f3c6c63732d7a4b9a7402e9a3b1a149fe1d7d",
+      "bytes": 12627,
+      "review_scope": "comment transfer owner; whole-document writer semantics distinguished from exact token replay"
+    },
+    {
+      "tree": "main working source",
+      "path": "crates/vibe-core/Cargo.toml",
+      "sha256": "3d7a7ccfc9051b01d414f259c2d32f44a4677ceef1b4680f2df417bc6f9d891f",
+      "bytes": 818,
+      "review_scope": "existing toml_edit/sha2 dependency declarations"
+    },
+    {
+      "tree": "main working source",
+      "path": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+      "sha256": "e676881df0adc17f7179208172cab6aaf687633b48a0a9f16bb28b1d143e383e",
+      "bytes": 45699,
+      "review_scope": "migration taxonomy and absent planner law search"
+    },
+    {
+      "tree": "main working source",
+      "path": "campaigns/next-semantic-transfer-2026-11/architecture/foundations-review.md",
+      "sha256": "1532aba171cecbf1caa472f1fc4abc4a91bfec18917232d69c2711f38f35210d",
+      "bytes": 23153,
+      "review_scope": "relevant architecture/dependency discussion"
+    },
+    {
+      "tree": "main working source",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/m02-foundation-audit.md",
+      "sha256": "7fd3e73faae8ebd1f066f0274d35f81fdb5765558d820c6f624f23805c32837e",
+      "bytes": 25139,
+      "review_scope": "relevant change parser/migration scope"
+    }
+  ],
+  "search_evidence": {
+    "main": "rg over crates/**/*.rs for MigrationTokenEdit|ManifestMigration|replay_authored_tokens|snapshot-to-copy|migration-diff|migration_profile produced no matches; module exports inspected separately",
+    "prototype": "git grep pinned crates/**/*.rs for plan_manifest_migration/replay_edits; callsites grouped in markdown"
+  },
+  "recommendation": "Transfer neutral exact token replay + finite registered snapshot-to-copy and identity profiles through existing Manifest checker. Preserve current syntax; omit later source/features/Redbook-specific fields until their real reader integrations. No apply/transport dependency.",
+  "proposed_status": "not-transferred for original pure planner boundary; root decision only",
+  "runtime_limit": "All behavior here inferred from bodies and assertion definitions; no test PASS claimed."
+}

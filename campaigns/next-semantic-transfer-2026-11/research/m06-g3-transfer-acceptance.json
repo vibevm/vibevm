@@ -1,0 +1,83 @@
+{
+  "task_id": "M-06-G.3",
+  "state": "accepted at original task boundary",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "contract_path": "campaigns/next/tasks/M-06-G.json",
+  "contract_sha256": "55c4cf284d3c4e0ece120b8c7ff23c10c8e3b49347a53bb5beb0abcd4a733432",
+  "exact_contract": {
+    "id": "M-06-G.3",
+    "title": "Exclude generated slot lanes and protect authored workspace members",
+    "goal": "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.",
+    "read_paths": [
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-035-spec-compiler.xml",
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+      "vibevm/vibespecs/modules/vibe-workspace/PROP-007-workspace.xml",
+      "crates/vibe-workspace/src/boot_artifacts/",
+      "crates/vibe-workspace/src/install/bootgen/",
+      "crates/vibe-workspace/src/vibedeps/",
+      "crates/vibe-workspace/src/install/",
+      "crates/vibe-spec/src/directives.rs"
+    ],
+    "write_paths": [
+      "crates/vibe-workspace/src/boot_artifacts/",
+      "crates/vibe-workspace/src/install/bootgen/",
+      "crates/vibe-workspace/src/vibedeps/",
+      "crates/vibe-workspace/src/install/",
+      "crates/vibe-spec/src/directives.rs"
+    ],
+    "steps": [
+      "Reproduce a simple package with static requires under an XML consumer, nested static zones and a multi-fragment zone; compare the current next tree with the reported main-only fixpoint behavior.",
+      "Classify generated slot boot/STATIC.*, INDEX.md and .vibe-boot-* as derived artifacts outside authored package traversal and #use targets; retain every authored fragment exactly once, including static_boot_count greater than one.",
+      "In a disposable workspace whose members are source package slots, snapshot each member and run install/check; either prove no source mutation or fix output placement so generated host lanes and lock records stay in the consumer-owned derived location."
+    ],
+    "positive_cases": [
+      "XML and Markdown consumers install the same authored static closure without parsing a generated multi-document lane as one spec.",
+      "Source member directories remain byte-identical after consumer install; package check does not read a generated lane as an authored single document."
+    ],
+    "negative_cases": [
+      "A generated slot STATIC.xml/INDEX/.vibe-boot file enters simple package content or becomes a #use target.",
+      "Dropping a substituted multi-fragment unit loses authored content; install writes host cache files into vibepacks source members."
+    ],
+    "checks": [
+      "SELECT BEFORE DISPATCH: bind the affected vibe-workspace/vibe-cli/vibe-spec target and exact regression cases from source before compiling; use --lib or a named integration target.",
+      "RUN BOUND CHECKS: cargo test -p vibe-workspace --lib <reviewed case> -- --exact or the corresponding affected named target; require one nonzero selected case.",
+      "CONDITIONAL ORACLE: run codegen/specmap only if a changed schema, generator, source index or dependent contract actually requires it; do not use a broad gate from write perimeter alone."
+    ],
+    "acceptance": [
+      "Read complete task contract campaigns/next/tasks/M-06-G.json#M-06-G.3",
+      "Keep generated boot cache files out of package content and avoid writing host-generated lanes into source package members.",
+      "Disposable positive and negative evidence is reviewed; any unavailable native Windows proof remains open rather than waived."
+    ],
+    "safe_stop": "Keep the regression reproducible in a disposable fixture and report exact unsupported behavior until the affected path is fixed.",
+    "commit_subject": "fix(boot): exclude generated slot lanes",
+    "notes": [
+      "Product-neutral regressions observed on a separate local main are hypotheses for this next checkout until disposable current-tree tests prove them. Do not copy fixture-specific package names or publish external package sets.",
+      "Maintain the mutable 1.1.0 cohort and the no-public-Git hold. Bind only affected tests; no mutation suite or routine whole-workspace gate."
+    ]
+  },
+  "reviewed_main_base": "2340ce81a518eca6473e0d6050bc90fe80658fbe",
+  "source_snapshot": "user-local evidence/2026-11-06/g3-acceptance/nst-g3-source.sha256",
+  "matrix": "m06-g3-transfer-acceptance.md",
+  "root_review": [
+    "Verified20 implementation/test SHA256 values",
+    "Read complete pinned task and production payload/static-zone/publication diffs",
+    "Inspected actual joined CLI snapshots/fragment/lock-drift assertions and generated-payload controls",
+    "Read actual final logs with nonzero selections and no ignored tests",
+    "Reviewed canonical facts/revisions and links; verified26committed blob hashes; accepted exact original task boundary"
+  ],
+  "limits": [
+    "Native Windows/macOS not executed; original task explicitly retains unavailable native Windows proof as open",
+    "Native marker retained artifact route tested in Mixed, not retained multidocument XML",
+    "No public push/release; no authored manifest/schema epoch change"
+  ],
+  "accepted_commit": "c266a5b62db5c6221c90734a3ddc4119eede3542",
+  "final_gate": {
+    "spec_units": 9095,
+    "tagged_items": 5255,
+    "edges": 4417,
+    "gated_orphans": 0,
+    "unresolved_host_edges": 0,
+    "warnings": 44,
+    "new_warning": "justified joined CLI three-obligation test; no suppression"
+  }
+}

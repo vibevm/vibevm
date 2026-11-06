@@ -123,6 +123,13 @@ def main():
                 ("transferCountsOld113", "transferStatus", [r for r in expected["tasks"] if r["prototypeAccepted"]]),
             ):
                 expected["meta"][key] = dict(collections.Counter(r[field] for r in selected))
+            full_count = sum(r["status"] == "full" for r in transfers.values())
+            expected["meta"]["limitations"] = [
+                note for note in expected["meta"].get("limitations", [])
+                if not note.startswith("Полностью подтверждён минимум")
+            ] + [
+                f"Полностью подтверждён минимум: {full_count} из старых 113 задач. Остальные статусы имеют собственные границы проверки."
+            ]
             status = json.loads((args.visualization / "status.json").read_text())
             assert status["ok"], "updater reports a failed refresh"
             for key in ("refreshedAt", "currentMainHead", "statusSourceUpdatedAt", "contentRevision", "snapshotId", "statusBasis"):
