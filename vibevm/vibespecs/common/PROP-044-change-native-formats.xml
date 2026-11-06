@@ -552,4 +552,79 @@ contract left its reasoning at the anchors of
 its phases wrote, never in the plan that carried it. Where lore and
 this contract disagree, this contract wins and the lore is corrected.</SOURCES></p>
   </sources>
+    <MANIFEST-MIGRATION-PLAN title="Pure authored-manifest migration planning">
+      <p>`req r1`</p>
+      <p><MIGRATION-PLAN-LAW fact="true" status="spec/done">**Pure authored-manifest migration planning.** A planner consumes exact
+in-memory source text and explicitly selected source profile, target profile
+and recipe. A missing selection produces typed input requirements with named
+alternatives; an unknown profile or revision, incompatible edge, malformed
+syntax or unrecognized shape produces a typed refusal. An incomplete compatible
+selection returns NeedsInput before syntax validation; unknown or incompatible
+supplied values still refuse. Neither the package's
+product version nor an absent epoch selects a grammar. Absence remains the
+distinct pre-epoch state; a recipe never inserts an epoch or changes an
+unrelated authored selection as a convenience.
+
+Recognized grammars are finite, immutable named revisions, checked over the
+owning TOML syntax tree. Their exact field sets, primitive shapes and value
+vocabularies are frozen independently of the evolving current Manifest
+decoder. A new shape needs a new profile revision. The initial bounded recipe
+is the documented materialization `snapshot` to `copy` rename, checked on explicitly synthetic package fixtures. A retained historical
+scalar fixture is deliberately refused because it is not a package manifest;
+it does not prove a successful historical package migration. Real-file corpus
+rehearsal remains required before claiming broad migration support. This
+recipe does not implement the complete historical manifest language. Current
+pre-epoch and explicit epoch-1 identity profiles remain distinct. SourceDescriptor,
+feature-specific converters and effectful application are separate atoms.
+
+The first registry entries are `materialization-legacy-absent-r1`,
+`materialization-current-absent-r1` and `materialization-current-epoch1-r1`.
+Their bounded package-role grammar admits only root `package` and optional
+`requires`; package requires string `name`, `group`, `kind`, `version`, with
+kind in `flow`, `feat`, `stack`, `tool`, `mcp`, `lang`. Optional strings are
+`materialization`, `license`, `description`, `homepage`; optional string arrays
+are `authors`, `keywords`; optional booleans are `bridge`, `frozen`. Epoch is
+absent in the two absent profiles and integer 1 in the epoch-1 profile.
+Requires admits only `packages`, whose owner-qualified keys map to string
+constraints or tables with required string `version` and optional string
+`link`, one of `static`, `dynamic`, `static-transitive`, `static-hard`.
+The frozen structural key shape is `[kind:]group/name`: exactly one slash,
+nonempty group and name, no `@`, and at most one optional colon prefix whose
+kind is in the six-token package vocabulary above. The current naming owner
+still checks group/name and constraint semantics; it cannot remove this
+structural qualification requirement from a frozen profile.
+Normal and inline TOML tables are equivalent shapes. Every other key, shape
+or vocabulary is refused. Legacy materialization is required and exactly
+`snapshot`; current materialization is absent or `copy`, `hardlink`,
+`in-place`. The only nonidentity edge is `snapshot-to-copy-r1`, from legacy
+absent to current absent; `identity-r1` covers the two current profiles each
+to itself. No edge adds an epoch. Current semantic validation may refuse an
+otherwise recognized shape; that never widens this frozen grammar.
+
+A successful plan carries exact before and after text, ordered token edits,
+source/target/recipe identities, deterministic domain-framed content and diff
+identities, and an output checked by the current Manifest owner. That final
+checker validates the result; it does not define the frozen input grammar.
+All bytes outside selected token spans, including comments, order and owner
+values, survive unchanged. The scalar rename also preserves its quote family
+and the optional initial newline of a multiline string. Ordered token replay
+rejects overlapping or out-of-order spans, invalid UTF-8 boundaries, mismatched
+before tokens, empty insertions and repeated insertion positions. A replay
+refusal names the edit field rather than assuming materialization ownership. An unprovable edit refuses instead of
+serializing a struct or falling back. Identity plans are byte-identical with
+no edits. Repeating exact input and selection reproduces exact output and
+identities. Planning performs no filesystem, cache, lock, provider, LLM,
+publication or implicit application operation.
+
+The initial identity recipe uses SHA-256 and frames each byte string with its
+unsigned 64-bit big-endian byte length. Content frames the UTF-8 domain
+`vibe-manifest-content-r1` then the exact document bytes. Diff frames
+`vibe-manifest-migration-diff-r1`, source profile, target profile, recipe,
+before text and after text, then the edit count encoded as an unsigned 64-bit
+big-endian value inside a frame. Each edit in source order frames field path,
+original byte start and end (each encoded likewise), before token and after
+token. Digests are lowercase hexadecimal without a prefix. A fixed
+independently computed golden vector binds this recipe; changing domains,
+framing or ordering requires a distinct recipe revision.</MIGRATION-PLAN-LAW></p>
+    </MANIFEST-MIGRATION-PLAN>
 </spec>

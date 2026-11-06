@@ -23,6 +23,7 @@ mod field_path;
 pub mod i18n;
 mod lockfile;
 mod mechanism;
+mod migration;
 mod package;
 mod plane;
 mod project;
@@ -67,6 +68,12 @@ pub use mechanism::{
     HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,
     MechanismKeyParseError, MechanismRole, MechanismRoleParseError, MechanismRoutes, ProviderOwner,
     ProviderPin, ProviderPinParseError, is_command_name, is_portable_token,
+};
+pub use migration::{
+    CURRENT_ABSENT, CURRENT_EPOCH1, IDENTITY, LEGACY_ABSENT, ManifestMigrationEpoch,
+    ManifestMigrationOutcome, ManifestMigrationPlan, MigrationInputRequirement, MigrationRefusal,
+    MigrationRefusalKind, MigrationSelection, MigrationTokenEdit, SNAPSHOT_TO_COPY,
+    manifest_migration_profile_epoch, plan_manifest_migration,
 };
 pub use package::application::{
     ARG_PLACEHOLDERS, AgentMode, ArchiveFormatDecl, ChoiceDecl, Condition, ExternalResult,
