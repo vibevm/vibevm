@@ -69,9 +69,9 @@ fn run() -> ExitCode {
     let cli = Cli::parse();
 
     if let Command::Refactor(args) = &cli.command
-        && let commands::refactor::RefactorCommand::PlanMigration(plan) = &args.command
+        && let Some(exit) = commands::refactor::machine_entry(args)
     {
-        return commands::refactor::migration_plan::run(plan.request_json.as_deref());
+        return exit;
     }
     let transfer_config = promote_user_config_env();
     init_tracing();

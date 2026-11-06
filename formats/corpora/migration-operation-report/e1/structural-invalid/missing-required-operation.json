@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "operation_id": null,
+  "outcome": "refused",
+  "target_state": "unavailable",
+  "intent_id": null,
+  "before_content_id": null,
+  "after_content_id": null,
+  "diff_id": null,
+  "error": {
+    "code": "invalid_request",
+    "field": "request",
+    "reason": "operation request does not match the registered shape"
+  },
+  "effects": [],
+  "warnings": [],
+  "residue": [],
+  "guarantees": {
+    "platform": "other",
+    "concurrency": "unestablished",
+    "barrier_binding": null,
+    "uncooperating_writers_excluded": false,
+    "durability": "unconfirmed",
+    "preservation": "bytes_only"
+  }
+}

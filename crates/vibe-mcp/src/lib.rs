@@ -29,7 +29,9 @@
 //! executed channel (ordinary success, or an executed structured failure
 //! that keeps its report under `isError: true`) — while [`ToolError`]
 //! stays the preflight / tool-failure channel. Its typed migration preflight
-//! variant retains a registered report; other errors remain text-only.
+//! variants retain registered reports; other errors remain text-only. An executed
+//! operation with invalid report evidence returns explicitly unvalidated text
+//! without structured content; this does not imply absence of effects.
 
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server");
@@ -102,6 +104,15 @@ pub struct ToolDescriptor {
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors")]
 pub enum ToolError {
+    /// Closed operation-report preflight; no operation has executed.
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-PREFLIGHT-REPORT: {message}; fix surface: supplied migration operation and configured grant"
+    )]
+    OperationPreflight {
+        report: Box<vibe_wire::generated::migration::e1::operation_report::OperationReport>,
+        message: String,
+    },
+
     /// Typed migration preflight evidence; the planner has not executed.
     #[error(
         "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-PREFLIGHT-REPORT: {message}; fix surface: supplied migration request"
@@ -305,16 +316,18 @@ impl<T: Transport> Server<T> {
                 // The constructor owns the text projection (fixed at
                 // construction — mandatory on both shapes), so the
                 // dispatcher only assembles the result, moving the
-                // structured value in via `into_parts` rather than
+                // optional structured value via `into_render_parts` rather than
                 // cloning it out.
-                let (structured, text, is_error) = output.into_parts();
-                let result = serde_json::json!({
+                let (structured, text, is_error) = output.into_render_parts();
+                let mut result = serde_json::json!({
                     "content": [
                         { "type": "text", "text": text }
                     ],
                     "isError": is_error,
-                    "structuredContent": structured,
                 });
+                if let Some(structured) = structured {
+                    result["structuredContent"] = structured;
+                }
                 JsonRpcResponse::ok(req.id, result)
             }
             Err(e) => {
@@ -325,6 +338,9 @@ impl<T: Transport> Server<T> {
                     "isError": true,
                 });
                 if let ToolError::StructuredPreflight { report, .. } = &e {
+                    result["structuredContent"] = serde_json::json!(report);
+                }
+                if let ToolError::OperationPreflight { report, .. } = &e {
                     result["structuredContent"] = serde_json::json!(report);
                 }
                 JsonRpcResponse::ok(req.id, result)

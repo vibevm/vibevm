@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "operation": "apply",
+  "operation_id": "synthetic-operation",
+  "authority": {
+    "project_root": "/synthetic/project",
+    "recovery_store_root": "/synthetic/recovery",
+    "target_relative": "vibe.toml",
+    "scope": "owned_authored_file"
+  },
+  "approved_request_json": "{\"schema\":1,\"source_text\":\"[package]\\nname=\\\"demo\\\"\\ngroup=\\\"org.example\\\"\\nkind=\\\"flow\\\"\\nversion=\\\"1.1.0\\\"\\nmaterialization=\\\"snapshot\\\"\\n\",\"source_profile\":\"materialization-legacy-absent-r1\",\"target_profile\":\"materialization-current-absent-r1\",\"recipe\":\"snapshot-to-copy-r1\"}",
+  "before_content_id": "905cf0b4eb7376819f47c9f7da02fecb8920d91dd9b76b4cb3454da77fa81887",
+  "after_content_id": "6798d562a0ff899a5afd793054821fc6a114f8cd55fc53118d7772e9167a44df",
+  "diff_id": "42faf5376728e4649c80657e6b0f93e9910a107261413a5d0c7f019bf5ab27e0",
+  "extra": true
+}

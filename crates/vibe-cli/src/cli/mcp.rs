@@ -221,6 +221,13 @@ pub struct McpUpgradeArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct McpServeArgs {
+    /// Explicit external store granting authored-manifest migration operations.
+    #[arg(long)]
+    pub migration_recovery_store: Option<PathBuf>,
+    /// Finite portable authored files; omitted grants only root vibe.toml.
+    #[arg(long, requires = "migration_recovery_store")]
+    pub migration_file: Vec<String>,
+
     /// Project root with `vibe.toml`. Defaults to current directory.
     /// The server reloads the lockfile fresh on every tool call so a
     /// concurrent `vibe install` run becomes visible without a

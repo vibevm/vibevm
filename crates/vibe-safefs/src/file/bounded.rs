@@ -86,9 +86,7 @@ impl Project {
         relative: &str,
         cap: usize,
     ) -> Result<Option<StableFileSnapshot>> {
-        let limit = cap
-            .checked_add(1)
-            .with_context(|| format!("cap {cap} is usize::MAX: cap + 1 would overflow"))?;
+        snapshot_limit(cap)?;
         let Some((holder, name)) = self.holder_of(directory, relative)? else {
             return Ok(None);
         };
@@ -103,49 +101,7 @@ impl Project {
                 );
             }
         };
-        verify_regular_single_link(&file, &display)?;
-        let before = file
-            .metadata()
-            .with_context(|| format!("inspecting `{}`", display.display()))?;
-        if before.len() > cap as u64 {
-            bail!(
-                "`{}` is {} bytes, over the {cap}-byte cap",
-                display.display(),
-                before.len()
-            );
-        }
-        crate::race_hook::before_bounded_read(&holder, &name);
-        let first = bounded_pass(&mut file, cap, limit, before.len(), &display)?;
-        let second = bounded_pass(&mut file, cap, limit, before.len(), &display)?;
-        if first != second {
-            bail!(
-                "`{}` changed between its two held-handle passes",
-                display.display()
-            );
-        }
-        verify_regular_single_link(&file, &display)?;
-        let after = file
-            .metadata()
-            .with_context(|| format!("re-inspecting `{}`", display.display()))?;
-        let unix_mode = crate::file::stable::unix_mode(&after);
-        if before.len() != after.len()
-            || second.len() as u64 != after.len()
-            || crate::file::stable::unix_mode(&before) != unix_mode
-        {
-            bail!(
-                "`{}` changed length or mode during its stable read",
-                display.display()
-            );
-        }
-        let held = crate::file::identity::file_identity(&file, &display)?;
-        ensure_still_final_name(&holder, &name, held, &display)?;
-        Ok(Some(StableFileSnapshot {
-            sha256: format!("{:x}", sha2::Sha256::digest(&second)),
-            size: second.len() as u64,
-            bytes: second,
-            unix_mode,
-            identity: held,
-        }))
+        read_held_snapshot_bounded(&mut file, &holder, &name, cap).map(Some)
     }
 
     /// Read one file at a project-relative path, or `None` when absent.
@@ -242,7 +198,7 @@ impl Project {
                 // reservation is the smaller metadata-derived capacity — never
                 // `cap`-sized on the ordinary metadata-stable path, and never
                 // `cap + 1`.
-                let mut bytes = Vec::with_capacity(metadata_len as usize);
+                let mut bytes = reserve_observed(metadata_len, &display)?;
                 crate::race_hook::before_bounded_read(&holder, &name);
                 // The read is fenced by `take(cap + 1)`, and the buffer below
                 // it is bounded mechanically, not by trust: `read_to_end` on a
@@ -305,7 +261,9 @@ impl Project {
                     // Exact top-up: the reservation fits precisely the bytes
                     // being appended, so no geometric growth can carry the
                     // buffer past the cap.
-                    bytes.reserve_exact(used);
+                    bytes.try_reserve_exact(used).with_context(|| {
+                        format!("reserving bounded bytes for `{}`", display.display())
+                    })?;
                     bytes.extend_from_slice(&chunk[..used]);
                 }
             }
@@ -317,6 +275,82 @@ impl Project {
     }
 }
 
+fn snapshot_limit(cap: usize) -> Result<usize> {
+    cap.checked_add(1)
+        .with_context(|| format!("cap {cap} is usize::MAX: cap + 1 would overflow"))
+}
+
+/// One held observation law for ordinary snapshots and already-authorized
+/// deterministic stages. Public reads still validate authored relative paths
+/// before reaching this internal single-component seam.
+pub(super) fn read_held_snapshot_bounded(
+    file: &mut std::fs::File,
+    holder: &Pinned,
+    name: &str,
+    cap: usize,
+) -> Result<StableFileSnapshot> {
+    crate::ensure_safe_component(name).or_else(|_| super::validate_transaction_stage_name(name))?;
+    let limit = snapshot_limit(cap)?;
+    let display = holder.join(name);
+    verify_regular_single_link(file, &display)?;
+    let before = file
+        .metadata()
+        .with_context(|| format!("inspecting `{}`", display.display()))?;
+    if before.len() > cap as u64 {
+        bail!(
+            "`{}` is {} bytes, over the {cap}-byte cap",
+            display.display(),
+            before.len()
+        );
+    }
+    crate::race_hook::before_bounded_read(holder, name);
+    let first = bounded_pass(file, cap, limit, before.len(), &display)?;
+    let second = bounded_pass(file, cap, limit, before.len(), &display)?;
+    if first != second {
+        bail!(
+            "`{}` changed between its two held-handle passes",
+            display.display()
+        );
+    }
+    verify_regular_single_link(file, &display)?;
+    let after = file
+        .metadata()
+        .with_context(|| format!("re-inspecting `{}`", display.display()))?;
+    let unix_mode = crate::file::stable::unix_mode(&after);
+    if before.len() != after.len()
+        || second.len() as u64 != after.len()
+        || crate::file::stable::unix_mode(&before) != unix_mode
+    {
+        bail!(
+            "`{}` changed length or mode during its stable read",
+            display.display()
+        );
+    }
+    let held = crate::file::identity::file_identity(file, &display)?;
+    ensure_still_final_name(holder, name, held, &display)?;
+    Ok(StableFileSnapshot {
+        sha256: format!("{:x}", sha2::Sha256::digest(&second)),
+        size: second.len() as u64,
+        bytes: second,
+        unix_mode,
+        identity: held,
+    })
+}
+
+fn reserve_observed(length: u64, display: &Path) -> Result<Vec<u8>> {
+    let capacity = usize::try_from(length).with_context(|| {
+        format!(
+            "observed size of `{}` exceeds addressable memory",
+            display.display()
+        )
+    })?;
+    let mut bytes = Vec::new();
+    bytes
+        .try_reserve_exact(capacity)
+        .with_context(|| format!("reserving observed bytes for `{}`", display.display()))?;
+    Ok(bytes)
+}
+
 fn bounded_pass(
     file: &mut std::fs::File,
     cap: usize,
@@ -326,7 +360,7 @@ fn bounded_pass(
 ) -> Result<Vec<u8>> {
     file.seek(SeekFrom::Start(0))
         .with_context(|| format!("seeking `{}`", display.display()))?;
-    let mut bytes = Vec::with_capacity(metadata_len as usize);
+    let mut bytes = reserve_observed(metadata_len, display)?;
     let mut fenced = file.take(limit as u64);
     let mut chunk = [0u8; READ_CHUNK];
     loop {
@@ -348,7 +382,9 @@ fn bounded_pass(
                 display.display()
             );
         }
-        bytes.reserve_exact(used);
+        bytes
+            .try_reserve_exact(used)
+            .with_context(|| format!("reserving bounded bytes for `{}`", display.display()))?;
         bytes.extend_from_slice(&chunk[..used]);
     }
 }
@@ -408,5 +444,34 @@ pub(crate) fn ensure_still_final_name(
              longer opens as a regular single-link file",
             display.display()
         ))),
+    }
+}
+
+#[cfg(test)]
+mod allocation_tests {
+    use super::*;
+
+    #[test]
+    fn impossible_observed_capacity_is_a_refusal_not_a_panic() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("empty");
+        let mut file = std::fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create_new(true)
+            .open(&path)
+            .unwrap();
+        let observed = (isize::MAX as u64) + 1;
+        let cap = usize::MAX - 1;
+        assert!(observed <= cap as u64);
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            bounded_pass(&mut file, cap, cap + 1, observed, &path)
+        }));
+        assert!(
+            result.is_ok(),
+            "impossible observed capacity panicked before typed refusal"
+        );
+        assert!(result.unwrap().is_err());
+        assert_eq!(std::fs::metadata(&path).unwrap().len(), 0);
     }
 }

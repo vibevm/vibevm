@@ -16,7 +16,9 @@ use vibe_core::{Group, PackageRef, machine_json_path};
 
 use crate::{ServerContext, ToolDescriptor, ToolError};
 
+pub mod migration_operation;
 pub mod migration_plan;
+pub use migration_operation::ManifestMigrationOperationMcpTool;
 pub use migration_plan::PlanManifestMigrationMcpTool;
 
 pub mod output;
@@ -63,6 +65,7 @@ pub trait McpTool {
 pub fn default_tools() -> Vec<Box<dyn McpTool>> {
     vec![
         Box::new(PlanManifestMigrationMcpTool),
+        Box::new(ManifestMigrationOperationMcpTool),
         Box::new(QueryPackageMcpTool),
         Box::new(ReadSubskillMcpTool),
         Box::new(MaterialiseSubskillMcpTool),

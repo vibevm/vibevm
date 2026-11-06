@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "operation": "apply",
+  "operation_id": "synthetic-operation",
+  "outcome": "completed",
+  "target_state": "validated_after",
+  "intent_id": "a3fa6d0f9c25d3e5ddda87b47cafaa92ae1bb94736efb0b584f6a683da5fdbb8",
+  "before_content_id": "905cf0b4eb7376819f47c9f7da02fecb8920d91dd9b76b4cb3454da77fa81887",
+  "after_content_id": "6798d562a0ff899a5afd793054821fc6a114f8cd55fc53118d7772e9167a44df",
+  "diff_id": "42faf5376728e4649c80657e6b0f93e9910a107261413a5d0c7f019bf5ab27e0",
+  "error": null,
+  "effects": [
+    {
+      "kind": "other",
+      "state": "completed"
+    }
+  ],
+  "warnings": [],
+  "residue": [],
+  "guarantees": {
+    "platform": "linux",
+    "concurrency": "participating_clients",
+    "barrier_binding": "synthetic-project-token",
+    "uncooperating_writers_excluded": false,
+    "durability": "file_and_directory_synced",
+    "preservation": "bytes_and_unix_mode"
+  }
+}

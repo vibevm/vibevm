@@ -27,8 +27,10 @@ use specmark::spec;
 ///   `isError: true` with the error's text and **no** `structuredContent`.
 ///   This exception remains a preflight failure, never an executed ToolOutput.
 /// - **Executed** — `Ok(ToolOutput)`. The operation ran and produced a
-///   structured report plus its human text projection. Within this
-///   channel there are three shapes, and the axis that separates them
+///   report plus its human text projection. If report validation fails,
+///   `executed_failure_text` retains explicitly unvalidated evidence without
+///   structured content. For valid structured results there are three shapes;
+///   the axis that separates them
 ///   is NOT success-vs-failure — it is *who writes the text*:
 ///   - [`ToolOutput::ok`] — ordinary success (`isError: false`) whose
 ///     text is the deterministic projection of the report;
@@ -115,7 +117,7 @@ use specmark::spec;
 #[derive(Debug, Clone, PartialEq)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
 pub struct ToolOutput {
-    structured: Value,
+    structured: Option<Value>,
     text: String,
     is_error: bool,
 }
@@ -132,7 +134,7 @@ impl ToolOutput {
         let structured = structured.into();
         let text = deterministic_text(&structured);
         ToolOutput {
-            structured,
+            structured: Some(structured),
             text,
             is_error: false,
         }
@@ -161,7 +163,7 @@ impl ToolOutput {
     /// and then discover its text was silently derived.
     pub fn executed(structured: impl Into<Value>, text: impl Into<String>) -> Self {
         ToolOutput {
-            structured: structured.into(),
+            structured: Some(structured.into()),
             text: text.into(),
             is_error: false,
         }
@@ -176,16 +178,53 @@ impl ToolOutput {
     /// error chain the text channel exists to carry.
     pub fn executed_failure(structured: impl Into<Value>, text: impl Into<String>) -> Self {
         ToolOutput {
-            structured: structured.into(),
+            structured: Some(structured.into()),
             text: text.into(),
             is_error: true,
         }
     }
 
+    /// Executed failure whose retained evidence failed normal report validation.
+    /// Text must state uncertainty honestly; absence is distinct from JSON null.
+    ///
+    /// ```
+    /// use vibe_mcp::tools::ToolOutput;
+    /// let out = ToolOutput::executed_failure_text("UNVALIDATED evidence; effects may exist");
+    /// assert!(out.is_error());
+    /// assert!(!out.has_structured());
+    /// assert!(ToolOutput::ok(serde_json::Value::Null).has_structured());
+    /// ```
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-STRUCTURED-PRESENCE",
+        r = 1
+    )]
+    pub fn executed_failure_text(text: impl Into<String>) -> Self {
+        Self {
+            structured: None,
+            text: text.into(),
+            is_error: true,
+        }
+    }
+
+    /// Whether structured content is present, including deliberate JSON null.
+    pub fn has_structured(&self) -> bool {
+        self.structured.is_some()
+    }
+
+    /// Lossless protocol rendering: absence remains absent.
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-STRUCTURED-PRESENCE",
+        r = 1
+    )]
+    pub fn into_render_parts(self) -> (Option<Value>, String, bool) {
+        (self.structured, self.text, self.is_error)
+    }
+
     /// The structured report — what the dispatcher places in the
-    /// result's single `structuredContent` field.
+    /// result's single `structuredContent` field. Legacy absent access yields null;
+    /// use `has_structured` or `into_render_parts` to preserve presence.
     pub fn structured(&self) -> &Value {
-        &self.structured
+        self.structured.as_ref().unwrap_or(&Value::Null)
     }
 
     /// The human text projection — what the dispatcher places in the
@@ -200,10 +239,14 @@ impl ToolOutput {
     }
 
     /// Consume into the `(structured, text, is_error)` triple — the
-    /// dispatcher's path, so the structured [`Value`] moves into the
+    /// legacy compatibility path (absence becomes JSON null), so the structured [`Value`] moves into the
     /// rendered result instead of being cloned out.
     pub fn into_parts(self) -> (Value, String, bool) {
-        (self.structured, self.text, self.is_error)
+        (
+            self.structured.unwrap_or(Value::Null),
+            self.text,
+            self.is_error,
+        )
     }
 }
 
@@ -222,11 +265,13 @@ fn deterministic_text(value: &Value) -> String {
 /// `Value` readers (`as_str`, `as_array`, …) work directly on a
 /// `ToolOutput`. Deliberately **not** `DerefMut` — mutating the value
 /// after construction could contradict the constructor invariants.
+/// Legacy dereferencing maps absence to JSON null; use `has_structured` or
+/// `into_render_parts` when presence matters.
 impl Deref for ToolOutput {
     type Target = Value;
 
     fn deref(&self) -> &Value {
-        &self.structured
+        self.structured.as_ref().unwrap_or(&Value::Null)
     }
 }
 
@@ -449,6 +494,51 @@ mod tests {
             v["result"]["content"][0]["text"],
             Value::String(deterministic_text(&parked_report())),
             "the dispatcher must not have re-derived the text from the report",
+        );
+    }
+    #[test]
+    #[spec(
+        verifies = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#EXECUTED-STRUCTURED-PRESENCE",
+        r = 1
+    )]
+    fn protocol_distinguishes_absence_null_and_ordinary_error() {
+        struct Probe(u8);
+        impl McpTool for Probe {
+            fn descriptor(&self) -> ToolDescriptor {
+                ToolDescriptor {
+                    name: "presence_probe".into(),
+                    description: "presence".into(),
+                    input_schema: serde_json::json!({"type":"object"}),
+                }
+            }
+            fn run(&self, _: &Value, _: &ServerContext) -> Result<ToolOutput, ToolError> {
+                match self.0 {
+                    0 => Ok(ToolOutput::executed_failure_text(
+                        "UNVALIDATED effects may exist",
+                    )),
+                    1 => Ok(ToolOutput::executed_failure(Value::Null, "deliberate null")),
+                    _ => Err(ToolError::InvalidArguments("ordinary preflight".into())),
+                }
+            }
+        }
+        for kind in 0..3 {
+            let response = dispatch("presence_probe", Box::new(Probe(kind)));
+            assert_eq!(response["result"]["isError"], true);
+            assert_eq!(
+                response["result"].get("structuredContent").is_some(),
+                kind == 1
+            );
+            if kind == 1 {
+                assert_eq!(response["result"]["structuredContent"], Value::Null);
+            }
+        }
+        let absent = ToolOutput::executed_failure_text("unvalidated");
+        assert!(!absent.has_structured());
+        assert_eq!(absent.clone().into_render_parts().0, None);
+        assert_eq!(
+            absent.into_parts().0,
+            Value::Null,
+            "legacy tuple is documented lossy"
         );
     }
 }

@@ -11,6 +11,7 @@ use vibe_specdoc::Direction;
 use crate::output;
 
 mod convert_source;
+pub(crate) mod migration_operation;
 pub(crate) mod migration_plan;
 
 use convert_source::{ConversionTarget, run_conversion};
@@ -26,6 +27,9 @@ pub struct RefactorArgs {
 pub(crate) enum RefactorCommand {
     /// Plan a supported authored-manifest migration from JSON stdin or literal text.
     PlanMigration(PlanMigrationArgs),
+
+    /// Apply, inspect or recover an independently granted authored manifest.
+    MigrationOperation(MigrationOperationArgs),
 
     /// Convert selected authored spec sources through the vibe-specdoc pivot.
     #[command(visible_alias = "convert-src")]
@@ -44,6 +48,23 @@ pub(crate) struct PlanMigrationArgs {
     /// Literal JSON request; otherwise read JSON from stdin.
     #[arg(long)]
     pub(crate) request_json: Option<String>,
+}
+
+/// Independent ownership grant; request JSON never supplies these flags.
+#[derive(Debug, Args)]
+pub(crate) struct MigrationOperationArgs {
+    /// Literal JSON; omitted means stdin.
+    #[arg(long)]
+    pub(crate) request_json: Option<String>,
+    /// Absolute independently granted project root.
+    #[arg(long)]
+    pub(crate) project_root: Option<PathBuf>,
+    /// Exact portable authored-file path under the project.
+    #[arg(long)]
+    pub(crate) target_relative: Option<String>,
+    /// Absolute external recovery store, outside project and machine cache.
+    #[arg(long)]
+    pub(crate) recovery_store: Option<PathBuf>,
 }
 
 /// Shared conversion flags for all three source-conversion verbs.
@@ -160,10 +181,21 @@ fn resolve_formats(
     Ok((from, to))
 }
 
+/// Enter text-only migration transports before settings, tracing or providers.
+pub(crate) fn machine_entry(args: &RefactorArgs) -> Option<std::process::ExitCode> {
+    match &args.command {
+        RefactorCommand::PlanMigration(plan) => {
+            Some(migration_plan::run(plan.request_json.as_deref()))
+        }
+        RefactorCommand::MigrationOperation(operation) => Some(migration_operation::run(operation)),
+        _ => None,
+    }
+}
+
 /// Run one refactoring-family command.
 pub fn run(ctx: &output::Context, args: RefactorArgs) -> Result<()> {
     match args.command {
-        RefactorCommand::PlanMigration(_) => {
+        RefactorCommand::PlanMigration(_) | RefactorCommand::MigrationOperation(_) => {
             bail!("pure migration planning requires its early entry")
         }
         RefactorCommand::ConvertSource(args) => run_convert_source(ctx, args),

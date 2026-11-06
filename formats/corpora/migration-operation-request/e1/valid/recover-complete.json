@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "operation": "recover",
+  "operation_id": "synthetic-operation",
+  "authority": {
+    "project_root": "/synthetic/project",
+    "recovery_store_root": "/synthetic/recovery",
+    "target_relative": "vibe.toml",
+    "scope": "owned_authored_file"
+  },
+  "expected_intent_id": "a3fa6d0f9c25d3e5ddda87b47cafaa92ae1bb94736efb0b584f6a683da5fdbb8",
+  "action": "complete"
+}

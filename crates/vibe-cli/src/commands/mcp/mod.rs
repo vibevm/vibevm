@@ -305,6 +305,12 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
         runtime.embedded_registry_root,
         runtime.seed_default_registry,
     );
+    let server_ctx = match args.migration_recovery_store {
+        Some(store) => server_ctx
+            .with_manifest_migration_authority(store, args.migration_file)
+            .context("admitting explicit MCP manifest migration authority")?,
+        None => server_ctx,
+    };
     let mut server = Server::stdio(server_ctx);
     server.run().context("MCP server I/O error")?;
     Ok(())

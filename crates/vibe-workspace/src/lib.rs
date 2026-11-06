@@ -362,6 +362,7 @@ fn rel_or_dot(root: &Path, dir: &Path) -> String {
 }
 
 /// Strict text-only migration planning, with no project discovery or effects.
+pub mod migration_application;
 pub mod migration_planning;
 
 #[cfg(test)]

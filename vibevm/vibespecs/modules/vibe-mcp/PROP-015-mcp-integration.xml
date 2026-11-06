@@ -60,7 +60,7 @@ close that loop:</close-the-loop></p>
       </facts>
     </server>
     <tools title="2.2 The tool surface: one seam, three tools">
-      <p><req-tools fact="true" status="impl/done">`req r1`</req-tools></p>
+      <p><req-tools fact="true" status="impl/done">`req r2`</req-tools></p>
       <p><TOOL-SEAM fact="true" status="impl/done">**Decision.** Every tool implements one seam (`McpTool`): it `describe`s
 itself (name, human description, JSON-Schema input shape) and `run`s
 against parsed arguments plus the read-only `ServerContext`.</TOOL-SEAM></p>
@@ -205,16 +205,24 @@ that was wrong about depth are in
 [`vibevm/vibespecs/design/map-query-language.xml`](../../design/map-query-language.xml) — the
 lore this contract is the short form of.</SELECT-THE-REASONING-LIVES-BESIDE-THE-CONTRACT></p>
       </map-select>
+      <MANIFEST-MIGRATION-CELL title="Owned migration operation tool">
+        <p>`req r1`</p>
+        <p><MIGRATION-CELL-LAW fact="true" status="spec/done">manifest_migration_operation is a thin apply/inspect/recover adapter over the owned-file migration domain. Its private server configuration grants a finite authored-file set and one recovery store; no configured builder grants no authority, while an explicitly configured empty set grants only root vibe.toml. Payload project, file and store must exactly match configured authority before any project open. Context project and machine-cache roots must remain unchanged. Protected machine-cache overlap refuses before effects, and the domain rechecks store policy before writes. Advertised strict operation fields agree with the registered JTD and runtime decoder. Preflight remains ToolError; executed results preserve domain effects, uncertainty and residue. Invalid post-effect reports render explicitly unvalidated text-only evidence, never a normal structured report or an assertion of rollback.</MIGRATION-CELL-LAW></p>
+      </MANIFEST-MIGRATION-CELL>
+      <EXECUTED-STRUCTURED-PRESENCE title="Explicit structured result presence">
+        <p>`req r1`</p>
+        <p><STRUCTURED-PRESENCE-LAW fact="true" status="spec/done">Executed output represents structured absence independently from JSON null. Deliberate null remains present. Protocol rendering consumes lossless optional parts; legacy structured access and tuple APIs collapse absence to null and cannot establish presence. Text-only executed failure remains an executed result and never implies no effects.</STRUCTURED-PRESENCE-LAW></p>
+      </EXECUTED-STRUCTURED-PRESENCE>
     </tools>
     <errors title="2.3 Tool and server errors cite their REQ">
-      <p><req-errors fact="true" status="impl/done">`req r2`</req-errors></p>
+      <p><req-errors fact="true" status="impl/done">`req r3`</req-errors></p>
       <facts ordered="false">
         <ERROR-LAYERS fact="true" status="impl/done">**Decision.** `ToolError` and `ServerError` are the crate's two error
   layers.</ERROR-LAYERS>
         <ERROR-CITES-REQ fact="true" status="impl/done">Each variant's Display text carries the violated `spec://` unit
   and a fix surface (the Class-F product-error grammar), so a failing tool
   call is navigable back to this PROP without source access.</ERROR-CITES-REQ>
-        <STRUCTURED-PREFLIGHT-REPORT fact="true" status="spec/done">A tool may refuse before execution with its typed registered preflight report. The dispatcher preserves that report in structuredContent with isError=true while keeping the error in ToolError; it must not manufacture an executed ToolOutput merely to carry structured data. The migration planning tool admits this through the registered migration preflight root. Other ToolError variants retain text-only failure behavior. Advertised request fields and the runtime domain decoder must agree.</STRUCTURED-PREFLIGHT-REPORT>
+        <STRUCTURED-PREFLIGHT-REPORT fact="true" status="spec/done">A tool may refuse before execution with its typed registered preflight report. The dispatcher preserves that report in structuredContent with isError=true while keeping the error in ToolError; it must not manufacture an executed ToolOutput merely to carry structured data. The migration planning tool admits this through the registered migration preflight root; the operation tool uses a separate closed typed operation-report preflight arm. Other ToolError variants retain text-only failure behavior. Advertised request fields and the runtime domain decoder must agree.</STRUCTURED-PREFLIGHT-REPORT>
       </facts>
     </errors>
     <agent-detection title="2.4 Agent detection">

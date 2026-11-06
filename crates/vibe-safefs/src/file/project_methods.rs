@@ -149,8 +149,14 @@ macro_rules! project_file_methods {
                     .dir
                     .open_with(stage_name, options.read(true).write(true).create_new(true))
                 {
-                    Ok(file) => (stage_name.to_owned(), Some(file), true),
+                    Ok(file) => (stage_name.to_owned(), Some(file.into_std()), true),
                     Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {
+                        if owned_receipt.is_some() {
+                            let held = owned::open_transaction_stage(
+                                &destination, stage_name, bytes, unix_mode,
+                            ).map_err(|error| before(&created, error))?;
+                            (stage_name.to_owned(), Some(held), false)
+                        } else {
                         let wanted = format!("{:x}", sha2::Sha256::digest(bytes));
                         let observed = destination
                             .inspect_transaction_stage_state(stage_name)
@@ -175,6 +181,7 @@ macro_rules! project_file_methods {
                             ));
                         }
                         (stage_name.to_owned(), None, false)
+                        }
                     }
                     Err(error) => return Err(before(&created, anyhow::Error::new(error))),
                 }
@@ -182,12 +189,12 @@ macro_rules! project_file_methods {
             None => {
                 let (name, file) =
                     create_unique_stage(&destination).map_err(|error| before(&created, error))?;
-                (name, Some(file), true)
+                (name, Some(file.into_std()), true)
             }
         };
         let mut owned_stage = None;
-        if let Some(staged_file) = staged_file {
-            let mut std_file = staged_file.into_std();
+        if let Some(mut std_file) = staged_file {
+            if created_stage {
             let written = std_file
                 .write_all(bytes)
                 .and_then(|()| std_file.flush())
@@ -217,9 +224,15 @@ macro_rules! project_file_methods {
                     )),
                 ));
             }
+            }
             if let Some(slot) = owned_receipt.as_deref_mut() {
-                *slot = Some(owned::capture_stage(&destination, &staged_name, &std_file, bytes)
-                    .map_err(|error| before(&created, error))?);
+                *slot = Some(if created_stage {
+                    owned::capture_stage(&destination, &staged_name, &std_file, bytes)
+                } else {
+                    // Reused state was admitted and synchronized under the
+                    // caller's durable intent. Never clean it on mint failure.
+                    OwnedFileReceipt::from_stage(&std_file, &destination.join(&staged_name), bytes)
+                }.map_err(|error| before(&created, error))?);
                 owned_stage = Some(std_file);
             }
         }

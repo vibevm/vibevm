@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "operation": "inspect",
+  "operation_id": "synthetic-operation",
+  "outcome": "refused",
+  "target_state": "unavailable",
+  "intent_id": null,
+  "before_content_id": null,
+  "after_content_id": null,
+  "diff_id": null,
+  "error": {
+    "code": "other",
+    "field": "authority",
+    "reason": "existing barrier could not be established"
+  },
+  "effects": [],
+  "warnings": [
+    {
+      "code": "durability_unconfirmed",
+      "action": "inspect"
+    }
+  ],
+  "residue": [
+    {
+      "location": "store",
+      "relative_path": "migrations/synthetic-unproven",
+      "ownership": "unproven"
+    }
+  ],
+  "guarantees": {
+    "platform": "windows",
+    "concurrency": "unestablished",
+    "barrier_binding": null,
+    "uncooperating_writers_excluded": false,
+    "durability": "unconfirmed",
+    "preservation": "bytes_only"
+  }
+}
