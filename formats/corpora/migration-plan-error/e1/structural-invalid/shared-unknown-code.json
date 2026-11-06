@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "stage": "preflight",
+  "error": {
+    "code": "future",
+    "field": "request",
+    "reason": "request is structurally invalid"
+  }
+}

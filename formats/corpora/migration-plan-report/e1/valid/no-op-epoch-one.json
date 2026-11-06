@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "stage": "planner",
+  "outcome": {
+    "status": "no_op",
+    "plan": {
+      "source_profile": "materialization-current-epoch1-r1",
+      "target_profile": "materialization-current-epoch1-r1",
+      "recipe": "identity-r1",
+      "before": "[package]\nname=\"demo\"\ngroup=\"org.example\"\nkind=\"flow\"\nversion=\"1.1.0\"\nepoch=1\nmaterialization=\"copy\"\n",
+      "after": "[package]\nname=\"demo\"\ngroup=\"org.example\"\nkind=\"flow\"\nversion=\"1.1.0\"\nepoch=1\nmaterialization=\"copy\"\n",
+      "edits": [],
+      "before_identity": "ca8b7cc9cce5eb9f5e8b7f293d754e75473bc541ba5ae801b4183c6e575ecd01",
+      "after_identity": "ca8b7cc9cce5eb9f5e8b7f293d754e75473bc541ba5ae801b4183c6e575ecd01",
+      "diff_identity": "0a60a70e3d686316a828aff1410cae82dab0ac8d1431d000136513d4a190e00d",
+      "source_epoch": {
+        "kind": "epoch_1"
+      },
+      "target_epoch": {
+        "kind": "epoch_1"
+      }
+    }
+  }
+}

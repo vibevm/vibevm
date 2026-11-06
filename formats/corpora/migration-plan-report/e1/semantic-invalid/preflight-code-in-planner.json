@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "stage": "planner",
+  "outcome": {
+    "status": "refused",
+    "error": {
+      "code": "invalid_request",
+      "field": "request",
+      "reason": "request is structurally invalid"
+    }
+  }
+}

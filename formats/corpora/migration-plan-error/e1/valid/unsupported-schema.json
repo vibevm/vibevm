@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "stage": "preflight",
+  "error": {
+    "code": "unsupported_schema",
+    "field": "schema",
+    "reason": "unsupported request schema"
+  }
+}

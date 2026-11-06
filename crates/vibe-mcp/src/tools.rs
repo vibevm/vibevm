@@ -16,6 +16,9 @@ use vibe_core::{Group, PackageRef, machine_json_path};
 
 use crate::{ServerContext, ToolDescriptor, ToolError};
 
+pub mod migration_plan;
+pub use migration_plan::PlanManifestMigrationMcpTool;
+
 pub mod output;
 pub use output::ToolOutput;
 
@@ -50,8 +53,8 @@ pub trait McpTool {
     /// success, or an executed structured failure whose report survives
     /// in `structuredContent` under `isError: true`. `Err(ToolError)`
     /// is the preflight / tool-failure channel: the operation never
-    /// ran, so the dispatcher renders text only, with no structured
-    /// content. See [`ToolOutput`] for the full distinction.
+    /// ran. A typed structured-preflight error retains its registered report;
+    /// other failures render text only. See [`ToolOutput`] for the full distinction.
     fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError>;
 }
 
@@ -59,6 +62,7 @@ pub trait McpTool {
 /// A new tool is a new cell added here, not an edit to the dispatcher.
 pub fn default_tools() -> Vec<Box<dyn McpTool>> {
     vec![
+        Box::new(PlanManifestMigrationMcpTool),
         Box::new(QueryPackageMcpTool),
         Box::new(ReadSubskillMcpTool),
         Box::new(MaterialiseSubskillMcpTool),

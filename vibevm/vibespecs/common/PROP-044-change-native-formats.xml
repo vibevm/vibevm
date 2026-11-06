@@ -627,4 +627,12 @@ token. Digests are lowercase hexadecimal without a prefix. A fixed
 independently computed golden vector binds this recipe; changing domains,
 framing or ordering requires a distinct recipe revision.</MIGRATION-PLAN-LAW></p>
     </MANIFEST-MIGRATION-PLAN>
+  <MANIFEST-MIGRATION-TRANSPORT title="Strict pure migration planning values">
+    <p>`req r1`</p>
+    <p><MIGRATION-TRANSPORT-LAW fact="true" status="spec/done">The exact-text migration planner exposes registered epoch-1 request, report and preflight-error roots. Request schema is exactly 1; source_text is supplied text, not a path. Optional source_profile, target_profile and recipe must be strings when present; explicit null is not absence. Unknown fields, wrong primitive types and unsupported schema refuse before planner entry. A planner report has stage planner and one of planned, no_op, needs_input or refused; a preflight error has stage preflight and cannot claim the planner ran. The shared error vocabulary separates preflight input/read/schema errors from core refusal reasons.
+
+Plans retain exact before/after text, ordered token edits, domain identities and distinct absent/epoch_1 metadata. Offsets are canonical unsigned decimal UTF-8 byte positions, not character offsets or floating point numbers. Generated shapes enforce structural admission; the domain validator checks stage/code coherence, exact edit reconstruction, no-op invariants and profile epochs, then compares a report with replay of its exact request through the existing pure core owner. It does not duplicate transformation or hash algorithms. Missing choices remain typed ordered questions; no heuristic selects an omitted choice. Only the current three materialization profiles are supported here. Source, feature and Redbook recipes require their own actual reader integration.
+
+The CLI refactor plan-migration route accepts literal JSON or stdin and emits one structured response before settings, tracing, registry, cache or provider initialization. It discovers no project paths and creates no application state. MCP plan_manifest_migration uses the same request authority, with an advertised schema matching its actual accepted fields. Structured preflight remains a failed tool call that did not execute the planner; successful or refused planner reports use the executed-result channel. Existing unrelated tool errors retain their meaning. Pure planning never grants or performs application.</MIGRATION-TRANSPORT-LAW></p>
+  </MANIFEST-MIGRATION-TRANSPORT>
 </spec>

@@ -11,6 +11,7 @@ use vibe_specdoc::Direction;
 use crate::output;
 
 mod convert_source;
+pub(crate) mod migration_plan;
 
 use convert_source::{ConversionTarget, run_conversion};
 
@@ -22,9 +23,10 @@ pub struct RefactorArgs {
 }
 
 #[derive(Debug, Subcommand)]
-// The shared `Convert` prefix is the intentional user-facing clap namespace.
-#[allow(clippy::enum_variant_names)]
 pub(crate) enum RefactorCommand {
+    /// Plan a supported authored-manifest migration from JSON stdin or literal text.
+    PlanMigration(PlanMigrationArgs),
+
     /// Convert selected authored spec sources through the vibe-specdoc pivot.
     #[command(visible_alias = "convert-src")]
     ConvertSource(ConvertSourceArgs),
@@ -34,6 +36,14 @@ pub(crate) enum RefactorCommand {
 
     /// Convert only the spec/ tree of a package (the current project by default).
     ConvertSpecSrc(ConvertSpecSrcArgs),
+}
+
+/// Exact text planning arguments, never a filesystem path.
+#[derive(Debug, Args)]
+pub(crate) struct PlanMigrationArgs {
+    /// Literal JSON request; otherwise read JSON from stdin.
+    #[arg(long)]
+    pub(crate) request_json: Option<String>,
 }
 
 /// Shared conversion flags for all three source-conversion verbs.
@@ -153,6 +163,9 @@ fn resolve_formats(
 /// Run one refactoring-family command.
 pub fn run(ctx: &output::Context, args: RefactorArgs) -> Result<()> {
     match args.command {
+        RefactorCommand::PlanMigration(_) => {
+            bail!("pure migration planning requires its early entry")
+        }
         RefactorCommand::ConvertSource(args) => run_convert_source(ctx, args),
         RefactorCommand::ConvertPackageSrc(args) => run_convert_package_src(ctx, args),
         RefactorCommand::ConvertSpecSrc(args) => run_convert_spec_src(ctx, args),

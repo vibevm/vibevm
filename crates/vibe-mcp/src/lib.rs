@@ -28,8 +28,8 @@
 //! declared name. Results come back as [`tools::ToolOutput`] — the
 //! executed channel (ordinary success, or an executed structured failure
 //! that keeps its report under `isError: true`) — while [`ToolError`]
-//! stays the preflight / tool-failure channel, rendered text-only with
-//! no structured content.
+//! stays the preflight / tool-failure channel. Its typed migration preflight
+//! variant retains a registered report; other errors remain text-only.
 
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server");
@@ -102,6 +102,15 @@ pub struct ToolDescriptor {
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors")]
 pub enum ToolError {
+    /// Typed migration preflight evidence; the planner has not executed.
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#STRUCTURED-PREFLIGHT-REPORT: {message}; fix surface: supplied migration request"
+    )]
+    StructuredPreflight {
+        report: Box<vibe_wire::generated::migration::e1::plan_error::PlanError>,
+        message: String,
+    },
+
     #[error(
         "invalid arguments: {0} \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools; \
@@ -309,12 +318,15 @@ impl<T: Transport> Server<T> {
                 JsonRpcResponse::ok(req.id, result)
             }
             Err(e) => {
-                let result = serde_json::json!({
+                let mut result = serde_json::json!({
                     "content": [
                         { "type": "text", "text": e.to_string() }
                     ],
                     "isError": true,
                 });
+                if let ToolError::StructuredPreflight { report, .. } = &e {
+                    result["structuredContent"] = serde_json::json!(report);
+                }
                 JsonRpcResponse::ok(req.id, result)
             }
         }

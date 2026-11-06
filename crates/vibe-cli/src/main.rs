@@ -65,14 +65,14 @@ fn main() -> ExitCode {
 }
 
 fn run() -> ExitCode {
-    let cli = match Cli::try_parse() {
-        Ok(cli) => cli,
-        Err(e) => {
-            // clap handles its own formatting and picks the right category.
-            e.exit();
-        }
-    };
+    // Clap owns argument diagnostics and their exit classification.
+    let cli = Cli::parse();
 
+    if let Command::Refactor(args) = &cli.command
+        && let commands::refactor::RefactorCommand::PlanMigration(plan) = &args.command
+    {
+        return commands::refactor::migration_plan::run(plan.request_json.as_deref());
+    }
     let transfer_config = promote_user_config_env();
     init_tracing();
     // VVM: derive the running version from the binary's own path, and warn

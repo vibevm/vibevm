@@ -1627,3 +1627,30 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/application/e1"
 sunset = "none"
+
+[format.migration-plan-request]
+epoch = 1
+schema = "schemas/migration/e1/plan_request.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/migration-plan-request/e1"
+sunset = "none"
+
+[format.migration-plan-report]
+epoch = 1
+schema = "schemas/migration/e1/plan_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/migration-plan-report/e1"
+sunset = "none"
+
+[format.migration-plan-error]
+epoch = 1
+schema = "schemas/migration/e1/plan_error.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/migration-plan-error/e1"
+sunset = "none"

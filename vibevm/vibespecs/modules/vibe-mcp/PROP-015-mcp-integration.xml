@@ -207,13 +207,14 @@ lore this contract is the short form of.</SELECT-THE-REASONING-LIVES-BESIDE-THE-
       </map-select>
     </tools>
     <errors title="2.3 Tool and server errors cite their REQ">
-      <p><req-errors fact="true" status="impl/done">`req r1`</req-errors></p>
+      <p><req-errors fact="true" status="impl/done">`req r2`</req-errors></p>
       <facts ordered="false">
         <ERROR-LAYERS fact="true" status="impl/done">**Decision.** `ToolError` and `ServerError` are the crate's two error
   layers.</ERROR-LAYERS>
         <ERROR-CITES-REQ fact="true" status="impl/done">Each variant's Display text carries the violated `spec://` unit
   and a fix surface (the Class-F product-error grammar), so a failing tool
   call is navigable back to this PROP without source access.</ERROR-CITES-REQ>
+        <STRUCTURED-PREFLIGHT-REPORT fact="true" status="spec/done">A tool may refuse before execution with its typed registered preflight report. The dispatcher preserves that report in structuredContent with isError=true while keeping the error in ToolError; it must not manufacture an executed ToolOutput merely to carry structured data. The migration planning tool admits this through the registered migration preflight root. Other ToolError variants retain text-only failure behavior. Advertised request fields and the runtime domain decoder must agree.</STRUCTURED-PREFLIGHT-REPORT>
       </facts>
     </errors>
     <agent-detection title="2.4 Agent detection">

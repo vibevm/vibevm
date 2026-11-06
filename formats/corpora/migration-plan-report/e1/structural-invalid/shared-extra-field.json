@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "stage": "planner",
+  "outcome": {
+    "status": "refused",
+    "error": {
+      "code": "unknown_selection",
+      "field": "source_profile",
+      "reason": "unknown profile or recipe revision",
+      "phase": "planner"
+    }
+  }
+}
