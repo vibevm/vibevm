@@ -15,15 +15,15 @@
     "cross_checked_graph_statuses": true
   },
   "counts": {
-    "partial": 33,
-    "full": 10,
+    "partial": 32,
+    "full": 11,
     "not-transferred": 31,
     "unknown": 39,
     "already_main": 0
   },
-  "minimum_proven_complete_old_tasks": 10,
-  "exact_global_complete_total": "not established; at least 10",
-  "important": "At least 10 full old tasks proved; 33 partial, 31 not-transferred, 39 unknown. Original M06A1 accepted; broader A2/A3/A4 source capabilities remain incomplete.",
+  "minimum_proven_complete_old_tasks": 11,
+  "exact_global_complete_total": "not established; at least 11",
+  "important": "At least 11 full original tasks proved; 32 partial, 31 not-transferred, 39 unknown. M06A2 accepted at its real captured library export boundary; A3/A4 source integration remains open.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -2117,13 +2117,16 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Make ordinary Markdown navigable while preserving literal Vibe syntax.\nAcceptance criteria: Structural view and raw content point to the same captured document.; No CommonMark node acquires normative Vibe fact authority.",
-      "status": "partial",
+      "status": "full",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Explicit inert ordinary Markdown structure tied to retained raw document; headings/fences/links, exact section selection and durable declared exports requested in explicit task steps. Current loader passes .md into Vibe downstream semantics; accepted inline opacity does not make all ordinary directives inert.",
-      "implemented_coverage": "Accepted F07 d6147a94d fixes the explicitly listed inline-code @fact opacity clause through parser/conversion/facts/normal warm-cache CLI; real duplicates still refuse. Nested Vibe list multibyte/task-box conversion already exists before campaign. Existing held source reads and unique Vibe anchor paths are reusable, not ordinary CommonMark interpretation.",
-      "remaining_behavior": "Explicit inert ordinary Markdown structure tied to retained raw document; headings/fences/links, exact section selection and durable declared exports requested in explicit task steps. Current loader passes .md into Vibe downstream semantics; accepted inline opacity does not make all ordinary directives inert.",
+      "accepted_main_commits": [
+        "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+        "d6147a94d83910b7c319247dc01cd980325a9e67"
+      ],
+      "transferred_scope": "Inert ordinary CommonMark outline/exact source spans, strict durable package export declarations, actual descriptor-selected captured export reader, zero normative facts and preserved native inline-code law.",
+      "unmet_or_unverified": "None at original A2 library consumer scope; A3/A4 and resource transport remain separate.",
+      "implemented_coverage": "Inert ordinary CommonMark outline/exact source spans, strict durable package export declarations, actual descriptor-selected captured export reader, zero normative facts and preserved native inline-code law.",
+      "remaining_behavior": "None at original A2 library consumer scope; A3/A4 and resource transport remain separate.",
       "superseded_obligations": [
         {
           "clause": "Must use exact prototype CommonMarkDoc/NodeId/source-query host",
@@ -2175,7 +2178,9 @@
           ]
         }
       ],
-      "review_report": "research/m06-transfer-crosswalk-review.md"
+      "review_report": "research/m06-transfer-crosswalk-review.md",
+      "review_evidence": "research/m06-a2-transfer-acceptance.json",
+      "review_main_pin": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2"
     },
     {
       "old_task_id": "M-06-A.3",
@@ -4959,8 +4964,8 @@
       "why_not_old_task_count": "Real accepted improvements; no whole old task inferred from their labels."
     }
   ],
-  "count_caution": "The proven lower bound is 10 complete tasks. Unknown means criterion-complete transfer has not been established, not that implementation is absent. Partial tasks are not weighted completion percentages; useful original semantics, not type names, determine completion.",
+  "count_caution": "The proven lower bound is 11 complete tasks. Unknown means criterion-complete transfer is unestablished, not absent implementation. Partial tasks are not weighted progress; original useful semantics determine completion.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
-  "version_note": "M06A1 full in264b07466 after joined runtime, independent review corrections and root generated/static gates. M16 foundation audit also reconciled five unknown rows; no whole source-family completion.",
-  "latest_scoped_review_main_pin": "264b0746684bdf4aec0b5d7d09595d79f70287df"
+  "version_note": "M06A2 full in626fcbd8d after ordinary parser/export/presence and actual captured Mixed consumer gates. Counts11full/32partial/31not-transferred/39unknown.",
+  "latest_scoped_review_main_pin": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2"
 }

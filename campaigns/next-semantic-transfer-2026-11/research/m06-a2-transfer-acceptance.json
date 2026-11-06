@@ -1,0 +1,139 @@
+{
+  "status": "accepted",
+  "task": "M-06-A.2",
+  "commit": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "original_semantics": {
+    "goal": "Make ordinary Markdown navigable while preserving literal Vibe syntax.",
+    "steps": [
+      "Implement CommonMark headings/sections/fences/links through the selected parser boundary; inspect existing dependencies before any addition.",
+      "Resolve durable manifest exports against exact section selectors and captured bytes.",
+      "Keep snapshot-local node IDs distinct from durable fact IDs; ordinary annotations/directives remain text.",
+      "Keep inline-code spans as quoted text in both paragraph and table-cell fact scans; pin a real @fact:X plus repeated quoted marker regression and remove any stale docs-corpus quarantine only if still present."
+    ],
+    "positive_cases": [
+      "Nested fences and headings produce stable same-snapshot sections.",
+      "Literal @requires/#use text is retained without fact/directive effects.",
+      "Real @fact:X with identical inline-code quotes in paragraph and table cell passes without DuplicateId; existing current scanner behavior remains pinned."
+    ],
+    "negative_cases": [
+      "Duplicate heading without unique export is ambiguous.",
+      "A malformed section selector cannot silently choose a heading."
+    ],
+    "acceptance": [
+      "Structural view and raw content point to the same captured document.",
+      "No CommonMark node acquires normative Vibe fact authority."
+    ],
+    "safe_stop": "Raw Markdown remains readable if a requested export cannot resolve."
+  },
+  "committed_files": {
+    "Cargo.toml": "a976068be6dc1f3cbc33edcfe1e269fa55191ca474bd6241eb435b64da2ef364",
+    "Cargo.lock": "97eb63f39cc137f611054230b3ae826effb88ab694a4c981dda5c8dcfbe21b74",
+    "crates/vibe-specdoc/Cargo.toml": "82443b2421cec03f1f2b9df0ede303567948004cdf571b4bb269c39454c334c0",
+    "crates/vibe-specdoc/src/lib.rs": "abb9738749a9b1bf9c7b4154045b51802d9f57c9c8b79fc986ae1d767b13646f",
+    "crates/vibe-specdoc/src/commonmark.rs": "b8d3736fd093b636aa7d66352ff1e9f4178ccec690288000ca462d417e9f4c07",
+    "crates/vibe-specdoc/src/commonmark/parse.rs": "25280aec5bb1fa55e1715513680a4df972f23e1c5fc356dcd5797a7ada6e83e0",
+    "crates/vibe-specdoc/src/commonmark/selection.rs": "3eef1da4d3bef040cc6b8aaec259b746ff67668bc6ffc2ecdd8480326b9db2be",
+    "crates/vibe-specdoc/src/commonmark/tests.rs": "21848b1a25000cdd5f0d39484c498aa56d04d46f5907e4434b0a51a37a698651",
+    "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml": "0832bdb228be4c0b5843915cbcdff5d1689b4871bbe582e5fb3cde4dcf93470b",
+    "campaigns/next-semantic-transfer-2026-11/FORMAT-CHANGES.md": "d2d47909dd0293241cd07fa3039506ddfeef99b2a0d92f80c4f0c03ced343ee7",
+    "crates/vibe-check/src/checks/boot_directory.rs": "3a40a1df9c2e64aa6a80391f1c1cc4db1f5fdca6c0a49282d317ad105faceeb7",
+    "crates/vibe-check/src/checks/wal_wellformed.rs": "0a35974e8c82e29048d215fb92d952448662fdce69069cb73bfb73c605986ba1",
+    "crates/vibe-cli/src/commands/facts/selected.rs": "2e6c6fd003e81724ad3ab79967cc0d93df836eb9e141210a53da3d37567f3176",
+    "crates/vibe-cli/src/commands/progress/grounding/tests.rs": "07272cfefb5d75346a1aaf5e533eec0095431a4ca13ddb8c8078966a9f57097d",
+    "crates/vibe-cli/src/commands/refactor/convert_source/policy/tests.rs": "4fc4262a226f33410b34a7e9f209b90869f9a8eacc9fc46273e7c75ee9e84a2a",
+    "crates/vibe-cli/src/commands/tree/build/tests.rs": "72d2b02bf117d7f47a23e0a87aa307512846dbd6b8a418436f4162a4e3dbb0a9",
+    "crates/vibe-cli/tests/cli_facts_declared.rs": "12150f2c3d340fa52f46f8c5224a81153e957dd30d8a5d4d00985ee43c43212d",
+    "crates/vibe-cli/tests/cli_source_admission.rs": "43c40d5123fc87e589ece488de17745efe6c4dbee96e0a8edc6d18cc9da396cc",
+    "crates/vibe-core/src/manifest/mod.rs": "5d06ee3843a6c9646504c95834632d91d17c1db7c838a3ef8300cf91b9ee0553",
+    "crates/vibe-core/src/manifest/package.rs": "c1cce61f6b30a75f5fda4b1927f01342a93eda9361a3c9d9970fc5a612b6e4c3",
+    "crates/vibe-core/src/manifest/package/meta.rs": "703b503282954c40f4bd0ef9fbf89755d1261e11eddf3a7d359adc1fedf859b3",
+    "crates/vibe-core/src/manifest/package/source_export.rs": "97dc612ef9db5f5c03b3a5cbe81a6a7e657c7739802de3765f86b98bc8822f4d",
+    "crates/vibe-core/src/manifest/package/source_export/tests.rs": "d39218aa5afe972d5b7c861428ba49b10e53f619ce391e10994d1a43ae3ba828",
+    "crates/vibe-core/src/manifest/package/tests.rs": "2b4925c3df0baab4c84da1458aaf220097499dad750498a14ea3782e1a175e4c",
+    "crates/vibe-core/src/manifest/package/wire.rs": "73b2e3b8c40e6bbc7723826bad6ed3d85284a9c40a9ebfad6fa172d8805bb467",
+    "crates/vibe-core/src/manifest/source_descriptor/mod.rs": "9e196dfee9f044f6bffdfb872d11d0c5572919ef1911cbdc7bebec6189394221",
+    "crates/vibe-doc/src/citations/tests.rs": "8c75d7d7e1c011305ae6949b0fbfd1a1bc3df503d23ac3a98fb5fff4b4a3fc5f",
+    "crates/vibe-doc/src/pages/tests.rs": "5ae864e54746e22bb6a3e5b612c54634f96118fb9c9de80bdb0bb4afb4c0e0db",
+    "crates/vibe-doc/src/translations/tests/source_policy.rs": "8adb46245e172228faccc386ff8fb554962c860d6718dba446ed98e5d407dfe8",
+    "crates/vibe-facts/src/lib.rs": "069590d248a569512568be33022f70b23d0232567d0fe7f960d004563d9aabe2",
+    "crates/vibe-facts/src/scan/declared.rs": "2bed0dab92b5ded351544814976cee9966a6c42ec42e58b6bde4f772aa2ea541",
+    "crates/vibe-facts/src/scan/declared/export.rs": "cfc512c610d56fa70ee3518b9e24a6826e054ef065080d5e530b7839a12b9462",
+    "crates/vibe-facts/src/scan/declared/export/tests.rs": "cd5d2fb23dffe7a367b85d7c594a47ecc2537bce6857b94ae5920b6dfd56c93e",
+    "crates/vibe-facts/src/scan/declared/walk.rs": "ac6211d088b67ff8a58b1b5a2213be2d6e7d320ac94bac465a5b844659efcad8",
+    "crates/vibe-facts/src/scan/declared_capture.rs": "226609f96d6205f470d95fe3e2685d3a24fc9109aa7d06ff8279f2b30bd76610",
+    "crates/vibe-spec/src/resolver/source_policy_tests.rs": "403bae1e956040b5b111f8e79f65ce42a159ef90825692a8acb477ae7f91366c",
+    "crates/vibe-spec/src/source_policy.rs": "28a54902c12b3e22e93722d4065e1c2508edc83634d0f7310489a470666c2b90",
+    "crates/vibe-spec/src/source_policy/tests.rs": "c51aa1fd37689701dbb8cb5d00d9d22467e3594cb63f3fa5ef5dc383c8130066",
+    "crates/vibe-workspace/src/install/source_admission.rs": "306ac1becad4e4eabd7046a36be6cda0eec8f2c1bd6ac1d1510f6ca7d50e5689",
+    "crates/vibe-workspace/src/vibedeps/source_policy.rs": "5af82fae03ad25c4582b619e5f28e142986984f78fd7bbc5618fa7205aba1053",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml": "35f32393eff0596d6c698add75db2921541145367193e7e93df87a2f11d11a50",
+    "specmap.json": "3b9645d3551105f39e4dce72508e5fb689924ab039fb665d83f99174a6377774"
+  },
+  "clause_evidence": [
+    {
+      "clause": "Implement CommonMark headings/sections/fences/links through the selected parser boundary; inspect existing dependencies before any addition.",
+      "evidence": "One standard pulldown-cmark0.13.6 event/offset adapter; quote/list/item scoped sections, setext/UTF8/CRLF, fences, links/images and normalized visible titles;12adapter tests."
+    },
+    {
+      "clause": "Resolve durable manifest exports against exact section selectors and captured bytes.",
+      "evidence": "Strict SourceExport name/file/headings, package-unique names and presence; actual descriptor-selected facts observation joins same raw/document/witness; installed Mixed library resolution tested after real CLI install."
+    },
+    {
+      "clause": "Keep snapshot-local node IDs distinct from durable fact IDs; ordinary annotations/directives remain text.",
+      "evidence": "Document-local checked positional NodeId and borrowed section; host pairs existing SourceFileWitness. Ordinary syntax is data, no fact/directive/trust node; zero-fact adoption and raw-preserving failures."
+    },
+    {
+      "clause": "Keep inline-code spans as quoted text in both paragraph and table-cell fact scans; pin a real @fact:X plus repeated quoted marker regression and remove any stale docs-corpus quarantine only if still present.",
+      "evidence": "Existing native inline opacity retained; exact real authored ID X plus4quoted markers and zero scanner errors in current native frontend control. QUARANTINED and UNPARSABLE_PROJECTIONS lists already empty and untouched."
+    }
+  ],
+  "gates": {
+    "root_commonmark": 12,
+    "root_facts_lib": 31,
+    "root_cli": 14,
+    "core_exports": 3,
+    "captured_exports": 5,
+    "guards": {
+      "spec": 10,
+      "check": 3,
+      "doc": 3,
+      "cli": 15
+    },
+    "runnable_docs": 5,
+    "strict_clippy_conform_fmt": "pass; CLI67existing/no new findings",
+    "specmap": {
+      "units": 9138,
+      "tagged_items": 5484,
+      "edges": 4633,
+      "orphan": 0,
+      "unresolved_host": 0,
+      "existing_warnings": 44,
+      "all_old_unit_occurrences_retained": 9132
+    },
+    "wire_diff": "exit0; no watched schema/formats paths changed; authored TOML compatibility is separately tested and recorded in FMT028",
+    "codegen": "not applicable: no schema/generator/generated registration changed"
+  },
+  "dependency": {
+    "pulldown-cmark": "=0.13.6; default-features=false; ENABLE_TABLES only",
+    "new_lock_packages": [
+      "pulldown-cmark0.13.6",
+      "unicase2.10.0"
+    ],
+    "existing_version_changes": 0,
+    "source": "source-a23-decisions.md"
+  },
+  "corrections": [
+    "Two parser fixture REDs were wrong expectations: quoted lazy continuation and total native IR unit count versus authored ID count. Corrected against grammar/current native behavior, no native/parser weakening.",
+    "Three preexisting clone-to-singleton-slice Clippy lints in touched tests replaced with from_ref, no oracle change.",
+    "Root performed explicit nested selection scope and proper reqr1 requirement section, clarified ordinary versus normative parser law, then passed final map/runtime checks. A queued send_message did not restart a completed worker; root took idle lease rather than claim cleanup was running."
+  ],
+  "limits": [
+    "Library source-data/export consumer, not a new CLI/MCP/resource URI endpoint.",
+    "Minimal outline and exact source slices, not a complete HTML AST/standalone rendering guarantee.",
+    "Node indexes are local positions, not cross-document identity or durable fact IDs.",
+    "Ordinary invalid UTF8 keeps raw/zero facts; unavailable raw input retains A1 incomplete semantics.",
+    "A3 transformed/raw XML/installed boot and A4 broader consumers remain open; project source fields unchanged.",
+    "Linux runtime measured; no new native-platform/formal grammar/security certification claim."
+  ]
+}

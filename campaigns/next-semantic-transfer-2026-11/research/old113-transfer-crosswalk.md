@@ -2,7 +2,7 @@
 
 Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. G123 review uses accepted main `5d44c5104`; the later app scope review uses `c5662ee42`, and G2 is accepted in `bc49f1220`. Unaccepted candidates are excluded; source-only reviews do not imply runtime acceptance.
 
-**Current counting result:** 113 old accepted IDs verified: **10 full semantic transfers, 33 partial correspondences, 31 scopes with no accepted campaign delivery, 39 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least10are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **11 full semantic transfers, 32 partial correspondences, 31 scopes with no accepted campaign delivery, 39 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least11are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -286,3 +286,7 @@ Root verified32 pinned hashes and5 original contracts in [the foundation review]
 ## M06A1 accepted — 2026-11-06
 
 Original A1 is full in264b07466: [clause acceptance](m06-a1-transfer-acceptance.md). Root verified122committed files and real source migration/adoption/guard/materializer evidence. Counter rises from9to10full; A1 came from not-transferred, not partial. A2/A3/A4 and the complete source feature remain open.
+
+## M06A2 accepted — 2026-11-06
+
+Original A2 is full in626fcbd8d: [acceptance](m06-a2-transfer-acceptance.md). Pure ordinary structure and strict declarations are joined to a real captured Mixed source reader, preserving zero facts and native inline opacity. Library resolution is delivered; new CLI/resource transport and A3/A4 are not inferred. Counts11full/32partial/31not-transferred/39unknown.

@@ -1,0 +1,575 @@
+{
+  "state": "read-only source audit; no runtime claims or implementation authorization",
+  "prototype_revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "main_revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+  "source_hashes": [
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-06-A.json",
+      "sha256": "0bae32aa41bd306c4d4596ac9faa70f1ea9f6e5c76b947fa93ae6f9cf97d752e",
+      "bytes": 40528
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "Cargo.toml",
+      "sha256": "88e6751d862f8fec06ddda2a4c4627e92a5812eed36304432a80070d83aceda4",
+      "bytes": 15174
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-specdoc/Cargo.toml",
+      "sha256": "dcc92651d19bc8fefaf0d899c9939bc9c0de9d07edc8a9a42a3c282c93370b44",
+      "bytes": 1026
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-specdoc/src/lib.rs",
+      "sha256": "0764269002b8ec14a96301c0d015e963cb096abc024c7d87acdf3f5b82e3392e",
+      "bytes": 7224
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-specdoc/src/commonmark.rs",
+      "sha256": "f6b19557d0e4a3f2497a98ccfc47d56238f695c6a11a3f166e9cfba0f526de3e",
+      "bytes": 10150
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-specdoc/src/commonmark/export.rs",
+      "sha256": "60bd72b6651c7259d21521ac058c6c552ba88c4dacbbf255dc30a19d81e2b776",
+      "bytes": 3001
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-specdoc/src/commonmark/tests.rs",
+      "sha256": "33aa5608eb1b36d226f72a20cf80552b82059eb6240cc10f0894d8cb22bf3ef5",
+      "bytes": 5817
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-specdoc/src/xml_data.rs",
+      "sha256": "c9340cecd7c2c166fc1990363999b20a96ccb605bdb2f69cc2ce9216ade7e56e",
+      "bytes": 8114
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-specdoc/src/xml_data/tests.rs",
+      "sha256": "2231af971f6f29acb36b7643cf967f03ce9e896a23f37e8c00196eae722d1f44",
+      "bytes": 4239
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-specdoc/src/captured.rs",
+      "sha256": "f4eefd76877a0efff4e820467c0408f58a9a12a449bac1c5c956e1c9821c8047",
+      "bytes": 5051
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-core/src/manifest/package/source_export.rs",
+      "sha256": "107dc5dac91094687058c847349e81b75ce93b699bea5b72a54192ccb558a7fc",
+      "bytes": 2753
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-facts/src/scan/declared/export.rs",
+      "sha256": "859135e4afee1624b790caa6dbe8892c56850067af245c173bd1dac7d8f46b01",
+      "bytes": 4083
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-facts/src/scan/declared/export/tests.rs",
+      "sha256": "7ebe5893003615fb21acd1e776170e494ccc50c1e1f9012119761f8e4fd1c190",
+      "bytes": 4082
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/vibedeps/derived/selection.rs",
+      "sha256": "da9431e699fdb45be5d57fe0a8fdffc78a4ab14736f19fe23b12bfa5c63891cf",
+      "bytes": 12016
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/vibedeps/derived/transform.rs",
+      "sha256": "c0df243afc39efc6f711ce03d078a6b2d398dcf61cd71e1c70c4373663e9c5b6",
+      "bytes": 13380
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+      "sha256": "f1a3d3fae53b22d3e642650a3e5ffcbe391451e9d75f0cf6a1ed8b87f909f0ac",
+      "bytes": 14642
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-spec/src/resolver.rs",
+      "sha256": "5b8b6a74fb3e02c158a0591e623b18acf42b7cf6ea2668072f25487259404534",
+      "bytes": 25418
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-spec/src/resolver/source_map.rs",
+      "sha256": "f7ede8b6bdc5b43cb0a3dd211b9e8d5523dbe6294afa330d59f847398da50527",
+      "bytes": 9849
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-spec/src/resolver/resource.rs",
+      "sha256": "54887819d9f372d4813f2809bc8af2106736a8707b6bafe1fed7ad43e2a175ea",
+      "bytes": 8894
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "Cargo.toml",
+      "sha256": "6b9afd8ac74fb3759cad77e327dd90ea1d111f7a60871426efcc7a2bfa75ea24",
+      "bytes": 15385
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "Cargo.lock",
+      "sha256": "efe1d16cc0dbd3e9b5a682201c1ffcc86c9e00736d365a9935eb53e467a26f4b",
+      "bytes": 146885
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-specdoc/Cargo.toml",
+      "sha256": "92998a5947bd3b6cc20f20e35d47e528151406495d0e4471471b7c3d15bd6091",
+      "bytes": 878
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-specdoc/src/md_in.rs",
+      "sha256": "41a300b48af328c77587f14b8f5d9a4ab728b03c25c2b5cf95e9dab0998c25db",
+      "bytes": 23889
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-specdoc/src/md_in/map.rs",
+      "sha256": "e8c231a037bb50fa25eeca23090a41c89621154019f4199fd20db6d285674739",
+      "bytes": 3570
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-specdoc/src/xml_in.rs",
+      "sha256": "675f6fd2bd7141704d230bba33dd5deb3812c77b4800b1eed2c7df8c05572148",
+      "bytes": 13410
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-specdoc/src/load.rs",
+      "sha256": "814e2be930dbecf36bce70ecbe48b8de9aeecbd02ba800c5ddc755537701c728",
+      "bytes": 15797
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-specdoc/tests/docs_corpus.rs",
+      "sha256": "c646caf94bc8db8d9f0bc2ddcc1622ab4c854db41e5b460c7d905c98008fa093",
+      "bytes": 22231
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/progress-core/src/parse/blocks.rs",
+      "sha256": "c845ce1bbebe282531d1a2d801093772b9e51d67ffe178dc4aff0df01d83b842",
+      "bytes": 15332
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/progress-core/src/parse/delimiters.rs",
+      "sha256": "29c589babb8d5af439412541e7d05060cf73dba2a829b5872ccf1829d1b66f71",
+      "bytes": 13109
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/progress-core/src/parse/anchors.rs",
+      "sha256": "91420ebc5ef5ee4340504a3ba014e8d63b7bfb2f2d4fe6fe8ad36b6b760013e0",
+      "bytes": 5362
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/progress-core/src/parse/mod.rs",
+      "sha256": "a8e703541b1d47e315f9c46e8982700df9d85674b52bef8a4605fc007096f8cf",
+      "bytes": 17932
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-core/src/manifest/source_descriptor/mod.rs",
+      "sha256": "65e1ccbf7a240b5c571da1166c520eba3027a188567267a9922dbf976bfa10af",
+      "bytes": 10760
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-core/src/manifest/package/meta.rs",
+      "sha256": "a6755b7133f613a775ca7ee812420bfa42a0718cff9d9d035fa9344c9b01b313",
+      "bytes": 7211
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-core/src/manifest/package/wire.rs",
+      "sha256": "e8e84d974da9ca69ca5948f75785b30d3bf83e7e4634a7269de6e7e3077ec617",
+      "bytes": 8962
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-spec/src/doctree.rs",
+      "sha256": "669fb65277757ba7ee5861028ee5b654584ed5d14b9ec0302394a104f2e6d1a7",
+      "bytes": 19930
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-spec/src/source_policy.rs",
+      "sha256": "f35c2f273f81688cc3a6d549734223fc13227febf62bee2973c5a65027659a8e",
+      "bytes": 14793
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-spec/src/resolver/observation.rs",
+      "sha256": "c67d64ad56718ed4d1404d758455cc8490be2a0cbb8d8ba6ff8bb2c37e6e2d30",
+      "bytes": 14695
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-facts/src/scan/declared.rs",
+      "sha256": "992e27ee789376f35c4ef89ffd8bcb575dbb9c5ebcde31ac5c4a5248b655cfb9",
+      "bytes": 7769
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-facts/src/scan/declared/walk.rs",
+      "sha256": "94d1894d081296e47972b933b738a17807a86f892c4bfcddb4d256b5aa25d651",
+      "bytes": 6075
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-workspace/src/vibedeps/source_policy.rs",
+      "sha256": "2e374d77373a86bc58e26f0c88ff6990165a117f03ccc385e65c096359e197d1",
+      "bytes": 8525
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "sha256": "f4f18eb81808a27193d616d1cae5796c8db37c70cae8433f3ce303b4b39b5ec4",
+      "bytes": 19197
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-workspace/src/vibedeps/derived/materialise.rs",
+      "sha256": "491b40242834d180ad61d891d01d822bdeefb00d6b3e852ff20d6d1e81031e52",
+      "bytes": 4872
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+      "sha256": "b7c700e99828d57d96b73449b6c135ae8cf619e3bfc9cc71f81d3c0371ad4828",
+      "bytes": 18290
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff/placement.rs",
+      "sha256": "8cf25bcdb686c7bffb8116370ce5a6b16c507c4e6fd922b33afe2d4e8524ff16",
+      "bytes": 8822
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff/plan.rs",
+      "sha256": "058b63b44ffb111a4efd50aebce18589b6aafe76fb6e5be6dbdebe27d57fa95a",
+      "bytes": 4794
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
+      "sha256": "f0b7dcee623b37371c85304a1bbfcda63cefd9b3a73cd9c6d0b435c2986851a9",
+      "bytes": 24474
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+      "sha256": "cf0a588b940a373aac64fdc7a813df8a42eee0bd8b0726a2c94f756279e89e1a",
+      "bytes": 7584
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "sha256": "bb96251e6f67d2893850aac097782bae548c6f30dfbbcc58bd7afafff3cbc064",
+      "bytes": 14356
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs",
+      "sha256": "ba55bbbb8a3381609358f06a6e47a6a42373996ce8e858185b3429e423b34094",
+      "bytes": 18277
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/source-foundation-decisions.md",
+      "sha256": "eb3d56b9dc956ee41ecfc0f49866f5975876cca8a8bdb71607aa6250da7a2386",
+      "bytes": 4993
+    },
+    {
+      "side": "main",
+      "revision": "264b0746684bdf4aec0b5d7d09595d79f70287df",
+      "path": "campaigns/next-semantic-transfer-2026-11/architecture/map.json",
+      "sha256": "04cb37c8435b0d9be3bf92395825b429c86dd723f9fd5b349dc5a5cd8086a3dd",
+      "bytes": 1047218
+    }
+  ],
+  "original_tasks": [
+    {
+      "id": "M-06-A.2",
+      "title": "Implement structural ordinary Markdown",
+      "goal": "Make ordinary Markdown navigable while preserving literal Vibe syntax.",
+      "read_paths": [
+        "crates/vibe-specdoc/src/load.rs",
+        "crates/vibe-spec/src/doctree.rs",
+        "Cargo.toml",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/progress-core/src/parse/blocks.rs",
+        "crates/vibe-specdoc/tests/docs_corpus.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+        "crates/vibe-specdoc/src/",
+        "crates/vibe-specdoc/Cargo.toml",
+        "Cargo.toml",
+        "Cargo.lock",
+        "crates/vibe-core/src/manifest/package/",
+        "crates/vibe-core/src/manifest/mod.rs",
+        "crates/vibe-facts/src/scan/declared.rs",
+        "crates/vibe-facts/src/scan/declared/",
+        "crates/vibe-facts/src/scan.rs",
+        "crates/vibe-facts/src/lib.rs",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/progress-core/src/parse/",
+        "crates/vibe-specdoc/tests/docs_corpus.rs",
+        "vibevm/vibespecs/modules/vibe-facts/PROP-043-facts-markup.xml"
+      ],
+      "steps": [
+        "Implement CommonMark headings/sections/fences/links through the selected parser boundary; inspect existing dependencies before any addition.",
+        "Resolve durable manifest exports against exact section selectors and captured bytes.",
+        "Keep snapshot-local node IDs distinct from durable fact IDs; ordinary annotations/directives remain text.",
+        "Keep inline-code spans as quoted text in both paragraph and table-cell fact scans; pin a real @fact:X plus repeated quoted marker regression and remove any stale docs-corpus quarantine only if still present."
+      ],
+      "positive_cases": [
+        "Nested fences and headings produce stable same-snapshot sections.",
+        "Literal @requires/#use text is retained without fact/directive effects.",
+        "Real @fact:X with identical inline-code quotes in paragraph and table cell passes without DuplicateId; existing current scanner behavior remains pinned."
+      ],
+      "negative_cases": [
+        "Duplicate heading without unique export is ambiguous.",
+        "A malformed section selector cannot silently choose a heading."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-specdoc target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-specdoc <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Structural view and raw content point to the same captured document.",
+        "No CommonMark node acquires normative Vibe fact authority."
+      ],
+      "safe_stop": "Raw Markdown remains readable if a requested export cannot resolve.",
+      "commit_subject": "feat(specdoc): add ordinary Markdown structure",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-072-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_06_a_2_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "Any new parser dependency is an implementation decision within the listed manifests; do not claim a library is already installed.",
+        "Permanent PROP-072 SOURCE-EXPORT-SELECTOR now fixes the conservative export grammar: package-unique name, exact file and root-to-section headings array. The vibe-core manifest owner parses authored rows; vibe-specdoc resolves only the pure captured-byte view, keeping snapshot NodeId separate from durable export identity. These two owners do not require a dependency cycle or an ambient filesystem read.",
+        "The existing descriptor-selected vibe-facts read seam is the host join for ordinary CommonMark. It may retain a structural observation and resolve a package source export from that same witnessed byte snapshot, but must never mint Vibe facts or claim directory census completeness from a supplied-file inventory.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    },
+    {
+      "id": "M-06-A.3",
+      "title": "Preserve XML-data and opaque resources",
+      "goal": "Keep data bytes and logical resources distinct from Vibe XML conversion.",
+      "read_paths": [
+        "crates/vibe-specdoc/src/load.rs",
+        "crates/vibe-specdoc/src/xml_in.rs",
+        "crates/vibe-spec/src/resolver/lookup.rs",
+        "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/vibedeps.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs"
+      ],
+      "write_paths": [
+        "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+        "crates/vibe-specdoc/src/",
+        "crates/vibe-workspace/src/vibedeps/derived.rs",
+        "crates/vibe-workspace/src/vibedeps/derived/",
+        "crates/vibe-workspace/src/vibedeps/tests_transformed.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_diff/",
+        "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+        "crates/vibe-workspace/src/vibedeps/slot_record/",
+        "crates/vibe-workspace/src/boot_artifacts.rs",
+        "crates/vibe-workspace/src/boot_artifacts/",
+        "crates/vibe-workspace/src/install/bootgen.rs",
+        "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
+        "crates/vibe-workspace/src/install/bootgen/hybrid_emit/",
+        "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+        "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+        "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs",
+        "crates/vibe-workspace/src/install/bootgen/replay_prepare/",
+        "crates/vibe-spec/src/resolver/",
+        "crates/vibe-spec/tests/resolve.rs",
+        "crates/vibe-specdoc/Cargo.toml",
+        "crates/vibe-specdoc/src/lib.rs",
+        "crates/vibe-workspace/Cargo.toml",
+        "crates/vibe-workspace/src/lib.rs",
+        "crates/vibe-workspace/src/vibedeps.rs",
+        "crates/vibe-spec/Cargo.toml",
+        "crates/vibe-spec/src/lib.rs",
+        "crates/vibe-spec/src/resolver.rs"
+      ],
+      "steps": [
+        "Add XML-data/raw and opaque handling with encoding/comments/whitespace preserved.",
+        "Allow safe optional XML tree inspection without external entities or network; invalid data stays raw retrievable.",
+        "Change pair/collision enumeration to compare declared logical resource identities instead of same filename stem alone."
+      ],
+      "positive_cases": [
+        "Same-stem ordinary Markdown and XML-data coexist.",
+        "Non-UTF8 or intentionally invalid XML fixture keeps exact raw bytes."
+      ],
+      "negative_cases": [
+        "Spec-format conversion cannot normalize ordinary XML-data.",
+        "External entity loading and ambiguous declared representations refuse."
+      ],
+      "checks": [
+        "SELECT BEFORE DISPATCH: vibe-specdoc target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-specdoc <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+        "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+        "cargo fmt --all -- --check",
+        "git diff --check"
+      ],
+      "acceptance": [
+        "Install/derive/read round-trips preserve data bytes exactly.",
+        "Optional structure failure does not invalidate unrelated facts."
+      ],
+      "safe_stop": "Expose raw resource with structured-view diagnostics; no guessed conversion.",
+      "commit_subject": "feat(specdoc): preserve plain XML and opaque resources",
+      "notes": [
+        "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+        "Permanent destination: vibevm/vibespecs/common/PROP-072-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+        "TO CREATE: m_06_a_3_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+        "PROP-072 SOURCE-REPRESENTATION-COLLISION separates original source identity, output path and Vibe document address. The transformed-slot test owner is included for exact raw-byte and collision cases. Descriptor packages select before conversion; unclassified legacy paths retain only their bounded compatibility route. Resolver adoption needs a validated output-to-source witness map, not a new suffix guess.",
+        "Cross-platform filename aliases use the owner's weaker cooperative contract: detect provable exact/case aliases, refuse observed no-replace target collisions and carry an explicit warning where Unicode normalization cannot be proved. Do not blanket-ban non-ASCII paths or block convenient Linux use solely for an unavailable stronger guarantee.",
+        "The incumbent slot writer uses replacing TempPath::persist and removes hardlink destinations. Descriptor-owned materialization therefore needs a strict new-path no-replace policy in slot_diff before derived conversion can publish without overwriting an unrecognized target alias; legacy slot updates retain their existing behavior.",
+        "For the first installed-slot reader, build a validated output-to-source/interpretation map from the retained SlotRecord plus a pinned installed manifest and output-byte checks, then inject it into the workspace boot FileResolver constructors. The current record proves output SHA and package source_hash but not each transformed original file's SHA; do not claim stronger original-byte proof. Lifecycle-agent and vibe-doc citation consumers remain explicitly due at A.4 rather than silently inheriting a suffix lookup.",
+        "The validated slot record must be parsed from the same bounded no-follow bytes captured by the descriptor map builder. A narrow `slot_record` byte-reader extraction is in scope; do not duplicate its schema/semantic validator or change the slot-record wire format merely for this host join.",
+        "The install-only boot renderer must carry exact selected slot version/source_hash/spec_format from ResolvedDep through bootgen/hybrid_emit into a descriptor-map-aware FileResolver. A descriptor-owned row with absent selected source_hash refuses; deriving the expected hash from the slot record itself is circular. Public standalone legacy rendering remains unchanged until it has an independent selected witness.",
+        "A focused test under the hybrid emitter's bounded sibling module must traverse the actual `emit_package_units` selected-slot carrier rather than only calling the descriptor-aware static renderer directly; pin the absent-hash refusal and no-descriptor byte-compatible route.",
+        "Native-managed, explicit custom backend and sealed replay boot readers also receive selected witnesses from their install owners: resolution is available at native_managed/hybrid_emit, and analyze has independent lock-derived resolution. Thread exact witness sets without inferring from slot metadata; replay candidates lacking a selected hash refuse descriptor-owned reads. The native_managed and analyze files are included for these carrier edges; standalone public render remains legacy until independently bound.",
+        "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+        "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+      ]
+    }
+  ],
+  "dependency_order": [
+    "A1 accepted: typed descriptor selection + held captures",
+    "A2 minimal pure CommonMark structure/section interface and export-presence owner",
+    "A2 real declared-export reader join; independently A3 raw XML/opaque inspector",
+    "A3 descriptor-selected conversion and collision/no-replace preflight",
+    "A3 selected installed-output map + actual boot carriers/read roundtrip",
+    "A4 broad remaining consumers remain separate"
+  ],
+  "nonzero_read_attempts": [
+    {
+      "path": "crates/vibe-spec/src/resolver/descriptor.rs",
+      "side": "prototype",
+      "result": "absent; actual owner source_map.rs located from resolver registration"
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/derived/transform.rs",
+      "side": "main",
+      "result": "absent; current transform owner remains derived.rs and derived/materialise.rs"
+    },
+    {
+      "path": "crates/vibe-specdoc/src/selection.rs",
+      "side": "main",
+      "result": "absent; final prototype selection/captured modules are later work, not incumbent main"
+    }
+  ],
+  "verification": "No Cargo/build/test/network command. Hashes bind source, not runtime acceptance.",
+  "recommendations": {
+    "commonmark": "One reviewed pulldown-cmark =0.13.4 ordinary grammar adapter; main native Vibe parsers unchanged",
+    "exports": "Option presence owner shared with sources; actual declared captured facts reader join; specdoc resolves headings only, core owns export grammar, facts owns byte witness",
+    "xml_data": "Existing quick-xml nonresolving optional root/count/depth summary with explicit inspection budget; raw retrieval remains uncapped by structural budget",
+    "a3_closure": "Descriptor-selected materializer + logical collision/no-replace + independently selected held installed reader + actual boot carrier roundtrip",
+    "scope_exclusions": [
+      "M16 captured document server/query transport",
+      "new universal source world or permission framework",
+      "A4 remaining consumers/project.sources",
+      "later CopiedUnconverted conversion-failure wire machinery"
+    ]
+  },
+  "report_sha256": "d2571f5c6d3e4d2eac36a2e78744d96275010be1ddadade61d4f1b582b11e23f",
+  "root_review": {
+    "status": "architecture audit accepted; implementation not accepted",
+    "verified_bindings": 51,
+    "verified_original_tasks": 2,
+    "decisions": "source-a23-decisions.md",
+    "dependency_override": "target pulldown-cmark0.13.6 rather than prototype0.13.4 after upstream patch review",
+    "full_task_promotions": 0
+  }
+}
