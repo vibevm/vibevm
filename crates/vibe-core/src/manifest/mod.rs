@@ -101,8 +101,8 @@ pub use package::{
     LinkType, MCP_ARG_VARS, Materialization, McpServerDecl, MediaDecl, NavigationChapterDecl,
     NavigationDecl, NavigationSectionDecl, Obsoletes, OverrideEntry, OverrideTable, OverrideTarget,
     PackageFormat, PackageMeta, PathPackageDep, Provides, PublishPosture, Recommends, Requires,
-    RequiresAny, SkillDecl, SkillResourceDecl, Suggests, TargetOs, TranslatesDecl, VarRegistryDep,
-    VisibilityMeta, WhenCondition,
+    RequiresAny, SkillDecl, SkillResourceDecl, SourceExport, Suggests, TargetOs, TranslatesDecl,
+    VarRegistryDep, VisibilityMeta, WhenCondition,
 };
 pub use project::{
     ActiveSection, AuthKind, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,

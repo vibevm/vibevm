@@ -266,10 +266,15 @@ impl PolicyState {
     fn mode(&self) -> PackageSourceMode {
         match self.manifest.as_ref() {
             None => PackageSourceMode::MissingManifest,
-            Some(manifest) => match manifest.package.as_ref().and_then(|p| p.sources.as_ref()) {
-                None => PackageSourceMode::Legacy,
-                Some(rows) if rows.is_empty() => PackageSourceMode::ExplicitEmpty,
-                Some(_) => PackageSourceMode::Explicit,
+            Some(manifest) => match manifest.package.as_ref() {
+                Some(package) if package.has_explicit_source_policy() => {
+                    if package.sources.as_deref().unwrap_or(&[]).is_empty() {
+                        PackageSourceMode::ExplicitEmpty
+                    } else {
+                        PackageSourceMode::Explicit
+                    }
+                }
+                _ => PackageSourceMode::Legacy,
             },
         }
     }
@@ -280,7 +285,10 @@ impl PolicyState {
         self.manifest.as_ref()?.package.as_ref()
     }
     pub fn package_sources(&self) -> Option<&[SourceDescriptor]> {
-        self.package()?.sources.as_deref()
+        let package = self.package()?;
+        package
+            .has_explicit_source_policy()
+            .then(|| package.sources.as_deref().unwrap_or(&[]))
     }
     pub fn manifest_bytes(&self) -> Option<&[u8]> {
         self.bytes.as_deref()

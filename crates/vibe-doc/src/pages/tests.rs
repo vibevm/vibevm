@@ -8,6 +8,11 @@ use super::{PageSet, read_package};
 fn source_policy_empty_has_no_pages_and_explicit_or_invalid_refuses_raw_xml() {
     for (suffix, empty) in [
         ("sources=[]\n", true),
+        ("source_exports=[]\n", true),
+        (
+            "[[package.source_exports]]\nname='intro'\nfile='guide.md'\nheadings=['Guide']\n",
+            true,
+        ),
         ("sources='invalid'\n", false),
         (
             "[[package.sources]]\nfile='vibevm/vibespecs/raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",

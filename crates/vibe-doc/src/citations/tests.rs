@@ -330,6 +330,7 @@ impl RuleText {
 fn source_policy_self_citation_refuses_unadmitted_raw_page() {
     for suffix in [
         "sources=[]\n",
+        "source_exports=[]\n",
         "sources='invalid'\n",
         "[[package.sources]]\nfile='vibevm/vibespecs/raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
     ] {

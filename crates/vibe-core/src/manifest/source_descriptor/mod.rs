@@ -222,7 +222,7 @@ fn valid_media(media: &str) -> bool {
         })
 }
 
-fn valid_source_path(path: &str) -> Result<(), String> {
+pub(in crate::manifest) fn valid_source_path(path: &str) -> Result<(), String> {
     declarant_path(Path::new(path))
         .map_err(|fault| format!("source path `{path}`: {}", fault.reason()))?;
     if layout::is_reserved_boot_source(Path::new(path)) {

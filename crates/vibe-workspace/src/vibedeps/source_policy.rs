@@ -82,7 +82,7 @@ impl SourcePolicy {
             manifest
                 .package
                 .as_ref()
-                .is_some_and(|package| package.sources.is_some())
+                .is_some_and(|package| package.has_explicit_source_policy())
         };
         if let Some(known) = known
             && (declared(known) || observed.manifest().is_some_and(declared))

@@ -45,6 +45,19 @@ pub struct DeclaredReadProvenance {
     pub reader: Option<&'static str>,
 }
 
+/// An optional ordinary view may fail without losing raw bytes or native facts.
+/// ```
+/// use vibe_facts::OrdinaryStructureError;
+/// assert_eq!(OrdinaryStructureError::InvalidUtf8, OrdinaryStructureError::InvalidUtf8);
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum OrdinaryStructureError {
+    InvalidUtf8,
+}
+
+mod export;
+pub use export::{DeclaredExportError, DeclaredExportResolution, resolve_declared_export};
+
 /// One classified read. Raw/unsupported results retain the exact supplied
 /// bytes; neither they nor ambiguous/unclassified reads manufacture facts.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -63,6 +76,12 @@ pub enum DeclaredDocumentObservation<'a> {
     Raw {
         provenance: DeclaredReadProvenance,
         bytes: &'a [u8],
+    },
+    /// Structure is optional; both outcomes retain the same original bytes.
+    OrdinaryMarkdown {
+        provenance: DeclaredReadProvenance,
+        bytes: &'a [u8],
+        structure: Result<vibe_specdoc::commonmark::CommonMarkDoc, OrdinaryStructureError>,
     },
     Unsupported {
         provenance: DeclaredReadProvenance,
@@ -149,9 +168,20 @@ pub fn observe_declared_document<'a>(
         });
     }
     match interpretation {
-        SourceInterpretation::Opaque
-        | SourceInterpretation::XmlData
-        | SourceInterpretation::Commonmark => {
+        SourceInterpretation::Commonmark => {
+            let structure = std::str::from_utf8(raw)
+                .map(vibe_specdoc::commonmark::CommonMarkDoc::parse)
+                .map_err(|_| OrdinaryStructureError::InvalidUtf8);
+            if structure.is_ok() {
+                provenance.reader = Some("vibe-specdoc:commonmark");
+            }
+            return Ok(DeclaredDocumentObservation::OrdinaryMarkdown {
+                provenance,
+                bytes: raw,
+                structure,
+            });
+        }
+        SourceInterpretation::Opaque | SourceInterpretation::XmlData => {
             return Ok(DeclaredDocumentObservation::Raw {
                 provenance,
                 bytes: raw,

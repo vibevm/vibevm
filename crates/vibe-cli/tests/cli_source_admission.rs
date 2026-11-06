@@ -30,6 +30,7 @@ fn inventory(root: &Path) -> BTreeMap<PathBuf, Option<Vec<u8>>> {
 fn declared_install_refuses_before_requested_metadata_and_lifecycle_effects() {
     for (target, boot, sources) in [
         ("xml", false, "sources=[]\n"),
+        ("xml", false, "source_exports=[]\n"),
         ("mixed", true, "sources=[]\n"),
         (
             "mixed",

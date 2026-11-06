@@ -67,7 +67,12 @@ fn run(targets: Vec<ConversionTarget>) -> anyhow::Result<()> {
 
 #[test]
 fn source_policy_direct_file_cannot_bypass_enclosing_opt_in_or_invalid_policy() {
-    for suffix in ["sources=[]\n", RAW, "sources='invalid'\n"] {
+    for suffix in [
+        "sources=[]\n",
+        "source_exports=[]\n",
+        RAW,
+        "sources='invalid'\n",
+    ] {
         let tmp = tempfile::tempdir().unwrap();
         fs::write(tmp.path().join("vibe.toml"), format!("{MANIFEST}{suffix}")).unwrap();
         let source = tmp.path().join("nested/source.md");

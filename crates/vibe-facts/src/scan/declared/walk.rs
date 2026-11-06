@@ -52,10 +52,10 @@ pub struct DeclaredTreeObservation<'a> {
 /// Exact declared paths for the current bounded reader; directory enumeration
 /// needs a separate captured census and is not guessed from supplied entries.
 pub fn exact_declared_files(package: &PackageMeta) -> Result<Vec<String>, DeclaredWalkError> {
-    let rows = package
-        .sources
-        .as_ref()
-        .ok_or(DeclaredWalkError::UndeclaredPackage)?;
+    if !package.has_explicit_source_policy() {
+        return Err(DeclaredWalkError::UndeclaredPackage);
+    }
+    let rows = package.sources.as_deref().unwrap_or(&[]);
     let mut paths = BTreeSet::new();
     for row in rows {
         match row.selector() {
@@ -109,7 +109,7 @@ pub fn observe_declared_source<'a>(
     // A supplied inventory does not prove that every descendant of a declared
     // directory was supplied. Until the host carries a separate census proof,
     // even successfully parsed descendants are only a partial observation.
-    let mut complete = package.sources.is_some()
+    let mut complete = package.has_explicit_source_policy()
         && !package
             .sources
             .as_deref()
@@ -134,6 +134,7 @@ pub fn observe_declared_source<'a>(
         } else if !matches!(
             &observed,
             DeclaredDocumentObservation::Raw { .. }
+                | DeclaredDocumentObservation::OrdinaryMarkdown { .. }
                 | DeclaredDocumentObservation::Unclassified { .. }
         ) {
             complete = false;

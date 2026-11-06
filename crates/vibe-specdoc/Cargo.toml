@@ -17,8 +17,10 @@ specmark = { workspace = true }
 # escaping — one new workspace dependency, pinned here. MIT.
 quick-xml.workspace = true
 # The Markdown frontend is an ADAPTER over progress-core's own scanner
-# (PROP-045 ##PIVOT-MODEL): this crate never parses Markdown itself.
+# (PROP-045 ##PIVOT-MODEL); ordinary CommonMark has a separate data adapter.
 progress-core.workspace = true
+# Pure ordinary grammar; no HTML renderer, URL resolver, or native Vibe scanner.
+pulldown-cmark.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

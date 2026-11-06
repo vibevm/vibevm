@@ -19743,6 +19743,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_facts_declared.rs",
+      "item_kind": "fn",
+      "line": 383,
+      "symbol": "vibe_cli::tests::cli_facts_declared::actual_mixed_installed_captured_ordinary_export_resolves_without_native_facts",
+      "end_line": 464,
+      "fingerprint": "tok1:6192a4453476a65a48e95205910a67e5cb076f1e49db85cc613303e3475fc6b3"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_generated_slot_lanes.rs",
       "item_kind": "fn",
       "line": 65,
@@ -20368,8 +20377,8 @@
       "item_kind": "fn",
       "line": 26,
       "symbol": "vibe_cli::tests::cli_source_admission::declared_install_refuses_before_requested_metadata_and_lifecycle_effects",
-      "end_line": 124,
-      "fingerprint": "tok1:737a9bf497ae25f34f30c5de5af8d63139a2bc2172e4d552c0b38441b93bd8ae"
+      "end_line": 125,
+      "fingerprint": "tok1:845eeeb3ed39b932ef70fcd77c3b2516fef708361e5f4ed80cb0fbdc25c1a721"
     },
     {
       "crate_name": "vibe-cli",
@@ -23336,9 +23345,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package.rs",
       "item_kind": "enum",
-      "line": 246,
+      "line": 248,
       "symbol": "vibe_core::manifest::package::Materialization",
-      "end_line": 294,
+      "end_line": 296,
       "fingerprint": "tok1:65c877351cb20d9e0003f1d107267a7129b6ac1a44c706c1c1024ba849765ec8"
     },
     {
@@ -23982,6 +23991,15 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/meta.rs",
+      "item_kind": "fn",
+      "line": 140,
+      "symbol": "vibe_core::manifest::package::meta::PackageMeta::has_explicit_source_policy",
+      "end_line": 153,
+      "fingerprint": "tok1:0bfd6086239fcc29eec1c7e765fbb10e39220de95d0ffd1260a4b82d76336353"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/skill.rs",
       "item_kind": "mod",
       "line": 14,
@@ -23991,11 +24009,20 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/source_export.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::package::source_export",
+      "end_line": 2,
+      "fingerprint": "tok1:8f6955adc13b90a263d1c2b4e11fcfb3b63c3752cc7bcf78ccd6bc111b7567f1"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/tests.rs",
       "item_kind": "fn",
-      "line": 109,
+      "line": 110,
       "symbol": "vibe_core::manifest::package::tests::package_format_parses_and_defaults_to_simple",
-      "end_line": 139,
+      "end_line": 140,
       "fingerprint": "tok1:6e3590b3dcd83b043c92e1c32fefafd7b2235e2da6927d88e5269b539b96bd24"
     },
     {
@@ -27206,9 +27233,9 @@
       "crate_name": "vibe-facts",
       "file": "crates/vibe-facts/src/lib.rs",
       "item_kind": "enum",
-      "line": 332,
+      "line": 333,
       "symbol": "vibe_facts::RegistryError",
-      "end_line": 448,
+      "end_line": 449,
       "fingerprint": "tok1:74dd00e581ea0a3f2fc220b0ee07bd3e012032603ba52bdc845904aa53efdd4c"
     },
     {
@@ -27255,6 +27282,15 @@
       "symbol": "vibe_facts::scan::declared",
       "end_line": 7,
       "fingerprint": "tok1:6dbdbabc0d532b1506ab534b3a9d84601992faec1909b5f29569c26a67c64b21"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/scan/declared/export.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_facts::scan::declared::export",
+      "end_line": 2,
+      "fingerprint": "tok1:c510f837a1575b87bb9125f603a0c4b5310231005ff4042492547c02ffedb833"
     },
     {
       "crate_name": "vibe-facts",
@@ -44927,9 +44963,9 @@
       "crate_name": "vibe-specdoc",
       "file": "crates/vibe-specdoc/src/lib.rs",
       "item_kind": "mod",
-      "line": 77,
+      "line": 78,
       "symbol": "vibe_specdoc",
-      "end_line": 77,
+      "end_line": 78,
       "fingerprint": "tok1:135ae76f09bee1d7e20f64f0c9ff24fc142f233d0e9b5a5597313065d352bf9f"
     },
     {
@@ -44949,6 +44985,42 @@
       "symbol": "vibe_specdoc::annotated::tests::paragraph_boundaries_preserve_exact_semantics_without_inserting_whitespace",
       "end_line": 49,
       "fingerprint": "tok1:e4b2b1696d6903f8ac6e1cdc3f3b7ff67894361a098955bb6b73937cf4f09204"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/commonmark.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_specdoc::commonmark",
+      "end_line": 6,
+      "fingerprint": "tok1:88a948fbb309b8b724d821858b8c075a282dc3e78e839f9374f3abc2bae7bfc4"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/commonmark.rs",
+      "item_kind": "fn",
+      "line": 86,
+      "symbol": "vibe_specdoc::commonmark::CommonMarkDoc::parse",
+      "end_line": 94,
+      "fingerprint": "tok1:1618a4e7992b8e4dfeab4166f835fbfd35625cf6380d01ef4570b49a11952b5a"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/commonmark/selection.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_specdoc::commonmark::selection",
+      "end_line": 2,
+      "fingerprint": "tok1:88a948fbb309b8b724d821858b8c075a282dc3e78e839f9374f3abc2bae7bfc4"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/commonmark/tests.rs",
+      "item_kind": "fn",
+      "line": 15,
+      "symbol": "vibe_specdoc::commonmark::tests::exact_sections_nested_fence_and_links_are_from_original_bytes",
+      "end_line": 51,
+      "fingerprint": "tok1:655d3677b9245b5bbb34557041239d219f2dcd8786904d9d53574e7d88a22834"
     },
     {
       "crate_name": "vibe-specdoc",
@@ -59549,6 +59621,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_facts_declared.rs",
+      "from_symbol": "vibe_cli::tests::cli_facts_declared::actual_mixed_installed_captured_ordinary_export_resolves_without_native_facts",
+      "line": 384,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-RESOLUTION",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_generated_slot_lanes.rs",
       "from_symbol": "vibe_cli::tests::cli_generated_slot_lanes::install_check_repeat_and_lock_reread_preserve_source_members_and_authored_fragments",
       "line": 66,
@@ -62882,7 +62962,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package.rs",
       "from_symbol": "vibe_core::manifest::package::Materialization",
-      "line": 274,
+      "line": 276,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#modes",
       "verb": "implements",
@@ -63465,6 +63545,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/manifest/package/meta.rs",
+      "from_symbol": "vibe_core::manifest::package::meta::PackageMeta::has_explicit_source_policy",
+      "line": 148,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-PACKAGE-OPT-IN",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-core/src/manifest/package/skill.rs",
       "from_symbol": "vibe_core::manifest::package::skill",
       "line": 14,
@@ -63473,9 +63561,17 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/manifest/package/source_export.rs",
+      "from_symbol": "vibe_core::manifest::package::source_export",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-SELECTOR",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-core/src/manifest/package/tests.rs",
       "from_symbol": "vibe_core::manifest::package::tests::package_format_parses_and_defaults_to_simple",
-      "line": 110,
+      "line": 111,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#formats",
       "verb": "verifies"
@@ -66430,7 +66526,7 @@
     {
       "file": "crates/vibe-facts/src/lib.rs",
       "from_symbol": "vibe_facts::RegistryError",
-      "line": 342,
+      "line": 343,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#model",
       "verb": "implements"
@@ -66473,6 +66569,14 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/src/scan/declared/export.rs",
+      "from_symbol": "vibe_facts::scan::declared::export",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-RESOLUTION",
       "verb": "implements"
     },
     {
@@ -82671,7 +82775,7 @@
     {
       "file": "crates/vibe-specdoc/src/lib.rs",
       "from_symbol": "vibe_specdoc",
-      "line": 77,
+      "line": 78,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#root",
       "verb": "implements"
@@ -82691,6 +82795,40 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-GENERATED-PROVENANCE",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/commonmark.rs",
+      "from_symbol": "vibe_specdoc::commonmark",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ORDINARY-COMMONMARK-PARSER",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/commonmark.rs",
+      "from_symbol": "vibe_specdoc::commonmark::CommonMarkDoc::parse",
+      "line": 88,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ORDINARY-COMMONMARK-PARSER",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-specdoc/src/commonmark/selection.rs",
+      "from_symbol": "vibe_specdoc::commonmark::selection",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ORDINARY-COMMONMARK-PARSER",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/commonmark/tests.rs",
+      "from_symbol": "vibe_specdoc::commonmark::tests::exact_sections_nested_fence_and_links_are_from_original_bytes",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ORDINARY-COMMONMARK-PARSER",
+      "verb": "verifies",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-specdoc/src/convert.rs",
@@ -98603,7 +98741,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:efd1f17bca233304d5f4fb58825c7fa0a0e52a6ea1b4e26a1ce01c50185eeea6",
+      "content_hash": "sha256:8a95e60f219e0cc8c425b82746609e65a7f6914e8ad4406e271b88f62a471c75",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "PROP-045: XML spec sources and materialisation targets",
@@ -99113,6 +99251,35 @@
       "heading": "**Revisit when:** two authors' requests for a construct outside this set, or for verifiable examples in the README of an ordinary package, are recorded in BACKLOG. @status:spec/done",
       "line": 592,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#doc-vocab-revisit"
+    },
+    {
+      "anchor": "ordinary-commonmark",
+      "content_hash": "sha256:e841f8017e52efc6654d79c42b700869c36f620644ec25953e63820c38fb52b7",
+      "doc_path": "common/PROP-045",
+      "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+      "heading": "8. Ordinary CommonMark data grammar",
+      "line": 595,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ordinary-commonmark"
+    },
+    {
+      "anchor": "ORDINARY-COMMONMARK-PARSER",
+      "content_hash": "sha256:7e66f2396e5c43b85183da91b1c534916c746406a6412854952fff56ef424fa9",
+      "doc_path": "common/PROP-045",
+      "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+      "heading": "Ordinary CommonMark parser contract",
+      "line": 596,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ORDINARY-COMMONMARK-PARSER",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "ORDINARY-COMMONMARK-LAW",
+      "content_hash": "sha256:8b4ef0307eed85f2b6bec19e0afe5aa4a0c39e2cde504b3a70fc8763a4b6897e",
+      "doc_path": "common/PROP-045",
+      "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+      "heading": "The normative Vibe Markdown frontend remains the progress-core adapter. Ordinary CommonMark structure is a distinct explicitly selected data interpretation, not that scanner with a few markers disabled. Its pure adapter uses pulldown-cmark 0.13.6 offset events with tables enabled and optional HTML/CLI features disabled; it does not render HTML, resolve URLs, discover manifests or fetch referenced resources. The patch level is selected from the maintained 0.13 series after published correctness/security fixes, rather than inheriting the prototype's 0.13.4 pin as policy. This does not widen the Vibe document IR or turn ordinary text into normative units. Source-policy and export behavior are governed by PROP-072. The adapter retains an owned exact UTF-8 source and document-local positional nodes; checked lookup rejects out-of-range positions but proves no cross-document identity. Quote, list and item containers scope sections and are transparent during root-to-section heading selection; a section ends at its own container boundary, honoring standard lazy continuations. Titles concatenate decoded text, inline code and image labels, normalize whitespace, and omit HTML markup events. Selectors must supply the exact nonempty normalized title path; duplicate siblings refuse instead of choosing an ordinal. A successful selection borrows its document, node and exact source slice. This is a minimal outline, not a complete HTML AST or a standalone rendering guarantee; durable names and byte witnesses remain host responsibilities. @status:spec/done",
+      "line": 598,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ORDINARY-COMMONMARK-LAW"
     },
     {
       "anchor": "root",
@@ -112166,10 +112333,10 @@
     },
     {
       "anchor": "SOURCE-PACKAGE-OPT-IN",
-      "content_hash": "sha256:6a8694d1a2da767234b9a88c775567e6c2946ac2fc67adfecdfeb66e135d3129",
+      "content_hash": "sha256:5571f609ace1c58f5c6ae8853cbd82811df0901e16861d784f5e3de202ab0348",
       "doc_path": "common/PROP-072",
       "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
-      "heading": "Package sources presence opts into classification, including an explicit empty list. Absence retains legacy package behavior; an explicit empty list grants zero semantic sources. Typed parsing/serialization preserves this distinction and present null refuses. Unmatched files remain raw. Source exports are not implemented by this boundary; future export-only presence cannot restore legacy semantic scanning. Project source declarations are not activated here. @status:spec/done",
+      "heading": "Presence of package sources or source_exports opts into classification, including explicit empty lists. Absence of both retains legacy package behavior; explicit policy without source rows grants zero semantic sources. An empty export list does not remove separately declared source rows. Typed parsing/serialization preserves this distinction and present null refuses. Unmatched files remain raw. Source exports select ordinary CommonMark sections only through the captured resolver; export-only presence grants no implicit semantic sources and cannot restore legacy scanning. Project source declarations are not activated here. @status:spec/done",
       "line": 6,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-PACKAGE-OPT-IN"
     },
@@ -112193,10 +112360,10 @@
     },
     {
       "anchor": "SOURCE-OBSERVATION-LAW",
-      "content_hash": "sha256:4d34786cb5e96328692ed76227731257abb6373e50f4451684a278ccae48fa42",
+      "content_hash": "sha256:0aa52bc77507d19be9bed8f6e87960ecdc30c4ddd6b54edaf601beda04c7fe96",
       "doc_path": "common/PROP-072",
       "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
-      "heading": "A declared document reader first selects its source row and media over one held source byte observation. Only a supported native interpretation invokes its existing pure parser and can produce native facts. CommonMark, XML-data, opaque and unmatched inputs remain non-native/raw; ambiguous, absent or invalid declared input cannot mint facts. Row identity and bytes/provenance remain separate; authored rows grant no trust. Exact-file facts adoption uses lock-selected identity and original Mixed slot record consistency, and refuses unsupported census/transformed or rederive paths before registry writes. The current facts-adopt path binds lock-selected kind/group/name/version and independently selected content hash to a captured original Mixed slot record, its manifest and exact declared document bytes through retained workspace/slot capabilities. The shared record validator rejects transformed metadata in Mixed records. Recorded manifest drift cannot be hidden by deleting source declarations; unrecorded legacy slots retain their separately qualified compatibility. The selected workspace, slot, registry-directory identity, lock, record and document bytes are rechecked before registry publication. Effective Mixed rederive admission happens before upserts and retains its no-op decision; predictable transformed/config refusal never follows successful registry mutation. Editable hashes prove consistency only, not authenticated original-source correspondence. Whole-change atomicity, hostile ABA and uncooperating writers remain outside this finite observation guarantee. @status:spec/done",
+      "heading": "A declared document reader first selects its source row and media over one held source byte observation. Only a supported native interpretation may invoke a normative Vibe parser or produce native facts. Ordinary CommonMark has a separate inert structural reader. CommonMark, XML-data, opaque and unmatched inputs remain non-native/raw; ambiguous, absent or invalid declared input cannot mint facts. Row identity and bytes/provenance remain separate; authored rows grant no trust. Exact-file facts adoption uses lock-selected identity and original Mixed slot record consistency, and refuses unsupported census/transformed or rederive paths before registry writes. The current facts-adopt path binds lock-selected kind/group/name/version and independently selected content hash to a captured original Mixed slot record, its manifest and exact declared document bytes through retained workspace/slot capabilities. The shared record validator rejects transformed metadata in Mixed records. Recorded manifest drift cannot be hidden by deleting source declarations; unrecorded legacy slots retain their separately qualified compatibility. The selected workspace, slot, registry-directory identity, lock, record and document bytes are rechecked before registry publication. Effective Mixed rederive admission happens before upserts and retains its no-op decision; predictable transformed/config refusal never follows successful registry mutation. Editable hashes prove consistency only, not authenticated original-source correspondence. Whole-change atomicity, hostile ABA and uncooperating writers remain outside this finite observation guarantee. @status:spec/done",
       "line": 9,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW"
     },
@@ -112208,6 +112375,33 @@
       "heading": "Installation admits the complete selected source-policy set, including exact declared input availability and selection/census support through the materializer's shared admission owner, before metadata publication, lifecycle execution publication, deferred in-place placement, hooks or slot writes. The outer coordination lease precedes authoritative snapshots: its empty lifecycle.lock and an empty allocated run-identity directory may remain after refusal; this is not permission for manifest, dependency lock, slot, facts or handler effects. Known supplied manifest policy governs even when the content directory lacks a local manifest; absence cannot erase a declaration. The bounded initial route supports original Mixed materialization with no declared own boot inputs; transformed/in-place/declared boot consumers refuse specifically before effects. Ordinary legacy dependencies do not by themselves make a declared package unsupported. Captured full manifest meaning, not only package metadata, must match the admitted input at the copy boundary. Generated boot ownership remains the exact G3 predicate; declaration alias refusal is a separate portable admission rule. The shared SourceObservation value carries bytes, permissions and file identity measured through the same held source read; it retains no per-file descriptor and is not an ownership receipt. Closing length/mode/identity checks include readonly state on supported hosts. Captured Mixed Copy uses those bytes and permissions; Hardlink stages the existing link attempt and verifies candidate identity, bytes and mode before destination replacement, with captured-byte/mode Copy fallback. Source identity/bytes/permissions are rechecked before reconcile; no chmod mutates a shared source inode. Known-declared input admission is finite, not a whole-world snapshot: changes after it can still cause ordinary partial failure. The slot record remains bytes-only; permissions participate in observed recorded-file reconciliation and placement, not authenticated metadata recording. Incumbent byte-matching unrecorded occupants remain untouched; this does not promise to repair foreign permission modes. This remains finite source observation and bounded publication, not authentication, hostile-ABA exclusion or unconditional content CAS. @status:spec/done",
       "line": 10,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALL-BOUNDARY"
+    },
+    {
+      "anchor": "SOURCE-COMMONMARK-STRUCTURE",
+      "content_hash": "sha256:23fd6be2534f7a1f71dff937f9325d21f8b5461b489b7eefde6059cfa0feecfa",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "The ordinary CommonMark view is a pure structural reading of the exact supplied UTF-8 source, using one standard CommonMark grammar with tables. It exposes headings, sections, fences and links without producing Vibe facts, directives or execution. Vibe-shaped words and heading annotations remain ordinary text. Source ranges refer to original bytes, not normalized Vibe projection positions. Container boundaries, setext headings, inline image/code text and nested fences require explicit executable cases; a section must not silently swallow unrelated text after its container closes. Node indices are local to a document snapshot and never durable fact identities; checked lookup does not pretend to prove cross-document identity. Host source witnesses bind any externally navigable node reference. A selected range is an exact source slice, not a promise of standalone equivalent Markdown rendering. @status:spec/done",
+      "line": 11,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-COMMONMARK-STRUCTURE"
+    },
+    {
+      "anchor": "SOURCE-EXPORT-SELECTOR",
+      "content_hash": "sha256:8c6d6ca0d523a29e2b2122cb219f200ff8befff8bf9b7b58960f9c0286369760",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "A package source export has one package-unique ASCII name matching [A-Za-z][A-Za-z0-9._-]*, an exact portable authored source file and a nonempty root-to-section path of normalized visible heading titles. Core owns declaration grammar and duplicate names; the structural parser owns heading interpretation and exact selection. Equal sibling headings are ambiguous; no ordinal or first-match fallback is allowed. Source exports are declarations, not proof of file availability or source interpretation. The single package policy owner treats presence of sources or source_exports, including empty arrays, as explicit policy; export-only metadata grants zero implicit semantic sources and cannot restore suffix scanning. Null and unknown declaration members refuse. Absence of both fields preserves legacy behavior. @status:spec/done",
+      "line": 12,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-SELECTOR"
+    },
+    {
+      "anchor": "SOURCE-EXPORT-RESOLUTION",
+      "content_hash": "sha256:9fbf29032ead25cb6d914c1bfee729519e54a73684871e934568c0d8be4752cf",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Named ordinary exports resolve through the descriptor-selected captured CommonMark observation. The join checks the selected resource and interpretation, the exact parsed source bytes and the existing SourceFileWitness; it returns export identity, source witness and document-local selection without minting normative facts or new authority. Core export-name/path validation and host source witnesses are reused rather than redefined inside the parser. Ambiguous, missing, malformed or unavailable structure yields a typed export failure while raw captured bytes remain readable. Ordinary structure failure does not invalidate unrelated native facts. A parser plus a declaration field alone is not delivery: actual captured Mixed installed source to export resolution is required. @status:spec/done",
+      "line": 13,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-RESOLUTION"
     },
     {
       "anchor": "genre-definition",

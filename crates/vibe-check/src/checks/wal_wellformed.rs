@@ -169,6 +169,7 @@ mod tests {
     fn source_policy_empty_skips_wal_pair_and_explicit_or_invalid_refuse() {
         for (suffix, expected) in [
             ("sources=[]\n", 0),
+            ("source_exports=[]\n", 0),
             ("sources='invalid'\n", 1),
             (
                 "[[package.sources]]\nfile='raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",

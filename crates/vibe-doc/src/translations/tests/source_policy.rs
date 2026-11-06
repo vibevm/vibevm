@@ -5,6 +5,7 @@ use super::*;
 fn source_policy_borrowed_page_has_no_raw_fallback() {
     for (suffix, empty) in [
         ("sources=[]\n", true),
+        ("source_exports=[]\n", true),
         ("sources='invalid'\n", false),
         (
             "[[package.sources]]\nfile='vibevm/vibespecs/raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",

@@ -177,11 +177,17 @@ fn actual_mixed_install_adopts_declared_media_and_repeat_keeps_existing() {
 
 #[test]
 fn explicit_empty_adopts_zero_despite_raw_fact_markers() {
-    let f = Fixture::install("sources=[]\n");
-    let output = f.adopt();
-    assert!(output.status.success(), "{output:?}");
-    assert!(String::from_utf8_lossy(&output.stdout).contains("added=0 kept=0"));
-    assert!(!f.facts_path().exists());
+    for policy in [
+        "sources=[]\n",
+        "source_exports=[]\n",
+        "[[package.source_exports]]\nname='intro'\nfile='guide.md'\nheadings=['Guide']\n",
+    ] {
+        let f = Fixture::install(policy);
+        let output = f.adopt();
+        assert!(output.status.success(), "{output:?}");
+        assert!(String::from_utf8_lossy(&output.stdout).contains("added=0 kept=0"));
+        assert!(!f.facts_path().exists());
+    }
 }
 
 #[test]
@@ -372,4 +378,87 @@ fn selected_slot_and_registry_symlinks_refuse_without_touching_redirects() {
                 .exists()
         );
     }
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-RESOLUTION"
+)]
+fn actual_mixed_installed_captured_ordinary_export_resolves_without_native_facts() {
+    use vibe_core::manifest::{Lockfile, SpecFormat};
+    use vibe_workspace::vibedeps;
+    let file = common::spec_rel("guide.md");
+    let text = declaration(&file, "text/markdown", "commonmark", "documentation")
+        + &format!(
+            "\n[[package.source_exports]]\nname='ordinary'\nfile='{file}'\nheadings=['Ordinary']\n"
+        );
+    let fixture = Fixture::install(&text);
+    let project = vibe_safefs::Project::open(fixture.project.path()).unwrap();
+    let lock_bytes = project
+        .read_source_bytes(Lockfile::FILENAME)
+        .unwrap()
+        .unwrap();
+    let lock = Lockfile::parse_str(std::str::from_utf8(&lock_bytes).unwrap()).unwrap();
+    let selected = lock
+        .packages
+        .iter()
+        .find(|row| format!("{}/{}", row.group, row.name) == PACKAGE)
+        .unwrap();
+    let relative = vibedeps::slot_rel_path(&selected.group, &selected.name, &selected.version);
+    let slot = project
+        .dir(&relative.split('/').collect::<Vec<_>>(), false)
+        .unwrap();
+    let policy = vibe_spec::source_policy::observe_package_policy_in(&project, &slot).unwrap();
+    let record_bytes = project
+        .read_source_bytes_in(&slot, vibedeps::SLOT_RECORD_FILENAME)
+        .unwrap()
+        .unwrap();
+    let record = vibedeps::read_slot_record_bytes(
+        &slot.path().join(vibedeps::SLOT_RECORD_FILENAME),
+        &record_bytes,
+    )
+    .unwrap();
+    assert_eq!(record.source_hash, selected.content_hash);
+    assert_eq!(record.spec_format, SpecFormat::Mixed);
+    let meta = policy.package().unwrap();
+    assert_eq!(meta.group, selected.group);
+    assert_eq!(meta.name, selected.name);
+    assert_eq!(meta.version, selected.version);
+    assert_eq!(meta.kind, selected.kind);
+    let manifest_witness =
+        vibe_facts::SourceFileWitness::of("vibe.toml", policy.manifest_bytes().unwrap());
+    assert_eq!(
+        record
+            .files
+            .iter()
+            .find(|row| row.path == "vibe.toml")
+            .unwrap()
+            .sha256,
+        manifest_witness.digest.strip_prefix("sha256:").unwrap()
+    );
+    let bytes = project.read_source_bytes_in(&slot, &file).unwrap().unwrap();
+    assert_eq!(bytes, FAKE.as_bytes());
+    let witness = vibe_facts::SourceFileWitness::of(&file, &bytes);
+    assert_eq!(
+        record
+            .files
+            .iter()
+            .find(|row| row.path == file)
+            .unwrap()
+            .sha256,
+        witness.digest.strip_prefix("sha256:").unwrap()
+    );
+    let observation = vibe_facts::observe_declared_document(meta, &file, Some(&bytes)).unwrap();
+    let resolved = vibe_facts::resolve_declared_export(meta, "ordinary", &observation).unwrap();
+    assert_eq!(resolved.witness, witness);
+    assert_eq!(
+        resolved.selection.raw().as_bytes(),
+        &bytes[resolved.selection.span()]
+    );
+    assert!(resolved.selection.raw().contains("@fact:FAKE"));
+    policy.recheck_unchanged().unwrap();
+    let adopted = fixture.adopt();
+    assert!(adopted.status.success(), "{adopted:?}");
+    assert!(String::from_utf8_lossy(&adopted.stdout).contains("added=0 kept=0"));
+    assert!(!fixture.facts_path().exists());
 }

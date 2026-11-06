@@ -72,10 +72,12 @@
 //!
 //! Separability follows progress-core's own law: this crate depends on no
 //! vibevm subsystem — only on `progress-core` (the scanner and the status
-//! vocabulary) and `quick-xml`.
+//! vocabulary), `quick-xml`, and the explicitly selected ordinary CommonMark
+//! data grammar in [`commonmark`]. Native `from_markdown` remains unchanged.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#root");
 
+pub mod commonmark;
 pub mod doc;
 pub mod load;
 

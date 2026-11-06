@@ -33,7 +33,7 @@ pub fn validate_declared_source_operation(
     if !manifest
         .package
         .as_ref()
-        .is_some_and(|p| p.sources.is_some())
+        .is_some_and(|p| p.has_explicit_source_policy())
     {
         return Ok(());
     }
@@ -78,7 +78,7 @@ pub fn validate_source_admission(
         if manifest
             .package
             .as_ref()
-            .is_some_and(|p| p.sources.is_some())
+            .is_some_and(|p| p.has_explicit_source_policy())
         {
             let boot = root.join(vibe_core::layout::current_boot_dir());
             if boot.is_dir() {
@@ -112,7 +112,7 @@ pub(super) fn validate_source_resolution(
             .manifest
             .package
             .as_ref()
-            .is_some_and(|p| p.sources.is_some());
+            .is_some_and(|p| p.has_explicit_source_policy());
         validate_declared_source_operation(
             &dep.manifest,
             &dep.content_dir,

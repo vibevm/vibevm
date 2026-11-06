@@ -202,21 +202,23 @@ mod tests {
 
     #[test]
     fn source_policy_skips_empty_authored_bytes_but_keeps_generated_structure() {
-        let tmp = tempdir().unwrap();
-        let boot = tmp.path().join(layout::current_boot_dir());
-        fs::create_dir_all(&boot).unwrap();
-        fs::write(tmp.path().join("vibe.toml"), "[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\nsources=[]\n").unwrap();
-        for name in ["raw.xml", "raw.md", "STATIC.xml", "STATIC.md", "INDEX.md"] {
-            fs::write(boot.join(name), "<foreign/>").unwrap();
+        for key in ["sources", "source_exports"] {
+            let tmp = tempdir().unwrap();
+            let boot = tmp.path().join(layout::current_boot_dir());
+            fs::create_dir_all(&boot).unwrap();
+            fs::write(tmp.path().join("vibe.toml"), format!("[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n{key}=[]\n")).unwrap();
+            for name in ["raw.xml", "raw.md", "STATIC.xml", "STATIC.md", "INDEX.md"] {
+                fs::write(boot.join(name), "<foreign/>").unwrap();
+            }
+            let mut report = crate::CheckReport::default();
+            super::BootDirectoryCheck.run(tmp.path(), &opts(), &mut report);
+            assert_eq!(report.findings.len(), 1, "{:?}", report.findings);
+            assert!(
+                report.findings[0]
+                    .message
+                    .contains("both STATIC.md and STATIC.xml")
+            );
         }
-        let mut report = crate::CheckReport::default();
-        super::BootDirectoryCheck.run(tmp.path(), &opts(), &mut report);
-        assert_eq!(report.findings.len(), 1, "{:?}", report.findings);
-        assert!(
-            report.findings[0]
-                .message
-                .contains("both STATIC.md and STATIC.xml")
-        );
     }
 
     #[test]

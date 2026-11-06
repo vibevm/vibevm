@@ -41,6 +41,11 @@ mod cases {
             selected(root.path(), &slot).resolve_file(&address),
             Err(ResolveError::DocNotFound { .. })
         ));
+        write(&slot, "source_exports=[]\n");
+        assert!(matches!(
+            selected(root.path(), &slot).resolve_file(&address),
+            Err(ResolveError::DocNotFound { .. })
+        ));
         let file =
             vibe_core::machine_json_path(&vibe_core::layout::current_specs_root().join("ONE.md"));
         write(

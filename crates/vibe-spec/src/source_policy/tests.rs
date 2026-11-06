@@ -142,3 +142,18 @@ fn detached_checkpoint_detects_selected_root_alias_retarget() {
         SourcePolicyErrorKind::Changed
     );
 }
+
+#[test]
+fn source_exports_only_presence_is_explicit_empty_not_legacy() {
+    for rows in [
+        "source_exports=[]\n",
+        "[[package.source_exports]]\nname='intro'\nfile='guide.md'\nheadings=['Guide']\n",
+    ] {
+        let root = tempfile::tempdir().unwrap();
+        fs::write(root.path().join("vibe.toml"), format!("{PACKAGE}{rows}")).unwrap();
+        let policy = observe_package_policy(root.path()).unwrap();
+        assert_eq!(policy.mode(), PackageSourceMode::ExplicitEmpty);
+        assert_eq!(policy.package_sources(), Some([].as_slice()));
+        assert!(policy.package().unwrap().sources.is_none());
+    }
+}

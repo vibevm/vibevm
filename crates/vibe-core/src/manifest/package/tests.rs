@@ -82,6 +82,7 @@ fn package_meta_as_package_ref_pins_exact() {
         epoch: None,
         spec_format: None,
         sources: None,
+        source_exports: None,
         frozen: false,
         authors: vec![],
         license: None,

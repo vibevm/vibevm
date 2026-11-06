@@ -14,6 +14,11 @@ use vibe_core::manifest::LinkType;
 fn source_policy_in_place_empty_skips_and_explicit_or_invalid_refuses() {
     for (suffix, empty) in [
         ("sources=[]\n", true),
+        ("source_exports=[]\n", true),
+        (
+            "[[package.source_exports]]\nname='intro'\nfile='guide.md'\nheadings=['Guide']\n",
+            true,
+        ),
         ("sources='invalid'\n", false),
         (
             "[[package.sources]]\nfile='raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
@@ -75,20 +80,20 @@ fn source_policy_in_place_uses_selected_slot_not_host_policy() {
     let mut lock = Lockfile::empty("test", "0");
     lock.packages.push(package);
     assert!(
-        collect_in_place(tmp.path(), &[rel.clone()], &lock).is_err(),
+        collect_in_place(tmp.path(), std::slice::from_ref(&rel), &lock).is_err(),
         "missing manifest cannot verify a selected package"
     );
     let manifest = "[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n";
     std::fs::write(slot.join("vibe.toml"), manifest).unwrap();
     assert_eq!(
-        collect_in_place(tmp.path(), &[rel.clone()], &lock)
+        collect_in_place(tmp.path(), std::slice::from_ref(&rel), &lock)
             .unwrap()
             .len(),
         1
     );
     std::fs::write(slot.join("vibe.toml"), format!("{manifest}sources=[]\n")).unwrap();
     assert!(
-        collect_in_place(tmp.path(), &[rel.clone()], &lock)
+        collect_in_place(tmp.path(), std::slice::from_ref(&rel), &lock)
             .unwrap()
             .is_empty()
     );

@@ -67,6 +67,7 @@ pub(super) fn observe(
                         row,
                         DeclaredDocumentObservation::Facts { .. }
                             | DeclaredDocumentObservation::Raw { .. }
+                            | DeclaredDocumentObservation::OrdinaryMarkdown { .. }
                             | DeclaredDocumentObservation::Unclassified { .. }
                     )
                 })

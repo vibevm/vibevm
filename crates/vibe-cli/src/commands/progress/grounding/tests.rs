@@ -79,20 +79,22 @@ fn fixture() -> tempfile::TempDir {
 
 #[test]
 fn source_policy_empty_excludes_raw_pairs_before_projection() {
-    let tmp = fixture();
-    fs::write(
-        tmp.path().join("vibe.toml"),
-        format!("{MANIFEST}sources = []\n"),
-    )
-    .unwrap();
-    let common = ProgressCommonArgs {
-        path: tmp.path().to_owned(),
-        campaign: None,
-        no_cache: false,
-    };
-    let result = ground(&common).unwrap();
-    assert!(result.docs.is_empty());
-    assert!(!tmp.path().join("payload-cache").exists());
+    for key in ["sources", "source_exports"] {
+        let tmp = fixture();
+        fs::write(
+            tmp.path().join("vibe.toml"),
+            format!("{MANIFEST}{key} = []\n"),
+        )
+        .unwrap();
+        let common = ProgressCommonArgs {
+            path: tmp.path().to_owned(),
+            campaign: None,
+            no_cache: false,
+        };
+        let result = ground(&common).unwrap();
+        assert!(result.docs.is_empty());
+        assert!(!tmp.path().join("payload-cache").exists());
+    }
 }
 
 #[test]

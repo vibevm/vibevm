@@ -171,6 +171,8 @@ rust-ai-native-specmap = { path = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai
 specmark = { package = "core-ai-native-specmark", path = "vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0/crates/vendor/core-ai-native-specmark" }
 
 # Third-party (all permissive licenses — PROP-000 §3)
+# Ordinary CommonMark only; native Vibe Markdown stays on progress-core. MIT.
+pulldown-cmark = { version = "=0.13.6", default-features = false }
 # The XML reader/writer of the PROP-045 spec-source dialect (vibe-specdoc).
 # MIT. One new dependency, decided on the record: PROP-045
 # ##XML-PARSER-DEPENDENCY (alternatives — roxmltree, xml-rs, hand-rolling —

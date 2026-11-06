@@ -26,9 +26,10 @@ pub use lifecycle::{OrphanReport, orphans, package_file_path, remove_package_fil
 pub use overlay::{PackageOverlay, overlay_file_hash};
 pub use report::{AdoptionCounts, AuthoredFact, adoption_counts, authored_facts};
 pub use scan::declared::{
-    CapturedDeclaredDocument, DeclaredDocumentObservation, DeclaredReadProvenance,
-    DeclaredSourceDisposition, DeclaredTreeObservation, DeclaredWalkError, exact_declared_files,
-    observe_declared_document, observe_declared_source,
+    CapturedDeclaredDocument, DeclaredDocumentObservation, DeclaredExportError,
+    DeclaredExportResolution, DeclaredReadProvenance, DeclaredSourceDisposition,
+    DeclaredTreeObservation, DeclaredWalkError, OrdinaryStructureError, exact_declared_files,
+    observe_declared_document, observe_declared_source, resolve_declared_export,
 };
 pub use scan::{
     AdoptionObservation, AdoptionRow, AuthoredSourceObservation, SourceFileWitness, SourceIssue,

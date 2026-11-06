@@ -53,9 +53,12 @@ pub struct PackageMeta {
     /// `[project]` does (the role-equipotence law, PROP-024
     /// ##MANIFEST-ROLES-ARE-EQUIPOTENT).
     pub spec_format: Option<SpecFormat>,
-    /// Explicit package interpretation policy. None retains legacy; Some(empty)
-    /// declares zero semantic sources and must survive serialization.
+    /// Explicit interpretation rows. Some(empty) declares zero semantic sources
+    /// and survives serialization. Legacy requires both source fields absent;
+    /// use `has_explicit_source_policy` rather than interpreting this alone.
     pub sources: Option<Vec<crate::manifest::SourceDescriptor>>,
+    /// Named ordinary sections; presence opts into explicit source policy.
+    pub source_exports: Option<Vec<super::SourceExport>>,
     /// `[package].frozen` — the PROP-044 §2a immutability flag. Absence
     /// (`false`) means the version is a **snapshot**: its content may
     /// still flow under the same version string, and a hash mismatch is
@@ -131,4 +134,21 @@ pub struct PackageMeta {
     /// `simple` — a forgotten `format` fails safe (over-load, visibly working),
     /// never silent (PROP-035 §3, owner decision).
     pub format: PackageFormat,
+}
+
+impl PackageMeta {
+    /// Presence of either source metadata key opts in, even for an empty list.
+    /// ```
+    /// use vibe_core::manifest::PackageMeta;
+    /// let p: PackageMeta = toml::from_str("name='demo'\ngroup='org.demo'\nkind='flow'\nversion='1.0.0'\nsource_exports=[]\n")?;
+    /// assert!(p.has_explicit_source_policy());
+    /// assert!(p.sources.is_none());
+    /// # Ok::<(), toml::de::Error>(())
+    /// ```
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-PACKAGE-OPT-IN"
+    )]
+    pub fn has_explicit_source_policy(&self) -> bool {
+        self.sources.is_some() || self.source_exports.is_some()
+    }
 }

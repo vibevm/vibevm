@@ -155,6 +155,7 @@ impl Adoption {
                         row,
                         vibe_facts::DeclaredDocumentObservation::Facts { .. }
                             | vibe_facts::DeclaredDocumentObservation::Raw { .. }
+                            | vibe_facts::DeclaredDocumentObservation::OrdinaryMarkdown { .. }
                             | vibe_facts::DeclaredDocumentObservation::Unclassified { .. }
                     )
                 })
