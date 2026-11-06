@@ -1,9 +1,14 @@
 //! Actual local evaluation using the common kernel and canonical parameter validator.
+#[cfg(test)]
+use super::HistoryUse;
 use super::{choices, definition, parameters, vocabulary};
 use crate::{HostFacts, ParamValue, ParameterPrompt};
 use std::collections::{BTreeMap, BTreeSet};
 use vibe_core::{configuration as k, manifest as m};
 use vibe_wire::generated::shared as w;
+
+#[path = "evaluate/basis.rs"]
+mod basis;
 
 /// Inputs for one selected installer. Prior state is evidence, never current authority.
 #[specmark::spec(
@@ -143,51 +148,18 @@ pub fn evaluate(request: EvaluationRequest<'_>) -> Result<EvaluatedConfiguration
         ),
         &mut out,
     );
-    if input.profile.is_some() {
-        out.reliance.push("profile".into());
-    } else if input.default_features {
-        out.reliance.push("feature-defaults".into());
-    }
-    if input.policy == k::ChoicePolicy::UseDeclaredDefaults {
-        for group in &d.groups {
-            if let m::ConfigurationGroupDecl::Choice { id, .. } = group
-                && normalized
-                    .choices
-                    .answers
-                    .get(id)
-                    .is_none_or(|a| matches!(a.selection, k::Selection::Omitted))
-            {
-                out.reliance.push(format!("choice:{id}"));
-            }
-        }
-    }
-    if let Some(result) = &result {
-        for implied in &result.implied {
-            if let k::ImplicationReason::GroupDefault { group } = &implied.reason {
-                out.reliance.push(format!("closure:{group}"));
-            }
-        }
-    }
-    if !request.replacement
-        && let Some(previous) = request.previous.as_ref()
-    {
-        for reliance in previous.reliance {
-            if let Some(id) = reliance.strip_prefix("closure:") {
-                let group = d.groups.iter().find_map(|g| match g {
-                    m::ConfigurationGroupDecl::Closure {
-                        id: group, members, ..
-                    } if group == id => Some(members),
-                    _ => None,
-                });
-                let explicit=group.is_some_and(|members|members.iter().any(|id|input.features.contains(id)
-                        || matches!(&normalized.features.base,k::FeatureBase::Selected(v) if v.contains(id))
-                        || normalized.choices.answers.values().any(|a|matches!(&a.selection,k::Selection::Explicit(v) if v.contains(id)))));
-                if !explicit && (group.is_some() || !request.reviewed) {
-                    out.reliance.push(reliance.clone());
-                }
-            }
-        }
-    }
+    let authority = basis::authority(request.replacement, request.reviewed);
+    out.reliance = basis::feature_reliance(
+        d,
+        &input,
+        &normalized,
+        result.as_ref(),
+        request
+            .previous
+            .as_ref()
+            .map_or(&[][..], |previous| previous.reliance),
+        authority,
+    );
     let params = parameters::resolve(
         parameters::Parameters {
             definition: d,
@@ -206,18 +178,7 @@ pub fn evaluate(request: EvaluationRequest<'_>) -> Result<EvaluatedConfiguration
         && let Some(previous) = request.previous.as_ref()
     {
         for reason in previous.reliance {
-            let retain = if let Some(id) = reason.strip_prefix("choice:") {
-                let still_automatic = input.policy == k::ChoicePolicy::UseDeclaredDefaults
-                    && normalized
-                        .choices
-                        .answers
-                        .get(id)
-                        .is_none_or(|a| matches!(a.selection, k::Selection::Omitted));
-                let exists = d.groups.iter().any(
-                    |g| matches!(g,m::ConfigurationGroupDecl::Choice{id:group,..} if group==id),
-                );
-                still_automatic && (exists || !request.reviewed)
-            } else if let Some(id) = reason.strip_prefix("parameter:") {
+            let retain = if let Some(id) = reason.strip_prefix("parameter:") {
                 let explicit = input.parameters.contains_key(id)
                     || out.parameters.iter().any(|p| match p {
                         w::ConfigurationParameterResult::Public(p) => {
@@ -242,24 +203,19 @@ pub fn evaluate(request: EvaluationRequest<'_>) -> Result<EvaluatedConfiguration
     }
     out.reliance.sort();
     out.reliance.dedup();
-    if !request.replacement
-        && !request.reviewed
-        && let Some(previous) = request.previous.as_ref()
+    if let Some(previous) = request.previous.as_ref()
+        && basis::review_required(authority, &out.definition, &out.reliance, previous)
     {
-        let changed_basis = previous.fingerprint != out.definition && !out.reliance.is_empty();
-        let new_reliance = out.reliance.iter().any(|r| !previous.reliance.contains(r));
-        if changed_basis || new_reliance {
-            out.questions
-                .push(w::ConfigurationQuestion::Review(Box::new(
-                    w::ConfigurationQuestionReview {
-                        previous_definition: previous.definition.clone(),
-                        current_definition: definition::definition(d),
-                        previous: previous.fingerprint.to_owned(),
-                        current: out.definition.clone(),
-                        reasons: out.reliance.clone(),
-                    },
-                )));
-        }
+        out.questions
+            .push(w::ConfigurationQuestion::Review(Box::new(
+                w::ConfigurationQuestionReview {
+                    previous_definition: previous.definition.clone(),
+                    current_definition: definition::definition(d),
+                    previous: previous.fingerprint.to_owned(),
+                    current: out.definition.clone(),
+                    reasons: out.reliance.clone(),
+                },
+            )));
     }
     if let Some(result) = result {
         let feature_result = choices::features(&result);
@@ -324,3 +280,10 @@ fn data(
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+#[path = "evaluate/basis_parity.rs"]
+mod basis_parity;
+#[cfg(test)]
+#[path = "evaluate/legacy_basis_oracle.rs"]
+mod legacy_basis_oracle;

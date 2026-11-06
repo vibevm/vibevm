@@ -38,6 +38,7 @@ pub use artifact::{
     ArtifactsError, ArtifactsSection, PackageTargetProjection, build_target_for_binary,
 };
 pub use compile::CompileSection;
+pub use configuration::basis as configuration_basis;
 pub use configuration::{
     ConfigurationDecl, ConfigurationEffect, ConfigurationFeatureDecl,
     ConfigurationFeatureVisibility, ConfigurationGroupDecl, ConfigurationGuard,

@@ -7,6 +7,7 @@ use crate::configuration::{Cardinality, MergeIntent};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+pub mod basis;
 mod intent;
 mod lower;
 mod package;

@@ -9849,28 +9849,91 @@
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/configuration/evaluate.rs",
       "item_kind": "struct",
-      "line": 29,
+      "line": 34,
       "symbol": "vibe_app::configuration::evaluate::EvaluatedConfiguration",
-      "end_line": 35,
+      "end_line": 40,
       "fingerprint": "tok1:c33ba99296eff0e9513636009dcf76abc73e1fdfc4606646730e596eb60503a6"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/configuration/evaluate.rs",
       "item_kind": "struct",
-      "line": 8,
+      "line": 13,
       "symbol": "vibe_app::configuration::evaluate::EvaluationRequest",
-      "end_line": 28,
+      "end_line": 33,
       "fingerprint": "tok1:69cb39aefb75e402245bf962b7dc29fc862f92d23a276a1fb0c1cae0fe2866c7"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/evaluate/basis.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_app::configuration::evaluate::basis",
+      "end_line": 2,
+      "fingerprint": "tok1:b90d0eaa31f0e777a6f8ee4ef6edf8bdbb5674782d059ee1776a0152074c97fd"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/evaluate/basis_parity.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_app::configuration::evaluate::basis_parity",
+      "end_line": 3,
+      "fingerprint": "tok1:b90d0eaa31f0e777a6f8ee4ef6edf8bdbb5674782d059ee1776a0152074c97fd"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/evaluate/basis_parity.rs",
+      "item_kind": "fn",
+      "line": 143,
+      "symbol": "vibe_app::configuration::evaluate::basis_parity::closure_dormancy_removal_and_explicit_takeover_match_the_frozen_evaluator",
+      "end_line": 193,
+      "fingerprint": "tok1:3952b063a95e1e6ec84ba802dea936c33a70af8430296d8517a40be6f7231c32"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/evaluate/basis_parity.rs",
+      "item_kind": "fn",
+      "line": 195,
+      "symbol": "vibe_app::configuration::evaluate::basis_parity::dormant_absent_and_removed_choice_defaults_keep_original_review_law",
+      "end_line": 247,
+      "fingerprint": "tok1:2ac8d13ab8127f2706e7275dd110a8e59fa7c25b14efe695a98e38e028a1c7e5"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/evaluate/basis_parity.rs",
+      "item_kind": "fn",
+      "line": 99,
+      "symbol": "vibe_app::configuration::evaluate::basis_parity::fresh_reuse_review_replacement_and_profile_overrides_match_old_wire_and_readiness",
+      "end_line": 141,
+      "fingerprint": "tok1:e78a1eaed87a8adc3d1e58316117c0c5318d1edd1f140bab29640a03dd3480c6"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/evaluate/basis_parity.rs",
+      "item_kind": "fn",
+      "line": 249,
+      "symbol": "vibe_app::configuration::evaluate::basis_parity::parameter_origins_secrets_and_path_realizations_remain_adapter_owned",
+      "end_line": 295,
+      "fingerprint": "tok1:e0c86736de0dd3748243bab88655a046b16ea4378dc215d52520dfb19dc58e2b"
     },
     {
       "crate_name": "vibe-app",
       "file": "crates/vibe-app/src/configuration/evaluate.rs",
       "item_kind": "fn",
-      "line": 36,
+      "line": 41,
       "symbol": "vibe_app::configuration::evaluate::evaluate",
-      "end_line": 283,
-      "fingerprint": "tok1:52df78c883508a282735c0343a831cf0d032e934c831a9a22ddb5dc28b7f9280"
+      "end_line": 239,
+      "fingerprint": "tok1:fd094c109e8b9de041c3b45fe874d611b7512a5263fcae27ed23501eb1e9e770"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/configuration/evaluate/legacy_basis_oracle.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_app::configuration::evaluate::legacy_basis_oracle",
+      "end_line": 5,
+      "fingerprint": "tok1:b90d0eaa31f0e777a6f8ee4ef6edf8bdbb5674782d059ee1776a0152074c97fd"
     },
     {
       "crate_name": "vibe-app",
@@ -21090,10 +21153,91 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/configuration.rs",
       "item_kind": "enum",
-      "line": 73,
+      "line": 74,
       "symbol": "vibe_core::manifest::configuration::ConfigurationFeatureVisibility",
-      "end_line": 85,
+      "end_line": 86,
       "fingerprint": "tok1:f46eef4dc57c93917b445e2e26ff04c17c99aaa9c8b133eba9886e06fe764be6"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/basis.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::manifest::configuration::basis",
+      "end_line": 2,
+      "fingerprint": "tok1:b90d0eaa31f0e777a6f8ee4ef6edf8bdbb5674782d059ee1776a0152074c97fd"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/basis.rs",
+      "item_kind": "fn",
+      "line": 65,
+      "symbol": "vibe_core::manifest::configuration::basis::consumer_reliance",
+      "end_line": 117,
+      "fingerprint": "tok1:8bca1317d78b6cf5ffe991467bf72b61d441c74465512e72825f3420b43b1af6"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/basis.rs",
+      "item_kind": "fn",
+      "line": 119,
+      "symbol": "vibe_core::manifest::configuration::basis::instance_reliance",
+      "end_line": 168,
+      "fingerprint": "tok1:fb16cbdeb77c49e7ed8dcf910c7b66a6f150b94182b349fa14bec7fc088d21af"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/basis.rs",
+      "item_kind": "fn",
+      "line": 205,
+      "symbol": "vibe_core::manifest::configuration::basis::review",
+      "end_line": 242,
+      "fingerprint": "tok1:5cddd7bd55abaf022d46280ba605a19db76ae4c42a5851e472747b96640e9931"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/basis/tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::manifest::configuration::basis::tests",
+      "end_line": 3,
+      "fingerprint": "tok1:b90d0eaa31f0e777a6f8ee4ef6edf8bdbb5674782d059ee1776a0152074c97fd"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/basis/tests.rs",
+      "item_kind": "fn",
+      "line": 12,
+      "symbol": "vibe_core::manifest::configuration::basis::tests::absent_defaults_and_removed_choice_keep_reliance_until_review_or_explicit_takeover",
+      "end_line": 68,
+      "fingerprint": "tok1:3e912c88eb678fb837c016370214c0393f4478799fa7ec76ee68b03b81345e76"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/basis/tests.rs",
+      "item_kind": "fn",
+      "line": 128,
+      "symbol": "vibe_core::manifest::configuration::basis::tests::fresh_reuse_review_and_replacement_preserve_the_two_independent_review_causes",
+      "end_line": 194,
+      "fingerprint": "tok1:483f1834142a082a75fe29e1ee261b66289acb785c0162d76c5da0cad9e4c4c1"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/basis/tests.rs",
+      "item_kind": "fn",
+      "line": 101,
+      "symbol": "vibe_core::manifest::configuration::basis::tests::merged_instance_retains_dormant_closure_until_a_real_consumer_explicitly_takes_it_over",
+      "end_line": 126,
+      "fingerprint": "tok1:7fe3766116db354baae20c73655dc4b9a81cbe3359f4a438a2eefe8d2f4aae5a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/configuration/basis/tests.rs",
+      "item_kind": "fn",
+      "line": 70,
+      "symbol": "vibe_core::manifest::configuration::basis::tests::profile_and_consumer_reliance_do_not_become_merged_closure_ownership",
+      "end_line": 99,
+      "fingerprint": "tok1:6fdaf34b23b81df74ef5c12d440c8741cc4b33fdc2a47c215282e6139aba3e86"
     },
     {
       "crate_name": "vibe-core",
@@ -48145,7 +48289,7 @@
     {
       "file": "crates/vibe-app/src/configuration/evaluate.rs",
       "from_symbol": "vibe_app::configuration::evaluate::EvaluatedConfiguration",
-      "line": 31,
+      "line": 36,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#EVALUATION",
       "verb": "documents"
@@ -48153,15 +48297,71 @@
     {
       "file": "crates/vibe-app/src/configuration/evaluate.rs",
       "from_symbol": "vibe_app::configuration::evaluate::EvaluationRequest",
-      "line": 9,
+      "line": 14,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
       "verb": "documents"
     },
     {
+      "file": "crates/vibe-app/src/configuration/evaluate/basis.rs",
+      "from_symbol": "vibe_app::configuration::evaluate::basis",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/evaluate/basis_parity.rs",
+      "from_symbol": "vibe_app::configuration::evaluate::basis_parity",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/evaluate/basis_parity.rs",
+      "from_symbol": "vibe_app::configuration::evaluate::basis_parity::closure_dormancy_removal_and_explicit_takeover_match_the_frozen_evaluator",
+      "line": 144,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/evaluate/basis_parity.rs",
+      "from_symbol": "vibe_app::configuration::evaluate::basis_parity::dormant_absent_and_removed_choice_defaults_keep_original_review_law",
+      "line": 196,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/evaluate/basis_parity.rs",
+      "from_symbol": "vibe_app::configuration::evaluate::basis_parity::fresh_reuse_review_replacement_and_profile_overrides_match_old_wire_and_readiness",
+      "line": 100,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/evaluate/basis_parity.rs",
+      "from_symbol": "vibe_app::configuration::evaluate::basis_parity::parameter_origins_secrets_and_path_realizations_remain_adapter_owned",
+      "line": 250,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-app/src/configuration/evaluate.rs",
       "from_symbol": "vibe_app::configuration::evaluate::evaluate",
-      "line": 38,
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/configuration/evaluate/legacy_basis_oracle.rs",
+      "from_symbol": "vibe_app::configuration::evaluate::legacy_basis_oracle",
+      "line": 5,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
       "verb": "implements"
@@ -58399,10 +58599,82 @@
     {
       "file": "crates/vibe-core/src/manifest/configuration.rs",
       "from_symbol": "vibe_core::manifest::configuration::ConfigurationFeatureVisibility",
-      "line": 78,
+      "line": 79,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#FEATURE-VISIBILITY",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/basis.rs",
+      "from_symbol": "vibe_core::manifest::configuration::basis",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/basis.rs",
+      "from_symbol": "vibe_core::manifest::configuration::basis::consumer_reliance",
+      "line": 75,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/basis.rs",
+      "from_symbol": "vibe_core::manifest::configuration::basis::instance_reliance",
+      "line": 128,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/basis.rs",
+      "from_symbol": "vibe_core::manifest::configuration::basis::review",
+      "line": 215,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/basis/tests.rs",
+      "from_symbol": "vibe_core::manifest::configuration::basis::tests",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/basis/tests.rs",
+      "from_symbol": "vibe_core::manifest::configuration::basis::tests::absent_defaults_and_removed_choice_keep_reliance_until_review_or_explicit_takeover",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/basis/tests.rs",
+      "from_symbol": "vibe_core::manifest::configuration::basis::tests::fresh_reuse_review_and_replacement_preserve_the_two_independent_review_causes",
+      "line": 129,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/basis/tests.rs",
+      "from_symbol": "vibe_core::manifest::configuration::basis::tests::merged_instance_retains_dormant_closure_until_a_real_consumer_explicitly_takes_it_over",
+      "line": 102,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/configuration/basis/tests.rs",
+      "from_symbol": "vibe_core::manifest::configuration::basis::tests::profile_and_consumer_reliance_do_not_become_merged_closure_ownership",
+      "line": 71,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-BASIS",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-core/src/manifest/configuration/intent.rs",
