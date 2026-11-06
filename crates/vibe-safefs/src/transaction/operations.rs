@@ -241,23 +241,63 @@ pub(crate) fn project_view(root: &Pinned) -> Result<Project> {
     })
 }
 
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-056#READABLE-DIRECTORY-SYNC"
+)]
 pub(crate) fn sync_directory(directory: &Pinned) -> DirectoryDurability {
-    match directory
+    // Unix directory capabilities can carry O_PATH: cloning preserves it,
+    // and fsync on that descriptor fails even on a supporting filesystem.
+    #[cfg(unix)]
+    let result = directory
+        .identity()
+        .and_then(|expected| sync_readable_directory(directory, expected))
+        .map_err(|error| {
+            error
+                .chain()
+                .find_map(|cause| {
+                    cause
+                        .downcast_ref::<std::io::Error>()
+                        .map(std::io::Error::kind)
+                })
+                .unwrap_or(std::io::ErrorKind::InvalidData)
+        });
+    #[cfg(not(unix))]
+    let result = directory
         .dir
         .try_clone()
         .and_then(|handle| handle.into_std_file().sync_all())
-    {
+        .map_err(|error| error.kind());
+    match result {
         Ok(()) => DirectoryDurability::Synced,
-        Err(error)
+        Err(kind)
             if matches!(
-                error.kind(),
+                kind,
                 std::io::ErrorKind::Unsupported | std::io::ErrorKind::PermissionDenied
             ) =>
         {
-            DirectoryDurability::Unsupported(error.kind())
+            DirectoryDurability::Unsupported(kind)
         }
-        Err(error) => DirectoryDurability::Failed(error.kind()),
+        Err(kind) => DirectoryDurability::Failed(kind),
     }
+}
+
+#[cfg(unix)]
+fn sync_readable_directory(directory: &Pinned, expected: FileIdentity) -> Result<()> {
+    // The fixed self operand stays relative to the held capability. Never
+    // reopen its display pathname or take a caller-provided component here.
+    let readable = directory.dir.open(".")?.into_std();
+    if !readable.metadata()?.is_dir()
+        || file_identity(&readable, directory.path())? != expected
+        || directory.identity()? != expected
+    {
+        bail!("readable directory handle differs from held capability");
+    }
+    readable.sync_all()?;
+    if file_identity(&readable, directory.path())? != expected || directory.identity()? != expected
+    {
+        bail!("directory identity changed across synchronization");
+    }
+    Ok(())
 }
 
 /// Classify an otherwise unsupported Windows directory flush after an atomic

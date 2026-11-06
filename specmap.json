@@ -39221,6 +39221,15 @@
     },
     {
       "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/file.rs",
+      "item_kind": "fn",
+      "line": 183,
+      "symbol": "vibe_safefs::file::regular_read_options",
+      "end_line": 201,
+      "fingerprint": "tok1:1660816681f774e457fccc7210964c0ab92cae105183592f166165c92ee7706d"
+    },
+    {
+      "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file/source_read.rs",
       "item_kind": "mod",
       "line": 2,
@@ -39455,6 +39464,60 @@
     },
     {
       "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/external_open.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_safefs::transaction::external_open",
+      "end_line": 2,
+      "fingerprint": "tok1:d81cc7487e43d9ec87c442aafd69e4afee0ffffa62cf617c26c2b474bc13a61e"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/external_open.rs",
+      "item_kind": "fn",
+      "line": 72,
+      "symbol": "vibe_safefs::transaction::external_open::ExternalStore::lock_existing_project",
+      "end_line": 92,
+      "fingerprint": "tok1:879a1ac8f6cf827216cfa06d77b97d2d9ffd6518372df6d141750d7d952af915"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/external_open.rs",
+      "item_kind": "fn",
+      "line": 6,
+      "symbol": "vibe_safefs::transaction::external_open::ExternalStore::open_existing_disjoint",
+      "end_line": 52,
+      "fingerprint": "tok1:e024f8583649d5cd0e2d6d7a688ee8f2e749d66d5e9f37a33df73267c709c77c"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/external_sync.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_safefs::transaction::external_sync",
+      "end_line": 2,
+      "fingerprint": "tok1:f5afd6717d659212539d080eef108e8bd3d3c49c88f29739c9d2288159a7d9d6"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/external_sync.rs",
+      "item_kind": "fn",
+      "line": 30,
+      "symbol": "vibe_safefs::transaction::external_sync::ExternalStore::sync_stable_file_bounded",
+      "end_line": 92,
+      "fingerprint": "tok1:981ad1485029444e564c4368582bcd9975adc66fc925ef52044ce02966382bb1"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/operations.rs",
+      "item_kind": "fn",
+      "line": 244,
+      "symbol": "vibe_safefs::transaction::operations::sync_directory",
+      "end_line": 282,
+      "fingerprint": "tok1:f3a599f74edc8e94214aebf4b1f8fb93e06e73cbcc4c102c909ab740f3eee1d3"
+    },
+    {
+      "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/transaction/platform.rs",
       "item_kind": "mod",
       "line": 3,
@@ -39506,6 +39569,60 @@
       "symbol": "vibe_safefs::transaction::platform::windows_abi::ntstatus_error",
       "end_line": 119,
       "fingerprint": "tok1:e8cc348ddb06d9bfc12016317f2ada5089a151afc5757299d0d888af650bf516"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/tests/external_read.rs",
+      "item_kind": "fn",
+      "line": 50,
+      "symbol": "vibe_safefs::transaction::tests::external_read::directory_flush_reopens_same_readable_capability_without_creation",
+      "end_line": 74,
+      "fingerprint": "tok1:8a4184e036ff71cf9ab16a1c4360d142d4603855788f560e01bc3ff015715dda"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/tests/external_read.rs",
+      "item_kind": "fn",
+      "line": 135,
+      "symbol": "vibe_safefs::transaction::tests::external_read::existing_lock_is_absent_or_same_named_rechecked_barrier",
+      "end_line": 201,
+      "fingerprint": "tok1:2d1219c57ccf1e96dcc9e118825a42bdd1d14fb97a098ae2f1f72cbf73b3460e"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/tests/external_read.rs",
+      "item_kind": "fn",
+      "line": 88,
+      "symbol": "vibe_safefs::transaction::tests::external_read::existing_store_absence_overlap_and_error_never_create_state",
+      "end_line": 133,
+      "fingerprint": "tok1:aeab4a738dd5af4f1cd074f74f09f763876a9b29054b32f72f2885a971c0d232"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/tests/external_read.rs",
+      "item_kind": "fn",
+      "line": 241,
+      "symbol": "vibe_safefs::transaction::tests::external_read::replaced_lock_name_fifo_refuses_without_a_peer",
+      "end_line": 308,
+      "fingerprint": "tok1:99cfed6c886aa5ceceb580a24c4548d9de54d4d892eecb7950c12c127a3d311d"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/tests/external_sync.rs",
+      "item_kind": "fn",
+      "line": 189,
+      "symbol": "vibe_safefs::transaction::tests::external_sync::owned_snapshot_and_retained_sync_refuse_fifo_without_a_writer",
+      "end_line": 254,
+      "fingerprint": "tok1:f5f30472f65a3544d4dd6c0b902a2fa097c504388e68032ebe33792190de1355"
+    },
+    {
+      "crate_name": "vibe-safefs",
+      "file": "crates/vibe-safefs/src/transaction/tests/external_sync.rs",
+      "item_kind": "fn",
+      "line": 25,
+      "symbol": "vibe_safefs::transaction::tests::external_sync::retained_image_requires_real_sync_and_preserves_snapshot",
+      "end_line": 72,
+      "fingerprint": "tok1:3b150d5ca9600e8301c1a404d051156c46cebf12506ce19c44170f1c018e3d75"
     },
     {
       "crate_name": "vibe-safefs",
@@ -76362,6 +76479,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-safefs/src/file.rs",
+      "from_symbol": "vibe_safefs::file::regular_read_options",
+      "line": 186,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#NONBLOCKING-REGULAR-ADMISSION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-safefs/src/file/source_read.rs",
       "from_symbol": "vibe_safefs::file::source_read",
       "line": 2,
@@ -76578,6 +76703,54 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-safefs/src/transaction/external_open.rs",
+      "from_symbol": "vibe_safefs::transaction::external_open",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-EXISTING-OBSERVATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/external_open.rs",
+      "from_symbol": "vibe_safefs::transaction::external_open::ExternalStore::lock_existing_project",
+      "line": 83,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-EXISTING-OBSERVATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/external_open.rs",
+      "from_symbol": "vibe_safefs::transaction::external_open::ExternalStore::open_existing_disjoint",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-EXISTING-OBSERVATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/external_sync.rs",
+      "from_symbol": "vibe_safefs::transaction::external_sync",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-RETAINED-SYNC",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/external_sync.rs",
+      "from_symbol": "vibe_safefs::transaction::external_sync::ExternalStore::sync_stable_file_bounded",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-RETAINED-SYNC",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/operations.rs",
+      "from_symbol": "vibe_safefs::transaction::operations::sync_directory",
+      "line": 244,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#READABLE-DIRECTORY-SYNC",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-safefs/src/transaction/platform.rs",
       "from_symbol": "vibe_safefs::transaction::platform",
       "line": 3,
@@ -76629,6 +76802,54 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NATIVE-NOFOLLOW-BOUNDARY",
       "verb": "deviates",
       "reason": "the reviewed NT calls return NTSTATUS, so this one pure conversion preserves their typed Win32 I/O errors"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/tests/external_read.rs",
+      "from_symbol": "vibe_safefs::transaction::tests::external_read::directory_flush_reopens_same_readable_capability_without_creation",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#READABLE-DIRECTORY-SYNC",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/tests/external_read.rs",
+      "from_symbol": "vibe_safefs::transaction::tests::external_read::existing_lock_is_absent_or_same_named_rechecked_barrier",
+      "line": 136,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-EXISTING-OBSERVATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/tests/external_read.rs",
+      "from_symbol": "vibe_safefs::transaction::tests::external_read::existing_store_absence_overlap_and_error_never_create_state",
+      "line": 89,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-EXISTING-OBSERVATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/tests/external_read.rs",
+      "from_symbol": "vibe_safefs::transaction::tests::external_read::replaced_lock_name_fifo_refuses_without_a_peer",
+      "line": 243,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#NONBLOCKING-REGULAR-ADMISSION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/tests/external_sync.rs",
+      "from_symbol": "vibe_safefs::transaction::tests::external_sync::owned_snapshot_and_retained_sync_refuse_fifo_without_a_writer",
+      "line": 191,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#NONBLOCKING-REGULAR-ADMISSION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-safefs/src/transaction/tests/external_sync.rs",
+      "from_symbol": "vibe_safefs::transaction::tests::external_sync::retained_image_requires_real_sync_and_preserves_snapshot",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-RETAINED-SYNC",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-safefs/src/transaction/tree.rs",
@@ -101944,7 +102165,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:bbf7c557b556b826480859cb7a4aae873f941875e385f3dbfeb4edc39e2b2a24",
+      "content_hash": "sha256:b09d539042840d881256201acf0746e6d20196ebd36361c07c0350782d6f27de",
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "PROP-056 — Scraped project export and in-place VibeVM removal",
@@ -103231,7 +103452,7 @@
     },
     {
       "anchor": "security",
-      "content_hash": "sha256:ae8225da509587fe856ba7a19755d54c9ebae1f31389de396f0fd31eef5b3e1f",
+      "content_hash": "sha256:b7dbc875b9dc90e6e2a128ad6ec3fd516b597d0d0f856ac0c97537f75478bbc3",
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "13. Security and authority invariants",
@@ -103257,12 +103478,48 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-FOLLOW"
     },
     {
+      "anchor": "EXTERNAL-EXISTING-OBSERVATION",
+      "content_hash": "sha256:a3f812915cfecb7b8ed015b0305317d132063a276d963a926411ec4087f3ff83",
+      "doc_path": "common/PROP-056",
+      "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
+      "heading": "Shared SafeFS existing-only external-store observation creates no path or lock file. Missing components are distinct from links, non-directories, overlap and I/O refusal. Capability ancestry proves project/store disjointness even for a missing suffix beneath the project. Existing and creating project-lock entrypoints use the same physical-project key, lock-name recipe, regular single-link admission and name/handle identity retry; both serialize only participants sharing that selected physical store. Store identity uses its own domain over the incumbent physical identity. This primitive does not broaden scrape's platform execution policy or grant a migration operation. @status:spec/done",
+      "line": 1170,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-EXISTING-OBSERVATION"
+    },
+    {
+      "anchor": "NONBLOCKING-REGULAR-ADMISSION",
+      "content_hash": "sha256:a409755089d6bafc8dc908fccd3f5c6c0ac2c79d5ef5290e69a57f6251ed8183",
+      "doc_path": "common/PROP-056",
+      "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
+      "heading": "Source and owned bounded reads, final-name snapshot and external-lock identity rechecks, and retained-image synchronization share nonblocking regular-file admission on Unix: open no-follow with O_NONBLOCK before checking file metadata, so a FIFO with no peer refuses instead of waiting indefinitely. Ordinary source reads retain their hardlink-permissive policy; owned snapshots and retained images still require one regular single-link file. This changes no writer/publication open defaults, follows no special file and grants no byte prefix as success. Non-Unix admission remains on its existing no-follow path. @status:spec/done",
+      "line": 1171,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#NONBLOCKING-REGULAR-ADMISSION"
+    },
+    {
+      "anchor": "EXTERNAL-RETAINED-SYNC",
+      "content_hash": "sha256:3636bece15aaf360ed98f70e5de0b850b436803df1c4142266ea9e8f4fe3c13c",
+      "doc_path": "common/PROP-056",
+      "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
+      "heading": "Matching retained bytes are not evidence of file synchronization. SafeFS can confirm a caller's exact retained single-link regular-file snapshot through its held capability: validate identity and bounded bytes/mode before and after actual file synchronization, and return actual parent-directory durability. The caller supplies the observation bound; no new fixed document quota is introduced and oversized observations never truncate. Windows uses a noncreating, nontruncating write-capable handle for file flush. This operation writes no content bytes, creates no namespace and does not authenticate older checkpoints or provide hostile-writer CAS. It confirms only the finite observation and synchronization window, not future immutability, whole-store atomicity or immunity to undetectable intervening changes. @status:spec/done",
+      "line": 1172,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#EXTERNAL-RETAINED-SYNC"
+    },
+    {
+      "anchor": "READABLE-DIRECTORY-SYNC",
+      "content_hash": "sha256:fa027660d54e61ce29b3353f6aca675cf3431744799ad6b5f0411ecf078f78e3",
+      "doc_path": "common/PROP-056",
+      "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
+      "heading": "On Unix a no-follow directory capability can carry O_PATH and therefore fail direct fsync with a bad descriptor. Synchronization reopens only fixed dot relative to that held directory as a readable handle, verifies the same directory identity before and after synchronization, and returns the actual durability result. It never falls back to the display pathname or creates namespace state. Non-Unix durability classification remains unchanged; unsupported or failed flushes are not promoted to Synced. @status:spec/done",
+      "line": 1173,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#READABLE-DIRECTORY-SYNC"
+    },
+    {
       "anchor": "SEC-NATIVE-NOFOLLOW-BOUNDARY",
       "content_hash": "sha256:b6b084673084b0c548f4f9084a13aabe9258e5b6e96e14e2d598f7e9e97fe374",
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Epoch-1 Windows\n      crosses a hand-written native ABI in exactly five narrowly reviewed functions:\n      lease-entry, remove-expected, create-directory, rename-no-replace and NTSTATUS\n      conversion. No safe standard-library or cap-std primitive preserves the required\n      retained-handle, no-follow, no-replace and race semantics for those operations.\n      Each function owns its inline SAFETY proof and exact tests. This is not a broad\n      crate or file exemption. A second consumer or an expanded native ABI is the\n      trigger to revisit a dedicated audit crate. @status:spec/done",
-      "line": 1170,
+      "line": 1174,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NATIVE-NOFOLLOW-BOUNDARY"
     },
     {
@@ -103271,7 +103528,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "A custom health verifier is\n      user-authorized code with the same trust consequence as a project build\n      script. The plan names its exact snapshot/interpreter/effects before\n      confirmation; packages cannot inject an executable scrape hook. Epoch 1\n      exposes only the disjoint copy through cwd and `{root}`; arbitrary\n      malicious host-absolute writes are outside its sandbox guarantee and\n      therefore require the same operator trust as any other authorized build\n      script. @status:spec/done",
-      "line": 1178,
+      "line": 1182,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-CUSTOM-CODE"
     },
     {
@@ -103280,7 +103537,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Contract, plan, argv, output and reports\n      may contain variable names and paths but never credential values. Custom\n      children receive only allowlisted environment. Output redaction and bounds\n      precede persistence. @status:spec/done",
-      "line": 1186,
+      "line": 1190,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-SECRETS"
     },
     {
@@ -103289,7 +103546,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "The running Vibe executable,\n      user-local journal and machine cache are outside project mutation\n      authority. Scrape removes repository integration, not the operator's\n      installed tool. @status:spec/done",
-      "line": 1190,
+      "line": 1194,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#SEC-NO-SELF-DELETION"
     },
     {
@@ -103298,7 +103555,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "14. Required verification matrix",
-      "line": 1197,
+      "line": 1201,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#acceptance"
     },
     {
@@ -103307,7 +103564,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Strict parse/write tests cover every\n      tagged variant, unknown field/kind/enum, duplicate id, missing required\n      member, wrong schema and canonical plan identity. @status:spec/done",
-      "line": 1199,
+      "line": 1203,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-SCHEMA"
     },
     {
@@ -103316,7 +103573,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Glob tests cover literal, component\n      star and whole-component double-star; reject question/class/brace/negation/\n      escape/triple-star/embedded-double-star, absolute/dot/backslash/colon\n      spellings; prove no shell/host expansion and deterministic order. @status:spec/done",
-      "line": 1202,
+      "line": 1206,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-GLOBS"
     },
     {
@@ -103325,7 +103582,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Fixtures cover clean generated,\n      modified generated, explicit authored deletion, keep shielding, invalid\n      keep/generated overlap, unclassified members, authored specifications and\n      kept descendants preventing ancestor deletion. @status:spec/done",
-      "line": 1206,
+      "line": 1210,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-CLASSIFICATION"
     },
     {
@@ -103334,7 +103591,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Rust goldens cover qualified/renamed\n      aliases, explicit/grouped imports, scope/spec/verifies/cell, every Cargo\n      dependency table, workspace inheritance, features and lock pruning across\n      src, tests, examples, benches, build.rs and arbitrarily nested workspace\n      members. Negatives preserve same-named local macros, strings/comments,\n      re-exports, glob imports and invalid macro grammar. End-to-end REDs prove\n      that a still-present path dependency blocks tree deletion before mutation,\n      and a still-present macro/attribute blocks dependency removal rather than\n      becoming rustc E0433 after publication. @status:spec/done",
-      "line": 1210,
+      "line": 1214,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-RUST"
     },
     {
@@ -103343,7 +103600,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "TypeScript/Go goldens cover mixed\n      comments, empty metadata comments, CRLF/indentation preservation and\n      non-target strings/prose/compiler/build/lint directives; product\n      source/tests remain native-buildable. @status:spec/done",
-      "line": 1219,
+      "line": 1223,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-TS-GO"
     },
     {
@@ -103352,7 +103609,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Managed-block fixtures cover\n      valid, absent, orphaned, reversed, duplicate, nested and embedded markers.\n      Relocation covers destination collision, overlap, cycle, cross-filesystem\n      refusal, byte/mode equality and ancestor retention. @status:spec/done",
-      "line": 1223,
+      "line": 1227,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-MANAGED-RELOCATE"
     },
     {
@@ -103361,7 +103618,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Epoch-1 has a real hermetic Cargo\n      before/after smoke plus exact argv and discovery unit coverage. Equivalent\n      real npm, Maven and Python preset smokes remain planned and unsupported\n      profiles remain typed blockers. @status:impl/plan",
-      "line": 1227,
+      "line": 1231,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-PRESETS"
     },
     {
@@ -103370,7 +103627,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Epoch-1 ships the sealed\n      Windows exit-code/inherit/reads-all/writes-none/spawn-allowed custom\n      profile with bundle, argv, output, timeout, cancel and drift tests. Stronger\n      structured, denied-network and restricted-effect profiles remain planned\n      behind explicit capability blockers. @status:impl/plan",
-      "line": 1231,
+      "line": 1235,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-CUSTOM-HEALTH"
     },
     {
@@ -103379,7 +103636,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Strict before-red refuses with zero\n      writes; before-green/after-red restores exact tree; admissible structured\n      no-regression before-fail/after-subset yields reduced assurance; a new or\n      worsened after finding rolls back; opaque nonzero never baselines. @status:spec/done",
-      "line": 1236,
+      "line": 1240,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-BASELINE"
     },
     {
@@ -103388,7 +103645,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Fault injection at every journal,\n      stage, rewrite, relocation, quarantine, contract-last, assertion, health,\n      rollback and cleanup boundary proves restart idempotence, correct\n      direction, third-state refusal and exact restoration. Before and after\n      verifier cwd/`{root}` writes are trapped in the external exact\n      copy/scratch, both the copy and delivered tree digest are re-proven after\n      health, and ambient TMP/TEMP inside the project cannot redirect workspace\n      creation into the product tree. @status:spec/done",
-      "line": 1240,
+      "line": 1244,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-TRANSACTION"
     },
     {
@@ -103397,7 +103654,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Export REDs cover output equal\n      to/inside/above source, destination race, unavailable no-replace rename,\n      crash before/after publication, after health in an exact disjoint copy\n      while the final location remains sealed,\n      and extra/missing/changed descendants before rollback. Concurrent output\n      data is never captured into transaction stage. @status:spec/done",
-      "line": 1248,
+      "line": 1252,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-EXPORT-RACES"
     },
     {
@@ -103406,7 +103663,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Epoch-1 end-to-end fixtures cover real\n      Rust export/in-place, Specmark erasure, Cargo.lock reconciliation, green\n      before/after, zero selected residue, external report and safe second-scrape\n      refusal. The mixed TypeScript/Go expansion remains planned. @status:impl/plan",
-      "line": 1254,
+      "line": 1258,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-E2E"
     },
     {
@@ -103415,7 +103672,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "A future host fixture covers\n      this repository's direct `vibevm/vibepacks` Cargo path wiring and\n      proves the scraper reports non-Specmark product tool dependencies as\n      blockers rather than deleting them into a broken build. @status:impl/plan",
-      "line": 1258,
+      "line": 1262,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#ACCEPT-HOST-DOGFOOD"
     },
     {
@@ -103424,7 +103681,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "15. Implementation decomposition",
-      "line": 1265,
+      "line": 1269,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#implementation"
     },
     {
@@ -103433,7 +103690,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "A — strict contract model, default generator,\n      path/glob parser, inventory/classification, canonical plan and human/JSON\n      rendering. @status:impl/done",
-      "line": 1267,
+      "line": 1271,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-A"
     },
     {
@@ -103442,7 +103699,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "B — typed rewrite/relocation algebra,\n      managed blocks, Rust/Cargo, TypeScript/npm and Go/module adapters, Cargo\n      v3/v4 native-lock reconciliation and residual proof. npm/pnpm/yarn/Go\n      manager-native lock rows remain explicit blockers. @status:impl/done",
-      "line": 1270,
+      "line": 1274,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-B"
     },
     {
@@ -103451,7 +103708,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "C — prepared Cargo/npm/Maven/Python\n      presets, the exact-copy Windows Cargo backend, the narrow sealed custom\n      profile, effect/output/process control and baseline comparison. Chains\n      without complete runtime capabilities fail closed. @status:impl/done",
-      "line": 1274,
+      "line": 1278,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-C"
     },
     {
@@ -103460,7 +103717,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "D — read-only source export transaction,\n      candidate publication and export evidence. @status:impl/done",
-      "line": 1278,
+      "line": 1282,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-D"
     },
     {
@@ -103469,7 +103726,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "E — external journal/lock, same-volume\n      quarantine, in-place contract-last commit, rollback and recovery. @status:impl/done",
-      "line": 1280,
+      "line": 1284,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-E"
     },
     {
@@ -103478,7 +103735,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "The pre-public internal\n      transaction journal moved from handwritten epoch 1 JSON to the strict generated\n      `scrape-transaction-journal/e2` root. Old epoch-1 state refuses with an actionable\n      restart recipe and is not migrated automatically; the public scrape plan, report and\n      health-result roots remain byte-identical at epoch 1. Root and named-object member\n      order is schema-declared; inline standard JTD discriminator arms use the pinned\n      generator's deterministic canonical field order. @status:impl/done",
-      "line": 1282,
+      "line": 1286,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#JOURNAL-E2-TRANSITION"
     },
     {
@@ -103487,7 +103744,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "The pre-public\n      prepared-health snapshot and canonical transaction health evidence use the strict\n      generated `scrape-prepared-health-snapshot/e2` and\n      `scrape-verification-health-evidence/e2` roots. An old handwritten prepared-health\n      shape refuses with the restart recipe rather than being guessed forward. Live file\n      identities and separately journaled verifier bundle bytes remain outside the plan\n      snapshot and are reattached only after their recorded digest, byte count, mode and\n      path identity agree. The public scrape plan, report and custom health-result roots\n      remain byte-identical at epoch 1; their health finding/report-row vocabulary has one\n      generated shared authority. @status:impl/done",
-      "line": 1289,
+      "line": 1293,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#HEALTH-PERSISTENCE-E2-TRANSITION"
     },
     {
@@ -103496,7 +103753,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "F — the bounded epoch-1 evidence includes\n      transaction/store fault matrices, composed production recovery, real Rust\n      Cargo/custom smokes, Windows races and explicit non-Windows fail-closed\n      probes. Wider ecosystem and host-dogfood rows remain planned above. @status:impl/done",
-      "line": 1299,
+      "line": 1303,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#IMPL-F"
     },
     {
@@ -103505,7 +103762,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "16. Foundational decisions",
-      "line": 1306,
+      "line": 1310,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#decisions"
     },
     {
@@ -103514,7 +103771,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "16.1 Contract over heuristics",
-      "line": 1307,
+      "line": 1311,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#decision-contract"
     },
     {
@@ -103523,7 +103780,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Decision. One\n      strict project contract carries every policy choice; observation only\n      evaluates it. @status:spec/done",
-      "line": 1308,
+      "line": 1312,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#DECISION-CONTRACT"
     },
     {
@@ -103532,7 +103789,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Why. Generated,\n      authored and accepted-product states can share names. Making policy data\n      is the only way to keep execution deterministic without guessing. @status:spec/done",
-      "line": 1311,
+      "line": 1315,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#WHY-CONTRACT"
     },
     {
@@ -103541,7 +103798,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Rejected.\n      Delete-known-names, Git-ignore-as-ownership, prompt-per-file and LLM\n      classification at execution time: each is order/environment dependent or\n      non-reproducible. @status:spec/done",
-      "line": 1314,
+      "line": 1318,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REJECT-CONTRACT"
     },
     {
@@ -103550,7 +103807,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Revisit when.\n      A stable package-contributed recipe protocol can compile into the same\n      closed plan without executing package code during scrape. @status:spec/done",
-      "line": 1318,
+      "line": 1322,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REVISIT-CONTRACT"
     },
     {
@@ -103559,7 +103816,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "16.2 Typed rewrites over regex and shell",
-      "line": 1323,
+      "line": 1327,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#decision-typed"
     },
     {
@@ -103568,7 +103825,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Decision. Native\n      parsers own source/manifests; literal exact-replace is the only textual\n      escape hatch. @status:spec/done",
-      "line": 1324,
+      "line": 1328,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#DECISION-TYPED"
     },
     {
@@ -103577,7 +103834,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Why. Identity,\n      cardinality and erasure equivalence are mechanically provable only over\n      syntax nodes and exact preimages. @status:spec/done",
-      "line": 1327,
+      "line": 1331,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#WHY-TYPED"
     },
     {
@@ -103586,7 +103843,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Rejected. Regex\n      source rewrites, arbitrary cleanup hooks and whole-file TOML/JSON\n      regeneration: they damage product text or hide the changed surface. @status:spec/done",
-      "line": 1330,
+      "line": 1334,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REJECT-TYPED"
     },
     {
@@ -103595,7 +103852,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Revisit when. Add a\n      typed adapter when a real unsupported format has a parser and preservation\n      oracle. @status:spec/done",
-      "line": 1333,
+      "line": 1337,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REVISIT-TYPED"
     },
     {
@@ -103604,7 +103861,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "16.3 Built-in health plus explicit custom oracle",
-      "line": 1338,
+      "line": 1342,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#decision-health"
     },
     {
@@ -103613,7 +103870,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Decision. Common\n      ecosystems use declarative presets; unusual domain checks use a sealed\n      custom verifier with structured argv and protocol. @status:spec/done",
-      "line": 1339,
+      "line": 1343,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#DECISION-HEALTH"
     },
     {
@@ -103622,7 +103879,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Why. Standard\n      operations should not require one-off scripts, while no finite preset\n      catalogue can express every project's definition of healthy. @status:spec/done",
-      "line": 1342,
+      "line": 1346,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#WHY-HEALTH"
     },
     {
@@ -103631,7 +103888,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Rejected. One shell\n      string, after-only testing, silent missing test scripts, automatic retry\n      and treating exit 0 as proof beyond the declared oracle. @status:spec/done",
-      "line": 1345,
+      "line": 1349,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REJECT-HEALTH"
     },
     {
@@ -103640,7 +103897,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Revisit when. A new\n      ecosystem demonstrates a stable build/test vocabulary deserving a built-in\n      adapter. @status:spec/done",
-      "line": 1348,
+      "line": 1352,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REVISIT-HEALTH"
     },
     {
@@ -103649,7 +103906,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "16.4 Export default, recoverable in-place option",
-      "line": 1353,
+      "line": 1357,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#decision-transaction"
     },
     {
@@ -103658,7 +103915,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Decision.\n      Export is the safest delivery form; explicit in-place uses an external\n      journal and same-volume quarantine with contract-last commit. @status:spec/done",
-      "line": 1354,
+      "line": 1358,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#DECISION-TRANSACTION"
     },
     {
@@ -103667,7 +103924,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Why. Project\n      `.vibe` cannot recover its own deletion, Git does not cover every\n      file, and multi-file mutation has no filesystem-wide atomic rename.\n      Journaled before/after states make interruption decidable. @status:spec/done",
-      "line": 1357,
+      "line": 1361,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#WHY-TRANSACTION"
     },
     {
@@ -103676,7 +103933,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Rejected.\n      Journal under project `.vibe`, Git reset as rollback, delete-first\n      uninstall, blind recursive removal, external configurable journal, and\n      cleaning quarantine before verified commit. @status:spec/done",
-      "line": 1361,
+      "line": 1365,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REJECT-TRANSACTION"
     },
     {
@@ -103685,7 +103942,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "Revisit when.\n      A platform offers a stronger atomic directory-tree primitive without\n      weakening cross-platform recovery semantics. @status:spec/done",
-      "line": 1365,
+      "line": 1369,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#REVISIT-TRANSACTION"
     },
     {
@@ -103694,7 +103951,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "17. History",
-      "line": 1371,
+      "line": 1375,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#history"
     },
     {
@@ -103703,7 +103960,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "2026-09-04: commissioned\n    directly by the owner after auditing how Rust Specmark, TypeScript JSDoc and\n    Go directive metadata behave when the Vibe tree disappears. The owner then\n    extended the request to an explicit default/alternate contract and\n    algorithmic standard/custom health checks, and ordered this feature ahead of\n    every remaining lifecycle R task. @status:spec/done",
-      "line": 1372,
+      "line": 1376,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#HISTORY-COMMISSIONED"
     },
     {
@@ -103712,7 +103969,7 @@
       "doc_path": "common/PROP-056",
       "file": "vibevm/vibespecs/common/PROP-056-scraped-project-export.xml",
       "heading": "2026-09-05:\n    implemented and ratified the Windows epoch-1 product surface: generated\n    plan/report wire, external journal/workspace, capability mutation, export,\n    in-place contract-last, rollback/recovery, exact-copy health, Cargo and the\n    narrow custom profile. Recorded the remaining manager-native lock, wider\n    preset/custom, mixed-language and host-dogfood work as explicit planned\n    scope. @status:impl/done",
-      "line": 1378,
+      "line": 1382,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#HISTORY-EPOCH1-WINDOWS"
     },
     {

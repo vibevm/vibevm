@@ -180,6 +180,26 @@ pub(crate) fn cap_options() -> cap_std::fs::OpenOptions {
     options
 }
 
+/// Admit a candidate regular file without waiting for a FIFO peer before its
+/// metadata can be checked. Regular-file reads are unchanged; writers retain
+/// the ordinary cap_options path and the caller still owns link-count policy.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-056#NONBLOCKING-REGULAR-ADMISSION"
+)]
+pub(crate) fn regular_read_options() -> cap_std::fs::OpenOptions {
+    #[cfg(unix)]
+    {
+        use cap_std::fs::OpenOptionsExt as _;
+        let mut options = cap_options();
+        options.custom_flags(libc::O_NONBLOCK);
+        options
+    }
+    #[cfg(not(unix))]
+    {
+        cap_options()
+    }
+}
+
 /// Refuse anything but a regular single-link file: no directories, no devices,
 /// no symlink/junction objects, no hard links shared with another name.
 pub(crate) fn verify_regular_single_link(file: &std::fs::File, display: &Path) -> Result<()> {

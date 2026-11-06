@@ -10,6 +10,11 @@ use crate::{
 };
 use crate::{DirectoryDurability, ExternalStore, Project, RenameError, arm_same_filesystem_check};
 
+#[path = "tests/external_read.rs"]
+mod external_read;
+#[path = "tests/external_sync.rs"]
+mod external_sync;
+
 fn project() -> (tempfile::TempDir, Project) {
     let root = tempfile::tempdir().unwrap();
     let project = Project::open(root.path()).unwrap();

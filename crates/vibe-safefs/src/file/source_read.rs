@@ -3,7 +3,7 @@ specmark::scope!(
     "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
 );
 
-use super::{cap_options, identity::file_identity, stable::unix_mode};
+use super::{identity::file_identity, regular_read_options, stable::unix_mode};
 use crate::{Pinned, Project};
 use anyhow::{Context, Result, bail};
 use std::io::{Read, Seek, SeekFrom};
@@ -54,7 +54,7 @@ impl Project {
             return Ok(None);
         };
         let path = holder.join(&name);
-        let mut options = source_options();
+        let mut options = regular_read_options();
         let mut held = match holder.dir.open_with(&name, options.read(true)) {
             Ok(file) => file.into_std(),
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
@@ -137,20 +137,6 @@ impl Project {
             );
         }
         Ok(metadata.is_file())
-    }
-}
-
-fn source_options() -> cap_std::fs::OpenOptions {
-    #[cfg(unix)]
-    {
-        use cap_std::fs::OpenOptionsExt as _;
-        let mut options = cap_options();
-        options.custom_flags(libc::O_NONBLOCK);
-        options
-    }
-    #[cfg(not(unix))]
-    {
-        cap_options()
     }
 }
 

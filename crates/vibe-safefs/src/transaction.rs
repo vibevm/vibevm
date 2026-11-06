@@ -20,6 +20,8 @@ use crate::{Pinned, Project};
 #[cfg(windows)]
 use cap_std::fs::OpenOptionsExt as _;
 
+mod external_open;
+mod external_sync;
 mod platform;
 mod tree;
 

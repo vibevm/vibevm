@@ -186,15 +186,10 @@ impl ExternalStore {
     /// store.  The arbitrary project key is hashed into a portable filename;
     /// raw project paths and raw OS identity numbers never enter that name.
     pub fn open_and_lock_project(&self, project_key: &str) -> Result<ExternalProjectLock> {
-        if project_key.is_empty() {
-            bail!("project key must not be empty");
-        }
+        let name = external_lock_name(project_key)?;
         let (locks, _, _) = ensure_external_child_durable(&self.root, "locks")?;
-        let mut digest = Sha256::new();
-        digest.update(b"vibe-safefs-external-lock-e1\0");
-        digest.update(project_key.as_bytes());
-        let name = format!("{:x}.lock", digest.finalize());
-        acquire_external_lock(&locks, &name)
+        acquire_external_lock(&locks, &name, true)?
+            .context("create-enabled lock unexpectedly returned absence")
     }
 
     /// Atomic durable file publication below the explicit store capability.
@@ -455,27 +450,49 @@ impl ExternalProjectLock {
 
 const LOCK_ATTEMPTS: u32 = 8;
 
-fn acquire_external_lock(directory: &Pinned, name: &str) -> Result<ExternalProjectLock> {
+fn external_lock_name(project_key: &str) -> Result<String> {
+    if project_key.is_empty() {
+        bail!("project key must not be empty");
+    }
+    let mut digest = Sha256::new();
+    digest.update(b"vibe-safefs-external-lock-e1\0");
+    digest.update(project_key.as_bytes());
+    Ok(format!("{:x}.lock", digest.finalize()))
+}
+
+fn acquire_external_lock(
+    directory: &Pinned,
+    name: &str,
+    create: bool,
+) -> Result<Option<ExternalProjectLock>> {
     let display = directory.join(name);
     for _ in 0..LOCK_ATTEMPTS {
         let mut options = cap_options();
         #[cfg(windows)]
         options.share_mode(0x0000_0001 | 0x0000_0002);
-        let file = directory
+        let file = match directory
             .dir
-            .open_with(name, options.read(true).write(true).create(true))
-            .with_context(|| format!("opening external lock `{}`", display.display()))?
-            .into_std();
+            .open_with(name, options.read(true).write(true).create(create))
+        {
+            Ok(file) => file.into_std(),
+            Err(error) if !create && error.kind() == std::io::ErrorKind::NotFound => {
+                return Ok(None);
+            }
+            Err(error) => {
+                return Err(anyhow::Error::new(error)
+                    .context(format!("opening external lock `{}`", display.display())));
+            }
+        };
         verify_regular_single_link(&file, &display)?;
         crate::race_hook::before_lock(directory, name);
         file.lock()
             .with_context(|| format!("locking `{}`", display.display()))?;
         if lock_still_named(directory, name, &file, &display)? {
-            return Ok(ExternalProjectLock {
+            return Ok(Some(ExternalProjectLock {
                 file,
                 directory: directory.shallow_clone()?,
                 name: name.to_owned(),
-            });
+            }));
         }
         drop(file);
     }
@@ -491,7 +508,7 @@ fn lock_still_named(
     locked: &std::fs::File,
     display: &Path,
 ) -> Result<bool> {
-    let mut options = cap_options();
+    let mut options = crate::file::regular_read_options();
     match directory.dir.open_with(name, options.read(true)) {
         Ok(current) => {
             let current = current.into_std();

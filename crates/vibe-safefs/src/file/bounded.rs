@@ -22,7 +22,7 @@ use sha2::Digest as _;
 
 use crate::Pinned;
 use crate::Project;
-use crate::file::cap_options;
+use crate::file::regular_read_options;
 use crate::file::verify_regular_single_link;
 
 /// One bounded, stable read of a regular single-link file.
@@ -93,7 +93,7 @@ impl Project {
             return Ok(None);
         };
         let display = holder.join(&name);
-        let mut options = cap_options();
+        let mut options = regular_read_options();
         let mut file = match holder.dir.open_with(&name, options.read(true)) {
             Ok(file) => file.into_std(),
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
@@ -218,7 +218,7 @@ impl Project {
             return Ok(None);
         };
         let display = holder.join(&name);
-        let mut options = cap_options();
+        let mut options = regular_read_options();
         match holder.dir.open_with(&name, options.read(true)) {
             Ok(file) => {
                 let std_file = file.into_std();
@@ -370,7 +370,7 @@ pub(crate) fn ensure_still_final_name(
     held: crate::file::identity::FileIdentity,
     display: &Path,
 ) -> Result<()> {
-    let mut options = cap_options();
+    let mut options = regular_read_options();
     match holder.dir.open_with(name, options.read(true)) {
         Ok(current) => {
             let current = current.into_std();
