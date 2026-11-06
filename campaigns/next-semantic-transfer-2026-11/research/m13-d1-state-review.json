@@ -1,0 +1,31 @@
+{
+  "task": "M13D1 bounded state review",
+  "tests_run": false,
+  "acceptance": "root-owned",
+  "findings": [{
+    "id": "STATE-P2-1",
+    "severity": "P2",
+    "path": "crates/vibe-workspace/src/migration_application/recovery.rs",
+    "lines": "456-485",
+    "branch": "target_write success, Apply and Restore",
+    "title": "Receipt dropped before final domain observation",
+    "observed": "OwnedPublication receipt is dropped at success-arm exit; final observed snapshot identity is discarded.",
+    "scenario_not_executed": "Same-byte/mode object replacement after inner SafeFS receipt verification and before domain final observation is accepted as Completed.",
+    "existing_test_distinction": "object_history_tests exercises inner SafeFS before_publish_verify hook, not post-helper domain observation.",
+    "suggestion": "Keep receipt through final observation and compare matches_snapshot; mismatch keeps evidence and returns Uncertain/PublicationIo."
+  }],
+  "drift": "No changes in ten named migration source hashes between captures",
+  "source_sha256": {
+    "crates/vibe-workspace/src/migration_application.rs": "9cd5e01ca6b82fb6a79d63c4724ec3106002ca9d82c939cade0734c9dbada8c3",
+    "crates/vibe-workspace/src/migration_application/runtime.rs": "ad8921ec3a12cea2b9372dc224a8e6e439b840a2270e44ebd7237ba76b00a141",
+    "crates/vibe-workspace/src/migration_application/storage.rs": "085eb3e56ec52918a3ddd212adb220c2768ba6c18a6093db185ba8275abe5009",
+    "crates/vibe-workspace/src/migration_application/recovery.rs": "71741d659ce3df3e85d2b7882fbd95e3e79b3655c8864f4804168d43a9d89220",
+    "crates/vibe-workspace/src/migration_application/validation.rs": "71feccef5de1a2400896a7f7c6e2452b0993497dc7df5dbe36440a3b19f6124c",
+    "crates/vibe-workspace/src/migration_application/report.rs": "48fbf7f97fbc889883c676cf24c6c13e45f9f80c58f5f677fdda60b9861d2a66",
+    "crates/vibe-workspace/src/migration_application/identity.rs": "d8e027bc7153acd2006d09b17bd7c0a62e8db66f005fcfc2a5421bed037f1d5f",
+    "crates/vibe-workspace/src/migration_application/object_history_tests.rs": "c3ba300a3ed15143fde00b85a535e1ac36123bc326bb7e7a560620b747e579a7",
+    "crates/vibe-workspace/src/migration_application/retained_sync_tests.rs": "084af72c804b62d05b7286ce488f90b4db8f0ffc72a9a0c1ee34a4fe3e651b52",
+    "crates/vibe-workspace/src/migration_application/runtime_tests.rs": "b1f8ca6768b9eef18c6559bc8c2e885f6cba03a79b5f076888e8de79fedaaff1"
+  },
+  "limits": ["same physical project/designated store cooperating participants", "no hostile CAS/ABA guarantee", "no power-loss inference from process exits", "cross-restart byte/mode recognition without persistent target witness", "no native-platform qualification"]
+}

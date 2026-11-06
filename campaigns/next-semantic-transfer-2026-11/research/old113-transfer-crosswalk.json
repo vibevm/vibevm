@@ -16,14 +16,14 @@
   },
   "counts": {
     "partial": 24,
-    "full": 8,
-    "not-transferred": 17,
+    "full": 9,
+    "not-transferred": 16,
     "unknown": 64,
     "already_main": 0
   },
-  "minimum_proven_complete_old_tasks": 8,
-  "exact_global_complete_total": "not established; at least 8",
-  "important": "At least8 full old tasks proved;24partial,17not-transferred,64unknown. C2 accepted; D1 source audit establishes missing domain without claiming runtime completion.",
+  "minimum_proven_complete_old_tasks": 9,
+  "exact_global_complete_total": "not established; at least 9",
+  "important": "At least9 full old tasks proved;24partial,16not-transferred,64unknown. Neutral D1 accepted with refined coordination/platform limits; no full source interpretation or campaign completion inferred.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -3823,13 +3823,15 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Apply a validated migration on Linux, macOS and Windows with retained before-state, explicitly scoped coordinated concurrency guarantees and truthful interrupted-state recovery.\nAcceptance criteria: Runnable fixtures cover real before→after reader behavior, preservation and recovery.; Generated report/errors retain exact source/target/effect state across process exit.; Product documentation and generated reports distinguish coordinated guarantees, external-writer limits and measured native-platform proof; all three platforms have working implementation paths.",
-      "status": "not-transferred",
+      "status": "full",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Actual D1 application/recovery unavailable in inspected main owners; source audit is not runtime/native qualification.",
-      "implemented_coverage": "Existing SafeFS primitives and accepted C1/C2 interfaces identified; no accepted migration apply/journal/recovery domain yet.",
-      "remaining_behavior": "Shared existing-store/sync capabilities, actual owned-file durable journal/replay/recovery and independently granted CLI/MCP surfaces.",
+      "accepted_main_commits": [
+        "a4b322150c494e5d7245252ace109b7be9e62c1a"
+      ],
+      "transferred_scope": "Real independently granted neutral one-file apply/inspect/complete/restore, durable intent/before image, known-state recovery, actual CLI/MCP and process-cut proof.",
+      "unmet_or_unverified": "Native Mac/Windows not executed; no power-loss/every-syscall proof, hostile CAS or persistent per-target object history.",
+      "implemented_coverage": "Original refined cooperative D1 contract accepted; shared/portable paths and measured native proof distinguished.",
+      "remaining_behavior": "No blocking original neutral implementation gap; later source/feature recipes, M16 editor participation and native Mac/Windows qualification remain explicitly separate.",
       "superseded_obligations": [],
       "exact_contract": {
         "id": "M-13-D.1",
@@ -3935,9 +3937,9 @@
           "Bounded surface registration amendment: the four additional CLI owners are only for the early migration machine entry and explicit MCP server migration-store/file grants. Reuse existing generic dispatcher channels. Follow PROP-044#MANIFEST-MIGRATION-SURFACES; do not modify unrelated command, lifecycle, configuration or package-manager behavior."
         ]
       },
-      "review_evidence": "research/m13-d1-next.md/.json",
-      "review_main_pin": "21d7683e027d81f14b2528734dd77bb7da236821",
-      "review_disposition": "Root verified42source bindings; classify known missing domain rather than unknown; primitive implementation started, not accepted."
+      "review_evidence": "research/m13-d1-transfer-acceptance.md/.json",
+      "review_main_pin": "a4b322150c494e5d7245252ace109b7be9e62c1a",
+      "review_disposition": "Root accepted after causal fixes, independent review, full source/format/adapter gates and original portable ruling."
     },
     {
       "old_task_id": "M-13-D.2",
@@ -4389,5 +4391,5 @@
   "count_caution": "The 0 complete lower bound is epistemic, not evidence all 113 fail. In particular M-01-A.3 could be complete once original caller inventory is reconciled. No missing type-name or broader subsystem requirement is used as a criterion substitute.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
   "version_note": "M01A3 and M06G2 full. Four M05 partial scopes updated after accepted app runtime.2full/24partial/16named untransferred/71unknown; exact global completed total remains unestablished.",
-  "latest_scoped_review_main_pin": "21d7683e027d81f14b2528734dd77bb7da236821"
+  "latest_scoped_review_main_pin": "a4b322150c494e5d7245252ace109b7be9e62c1a"
 }
