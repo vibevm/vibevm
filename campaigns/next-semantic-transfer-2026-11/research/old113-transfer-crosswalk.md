@@ -2,7 +2,7 @@
 
 Cumulative reconciliation. Initial whole-crosswalk pin `a344c6389fdb60a8db075f60b8a7c89712572916`; later scoped reviews carry their own pins. G123 review uses accepted main `5d44c5104`; the later app scope review uses `c5662ee42`, and G2 is accepted in `bc49f1220`. Unaccepted candidates are excluded; source-only reviews do not imply runtime acceptance.
 
-**Current counting result:** 113 old accepted IDs verified: **9 full semantic transfers, 30 partial correspondences, 22 scopes with no accepted campaign delivery, 52 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least9are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
+**Current counting result:** 113 old accepted IDs verified: **9 full semantic transfers, 31 partial correspondences, 29 scopes with no accepted campaign delivery, 44 not yet fully reconciled**. Root accepted M-01-A.3 in3be4a0590 after checking its exact caller/fixture matrix; see [acceptance](m01-a3-transfer-acceptance.md). M-06-G.2 is accepted in bc49f1220; see [its clause matrix](m06-g2-transfer-acceptance.md). **The exact global completed total remains unestablished; at least9are proved.** The original zero lower bound is superseded, not a claim that no capabilities had been delivered.
 
 **Comparison rule:** semantic transfer, not reproduction of old mechanism. Approved literal-percent compatibility, shared source inodes, bytes-only APIs and simpler rollback owners do not themselves keep a task partial. Only remaining useful behavior or acceptance evidence counts. No full already-main task equivalence was established.
 
@@ -274,3 +274,7 @@ Root verified all26 pinned source hashes and all five original contracts in [the
 ## Seven M14 tasks — environment audit, 2026-11-06
 
 Root verified49 pinned source hashes and7 original contracts in [the environment review](m14-transfer-review.md). A2/B2/C2 are partial; A1/B1/C1/C3 are not transferred. No new full task. Existing global/project installer choices, layout, cache and ownership must be extended, not replaced by another package manager. Root substitution alone does not redirect host commands or native launchers. The original stale C1 cross-reference is interpreted against explicit C2/C3 contracts: first actual bound effect belongs C3.
+
+## Eight M10 tasks — derivative audit, 2026-11-06
+
+Root verified31 pinned source hashes and8 original contracts in [the derivative review](m10-transfer-review.md). D1 is partial; seven others are not transferred. No full task promoted. Existing compiler provenance and materializer records are reusable foundations, but adoption statuses are not arbitrary local patches, and preparation that hydrates skills/cache is not a passive read. Preserve one source/compiler/ownership system when adding independent base/local/result lineage.

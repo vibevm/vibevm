@@ -1,0 +1,1903 @@
+{
+  "main_pin": "33606d916e3990baa25b58982d311d2429766b79",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "mode": "read-only audit; dirtyA1 excluded; no source/ledger changes",
+  "rows": [
+    {
+      "old_task_id": "M-10-A.1",
+      "title": "Define the required derivative family matrix",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-10-A.1",
+        "title": "Define the required derivative family matrix",
+        "goal": "Make general local derivatives concrete across all source interpretations without a demand-permission gate.",
+        "read_paths": [
+          "crates/vibe-agent-projection/src/pkgskill.rs",
+          "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+          "crates/vibe-workspace/src/vibedeps/derived.rs",
+          "crates/vibe-spec/src/resolver/lookup.rs",
+          "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+          "vibevm/vibespecs/common/PROP-028-package-families.xml"
+        ],
+        "write_paths": [
+          "vibevm/vibespecs/common/PROP-074-local-derivatives.xml",
+          "fixtures/next/derivatives/"
+        ],
+        "steps": [
+          "Enumerate required CommonMark, XML-data, Vibe-spec, opaque file and nested-tree cases, including code-bearing bytes treated as data.",
+          "Map existing composition/replacement/export mechanisms to each family; identify exact missing behavior and owning library rather than proposing a parallel priority language.",
+          "Create PROP-074 anchors and fixture manifests that distinguish base identity, local ownership, compatibility targets and downstream activation."
+        ],
+        "positive_cases": [
+          "Every required family has a meaningful local modification/replacement scenario.",
+          "A sealed source permits a separately owned local derivative."
+        ],
+        "negative_cases": [
+          "Text-only support cannot close general resource scope.",
+          "Neither absent demand evidence nor a sealed flag may become a new permission gate."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-specdoc target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-specdoc <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+          "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "Canonical family matrix names actual source mechanisms and executable case requirements.",
+          "No original capture or upstream identity is edited."
+        ],
+        "safe_stop": "Family scope and canonical derivative contract are reviewable before implementation.",
+        "commit_subject": "docs(derivatives): define complete local resource family scope",
+        "notes": [
+          "PROP-074 and fixtures/next/derivatives are proposed paths. This task creates their first canonical/fixture content."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Enumerate required CommonMark, XML-data, Vibe-spec, opaque file and nested-tree cases, including code-bearing bytes treated as data.",
+          "assessment": "missing",
+          "reason": "No canonical five-family local derivative matrix or meaningful local replacement fixture family.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-028-package-families.xml",
+            "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Map existing composition/replacement/export mechanisms to each family; identify exact missing behavior and owning library rather than proposing a parallel priority language.",
+          "assessment": "partial",
+          "reason": "Existing Vibe compiler composition, slot conversion and skill projection owners are identifiable; no accepted common derivative ownership decision.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-028-package-families.xml",
+            "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Create PROP-074 anchors and fixture manifests that distinguish base identity, local ownership, compatibility targets and downstream activation.",
+          "assessment": "missing",
+          "reason": "No PROP074/binding fixtures distinguishing base/local/compatibility/activation.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-028-package-families.xml",
+            "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Every required family has a meaningful local modification/replacement scenario.",
+          "assessment": "missing",
+          "reason": "No local replacement scenario for every required family.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-028-package-families.xml",
+            "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "A sealed source permits a separately owned local derivative.",
+          "assessment": "missing",
+          "reason": "No independently owned sealed-base derivative scenario.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-028-package-families.xml",
+            "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Text-only support cannot close general resource scope.",
+          "assessment": "partial",
+          "reason": "Existing slot raw-copy and skill tree code handle nontext bytes; that is not a complete local derivative family contract.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-028-package-families.xml",
+            "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Neither absent demand evidence nor a sealed flag may become a new permission gate.",
+          "assessment": "unverified",
+          "reason": "No derivative operation or new demand/sealed permission gate exists; absence alone is not positive delivery.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-028-package-families.xml",
+            "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Canonical family matrix names actual source mechanisms and executable case requirements.",
+          "assessment": "missing",
+          "reason": "No canonical family matrix with executable case requirements.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-028-package-families.xml",
+            "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "No original capture or upstream identity is edited.",
+          "assessment": "partial",
+          "reason": "Accepted compiler/source observation preserves upstream bytes at its boundary; no general derivative path.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-028-package-families.xml",
+            "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Family scope and canonical derivative contract are reviewable before implementation.",
+          "assessment": "missing",
+          "reason": "Required family contract/fixtures absent.",
+          "evidence_paths": [
+            "vibevm/vibespecs/common/PROP-028-package-families.xml",
+            "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs"
+          ]
+        }
+      ],
+      "runtime": "No new tests run; source inference and historical accepted receipts only."
+    },
+    {
+      "old_task_id": "M-10-A.2",
+      "title": "Choose one reusable derivative operation boundary",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-10-A.2",
+        "title": "Choose one reusable derivative operation boundary",
+        "goal": "Integrate derive operations with source proof and artifact ownership instead of adding another truth store.",
+        "read_paths": [
+          "crates/vibe-spec/src/resolver/lookup.rs",
+          "crates/vibe-install/src/slot_verify.rs",
+          "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+          "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+          "crates/vibe-spec/src/compiler/ir.rs",
+          "crates/vibe-workspace/src/extension_world.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs"
+        ],
+        "write_paths": [
+          "vibevm/vibespecs/common/PROP-074-local-derivatives.xml",
+          "crates/vibe-workspace/src/",
+          "fixtures/next/derivatives/",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs"
+        ],
+        "steps": [
+          "Trace source capture, existing composition output and downstream artifact/deploy ownership for two contrasting fixture families.",
+          "Define derive/show/diff/rebase/apply service boundaries and immutable input/output carriers using M-01/M-16; record which values are authored versus disposable output.",
+          "Add a small operation harness proving passive replacement and projection inspection never execute code or mutate installed source slots."
+        ],
+        "positive_cases": [
+          "One inert text replacement and one opaque tree use the same domain lifecycle.",
+          "Source provenance remains available after deleting disposable derived output."
+        ],
+        "negative_cases": [
+          "A derived cache cannot become the sole home of local authored source.",
+          "Derivation cannot secretly hydrate, execute a script or reuse upstream grants."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+          "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "One owning service has explicit input/output/effect boundaries for every operation.",
+          "Dependency direction remains acyclic; no second resolver/compiler is introduced."
+        ],
+        "safe_stop": "The common derivative service harness and ownership decision are ready.",
+        "commit_subject": "refactor(derivatives): define shared source and artifact operation seams",
+        "notes": [
+          "Exact new module names are proposed within existing workspace/source ownership; if a different crate is required, root must bind that perimeter before editing it.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Trace source capture, existing composition output and downstream artifact/deploy ownership for two contrasting fixture families.",
+          "assessment": "partial",
+          "reason": "Source/conversion/compiler/skill/artifact boundaries can be traced; two contrasting same-lifecycle derivative fixtures are absent.",
+          "evidence_paths": [
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/lib.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Define derive/show/diff/rebase/apply service boundaries and immutable input/output carriers using M-01/M-16; record which values are authored versus disposable output.",
+          "assessment": "missing",
+          "reason": "No shared derive/show/diff/rebase/apply service or immutable base/local/result carriers.",
+          "evidence_paths": [
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/lib.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Add a small operation harness proving passive replacement and projection inspection never execute code or mutate installed source slots.",
+          "assessment": "missing",
+          "reason": "No passive derivative operation harness; existing skill prepare hydrates embedded sources and writes composed cache.",
+          "evidence_paths": [
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/lib.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "One inert text replacement and one opaque tree use the same domain lifecycle.",
+          "assessment": "missing",
+          "reason": "No text replacement and opaque tree under one derivative lifecycle.",
+          "evidence_paths": [
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/lib.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Source provenance remains available after deleting disposable derived output.",
+          "assessment": "partial",
+          "reason": "Original authored package/local skill inputs survive disposable output recreation, but exact retained derivative provenance record absent.",
+          "evidence_paths": [
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/lib.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "A derived cache cannot become the sole home of local authored source.",
+          "assessment": "partial",
+          "reason": "Existing composed cache is reproducible from inputs; no derivative authored-input retention contract.",
+          "evidence_paths": [
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/lib.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Derivation cannot secretly hydrate, execute a script or reuse upstream grants.",
+          "assessment": "missing",
+          "reason": "Existing skill preparation can acquire cache/network; cannot establish zero-effect passive derive.",
+          "evidence_paths": [
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/lib.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "One owning service has explicit input/output/effect boundaries for every operation.",
+          "assessment": "missing",
+          "reason": "One owning derivative service with explicit effect boundaries absent.",
+          "evidence_paths": [
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/lib.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Dependency direction remains acyclic; no second resolver/compiler is introduced.",
+          "assessment": "partial",
+          "reason": "Incumbent compiler/resolver can be reused; no new service dependency design accepted.",
+          "evidence_paths": [
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/lib.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "The common derivative service harness and ownership decision are ready.",
+          "assessment": "missing",
+          "reason": "Common derivative harness/ownership decision not delivered.",
+          "evidence_paths": [
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/lib.rs",
+            "crates/vibe-orchestrator/src/lib.rs"
+          ]
+        }
+      ],
+      "runtime": "No new tests run; source inference and historical accepted receipts only."
+    },
+    {
+      "old_task_id": "M-10-B.1",
+      "title": "Define authored bindings and exact derivative provenance",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-10-B.1",
+        "title": "Define authored bindings and exact derivative provenance",
+        "goal": "Implement the typed authored binding and distinct base/local/result identities.",
+        "read_paths": [
+          "crates/vibe-core/src/manifest/package.rs",
+          "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+          "crates/vibe-install/src/slot_verify.rs",
+          "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+          "crates/vibe-spec/src/resolver/lookup.rs",
+          "xtask/src/main.rs",
+          ".cargo/config.toml",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-core/src/manifest/",
+          "crates/vibe-workspace/src/",
+          "schemas/",
+          "formats/",
+          "crates/vibe-wire/",
+          "vibevm/vibespecs/common/PROP-074-local-derivatives.xml",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs"
+        ],
+        "steps": [
+          "Add DerivationBinding grammar with owner/resource IDs, exact base capture/resource/interpretation, retained local source and explicit operation recipe.",
+          "Define framed provenance/result hashes and generated result schema; equal output bytes must not erase distinct ownership/provenance.",
+          "Use migration primitives for any changed authored format, preserve comments and reject ambiguous legacy input."
+        ],
+        "positive_cases": [
+          "Bindings round-trip while retaining authored local source and exact base.",
+          "Same result bytes from different bases/owners remain distinct provenance records."
+        ],
+        "negative_cases": [
+          "Duplicate identity, absent exact base or ambiguous source interpretation refuses.",
+          "A copied upstream logical ID cannot masquerade as a new derivative."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+          "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "Strict schemas/corpus cover authored and generated carriers.",
+          "Stored result retains a complete navigable base→local→result chain."
+        ],
+        "safe_stop": "Binding/provenance schema and pure validation work before writes.",
+        "commit_subject": "feat(derivatives): record exact local binding and provenance",
+        "notes": [
+          "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Add DerivationBinding grammar with owner/resource IDs, exact base capture/resource/interpretation, retained local source and explicit operation recipe.",
+          "assessment": "missing",
+          "reason": "No authored binding grammar with owner/resource/exact base/interpretation/local source/recipe.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-facts/src/overlay.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Define framed provenance/result hashes and generated result schema; equal output bytes must not erase distinct ownership/provenance.",
+          "assessment": "partial",
+          "reason": "F19 emission provenance retains context/input/output distinctions and slot records retain converter/source/output, but no general derivative result schema or base-local-result hash carrier.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-facts/src/overlay.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Use migration primitives for any changed authored format, preserve comments and reject ambiguous legacy input.",
+          "assessment": "missing",
+          "reason": "No derivative authored-format migration; M13 exact replay is a reusable prerequisite only.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-facts/src/overlay.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Bindings round-trip while retaining authored local source and exact base.",
+          "assessment": "missing",
+          "reason": "No derivative binding roundtrip retaining local source/exact base.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-facts/src/overlay.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Same result bytes from different bases/owners remain distinct provenance records.",
+          "assessment": "partial",
+          "reason": "Compiler contexts and source lane evidence distinguish equal emitted bytes; not independently owned local derivative provenance.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-facts/src/overlay.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Duplicate identity, absent exact base or ambiguous source interpretation refuses.",
+          "assessment": "missing",
+          "reason": "No derivative duplicate/base/interpretation admission.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-facts/src/overlay.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "A copied upstream logical ID cannot masquerade as a new derivative.",
+          "assessment": "missing",
+          "reason": "No distinct derivative identity admission to reject copied upstream logical ID.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-facts/src/overlay.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Strict schemas/corpus cover authored and generated carriers.",
+          "assessment": "missing",
+          "reason": "No strict authored/generated derivative schema corpus.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-facts/src/overlay.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Stored result retains a complete navigable base→local→result chain.",
+          "assessment": "missing",
+          "reason": "No complete navigable base-local-result chain; slot overlay is adoption status, not local source.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-facts/src/overlay.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Binding/provenance schema and pure validation work before writes.",
+          "assessment": "missing",
+          "reason": "Binding/provenance domain absent despite useful compiler evidence.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-facts/src/overlay.rs"
+          ]
+        }
+      ],
+      "runtime": "No new tests run; source inference and historical accepted receipts only."
+    },
+    {
+      "old_task_id": "M-10-B.2",
+      "title": "Separate compatibility from activation authority",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-10-B.2",
+        "title": "Separate compatibility from activation authority",
+        "goal": "Implement independent compatibility and effect-admission decisions for local derivatives.",
+        "read_paths": [
+          "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+          "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+          "crates/vibe-spec/src/resolver/lookup.rs",
+          "xtask/src/main.rs",
+          ".cargo/config.toml",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs",
+          "crates/vibe-agent-projection/Cargo.toml",
+          "crates/vibe-agent-projection/src/lib.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-workspace/src/",
+          "crates/vibe-agent-projection/src/",
+          "crates/vibe-lifecycle/src/mechanism/deploy/",
+          "schemas/",
+          "formats/",
+          "crates/vibe-wire/",
+          "vibevm/vibespecs/common/PROP-074-local-derivatives.xml",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs",
+          "crates/vibe-agent-projection/Cargo.toml",
+          "crates/vibe-agent-projection/src/lib.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy.rs"
+        ],
+        "steps": [
+          "Validate an optional export target against the derived result's actual interface without prohibiting local creation.",
+          "Expose compatible/incompatible/unknown diagnostics and allow an explicitly selected alternative supported target.",
+          "Require new descriptor/artifact identity and exact M-08/M-14 grants before executing/deploying code-bearing results; no upstream trust inheritance."
+        ],
+        "positive_cases": [
+          "A sealed source can be forked locally and inspected even when one target rejects its interface.",
+          "Compatible derivative activation succeeds only with its own grant."
+        ],
+        "negative_cases": [
+          "Incompatible target cannot be mislabeled supported.",
+          "Base signatures, grants or package installation cannot authorize changed result effects."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- check --path . --quiet only when actual spec/boot/dependency composition impact requires whole-project validation. Otherwise bind an existing appropriate root or focused declared-source checks; the write perimeter alone is not a trigger.",
+          "CONDITIONAL ORACLE: cargo run --quiet -p vibe-cli -- facts check --exhaustive only when actual facts/adoption/reference/extraction or closure-contract impact requires exhaustive validation. Otherwise bind affected claim/source checks; the write perimeter alone is not a trigger.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "Creation, compatibility and activation have separate machine states and cases.",
+          "Refusal leaves local source intact and original slot unchanged."
+        ],
+        "safe_stop": "Compatibility/admission decisions are implemented on fixtures.",
+        "commit_subject": "feat(derivatives): separate local ownership from activation grants",
+        "notes": [
+          "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Validate an optional export target against the derived result's actual interface without prohibiting local creation.",
+          "assessment": "missing",
+          "reason": "No derivative interface compatibility evaluation independent of local creation.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Expose compatible/incompatible/unknown diagnostics and allow an explicitly selected alternative supported target.",
+          "assessment": "missing",
+          "reason": "No compatible/incompatible/unknown derivative target report or alternative selection.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Require new descriptor/artifact identity and exact M-08/M-14 grants before executing/deploying code-bearing results; no upstream trust inheritance.",
+          "assessment": "partial",
+          "reason": "Artifact/deploy owner checks current recorded bytes; no derivative-specific new descriptor/grant join.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "A sealed source can be forked locally and inspected even when one target rejects its interface.",
+          "assessment": "missing",
+          "reason": "No sealed-base local fork and rejected-export-target scenario.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Compatible derivative activation succeeds only with its own grant.",
+          "assessment": "missing",
+          "reason": "No independently granted compatible derivative activation.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Incompatible target cannot be mislabeled supported.",
+          "assessment": "missing",
+          "reason": "No derivative target support classifier.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Base signatures, grants or package installation cannot authorize changed result effects.",
+          "assessment": "missing",
+          "reason": "No base-to-result authority noninheritance check joined to derivative identity.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Creation, compatibility and activation have separate machine states and cases.",
+          "assessment": "missing",
+          "reason": "Creation/compatibility/activation states not modeled together.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Refusal leaves local source intact and original slot unchanged.",
+          "assessment": "partial",
+          "reason": "Incumbent readers/compilers preserve original sources on refusal, but derivative-local-source refusal boundary absent.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Compatibility/admission decisions are implemented on fixtures.",
+          "assessment": "missing",
+          "reason": "Derivative compatibility/admission fixtures absent.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        }
+      ],
+      "runtime": "No new tests run; source inference and historical accepted receipts only."
+    },
+    {
+      "old_task_id": "M-10-C.1",
+      "title": "Implement inert derive, show and diff across files and trees",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-10-C.1",
+        "title": "Implement inert derive, show and diff across files and trees",
+        "goal": "Materialize local derivative results with complete resource membership and byte-preserving data handling.",
+        "read_paths": [
+          "crates/vibe-spec/src/resolver/lookup.rs",
+          "crates/vibe-install/src/slot_verify.rs",
+          "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+          "crates/vibe-safefs/src/file/bounded.rs",
+          "crates/vibe-safefs/src/component.rs",
+          "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs",
+          "crates/vibe-agent-projection/Cargo.toml",
+          "crates/vibe-agent-projection/src/lib.rs",
+          "crates/vibe-spec/Cargo.toml",
+          "crates/vibe-spec/src/lib.rs",
+          "crates/vibe-spec/src/resolver.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-workspace/src/",
+          "crates/vibe-agent-projection/src/",
+          "crates/vibe-spec/src/resolver/",
+          "fixtures/next/derivatives/",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs",
+          "crates/vibe-agent-projection/Cargo.toml",
+          "crates/vibe-agent-projection/src/lib.rs",
+          "crates/vibe-spec/Cargo.toml",
+          "crates/vibe-spec/src/lib.rs",
+          "crates/vibe-spec/src/resolver.rs"
+        ],
+        "steps": [
+          "Implement full replacement/local-source copy for each family in M-10-A using admitted captured inputs and retained local source.",
+          "Validate tree paths/membership before staged publication; preserve XML-data/opaque bytes and notices without running embedded content.",
+          "Expose show/diff through the owning service with raw/projection basis, exact digests and complete file additions/removals."
+        ],
+        "positive_cases": [
+          "CommonMark, XML-data, Vibe-spec, opaque file and nested tree each produce a usable independently owned result.",
+          "Removing generated output permits recreation from retained authored input."
+        ],
+        "negative_cases": [
+          "Traversal, changed base/local bytes, missing resource and duplicate path fail before publication.",
+          "Opaque script/code content remains inert."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "Every family has a real result and exact source/result inventory.",
+          "Passive operations have zero process/network/install side effects."
+        ],
+        "safe_stop": "General derivation/read/diff work locally; activation remains separate.",
+        "commit_subject": "feat(derivatives): derive and inspect complete inert resource trees",
+        "notes": [
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Implement full replacement/local-source copy for each family in M-10-A using admitted captured inputs and retained local source.",
+          "assessment": "partial",
+          "reason": "Mixed slots and skill snapshots copy files/trees, but no independently owned retained local replacement per five families.",
+          "evidence_paths": [
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Validate tree paths/membership before staged publication; preserve XML-data/opaque bytes and notices without running embedded content.",
+          "assessment": "partial",
+          "reason": "Existing paths/collisions and copied bytes provide reusable checks; committed conversion still classifies spec candidates by suffix/location, not explicit XML-data/opaque interpretation.",
+          "evidence_paths": [
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Expose show/diff through the owning service with raw/projection basis, exact digests and complete file additions/removals.",
+          "assessment": "missing",
+          "reason": "No general show/diff result with exact base/local/result inventory and additions/removals.",
+          "evidence_paths": [
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "CommonMark, XML-data, Vibe-spec, opaque file and nested tree each produce a usable independently owned result.",
+          "assessment": "missing",
+          "reason": "No usable independently owned result across all five required families.",
+          "evidence_paths": [
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Removing generated output permits recreation from retained authored input.",
+          "assessment": "partial",
+          "reason": "Converted slots/composed skills can be recreated from original input; no authored local derivative binding to recreate.",
+          "evidence_paths": [
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Traversal, changed base/local bytes, missing resource and duplicate path fail before publication.",
+          "assessment": "partial",
+          "reason": "Existing materialization checks duplicates/record hashes; no joined changed-base/local membership fence.",
+          "evidence_paths": [
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Opaque script/code content remains inert.",
+          "assessment": "partial",
+          "reason": "Raw copied script bytes are data in materialization; no full passive derivative service proof.",
+          "evidence_paths": [
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Every family has a real result and exact source/result inventory.",
+          "assessment": "missing",
+          "reason": "No exact independently owned source/result inventory for every family.",
+          "evidence_paths": [
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Passive operations have zero process/network/install side effects.",
+          "assessment": "missing",
+          "reason": "No zero-process/network/install passive operation boundary; skill preparation hydrates sources.",
+          "evidence_paths": [
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "General derivation/read/diff work locally; activation remains separate.",
+          "assessment": "missing",
+          "reason": "General derive/show/diff absent.",
+          "evidence_paths": [
+            "crates/vibe-workspace/src/vibedeps/derived.rs",
+            "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+            "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        }
+      ],
+      "runtime": "No new tests run; source inference and historical accepted receipts only."
+    },
+    {
+      "old_task_id": "M-10-C.2",
+      "title": "Implement explicit rebase and guarded authored apply",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-10-C.2",
+        "title": "Implement explicit rebase and guarded authored apply",
+        "goal": "Preserve old provenance while rebasing a local derivative onto a newly selected base.",
+        "read_paths": [
+          "crates/vibe-install/src/slot_verify.rs",
+          "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+          "crates/vibe-lifecycle/src/state/fingerprint/inputs.rs",
+          "crates/vibe-safefs/src/file/bounded.rs",
+          "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+          "crates/vibe-spec/src/resolver/lookup.rs",
+          "xtask/src/main.rs",
+          ".cargo/config.toml",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-safefs/Cargo.toml",
+          "crates/vibe-safefs/src/lib.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/mod.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/barrier.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/apply.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/journal.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/fence.rs",
+          "crates/vibe-orchestrator/src/document_analysis/mod.rs",
+          "crates/vibe-orchestrator/src/document_analysis/capture.rs",
+          "crates/vibe-orchestrator/Cargo.toml",
+          "vibevm/vibespecs/common/PROP-080-machine-operations-and-observability.xml"
+        ],
+        "write_paths": [
+          "crates/vibe-workspace/src/",
+          "crates/vibe-core/src/manifest/",
+          "crates/vibe-safefs/src/",
+          "fixtures/next/derivatives/",
+          "schemas/",
+          "formats/",
+          "crates/vibe-wire/",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-safefs/Cargo.toml",
+          "crates/vibe-safefs/src/lib.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/mod.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/plan.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/barrier.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/apply.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/journal.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/fence.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/derivative.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/derivative_journal.rs",
+          "crates/vibe-orchestrator/src/document_analysis/edit/m_10_c_2_cases.rs"
+        ],
+        "steps": [
+          "Compare old base/new base/local content and return rebase-required with reviewable changes; do not auto-merge.",
+          "After explicit selection, recapture saved source and apply a new binding under M-16 edit barrier/CAS with retained before-state.",
+          "Journal local binding/result publication, preserve old accepted provenance and implement inspect/recover for interruption."
+        ],
+        "positive_cases": [
+          "An explicit compatible rebase creates new provenance while preserving the prior chain.",
+          "Replay of an already-applied exact transaction is idempotent."
+        ],
+        "negative_cases": [
+          "Missing old capture, ambiguous patch, dirty buffer or concurrent edit refuses.",
+          "Unknown third state remains recovery-required rather than overwriting local work."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: bind the new vibe-orchestrator --lib document_analysis::edit::m_10_c_2_cases family to registered M16 derivative adapter/apply/recovery obligations before compiling; verify nonzero selected cases.",
+          "RUN BOUND CHECKS: cargo test --offline --locked -p vibe-orchestrator --lib document_analysis::edit::m_10_c_2_cases -- --nocapture; select affected incumbent m_16_d_3_cases when existing M16 internals change.",
+          "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "git diff --check",
+          "CONDITIONAL OWNER CHECKS: vibe-core only for actual binding-model changes; vibe-safefs only for affected guarded publication behavior; vibe-wire/codegen only for actual persisted format/registration changes. Bind meaningful existing or new nonzero cases before compiling, never require empty invented families solely from write allowance.",
+          "SCOPED FORMAT: check only changed Rust files; preserve inherited unrelated whole-workspace formatting debt."
+        ],
+        "acceptance": [
+          "Same-version base drift cannot silently change applicability.",
+          "Failure injection preserves authored source and truthful completed/pending effects."
+        ],
+        "safe_stop": "Explicit rebase/apply/recovery is proven with no automatic merge.",
+        "commit_subject": "feat(derivatives): apply explicit rebases with retained recovery",
+        "notes": [
+          "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations.",
+          "The named orchestrator edit owner paths are writable only for an upper derivative adapter and bounded reuse of the incumbent registered barrier/lease/expected-snapshot publication/recovery. Workspace stays pure; no reverse dependency, new barrier/grant, or widened target eligibility.",
+          "DocumentEditAuthority forbids .vibe/.zap-state/lockfile targets. EditBarrier::apply owns its lifecycle lease and releases fences at exit; do not nest the lease or claim post-release fencing. Journal result publication as an explicit separate effect with retained lineage and completed/pending/unknown outcomes.",
+          "The initial actual M10C2 attempt stopped unsatisfied/not_started with an empty patch because the packet made the required M16 owner read-only. Its four Cargo families were not run; format/diff attempts are not functional evidence. Repeat this same logical task using the corrected owner perimeter."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Compare old base/new base/local content and return rebase-required with reviewable changes; do not auto-merge.",
+          "assessment": "missing",
+          "reason": "No old/new base versus local rebase-required comparison; slot freshness is not rebase.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "After explicit selection, recapture saved source and apply a new binding under M-16 edit barrier/CAS with retained before-state.",
+          "assessment": "missing",
+          "reason": "No derivative binding apply via shared M16 saved editor barrier; main M13 one-file migration is different authority.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Journal local binding/result publication, preserve old accepted provenance and implement inspect/recover for interruption.",
+          "assessment": "missing",
+          "reason": "No derivative binding/result publication journal or lineage-preserving recovery.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "An explicit compatible rebase creates new provenance while preserving the prior chain.",
+          "assessment": "missing",
+          "reason": "No explicit compatible derivative rebase preserving prior chain.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Replay of an already-applied exact transaction is idempotent.",
+          "assessment": "partial",
+          "reason": "M13 exact approved existing-file migration has idempotence; no derivative transaction exists.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Missing old capture, ambiguous patch, dirty buffer or concurrent edit refuses.",
+          "assessment": "missing",
+          "reason": "No derivative old-capture/patch/dirty-buffer/concurrent-edit refusal join.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Unknown third state remains recovery-required rather than overwriting local work.",
+          "assessment": "partial",
+          "reason": "M13 migration refuses third state for its file; derivative local/result state machine absent.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Same-version base drift cannot silently change applicability.",
+          "assessment": "missing",
+          "reason": "No derivative applicability tied to exact same-version base capture.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "Failure injection preserves authored source and truthful completed/pending effects.",
+          "assessment": "missing",
+          "reason": "No derivative interruption/failure matrix preserving local source and effects.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Explicit rebase/apply/recovery is proven with no automatic merge.",
+          "assessment": "missing",
+          "reason": "No explicit derivative rebase/apply/recovery.",
+          "evidence_paths": [
+            "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+            "crates/vibe-workspace/src/migration_application/runtime.rs",
+            "crates/vibe-orchestrator/src/lib.rs",
+            "crates/vibe-install/src/slot_verify.rs"
+          ]
+        }
+      ],
+      "runtime": "No new tests run; source inference and historical accepted receipts only."
+    },
+    {
+      "old_task_id": "M-10-D.1",
+      "title": "Expose derivatives in source and boot inspection",
+      "proposed_status": "partial",
+      "exact_contract": {
+        "id": "M-10-D.1",
+        "title": "Expose derivatives in source and boot inspection",
+        "goal": "Connect exact derivative provenance to source queries and debugger views.",
+        "read_paths": [
+          "crates/vibe-spec/src/resolver/lookup.rs",
+          "crates/vibe-spec/src/compiler/ir.rs",
+          "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+          "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+          "crates/vibe-workspace/src/compile_trace.rs",
+          "crates/vibe-spec/Cargo.toml",
+          "crates/vibe-spec/src/lib.rs",
+          "crates/vibe-spec/src/resolver.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs",
+          "crates/vibe-mcp/Cargo.toml",
+          "crates/vibe-mcp/src/lib.rs",
+          "crates/vibe-cli/Cargo.toml",
+          "crates/vibe-cli/src/commands/mod.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-spec/src/resolver/",
+          "crates/vibe-workspace/src/",
+          "crates/vibe-mcp/src/",
+          "crates/vibe-cli/src/commands/",
+          "fixtures/next/derivatives/",
+          "crates/vibe-spec/Cargo.toml",
+          "crates/vibe-spec/src/lib.rs",
+          "crates/vibe-spec/src/resolver.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs",
+          "crates/vibe-mcp/Cargo.toml",
+          "crates/vibe-mcp/src/lib.rs",
+          "crates/vibe-cli/Cargo.toml",
+          "crates/vibe-cli/src/commands/mod.rs"
+        ],
+        "steps": [
+          "Consume the accepted M-06-C and M-01 contracts to resolve a derivative resource as its own identity with full provenance.",
+          "Add base/local/result relationships to actual boot occurrences and source/raw-projection navigation without inventing a second compiler.",
+          "Verify same-snapshot paging and exact contribution attribution after a derivative update; stale captures remain explicit."
+        ],
+        "positive_cases": [
+          "Source query and debugger navigate the same base→local→result records.",
+          "A repeated inclusion keeps distinct occurrences while sharing exact payload identity."
+        ],
+        "negative_cases": [
+          "A stale derivative cannot be labeled current source-proven.",
+          "Opening a view cannot recompute effectful derivatives or invoke providers."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-mcp target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-mcp <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "CLI/API/MCP inspection agrees on identity, bytes and completeness.",
+          "All required families appear in the debugger/source proof matrix."
+        ],
+        "safe_stop": "Read integration is complete; no derived active content executed.",
+        "commit_subject": "feat(derivatives): expose provenance in source and boot models",
+        "notes": [
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Consume the accepted M-06-C and M-01 contracts to resolve a derivative resource as its own identity with full provenance.",
+          "assessment": "missing",
+          "reason": "Resolver selects installed/self documents, not a derivative resource identity with retained lineage.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-cli/src/commands/tree/artifacts.rs",
+            "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+            "crates/vibe-spec/src/resolver/lookup.rs",
+            "crates/vibe-workspace/src/compile_trace.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Add base/local/result relationships to actual boot occurrences and source/raw-projection navigation without inventing a second compiler.",
+          "assessment": "partial",
+          "reason": "F19 carries compiler source occurrences into emitted boot, but no base/local/result relationship or authored-raw coordinate chain.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-cli/src/commands/tree/artifacts.rs",
+            "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+            "crates/vibe-spec/src/resolver/lookup.rs",
+            "crates/vibe-workspace/src/compile_trace.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Verify same-snapshot paging and exact contribution attribution after a derivative update; stale captures remain explicit.",
+          "assessment": "missing",
+          "reason": "No derivative snapshot-bound paging/update attribution.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-cli/src/commands/tree/artifacts.rs",
+            "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+            "crates/vibe-spec/src/resolver/lookup.rs",
+            "crates/vibe-workspace/src/compile_trace.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Source query and debugger navigate the same base→local→result records.",
+          "assessment": "missing",
+          "reason": "No source-query/debugger shared derivative lineage record.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-cli/src/commands/tree/artifacts.rs",
+            "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+            "crates/vibe-spec/src/resolver/lookup.rs",
+            "crates/vibe-workspace/src/compile_trace.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "A repeated inclusion keeps distinct occurrences while sharing exact payload identity.",
+          "assessment": "partial",
+          "reason": "F19 recursion path and target/view evidence preserve repeated occurrence identity independently of payload; useful boot-attribution subpart already accepted.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-cli/src/commands/tree/artifacts.rs",
+            "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+            "crates/vibe-spec/src/resolver/lookup.rs",
+            "crates/vibe-workspace/src/compile_trace.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "A stale derivative cannot be labeled current source-proven.",
+          "assessment": "partial",
+          "reason": "Compiler checks stale body/tape and recipe freshness; not an exact derivative source-proof freshness state.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-cli/src/commands/tree/artifacts.rs",
+            "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+            "crates/vibe-spec/src/resolver/lookup.rs",
+            "crates/vibe-workspace/src/compile_trace.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Opening a view cannot recompute effectful derivatives or invoke providers.",
+          "assessment": "partial",
+          "reason": "Committed decompile_static reads supplied text without provider calls; compile-analyzed instead recompiles with a supplied TransformPlan. No generic passive derivative inspection boundary is proved by that API.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-cli/src/commands/tree/artifacts.rs",
+            "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+            "crates/vibe-spec/src/resolver/lookup.rs",
+            "crates/vibe-workspace/src/compile_trace.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "CLI/API/MCP inspection agrees on identity, bytes and completeness.",
+          "assessment": "missing",
+          "reason": "No CLI/API/MCP derivative identity/bytes/completeness parity.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-cli/src/commands/tree/artifacts.rs",
+            "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+            "crates/vibe-spec/src/resolver/lookup.rs",
+            "crates/vibe-workspace/src/compile_trace.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "All required families appear in the debugger/source proof matrix.",
+          "assessment": "missing",
+          "reason": "No all-family derivative debugger/source proof matrix.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-cli/src/commands/tree/artifacts.rs",
+            "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+            "crates/vibe-spec/src/resolver/lookup.rs",
+            "crates/vibe-workspace/src/compile_trace.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Read integration is complete; no derived active content executed.",
+          "assessment": "partial",
+          "reason": "Actual committed boot occurrence inspection exists; derivative read integration absent.",
+          "evidence_paths": [
+            "crates/vibe-spec/src/embed/occurrences.rs",
+            "crates/vibe-spec/src/compiler/ir/emitted.rs",
+            "crates/vibe-cli/src/commands/tree/artifacts.rs",
+            "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+            "crates/vibe-spec/src/resolver/lookup.rs",
+            "crates/vibe-workspace/src/compile_trace.rs"
+          ]
+        }
+      ],
+      "runtime": "No new tests run; source inference and historical accepted receipts only."
+    },
+    {
+      "old_task_id": "M-10-D.2",
+      "title": "Prove derivative activation, revocation and recovery",
+      "proposed_status": "not-transferred",
+      "exact_contract": {
+        "id": "M-10-D.2",
+        "title": "Prove derivative activation, revocation and recovery",
+        "goal": "Deliver the full active-resource path under new authority and retained artifact/receipt ownership.",
+        "read_paths": [
+          "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/model.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/ownership.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy/plugin/opencode.rs",
+          "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+          "crates/vibe-install/src/slot_verify.rs",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+          "crates/vibe-agent-projection/Cargo.toml",
+          "crates/vibe-agent-projection/src/lib.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-lifecycle/src/mechanism/deploy/",
+          "crates/vibe-agent-projection/src/",
+          "crates/vibe-workspace/src/",
+          "fixtures/next/derivatives/",
+          "crates/vibe-lifecycle/Cargo.toml",
+          "crates/vibe-lifecycle/src/lib.rs",
+          "crates/vibe-lifecycle/src/mechanism.rs",
+          "crates/vibe-lifecycle/src/mechanism/deploy.rs",
+          "crates/vibe-agent-projection/Cargo.toml",
+          "crates/vibe-agent-projection/src/lib.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs"
+        ],
+        "steps": [
+          "Produce a code-bearing derivative fixture and publish its exact artifact through the existing artifact/adapter machinery.",
+          "Prepare and issue a new exact activation grant; exercise apply/update/verify/remove and a base/local change between plan and effect.",
+          "Revoke the descriptor/grant and inspect/clean up using retained host-readable ownership; retain partial status on interruption."
+        ],
+        "positive_cases": [
+          "Explicitly admitted derivative activation works and preserves neighboring state.",
+          "Revoked or missing descriptor remains inspectable and safely removable under new cleanup authority."
+        ],
+        "negative_cases": [
+          "Derive/read alone never triggers execution.",
+          "Changed result, inherited grant or drifted receipt refuses without guessing rollback."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-lifecycle target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-lifecycle <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-agent-projection target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-agent-projection <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "Evidence joins exact derivative result, grant, artifact, observed effect and receipt.",
+          "General families and downstream active/inert paths satisfy M-10 exit."
+        ],
+        "safe_stop": "Full derivative activation/recovery proof is ready for root review.",
+        "commit_subject": "test(derivatives): verify explicit activation and retained ownership",
+        "notes": [
+          "Prerequisites M-08-C/D and M-06-C are mandatory. Native fixture execution is confined to explicitly bound isolated test targets; no sandbox claim is inferred.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "clauses": [
+        {
+          "category": "steps",
+          "index": 1,
+          "exact": "Produce a code-bearing derivative fixture and publish its exact artifact through the existing artifact/adapter machinery.",
+          "assessment": "partial",
+          "reason": "Existing artifact/deploy machinery admits measured artifacts; no code-bearing derivative fixture/provenance connection.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 2,
+          "exact": "Prepare and issue a new exact activation grant; exercise apply/update/verify/remove and a base/local change between plan and effect.",
+          "assessment": "missing",
+          "reason": "No new derivative-specific activation grant and apply/update/verify/remove drift journey.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "steps",
+          "index": 3,
+          "exact": "Revoke the descriptor/grant and inspect/clean up using retained host-readable ownership; retain partial status on interruption.",
+          "assessment": "missing",
+          "reason": "No derivative descriptor/grant revocation cleanup with retained ownership.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 1,
+          "exact": "Explicitly admitted derivative activation works and preserves neighboring state.",
+          "assessment": "missing",
+          "reason": "No actual independently admitted derivative activation/neighbour preservation proof.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "positive_cases",
+          "index": 2,
+          "exact": "Revoked or missing descriptor remains inspectable and safely removable under new cleanup authority.",
+          "assessment": "missing",
+          "reason": "No revoked derivative descriptor inspection/removal proof.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 1,
+          "exact": "Derive/read alone never triggers execution.",
+          "assessment": "partial",
+          "reason": "Pure compiler/read helpers are inert at their stated boundary; no common passive derivative service to prove all entrypoints.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "negative_cases",
+          "index": 2,
+          "exact": "Changed result, inherited grant or drifted receipt refuses without guessing rollback.",
+          "assessment": "partial",
+          "reason": "Ordinary deploy checks artifact digest and receipt ownership; changed-result/inherited-grant derivative joins absent.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 1,
+          "exact": "Evidence joins exact derivative result, grant, artifact, observed effect and receipt.",
+          "assessment": "missing",
+          "reason": "No exact derivative result→new grant→artifact→effect→receipt evidence chain.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "acceptance",
+          "index": 2,
+          "exact": "General families and downstream active/inert paths satisfy M-10 exit.",
+          "assessment": "missing",
+          "reason": "General five-family plus active/inert M10 exit absent.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        },
+        {
+          "category": "safe_stop",
+          "index": 1,
+          "exact": "Full derivative activation/recovery proof is ready for root review.",
+          "assessment": "missing",
+          "reason": "Derivative activation/recovery proof absent.",
+          "evidence_paths": [
+            "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+            "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+            "crates/vibe-agent-projection/src/pkgskill.rs"
+          ]
+        }
+      ],
+      "runtime": "No new tests run; source inference and historical accepted receipts only."
+    }
+  ],
+  "source_bindings": [
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-10-A.json",
+      "sha256": "28e8d1f8d304412a598f0d6f8e0f25e6c3b3f078bf9c78227cdc709437b507c6",
+      "scope": "full exact contracts, checks/notes treated as historical data"
+    },
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-10-B.json",
+      "sha256": "7868f3ad874054d4f029f48928f932d1aab4c22052c4883b5bfdf990526e1ec8",
+      "scope": "full exact contracts, checks/notes treated as historical data"
+    },
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-10-C.json",
+      "sha256": "2dafbf0180f22a7fbf0d268d2c21ad17d36a58a9337213dc29baeefedfad758e",
+      "scope": "full exact contracts, checks/notes treated as historical data"
+    },
+    {
+      "tree": "prototype contract",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-10-D.json",
+      "sha256": "173e0382e27d28523690a0ca06578f61003f17737d88d40a0feaf630eb533106",
+      "scope": "full exact contracts, checks/notes treated as historical data"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F17-normal-closure-once.md",
+      "sha256": "b17e0caca90a550f2b3d8df1472263910c17de42318bce3b52c02bcf5b6b4d31",
+      "scope": "full accepted receipt/limits"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "campaigns/next-semantic-transfer-2026-11/features/F19-typed-embed-provenance.md",
+      "sha256": "97c4a0bdc6c45b9f8213337e1b0f03c482d8be4da336529a97e327743059caa7",
+      "scope": "full accepted receipt/limits"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/old113-transfer-crosswalk.json",
+      "sha256": "0546f52ec9d64d3611ab7fb4ec4bc15d365d16e0117c42da5342b3cb5529009f",
+      "scope": "eight M10 rows"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "campaigns/next-semantic-transfer-2026-11/architecture/map.json",
+      "sha256": "04cb37c8435b0d9be3bf92395825b429c86dd723f9fd5b349dc5a5cd8086a3dd",
+      "scope": "eight M10 dependency/uncertainty rows"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+      "sha256": "a173149a2898b0707c1a65cf7357138e90663b0ec3979dcc14e64d1027bc77d1",
+      "scope": "record/file/disposition types, read/write/wire mapping and hash owner"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "sha256": "6a6e155adc50cc81a9944a7b1aa54e9d36905570dfd81fd77c5bb2b3ac1d5d16",
+      "scope": "materialization inputs, source/output selection, raw fallback, adoption overlay and generated exclusion"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-install/src/slot_verify.rs",
+      "sha256": "dd5ceeafcf6f7c43c49f9f85c5763fde9d08fe2b469053877e28ac148cc75d7b",
+      "scope": "typed source/format/recipe/overlay/payload consistency verification"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-facts/src/overlay.rs",
+      "sha256": "e174d72c2f8d91bf68e6a37690ba4d87c925a630527c4a4575bc9f046200d4e2",
+      "scope": "PackageOverlay/status entries and registry-file hash"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-cli/src/commands/refactor/convert_source.rs",
+      "sha256": "a74fde188f79adcc463d37cd4efff21983e8fd85c91de3f8f265c2b91ec5010f",
+      "scope": "discovery/refusal/conversion and sibling write/remove rollback"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-agent-projection/src/pkgskill.rs",
+      "sha256": "1bfa287a0cb21efc9b2b57931815f7c5c1487fc5bb64cf1ffc545e03e0e9fec0",
+      "scope": "install receipt/ownership check and reconcile/uninstall overview"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "sha256": "79be30821dba08ab1fdf03d320f4400ff9eb7d69557ef8223729b412d399132b",
+      "scope": "declarations/provider, embedded_root, prepare/hydrate/composed cache implementation"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-spec/src/compiler/ir.rs",
+      "sha256": "9f94d14ce580cc94bb8e6d80e270846540585361fe6106cbd98579ff5c8b4ea2",
+      "scope": "IR identity types/module exports"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-spec/src/compiler/ir/emitted.rs",
+      "sha256": "4a14d60060991033e5daf59e04726cbe25ed31455ac391cc33220a656f3c4099",
+      "scope": "manager-owned emitted provenance and artifact bytes"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-spec/src/compiler/embed_snapshot.rs",
+      "sha256": "e626319fdd0ea8be1b4ab06d0974831c50c08a13514d0e75397261659ad899ae",
+      "scope": "complete internal snapshot value"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-spec/src/compiler/source_snapshot.rs",
+      "sha256": "e32563311741e431996463c4069525b06e9166c3c40131ab9b82618deadf37bd",
+      "scope": "complete internal resolution snapshot/observation values"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-spec/src/embed/occurrences.rs",
+      "sha256": "55f5309c01af67ca96e62692f8ce5bd24dd407d578b83c2f50b76f9fd652dc12",
+      "scope": "EmbedOccurrence/Tape source coordinate/digest/boundaries owner"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+      "sha256": "bd9459dda2c8b1090aa702bda1693c57980fa0cdd23d156db8db73cddeede8e4",
+      "scope": "whole compile-analysis delegation boundary"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-workspace/src/compile_trace.rs",
+      "sha256": "6a9e8dc6877a943f3b00500c6eaa2cd8b952bdda163b8d51b7b2946599d27712",
+      "scope": "durable trace purpose, failure/retention limits and module inventory"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-cli/src/commands/tree/artifacts.rs",
+      "sha256": "61cf400e00facf82a690ef88d0c51c3b1946d8af3997c464dba61d568db64c5f",
+      "scope": "committed static decompiler framing/contribution/occurrence parsing"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-spec/src/resolver/lookup.rs",
+      "sha256": "e22aa67c63755e5d72efe0316cb578654b96777685e821ecddd0db55ed269208",
+      "scope": "document selection/ambiguity/format matching"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-workspace/src/lib.rs",
+      "sha256": "aa7f1dccf6a5d33717780a19438029abf994fbe3ffe4151a8c6466264da94daa",
+      "scope": "public module inventory"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-orchestrator/src/lib.rs",
+      "sha256": "a1f485472b3e6d8e2af02744045d52733a23d208611b1fb7969a59ca990267bf",
+      "scope": "public module inventory, no document_analysis owner"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-workspace/src/migration_application/runtime.rs",
+      "sha256": "f7f203dee27b6fcf1a04cda612b4fc35b9c4ff5a125aa1eab3656cf6bde6dc90",
+      "scope": "apply_plan existing target and exact approval/replay logic"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/artifact.rs",
+      "sha256": "1f0448dc9c0a5cfccdd0f372a069d374f06e6302fb562ea82f582593bdf7e773",
+      "scope": "whole artifact admission/digest check"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "crates/vibe-lifecycle/src/mechanism/deploy/protocol.rs",
+      "sha256": "c40c5d061eda4de25e719764e70b422398076a6219e714eda55f41c6a74cce83",
+      "scope": "artifact/provider resource/lock ownership model"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "vibevm/vibespecs/common/PROP-028-package-families.xml",
+      "sha256": "74d465fed99defc39335fa42fb67a430f954f6993676d3664f9bb3f9352b9233",
+      "scope": "relevant source family/derivative keyword search, no derivative matrix found"
+    },
+    {
+      "tree": "accepted main",
+      "pin": "33606d916e3990baa25b58982d311d2429766b79",
+      "path": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+      "sha256": "31b12a7d48bb76fbd5f909fbb7a5169dec83c29b0773281b6707bc1b391960d7",
+      "scope": "materialization/converter/hash and generated-artifact facts"
+    }
+  ],
+  "proposed_counts": {
+    "full": 0,
+    "partial": 1,
+    "not-transferred": 7,
+    "unknown": 0
+  },
+  "known_accepted_evidence": [
+    {
+      "features": [
+        "F17",
+        "F19"
+      ],
+      "commit": "2a9da5c8b2e9ba6b73d2192df1f6b6a541a7f373",
+      "ancestor_of_main_pin": true,
+      "scope": "normal once coverage and typed compiler/boot embed provenance, not generic authored derivative"
+    }
+  ],
+  "status_policy": "Reusable compiler/slot/skill primitives alone do not deliver a defining derivative binding/service/apply operation. D1 partial credits actual repeated occurrence/boot provenance/committed pure inspection sub-obligations. No full task proposed.",
+  "next_atom": "A1 five-family canonical matrix/fixtures and A2 one passive service boundary over exact captured base and retained local source; follow with coherent B1 bindings/result identity and C1 inert derive/show/diff. No activation permission/demand gate for local creation.",
+  "architectural_order": "Explicit source interpretation and capture interfaces feed pure binding/inert replacement; Vibe-spec projection uses existing compiler/specdoc, opaque/XML-data stays bytes. D1 inspection joins existing occurrence model. C2 saved binding/result publication belongs above workspace in shared editor/recovery owner; B2 active half and D2 require actual separate result grant, artifact and target admission. No second resolver/compiler/truth store.",
+  "scope_note": "All eight original task contracts retained. No unimplemented outside113 work commissioned; interfaces are named prerequisites, not substituted completion.",
+  "root_review": {
+    "disposition": "accepted source-audit classification only",
+    "verified_source_bindings": 31,
+    "verified_complete_original_contracts": 8,
+    "runtime_tests_run": false,
+    "full_task_promotions": 0
+  }
+}
