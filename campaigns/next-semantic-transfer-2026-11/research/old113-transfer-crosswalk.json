@@ -16,14 +16,14 @@
   },
   "counts": {
     "partial": 24,
-    "full": 4,
+    "full": 5,
     "not-transferred": 18,
-    "unknown": 67,
+    "unknown": 66,
     "already_main": 0
   },
-  "minimum_proven_complete_old_tasks": 4,
-  "exact_global_complete_total": "not established; at least 4",
-  "important": "At least4 full old tasks proved;24partial,18not-transferred,67unknown. G3 accepted at its exact original boundary; no whole campaign completion inferred.",
+  "minimum_proven_complete_old_tasks": 5,
+  "exact_global_complete_total": "not established; at least 5",
+  "important": "At least5 full old tasks proved;24partial,18not-transferred,66unknown. Neutral M13C1 accepted at its exact original boundary; later recipe integrations remain separate.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -3575,14 +3575,86 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Parse and plan deterministic authored-format migrations while preserving owner syntax and values.\nAcceptance criteria: Repeated planning over exact input gives identical output/diff identity.; Fixture coverage demonstrates genuine transforms and no-op/ambiguity cases.",
-      "status": "unknown",
+      "status": "full",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "implemented_coverage": "No criterion-complete implementation mapped in this bounded review; does not assert absence of baseline pieces.",
-      "remaining_behavior": "Not criterion-by-criterion reconciled in this bounded review. No full completion or already-main equivalence inferred from card absence.",
-      "superseded_obligations": []
+      "accepted_main_commits": [
+        "f56a4cba60e502416d194f6fc3677e51a1ad2e45"
+      ],
+      "transferred_scope": "Pure explicitly selected frozen migration profiles, exact-token snapshot-to-copy and current no-op plans, typed input/refusal and validated identities.",
+      "unmet_or_unverified": "Broad historical real-file corpus not claimed; successful package fixtures are synthetic.",
+      "implemented_coverage": "Exact original neutral C1 contract; source/feature converters explicitly belong to later reader atoms.",
+      "remaining_behavior": "No original C1 blocking gap; later recipe, transport and saved apply remain separate campaign obligations.",
+      "superseded_obligations": [],
+      "exact_contract": {
+        "id": "M-13-C.1",
+        "title": "Implement pure versioned migration planning",
+        "goal": "Parse and plan deterministic authored-format migrations while preserving owner syntax and values.",
+        "read_paths": [
+          "crates/vibe-core/src/manifest/package.rs",
+          "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
+          "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+          "vibevm/vibespecs/common/PROP-032-project-model-ide-substrate.xml",
+          "vibevm/vibespecs/common/PROP-031-algorithmic-refactoring.xml",
+          "xtask/src/main.rs",
+          ".cargo/config.toml",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs"
+        ],
+        "write_paths": [
+          "crates/vibe-core/src/manifest/",
+          "crates/vibe-workspace/src/",
+          "schemas/",
+          "formats/",
+          "crates/vibe-wire/",
+          "crates/vibe-core/Cargo.toml",
+          "crates/vibe-core/src/lib.rs",
+          "crates/vibe-core/src/manifest/mod.rs",
+          "crates/vibe-workspace/Cargo.toml",
+          "crates/vibe-workspace/src/lib.rs"
+        ],
+        "steps": [
+          "Define a source-version registry with a frozen recognized epoch-less grammar and deterministic transform chain; unknown input is a typed refusal.",
+          "Retain a syntax-preserving representation for authored TOML/text so comments, ordering and owner selections survive planned edits.",
+          "Produce validated in-memory before/after diffs and typed NeedsInput for ambiguity; do not implement SourceDescriptor or feature-specific converters before their own reader atoms."
+        ],
+        "positive_cases": [
+          "A recognized legacy fixture yields deterministic planned changes with comments/values preserved.",
+          "A current-format input yields an explicit no-op plan."
+        ],
+        "negative_cases": [
+          "Unknown version, ambiguous selection and malformed syntax refuse before filesystem effects.",
+          "No LLM or heuristic default chooses missing authored intent."
+        ],
+        "checks": [
+          "SELECT BEFORE DISPATCH: vibe-core target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-core <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "SELECT BEFORE DISPATCH: vibe-wire target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+          "RUN BOUND CHECKS: after binding, use cargo test -p vibe-wire <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+          "CONDITIONAL ORACLE: cargo xtask check-codegen only when the actual diff affects schemas, generators, generated-output registration or a dependent contract. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "CONDITIONAL ORACLE: cargo xtask wire-diff only when the actual diff affects wire/format behavior, its corpus or epoch semantics. Bind a narrower existing oracle if available; the global command needs that concrete impact and no adequate narrower check.",
+          "cargo fmt --all -- --check",
+          "git diff --check"
+        ],
+        "acceptance": [
+          "Repeated planning over exact input gives identical output/diff identity.",
+          "Fixture coverage demonstrates genuine transforms and no-op/ambiguity cases."
+        ],
+        "safe_stop": "Pure executable migration planner is complete; no authored file changed by plan.",
+        "commit_subject": "feat(migrate): plan deterministic syntax-preserving format changes",
+        "notes": [
+          "Exact module/type/epoch names are settled inside this task's approved perimeter. SourceDescriptor converter belongs to M-06-A, feature converter to M-05-B.",
+          "Schema changes: inspect the existing codegen entrypoint before regeneration; never hand-edit generated types or invent a new codegen command. The listed check-codegen and wire-diff oracles are conditional on the actual affected inputs, never on the allowed write perimeter alone.",
+          "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+        ]
+      },
+      "review_evidence": "research/m13-foundation-review.md;research/m13-c1-transfer-acceptance.md/.json",
+      "review_disposition": "Root accepted original neutral C1 after source/contract/runtime/static review.",
+      "review_main_pin": "f56a4cba60e502416d194f6fc3677e51a1ad2e45"
     },
     {
       "old_task_id": "M-13-C.2",
@@ -4064,5 +4136,5 @@
   "count_caution": "The 0 complete lower bound is epistemic, not evidence all 113 fail. In particular M-01-A.3 could be complete once original caller inventory is reconciled. No missing type-name or broader subsystem requirement is used as a criterion substitute.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
   "version_note": "M01A3 and M06G2 full. Four M05 partial scopes updated after accepted app runtime.2full/24partial/16named untransferred/71unknown; exact global completed total remains unestablished.",
-  "latest_scoped_review_main_pin": "c266a5b62db5c6221c90734a3ddc4119eede3542"
+  "latest_scoped_review_main_pin": "f56a4cba60e502416d194f6fc3677e51a1ad2e45"
 }
