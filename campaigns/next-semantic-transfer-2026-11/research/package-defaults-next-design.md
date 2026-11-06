@@ -1,0 +1,107 @@
+# Next package slice: defaults/profile basis over F16 owners
+
+## Recommended bounded outcome
+
+Extend F16's **fixed actual workspace consumers, local-registry copy sources and dependency effects** to ordinary fresh `use-declared-defaults`, ordinary feature defaults, and explicitly named **parameterless** profiles. Persist the selected automatic basis, cold-replay it, and refuse changed retained meaning with a named rediscovery outcome before automatic effects. Preserve F16 explicit-only behavior and faithful legacy7/explicit8 reading. No transitive configured consumers/forwarding, parameter execution, subskill/config-data delivery or new solver is required for this slice.
+
+This is a read-only implementation design, not runtime acceptance. F16's acceptance record is evidence of its bounded explicit runtime, not proof of these new cases. Root's `common-package-default-basis-review.md` explicitly authorizes fresh candidate-local defaults with receipts bound only after feasibility; highest-version preference must not mint a shown decision. Twenty-two current source snapshots/hashes are in `/tmp/nst-package-defaults-next-evidence/sources.json`. No build/test/probe, source/Git mutation, network or agent was performed.
+
+## Existing seams that determine the change
+
+| Owner | Current behavior / consequence |
+|---|---|
+| `vibe-core/src/manifest/configuration/intent.rs::normalize_input` | Applies only a named profile, then authored selection/parameter overrides. Explicit omitted and empty entries replace profile answers. Named-profile features replace the ordinary default base; absent profile plus default_features selects declared feature defaults. Default-profile marker is not auto-consent. Reuse unchanged. |
+| `configuration/choices/types.rs:118-132` and `choices/evaluate.rs:110-121,260-299` | DefaultUse is explicitly provisional and only reports active-group defaults. It cannot cover dormant/absent defaults or be persisted as a historical consent receipt by itself. Existing policy/cardinality/merge engine stays the single evaluator. |
+| `manifest/configuration/package.rs::evaluate_parts:101+` | F16 explicitly rejects default_features, any profile, policy other than RequireSelection, all parameters, and observed closure fallback. It then computes selected optional dependencies. Merely deleting those rejection branches would introduce unbound automatic behavior. |
+| `vibe-app/src/configuration/evaluate.rs:146-264` | Existing basis semantics: profile/feature-default reasons; omitted choice reasons even for dormant groups; carry prior closure/choice/parameter reasons; changed semantic basis with reliance or newly introduced reliance requires review. Resolved effects are withheld while questions/problems exist. This is the reusable semantic precedent. |
+| `vibe-app/src/configuration/plan.rs:272-349` | Domain owner distinguishes fresh/replacement, prior history and actual attended review. Review is not inferred from assume-yes; the app owner controls the acknowledgment. `review.rs::summary` is app wire/presentation, not a shared kernel. |
+| `manifest/configuration/semantic.rs::semantic_fingerprint:99` | Typed versioned definition fingerprint excludes presentation. Reuse it; do not hash generated wire/debug text or secret answers. Package effect declaration meaning still belongs to its package adapter. |
+| `vibe-resolver/src/configuration.rs::ConfigurationSnapshot::{new,fetch_manifest,configuration,validate_selected}` | One operation caches original metadata/evaluation/view per candidate; currently receives original inputs but **no retained basis**. Only selected nodes contribute returned records. NeedsSelection has a mandatory-only solver view and fails after selection; Incompatible becomes candidate rejection. This is the provisional-versus-selected seam to extend. |
+| `vibe-install/src/plan.rs::plan_prepared_without_publication:203-245` | Loads/admit-checks lock before building the operation snapshot, but currently passes only inputs into ConfigurationSnapshot. This is the place to hand admitted history to the existing operation snapshot. |
+| `vibe-core/src/manifest/lockfile/configuration.rs::{validate_configurations,configuration_for}` | Re-evaluates historical original definition/declarations/consumers and compares derived fields; then checks actual pinned manifest identity. Today this re-evaluation has no history/basis channel. It must not turn an automatic record into a fresh authorization during read. |
+| `vibe-workspace/src/freshness/configuration.rs::configuration_freshness` | Compares current actual consumer inputs with retained originals, even if effective graph is unchanged. It must remain independent of consent renewal. Source-free Fresh already has a real orchestrator caller before source construction. |
+
+## Minimal shared core extraction
+
+Proposed new **pure** helper home: `vibe-core/src/manifest/configuration/basis.rs`, exported through the existing configuration module. These are proposed responsibilities/names, not existing APIs:
+
+1. `automatic_reliance` over a ConfigurationDecl, original/normalized input and actual feature/choice result. Produce typed reasons corresponding to the existing app meanings: Profile, FeatureDefaults, Choice(group), Closure(group). Parameter reasons can remain supplied by the app's current parameter adapter; package parameters remain unsupported in this slice.
+2. `carry_reliance` for retained reuse. Preserve a prior automatic reason while that area has not been explicitly taken over or reviewed, including dormant and removed groups. Do not replace the prior set with only this evaluation's active DefaultUse observations.
+3. `check_basis` over typed authority/history/current meaning, yielding Proceed versus ReviewRequired with named reasons. Reuse the app rule: changed semantic fingerprint while still automatically reliant, or newly introduced automatic reliance, requires review for retained reuse. Fresh unbound evaluation is allowed provisionally. A review/replacement authority comes from its domain owner, not a boolean silently derived from a changed file hash.
+
+Move only this policy into core. App `evaluate.rs` becomes an adapter to it; retain its current wire reason spelling/record shape and its existing parameter/history/prompt owners. Keep `review.rs` in app for before/after presentation and `record.rs` for app record admission. Do not move app ConfigurationRecord, HostFacts, index/steps types or prompts into the package path. Characterize app behavior through its existing basis/dormant/removal tests before accepting this extraction.
+
+**Multiple consumers matter.** Profile, feature-default and choice reasons are attributable to actual consumer keys and must stay distinct. The ordinary feature kernel computes a merged instance-level closure fallback, not a fake per-consumer DefaultUse. Preserve that closure reliance at the actual instance level (with the real contributing inputs retained), rather than inventing an owner label or pretending every consumer individually authorized a group default. One package basis can hold per-consumer reasons plus instance closure reasons; an app is its one-consumer adapter. This distinction prevents a new consumer's fresh permission from renewing another consumer's retained automatic decision.
+
+## Original input, reliance and dormant history
+
+Keep `PackageConfiguration.consumers` exactly as authored. Never expand a profile/default into replacement explicit group answers and persist those as original intent. Keep original omitted versus empty and exact versus additive. A profile's presets remain profile meaning; explicit authored group entries override them as normalize_input already specifies.
+
+Reliance is broader than “a default selected something today”:
+
+- `default_features=true` relies on feature-default meaning even when the current default set is empty; adding a default later must not become silent renewal.
+- UseDeclaredDefaults with an omitted choice records reliance on that declared group even if the group is dormant or currently has no defaults. Explicit empty is not omission.
+- A previously used closure fallback must survive switching its parent/branch off while that fallback remains implicit. Otherwise switch-away → change fallback → switch-back loses history.
+- Removal of a relied-on group must not erase the evidence before review. Until acknowledgment, the old lock/definition stays unchanged and the new candidate surfaces rediscovery. Explicit takeover of the relevant area can retire its automatic reliance under the shared rule; fully explicit/no-auto input must not be frozen merely because unrelated defaults changed.
+- Naming a profile selects that profile only; `default=true` on some other profile is presentation, never a second automatic selection rule. Profiles with parameters stay refused until the package parameter consumer exists.
+
+A package semantic basis must include the referenced dependency declaration meaning (optionality/source/version/kind/link/visibility as appropriate) alongside the existing configuration semantic fingerprint. Otherwise a default choosing the same feature can silently induce different dependency meaning while its ConfigurationDecl hash is unchanged. Keep this package adapter projection outside the shared feature/choice helper. Whole-semantic-definition comparison is conservative but permitted. Source/payload content identity remains the existing selected LockedPackage/captured metadata drift check; presentation-only changes must not force semantic review merely because raw bytes differ.
+
+## Candidate authority and selected-only receipts
+
+Extend ConfigurationSnapshot's constructor/input with admitted historical records from the existing lock, keyed by the same package/actual-consumer identities as F16. Preserve that one snapshot through normal solve, held-pin retries, metadata projection and existing supported routes. No global mutable current-choice map or second solver is needed.
+
+| Candidate state | Solver-facing behavior | What may persist |
+|---|---|---|
+| Truly fresh/unbound input with explicit permission for automatic meaning | Normalize/evaluate each candidate against that candidate's definition. Its provisional selected dependency constraints can establish feasibility. | Only final feasible selected candidate's original input, reliance and basis, after normal full plan/source admission. |
+| Fresh candidate has a valid default but resulting dependency is unsatisfiable | Ordinary candidate failure/backtracking, preserving identical original inputs. | No rejected candidate receipt or default residue. |
+| Selected candidate has unanswered mandatory choice with no authorized default | Keep the existing unresolved-candidate treatment; do not classify it incompatible just to choose an easier older default. | No ready effects/lock; surface named questions. |
+| Retained/shown automatic basis mismatches candidate meaning | ReviewRequired/Rediscovery, not an Incompatible reason that lets the solver evade review. Do not expose that candidate's unauthorized automatic effects. | Old record untouched; selected unresolved outcome only. |
+| Explicit stable answer incompatible with a candidate | Existing candidate incompatibility/backtracking, keeping the hard answer. | Only a genuinely compatible selected result; never substitute a different answer. |
+| Malformed declaration or source observation failure | Typed validation/source failure as today. | Never a default-based fallback success. |
+
+For a new Rediscovery variant, mirror the current NeedsSelection distinction: retain a non-executable unresolved view sufficient to assess independently mandatory feasibility; `validate_selected` reports it only if selected. Do not route it through the provider's Incompatible→Dependencies::Unknown branch or generic source cancellation accidentally. Current mandatory-only unresolved view is a conservative existing seam; no partially authorized effect graph may escape to install. Independent impossible candidates can still be rejected by their actual mandatory requirements. General transitive contribution/forwarding support is explicitly not part of this change.
+
+**Receipt binding point:** candidate cache holds observations, not durable consent. `configuration_for_node`/snapshot.configuration is queried only for final graph nodes; after fetched original-manifest equality and complete apply admission, the existing `apply/lock.rs::record_lock` publishes selected records. Failed solving, declined confirmation, interrupted planning or rejected recommendations must not update historical basis.
+
+## A durable representation change is necessary
+
+Current PackageConfiguration stores consumers, definition/declarations, features, active dependencies and causes. That is insufficient to retain historical closure reliance after a successful switch to a dormant state: fresh evaluation of the new current input no longer observes the earlier fallback. Recomputing reasons at lock read would both lose that history and risk minting current consent. Therefore “no wire change, derive it from active defaults” is not faithful to the accepted app semantics.
+
+Recommended package-owned addition: a typed automatic-basis field retaining its semantic fingerprint, per-actual-consumer automatic reasons and instance closure reliance. Reuse the existing historical definition/declarations and original consumers rather than duplicate the full app record. Runtime secret values/hashes are not part of it. Historical validation verifies fingerprint/shape, required current reliance and permitted carried reasons separately from recomputing derived selected effects; it must not silently replace the stored receipt with fresh output.
+
+Because the accepted F16 lock8 reader is strict and its evaluator rejects automatic inputs, recommend **a new lock schema for automatic-basis records (e.g.9)**, retaining faithful7 and explicit8 reads/writes. Existing explicit8 records need no invented receipt. An absent basis is admissible only for the old explicit/no-auto contract, including absence of closure fallback. An automatic record missing its basis must fail; never upgrade it on read from current defaults. New explicit-only writes can retain8 when no new basis is needed; legacy-only writes retain7. App wire/index/steps schemas need not change for the shared semantic extraction.
+
+This is a proposal for root format judgment, not an authorized epoch bump. Required owners are `manifest/configuration/package.rs`, `manifest/lockfile.rs`, `lockfile/configuration.rs` and their typed serializer/reader tests, plus format registry/break documentation under root. Do not put JSON text into a string or add another persistence store.
+
+## Concrete activation path and affected readers
+
+1. Shared basis helper plus characterization through existing app evaluator: retain app output and review behavior; do not import package solver state into app.
+2. Package evaluation accepts supported automatic feature/group/profile inputs, produces original/resolved data and provisional reliance, and still refuses parameters/unsupported effects.
+3. Install planning loads validated prior basis before source construction/replanning and passes it into ConfigurationSnapshot. Root/newly added consumers are distinguished from retained consumers; comparing inputs unequal is not sufficient to grant fresh authority.
+4. Candidate classification and selected-only extraction use the table above. Actual source metadata→fetch consistency remains F16's owner.
+5. Lock serialization/structural historical admission, `PackageConfiguration::validate/project`, and `Lockfile::configuration_for` preserve/admit the new record without renewing it. Re-evaluating historical data is a check, not an authorization event.
+6. `freshness_prepared` / `freshness::configuration_freshness`, source-free Fresh, `configuration_admission::{retained_before_planning,locked_workspace,admitted_package}`, durable boot projection and missing-slot exact-store repair all consume the admitted historical basis. Same semantic input/record can replay without reopening an unused registry; changed automatic meaning cannot pass Fresh.
+7. Ordinary bare install and whole-update's shared install route gain the bounded capability. Non-force reinstall remains exact historical replay. Scoped configured update/removal and mixed in-place modes retain their existing explicit refusals until their real consumers support the richer semantics. Remap/other strict lock readers need the new version's faithful read, not a generic unsupported→empty exception.
+
+### Review transport boundary
+
+The minimal activation above delivers initial automatic/profile install, unchanged retained replay and truthful rediscovery, not a complete interactive/external review workflow. Current package authored input has no reviewed-definition token; assume-yes, an unchanged file, or arbitrary source edits must not be treated as acknowledgment. Existing all-explicit source reconfiguration remains a real way to stop relying on defaults, but does not replace a future keep-automatic-and-review operation.
+
+Root should decide whether to include that review operation in the same slice. If included, it needs an operation-local exact package/candidate/semantic-basis acknowledgment for real consumer keys, validated against the selected candidate; reuse the common definition/evaluation data with a package-owned input boundary rather than copy app DTOs. Do not invent an unversioned review key in shared authored input just to bypass the gate. If deferred, say so in acceptance and retain a typed Rediscovery payload naming previous/current basis and consumers. Likewise, an existing explicit8 consumer newly enabling automatic reliance follows the app's new-reliance review rule unless root explicitly authorizes a deliberate replacement operation; it is not automatically a fresh consumer because one field changed.
+
+## Executable oracles before acceptance
+
+- **Fresh feasibility, not highest first:** ordinary authored UseDeclaredDefaults; suite2 default fast induces unavailable dependency, suite1 default small is feasible. Actual CLI selects suite1, records only suite1 automatic basis, installs only its graph/slots/hooks/boot. A cold process preserves originals/reliance and does not rerun hooks. No provisional suite2 receipt remains.
+- **Retained basis versus fresh permission:** establish a real successful suite2/fast record, then change only the authored version range to exclude suite2 (for example `>=1,<3` → `<2`) so ordinary install must replan and fallback would use different automatic meaning. This is a version decision, not acknowledgment of new defaults. Actual operation must report rediscovery with unchanged manifest/lock/slots/boot/hooks. Reopening the process or adding -y does not authorize small. Explicit hard fast remains a hard answer and never becomes small.
+- **Questions versus SAT rejection:** newer otherwise-feasible candidate lacks an authorized mandatory answer; older has an easy default. Return selected questions, do not downgrade solely to avoid input. A newer candidate independently impossible through mandatory deps may be rejected without surfacing its question.
+- **Profiles and overrides:** explicitly name a parameterless profile; authored group override (including explicit empty/omitted) replaces its preset correctly, and an unrelated default-profile marker never activates. Verify actual dependency effects and distinct original profile/override state after cold replay. Parameter-bearing profile stays a specific unsupported boundary.
+- **Dormancy/removal/new reliance:** use a fallback/default, switch its guard/parent off, change relevant default/remove the relied-on group, then reactivate. History must force review before effects. Include empty/absent default meaning and newly introduced reliance; an active-only DefaultUse list must fail these tests.
+- **Multiple consumers:** one retained automatic consumer plus another fresh/explicit consumer; named exact/additive conflicts stay real, and the fresh one's permission cannot renew the retained one's basis. Both originals survive one shared-instance lock; no fabricated consumer owns the merged closure fallback.
+- **Historical wire integrity and app parity:** old7 and explicit8 faithful; missing/tampered automatic basis or unknown future epoch refuses without rewrites. Rejected candidates/failed plans leave no receipt. Existing app fresh/review/removed-default/profile tests and F16 explicit workspace/cold/missing-slot tests remain unchanged and pass through the shared helper.
+
+## Scope risks for root review
+
+The hard parts are authority classification, historical reason carry and error routing—not adding defaults to the feature closure. Whole-definition comparison is deliberately conservative; avoid accidental raw-byte/payload review. Instance closure reliance needs honest attribution separate from per-consumer permissions. Core historical validation cannot call the fresh path and declare the result authorized. A new schema/reader activation must be coherent across all actual lock consumers. The approval transport is a visible remaining choice, not an implied side effect of a new boolean.
+
+No status label, pure default-use field or green local evaluator alone establishes this slice. Its acceptance is the selected actual effects plus durable original/basis and cold-process discriminators above.

@@ -1520,3 +1520,33 @@ Root read actual link-context-green.log despite its optimistic filename:12PASS/1
 ### 2026-11-06 — transitive scope/design report accepted as research; temporary probe removed
 
 Root read final production-design report and verified25main/pinned/library/report source hashes. Pinned configured solve rejects TargetFeature; its strong-forwarding test expects Unsupported; local feature recursion and accumulated dep_features are not end-to-end target consumption. Report preserves three future alternatives and exact current API/completeness gaps without making them prerequisites for this transfer. Promoted research/transitive-production-design.md and source bindings. After target clean, all50remaining private probe files matched the permanent archive; removed exactly those archived files and empty directories, verified /fast/tmp/nst-transitive-proof absent, and recorded source-removal receipt. No worktree was created or removed; main/prototype/app state untouched by cleanup.
+
+
+### 2026-11-06 — G1 actual installation reaches repeat/unit reuse; CLI fixture argument error
+
+Root verified final targeted logs13link/7boot PASS and reviewed the ordinary local-registry CLI fixture. First integration run reaches successful install, once-only XML markers, actual compiled units, repeat install and unchanged unit bytes/mtime. It then fails because the test helper injects --assume-yes into vibe tree, which rejects that argument. This is fixture misuse, not a product failure; correct the command-specific helper without widening the CLI. Tree nested attribution, schema validation and forced lane reconstruction have not run to completion yet. Root inspected emitted XML: body markers retained once, shared empty beta frame preserved; final attribution proof still required.
+
+
+### 2026-11-06 — actual XML install exposes missing nested attribution
+
+After command-helper correction, cli-second reaches tree schema/boot data but nested embed addresses are empty instead of one each (0/1 integration FAIL at line291). Root observed prior emitted XML escaping embed markers into paragraph text and source-read tree/artifacts/embeds.rs, which accepts standalone raw comment controls. F08 acceptance explicitly used a synthetic static wrapper, not a full install/XML projection; this is a candidate preexisting integration gap, not yet attributed to G1 by runtime baseline comparison. Prior tree.stdout evidence was empty/stale first-run output, so it is not the second-run JSON. Root assigned bounded read-only compiler/IR/XML/tree owner audit to finish_secret_diagnostics; current implementation worker must preserve fresh evidence and unmet oracle. No arbitrary XML unescape or weakened literal/fence control law is authorized. G1 once-coverage remains separate from this newly exposed consumer gap.
+
+
+### 2026-11-06 — XML provenance must survive projection, not be guessed from escaped prose
+
+Root read static_xml emission and specdoc md_in: prepared SpecDoc is rendered to XML, and standalone Comment blocks are deliberately discarded by the Markdown adapter; paragraph-shaped marker text instead survives escaped. Thus unescaping strings cannot recover every lost generated occurrence and risks treating authored examples as provenance. Reviewer must locate existing embed evidence and choose the proper owner before any production patch. Local plan now names XML attribution as an explicit active audit, distinct from G1 once-coverage. Implementation worker may split/reorder assertions to exercise actual reinstall independently, but the named XML integration oracle stays nonignored and unmet until corrected.
+
+
+### 2026-11-06 — defaults design reviewed; review-and-retry must complete the feature
+
+Root read next defaults/profile design and verified22source hashes. Existing lock8 explicit records cannot faithfully retain automatic closure history through dormancy by recomputing active default uses; a typed automatic basis and coherent versioned lock read/write are required. Shared policy must preserve per-consumer reasons and instance closure reliance, candidate-local provisional evaluation, and selected-only persistence. Root agrees the direction but has not authorized a format patch. A permanent rediscovery refusal alone would leave the user journey unfinished, so reviewer now designs exact shown-candidate/consumer/semantic acknowledgment and retry through existing install/confirmation and common UI seams; -y or changed authored input never manufactures review. No new authored review flag/store or general forwarding prerequisite.
+
+
+### 2026-11-06 — CLI third exercises full G1 lifecycle before named XML attribution failure
+
+Root reviewed current fixture and cli-third.log: install/repeat actual-unit fingerprint/trace/byte/mtime checks, authored INDEX literal behavior, empty shared-beta contribution source ownership, deleted-host-lane reinstall and complete registry-source snapshot checks all execute before the final nested-embed assertion fails0/1. No ignored assertion or passing whole-test claim. Root chose existing PROP009/035 facts as canonical author documentation; worker attempted old docs path and got a write failure without creating a document, so no disconnected docs mirror/doc.web change is needed. G1 scoped static/traceability gates proceed while separate XML provenance owner design remains pending.
+
+
+### 2026-11-06 — broader G1 compatibility controls pass, XML end-to-end remains RED
+
+Root read completed g1-control-receipts and raw logs: compiler::649PASS, boot_artifacts::tests41PASS, existing tree_nested_attribution14PASS, all exit0. These panels overlap earlier targeted checks and are not additive completion counts. Existing tree compatibility proves the retained scanner contract, not XML projection; new actual install nested attribution remains unmet. Worker identified parent boot_artifacts.rs crossing600lines solely from4-line test registration (baseline597); root approved moving registration into the cohesive existing tests_ir_characterization owner, preserving original parent and rerunning the moved nonzero filter instead of shaving whitespace or disabling the rule.

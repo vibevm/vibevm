@@ -1,0 +1,90 @@
+[
+  {
+    "path": "vibevm/vibespecs/boot/90-user.xml",
+    "sha256": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec"
+  },
+  {
+    "path": "vibevm/vibespecs/common/PROP-069-common-configuration.xml",
+    "sha256": "ca3478b7dea6b940bb62748008b7badf4e191d39745d450c3b5e8a552f43c021"
+  },
+  {
+    "path": "campaigns/next-semantic-transfer-2026-11/features/F16-explicit-package-configuration.md",
+    "sha256": "f622458e7651d993b833199b3a3089888b6dc9d3b72083887583f8af7673e333"
+  },
+  {
+    "path": "campaigns/next-semantic-transfer-2026-11/research/common-package-default-basis-review.md",
+    "sha256": "0cd44fa85b1122183109fb22c4a9d511627046263b5e3dd9bbac87a600bea347"
+  },
+  {
+    "path": "crates/vibe-core/src/manifest/configuration/intent.rs",
+    "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83"
+  },
+  {
+    "path": "crates/vibe-core/src/manifest/configuration/package.rs",
+    "sha256": "ab2fc832a1fbc91a49ac0dae726cd0eec630ad4db26a29eb333ab2fd3e39c1b2"
+  },
+  {
+    "path": "crates/vibe-core/src/manifest/configuration/semantic.rs",
+    "sha256": "0e433d6c75c5d56ff48928927fc68cbc1f989a7a4081644013f51a2c3c065b6d"
+  },
+  {
+    "path": "crates/vibe-core/src/configuration/choices/types.rs",
+    "sha256": "4d3af0bcfa5700edf4444bae002c1bcc5682bb943226da629f9170f9dd772a80"
+  },
+  {
+    "path": "crates/vibe-core/src/configuration/choices/evaluate.rs",
+    "sha256": "5572c229891593d9290cce7f22f07651fd2e1282270469b2eab8a15fb6f5ca1b"
+  },
+  {
+    "path": "crates/vibe-app/src/configuration/evaluate.rs",
+    "sha256": "1ec0ed30f8a6e86c8e80483ec7c4fca56ad5acd3332fe12f8c1d7337560cd6b9"
+  },
+  {
+    "path": "crates/vibe-app/src/configuration/review.rs",
+    "sha256": "c936d99d7941286045b9cb582feff02b88272b6986d5ac08ff23d16fd4146e0b"
+  },
+  {
+    "path": "crates/vibe-app/src/configuration/record.rs",
+    "sha256": "2cfaea4918a8ba08d3b318900aa4b05e462dd8c9a93799efd9e934fde80f8478"
+  },
+  {
+    "path": "crates/vibe-app/src/configuration/plan.rs",
+    "sha256": "8758518dcee60b240231dc03b48b3d9d1742106681298fcb50ccc77905cd5520"
+  },
+  {
+    "path": "crates/vibe-resolver/src/configuration.rs",
+    "sha256": "15fb6a8ba963157c92c080b776c6ad0504a671b8f551d8426822934837a06535"
+  },
+  {
+    "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+    "sha256": "fc5e375b26cd3cddf18193b6096e248e5ddb58cc63f1af6b231efb2ba84a4ab6"
+  },
+  {
+    "path": "crates/vibe-install/src/plan.rs",
+    "sha256": "43b89255381926ad7a8654168963c120d0507bf6fc497213d06263d6e268e80e"
+  },
+  {
+    "path": "crates/vibe-install/src/plan/configured.rs",
+    "sha256": "6cf2aa8e549fbaab4b1040bb4c7625f2f88663a1bb7a1af8ca8b9088ff722ba8"
+  },
+  {
+    "path": "crates/vibe-install/src/configuration_admission.rs",
+    "sha256": "111b65071247a78d04246db11812bfa824ceff75000736d112f98897f38be57b"
+  },
+  {
+    "path": "crates/vibe-install/src/apply/lock.rs",
+    "sha256": "decf93f0ecfe14764c94bbb020cad67050f28e0c43ded2ef4add726b61081d72"
+  },
+  {
+    "path": "crates/vibe-core/src/manifest/lockfile/configuration.rs",
+    "sha256": "2c563f0fe41c8893dc91f0ce142031b32c6490212b21716ea1fb360798c7106e"
+  },
+  {
+    "path": "crates/vibe-workspace/src/freshness/configuration.rs",
+    "sha256": "090703305944c65fad1d3eb584acd7f7e553ee2ee742ac0f17f110073dce78ae"
+  },
+  {
+    "path": "crates/vibe-core/src/manifest/lockfile.rs",
+    "sha256": "c2a389a6ae2fd6153282ab24896cf1401f2bfe6d88e4be5d9f3bafd651b36e57"
+  }
+]
