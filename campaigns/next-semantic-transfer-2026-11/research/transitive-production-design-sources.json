@@ -1,0 +1,141 @@
+{
+  "status": "read-only source/architecture evidence; no implementation authorization",
+  "report": "/tmp/nst-transitive-production-design.md",
+  "report_sha256": "a001f9f62136e9abce5b1f237bfa98c3a0d6d36a9941467ce3f8f266b62bb105",
+  "sources": [
+    {
+      "source": "main",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/common-package-transitive-next.md",
+      "sha256": "a51fc6aa3bd75242fc4e910052d253a4945f7baab739908411a77c7a2cac3173"
+    },
+    {
+      "source": "main",
+      "path": "campaigns/next-semantic-transfer-2026-11/research/transitive-grounding-invariants.md",
+      "sha256": "33322f99e014833a80894ccba4f41b7c86c9138a6c71eb13cc45a28a751848c4"
+    },
+    {
+      "source": "main",
+      "path": "crates/vibe-resolver/src/configuration.rs",
+      "sha256": "15fb6a8ba963157c92c080b776c6ad0504a671b8f551d8426822934837a06535"
+    },
+    {
+      "source": "main",
+      "path": "crates/vibe-resolver/src/resolvo_engine/provider.rs",
+      "sha256": "fc5e375b26cd3cddf18193b6096e248e5ddb58cc63f1af6b231efb2ba84a4ab6"
+    },
+    {
+      "source": "main",
+      "path": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
+      "sha256": "9bb5a41e4fb2a4f88f31c930a84f9e2eb7b282ecdd3faaccb151172fb3e92fea"
+    },
+    {
+      "source": "main",
+      "path": "crates/vibe-resolver/src/resolvo_engine/capabilities.rs",
+      "sha256": "aa13e4d9ec55542350d77fcb5c01c642a4ffd8a36eda1d1dd754ebcba52fb1ba"
+    },
+    {
+      "source": "main",
+      "path": "crates/vibe-core/src/manifest/configuration/package.rs",
+      "sha256": "ab2fc832a1fbc91a49ac0dae726cd0eec630ad4db26a29eb333ab2fd3e39c1b2"
+    },
+    {
+      "source": "main",
+      "path": "crates/vibe-core/src/configuration/choices/merge.rs",
+      "sha256": "5fcf6bda68cbd1e2c3ad31e828ef23e0941d779f6b128bec358cbb2333c113af"
+    },
+    {
+      "source": "main",
+      "path": "crates/vibe-core/src/configuration/choices/evaluate.rs",
+      "sha256": "5572c229891593d9290cce7f22f07651fd2e1282270469b2eab8a15fb6f5ca1b"
+    },
+    {
+      "source": "prototype blob",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-resolver/src/features.rs",
+      "sha256": "525ecac874bc54032faca59e6c08e20552c9d839c7ace584bcf9418a80a57803"
+    },
+    {
+      "source": "prototype blob",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-resolver/src/features/configuration.rs",
+      "sha256": "614dfa8ad2d2ac3bdc0d99ce804d6a4c13797408fed9a685ba4d849870f4af95"
+    },
+    {
+      "source": "prototype blob",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+      "sha256": "b13c7516929498a3e0d314b4e3648865b89301ca757d91eb71b5b1e294ea6ab7"
+    },
+    {
+      "source": "prototype blob",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-resolver/src/resolvo_engine/m_05_c_2_cases.rs",
+      "sha256": "7833dca3211e4de0c016842cdad5688e50d264f3a70dc34b027182fb5d36e477"
+    },
+    {
+      "source": "prototype blob",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-install/src/plan/fetch.rs",
+      "sha256": "a4bab3732f64d68eede122c3089e53cb2510f821ccabb6081f9bb4cc9ef0939b"
+    },
+    {
+      "source": "prototype blob",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-install/src/plan.rs",
+      "sha256": "1495b9b494c3f1c491d9aec3a408fbbed5a9c72884df24e108b014a39a143fea"
+    },
+    {
+      "source": "prototype blob",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-install/src/authored_configuration.rs",
+      "sha256": "2e4bfa7858f77b3fb4f30c5363d39b2c540cb9a5c5554833dfd43687980ecb51"
+    },
+    {
+      "source": "prototype blob",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-install/src/record.rs",
+      "sha256": "53482faf61a96341bfa0e0fb4756bf89a3c99d4fae67966fefb11257fa7ff89c"
+    },
+    {
+      "source": "prototype blob",
+      "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-orchestrator/src/machine_operation/configuration_choice.rs",
+      "sha256": "9fa0f7631e2f123af99b70c950360c18ae73456e2c70dd5bd9edc5dc8fe00e22"
+    },
+    {
+      "source": "cached resolvo0.11.0",
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/lib.rs",
+      "sha256": "30946db989adddbd25f3c474f57167c664b6f699f235046969b772de8b6f5ec7"
+    },
+    {
+      "source": "cached resolvo0.11.0",
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/conditional_requirement.rs",
+      "sha256": "56251448173bc4a675a9ba48ab4e45c1a88ace4e4d3c261a249b172d3a39828d"
+    },
+    {
+      "source": "cached resolvo0.11.0",
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/solver/cache.rs",
+      "sha256": "06f29fd4f867f88c02bf05e26c6bc1c41438f6fe4a6b1251301d167d676e72e0"
+    },
+    {
+      "source": "cached resolvo0.11.0",
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/solver/mod.rs",
+      "sha256": "da041375bd177bf4ccb87c099ff0aa4b92f41f45da5369ce3a4b677d1f933403"
+    },
+    {
+      "source": "prior executable research report; not rerun",
+      "path": "/tmp/nst-transitive-proof-report.md",
+      "sha256": "ef9a28f4b5fd902c1f64c0fdd2f7f038e14533757cdb9542a5f0dfd2ccc2d526"
+    },
+    {
+      "source": "prior executable research report; not rerun",
+      "path": "/tmp/nst-transitive-proof-v2-report.md",
+      "sha256": "16119623c51b586fbdc69323ae36b5ea7d01222db9aebbd0a4102d6d4b1e7932"
+    },
+    {
+      "source": "prior executable research report; not rerun",
+      "path": "/tmp/nst-transitive-proof-v3-report.md",
+      "sha256": "1ee3254be17fea8033e33ebf87e193f0bbae856b10e431f510a36d4e63c9f7ac"
+    }
+  ]
+}

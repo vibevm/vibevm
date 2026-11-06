@@ -1,0 +1,16 @@
+{
+  "pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "source": "crates/vibe-resolver/src/resolvo_engine/configuration.rs",
+  "sha256": "b13c7516929498a3e0d314b4e3648865b89301ca757d91eb71b5b1e294ea6ab7",
+  "observed": [
+    {
+      "lines": "249-252",
+      "text": "impl ResolvoDepSolver<&TransactionCatalog> {\n    /// Solve fixed, explicit incoming consumers over immutable candidates.\n    /// Unsupported native/multi-domain/forwarding combinations refuse before\n    /// solving. Choice/default needs are observed only in the selected graph."
+    },
+    {
+      "lines": "393-404",
+      "text": "                .map_err(|e| {\n                    ConfigurationSolveError::Source(DepProviderError::Other(e.to_string()))\n                })?;\n            if d.definition\n                .program\n                .features\n                .values()\n                .flatten()\n                .any(|e| matches!(e, FeatureEffect::TargetFeature { .. }))\n            {\n                return Err(ConfigurationSolveError::Unsupported(\"cross-package feature forwarding needs explicit candidate-conditioned consumer edges; not supported by this fixed-consumer entry\".into()));\n            }"
+    }
+  ],
+  "conclusion": "This fixed-consumer configured entry explicitly refuses cross-package TargetFeature. Other-entry audit pending; finite v1-v3 research is not evidence of shipped prototype forwarding."
+}

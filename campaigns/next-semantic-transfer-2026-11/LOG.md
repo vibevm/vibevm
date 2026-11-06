@@ -1490,3 +1490,33 @@ Root re-read the prior G1 clause review and delegated current-source revalidatio
 Root read v3 source and report, verified all15 frozen hashes and archived the full non-target probe with per-file hashes. v3 has3PASS; combined current source11PASS/4preserved old-encodingFAIL/0ignored. Separate decreasing-rank causal proofs reject unseeded forced activation while preserving off and actual external/required seeded cycles with redundant original input intact. This accepts finite expressiveness only: five hand-grounded facts are not a general discovery/lowering algorithm. Next bounded design examines immutable lazy discovery, alternative causes, nonmonotonic merge and omitted recommendation/OR/capability provenance. Source archive: local context evidence/2026-11-06/transitive-proof-v3. No shipped behavior or format changed by this proof.
 
 G1 implementation authorized after root reviewed actual compiler/boot RED: umbrella/direct contributions duplicate normal sections; four discriminator controls passed. Worker owns local plan_stream coverage plus cohesive helper/tests, preserving source identities, captured variants, uncovered preamble/siblings and shared validation replay. Actual installed-route proof remains required before acceptance.
+
+
+### 2026-11-06 — G1 contract separated from compiled-unit composition
+
+Root added candidate spec/work facts PROP-009#NORMAL-CLOSURE-ONCE and #AUTHORED-INDEX-BOUNDARY plus PROP-035#SOURCE-DIRECTIVE-PLACEMENT. Normal closure coverage is per artifact and source identity/captured variant; it must preserve uncovered regions and attribution. Existing STATIC-EMITS-ONCE-EACH describes a distinct compiled-unit composition rule with an accepted residual, so the new helper must not use that anchor as if it proved the new contract. Scanner source confirms leading whitespace, fence/comment masking and no last-line restriction; INDEX kind=static denotes unconditional read timing, not normal compilation. XML parses and diff whitespace check pass; implementation/runtime/traceability acceptance is still pending. Root requested a contract-plus-source :add repeated-heading discriminator because anchored lookup alone may omit legitimate continuation spans.
+
+
+### 2026-11-06 — root corrects transitive research priority against actual prototype scope
+
+Root re-read pinned resolvo_engine/configuration.rs rather than relying on task labels: solve_configured documents fixed explicit consumers and rejects TargetFeature with an explicit unsupported-forwarding error before solve. Captured exact pin/source hash and excerpts in research/transitive-scope-check.json. This proves the fixed-consumer entry lacks forwarding, not that every prototype entry does; worker is auditing other entrypoints and actual tested consumers before route selection. Root had prematurely treated general candidate-conditioned transitive lowering as the next transfer prerequisite. Finite proofs remain useful architectural evidence, but must not manufacture implemented prototype scope or delay defaults/parameters/loading that actually ran there. No product acceptance counts changed; production transitive implementation remains unauthorized pending this scope/design review.
+
+
+### 2026-11-06 — G1 pre-link dedup loses distinct short-link meanings
+
+Worker discriminator reports actual0/1 RED: the same shared text resolves (#X) to a--X in contribution A and b--X in contribution B, but pre-link coverage suppresses B. Root approved moving coverage after full ordinary link resolution within the same pass, keeping full inputs/digest/witnesses and shared replay. This preserves ambiguity diagnostics and compares resolved meaning before suppression. Open fence boundaries conservatively retain original content. Candidate NORMAL-CLOSURE-ONCE contract now names resolved reference meaning and fence-state preservation. Earlier6/6 boot and11/11 link successes did not cover this counterexample and are not final acceptance.
+
+
+### 2026-11-06 — next implemented configuration surface: defaults/profile basis
+
+Bounded transitive proof is closed as finite research only; general forwarding production work is not accepted or started. Root assigned read-only next-atom design for ordinary package automatic/default/profile basis to the existing review worker, using accepted PROP-069 policy and F16 core/resolver/lock seams. The task must preserve provisional candidate meaning versus retained consent, selected-only receipts, dormant history and real maintenance readers; no copied app wire or general forwarding prerequisite. G1 remains current implementation frontier, with the newly reproduced scoped-link RED under correction.
+
+
+### 2026-11-06 — post-link correction fixes context but exposes newline regression
+
+Root read actual link-context-green.log despite its optimistic filename:12PASS/1FAIL, not GREEN. Distinct scoped-link and later ambiguity discriminators now pass; incumbent terminal_newline_variants_keep_compatibility_bytes_and_typed_requirement fails with newline requirement flags [1,1,1] instead of [1,1,0]. Re-parsing linked bodies through DocTree loses the relevant terminal newline form. Root requested byte preservation on no-suppression path and correct residual line endings, keeping the existing oracle rather than weakening it. G1 remains candidate. Separate finite transitive proof private target was cleaned after archive verification and30minutes idle: Cargo exit0,6893files/1.1GiB; raw sources/reports remain available for current design review.
+
+
+### 2026-11-06 — transitive scope/design report accepted as research; temporary probe removed
+
+Root read final production-design report and verified25main/pinned/library/report source hashes. Pinned configured solve rejects TargetFeature; its strong-forwarding test expects Unsupported; local feature recursion and accumulated dep_features are not end-to-end target consumption. Report preserves three future alternatives and exact current API/completeness gaps without making them prerequisites for this transfer. Promoted research/transitive-production-design.md and source bindings. After target clean, all50remaining private probe files matched the permanent archive; removed exactly those archived files and empty directories, verified /fast/tmp/nst-transitive-proof absent, and recorded source-removal receipt. No worktree was created or removed; main/prototype/app state untouched by cleanup.
