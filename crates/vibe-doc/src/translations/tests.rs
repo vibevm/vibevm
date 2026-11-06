@@ -450,7 +450,7 @@ fn an_unreachable_source_is_the_same_refusal_the_check_gives() {
 /// different commands on purpose, and every field travels.
 #[test]
 fn borrowed_bodies_are_kept_under_the_page_that_authored_them() {
-    let found = borrowed(&fixture("borrowed/adaptation"), &borrowed_world());
+    let found = borrowed(&fixture("borrowed/adaptation"), &borrowed_world()).unwrap();
     assert_eq!(
         found.keys().collect::<Vec<_>>(),
         vec!["guide/first.xml", "guide/second.xml"]
@@ -474,10 +474,22 @@ fn borrowed_bodies_are_kept_under_the_page_that_authored_them() {
 #[test]
 fn nothing_to_borrow_is_an_empty_bundle() {
     // A source no source holds.
-    assert!(borrowed(&fixture("borrowed/adaptation"), &SpecSources::new()).is_empty());
+    assert!(
+        borrowed(&fixture("borrowed/adaptation"), &SpecSources::new())
+            .unwrap()
+            .is_empty()
+    );
     // Packages that adapt nothing at all.
-    assert!(borrowed(&fixture("borrowed/source"), &borrowed_world()).is_empty());
-    assert!(borrowed(&fixture("manual"), &SpecSources::new()).is_empty());
+    assert!(
+        borrowed(&fixture("borrowed/source"), &borrowed_world())
+            .unwrap()
+            .is_empty()
+    );
+    assert!(
+        borrowed(&fixture("manual"), &SpecSources::new())
+            .unwrap()
+            .is_empty()
+    );
 }
 
 /// One page at a time, for a surface answering one request — and every
@@ -487,11 +499,15 @@ fn one_page_is_read_by_its_address_and_nothing_outside_the_source_is() {
     let dir = fixture("borrowed/adaptation");
     let world = borrowed_world();
     assert_eq!(
-        borrowed_by(&dir, "guide/second.xml", &world)["demo"].run,
+        borrowed_by(&dir, "guide/second.xml", &world).unwrap()["demo"].run,
         "vibe list"
     );
     // A page the source does not carry.
-    assert!(borrowed_by(&dir, "guide/third.xml", &world).is_empty());
+    assert!(
+        borrowed_by(&dir, "guide/third.xml", &world)
+            .unwrap()
+            .is_empty()
+    );
     // And every spelling that is not a page address at all.
     for bad in [
         "",
@@ -500,7 +516,10 @@ fn one_page_is_read_by_its_address_and_nothing_outside_the_source_is() {
         "/vibe.toml",
         "guide\\second.xml",
     ] {
-        assert!(borrowed_by(&dir, bad, &world).is_empty(), "`{bad}`");
+        assert!(
+            borrowed_by(&dir, bad, &world).unwrap().is_empty(),
+            "`{bad}`"
+        );
     }
 }
 
@@ -536,3 +555,4 @@ fn the_first_of_a_repeated_id_on_one_page_wins() {
     assert_eq!(found.len(), 1, "{found:?}");
     assert_eq!(found["demo"].run, "first");
 }
+mod source_policy;

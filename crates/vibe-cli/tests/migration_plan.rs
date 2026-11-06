@@ -128,7 +128,7 @@ fn run(value: Value, exit: i32, literal: bool, poisoned: bool) -> Value {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 fn stdin_and_literal_match_shared_golden_plan_without_state() {
     let stdin = run(request(), 0, false, false);

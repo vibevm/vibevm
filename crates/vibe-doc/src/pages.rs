@@ -97,6 +97,18 @@ impl PageSet {
 /// assert!(set.unreadable.is_empty());
 /// ```
 pub fn read_package(package_dir: &Path) -> Result<PageSet> {
+    use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
+    let policy = observe_package_policy(package_dir)?;
+    match policy.mode() {
+        PackageSourceMode::ExplicitEmpty => {
+            policy.recheck_unchanged()?;
+            return Ok(PageSet::default());
+        }
+        PackageSourceMode::Explicit => {
+            return Err(policy.unsupported("documentation page parsing").into());
+        }
+        PackageSourceMode::Legacy | PackageSourceMode::MissingManifest => {}
+    }
     let mut set = PageSet::default();
     for (rel, path) in walk_package(package_dir)? {
         let text = std::fs::read_to_string(&path).map_err(|e| DocError::io("reading", &path, e))?;
@@ -109,6 +121,7 @@ pub fn read_package(package_dir: &Path) -> Result<PageSet> {
             }),
         }
     }
+    policy.recheck_unchanged()?;
     Ok(set)
 }
 

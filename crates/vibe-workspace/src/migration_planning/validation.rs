@@ -29,7 +29,7 @@ pub fn validate_preflight_error(error: &PlanError) -> Validated<()> {
     Ok(())
 }
 
-pub(super) fn validate_report(report: &PlanReport) -> Validated<()> {
+pub(super) fn validate_report(report: &PlanReport, request: &PlanRequest) -> Validated<()> {
     if report.schema != 1 {
         return Err(invalid("schema", "unsupported report schema"));
     }
@@ -37,8 +37,8 @@ pub(super) fn validate_report(report: &PlanReport) -> Validated<()> {
         PlanReportStage::Planner => {}
     }
     match &report.outcome {
-        Outcome::Planned(outcome) => validate_plan(&outcome.plan, false),
-        Outcome::NoOp(outcome) => validate_plan(&outcome.plan, true),
+        Outcome::Planned(outcome) => validate_plan(&outcome.plan, false, request),
+        Outcome::NoOp(outcome) => validate_plan(&outcome.plan, true, request),
         Outcome::Refused(outcome) => {
             if is_preflight(&outcome.error.code) {
                 return Err(invalid(
@@ -57,7 +57,25 @@ pub(super) fn validate_report(report: &PlanReport) -> Validated<()> {
             }
             let mut fields = Vec::new();
             for question in &outcome.questions {
-                let identity = question.field.clone();
+                match (&question.field, question.resource_path.as_deref()) {
+                    (QuestionField::SourceMedia, Some(path))
+                        if vibe_core::manifest::declarant_path(std::path::Path::new(path))
+                            .is_ok() => {}
+                    (QuestionField::SourceMedia, _) => {
+                        return Err(invalid(
+                            "questions.resource_path",
+                            "source media question requires its normalized file",
+                        ));
+                    }
+                    (_, None) => {}
+                    (_, Some(_)) => {
+                        return Err(invalid(
+                            "questions.resource_path",
+                            "global question cannot name a resource",
+                        ));
+                    }
+                }
+                let identity = (question.field.clone(), question.resource_path.clone());
                 if fields.contains(&identity) {
                     return Err(invalid(
                         "questions.field",
@@ -101,7 +119,7 @@ fn decimal(text: &str) -> Validated<usize> {
     })
 }
 
-pub(super) fn validate_plan(plan: &Plan, no_op: bool) -> Validated<()> {
+pub(super) fn validate_plan(plan: &Plan, no_op: bool, request: &PlanRequest) -> Validated<()> {
     if epoch(&plan.source_profile)? != plan.source_epoch
         || epoch(&plan.target_profile)? != plan.target_epoch
     {
@@ -129,14 +147,7 @@ pub(super) fn validate_plan(plan: &Plan, no_op: bool) -> Validated<()> {
         decimal(&edit.before_start)?;
         decimal(&edit.before_end)?;
     }
-    let request = PlanRequest {
-        schema: 1,
-        source_text: plan.before.clone(),
-        source_profile: Some(plan.source_profile.clone()),
-        target_profile: Some(plan.target_profile.clone()),
-        recipe: Some(plan.recipe.clone()),
-    };
-    let expected = match core_outcome(&request)? {
+    let expected = match core_outcome(request)? {
         ManifestMigrationOutcome::Planned(expected) if !no_op => expected,
         ManifestMigrationOutcome::NoOp(expected) if no_op => expected,
         _ => {
@@ -165,15 +176,15 @@ pub(super) fn validate_plan(plan: &Plan, no_op: bool) -> Validated<()> {
 /// ```
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 pub fn validate_report_for_request(request: &PlanRequest, report: &PlanReport) -> Validated<()> {
     if request.schema != 1 {
         return Err(invalid("request.schema", "unsupported request schema"));
     }
-    validate_report(report)?;
+    validate_report(report, request)?;
     let expected = project_core(request)?;
-    validate_report(&expected)?;
+    validate_report(&expected, request)?;
     if &expected != report {
         return Err(invalid(
             "report",

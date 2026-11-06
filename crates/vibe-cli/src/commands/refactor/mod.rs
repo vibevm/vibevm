@@ -261,7 +261,10 @@ fn resolve_package_targets(path: PathBuf) -> Vec<ConversionTarget> {
         root.join(vibe_core::layout::current_packages_root()),
     ] {
         if home.is_dir() {
-            targets.push(ConversionTarget::Path(home));
+            targets.push(ConversionTarget::Selected {
+                root: root.clone(),
+                path: home,
+            });
         }
     }
     if targets.is_empty() {
@@ -288,7 +291,7 @@ fn resolve_spec_target(path: PathBuf) -> ConversionTarget {
 fn spec_target(root: PathBuf) -> ConversionTarget {
     let spec = root.join(vibe_core::layout::current_specs_root());
     if spec.is_dir() {
-        ConversionTarget::Path(spec)
+        ConversionTarget::Selected { root, path: spec }
     } else {
         ConversionTarget::Refused {
             path: spec,

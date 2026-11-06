@@ -17,9 +17,15 @@ use anyhow::{Context as _, Result, bail};
 use progress_core::doc::ParsedDoc;
 use progress_core::{cache, journal, rollup, scope, sidecar, state};
 use vibe_registry::ShellGit;
+use vibe_spec::source_policy::{
+    PackagePolicyCheckpoint, PackageSourceMode, observe_package_policy,
+};
 
 use crate::cli::ProgressCommonArgs;
 use crate::commands::progress_evidence::EvidenceSnapshot;
+
+#[cfg(test)]
+mod tests;
 
 /// Which dialect vocabulary a file is read under, memoised by the
 /// package directory that decides it.
@@ -29,44 +35,56 @@ use crate::commands::progress_evidence::EvidenceSnapshot;
 /// package rather than once per page: a manual is hundreds of files and
 /// one manifest.
 #[derive(Default)]
-struct VocabularyByPackage {
-    seen: BTreeMap<PathBuf, vibe_specdoc::Vocabulary>,
+pub(super) struct VocabularyByPackage {
+    // Guard metadata only: never retain one open directory per scanned ancestor.
+    seen: BTreeMap<PathBuf, PackagePolicyCheckpoint>,
 }
 
 impl VocabularyByPackage {
     /// The vocabulary `file` is read under: walk up to the nearest
-    /// `vibe.toml` at or below `root` and take its kind. No manifest, an
-    /// unreadable one, or any kind but `doc` answers the spec dialect —
-    /// the closed default, which is the right answer for everything that
-    /// is not documentation and the safe answer for anything unclear.
-    fn of(&mut self, root: &Path, file: &Path) -> vibe_specdoc::Vocabulary {
+    /// `vibe.toml` at or below `root` and take its kind. A missing
+    /// manifest answers the spec dialect. A present invalid policy
+    /// refuses; an explicit empty package contributes no semantic documents.
+    fn of(&mut self, root: &Path, file: &Path) -> Result<Option<vibe_specdoc::Vocabulary>> {
         let mut dir = file.parent();
         while let Some(current) = dir {
-            if let Some(known) = self.seen.get(current) {
-                return *known;
+            if !self.seen.contains_key(current) {
+                self.seen.insert(
+                    current.to_path_buf(),
+                    observe_package_policy(current)?.into_checkpoint(),
+                );
             }
-            let manifest_path = current.join(vibe_core::manifest::Manifest::FILENAME);
-            if manifest_path.is_file() {
-                let vocab = match vibe_core::manifest::Manifest::read(&manifest_path) {
-                    Ok(manifest)
-                        if manifest
-                            .package
-                            .as_ref()
-                            .is_some_and(|p| p.kind == vibe_core::PackageKind::Doc) =>
-                    {
-                        vibe_specdoc::Vocabulary::Doc
-                    }
-                    _ => vibe_specdoc::Vocabulary::Spec,
-                };
-                self.seen.insert(current.to_path_buf(), vocab);
-                return vocab;
+            let policy = &self.seen[current];
+            match policy.mode() {
+                PackageSourceMode::ExplicitEmpty => return Ok(None),
+                PackageSourceMode::Explicit => return Err(policy.unsupported("progress").into()),
+                PackageSourceMode::Legacy => {
+                    return Ok(Some(
+                        if policy
+                            .package()
+                            .is_some_and(|p| p.kind == vibe_core::PackageKind::Doc)
+                        {
+                            vibe_specdoc::Vocabulary::Doc
+                        } else {
+                            vibe_specdoc::Vocabulary::Spec
+                        },
+                    ));
+                }
+                PackageSourceMode::MissingManifest => {}
             }
             if current == root {
                 break;
             }
             dir = current.parent();
         }
-        vibe_specdoc::Vocabulary::Spec
+        Ok(Some(vibe_specdoc::Vocabulary::Spec))
+    }
+
+    fn recheck(&self) -> Result<()> {
+        for policy in self.seen.values() {
+            policy.recheck_unchanged()?;
+        }
+        Ok(())
     }
 }
 
@@ -112,6 +130,7 @@ pub(crate) struct Ground {
     /// and carried on `Ground` rather than asked for again: a second
     /// read would be a second opinion about the same file.
     pub(crate) judging_exemption: scope::JudgingExemption,
+    pub(super) source_policies: VocabularyByPackage,
 }
 
 /// Resolve the tree, then produce one `ParsedDoc` per observed file —
@@ -166,6 +185,22 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
             ))
         );
     }
+    // Admission precedes pair classification, parsing and cached-payload use.
+    let mut vocabularies = VocabularyByPackage::default();
+    let root_policy = observe_package_policy(&root)?;
+    if root_policy.mode() == PackageSourceMode::Explicit {
+        return Err(root_policy.unsupported("progress").into());
+    }
+    vocabularies
+        .seen
+        .insert(root.clone(), root_policy.into_checkpoint());
+    let mut admitted = Vec::new();
+    for rel in files {
+        if let Some(vocab) = vocabularies.of(&root, &root.join(&rel))? {
+            admitted.push((rel, vocab));
+        }
+    }
+    let files: Vec<_> = admitted.iter().map(|(path, _)| path.clone()).collect();
     // One logical document, one form (PROP-045 ##TARGET-MIXED): `X.md` and
     // `X.xml` beside each other are a split brain — parsing both would
     // count one document's units twice under two paths, so the pair is a
@@ -175,8 +210,7 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
     }
     let mut docs = Vec::new();
     let mut xml_sources = BTreeSet::new();
-    let mut vocabularies = VocabularyByPackage::default();
-    for rel in files {
+    for (rel, vocab) in admitted {
         let full = root.join(&rel);
         // The projection dispatch (PROP-045 ##PROJECTION-READ): `.md` (and
         // anything else) verbatim, `.xml` through `from_xml →
@@ -192,7 +226,6 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         // refuses the first page of any manual it observes — a legal
         // `example` or `derived` block is simply not in the spec
         // dialect.
-        let vocab = vocabularies.of(&root, &full);
         let (text, kind) = vibe_specdoc::load_spec_text_with(&full, vocab)
             .map_err(|e| anyhow::Error::msg(e.to_string()))
             .with_context(|| format!("reading {}", full.display()))?;
@@ -210,6 +243,7 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         });
     }
     let judging_exemption = cfg.judging_exemption()?;
+    vocabularies.recheck()?;
     Ok(Ground {
         root,
         docs,
@@ -220,6 +254,7 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         excluded: excludes.dropped,
         xml_sources,
         judging_exemption,
+        source_policies: vocabularies,
     })
 }
 
@@ -366,6 +401,7 @@ pub(crate) fn refresh_state_with_evidence(
     g: &mut Ground,
     evidence: &EvidenceSnapshot,
 ) -> Result<Refresh> {
+    g.source_policies.recheck()?;
     let Some(campaign) = g.campaign.as_ref() else {
         return Ok(Refresh::default());
     };

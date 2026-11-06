@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "stage": "planner",
+  "outcome": {
+    "status": "needs_input",
+    "questions": [
+      {
+        "field": "recipe",
+        "resource_path": "vibevm/vibespecs/boot/10-flow.xml",
+        "choices": [
+          "application/xml",
+          "text/markdown"
+        ]
+      }
+    ]
+  }
+}

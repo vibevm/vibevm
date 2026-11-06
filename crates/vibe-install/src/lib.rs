@@ -44,6 +44,7 @@ mod lifecycle;
 mod plan;
 mod record;
 mod slot_verify;
+mod source_admission;
 mod visibility_projection;
 
 pub use apply::{

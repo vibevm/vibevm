@@ -119,6 +119,9 @@ pub enum QuestionField {
     #[serde(rename = "recipe")]
     Recipe,
 
+    #[serde(rename = "source_media")]
+    SourceMedia,
+
     #[serde(rename = "source_profile")]
     SourceProfile,
 
@@ -133,6 +136,11 @@ pub struct Question {
     pub choices: Vec<String>,
 
     pub field: QuestionField,
+
+    /// Required for source-specific question kinds, absent for the three global
+    /// selection fields.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resource_path: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

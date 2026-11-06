@@ -17,6 +17,7 @@ vibe-facts.workspace = true
 # The PROP-045 projection dispatch: boot-directory validation reads XML
 # boot files through the dialect (##LOADER-LAW, ##PROJECTION-READ).
 vibe-specdoc.workspace = true
+vibe-spec.workspace = true
 vibe-core.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true

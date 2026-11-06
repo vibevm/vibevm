@@ -38,7 +38,7 @@ fn corpus<T: DeserializeOwned + Serialize>(family: &str, valid: bool) {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 fn request_valid() {
     corpus::<PlanRequest>("migration-plan-request", true);
@@ -46,7 +46,7 @@ fn request_valid() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 fn request_invalid() {
     corpus::<PlanRequest>("migration-plan-request", false);
@@ -54,7 +54,7 @@ fn request_invalid() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 fn report_valid() {
     corpus::<PlanReport>("migration-plan-report", true);
@@ -62,7 +62,7 @@ fn report_valid() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 fn report_invalid() {
     corpus::<PlanReport>("migration-plan-report", false);
@@ -70,7 +70,7 @@ fn report_invalid() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 fn error_valid() {
     corpus::<PlanError>("migration-plan-error", true);
@@ -78,7 +78,7 @@ fn error_valid() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 fn error_invalid() {
     corpus::<PlanError>("migration-plan-error", false);

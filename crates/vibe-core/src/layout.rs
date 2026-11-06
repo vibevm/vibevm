@@ -79,6 +79,8 @@ pub const STATIC_MD: &str = "STATIC.md";
 /// as engine-owned clean state. The basename is law here once —
 /// vibe-workspace sources its lock name from this constant.
 pub const BOOT_ARTIFACTS_LOCK: &str = ".vibe-boot-artifacts.lock";
+/// Direct generated boot publication names share this reserved prefix.
+pub const BOOT_PUBLICATION_PREFIX: &str = ".vibe-boot-";
 
 /// The project-relative specs root under the NEW layout: `vibevm/vibespecs`.
 pub fn vibespecs_root() -> PathBuf {
@@ -223,6 +225,62 @@ pub fn current_boot_static_xml() -> PathBuf {
 /// (`spec/boot/STATIC.md` today).
 pub fn current_boot_static_md() -> PathBuf {
     current_boot_dir().join(STATIC_MD)
+}
+
+/// Whether a package-relative path belongs to generated boot publication.
+/// Only the owned boot directory and its direct publication artifacts match.
+/// ```
+/// use std::path::Path;
+/// use vibe_core::layout;
+/// assert!(layout::is_generated_boot_output(&layout::current_boot_static_xml()));
+/// assert!(layout::is_generated_boot_output(&layout::current_boot_dir().join(".vibe-boot-stage")));
+/// assert!(!layout::is_generated_boot_output(Path::new("data/STATIC.xml")));
+/// ```
+pub fn is_generated_boot_output(relative: &std::path::Path) -> bool {
+    generated_boot_paths().iter().any(|path| relative == path)
+        || (relative.parent() == Some(current_boot_dir().as_path())
+            && relative
+                .file_name()
+                .and_then(|name| name.to_str())
+                .is_some_and(|name| name.starts_with(BOOT_PUBLICATION_PREFIX)))
+}
+
+fn generated_boot_paths() -> [PathBuf; 3] {
+    [
+        current_boot_static_md(),
+        current_boot_static_xml(),
+        current_boot_index(),
+    ]
+}
+
+/// Declaration admission also excludes ASCII aliases of reserved outputs.
+/// This is stricter than exact payload ownership, not a claim that every alias
+/// is a generated file on a case-sensitive host. Unicode aliases are separate.
+/// ```
+/// use vibe_core::layout;
+/// let alias = layout::current_boot_dir().join("static.XML");
+/// assert!(!layout::is_generated_boot_output(&alias));
+/// assert!(layout::is_reserved_boot_source(&alias));
+/// assert!(!layout::is_reserved_boot_source(&layout::current_boot_dir().join("nested/.vibe-boot-note")));
+/// ```
+pub fn is_reserved_boot_source(relative: &std::path::Path) -> bool {
+    let spelling = relative.to_string_lossy().replace('\\', "/");
+    generated_boot_paths()
+        .iter()
+        .any(|path| spelling.eq_ignore_ascii_case(&path.to_string_lossy().replace('\\', "/")))
+        || relative.parent().is_some_and(|parent| {
+            parent
+                .to_string_lossy()
+                .replace('\\', "/")
+                .eq_ignore_ascii_case(&current_boot_dir().to_string_lossy().replace('\\', "/"))
+                && relative
+                    .file_name()
+                    .and_then(|name| name.to_str())
+                    .is_some_and(|name| {
+                        name.to_ascii_lowercase()
+                            .starts_with(BOOT_PUBLICATION_PREFIX)
+                    })
+        })
 }
 
 #[cfg(test)]

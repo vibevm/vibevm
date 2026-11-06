@@ -3,7 +3,7 @@
     "description": "Epoch-1 pure migration planner report. The owning adapter requires schema exactly 1, validates profile/epoch and stage/code coherence, canonical source-bound offsets and plan invariants; JTD enforces structural shape only.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-      "r": 1
+      "r": 2
     },
     "x-vocabularies": [
       "migration_planning_error"
@@ -153,7 +153,8 @@
           "enum": [
             "source_profile",
             "target_profile",
-            "recipe"
+            "recipe",
+            "source_media"
           ],
           "metadata": {
             "x-vocabulary": "closed"
@@ -166,6 +167,15 @@
           "metadata": {
             "x-empty": "emit",
             "description": "Exact named choices in owning planner order."
+          }
+        }
+      },
+      "optionalProperties": {
+        "resource_path": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Required for source-specific question kinds, absent for the three global selection fields."
           }
         }
       }

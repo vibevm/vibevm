@@ -4,6 +4,36 @@ use std::fs;
 
 use super::{PageSet, read_package};
 
+#[test]
+fn source_policy_empty_has_no_pages_and_explicit_or_invalid_refuses_raw_xml() {
+    for (suffix, empty) in [
+        ("sources=[]\n", true),
+        ("sources='invalid'\n", false),
+        (
+            "[[package.sources]]\nfile='vibevm/vibespecs/raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+            false,
+        ),
+    ] {
+        let tmp = tempfile::tempdir().unwrap();
+        fs::create_dir_all(tmp.path().join(super::SPEC_ROOT)).unwrap();
+        let path = tmp.path().join(super::SPEC_ROOT).join("raw.xml");
+        fs::write(&path, "<foreign/>").unwrap();
+        fs::write(tmp.path().join("vibe.toml"), format!("[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n{suffix}")).unwrap();
+        let result = read_package(tmp.path());
+        if empty {
+            assert_eq!(result.unwrap().total(), 0);
+        } else {
+            assert!(
+                result
+                    .unwrap_err()
+                    .to_string()
+                    .contains("SOURCE-ADMISSION-BOUNDARY")
+            );
+        }
+        assert_eq!(fs::read_to_string(path).unwrap(), "<foreign/>");
+    }
+}
+
 fn page(dir: &std::path::Path, rel: &str, body: &str) {
     let path = dir.join("vibevm/vibespecs").join(rel);
     fs::create_dir_all(path.parent().expect("page has a parent")).expect("mkdir");

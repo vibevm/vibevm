@@ -3,7 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATI
 use super::*;
 use toml_edit::{Document, Item, TableLike, Value};
 
-fn shape(field: &str) -> MigrationRefusal {
+pub(super) fn shape(field: &str) -> MigrationRefusal {
     refusal(
         MigrationRefusalKind::UnrecognizedShape,
         field,
@@ -11,19 +11,19 @@ fn shape(field: &str) -> MigrationRefusal {
     )
 }
 
-fn table<'a>(item: Option<&'a Item>, field: &str) -> Checked<&'a dyn TableLike> {
+pub(super) fn table<'a>(item: Option<&'a Item>, field: &str) -> Checked<&'a dyn TableLike> {
     item.and_then(Item::as_table_like)
         .ok_or_else(|| shape(field))
 }
 
-fn string<'a>(table: &'a dyn TableLike, key: &str, field: &str) -> Checked<&'a str> {
+pub(super) fn string<'a>(table: &'a dyn TableLike, key: &str, field: &str) -> Checked<&'a str> {
     table
         .get(key)
         .and_then(Item::as_str)
         .ok_or_else(|| shape(field))
 }
 
-fn only(table: &dyn TableLike, keys: &[&str], field: &str) -> Checked<()> {
+pub(super) fn only(table: &dyn TableLike, keys: &[&str], field: &str) -> Checked<()> {
     for (key, _) in table.iter() {
         if !keys.contains(&key) {
             return Err(shape(&format!("{field}.{key}")));

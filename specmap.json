@@ -5630,7 +5630,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "plan_report",
-      "end_line": 174
+      "end_line": 184
     },
     {
       "crate_name": "<schema>",
@@ -5662,7 +5662,7 @@
       "item_kind": "schema-def",
       "line": 150,
       "symbol": "plan_report::question",
-      "end_line": 172
+      "end_line": 182
     },
     {
       "crate_name": "<schema>",
@@ -5678,7 +5678,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "plan_request",
-      "end_line": 40
+      "end_line": 92
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/migration/e1/plan_request.jtd.json",
+      "item_kind": "schema-def",
+      "line": 50,
+      "symbol": "plan_request::source_decision",
+      "end_line": 90
     },
     {
       "crate_name": "<schema>",
@@ -14974,6 +14982,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/facts/selected.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::commands::facts::selected",
+      "end_line": 3,
+      "fingerprint": "tok1:6dbdbabc0d532b1506ab534b3a9d84601992faec1909b5f29569c26a67c64b21"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/facts_check.rs",
       "item_kind": "mod",
       "line": 4,
@@ -15795,10 +15812,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/progress/grounding.rs",
       "item_kind": "fn",
-      "line": 117,
+      "line": 136,
       "symbol": "vibe_cli::commands::progress::grounding::ground",
-      "end_line": 224,
-      "fingerprint": "tok1:8c68a7d152826187a48d59e30319430d17b6a6c55dd5d69bae518b04792166a2"
+      "end_line": 259,
+      "fingerprint": "tok1:b54a954ac47e8cd6de40d11f1aec913246a59fa7280a2729c481c19a40a0b2c2"
     },
     {
       "crate_name": "vibe-cli",
@@ -15865,6 +15882,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/refactor/convert_source/policy.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::refactor::convert_source::policy",
+      "end_line": 2,
+      "fingerprint": "tok1:2ac40db1dca86d4cbda022da23e47d265e1a9b6c30f5a2ff9feaebe6a8f6d514"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
       "item_kind": "mod",
       "line": 2,
@@ -15897,7 +15923,7 @@
       "line": 13,
       "symbol": "vibe_cli::commands::refactor::migration_plan::run",
       "end_line": 57,
-      "fingerprint": "tok1:60aebf12c3404b05e908b56d1636e48bf06fb96b0da5052ebc0bcffd64ae6136"
+      "fingerprint": "tok1:704181516e7616139da4d0d0eb472899d4975dedebb80f19c1879cf79ae15878"
     },
     {
       "crate_name": "vibe-cli",
@@ -16155,9 +16181,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/reinstall.rs",
       "item_kind": "fn",
-      "line": 263,
+      "line": 271,
       "symbol": "vibe_cli::commands::reinstall::run_inner",
-      "end_line": 333,
+      "end_line": 341,
       "fingerprint": "tok1:6c96e3cbec0cd97cf04cb09c6518755c353b51594d735e35b5b50f04688e3df9"
     },
     {
@@ -16906,6 +16932,15 @@
       "symbol": "vibe_cli::commands::tree::build",
       "end_line": 9,
       "fingerprint": "tok1:0218f71011dce5a4956b387fc41ca0ec75e1b6d8f3e7655d0c39b5c1bd44c195"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/build/in_place.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::tree::build::in_place",
+      "end_line": 2,
+      "fingerprint": "tok1:2ac40db1dca86d4cbda022da23e47d265e1a9b6c30f5a2ff9feaebe6a8f6d514"
     },
     {
       "crate_name": "vibe-cli",
@@ -19699,6 +19734,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_facts_declared.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::cli_facts_declared",
+      "end_line": 2,
+      "fingerprint": "tok1:6dbdbabc0d532b1506ab534b3a9d84601992faec1909b5f29569c26a67c64b21"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_generated_slot_lanes.rs",
       "item_kind": "fn",
       "line": 65,
@@ -20320,6 +20364,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_source_admission.rs",
+      "item_kind": "fn",
+      "line": 26,
+      "symbol": "vibe_cli::tests::cli_source_admission::declared_install_refuses_before_requested_metadata_and_lifecycle_effects",
+      "end_line": 124,
+      "fingerprint": "tok1:737a9bf497ae25f34f30c5de5af8d63139a2bc2172e4d552c0b38441b93bd8ae"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_spec_format.rs",
       "item_kind": "fn",
       "line": 40,
@@ -20505,7 +20558,16 @@
       "line": 128,
       "symbol": "vibe_cli::tests::migration_plan::stdin_and_literal_match_shared_golden_plan_without_state",
       "end_line": 151,
-      "fingerprint": "tok1:95884941387d7f08f122e625f3ebc5b153bac8eed25d96632e4bc995f893e79e"
+      "fingerprint": "tok1:952dca25927710447f3a87047bf47e19838306b176d6593ce24b56b2478d9478"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/source_migration.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::source_migration",
+      "end_line": 2,
+      "fingerprint": "tok1:50c69a23ecb77738cd59c3d217af77779878d30f1e26611c2619ad7f6c5447f0"
     },
     {
       "crate_name": "vibe-cli",
@@ -23166,19 +23228,19 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/migration.rs",
       "item_kind": "fn",
-      "line": 30,
+      "line": 34,
       "symbol": "vibe_core::manifest::migration::manifest_migration_profile_epoch",
-      "end_line": 47,
-      "fingerprint": "tok1:d795e991d747531031ca33280a13053c1162f255b88943aca8fce0a0117abb20"
+      "end_line": 53,
+      "fingerprint": "tok1:70c17ebb04cb4f49458eb03143b3834aae1bc7c5b2b1a728f8e51a789e41b682"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/migration.rs",
       "item_kind": "fn",
-      "line": 172,
+      "line": 180,
       "symbol": "vibe_core::manifest::migration::plan_manifest_migration",
-      "end_line": 196,
-      "fingerprint": "tok1:1bdbf9253a0467412a62e52a0923e24bdb60721645bde37423518ba65469255a"
+      "end_line": 204,
+      "fingerprint": "tok1:c74143e7c44fe0bddcf5cd3dd248270ddf9dac556bac8f50856ab31ff84ab619"
     },
     {
       "crate_name": "vibe-core",
@@ -23211,27 +23273,27 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/migration/tests.rs",
       "item_kind": "fn",
-      "line": 416,
+      "line": 417,
       "symbol": "vibe_core::manifest::migration::tests::frozen_profile_epoch_metadata_is_explicit_and_unknown_is_unrecognized",
-      "end_line": 446,
+      "end_line": 447,
       "fingerprint": "tok1:952f447d10f5b058f51b57b242c6878f11b97146954581b434a4818c34e82c71"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/migration/tests.rs",
       "item_kind": "fn",
-      "line": 380,
+      "line": 381,
       "symbol": "vibe_core::manifest::migration::tests::independently_fixed_r1_identity_and_token_vector",
-      "end_line": 414,
+      "end_line": 415,
       "fingerprint": "tok1:366a03a96edc5291cbbb7c1393fbc6fdc29c77e0b6861e95e8383b1863f1c727"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/migration/tests.rs",
       "item_kind": "fn",
-      "line": 62,
+      "line": 63,
       "symbol": "vibe_core::manifest::migration::tests::transforms_one_token_preserving_choices_and_unrelated_bytes",
-      "end_line": 89,
+      "end_line": 90,
       "fingerprint": "tok1:f4dfb2ad56ac5ef2d84f14696d41b26ab8376f2e26f0dad44884b3bb5a7582fe"
     },
     {
@@ -23931,9 +23993,9 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/tests.rs",
       "item_kind": "fn",
-      "line": 108,
+      "line": 109,
       "symbol": "vibe_core::manifest::package::tests::package_format_parses_and_defaults_to_simple",
-      "end_line": 138,
+      "end_line": 139,
       "fingerprint": "tok1:6e3590b3dcd83b043c92e1c32fefafd7b2235e2da6927d88e5269b539b96bd24"
     },
     {
@@ -24196,6 +24258,15 @@
       "symbol": "vibe_core::manifest::run_command::RunCommandHandler",
       "end_line": 31,
       "fingerprint": "tok1:c0dd5153e77018e31c2f6431c8aee8bae146befa303df889d765302266f401ee"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/source_descriptor/mod.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_core::manifest::source_descriptor",
+      "end_line": 6,
+      "fingerprint": "tok1:5eb31448f2649443ebea360bf6c22880fb1a493b89e10771ddbecb4818a10c24"
     },
     {
       "crate_name": "vibe-core",
@@ -25391,8 +25462,8 @@
       "item_kind": "enum",
       "line": 16,
       "symbol": "vibe_doc::error::DocError",
-      "end_line": 238,
-      "fingerprint": "tok1:0a7d63149c56abc6a5d9aa6ebcf277af39943108ba32f5c94c2fee2b16f8957b"
+      "end_line": 241,
+      "fingerprint": "tok1:40e2855fc586dec27f24cf1e67ece91c3c852870972287870d0453978c34b478"
     },
     {
       "crate_name": "vibe-doc",
@@ -27135,10 +27206,10 @@
       "crate_name": "vibe-facts",
       "file": "crates/vibe-facts/src/lib.rs",
       "item_kind": "enum",
-      "line": 327,
+      "line": 332,
       "symbol": "vibe_facts::RegistryError",
-      "end_line": 441,
-      "fingerprint": "tok1:c23ab9374e9f3a3662e14072d3601333a5fc9ffd1d2757fb14a461ed3526d206"
+      "end_line": 448,
+      "fingerprint": "tok1:74dd00e581ea0a3f2fc220b0ee07bd3e012032603ba52bdc845904aa53efdd4c"
     },
     {
       "crate_name": "vibe-facts",
@@ -27175,6 +27246,33 @@
       "symbol": "vibe_facts::scan",
       "end_line": 28,
       "fingerprint": "tok1:0abf65d3f6e1a4769ac4455015931a108063b1a0049ac9676694a584abe6dcb9"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/scan/declared.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_facts::scan::declared",
+      "end_line": 7,
+      "fingerprint": "tok1:6dbdbabc0d532b1506ab534b3a9d84601992faec1909b5f29569c26a67c64b21"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/scan/declared/walk.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_facts::scan::declared::walk",
+      "end_line": 7,
+      "fingerprint": "tok1:6dbdbabc0d532b1506ab534b3a9d84601992faec1909b5f29569c26a67c64b21"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/scan/declared_capture.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_facts::scan::declared_capture",
+      "end_line": 2,
+      "fingerprint": "tok1:6dbdbabc0d532b1506ab534b3a9d84601992faec1909b5f29569c26a67c64b21"
     },
     {
       "crate_name": "vibe-facts",
@@ -28352,8 +28450,8 @@
       "item_kind": "fn",
       "line": 11,
       "symbol": "vibe_install::apply::metadata::apply_with_spec_format_and_slot_lifecycle",
-      "end_line": 68,
-      "fingerprint": "tok1:047a65e06e363fd5186dfe64f1979d67e18e3e911f10fcd9a176bd31514b8afd"
+      "end_line": 69,
+      "fingerprint": "tok1:ed835a7331d0661bd96d85f4ea185da3013f695609778af8e9c0179921c88442"
     },
     {
       "crate_name": "vibe-install",
@@ -28669,6 +28767,15 @@
       "symbol": "vibe_install::record::workspace_root_snapshot",
       "end_line": 250,
       "fingerprint": "tok1:f4addd9d3199b3a93ae632a4c550dcc5f5207b786ef07e5bc9bd53d689806e10"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/source_admission.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_install::source_admission",
+      "end_line": 2,
+      "fingerprint": "tok1:2ac40db1dca86d4cbda022da23e47d265e1a9b6c30f5a2ff9feaebe6a8f6d514"
     },
     {
       "crate_name": "vibe-install",
@@ -35022,7 +35129,7 @@
       "line": 7,
       "symbol": "vibe_mcp::tests::migration_planning::public_tool_keeps_exact_plan_questions_and_preflight_distinct",
       "end_line": 53,
-      "fingerprint": "tok1:0d2986a1267aa916343a2d0eb41b95ed5bc884fc4f5ad0271b2db3a712d0e4d8"
+      "fingerprint": "tok1:b60e4a54d7781fa6e1982b804733e68a00c12849fcf59917e55a0ea22782397a"
     },
     {
       "crate_name": "vibe-mcp",
@@ -35256,7 +35363,16 @@
       "line": 13,
       "symbol": "vibe_mcp::tools::migration_plan::PlanManifestMigrationMcpTool",
       "end_line": 26,
-      "fingerprint": "tok1:a69c8208d5a5384c25da999d91ce99da97fae0324a12b5948fa6b99de25c2fee"
+      "fingerprint": "tok1:f7eb5c92f55565112a02ad4df2b8a061e50342ae58574cb99ea5e3caa4f6007c"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/migration_plan/source_tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_mcp::tools::migration_plan::source_tests",
+      "end_line": 2,
+      "fingerprint": "tok1:50c69a23ecb77738cd59c3d217af77779878d30f1e26611c2619ad7f6c5447f0"
     },
     {
       "crate_name": "vibe-mcp",
@@ -39555,9 +39671,9 @@
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "enum",
-      "line": 51,
+      "line": 52,
       "symbol": "vibe_safefs::file::Presence",
-      "end_line": 63,
+      "end_line": 64,
       "fingerprint": "tok1:4b753670f3588e7bfc7942d6b920f6077b6ea195d6dd26607ff71d9c5c7b520d"
     },
     {
@@ -39636,9 +39752,9 @@
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file.rs",
       "item_kind": "fn",
-      "line": 183,
+      "line": 184,
       "symbol": "vibe_safefs::file::regular_read_options",
-      "end_line": 201,
+      "end_line": 202,
       "fingerprint": "tok1:1660816681f774e457fccc7210964c0ab92cae105183592f166165c92ee7706d"
     },
     {
@@ -39654,10 +39770,10 @@
       "crate_name": "vibe-safefs",
       "file": "crates/vibe-safefs/src/file/source_read.rs",
       "item_kind": "fn",
-      "line": 13,
+      "line": 48,
       "symbol": "vibe_safefs::file::source_read::Project::read_source_bytes",
-      "end_line": 33,
-      "fingerprint": "tok1:bf92d69f007f20e4ed4e43bfdeca90f2b6612153d77abfa5d91fe6e94a35a5ac"
+      "end_line": 70,
+      "fingerprint": "tok1:0f31c60cb0a96b1827ea7dd59636aa908d5b8bd25c1cf828b769d8426288587e"
     },
     {
       "crate_name": "vibe-safefs",
@@ -44638,6 +44754,33 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/source_policy.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_spec::source_policy",
+      "end_line": 3,
+      "fingerprint": "tok1:2ac40db1dca86d4cbda022da23e47d265e1a9b6c30f5a2ff9feaebe6a8f6d514"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/source_policy.rs",
+      "item_kind": "struct",
+      "line": 37,
+      "symbol": "vibe_spec::source_policy::SourcePolicyError",
+      "end_line": 56,
+      "fingerprint": "tok1:55368bdac54df0e380201f891e182f0a5f066fa60ad8522db52896df714619b9"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/source_policy.rs",
+      "item_kind": "fn",
+      "line": 127,
+      "symbol": "vibe_spec::source_policy::observe_package_policy",
+      "end_line": 197,
+      "fingerprint": "tok1:698cebfd0a99b9575520a08a268ad5425690df799088bbaa7078ca14d3fcfcfe"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/transforms/mod.rs",
       "item_kind": "mod",
       "line": 3,
@@ -45219,7 +45362,7 @@
       "line": 78,
       "symbol": "vibe_wire::tests::migration_planning_wire::error_invalid",
       "end_line": 85,
-      "fingerprint": "tok1:6f52b2a4306c5cf177f954a8e94de12dcf5431181b03907afa035d7d0582666c"
+      "fingerprint": "tok1:d002476d80cc59a1a16da5824ec34de04a13926a4c4ea1c270accdf8b06be4fb"
     },
     {
       "crate_name": "vibe-wire",
@@ -45228,7 +45371,7 @@
       "line": 70,
       "symbol": "vibe_wire::tests::migration_planning_wire::error_valid",
       "end_line": 77,
-      "fingerprint": "tok1:4efd4fdb6a2ff249c87679bbe417030243e5f1a08d45d941518fadcd73e1d4d9"
+      "fingerprint": "tok1:82b2b98317931b3cf7d46b1145b3525d5d23a22cc12c9ff57275633d0f42382e"
     },
     {
       "crate_name": "vibe-wire",
@@ -45237,7 +45380,7 @@
       "line": 62,
       "symbol": "vibe_wire::tests::migration_planning_wire::report_invalid",
       "end_line": 69,
-      "fingerprint": "tok1:3e092378999fda83397ba47fb0416b6f9909d3236532d56faf79b66e6f2bdf23"
+      "fingerprint": "tok1:59c5e45a631ced471abca0158a338fbda3b451beb2ecfcc2e5345339464df588"
     },
     {
       "crate_name": "vibe-wire",
@@ -45246,7 +45389,7 @@
       "line": 54,
       "symbol": "vibe_wire::tests::migration_planning_wire::report_valid",
       "end_line": 61,
-      "fingerprint": "tok1:fc30365bc61c531183267e0f13e2fec2b0ffa8ace09df9e8d97ffbc538f91aa7"
+      "fingerprint": "tok1:d380853ece7585068919c7ae8726ea868a051212f8fff28ffb803e94c3b032dc"
     },
     {
       "crate_name": "vibe-wire",
@@ -45255,7 +45398,7 @@
       "line": 46,
       "symbol": "vibe_wire::tests::migration_planning_wire::request_invalid",
       "end_line": 53,
-      "fingerprint": "tok1:e09e687b58d4800956006bfb085e8f8f1c10ed4d0bf77866652c2993076ea1ef"
+      "fingerprint": "tok1:f5db3f0bffdae74d910490ae15a763f77053933cdc191e1805af3a696b9f67eb"
     },
     {
       "crate_name": "vibe-wire",
@@ -45264,7 +45407,7 @@
       "line": 38,
       "symbol": "vibe_wire::tests::migration_planning_wire::request_valid",
       "end_line": 45,
-      "fingerprint": "tok1:cfdd40c8a2f4c7a1b66c70496390b440307f1f679c3cb1b4b06e353f8ee07bee"
+      "fingerprint": "tok1:65d530917b9816a50bfb81cd80f66318020c603905e26917e8763f4eaa4b2174"
     },
     {
       "crate_name": "vibe-workspace",
@@ -46602,18 +46745,18 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 400,
+      "line": 401,
       "symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "end_line": 436,
+      "end_line": 437,
       "fingerprint": "tok1:9d08758b1e16a710bbfa572f2ce3046d6e310f18c933ba54f3f2830ac4c1624a"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 301,
+      "line": 302,
       "symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "end_line": 333,
+      "end_line": 334,
       "fingerprint": "tok1:59bcdc58df73e3c62002c8068aa146e54c8502dc4e80f014f5352991cb91c6c5"
     },
     {
@@ -46786,6 +46929,15 @@
       "symbol": "vibe_workspace::install::slot_lifecycle::SlotLifecycleTarget",
       "end_line": 33,
       "fingerprint": "tok1:503cc8bddf16ba6c4bd297e6f6708282be7d102294f99f454ccdbd29ed934552"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/source_admission.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::install::source_admission",
+      "end_line": 2,
+      "fingerprint": "tok1:2ac40db1dca86d4cbda022da23e47d265e1a9b6c30f5a2ff9feaebe6a8f6d514"
     },
     {
       "crate_name": "vibe-workspace",
@@ -47511,19 +47663,55 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/migration_planning.rs",
       "item_kind": "struct",
-      "line": 46,
+      "line": 47,
       "symbol": "vibe_workspace::migration_planning::MigrationReportValidationError",
-      "end_line": 65,
-      "fingerprint": "tok1:683f0cc3a4e26af8cb5346f731709529d47209a3c71dff8ee1d75b7bfadbe02e"
+      "end_line": 66,
+      "fingerprint": "tok1:037c8f45d0cb873e7269e3076bf658916d4032f2bc92de32b6d799d9692de1e4"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/migration_planning.rs",
       "item_kind": "fn",
-      "line": 163,
+      "line": 196,
       "symbol": "vibe_workspace::migration_planning::plan_migration_request",
-      "end_line": 201,
-      "fingerprint": "tok1:920ffcce87d4672728d94b04f656f615586d0c1af3439c4f3a7efea907a8d68d"
+      "end_line": 237,
+      "fingerprint": "tok1:a7093645b0da86eea8212e68c17a2cc3481ca404656b6788fd75932c97d1e734"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_planning/source_apply_tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::migration_planning::source_apply_tests",
+      "end_line": 2,
+      "fingerprint": "tok1:45f190796a9b1f2c77f88f5b868968c8c842ebdac4be854f23ab87106672463b"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_planning/source_apply_tests.rs",
+      "item_kind": "fn",
+      "line": 77,
+      "symbol": "vibe_workspace::migration_planning::source_apply_tests::source_recipe_apply_replay_and_declared_reader_preserve_original_bytes",
+      "end_line": 119,
+      "fingerprint": "tok1:b10aa9fb885224a53faf7968d30ddd9e07750dd504aa114c13d213bfe3fdc75d"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_planning/source_tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::migration_planning::source_tests",
+      "end_line": 2,
+      "fingerprint": "tok1:50c69a23ecb77738cd59c3d217af77779878d30f1e26611c2619ad7f6c5447f0"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/migration_planning/source_tests.rs",
+      "item_kind": "fn",
+      "line": 39,
+      "symbol": "vibe_workspace::migration_planning::source_tests::source_question_answer_preserves_exact_bytes_and_original_decision",
+      "end_line": 105,
+      "fingerprint": "tok1:e1247d5d32884a1bc0b7c791caa4a73297ff2796fb1337a5e35d35b7e4665987"
     },
     {
       "crate_name": "vibe-workspace",
@@ -47538,28 +47726,28 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/migration_planning/tests.rs",
       "item_kind": "fn",
-      "line": 91,
+      "line": 92,
       "symbol": "vibe_workspace::migration_planning::tests::golden_projection_preserves_c1_text_spans_and_identities",
-      "end_line": 127,
-      "fingerprint": "tok1:3b94b4bba91db482d06d5995e1dd7fab1a9ff085d5fc5ac3df8953dfdee7cace"
+      "end_line": 128,
+      "fingerprint": "tok1:a50d02886b0235f176c8592fd35c4995198e065bce2353c551145cfb3c63829b"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/migration_planning/tests.rs",
       "item_kind": "fn",
-      "line": 431,
+      "line": 432,
       "symbol": "vibe_workspace::migration_planning::tests::registered_positive_examples_are_actual_replayable_domain_results",
-      "end_line": 473,
-      "fingerprint": "tok1:0fe0256e0b81b2939869bb52791168a7518dd8316f2c4d97cfb797d82b4d060c"
+      "end_line": 474,
+      "fingerprint": "tok1:494b81944d924770ce17f172331af0b0a2bed65a94c7a564ca8dceb6c054c19f"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/migration_planning/tests.rs",
       "item_kind": "fn",
-      "line": 375,
+      "line": 376,
       "symbol": "vibe_workspace::migration_planning::tests::retained_presence_and_semantic_invalid_corpora_refuse",
-      "end_line": 429,
-      "fingerprint": "tok1:2c35c422e9a77a597d5aa214d156eca6bf8a0d2a2f1871fbe627252069ff24ba"
+      "end_line": 430,
+      "fingerprint": "tok1:65b8cc38238976a123a93fe55118ab5c3ecbf1e91877cc2094647f1952305a5b"
     },
     {
       "crate_name": "vibe-workspace",
@@ -47574,10 +47762,10 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/migration_planning/validation.rs",
       "item_kind": "fn",
-      "line": 158,
+      "line": 169,
       "symbol": "vibe_workspace::migration_planning::validation::validate_report_for_request",
-      "end_line": 184,
-      "fingerprint": "tok1:be0068ab2e985e54c0e0cd6c1014b8eb39827dafa00fea5b9528d1c8b5a5e4d9"
+      "end_line": 195,
+      "fingerprint": "tok1:496921f1f972281cdb9eb7ce81ab1376cb4453bcca2c7ab9baf50cebddf2bd27"
     },
     {
       "crate_name": "vibe-workspace",
@@ -47835,10 +48023,10 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
       "item_kind": "fn",
-      "line": 554,
+      "line": 450,
       "symbol": "vibe_workspace::vibedeps::derived::is_generated_boot_artifact",
-      "end_line": 573,
-      "fingerprint": "tok1:5e5dc5e62411f2fddcc0c46e96c9dd225983f0fb72e2767f6c4c0d4200f8a191"
+      "end_line": 462,
+      "fingerprint": "tok1:767364105f91a49726aa1e0a3c59f2208df84da6b9e9d70f98edbc9399505dc0"
     },
     {
       "crate_name": "vibe-workspace",
@@ -47862,10 +48050,10 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
       "item_kind": "fn",
-      "line": 535,
+      "line": 490,
       "symbol": "vibe_workspace::vibedeps::slot_diff::collect_source_files",
-      "end_line": 565,
-      "fingerprint": "tok1:3bd1c3d7ab06986c1c37f9d39de3e401a2d4223e50fa85c8580cb5166dec6502"
+      "end_line": 525,
+      "fingerprint": "tok1:db8ba9aba84420b52c76b7cb45aa204c02df647d6ba8d9bc25fd975c077ffcb8"
     },
     {
       "crate_name": "vibe-workspace",
@@ -47896,48 +48084,66 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+      "item_kind": "fn",
+      "line": 62,
+      "symbol": "vibe_workspace::vibedeps::slot_record::read_slot_record_bytes",
+      "end_line": 84,
+      "fingerprint": "tok1:ab0c32b192fd24745cb290efaf9081af394b0fef781c63176ebc121609c3bcd9"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/source_policy.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_workspace::vibedeps::source_policy",
+      "end_line": 5,
+      "fingerprint": "tok1:2ac40db1dca86d4cbda022da23e47d265e1a9b6c30f5a2ff9feaebe6a8f6d514"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
-      "line": 349,
+      "line": 355,
       "symbol": "vibe_workspace::vibedeps::tests::ensure_gitignored_appends_once",
-      "end_line": 364,
+      "end_line": 370,
       "fingerprint": "tok1:d18c6c12250f67549b006ee416f1eecfcbf8860d39c62fc5456b11aec08ec053"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
-      "line": 277,
+      "line": 283,
       "symbol": "vibe_workspace::vibedeps::tests::in_place_slot_path_is_unversioned",
-      "end_line": 287,
+      "end_line": 293,
       "fingerprint": "tok1:d293dc3a1afac5d80a651c9bd25d66380fa4dece142facac1c9e5ce75b47922e"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
-      "line": 313,
+      "line": 319,
       "symbol": "vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_copy",
-      "end_line": 334,
-      "fingerprint": "tok1:c0ad558cf8b03087c2f97f79380afeef8e9b8ef072074ed171e49214373f729f"
+      "end_line": 340,
+      "fingerprint": "tok1:7a0e59d86f033e3f8bac94ef2e8257c190f4b8e1332ad6188a5fd0d2c916ec22"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
-      "line": 244,
+      "line": 247,
       "symbol": "vibe_workspace::vibedeps::tests::materialise_hardlink_mode_places_the_full_tree",
-      "end_line": 275,
-      "fingerprint": "tok1:99a0e87c5f8c1cb637c595e422c6efdeccb98b774ce8cb451102f45cdca6e834"
+      "end_line": 281,
+      "fingerprint": "tok1:3d9bfee429900ab3ec86a8ca676c31a28654f276415c51ca5dd36d25ac0949e5"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
-      "line": 289,
+      "line": 295,
       "symbol": "vibe_workspace::vibedeps::tests::materialise_in_place_moves_the_clone_keeping_git",
-      "end_line": 311,
-      "fingerprint": "tok1:d75e9cae6ecd75d62d5640f6e5256b542454a34e487cdb4c01702b30da0bd744"
+      "end_line": 317,
+      "fingerprint": "tok1:897a0e03d07879831f8432b97f23aa913b5cbd93a354f3b04aa69ff13bc0e7f0"
     },
     {
       "crate_name": "vibe-workspace",
@@ -47952,10 +48158,10 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/tests_transformed.rs",
       "item_kind": "fn",
-      "line": 392,
+      "line": 396,
       "symbol": "vibe_workspace::vibedeps::tests_transformed::generated_boot_cache_is_excluded_from_every_payload_walk_only_at_its_owned_path",
-      "end_line": 486,
-      "fingerprint": "tok1:8a98ab302a400eaaec1917783e77e70abeeb2b3b7772028d6ef4dcdc74668c9b"
+      "end_line": 494,
+      "fingerprint": "tok1:c19ac50083c62a1f44b793ade0a65bbc58300dbb8aaf02ddd66fdd7b53b2be3a"
     },
     {
       "crate_name": "xtask",
@@ -55026,6 +55232,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/facts/selected.rs",
+      "from_symbol": "vibe_cli::commands::facts::selected",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/facts_check.rs",
       "from_symbol": "vibe_cli::commands::facts_check",
       "line": 4,
@@ -55757,7 +55971,7 @@
     {
       "file": "crates/vibe-cli/src/commands/progress/grounding.rs",
       "from_symbol": "vibe_cli::commands::progress::grounding::ground",
-      "line": 130,
+      "line": 149,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#tool",
       "verb": "implements"
@@ -55819,6 +56033,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/refactor/convert_source/policy.rs",
+      "from_symbol": "vibe_cli::commands::refactor::convert_source::policy",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/refactor/migration_operation.rs",
       "from_symbol": "vibe_cli::commands::refactor::migration_operation",
       "line": 2,
@@ -55850,7 +56072,7 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "implements",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-cli/src/commands/registry/mod.rs",
@@ -56079,7 +56301,7 @@
     {
       "file": "crates/vibe-cli/src/commands/reinstall.rs",
       "from_symbol": "vibe_cli::commands::reinstall::run_inner",
-      "line": 263,
+      "line": 271,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -56753,6 +56975,14 @@
       "line": 9,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#effective-load",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/build/in_place.rs",
+      "from_symbol": "vibe_cli::commands::tree::build::in_place",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY",
       "verb": "implements"
     },
     {
@@ -59311,6 +59541,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_facts_declared.rs",
+      "from_symbol": "vibe_cli::tests::cli_facts_declared",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_generated_slot_lanes.rs",
       "from_symbol": "vibe_cli::tests::cli_generated_slot_lanes::install_check_repeat_and_lock_reread_preserve_source_members_and_authored_fragments",
       "line": 66,
@@ -59937,6 +60175,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_source_admission.rs",
+      "from_symbol": "vibe_cli::tests::cli_source_admission::declared_install_refuses_before_requested_metadata_and_lifecycle_effects",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALL-BOUNDARY",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_spec_format.rs",
       "from_symbol": "vibe_cli::tests::cli_spec_format::redbook_polygon_follows_each_static_target_and_switches_without_an_orphan",
       "line": 41,
@@ -60131,7 +60377,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-cli/tests/source_migration.rs",
+      "from_symbol": "vibe_cli::tests::source_migration",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-cli/tests/tree_nested_attribution.rs",
@@ -62525,7 +62779,7 @@
     {
       "file": "crates/vibe-core/src/manifest/migration.rs",
       "from_symbol": "vibe_core::manifest::migration::manifest_migration_profile_epoch",
-      "line": 37,
+      "line": 41,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
       "verb": "implements",
@@ -62534,7 +62788,7 @@
     {
       "file": "crates/vibe-core/src/manifest/migration.rs",
       "from_symbol": "vibe_core::manifest::migration::plan_manifest_migration",
-      "line": 184,
+      "line": 192,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
       "verb": "implements",
@@ -62567,7 +62821,7 @@
     {
       "file": "crates/vibe-core/src/manifest/migration/tests.rs",
       "from_symbol": "vibe_core::manifest::migration::tests::frozen_profile_epoch_metadata_is_explicit_and_unknown_is_unrecognized",
-      "line": 417,
+      "line": 418,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
       "verb": "verifies",
@@ -62576,7 +62830,7 @@
     {
       "file": "crates/vibe-core/src/manifest/migration/tests.rs",
       "from_symbol": "vibe_core::manifest::migration::tests::independently_fixed_r1_identity_and_token_vector",
-      "line": 381,
+      "line": 382,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
       "verb": "verifies",
@@ -62585,7 +62839,7 @@
     {
       "file": "crates/vibe-core/src/manifest/migration/tests.rs",
       "from_symbol": "vibe_core::manifest::migration::tests::transforms_one_token_preserving_choices_and_unrelated_bytes",
-      "line": 63,
+      "line": 64,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
       "verb": "verifies",
@@ -63221,7 +63475,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package/tests.rs",
       "from_symbol": "vibe_core::manifest::package::tests::package_format_parses_and_defaults_to_simple",
-      "line": 109,
+      "line": 110,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#formats",
       "verb": "verifies"
@@ -63461,6 +63715,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#HOST-RUN-COMMANDS",
       "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/source_descriptor/mod.rs",
+      "from_symbol": "vibe_core::manifest::source_descriptor",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-GRAMMAR",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-core/src/manifest/subskill.rs",
@@ -66168,7 +66430,7 @@
     {
       "file": "crates/vibe-facts/src/lib.rs",
       "from_symbol": "vibe_facts::RegistryError",
-      "line": 337,
+      "line": 342,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#model",
       "verb": "implements"
@@ -66203,6 +66465,30 @@
       "line": 28,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#laws",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/src/scan/declared.rs",
+      "from_symbol": "vibe_facts::scan::declared",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/src/scan/declared/walk.rs",
+      "from_symbol": "vibe_facts::scan::declared::walk",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/src/scan/declared_capture.rs",
+      "from_symbol": "vibe_facts::scan::declared_capture",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW",
       "verb": "implements"
     },
     {
@@ -67574,6 +67860,14 @@
       "line": 158,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-RECORDING",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/src/source_admission.rs",
+      "from_symbol": "vibe_install::source_admission",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY",
       "verb": "implements"
     },
     {
@@ -73423,7 +73717,7 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-mcp/src/tools.rs",
@@ -73640,7 +73934,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "implements",
-      "pinned_r": 1
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools/migration_plan/source_tests.rs",
+      "from_symbol": "vibe_mcp::tools::migration_plan::source_tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-mcp/src/tools/output.rs",
@@ -77611,7 +77913,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::Presence",
-      "line": 53,
+      "line": 54,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE",
       "verb": "documents"
@@ -77683,7 +77985,7 @@
     {
       "file": "crates/vibe-safefs/src/file.rs",
       "from_symbol": "vibe_safefs::file::regular_read_options",
-      "line": 186,
+      "line": 187,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-056#NONBLOCKING-REGULAR-ADMISSION",
       "verb": "implements"
@@ -77699,7 +78001,7 @@
     {
       "file": "crates/vibe-safefs/src/file/source_read.rs",
       "from_symbol": "vibe_safefs::file::source_read::Project::read_source_bytes",
-      "line": 28,
+      "line": 63,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
       "verb": "implements"
@@ -82207,6 +82509,30 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-spec/src/source_policy.rs",
+      "from_symbol": "vibe_spec::source_policy",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/source_policy.rs",
+      "from_symbol": "vibe_spec::source_policy::SourcePolicyError",
+      "line": 46,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/source_policy.rs",
+      "from_symbol": "vibe_spec::source_policy::observe_package_policy",
+      "line": 134,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-spec/src/transforms/mod.rs",
       "from_symbol": "vibe_spec::transforms",
       "line": 3,
@@ -82740,7 +83066,7 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-wire/tests/migration_planning_wire.rs",
@@ -82749,7 +83075,7 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-wire/tests/migration_planning_wire.rs",
@@ -82758,7 +83084,7 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-wire/tests/migration_planning_wire.rs",
@@ -82767,7 +83093,7 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-wire/tests/migration_planning_wire.rs",
@@ -82776,7 +83102,7 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-wire/tests/migration_planning_wire.rs",
@@ -82785,7 +83111,7 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-workspace/src/lib.rs",
@@ -84037,7 +84363,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 409,
+      "line": 410,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#PLAN-TIME-VALIDATION",
       "verb": "implements"
@@ -84045,7 +84371,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 405,
+      "line": 406,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#plan-time",
       "verb": "implements",
@@ -84054,7 +84380,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "line": 302,
+      "line": 303,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
       "verb": "implements",
@@ -84219,6 +84545,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM",
       "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/source_admission.rs",
+      "from_symbol": "vibe_workspace::install::source_admission",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-workspace/src/install/subtree.rs",
@@ -84920,20 +85254,54 @@
     {
       "file": "crates/vibe-workspace/src/migration_planning.rs",
       "from_symbol": "vibe_workspace::migration_planning::MigrationReportValidationError",
-      "line": 55,
+      "line": 56,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "implements",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-workspace/src/migration_planning.rs",
       "from_symbol": "vibe_workspace::migration_planning::plan_migration_request",
-      "line": 171,
+      "line": 204,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "implements",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_planning/source_apply_tests.rs",
+      "from_symbol": "vibe_workspace::migration_planning::source_apply_tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_planning/source_apply_tests.rs",
+      "from_symbol": "vibe_workspace::migration_planning::source_apply_tests::source_recipe_apply_replay_and_declared_reader_preserve_original_bytes",
+      "line": 78,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-APPLY",
+      "verb": "verifies",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_planning/source_tests.rs",
+      "from_symbol": "vibe_workspace::migration_planning::source_tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/migration_planning/source_tests.rs",
+      "from_symbol": "vibe_workspace::migration_planning::source_tests::source_question_answer_preserves_exact_bytes_and_original_decision",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
+      "verb": "verifies",
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-workspace/src/migration_planning/tests.rs",
@@ -84946,29 +85314,29 @@
     {
       "file": "crates/vibe-workspace/src/migration_planning/tests.rs",
       "from_symbol": "vibe_workspace::migration_planning::tests::golden_projection_preserves_c1_text_spans_and_identities",
-      "line": 92,
+      "line": 93,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-workspace/src/migration_planning/tests.rs",
       "from_symbol": "vibe_workspace::migration_planning::tests::registered_positive_examples_are_actual_replayable_domain_results",
-      "line": 432,
+      "line": 433,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-workspace/src/migration_planning/tests.rs",
       "from_symbol": "vibe_workspace::migration_planning::tests::retained_presence_and_semantic_invalid_corpora_refuse",
-      "line": 376,
+      "line": 377,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-workspace/src/migration_planning/validation.rs",
@@ -84981,11 +85349,11 @@
     {
       "file": "crates/vibe-workspace/src/migration_planning/validation.rs",
       "from_symbol": "vibe_workspace::migration_planning::validation::validate_report_for_request",
-      "line": 166,
+      "line": 177,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "implements",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-workspace/src/publish.rs",
@@ -85219,7 +85587,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
       "from_symbol": "vibe_workspace::vibedeps::derived::is_generated_boot_artifact",
-      "line": 558,
+      "line": 454,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
       "verb": "implements"
@@ -85243,7 +85611,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
       "from_symbol": "vibe_workspace::vibedeps::slot_diff::collect_source_files",
-      "line": 535,
+      "line": 490,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
       "verb": "implements"
@@ -85273,9 +85641,25 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+      "from_symbol": "vibe_workspace::vibedeps::slot_record::read_slot_record_bytes",
+      "line": 71,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/vibedeps/source_policy.rs",
+      "from_symbol": "vibe_workspace::vibedeps::source_policy",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests::ensure_gitignored_appends_once",
-      "line": 350,
+      "line": 356,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#vendoring",
       "verb": "verifies",
@@ -85284,7 +85668,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests::in_place_slot_path_is_unversioned",
-      "line": 278,
+      "line": 284,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -85293,7 +85677,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_copy",
-      "line": 314,
+      "line": 320,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -85302,7 +85686,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests::materialise_hardlink_mode_places_the_full_tree",
-      "line": 245,
+      "line": 248,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#hardlink",
       "verb": "verifies",
@@ -85311,7 +85695,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests::materialise_in_place_moves_the_clone_keeping_git",
-      "line": 290,
+      "line": 296,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -85328,7 +85712,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests_transformed.rs",
       "from_symbol": "vibe_workspace::vibedeps::tests_transformed::generated_boot_cache_is_excluded_from_every_payload_walk_only_at_its_owned_path",
-      "line": 393,
+      "line": 397,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
       "verb": "verifies"
@@ -97489,7 +97873,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d5eb82f27afaa0b827efec49c90212ed642021ae0ad6a2abec7187459eed84d3",
+      "content_hash": "sha256:c0b86019e5fd1488a1309ef2525e44842383a8ec013ead27d92fc29488f91aeb",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -98121,21 +98505,21 @@
     },
     {
       "anchor": "MANIFEST-MIGRATION-TRANSPORT",
-      "content_hash": "sha256:c684ec9a5604d97cd1afdf6c1cf053a5da59735f3bed91c963e3be26f87328f7",
+      "content_hash": "sha256:3377468b9d7abc87b2b7046a57a425e61446b5d9c2ef9d0096bd2c6cdbc950ff",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
       "heading": "Strict pure migration planning values",
       "line": 630,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "kind": "req",
-      "revision": 1
+      "revision": 2
     },
     {
       "anchor": "MIGRATION-TRANSPORT-LAW",
-      "content_hash": "sha256:46f57135c9b2e275d9329631b76cd94910a46096c6606912984912387a0c8a21",
+      "content_hash": "sha256:8aa5abf6d22c3087cf87a86c71fa5a4ce33aacc0d07e8075e1e7047b887e5339",
       "doc_path": "common/PROP-044",
       "file": "vibevm/vibespecs/common/PROP-044-change-native-formats.xml",
-      "heading": "The exact-text migration planner exposes registered epoch-1 request, report and preflight-error roots. Request schema is exactly 1; source_text is supplied text, not a path. Optional source_profile, target_profile and recipe must be strings when present; explicit null is not absence. Unknown fields, wrong primitive types and unsupported schema refuse before planner entry. A planner report has stage planner and one of planned, no_op, needs_input or refused; a preflight error has stage preflight and cannot claim the planner ran. The shared error vocabulary separates preflight input/read/schema errors from core refusal reasons.\n\nPlans retain exact before/after text, ordered token edits, domain identities and distinct absent/epoch_1 metadata. Offsets are canonical unsigned decimal UTF-8 byte positions, not character offsets or floating point numbers. Generated shapes enforce structural admission; the domain validator checks stage/code coherence, exact edit reconstruction, no-op invariants and profile epochs, then compares a report with replay of its exact request through the existing pure core owner. It does not duplicate transformation or hash algorithms. Missing choices remain typed ordered questions; no heuristic selects an omitted choice. Only the current three materialization profiles are supported here. Source, feature and Redbook recipes require their own actual reader integration.\n\nThe CLI refactor plan-migration route accepts literal JSON or stdin and emits one structured response before settings, tracing, registry, cache or provider initialization. It discovers no project paths and creates no application state. MCP plan_manifest_migration uses the same request authority, with an advertised schema matching its actual accepted fields. Structured preflight remains a failed tool call that did not execute the planner; successful or refused planner reports use the executed-result channel. Existing unrelated tool errors retain their meaning. Pure planning never grants or performs application. @status:spec/done",
+      "heading": "The exact-text migration planner exposes registered epoch-1 request, report and preflight-error roots. Request schema is exactly 1; source_text is supplied text, not a path. Optional source_profile, target_profile and recipe must be strings when present; explicit null is not absence. Unknown fields, wrong primitive types and unsupported schema refuse before planner entry. A planner report has stage planner and one of planned, no_op, needs_input or refused; a preflight error has stage preflight and cannot claim the planner ran. The shared error vocabulary separates preflight input/read/schema errors from core refusal reasons.\n\nPlans retain exact before/after text, ordered token edits, domain identities and distinct absent/epoch_1 metadata. Offsets are canonical unsigned decimal UTF-8 byte positions, not character offsets or floating point numbers. Generated shapes enforce structural admission; the domain validator checks stage/code coherence, exact edit reconstruction, no-op invariants and profile epochs, then compares a report with replay of its exact request through the existing pure core owner. It does not duplicate transformation or hash algorithms. Missing choices remain typed ordered questions; no heuristic selects an omitted choice. The materialization profiles and the finite normal-flow source declaration recipe are supported. Optional exact-file source_decisions carry explicitly supplied media/interpretation/role/loading answers. Missing source media yields a source_media question naming resource_path; the three global questions never name a resource. Absent/empty answers preserve neutral request bytes, and unused supplied decisions refuse. Feature and Redbook recipes remain separate. Report validation consumes the original request answers, never infers them from after text.\n\nThe CLI refactor plan-migration route accepts literal JSON or stdin and emits one structured response before settings, tracing, registry, cache or provider initialization. It discovers no project paths and creates no application state. MCP plan_manifest_migration uses the same request authority, with an advertised schema matching its actual accepted fields. Structured preflight remains a failed tool call that did not execute the planner; successful or refused planner reports use the executed-result channel. Existing unrelated tool errors retain their meaning. Pure planning never grants or performs application. @status:spec/done",
       "line": 632,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MIGRATION-TRANSPORT-LAW"
     },
@@ -98219,7 +98603,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:ea87f0dd3bd7428734834776b8108830d0d03148200585dda87f196de91e1038",
+      "content_hash": "sha256:efd1f17bca233304d5f4fb58825c7fa0a0e52a6ea1b4e26a1ce01c50185eeea6",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "PROP-045: XML spec sources and materialisation targets",
@@ -98435,7 +98819,7 @@
     },
     {
       "anchor": "loaders",
-      "content_hash": "sha256:e7d251a70156afb546817a2576446f1ee73fc30dc8a2a330fd2801dbdab8cfd8",
+      "content_hash": "sha256:eca0dbfd47ce0945e8bc281f17330124c263c9d89af75e8858c9d6545b491f6a",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "4. Loaders and scanners read all three",
@@ -98443,12 +98827,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#loaders"
     },
     {
+      "anchor": "EXPLICIT-SOURCE-BOUNDARY",
+      "content_hash": "sha256:681fb5110400681f5286007430f2c88c53d1b4f87e4fd0548b42a2112556a074",
+      "doc_path": "common/PROP-045",
+      "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
+      "heading": "The suffix dispatch described below remains the legacy package/content-tree branch. Package sources presence selects PROP-072's declaration policy, including an empty list with no semantic inputs. The bounded exact-file facts reader dispatches captured bytes by declared media and interpretation, independent of suffix; raw resources cannot mint native facts. Other root-aware consumers either support that policy or refuse before semantic effects. Ordinary declared boot compilation and transformed materialization remain downstream work, not implicit fallback through the legacy XML/Markdown projection. The shared specdoc pivot remains a pure byte/text reader and never discovers manifests. @status:spec/done",
+      "line": 324,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#EXPLICIT-SOURCE-BOUNDARY"
+    },
+    {
       "anchor": "LOADER-LAW",
       "content_hash": "sha256:09919a0c0be449c17275b01ac7f71e133c4a5b043809c9b08cfc4a497ea37059",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "Every consumer of spec sources — the progress scanner and\n`vibe progress check», the specmap unit parser, `vibe check`, the tree/\nboot readers, mirror views — accepts `.md` and `.xml` spec files and a\ntree mixing both. XML goes through the XML frontend into the same pivot\nthe MD frontend feeds, so every downstream mechanism (facts, verdicts,\nstaleness hashes, unit counts, anchors, specmap units) works unchanged\non either source. *Построй по замеру: точный список интеграционных точек\n(`*.md`-фильтры) даёт XML-MEASURE; каждая точка получает парную `.xml»\nветку, ни одна — молча.* @status:spec/work",
-      "line": 324,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#LOADER-LAW"
     },
     {
@@ -98457,7 +98850,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Decision (ADR-part): scanners read XML through its\ncanonical Markdown projection — one dispatch layer above the parser, no\ndependency cycle.** `vibe-specdoc` depends on `progress-core` (its MD\nfrontend is the adapter), so progress-core cannot itself call specdoc.\nThe consumers dispatch instead: a `.xml` spec entering any scanner\n(progress, check, specmap-host, show) is first projected\n`from_xml → to_markdown` — deterministic and canonical by S1's emitter —\nand the projection feeds the existing MD machinery; units, facts,\nanchors, hashes and verdict staleness all work unchanged, and a source\nedit moves the projection exactly when it moves meaning. Alternatives\nweighed: a native XML unit-walker in every scanner (a fifth and sixth\nparser family — the disease the measure named), and inverting the crate\ndependency (progress-core consuming specdoc — a cycle). RECORDED\nDEGRADATION, honest: a diagnostic for an XML source cites\nprojection-relative line numbers, and v1 marks such diagnostics with\nthe projection notice rather than pretending; native source positions\nare follow-up work riding the specmap-engine slice (S4b). @status:spec/work",
-      "line": 333,
+      "line": 334,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#PROJECTION-READ"
     },
     {
@@ -98466,7 +98859,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "`spec://` addressing is format-blind: anchors\nare `id` attributes in XML and `{#…}`/first-token anchors in MD, minted\ninto the same address space; a document's address does not change when\nits serialisation does. @status:spec/work",
-      "line": 350,
+      "line": 351,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#ADDRESSING-UNCHANGED"
     },
     {
@@ -98475,7 +98868,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "5. The redbook polygon — acceptance",
-      "line": 355,
+      "line": 356,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#polygon"
     },
     {
@@ -98484,7 +98877,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "A dedicated test project imports `org.vibevm.world/redbook`\n(the largest real corpus of house-style markup) plus locally-authored\nXML and MD specs, and the suite drives all three targets end-to-end:\n**(a)** XML+MD → `xml`: every materialised spec file is dialect XML,\ngoldens pinned, and the round-trip MD→XML→MD over redbook files is\nsemantically stable (units, facts, anchors, statuses, tables, fences —\ncounted equal; the degradation measure); **(b)** XML+MD → `markdown`:\nevery file is MD, XML-authored sources render with nested headings per\nthe degradation law; **(c)** XML+MD → `mixed`: byte-identical\ncopy-through. In all three, the loaders prove themselves: `vibe progress\ncheck` clean, specmap builds, boot regenerates. @status:spec/work",
-      "line": 356,
+      "line": 357,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#POLYGON"
     },
     {
@@ -98493,7 +98886,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The C++-inheritance machinery is\nformat-blind — verified, not assumed (owner clause 2026-08-22,\nverbatim: «проверь что все механизмы \"наследования как в C++\" которые\nмы сделали для Markdown, точно так же работают и для XML, включая\nновый синтаксис секций и фактов. Если нет, это тоже нужно\nулучшить»).** The B-011 family — `#use spec://… as X` aliasing, `@!X`\nreferences, the qualified splice (rename-on-splice with every\nreference kept valid), hoist/elision stubs, de-substitution of covered\nunits, rename tombstones, and the dynamic-STATIC case — must produce\nBYTE-IDENTICAL compiled closures whether a dependency is authored in\nMarkdown or in dialect XML (generic and named shapes both). Pinned by\na twin-test family in vibe-spec's pipeline: each mechanism runs over\nan MD twin and its to_xml serialisation, outputs compared\nbyte-for-byte; mixed trees (one dep MD, one XML) ride the same pins.\nGaps found by the twins are fixed in the machinery, never by relaxing\nthe assert. Landed: eight twins (four in vibe-spec's pipeline — alias +\n`@!X`, an alias declared inside the projected node over a mixed tree,\nthe three-way same-short-anchor splice, fact-grain through an alias —\ncomparing lane AND rename map; four on the bootgen floor — the\nstatic-transitive zone, single-copy hoist, de-substitution over a mixed\nlane, and the dynamic-STATIC install case), every twin minting its XML\nat run time so the family always carries the live dialect form. Parity\nheld out of the box at the compile floor: byte-identical, no machinery\nchange. The twins NAMED the lawful residue at the install floor —\n`vibe:static` provenance comments cite the true source file (extension\nincluded) and INDEX raw-snippet paths carry the materialised extension,\nwhile the dynamic-STATIC target stays the generated, extension-stable\n`STATIC.md` — honest provenance, not a format leak. @status:impl/done",
-      "line": 367,
+      "line": 368,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#INHERITANCE-PARITY"
     },
     {
@@ -98502,7 +98895,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "5a. The dynamic-router measurement — external agents",
-      "line": 395,
+      "line": 396,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#agent-routing"
     },
     {
@@ -98511,7 +98904,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The hardest part, named by the owner\n(2026-08-21): measuring the dynamic routers in EXTERNAL agents.** The\ndynamic lane has no code router — the reading agent resolves dynamic\nINCLUDEs itself — so readiness for XML targets is an empirical property\nof live agent harnesses, not of this repository's code, and it is\nMEASURED, not assumed. At measurement time the instrument used one\nClaude-family external lane and codexrunner as the GPT-family lane. The former\nsubscription-backed lane was retired by owner ruling 2026-09-08 and is not a\ncurrent or repeatable runner; the reusable stand now exposes only its Codex\npath. Protocol: the\npolygon project (scenario №0 state — XML-materialised tree, honest\n`INDEX.md` with static and dynamic entries, at least one `when`-guarded\nconditional entry) plus a probe packet that orders a cold worker to\nperform the standard boot (read STATIC in full, then every INDEX entry,\nresolving dynamic INCLUDEs) and then answer control questions whose\nanswers exist ONLY inside dynamically-included XML files (one per\ndynamic entry, plus one inside a `when`-inactive entry that must NOT be\nanswered — the negative control). Scoring is by artifact: each answer\ncites the file it came from; the measure is answered/missed per lane,\nper agent family. The run is repeated over the `markdown» and `mixed»\nmaterialisations of the same tree as the baseline — the DELTA between\nXML and MD scores is the finding, not the absolute number. Results are\nrecorded in the polygon's report and this section's facts flip to\n`impl/…` with the measured numbers cited. *Проверь при постройке: probe\nне должен подсказывать формат — пакет говорит «выполни бут по\nCLAUDE.md/INDEX», не «прочитай XML».* MEASURED (2026-08-22, on the\nfinal dialect — named sections and facts, specdoc/3): **36/36 PASS,\nXML−MD delta = 0 everywhere.** The polygon (redbook closure + three\n`org.vibevm.probe` flows: two `os:windows` beacons, one `os:linux`\nnegative control) ran three materialisations × three lanes — codex\ngpt-5.5@low ×2 sweeps, codex gpt-5.6-sol@xhigh, claudez GLM big — with\na format-blind probe; every beacon answered with its exact\nmaterialised source path, and the inactive entry was correctly\nreported unreadable in all nine cells with zero beacon leakage.\nReport: `campaigns/packages-2026-09/xml-measure/RESULTS-2026-08-22.md`;\nthe harness is a reusable regression stand (`setup.sh` + the weak-tier\nsweep as the sensitive detector). @status:impl/done",
-      "line": 396,
+      "line": 397,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#AGENT-ROUTER-MEASURE"
     },
     {
@@ -98520,7 +98913,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Model tiers are a measurement dimension —\nthe simpler models go first (owner's advice, verbatim, 2026-08-21: «при\nизмерении воркеров через Codex я бы советовал попользоваться не моделью\ngpt-5.6-sol, а в первую очередь более простыми моделями, чтобы проверить\nнасколько они вообще справляются с новыми режимами»).** A strong model\nmasks format friction; the weak model is the sensitive instrument. The\nCodex-lane probes therefore run the SIMPLER available tiers first\n(`CODEXRUNNER_MODEL`/`CODEXRUNNER_EFFORT` are the launcher's overrides;\nthe measurement slice enumerates which tiers the installed codex\nactually serves and records the list), with the pinned strong tier\n(gpt-5.6-sol) run last as the ceiling reference — the per-tier score\ntable, not one number, is the deliverable. The symmetric extension on\nthe Claude-family lane (a small slot exists there too) is the builder's\nown addition, applied with the same first-simple ordering unless the\nowner says otherwise. The lane DEFAULT for work tasks is untouched: this\ntiering is the measurement protocol's, not the launcher's. MEASURED\n(2026-08-22): the installed codex serves exactly two tiers — `gpt-5.5`\nand `gpt-5.6-sol` (`gpt-5.5-codex`, `gpt-5.1-codex-mini`,\n`codex-mini-latest` error on the ping; list recorded in the stand's\n`tiers.txt`); effort served as the second simplicity axis. The\nsensitive instrument went first per the owner's ordering — gpt-5.5@low,\ntwo full sweeps, 18/18 — and the ceiling gpt-5.6-sol@xhigh matched it\n9/9: the per-tier table shows NO tier gradient, i.e. the final\ndialect's format friction sits below even the cheap tier's noise\nfloor. Claude-family symmetric run: claudez big 9/9. @status:impl/done",
-      "line": 433,
+      "line": 434,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#AGENT-ROUTER-MODEL-TIERS"
     },
     {
@@ -98529,7 +98922,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "5b. Questions the build surfaced — dispositions",
-      "line": 459,
+      "line": 460,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#surfaced"
     },
     {
@@ -98538,7 +98931,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**REVIEW markers and comments (S4 finding,\ndisposed).** The dialect legally SKIPS XML comments as layout and the\npivot deliberately drops them, so a projection loses `<!-- REVIEW: -->`\nmarkers. The law therefore is: comment-consuming readers (review aging,\nmanaged-block scanners) read RAW SOURCE TEXT of both forms — the comment\nsyntax is shared by MD and XML — and never the projection; S4 built\nreview aging exactly so, with source-relative lines. A comment-carrying\npivot was weighed and refused: comments are the one construct whose\nwhole point is to be invisible to the document model. @status:impl/done",
-      "line": 460,
+      "line": 461,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#REVIEW-COMMENTS-LAW"
     },
     {
@@ -98547,7 +98940,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The `normal` boot format over XML slots is\nnamed residue (S4 finding, open).** `compile_normal_entry` reads its\nclosure through vibe-spec's own MD section source, which the projection\ncannot feed without touching that crate; `simple` snippets and authored\nboot files carry XML materialisation fully today. The residue rides the\nS4b family (the engine/vibe-spec lane), recorded here so scenario №0's\npolygon states honestly which snippet formats its packages use. @status:spec/work",
-      "line": 469,
+      "line": 470,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#NORMAL-FORMAT-RESIDUE"
     },
     {
@@ -98556,7 +98949,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**`show effective`'s boot-origin match is\nlogical-document keyed (S4 finding, closed by S5).** The literal-name\nmatch silently degraded a transformed snippet's origin to `user»; the\nS5 landing keys the match on the logical stem (`10-flow-wal.xml` and\n`10-flow-wal.xml` are one contribution), pinned by the polygon's\norigin test — a snippet materialised into `.xml` reports its package. @status:impl/done",
-      "line": 476,
+      "line": 477,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#BOOT-ORIGIN-LITERAL-MATCH"
     },
     {
@@ -98565,7 +98958,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Generated boot artifacts are\noutside the derived identity (S5 polygon finding, law).** Boot\nregeneration writes a child target-selected `vibevm/vibespecs/boot/STATIC.xml|STATIC.md`\nplus `INDEX.md` INTO a dependency slot after materialisation — so the\nderived hash excludes them: they are outside the slot record's owned payload,\njust as the record file itself is outside content identity. The format-purity claim never counts them: a\ntransformed slot's «no foreign-form spec files» is asserted over SOURCES,\nnot over projections the machine regenerates at will. The polygon caught both\nfailure shapes live before this law existed: a stale derived hash the\nmoment boot regenerated, and a fake purity violation on the one slot\nwhose snippet compiles to a child STATIC. @status:impl/done",
-      "line": 482,
+      "line": 483,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#GENERATED-ARTIFACTS-OUTSIDE-DERIVED"
     },
     {
@@ -98574,7 +98967,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "6. Build order",
-      "line": 495,
+      "line": 496,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#build-order"
     },
     {
@@ -98583,7 +98976,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "S1 pivot + XML frontend/backend + golden round-trips over the\nredbook corpus → S2 MD backend (XML→MD) + degradation tests → S3 the\nsetting + transforming materialisation + the hash law → S4 the scanner/\nchecker/specmap/boot-compiler integration points (the measured `*.md`\nlist; the static splice learns XML input, INDEX carries materialised\npaths) → S5 the redbook polygon E2E: scenario №0 first, then the three\nmixed-input targets → S5a the historical external-agent router measurement\n(§5a, two agent families over the polygon; only the Codex path remains\nrunnable) → S6 docs, ALPHA-NOTES, judging.\nEach slice lands with its own gates; the polygon plus the agent\nmeasurement are the wave's exit. @status:spec/work",
-      "line": 496,
+      "line": 497,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#SLICES"
     },
     {
@@ -98592,7 +98985,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "7. The documentation vocabulary — the dialect reopened for one genre",
-      "line": 508,
+      "line": 509,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#documentation-vocabulary"
     },
     {
@@ -98601,7 +98994,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Decision (ADR-part; the recorded reopening of `##XML-DIALECT-IS-THE-MD-SUBSET`, 2026-09-11).**\nThe decision-records law lets a decision be reopened only by a named trigger,\nand the trigger is named: a consumer appeared that needs constructs Markdown\ncannot express — the documentation genre of\n[PROP-057](PROP-057-documentation-packages-and-site.xml): a verifiable\nexample with its expected output, a live citation of a specification rule, a\ngenerated reference block, an agent prompt with asserts. The dialect gains a\n**second, additive vocabulary** for that genre. The spec vocabulary keeps the\nMD-subset law unchanged; the documentation vocabulary is open only inside\npackages of kind `doc` and projects to Markdown one way, by law, not by\ndefect. @status:spec/done",
-      "line": 509,
+      "line": 510,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-REOPENING"
     },
     {
@@ -98610,7 +99003,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The vocabulary is a parameter of the reader, not of the document.** `Vocabulary::{Spec, Doc}` (default `Spec`) selects the accepted element set through additive entry points (`from_xml_with`, `load_spec_text_with`, `project_spec_text_with`); the mapping «package kind → vocabulary» is the caller's, because the pivot knows no `PackageKind` by the separability law. A document declares nothing about its vocabulary. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 521,
+      "line": 522,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-BY-KIND"
     },
     {
@@ -98619,7 +99012,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "A documentation element met under the `Spec` vocabulary is a **loud error** with a genre-naming message («open only in packages of kind `doc`»), never a silent skip — the same closed-vocabulary law as everywhere in the dialect. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 522,
+      "line": 523,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-LOUD-IN-SPEC"
     },
     {
@@ -98628,7 +99021,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The discriminator against name collisions.** `example`, `rule`, `derived` and `run` already live in the corpus as named sections (`<example title=\"…\">`). The rule: **a documentation block never carries `title=`; a named section always does.** `<example title=\"…\">` is a section under any vocabulary; `<example>` without `title` is a block under `Doc`. The writer does not depend on the vocabulary: the elementability blacklist does not grow, and one IR serialises to the same bytes under both vocabularies. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 523,
+      "line": 524,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-DISCRIMINATOR"
     },
     {
@@ -98637,7 +99030,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**`when` is a property of the slot, not of a block kind:** `Section.blocks` and `SpecDoc.preamble` hold `BlockNode { when: Option<Cond>, block }`, so a condition applies to any block and to sections. `Cond` is a closed list — the boot lane's condition vocabulary (`os:…`, agent) — with a nearest-legal hint on error. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 524,
+      "line": 525,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-WHEN-SLOT"
     },
     {
@@ -98646,7 +99039,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**The Markdown projection of the documentation genre is one-way, and this is pinned.** `md_out` emits the best projection of every element (the table below); parsing that projection back yields a different IR (`Conversion::IrDivergent`), and the expectation test `doc_genre_is_not_round_trippable_through_markdown` pins it. The projection exists because the host scanners (`facts check`, `progress`) read XML only through it (`##PROJECTION-READ`) — the documentation stays observed. Authoring documentation is XML only; `md_in` is not widened, and cannot be: the Markdown block kinds are closed in `progress-core`. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 525,
+      "line": 526,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-MD-ONE-WAY"
     },
     {
@@ -98655,7 +99048,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "The texts of `run`, `expect`, `stderr`, the body of `prompt` and each `assert` are verbatim like `Fence::text`; CDATA is admitted in exactly these elements by an explicit list. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 526,
+      "line": 527,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-VERBATIM-TEXTS"
     },
     {
@@ -98664,7 +99057,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "The address of a `rule` drops any `~rN` revision suffix: a pin that strays into the attribute never becomes a pin on the `documents` edge (PROP-057 §14 — citations are live and unpinned). <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"impl\"/>",
-      "line": 527,
+      "line": 528,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-RULE-ADDRESS"
     },
     {
@@ -98673,7 +99066,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "There is no tabs element on purpose; `when` replaces it. Step-by-step procedures are an ordered list with `example` blocks inside. Inline content stays Markdown (`##INLINE-STAYS-MARKDOWN`). @status:spec/done",
-      "line": 528,
+      "line": 529,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-NO-TABS"
     },
     {
@@ -98682,7 +99075,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "Known limit: the README and specs of packages of other kinds cannot carry verifiable examples — the vocabulary opens by package kind. Their fences render at level 0 as they are, unverified. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 529,
+      "line": 530,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#DOC-VOCAB-README-LIMIT"
     },
     {
@@ -98691,7 +99084,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "The elements, their Markdown projection and their checker (the semantics of each checker are PROP-057 §10 and §14): @status:spec/done",
-      "line": 531,
+      "line": 532,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#doc-vocab-table-lead"
     },
     {
@@ -98700,7 +99093,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Why:** the owner chose the named-element form — a named tag is self-describing for an agent, and an example is verifiable by construction. A second vocabulary rather than a widened one keeps the spec dialect exactly as measured and pinned; gating by kind keeps a `flow` README from silently acquiring unverified «examples». @status:spec/done",
-      "line": 589,
+      "line": 590,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#doc-vocab-why"
     },
     {
@@ -98709,7 +99102,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Considered and rejected:** Markdown with directives; conventions inside the present dialect (a fence pair «by agreement» — nothing can check it); a tabs element; own examples in translations; widening `md_in` (the Markdown block kinds are closed in `progress-core`). @status:spec/done",
-      "line": 590,
+      "line": 591,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#doc-vocab-rejected"
     },
     {
@@ -98718,7 +99111,7 @@
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "**Revisit when:** two authors' requests for a construct outside this set, or for verifiable examples in the README of an ordinary package, are recorded in BACKLOG. @status:spec/done",
-      "line": 591,
+      "line": 592,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#doc-vocab-revisit"
     },
     {
@@ -111752,6 +112145,69 @@
       "heading": "The Rust-owned change-manifest and change-work formats are separately registered at epoch 1 with strict unknown-field rejection, no JTD schema and recoverable=false. Their corpora execute the actual shared readers. The ordinary initial change reader admits only the roles and unbound origin capture declarations above; it does not claim compatibility with later prototype release-impact or bound-origin fields. Pilot change epoch 0 is accepted only by the explicitly selected pure migration proposal and requires generated chg- IDs; ordinary parsing admits epoch 1 only. There is no work migration, writer or recovery operation here. @status:spec/done",
       "line": 11,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-071#CHANGE-FORMAT-BOUNDARY"
+    },
+    {
+      "anchor": "SOURCE-DESCRIPTOR-GRAMMAR",
+      "content_hash": "sha256:e036b24894f6c6f0d5af4cfe1b27b71bf859f9e2cf4b8873d2a75dd5ea6ff671",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "A package source row selects exactly one portable relative file or directory default. Media, interpretation, role and loading are explicit and validated together. Native Vibe spec, Vibe documentation, ordinary CommonMark, XML data and opaque resources are distinct interpretations; no authored trust field exists. Host observations and byte witnesses are separate from authored intent. Generated boot publication artifacts belong to the shared layout owner, never authored source rows or inherited directory defaults. Declaration admission additionally refuses ASCII case aliases derived from those same canonical paths and publication prefix. Exact materializer payload ownership is unchanged: rejecting a portable declaration alias does not claim that spelling is generated on Linux. Broader filesystem alias qualification remains separate. @status:spec/done",
+      "line": 4,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-GRAMMAR"
+    },
+    {
+      "anchor": "SOURCE-DESCRIPTOR-PRECEDENCE",
+      "content_hash": "sha256:6ddcf2271e2581f1b5a47ae633cdaad5c5cc1404940dff600dd70c52de664240",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Exact file overrides directories; otherwise the longest component-delimited directory wins. Equal identical rows coalesce; equal incompatible rows return path-specific NeedsInput with original row indexes. No match is unclassified. Coordinate plus original relative path identifies the resource independently of suffix, output format or physical bytes. Package Simple/Normal and boot linkage do not follow from descriptor interpretation. @status:spec/done",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DESCRIPTOR-PRECEDENCE"
+    },
+    {
+      "anchor": "SOURCE-PACKAGE-OPT-IN",
+      "content_hash": "sha256:6a8694d1a2da767234b9a88c775567e6c2946ac2fc67adfecdfeb66e135d3129",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Package sources presence opts into classification, including an explicit empty list. Absence retains legacy package behavior; an explicit empty list grants zero semantic sources. Typed parsing/serialization preserves this distinction and present null refuses. Unmatched files remain raw. Source exports are not implemented by this boundary; future export-only presence cannot restore legacy semantic scanning. Project source declarations are not activated here. @status:spec/done",
+      "line": 6,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-PACKAGE-OPT-IN"
+    },
+    {
+      "anchor": "SOURCE-ADMISSION-BOUNDARY",
+      "content_hash": "sha256:36a5819f3cfe835260c39aca7b72098ba311ca7667befaf1d76b462d5109bf32",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "A root-aware consumer observes the caller-selected logical root, admitted physical root identity and exact manifest bytes through held no-follow source reads. MissingManifest is unclassified content-tree compatibility, not proof of legacy package policy. Present malformed or unreadable manifests refuse. Before publication the same logical root and manifest must still agree, including missing becoming present; rereading a detached old root alone is insufficient. Admitted source reads may use the same held root capability. Held observations retain the root capability for actual source reads. Guard-only scans consume them into detached checkpoints with no file descriptor or source-read capability; checkpoints transiently re-admit logical roots and compare observed identity/manifest bytes. They preserve ordinary replacement, alias retarget and missing-to-present detection, but do not retain an old handle to exclude inode-reuse ABA. Neither form claims whole-world atomicity, authentication or content CAS. Declared inputs enter only a classified supported consumer or a precise pre-effect unsupported-operation refusal; they never silently fall back to suffix semantics. ExplicitEmpty means empty semantics rather than a fabricated parse failure. Pure specdoc projection performs no manifest/root discovery. @status:spec/done",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY"
+    },
+    {
+      "anchor": "SOURCE-MIGRATION-REPLAY",
+      "content_hash": "sha256:128af19c9fd3b9fb53edf2411fab1c066d2f76f075c056ba2b3715088b26d310",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "The finite source-boot-normal-absent-r1 to source-boot-normal-declared-absent-r1 transition recognizes one explicit normal flow boot source and preserves every existing byte while inserting one source row through the existing M13 token replay owner. It asks for media independently of suffix, accepts only the exact matching explicit Vibe spec answer, and revalidates the target. Reserved output paths refuse before an impossible media question. Identity profiles reject unused decisions. Original C2 request answers bind validation and existing D1 replay/application; no new writer or journal exists. Repeated apply and stale-source refusal require actual integration evidence. This does not classify all historical shapes or implement downstream boot/transform consumers. @status:spec/done",
+      "line": 8,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-MIGRATION-REPLAY"
+    },
+    {
+      "anchor": "SOURCE-OBSERVATION-LAW",
+      "content_hash": "sha256:4d34786cb5e96328692ed76227731257abb6373e50f4451684a278ccae48fa42",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "A declared document reader first selects its source row and media over one held source byte observation. Only a supported native interpretation invokes its existing pure parser and can produce native facts. CommonMark, XML-data, opaque and unmatched inputs remain non-native/raw; ambiguous, absent or invalid declared input cannot mint facts. Row identity and bytes/provenance remain separate; authored rows grant no trust. Exact-file facts adoption uses lock-selected identity and original Mixed slot record consistency, and refuses unsupported census/transformed or rederive paths before registry writes. The current facts-adopt path binds lock-selected kind/group/name/version and independently selected content hash to a captured original Mixed slot record, its manifest and exact declared document bytes through retained workspace/slot capabilities. The shared record validator rejects transformed metadata in Mixed records. Recorded manifest drift cannot be hidden by deleting source declarations; unrecorded legacy slots retain their separately qualified compatibility. The selected workspace, slot, registry-directory identity, lock, record and document bytes are rechecked before registry publication. Effective Mixed rederive admission happens before upserts and retains its no-op decision; predictable transformed/config refusal never follows successful registry mutation. Editable hashes prove consistency only, not authenticated original-source correspondence. Whole-change atomicity, hostile ABA and uncooperating writers remain outside this finite observation guarantee. @status:spec/done",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW"
+    },
+    {
+      "anchor": "SOURCE-INSTALL-BOUNDARY",
+      "content_hash": "sha256:27c906072c57a906eb3bfe037697fb4c16d24b3e8e5e315532bac6de73c3d798",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Installation admits the complete selected source-policy set, including exact declared input availability and selection/census support through the materializer's shared admission owner, before metadata publication, lifecycle execution publication, deferred in-place placement, hooks or slot writes. The outer coordination lease precedes authoritative snapshots: its empty lifecycle.lock and an empty allocated run-identity directory may remain after refusal; this is not permission for manifest, dependency lock, slot, facts or handler effects. Known supplied manifest policy governs even when the content directory lacks a local manifest; absence cannot erase a declaration. The bounded initial route supports original Mixed materialization with no declared own boot inputs; transformed/in-place/declared boot consumers refuse specifically before effects. Ordinary legacy dependencies do not by themselves make a declared package unsupported. Captured full manifest meaning, not only package metadata, must match the admitted input at the copy boundary. Generated boot ownership remains the exact G3 predicate; declaration alias refusal is a separate portable admission rule. The shared SourceObservation value carries bytes, permissions and file identity measured through the same held source read; it retains no per-file descriptor and is not an ownership receipt. Closing length/mode/identity checks include readonly state on supported hosts. Captured Mixed Copy uses those bytes and permissions; Hardlink stages the existing link attempt and verifies candidate identity, bytes and mode before destination replacement, with captured-byte/mode Copy fallback. Source identity/bytes/permissions are rechecked before reconcile; no chmod mutates a shared source inode. Known-declared input admission is finite, not a whole-world snapshot: changes after it can still cause ordinary partial failure. The slot record remains bytes-only; permissions participate in observed recorded-file reconciliation and placement, not authenticated metadata recording. Incumbent byte-matching unrecorded occupants remain untouched; this does not promise to repair foreign permission modes. This remains finite source observation and bounded publication, not authentication, hostile-ABA exclusion or unconditional content CAS. @status:spec/done",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALL-BOUNDARY"
     },
     {
       "anchor": "genre-definition",
@@ -167976,7 +168432,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
-      "line": 302,
+      "line": 303,
       "message": "edge `vibe_workspace::install::bootgen::verify_boot_graph` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
     },
     {

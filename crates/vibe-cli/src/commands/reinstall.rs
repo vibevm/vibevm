@@ -112,9 +112,7 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
     }
 
     let manifest = Manifest::read(workspace.root.join(Manifest::FILENAME))?;
-    let user_config = UserConfig::load().context("loading the user config")?;
-    let spec_format =
-        crate::commands::install::resolve_spec_format(&manifest, user_config.install.spec_format);
+    let spec_format = effective_rederive_format(&manifest)?;
     if spec_format == SpecFormat::Mixed {
         return Ok(true);
     }
@@ -171,6 +169,16 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
     )
     .with_context(|| format!("re-deriving the installed `{package}` slot"))?;
     Ok(true)
+}
+
+/// Resolve the same configuration before a declared adoption commits its
+/// registry entries. The caller retains the Mixed no-op decision.
+pub(super) fn effective_rederive_format(manifest: &Manifest) -> Result<SpecFormat> {
+    let user_config = UserConfig::load().context("loading the user config")?;
+    Ok(crate::commands::install::resolve_spec_format(
+        manifest,
+        user_config.install.spec_format,
+    ))
 }
 
 pub fn run(

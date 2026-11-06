@@ -17,6 +17,7 @@ fn sample_request() -> PlanRequest {
         source_profile: Some(LEGACY_ABSENT.to_owned()),
         target_profile: Some(CURRENT_ABSENT.to_owned()),
         recipe: Some(SNAPSHOT_TO_COPY.to_owned()),
+        source_decisions: Vec::new(),
     }
 }
 
@@ -77,21 +78,21 @@ fn byte_consistent_foreign_edits_cannot_impersonate_the_selected_recipe() {
     plan.after = format!("# declared\r\n{original}# retained\r\n");
     // These edits reconstruct their text, but the selected recipe never
     // produced them. Byte consistency alone is not an accepted proposal.
-    assert!(validate_plan(plan, false).is_err());
+    assert!(validate_plan(plan, false, &sample_request()).is_err());
 
     let mut duplicate = plan.clone();
     duplicate.edits[1] = duplicate.edits[0].clone();
-    assert!(validate_plan(&duplicate, false).is_err());
+    assert!(validate_plan(&duplicate, false, &sample_request()).is_err());
 
     let mut empty = plan.clone();
     empty.edits[0].after_token.clear();
-    assert!(validate_plan(&empty, false).is_err());
+    assert!(validate_plan(&empty, false, &sample_request()).is_err());
 }
 
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 fn golden_projection_preserves_c1_text_spans_and_identities() {
     let request = sample_request();
@@ -369,13 +370,13 @@ fn preflight_roots_keep_three_codes_and_serialize_only_inner_document() {
         stage: PlanReportStage::Planner,
         outcome: Outcome::Refused(Box::new(OutcomeRefused { error: error.error })),
     };
-    assert!(validate_report(&report).is_err());
+    assert!(validate_report(&report, &sample_request()).is_err());
 }
 
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 fn retained_presence_and_semantic_invalid_corpora_refuse() {
     // These retained wire fixtures are synthetic/golden inputs, not historical
@@ -431,7 +432,7 @@ fn retained_presence_and_semantic_invalid_corpora_refuse() {
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 fn registered_positive_examples_are_actual_replayable_domain_results() {
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../formats/corpora");

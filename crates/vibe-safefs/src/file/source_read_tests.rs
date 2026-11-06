@@ -6,6 +6,44 @@ use super::*;
 use std::fs;
 
 #[test]
+fn observation_carries_shared_identity_bytes_and_permissions_without_ownership() {
+    let root = tempfile::tempdir().unwrap();
+    fs::write(root.path().join("source"), b"shared").unwrap();
+    fs::hard_link(root.path().join("source"), root.path().join("alias")).unwrap();
+    let project = Project::open(root.path()).unwrap();
+    let source = project.read_source_observation("source").unwrap().unwrap();
+    let alias = project.read_source_observation("alias").unwrap().unwrap();
+    assert_eq!(source.identity(), alias.identity());
+    assert_eq!(source.bytes(), b"shared");
+    assert_eq!(
+        source.permissions(),
+        &fs::metadata(root.path().join("source"))
+            .unwrap()
+            .permissions()
+    );
+    assert!(project.read_file_snapshot_bounded("source", 64).is_err());
+}
+
+#[test]
+fn readonly_change_during_source_observation_refuses_without_repair() {
+    let root = tempfile::tempdir().unwrap();
+    let path = root.path().join("source");
+    fs::write(&path, b"stable").unwrap();
+    let original = fs::metadata(&path).unwrap().permissions();
+    assert!(!original.readonly());
+    crate::arm_between_stream_passes(Some(Box::new(|parent, name| {
+        let path = parent.join(name);
+        let mut permissions = fs::metadata(&path).unwrap().permissions();
+        permissions.set_readonly(true);
+        fs::set_permissions(path, permissions).unwrap();
+    })));
+    let project = Project::open(root.path()).unwrap();
+    assert!(project.read_source_observation("source").is_err());
+    assert!(fs::metadata(&path).unwrap().permissions().readonly());
+    fs::set_permissions(path, original).unwrap();
+}
+
+#[test]
 fn shared_source_reads_preserve_both_names_and_strict_snapshot_refusal() {
     let root = tempfile::tempdir().unwrap();
     fs::write(root.path().join("source"), b"shared source").unwrap();

@@ -37,6 +37,7 @@ mod merge;
 mod pipeline;
 mod qualify;
 mod resolver;
+pub mod source_policy;
 mod transforms;
 mod use_graph;
 

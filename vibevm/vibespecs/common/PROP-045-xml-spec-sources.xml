@@ -321,6 +321,7 @@ is green over the result. This is the polygon's primary run; the three
 mixed-input runs of §5 ride beside it.</SCENARIO-ZERO></p>
   </materialisation>
   <loaders title="4. Loaders and scanners read all three">
+    <p><EXPLICIT-SOURCE-BOUNDARY fact="true" status="spec/done">The suffix dispatch described below remains the legacy package/content-tree branch. Package sources presence selects PROP-072's declaration policy, including an empty list with no semantic inputs. The bounded exact-file facts reader dispatches captured bytes by declared media and interpretation, independent of suffix; raw resources cannot mint native facts. Other root-aware consumers either support that policy or refuse before semantic effects. Ordinary declared boot compilation and transformed materialization remain downstream work, not implicit fallback through the legacy XML/Markdown projection. The shared specdoc pivot remains a pure byte/text reader and never discovers manifests.</EXPLICIT-SOURCE-BOUNDARY></p>
     <p><LOADER-LAW fact="true" status="spec/work">Every consumer of spec sources — the progress scanner and
 `vibe progress check», the specmap unit parser, `vibe check`, the tree/
 boot readers, mirror views — accepts `.md` and `.xml` spec files and a

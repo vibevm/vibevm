@@ -6,6 +6,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
+use vibe_safefs::SourceObservation;
 
 use sha2::{Digest, Sha256};
 use vibe_core::ContentHash;
@@ -16,8 +18,12 @@ use super::{
 };
 use crate::{WorkspaceError, path_to_slash};
 
+#[cfg(test)]
+mod mode_tests;
+mod placement;
 mod plan;
 mod report;
+use placement::place_atomically;
 
 use plan::DiffPlan;
 pub(crate) use report::MaterialiseReport;
@@ -30,11 +36,35 @@ pub(super) struct PreparedSlotFile {
 }
 
 enum PreparedContent {
-    Source { path: PathBuf, mode: CopyMode },
+    Observed {
+        observation: Arc<SourceObservation>,
+        path: PathBuf,
+        mode: CopyMode,
+    },
+    Source {
+        path: PathBuf,
+        mode: CopyMode,
+    },
     Bytes(Vec<u8>),
 }
 
 impl PreparedSlotFile {
+    pub(super) fn from_observation(
+        path: PathBuf,
+        source: PathBuf,
+        mode: CopyMode,
+        observation: Arc<SourceObservation>,
+    ) -> Self {
+        Self {
+            path,
+            sha256: sha256_bytes(observation.bytes()),
+            content: PreparedContent::Observed {
+                observation,
+                path: source,
+                mode,
+            },
+        }
+    }
     pub(super) fn from_source(
         path: PathBuf,
         source: PathBuf,
@@ -85,9 +115,10 @@ pub(super) fn sort_prepared_files(files: &mut [PreparedSlotFile]) {
 pub(super) fn prepare_source_tree(
     root: &Path,
     mode: CopyMode,
+    policy: &super::source_policy::SourcePolicy,
 ) -> Result<Vec<PreparedSlotFile>, WorkspaceError> {
     let mut files = Vec::new();
-    collect_source_files(root, root, mode, &mut files)?;
+    collect_source_files(root, root, mode, policy, &mut files)?;
     sort_prepared_files(&mut files);
     Ok(files)
 }
@@ -101,6 +132,7 @@ pub(super) fn compute_prepared_payload_hash(
         hasher.update(file.path_wire().as_bytes());
         hasher.update([0]);
         match &file.content {
+            PreparedContent::Observed { observation, .. } => hasher.update(observation.bytes()),
             PreparedContent::Bytes(bytes) => hasher.update(bytes),
             PreparedContent::Source { path, .. } => {
                 hash_file_into(path, &mut hasher).map_err(|reason| {
@@ -184,53 +216,6 @@ fn inspect_existing_record(slot: &Path) -> Result<Option<SlotRecord>, WorkspaceE
             .map_err(|reason| materialisation_error(&record_path, reason)),
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
         Err(error) => Err(io_err(&record_path, error)),
-    }
-}
-
-fn inspect_destination(
-    path: &Path,
-    old: Option<&super::SlotFile>,
-    incoming_hash: &str,
-    stale_scaffold: bool,
-) -> Result<bool, WorkspaceError> {
-    match fs::symlink_metadata(path) {
-        Ok(metadata) if old.is_none() && metadata.file_type().is_file() => {
-            let actual = sha256_file(path).map_err(|reason| materialisation_error(path, reason))?;
-            if actual == incoming_hash {
-                Ok(true)
-            } else {
-                Err(materialisation_error(
-                    path,
-                    "incoming payload collides with a different unrecorded on-disk file",
-                ))
-            }
-        }
-        Ok(metadata) if old.is_none() && metadata.is_dir() && stale_scaffold => Ok(false),
-        Ok(_) if old.is_none() => Err(materialisation_error(
-            path,
-            "incoming payload collides with an unrecorded on-disk path",
-        )),
-        Ok(metadata) if metadata.is_dir() => Err(materialisation_error(
-            path,
-            "recorded payload path became a directory; refusing to remove unrecorded contents",
-        )),
-        Ok(metadata) if !metadata.file_type().is_file() && !metadata.file_type().is_symlink() => {
-            Err(materialisation_error(
-                path,
-                "recorded payload path is neither a regular file nor a symbolic link",
-            ))
-        }
-        Ok(metadata) if metadata.file_type().is_symlink() => Ok(false),
-        Ok(_) => {
-            let old = old.expect("the unrecorded case returned above");
-            if old.sha256 != incoming_hash {
-                return Ok(false);
-            }
-            let actual = sha256_file(path).map_err(|reason| materialisation_error(path, reason))?;
-            Ok(actual == incoming_hash)
-        }
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(false),
-        Err(error) => Err(io_err(path, error)),
     }
 }
 
@@ -395,36 +380,6 @@ fn place_all(slot: &Path, files: &[PreparedSlotFile]) -> Result<(), WorkspaceErr
     Ok(())
 }
 
-fn place_atomically(slot: &Path, file: &PreparedSlotFile) -> Result<(), WorkspaceError> {
-    let destination = slot.join(&file.path);
-    let parent = destination
-        .parent()
-        .expect("a prepared relative file always has a parent");
-    fs::create_dir_all(parent).map_err(|error| io_err(parent, error))?;
-    match &file.content {
-        PreparedContent::Bytes(bytes) => {
-            let mut temporary = staged_file(parent)?;
-            temporary
-                .as_file_mut()
-                .write_all(bytes)
-                .map_err(|error| io_err(temporary.path(), error))?;
-            persist_staged(temporary, &destination, &file.sha256)
-        }
-        PreparedContent::Source {
-            path,
-            mode: CopyMode::Copy,
-        } => {
-            let temporary = staged_file(parent)?;
-            fs::copy(path, temporary.path()).map_err(|error| io_err(temporary.path(), error))?;
-            persist_staged(temporary, &destination, &file.sha256)
-        }
-        PreparedContent::Source {
-            path,
-            mode: CopyMode::Hardlink,
-        } => place_hardlink(path, &destination, parent, &file.sha256),
-    }
-}
-
 fn staged_file(parent: &Path) -> Result<tempfile::NamedTempFile, WorkspaceError> {
     tempfile::Builder::new()
         .prefix(".vibe-place-")
@@ -539,6 +494,7 @@ fn collect_source_files(
     directory: &Path,
     root: &Path,
     mode: CopyMode,
+    policy: &super::source_policy::SourcePolicy,
     files: &mut Vec<PreparedSlotFile>,
 ) -> Result<(), WorkspaceError> {
     for entry in fs::read_dir(directory).map_err(|error| io_err(directory, error))? {
@@ -552,13 +508,17 @@ fn collect_source_files(
         }
         let file_type = entry.file_type().map_err(|error| io_err(&source, error))?;
         if file_type.is_dir() {
-            collect_source_files(&source, root, mode, files)?;
+            collect_source_files(&source, root, mode, policy, files)?;
         } else if file_type.is_file() {
             let relative = source
                 .strip_prefix(root)
                 .expect("a walked source path remains below its root")
                 .to_path_buf();
-            files.push(PreparedSlotFile::from_source(relative, source, mode)?);
+            files.push(if let Some(observation) = policy.captured(&relative) {
+                PreparedSlotFile::from_observation(relative, source, mode, observation)
+            } else {
+                PreparedSlotFile::from_source(relative, source, mode)?
+            });
         }
     }
     Ok(())

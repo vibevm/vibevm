@@ -43,7 +43,7 @@ pub use component::{
 };
 pub use file::{
     ContentDigest, FileIdentity, OwnedFileReceipt, OwnedPublication, OwnedPublishError, Presence,
-    StableFileSnapshot, StableFileState,
+    SourceObservation, StableFileSnapshot, StableFileState,
 };
 #[cfg(any(test, feature = "inject-failures"))]
 pub use file::{fail_after_publish, fail_before_publish, fail_before_stage_cleanup};

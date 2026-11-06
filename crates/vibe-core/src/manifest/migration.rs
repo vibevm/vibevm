@@ -1,14 +1,15 @@
 //! Pure authored-manifest proposals over explicitly selected frozen grammars.
 //! Successful plans are data, not filesystem grants or authenticated receipts.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN");
-use super::Manifest;
+use super::{Manifest, SourceDescriptor};
 use std::ops::Range;
 use toml_edit::Document;
 mod identity;
 mod profiles;
 mod replay;
+mod source;
 use identity::{diff_identity, identity};
-use profiles::{check_shape, materialization_edit};
+use profiles::{check_shape as check_materialization_shape, materialization_edit};
 use replay::replay_edits;
 
 pub const LEGACY_ABSENT: &str = "materialization-legacy-absent-r1";
@@ -16,6 +17,9 @@ pub const CURRENT_ABSENT: &str = "materialization-current-absent-r1";
 pub const CURRENT_EPOCH1: &str = "materialization-current-epoch1-r1";
 pub const SNAPSHOT_TO_COPY: &str = "snapshot-to-copy-r1";
 pub const IDENTITY: &str = "identity-r1";
+pub const SOURCE_BOOT_LEGACY: &str = "source-boot-normal-absent-r1";
+pub const SOURCE_BOOT_CURRENT: &str = "source-boot-normal-declared-absent-r1";
+pub const BOOT_SOURCE_INSERT: &str = "boot-source-explicit-r1";
 /// Authored profile epoch provenance, independent of product and wire versions.
 /// ```
 /// use vibe_core::manifest::ManifestMigrationEpoch;
@@ -32,7 +36,7 @@ pub enum ManifestMigrationEpoch {
 /// assert_eq!(manifest_migration_profile_epoch(CURRENT_ABSENT), Some(ManifestMigrationEpoch::Absent));
 /// assert_eq!(manifest_migration_profile_epoch("unknown-r2"), None);
 /// ```
-/// Canonical metadata for the three frozen profiles; unknown revisions have
+/// Canonical metadata for the registered frozen profiles; unknown revisions have
 /// no recognized epoch, and absence is never guessed to mean epoch one.
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-PLAN",
@@ -40,7 +44,9 @@ pub enum ManifestMigrationEpoch {
 )]
 pub fn manifest_migration_profile_epoch(profile: &str) -> Option<ManifestMigrationEpoch> {
     match profile {
-        LEGACY_ABSENT | CURRENT_ABSENT => Some(ManifestMigrationEpoch::Absent),
+        LEGACY_ABSENT | CURRENT_ABSENT | SOURCE_BOOT_LEGACY | SOURCE_BOOT_CURRENT => {
+            Some(ManifestMigrationEpoch::Absent)
+        }
         CURRENT_EPOCH1 => Some(ManifestMigrationEpoch::Epoch1),
         _ => None,
     }
@@ -50,7 +56,7 @@ pub fn manifest_migration_profile_epoch(profile: &str) -> Option<ManifestMigrati
 /// ```
 /// use vibe_core::manifest::{MigrationSelection, CURRENT_ABSENT, IDENTITY};
 /// let selected = MigrationSelection { source_profile: Some(CURRENT_ABSENT),
-///     target_profile: Some(CURRENT_ABSENT), recipe: Some(IDENTITY) };
+///     target_profile: Some(CURRENT_ABSENT), recipe: Some(IDENTITY), source_decisions: &[] };
 /// assert!(selected.recipe.is_some());
 /// ```
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -58,6 +64,7 @@ pub struct MigrationSelection<'a> {
     pub source_profile: Option<&'a str>,
     pub target_profile: Option<&'a str>,
     pub recipe: Option<&'a str>,
+    pub source_decisions: &'a [SourceDescriptor],
 }
 
 /// A missing caller selection with explicitly listed allowed alternatives.
@@ -73,6 +80,7 @@ pub struct MigrationSelection<'a> {
 pub struct MigrationInputRequirement {
     pub field: &'static str,
     pub choices: Vec<String>,
+    pub resource_path: Option<String>,
 }
 
 /// Stable failure classification, distinct from missing caller input.
@@ -128,7 +136,7 @@ pub struct MigrationTokenEdit {
 /// use vibe_core::manifest::*;
 /// let text = "[package]\nname='demo'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n";
 /// let choice = MigrationSelection { source_profile: Some(CURRENT_ABSENT),
-///     target_profile: Some(CURRENT_ABSENT), recipe: Some(IDENTITY) };
+///     target_profile: Some(CURRENT_ABSENT), recipe: Some(IDENTITY), source_decisions: &[] };
 /// let ManifestMigrationOutcome::NoOp(plan) = plan_manifest_migration(text, choice) else { panic!("expected no-op") };
 /// let plan: ManifestMigrationPlan = plan;
 /// assert_eq!(plan.before, plan.after);
@@ -175,7 +183,7 @@ const EDGES: [(&str, &str, &str); 3] = [
 /// use vibe_core::manifest::*;
 /// let text = "[package]\nname='demo'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\nmaterialization='snapshot'\n";
 /// let selection = MigrationSelection { source_profile: Some(LEGACY_ABSENT),
-///     target_profile: Some(CURRENT_ABSENT), recipe: Some(SNAPSHOT_TO_COPY) };
+///     target_profile: Some(CURRENT_ABSENT), recipe: Some(SNAPSHOT_TO_COPY), source_decisions: &[] };
 /// let ManifestMigrationOutcome::Planned(plan) = plan_manifest_migration(text, selection) else { panic!("expected plan") };
 /// assert_eq!(plan.after, text.replace("'snapshot'", "'copy'"));
 /// assert_eq!(plan.edits.len(), 1);
@@ -208,16 +216,36 @@ fn unprovable(field: &str) -> MigrationRefusal {
         "selected token span or replacement cannot be proved",
     )
 }
+fn check_shape(document: &Document<&str>, profile: &str) -> Checked<()> {
+    if matches!(profile, SOURCE_BOOT_LEGACY | SOURCE_BOOT_CURRENT) {
+        source::check_source_shape(document, profile)
+    } else {
+        check_materialization_shape(document, profile)
+    }
+}
 fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrationOutcome> {
     let selected = [
         selection.source_profile,
         selection.target_profile,
         selection.recipe,
     ];
+    let source_lane = !selection.source_decisions.is_empty()
+        || selected.iter().flatten().any(|value| {
+            matches!(
+                *value,
+                SOURCE_BOOT_LEGACY | SOURCE_BOOT_CURRENT | BOOT_SOURCE_INSERT
+            )
+        });
     let fields = ["source_profile", "target_profile", "recipe"];
     for (index, value) in selected.iter().enumerate() {
         if let Some(value) = value {
-            let known = if index == 2 {
+            let known = if source_lane {
+                if index == 2 {
+                    matches!(*value, BOOT_SOURCE_INSERT | IDENTITY)
+                } else {
+                    matches!(*value, SOURCE_BOOT_LEGACY | SOURCE_BOOT_CURRENT)
+                }
+            } else if index == 2 {
                 matches!(*value, SNAPSHOT_TO_COPY | IDENTITY)
             } else {
                 matches!(*value, LEGACY_ABSENT | CURRENT_ABSENT | CURRENT_EPOCH1)
@@ -231,16 +259,24 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
             }
         }
     }
-    let edges: Vec<_> = EDGES
-        .iter()
-        .copied()
-        .filter(|(source, target, recipe)| {
-            selected
-                .iter()
-                .zip([source, target, recipe])
-                .all(|(choice, value)| choice.is_none_or(|choice| choice == *value))
-        })
-        .collect();
+    let source_edges = [
+        (SOURCE_BOOT_LEGACY, SOURCE_BOOT_CURRENT, BOOT_SOURCE_INSERT),
+        (SOURCE_BOOT_CURRENT, SOURCE_BOOT_CURRENT, IDENTITY),
+    ];
+    let edges: Vec<_> = (if source_lane {
+        &source_edges[..]
+    } else {
+        &EDGES[..]
+    })
+    .iter()
+    .copied()
+    .filter(|(source, target, recipe)| {
+        selected
+            .iter()
+            .zip([source, target, recipe])
+            .all(|(choice, value)| choice.is_none_or(|choice| choice == *value))
+    })
+    .collect();
     if edges.is_empty() {
         return Err(refusal(
             MigrationRefusalKind::IncompatibleEdge,
@@ -262,6 +298,7 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
                 requirements.push(MigrationInputRequirement {
                     field: fields[index],
                     choices: choices.into_iter().map(str::to_owned).collect(),
+                    resource_path: None,
                 });
             }
         }
@@ -276,7 +313,15 @@ fn plan(text: &str, selection: MigrationSelection<'_>) -> Checked<ManifestMigrat
         )
     })?;
     check_shape(&input, source)?;
-    let edits = if recipe == SNAPSHOT_TO_COPY {
+    if recipe != BOOT_SOURCE_INSERT && !selection.source_decisions.is_empty() {
+        return Err(profiles::shape("source_decisions"));
+    }
+    let edits = if recipe == BOOT_SOURCE_INSERT {
+        match source::source_insert_edit(text, &input, selection.source_decisions)? {
+            Ok(edit) => vec![edit],
+            Err(question) => return Ok(ManifestMigrationOutcome::NeedsInput(vec![question])),
+        }
+    } else if recipe == SNAPSHOT_TO_COPY {
         vec![materialization_edit(text, &input)?]
     } else {
         Vec::new()
@@ -322,3 +367,6 @@ mod tests;
 
 #[cfg(test)]
 mod tests_replay;
+
+#[cfg(test)]
+mod tests_source;

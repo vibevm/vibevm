@@ -306,6 +306,7 @@ fn apply_with_spec_format_and_lifecycle_observed_traced_prepared_inner<
     native: Option<NativeApplyPreparation<'_>>,
 ) -> Result<PreparedApplyReport> {
     crate::configuration_admission::planned(&planned)?;
+    crate::source_admission::planned(&planned, spec_format)?;
     let lifecycle = InstallSlotLifecycle::from_plan_observed(&planned, run, streams, seams, lease)?;
     let lifecycle_run = lifecycle.run_handle();
     let applied = apply_with_spec_format_and_slot_lifecycle(

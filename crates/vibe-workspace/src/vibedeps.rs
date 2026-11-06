@@ -35,6 +35,8 @@ mod derived;
 mod slot_cow;
 mod slot_diff;
 mod slot_record;
+mod source_policy;
+pub(crate) use source_policy::validate_source_inputs;
 
 pub use build_ignore::{BUILD_OUTPUT_IGNORES, ensure_build_output_ignores};
 pub(crate) use derived::materialise_with_spec_format_report;
@@ -47,8 +49,8 @@ pub(crate) use slot_cow::detach_recorded_hardlinks;
 pub(crate) use slot_diff::MaterialiseReport;
 pub use slot_record::{
     SLOT_RECORD_FILENAME, SLOT_RECORD_SCHEMA, SlotFile, SlotFileDisposition, SlotRecord,
-    compute_recorded_payload_hash, read_slot_record, sha256_bytes, sha256_file,
-    verify_recorded_files, write_slot_record,
+    compute_recorded_payload_hash, read_slot_record, read_slot_record_bytes, sha256_bytes,
+    sha256_file, verify_recorded_files, write_slot_record,
 };
 
 /// Directory name of the materialisation tree's final component.
@@ -169,6 +171,32 @@ pub(crate) fn materialise_with_report(
     mode: CopyMode,
     source_hash: &ContentHash,
 ) -> Result<MaterialiseReport, WorkspaceError> {
+    let policy = source_policy::SourcePolicy::observe(
+        content_src,
+        vibe_core::manifest::SpecFormat::Mixed,
+        None,
+    )?;
+    materialise_observed_report(
+        workspace_root,
+        group,
+        name,
+        version,
+        &policy,
+        mode,
+        source_hash,
+    )
+}
+
+fn materialise_observed_report(
+    workspace_root: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    policy: &source_policy::SourcePolicy,
+    mode: CopyMode,
+    source_hash: &ContentHash,
+) -> Result<MaterialiseReport, WorkspaceError> {
+    let content_src = policy.root();
     let slot = slot_abs_path(workspace_root, group, name, version);
     let slot_label = slot_rel_path(group, name, version);
 
@@ -182,7 +210,7 @@ pub(crate) fn materialise_with_report(
     }
     refuse_reserved_source_record(content_src)?;
 
-    let incoming = slot_diff::prepare_source_tree(content_src, mode)?;
+    let incoming = slot_diff::prepare_source_tree(content_src, mode, policy)?;
     let files = incoming
         .iter()
         .map(|file| SlotFile {
@@ -201,6 +229,7 @@ pub(crate) fn materialise_with_report(
         overlay_hash: None,
         files,
     };
+    policy.validate_prepared(&incoming)?;
     slot_diff::reconcile_slot(&slot, &incoming, &record)
 }
 
@@ -293,6 +322,19 @@ pub fn materialise_in_place(
             ),
         });
     }
+    let policy = vibe_spec::source_policy::observe_package_policy(clone_src)
+        .map_err(|error| source_policy::refused(clone_src, error))?;
+    if let Some(manifest) = policy.manifest() {
+        crate::install::validate_declared_source_operation(
+            manifest,
+            clone_src,
+            vibe_core::manifest::SpecFormat::Mixed,
+            true,
+        )?;
+    }
+    policy
+        .recheck_unchanged()
+        .map_err(|error| source_policy::refused(clone_src, error))?;
     // Replace any existing slot so the result is exactly the fetched clone.
     if slot.exists() {
         fs::remove_dir_all(&slot).map_err(|e| io_err(&slot, e))?;

@@ -116,6 +116,7 @@ pub fn regenerate_boot_from_traced_prepared(
     trace: Option<&crate::compile_trace::TraceRun>,
     lowering: OwnerRuntimeLowering,
 ) -> Result<BootRegeneration, WorkspaceError> {
+    super::source_admission::validate_source_admission(workspace, resolution, spec_format)?;
     // B-031 self is always the workspace root coordinate.
     let self_coord = root_self_coordinate(&workspace.root_manifest);
 

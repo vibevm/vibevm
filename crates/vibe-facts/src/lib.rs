@@ -25,6 +25,11 @@ use thiserror::Error;
 pub use lifecycle::{OrphanReport, orphans, package_file_path, remove_package_file};
 pub use overlay::{PackageOverlay, overlay_file_hash};
 pub use report::{AdoptionCounts, AuthoredFact, adoption_counts, authored_facts};
+pub use scan::declared::{
+    CapturedDeclaredDocument, DeclaredDocumentObservation, DeclaredReadProvenance,
+    DeclaredSourceDisposition, DeclaredTreeObservation, DeclaredWalkError, exact_declared_files,
+    observe_declared_document, observe_declared_source,
+};
 pub use scan::{
     AdoptionObservation, AdoptionRow, AuthoredSourceObservation, SourceFileWitness, SourceIssue,
     SourceKind, address_prefix, join_adoption, observe_authored_source, scan_authored_facts,
@@ -336,6 +341,8 @@ fn invalid_address(address: &str, reason: &str) -> RegistryError {
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-046#model")]
 pub enum RegistryError {
+    #[error(transparent)]
+    SourcePolicy(Box<vibe_spec::source_policy::SourcePolicyError>),
     #[error(
         "could not access `{}`: {source} \
          (violates spec://org.vibevm.core/vibevm/common/PROP-046#model; \
@@ -446,3 +453,9 @@ mod scan_tests;
 mod scan_witness_tests;
 #[cfg(test)]
 mod tests;
+
+impl From<vibe_spec::source_policy::SourcePolicyError> for RegistryError {
+    fn from(error: vibe_spec::source_policy::SourcePolicyError) -> Self {
+        Self::SourcePolicy(Box::new(error))
+    }
+}

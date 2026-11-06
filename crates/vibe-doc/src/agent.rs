@@ -164,7 +164,7 @@ fn fetch(
     // the way `locate` found the file — through the chain, by the
     // authority's coordinate — so the two cannot disagree about which
     // instance answered. One page is read, not the source package.
-    let examples = borrowed_by(&rel, parsed, sources);
+    let examples = borrowed_by(&rel, parsed, sources)?;
     let page = Page {
         rel: rel.clone(),
         path: located.path.clone(),
@@ -215,14 +215,14 @@ fn borrowed_by(
     rel: &str,
     parsed: &SpecAddress,
     sources: &SpecSources,
-) -> BTreeMap<String, crate::content::ExampleBody> {
+) -> Result<BTreeMap<String, crate::content::ExampleBody>> {
     let Authority::Package { group, name, .. } = &parsed.authority else {
-        return BTreeMap::new();
+        return Ok(BTreeMap::new());
     };
     sources
         .instance_of(group, name)
         .map(|instance| crate::translations::borrowed_by(&instance.root, rel, sources))
-        .unwrap_or_default()
+        .unwrap_or_else(|| Ok(BTreeMap::new()))
 }
 
 #[cfg(test)]

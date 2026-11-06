@@ -9,6 +9,41 @@ use anyhow::{Context, Result, bail};
 use std::io::{Read, Seek, SeekFrom};
 use std::path::Path;
 
+/// Bytes, permissions and identity from one finite held source observation.
+/// Shared regular files are permitted. No file descriptor is retained and no
+/// exclusive ownership, hostile-ABA or whole-tree snapshot claim is made.
+/// ```
+/// # fn main() -> anyhow::Result<()> {
+/// let root = tempfile::tempdir()?;
+/// std::fs::write(root.path().join("source"), b"payload")?;
+/// let project = vibe_safefs::Project::open(root.path())?;
+/// let observed = project.read_source_observation("source")?.unwrap();
+/// assert_eq!(observed.bytes(), b"payload");
+/// assert_eq!(observed.identity(), project.read_source_observation("source")?.unwrap().identity());
+/// # Ok(()) }
+/// ```
+#[derive(Debug, Clone)]
+pub struct SourceObservation {
+    bytes: Vec<u8>,
+    permissions: std::fs::Permissions,
+    identity: crate::FileIdentity,
+}
+
+impl SourceObservation {
+    pub fn bytes(&self) -> &[u8] {
+        &self.bytes
+    }
+    pub fn permissions(&self) -> &std::fs::Permissions {
+        &self.permissions
+    }
+    pub fn identity(&self) -> crate::FileIdentity {
+        self.identity
+    }
+    pub fn into_bytes(self) -> Vec<u8> {
+        self.bytes
+    }
+}
+
 impl Project {
     /// Observe one source file without following descendant links or copying
     /// shared inodes. The held initial length fences two agreeing passes;
@@ -29,7 +64,14 @@ impl Project {
         implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
     )]
     pub fn read_source_bytes(&self, relative: &str) -> Result<Option<Vec<u8>>> {
-        self.read_source_bytes_in(&self.root_dir()?, relative)
+        Ok(self
+            .read_source_observation(relative)?
+            .map(SourceObservation::into_bytes))
+    }
+
+    /// Observe bytes and mode together without retaining a per-file handle.
+    pub fn read_source_observation(&self, relative: &str) -> Result<Option<SourceObservation>> {
+        self.read_source_observation_in(&self.root_dir()?, relative)
     }
 
     /// The same source observation below a parent retained by the locator.
@@ -50,6 +92,17 @@ impl Project {
         directory: &Pinned,
         relative: &str,
     ) -> Result<Option<Vec<u8>>> {
+        Ok(self
+            .read_source_observation_in(directory, relative)?
+            .map(SourceObservation::into_bytes))
+    }
+
+    /// The same finite observation under a previously admitted directory.
+    pub fn read_source_observation_in(
+        &self,
+        directory: &Pinned,
+        relative: &str,
+    ) -> Result<Option<SourceObservation>> {
         let Some((holder, name)) = self.holder_of(directory, relative)? else {
             return Ok(None);
         };
@@ -85,7 +138,10 @@ impl Project {
         compare_pass(&mut held, &bytes)
             .with_context(|| format!("source `{}` changed between held passes", path.display()))?;
         let after = regular(&held, &path)?;
-        if before.len() != after.len() || unix_mode(&before) != unix_mode(&after) {
+        if before.len() != after.len()
+            || unix_mode(&before) != unix_mode(&after)
+            || before.permissions().readonly() != after.permissions().readonly()
+        {
             bail!(
                 "source `{}` changed length or mode during observation",
                 path.display()
@@ -105,7 +161,11 @@ impl Project {
                 path.display()
             );
         }
-        Ok(Some(bytes))
+        Ok(Some(SourceObservation {
+            bytes,
+            permissions: after.permissions(),
+            identity,
+        }))
     }
 
     /// Check source file membership without reading content. Shared regular

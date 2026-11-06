@@ -23,6 +23,7 @@ path = "src/bin/vibe-app-proxy.rs"
 features = ["rfd/xdg-portal"]
 
 [dependencies]
+vibe-safefs.workspace = true
 specmark.workspace = true
 # User applications (PROP-059): install, launch, storage libraries.
 vibe-app.workspace = true

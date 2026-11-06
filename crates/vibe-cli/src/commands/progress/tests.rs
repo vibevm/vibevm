@@ -110,6 +110,7 @@ fn refresh_state_derives_phase_from_journal() {
         // …and nothing here is exempt from judging: the fixture carries
         // no config at all, which is what "no exemptions" means.
         judging_exemption: progress_core::scope::JudgingExemption::default(),
+        source_policies: Default::default(),
     };
     refresh_state(&mut g).expect("refresh_state");
 

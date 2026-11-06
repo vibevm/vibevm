@@ -14,9 +14,13 @@ use crate::output;
 
 use super::{ResolvedConversion, SourceFormat};
 
+mod policy;
+use policy::ConversionPolicies;
+
 #[derive(Debug)]
 pub(super) enum ConversionTarget {
     Path(PathBuf),
+    Selected { root: PathBuf, path: PathBuf },
     Refused { path: PathBuf, reason: String },
 }
 
@@ -62,10 +66,13 @@ pub(super) fn run_conversion(
     conversion: ResolvedConversion,
     command_name: &str,
 ) -> Result<()> {
+    // Finish policy admission for the complete requested set before parsing
+    // or writing any candidate, including a legacy sibling of a refused one.
+    let policies = ConversionPolicies::admit(&targets)?;
     let mut discovered = BTreeMap::new();
     for target in targets {
         match target {
-            ConversionTarget::Path(path) => {
+            ConversionTarget::Path(path) | ConversionTarget::Selected { path, .. } => {
                 if let Err(error) = discover_argument(&path, &conversion, &mut discovered) {
                     discovered.insert(path, Discovered::Refused(format!("{error:#}")));
                 }
@@ -102,7 +109,15 @@ pub(super) fn run_conversion(
                 counts.refused += 1;
             }
             Discovered::Candidate => {
-                process_candidate(&path, &conversion, attended, &mut accept_all, &mut counts)
+                policies.recheck()?;
+                process_candidate(
+                    &path,
+                    &conversion,
+                    attended,
+                    &mut accept_all,
+                    &mut counts,
+                    &policies,
+                )
             }
         }
     }
@@ -285,6 +300,7 @@ fn process_candidate(
     attended: bool,
     accept_all: &mut bool,
     counts: &mut Counts,
+    policies: &ConversionPolicies,
 ) {
     let sibling = path.with_extension(conversion.to.extension());
     if sibling.exists() {
@@ -326,11 +342,19 @@ fn process_candidate(
                 println!("dry-run byte-stable {}", path.display());
                 counts.dry_run += 1;
             } else {
-                write_or_refuse(path, &output, conversion.to, "converted", counts, false);
+                write_or_refuse(
+                    path,
+                    &output,
+                    conversion.to,
+                    "converted",
+                    counts,
+                    false,
+                    policies,
+                );
             }
         }
         Conversion::IrStableLoss { output, loss } => process_lossy(
-            path, &output, &loss, conversion, attended, accept_all, counts,
+            path, &output, &loss, conversion, attended, accept_all, counts, policies,
         ),
         Conversion::IrDivergent { detail } => {
             if conversion.dry_run {
@@ -347,6 +371,7 @@ fn process_candidate(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn process_lossy(
     path: &Path,
     output: &str,
@@ -355,6 +380,7 @@ fn process_lossy(
     attended: bool,
     accept_all: &mut bool,
     counts: &mut Counts,
+    policies: &ConversionPolicies,
 ) {
     if conversion.dry_run {
         println!("dry-run ir-stable-loss {}\n{loss}", path.display());
@@ -386,7 +412,15 @@ fn process_lossy(
         }
     };
     if approved {
-        write_or_refuse(path, output, conversion.to, "lossy-confirmed", counts, true);
+        write_or_refuse(
+            path,
+            output,
+            conversion.to,
+            "lossy-confirmed",
+            counts,
+            true,
+            policies,
+        );
     } else {
         println!("refused {}", path.display());
         if disposition == LossDisposition::Refuse {
@@ -433,8 +467,12 @@ fn write_or_refuse(
     status: &str,
     counts: &mut Counts,
     lossy: bool,
+    policies: &ConversionPolicies,
 ) {
-    match write_conversion(path, output, target) {
+    match policies
+        .recheck()
+        .and_then(|()| write_conversion(path, output, target))
+    {
         Ok(()) => {
             println!("{status} {}", path.display());
             if lossy {

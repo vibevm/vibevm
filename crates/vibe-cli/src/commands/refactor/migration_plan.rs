@@ -12,7 +12,7 @@ use crate::exit_code::{GENERAL, OK, USAGE};
 
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 pub(crate) fn run(request_json: Option<&str>) -> ExitCode {
     let response = match request_json {

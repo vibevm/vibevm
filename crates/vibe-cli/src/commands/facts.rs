@@ -17,6 +17,8 @@ use vibe_workspace::{Workspace, vibedeps};
 
 use crate::{cli::ProgressCheckArgs, output};
 
+mod selected;
+
 #[derive(Debug, Args)]
 pub struct FactsArgs {
     #[command(subcommand)]
@@ -189,12 +191,14 @@ fn rederive_or_defer(root: &Path, package: Option<&str>) -> Result<()> {
 }
 
 fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
-    let slot = installed_slot(root, package)?;
-    let authored = scan_authored_facts(&slot, package, SourceKind::Package)?;
+    const ADMISSION: &str = "violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW: facts source admission refused; fix surface: selected package declarations, slot record and workspace configuration";
+    let selected = selected::Adoption::prepare(root, package).context(ADMISSION)?;
+    let authored = selected.facts();
 
     let mut registry = Registry::load(root)?;
     let mut added = 0usize;
     let mut kept = 0usize;
+    selected.recheck().context(ADMISSION)?;
     for authored in authored {
         if prefix.is_some_and(|prefix| !authored.address.starts_with(prefix)) {
             continue;
@@ -206,10 +210,11 @@ fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
             kept += 1;
             continue;
         }
+        selected.recheck().context(ADMISSION)?;
         registry.upsert(
             root,
             FactEntry {
-                address: authored.address,
+                address: authored.address.clone(),
                 origin: FactOrigin::Package,
                 package: Some(package.to_string()),
                 status: Some(status),
@@ -219,7 +224,9 @@ fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
         added += 1;
     }
     println!("facts adopt {package}: added={added} kept={kept}");
-    rederive_or_defer(root, Some(package))?;
+    if !selected.mixed_noop() {
+        rederive_or_defer(root, Some(package))?;
+    }
     Ok(())
 }
 
@@ -328,11 +335,6 @@ fn project_relative(root: &Path, path: &Path) -> String {
         .unwrap_or(path)
         .to_string_lossy()
         .replace('\\', "/")
-}
-
-fn installed_slot(root: &Path, package: &str) -> Result<PathBuf> {
-    materialised_slot(root, package)?
-        .with_context(|| format!("package `{package}` has no materialised installed slot"))
 }
 
 fn materialised_slot(root: &Path, package: &str) -> Result<Option<PathBuf>> {

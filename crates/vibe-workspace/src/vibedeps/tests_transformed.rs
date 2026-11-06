@@ -54,7 +54,11 @@ fn xml_format_converts_only_spec_genre_and_records_every_file() {
         "# Guide\n\nText.\n",
     );
     write(source.path(), "LICENSE.md", "license bytes\n");
-    write(source.path(), "vibe.toml", "[package]\nname = \"sample\"\n");
+    write(
+        source.path(),
+        "vibe.toml",
+        "[package]\nname = \"sample\"\ngroup='org.example'\nversion='1.0.0'\nkind='flow'\n",
+    );
 
     let footprint = materialise_with_spec_format(
         workspace.path(),
@@ -397,7 +401,11 @@ fn generated_boot_cache_is_excluded_from_every_payload_walk_only_at_its_owned_pa
     for format in [SpecFormat::Mixed, SpecFormat::Markdown, SpecFormat::Xml] {
         let workspace = TempDir::new().unwrap();
         let source = TempDir::new().unwrap();
-        write(source.path(), "vibe.toml", "[package]\nname='sample'\n");
+        write(
+            source.path(),
+            "vibe.toml",
+            "[package]\nname='sample'\ngroup='org.example'\nversion='1.0.0'\nkind='flow'\n",
+        );
         for name in [
             "STATIC.md",
             "STATIC.xml",

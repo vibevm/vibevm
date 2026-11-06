@@ -3,6 +3,7 @@ specmark::scope!(
     "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
 );
 use super::*;
+use crate::source_policy::{PackagePolicyCheckpoint, PackageSourceMode, observe_package_policy_in};
 use vibe_safefs::{Pinned, Project};
 
 pub(crate) struct SourceLocation {
@@ -10,11 +11,16 @@ pub(crate) struct SourceLocation {
     parent: Pinned,
     name: String,
     pub(crate) resolved: ResolvedSourceFile,
+    policy: PackagePolicyCheckpoint,
 }
 
 impl SourceLocation {
     pub(crate) fn read(&self) -> Result<Vec<u8>, ResolveError> {
-        self.project
+        self.policy
+            .recheck_unchanged()
+            .map_err(|error| failure(&self.resolved.path, error))?;
+        let bytes = self
+            .project
             .read_source_bytes_in(&self.parent, &self.name)
             .map_err(|error| failure(&self.resolved.path, error))?
             .ok_or_else(|| {
@@ -22,7 +28,11 @@ impl SourceLocation {
                     &self.resolved.path,
                     "selected source disappeared before reading",
                 )
-            })
+            })?;
+        self.policy
+            .recheck_unchanged()
+            .map_err(|error| failure(&self.resolved.path, error))?;
+        Ok(bytes)
     }
 }
 
@@ -47,7 +57,7 @@ impl FileResolver {
             });
         }
         let (project, package, logical) = self.observed_root(address)?;
-        let (parent, resolved) =
+        let (parent, resolved, policy) =
             locate_in(&project, &package, &logical, &address.doc_path, formats)?;
         let name = resolved
             .path
@@ -60,6 +70,7 @@ impl FileResolver {
             parent,
             name,
             resolved,
+            policy,
         })
     }
 
@@ -124,6 +135,33 @@ impl FileResolver {
                                 selected: chosen.version.clone(),
                             });
                         }
+                    }
+                    let physical_workspace = self.ws_root.canonicalize().ok();
+                    let relative = chosen.root.strip_prefix(&self.ws_root).ok().or_else(|| {
+                        physical_workspace
+                            .as_ref()
+                            .and_then(|root| chosen.root.strip_prefix(root).ok())
+                    });
+                    if let Some(relative) = relative.filter(|relative| {
+                        relative.starts_with(vibe_core::layout::current_vibedeps_root())
+                            || relative.starts_with(vibe_core::layout::LEGACY_VIBEDEPS_DIR)
+                    }) {
+                        let (project, _, _) = admit(&self.ws_root)?;
+                        let raw = relative.to_str().ok_or_else(|| {
+                            failure(&chosen.root, "derived slot path is not UTF-8")
+                        })?;
+                        let spelling = if cfg!(windows) {
+                            raw.replace('\\', "/")
+                        } else {
+                            raw.to_owned()
+                        };
+                        vibe_core::manifest::declarant_path(Path::new(&spelling))
+                            .map_err(|error| failure(&chosen.root, error.reason()))?;
+                        let components: Vec<_> = spelling.split('/').collect();
+                        let package = project
+                            .dir(&components, false)
+                            .map_err(|error| failure(&chosen.root, error))?;
+                        return Ok((project, package, chosen.root.clone()));
                     }
                     return admit(&chosen.root);
                 }
@@ -214,7 +252,16 @@ fn locate_in(
     logical: &Path,
     document: &str,
     formats: &[String],
-) -> Result<(Pinned, ResolvedSourceFile), ResolveError> {
+) -> Result<(Pinned, ResolvedSourceFile, PackagePolicyCheckpoint), ResolveError> {
+    let policy =
+        observe_package_policy_in(project, package).map_err(|error| failure(logical, error))?;
+    match policy.mode() {
+        PackageSourceMode::ExplicitEmpty => return Err(missing(logical, document)),
+        PackageSourceMode::Explicit => {
+            return Err(failure(logical, policy.unsupported("spec address lookup")));
+        }
+        PackageSourceMode::Legacy | PackageSourceMode::MissingManifest => {}
+    }
     let (specs, base) = layout(
         project,
         package,
@@ -269,6 +316,9 @@ fn locate_in(
         }
     }
     let selected = lookup::select_doc(&base, document, formats, &candidates)?;
+    policy
+        .recheck_unchanged()
+        .map_err(|error| failure(logical, error))?;
     Ok((
         parent,
         ResolvedSourceFile {
@@ -280,6 +330,7 @@ fn locate_in(
             },
             physical_stem: selected.physical_stem,
         },
+        policy,
     ))
 }
 

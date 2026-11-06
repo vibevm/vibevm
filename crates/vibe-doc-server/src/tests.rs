@@ -187,6 +187,42 @@ fn borrowed_reader() -> Reader {
     .expect("the adaptation opens")
 }
 
+#[tokio::test]
+async fn source_policy_borrowed_refusal_is_an_error_response_not_empty_examples() {
+    let tmp = tempfile::tempdir().unwrap();
+    let raw = tmp.path().join("vibevm/vibespecs/guide/second.xml");
+    std::fs::create_dir_all(raw.parent().unwrap()).unwrap();
+    std::fs::write(&raw, "<foreign/>").unwrap();
+    std::fs::write(tmp.path().join("vibe.toml"), "[package]\nname='borrowed'\ngroup='com.example.docs'\nkind='flow'\nversion='0.1.0'\n[[package.sources]]\nfile='vibevm/vibespecs/guide/second.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n").unwrap();
+    let sources = SpecSources::for_checkout(tmp.path(), Some("com.example.docs"), "borrowed");
+    let reader = Reader::open(
+        &Config::new(doc_fixture("borrowed/adaptation")),
+        sources,
+        when(),
+    )
+    .unwrap();
+    let response = build_app(std::sync::Arc::new(reader))
+        .oneshot(
+            Request::builder()
+                .method(Method::GET)
+                .uri("/doc/com.example.docs/borrowed-ru/0.1.0/guide/second.md")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(
+        response.status(),
+        axum::http::StatusCode::INTERNAL_SERVER_ERROR
+    );
+    let bytes = axum::body::to_bytes(response.into_body(), 1024 * 1024)
+        .await
+        .unwrap();
+    let body = String::from_utf8(bytes.to_vec()).unwrap();
+    assert!(body.contains("SOURCE-ADMISSION-BOUNDARY"), "{body}");
+    assert_eq!(std::fs::read_to_string(raw).unwrap(), "<foreign/>");
+}
+
 /// One GET against the router — no listener is bound, as everywhere else
 /// in this crate.
 async fn served(reader: Reader, path: &str) -> String {

@@ -71,6 +71,7 @@ fn missing_selection_is_not_silently_inferred_even_for_malformed_text() {
         source_profile: Some(LEGACY_ABSENT),
         target_profile: Some(CURRENT_ABSENT),
         recipe: Some(SNAPSHOT_TO_COPY),
+        source_decisions: &[],
     };
     let ManifestMigrationOutcome::Refused(error) = plan_manifest_migration("[package", selection)
     else {

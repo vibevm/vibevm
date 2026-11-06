@@ -32,6 +32,7 @@ pub use owned::{OwnedFileReceipt, OwnedPublication, OwnedPublishError};
 mod create_new;
 pub(crate) mod identity;
 mod source_read;
+pub use source_read::SourceObservation;
 mod stable;
 mod stream;
 pub use bounded::StableFileSnapshot;

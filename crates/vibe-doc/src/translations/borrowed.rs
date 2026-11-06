@@ -98,28 +98,27 @@ use crate::pages;
 /// .unwrap();
 ///
 /// let world = SpecSources::for_checkout(&source, Some("com.example.docs"), "pair");
-/// let found = borrowed(&adaptation, &world);
+/// let found = borrowed(&adaptation, &world).unwrap();
 /// assert_eq!(found["guide/first.xml"]["demo"].run, "vibe --version");
 ///
 /// // A world that reaches no source lends nothing, and says so by being
 /// // empty rather than by refusing.
-/// assert!(borrowed(&adaptation, &SpecSources::new()).is_empty());
+/// assert!(borrowed(&adaptation, &SpecSources::new()).unwrap().is_empty());
 /// ```
 pub fn borrowed(
     package_dir: &Path,
     sources: &SpecSources,
-) -> BTreeMap<String, BTreeMap<String, ExampleBody>> {
+) -> crate::Result<BTreeMap<String, BTreeMap<String, ExampleBody>>> {
     let Ok(Some(adapted)) = super::adapted(package_dir, sources) else {
-        return BTreeMap::new();
+        return Ok(BTreeMap::new());
     };
-    let Ok(set) = pages::read_package(&adapted.instance.root) else {
-        return BTreeMap::new();
-    };
-    set.pages
+    let set = pages::read_package(&adapted.instance.root)?;
+    Ok(set
+        .pages
         .iter()
         .map(|page| (page.rel.clone(), authored(&page.doc)))
         .filter(|(_, bodies)| !bodies.is_empty())
-        .collect()
+        .collect())
 }
 
 /// The same for ONE page, by its address inside the package.
@@ -164,33 +163,52 @@ pub fn borrowed(
 /// .unwrap();
 ///
 /// let world = SpecSources::for_checkout(&source, Some("com.example.docs"), "pair");
-/// let page = borrowed_by(&adaptation, "guide/first.xml", &world);
+/// let page = borrowed_by(&adaptation, "guide/first.xml", &world).unwrap();
 /// assert_eq!(page["demo"].expect, "vibe 1.0.0");
 ///
 /// // A page the source does not carry, and an address that is not a page
 /// // address, both lend nothing.
-/// assert!(borrowed_by(&adaptation, "guide/second.xml", &world).is_empty());
-/// assert!(borrowed_by(&adaptation, "../vibe.toml", &world).is_empty());
+/// assert!(borrowed_by(&adaptation, "guide/second.xml", &world).unwrap().is_empty());
+/// assert!(borrowed_by(&adaptation, "../vibe.toml", &world).unwrap().is_empty());
 /// ```
 pub fn borrowed_by(
     package_dir: &Path,
     page: &str,
     sources: &SpecSources,
-) -> BTreeMap<String, ExampleBody> {
+) -> crate::Result<BTreeMap<String, ExampleBody>> {
     if !is_page_address(page) {
-        return BTreeMap::new();
+        return Ok(BTreeMap::new());
     }
     let Ok(Some(adapted)) = super::adapted(package_dir, sources) else {
-        return BTreeMap::new();
+        return Ok(BTreeMap::new());
     };
+    use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
+    let policy = observe_package_policy(&adapted.instance.root)?;
+    match policy.mode() {
+        PackageSourceMode::ExplicitEmpty => {
+            policy.recheck_unchanged()?;
+            return Ok(BTreeMap::new());
+        }
+        PackageSourceMode::Explicit => {
+            return Err(policy.unsupported("borrowed documentation examples").into());
+        }
+        PackageSourceMode::Legacy | PackageSourceMode::MissingManifest => {}
+    }
     let path = adapted.instance.root.join(pages::SPEC_ROOT).join(page);
-    let Ok(text) = std::fs::read_to_string(&path) else {
-        return BTreeMap::new();
+    let text = match std::fs::read_to_string(&path) {
+        Ok(text) => text,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(BTreeMap::new()),
+        Err(error) => return Err(crate::DocError::io("reading", &path, error)),
     };
-    let Ok(doc) = vibe_specdoc::from_xml_with(&text, vibe_specdoc::Vocabulary::Doc) else {
-        return BTreeMap::new();
-    };
-    authored(&doc)
+    let doc =
+        vibe_specdoc::from_xml_with(&text, vibe_specdoc::Vocabulary::Doc).map_err(|error| {
+            crate::DocError::Page {
+                path,
+                message: error.to_string(),
+            }
+        })?;
+    policy.recheck_unchanged()?;
+    Ok(authored(&doc))
 }
 
 /// The examples one page authors, by id, first in document order winning.

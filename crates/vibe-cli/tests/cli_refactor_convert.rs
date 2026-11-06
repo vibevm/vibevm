@@ -7,6 +7,8 @@ use std::process::{Command, Output};
 const CANONICAL_MD: &str = "# T {#t}\n\n@fact:A body @status:impl/done\n\n";
 const LOSSY_MD: &str =
     "# T {#t}\n\n<!-- REVIEW: keep this comment -->\n\n@fact:A body @status:impl/done\n\n";
+const LEGACY_PACKAGE: &str =
+    "[package]\nname='fixture'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n";
 
 fn vibe(args: &[&str]) -> Output {
     Command::new(env!("CARGO_BIN_EXE_vibe"))
@@ -350,7 +352,7 @@ fn refactor_help_lists_the_conversion_family_and_visible_alias() {
 #[test]
 fn package_src_converts_spec_homes_only_and_skips_vibedeps() {
     let temp = tempfile::tempdir().expect("tempdir");
-    fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
+    fs::write(temp.path().join("vibe.toml"), LEGACY_PACKAGE).expect("write manifest");
     // Root files OUTSIDE the spec homes stay untouched — the perimeter is
     // the spec directories plus the root spec-genre family, never the
     // whole tree (owner ruling 2026-08-24).
@@ -415,9 +417,35 @@ fn package_src_refuses_a_directory_without_vibe_manifest() {
 }
 
 #[test]
+fn invalid_manifest_refuses_every_conversion_entry_before_writes() {
+    for command in ["convert-source", "convert-package-src", "convert-spec-src"] {
+        let temp = tempfile::tempdir().unwrap();
+        fs::write(temp.path().join("vibe.toml"), "fixture = true\n").unwrap();
+        let spec = temp.path().join(vibe_core::layout::current_specs_root());
+        fs::create_dir_all(&spec).unwrap();
+        let source = spec.join("inside.md");
+        fs::write(&source, CANONICAL_MD).unwrap();
+        let target = if command == "convert-source" {
+            source.as_path()
+        } else {
+            temp.path()
+        };
+        let output = vibe(&["refactor", command, "--to", "xml", path_text(target)]);
+        assert!(!output.status.success(), "{command}");
+        assert!(
+            text(&output.stderr).contains("SOURCE-ADMISSION-BOUNDARY"),
+            "{}",
+            text(&output.stderr)
+        );
+        assert_eq!(fs::read_to_string(&source).unwrap(), CANONICAL_MD);
+        assert!(!source.with_extension("xml").exists());
+    }
+}
+
+#[test]
 fn spec_src_converts_only_the_package_spec_directory() {
     let temp = tempfile::tempdir().expect("tempdir");
-    fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
+    fs::write(temp.path().join("vibe.toml"), LEGACY_PACKAGE).expect("write manifest");
     let readme = temp.path().join("README.md");
     fs::write(&readme, CANONICAL_MD).expect("write readme");
     let spec = temp.path().join(vibe_core::layout::current_specs_root());
@@ -445,7 +473,7 @@ fn spec_src_converts_only_the_package_spec_directory() {
 #[test]
 fn spec_src_without_argument_finds_the_nearest_project_root() {
     let temp = tempfile::tempdir().expect("tempdir");
-    fs::write(temp.path().join("vibe.toml"), "fixture = true\n").expect("write manifest");
+    fs::write(temp.path().join("vibe.toml"), LEGACY_PACKAGE).expect("write manifest");
     let spec = temp.path().join(vibe_core::layout::current_specs_root());
     fs::create_dir_all(&spec).expect("create spec");
     fs::write(spec.join("inside.md"), CANONICAL_MD).expect("write spec source");

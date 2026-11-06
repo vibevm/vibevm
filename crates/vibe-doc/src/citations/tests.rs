@@ -326,3 +326,27 @@ impl RuleText {
         self.path.to_string_lossy().replace('\\', "/")
     }
 }
+#[test]
+fn source_policy_self_citation_refuses_unadmitted_raw_page() {
+    for suffix in [
+        "sources=[]\n",
+        "sources='invalid'\n",
+        "[[package.sources]]\nfile='vibevm/vibespecs/raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+    ] {
+        let tmp = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(tmp.path().join(crate::pages::SPEC_ROOT)).unwrap();
+        std::fs::write(
+            tmp.path().join(crate::pages::SPEC_ROOT).join("raw.xml"),
+            "<foreign/>",
+        )
+        .unwrap();
+        std::fs::write(tmp.path().join("vibe.toml"), format!("[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n{suffix}")).unwrap();
+        let error = super::resolve_self(
+            tmp.path(),
+            "spec://org.example/guard/raw#root",
+            "org.example/guard",
+        )
+        .unwrap_err();
+        assert!(error.contains("SOURCE-ADMISSION-BOUNDARY"), "{error}");
+    }
+}

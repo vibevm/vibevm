@@ -53,6 +53,9 @@ pub struct PackageMeta {
     /// `[project]` does (the role-equipotence law, PROP-024
     /// ##MANIFEST-ROLES-ARE-EQUIPOTENT).
     pub spec_format: Option<SpecFormat>,
+    /// Explicit package interpretation policy. None retains legacy; Some(empty)
+    /// declares zero semantic sources and must survive serialization.
+    pub sources: Option<Vec<crate::manifest::SourceDescriptor>>,
     /// `[package].frozen` — the PROP-044 §2a immutability flag. Absence
     /// (`false`) means the version is a **snapshot**: its content may
     /// still flow under the same version string, and a hash mismatch is

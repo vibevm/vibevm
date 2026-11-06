@@ -124,7 +124,8 @@ fn registered_descriptor_is_strict_without_context_files() {
             "source_text",
             "source_profile",
             "target_profile",
-            "recipe"
+            "recipe",
+            "source_decisions"
         ])
     );
     for field in ["source_text", "source_profile", "target_profile", "recipe"] {
@@ -165,6 +166,44 @@ fn registered_descriptor_is_strict_without_context_files() {
             Some(&Value::Bool(true)),
             "{field}: current wire is non-null"
         );
+        if let Some(element) = shape.get("elements") {
+            assert_eq!(schema["properties"][field]["type"], "array");
+            let declared = &jtd["definitions"][element["ref"].as_str().unwrap()];
+            let properties = declared["properties"].as_object().unwrap();
+            let advertised = &schema["properties"][field]["items"];
+            assert_eq!(advertised["type"], "object");
+            assert_eq!(advertised["additionalProperties"], false);
+            assert_ne!(declared["additionalProperties"], true);
+            let keys: BTreeSet<_> = properties.keys().map(String::as_str).collect();
+            assert_eq!(
+                advertised["properties"]
+                    .as_object()
+                    .unwrap()
+                    .keys()
+                    .map(String::as_str)
+                    .collect::<BTreeSet<_>>(),
+                keys
+            );
+            assert_eq!(
+                advertised["required"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| v.as_str().unwrap())
+                    .collect::<BTreeSet<_>>(),
+                keys
+            );
+            for (name, wire) in properties {
+                assert_ne!(wire["nullable"], true);
+                assert_eq!(advertised["properties"][name]["type"], "string");
+                if wire.get("enum").is_some() {
+                    assert_eq!(advertised["properties"][name]["enum"], wire["enum"]);
+                } else {
+                    assert_eq!(wire["type"], "string");
+                }
+            }
+            continue;
+        }
         let expected = match shape["type"].as_str().unwrap() {
             "string" => "string",
             "uint32" => "integer",

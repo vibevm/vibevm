@@ -6,6 +6,9 @@ use tempfile::TempDir;
 use vibe_core::ContentHash;
 use vibe_core::manifest::SpecFormat;
 
+const LEGACY_MANIFEST: &str =
+    "[package]\ngroup='org.vibevm'\nname='wal'\nversion='1.0.0'\nkind='flow'\n";
+
 #[cfg(test)]
 fn version(s: &str) -> semver::Version {
     semver::Version::parse(s).unwrap()
@@ -47,11 +50,7 @@ fn slot_abs_path_joins_under_workspace_root() {
 fn materialise_copies_the_tree_verbatim() {
     let ws = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
-    write(
-        src.path(),
-        "vibe.toml",
-        "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\n",
-    );
+    write(src.path(), "vibe.toml", LEGACY_MANIFEST);
     write(src.path(), "boot/10-flow-wal.md", "# boot");
     write(
         src.path(),
@@ -74,7 +73,7 @@ fn materialise_copies_the_tree_verbatim() {
         .join(crate::layout_paths::vibedeps_path("org.vibevm.wal/0.3.0"));
     assert_eq!(
         fs::read_to_string(slot.join("vibe.toml")).unwrap(),
-        "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\n"
+        LEGACY_MANIFEST
     );
     assert_eq!(
         fs::read_to_string(slot.join("boot/10-flow-wal.md")).unwrap(),
@@ -101,7 +100,7 @@ fn materialise_copies_the_tree_verbatim() {
 fn materialise_skips_dot_git() {
     let ws = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
-    write(src.path(), "vibe.toml", "x");
+    write(src.path(), "vibe.toml", LEGACY_MANIFEST);
     write(src.path(), ".git/config", "[core]");
     write(src.path(), ".git/objects/ab/cdef", "blob");
     // A `.git` nested deeper than the root is skipped too.
@@ -135,7 +134,7 @@ fn materialise_skips_dot_git() {
 fn materialise_is_idempotent_and_removes_recorded_stale_files() {
     let ws = TempDir::new().unwrap();
     let src1 = TempDir::new().unwrap();
-    write(src1.path(), "vibe.toml", "v1");
+    write(src1.path(), "vibe.toml", LEGACY_MANIFEST);
     write(src1.path(), "stale.md", "remove me");
     materialise(
         ws.path(),
@@ -149,7 +148,8 @@ fn materialise_is_idempotent_and_removes_recorded_stale_files() {
 
     // Re-materialise from a source that no longer carries `stale.md`.
     let src2 = TempDir::new().unwrap();
-    write(src2.path(), "vibe.toml", "v2");
+    let replacement_manifest = LEGACY_MANIFEST.replace("1.0.0", "2.0.0");
+    write(src2.path(), "vibe.toml", &replacement_manifest);
     let written = materialise(
         ws.path(),
         &g("org.vibevm"),
@@ -163,7 +163,10 @@ fn materialise_is_idempotent_and_removes_recorded_stale_files() {
     let slot = ws
         .path()
         .join(crate::layout_paths::vibedeps_path("org.vibevm.auth/0.1.0"));
-    assert_eq!(fs::read_to_string(slot.join("vibe.toml")).unwrap(), "v2");
+    assert_eq!(
+        fs::read_to_string(slot.join("vibe.toml")).unwrap(),
+        replacement_manifest
+    );
     assert!(
         !slot.join("stale.md").exists(),
         "stale file must be cleared"
@@ -191,7 +194,7 @@ fn materialise_errors_when_source_missing() {
 fn is_materialised_reflects_slot_presence() {
     let ws = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
-    write(src.path(), "vibe.toml", "x");
+    write(src.path(), "vibe.toml", LEGACY_MANIFEST);
     assert!(!is_materialised(
         ws.path(),
         &g("org.vibevm"),
@@ -219,7 +222,7 @@ fn is_materialised_reflects_slot_presence() {
 fn remove_slot_deletes_and_reports() {
     let ws = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
-    write(src.path(), "vibe.toml", "x");
+    write(src.path(), "vibe.toml", LEGACY_MANIFEST);
     materialise(
         ws.path(),
         &g("org.vibevm"),
@@ -249,7 +252,7 @@ fn remove_slot_deletes_and_reports() {
 fn materialise_hardlink_mode_places_the_full_tree() {
     let ws = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
-    write(src.path(), "vibe.toml", "x");
+    write(src.path(), "vibe.toml", LEGACY_MANIFEST);
     write(src.path(), "boot/s.md", "# s");
     let written = materialise_with(
         ws.path(),
@@ -266,7 +269,10 @@ fn materialise_hardlink_mode_places_the_full_tree() {
         .join(crate::layout_paths::vibedeps_path("org.vibevm.w/1.0.0"));
     // Hardlinked (or copy-fallback) — either way the content is present
     // and the footprint matches a copy materialisation.
-    assert_eq!(fs::read_to_string(slot.join("vibe.toml")).unwrap(), "x");
+    assert_eq!(
+        fs::read_to_string(slot.join("vibe.toml")).unwrap(),
+        LEGACY_MANIFEST
+    );
     assert!(slot.join("boot/s.md").is_file());
     assert_eq!(
         written,
@@ -294,7 +300,7 @@ fn in_place_slot_path_is_unversioned() {
 fn materialise_in_place_moves_the_clone_keeping_git() {
     let ws = TempDir::new().unwrap();
     let clone = TempDir::new().unwrap();
-    write(clone.path(), "vibe.toml", "[package]\n");
+    write(clone.path(), "vibe.toml", LEGACY_MANIFEST);
     write(clone.path(), ".git/HEAD", "ref: refs/heads/main\n");
     write(clone.path(), "src/main.rs", "fn main() {}");
 
@@ -320,7 +326,7 @@ fn is_in_place_slot_false_for_a_versioned_copy() {
     // A versioned `copy` slot has no `.git` at the <group>.<name> level,
     // so it is not mistaken for an in-place slot.
     let src = TempDir::new().unwrap();
-    write(src.path(), "vibe.toml", "x");
+    write(src.path(), "vibe.toml", LEGACY_MANIFEST);
     materialise(
         ws.path(),
         &g("org.vibevm"),

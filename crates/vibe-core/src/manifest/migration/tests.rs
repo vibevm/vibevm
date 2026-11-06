@@ -13,6 +13,7 @@ fn selection(
         source_profile: Some(source),
         target_profile: Some(target),
         recipe: Some(recipe),
+        source_decisions: &[],
     }
 }
 

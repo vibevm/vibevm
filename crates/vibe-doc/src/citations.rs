@@ -448,6 +448,16 @@ fn resolve_self(
     uri: &str,
     self_coordinate: &str,
 ) -> std::result::Result<(), String> {
+    use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
+    let policy = observe_package_policy(package_dir).map_err(|error| error.to_string())?;
+    match policy.mode() {
+        PackageSourceMode::ExplicitEmpty | PackageSourceMode::Explicit => {
+            return Err(policy
+                .unsupported("documentation self citation")
+                .to_string());
+        }
+        PackageSourceMode::Legacy | PackageSourceMode::MissingManifest => {}
+    }
     let rest = uri
         .strip_prefix("spec://")
         .and_then(|b| b.strip_prefix(self_coordinate))
@@ -480,6 +490,9 @@ fn resolve_self(
     let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
     let doc = vibe_specdoc::from_xml_with(&text, vibe_specdoc::Vocabulary::Doc)
         .map_err(|e| format!("{}: {e}", path.display()))?;
+    policy
+        .recheck_unchanged()
+        .map_err(|error| error.to_string())?;
     let path_segments: Vec<String> = anchor.split('.').map(str::to_owned).collect();
     anchor_text(&doc, &path_segments)
         .map(|_| ())

@@ -177,3 +177,27 @@ fn authored_root_slot_record_is_reserved() {
         "{error}"
     );
 }
+
+#[test]
+fn captured_record_bytes_use_the_same_reader_without_reopening_path() {
+    let scope = tempfile::tempdir().unwrap();
+    let path = scope.path().join(super::SLOT_RECORD_FILENAME);
+    let bytes = b"schema=1\nsource_hash='sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'\nspec_format='mixed'\nfile=[]\n";
+    std::fs::write(&path, bytes).unwrap();
+    let from_path = super::read_slot_record(scope.path()).unwrap();
+    let captured = std::fs::read(&path).unwrap();
+    std::fs::write(&path, "malformed replacement").unwrap();
+    assert_eq!(
+        super::read_slot_record_bytes(&path, &captured).unwrap(),
+        from_path
+    );
+    assert!(super::read_slot_record(scope.path()).is_err());
+    assert!(super::read_slot_record_bytes(&path, &[0xff]).is_err());
+    assert!(
+        super::read_slot_record_bytes(
+            &path,
+            b"schema=9\nsource_hash='sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'\nspec_format='mixed'\nfile=[]\n"
+        )
+        .is_err()
+    );
+}

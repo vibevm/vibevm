@@ -38,6 +38,8 @@ use crate::{Workspace, WorkspaceError, vibedeps};
 
 /// Stale-slot pruning — removing every dependency slot the current
 /// resolution no longer names, out of line per the file-length budget.
+mod source_admission;
+pub use source_admission::{validate_declared_source_operation, validate_source_admission};
 mod prune;
 use prune::prune_stale_slots;
 
@@ -250,6 +252,7 @@ fn materialise_resolution_with_spec_format(
     resolution: &[ResolvedDep],
     options: MaterialiseOptions<'_>,
 ) -> Result<Materialised, WorkspaceError> {
+    source_admission::validate_source_resolution(resolution, options.spec_format)?;
     let MaterialiseOptions {
         slot_integrity,
         spec_format,
@@ -422,6 +425,7 @@ fn materialise_resolution_with_spec_format(
             copy_mode_for(&dep.manifest),
             spec_format,
             source_hash,
+            Some(&dep.manifest),
         )?;
         if materialise_report.payload_changed() {
             post_install_deps.push(dep.clone());

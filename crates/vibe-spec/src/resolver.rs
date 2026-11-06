@@ -372,3 +372,7 @@ mod tests;
 
 #[cfg(test)]
 mod path_tests;
+
+#[cfg(test)]
+#[path = "resolver/source_policy_tests.rs"]
+mod source_policy_tests;

@@ -38,6 +38,10 @@ use vibe_core::{Group, PackageName};
 
 use crate::{AuthoredFact, FactStatus, Registry, RegistryError, authored_facts};
 
+pub mod declared;
+#[path = "scan/declared_capture.rs"]
+mod declared_capture;
+
 /// Which kind of source root a scan walks.
 ///
 /// ```text
@@ -231,6 +235,14 @@ pub fn observe_authored_source(
     source_kind: SourceKind,
 ) -> Result<AuthoredSourceObservation, RegistryError> {
     split_coordinate(package_coordinate)?;
+    let policy = vibe_spec::source_policy::observe_package_policy(source_root)?;
+    if matches!(
+        policy.mode(),
+        vibe_spec::source_policy::PackageSourceMode::Explicit
+            | vibe_spec::source_policy::PackageSourceMode::ExplicitEmpty
+    ) {
+        return declared_capture::observe(source_root, package_coordinate, &policy);
+    }
     let mut documents: Vec<String> = Vec::new();
     let specs_root = source_root.join(layout::current_specs_root());
     collect_spec_documents(source_root, &specs_root, &mut documents)?;
@@ -344,6 +356,7 @@ pub fn observe_authored_source(
         }
     }
     authored.sort_by(|a, b| a.address.cmp(&b.address));
+    policy.recheck_unchanged()?;
     Ok(AuthoredSourceObservation::Available {
         facts: authored,
         documents: witnesses,

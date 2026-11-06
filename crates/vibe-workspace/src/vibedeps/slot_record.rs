@@ -56,10 +56,30 @@ pub fn read_slot_record(slot: &Path) -> Result<SlotRecord, String> {
             path.display()
         )
     })?;
-    let wire: WireSlotRecord = toml::from_str(&text)
+    read_slot_record_bytes(&path, text.as_bytes())
+}
+
+/// Parse an already observed record; `path` is diagnostic only and is never read.
+/// This uses the same generated wire conversion and semantic validator as the
+/// ordinary path reader.
+/// ```
+/// use std::path::Path;
+/// use vibe_workspace::vibedeps::read_slot_record_bytes;
+/// let bytes = b"schema=1\nsource_hash='sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'\nspec_format='mixed'\nfile=[]\n";
+/// assert!(read_slot_record_bytes(Path::new("not-opened/.vibe-slot.toml"), bytes).is_ok());
+/// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-RECORD")]
+pub fn read_slot_record_bytes(path: &Path, bytes: &[u8]) -> Result<SlotRecord, String> {
+    let text = std::str::from_utf8(bytes).map_err(|_| {
+        format!(
+            "slot record parse failure at `{}`: invalid UTF-8",
+            path.display()
+        )
+    })?;
+    let wire: WireSlotRecord = toml::from_str(text)
         .map_err(|error| format!("slot record parse failure at `{}`: {error}", path.display()))?;
-    let record = record_from_wire(wire).map_err(|error| format_validation_error(&path, error))?;
-    validate_record(&record).map_err(|error| format_validation_error(&path, error))?;
+    let record = record_from_wire(wire).map_err(|error| format_validation_error(path, error))?;
+    validate_record(&record).map_err(|error| format_validation_error(path, error))?;
     Ok(record)
 }
 

@@ -30,6 +30,9 @@ use specmark::spec;
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY")]
 #[non_exhaustive]
 pub enum DocError {
+    /// Source interpretation was not admitted for this semantic operation.
+    #[error(transparent)]
+    SourcePolicy(#[from] vibe_spec::source_policy::SourcePolicyError),
     /// A file the check needed could not be read or written.
     #[error(
         "{action} `{path}`: {source} \

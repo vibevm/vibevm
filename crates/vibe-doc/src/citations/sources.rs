@@ -258,7 +258,14 @@ impl SpecSources {
         );
         FileResolver::with_selected_world(
             instance.root.clone(),
-            instance.root.clone(),
+            if instance.source == Source::Lock {
+                self.lock
+                    .as_ref()
+                    .cloned()
+                    .unwrap_or_else(|| instance.root.clone())
+            } else {
+                instance.root.clone()
+            },
             selected,
             // A coordinate that is deliberately NOT the address's own, so
             // the address takes the selected arm and its `@version`, when

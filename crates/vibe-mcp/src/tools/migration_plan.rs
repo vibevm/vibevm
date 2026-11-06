@@ -21,7 +21,7 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
 #[cell(seam = "McpTool", variant = "plan_manifest_migration")]
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 pub struct PlanManifestMigrationMcpTool;
 
@@ -37,7 +37,17 @@ impl McpTool for PlanManifestMigrationMcpTool {
                     "source_text": { "type": "string" },
                     "source_profile": { "type": "string" },
                     "target_profile": { "type": "string" },
-                    "recipe": { "type": "string" }
+                    "recipe": { "type": "string" },
+                    "source_decisions": {"type":"array","items":{
+                        "type":"object","additionalProperties":false,
+                        "required":["file","media","interpretation","role","loading"],
+                        "properties": {
+                            "file":{"type":"string"},"media":{"type":"string"},
+                            "interpretation":{"type":"string","enum":["vibe-spec","vibe-doc","commonmark","xml-data","opaque"]},
+                            "role":{"type":"string","enum":["spec","documentation","resource"]},
+                            "loading":{"type":"string","enum":["scan","explicit"]}
+                        }
+                    }}
                 },
                 "required": ["schema", "source_text"],
                 "additionalProperties": false
@@ -64,7 +74,7 @@ impl McpTool for PlanManifestMigrationMcpTool {
                         false,
                     ),
                     Outcome::NeedsInput(_) => (
-                        "Select the listed profile and recipe choices, then call plan_manifest_migration again. No changes were applied.",
+                        "Provide the requested choices and call plan_manifest_migration again. No changes were applied.",
                         false,
                     ),
                     Outcome::Refused(_) => (
@@ -88,3 +98,7 @@ impl McpTool for PlanManifestMigrationMcpTool {
 #[cfg(test)]
 #[path = "migration_plan/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "migration_plan/source_tests.rs"]
+mod source_tests;

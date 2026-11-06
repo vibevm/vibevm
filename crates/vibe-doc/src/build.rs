@@ -182,7 +182,7 @@ pub fn content(
         // source page at its own address (`##LOC-EXAMPLE-REF`,
         // `##LOC-MIRROR`). A source documentation adapts nothing, so this
         // is empty for it and costs a manifest read.
-        examples: translations::borrowed(package_dir, sources),
+        examples: translations::borrowed(package_dir, sources)?,
         base: base.to_owned(),
         // One package is one language (`##LOC-LANGUAGE-FIELD`), so the
         // edition's language is read once per build and handed to the

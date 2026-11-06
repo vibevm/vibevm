@@ -87,6 +87,29 @@ impl Check for BootDirectoryCheck {
         // the dialect is an error, and a document held in BOTH forms is
         // the split brain the mixed target forbids.
         let mut spec_files: Vec<PathBuf> = Vec::new();
+        use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
+        let policy = observe_package_policy(project_root);
+        let authored_admitted = match &policy {
+            Ok(policy) => match policy.mode() {
+                PackageSourceMode::Legacy | PackageSourceMode::MissingManifest => true,
+                PackageSourceMode::ExplicitEmpty => false,
+                PackageSourceMode::Explicit => {
+                    report.err(
+                        self.id(),
+                        Some("vibe.toml".into()),
+                        None,
+                        policy
+                            .unsupported("authored boot directory validation")
+                            .to_string(),
+                    );
+                    false
+                }
+            },
+            Err(error) => {
+                report.err(self.id(), Some("vibe.toml".into()), None, error.to_string());
+                false
+            }
+        };
         let mut has_static_md = false;
         let mut has_static_xml = false;
         for entry in entries.filter_map(|e| e.ok()) {
@@ -111,6 +134,10 @@ impl Check for BootDirectoryCheck {
             // only — near misses (`.bak`) and the crash-only journal and
             // stage control names must keep warning below.
             if name == vibe_core::layout::BOOT_ARTIFACTS_LOCK {
+                continue;
+            }
+            // Generated INDEX is structural metadata, never authored dialect input.
+            if name == "INDEX.md" || !authored_admitted {
                 continue;
             }
             if !vibe_specdoc::is_spec_source(&path) {
@@ -145,6 +172,12 @@ impl Check for BootDirectoryCheck {
                 "both STATIC.md and STATIC.xml exist — the generator owns one; delete the stray",
             );
         }
+        if let Ok(policy) = &policy
+            && let Err(error) = policy.recheck_unchanged()
+        {
+            report.err(self.id(), Some("vibe.toml".into()), None, error.to_string());
+            return;
+        }
         for collision in vibe_specdoc::pair_collisions_in(&spec_files) {
             let rel = collision
                 .markdown
@@ -158,6 +191,7 @@ impl Check for BootDirectoryCheck {
 
 #[cfg(test)]
 mod tests {
+    use crate::Check;
     use std::fs;
 
     use tempfile::tempdir;
@@ -165,6 +199,51 @@ mod tests {
 
     use crate::test_support::{opts, write_minimal_project};
     use crate::{CheckId, Severity, check_project};
+
+    #[test]
+    fn source_policy_skips_empty_authored_bytes_but_keeps_generated_structure() {
+        let tmp = tempdir().unwrap();
+        let boot = tmp.path().join(layout::current_boot_dir());
+        fs::create_dir_all(&boot).unwrap();
+        fs::write(tmp.path().join("vibe.toml"), "[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\nsources=[]\n").unwrap();
+        for name in ["raw.xml", "raw.md", "STATIC.xml", "STATIC.md", "INDEX.md"] {
+            fs::write(boot.join(name), "<foreign/>").unwrap();
+        }
+        let mut report = crate::CheckReport::default();
+        super::BootDirectoryCheck.run(tmp.path(), &opts(), &mut report);
+        assert_eq!(report.findings.len(), 1, "{:?}", report.findings);
+        assert!(
+            report.findings[0]
+                .message
+                .contains("both STATIC.md and STATIC.xml")
+        );
+    }
+
+    #[test]
+    fn source_policy_refuses_explicit_and_invalid_before_authored_dialect() {
+        for suffix in [
+            "sources='invalid'\n",
+            "[[package.sources]]\nfile='raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+        ] {
+            let tmp = tempdir().unwrap();
+            let boot = tmp.path().join(layout::current_boot_dir());
+            fs::create_dir_all(&boot).unwrap();
+            fs::write(tmp.path().join("vibe.toml"), format!("[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n{suffix}")).unwrap();
+            fs::write(boot.join("raw.xml"), "<foreign/>").unwrap();
+            let mut report = crate::CheckReport::default();
+            super::BootDirectoryCheck.run(tmp.path(), &opts(), &mut report);
+            assert_eq!(report.findings.len(), 1, "{:?}", report.findings);
+            assert!(
+                report.findings[0]
+                    .message
+                    .contains("SOURCE-ADMISSION-BOUNDARY")
+            );
+            assert_eq!(
+                fs::read_to_string(boot.join("raw.xml")).unwrap(),
+                "<foreign/>"
+            );
+        }
+    }
 
     #[test]
     fn boot_dir_accepts_the_loading_model_layout() {

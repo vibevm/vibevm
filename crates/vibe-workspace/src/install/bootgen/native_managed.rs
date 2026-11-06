@@ -52,6 +52,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
         });
     }
     epoch.assert_resolution(&workspace.root, resolution)?;
+    super::super::source_admission::validate_source_admission(workspace, resolution, spec_format)?;
     let self_coord = root_self_coordinate(&workspace.root_manifest);
     let mut replay_candidates =
         BootReplayCandidates::new(workspace.root.clone(), self_coord.clone());

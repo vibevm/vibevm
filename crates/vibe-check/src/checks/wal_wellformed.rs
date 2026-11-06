@@ -58,6 +58,27 @@ impl Check for WalWellformedCheck {
     }
 
     fn run(&self, project_root: &Path, _opts: &CheckOptions, report: &mut CheckReport) {
+        use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
+        let policy = match observe_package_policy(project_root) {
+            Ok(policy) => policy,
+            Err(error) => {
+                report.err(self.id(), Some("vibe.toml".into()), None, error.to_string());
+                return;
+            }
+        };
+        match policy.mode() {
+            PackageSourceMode::ExplicitEmpty => return,
+            PackageSourceMode::Explicit => {
+                report.err(
+                    self.id(),
+                    Some("vibe.toml".into()),
+                    None,
+                    policy.unsupported("WAL wellformedness").to_string(),
+                );
+                return;
+            }
+            PackageSourceMode::MissingManifest | PackageSourceMode::Legacy => {}
+        }
         let wal_rel = match resolve_wal(project_root) {
             WalResolution::Absent => {
                 // WAL discipline is a project convention, not part of the
@@ -96,6 +117,10 @@ impl Check for WalWellformedCheck {
                 return;
             }
         };
+        if let Err(error) = policy.recheck_unchanged() {
+            report.err(self.id(), Some("vibe.toml".into()), None, error.to_string());
+            return;
+        }
         // Collect every top-level (`## …`) section heading, lowercased
         // and trimmed to the first parenthesis to make the matching
         // resilient to suffixes like `(do not violate without discussion)`.
@@ -131,6 +156,7 @@ impl Check for WalWellformedCheck {
 
 #[cfg(test)]
 mod tests {
+    use crate::Check;
     use std::fs;
 
     use tempfile::tempdir;
@@ -138,6 +164,34 @@ mod tests {
 
     use crate::test_support::{opts, write_minimal_project};
     use crate::{CheckId, check_project};
+
+    #[test]
+    fn source_policy_empty_skips_wal_pair_and_explicit_or_invalid_refuse() {
+        for (suffix, expected) in [
+            ("sources=[]\n", 0),
+            ("sources='invalid'\n", 1),
+            (
+                "[[package.sources]]\nfile='raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+                1,
+            ),
+        ] {
+            let tmp = tempdir().unwrap();
+            fs::create_dir_all(tmp.path().join(layout::current_specs_root())).unwrap();
+            fs::write(tmp.path().join("vibe.toml"), format!("[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n{suffix}")).unwrap();
+            fs::write(tmp.path().join(layout::current_wal_xml()), "<foreign/>").unwrap();
+            fs::write(tmp.path().join(layout::current_wal_md()), "raw").unwrap();
+            let mut report = crate::CheckReport::default();
+            super::WalWellformedCheck.run(tmp.path(), &opts(), &mut report);
+            assert_eq!(report.findings.len(), expected, "{:?}", report.findings);
+            for finding in report.findings {
+                assert!(finding.message.contains("SOURCE-ADMISSION-BOUNDARY"));
+            }
+            assert_eq!(
+                fs::read_to_string(tmp.path().join(layout::current_wal_xml())).unwrap(),
+                "<foreign/>"
+            );
+        }
+    }
 
     #[test]
     fn wal_missing_sections_warn() {

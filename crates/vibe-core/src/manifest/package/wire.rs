@@ -33,6 +33,12 @@ struct PackageMetaWire {
     epoch: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     spec_format: Option<SpecFormat>,
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "declared_sources"
+    )]
+    sources: Option<Vec<crate::manifest::SourceDescriptor>>,
     #[serde(default, skip_serializing_if = "is_false")]
     frozen: bool,
     #[serde(default)]
@@ -65,6 +71,13 @@ struct PackageMetaWire {
     format: PackageFormat,
 }
 
+// An absent key is None; a present null is invalid, never an absent policy.
+fn declared_sources<'de, D: Deserializer<'de>>(
+    d: D,
+) -> std::result::Result<Option<Vec<crate::manifest::SourceDescriptor>>, D::Error> {
+    Vec::<crate::manifest::SourceDescriptor>::deserialize(d).map(Some)
+}
+
 impl Serialize for PackageMeta {
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -92,6 +105,7 @@ impl From<PackageMeta> for PackageMetaWire {
             version: value.version,
             epoch: value.epoch,
             spec_format: value.spec_format,
+            sources: value.sources,
             frozen: value.frozen,
             authors: value.authors,
             license: value.license,
@@ -120,6 +134,7 @@ impl From<PackageMetaWire> for PackageMeta {
             version: value.version,
             epoch: value.epoch,
             spec_format: value.spec_format,
+            sources: value.sources,
             frozen: value.frozen,
             authors: value.authors,
             license: value.license,

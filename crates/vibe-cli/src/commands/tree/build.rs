@@ -10,7 +10,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#effect
 
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 use vibe_core::manifest::{LinkType, LockedPackage, Lockfile, Manifest};
@@ -218,7 +218,7 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
         roots,
         packages,
         boot,
-        in_place_specs: collect_in_place(root, &boot_files),
+        in_place_specs: collect_in_place(root, &boot_files, &lockfile)?,
         // Root-drift lands here now; the stale-artifacts check (needs a fresh
         // EffectiveBoot recompute) is still deferred — PROP-036 §2.10.
         diagnostics,
@@ -444,47 +444,8 @@ fn condition_from_when(when: Option<&str>) -> Condition {
     }
 }
 
-/// Collect in-place `@spec` / `#use` / `#embed` / `#source` markers from every
-/// boot source file that loads, via the canonical fence-aware parser
-/// (PROP-036 §2.9). `boot_files` are project-relative paths (the host-authored
-/// boot files plus every `STATIC.md` / `INDEX.md` source path); each that
-/// exists is read and parsed. A bare `spec://` is discretionary and not
-/// collected. An empty result is correct when no boot file carries a marker.
-///
-/// A `.xml` boot source is read through its canonical MD projection
-/// (PROP-045 ##PROJECTION-READ): directives live in unit text, which the
-/// projection preserves, so the marker scan sees exactly what a reader of
-/// the projected file sees.
-fn collect_in_place(root: &Path, boot_files: &[String]) -> Vec<InPlaceSpec> {
-    let mut out = Vec::new();
-    for file in boot_files {
-        let Ok((text, _)) = vibe_specdoc::load_spec_text(&root.join(file)) else {
-            continue;
-        };
-        let directives = Directives::parse(&text);
-        for u in directives.in_place_uses {
-            out.push(InPlaceSpec {
-                carrier: Carrier::AtSpec,
-                address: u.address.without_pin(),
-                file: file.clone(),
-                line: (u.line + 1) as u64,
-                resolved: false,
-                target_package: None,
-            });
-        }
-        for d in directives.directives {
-            out.push(InPlaceSpec {
-                carrier: carrier_of(d.kind),
-                address: d.address.without_pin(),
-                file: file.clone(),
-                line: (d.line + 1) as u64,
-                resolved: false,
-                target_package: None,
-            });
-        }
-    }
-    out
-}
+mod in_place;
+use in_place::collect_in_place;
 
 /// Map a directive kind to the model carrier.
 fn carrier_of(kind: vibe_spec::DirectiveKind) -> Carrier {

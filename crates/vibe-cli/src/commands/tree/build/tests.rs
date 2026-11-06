@@ -10,6 +10,97 @@
 use super::*;
 use vibe_core::manifest::LinkType;
 
+#[test]
+fn source_policy_in_place_empty_skips_and_explicit_or_invalid_refuses() {
+    for (suffix, empty) in [
+        ("sources=[]\n", true),
+        ("sources='invalid'\n", false),
+        (
+            "[[package.sources]]\nfile='raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
+            false,
+        ),
+    ] {
+        let tmp = tempfile::tempdir().unwrap();
+        std::fs::write(tmp.path().join("vibe.toml"), format!("[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n{suffix}")).unwrap();
+        std::fs::write(tmp.path().join("raw.xml"), "<foreign/>").unwrap();
+        let result = collect_in_place(
+            tmp.path(),
+            &["raw.xml".into()],
+            &Lockfile::empty("test", "0"),
+        );
+        if empty {
+            assert!(result.unwrap().is_empty());
+        } else {
+            assert!(
+                result
+                    .unwrap_err()
+                    .to_string()
+                    .contains("SOURCE-ADMISSION-BOUNDARY")
+            );
+        }
+    }
+}
+
+#[test]
+fn source_policy_in_place_unknown_dependency_owner_refuses() {
+    let tmp = tempfile::tempdir().unwrap();
+    let file = vibe_core::layout::current_vibedeps_root().join("org.example.guard/1.0.0/raw.md");
+    let result = collect_in_place(
+        tmp.path(),
+        &[vibe_core::machine_json_path(&file)],
+        &Lockfile::empty("test", "0"),
+    );
+    assert!(
+        result
+            .unwrap_err()
+            .to_string()
+            .contains("no selected package owner")
+    );
+}
+
+#[test]
+fn source_policy_in_place_uses_selected_slot_not_host_policy() {
+    let tmp = tempfile::tempdir().unwrap();
+    std::fs::write(tmp.path().join("vibe.toml"), "[project]\nname='host'\n").unwrap();
+    let package: LockedPackage = toml::from_str("kind='flow'\nname='guard'\ngroup='org.example'\nversion='1.0.0'\nsource_url='file:///fixture'\ncontent_hash='sha256:abc'\n").unwrap();
+    let slot = vibe_workspace::vibedeps::slot_abs_path(
+        tmp.path(),
+        &package.group,
+        package.name.as_str(),
+        &package.version,
+    );
+    std::fs::create_dir_all(&slot).unwrap();
+    std::fs::write(slot.join("boot.md"), "#use spec://org.example/lib/boot\n").unwrap();
+    let rel = vibe_core::machine_json_path(slot.join("boot.md").strip_prefix(tmp.path()).unwrap());
+    let mut lock = Lockfile::empty("test", "0");
+    lock.packages.push(package);
+    assert!(
+        collect_in_place(tmp.path(), &[rel.clone()], &lock).is_err(),
+        "missing manifest cannot verify a selected package"
+    );
+    let manifest = "[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n";
+    std::fs::write(slot.join("vibe.toml"), manifest).unwrap();
+    assert_eq!(
+        collect_in_place(tmp.path(), &[rel.clone()], &lock)
+            .unwrap()
+            .len(),
+        1
+    );
+    std::fs::write(slot.join("vibe.toml"), format!("{manifest}sources=[]\n")).unwrap();
+    assert!(
+        collect_in_place(tmp.path(), &[rel.clone()], &lock)
+            .unwrap()
+            .is_empty()
+    );
+    std::fs::write(slot.join("vibe.toml"), format!("{manifest}[[package.sources]]\nfile='boot.md'\nmedia='text/markdown'\ninterpretation='opaque'\nrole='resource'\nloading='explicit'\n")).unwrap();
+    assert!(
+        collect_in_place(tmp.path(), &[rel], &lock)
+            .unwrap_err()
+            .to_string()
+            .contains("SOURCE-ADMISSION-BOUNDARY")
+    );
+}
+
 /// One row of the decision table: the six inputs → `(transitive, origin)`.
 #[cfg(test)]
 fn row(
@@ -165,7 +256,12 @@ fn in_place_directives_collect_from_an_xml_boot_source() {
          <p>#use spec://org.example/lib/boot</p>\n</spec>\n",
     )
     .expect("write xml");
-    let specs = collect_in_place(root, std::slice::from_ref(&dyn_rel));
+    let specs = collect_in_place(
+        root,
+        std::slice::from_ref(&dyn_rel),
+        &Lockfile::empty("test", "0"),
+    )
+    .unwrap();
     assert_eq!(specs.len(), 1, "{specs:?}");
     assert_eq!(specs[0].file, dyn_rel);
     assert_eq!(specs[0].carrier, Carrier::Use);

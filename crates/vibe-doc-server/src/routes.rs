@@ -344,7 +344,8 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
         // whole source package (`##LOC-EXAMPLE-REF`).
         examples: BTreeMap::from([(
             found.rel.clone(),
-            vibe_doc::translations::borrowed_by(&reader.package_dir, &found.rel, &reader.sources),
+            vibe_doc::translations::borrowed_by(&reader.package_dir, &found.rel, &reader.sources)
+                .map_err(|error| ApiError::internal(error.to_string()))?,
         )]),
         base: reader.base.clone(),
         // The edition's language, for the one line the island writes in

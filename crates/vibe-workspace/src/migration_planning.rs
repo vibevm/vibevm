@@ -9,7 +9,8 @@ use serde::{Serialize, Serializer};
 use serde_json::Value;
 use vibe_core::manifest::{
     ManifestMigrationEpoch, ManifestMigrationOutcome, ManifestMigrationPlan, MigrationRefusalKind,
-    MigrationSelection, manifest_migration_profile_epoch, plan_manifest_migration,
+    MigrationSelection, SourceDescriptor, manifest_migration_profile_epoch,
+    plan_manifest_migration,
 };
 use vibe_wire::generated::migration::e1::{
     plan_error::{PlanError, PlanErrorStage},
@@ -54,7 +55,7 @@ impl Serialize for MigrationPlanningResponse {
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 #[error(
     "violates REQ spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT: migration report field {field}: {reason}; fix surface: exact request and domain report"
@@ -157,7 +158,39 @@ pub fn decode_migration_request(value: Value) -> Result<PlanRequest, PlanError> 
             "unsupported request schema",
         ));
     }
+    source_decisions(&request)?;
     Ok(request)
+}
+
+fn source_decisions(request: &PlanRequest) -> Result<Vec<SourceDescriptor>, PlanError> {
+    let mut seen = std::collections::BTreeSet::new();
+    request
+        .source_decisions
+        .iter()
+        .map(|decision| {
+            if !seen.insert(decision.file.as_str()) {
+                return Err(preflight(
+                    Code::InvalidRequest,
+                    "source_decisions.file",
+                    "duplicate source decision path",
+                ));
+            }
+            let value = serde_json::to_value(decision).map_err(|_| {
+                preflight(
+                    Code::InvalidRequest,
+                    "source_decisions",
+                    "source decision encoding failed",
+                )
+            })?;
+            serde_json::from_value(value).map_err(|_| {
+                preflight(
+                    Code::InvalidRequest,
+                    "source_decisions",
+                    "source selector, media, interpretation, role or loading is invalid",
+                )
+            })
+        })
+        .collect()
 }
 
 /// Typed callers have already lost JSON presence provenance; JSON callers
@@ -170,7 +203,7 @@ pub fn decode_migration_request(value: Value) -> Result<PlanRequest, PlanError> 
 /// ```
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
-    r = 1
+    r = 2
 )]
 pub fn plan_migration_request(request: PlanRequest) -> MigrationPlanningResponse {
     if request.schema != 1 {
@@ -180,8 +213,11 @@ pub fn plan_migration_request(request: PlanRequest) -> MigrationPlanningResponse
             "unsupported request schema",
         ));
     }
+    if let Err(error) = source_decisions(&request) {
+        return MigrationPlanningResponse::Preflight(error);
+    }
     let report = match project_core(&request).and_then(|report| {
-        validate_report(&report)?;
+        validate_report(&report, &request)?;
         Ok(report)
     }) {
         Ok(report) => report,
@@ -201,12 +237,15 @@ pub fn plan_migration_request(request: PlanRequest) -> MigrationPlanningResponse
 }
 
 fn core_outcome(request: &PlanRequest) -> Validated<ManifestMigrationOutcome> {
+    let decisions = source_decisions(request)
+        .map_err(|_| invalid("source_decisions", "invalid explicit source decisions"))?;
     let outcome = plan_manifest_migration(
         &request.source_text,
         MigrationSelection {
             source_profile: request.source_profile.as_deref(),
             target_profile: request.target_profile.as_deref(),
             recipe: request.recipe.as_deref(),
+            source_decisions: &decisions,
         },
     );
     Ok(outcome)
@@ -228,11 +267,13 @@ fn project_core(request: &PlanRequest) -> Validated<PlanReport> {
                     "source_profile" => QuestionField::SourceProfile,
                     "target_profile" => QuestionField::TargetProfile,
                     "recipe" => QuestionField::Recipe,
+                    "source_media" => QuestionField::SourceMedia,
                     _ => return Err(invalid("questions.field", "unknown core input field")),
                 };
                 questions.push(Question {
                     field,
                     choices: requirement.choices,
+                    resource_path: requirement.resource_path,
                 });
             }
             Outcome::NeedsInput(Box::new(OutcomeNeedsInput { questions }))
@@ -305,3 +346,10 @@ pub use validation::{validate_preflight_error, validate_report_for_request};
 #[cfg(test)]
 #[path = "migration_planning/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "migration_planning/source_apply_tests.rs"]
+mod source_apply_tests;
+#[cfg(test)]
+#[path = "migration_planning/source_tests.rs"]
+mod source_tests;

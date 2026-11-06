@@ -27,6 +27,7 @@ pub(super) fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Size
     native: Option<NativeApplyPreparation<'_>>,
 ) -> Result<PreparedApplyReport> {
     crate::configuration_admission::planned(&planned)?;
+    crate::source_admission::planned(&planned, spec_format)?;
     let before_manifest = planned.manifest.clone();
     let manifest_changed = prepare_manifest(&mut planned)?;
     let workspace = vibe_workspace::Workspace::discover_with_selected_manifest(
