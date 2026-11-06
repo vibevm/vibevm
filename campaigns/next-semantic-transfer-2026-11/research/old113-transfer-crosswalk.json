@@ -4388,8 +4388,8 @@
       "why_not_old_task_count": "Real accepted improvements; no whole old task inferred from their labels."
     }
   ],
-  "count_caution": "The 0 complete lower bound is epistemic, not evidence all 113 fail. In particular M-01-A.3 could be complete once original caller inventory is reconciled. No missing type-name or broader subsystem requirement is used as a criterion substitute.",
+  "count_caution": "The proven lower bound is 9 complete tasks. Unknown means criterion-complete transfer has not been established, not that implementation is absent. Partial tasks are not weighted completion percentages. No missing type-name or broader subsystem requirement substitutes for original semantic criteria.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
-  "version_note": "M01A3 and M06G2 full. Four M05 partial scopes updated after accepted app runtime.2full/24partial/16named untransferred/71unknown; exact global completed total remains unestablished.",
+  "version_note": "Latest accepted review includes neutral M13D1: 9 full, 24 partial, 16 not-transferred, 64 unknown. Current M06A1 work is unaccepted and does not increase these counts; exact global completed total remains unestablished.",
   "latest_scoped_review_main_pin": "a4b322150c494e5d7245252ace109b7be9e62c1a"
 }
