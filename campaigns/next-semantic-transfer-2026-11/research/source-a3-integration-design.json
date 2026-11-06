@@ -1,0 +1,533 @@
+{
+  "status": "read-only proposed design; no bridge implementation or runtime verification",
+  "main_revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+  "prototype_revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "original_A3": {
+    "id": "M-06-A.3",
+    "title": "Preserve XML-data and opaque resources",
+    "goal": "Keep data bytes and logical resources distinct from Vibe XML conversion.",
+    "read_paths": [
+      "crates/vibe-specdoc/src/load.rs",
+      "crates/vibe-specdoc/src/xml_in.rs",
+      "crates/vibe-spec/src/resolver/lookup.rs",
+      "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "crates/vibe-specdoc/Cargo.toml",
+      "crates/vibe-specdoc/src/lib.rs",
+      "crates/vibe-workspace/Cargo.toml",
+      "crates/vibe-workspace/src/lib.rs",
+      "crates/vibe-workspace/src/vibedeps.rs",
+      "crates/vibe-spec/Cargo.toml",
+      "crates/vibe-spec/src/lib.rs",
+      "crates/vibe-spec/src/resolver.rs"
+    ],
+    "write_paths": [
+      "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "crates/vibe-specdoc/src/",
+      "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "crates/vibe-workspace/src/vibedeps/derived/",
+      "crates/vibe-workspace/src/vibedeps/tests_transformed.rs",
+      "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+      "crates/vibe-workspace/src/vibedeps/slot_diff/",
+      "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+      "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+      "crates/vibe-workspace/src/vibedeps/slot_record/",
+      "crates/vibe-workspace/src/boot_artifacts.rs",
+      "crates/vibe-workspace/src/boot_artifacts/",
+      "crates/vibe-workspace/src/install/bootgen.rs",
+      "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
+      "crates/vibe-workspace/src/install/bootgen/hybrid_emit/",
+      "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+      "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs",
+      "crates/vibe-workspace/src/install/bootgen/replay_prepare/",
+      "crates/vibe-spec/src/resolver/",
+      "crates/vibe-spec/tests/resolve.rs",
+      "crates/vibe-specdoc/Cargo.toml",
+      "crates/vibe-specdoc/src/lib.rs",
+      "crates/vibe-workspace/Cargo.toml",
+      "crates/vibe-workspace/src/lib.rs",
+      "crates/vibe-workspace/src/vibedeps.rs",
+      "crates/vibe-spec/Cargo.toml",
+      "crates/vibe-spec/src/lib.rs",
+      "crates/vibe-spec/src/resolver.rs"
+    ],
+    "steps": [
+      "Add XML-data/raw and opaque handling with encoding/comments/whitespace preserved.",
+      "Allow safe optional XML tree inspection without external entities or network; invalid data stays raw retrievable.",
+      "Change pair/collision enumeration to compare declared logical resource identities instead of same filename stem alone."
+    ],
+    "positive_cases": [
+      "Same-stem ordinary Markdown and XML-data coexist.",
+      "Non-UTF8 or intentionally invalid XML fixture keeps exact raw bytes."
+    ],
+    "negative_cases": [
+      "Spec-format conversion cannot normalize ordinary XML-data.",
+      "External entity loading and ambiguous declared representations refuse."
+    ],
+    "checks": [
+      "SELECT BEFORE DISPATCH: vibe-specdoc target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-specdoc <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "SELECT BEFORE DISPATCH: vibe-workspace target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-workspace <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "SELECT BEFORE DISPATCH: vibe-spec target/cases are TO BIND from source/metadata to affected positive/negative obligations; choose --lib, --test <name>, --bin <name>, or affected --doc before compiling.",
+      "RUN BOUND CHECKS: after binding, use cargo test -p vibe-spec <target> <case> -- --exact for lib/test/bin, or a reviewed small family without --exact; bind supported rustdoc selection separately. Verify intended nonzero cases in output; use target-specific --list only when needed to confirm selection, and reuse its valid inventory.",
+      "cargo fmt --all -- --check",
+      "git diff --check"
+    ],
+    "acceptance": [
+      "Install/derive/read round-trips preserve data bytes exactly.",
+      "Optional structure failure does not invalidate unrelated facts."
+    ],
+    "safe_stop": "Expose raw resource with structured-view diagnostics; no guessed conversion.",
+    "commit_subject": "feat(specdoc): preserve plain XML and opaque resources",
+    "notes": [
+      "Internal children execute sequentially; cross-parent prerequisites remain exactly the root campaign graph.",
+      "Permanent destination: vibevm/vibespecs/common/PROP-072-boot-observability.xml (PROPOSED file until its source-contract task creates it). Create/update the governing permanent contract before implementation assertions cite its real anchors; campaign retirement/promotion is root-owned.",
+      "TO CREATE: m_06_a_3_cases test family for the cases below. This is not an existing test. Bind the owning target and intended regression cases before dispatch; confirm created names and nonzero exact selection before running. Do not compile unrelated targets for discovery.",
+      "PROP-072 SOURCE-REPRESENTATION-COLLISION separates original source identity, output path and Vibe document address. The transformed-slot test owner is included for exact raw-byte and collision cases. Descriptor packages select before conversion; unclassified legacy paths retain only their bounded compatibility route. Resolver adoption needs a validated output-to-source witness map, not a new suffix guess.",
+      "Cross-platform filename aliases use the owner's weaker cooperative contract: detect provable exact/case aliases, refuse observed no-replace target collisions and carry an explicit warning where Unicode normalization cannot be proved. Do not blanket-ban non-ASCII paths or block convenient Linux use solely for an unavailable stronger guarantee.",
+      "The incumbent slot writer uses replacing TempPath::persist and removes hardlink destinations. Descriptor-owned materialization therefore needs a strict new-path no-replace policy in slot_diff before derived conversion can publish without overwriting an unrecognized target alias; legacy slot updates retain their existing behavior.",
+      "For the first installed-slot reader, build a validated output-to-source/interpretation map from the retained SlotRecord plus a pinned installed manifest and output-byte checks, then inject it into the workspace boot FileResolver constructors. The current record proves output SHA and package source_hash but not each transformed original file's SHA; do not claim stronger original-byte proof. Lifecycle-agent and vibe-doc citation consumers remain explicitly due at A.4 rather than silently inheriting a suffix lookup.",
+      "The validated slot record must be parsed from the same bounded no-follow bytes captured by the descriptor map builder. A narrow `slot_record` byte-reader extraction is in scope; do not duplicate its schema/semantic validator or change the slot-record wire format merely for this host join.",
+      "The install-only boot renderer must carry exact selected slot version/source_hash/spec_format from ResolvedDep through bootgen/hybrid_emit into a descriptor-map-aware FileResolver. A descriptor-owned row with absent selected source_hash refuses; deriving the expected hash from the slot record itself is circular. Public standalone legacy rendering remains unchanged until it has an independent selected witness.",
+      "A focused test under the hybrid emitter's bounded sibling module must traverse the actual `emit_package_units` selected-slot carrier rather than only calling the descriptor-aware static renderer directly; pin the absent-hash refusal and no-descriptor byte-compatible route.",
+      "Native-managed, explicit custom backend and sealed replay boot readers also receive selected witnesses from their install owners: resolution is available at native_managed/hybrid_emit, and analyze has independent lock-derived resolution. Thread exact witness sets without inferring from slot metadata; replay candidates lacking a selected hash refuse descriptor-owned reads. The native_managed and analyze files are included for these carrier edges; standalone public render remains legacy until independently bound.",
+      "Only listed file/subtree perimeters may change; new implementation/test/schema paths within them are PROPOSED, not claims of existing files. Reuse prerequisite-owned modules where present and stop for a packet correction if an essential edit falls outside the perimeter.",
+      "Registration perimeter includes existing crate manifests and module owners only for required exports/dependencies; do not change unrelated declarations."
+    ]
+  },
+  "source_hashes": [
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/Cargo.toml",
+      "sha256": "4f9839937a8eb5824eb7081d432249e98119556051c52af2f8a41c43ddd0da37",
+      "bytes": 3236
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/src/resolver.rs",
+      "sha256": "d52d68c41dda3c73c5764a1572dda2bbaa740efd34050378b697cbe67515266a",
+      "bytes": 16119
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/src/resolver/observation.rs",
+      "sha256": "c67d64ad56718ed4d1404d758455cc8490be2a0cbb8d8ba6ff8bb2c37e6e2d30",
+      "bytes": 14695
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/src/resolver/lookup.rs",
+      "sha256": "e22aa67c63755e5d72efe0316cb578654b96777685e821ecddd0db55ed269208",
+      "bytes": 12838
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/src/resolver/paths.rs",
+      "sha256": "74b7b291db8f0ed8af336dd0d34fba282ce9ad28415dcb000fb1299a42106646",
+      "bytes": 1564
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/src/resolver/glob.rs",
+      "sha256": "9f5658954e4efd7ecc2ed0fe51703c094f0beffa8d07803e4798df52ef06c259",
+      "bytes": 17556
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/src/resolver/source_policy_tests.rs",
+      "sha256": "403bae1e956040b5b111f8e79f65ce42a159ef90825692a8acb477ae7f91366c",
+      "bytes": 3438
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/src/source_policy.rs",
+      "sha256": "28a54902c12b3e22e93722d4065e1c2508edc83634d0f7310489a470666c2b90",
+      "bytes": 15067
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/src/embed.rs",
+      "sha256": "9ac97b2ad71ac94f5a5ba5f950e61f35dbe1c9484c8e05a5d294fd152ed39290",
+      "bytes": 13129
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/src/embed/read.rs",
+      "sha256": "8e9a4bb733be25cb79a179f0827a9059104b4c50437e4c0afd3ebfa2cdcf2e97",
+      "bytes": 3016
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-spec/src/embed/source_reads.rs",
+      "sha256": "46d34fd5132d3b3d7b3bf435f655338f77bff76aeb5b46f88e6e634621e21ebd",
+      "bytes": 13646
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-safefs/src/project.rs",
+      "sha256": "92ae6680cd5172324aced5eadb43c4317558f32a47fd76352f0eab22260b535c",
+      "bytes": 17274
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-core/src/manifest/lockfile.rs",
+      "sha256": "c2a389a6ae2fd6153282ab24896cf1401f2bfe6d88e4be5d9f3bafd651b36e57",
+      "bytes": 24066
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-core/src/manifest/project.rs",
+      "sha256": "c2055bd47772931aec1e029b7a4335c20624c4789c11760381d56f8136c81630",
+      "bytes": 20819
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/model.rs",
+      "sha256": "cdd80a77d732dae45987f389d5290f9aa574c410d66df7b000909e351196f644",
+      "bytes": 14206
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-cli/src/commands/reinstall.rs",
+      "sha256": "d98b0fcbfac8bf1710b519b75d4f6b2bbcd359349d8c8aa5b27361d03c6acf24",
+      "bytes": 12661
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/vibedeps/slot_record.rs",
+      "sha256": "1b1325056e0c68262689f36553c3e9320b0c8b86e325f7a9e9a3f57e9e9621f5",
+      "bytes": 18712
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/vibedeps/source_policy.rs",
+      "sha256": "5af82fae03ad25c4582b619e5f28e142986984f78fd7bbc5618fa7205aba1053",
+      "bytes": 8536
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/vibedeps/derived.rs",
+      "sha256": "f4f18eb81808a27193d616d1cae5796c8db37c70cae8433f3ce303b4b39b5ec4",
+      "bytes": 19197
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/vibedeps/derived/materialise.rs",
+      "sha256": "491b40242834d180ad61d891d01d822bdeefb00d6b3e852ff20d6d1e81031e52",
+      "bytes": 4872
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
+      "sha256": "b7c700e99828d57d96b73449b6c135ae8cf619e3bfc9cc71f81d3c0371ad4828",
+      "bytes": 18290
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff/plan.rs",
+      "sha256": "058b63b44ffb111a4efd50aebce18589b6aafe76fb6e5be6dbdebe27d57fa95a",
+      "bytes": 4794
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/vibedeps/slot_diff/placement.rs",
+      "sha256": "8cf25bcdb686c7bffb8116370ce5a6b16c507c4e6fd922b33afe2d4e8524ff16",
+      "bytes": 8822
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen.rs",
+      "sha256": "90cd5ef7169d7d536f0815f6a4044d9a8bb62aadeb26ec0f3becd70923ed35a1",
+      "bytes": 17498
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/materialised_read.rs",
+      "sha256": "69442ec0caac6366ba65783311d8adfc3fa40b2926caf5550781a29399d7f4f1",
+      "bytes": 7332
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
+      "sha256": "f0b7dcee623b37371c85304a1bbfcda63cefd9b3a73cd9c6d0b435c2986851a9",
+      "bytes": 24474
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/hybrid_emit/native_managed.rs",
+      "sha256": "421e997ccac8a9db4e70d8684c9a8007545945d0683921b416f38fab32f06e49",
+      "bytes": 8259
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/hybrid_emit/zone_projection.rs",
+      "sha256": "bff8d05a8d096a8c0b7fb7af32ec75dbbfcee0ca5bd9ab7f7b0ccbe41540d41a",
+      "bytes": 6030
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+      "sha256": "cf0a588b940a373aac64fdc7a813df8a42eee0bd8b0726a2c94f756279e89e1a",
+      "bytes": 7584
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "sha256": "bb96251e6f67d2893850aac097782bae548c6f30dfbbcc58bd7afafff3cbc064",
+      "bytes": 14356
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs",
+      "sha256": "ba55bbbb8a3381609358f06a6e47a6a42373996ce8e858185b3429e423b34094",
+      "bytes": 18277
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/replay_prepare/prepared.rs",
+      "sha256": "187e4a556d3698592032f542fc1466a1d803347b63b233230b989499c06438af",
+      "bytes": 3922
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/replay_prepare/validate.rs",
+      "sha256": "eb1048bfa5c84326a4988adc04d9f5b18dc1efa1ba16d55a0a85600fc0b80864",
+      "bytes": 2570
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/snippet_source.rs",
+      "sha256": "90c75d715d61ede3d063cc612429f6ce4a4014f57914e735d089c0a0471533bc",
+      "bytes": 4060
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/node_dependency.rs",
+      "sha256": "6819f08585e4cbf5a7321efeb7eec6737d3269584a2e2e84de2dd586dde12a14",
+      "bytes": 6726
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/install/bootgen/desubstitute.rs",
+      "sha256": "136823134a7fa221b8097dd81bac7db26bde03dd6acec3f0cf15494dfbf328aa",
+      "bytes": 5943
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/boot_artifacts.rs",
+      "sha256": "114858054131449a8ed4d58ce722e2c9b6574e5612349b8cf004af16dc4a6480",
+      "bytes": 22884
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+      "sha256": "6ca45967691ebb327c451c64cae8b4d90ac1281559f65964ebb3e3ff17a42547",
+      "bytes": 9789
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/boot_artifacts/format.rs",
+      "sha256": "78aee331ff2329acfcac766d880ad3713604562dc5311b813eb4e173f4eddf41",
+      "bytes": 3394
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/boot_artifacts/normal.rs",
+      "sha256": "8458de014167710e1b42d08bbfe651f7518d51bb4c0d4f408fedb5eb80e9ed93",
+      "bytes": 4889
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/boot_artifacts/native_managed.rs",
+      "sha256": "b4c27ffd920030bce54d2226b946f67deb1d89aacfd031d7b29bc06ee8cf44c4",
+      "bytes": 19721
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/boot_artifacts/native_managed/explicit.rs",
+      "sha256": "0ef992121d980feccea78d70b10cf0b010bad5fb3264895b8a4e1a3023a21433",
+      "bytes": 2282
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/boot_artifacts/native_managed/replay.rs",
+      "sha256": "c68176323dd4bfad65e4d2aaef3851fd09fdef88b0e6bbf5a2e1414262252cb5",
+      "bytes": 1182
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/boot_artifacts/analyzed.rs",
+      "sha256": "bd9459dda2c8b1090aa702bda1693c57980fa0cdd23d156db8db73cddeede8e4",
+      "bytes": 1622
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-workspace/src/boot_artifacts/tests_inheritance_parity.rs",
+      "sha256": "64fe2c7a99936d9084c75f048cb198a63d1da91602316299a614f34c2a7371d4",
+      "bytes": 16791
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-specdoc/src/lib.rs",
+      "sha256": "abb9738749a9b1bf9c7b4154045b51802d9f57c9c8b79fc986ae1d767b13646f",
+      "bytes": 7153
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "campaigns/next/tasks/M-06-A.json",
+      "sha256": "0bae32aa41bd306c4d4596ac9faa70f1ea9f6e5c76b947fa93ae6f9cf97d752e",
+      "bytes": 40528
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-spec/src/resolver.rs",
+      "sha256": "5b8b6a74fb3e02c158a0591e623b18acf42b7cf6ea2668072f25487259404534",
+      "bytes": 25418
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-spec/src/resolver/source_map.rs",
+      "sha256": "f7ede8b6bdc5b43cb0a3dd211b9e8d5523dbe6294afa330d59f847398da50527",
+      "bytes": 9849
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-spec/src/resolver/read.rs",
+      "sha256": "243d74dba9e5f76828740f4170e07c579c1b0bbeeae3e6eb7cb4a46d4a9dbe27",
+      "bytes": 7584
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/vibedeps/derived/selection.rs",
+      "sha256": "da9431e699fdb45be5d57fe0a8fdffc78a4ab14736f19fe23b12bfa5c63891cf",
+      "bytes": 12016
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/vibedeps/descriptor_map.rs",
+      "sha256": "f1a3d3fae53b22d3e642650a3e5ffcbe391451e9d75f0cf6a1ed8b87f909f0ac",
+      "bytes": 14642
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/boot_artifacts/descriptor_reader.rs",
+      "sha256": "7248688bb5842e21ca586a4e242d34d56779f1a9146c5913cfd51c11b15ab48c",
+      "bytes": 4343
+    },
+    {
+      "side": "prototype",
+      "revision": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+      "path": "crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+      "sha256": "0d835fa8ae14cfe569a32b8b1273dd1c179216e097f00a1a899918169805f4aa",
+      "bytes": 15891
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-cli/src/commands/extensions_analyze.rs",
+      "sha256": "57ebcfedbf93708a2cbc68a06097c6a86a4eeb99f6dd2e1a2efc7c99eab61d60",
+      "bytes": 14286
+    },
+    {
+      "side": "main",
+      "revision": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2",
+      "path": "crates/vibe-cli/src/commands/extensions.rs",
+      "sha256": "248f38009abe98cd4a0c7f92920069233c0c24ccb07bc59581bf35e04c2b7bf7",
+      "bytes": 17782
+    }
+  ],
+  "approved_root_directions": [
+    "data-only host checked map and opaque byte rechecks; no reverse dependency",
+    "original declared logical path owns native address; physical naming remains with_extension and real collisions refuse",
+    "explicit independently selected materialized SpecFormat; no lock-format addition or suffix/record inference"
+  ],
+  "candidate_prerequisite": {
+    "report": "/tmp/nst-a3-xml-progress.md",
+    "hashes": "/tmp/nst-a3-xml-hashes.json",
+    "status": "peer frozen candidate; optional raw inspector alone does not close A3"
+  },
+  "source_findings": [
+    "self-root admit canonicalizes an installed self slot unless explicitly distinguished",
+    "Simple boot inputs and FsSectionSource project by physical suffix today",
+    "durable analysis infers lane format from STATIC suffix, not independently selected slot format",
+    "existing record parser lives in workspace and cannot be imported into spec",
+    "slot publication uses replacing persist/rename after preflight; new-path no-replace seam needed",
+    "generated unit STATIC is not authored slot footprint; keep separate incumbent artifact route"
+  ],
+  "runtime_commands": [],
+  "report_sha256": "54127c04f0c036487f7a541f8b0f111c93ab40c03b7cb9bb1b3382b723fc7d2d",
+  "genuine_prerequisites": [
+    "host-prepared lower binding with opaque record bytes and sole workspace validator",
+    "checkpoint recheck_in binds supplied Project/Pinned to the existing captured policy",
+    "explicit independently selected materialized SpecFormat on bound analysis/backend/replay callers",
+    "declared-media projection and original-to-output snippet/Normal seed mapping",
+    "new-path no-replace placement using existing slot diff owner",
+    "separate existing generated artifact/substitution/overlay route"
+  ],
+  "root_review": {
+    "status": "approved implementation direction; no runtime acceptance",
+    "verified_source_hashes": 56,
+    "directions": [
+      "host prepares checked data; one workspace record validator; no reverse dependency",
+      "independent selected input format; real command/install callers",
+      "original logical identity distinct from physical outputs",
+      "held installed-self/point/pattern/media checks; generated artifact lane separate",
+      "new-path no-replace within incumbent writer; exact ordinary bytes preserved"
+    ],
+    "open_qualification": "Verify actual prototype directory-default route against materializer-owned inventory; do not omit useful implemented behavior merely by retaining A1 guard."
+  }
+}
