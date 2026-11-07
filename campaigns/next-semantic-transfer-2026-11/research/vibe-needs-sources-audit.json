@@ -1,0 +1,188 @@
+{
+  "audit": "needs-1-2-3-current-source",
+  "runtime_tested": false,
+  "repository_mutated": false,
+  "report": "/tmp/vibe-needs-sources-audit.md",
+  "source_hashes": [
+    {
+      "path": "/fast/git/vibevm/BACKLOG.md",
+      "sha256": "3cfc5c6a9c3a0c4c569d220bce867da7d2377dc0dbba4d3bd19df45cd2b0343f"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/package/wire.rs",
+      "sha256": "7b91527d7d7ddbfbbf3cec648c869265e272946dfb9b544b51af4c80c0ac0cc1"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/package/wire/requires.rs",
+      "sha256": "72ad3451d50ca254904a0e19eac8b7a96f6b0360862a95e8cce3ee2caed2e33e"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/lockfile.rs",
+      "sha256": "c2a389a6ae2fd6153282ab24896cf1401f2bfe6d88e4be5d9f3bafd651b36e57"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/lock_provenance.rs",
+      "sha256": "c777fa8fd5e8bd19c2243a975f6e41e05f55fc27c447c810d4a1e1b7c7d5300a"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-package-source/src/options.rs",
+      "sha256": "c0a6e203ee93626f6a3f4607233e926fbab8a5020788ed5006f67013fcb1d6b4"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-package-source/src/builder.rs",
+      "sha256": "a262bddf65a47063986c6fbb8c46a92698fd5cfa1f0a3824ccbc9571193b3e70"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-package-source/src/source.rs",
+      "sha256": "6bb2471d452f82b4f13c6993c6f39c80c604c1cdb868ca32a40d3b3e0933285a"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/mod.rs",
+      "sha256": "e3fb8174c5574c725a9eff1b2d86af3733e6f02039e4ec36a8bfcee3267ee94d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/walk.rs",
+      "sha256": "e93c9bc03e50f59a1333a0fa8ec3f204c2aca7c7c2020bcc371ffc238fd5aa9d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/resolution.rs",
+      "sha256": "37bb64beb52ed07cba72836aeb60c6c30959c5ad523b0dfce434a7dc21326107"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/attempt.rs",
+      "sha256": "a685df72c065022eac2bfb8433160cfc7dbb417d6d72fa77a85752cd3f2a583a"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/clone_chain.rs",
+      "sha256": "d6531e3bdb15b35964c8be7a3b9ed82d5fc7ffcbe4728b84b8bc671715ffda26"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/mod.rs",
+      "sha256": "767d7ba0e945ef4ed173097953cc5e5d76b1cd109937679e9fa48c0b6cf0b504"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/lib.rs",
+      "sha256": "a1b61d75b8ae16a41e5890bbcae080cd89c8805593fcddf84bf2cd73b1c701ee"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/plan.rs",
+      "sha256": "43b89255381926ad7a8654168963c120d0507bf6fc497213d06263d6e268e80e"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/plan/fetch.rs",
+      "sha256": "3138520b64f3809186a1eeee8fd9124a44e99535e329b72bb11f53f769bb8ea2"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-cli/src/cli/pkg.rs",
+      "sha256": "d1620f20ba9be5c2e3db1963d008ae39306fb5812465ad9746c65def410c9b4a"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-cli/src/commands/install/report.rs",
+      "sha256": "f5017924dd6fa1ea872d6514716e2e9d05ca1d2edfdd1ca11df02f7111a464a8"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-app/src/resolve.rs",
+      "sha256": "26f4a1393197dec463546aa692841d8bf4fe4e4b32807117c97b0d024b28e2dc"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-app/src/index/wire.rs",
+      "sha256": "31080b8e7015d0f3b1fb32f5afc38e4b98d9bc4084eb84b5eaeb377c5e33c2e4"
+    },
+    {
+      "path": "/fast/git/vibevm/schemas/application_plan.jtd.json",
+      "sha256": "2a056278c6ea698a15d21c526867d20c336a37cfb154260fe8a2ab0b10f217dc"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-wire/src/generated/shared/mod.rs",
+      "sha256": "49a01deea5f0343239d414f162d1adec23f113a325f3dbb00893cd04748659b9"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-wire/src/generated/application_list/mod.rs",
+      "sha256": "4c166b69676802521bb12c6df85606f7f53d162e9b3a47cc34b6e38daebc27ae"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-wire/src/generated/application_describe/mod.rs",
+      "sha256": "f02f107a82d8e5a2d5ce081e889db769203daeaa33037d393ce1da07ecd77cc4"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
+      "sha256": "0d6d44873da986f956e094fc1bf34757190467d1498488ac78de6e1224a1d7c1"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/features/F05-source-selection.md",
+      "sha256": "8ca9fbc1f9c54abfccafcc787493c7bc5aa1f53723a1783c00601a04cd3714e6"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/architecture/TASKS.md",
+      "sha256": "343a081e93da6e207043257d50f9a6bb9e0806aa7312ea133b7751263008aa90"
+    },
+    {
+      "path": "/tmp/nst-g3-rules.md",
+      "sha256": "c92cd3581e1fa756ff223441b97962bef4dd4d8e9c79a2bcf7bf96a3375e353f"
+    },
+    {
+      "path": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
+      "sha256": "0939b548c152f7ef6129f7daa02e8b325bca15aff9f1a7b90c8d09f027d788a5"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement": "project-plan-only",
+      "status": "missing CLI; internal planner has acquisition effects"
+    },
+    {
+      "requirement": "plan-source-fields",
+      "status": "missing projection; provenance exists"
+    },
+    {
+      "requirement": "skipped-candidates",
+      "status": "partial failure-only observations"
+    },
+    {
+      "requirement": "requirement-registry-pin",
+      "status": "missing"
+    },
+    {
+      "requirement": "hosting-preference",
+      "status": "missing"
+    },
+    {
+      "requirement": "global-installed-provenance",
+      "status": "missing; continuation route is not provenance"
+    },
+    {
+      "requirement": "global-source-plan",
+      "status": "missing"
+    },
+    {
+      "requirement": "excluded-hosting-no-contact",
+      "status": "missing; existing remap/offline owners"
+    }
+  ],
+  "first_slice": "Shared generated source evidence from existing resolver/acquisition, preserved in install plan and application inventory; legacy unknown",
+  "blockers": [
+    "Define literal no-write versus cache effects",
+    "Define pin conflict/scope and override interaction",
+    "Preserve version semantics under hosting preference",
+    "Cannot prove excluded-only availability without evidence",
+    "Gate before construction probes and redirect/remap contacts"
+  ],
+  "overlaps": [
+    "M-16-B.1",
+    "M-16-B.2",
+    "M-16-C.2",
+    "M-16-C.2.2",
+    "M-16-C.4",
+    "M-17-A.2",
+    "M-17-A.4",
+    "M-13-B.1",
+    "M-13-B.2",
+    "M-15-B.2",
+    "M-15-K.3",
+    "B-222 portable applications"
+  ]
+}

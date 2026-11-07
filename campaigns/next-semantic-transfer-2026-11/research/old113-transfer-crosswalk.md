@@ -324,3 +324,5 @@ A4 level0 native projection accepted `a3bd65d92`. Actual host CLI and package re
 A4 selected tree adapter accepted `954ffc3c1`; unchanged schema and actual repository gate verified. Show/progress and remaining consumers open; old113counts unchanged.
 
 A4 show effective accepted `8aaea9d7c`; output schema unchanged. Progress and remaining consumers open; old113counts unchanged.
+
+A4 progress reader/common derived writes accepted `751c53600`; seal and remaining adapters open. Owner VIBE-NEEDS priority is additional scope, not a change to113denominator.

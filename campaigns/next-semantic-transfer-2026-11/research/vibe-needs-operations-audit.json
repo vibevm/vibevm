@@ -1,0 +1,134 @@
+{
+  "audit": "needs-4-5-7",
+  "mode": "read-only source audit; no runtime acceptance",
+  "source_hashes": [
+    {
+      "path": "/tmp/nst-g3-rules.md",
+      "sha256": "c92cd3581e1fa756ff223441b97962bef4dd4d8e9c79a2bcf7bf96a3375e353f"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec"
+    },
+    {
+      "path": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
+      "sha256": "0939b548c152f7ef6129f7daa02e8b325bca15aff9f1a7b90c8d09f027d788a5"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/architecture/map.json",
+      "sha256": "04cb37c8435b0d9be3bf92395825b429c86dd723f9fd5b349dc5a5cd8086a3dd"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/architecture/TASKS.md",
+      "sha256": "343a081e93da6e207043257d50f9a6bb9e0806aa7312ea133b7751263008aa90"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-cli/src/cli/mcp.rs",
+      "sha256": "79511c0265e466195c66bcc09de773b5ff3541138817629062479816f05156f3"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-cli/src/commands/mcp/package_registration.rs",
+      "sha256": "1ccc976604a04c69ffed87a370eddc59df0eb5c98ce1bce92163bcea51d28c3b"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-cli/src/commands/mcp/package_registration/register.rs",
+      "sha256": "28f7fcf9ec978e5c88f8c4d029d34b96a67ce41c67db9b0fd909cc92fcbac213"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/configuration/intent.rs",
+      "sha256": "0ea07758d744116c755a5ac78d60b2788da17160c9e2e997dadf9795461b6c83"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/progress.rs",
+      "sha256": "3d29f52f3d053917941b56114ee713a3d903fb76abc16481dab062a3f81d4dee"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/progress/transfer.rs",
+      "sha256": "dd0b9fdf272a1a61823237ebfef4c88eadfe6c103a2875a39c5d84fb5acc89a0"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/progress/transfer/record.rs",
+      "sha256": "2aac82e4375e8a90b56dbe8f59888ee969727b4c6c32a623527bc9b207cff28f"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/progress/transfer/sampler.rs",
+      "sha256": "6c34cfe83dd7ea4eeb9125ac1513a131fe9e3b2fce91b2f948df72baee1a3838"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/progress/transfer/journal.rs",
+      "sha256": "ea3a07328ade16eba7f0eabd0ba61b3519c03334d2caf03e597cd3d7ffe289b4"
+    },
+    {
+      "path": "/fast/git/vibevm/schemas/transfer_event.jtd.json",
+      "sha256": "6290fe8cae087fa3c6ee8754d0ed806d40419e9abd7278744749c1199a134f82"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-cli/src/commands/app/interrupt.rs",
+      "sha256": "6ff5471306ca33e8dbd2031f01ecfbe5479350f6fd2638e4e4b71f43a74c7812"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/apply.rs",
+      "sha256": "c48e89a4393b69e1b8ebbb0244e07ea0fe0b5ba15566205a5a1f7847f6a8f948"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/apply/file_guard.rs",
+      "sha256": "5bd7e537bdc23bfed22ba30b9a6f3c3b42c22ca3c33cc4ccacba3036e68791e6"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-cli/tests/cli_hosted_cancellation.rs",
+      "sha256": "276795e88c3d5eb5f7815df537a259bafdd0f928b607b97f34f5f4f9583723cb"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-actions/src/invoke.rs",
+      "sha256": "b299ad55c3f4eb5478569a572f6438142f1b5a80fdbf16ebeec21f6f45a5a5bb"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-agent-projection/src/pkgskill/projection.rs",
+      "sha256": "79be30821dba08ab1fdf03d320f4400ff9eb7d69557ef8223729b412d399132b"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-lifecycle/src/mechanism/deploy/state.rs",
+      "sha256": "fd0a248d1b0dbe2c596067f83dd65ac8b1d7be961e3e82d8827856e89d6175d1"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/common/PROP-068-transfers.xml",
+      "sha256": "a862c55c6b31c61110b68bee203f6059dcd73006d97ab8005d4a398932836ee2"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/common/PROP-065-structured-installation.xml",
+      "sha256": "2211ea34a29b7e693ccede997358d4711f6902cc504fe2bd1f7ea6b4e61002d1"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/modules/vibe-mcp/PROP-027-mcp-packages.xml",
+      "sha256": "65603b3205e5ad6e64599bc2c0931afe95dc55636259c9e41997d774e6c09baa"
+    }
+  ],
+  "coverage": [
+    {
+      "need": 4,
+      "status": "missing durable per-agent toggle; ownership/configuration foundations present"
+    },
+    {
+      "need": 5,
+      "status": "partial recovery foundations; universal project cancellation and rollback unproven"
+    },
+    {
+      "need": 7,
+      "status": "network cumulative samples and final written size present; live independent disk counter missing"
+    }
+  ],
+  "report": "/tmp/vibe-needs-operations-audit.md",
+  "tests_run": [],
+  "architecture_mapping": [
+    "M-05-D.1",
+    "M-08-A.2",
+    "M-08-C.2",
+    "M-08-C.3",
+    "M-16-B.1",
+    "M-16-C.1",
+    "M-16-C.2.1",
+    "M-16-C.2.4",
+    "M-16-C.3",
+    "M-17-C.2"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "commit": "751c53600834df31a79d20b8aeaba772be600b1b",
+  "files": 18,
+  "source_seal": 16,
+  "evidence_seal": 72,
+  "tests": {
+    "cli_new": 6,
+    "host": 5,
+    "sidecar": 1,
+    "units": 43,
+    "scope": 16,
+    "doctests": 11
+  },
+  "specmap": {
+    "units": 9178,
+    "code_items": 5577,
+    "edges": 4726,
+    "warnings": 44,
+    "prior_occurrences_retained": 9176
+  },
+  "seal_complete": false,
+  "full_a4_accepted": false
+}

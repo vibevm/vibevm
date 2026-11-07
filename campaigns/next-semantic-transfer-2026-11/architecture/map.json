@@ -1,5 +1,6 @@
 {
   "meta": {
+    "owner_extensions": ["vibe-needs.json"],
     "total": 222,
     "prototypeAccepted": 113,
     "sourcePin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",

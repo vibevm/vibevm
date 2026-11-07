@@ -1,0 +1,252 @@
+{
+  "observed_at": "2026-11-07T08:38:35.891937+00:00",
+  "review": "frozen candidate source and receipts refreshed; no concrete blockers found",
+  "root_acceptance_pending": true,
+  "full_a4_complete": false,
+  "runtime_tests_run_by_reviewer": false,
+  "handoff_sha256": "290509c610090fb5b987179d4990de31d8ba32d336cd64b6ea168c4b9f2a3693",
+  "verified_source_count": 16,
+  "verified_evidence_count": 72,
+  "hash_mismatches": [],
+  "source_sha256": {
+    "crates/progress-core/src/scope.rs": "866630ec3a24d9f7ecdb4ec2e532b4a0a71d0bf3de07ba4e038687c45f1724ed",
+    "crates/progress-core/src/scope/enumerate.rs": "cf9f5cc7cad66b354b09ad2215df60829779c23c24a0139a50079d2b6692bcd1",
+    "crates/vibe-cli/src/commands/facts_check.rs": "d2e0594d5c5e1c6b44e5f2398c6f650180ed1f847a951b585fbc45b232b07943",
+    "crates/vibe-cli/src/commands/progress.rs": "936d87b7cd2c663776ec72b18fda4d584f19783c75c8913ebb612995c570f993",
+    "crates/vibe-cli/src/commands/progress/baseline.rs": "5648d34282307cf4bea27cab9731f63469ee6a1671729682d7af5ee2e457f1ef",
+    "crates/vibe-cli/src/commands/progress/evidence_boundaries.rs": "3a63a9f6d6c0f98ba5366a0ce8310e94fa5b12ee5112c18bd9ce7c704e9f8d37",
+    "crates/vibe-cli/src/commands/progress/evidence_boundaries/drift.rs": "a8967709d60b54f1e98ccbd26562a413e6cefad8a9b7c89e533b56ebc758d601",
+    "crates/vibe-cli/src/commands/progress/grounding.rs": "c6e7558dfb43e4abf50703e9c9f4c21f597fa891ecc9162c9a12442a17e85c4d",
+    "crates/vibe-cli/src/commands/progress/grounding/sources.rs": "a8220d3ef88a0fee1f1be353d012df486ae0510876d9433ffcb8dbe36d386491",
+    "crates/vibe-cli/src/commands/progress/grounding/sources/installed.rs": "1539a9758506bb9ea23378ac08e32f78479602c0b5abcedc0659e7dc96e2bc58",
+    "crates/vibe-cli/src/commands/progress/grounding/tests.rs": "734f513689813d771dee85610a9b85ccf5d4f950f307ec72041ca330b2c4ca0e",
+    "crates/vibe-cli/src/commands/progress/rescan.rs": "c6c07f2836f4ea9e44546514730e58cc47488bd1d42c6bd876747635b6c16272",
+    "crates/vibe-cli/src/commands/progress/tests.rs": "a95b8e9322840eb7d6822843e8a754916316963b34fbc1e0a00909a4c5ac8b26",
+    "crates/vibe-cli/src/commands/progress_evidence.rs": "e8dc2103e625c20148531bd06dd8d99ca5e5ec20edcf0b53a27ff6e0a4eea52a",
+    "crates/vibe-cli/tests/cli_host_sources.rs": "1c685042216b54c3ec103aae19b4ca99cdae7e1f6128f89e8a96f39c1b046fbf",
+    "crates/vibe-cli/tests/cli_progress_sources.rs": "74a6e3f7680deec0cb04818c609b3ab520bc1644dc40839f2d0ed119d446a6b7"
+  },
+  "law_sha256": "7103e04f59482ceef56dbe2782cdb8c63ceef0f29eca4e97cb55e73a179b2038",
+  "gates_observed": {
+    "cli": {
+      "passed": 12,
+      "focused": 6,
+      "host": 5,
+      "sidecar": 1,
+      "exit": 0,
+      "log": "/tmp/nst-a4-progress-cli-final5.log"
+    },
+    "units": {
+      "passed": 43,
+      "exit": 0,
+      "log": "/tmp/nst-a4-progress-units-final6.log"
+    },
+    "scope": {
+      "passed": 16,
+      "exit": 0,
+      "log": "/tmp/nst-a4-progress-scope-final.log"
+    },
+    "doctests": {
+      "passed": 11,
+      "exit": 0,
+      "log": "/tmp/nst-a4-progress-doctests.log"
+    },
+    "clippy": {
+      "exit": 0,
+      "log": "/tmp/nst-a4-progress-clippy-final2.log"
+    },
+    "conform": [
+      {
+        "scope": "crates/vibe-cli/src/commands/progress",
+        "exit": 0,
+        "log": "/tmp/nst-a4-progress-conform-progress-final.log",
+        "sarif": "/tmp/nst-a4-progress-conform-progress-final.sarif"
+      },
+      {
+        "scope": "crates/vibe-cli/src/commands/progress.rs",
+        "exit": 0,
+        "log": "/tmp/nst-a4-progress-conform-entry-final.log",
+        "sarif": "/tmp/nst-a4-progress-conform-entry-final.sarif"
+      },
+      {
+        "scope": "crates/vibe-cli/src/commands/facts_check.rs",
+        "exit": 0,
+        "log": "/tmp/nst-a4-progress-conform-facts-final.log",
+        "sarif": "/tmp/nst-a4-progress-conform-facts-final.sarif"
+      },
+      {
+        "scope": "crates/vibe-cli/src/commands/progress_evidence.rs",
+        "exit": 0,
+        "log": "/tmp/nst-a4-progress-conform-evidence-final.log",
+        "sarif": "/tmp/nst-a4-progress-conform-evidence-final.sarif"
+      },
+      {
+        "scope": "crates/progress-core/src/scope",
+        "exit": 0,
+        "log": "/tmp/nst-a4-progress-conform-scope-final.log",
+        "sarif": "/tmp/nst-a4-progress-conform-scope-final.sarif"
+      },
+      {
+        "scope": "crates/progress-core/src/scope.rs",
+        "exit": 0,
+        "log": "/tmp/nst-a4-progress-conform-scope-entry-final.log",
+        "sarif": "/tmp/nst-a4-progress-conform-scope-entry-final.sarif"
+      },
+      {
+        "scope": "crates/vibe-cli/tests/cli_progress_sources.rs",
+        "exit": 0,
+        "log": "/tmp/nst-a4-progress-conform-cli-final.log",
+        "sarif": "/tmp/nst-a4-progress-conform-cli-final.sarif"
+      },
+      {
+        "scope": "crates/vibe-cli/tests/cli_host_sources.rs",
+        "exit": 0,
+        "log": "/tmp/nst-a4-progress-conform-host-final.log",
+        "sarif": "/tmp/nst-a4-progress-conform-host-final.sarif"
+      }
+    ],
+    "hygiene": [
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--",
+          "--check"
+        ],
+        "exit": 0,
+        "log": "/tmp/nst-a4-progress-fmt-final.log"
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "--",
+          "crates/progress-core/src/scope.rs",
+          "crates/progress-core/src/scope/enumerate.rs",
+          "crates/vibe-cli/src/commands/facts_check.rs",
+          "crates/vibe-cli/src/commands/progress.rs",
+          "crates/vibe-cli/src/commands/progress/baseline.rs",
+          "crates/vibe-cli/src/commands/progress/evidence_boundaries.rs",
+          "crates/vibe-cli/src/commands/progress/evidence_boundaries/drift.rs",
+          "crates/vibe-cli/src/commands/progress/grounding.rs",
+          "crates/vibe-cli/src/commands/progress/grounding/sources.rs",
+          "crates/vibe-cli/src/commands/progress/grounding/sources/installed.rs",
+          "crates/vibe-cli/src/commands/progress/grounding/tests.rs",
+          "crates/vibe-cli/src/commands/progress/rescan.rs",
+          "crates/vibe-cli/src/commands/progress/tests.rs",
+          "crates/vibe-cli/src/commands/progress_evidence.rs",
+          "crates/vibe-cli/tests/cli_host_sources.rs",
+          "crates/vibe-cli/tests/cli_progress_sources.rs"
+        ],
+        "exit": 0,
+        "log": "/tmp/nst-a4-progress-diff-check-final.log"
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--no-index",
+          "--check",
+          "/dev/null",
+          "crates/vibe-cli/src/commands/progress/evidence_boundaries/drift.rs"
+        ],
+        "exit": 1,
+        "log": "/tmp/nst-a4-progress-new-diff-check-0-final.log"
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--no-index",
+          "--check",
+          "/dev/null",
+          "crates/vibe-cli/src/commands/progress/grounding/sources.rs"
+        ],
+        "exit": 1,
+        "log": "/tmp/nst-a4-progress-new-diff-check-1-final.log"
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--no-index",
+          "--check",
+          "/dev/null",
+          "crates/vibe-cli/src/commands/progress/grounding/sources/installed.rs"
+        ],
+        "exit": 1,
+        "log": "/tmp/nst-a4-progress-new-diff-check-2-final.log"
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--no-index",
+          "--check",
+          "/dev/null",
+          "crates/vibe-cli/tests/cli_progress_sources.rs"
+        ],
+        "exit": 1,
+        "log": "/tmp/nst-a4-progress-new-diff-check-3-final.log"
+      }
+    ],
+    "explicit_whitespace": {
+      "exit": 0,
+      "passed": 16,
+      "log": "/tmp/nst-a4-progress-new-whitespace-final.log"
+    }
+  },
+  "conform_sarif_results": [
+    {
+      "scope": "crates/vibe-cli/src/commands/progress",
+      "exit": 0,
+      "results": 0
+    },
+    {
+      "scope": "crates/vibe-cli/src/commands/progress.rs",
+      "exit": 0,
+      "results": 0
+    },
+    {
+      "scope": "crates/vibe-cli/src/commands/facts_check.rs",
+      "exit": 0,
+      "results": 0
+    },
+    {
+      "scope": "crates/vibe-cli/src/commands/progress_evidence.rs",
+      "exit": 0,
+      "results": 0
+    },
+    {
+      "scope": "crates/progress-core/src/scope",
+      "exit": 0,
+      "results": 0
+    },
+    {
+      "scope": "crates/progress-core/src/scope.rs",
+      "exit": 0,
+      "results": 0
+    },
+    {
+      "scope": "crates/vibe-cli/tests/cli_progress_sources.rs",
+      "exit": 0,
+      "results": 0
+    },
+    {
+      "scope": "crates/vibe-cli/tests/cli_host_sources.rs",
+      "exit": 0,
+      "results": 0
+    }
+  ],
+  "dispositions": {
+    "R1": "Resolved: unrecorded legacy has no path-derived lock requirement; recorded/declared roots retain independent context.",
+    "R2": "Closed by root law: native File declaration promises availability; ordinary absent and directory/literal glob misses are not new existence promises."
+  },
+  "delta_since_previous_review": [
+    "cli_host_sources: explicit successful progress raw-skip control; generic check refusal remains; Clippy style fix",
+    "cli_progress_sources: read-only rescan snapshot; registered-member ownership and missing selected File control"
+  ],
+  "scope_limit": "Shared-ground progress only; human gate and separate seal unchanged. Earlier review files retained unchanged because frozen handoff hashes them."
+}

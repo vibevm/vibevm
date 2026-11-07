@@ -675,3 +675,18 @@ FMT-041 accepted `954ffc3c197edc02e7ec2f0b33aed8878ba9fabb`: additive internal b
 Preserve existing boot/generated/WAL/files_written display universe and report fields. Add declared-media native display and independently bound installed reads; explicitly named ordinary UTF8 stays literal, unsupported binary display remains honest. Legacy provenance-header grammar is retained as display metadata, not a new resource URI or grant of native membership. No new manifest/install-g/schema/CLI option; exact API/error compatibility pending acceptance.
 
 FMT-042 accepted `8aaea9d7cbba510509b2804b695fb3b7be9bf153`: declared native display, literal named UTF8, independent installed binding and retained observations; no report/manifest/install-g/URI schema change. Existing generated/WAL/header/MISSING behavior retained. Binary remains an explicit display error; no new encoding.
+
+
+## FMT-043 — Captured progress corpus and derived-output barriers (accepted slice)
+
+Preserve progress.toml include/exclude/default scope and projection-based cache hash/schema. Add declared-media reading before cache reuse and retain the same projection for weave; guard each existing derived write boundary. No new vibe.toml/install-g/URI/cache/state schema is intended. Seal and human gate input remain separate; final API/error/identity details pending acceptance.
+
+FMT-043 boundary clarification: progress include globs/defaults are unchanged; a native exact File declaration selected by scope is an availability promise; ordinary inputs and directory defaults alone are not. Qualified unrecorded legacy slot-root reading remains possible without invented lock context; recorded/declared inputs retain independent binding. Installed record integrity is not weakened by source-scope filtering.
+
+FMT-043 accepted `751c53600834df31a79d20b8aeaba772be600b1b`: scope predicate + captured source/evidence/projection and actual write barriers. Existing include/default/exclusions/cache/state schemas and projection hash unchanged; qualified legacy/recorded context distinctions explicit. Seal remains separate.
+
+## FMT-044 — Shared source evidence and durable application provenance (planned)
+
+VIBE-NEEDS1/2/3 foundation. Preserve canonical origin separately from actual acquisition/read route and unknown legacy data. Existing closed application index4/steps2 must not receive silently incompatible fields: new index5/application-e4 and steps3/application-e3 readers/writers plus existing proxy transition are planned. Read old epochs with unknown provenance; minimum writer and compatibility tests remain required. Generated shared/report types only; no hand-edited generated Rust. Source-kind meanings, package identity/hash and portable import semantics must not be redefined. No project plan-only/pin/hosting-exclusion completion implied.
+
+FMT-044 scope extension: existing import_work cohort also needs a new strict epoch/protocol3 to retain source evidence before pending steps exist. Prior cohort readers remain frozen; old missing evidence stays unknown. This is the existing cohort owner, not a new sidecar. CLI shared evidence uses the existing permissive-reader projection; durable records stay strict.

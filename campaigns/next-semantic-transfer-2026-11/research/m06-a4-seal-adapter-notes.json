@@ -1,0 +1,22 @@
+{
+  "task": "A4 seal source adapter preparation",
+  "mode": "read-only no runtime",
+  "observed_at": "2026-11-07T08:09:49.376976+00:00",
+  "source_sha256": {
+    "crates/vibe-cli/src/commands/progress/seal.rs": "d5868c7c5dc9be6ad29bb0c02c9f2dafd8c8fb845ad1eaab259b9df480365df8",
+    "crates/progress-core/src/seal.rs": "a188b6df74bab7c7c4025435d765c2a4c560037cc9d2702851815c8afd307c71",
+    "crates/vibe-cli/src/commands/progress.rs": "11d0bf4eb910c160ae00932105967ff43ceafdbfa564ae2139bd08a42e727c8a",
+    "crates/vibe-cli/src/commands/progress/grounding.rs": "0ef497620281b31eb2c7db57f5626154f3c5d188ed2e9c751370a7235a86b9e0",
+    "crates/vibe-cli/tests/cli_host_sources.rs": "d0a339994e06014758c8475fb316714ea419fbc861439307133b167c15da2a91"
+  },
+  "prerequisite": "active progress worker captured projection/cache key contract",
+  "preserve": [
+    "human verdicts never manufactured",
+    "per-file continuation",
+    "already-current timestamp",
+    "source raw witness distinct from projection hash"
+  ],
+  "root_choice": "late source recheck failure handling before shared cache flush",
+  "full_a4_acceptance": false,
+  "report_sha256": "c53c810695b120dee4fdde69f3401668cfe8b6c6fcf31f3cb31cfc9585466295"
+}

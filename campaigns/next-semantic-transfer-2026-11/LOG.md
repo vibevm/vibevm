@@ -2433,3 +2433,38 @@ Tree accepted954ffc3c1 with records4aed7fbe1. Root planned SOURCE-SHOW-READ r1/F
 ### A4 show effective accepted
 
 Commit `8aaea9d7cbba510509b2804b695fb3b7be9bf153`:6reviewed product/spec/map files, committed hashes verified. CLI4+host5/units4/legacy2/format1/docs20+47/static pass. Map9176/5575/4724/44 retains9174prior occurrences, warning meanings unchanged. Source4/evidence39 matched independent review. FMT042 records literal ordinary display and unchanged output schema. No worktree/public push. Next progress decision: activate common captured readers and every existing derived-output boundary together, not merely read-only helpers; seal remains separate.
+
+
+### A4 progress shared reader/effects adapter begins
+
+Show accepted8aaea9d7c, records491f42fc4. Root planned SOURCE-PROGRESS-READ r1/FMT043 and chose complete common-ground readers plus derived-output barriers in one slice: scan/check-state/mirror/resume/baseline/weave-out. Root inspected writes: they produce derived artifacts; a refresh-only guard misses several earlier write sites. No new transaction or authored source rewrite. Scope stays progress.toml; seal remains separately tracked. FullA4/old113counts unchanged, no worktree.
+
+
+### A4 progress real RED and exact owner grants
+
+Actual facts-check command refuses valid declared project policy: cli_progress_sources discriminator1executed/failed, cargo101, source .payload explicitly selected by config. Root inspected receipt. Approved scope::includes_path in existing progress-core enumeration owner with parity tests and unchanged exclusions/defaults, so missing selected declarations cannot silently vanish. Default vibedeps exclusion remains; installed tests must explicitly select slot root and obtain independent containing workspace/lock context.
+
+Approved retained EvidenceSnapshot/recheck in existing progress_evidence owner before derived writes, without schema/verdict changes or rejudgment. Approved only progress-check expectation update in named ordinary-host test; other consumer cells remain. Scope/cache canon moved from the tombstone to vibe-facts/PROP-043-facts-markup.xml; exact read surface corrected. Progress-private reader composes existing primitives, no global capture service. Seal preparation5source hashes verified, no runtime claim; seal remains subsequent.
+
+
+### A4 progress review dispositions
+
+Independent review verified actual first-write guard placement/projection reuse and raised two boundary questions. Root preserved existing glob meaning: absent literal include under directory-only declaration is empty membership, not a new file promise; selected exact File declarations and disappearing captured inputs still refuse. Requested explicit contrasting tests and clarified planned law.
+
+Legacy slot-root concern is a real compatibility correction: unrecorded Legacy/MissingManifest roots must not require containing lock solely from path spelling. Recorded/declared roots retain independent context; a bound legacy prepare(None) outcome must keep selection guards through writes. Existing workspace record validation remains authoritative, including missing/corrupt recorded bytes outside syntax-consumption scope. No weaker record parser or global source world. Active Conform completed before these source changes; final gates must use fresh hashes.
+
+
+### Progress promise wording corrected before acceptance
+
+Worker correctly questioned root's overly broad "File declaration" wording. Root clarified native-only: ordinary files never contribute parsed progress documents and missing ordinary input must not become an availability requirement merely because a scope glob names it. Implementation already had this correct selection boundary; no semantic code change requested. Planned law/FMT wording narrowed accordingly. Native exact-file promises, directory-default empty membership and captured-source drift retain distinct behavior.
+
+
+### Progress accepted; owner-needs priority integrated
+
+Progress `751c53600834df31a79d20b8aeaba772be600b1b` accepted after exact18blob verification and frozen review; all scoped gates pass. Source read/common derived writes are supported; seal/A4 remain open.
+
+Owner requested eight requirements from app VIBE-NEEDS file and explicitly prioritized them among equally architecture-ready tasks. Read-only audits verified31+25+37source/evidence hashes (original needs prefix preserved while its tracking block grew). Architecture extension adds19dependency nodes across existing L0–L5/Q without changing historical222/113; common source facts/policy/effect boundaries precede consumers. Existing init-kind12/init-app2/app-menu3 runtime tests passed on current main; minimal need6 is partial, B224 metadata existing implementation verified on Linux fixture.
+
+First new implementation VN-SOURCE-FACTS began after bounded design grant: source evidence must not confuse continuation/launcher origins, actual route with canonical origin, or route class with network activity. Closed index4/steps2 require genuine epoch transitions/proxy compatibility rather than an unsafe optional field. Global plan missing source-evidence RED captured; schemas/codegen underway. Public task progress is maintained only in the owner-authorized app needs file; app code/worktrees/caches untouched.
+
+Source-evidence implementation found closed import_work cohort as another required retention boundary; root authorized new cohort epoch3 with frozen prior readers and interrupted-import/resume tests. Existing shared permissive wire projection resolves strict SourceEvidence in CLI formats without weakening durable readers. No source fact may be reconstructed from a continuation directory alone.

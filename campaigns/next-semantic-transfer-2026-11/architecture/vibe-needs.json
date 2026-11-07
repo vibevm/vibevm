@@ -1,0 +1,433 @@
+{
+  "schema": 1,
+  "updated_at": "2026-11-07T09:18:21.340665+00:00",
+  "source": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
+  "historical_task_count": 222,
+  "historical_prototype_count": 113,
+  "priority_rule": "Among equally architecture-ready tasks, VIBE-NEEDS tasks precede other campaign tasks; dependencies remain mandatory. Need1 is P1.",
+  "first_implementation": "VN-SOURCE-FACTS then captured source propagation using existing owners; no completed preview/pin/exclusion claim from provenance alone",
+  "nodes": [
+    {
+      "id": "VN-SOURCE-FACTS",
+      "layer": "L0",
+      "title": "Единые факты выбранного и фактически полученного источника",
+      "needs": [
+        1,
+        2,
+        3
+      ],
+      "depends_on": [],
+      "owners": [
+        "vibe-core",
+        "vibe-registry",
+        "vibe-package-source"
+      ],
+      "contract": "Canonical origin отдельно от acquisition route; unknown не восстанавливается из текущих настроек.",
+      "status": "active"
+    },
+    {
+      "id": "VN-SOURCE-POLICY",
+      "layer": "L0",
+      "title": "Политика registry pin, hosting preference и exclusion",
+      "needs": [
+        1,
+        3
+      ],
+      "depends_on": [],
+      "owners": [
+        "vibe-core",
+        "vibe-package-source"
+      ],
+      "contract": "Один effective policy; preference только для одинаковой версии, pin без fallback, URL назначения проверяется независимо от label.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-EFFECT-CONTRACT",
+      "layer": "L0",
+      "title": "Границы plan/cancel и честные результаты эффектов",
+      "needs": [
+        1,
+        5,
+        7
+      ],
+      "depends_on": [],
+      "owners": [
+        "vibe-core progress",
+        "vibe-lifecycle",
+        "vibe-orchestrator"
+      ],
+      "contract": "Read-only preview отделён от acquisition; cancelled не подменяет recovery-required/committed external effects.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-ACTIVATION-INTENT",
+      "layer": "L0",
+      "title": "Desired enable/disable отдельно от observed agent projection",
+      "needs": [
+        4
+      ],
+      "depends_on": [],
+      "owners": [
+        "vibe-agent-projection",
+        "MCP ownership receipts"
+      ],
+      "contract": "Ключ package+entry+agent+scope, provenance выбора, не package feature toggle.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-ENV-POLICY",
+      "layer": "L0",
+      "title": "Политика durable environment и наблюдение profile",
+      "needs": [
+        8
+      ],
+      "depends_on": [],
+      "owners": [
+        "vvm env",
+        "env_rc",
+        "doctor"
+      ],
+      "contract": "Shims/current отдельно от PATH и advisory HOME; process PATH, profile block и login-effect evidence различаются.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-SCAFFOLD-INPUT",
+      "layer": "L0",
+      "title": "Нормализованный выбор типа/цели/метода scaffold",
+      "needs": [
+        6
+      ],
+      "depends_on": [],
+      "owners": [
+        "vibe-core manifest",
+        "common configuration",
+        "vibe-app select"
+      ],
+      "contract": "Переиспользовать существующие installer/choice types; не выдумывать checksum или второй wizard.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-SOURCE-OBSERVATION",
+      "layer": "L1",
+      "title": "Сохранение фактов resolution/acquisition и причин кандидатов",
+      "needs": [
+        1,
+        2,
+        3
+      ],
+      "depends_on": [
+        "VN-SOURCE-FACTS"
+      ],
+      "owners": [
+        "MultiResolution",
+        "CachedPackage"
+      ],
+      "contract": "Наблюдавшийся кандидат отличается от excluded/not-probed; commit только если наблюдён.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-CONTACT-ADMISSION",
+      "layer": "L1",
+      "title": "Exclusion до probe/fetch/redirect/remap/fallback",
+      "needs": [
+        3
+      ],
+      "depends_on": [
+        "VN-SOURCE-POLICY",
+        "VN-SOURCE-FACTS"
+      ],
+      "owners": [
+        "vibe-registry",
+        "Locator",
+        "managed transports"
+      ],
+      "contract": "Не контактировать с запрещённым hosting; неподдерживаемая непрозрачная маршрутизация не считается безопасной.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-PREVIEW-INPUT",
+      "layer": "L1",
+      "title": "Read-only получение метаданных для полного плана",
+      "needs": [
+        1
+      ],
+      "depends_on": [
+        "VN-EFFECT-CONTRACT",
+        "VN-CONTACT-ADMISSION"
+      ],
+      "owners": [
+        "existing registry/source providers"
+      ],
+      "contract": "Не называть существующий cache-writing acquisition режимом без записей; никаких install hooks.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-DISK-COUNTER",
+      "layer": "L1",
+      "title": "Счётчик успешных logical writes в существующих transfer events",
+      "needs": [
+        7
+      ],
+      "depends_on": [
+        "VN-EFFECT-CONTRACT"
+      ],
+      "owners": [
+        "PROP-068 transfer owner"
+      ],
+      "contract": "После успешного write, monotonic; unknown для неинструментированных путей, не received bytes и не final size.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-SOURCE-CHOICE",
+      "layer": "L2",
+      "title": "Один resolver: pins и same-version hosting preference",
+      "needs": [
+        1,
+        3
+      ],
+      "depends_on": [
+        "VN-SOURCE-POLICY",
+        "VN-SOURCE-OBSERVATION",
+        "VN-CONTACT-ADMISSION"
+      ],
+      "owners": [
+        "vibe-resolver",
+        "MultiRegistryResolver"
+      ],
+      "contract": "Сохранить unconfigured version semantics; конфликт входящих pins — typed failure.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-PROJECT-PLAN",
+      "layer": "L2",
+      "title": "Полный план closure без product/cache/profile записей",
+      "needs": [
+        1,
+        3
+      ],
+      "depends_on": [
+        "VN-PREVIEW-INPUT",
+        "VN-SOURCE-CHOICE"
+      ],
+      "owners": [
+        "vibe-install planning",
+        "vibe-orchestrator"
+      ],
+      "contract": "Тот же solve/conditional/configuration owner; непробированные причины не выдумываются.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-APP-PROVENANCE",
+      "layer": "L3",
+      "title": "Долговечный источник app через install/update/rollback/import",
+      "needs": [
+        2
+      ],
+      "depends_on": [
+        "VN-SOURCE-OBSERVATION"
+      ],
+      "owners": [
+        "vibe-app index/operations"
+      ],
+      "contract": "Legacy unknown; continuation route и launcher source не заменяют acquisition provenance.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-ACTIVATION-RECONCILE",
+      "layer": "L3",
+      "title": "Повторяемое disable/re-enable с сохранением ownership",
+      "needs": [
+        4
+      ],
+      "depends_on": [
+        "VN-ACTIVATION-INTENT"
+      ],
+      "owners": [
+        "MCP registrations",
+        "skill projection",
+        "deploy recovery"
+      ],
+      "contract": "Install/update/apply сохраняют desired-off; чужие правки не перезаписываются.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-CANCEL-APPLY",
+      "layer": "L3",
+      "title": "Cooperative stop, guarded rollback и retained recovery",
+      "needs": [
+        5
+      ],
+      "depends_on": [
+        "VN-EFFECT-CONTRACT"
+      ],
+      "owners": [
+        "existing fetch/child supervision",
+        "install lease/FileGuard"
+      ],
+      "contract": "До публикации — без изменений проекта; после irreversible boundary — честный outcome, не фиктивный rollback.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-ENV-ACTIVATION",
+      "layer": "L3",
+      "title": "Управляемая активация без неожиданного profile edit",
+      "needs": [
+        8
+      ],
+      "depends_on": [
+        "VN-ENV-POLICY"
+      ],
+      "owners": [
+        "activate_record",
+        "activate_instance",
+        "RcFilePersister"
+      ],
+      "contract": "Одна политика охватывает PATH и advisory HOME; profile inspection не исполняет произвольный startup code.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-SCAFFOLD",
+      "layer": "L4",
+      "title": "Валидные scaffold выбранного способа установки",
+      "needs": [
+        6
+      ],
+      "depends_on": [
+        "VN-SCAFFOLD-INPUT"
+      ],
+      "owners": [
+        "existing init app/kinds"
+      ],
+      "contract": "Проверка до записи, repeat сохраняет authored bytes, все outcomes перечислены.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-SURFACES",
+      "layer": "L5",
+      "title": "CLI/JSON/events из общих owners, не GUI-эвристики",
+      "needs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "depends_on": [
+        "VN-PROJECT-PLAN",
+        "VN-APP-PROVENANCE",
+        "VN-ACTIVATION-RECONCILE",
+        "VN-CANCEL-APPLY",
+        "VN-ENV-ACTIVATION",
+        "VN-SCAFFOLD",
+        "VN-DISK-COUNTER"
+      ],
+      "owners": [
+        "schemas/vibe-wire",
+        "existing CLI/events"
+      ],
+      "contract": "Поставлять по независимым вертикалям; общий узел не блокирует готовую поверхность ожиданием всех остальных.",
+      "status": "planned"
+    },
+    {
+      "id": "VN-COMPAT-CHECK",
+      "layer": "Q",
+      "title": "Проверить существующие scaffolds и B-224 без повторной реализации",
+      "needs": [
+        6,
+        224
+      ],
+      "depends_on": [],
+      "owners": [
+        "cli_init_kinds",
+        "cli_init_app",
+        "cli_app_menu"
+      ],
+      "contract": "Source evidence уже есть; runtime gate требуется до принятия.",
+      "status": "accepted",
+      "evidence": "CLI init kinds12/app2/menu3 PASS; Linux fixture only"
+    }
+  ],
+  "needs": [
+    {
+      "id": "VN-01",
+      "number": 1,
+      "status": "audited_not_accepted",
+      "foundation_nodes": [
+        "VN-SOURCE-FACTS",
+        "VN-SOURCE-POLICY",
+        "VN-EFFECT-CONTRACT"
+      ]
+    },
+    {
+      "id": "VN-02",
+      "number": 2,
+      "status": "audited_not_accepted",
+      "foundation_nodes": [
+        "VN-SOURCE-FACTS"
+      ]
+    },
+    {
+      "id": "VN-03",
+      "number": 3,
+      "status": "audited_not_accepted",
+      "foundation_nodes": [
+        "VN-SOURCE-FACTS",
+        "VN-SOURCE-POLICY"
+      ]
+    },
+    {
+      "id": "VN-04",
+      "number": 4,
+      "status": "audited_not_accepted",
+      "foundation_nodes": [
+        "VN-ACTIVATION-INTENT"
+      ]
+    },
+    {
+      "id": "VN-05",
+      "number": 5,
+      "status": "audited_not_accepted",
+      "foundation_nodes": [
+        "VN-EFFECT-CONTRACT"
+      ]
+    },
+    {
+      "id": "VN-06",
+      "number": 6,
+      "status": "audited_not_accepted",
+      "foundation_nodes": [
+        "VN-SCAFFOLD-INPUT"
+      ]
+    },
+    {
+      "id": "VN-07",
+      "number": 7,
+      "status": "audited_not_accepted",
+      "foundation_nodes": [
+        "VN-EFFECT-CONTRACT"
+      ]
+    },
+    {
+      "id": "VN-08",
+      "number": 8,
+      "status": "audited_not_accepted",
+      "foundation_nodes": [
+        "VN-ENV-POLICY"
+      ]
+    }
+  ],
+  "existing_interfaces": [
+    "M-05-C.1",
+    "M-05-D.1",
+    "M-08-C.2",
+    "M-08-C.3",
+    "M-16-B.1",
+    "M-16-C.2.1",
+    "M-16-C.3",
+    "M-17-C.2"
+  ],
+  "qualification": "Source audits only; runtime/product acceptance not yet established."
+}
