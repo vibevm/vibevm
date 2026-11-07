@@ -59,3 +59,7 @@ Project event acceptedc600cb539 through the existing prepared plan/observer; cur
 ### Hosting observation accepted — 1f0b53aa0
 
 Known hosting labels now accompany project/global source reports through one pure core observer and shared report helper. Persisted facts unchanged; selected origin and differing recorded route remain distinct. This closes only the hosting-if-known reporting facet, not preference/exclusion or a no-contact guarantee. Contact audit identifies early index/raw HTTP probes, redirects/retries, warm Git origins, canonical marker fetches and submodules as actual next admission boundaries.
+
+### Internal HTTP-only admission accepted — 57d30367f
+
+Initial/redirect/retry destinations are admitted before contact with typed refusal and no native fallback escape under the explicit binding. This is a constrained internal capability, not public Need3 completion: native Git is still unavailable under that binding. Next work must restore safely admitted native Git/submodules and allowed-mirror/composition behavior, not leave blanket refusal as the final solution. No-policy behavior remains unchanged.

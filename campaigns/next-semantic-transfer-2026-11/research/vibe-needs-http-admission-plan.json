@@ -1,0 +1,154 @@
+{
+  "status": "implementation_plan_not_grant",
+  "report": "/tmp/vibe-needs-http-admission-plan.md",
+  "runtime_tested": false,
+  "source_changed": false,
+  "source_hashes": [
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/mod.rs",
+      "sha256": "7e3eaa50b351d600440c6f498d2bb6f609d08713442dce96e7ee0beec2dec12c"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/pooled.rs",
+      "sha256": "810854345e1a4ac24df65fbb901b6b289e4ec2703c5e2e2735ada2e0eee0de01"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/handshake.rs",
+      "sha256": "e648a3ed4a2e9fe29972c8ff72f37dc9437fe538f92c9bdbf273d76f00e31a35"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/by_name.rs",
+      "sha256": "a363788eb849db10173f7442499622d49e610d8e663cb1af7fa2a8561bcd52e1"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/catalog.rs",
+      "sha256": "558ce9124ddb3d2a7a0e5ecdefb3cef9c7a4da48360bf44ac5f9776c8a5ce7a4"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/auth.rs",
+      "sha256": "6580e9d2a690065ffae565222b1fdac59e8c03f9179fad5d866bedab87d12dbc"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/static_search.rs",
+      "sha256": "be597525d2b7a0ff4ad8619b122c1068acafd5d530e10f0406c959789a774e70"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/tests.rs",
+      "sha256": "21151649209d66223d58de532c7f9f99eaec6b10605565bb5797b6ff1353e287"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/mod.rs",
+      "sha256": "50ea9ead78e3485fe2eb643665cc8e886e6690cafd806f0f396b1fda14b58927"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell.rs",
+      "sha256": "cf0eee94af08755d8700288a04ca87553984da22a793783233b524d3418e9666"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/raw_http.rs",
+      "sha256": "80a4148de29aeb333af0e8b47181d173164b9172dfe4b608f87593d44d41ff36"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/reported.rs",
+      "sha256": "c10e90bb12aa17888ed987fd222a9fc05e2416c3229c7a3271ec44f0ffcc079d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/env.rs",
+      "sha256": "7074139824e9e375cbb6730cddf3cfee4a0fcb7c9748764a82f7173bfbbcb7da"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/tests_pure.rs",
+      "sha256": "0dfe1e2ff1588d8763804151ca0ee26435b206c59dd7b47542f72f1138f78a16"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/raw_http/hosts.rs",
+      "sha256": "485324ad5a9de328616af1856873d362681a18be3370e1179ec669e4758d0acb"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/raw_http/retry.rs",
+      "sha256": "766a672abc253ba2c8dc40a6ad81478d0bb16fc0902704b624a1fb480f03a9f3"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/raw_http/tests.rs",
+      "sha256": "5ce3e68bf430328806fde914cf349d7c6c1b3600cfe69491831a91cf112b3f4c"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/mod.rs",
+      "sha256": "e3fb8174c5574c725a9eff1b2d86af3733e6f02039e4ec36a8bfcee3267ee94d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/lookup.rs",
+      "sha256": "bae2d15b656453728cccf68f73479baa3730f89378d955b6d124452e38b4501d"
+    }
+  ],
+  "boundary": "internal HTTP-only immutable Arc binding; absence is legacy; every native subprocess refused before spawn under binding",
+  "public_flags_or_settings": false,
+  "types": [
+    "HttpAdmission",
+    "ContactRefusal",
+    "HttpGetError"
+  ],
+  "constructors": [
+    "IndexClient::probe_with_admission",
+    "IndexClient::at_with_admission",
+    "ShellGit consuming binding constructor resetting raw pool",
+    "MultiRegistryResolver bound constructor before index probe"
+  ],
+  "redirect_contract": {
+    "auto_follow": false,
+    "ambient_proxy": false,
+    "allowed_schemes": [
+      "http",
+      "https"
+    ],
+    "statuses": [
+      301,
+      302,
+      303,
+      307,
+      308
+    ],
+    "max_followed_hops": 10,
+    "https_downgrade": "typed refusal",
+    "credentials": "same-origin only; permanent stripping after origin change; no client default bearer headers in bound path"
+  },
+  "typed_propagation": [
+    "IndexError::ContactRefused",
+    "GitError::ContactRefused",
+    "RegistryError structured refusal",
+    "probe Result separate from Absent/legacy Refused",
+    "raw Some(Err(...)) not None",
+    "repomd freshness cannot swallow refusal"
+  ],
+  "first_red": {
+    "entry": "IndexClient bound real probe",
+    "allowed": "127.0.0.1 loopback A",
+    "redirected_denied": "127.0.0.2 loopback B",
+    "assert": [
+      "typed ExcludedHost",
+      "A requests=1",
+      "B requests=0",
+      "no later probe candidates"
+    ],
+    "second": "initial denied host yields zero requests"
+  },
+  "required_extra_packet_reads": [
+    "crates/vibe-registry/src/error.rs",
+    "crates/vibe-registry/src/lib.rs",
+    "crates/vibe-core/src/remap/endpoint.rs",
+    "exact by_name_is_current callers discovered from approved source census",
+    "installed reqwest redirect/proxy API source if necessary"
+  ],
+  "mandatory_next": [
+    "admitted native Git and recursive submodule/config posture",
+    "alternate registry/mirror route diagnostics",
+    "full operation composition and public policy syntax"
+  ],
+  "not_claimed": [
+    "complete Need3",
+    "all-Git-unsupported as final solution",
+    "process-wide egress sandbox",
+    "public hosting policy",
+    "transitive pin implementation"
+  ]
+}
