@@ -43,3 +43,11 @@
 Общие source-evidence types и передача уже наблюдаемых фактов без потерь. Затем source policy/contact admission и общий resolver/preview. Durable app provenance использует ту же модель; публичные поверхности поступают по завершённым вертикалям. Ни один пункт VIBE-NEEDS пока не принят целиком.
 
 Аудиты: `../research/vibe-needs-{sources,operations,entrypoints}-audit.md/json`. Статусы для app-владельца ведутся также в исходном VIBE-NEEDS файле.
+
+### Обязательная граница VN-SOURCE-OBSERVATION: реальное project install event
+
+Проверено в текущем main: `commands/install/observer.rs` передаёт в `report::present_resolution` только `ResolvedDep[]`; локальный `PlanEntry` выводит `package/version` в `packages`. Между тем `schemas/install_plan.jtd.json` описывает `plans` и обещает вывод перед подтверждением. Это отдельное расхождение живого producer и канонического контракта. Следующий source-observation consumer должен согласовать observer/carrier, фактически полученные source facts и generated schema, сохранив действительную последовательность событий. Нельзя объявлять project install event реализованным на основании app plan/list/describe или переносить в него сведения, восстановленные из текущих настроек. Этот пункт остаётся обязательным; текущий VN-SOURCE-FACTS его не закрывает.
+
+### Принят общий источник фактов — 2df122323
+
+VN-SOURCE-FACTS принят: generated evidence, durable app lifecycle/old unknown, фактические пути acquisition, корректный lock source_kind. Потребность2 частично обеспечена;1–3 целиком не приняты. Следующий consumer — реальное project install:plan через уже подготовленные данные и существующий observer, с исправлением расхождения packages/plans. Его фундамент готов; source policy/read-only preview/candidate reasons остаются отдельными обязательствами.

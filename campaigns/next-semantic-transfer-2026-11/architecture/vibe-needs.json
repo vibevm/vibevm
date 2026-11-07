@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "updated_at": "2026-11-07T09:18:21.340665+00:00",
+  "updated_at": "2026-11-07T10:23:44.981444+00:00",
   "source": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
   "historical_task_count": 222,
   "historical_prototype_count": 113,
   "priority_rule": "Among equally architecture-ready tasks, VIBE-NEEDS tasks precede other campaign tasks; dependencies remain mandatory. Need1 is P1.",
-  "first_implementation": "VN-SOURCE-FACTS then captured source propagation using existing owners; no completed preview/pin/exclusion claim from provenance alone",
+  "first_implementation": "VN-SOURCE-FACTS accepted2df122323. Next: project install:plan observation through prepared-plan/observer; policy/preview/candidate diagnostics remain open.",
   "nodes": [
     {
       "id": "VN-SOURCE-FACTS",
@@ -23,7 +23,7 @@
         "vibe-package-source"
       ],
       "contract": "Canonical origin отдельно от acquisition route; unknown не восстанавливается из текущих настроек.",
-      "status": "active"
+      "status": "accepted"
     },
     {
       "id": "VN-SOURCE-POLICY",
@@ -123,7 +123,7 @@
         "CachedPackage"
       ],
       "contract": "Наблюдавшийся кандидат отличается от excluded/not-probed; commit только если наблюдён.",
-      "status": "planned"
+      "status": "active"
     },
     {
       "id": "VN-CONTACT-ADMISSION",
@@ -364,7 +364,7 @@
     {
       "id": "VN-02",
       "number": 2,
-      "status": "audited_not_accepted",
+      "status": "partial_source_evidence_accepted_hosting_pending",
       "foundation_nodes": [
         "VN-SOURCE-FACTS"
       ]

@@ -1,0 +1,298 @@
+{
+  "node": "VN-SOURCE-POLICY",
+  "status": "implementation_plan_only",
+  "report": "vibe-needs-source-policy-plan.md",
+  "runtime_tested": false,
+  "product_changes": false,
+  "snapshot_qualification": "Concurrent source-evidence writer; these hashes are observations, not a frozen tree",
+  "source_hashes": [
+    {
+      "path": "/fast/git/vibevm/BACKLOG.md",
+      "sha256": "3cfc5c6a9c3a0c4c569d220bce867da7d2377dc0dbba4d3bd19df45cd2b0343f"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/package/wire.rs",
+      "sha256": "7b91527d7d7ddbfbbf3cec648c869265e272946dfb9b544b51af4c80c0ac0cc1"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/package/wire/requires.rs",
+      "sha256": "72ad3451d50ca254904a0e19eac8b7a96f6b0360862a95e8cce3ee2caed2e33e"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/lockfile.rs",
+      "sha256": "c2a389a6ae2fd6153282ab24896cf1401f2bfe6d88e4be5d9f3bafd651b36e57"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/lock_provenance.rs",
+      "sha256": "c777fa8fd5e8bd19c2243a975f6e41e05f55fc27c447c810d4a1e1b7c7d5300a"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-package-source/src/options.rs",
+      "sha256": "c0a6e203ee93626f6a3f4607233e926fbab8a5020788ed5006f67013fcb1d6b4"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-package-source/src/builder.rs",
+      "sha256": "a262bddf65a47063986c6fbb8c46a92698fd5cfa1f0a3824ccbc9571193b3e70"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-package-source/src/source.rs",
+      "sha256": "6bb2471d452f82b4f13c6993c6f39c80c604c1cdb868ca32a40d3b3e0933285a"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/mod.rs",
+      "sha256": "e3fb8174c5574c725a9eff1b2d86af3733e6f02039e4ec36a8bfcee3267ee94d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/walk.rs",
+      "sha256": "e93c9bc03e50f59a1333a0fa8ec3f204c2aca7c7c2020bcc371ffc238fd5aa9d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/resolution.rs",
+      "sha256": "37bb64beb52ed07cba72836aeb60c6c30959c5ad523b0dfce434a7dc21326107"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/attempt.rs",
+      "sha256": "a685df72c065022eac2bfb8433160cfc7dbb417d6d72fa77a85752cd3f2a583a"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/clone_chain.rs",
+      "sha256": "d6531e3bdb15b35964c8be7a3b9ed82d5fc7ffcbe4728b84b8bc671715ffda26"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/mod.rs",
+      "sha256": "767d7ba0e945ef4ed173097953cc5e5d76b1cd109937679e9fa48c0b6cf0b504"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/lib.rs",
+      "sha256": "306a549764d2d151ea4743a9a636b0d974d5f89935f356882f21ced774bb63c2"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/plan.rs",
+      "sha256": "43b89255381926ad7a8654168963c120d0507bf6fc497213d06263d6e268e80e"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/plan/fetch.rs",
+      "sha256": "116405f46ae5805e1c72675f5a55d77ed99653ed34ad0a7603975789dd467528"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-cli/src/cli/pkg.rs",
+      "sha256": "d1620f20ba9be5c2e3db1963d008ae39306fb5812465ad9746c65def410c9b4a"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-cli/src/commands/install/report.rs",
+      "sha256": "f5017924dd6fa1ea872d6514716e2e9d05ca1d2edfdd1ca11df02f7111a464a8"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-app/src/resolve.rs",
+      "sha256": "a7ad180822f68ee79fd8a291fdc815ff1c27cc037e0ce9d832bb03888ceea86e"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-app/src/index/wire.rs",
+      "sha256": "29f946e81ddaafe30b2b61fa68d64bd1064cfdb58e693502c0e44a08a1eea5c0"
+    },
+    {
+      "path": "/fast/git/vibevm/schemas/application_plan.jtd.json",
+      "sha256": "298d82e2d0b59ca27fe395642ff2eebffd52fadac4fa8eb72c086d4eeea3bbe9"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-wire/src/generated/shared/mod.rs",
+      "sha256": "8ffacd5efce5b4a4ebbf90c3e238b3fdd10ad40869c2e9cccb00182d157302e7"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-wire/src/generated/application_list/mod.rs",
+      "sha256": "348924351142b7b28bd58fbc6cfc3a48c15542c82ef58e8da64e054f4a4dd7b5"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-wire/src/generated/application_describe/mod.rs",
+      "sha256": "b740bbd9ee5cf698533a28b2454947adee3b26b314090923fee05907fe3f1732"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml",
+      "sha256": "0d6d44873da986f956e094fc1bf34757190467d1498488ac78de6e1224a1d7c1"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/features/F05-source-selection.md",
+      "sha256": "8ca9fbc1f9c54abfccafcc787493c7bc5aa1f53723a1783c00601a04cd3714e6"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/architecture/TASKS.md",
+      "sha256": "343a081e93da6e207043257d50f9a6bb9e0806aa7312ea133b7751263008aa90"
+    },
+    {
+      "path": "/tmp/nst-g3-rules.md",
+      "sha256": "c92cd3581e1fa756ff223441b97962bef4dd4d8e9c79a2bcf7bf96a3375e353f"
+    },
+    {
+      "path": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
+      "sha256": "0ff786436814f300dfe2785dc1a8b6fb159d418c47d92a0819e5e8d62cc43540"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/architecture/VIBE-NEEDS.md",
+      "sha256": "1be41472fdda5595d37dac8bc42108647222e6fcb884df0407e32ed2a01529af"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/architecture/vibe-needs.json",
+      "sha256": "81ab9c3ae4f2c68491c90dd3db65888cb975dbf15a7ae41927d4d87f4302bd98"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "sha256": "adb28af513e876e419299eaf0a3cac40cc201a1be58b515ee7e6dc12916118fc"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/global_registry.rs",
+      "sha256": "4da18878d996dd0ba04f0a1a682cf66c5ee85a589f330e70ad1205186825458c"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/package.rs",
+      "sha256": "c1cce61f6b30a75f5fda4b1927f01342a93eda9361a3c9d9970fc5a612b6e4c3"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/project.rs",
+      "sha256": "34c6f6e9443c96a07d52d03ac557a7cb9f9b2c184c3d1f73c792da615677fc65"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/mod.rs",
+      "sha256": "5d06ee3843a6c9646504c95834632d91d17c1db7c838a3ef8300cf91b9ee0553"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/package/deps.rs",
+      "sha256": "f0b835483d49caa734f7c49567d5c8e7829769197dccf97a7a67af995e564fec"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/package/capabilities.rs",
+      "sha256": "f05bd38af9c55acf9ecbf39089d03cbd991de256ed83d9273e7d152a8500cfbf"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/manifest/document.rs",
+      "sha256": "1895a8f50ffb8a685646c136465f0d1c8687bba420e41eb57d29c7c183b7b6ff"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/lib.rs",
+      "sha256": "68e6bc46a62c41ac9a8f413fcf48f639ee4920f85d5248cffdcd1bbd9b1db979"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/multi_registry_provider.rs",
+      "sha256": "19356e65f961e7346cba05bb0a274821c87c4150a443dbf86b0f28e43917276d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/local_registry_provider.rs",
+      "sha256": "8a3928a6281949df47ce01ab9aaa0aed69aaceaa5a8e5a28451b975344bf4d79"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/local_composite_provider.rs",
+      "sha256": "c74b67373dc0cd57a08ec83be7d73f2b4c95e48f2e11ea7d1bb73a39415e0ea6"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/resolvo_engine/provider.rs",
+      "sha256": "fc5e375b26cd3cddf18193b6096e248e5ddb58cc63f1af6b231efb2ba84a4ab6"
+    }
+  ],
+  "changed_since_previous_audit": [
+    "/fast/git/vibevm/crates/vibe-registry/src/lib.rs",
+    "/fast/git/vibevm/crates/vibe-install/src/plan/fetch.rs",
+    "/fast/git/vibevm/crates/vibe-app/src/resolve.rs",
+    "/fast/git/vibevm/crates/vibe-app/src/index/wire.rs",
+    "/fast/git/vibevm/schemas/application_plan.jtd.json",
+    "/fast/git/vibevm/crates/vibe-wire/src/generated/shared/mod.rs",
+    "/fast/git/vibevm/crates/vibe-wire/src/generated/application_list/mod.rs",
+    "/fast/git/vibevm/crates/vibe-wire/src/generated/application_describe/mod.rs",
+    "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md"
+  ],
+  "settled": [
+    "pins against operation-effective project/user catalog",
+    "preference at fixed selected version",
+    "exclusion before managed contacts",
+    "root selected vertical integration; public options wait for complete consumers"
+  ],
+  "proposed_vocabulary": {
+    "toml_table": "source_policy",
+    "fields": [
+      "prefer_hosting",
+      "exclude_hosting"
+    ],
+    "edge": "requires.packages.<coordinate>.registry",
+    "cli": [
+      "--prefer-hosting",
+      "--no-hosting-preference",
+      "--exclude-hosting"
+    ],
+    "existing_registry_flag": "--registry remains local path"
+  },
+  "precedence": {
+    "preference": "invocation > project > user; explicit empty clears",
+    "exclusion": "union proposed; root confirmation needed",
+    "catalog": "existing project-first alias shadowing"
+  },
+  "chunks": [
+    {
+      "id": "P0",
+      "purpose": "Review L0 contract/normalization/admission independently; integrate public grammar with P1/P2 real consumers"
+    },
+    {
+      "id": "P1",
+      "purpose": "managed destination admission before discovery and each resolved route"
+    },
+    {
+      "id": "P2",
+      "purpose": "pin-aware shared solver/provider candidate relation and fixed-version source choice"
+    },
+    {
+      "id": "P3",
+      "purpose": "generated input/error compatibility and neutral CLI/full-operation consumption"
+    }
+  ],
+  "pin_constraints": [
+    "declaration-local edge metadata",
+    "unknown alias refuses",
+    "same alias unifies",
+    "different incoming aliases conflict",
+    "no hidden dependency registries",
+    "path/git/override conflict",
+    "selected-active edges only; backtracking safe",
+    "named local registry eligible; ambient embedded cannot impersonate",
+    "explicit --registry path incompatible with named pins"
+  ],
+  "questions": [
+    "exclusion union versus replacement/reset",
+    "host:<name> vocabulary versus hostnames only"
+  ],
+  "risks": [
+    "resolvo currently interns semver-only candidate identity",
+    "post-solve validation alone cannot enforce source choice",
+    "conditional/root snapshot lowering may drop pin metadata",
+    "same version string does not prove equivalent source manifest",
+    "old strict readers reject new authored fields"
+  ],
+  "not_claimed": [
+    "project preview",
+    "working hosting exclusion",
+    "whole-closure registry pin",
+    "app inventory provenance completed"
+  ],
+  "solver_design": {
+    "identity": "existing package NameId; candidate record adds canonical source binding to semver",
+    "constraint": "per-edge pin and semver; active-pin source-authority implication controls out-of-default version eligibility",
+    "cache": "stable candidate inventory before NameId cache; no mutable accumulating pin map",
+    "metadata": "candidate-bound manifest and final acquisition",
+    "verification_point": "inspect resolvo condition/version-set adapters for active incoming pin witness implication before implementation",
+    "status": "candidate requiring root evaluation; encoding not accepted",
+    "rejected": "fixed default-registry version domain on unpinned edge when another selected edge pins the same package"
+  },
+  "solver_alternatives": [
+    {
+      "id": "A",
+      "shape": "source-aware candidates plus active selected-edge pin witness implication",
+      "proof": "exact conditional support; witness cannot be freely invented; stable candidate universe"
+    },
+    {
+      "id": "B",
+      "shape": "same-engine immutable assumption-scoped passes with conflict/no-good backtracking",
+      "proof": "termination, completeness, no stale source caches; must find pin-enabled solutions from unsatisfied default graph"
+    }
+  ],
+  "root_disposition": "Draft preserved for architectural review; solver encoding, exclusion merge and public syntax are not accepted. No product implementation or runtime proof."
+}

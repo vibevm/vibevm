@@ -1,0 +1,198 @@
+{
+  "status": "read_only_feasibility_no_complete_encoding_proved",
+  "runtime_tested": false,
+  "code_changed": false,
+  "dependency_version": "resolvo 0.11.0 (Cargo.lock)",
+  "report": "/tmp/vibe-needs-source-policy-feasibility.md",
+  "source_hashes": [
+    {
+      "path": "/fast/git/vibevm/Cargo.lock",
+      "sha256": "3c383fd0458be6ea35004953901965e36c05deeebc401f03d91a9239f3e348e7"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/Cargo.toml",
+      "sha256": "69318ae75c99f1b6ccd29e5d973514339676d2d836099581cb8f7ec0cd755899"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/lib.rs",
+      "sha256": "68e6bc46a62c41ac9a8f413fcf48f639ee4920f85d5248cffdcd1bbd9b1db979"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/walk.rs",
+      "sha256": "e93c9bc03e50f59a1333a0fa8ec3f204c2aca7c7c2020bcc371ffc238fd5aa9d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/resolvo_engine/mod.rs",
+      "sha256": "9bb5a41e4fb2a4f88f31c930a84f9e2eb7b282ecdd3faaccb151172fb3e92fea"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/resolvo_engine/version_set.rs",
+      "sha256": "7822676156cdb59f143b5cf602f1fee9c8635b216c08ac795de3162ecc5c179f"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/resolvo_engine/provider.rs",
+      "sha256": "fc5e375b26cd3cddf18193b6096e248e5ddb58cc63f1af6b231efb2ba84a4ab6"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/resolvo_engine/capabilities.rs",
+      "sha256": "aa13e4d9ec55542350d77fcb5c01c642a4ffd8a36eda1d1dd754ebcba52fb1ba"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/resolvo_engine/tests.rs",
+      "sha256": "fa9d54f0fdb384a0aaf0655d6850e23ab9fa7a5368ddddc3813da81e00a1b997"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/conditional.rs",
+      "sha256": "e6f0bfc92f1e8749e0b840663617b40757338d1b6837d72fd4a2d32f4aa501a9"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/naive.rs",
+      "sha256": "4c980387e38483f04fbbc0d9037bf8e2a08f28e0cd287e22113c65df838ed462"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/sat.rs",
+      "sha256": "f4a347ceed7012cc517e60e79e0e31f533c69e2d55d8cf56a4b116f0fedcf1e5"
+    },
+    {
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/lib.rs",
+      "sha256": "30946db989adddbd25f3c474f57167c664b6f699f235046969b772de8b6f5ec7"
+    },
+    {
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/solver/mod.rs",
+      "sha256": "da041375bd177bf4ccb87c099ff0aa4b92f41f45da5369ce3a4b677d1f933403"
+    },
+    {
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/conditional_requirement.rs",
+      "sha256": "56251448173bc4a675a9ba48ab4e45c1a88ace4e4d3c261a249b172d3a39828d"
+    },
+    {
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/requirement.rs",
+      "sha256": "ba9a656b77057c7e380222293f3a017110e487a77a9c4131ab706166f1f61c13"
+    },
+    {
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/utils/pool.rs",
+      "sha256": "63574afa794cbf2bee5b4735cf4505fc8a00bcf747b7a2388967f8b98a8982e8"
+    },
+    {
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/solver/conditions.rs",
+      "sha256": "6154051e619839f3406092c229987589aaa8d1662b31707d90e3ca71c4ad6504"
+    },
+    {
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/solver/clause.rs",
+      "sha256": "5488332879c519e99011b7abacfde231ab5ce36a0065553f52810e4b810e0062"
+    }
+  ],
+  "evidence": [
+    {
+      "claim": "generic candidate source record supported",
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/utils/pool.rs",
+      "lines": [
+        13,
+        18,
+        33,
+        154
+      ]
+    },
+    {
+      "claim": "positive-only Condition grammar",
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/conditional_requirement.rs",
+      "lines": [
+        21,
+        34
+      ]
+    },
+    {
+      "claim": "unconditional constrains field",
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/lib.rs",
+      "lines": [
+        254,
+        261,
+        274
+      ]
+    },
+    {
+      "claim": "private clauses not public extension API",
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/solver/clause.rs",
+      "lines": [
+        50,
+        654
+      ]
+    },
+    {
+      "claim": "Problem public construction",
+      "path": "/home/olegchir/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/resolvo-0.11.0/src/solver/mod.rs",
+      "lines": [
+        103,
+        115,
+        137
+      ]
+    },
+    {
+      "claim": "current semver-only record",
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/resolvo_engine/version_set.rs",
+      "lines": [
+        16,
+        46
+      ]
+    },
+    {
+      "claim": "cache and source-blind metadata",
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/resolvo_engine/provider.rs",
+      "lines": [
+        36,
+        38,
+        214,
+        241,
+        247,
+        264,
+        280,
+        288
+      ]
+    },
+    {
+      "claim": "post-solve validation",
+      "path": "/fast/git/vibevm/crates/vibe-resolver/src/resolvo_engine/mod.rs",
+      "lines": [
+        233
+      ]
+    },
+    {
+      "claim": "first-registry version domain",
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/walk.rs",
+      "lines": [
+        71,
+        77,
+        95
+      ]
+    }
+  ],
+  "supported_building_blocks": [
+    "generic source-bearing candidate under same package NameId",
+    "semver plus registry candidate filter",
+    "positive conditional requirements",
+    "non-installing unconditional constraints"
+  ],
+  "missing_public_api": [
+    "Condition Not or absence predicate",
+    "conditional constrains field",
+    "general solver clause/no-good injection on inspected public surface"
+  ],
+  "rejected_shortcuts": [
+    "fixed default domain on unpinned edges despite active pin",
+    "union all registries plus soft ordering",
+    "global encountered-pin accumulator",
+    "free synthetic witness",
+    "reverse dependency to parent as witness",
+    "post-solve-only refusal",
+    "adding Not alone as claimed complete fix"
+  ],
+  "next_steps": [
+    "progress exclusion and fixed-version preference independently with real consumers",
+    "keep pin public grammar unexposed",
+    "finite expected-solution table for counterexamples",
+    "prove solver-owned selected-authored-edge eligibility extension at existing provider/candidate seam",
+    "do not fork dependency or add second search framework without accepted design"
+  ],
+  "qualification": "Missing named conditional-constrains API does not prove all positive guarded constraints inexpressible; key unresolved issue is absence/default eligibility and exact supported incoming-edge pin authority.",
+  "root_disposition": "Read-only feasibility evidence retained; no complete pin implementation or solver design accepted."
+}
