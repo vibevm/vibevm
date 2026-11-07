@@ -41,7 +41,7 @@ impl Package {
             dir.path().join("vibe.toml"),
             format!(
                 "[package]\nname = \"m\"\ngroup = \"org.demo\"\nkind = \"doc\"\n\
-                 version = \"0.1.0\"\n\n[i18n]\ncanonical = \"{lang}\"\n{glossary}"
+                 version = \"0.1.0\"\ntitle = \"Manual\"\nabstract = \"A manual.\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n\n[i18n]\ncanonical = \"{lang}\"\n{glossary}"
             ),
         )
         .expect("manifest");
@@ -300,7 +300,7 @@ fn a_package_whose_language_has_no_list_is_refused() {
     let dir = tempfile::tempdir().expect("temp dir");
     fs::write(
         dir.path().join("vibe.toml"),
-        "[package]\nname = \"m\"\n\n[i18n]\ncanonical = \"fr\"\n",
+        "[package]\nname = \"m\"\ngroup = \"org.demo\"\nkind = \"doc\"\nversion = \"0.1.0\"\ntitle = \"Manual\"\nabstract = \"A manual.\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n\n[i18n]\ncanonical = \"fr\"\n",
     )
     .expect("manifest");
     let e = super::check(dir.path(), FULL_STYLE).expect_err("refused");

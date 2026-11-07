@@ -164,7 +164,9 @@ pub fn synthesise(manifest: &Manifest) -> String {
     out.push_str(&format!("name = {}\n", quote(&manifest.name)));
     out.push_str(&format!("group = {}\n", quote(&manifest.group)));
     out.push_str(&format!("version = {}\n", quote(&manifest.version)));
-    out.push_str(&format!("kind = {}\n", quote(&manifest.kind())));
+    if let Some(kind) = manifest.field("kind") {
+        out.push_str(&format!("kind = {}\n", quote(&kind)));
+    }
     out.push_str(&format!("title = {}\n", quote(&manifest.title())));
     out.push_str(&format!("abstract = {}\n", quote(&manifest.abstract_())));
     if let Some(description) = manifest.field("description") {

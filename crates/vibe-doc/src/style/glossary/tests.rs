@@ -11,7 +11,7 @@ fn declared_glossary(entries: &str) -> Option<Glossary> {
     let dir = tempfile::tempdir().expect("temp dir");
     fs::write(
         dir.path().join("vibe.toml"),
-        "[glossary]
+        "[package]\nname = \"m\"\ngroup = \"org.demo\"\nkind = \"doc\"\nversion = \"0.1.0\"\ntitle = \"Manual\"\nabstract = \"A manual.\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n[glossary]
 page = \"glossary/index\"
 ",
     )
@@ -76,7 +76,7 @@ fn a_package_with_no_declaration_has_no_terms() {
     let dir = tempfile::tempdir().expect("temp dir");
     fs::write(
         dir.path().join("vibe.toml"),
-        "[glossary]
+        "[package]\nname = \"m\"\ngroup = \"org.demo\"\nkind = \"doc\"\nversion = \"0.1.0\"\ntitle = \"Manual\"\nabstract = \"A manual.\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n[glossary]
 page = \"glossary/index\"
 ",
     )

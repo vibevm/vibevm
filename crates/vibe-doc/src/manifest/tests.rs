@@ -1,7 +1,9 @@
 //! Building a manifest over a real package tree.
 
 use chrono::{TimeZone, Utc};
-use vibe_wire::generated::doc_manifest::{DocumentationStatus, PageGenre, TranslationStatus};
+use vibe_wire::generated::doc_manifest::{
+    Authorship, DocumentationStatus, PackageKind, PageGenre, TranslationStatus,
+};
 
 use super::*;
 
@@ -111,7 +113,7 @@ fn the_card_carries_who_wrote_the_prose_when_the_package_says() {
     std::fs::write(
         tmp.path().join("vibe.toml"),
         "[package]\nname = \"x\"\ngroup = \"org.demo\"\nkind = \"doc\"\nversion = \"0.1.0\"\n\
-         title = \"t\"\nabstract = \"a\"\nauthorship = \"ai\"\n",
+         title = \"t\"\nabstract = \"a\"\nauthorship = \"ai\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n",
     )
     .expect("write");
     let built =
@@ -131,7 +133,7 @@ fn the_navigation_is_carried_and_the_page_order_is_left_alone() {
     std::fs::write(
         tmp.path().join("vibe.toml"),
         "[package]\nname = \"x\"\ngroup = \"org.demo\"\nkind = \"doc\"\nversion = \"0.1.0\"\n\
-         title = \"t\"\nabstract = \"a\"\n\n[navigation]\npinned = [\"start/index\"]\n\n\
+         title = \"t\"\nabstract = \"a\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n\n[navigation]\npinned = [\"start/index\"]\n\n\
          [[navigation.section]]\nid = \"start\"\ntitle = \"Start\"\n",
     )
     .expect("write");
@@ -156,7 +158,7 @@ fn the_navigation_is_carried_and_the_page_order_is_left_alone() {
 #[test]
 fn the_learning_path_is_carried_whole_and_moves_no_page() {
     let card = "[package]\nname = \"x\"\ngroup = \"org.demo\"\nkind = \"doc\"\n\
-                version = \"0.1.0\"\ntitle = \"t\"\nabstract = \"a\"\n";
+                version = \"0.1.0\"\ntitle = \"t\"\nabstract = \"a\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n";
     let tmp = tempfile::tempdir().expect("temp");
     let root = tmp.path().join(crate::pages::SPEC_ROOT);
     for document in ["start/index", "model/two-trees", "glossary/index"] {
@@ -279,16 +281,20 @@ fn a_rendering_says_whether_the_site_derived_it() {
 
 /// The word the package calls itself by reaches the card whole, for all
 /// eight kinds and not only for the one the projection flag can be read
-/// backwards into. A word the register does not know — `pack`, which is
-/// what a level-0 composition writes when the package named no kind — is
-/// an absence and never a ninth kind: the composition is saying it was
+/// backwards into. A generated card for a package that names no kind keeps
+/// that absence and never invents a ninth kind: the composition is saying it was
 /// told nothing, and a card that was told nothing draws no mark.
 #[test]
 fn the_card_carries_the_kind_the_package_calls_itself_by() {
     let card = |kind: &str| {
+        let server = if kind == "mcp" {
+            "\n[[mcp_server]]\nname = \"demo\"\nurl = \"https://example.invalid/mcp\"\ntransport = \"streamable-http\"\n"
+        } else {
+            ""
+        };
         card_of(&format!(
             "[package]\nname = \"x\"\ngroup = \"org.demo\"\nkind = \"{kind}\"\n\
-             version = \"0.1.0\"\ntitle = \"t\"\nabstract = \"a\"\n"
+             version = \"0.1.0\"\ntitle = \"t\"\nabstract = \"a\"\n{server}"
         ))
     };
 
@@ -309,7 +315,30 @@ fn the_card_carries_the_kind_the_package_calls_itself_by() {
     assert_eq!(card("lang").kind, Some(PackageKind::Lang));
     assert_eq!(card("app").kind, Some(PackageKind::App));
 
-    let unnamed = card("pack");
+    let root = tempfile::tempdir().expect("unknown subject");
+    let work = tempfile::tempdir().expect("generated output");
+    std::fs::write(
+        root.path().join("vibe.toml"),
+        "[package]\nname = \"x\"\ngroup = \"org.demo\"\nversion = \"0.1.0\"\n",
+    )
+    .expect("original metadata has no kind");
+    let (_, generated) = crate::site::level0::compose_prepared(
+        root.path(),
+        work.path(),
+        &crate::site::level0::Related::default(),
+    )
+    .expect("generated card");
+    let slots = crate::media::slots(work.path(), "org.demo/x").expect("media");
+    let unnamed = assemble(
+        &generated.card,
+        &generated.pages,
+        &Reviews::default(),
+        &slots,
+        &SpecSources::new(),
+        &Options::at(rendered_at()),
+    )
+    .manifest
+    .package;
     assert_eq!(unnamed.kind, None);
     assert!(unnamed.projection);
 }
@@ -323,10 +352,10 @@ fn a_bridge_carries_the_two_authorships_it_keeps_apart() {
     let source = |name: &str, license: &str, authors: &str| {
         format!(
             "\n[[embedded_source]]\nname = \"{name}\"\nkind = \"git\"\n\
-             url = \"https://example.invalid/{name}\"\ncommit = \"abc\"\n\
-             content_hash = \"sha256:0\"\nupstream_authors = [{authors}]\n\
+             url = \"https://example.invalid/{name}\"\ncommit = \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n\
+             content_hash = \"sha256-tree/1:0000000000000000000000000000000000000000000000000000000000000000\"\nupstream_authors = [{authors}]\n\
              upstream_license = \"{license}\"\nlicense_path = \"LICENSE\"\n\
-             license_url = \"https://example.invalid/{name}/LICENSE\"\n"
+             license_url = \"https://example.invalid/{name}/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/LICENSE\"\n"
         )
     };
     let head = "[package]\nname = \"wrapped\"\ngroup = \"org.demo\"\nkind = \"flow\"\n\

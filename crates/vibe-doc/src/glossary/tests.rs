@@ -33,8 +33,7 @@ const GLOSSARY_PAGE: &str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
        </manifest>\n\
      </spec>\n";
 
-const DECLARING: &str = "[package]\nname = \"m\"\ngroup = \"com.example.docs\"\nkind = \"doc\"\n\
-                         \n[glossary]\npage = \"glossary/index\"\n";
+const DECLARING: &str = "[package]\nname = \"m\"\ngroup = \"com.example.docs\"\nkind = \"doc\"\nversion = \"0.1.0\"\ntitle = \"Manual\"\nabstract = \"A manual.\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n[glossary]\npage = \"glossary/index\"\n";
 
 fn read_set(dir: &std::path::Path) -> PageSet {
     crate::pages::read_package(dir).expect("the package reads")
@@ -53,7 +52,7 @@ fn a_declaration_is_read_off_the_manifest() {
     // And a package that declares none has none. The path means nothing by
     // itself (`##GLOSSARY-DECLARED`).
     let bare = package(
-        "[package]\nname = \"m\"\n",
+        "[package]\nname = \"m\"\ngroup = \"com.example.docs\"\nkind = \"doc\"\nversion = \"0.1.0\"\ntitle = \"Manual\"\nabstract = \"A manual.\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n",
         &[("glossary/index.xml", GLOSSARY_PAGE)],
     );
     assert_eq!(declared(bare.path()).expect("the manifest reads"), None);
@@ -162,7 +161,7 @@ fn an_unreadable_glossary_page_is_reported_as_one() {
 #[test]
 fn a_package_with_no_declaration_has_nothing_to_check() {
     let dir = package(
-        "[package]\nname = \"m\"\n",
+        "[package]\nname = \"m\"\ngroup = \"com.example.docs\"\nkind = \"doc\"\nversion = \"0.1.0\"\ntitle = \"Manual\"\nabstract = \"A manual.\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n",
         &[("guide/one.xml", GLOSSARY_PAGE)],
     );
     assert!(

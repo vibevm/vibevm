@@ -72,10 +72,11 @@ fn a_required_member_does_not_hide_the_list() {
         Some(vec![
             "meta".to_string(),
             "package".to_string(),
+            "configurations".to_string(),
             "remap".to_string()
         ]),
-        "the top level of `vibe.lock` has one required member and two optional ones; \
-         the refusal must still name all three"
+        "the top level of `vibe.lock` has one required member and three optional ones; \
+         the refusal must still name all four"
     );
 }
 

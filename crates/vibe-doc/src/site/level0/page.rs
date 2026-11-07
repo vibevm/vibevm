@@ -41,15 +41,23 @@ pub fn compose(
     manifest: &Manifest,
     related: &Related,
     composed: &mut Composed,
+    pages: &mut crate::pages::PageSet,
 ) -> Result<()> {
     write(
         work,
         MANIFEST_PAGE,
         manifest_page(manifest, related),
         composed,
+        pages,
     )?;
     if let Some(text) = read_readme(source) {
-        write(work, README_PAGE, readme_page(manifest, &text), composed)?;
+        write(
+            work,
+            README_PAGE,
+            readme_page(manifest, &text),
+            composed,
+            pages,
+        )?;
     }
     if let Some(snippet) = manifest.table("boot_snippet") {
         write(
@@ -57,6 +65,7 @@ pub fn compose(
             BOOT_SNIPPET_PAGE,
             boot_snippet_page(manifest, snippet),
             composed,
+            pages,
         )?;
     }
     Ok(())
@@ -64,7 +73,13 @@ pub fn compose(
 
 /// Write one composed page, unless the package already carries a
 /// document at that address.
-fn write(work: &Path, name: &str, body: String, composed: &mut Composed) -> Result<()> {
+fn write(
+    work: &Path,
+    name: &str,
+    body: String,
+    composed: &mut Composed,
+    pages: &mut crate::pages::PageSet,
+) -> Result<()> {
     let path = work.join(SPEC_ROOT).join(name);
     if path.is_file() {
         composed.notes.push(format!(
@@ -76,6 +91,7 @@ fn write(work: &Path, name: &str, body: String, composed: &mut Composed) -> Resu
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent).map_err(|e| DocError::io("creating", parent, e))?;
     }
+    super::generated_page(pages, name, path.clone(), &body)?;
     std::fs::write(&path, body).map_err(|e| DocError::io("writing", &path, e))?;
     composed.generated.push(name.to_string());
     Ok(())

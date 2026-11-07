@@ -30,7 +30,7 @@ fn plain(root: &Path) {
          description = \"A write-ahead log for sessions\"\n\
          \n\
          [boot_snippet]\n\
-         path = \"snippet.md\"\n\
+         source = \"snippet.md\"\n\
          \n\
          [[skill]]\n\
          name = \"wal\"\n\

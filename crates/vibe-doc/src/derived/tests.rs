@@ -25,7 +25,7 @@ fn package(tmp: &Path, field: &str) -> PathBuf {
     fs::create_dir_all(&pages).expect("mkdir");
     fs::write(
         pkg.join("vibe.toml"),
-        "[package]\ngroup = \"org.acme\"\nname = \"manual\"\ntitle = \"A Manual\"\nabstract = \"Short.\"\n",
+        "[package]\nkind = \"doc\"\nversion = \"0.1.0\"\ngroup = \"org.acme\"\nname = \"manual\"\ntitle = \"A Manual\"\nabstract = \"Short.\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n",
     )
     .expect("write manifest");
     fs::write(
@@ -84,7 +84,7 @@ fn a_product_change_shows_up_as_a_changed_block_and_is_red() {
     check(&pkg, &env(tmp.path()), true).expect("accepts");
     fs::write(
         pkg.join("vibe.toml"),
-        "[package]\ngroup = \"org.acme\"\nname = \"manual\"\ntitle = \"A Renamed Manual\"\n",
+        "[package]\nkind = \"doc\"\nversion = \"0.1.0\"\ngroup = \"org.acme\"\nname = \"manual\"\ntitle = \"A Renamed Manual\"\nabstract = \"Short.\"\n\n[[documents]]\npackage = \"org.demo/product\"\nversion = \"^1.0\"\n",
     )
     .expect("rewrite manifest");
     let report = check(&pkg, &env(tmp.path()), false).expect("runs");

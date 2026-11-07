@@ -11,8 +11,8 @@
 //!
 //! ## One path for both levels, and why that is not a trick
 //!
-//! This module writes a documentation package: a manifest with a card, a
-//! spec root of pages. For a package that ships no documentation the
+//! This module prepares explicit generated pages and card metadata, with
+//! diagnostic work files alongside them. For a package that ships no documentation the
 //! pages are the ones composed here; for a `doc` package the very same
 //! composition also carries the pages its author wrote, because those
 //! pages already live under the spec root and are copied as they are.
@@ -115,8 +115,8 @@ impl Related {
 /// What one composition produced.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Composed {
-    /// The documentation package that was written — what the rest of the
-    /// pipeline is pointed at.
+    /// Diagnostic work files and copied media for this composition.
+    /// The site receives generated pages/card separately from authored admission.
     pub dir: PathBuf,
     /// Spec documents copied from the package, at their own paths.
     pub copied: usize,
@@ -129,13 +129,35 @@ pub struct Composed {
     pub notes: Vec<String>,
 }
 
-/// Compose the documentation package for `source`, in `work`.
+/// Write the diagnostic composition for `source`, in `work`.
+///
+/// The site uses the internal prepared result rather than admitting this
+/// directory as an authored package.
 ///
 /// `work` is emptied first: a composition carries the package's current
 /// bytes and nothing else, and a stale page left behind from an earlier
 /// version would be published under an address its package no longer
 /// claims.
 pub fn compose(source: &Path, work: &Path, related: &Related) -> Result<Composed> {
+    compose_prepared(source, work, related).map(|(composed, _)| composed)
+}
+
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
+    r = 1
+)]
+pub(crate) fn compose_prepared(
+    source: &Path,
+    work: &Path,
+    related: &Related,
+) -> Result<(Composed, crate::build::Generated)> {
+    // Only actual authored pages invoke source admission. A card-only view
+    // can describe incomplete metadata without interpreting authored XML.
+    let mut pages = if source.join(SPEC_ROOT).is_dir() {
+        crate::pages::read_package(source)?
+    } else {
+        crate::pages::PageSet::default()
+    };
     if work.exists() {
         std::fs::remove_dir_all(work).map_err(|e| DocError::io("clearing", work, e))?;
     }
@@ -152,38 +174,46 @@ pub fn compose(source: &Path, work: &Path, related: &Related) -> Result<Composed
     card::copy_media(source, work, &manifest, &mut composed.notes)?;
     card::copy_reviews(source, work)?;
 
-    composed.copied = copy_specs(source, work)?;
-    page::compose(source, work, &manifest, related, &mut composed)?;
-    Ok(composed)
+    composed.copied = copy_specs(work, &pages)?;
+    page::compose(source, work, &manifest, related, &mut composed, &mut pages)?;
+    pages.pages.sort_by(|a, b| a.rel.cmp(&b.rel));
+    let metadata: toml::Value = toml::from_str(&card::synthesise(&manifest))
+        .map_err(|e| DocError::manifest(work, format!("generated card does not parse: {e}")))?;
+    let card = crate::manifest::Card::from_value(&metadata, work)?;
+    Ok((composed, crate::build::Generated { pages, card }))
+}
+
+/// Parse only bytes explicitly produced by the level-zero/failure generator.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
+    r = 1
+)]
+pub(crate) fn generated_page(
+    set: &mut crate::pages::PageSet,
+    rel: &str,
+    path: PathBuf,
+    text: &str,
+) -> Result<()> {
+    let doc = vibe_specdoc::from_xml_with(text, vibe_specdoc::Vocabulary::Doc)
+        .map_err(|e| DocError::manifest(&path, format!("generated page does not parse: {e}")))?;
+    set.pages.push(crate::pages::Page {
+        rel: rel.to_owned(),
+        path,
+        doc,
+    });
+    Ok(())
 }
 
 /// Copy every spec document at its own path.
-fn copy_specs(source: &Path, work: &Path) -> Result<usize> {
-    let from = source.join(SPEC_ROOT);
-    if !from.is_dir() {
-        return Ok(0);
-    }
+fn copy_specs(work: &Path, pages: &crate::pages::PageSet) -> Result<usize> {
     let into = work.join(SPEC_ROOT);
+    let paths = pages
+        .pages
+        .iter()
+        .map(|p| (&p.rel, &p.path))
+        .chain(pages.unreadable.iter().map(|p| (&p.rel, &p.path)));
     let mut copied = 0;
-    for entry in walkdir::WalkDir::new(&from).sort_by_file_name() {
-        let entry = entry.map_err(|e| {
-            DocError::io(
-                "walking",
-                from.clone(),
-                e.into_io_error()
-                    .unwrap_or_else(|| std::io::Error::other("walk failed")),
-            )
-        })?;
-        if !entry.file_type().is_file() {
-            continue;
-        }
-        let path = entry.path();
-        if path.extension().and_then(|e| e.to_str()) != Some("xml") {
-            continue;
-        }
-        let Ok(rel) = path.strip_prefix(&from) else {
-            continue;
-        };
+    for (rel, path) in paths {
         let target = into.join(rel);
         if let Some(parent) = target.parent() {
             std::fs::create_dir_all(parent).map_err(|e| DocError::io("creating", parent, e))?;

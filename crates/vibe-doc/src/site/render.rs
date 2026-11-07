@@ -2,8 +2,8 @@
 //! (PROP-057 `##SITE-RENDER-IDEMPOTENT`, `##LEVEL-ZERO`).
 //!
 //! Every pair goes through the same three steps: its bytes are brought
-//! onto disk, a documentation package is composed from them
-//! ([`super::level0`]), and that package is built in the three
+//! onto disk, explicit pages and card metadata are composed from them
+//! ([`super::level0`]), and those inputs are built in the three
 //! projections the site serves. The build is the one `vibe doc build`
 //! already is — there is no second renderer for the site — so a page a
 //! reader opens on the web and a page an agent reads locally come out of
@@ -216,10 +216,11 @@ fn attempt(
         Origin::Registry => prepare.warm(pair)?,
     };
     let related = options.related.clone().adapting(mirror(&source, options));
-    let composed = level0::compose(&source, &composed_dir(options.work, pair), &related)?;
+    let (composed, generated) =
+        level0::compose_prepared(&source, &composed_dir(options.work, pair), &related)?;
     notes.extend(composed.notes.iter().cloned());
     let derived = prepare.derived(pair, &composed.dir);
-    build_projections(pair, &composed.dir, derived, options)
+    build_projections(pair, &composed.dir, &generated, derived, options)
 }
 
 /// Measure an adaptation against the documentation it adapts, when this
@@ -269,16 +270,28 @@ fn refused(
         failed_page(pair, reason),
     )
     .map_err(|e| DocError::io("writing", dir.join(FAILED_PAGE), e))?;
-    build_projections(pair, &dir, BTreeMap::new(), options)
+    let metadata: toml::Value = toml::from_str(&failed_manifest(pair, reason))
+        .map_err(|e| DocError::manifest(&dir, format!("generated card does not parse: {e}")))?;
+    let card = manifest::Card::from_value(&metadata, &dir)?;
+    let mut pages = crate::pages::PageSet::default();
+    level0::generated_page(
+        &mut pages,
+        FAILED_PAGE,
+        dir.join(crate::pages::SPEC_ROOT).join(FAILED_PAGE),
+        &failed_page(pair, reason),
+    )?;
+    let generated = build::Generated { pages, card };
+    build_projections(pair, &dir, &generated, BTreeMap::new(), options)
 }
 
 /// Where the «render failed» page is served from.
 pub const FAILED_PAGE: &str = "render-failed.xml";
 
-/// Build the composed package in every projection the site serves.
+/// Build explicit producer inputs in every projection the site serves.
 fn build_projections(
     pair: &Pair,
     package_dir: &Path,
+    generated: &build::Generated,
     derived: BTreeMap<String, String>,
     options: &Options,
 ) -> Result<(Vec<PathBuf>, usize, usize, usize, build::Unresolved)> {
@@ -289,8 +302,9 @@ fn build_projections(
     let mut unresolved = build::Unresolved::default();
     for format in FORMATS {
         let tree = tree_dir(options.work, pair, *format);
-        let built = build::build(
+        let built = build::build_generated(
             package_dir,
+            generated,
             options.sources,
             &build::Options {
                 format: *format,

@@ -175,8 +175,19 @@ pub fn content(
     derived: BTreeMap<String, String>,
 ) -> Result<(PageSet, Content)> {
     let set = pages::read_package(package_dir)?;
+    let content = content_for_set(package_dir, sources, base, derived, &set)?;
+    Ok((set, content))
+}
+
+fn content_for_set(
+    package_dir: &Path,
+    sources: &SpecSources,
+    base: &str,
+    derived: BTreeMap<String, String>,
+    set: &PageSet,
+) -> Result<Content> {
     let content = Content {
-        rules: citations::resolve_rules(&set, sources),
+        rules: citations::resolve_rules(set, sources),
         derived,
         // A translation authors no example and borrows every one from the
         // source page at its own address (`##LOC-EXAMPLE-REF`,
@@ -200,9 +211,9 @@ pub fn content(
         // declares none, or declares a page it does not carry, yields
         // `None` and every link stays exactly as it was; the DECLARATION
         // pointing at nothing is `vibe check`'s finding, not a render's.
-        glossary: crate::glossary::read(package_dir, &set)?,
+        glossary: crate::glossary::read(package_dir, set)?,
     };
-    Ok((set, content))
+    Ok(content)
 }
 
 /// Render one page in one projection, with the block numbers every
@@ -276,6 +287,74 @@ pub fn build_observed(
     let built_manifest = observed(progress, "Building documentation manifest", || {
         manifest::build(package_dir, sources, &options.manifest)
     })?;
+    finish(
+        package_dir,
+        &set,
+        &content,
+        built_manifest,
+        options,
+        progress,
+        declared_kind(package_dir),
+    )
+}
+
+/// Explicit producer-owned pages and card; never authorizes a filesystem walk.
+#[derive(Debug, Clone)]
+pub(crate) struct Generated {
+    pub(crate) pages: PageSet,
+    pub(crate) card: manifest::Card,
+}
+
+/// Feed generated inputs through the same assembly and projection owners.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
+    r = 1
+)]
+pub(crate) fn build_generated(
+    package_dir: &Path,
+    input: &Generated,
+    sources: &SpecSources,
+    options: &Options,
+) -> Result<Built> {
+    let mut content = content_for_set(
+        package_dir,
+        sources,
+        &options.base,
+        options.derived.clone(),
+        &input.pages,
+    )?;
+    content.lang.clone_from(&input.card.lang);
+    let reviews = manifest::Reviews::read(package_dir.join(manifest::REVIEWS))?;
+    let coordinate = input.card.coordinate();
+    let slots = media::slots(package_dir, &coordinate)?;
+    let built_manifest = manifest::assemble(
+        &input.card,
+        &input.pages,
+        &reviews,
+        &slots,
+        sources,
+        &options.manifest,
+    );
+    finish(
+        package_dir,
+        &input.pages,
+        &content,
+        built_manifest,
+        options,
+        &Progress::default(),
+        input.card.placeholder_kind(),
+    )
+}
+
+fn finish(
+    package_dir: &Path,
+    set: &PageSet,
+    content: &Content,
+    built_manifest: manifest::Built,
+    options: &Options,
+    progress: &Progress,
+    kind: vibe_core::PackageKind,
+) -> Result<Built> {
     let card = &built_manifest.manifest.package;
     // The package's own segment of the address map. Everything a build
     // writes for THIS package hangs off it; the machine files that
@@ -292,10 +371,10 @@ pub fn build_observed(
     // way (`gaps::unresolved`).
     let mut unresolved = Unresolved::default();
     for page in &set.pages {
-        unresolved += gaps::unresolved(page, &content);
+        unresolved += gaps::unresolved(page, content);
         files.push(BuiltFile {
             path: page_path(&prefix, &page.rel, options.format),
-            bytes: render_page(page, &content, options.format).into_bytes(),
+            bytes: render_page(page, content, options.format).into_bytes(),
         });
         render.set_progress(files.len() as u64, Some(set.pages.len() as u64), "pages");
     }
@@ -305,7 +384,7 @@ pub fn build_observed(
         path: "manifest.json".to_string(),
         bytes: manifest::to_json(&built_manifest.manifest).into_bytes(),
     });
-    let bodies = llms::bodies(&set, &content);
+    let bodies = llms::bodies(set, content);
     for (name, text) in llms::tiers(&built_manifest.manifest, &bodies, &options.base) {
         files.push(BuiltFile {
             path: name.to_string(),
@@ -325,7 +404,6 @@ pub fn build_observed(
     // common case and not the only one — the site renders every kind
     // from its own bytes (`##LEVEL-ZERO`), and a `lang` package wearing
     // a book would be a picture that says the wrong thing.
-    let kind = declared_kind(package_dir);
     let mut generated_roles = Vec::new();
     let slots = observed(progress, "Reading documentation media", || {
         media::slots(package_dir, &coordinate)

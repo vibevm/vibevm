@@ -195,6 +195,10 @@ fn a_reference_a_render_cannot_fill_is_counted_once_for_the_pair() {
 /// A registry of hundreds will always hold one broken package, and a
 /// builder that stopped for it would publish nothing at all.
 #[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
+    r = 1
+)]
 fn a_package_that_cannot_be_fetched_becomes_a_page_and_not_a_stop() {
     let tmp = tempfile::tempdir().expect("a temporary directory");
     let work = tmp.path().join("trees");
@@ -221,6 +225,10 @@ fn a_package_that_cannot_be_fetched_becomes_a_page_and_not_a_stop() {
 /// A package that renders after a failure must leave no trace of the
 /// failure behind.
 #[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
+    r = 1
+)]
 fn a_retry_that_succeeds_replaces_the_failure_page() {
     let tmp = tempfile::tempdir().expect("a temporary directory");
     let source = tmp.path().join("src");
@@ -279,4 +287,191 @@ fn a_coordinate_keys_one_directory_at_every_render() {
         tree_dir(work, &pair(), Format::Html),
         tree_dir(work, &pair(), Format::Md)
     );
+}
+
+/// The unknown original subject remains unknown in every generated projection.
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
+    r = 1
+)]
+fn an_unknown_kind_is_a_generated_card_not_an_authored_package() {
+    let tmp = tempfile::tempdir().expect("temp");
+    let source = tmp.path().join("source");
+    package(&source);
+    let path = source.join("vibe.toml");
+    let text = fs::read_to_string(&path).expect("manifest");
+    fs::write(&path, text.replace("kind = \"flow\"\n", "")).expect("unknown kind");
+    assert!(
+        crate::pages::read_package(&source).is_err(),
+        "authored admission stays strict"
+    );
+    let work = tmp.path().join("work");
+    let sources = SpecSources::new();
+    let rendered =
+        render(&pair(), &Handy { source }, &options(&work, &sources)).expect("generated view");
+    assert!(rendered.ok(), "{:?}", rendered.failed);
+    assert_eq!(rendered.trees.len(), 3);
+    for (format, tree) in FORMATS.iter().zip(&rendered.trees) {
+        let manifest: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(tree.join("manifest.json")).expect("manifest"),
+        )
+        .expect("JSON");
+        assert!(manifest["package"]["kind"].is_null());
+        assert_eq!(manifest["package"]["projection"], true);
+        assert_eq!(manifest["package"]["group"], "org.example");
+        assert_eq!(manifest["package"]["name"], "wal");
+        assert_eq!(manifest["package"]["version"], "1.2.0");
+        assert!(
+            tree.join(build::page_path(
+                "org.example/wal/1.2.0/",
+                "manifest.xml",
+                *format
+            ))
+            .is_file()
+        );
+    }
+    assert!(
+        crate::pages::read_package(&composed_dir(&work, &pair())).is_err(),
+        "work files grant no authored admission"
+    );
+}
+
+/// A producer result fixes the pages and subject metadata; work files do not
+/// become an alternate authority to discover or reinterpret authored inputs.
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
+    r = 1
+)]
+fn prepared_generated_pages_and_card_do_not_come_back_from_work_files() {
+    let tmp = tempfile::tempdir().expect("temp");
+    let source = tmp.path().join("source");
+    package(&source);
+    let work = tmp.path().join("work");
+    let (composed, input) =
+        level0::compose_prepared(&source, &work, &level0::Related::default()).expect("producer");
+    let options = build::Options {
+        format: Format::Html,
+        base: "/doc/".into(),
+        manifest: manifest::Options::at(crate::manifest::tests::rendered_at()),
+        derived: BTreeMap::new(),
+    };
+    let sources = SpecSources::new();
+    let before = build::build_generated(&composed.dir, &input, &sources, &options).expect("before");
+    let pages = work.join(crate::pages::SPEC_ROOT);
+    fs::write(pages.join("manifest.xml"), "not XML").expect("replace diagnostic");
+    fs::write(pages.join("injected.xml"), CITING_PAGE).expect("unselected file");
+    let manifest = work.join("vibe.toml");
+    let text = fs::read_to_string(&manifest).expect("card diagnostic");
+    fs::write(
+        manifest,
+        text.replace("kind = \"flow\"", "kind = \"tool\"")
+            .replace("title = \"wal\"", "title = \"Changed\""),
+    )
+    .expect("replace diagnostic card");
+    let after = build::build_generated(&composed.dir, &input, &sources, &options).expect("after");
+    assert_eq!(before.files, after.files);
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
+    r = 1
+)]
+fn invalid_original_pages_cannot_use_generated_composition_as_admission() {
+    let tmp = tempfile::tempdir().expect("temp");
+    let source = tmp.path().join("source");
+    package(&source);
+    fs::write(
+        source.join("vibe.toml"),
+        "[package]\nname = \"wal\"\ngroup = \"org.example\"\nversion = \"1.2.0\"\n",
+    )
+    .expect("invalid authored package");
+    let pages = source.join(crate::pages::SPEC_ROOT);
+    fs::create_dir_all(&pages).expect("pages");
+    fs::write(pages.join("injected.xml"), CITING_PAGE).expect("page");
+    assert!(
+        level0::compose_prepared(
+            &source,
+            &tmp.path().join("work"),
+            &level0::Related::default()
+        )
+        .is_err()
+    );
+}
+
+/// The generated composition adds its own pages; the authored card, page rows,
+/// media bytes and rendered translation bodies retain the incumbent answers.
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
+    r = 1
+)]
+fn generated_composition_preserves_authored_metadata_and_page_projections() {
+    use crate::manifest::tests::fixture;
+    let sources = SpecSources::for_checkout(
+        fixture("borrowed/source"),
+        Some("com.example.docs"),
+        "borrowed",
+    );
+    for name in ["manual", "translations/source", "borrowed/adaptation"] {
+        let source = fixture(name);
+        let work = tempfile::tempdir().expect("work");
+        let (_, input) =
+            level0::compose_prepared(&source, work.path(), &level0::Related::default())
+                .expect("producer");
+        for format in FORMATS {
+            let options = build::Options {
+                format: *format,
+                base: "/doc/".into(),
+                manifest: manifest::Options::at(crate::manifest::tests::rendered_at()),
+                derived: BTreeMap::new(),
+            };
+            let authored = build::build(&source, &sources, &options).expect("authored");
+            let generated =
+                build::build_generated(work.path(), &input, &sources, &options).expect("generated");
+            let manifest_of = |built: &build::Built| -> serde_json::Value {
+                serde_json::from_slice(
+                    &built
+                        .files
+                        .iter()
+                        .find(|file| file.path == "manifest.json")
+                        .expect("manifest")
+                        .bytes,
+                )
+                .expect("JSON")
+            };
+            let original = manifest_of(&authored);
+            let composed = manifest_of(&generated);
+            // Audiences are derived from pages. The added manifest reference
+            // has user/dev audiences; every other card field stays identical.
+            let mut expected_card = original["package"].clone();
+            expected_card["audiences"] = serde_json::json!(
+                ["user", "author", "dev", "agent"]
+                    .into_iter()
+                    .filter(|audience| matches!(*audience, "user" | "dev")
+                        || original["package"]["audiences"]
+                            .as_array()
+                            .expect("audiences")
+                            .iter()
+                            .any(|value| value == audience))
+                    .collect::<Vec<_>>()
+            );
+            assert_eq!(expected_card, composed["package"], "{name}");
+            for row in original["pages"].as_array().expect("pages") {
+                assert!(
+                    composed["pages"].as_array().expect("pages").contains(row),
+                    "{name}: {row}"
+                );
+            }
+            for file in authored
+                .files
+                .iter()
+                .filter(|file| file.path != "manifest.json" && !file.path.starts_with("llms"))
+            {
+                assert!(generated.files.contains(file), "{name}: {}", file.path);
+            }
+        }
+    }
 }
