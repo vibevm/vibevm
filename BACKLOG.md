@@ -2568,3 +2568,7 @@ structure, and it goes when the file does.
 | @fact:B233-DISPOSITION **disposition** | `candidate — to be considered and decided later in vibe` (the owner's rule of 2026-11-04 for vibe's needs found while building the app). |
 | @fact:B233-FILED **filed by** | vibevm-app build side (session MVP), 2026-11-04. |
 
+
+## 2026-11-07 · the owner's ruling relayed from vibevm-app's audit (notes/66 there)
+
+- **P1 · Remove `org.vibevm.world.zap` and `org.vibevm.zap.zap` from the public registry.** The repositories under `github.com/vibespecs` go, then their versions are **yanked from the registry's index** (`anarchic/vibespecs` and its GitHub mirror) and the index is rebuilt, so `vibe` stops offering packages that no longer download. The owner's ruling of 2026-11-07: everything of vibevm-app and Zap is closed software; `vibe` itself stays open. The `vibe-index` yank-then-reindex procedure is this repository's; the repository removals are the owner's hand.
