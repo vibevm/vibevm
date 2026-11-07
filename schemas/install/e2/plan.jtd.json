@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "description": "The live project install:plan observation. Acquired package facts are captured before confirmation, then emitted through the existing deferred terminal stream; parked runs suppress previews. Planning may already acquire source/cache data. This is not a read-only preview or an interception point before apply.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS" },
+    "rustOptions": { "package": "vibe_wire::install::e2::plan" },
+    "x-rust-type": "InstallPlan",
+    "x-vocabularies": ["source_evidence"],
+    "x-wire-order": ["command", "packages"]
+  },
+  "properties": {
+    "command": { "type": "string", "metadata": { "description": "Always install:plan." } },
+    "packages": { "elements": { "ref": "plan_entry" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "plan_entry": {
+      "metadata": { "x-wire-order": ["package", "version", "source_evidence"] },
+      "properties": {
+        "package": { "type": "string", "metadata": { "description": "The group/name coordinate, without a version." } },
+        "version": { "type": "string" }
+      },
+      "optionalProperties": {
+        "source_evidence": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive", "description": "Held source-owner observations; absent in older live packages rows means unknown." } }
+      }
+    }
+  }
+}

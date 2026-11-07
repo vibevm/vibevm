@@ -523,3 +523,5 @@ mod configured;
 
 mod fresh;
 pub use fresh::freshness_prepared;
+
+mod report;

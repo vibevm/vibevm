@@ -4,13 +4,11 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
-use serde::Serialize;
 use vibe_install::SlotLifecycleReport;
 use vibe_wire::generated::install_report::{
     InstallContributionReport, InstallDelegation, InstallHookReport, InstallSlotTarget,
 };
 use vibe_workspace::hooks::HookReport;
-use vibe_workspace::install::ResolvedDep;
 
 use crate::output;
 use crate::output::language::{Cell, List, Role, Row};
@@ -129,27 +127,28 @@ impl HookReportPresentation for LifecycleHookView<'_> {
     }
 }
 
-pub(super) fn present_resolution(ctx: &output::Context, resolution: &[ResolvedDep]) {
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS"
+)]
+pub(super) fn present_resolution(ctx: &output::Context, planned: &vibe_install::PlannedInstall) {
+    let resolution = &planned.resolution;
     if ctx.is_json() {
-        #[derive(Serialize)]
-        struct PlanEntry {
-            package: String,
-            version: String,
-        }
-        let payload: Vec<PlanEntry> = resolution
-            .iter()
-            .map(|d| PlanEntry {
-                package: format!("{}/{}", d.group, d.name),
-                version: d.version.to_string(),
+        use vibe_wire::generated::install::e2::plan::{InstallPlan, PlanEntry};
+        let packages = planned
+            .package_sources()
+            .map(|(group, name, version, evidence)| PlanEntry {
+                package: format!("{group}/{name}"),
+                version: version.to_string(),
+                source_evidence: Some(evidence),
             })
             .collect();
         // The plan is a PREVIEW, deferred like every other one: a run that
         // parks emits its handoff document alone, and a run that completes
         // flushes this first, exactly as before.
-        let _ = ctx.defer_json_plan(&serde_json::json!({
-            "command": "install:plan",
-            "packages": payload,
-        }));
+        let _ = ctx.defer_json_plan(&InstallPlan {
+            command: "install:plan".into(),
+            packages,
+        });
         return;
     }
     if ctx.is_quiet() {

@@ -174,7 +174,7 @@ pub(super) fn try_in_place_incremental<S: InstallSource + ?Sized>(
         content_hash: prepared.content_hash().to_owned(),
         source_uri: prepared.source_uri().to_owned(),
         fetched_from: None,
-        registry_name: old.registry.clone(),
+        registry_name: prepared.source_evidence().registry,
         source_ref: Some(prepared.source_ref().to_owned()),
         resolved_commit: Some(prepared.resolved_commit().to_owned()),
         overridden: false,

@@ -404,6 +404,57 @@ fn general_install_defers_in_place_instead_of_recloning() {
     f.assert_no_reclone();
 }
 
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS"
+)]
+fn held_project_observation_and_next_lock_use_current_preparation_alias() {
+    let f = Fixture::new();
+    let old_commit = f.publish("1.0.0", "");
+    f.seed();
+    let lock_path = f.project.join("vibe.lock");
+    let mut old = Lockfile::read(&lock_path).unwrap();
+    old.packages[0].registry = Some("historical-alias".into());
+    old.write(&lock_path).unwrap();
+    let commit = f.publish("1.1.0", "");
+    let mut plan = f.ready();
+    let captured = plan
+        .package_sources()
+        .map(|(g, n, v, e)| (format!("{g}/{n}@{v}"), e))
+        .collect::<Vec<_>>();
+    assert_eq!(captured.len(), 1);
+    assert_eq!(captured[0].0, "org.vibevm/giant@1.1.0");
+    assert_eq!(captured[0].1.registry.as_deref(), Some("fixture"));
+    assert_eq!(
+        captured[0].1.resolved_commit.as_deref(),
+        Some(commit.as_str())
+    );
+    assert_eq!(captured[0].1.store_reused, Some(false));
+    assert_eq!(git(&f.slot, &["rev-parse", "HEAD"]), old_commit);
+    let before = worktree(&f.project);
+    let prepared_count = f.source.prepared.borrow().len();
+    // Public resolution rows and later on-disk history cannot be zipped into held facts.
+    let original_name = std::mem::replace(&mut plan.resolution[0].name, "unrelated".into());
+    let old_bytes = fs::read(&lock_path).unwrap();
+    old.packages[0].registry = Some("later-history".into());
+    old.write(&lock_path).unwrap();
+    assert_eq!(
+        plan.package_sources()
+            .map(|(g, n, v, e)| (format!("{g}/{n}@{v}"), e))
+            .collect::<Vec<_>>(),
+        captured
+    );
+    fs::write(&lock_path, old_bytes).unwrap();
+    plan.resolution[0].name = original_name;
+    assert_eq!(f.source.prepared.borrow().len(), prepared_count);
+    assert_eq!(worktree(&f.project), before);
+    vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
+    let written = Lockfile::read(&lock_path).unwrap();
+    assert_eq!(written.packages[0].registry.as_deref(), Some("fixture"));
+    f.assert_provenance(f.source.prepared.borrow().last().unwrap());
+    f.assert_no_reclone();
+}
+
 /// Snapshot worktree bytes independently of Git status; preparation may add
 /// object/FETCH_HEAD metadata, but every other Git/worktree byte stays bound.
 fn worktree(path: &Path) -> BTreeMap<PathBuf, Vec<u8>> {

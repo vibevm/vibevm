@@ -76,8 +76,8 @@ impl InstallObserver for CliInstallObserver<'_> {
             InstallNarration::FreshLock => {
                 self.ctx.heading("vibe.lock is fresh — skipping resolution");
             }
-            InstallNarration::Resolution(resolution) => {
-                report::present_resolution(self.ctx, resolution);
+            InstallNarration::Resolution(planned) => {
+                report::present_resolution(self.ctx, planned);
             }
             InstallNarration::ClosureDiff {
                 old,

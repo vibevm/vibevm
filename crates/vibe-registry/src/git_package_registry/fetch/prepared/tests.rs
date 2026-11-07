@@ -168,6 +168,7 @@ fn fresh_preparation_pins_objects_despite_remote_retag_and_survives_drop() {
     assert!(!f.slot.join(".git/objects/info/alternates").exists());
     git(&f.slot, &["fsck", "--full"]);
 }
+
 #[test]
 fn prospective_common_manifest_does_not_advance_or_clean_existing_checkout() {
     let f = Fixture::new();
@@ -281,43 +282,7 @@ fn existing_origin_is_the_prospective_source_even_when_canonical_metadata_differ
     assert_eq!(tree(&f.slot), before);
     assert_eq!(p.source_uri(), f.upstream.to_str().unwrap());
 }
-#[test]
-fn mirror_switch_is_prepared_before_admission_and_applies_only_its_held_commit() {
-    let f = Fixture::new();
-    f.publish("1.0.0", "OLD", false);
-    f.seed();
-    let mirror = Fixture::new();
-    let commit = mirror.publish("1.1.0", "MIRROR", false);
-    let r = registry_with_mirrors(
-        &f.cache,
-        f.upstream.parent().unwrap().to_str().unwrap(),
-        NamingConvention::Fqdn,
-        vec![
-            mirror
-                .upstream
-                .parent()
-                .unwrap()
-                .to_string_lossy()
-                .into_owned(),
-        ],
-        f.backend.clone(),
-    );
-    let mut selected = f.selected(&r, "1.0.0");
-    selected.version = semver::Version::new(1, 1, 0);
-    let old = git(&f.slot, &["rev-parse", "HEAD"]);
-    let prepared = r.prepare_in_place(&selected, &f.slot).unwrap();
-    assert_eq!(git(&f.slot, &["rev-parse", "HEAD"]), old);
-    assert_eq!(prepared.resolved_commit(), commit);
-    fs::rename(&mirror.upstream, mirror.upstream.with_extension("gone")).unwrap();
-    prepared.materialise().unwrap();
-    drop(prepared);
-    assert_eq!(
-        fs::read_to_string(f.slot.join("payload.txt")).unwrap(),
-        "MIRROR"
-    );
-    assert!(!f.slot.join(".git/objects/info/alternates").exists());
-    git(&f.slot, &["fsck", "--full"]);
-}
+
 #[test]
 fn authoritative_manifest_transform_refuses_without_running_smudge_or_touching_checkout() {
     for attributes in [
@@ -583,3 +548,6 @@ fn prepared_admission_refusal_cannot_be_hidden_by_valid_legacy_mirror() {
     assert_eq!(tree(&f.slot), before);
     assert_eq!(git(&f.slot, &["rev-parse", "HEAD"]), old);
 }
+
+#[path = "source_evidence_tests.rs"]
+mod source_evidence_tests;

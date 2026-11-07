@@ -68,7 +68,7 @@ pub(super) fn apply(
         trace,
     } = inputs;
     // Show the plan: the packages to materialise.
-    observer.narrate(InstallNarration::Resolution(&planned.resolution));
+    observer.narrate(InstallNarration::Resolution(&planned));
     // Counted here, from the solved graph itself, before the plan is
     // consumed by the apply.
     let packages_resolved = planned.resolution.len();

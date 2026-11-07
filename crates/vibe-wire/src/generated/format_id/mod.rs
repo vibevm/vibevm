@@ -69,6 +69,7 @@ pub enum FormatId {
     CliExtensionsReport,
     CliInitReport,
     CliInstallPlan,
+    CliInstallPlanV1,
     CliInstallReport,
     CliLifecyclePlan,
     CliLifecycleReport,

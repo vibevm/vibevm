@@ -519,9 +519,9 @@ config = { message = "GOLDEN-INSTALL" }
         "slot rows precede phase rows in the command root",
     );
 
-    let expected = golden(
+    let mut expected = golden(
         r#"[
-{"command":"install:plan","packages":[{"package":"org.goldenpkg/hooked","version":"0.1.0"}]},
+{"command":"install:plan","packages":[{"package":"org.goldenpkg/hooked","version":"0.1.0","source_evidence":{"source_url":"<fixture-source>","source_kind":"registry","acquisition":"directory","store_reused":false}}]},
 {"chain":["validate","install"],"command":"lifecycle:plan","contributions":[
  {"handler":"script","key":"org.goldenpkg/hooked#@vibe/hooks/pre-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:pre-install","provider":"org.goldenpkg/hooked","tier":"dependency","reference":"org.goldenpkg/hooked#@vibe/hooks/pre-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"version":"0.1.0"},
  {"handler":"script","key":"org.goldenpkg/hooked#@vibe/hooks/post-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:post-install","provider":"org.goldenpkg/hooked","tier":"dependency","reference":"org.goldenpkg/hooked#@vibe/hooks/post-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"version":"0.1.0"}],
@@ -536,6 +536,13 @@ config = { message = "GOLDEN-INSTALL" }
  {"handler":"script","key":"org.goldenpkg/hooked#@vibe/hooks/post-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:post-install","provider":"org.goldenpkg/hooked","status":"ok","tier":"dependency","reference":"org.goldenpkg/hooked#@vibe/hooks/post-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"stdout":"POST-RAN\n","version":"0.1.0"},
  {"handler":"builtin","key":"org.golden/golden#greet-install","phase":"install","point":"phase:install","provider":"org.golden/golden","status":"ok","tier":"host-declaration","message":"GOLDEN-INSTALL","version":"0.1.0"}]}]"#,
     );
+    // Compare the actual locator to the fixture's source, rather than removing it.
+    expected[0]["packages"][0]["source_evidence"]["source_url"] =
+        vibe_core::progress::transfer::safe_remote(&format!(
+            "file://{}",
+            package.to_string_lossy().replace('\\', "/")
+        ))
+        .into();
     assert_eq!(
         Value::Array(docs),
         expected,

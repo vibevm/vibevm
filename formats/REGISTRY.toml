@@ -468,6 +468,14 @@ corpus = "none"
 sunset = "none"
 
 [format.cli-install-plan]
+epoch = 2
+schema = "schemas/install/e2/plan.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/install-plan/e2"
+sunset = "none"
+
+[format.cli-install-plan-v1]
 epoch = 1
 schema = "schemas/install_plan.jtd.json"
 recoverable = true

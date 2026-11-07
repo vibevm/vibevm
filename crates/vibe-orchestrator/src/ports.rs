@@ -28,7 +28,6 @@ use vibe_core::manifest::{LockedPackage, Lockfile, Manifest};
 use vibe_lifecycle::RunMetadata;
 use vibe_lifecycle::process::StreamMode;
 use vibe_wire::generated::lifecycle_report::LifecycleContributionReport;
-use vibe_workspace::install::ResolvedDep;
 
 use crate::RitualPlan;
 
@@ -104,14 +103,13 @@ pub trait RunObserver: Send + Sync {
 /// let event = InstallNarration::FreshLock;
 /// assert!(matches!(event, InstallNarration::FreshLock));
 /// ```
-#[derive(Debug)]
 pub enum InstallNarration<'a> {
     /// Nothing is declared: the empty world is being regenerated.
     EmptyWorld,
     /// The lockfile is fresh, so resolution is skipped.
     FreshLock,
     /// The solved plan, immediately before the confirmation gate.
-    Resolution(&'a [ResolvedDep]),
+    Resolution(&'a vibe_install::PlannedInstall),
     /// PROP-050 `##VERIFY-LOCK-DIFF`, after a successful apply.
     ClosureDiff {
         /// The pre-apply lockfile snapshot.
@@ -123,6 +121,32 @@ pub enum InstallNarration<'a> {
         /// The same lanes sampled after it.
         lanes_after: &'a [(String, Option<u64>)],
     },
+}
+
+// Borrowing the full preparation must not widen this port's diagnostic surface.
+impl std::fmt::Debug for InstallNarration<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::EmptyWorld => f.write_str("EmptyWorld"),
+            Self::FreshLock => f.write_str("FreshLock"),
+            Self::Resolution(planned) => f
+                .debug_tuple("Resolution")
+                .field(&planned.resolution)
+                .finish(),
+            Self::ClosureDiff {
+                old,
+                new,
+                lanes_before,
+                lanes_after,
+            } => f
+                .debug_struct("ClosureDiff")
+                .field("old", old)
+                .field("new", new)
+                .field("lanes_before", lanes_before)
+                .field("lanes_after", lanes_after)
+                .finish(),
+        }
+    }
 }
 
 /// The observation policy of the CHILD install surface.

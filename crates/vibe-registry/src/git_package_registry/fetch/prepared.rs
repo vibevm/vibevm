@@ -11,6 +11,7 @@ struct Before {
     origin: Option<String>,
 }
 struct Prepared {
+    registry_name: String,
     _temporary: tempfile::TempDir,
     objects: PathBuf,
     slot: PathBuf,
@@ -72,6 +73,38 @@ fn observed_origin(backend: &dyn GitBackend, slot: &Path) -> Result<Option<Strin
     }
 }
 impl PreparedInPlace {
+    /// Credential-redacted facts of this held registry preparation, without
+    /// querying the source again or applying its objects to the destination.
+    ///
+    /// ```
+    /// # fn inspect(candidate: &vibe_registry::PreparedInPlace) {
+    /// let evidence = candidate.source_evidence();
+    /// assert_eq!(evidence.resolved_commit.as_deref(), Some(candidate.resolved_commit()));
+    /// assert_eq!(evidence.store_reused, Some(false));
+    /// # }
+    /// ```
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS"
+    )]
+    pub fn source_evidence(&self) -> vibe_wire::generated::shared::SourceEvidence {
+        use vibe_core::progress::transfer::safe_remote;
+        use vibe_wire::generated::shared::{
+            SourceAcquisition, SourceEvidence, SourceSelectionKind,
+        };
+        let canonical = safe_remote(&self.0.canonical);
+        let actual = safe_remote(&self.0.origin);
+        SourceEvidence {
+            registry: Some(self.0.registry_name.clone()),
+            fetched_from: (actual != canonical).then_some(actual),
+            source_url: Some(canonical),
+            source_ref: Some(self.0.requested.clone()),
+            resolved_commit: Some(self.0.revision.commit.clone()),
+            source_kind: Some(SourceSelectionKind::Registry),
+            acquisition: Some(SourceAcquisition::GitRepository),
+            store_reused: Some(false),
+            via_redirect: None,
+        }
+    }
     /// Actual prospective manifest read from the retained commit object.
     #[specmark::spec(
         implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION"
@@ -308,6 +341,7 @@ impl GitPerPackageRegistry {
                     ));
                 }
                 Ok(PreparedInPlace(Arc::new(Prepared {
+                    registry_name: self.name.clone(),
                     _temporary: temporary,
                     objects,
                     slot: slot.clone(),
