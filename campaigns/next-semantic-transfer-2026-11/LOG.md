@@ -2298,3 +2298,33 @@ Commit `839fdd0c34e0dd96361cf82c5f74b3e77d9ac789` contains exactly3reviewed docu
 ### A4 captured document point slice accepted
 
 Commit `7859d3e2dc0d94991cbc9908c6fc0b1c23b0d31f`:21reviewed product/spec/map paths; root verified committed bytes against exact seal. Final target6/10/3, lower21/77, doctests83/17, Clippy/Conform/fmt pass; map9166/5549/4698,44unchangedwarnings retains9164old units. Full doc lib568/62 retains exact old62, explicitly not green and tracked for repair. FMT037 and research/m06-a4-doc-point-acceptance.md/json record compatibility and limits. Independent final review found no blocker. FullA4partial, old113counts unchanged. No worktree or public push. Next planned atom DOC-BASELINE now becomes active.
+
+
+### A4 generated rendering and baseline repair begins
+
+Point reads accepted7859d3e2d with docs a39925497. Root planned SOURCE-DOC-GENERATED r1 and FMT038, then delegates bounded baseline repair through existing build/card/render owners. Actual target is all62classified failures, including generated failed-fetch/retry behavior and unknown original kind; authored admission remains strict. Prepared packet names exact fixture groups and existing APIs, excludes broad declared census/server work. No temporary worktree required; Cargo/Conform transferred only after prior worker returned it.
+
+
+### Root cause correction: generated-page regression belongs to integration
+
+Root inspected Git history/blame: source-policy check in pages::read_package lines100–110 originates in A1 commit264b07466; failed_manifest producer predates it (f09645cb4). Current failed-fetch/retry stacks stop at the new guard. This is an integration qualification gap, not a prototype defect: common authored-source admission was applied to an existing generated-card path without preserving its distinct input meaning. A1 scoped gates did not include evidence of full doc-library compatibility. Added this provenance to baseline-debt report and approved the worker's narrow shared-finalization/assembly design; strict authored admission remains intact. Completion requires real generated failure/retry behavior and full doc library, not merely revised expectations.
+
+
+### A4 generated repair: first real behavior restored, candidate not accepted
+
+Root inspected /tmp/nst-a4-doc-generated.log: actual failed-fetch page and successful retry tests now pass; full library615PASS/15FAIL. The initial fixture-only pass was619/11; new strict admission of original level0 sources exposed additional incomplete shared plain() metadata. Root inspected boot_snippet.path in that fixture and approved correction to actual source field plus direct generated AST capture in level0/page.rs. Early review caught duplicated TOML from broad replacement, an incomplete rewrite fixture and a lock-field vector not yet updated with its prose; worker is correcting them before acceptance. Existing assertions must survive; generated output tests should consume the explicit producer input rather than manufacture authored-package authority. No green full-suite or completed task claim.
+
+
+### A4 baseline repair: first complete green library run
+
+Root inspected /tmp/nst-a4-doc-generated2.log and matched every one of the62previous failure names to an actual PASS line. Full library630PASS/0FAIL, including real failed-fetch/retry. Archived first-green receipt in local m06-a4-doc-baseline evidence. Candidate still under development: generated-boundary/unknown-kind discriminators, final static gates and review remain. This is not task acceptance yet.
+
+
+### A4 generated boundary discriminators green
+
+Root inspected3new test bodies and generated3.log:633PASS/0FAIL. Tests prove unknown kind/null+projection across all3rendered formats, prepared pages/card unaffected by replacement/unselected work files, and invalid original authored pages refused before composition. Independent reviewer also matched all62old names to PASS and found no concrete blocker, pending freeze/gates. Root qualified the scope: PageSet/Card are captured, but ancillary translations/glossary/media/reviews retain existing filesystem owners; no global no-reread or immutable snapshot claim. FMT038 records internal unknown-kind spelling change without altering authored manifests.
+
+
+### A4 generated rendering/baseline repair accepted
+
+Commit `8e61e9c754f8d9d9467c75e394c7833f0f68e096` contains21reviewed source/spec/map paths, all committed blobs verified. Full library634/0 closes every62old name; docs83/0,Clippy/Conform/fmt/wire pass. Map9168/5560/4709/44 retains9166prior occurrences with no new warning meanings. Root overlapped first map-check inadvertently; excluded it and reran sequentially. First review-hash script rejected root-owned spec status promotion; exact single status delta was then proved and all other hashes matched before staging. Independent final review no blocker. FMT038 and acceptance files record real behavior/compatibility. FullA4partial. No worktree/public push. Next: full declared Doc page census and actual callers.

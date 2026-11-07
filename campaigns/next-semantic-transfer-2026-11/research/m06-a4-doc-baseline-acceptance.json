@@ -1,0 +1,18 @@
+{
+  "commit": "8e61e9c754f8d9d9467c75e394c7833f0f68e096",
+  "files": 21,
+  "full_doc_lib_passed": 634,
+  "full_doc_lib_failed": 0,
+  "old_named_failures_closed": 62,
+  "doctests_passed": 83,
+  "clippy": "pass",
+  "conform_new": 0,
+  "specmap": {
+    "units": 9168,
+    "code_items": 5560,
+    "edges": 4709,
+    "warnings": 44,
+    "prior_units_retained": 9166
+  },
+  "full_a4_accepted": false
+}

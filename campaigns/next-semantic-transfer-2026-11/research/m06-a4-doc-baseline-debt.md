@@ -250,3 +250,16 @@ Mapped tests:
 First correct fixture manifests without altering their assertions or page bodies, then rerun all mapped tests and the full vibe-doc library suite under the existing lease. Handle the synthetic level-0/failure-card carrier as product work in the page/census slice: authored admission must stay strict, synthetic metadata must not masquerade as valid original package metadata. Update the exact lock-field expectation against the current parser. Any remaining failure is new evidence requiring classification, not permission to blanket-ignore it.
 
 The baseline-only declared-point citation and candidate-only empty-world refusal tests are excluded from these 62 and remain the point-read owner’s work. Evidence hashes and every original panic are in the JSON.
+
+
+## Integration provenance verified by root
+
+`git log -S 'observe_package_policy(package_dir)' -- crates/vibe-doc/src/pages.rs` and blame lines100–110 identify A1 commit `264b0746684bdf4aec0b5d7d09595d79f70287df` as the source of the strict policy check at page loading. `git log -S 'fn failed_manifest' -- crates/vibe-doc/src/site/render.rs` identifies earlier main commit `f09645cb4` for the generated failure-page producer. Current failure stacks stop at that new admission before rendering.
+
+The generated failure-page regression is therefore integration debt introduced by the source-policy rollout over an existing producer path, not evidence of a prototype defect. The generator's card metadata was already distinct from a valid authored package; adding a common authored admission boundary without carrying that distinction broke the path. A1 acceptance lists scoped source/materializer/compiler/CLI gates, but supplies no full documentation-library compatibility receipt. Those gates did not prove this consumer preserved its behavior.
+
+The remedy is the approved explicit generated-render input through the same render/card assembly, preserving unknown original kind and strict authored validation. The completion gate includes actual failed-fetch/retry and synthetic-card cases plus the complete documentation library suite. Fixture corrections preserve positive behavior assertions and use valid package metadata where the test actually represents an authored package. No baseline suppression or blanket bypass is justified by this provenance.
+
+## Resolution
+
+All62named failures were corrected and verified in accepted commit `8e61e9c754f8d9d9467c75e394c7833f0f68e096`; see `m06-a4-doc-baseline-acceptance.md/json`. Full library634/0 includes4new discriminators. The classification above remains the historical cause inventory, not current open debt. Full declared page census remains separate.

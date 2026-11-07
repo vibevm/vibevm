@@ -624,3 +624,12 @@ FMT-037 additional Rust error distinction under implementation: SourcePolicyErro
 Compatibility note — tutorial correction `839fdd0c3` changes no format or default: omitted package manifest format remains Simple, init package scaffold remains Normal, omitted --link remains Dynamic and explicit Static/Dynamic remain honored. EN/RU prose and root layout comment were corrected only.
 
 FMT-037 accepted `7859d3e2dc0d94991cbc9908c6fc0b1c23b0d31f`: SpecSources::capture_document/with_materialized_format, CapturedDocument relative/parse/recheck, PreparedInstalledSource::manifest and materialized_record_present; MissingNativeAddress distinguishes native absence. Actual installed Mixed/Xml, original Doc page identity, missing-versus-invalid adaptation and workspace-member CLI selection verified. No declared page census acceptance.
+
+
+## FMT-038 — Generated documentation input boundary (accepted slice)
+
+Repair level0/failure-page rendering through an explicit producer input to the existing build/card pipeline. Preserve actual subject identity and optional original kind; do not add pack to PackageKind, invent kind=doc or weaken authored manifest validation. Internal Rust composition change; no new vibe.toml/install-g/URI/DocIR/wire schema. Correct existing fixtures and lock-field expectation to current valid formats, without changing those formats. Final actual API/compatibility details pending acceptance.
+
+FMT-038 candidate detail: unknown-kind generated work metadata now omits kind rather than writing the non-PackageKind word pack; known original kinds remain. This changes internal generated diagnostic card spelling, not authored package grammar. Prepared generated page AST and Card fields are retained in memory; existing ancillary translation/glossary/media/review owners still read their normal inputs. No claim of a globally immutable render snapshot or zero filesystem rereads.
+
+FMT-038 accepted `8e61e9c754f8d9d9467c75e394c7833f0f68e096`. Internal Generated/PageSet/Card/shared finish and Card parsing module restore failure/retry and unknown-kind rendering; no public package kind, authored key, install-g default or wire schema added. Full doc library634PASS closes all62previous failures; four new boundary/differential tests pass. Ancillary filesystem inputs remain outside the captured PageSet/Card scope.

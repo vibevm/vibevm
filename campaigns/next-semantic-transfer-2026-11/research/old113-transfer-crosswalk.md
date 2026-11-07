@@ -314,3 +314,5 @@ A4 facts report/adopt accepted in `728d41319b04b2e527058ed29e77e4d88209c566`; [b
 A4 tutorial correction accepted `839fdd0c3`: EN/RU --link and Simple/Normal defaults plus root layout comment; exact init1PASS, no config/default change, no old113count increment.
 
 A4 captured documentation point reads accepted `7859d3e2d`; actual citations/agent/CLI support, full census and generated-render/baseline repair remain. No old113count increment.
+
+A4 generated documentation repair accepted `8e61e9c75`; all62prior library failures closed, full634/0. Full declared page census remains. Old113counts unchanged.

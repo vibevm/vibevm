@@ -1,0 +1,53 @@
+# NST-SOURCE-A4-DOC-BASELINE independent review
+
+final frozen candidate reviewed; no concrete blocker; root acceptance pending. No concrete blocking defect found. Acceptance remains root-owned.
+
+- Explicit Generated PageSet/Card uses common content/manifest/finish/projection/media/llms owners.
+- compose_prepared reads real authored pages via pages::read_package(source) before composing work tree; absent page tree generates metadata-only view. No marker grants authored admission.
+- Unknown kind remains None and projection true; placeholder fallback Doc is existing visual fallback, not a package metadata kind. Known original kind feeds placeholders.
+- Carried relations, navigation, i18n, bridge metadata, media, reviews and glossary owners retained. Media/review/glossary/translation metadata still use composed filesystem as before; only pages/card are captured producer input.
+- Fixture updates fill mandatory Doc identity/title/abstract/documents, supported MCP server, valid embedded-source pins/hash. Assertions preserved apart from exact configurations lock field update.
+- Full lib latest observed 633 pass including three discriminator tests and actual failure/retry. No Cargo/tests invoked by reviewer.
+- Declared census/server/borrowed completeness is explicitly outside this slice. Final source/gate binding and remaining gates are root acceptance work.
+- Post-split manifest/card.rs reviewed fully: extraction retains Card parsing/bridge/authorship/kind semantics; crate-private reexport keeps existing callers.
+- New differential test compares complete card except explicitly unioned generated-page audiences, every original page row and output/media bytes across three fixtures and three formats.
+- Sealed lib634/0, doctests83/0, Clippy completion (existing vibe-cli Cargo manifest warning), Conform0 findings with empty SARIF results observed.
+
+All62 original failures observed passing in sealed lib log. All four exit=0 per writer handoff; reviewer inspected log completions/results, did not rerun commands.
+
+## Examined source SHA256
+
+- `crates/vibe-doc/src/build.rs`: `6097054e87e440aff03ffcaa4036dbff227c5329ffcf97ff3619d3aaa87bdb6b`
+- `crates/vibe-doc/src/derived/tests.rs`: `817c1577e54746689b259b9ff7084ca2c07a61b5adcaeef37da9162e14149de6`
+- `crates/vibe-doc/src/glossary/tests.rs`: `78bb529e1fe137e18d0df93d1332b3b0052928ea03aabbf8ff620213ae825def`
+- `crates/vibe-doc/src/manifest.rs`: `a180e487fee5951b420d9ae62df04aaca1cd64bd82b192651644877c269354b7`
+- `crates/vibe-doc/src/manifest/card.rs`: `997c327790d9d010567f36bf723f7714965f0d179fb4ec62f18854ae32057f5a`
+- `crates/vibe-doc/src/manifest/tests.rs`: `14fc5851d8f02f74cbaa5d1d7777d48181deefcb7228f5fd0fb9669bd55c7431`
+- `crates/vibe-doc/src/pages.rs`: `2b96acda8d560116ea1dbebb30e32ae754c2605369c945bc57abe6e19322fc1a`
+- `crates/vibe-doc/src/prompts/tests.rs`: `9db999d637336f50e94296963389db0c8a7c0ea5ae4f3a11e8038b9adb909d1a`
+- `crates/vibe-doc/src/site/level0.rs`: `fab8428de80e12b9826c69dbe3577b6f55318897091a50e8158a2eb9e92fbe20`
+- `crates/vibe-doc/src/site/level0/card.rs`: `dd6f60cfc9872aae96465728c0a5db2e86f1b4d52cb2a6b5db9df21c6f0a9d27`
+- `crates/vibe-doc/src/site/level0/page.rs`: `3b2a2e0a907516a71d9c41104f8533b272b448cdfb5bb4a080f56aa8c9189403`
+- `crates/vibe-doc/src/site/level0/tests.rs`: `29c8aaa59636b8ba0f49add3819bd2be3e2167d26dc520db01dceb958aa33793`
+- `crates/vibe-doc/src/site/render.rs`: `ad6a50e132eb10c85b7e396bfaf10f57f7a23f55e99a46538acc3a2758164250`
+- `crates/vibe-doc/src/site/render/tests.rs`: `6a0a332d743afcc20cf8b9546deee08fb5fba1ed8c9e0cb25c88c4a60ed97790`
+- `crates/vibe-doc/src/style/glossary/tests.rs`: `90c8218746294e893c2cbd0de3d5e90563dcb0544bdd1331144a986f7cb59ab9`
+- `crates/vibe-doc/src/style/terms/tests.rs`: `c75a6c56c4f4116779e573e1ed1234b3da3fb1712d37a783c5c960f660a88a98`
+- `crates/vibe-doc/src/style/tests.rs`: `ec9e3c6b23bb0ed00bebca29fa2c32d801c5af3c8b7d10aea79c43efa6a61c17`
+- `crates/vibe-doc/src/surface/diff/tests.rs`: `81eaf9f42a6e4e6bcebfdd91693f86698d5a21a6753f95e8d2d1c854ae8fbc05`
+- `crates/vibe-doc/src/surface/fields/tests.rs`: `2f8672ac1cf075150da7fbcf4194764a78fdb8119145b170906af3b728d2ae81`
+- `crates/vibe-doc/src/todo/tests.rs`: `aa8a7fdc87cea585cdd6316fe38455071c187d5ba43bdedf705681f394a652a8`
+- `crates/vibe-doc/src/translations/borrowed.rs`: `d3d8fc7eb023c50a880fd59b9ef829b5742b84c513069917c044a64fa7958025`
+- `vibevm/vibespecs/common/PROP-072-boot-observability.xml`: `da2accdcf10b1c9af6f5c0da1c2f467b5e6ad8b97f997a3594f541e3aa9c1342`
+
+## Observed logs
+
+- `/tmp/nst-a4-doc-generated.log`: ['test result: FAILED. 615 passed; 15 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.00s']; SHA256 `dd104a2fba454a4ac0a139f3e1c202b3112e472f46ded9098a7699bf2f99b593`
+- `/tmp/nst-a4-doc-generated2.log`: ['test result: ok. 630 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s']; SHA256 `ed64d3afc2b4281ecc732cdc67fd4df111f714da6bb4b4993d8ce73925f1d3e2`
+- `/tmp/nst-a4-doc-generated3.log`: ['test result: ok. 633 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.02s']; SHA256 `f7658447849fb52f2dd15ab8257ac6256c1059561e35516f56d628c4a0ad89de`
+- `/tmp/nst-a4-doc-lib-sealed.log`: ['    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.41s', 'test result: ok. 634 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.21s']; SHA256 `63fb323efd773fdeede0863a5900eb80f8cb5363a941edb758fec99704fc5a9a`
+- `/tmp/nst-a4-doc-doctests-sealed.log`: ['    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.53s', 'test result: ok. 83 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s']; SHA256 `826b683ecaae02024959c7ef151325ef931bb3cf6a75090b09e64192d9b5a1e9`
+- `/tmp/nst-a4-doc-clippy-sealed.log`: ['    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.09s']; SHA256 `63d224b522c6487999de7edfbe816e5aade5ca2b80df53f2580200d4a64a0247`
+- `/tmp/nst-a4-doc-conform-sealed.log`: ['conform check: 0 finding(s) in scope crates/vibe-doc ({}), 0 frozen in baseline, 0 new; SARIF at target/conform/report.sarif.']; SHA256 `954cb28a0b7c66df61f01346230655417e80eb3c483768f1020d3726365a90c8`
+
+Final seal refresh: all19 writer source hashes match live files. Final Card comment clarifies presentation-only extraction and separate full authored admission. No executable changes after sealed gates reported by writer.
