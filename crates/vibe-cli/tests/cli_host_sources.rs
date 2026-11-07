@@ -54,7 +54,6 @@ fn host_progress_show_convert_and_checks_do_not_parse_ordinary_content() {
         vec!["progress", "check", "--path"],
         vec!["show", "effective", "--path"],
         vec!["check", "--path"],
-        vec!["tree", "--path"],
     ] {
         let result = user.vibe().args(&args).arg(root.path()).output().unwrap();
         assert!(!result.status.success(), "{args:?}: {result:?}");
@@ -70,6 +69,16 @@ fn host_progress_show_convert_and_checks_do_not_parse_ordinary_content() {
         assert!(!text.contains("unclosed XML"));
         assert_eq!(files(root.path()), before, "{args:?} wrote project files");
     }
+    let result = user
+        .vibe()
+        .args(["--json", "tree", "--path"])
+        .arg(root.path())
+        .output()
+        .unwrap();
+    assert!(result.status.success(), "{result:?}");
+    let tree: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
+    assert!(tree["in_place_specs"].as_array().unwrap().is_empty());
+    assert_eq!(files(root.path()), before, "tree wrote project files");
     let result = user
         .vibe()
         .args(["refactor", "convert-source", "--to", "xml"])

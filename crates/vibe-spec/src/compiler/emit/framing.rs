@@ -197,9 +197,29 @@ pub(crate) fn elided_marker(syntax: CommentSyntax, meta: &ContributionMeta) -> S
 
 pub(crate) fn elided_marker_payload(meta: &ContributionMeta) -> String {
     format!(
-        "{STATIC_MARKER_PREFIX}{} — {}; zone elided: emitted member-by-member in this lane (once-each, B-006)",
+        "{STATIC_MARKER_PREFIX}{} — {}{ELIDED_MARKER_SUFFIX}",
         meta.origin, meta.path
     )
+}
+
+const ELIDED_MARKER_SUFFIX: &str =
+    "; zone elided: emitted member-by-member in this lane (once-each, B-006)";
+
+/// Recover the path field of a static provenance marker, removing only the
+/// emitter's exact elision annotation. This is framing, not path admission.
+///
+/// ```
+/// use vibe_spec::static_marker_source_path;
+/// assert_eq!(static_marker_source_path(concat!(
+///     "boot/STATIC.xml",
+///     "; zone elided: emitted member-by-member in this lane (once-each, B-006)"
+/// )), "boot/STATIC.xml");
+/// assert_eq!(static_marker_source_path("docs/a;b.md"), "docs/a;b.md");
+/// ```
+pub fn static_marker_source_path(path_field: &str) -> &str {
+    path_field
+        .strip_suffix(ELIDED_MARKER_SUFFIX)
+        .unwrap_or(path_field)
 }
 
 pub(crate) fn hoisted_marker(syntax: CommentSyntax, origin: &str) -> String {
@@ -263,4 +283,24 @@ pub(crate) fn hoisted_origin_in_comment(comment: &str) -> Option<String> {
         .ok()
         .flatten()?;
     hoisted_origin_in_payload(&payload).map(str::to_owned)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn elided_marker_retains_exact_legacy_and_xml_emitted_bytes() {
+        let meta = ContributionMeta::new("org.example/parent", "boot/STATIC.xml").unwrap();
+        let payload = "vibe:static org.example/parent — boot/STATIC.xml; zone elided: emitted member-by-member in this lane (once-each, B-006)";
+        assert_eq!(
+            elided_marker(CommentSyntax::Markdown, &meta),
+            format!("<!-- {payload} -->")
+        );
+        assert_eq!(
+            elided_marker(CommentSyntax::Xml, &meta),
+            vibe_specdoc::frame_generated_xml_comment(payload)
+        );
+        assert_eq!(elided_marker_payload(&meta), payload);
+    }
 }

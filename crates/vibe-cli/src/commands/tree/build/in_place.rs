@@ -1,6 +1,7 @@
 //! Admission and directive collection over the tree's selected boot sources.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY");
 use super::*;
+mod read;
 
 /// Collect in-place `@spec` / `#use` / `#embed` / `#source` markers from every
 /// boot source file that loads, via the canonical fence-aware parser
@@ -13,22 +14,27 @@ use super::*;
 /// (PROP-045 ##PROJECTION-READ): directives live in unit text, which the
 /// projection preserves, so the marker scan sees exactly what a reader of
 /// the projected file sees.
+#[cfg(test)]
 pub(super) fn collect_in_place(
     root: &Path,
     boot_files: &[String],
     lock: &Lockfile,
 ) -> Result<Vec<InPlaceSpec>> {
-    use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
-    // Only the already selected slots may own dependency source paths. This
-    // table does not read any package until an actual input selects it.
-    let slots: Vec<PathBuf> = lock
-        .packages
-        .iter()
-        .map(|p| {
-            vibe_workspace::vibedeps::slot_abs_path(root, &p.group, p.name.as_str(), &p.version)
-        })
-        .collect();
-    let mut policies = BTreeMap::new();
+    collect_bound(root, boot_files, lock, None, None)
+}
+
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-TREE-READ",
+    r = 1
+)]
+pub(super) fn collect_bound(
+    root: &Path,
+    boot_files: &[String],
+    lock: &Lockfile,
+    format: Option<vibe_core::manifest::SpecFormat>,
+    manifest: Option<&Manifest>,
+) -> Result<Vec<InPlaceSpec>> {
+    let mut reads = read::SelectedReads::new(root, lock, format, manifest)?;
     let mut out = Vec::new();
     for file in boot_files {
         let relative = Path::new(file);
@@ -38,46 +44,17 @@ pub(super) fn collect_in_place(
         if vibe_core::layout::is_generated_boot_output(relative) {
             continue;
         }
-        let full = root.join(relative);
-        let owner = slots
-            .iter()
-            .filter(|slot| full.starts_with(slot))
-            .max_by_key(|slot| slot.components().count());
-        if owner.is_none()
-            && (relative.starts_with(vibe_core::layout::current_vibedeps_root())
-                || relative.starts_with(vibe_core::layout::current_packages_root()))
-        {
-            anyhow::bail!(
-                "violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY: tree boot source `{file}` has no selected package owner; fix surface: regenerate boot metadata with the selected lock slots"
-            );
-        }
-        let selected_package = owner.is_some();
-        let owner = owner.map(PathBuf::as_path).unwrap_or(root);
-        if full
-            .strip_prefix(owner)
-            .is_ok_and(vibe_core::layout::is_generated_boot_output)
-        {
-            continue;
-        }
-        if !policies.contains_key(owner) {
-            policies.insert(owner.to_owned(), observe_package_policy(owner)?);
-        }
-        let policy = &policies[owner];
-        match policy.mode() {
-            PackageSourceMode::ExplicitEmpty => continue,
-            PackageSourceMode::Explicit => {
-                return Err(policy.unsupported("tree in-place directives").into());
-            }
-            PackageSourceMode::MissingManifest if selected_package => anyhow::bail!(
-                "violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY: selected tree package `{}` has no manifest; fix surface: restore the selected package manifest before authored boot reads",
-                owner.display()
-            ),
-            PackageSourceMode::Legacy | PackageSourceMode::MissingManifest => {}
-        }
-        let Ok((text, _)) = vibe_specdoc::load_spec_text(&full) else {
+        let Some((text, declared)) = reads.read(relative)? else {
             continue;
         };
         let directives = Directives::parse(&text);
+        if declared && let Some(error) = directives.errors.first() {
+            return Err(read::refused(format!(
+                "{file}: projection line {}: {}",
+                error.line + 1,
+                error.message
+            )));
+        }
         for u in directives.in_place_uses {
             out.push(InPlaceSpec {
                 carrier: Carrier::AtSpec,
@@ -99,8 +76,6 @@ pub(super) fn collect_in_place(
             });
         }
     }
-    for policy in policies.values() {
-        policy.recheck_unchanged()?;
-    }
+    reads.recheck()?;
     Ok(out)
 }

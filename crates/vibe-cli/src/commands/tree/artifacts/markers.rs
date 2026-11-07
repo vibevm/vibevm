@@ -27,7 +27,7 @@ fn parse_legacy_marker(payload: &str, start_line: usize, end_line: usize) -> Opt
     let (origin, path) = inner.split_once(MARKER_SEP)?;
     Some(Marker {
         origin: origin.trim().to_string(),
-        source_path: path.trim().to_string(),
+        source_path: vibe_spec::static_marker_source_path(path.trim()).to_string(),
         start_line,
         end_line,
     })
@@ -51,7 +51,7 @@ fn parse_generated_marker(
         });
     };
     let origin = origin.trim();
-    let path = path.trim();
+    let path = vibe_spec::static_marker_source_path(path.trim());
     if origin.is_empty() {
         return Err(StaticDecompileError::MalformedGeneratedProvenance {
             line: start_line + 1,
@@ -181,4 +181,63 @@ pub(super) fn collect(
         cursor = end;
     }
     Ok(markers)
+}
+
+#[cfg(test)]
+mod tests {
+    use vibe_spec::{ArtifactInput, ArtifactPlan, ArtifactTarget, SectionSource, SpecAddress};
+
+    struct NoSource;
+    impl SectionSource for NoSource {
+        fn section_text(&self, _: &SpecAddress) -> Result<String, String> {
+            Err("elided contribution must not read source".into())
+        }
+    }
+
+    #[test]
+    fn actual_emitter_elided_markers_keep_only_source_path_in_both_frames() {
+        let path = "vibevm/vibespecs/boot/STATIC.xml";
+        for (target, generated) in [
+            (
+                ArtifactTarget::StaticMarkdown,
+                "vibevm/vibespecs/boot/STATIC.md",
+            ),
+            (
+                ArtifactTarget::StaticXml,
+                "vibevm/vibespecs/boot/STATIC.xml",
+            ),
+        ] {
+            let plan = ArtifactPlan::static_lane(
+                target,
+                generated,
+                "vibevm/vibedeps",
+                vec![ArtifactInput::elided("org.example/parent", path).unwrap()],
+            )
+            .unwrap();
+            let emitted = vibe_spec::compile_artifact(plan, &NoSource).unwrap();
+            let tape = std::str::from_utf8(emitted.bytes()).unwrap();
+            let rows = super::super::decompile_static(tape).unwrap();
+            assert_eq!(rows.len(), 1);
+            assert_eq!(rows[0].origin, "org.example/parent");
+            assert_eq!(rows[0].source_path, path, "{tape}");
+        }
+    }
+
+    #[test]
+    fn ordinary_semicolons_and_nonexact_annotations_remain_literal_paths() {
+        for path in [
+            "docs/ordinary;name.md",
+            "docs/x.xml; zone elided: another annotation",
+            "docs/x.xml; zone elided: emitted member-by-member in this lane (once-each, B-006) extra",
+        ] {
+            let payload = format!("vibe:static org.example/parent — {path}");
+            for marker in [
+                format!("<!-- {payload} -->"),
+                vibe_specdoc::frame_generated_xml_comment(&payload),
+            ] {
+                let rows = super::super::decompile_static(&marker).unwrap();
+                assert_eq!(rows[0].source_path, path);
+            }
+        }
+    }
 }

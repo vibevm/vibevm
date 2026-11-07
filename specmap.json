@@ -16971,6 +16971,24 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/build/in_place.rs",
+      "item_kind": "fn",
+      "line": 26,
+      "symbol": "vibe_cli::commands::tree::build::in_place::collect_bound",
+      "end_line": 81,
+      "fingerprint": "tok1:788f9c97ebb63560de0dd85dd00d3fc1bdc1a9e98fdb299f78235afb1eac567e"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/build/in_place/read.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::tree::build::in_place::read",
+      "end_line": 5,
+      "fingerprint": "tok1:59e411cb133e443f416a0605fd90b45e7960e1c86b38c1976988b68649f766c3"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/diagnostics.rs",
       "item_kind": "mod",
       "line": 10,
@@ -19758,6 +19776,15 @@
       "symbol": "vibe_cli::tests::cli_declared_own_boot",
       "end_line": 5,
       "fingerprint": "tok1:d4394199b9195d566a13a2bbdcd2d7783c8808edc6fa78dcdcfce1a3579e904a"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_declared_tree.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::cli_declared_tree",
+      "end_line": 5,
+      "fingerprint": "tok1:59e411cb133e443f416a0605fd90b45e7960e1c86b38c1976988b68649f766c3"
     },
     {
       "crate_name": "vibe-cli",
@@ -57850,6 +57877,24 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/tree/build/in_place.rs",
+      "from_symbol": "vibe_cli::commands::tree::build::in_place::collect_bound",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-TREE-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/build/in_place/read.rs",
+      "from_symbol": "vibe_cli::commands::tree::build::in_place::read",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-TREE-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-cli/src/commands/tree/diagnostics.rs",
       "from_symbol": "vibe_cli::commands::tree::diagnostics",
       "line": 10,
@@ -60403,6 +60448,15 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_declared_tree.rs",
+      "from_symbol": "vibe_cli::tests::cli_declared_tree",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-TREE-READ",
       "verb": "implements",
       "pinned_r": 1
     },
@@ -114257,6 +114311,26 @@
       "heading": "Level-zero projection chooses authored native inputs through their declared interpretation and selected root, not a physical SPEC_ROOT existence gate or filename suffix. Parse VibeSpec as Spec; only an actual Doc package may supply Doc vocabulary. Do not disguise a project or other package kind as Doc. Use existing native inventory, selected Doc and generated rendering owners with the original identity and finite observations; an installed input still needs its independent binding or an explicit refusal. Retain captured native bytes for composition copies and relevant rechecks through publication instead of reopening authored files after capture. Existing card-only views may describe incomplete subject metadata without thereby authorizing authored native parsing. Ordinary resources enter only their existing explicitly selected literal presentation paths, never native page semantics by suffix. Preserve legacy layout, original logical names, canonical native meaning/status/void and the accepted generated-versus-authored boundary. No new kind, manifest/URI/wire schema, parser, global source world or transaction is introduced. @status:spec/done",
       "line": 80,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-LEVEL0-READ-LAW"
+    },
+    {
+      "anchor": "SOURCE-TREE-READ",
+      "content_hash": "sha256:27a7f6b519bf5107b861eaa7c63ec7af143e9a3691ca2cf5e7e9de44c037d3e6",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Selected native boot inputs in tree views",
+      "line": 82,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-TREE-READ",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-TREE-READ-LAW",
+      "content_hash": "sha256:60a468963c5364b54a4e4b099411fffb325df73760f481986300f81432837435",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Tree directive collection reads only the boot-file set selected by committed INDEX and STATIC provenance. It does not replace that graph with a whole-source census or regenerate artifacts. Original host and registered node inputs use held policy, exact selected bytes and declared media; ungrouped hosts retain path-based identity without a fabricated package, group or native address. Installed inputs retain independently selected lock identity/hash and trusted materialized format through the existing binding owner; map physical selected output to its original row rather than guessing from suffix. Only selected VibeSpec input reaches native projection and the existing directive parser; ordinary and Doc inputs do not mint managed directives. Selected declared ambiguity, malformed native syntax, unavailable source or changed binding refuses visibly rather than becoming empty output. Preserve qualified legacy behavior, exact generated-artifact exclusions, committed load attribution and existing tree schema/carriers. Explicit native input already named by the graph is a requested read, not a change to automatic scan-only enrollment. Recheck relevant lock/policy/source observations before returning the read-only model; no lifecycle lease, writes, new URI or source world. Existing XML projection-relative line convention remains distinct from original XML byte positions. @status:spec/done",
+      "line": 84,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-TREE-READ-LAW"
     },
     {
       "anchor": "genre-definition",

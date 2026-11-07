@@ -11,7 +11,7 @@ use super::*;
 use vibe_core::manifest::LinkType;
 
 #[test]
-fn source_policy_in_place_empty_skips_and_explicit_or_invalid_refuses() {
+fn source_policy_in_place_empty_and_ordinary_skip_while_invalid_refuses() {
     for (suffix, empty) in [
         ("sources=[]\n", true),
         ("source_exports=[]\n", true),
@@ -22,7 +22,7 @@ fn source_policy_in_place_empty_skips_and_explicit_or_invalid_refuses() {
         ("sources='invalid'\n", false),
         (
             "[[package.sources]]\nfile='raw.xml'\nmedia='application/xml'\ninterpretation='xml-data'\nrole='resource'\nloading='explicit'\n",
-            false,
+            true,
         ),
     ] {
         let tmp = tempfile::tempdir().unwrap();
@@ -66,7 +66,11 @@ fn source_policy_in_place_unknown_dependency_owner_refuses() {
 #[test]
 fn source_policy_in_place_uses_selected_slot_not_host_policy() {
     let tmp = tempfile::tempdir().unwrap();
-    std::fs::write(tmp.path().join("vibe.toml"), "[project]\nname='host'\n").unwrap();
+    std::fs::write(
+        tmp.path().join("vibe.toml"),
+        "[project]\nname='host'\nversion='1.0.0'\n",
+    )
+    .unwrap();
     let package: LockedPackage = toml::from_str("kind='flow'\nname='guard'\ngroup='org.example'\nversion='1.0.0'\nsource_url='file:///fixture'\ncontent_hash='sha256:abc'\n").unwrap();
     let slot = vibe_workspace::vibedeps::slot_abs_path(
         tmp.path(),
@@ -94,15 +98,76 @@ fn source_policy_in_place_uses_selected_slot_not_host_policy() {
     std::fs::write(slot.join("vibe.toml"), format!("{manifest}sources=[]\n")).unwrap();
     assert!(
         collect_in_place(tmp.path(), std::slice::from_ref(&rel), &lock)
-            .unwrap()
-            .is_empty()
+            .unwrap_err()
+            .to_string()
+            .contains("independently selected materialized format")
     );
     std::fs::write(slot.join("vibe.toml"), format!("{manifest}[[package.sources]]\nfile='boot.md'\nmedia='text/markdown'\ninterpretation='opaque'\nrole='resource'\nloading='explicit'\n")).unwrap();
     assert!(
-        collect_in_place(tmp.path(), &[rel], &lock)
+        collect_in_place(tmp.path(), std::slice::from_ref(&rel), &lock)
             .unwrap_err()
             .to_string()
-            .contains("SOURCE-ADMISSION-BOUNDARY")
+            .contains("independently selected materialized format")
+    );
+    lock.write(tmp.path().join("vibe.lock")).unwrap();
+    let index = tmp.path().join(vibe_core::layout::current_boot_index());
+    std::fs::create_dir_all(index.parent().unwrap()).unwrap();
+    std::fs::write(
+        index,
+        format!("schema=1\n[[entry]]\nkind='dynamic'\npath='{rel}'\n"),
+    )
+    .unwrap();
+    assert!(
+        build_tree(tmp.path())
+            .unwrap_err()
+            .to_string()
+            .contains("independently selected materialized format")
+    );
+    std::fs::write(slot.join("vibe.toml"), format!("{manifest}sources=[]\n")).unwrap();
+    assert!(
+        build_tree(tmp.path())
+            .unwrap_err()
+            .to_string()
+            .contains("independently selected materialized format")
+    );
+}
+
+#[test]
+fn in_place_selected_slot_uses_unversioned_owner_and_refuses_declared_binding() {
+    let root = tempfile::tempdir().unwrap();
+    std::fs::write(
+        root.path().join("vibe.toml"),
+        "[project]\nname='host'\nversion='1.0.0'\n",
+    )
+    .unwrap();
+    let p: LockedPackage = toml::from_str("kind='flow'\nname='guard'\ngroup='org.example'\nversion='1.0.0'\nsource_url='file:///fixture'\ncontent_hash='sha256:abc'\nmaterialization='in-place'\n").unwrap();
+    let slot = vibe_workspace::vibedeps::in_place_slot_abs_path(root.path(), &p.group, &p.name);
+    std::fs::create_dir_all(&slot).unwrap();
+    let manifest = "[package]\nname='guard'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\n";
+    std::fs::write(slot.join("vibe.toml"), manifest).unwrap();
+    std::fs::write(slot.join("boot.md"), "#use spec://org.example/lib/boot\n").unwrap();
+    let relative =
+        vibe_core::machine_json_path(slot.join("boot.md").strip_prefix(root.path()).unwrap());
+    let mut lock = Lockfile::empty("test", "0");
+    lock.packages.push(p);
+    assert_eq!(
+        collect_in_place(root.path(), std::slice::from_ref(&relative), &lock)
+            .unwrap()
+            .len(),
+        1
+    );
+    std::fs::write(slot.join("vibe.toml"), format!("{manifest}[[package.sources]]\nfile='boot.md'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='explicit'\n")).unwrap();
+    assert!(
+        in_place::collect_bound(
+            root.path(),
+            &[relative],
+            &lock,
+            Some(vibe_core::manifest::SpecFormat::Mixed),
+            None
+        )
+        .unwrap_err()
+        .to_string()
+        .contains("declared in-place tree source has no installed binding")
     );
 }
 

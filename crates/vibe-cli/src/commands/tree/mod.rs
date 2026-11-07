@@ -55,7 +55,10 @@ pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
             None => return Ok(()),
         }
     };
-    let tree = build::build_tree(&root)?;
+    let manifest =
+        vibe_core::manifest::Manifest::read(root.join(vibe_core::manifest::Manifest::FILENAME))?;
+    let format = super::reinstall::effective_rederive_format(&manifest)?;
+    let tree = build::build_tree_bound(&root, format)?;
 
     if ctx.is_json() {
         // The schema-valid model is flattened under the CLI envelope

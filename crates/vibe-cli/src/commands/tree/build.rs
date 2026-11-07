@@ -38,7 +38,24 @@ const HOST_BOOT_FILES: &[&str] = &["00-core.md", "90-user.md"];
 /// Read-only: touches only `vibe.lock`, `vibe.toml`, the committed boot
 /// artifacts, and each package's materialised `vibedeps/` manifest. Never
 /// mutates the tree (PROP-036 §2.1).
+/// This compatibility entry has no installed representation selection;
+/// declared installed reads require [`build_tree_bound`].
 pub fn build_tree(root: &Path) -> Result<PackageTree> {
+    build_tree_impl(root, None)
+}
+
+/// Bind declared installed input to the operator's independently selected format.
+pub(super) fn build_tree_bound(
+    root: &Path,
+    format: vibe_core::manifest::SpecFormat,
+) -> Result<PackageTree> {
+    build_tree_impl(root, Some(format))
+}
+
+fn build_tree_impl(
+    root: &Path,
+    format: Option<vibe_core::manifest::SpecFormat>,
+) -> Result<PackageTree> {
     let lockfile = load_lockfile(root)?;
     let manifest = Manifest::read(root.join(Manifest::FILENAME))
         .with_context(|| format!("reading {}", root.join(Manifest::FILENAME).display()))?;
@@ -218,7 +235,13 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
         roots,
         packages,
         boot,
-        in_place_specs: collect_in_place(root, &boot_files, &lockfile)?,
+        in_place_specs: in_place::collect_bound(
+            root,
+            &boot_files,
+            &lockfile,
+            format,
+            Some(&manifest),
+        )?,
         // Root-drift lands here now; the stale-artifacts check (needs a fresh
         // EffectiveBoot recompute) is still deferred — PROP-036 §2.10.
         diagnostics,
@@ -445,6 +468,7 @@ fn condition_from_when(when: Option<&str>) -> Condition {
 }
 
 mod in_place;
+#[cfg(test)]
 use in_place::collect_in_place;
 
 /// Map a directive kind to the model carrier.

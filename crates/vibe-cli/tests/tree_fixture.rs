@@ -175,13 +175,37 @@ license_file_sha256 = "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     )
 }
 
-/// Materialise the six-file fixture project under `root`.
+/// Materialise the graph and its selected legacy package owners under `root`.
 fn write_fixture(root: &Path) {
     std::fs::create_dir_all(root.join(common::boot_dir())).expect("mk the boot lane");
     std::fs::write(root.join("vibe.toml"), MANIFEST).expect("write vibe.toml");
     std::fs::write(root.join("vibe.lock"), lockfile()).expect("write vibe.lock");
     std::fs::write(root.join(common::static_md_rel()), static_md()).expect("write STATIC.md");
     std::fs::write(root.join(common::index_rel()), index_md()).expect("write INDEX.md");
+    // Authored source admission requires the manifest of a selected package,
+    // even for this legacy model oracle. Keep the six-lane graph unchanged.
+    let lock = vibe_core::manifest::Lockfile::parse_str(&lockfile()).unwrap();
+    for package in lock.packages {
+        let slot = vibe_workspace::vibedeps::slot_abs_path(
+            root,
+            &package.group,
+            &package.name,
+            &package.version,
+        );
+        std::fs::create_dir_all(&slot).unwrap();
+        std::fs::write(
+            slot.join("vibe.toml"),
+            format!(
+                "[package]\nkind='{}'\ngroup='{}'\nname='{}'\nversion='{}'\n",
+                package.kind.as_str(),
+                package.group,
+                package.name,
+                package.version
+            ),
+        )
+        .unwrap();
+        std::fs::write(slot.join("boot.md"), "# Legacy boot\n").unwrap();
+    }
 }
 
 /// Run `vibe tree --json --path <root>` and parse stdout.

@@ -53,6 +53,7 @@ pub use compiler::builtin::{
     compile_artifact_missing_backend_test_vehicle, compile_artifact_opaque_test_vehicle,
     compile_artifact_replacement_test_vehicle, compile_plan_header_for_test,
 };
+pub use compiler::emit::framing::static_marker_source_path;
 pub use compiler::ir::{
     ArtifactContext, ArtifactInput, ArtifactInputType, ArtifactInputWitness, ArtifactPlan,
     ArtifactPlanError, ArtifactTarget, BackendId, BackendIdError, DocumentProvider,
