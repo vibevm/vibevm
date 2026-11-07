@@ -299,11 +299,22 @@ pub fn build_observed(
     Ok(prepare_observed(package_dir, sources, options, progress)?.built)
 }
 
-/// Explicit producer-owned pages and card; never authorizes a filesystem walk.
+/// Explicit producer pages/card plus any retained original source observation.
+/// Generated input never authorizes a filesystem walk.
 #[derive(Debug, Clone)]
 pub(crate) struct Generated {
     pub(crate) pages: PageSet,
     pub(crate) card: manifest::Card,
+    pub(crate) authored: Option<std::sync::Arc<crate::site::level0::sources::SourcePages>>,
+}
+
+impl Generated {
+    pub(crate) fn recheck(&self) -> Result<()> {
+        if let Some(authored) = &self.authored {
+            authored.recheck()?;
+        }
+        Ok(())
+    }
 }
 
 /// Feed generated inputs through the same assembly and projection owners.
@@ -317,6 +328,7 @@ pub(crate) fn build_generated(
     sources: &SpecSources,
     options: &Options,
 ) -> Result<Built> {
+    input.recheck()?;
     let mut content = content_for_set(
         package_dir,
         sources,
@@ -337,7 +349,7 @@ pub(crate) fn build_generated(
         sources,
         &options.manifest,
     );
-    finish(
+    let built = finish(
         package_dir,
         &input.pages,
         &content,
@@ -345,7 +357,9 @@ pub(crate) fn build_generated(
         options,
         &Progress::default(),
         input.card.placeholder_kind(),
-    )
+    )?;
+    input.recheck()?;
+    Ok(built)
 }
 
 fn finish(

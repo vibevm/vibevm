@@ -9,6 +9,8 @@ use std::path::Path;
 
 use super::*;
 
+mod source_policy;
+
 fn write(path: &Path, text: &str) {
     fs::create_dir_all(path.parent().expect("a parent")).expect("the directory");
     fs::write(path, text).expect("writing");
@@ -259,4 +261,36 @@ fn a_declared_image_that_is_missing_is_a_note_and_not_a_refusal() {
 
 fn page_names(set: &crate::pages::PageSet) -> Vec<String> {
     set.pages.iter().map(|p| p.rel.clone()).collect()
+}
+
+#[test]
+fn declared_spec_flow_matches_legacy_composition() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path().join("pkg");
+    plain(&root);
+    let (_, legacy) =
+        compose_prepared(&root, &tmp.path().join("legacy"), &Related::default()).unwrap();
+    let manifest = fs::read_to_string(root.join("vibe.toml")).unwrap();
+    write(
+        &root.join("vibe.toml"),
+        &format!(
+            "{manifest}\n[[package.sources]]\nfile='vibevm/vibespecs/common/PROP-001.xml'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='explicit'\n"
+        ),
+    );
+    let (_, declared) =
+        compose_prepared(&root, &tmp.path().join("declared"), &Related::default()).unwrap();
+    let old = legacy
+        .pages
+        .pages
+        .iter()
+        .find(|p| p.rel == "common/PROP-001.xml")
+        .unwrap();
+    let new = declared
+        .pages
+        .pages
+        .iter()
+        .find(|p| p.rel == old.rel)
+        .unwrap();
+    assert_eq!(old.doc, new.doc);
+    assert_eq!(old.path, new.path);
 }

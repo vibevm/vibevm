@@ -15,7 +15,7 @@
 //! diagnostic work files alongside them. For a package that ships no documentation the
 //! pages are the ones composed here; for a `doc` package the very same
 //! composition also carries the pages its author wrote, because those
-//! pages already live under the spec root and are copied as they are.
+//! pages are selected at their original root and copied from captured bytes.
 //! So one function answers both levels, and everything downstream — the
 //! block numbering, the three projections, the manifest, the `llms`
 //! tiers, the card's images — is the pipeline that already exists rather
@@ -28,8 +28,8 @@
 //!
 //! ## What is copied and what is composed
 //!
-//! Copied, byte for byte: every `.xml` under the package's spec root,
-//! at the same relative path. That is not an optimisation — it is the
+//! Copied, byte for byte: selected native Spec/Doc sources, or legacy XML
+//! under the spec root, at their original logical paths. This is the
 //! address map. `spec://<group>/<name>@<version>/<document>` maps to
 //! `/doc/<group>/<name>/<version>/<document>/` (`##SITE-MOUNT`), so a
 //! document has to keep its path or every citation to it would break.
@@ -49,6 +49,7 @@ use crate::pages::SPEC_ROOT;
 
 mod card;
 mod page;
+pub(crate) mod sources;
 // Public where its siblings are not: the block reader is the one piece
 // of a composition that answers a question on its own — «what shape is
 // this README» — and its example is worth compiling.
@@ -153,17 +154,24 @@ pub(crate) fn compose_prepared(
 ) -> Result<(Composed, crate::build::Generated)> {
     // Only actual authored pages invoke source admission. A card-only view
     // can describe incomplete metadata without interpreting authored XML.
-    let mut pages = if source.join(SPEC_ROOT).is_dir() {
-        crate::pages::read_package(source)?
+    let manifest = card::read(source)?;
+    let authored = if source.join(SPEC_ROOT).is_dir() || manifest.has_source_declaration() {
+        Some(std::sync::Arc::new(sources::SourcePages::capture(
+            source,
+            &manifest.text,
+        )?))
     } else {
-        crate::pages::PageSet::default()
+        None
     };
+    let mut pages = authored
+        .as_ref()
+        .map(|source| source.set.clone())
+        .unwrap_or_default();
     if work.exists() {
         std::fs::remove_dir_all(work).map_err(|e| DocError::io("clearing", work, e))?;
     }
     std::fs::create_dir_all(work).map_err(|e| DocError::io("creating", work, e))?;
 
-    let manifest = card::read(source)?;
     let mut composed = Composed {
         dir: work.to_path_buf(),
         ..Composed::default()
@@ -174,13 +182,26 @@ pub(crate) fn compose_prepared(
     card::copy_media(source, work, &manifest, &mut composed.notes)?;
     card::copy_reviews(source, work)?;
 
-    composed.copied = copy_specs(work, &pages)?;
+    if let Some(authored) = &authored {
+        authored.recheck()?;
+        composed.copied = copy_specs(work, &authored.copies)?;
+    }
     page::compose(source, work, &manifest, related, &mut composed, &mut pages)?;
     pages.pages.sort_by(|a, b| a.rel.cmp(&b.rel));
     let metadata: toml::Value = toml::from_str(&card::synthesise(&manifest))
         .map_err(|e| DocError::manifest(work, format!("generated card does not parse: {e}")))?;
     let card = crate::manifest::Card::from_value(&metadata, work)?;
-    Ok((composed, crate::build::Generated { pages, card }))
+    if let Some(authored) = &authored {
+        authored.recheck()?;
+    }
+    Ok((
+        composed,
+        crate::build::Generated {
+            pages,
+            card,
+            authored,
+        },
+    ))
 }
 
 /// Parse only bytes explicitly produced by the level-zero/failure generator.
@@ -204,21 +225,16 @@ pub(crate) fn generated_page(
     Ok(())
 }
 
-/// Copy every spec document at its own path.
-fn copy_specs(work: &Path, pages: &crate::pages::PageSet) -> Result<usize> {
+/// Copy captured native bytes at their original logical paths.
+fn copy_specs(work: &Path, copies: &[(String, Vec<u8>)]) -> Result<usize> {
     let into = work.join(SPEC_ROOT);
-    let paths = pages
-        .pages
-        .iter()
-        .map(|p| (&p.rel, &p.path))
-        .chain(pages.unreadable.iter().map(|p| (&p.rel, &p.path)));
     let mut copied = 0;
-    for (rel, path) in paths {
+    for (rel, bytes) in copies {
         let target = into.join(rel);
         if let Some(parent) = target.parent() {
             std::fs::create_dir_all(parent).map_err(|e| DocError::io("creating", parent, e))?;
         }
-        std::fs::copy(path, &target).map_err(|e| DocError::io("copying", path, e))?;
+        std::fs::write(&target, bytes).map_err(|e| DocError::io("writing", &target, e))?;
         copied += 1;
     }
     Ok(copied)

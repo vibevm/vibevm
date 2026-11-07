@@ -37,6 +37,18 @@ pub struct Manifest {
 }
 
 impl Manifest {
+    /// Presence selects strict source admission; this never decodes descriptors.
+    pub(super) fn has_source_declaration(&self) -> bool {
+        ["package", "project"].iter().any(|owner| {
+            self.value
+                .get(owner)
+                .is_some_and(|table| table.get("sources").is_some())
+        }) || self
+            .value
+            .get("package")
+            .is_some_and(|table| table.get("source_exports").is_some())
+    }
+
     /// One string from `[package]`.
     pub fn field(&self, key: &str) -> Option<String> {
         self.value

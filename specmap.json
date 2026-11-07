@@ -25469,10 +25469,10 @@
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/build.rs",
       "item_kind": "fn",
-      "line": 309,
+      "line": 320,
       "symbol": "vibe_doc::build::build_generated",
-      "end_line": 349,
-      "fingerprint": "tok1:b0526262fead99db3565c53e5316d949e500e355ae655ae1ebf739239ab47ba5"
+      "end_line": 363,
+      "fingerprint": "tok1:e8bc231667367709d246648d7ad6c34dbdded55328adca457837c45463191a9c"
     },
     {
       "crate_name": "vibe-doc",
@@ -25586,9 +25586,9 @@
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/citations/sources/census.rs",
       "item_kind": "fn",
-      "line": 157,
+      "line": 172,
       "symbol": "vibe_doc::citations::sources::census::SpecSources::capture_pages",
-      "end_line": 208,
+      "end_line": 223,
       "fingerprint": "tok1:4899839762938d848f981039f02f37eb298b47ae20d4994705195434b6234fc4"
     },
     {
@@ -26090,18 +26090,18 @@
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/site/level0.rs",
       "item_kind": "fn",
-      "line": 145,
+      "line": 146,
       "symbol": "vibe_doc::site::level0::compose_prepared",
-      "end_line": 184,
-      "fingerprint": "tok1:a31fa6fe80ae33118e65dd35aab787d0d4e3c1dafce855d51311e1c330c6fd6b"
+      "end_line": 205,
+      "fingerprint": "tok1:f603e1b193384080ecf5147516a1f63555e23ac4090e6922694eaf4da9202a45"
     },
     {
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/site/level0.rs",
       "item_kind": "fn",
-      "line": 186,
+      "line": 207,
       "symbol": "vibe_doc::site::level0::generated_page",
-      "end_line": 205,
+      "end_line": 226,
       "fingerprint": "tok1:6356c6018a9801ee83ef47fd728fb5e9b818ed1f14a9c3a5ce06ec27d1670556"
     },
     {
@@ -26121,6 +26121,24 @@
       "symbol": "vibe_doc::site::level0::readme",
       "end_line": 26,
       "fingerprint": "tok1:5765336363ea77c369431c741545e784689a21e801e391a78cfefb86e8961238"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/level0/sources.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_doc::site::level0::sources",
+      "end_line": 5,
+      "fingerprint": "tok1:bdbacc3f2fc8d19e4c378779a6dbf5204f356686b3598c5a61fddd2c5f641b4c"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/level0/tests/source_policy.rs",
+      "item_kind": "fn",
+      "line": 26,
+      "symbol": "vibe_doc::site::level0::tests::source_policy::outside_specroot_native_inputs_keep_bytes_ast_and_identity",
+      "end_line": 80,
+      "fingerprint": "tok1:b601477193904d348ab865428e3323ef24e79804971654e45b4e37e4429cb8b1"
     },
     {
       "crate_name": "vibe-doc",
@@ -26144,54 +26162,63 @@
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "item_kind": "fn",
-      "line": 195,
+      "line": 197,
       "symbol": "vibe_doc::site::render::tests::a_package_that_cannot_be_fetched_becomes_a_page_and_not_a_stop",
-      "end_line": 223,
+      "end_line": 225,
       "fingerprint": "tok1:bcc70bbff3a216805b437a03643c57db322d25a59b323514c5124d786d261b81"
     },
     {
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "item_kind": "fn",
-      "line": 225,
+      "line": 227,
       "symbol": "vibe_doc::site::render::tests::a_retry_that_succeeds_replaces_the_failure_page",
-      "end_line": 251,
+      "end_line": 253,
       "fingerprint": "tok1:448ac6624ae3107a1841b2c25749d60051d8a499455493c5844b72d09db15ca6"
     },
     {
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "item_kind": "fn",
-      "line": 292,
+      "line": 294,
       "symbol": "vibe_doc::site::render::tests::an_unknown_kind_is_a_generated_card_not_an_authored_package",
-      "end_line": 338,
+      "end_line": 340,
       "fingerprint": "tok1:a15572a289aacb07574abb3e1b7f662a4e69b5ca5912c269e04aca3031938ade"
     },
     {
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "item_kind": "fn",
-      "line": 404,
+      "line": 406,
       "symbol": "vibe_doc::site::render::tests::generated_composition_preserves_authored_metadata_and_page_projections",
-      "end_line": 477,
+      "end_line": 479,
       "fingerprint": "tok1:e70d62ca3aa014b67a2ec8a50d04b2a01f7bd9cb304f9db8b2ec9721bd15c85d"
     },
     {
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "item_kind": "fn",
-      "line": 377,
+      "line": 379,
       "symbol": "vibe_doc::site::render::tests::invalid_original_pages_cannot_use_generated_composition_as_admission",
-      "end_line": 402,
+      "end_line": 404,
       "fingerprint": "tok1:8c48e8f4b1d664c161611eb31829995a315d67a5eb52ce387fdaceed9769db95"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/site/render/tests/native_sources.rs",
+      "item_kind": "fn",
+      "line": 25,
+      "symbol": "vibe_doc::site::render::tests::native_sources::declared_package_and_host_render_all_formats_from_original_sources",
+      "end_line": 89,
+      "fingerprint": "tok1:845cf5a594ec344744bb1296a883267bbc39fc564438a16bcec3c456ae414583"
     },
     {
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "item_kind": "fn",
-      "line": 340,
+      "line": 342,
       "symbol": "vibe_doc::site::render::tests::prepared_generated_pages_and_card_do_not_come_back_from_work_files",
-      "end_line": 375,
+      "end_line": 377,
       "fingerprint": "tok1:addcecb2dfccc78fa832a63a7ec6673d87aa15cf21612b5e54ae5f6dbac90ff2"
     },
     {
@@ -65619,7 +65646,7 @@
     {
       "file": "crates/vibe-doc/src/build.rs",
       "from_symbol": "vibe_doc::build::build_generated",
-      "line": 310,
+      "line": 321,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
       "verb": "implements",
@@ -65730,7 +65757,7 @@
     {
       "file": "crates/vibe-doc/src/citations/sources/census.rs",
       "from_symbol": "vibe_doc::citations::sources::census::SpecSources::capture_pages",
-      "line": 166,
+      "line": 181,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS",
       "verb": "implements",
@@ -66180,7 +66207,7 @@
     {
       "file": "crates/vibe-doc/src/site/level0.rs",
       "from_symbol": "vibe_doc::site::level0::compose_prepared",
-      "line": 145,
+      "line": 146,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
       "verb": "implements",
@@ -66189,7 +66216,7 @@
     {
       "file": "crates/vibe-doc/src/site/level0.rs",
       "from_symbol": "vibe_doc::site::level0::generated_page",
-      "line": 187,
+      "line": 208,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
       "verb": "implements",
@@ -66212,6 +66239,24 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-doc/src/site/level0/sources.rs",
+      "from_symbol": "vibe_doc::site::level0::sources",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-LEVEL0-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-doc/src/site/level0/tests/source_policy.rs",
+      "from_symbol": "vibe_doc::site::level0::tests::source_policy::outside_specroot_native_inputs_keep_bytes_ast_and_identity",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-LEVEL0-READ",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-doc/src/site/queue.rs",
       "from_symbol": "vibe_doc::site::queue",
       "line": 33,
@@ -66230,7 +66275,7 @@
     {
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "from_symbol": "vibe_doc::site::render::tests::a_package_that_cannot_be_fetched_becomes_a_page_and_not_a_stop",
-      "line": 198,
+      "line": 200,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
       "verb": "verifies",
@@ -66239,7 +66284,7 @@
     {
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "from_symbol": "vibe_doc::site::render::tests::a_retry_that_succeeds_replaces_the_failure_page",
-      "line": 228,
+      "line": 230,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
       "verb": "verifies",
@@ -66248,7 +66293,7 @@
     {
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "from_symbol": "vibe_doc::site::render::tests::an_unknown_kind_is_a_generated_card_not_an_authored_package",
-      "line": 294,
+      "line": 296,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
       "verb": "verifies",
@@ -66257,7 +66302,7 @@
     {
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "from_symbol": "vibe_doc::site::render::tests::generated_composition_preserves_authored_metadata_and_page_projections",
-      "line": 407,
+      "line": 409,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
       "verb": "verifies",
@@ -66266,16 +66311,25 @@
     {
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "from_symbol": "vibe_doc::site::render::tests::invalid_original_pages_cannot_use_generated_composition_as_admission",
-      "line": 378,
+      "line": 380,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
       "verb": "verifies",
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-doc/src/site/render/tests/native_sources.rs",
+      "from_symbol": "vibe_doc::site::render::tests::native_sources::declared_package_and_host_render_all_formats_from_original_sources",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-LEVEL0-READ",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-doc/src/site/render/tests.rs",
       "from_symbol": "vibe_doc::site::render::tests::prepared_generated_pages_and_card_do_not_come_back_from_work_files",
-      "line": 343,
+      "line": 345,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
       "verb": "verifies",
@@ -114183,6 +114237,26 @@
       "heading": "Declared documentation page enumeration uses the actual Doc package, selected outer source policy and finite operation-owned native inventory. Shared selector precedence applies before filtering; a valid selector tie whose winning declarations are all outside the requested interpretation contributes no page, while a tie containing that native interpretation refuses. Structural manifest validation and unfiltered host inventory behavior remain unchanged. Ordinary resources and nested manifest data do not acquire page vocabulary. Authored originals use held policy/media/bytes, while installed roots require independent full selected lock identity/hash and trusted materialized format through the existing prepared record owner. Explicit roots are not replaced by nearer coordinate matches; an unbound materialized path cannot invent its own expectation. Preserve original logical relative paths and established document identities independently of converted filenames. Explicit empty has zero pages; malformed policy or unavailable selected input refuses. Native syntax failures remain named unreadable pages, and membership-only navigation can still name a malformed selected page. Actual build, server routes, self citations and borrowed examples consume the same selected inventory or point-read owners and retain relevant observation checks before publication or response. Server page selection uses logical document identity rather than reconstructing an xml filename; existing routes, translation relations and missing-page behavior remain compatible. Generated producer inputs retain their separate accepted boundary, and legacy APIs retain their qualified compatibility or explicit unsupported refusal where independent binding is absent. Reuse native Doc AST and existing rendering/manifest/projection owners; no new package kind, wire schema, source URI, parser, global source world or transaction is introduced. @status:spec/done",
       "line": 76,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS-LAW"
+    },
+    {
+      "anchor": "SOURCE-LEVEL0-READ",
+      "content_hash": "sha256:40343dd07c8873109d0c3881402b232193166440ec3a56d259a6ae500ceda197",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Declared native inputs to generated level-zero views",
+      "line": 78,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-LEVEL0-READ",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-LEVEL0-READ-LAW",
+      "content_hash": "sha256:c4e2d6bab9fdc59f152695751ce6bce4f573ff8da9153d5d035943b58f3bbdde",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Level-zero projection chooses authored native inputs through their declared interpretation and selected root, not a physical SPEC_ROOT existence gate or filename suffix. Parse VibeSpec as Spec; only an actual Doc package may supply Doc vocabulary. Do not disguise a project or other package kind as Doc. Use existing native inventory, selected Doc and generated rendering owners with the original identity and finite observations; an installed input still needs its independent binding or an explicit refusal. Retain captured native bytes for composition copies and relevant rechecks through publication instead of reopening authored files after capture. Existing card-only views may describe incomplete subject metadata without thereby authorizing authored native parsing. Ordinary resources enter only their existing explicitly selected literal presentation paths, never native page semantics by suffix. Preserve legacy layout, original logical names, canonical native meaning/status/void and the accepted generated-versus-authored boundary. No new kind, manifest/URI/wire schema, parser, global source world or transaction is introduced. @status:spec/done",
+      "line": 80,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-LEVEL0-READ-LAW"
     },
     {
       "anchor": "genre-definition",

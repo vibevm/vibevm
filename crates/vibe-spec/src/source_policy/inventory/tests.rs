@@ -2,6 +2,48 @@
 use super::*;
 use std::fs;
 const COORD: &str = "org.example/demo";
+
+#[test]
+fn native_presence_uses_selector_membership_without_granting_doc_vocabulary() {
+    let root = fixture();
+    let path = root.path().join("vibe.toml");
+    fs::write(&path, "[project]\ngroup='org.example'\nname='demo'\nversion='1.0.0'\n[[project.sources]]\ndirectory='src'\nmedia='application/xml'\ninterpretation='vibe-doc'\nrole='documentation'\nloading='explicit'\n[[project.sources]]\nfile='src/a'\nmedia='application/octet-stream'\ninterpretation='opaque'\nrole='resource'\nloading='explicit'\n").unwrap();
+    let policy = observe_package_policy(root.path()).unwrap();
+    assert!(
+        !policy
+            .has_native_sources(COORD, SourceInterpretation::VibeDoc)
+            .unwrap()
+    );
+    assert_eq!(
+        policy
+            .capture_host_inventory(COORD)
+            .unwrap()
+            .resources()
+            .len(),
+        1
+    );
+    assert!(
+        policy
+            .capture_native_inventory(COORD, SourceInterpretation::VibeDoc)
+            .is_err()
+    );
+    fs::write(root.path().join("src/b"), [0xff]).unwrap();
+    assert!(
+        policy
+            .has_native_sources(COORD, SourceInterpretation::VibeDoc)
+            .unwrap()
+    );
+    assert!(
+        policy
+            .capture_native_inventory(COORD, SourceInterpretation::VibeDoc)
+            .is_err()
+    );
+    assert!(
+        policy
+            .has_native_sources(COORD, SourceInterpretation::Opaque)
+            .is_err()
+    );
+}
 fn fixture() -> tempfile::TempDir {
     let root = tempfile::tempdir().unwrap();
     fs::write(root.path().join("vibe.toml"),"[project]\ngroup='org.example'\nname='demo'\nversion='1.0.0'\n[[project.sources]]\ndirectory='src'\nmedia='application/octet-stream'\ninterpretation='opaque'\nrole='resource'\nloading='explicit'\n").unwrap();

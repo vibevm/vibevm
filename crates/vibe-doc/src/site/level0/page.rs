@@ -81,7 +81,17 @@ fn write(
     pages: &mut crate::pages::PageSet,
 ) -> Result<()> {
     let path = work.join(SPEC_ROOT).join(name);
-    if path.is_file() {
+    let document = crate::pages::document_of(name);
+    if path.is_file()
+        || pages
+            .pages
+            .iter()
+            .any(|page| crate::pages::document_of(&page.rel) == document)
+        || pages
+            .unreadable
+            .iter()
+            .any(|page| crate::pages::document_of(&page.rel) == document)
+    {
         composed.notes.push(format!(
             "`{name}` is a page this package wrote, so the generated one was not \
              written — an authored page is the better page"

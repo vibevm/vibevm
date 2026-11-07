@@ -8,6 +8,8 @@ use chrono::{TimeZone, Utc};
 
 use super::*;
 
+mod native_sources;
+
 /// A composition root that answers both questions the way a test needs:
 /// the bytes are already where they are, and no product is run.
 struct Handy {

@@ -46,6 +46,21 @@ enum Guard {
     },
 }
 impl CapturedPages {
+    /// Original captured declared bytes, for source-backed diagnostic copies.
+    pub(crate) fn declared_bytes(&self) -> Vec<(&str, &[u8])> {
+        match &self.guard {
+            Guard::Authored(_, inventory) => inventory
+                .resources()
+                .iter()
+                .map(|resource| (resource.relative(), resource.bytes()))
+                .collect(),
+            Guard::Installed { bytes, .. } => bytes
+                .iter()
+                .map(|(relative, bytes)| (relative.as_str(), bytes.as_slice()))
+                .collect(),
+            _ => Vec::new(),
+        }
+    }
     pub(crate) fn canonical_addresses(&self) -> bool {
         matches!(self.guard, Guard::Authored(..) | Guard::Installed { .. })
     }

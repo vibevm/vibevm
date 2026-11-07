@@ -331,6 +331,37 @@ impl PackagePolicyObservation {
     ) -> Result<CapturedHostInventory, SourcePolicyError> {
         self.capture_inventory(coordinate, None)
     }
+    /// Query native membership through the same finite source selector.
+    ///
+    /// Membership alone grants no vocabulary or byte-read authority. This lets
+    /// a renderer distinguish an empty/shadowed Doc scope from actual Doc input
+    /// before requiring an actual Doc package. Recheck the decision before use.
+    /// ```
+    /// use vibe_spec::source_policy::observe_package_policy;
+    /// use vibe_core::manifest::SourceInterpretation;
+    /// let root = tempfile::tempdir().unwrap();
+    /// std::fs::write(root.path().join("vibe.toml"),
+    ///     "[project]\ngroup='com.example'\nname='host'\nversion='1.0.0'\nsources=[]\n").unwrap();
+    /// let policy = observe_package_policy(root.path()).unwrap();
+    /// assert!(!policy.has_native_sources("com.example/host", SourceInterpretation::VibeDoc).unwrap());
+    /// ```
+    pub fn has_native_sources(
+        &self,
+        coordinate: &str,
+        interpretation: SourceInterpretation,
+    ) -> Result<bool, SourcePolicyError> {
+        if !matches!(
+            interpretation,
+            SourceInterpretation::VibeSpec | SourceInterpretation::VibeDoc
+        ) {
+            return Err(self.unsupported("non-native inventory filter"));
+        }
+        Ok(!self
+            .selected_inventory(coordinate, Some(interpretation))?
+            .files
+            .is_empty())
+    }
+
     /// Capture a finite native-only inventory through the same source selector.
     /// Ordinary exact resources are not required by this operation.
     /// ```

@@ -200,7 +200,7 @@ pub fn document_of(rel: &str) -> &str {
 ///
 /// A missing spec root is not an error: a package may legitimately carry
 /// no pages yet, and an empty walk says so more usefully than a refusal.
-fn walk_package(package_dir: &Path) -> Result<Vec<(String, PathBuf)>> {
+pub(crate) fn walk_package(package_dir: &Path) -> Result<Vec<(String, PathBuf)>> {
     let root = package_dir.join(SPEC_ROOT);
     if !root.is_dir() {
         return Ok(Vec::new());

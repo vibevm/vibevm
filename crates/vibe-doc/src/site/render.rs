@@ -280,7 +280,11 @@ fn refused(
         dir.join(crate::pages::SPEC_ROOT).join(FAILED_PAGE),
         &failed_page(pair, reason),
     )?;
-    let generated = build::Generated { pages, card };
+    let generated = build::Generated {
+        pages,
+        card,
+        authored: None,
+    };
     build_projections(pair, &dir, &generated, BTreeMap::new(), options)
 }
 
@@ -321,7 +325,9 @@ fn build_projections(
         if matches!(format, Format::Html) {
             unresolved = built.unresolved;
         }
+        generated.recheck()?;
         let report = build::write_reconciled(&built, &tree)?;
+        generated.recheck()?;
         files += built.files.len();
         written += report.written + report.removed;
         reused += report.unchanged;
