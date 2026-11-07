@@ -14552,6 +14552,15 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/check.rs",
       "item_kind": "fn",
+      "line": 234,
+      "symbol": "vibe_cli::commands::check::append_boot_graph_findings",
+      "end_line": 282,
+      "fingerprint": "tok1:205bfc71ac35044afd965dbbbdf611d4953959a9269fd263e0ea6db9c42e0dd5"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/check.rs",
+      "item_kind": "fn",
       "line": 178,
       "symbol": "vibe_cli::commands::check::finding_block",
       "end_line": 218,
@@ -19713,6 +19722,15 @@
       "symbol": "vibe_cli::tests::cli_common_package_optional::workspace::incompatible_exact_workspace_inputs_name_both_consumers_and_leave_the_world_unchanged",
       "end_line": 316,
       "fingerprint": "tok1:80874ebe397ddd222daf8c1ee073f86e91789283e36cd8a1e229d61c2ad09304"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_declared_boot_check.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::cli_declared_boot_check",
+      "end_line": 5,
+      "fingerprint": "tok1:d2384c1e65ea27c7d1a060f8392b0675eb9770732e0b86c27d26216a0021a69c"
     },
     {
       "crate_name": "vibe-cli",
@@ -47049,6 +47067,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/declared_tests/cases/boot_check.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::install::bootgen::declared_tests::cases::boot_check",
+      "end_line": 5,
+      "fingerprint": "tok1:d2384c1e65ea27c7d1a060f8392b0675eb9770732e0b86c27d26216a0021a69c"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/desubstitute.rs",
       "item_kind": "mod",
       "line": 6,
@@ -47240,19 +47267,37 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 390,
+      "line": 353,
       "symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "end_line": 426,
+      "end_line": 389,
       "fingerprint": "tok1:9d08758b1e16a710bbfa572f2ce3046d6e310f18c933ba54f3f2830ac4c1624a"
     },
     {
       "crate_name": "vibe-workspace",
-      "file": "crates/vibe-workspace/src/install/bootgen.rs",
+      "file": "crates/vibe-workspace/src/install/bootgen/verify.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::install::bootgen::verify",
+      "end_line": 5,
+      "fingerprint": "tok1:d2384c1e65ea27c7d1a060f8392b0675eb9770732e0b86c27d26216a0021a69c"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/verify.rs",
       "item_kind": "fn",
-      "line": 340,
-      "symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "end_line": 379,
-      "fingerprint": "tok1:b43b90d69a0152d4ee98f81d966a103f0b99e6190a96721bc68ccf1b86d1bb8a"
+      "line": 10,
+      "symbol": "vibe_workspace::install::bootgen::verify::verify_boot_graph",
+      "end_line": 17,
+      "fingerprint": "tok1:4e1ff1a70ed9be6d751d9c23d83e8af4c78acc9f226f2957ac070952865ea159"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/verify.rs",
+      "item_kind": "fn",
+      "line": 19,
+      "symbol": "vibe_workspace::install::bootgen::verify::verify_boot_graph_with_spec_format",
+      "end_line": 29,
+      "fingerprint": "tok1:cd129565488ccfb0b80d2c211641d67bfc471d068474412a3f81cf12e6d49705"
     },
     {
       "crate_name": "vibe-workspace",
@@ -55371,6 +55416,15 @@
     },
     {
       "file": "crates/vibe-cli/src/commands/check.rs",
+      "from_symbol": "vibe_cli::commands::check::append_boot_graph_findings",
+      "line": 235,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-BOOT-CHECK",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/check.rs",
       "from_symbol": "vibe_cli::commands::check::finding_block",
       "line": 190,
       "provenance": "authored",
@@ -60045,6 +60099,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_declared_boot_check.rs",
+      "from_symbol": "vibe_cli::tests::cli_declared_boot_check",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-BOOT-CHECK",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-cli/tests/cli_declared_own_boot.rs",
@@ -85185,6 +85248,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/install/bootgen/declared_tests/cases/boot_check.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::declared_tests::cases::boot_check",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-BOOT-CHECK",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-workspace/src/install/bootgen/desubstitute.rs",
       "from_symbol": "vibe_workspace::install::bootgen::desubstitute",
       "line": 6,
@@ -85363,7 +85435,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 399,
+      "line": 362,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#PLAN-TIME-VALIDATION",
       "verb": "implements"
@@ -85371,18 +85443,36 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 395,
+      "line": 358,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#plan-time",
       "verb": "implements",
       "pinned_r": 2
     },
     {
-      "file": "crates/vibe-workspace/src/install/bootgen.rs",
-      "from_symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "line": 341,
+      "file": "crates/vibe-workspace/src/install/bootgen/verify.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::verify",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-BOOT-CHECK",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen/verify.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::verify::verify_boot_graph",
+      "line": 11,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen/verify.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::verify::verify_boot_graph_with_spec_format",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-BOOT-CHECK",
       "verb": "implements",
       "pinned_r": 1
     },
@@ -113509,6 +113599,26 @@
       "heading": "Automatic authored node boot selects immediate children of the existing boot directory through the shared outer source policy. Enroll instruction sources with VibeSpec interpretation and scan loading; ordinary, documentation and native explicit-only sources are not automatically enrolled. Exact declared immediate eligible files participate even when absent so a missing promised boot input refuses. Generated STATIC/INDEX and owned publication controls retain their separate ownership. Preserve original paths, existing category/order rules and actual own/inherited Dynamic linkage with Simple format; unconditional INDEX static read-kind does not mean compiler static linkage. Do not add project.format or force Normal/STATIC compilation. Use narrow held original-resource capture for the selected boot scope, not whole-host inventory and not a fabricated group, package or installed record. Ungrouped nodes use their incumbent HostUngrouped provider without minting spec addresses. The private prepared-node carrier retains entries with observed policy/media/bytes; early source admission and authoritative generation share its selection logic. Validate every known node before earlier metadata/package effects, then recheck relevant captured input immediately before actual INDEX/redirect publication, including zero-static, managed-native and replay routes. Only an actual compiler path consuming a node input may claim captured-media compiler coverage; normal own enrollment is proved by INDEX and original bytes. Unrelated invalid or missing sources outside selected automatic boot scope cannot poison this operation. Existing exact native lookup remains available for explicit-only sources. This is finite prevalidation/recheck under existing cooperative publication, not a new global transaction or source-authentication claim. @status:spec/done",
       "line": 56,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT-LAW"
+    },
+    {
+      "anchor": "SOURCE-BOOT-CHECK",
+      "content_hash": "sha256:e86cf2b4b7ea0c5d73d7b3f36455e9d9154007f19772bda7b58c681952ee3f86",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Selected declared boot graph verification",
+      "line": 58,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-BOOT-CHECK",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-BOOT-CHECK-LAW",
+      "content_hash": "sha256:abcebcd7ec87c8e393843beead6d3a30d3c3455745a6f9bc9948e46bb3c647d4",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "The bound boot-graph verifier uses independently selected materialized SpecFormat, existing durable resolution, prepared source bindings, mapped unit table and format-aware owner-plan fingerprints. The old unbound wrapper retains its legacy contract and cannot guess declared input format. Reuse the incumbent fingerprint/pending/stale propagation owner; this is not STATIC-body authentication or generated-input consumption admission. The actual check command selects format through the existing project/operator configuration owner. An absent durable lock makes this adapter non-applicable without loading irrelevant configuration or creating state. A present malformed, nonregular or unreadable installed scope is not absence. An applicable graph that cannot be loaded, bound or verified produces the existing BootGraphIntegrity Error through the normal report and error exit; it must not silently contribute no findings. Stale or missing unit INDEX remains the incumbent Warning and warning-only exit behavior. Do not add a CheckId, schema, CLI option, lifecycle lease, regeneration or new member-discovery semantics. Other authored/project check rules retain their own scope. @status:spec/done",
+      "line": 60,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-BOOT-CHECK-LAW"
     },
     {
       "anchor": "genre-definition",
@@ -169732,12 +169842,6 @@
     },
     {
       "code": "pin-into-unmarked-unit",
-      "file": "crates/vibe-workspace/src/install/bootgen.rs",
-      "line": 341,
-      "message": "edge `vibe_workspace::install::bootgen::verify_boot_graph` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
-    },
-    {
-      "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "line": 60,
       "message": "edge `vibe_workspace::install::bootgen::hybrid_emit::emit_package_units` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units` carries no kind/revision line yet"
@@ -169759,6 +169863,12 @@
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit/table.rs",
       "line": 13,
       "message": "edge `vibe_workspace::install::bootgen::hybrid_emit::table::build_unit_table` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-workspace/src/install/bootgen/verify.rs",
+      "line": 11,
+      "message": "edge `vibe_workspace::install::bootgen::verify::verify_boot_graph` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
     },
     {
       "code": "stale-exclude",

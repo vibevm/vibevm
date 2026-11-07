@@ -85,7 +85,6 @@ pub use slot_lifecycle::{
 
 #[cfg(test)]
 pub(crate) use bootgen::analyze_effective_bound_native;
-pub use bootgen::verify_boot_graph;
 /// The R4.3 lane analyzer's write-free entry (packages-2026-09 §9): one
 /// selected node's lane composed and compiled under the analyzer
 /// observer — the same composition regeneration runs, minus every write.
@@ -99,6 +98,7 @@ pub use bootgen::{
     regenerate_boot_from_traced_prepared, regenerate_boot_from_with_spec_format,
     regenerate_boot_traced, regenerate_boot_with_spec_format,
 };
+pub use bootgen::{verify_boot_graph, verify_boot_graph_with_spec_format};
 mod native;
 pub use native::{
     NativeInstallCarriage, NativeInstallOutcome, NativeInstallReplayError,

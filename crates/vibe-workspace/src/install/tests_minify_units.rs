@@ -253,6 +253,12 @@ fn verify_boot_graph_calls_a_freshly_generated_activated_tree_clean() {
             .is_empty(),
         "the check half must frame the same owner-plan digests the generate half did"
     );
+    assert!(
+        verify_boot_graph_with_spec_format(&ws, SpecFormat::Xml)
+            .expect("bound verification observes the same selected world")
+            .is_empty(),
+        "the bound check must retain the selected target in owner-plan frames"
+    );
 }
 
 /// The first `<?xml …?> … </spec>` document of one emitted tape.

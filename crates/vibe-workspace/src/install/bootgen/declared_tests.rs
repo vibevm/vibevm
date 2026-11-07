@@ -456,5 +456,6 @@ mod cases {
             );
         }
     }
+    mod boot_check;
     mod native;
 }

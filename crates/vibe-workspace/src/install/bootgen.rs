@@ -24,16 +24,17 @@ mod generated_inputs;
 /// Durable-world owner-plan lowering along its own responsibility.
 #[path = "bootgen/owner_plans.rs"]
 mod owner_plans;
-use owner_plans::{plan_digest_frames, plan_digest_frames_for};
+use owner_plans::plan_digest_frames_for;
 #[cfg(test)]
 #[path = "bootgen/compile_plan_tests.rs"]
 mod compile_plan_tests;
 
 #[path = "bootgen/hybrid_emit.rs"]
 mod hybrid_emit;
+#[cfg(test)]
+use hybrid_emit::build_unit_table;
 use hybrid_emit::{
-    append_hoisted, build_unit_table, build_unit_table_bound, emit_package_units,
-    verify_fingerprints,
+    append_hoisted, build_unit_table_bound, emit_package_units, verify_fingerprints,
 };
 
 #[path = "bootgen/analyze.rs"]
@@ -337,46 +338,8 @@ pub fn regenerate_boot_traced(
     regenerate_boot_from_traced(workspace, &resolution, spec_format, trace)
 }
 
-/// Return package units whose durable boot fingerprints are stale.
-#[spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
-    r = 1
-)]
-pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, WorkspaceError> {
-    let resolution = read_durable_resolution(&workspace.root)?;
-    // No materialized-input format is supplied to this legacy verifier.
-    // Declared graphs must not compute a fingerprint from guessed suffixes.
-    let _ = boot_artifacts::declared_sources::DeclaredBootSources::prepare_with_nodes(
-        workspace,
-        &resolution,
-        None,
-    )?;
-    let world = ExtensionWorldEpoch::from_resolution(&workspace.root, &resolution)
-        .map_err(owner_plans::world_error)?;
-    let table = build_unit_table(&workspace.root, &resolution);
-    let versions: HashMap<UnitId, String> = resolution
-        .iter()
-        .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
-        .collect();
-    // The check half constructs the SAME explicit world the generate half
-    // does from the exact materialised resolution, and
-    // frames the same owner-plan digests (R4 architecture §7.1). Recomputing
-    // without them would call every unit whose owner activates a transform
-    // stale on a tree the generator had just left fresh.
-    let runtimes = lower_owner_runtimes(
-        workspace,
-        &world,
-        OwnerRuntimeLowering::compatibility_root_without_presets(),
-    )?;
-    verify_fingerprints(
-        &workspace.root,
-        &resolution,
-        &table,
-        &versions,
-        &plan_digest_frames(&runtimes),
-        &runtimes,
-    )
-}
+mod verify;
+pub use verify::{verify_boot_graph, verify_boot_graph_with_spec_format};
 
 mod own_boot;
 pub(crate) use own_boot::PreparedNodeBoot;

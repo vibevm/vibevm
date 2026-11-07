@@ -10,9 +10,9 @@ use anyhow::{Context, Result, bail};
 use serde::Serialize;
 use vibe_check::{CheckId, CheckOptions, CheckReport, Finding, Severity};
 use vibe_core::machine_json_path;
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_workspace::Workspace;
-use vibe_workspace::install::verify_boot_graph;
+use vibe_workspace::install::verify_boot_graph_with_spec_format;
 
 use crate::cli::CheckArgs;
 use crate::output;
@@ -231,17 +231,39 @@ fn resolve_project_root(path: &Path) -> Result<PathBuf> {
     Ok(stripped)
 }
 
-/// Append PROP-038 §3 boot-graph integrity findings: any per-unit boot
-/// artifact whose recorded fingerprint is stale (the hybrid linker's
-/// dirty-subgraph should have refreshed it). Best-effort — a project that is
-/// not an installed workspace, or whose materialisation cannot be read,
-/// contributes no findings.
+/// Report stale units and applicable verification failures without mutating state.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-BOOT-CHECK",
+    r = 1
+)]
 fn append_boot_graph_findings(project_root: &Path, report: &mut CheckReport) {
-    let Ok(ws) = Workspace::load(project_root) else {
+    // Only genuine absence makes this adapter non-applicable. In particular,
+    // do not load operator configuration for an uninstalled project.
+    let lock = project_root.join(Lockfile::FILENAME);
+    if matches!(std::fs::symlink_metadata(&lock), Err(error) if error.kind() == std::io::ErrorKind::NotFound)
+    {
         return;
-    };
-    let Ok(stale) = verify_boot_graph(&ws) else {
-        return;
+    }
+    let result = (|| -> Result<_> {
+        let ws = Workspace::load(project_root).context("loading installed workspace")?;
+        let format = super::reinstall::effective_rederive_format(&ws.root_manifest)?;
+        Ok(verify_boot_graph_with_spec_format(&ws, format)?)
+    })();
+    let stale = match result {
+        Ok(stale) => stale,
+        Err(error) => {
+            report.findings.push(Finding {
+                check: CheckId::BootGraphIntegrity,
+                severity: Severity::Error,
+                path: None,
+                line: None,
+                column: None,
+                field: None,
+                package: None,
+                message: format!("installed boot graph verification could not complete: {error:#}"),
+            });
+            return;
+        }
     };
     for (group, name) in stale {
         report.findings.push(Finding {
