@@ -6,7 +6,12 @@ pub(in crate::operations) fn source(
     ctx: &OperationContext<'_>,
     op: &w::ApplicationPendingOperation,
 ) -> Result<ResolvedPackage, AppError> {
-    read_source(ctx, &op.source, &op.target.key)
+    let mut resolved = read_source(ctx, &op.source, &op.target.key)?;
+    resolved.source_evidence = load(ctx.settings, &resolved.package, Some(&op.target.operation))?
+        .source_evidence
+        .get(&op.target.key)
+        .cloned();
+    Ok(resolved)
 }
 pub(in crate::operations) fn read_source(
     ctx: &OperationContext<'_>,

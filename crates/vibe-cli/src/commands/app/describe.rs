@@ -28,14 +28,22 @@ pub(super) fn show(
     let settings = global::settings_root()?;
     let resolved = global::resolve_package(&settings, registry, embedded_root, package, offline)?;
     if configuration {
-        let document = vibe_app::configuration::describe(&resolved);
+        let mut document = vibe_app::configuration::describe(&resolved);
+        document.installed_source = vibe_app::Index::load(&settings)?
+            .installations
+            .get(&resolved.package.key())
+            .and_then(|r| r.source_evidence.clone());
         if ctx.is_json() {
             return ctx.emit_json(&document);
         }
         println!("{}", serde_json::to_string_pretty(&document)?);
         return Ok(());
     }
-    let document = vibe_app::describe(&resolved)?;
+    let mut document = vibe_app::describe(&resolved)?;
+    document.installed_source = vibe_app::Index::load(&settings)?
+        .installations
+        .get(&resolved.package.key())
+        .and_then(|r| r.source_evidence.clone());
     if ctx.is_json() {
         return ctx.emit_json(&document);
     }

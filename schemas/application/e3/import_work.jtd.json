@@ -1,0 +1,57 @@
+{
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "target": {
+      "ref": "application_import_target"
+    },
+    "phase": {
+      "ref": "application_import_phase"
+    },
+    "context": {
+      "ref": "application_import_context"
+    },
+    "cohort": {
+      "ref": "application_full_import"
+    },
+    "kind": {
+      "type": "string"
+    }
+  },
+  "metadata": {
+    "x-wire-order": [
+      "protocol",
+      "target",
+      "phase",
+      "context",
+      "cohort",
+      "kind",
+      "source_evidence"
+    ],
+    "x-rust-type": "ImportWork",
+    "x-vocabularies": [
+      "application_full_import",
+      "application_import_context",
+      "application_import_phase",
+      "application_import_target",
+      "source_evidence"
+    ],
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application::e3::import_work"
+    }
+  },
+  "optionalProperties": {
+    "source_evidence": {
+      "values": {
+        "ref": "source_evidence"
+      },
+      "metadata": {
+        "x-empty": "omit"
+      }
+    }
+  }
+}

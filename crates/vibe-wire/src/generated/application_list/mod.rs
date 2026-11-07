@@ -137,6 +137,10 @@ pub struct Installation {
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub env: Vec<EnvEntry>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(deserialize_with = "__reader_projection::deserialize_source_evidence_0")]
+    pub source_evidence: Option<SourceEvidence>,
 }
 
 /// One launch point with its menu and desktop-entry metadata (PROP-059#menu,
@@ -257,6 +261,12 @@ pub enum Scope {
     Runtime,
 }
 
+pub use crate::generated::shared::SourceAcquisition;
+
+pub use crate::generated::shared::SourceEvidence;
+
+pub use crate::generated::shared::SourceSelectionKind;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Status {
     #[serde(rename = "ready")]
@@ -264,4 +274,154 @@ pub enum Status {
 
     #[serde(rename = "unavailable")]
     Unavailable,
+}
+
+#[doc(hidden)]
+#[allow(clippy::collapsible_if, unused_variables)]
+mod __reader_projection {
+    #[derive(Clone, Copy)]
+    struct NoDuplicateValue;
+
+    impl<'de> serde::de::DeserializeSeed<'de> for NoDuplicateValue {
+        type Value = serde_json::Value;
+
+        fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            deserializer.deserialize_any(NoDuplicateValueVisitor)
+        }
+    }
+
+    struct NoDuplicateValueVisitor;
+
+    impl<'de> serde::de::Visitor<'de> for NoDuplicateValueVisitor {
+        type Value = serde_json::Value;
+
+        fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            formatter.write_str("a JSON value without duplicate object members")
+        }
+
+        fn visit_bool<E>(self, value: bool) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Bool(value))
+        }
+
+        fn visit_i64<E>(self, value: i64) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Number(value.into()))
+        }
+
+        fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Number(value.into()))
+        }
+
+        fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>
+        where
+            E: serde::de::Error,
+        {
+            serde_json::Number::from_f64(value)
+                .map(serde_json::Value::Number)
+                .ok_or_else(|| E::custom("non-finite JSON number"))
+        }
+
+        fn visit_str<E>(self, value: &str) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::String(value.to_string()))
+        }
+
+        fn visit_string<E>(self, value: String) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::String(value))
+        }
+
+        fn visit_none<E>(self) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Null)
+        }
+
+        fn visit_unit<E>(self) -> Result<Self::Value, E> {
+            Ok(serde_json::Value::Null)
+        }
+
+        fn visit_some<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)
+        }
+
+        fn visit_newtype_struct<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)
+        }
+
+        fn visit_seq<A>(self, mut sequence: A) -> Result<Self::Value, A::Error>
+        where
+            A: serde::de::SeqAccess<'de>,
+        {
+            let mut items = Vec::new();
+            while let Some(item) = sequence.next_element_seed(NoDuplicateValue)? {
+                items.push(item);
+            }
+            Ok(serde_json::Value::Array(items))
+        }
+
+        fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+        where
+            A: serde::de::MapAccess<'de>,
+        {
+            let mut object = serde_json::Map::new();
+            while let Some(key) = map.next_key::<String>()? {
+                if object.contains_key(&key) {
+                    return Err(<A::Error as serde::de::Error>::custom(
+                        "duplicate object member",
+                    ));
+                }
+                let value = map.next_value_seed(NoDuplicateValue)?;
+                object.insert(key, value);
+            }
+            Ok(serde_json::Value::Object(object))
+        }
+    }
+
+    pub(super) fn deserialize_source_evidence_0<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<crate::generated::shared::SourceEvidence>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_source_evidence(&mut value);
+        serde_json::from_value(value)
+            .map(Some)
+            .map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    fn prune_source_acquisition(_value: &mut serde_json::Value) {}
+
+    fn prune_source_evidence(value: &mut serde_json::Value) {
+        let Some(object) = value.as_object_mut() else {
+            return;
+        };
+        object.retain(|key, _| {
+            matches!(
+                key.as_str(),
+                "acquisition"
+                    | "fetched_from"
+                    | "registry"
+                    | "resolved_commit"
+                    | "source_kind"
+                    | "source_ref"
+                    | "source_url"
+                    | "store_reused"
+                    | "via_redirect"
+            )
+        });
+        if let Some(child) = object.get_mut("acquisition") {
+            prune_source_acquisition(child);
+        }
+        if let Some(child) = object.get_mut("source_kind") {
+            prune_source_selection_kind(child);
+        }
+    }
+
+    fn prune_source_selection_kind(_value: &mut serde_json::Value) {}
 }

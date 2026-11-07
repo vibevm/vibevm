@@ -1,7 +1,7 @@
 //! Exact old/new finite cohort worlds behind a small explicit inspection view.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION");
 use vibe_wire::generated::{
-    application::{e1::import_work as old, e2::import_work as full},
+    application::{e3::import_work as full, e3::legacy_import_work as old},
     shared as w,
 };
 
@@ -11,6 +11,12 @@ pub(crate) enum ImportWork {
     Full(full::ImportWork),
 }
 impl ImportWork {
+    pub(crate) fn source_evidence(&self) -> &std::collections::BTreeMap<String, w::SourceEvidence> {
+        match self {
+            Self::Legacy(d) => &d.source_evidence,
+            Self::Full(d) => &d.source_evidence,
+        }
+    }
     pub(crate) fn target(&self) -> &w::ApplicationImportTarget {
         match self {
             Self::Legacy(d) => &d.target,

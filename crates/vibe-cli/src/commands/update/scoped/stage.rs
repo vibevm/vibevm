@@ -124,6 +124,9 @@ pub(super) fn stage(
         )
         .context("gitignoring the in-place slot")?;
         let cached = CachedPackage {
+            recorded_source_kind: None,
+            store_reused: None,
+            acquisition: None,
             resolved: ResolvedPackage {
                 group: p.group.clone(),
                 name: p.name.clone(),

@@ -2,10 +2,9 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Version 1 installation plan from vibe app plan --json and vibe install
-/// --plan-only --json: the chosen option, result and features and every step
-/// as run or skip with its reason, computed without downloading or running
-/// anything.
+/// Application configuration plan without installer-step execution. Package
+/// resolution may acquire content and write cache or configuration; this is not
+/// a read-only preview.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AppPlan {
     pub protocol: String,
@@ -23,6 +22,10 @@ pub struct AppPlan {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub execution: Option<Execution>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(deserialize_with = "__reader_projection::deserialize_source_evidence_2")]
+    pub source_evidence: Option<SourceEvidence>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -346,6 +349,12 @@ pub enum Scope {
     Runtime,
 }
 
+pub use crate::generated::shared::SourceAcquisition;
+
+pub use crate::generated::shared::SourceEvidence;
+
+pub use crate::generated::shared::SourceSelectionKind;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Step {
     pub id: String,
@@ -507,6 +516,19 @@ mod __reader_projection {
         let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
         prune_configuration_evaluation(&mut value);
         serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    pub(super) fn deserialize_source_evidence_2<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<crate::generated::shared::SourceEvidence>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_source_evidence(&mut value);
+        serde_json::from_value(value)
+            .map(Some)
+            .map_err(<D::Error as serde::de::Error>::custom)
     }
 
     fn prune_application_agent_mode(_value: &mut serde_json::Value) {}
@@ -1507,4 +1529,34 @@ mod __reader_projection {
     }
 
     fn prune_configuration_visibility(_value: &mut serde_json::Value) {}
+
+    fn prune_source_acquisition(_value: &mut serde_json::Value) {}
+
+    fn prune_source_evidence(value: &mut serde_json::Value) {
+        let Some(object) = value.as_object_mut() else {
+            return;
+        };
+        object.retain(|key, _| {
+            matches!(
+                key.as_str(),
+                "acquisition"
+                    | "fetched_from"
+                    | "registry"
+                    | "resolved_commit"
+                    | "source_kind"
+                    | "source_ref"
+                    | "source_url"
+                    | "store_reused"
+                    | "via_redirect"
+            )
+        });
+        if let Some(child) = object.get_mut("acquisition") {
+            prune_source_acquisition(child);
+        }
+        if let Some(child) = object.get_mut("source_kind") {
+            prune_source_selection_kind(child);
+        }
+    }
+
+    fn prune_source_selection_kind(_value: &mut serde_json::Value) {}
 }

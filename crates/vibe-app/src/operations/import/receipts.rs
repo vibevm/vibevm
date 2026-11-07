@@ -5,7 +5,7 @@ use crate::{
     AppError, ImportScope, ImportSecrets, Index, MutationLock, SettingsRoot, steps::StepsFile,
 };
 use std::collections::{BTreeMap, BTreeSet};
-use vibe_wire::generated::{application::e2::import_work as wire, shared as w};
+use vibe_wire::generated::{application::e3::import_work as wire, shared as w};
 use w::{
     ApplicationImportCompletedBinding as Receipt, ApplicationImportCompletedBindingState as State,
 };
@@ -362,6 +362,15 @@ pub(super) fn recover(
                 .pending_mut(settings)?
                 .children
                 .retain(|edge| edge.target.as_ref() != Some(&r.target));
+            if !parent
+                .pending(settings)?
+                .children
+                .iter()
+                .any(|edge| edge.key == r.target.key)
+            {
+                // The child now owns this observation in its retained steps/index.
+                parent.source_evidence.remove(&r.target.key);
+            }
             parent.save(&pending::work(settings, &parent.package))?;
             set_state(settings, d, &key, State::Detached)?;
         }

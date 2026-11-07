@@ -255,15 +255,16 @@ impl MultiRegistryResolver {
         // insert write-once into the machine store; an already-present
         // entry is returned untouched, its manifest read back.
         let content_hash = compute_content_hash(&clone_dir)?;
-        let dest = store::insert_current_at(
+        let inserted = store::insert_current_at(
             store_root,
             &clone_dir,
             group,
             name,
             &resolution.resolved.version,
             &content_hash,
-        )?
-        .into_entry();
+        )?;
+        let reused = matches!(&inserted, store::InsertOutcome::AlreadyPresent(_));
+        let dest = inserted.into_entry();
         let manifest_path = dest.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
         if manifest.package.is_none() {
@@ -274,6 +275,9 @@ impl MultiRegistryResolver {
         }
 
         Ok(CachedPackage {
+            recorded_source_kind: None,
+            store_reused: Some(reused),
+            acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),
             resolved: ResolvedPackage {
                 group: group.clone(),
                 name: name.to_string(),
@@ -330,6 +334,9 @@ impl MultiRegistryResolver {
         let content_hash = compute_content_hash(&package_dir)?;
 
         Ok(CachedPackage {
+            recorded_source_kind: None,
+            store_reused: Some(false),
+            acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::Directory),
             resolved: ResolvedPackage {
                 group: group.clone(),
                 name: name.to_string(),

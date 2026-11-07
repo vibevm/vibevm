@@ -17,6 +17,27 @@ fn paused() -> (Home, import_work::ImportWork) {
     ));
     let saved = cohort(&b);
     assert_eq!(saved.cohort.completed_bindings.len(), 2);
+    let installed = Index::load(&b.settings).unwrap();
+    for receipt in saved.cohort.completed_bindings.values() {
+        let child = state(&b, &receipt.target.key);
+        let evidence = child.source_evidence.get(&receipt.target.key).unwrap();
+        assert_eq!(
+            installed.installations[&receipt.target.key]
+                .source_evidence
+                .as_ref(),
+            Some(evidence)
+        );
+        assert_eq!(evidence.acquisition, Some(w::SourceAcquisition::Directory));
+        assert!(
+            evidence
+                .source_url
+                .as_ref()
+                .unwrap()
+                .contains(b.settings.path().parent().unwrap().to_str().unwrap())
+        );
+        let parent = state(&b, &receipt.previous_parent.key);
+        assert!(!parent.source_evidence.contains_key(&receipt.target.key));
+    }
     (b, saved)
 }
 fn path(home: &Home, target: &w::ApplicationPendingTarget) -> PathBuf {
@@ -143,6 +164,13 @@ fn public_resume_recovers_captured_moved_and_unlinked_transfer_cuts() {
         );
         assert_eq!(home.count("child", "1.0.0"), 1);
         assert_eq!(home.count("middle", "1.0.0"), 1);
+        let installed = Index::load(&home.settings).unwrap();
+        for key in [MIDDLE, CHILD1] {
+            assert_eq!(
+                installed.installations[key].source_evidence,
+                saved.source_evidence.get(key).cloned()
+            );
+        }
         let work = crate::work(&home.settings, None).unwrap();
         assert!(work.imports.is_empty() && work.entries.is_empty());
     }

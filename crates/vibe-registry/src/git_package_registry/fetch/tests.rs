@@ -46,6 +46,11 @@ fn fetch_clones_and_populates_the_machine_store() {
     let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let cached = r.fetch(&resolved, store_root.path()).unwrap();
+    assert_eq!(cached.store_reused, Some(false));
+    assert_eq!(
+        r.fetch(&resolved, store_root.path()).unwrap().store_reused,
+        Some(true)
+    );
 
     // The cache_dir IS the machine-store entry, laid out
     // `<store>/<group>/<name>/v<version>/` (PROP-010 §2.7) — the path

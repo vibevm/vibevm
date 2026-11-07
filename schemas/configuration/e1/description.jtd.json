@@ -12,10 +12,13 @@
       "package",
       "application",
       "options",
-      "configuration"
+      "configuration",
+      "source_evidence",
+      "installed_source"
     ],
     "x-vocabularies": [
-      "configuration_definition"
+      "configuration_definition",
+      "source_evidence"
     ]
   },
   "properties": {
@@ -1239,6 +1242,20 @@
   "optionalProperties": {
     "configuration": {
       "ref": "configuration_definition",
+      "metadata": {
+        "x-default": null,
+        "x-reader-projection": "permissive"
+      }
+    },
+    "source_evidence": {
+      "ref": "source_evidence",
+      "metadata": {
+        "x-default": null,
+        "x-reader-projection": "permissive"
+      }
+    },
+    "installed_source": {
+      "ref": "source_evidence",
       "metadata": {
         "x-default": null,
         "x-reader-projection": "permissive"

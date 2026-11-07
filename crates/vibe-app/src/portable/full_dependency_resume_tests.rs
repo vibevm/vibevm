@@ -3,7 +3,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION");
 use super::*;
 use std::cell::Cell;
-use vibe_wire::generated::{application::e2::import_work, shared as w};
+use vibe_wire::generated::{application::e3::import_work, shared as w};
 
 const MIDDLE: &str = "org.example/middle@1.0.0";
 const SOURCE_ANSWER: &str = "SYN_DEEP_SOURCE_SECRET_5110";
@@ -187,7 +187,7 @@ fn cohort(home: &Home) -> import_work::ImportWork {
     let bytes = fs::read(Path::new(&entry.path).join("import.json")).unwrap();
     let saved: import_work::ImportWork = serde_json::from_slice(&bytes).unwrap();
     assert_eq!(saved.target, entry.target);
-    assert_eq!(saved.protocol, "vibe-app-import-work/2");
+    assert_eq!(saved.protocol, "vibe-app-import-work/3");
     saved
 }
 fn state(home: &Home, key: &str) -> crate::steps::StepsFile {

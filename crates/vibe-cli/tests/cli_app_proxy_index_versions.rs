@@ -57,7 +57,21 @@ fn installing_common_configuration_keeps_legacy_and_rich_path_commands_working()
         "org.example/legacy",
         &["--offline", "--unattended", "--json"],
     ));
-    assert_eq!(r.index()["protocol"], "vibe-user-applications/3");
+    assert_eq!(r.index()["protocol"], "vibe-user-applications/5");
+    let mut legacy = r.index();
+    legacy["protocol"] = "vibe-user-applications/3".into();
+    for record in legacy["installations"]
+        .as_object_mut()
+        .unwrap()
+        .values_mut()
+    {
+        record.as_object_mut().unwrap().remove("source_evidence");
+    }
+    fs::write(
+        r.settings().join("applications/index.json"),
+        serde_json::to_vec(&legacy).unwrap(),
+    )
+    .unwrap();
     let before = launch(&r, "legacy-cmd");
     assert!(
         before.status.success(),
@@ -69,7 +83,7 @@ fn installing_common_configuration_keeps_legacy_and_rich_path_commands_working()
         "org.example/rich",
         &["--offline", "--unattended", "--json"],
     ));
-    assert_eq!(r.index()["protocol"], "vibe-user-applications/4");
+    assert_eq!(r.index()["protocol"], "vibe-user-applications/5");
     let path = r.settings().join("applications/index.json");
     let bytes = fs::read(&path).unwrap();
     for (command, expected) in [("legacy-cmd", "legacy"), ("rich-cmd", "rich")] {
@@ -99,7 +113,11 @@ fn actual_proxy_refuses_unknown_protocol_and_nested_fields_in_both_index_version
         "org.example/legacy",
         &["--offline", "--unattended", "--json"],
     ));
-    let old = r.index();
+    let mut old = r.index();
+    old["protocol"] = "vibe-user-applications/3".into();
+    for record in old["installations"].as_object_mut().unwrap().values_mut() {
+        record.as_object_mut().unwrap().remove("source_evidence");
+    }
     ok(&r.app(
         &["install", "-g"],
         "org.example/rich",
@@ -107,7 +125,17 @@ fn actual_proxy_refuses_unknown_protocol_and_nested_fields_in_both_index_version
     ));
     let new = r.index();
     let path = r.settings().join("applications/index.json");
-    for original in [old, new.clone()] {
+    let mut four = new.clone();
+    four["protocol"] = "vibe-user-applications/4".into();
+    for record in four["installations"].as_object_mut().unwrap().values_mut() {
+        record.as_object_mut().unwrap().remove("source_evidence");
+    }
+    for original in [old, four, new.clone()] {
+        fs::write(&path, serde_json::to_vec(&original).unwrap()).unwrap();
+        assert!(
+            launch(&r, "legacy-cmd").status.success(),
+            "each declared reader protocol must actually route"
+        );
         let mut variants = Vec::new();
         let mut bad = original.clone();
         bad["protocol"] = "vibe-user-applications/999".into();
@@ -118,7 +146,7 @@ fn actual_proxy_refuses_unknown_protocol_and_nested_fields_in_both_index_version
         let mut bad = original.clone();
         bad["installations"]["org.example/legacy@1.0.0"]["future"] = true.into();
         variants.push(bad);
-        if original["protocol"] == "vibe-user-applications/4" {
+        if original["protocol"] != "vibe-user-applications/3" {
             let mut bad = original;
             bad["installations"]["org.example/rich@1.0.0"]["configuration"]["evaluation"]["input"]
                 ["intent"]["future"] = true.into();
@@ -148,7 +176,11 @@ fn actual_proxy_refuses_unknown_protocol_and_nested_fields_in_both_index_version
 #[test]
 fn original_image_reports_exact_reader_capabilities_without_changing_probe() {
     let image = std::path::Path::new(env!("CARGO_BIN_EXE_vibe-app-proxy"));
-    for protocol in ["vibe-user-applications/3", "vibe-user-applications/4"] {
+    for protocol in [
+        "vibe-user-applications/3",
+        "vibe-user-applications/4",
+        "vibe-user-applications/5",
+    ] {
         let out = Command::new(image)
             .args(["--supports-index", protocol])
             .output()

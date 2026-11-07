@@ -7,6 +7,7 @@
     "rustOptions": {
       "package": "vibe_wire::application_list"
     },
+    "x-vocabularies": ["source_evidence"],
     "x-wire-order": ["protocol", "installations"]
   },
   "properties": {
@@ -30,7 +31,7 @@
       "metadata": { "x-vocabulary": "closed" }
     },
     "installation": {
-      "metadata": { "x-wire-order": ["key", "slot", "package", "method", "status", "reason", "library", "app_root", "portable", "default", "icon", "icon_set", "menu_group", "categories", "keywords", "launchers", "hidden", "mark", "held", "superseded_by", "requires", "required_by", "env"] },
+      "metadata": { "x-wire-order": ["key", "slot", "package", "method", "status", "reason", "library", "app_root", "portable", "default", "icon", "icon_set", "menu_group", "categories", "keywords", "launchers", "hidden", "mark", "held", "superseded_by", "requires", "required_by", "env", "source_evidence"] },
       "properties": {
         "key": { "type": "string" },
         "slot": { "type": "string" },
@@ -44,6 +45,7 @@
         "default": { "type": "boolean" }
       },
       "optionalProperties": {
+        "source_evidence": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive" } },
         "icon": { "type": "string", "metadata": { "x-default": null } },
         "icon_set": { "ref": "icon_set", "metadata": { "x-default": null } },
         "menu_group": { "type": "string", "metadata": { "x-default": null } },

@@ -231,6 +231,8 @@ row!(
 )]
 pub fn describe(resolved: &crate::ResolvedPackage) -> new::Description {
     new::Description {
+        source_evidence: resolved.source_evidence.clone(),
+        installed_source: None,
         protocol: "vibe-configuration-description/1".into(),
         package: new::Package {
             group: resolved.package.group.clone(),

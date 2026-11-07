@@ -51,6 +51,7 @@ fn installed(option: &str, features: &[&str]) -> Index {
     index.installations.insert(
         KEY.into(),
         Installation {
+            source_evidence: None,
             secret_origins: Default::default(),
             configuration: None,
             pending: None,

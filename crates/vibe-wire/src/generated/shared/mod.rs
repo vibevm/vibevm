@@ -5023,6 +5023,18 @@ pub struct SlotTarget {
     pub version: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum SourceAcquisition {
+    #[serde(rename = "directory")]
+    Directory,
+
+    #[serde(rename = "git_repository")]
+    GitRepository,
+
+    #[serde(rename = "store")]
+    Store,
+}
+
 /// Source IR payload (`SourceIr`): typed address, frontend format, immutable
 /// document subject, raw text.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -5041,6 +5053,40 @@ pub struct SourceDoc {
     pub text: String,
 }
 
+/// Captured credential-redacted display facts, not identity or authorization.
+/// Missing fields are unknown; source_kind retains lock selection meaning;
+/// acquisition is a read route, never a network claim.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SourceEvidence {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub registry: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_url: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_ref: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolved_commit: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_kind: Option<SourceSelectionKind>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub via_redirect: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fetched_from: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub acquisition: Option<SourceAcquisition>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub store_reused: Option<bool>,
+}
+
 /// Artifact-wide immutable observation of every source input
 /// (`SourceResolutionSnapshot`).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -5056,6 +5102,27 @@ pub struct SourceResolutionSnapshot {
     pub expansions: BTreeMap<String, ExpansionObservation>,
 
     pub explicit_use_keys: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum SourceSelectionKind {
+    #[serde(rename = "embedded")]
+    Embedded,
+
+    #[serde(rename = "git")]
+    Git,
+
+    #[serde(rename = "local")]
+    Local,
+
+    #[serde(rename = "override")]
+    Override,
+
+    #[serde(rename = "path")]
+    Path,
+
+    #[serde(rename = "registry")]
+    Registry,
 }
 
 /// Half-open source-line range `[start, end)`.

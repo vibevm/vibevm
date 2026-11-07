@@ -56,8 +56,13 @@ pub(crate) fn resolve_package(
     if let Some(root) = embedded_root {
         let local = open_local(root)?;
         if vibe_app::local_registry_carries(&local, spelling)? {
-            return Ok(vibe_app::from_local_registry(&local, root, spelling)
-                .map_err(vibe_app::AppError::from)?);
+            let mut resolved = vibe_app::from_local_registry(&local, root, spelling)
+                .map_err(vibe_app::AppError::from)?;
+            if let Some(evidence) = &mut resolved.source_evidence {
+                evidence.source_kind =
+                    Some(vibe_wire::generated::shared::SourceSelectionKind::Embedded);
+            }
+            return Ok(resolved);
         }
     }
     Ok(vibe_app::from_global(settings.path(), spelling, offline)
@@ -68,6 +73,10 @@ fn open_local(root: &Path) -> Result<vibe_registry::LocalRegistry> {
     crate::registry::application_local_registry(root.to_path_buf())
         .with_context(|| format!("opening the application registry `{}`", root.display()))
 }
+
+#[cfg(test)]
+#[path = "global/source_tests.rs"]
+mod source_tests;
 
 /// The package resolver of one command: the same explicit (or embedded)
 /// registry as the requested package, otherwise the configured registries

@@ -58,7 +58,11 @@ fn original(caller: &[OsString]) -> Result<i32, String> {
     match caller {
         [flag] if flag == "--probe" => println!("{PROXY_PROTOCOL}"),
         [flag, protocol] if flag == "--supports-index" => match protocol.to_str() {
-            Some("vibe-user-applications/3" | "vibe-user-applications/4") => {
+            Some(
+                "vibe-user-applications/3"
+                | "vibe-user-applications/4"
+                | "vibe-user-applications/5",
+            ) => {
                 println!("{}", protocol.to_string_lossy());
             }
             _ => return Err("unsupported application index protocol".into()),

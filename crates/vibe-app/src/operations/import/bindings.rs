@@ -177,7 +177,15 @@ impl<'a> ImportScope<'a> {
         {
             return Err(invalid(key, "import belongs to another home"));
         }
-        let resolved = pending::read_source(ctx, &binding.source, key)?;
+        let mut resolved = pending::read_source(ctx, &binding.source, key)?;
+        resolved.source_evidence = if let Some(target) = &self.target {
+            super::load(ctx.settings, &target.operation)?
+                .source_evidence()
+                .get(key)
+                .cloned()
+        } else {
+            None
+        };
         let option = resolved
             .options
             .iter()

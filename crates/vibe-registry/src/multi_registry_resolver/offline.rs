@@ -156,6 +156,15 @@ impl MultiRegistryResolver {
             )?;
         }
         Ok(CachedPackage {
+            recorded_source_kind: self
+                .locked
+                .get(&format!(
+                    "{}/{}",
+                    resolution.resolved.group, resolution.resolved.name
+                ))
+                .and_then(|p| p.source_kind),
+            store_reused: Some(true),
+            acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::Store),
             resolved: resolution.resolved.clone(),
             // The entry is what `vibedeps/` materialisation copies
             // from — same contract as a registry fetch's store insert.

@@ -11,12 +11,14 @@ use vibe_core::manifest::ShellInterpreter;
 use vibe_wire::generated::application::e1::steps as wire;
 
 use crate::agents::RunMode;
+mod evidence_versions;
 mod versions;
 
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 #[serde(untagged)]
 pub(crate) enum StepsDocument {
     Legacy(wire::StepsFile),
+    Evidence(Box<vibe_wire::generated::application::e3::steps::StepsFile>),
     Current(Box<vibe_wire::generated::application::e2::steps::StepsFile>),
 }
 use crate::error::{AppError, StepError};
@@ -80,6 +82,8 @@ pub(crate) struct AgentRun {
 /// The whole `steps.json`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct StepsFile {
+    pub source_evidence:
+        std::collections::BTreeMap<String, vibe_wire::generated::shared::SourceEvidence>,
     pub operation: Option<vibe_wire::generated::shared::ApplicationPendingOperation>,
     pub package: PackageCoordinate,
     pub option: String,
@@ -138,11 +142,21 @@ impl StepsFile {
                     serde_json::from_slice(&bytes).map_err(|e| mismatch(work, e.to_string()))?;
                 Ok(Some(Self::from_wire(document)))
             }
-            "vibe-app-steps/2" => {
-                let document = serde_json::from_slice::<
-                    vibe_wire::generated::application::e2::steps::StepsFile,
-                >(&bytes)
-                .map_err(|e| mismatch(work, e.to_string()))?;
+            "vibe-app-steps/2" | "vibe-app-steps/3" => {
+                let (document, evidence) = if header.protocol == "vibe-app-steps/3" {
+                    evidence_versions::split(
+                        serde_json::from_slice(&bytes)
+                            .map_err(|e| mismatch(work, e.to_string()))?,
+                    )
+                } else {
+                    (
+                        serde_json::from_slice::<
+                            vibe_wire::generated::application::e2::steps::StepsFile,
+                        >(&bytes)
+                        .map_err(|e| mismatch(work, e.to_string()))?,
+                        Default::default(),
+                    )
+                };
                 let (rows, operation) = versions::split(document);
                 if !crate::operations::pending::valid_operation(&operation.target.operation) {
                     return Err(mismatch(
@@ -179,6 +193,25 @@ impl StepsFile {
                         "pending operation differs from its step owner".into(),
                     ));
                 }
+                for key in evidence.keys() {
+                    if key != &state.package.key()
+                        && !operation.children.iter().any(|c| &c.key == key)
+                    {
+                        return Err(mismatch(
+                            work,
+                            format!(
+                                "source evidence `{key}` is outside captured root {} and children {:?}",
+                                state.package.key(),
+                                operation
+                                    .children
+                                    .iter()
+                                    .map(|c| &c.key)
+                                    .collect::<Vec<_>>()
+                            ),
+                        ));
+                    }
+                }
+                state.source_evidence = evidence;
                 state.operation = Some(operation);
                 Ok(Some(state))
             }
@@ -210,7 +243,14 @@ impl StepsFile {
         let rows = self.legacy_rows();
         match &self.operation {
             Some(operation) => {
-                StepsDocument::Current(Box::new(versions::promote(rows, operation.clone())))
+                if self.source_evidence.is_empty() {
+                    StepsDocument::Current(Box::new(versions::promote(rows, operation.clone())))
+                } else {
+                    StepsDocument::Evidence(Box::new(evidence_versions::promote(
+                        versions::promote(rows, operation.clone()),
+                        self.source_evidence.clone(),
+                    )))
+                }
             }
             None => StepsDocument::Legacy(rows),
         }
@@ -273,6 +313,7 @@ impl StepsFile {
 
     pub fn from_wire(document: wire::StepsFile) -> Self {
         Self {
+            source_evidence: Default::default(),
             operation: None,
             package: PackageCoordinate {
                 group: document.package.group,

@@ -14,13 +14,14 @@ use vibe_core::manifest::{
     IconDecl, InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl,
     RequirementScope, ShellInterpreter, StepPhase,
 };
-use vibe_wire::generated::application::e3::index as wire;
+use vibe_wire::generated::application::e4::index as wire;
 
 use crate::error::StateError;
 use crate::settings::{SettingsRoot, io, write_atomic};
 
 /// The protocol tag of the current index format.
-pub const INDEX_PROTOCOL: &str = "vibe-user-applications/4";
+pub const INDEX_PROTOCOL: &str = "vibe-user-applications/5";
+const FOUR_PROTOCOL: &str = "vibe-user-applications/4";
 const LEGACY_PROTOCOL: &str = "vibe-user-applications/3";
 
 /// `group/name@version` of one package.
@@ -168,6 +169,8 @@ pub struct AuthoredCommands {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
 pub struct Installation {
+    /// Captured package source display facts; absent means unknown history.
+    pub source_evidence: Option<vibe_wire::generated::shared::SourceEvidence>,
     /// Captured value-free secret origins; absent/empty legacy state is unknown history.
     pub secret_origins:
         BTreeMap<String, vibe_wire::generated::shared::ConfigurationParameterOrigin>,
@@ -346,12 +349,12 @@ impl Index {
     }
 
     /// Observe the persisted tag independently of lossless writer eligibility.
-    pub(crate) fn load_with_protocol(settings: &SettingsRoot) -> Result<(Self, bool), StateError> {
+    pub(crate) fn load_with_protocol(settings: &SettingsRoot) -> Result<(Self, u8), StateError> {
         let path = settings.index_path();
         let bytes = match fs::read(&path) {
             Ok(bytes) => bytes,
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
-                return Ok((Self::default(), false));
+                return Ok((Self::default(), 3));
             }
             Err(source) => return Err(io("reading", &path, source)),
         };
@@ -367,23 +370,35 @@ impl Index {
         Self::parse_with_protocol(bytes).map(|(index, _)| index)
     }
 
-    fn parse_with_protocol(bytes: &[u8]) -> Result<(Self, bool), String> {
+    fn parse_with_protocol(bytes: &[u8]) -> Result<(Self, u8), String> {
         #[derive(serde::Deserialize)]
         struct Header {
             protocol: String,
         }
         let header: Header = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
         let document = match header.protocol.as_str() {
-            LEGACY_PROTOCOL => upgrade::promote(
+            LEGACY_PROTOCOL => upgrade_four::promote(upgrade::promote(
                 serde_json::from_slice::<
                     vibe_wire::generated::application::e2::index::ApplicationIndex,
                 >(bytes)
                 .map_err(|e| e.to_string())?,
-            ),
+            )),
+            FOUR_PROTOCOL => {
+                upgrade_four::promote(serde_json::from_slice(bytes).map_err(|e| e.to_string())?)
+            }
             INDEX_PROTOCOL => serde_json::from_slice(bytes).map_err(|e| e.to_string())?,
             _ => return Err("unsupported application index protocol".into()),
         };
-        Self::from_wire(document).map(|index| (index, header.protocol == INDEX_PROTOCOL))
+        Self::from_wire(document).map(|index| {
+            (
+                index,
+                match header.protocol.as_str() {
+                    INDEX_PROTOCOL => 5,
+                    FOUR_PROTOCOL => 4,
+                    _ => 3,
+                },
+            )
+        })
     }
 
     /// Whether any retained data needs the current closed index4 reader.
@@ -391,6 +406,20 @@ impl Index {
         self.installations.values().any(|r| {
             r.configuration.is_some() || r.pending.is_some() || !r.secret_origins.is_empty()
         })
+    }
+
+    pub(crate) fn minimum_reader(&self) -> u8 {
+        if self
+            .installations
+            .values()
+            .any(|r| r.source_evidence.is_some())
+        {
+            5
+        } else if self.requires_reader_four() {
+            4
+        } else {
+            3
+        }
     }
 
     pub fn default_of(&self, slot: &str) -> Option<&str> {
@@ -421,10 +450,10 @@ impl Index {
 
     pub fn to_wire(&self) -> wire::ApplicationIndex {
         wire::ApplicationIndex {
-            protocol: if self.requires_reader_four() {
-                INDEX_PROTOCOL
-            } else {
-                LEGACY_PROTOCOL
+            protocol: match self.minimum_reader() {
+                5 => INDEX_PROTOCOL,
+                4 => FOUR_PROTOCOL,
+                _ => LEGACY_PROTOCOL,
             }
             .into(),
             installations: self
@@ -448,7 +477,10 @@ impl Index {
     }
 
     pub fn from_wire(document: wire::ApplicationIndex) -> Result<Self, String> {
-        if document.protocol != INDEX_PROTOCOL && document.protocol != LEGACY_PROTOCOL {
+        if document.protocol != INDEX_PROTOCOL
+            && document.protocol != FOUR_PROTOCOL
+            && document.protocol != LEGACY_PROTOCOL
+        {
             return Err(format!(
                 "protocol `{}` is not `{INDEX_PROTOCOL}`",
                 document.protocol
@@ -462,6 +494,14 @@ impl Index {
             return Err(
                 "protocol3 cannot retain common configuration or pending operation state".into(),
             );
+        }
+        if document.protocol != INDEX_PROTOCOL
+            && document
+                .installations
+                .values()
+                .any(|r| r.source_evidence.is_some())
+        {
+            return Err("source evidence requires application index5".into());
         }
         let mut installations = BTreeMap::new();
         for (key, record) in document.installations {
@@ -500,6 +540,7 @@ mod launcher_wire;
 mod publication;
 #[path = "index/upgrade.rs"]
 mod upgrade;
+mod upgrade_four;
 #[path = "index/wire.rs"]
 mod wire_form;
 

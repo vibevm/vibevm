@@ -146,6 +146,7 @@ mod tests {
 
     fn installation(icon: Option<IconDecl>, launcher_icon: Option<IconDecl>) -> Installation {
         Installation {
+            source_evidence: None,
             secret_origins: Default::default(),
             configuration: None,
             pending: None,

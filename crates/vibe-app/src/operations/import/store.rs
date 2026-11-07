@@ -2,8 +2,8 @@
 use super::*;
 use crate::SettingsRoot;
 use std::{fs, path::PathBuf};
-pub(crate) use vibe_wire::generated::application::e1::import_work::ImportWork;
-const PROTOCOL: &str = "vibe-app-import-work/1";
+pub(crate) use vibe_wire::generated::application::e3::legacy_import_work::ImportWork;
+const PROTOCOL: &str = "vibe-app-import-work/3";
 
 pub(crate) fn path(settings: &SettingsRoot, id: &str) -> Result<PathBuf, AppError> {
     if !pending::valid_operation(id) {
@@ -26,9 +26,31 @@ pub(crate) fn load(settings: &SettingsRoot, id: &str) -> Result<ImportWork, AppE
     let directory = path(settings, id)?;
     let bytes = fs::read(directory.join("import.json"))
         .map_err(|_| failure(settings, id, "exact cohort state is unavailable"))?;
-    let document: ImportWork = serde_json::from_slice(&bytes)
-        .map_err(|_| failure(settings, id, "invalid closed cohort record"))?;
-    if document.protocol != PROTOCOL
+    #[derive(serde::Deserialize)]
+    struct Header {
+        protocol: String,
+    }
+    let header: Header = serde_json::from_slice(&bytes)
+        .map_err(|_| failure(settings, id, "invalid cohort header"))?;
+    let document: ImportWork = if header.protocol == "vibe-app-import-work/1" {
+        let old: vibe_wire::generated::application::e1::import_work::ImportWork =
+            serde_json::from_slice(&bytes)
+                .map_err(|_| failure(settings, id, "invalid frozen legacy cohort"))?;
+        ImportWork {
+            protocol: PROTOCOL.into(),
+            kind: "legacy".into(),
+            source_evidence: Default::default(),
+            target: old.target,
+            phase: old.phase,
+            context: old.context,
+            cohort: old.cohort,
+        }
+    } else {
+        serde_json::from_slice(&bytes)
+            .map_err(|_| failure(settings, id, "invalid closed cohort record"))?
+    };
+    if document.kind != "legacy"
+        || document.protocol != PROTOCOL
         || document.target.operation != id
         || document.target.home != pending::actual_home(settings)?
     {
@@ -46,6 +68,17 @@ pub(crate) fn load(settings: &SettingsRoot, id: &str) -> Result<ImportWork, AppE
         ));
     }
     let cohort = &document.cohort;
+    if document
+        .source_evidence
+        .keys()
+        .any(|k| !cohort.rows.iter().any(|r| &r.key == k))
+    {
+        return Err(failure(
+            settings,
+            id,
+            "source evidence key is outside the captured cohort",
+        ));
+    }
     if cohort.cursor as usize > cohort.rows.len()
         || cohort.current.as_ref().is_some_and(|t| {
             t.home != document.target.home
@@ -104,7 +137,20 @@ pub(crate) fn load(settings: &SettingsRoot, id: &str) -> Result<ImportWork, AppE
     Ok(document)
 }
 fn encode(settings: &SettingsRoot, document: &ImportWork) -> Result<Vec<u8>, AppError> {
-    let mut bytes = serde_json::to_vec_pretty(document).map_err(|_| {
+    let encoded = if document.source_evidence.is_empty() {
+        serde_json::to_vec_pretty(
+            &vibe_wire::generated::application::e1::import_work::ImportWork {
+                protocol: "vibe-app-import-work/1".into(),
+                target: document.target.clone(),
+                phase: document.phase.clone(),
+                context: document.context.clone(),
+                cohort: document.cohort.clone(),
+            },
+        )
+    } else {
+        serde_json::to_vec_pretty(document)
+    };
+    let mut bytes = encoded.map_err(|_| {
         failure(
             settings,
             &document.target.operation,
@@ -157,6 +203,8 @@ pub(super) fn begin(
         operation: pending::generation(),
     };
     let document = ImportWork {
+        kind: "legacy".into(),
+        source_evidence: cohort.source_evidence.clone(),
         protocol: PROTOCOL.into(),
         target,
         phase: w::ApplicationImportPhase::Running,
@@ -226,7 +274,7 @@ mod tests {
         let settings = SettingsRoot::new(&root.path().join("settings"));
         fs::create_dir_all(settings.path()).unwrap();
         let mut document: ImportWork = serde_json::from_slice(include_bytes!(
-            "../../../../../formats/corpora/application/e1/import_work.json"
+            "../../../../../formats/corpora/application/e3/legacy_import_work.json"
         ))
         .unwrap();
         document.target.home = pending::actual_home(&settings).unwrap();

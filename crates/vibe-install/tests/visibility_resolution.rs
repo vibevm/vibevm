@@ -111,6 +111,9 @@ impl InstallSource for TestSource {
             .unwrap();
         self.fetches.borrow_mut().push(pkgref.qualified_name());
         Ok(CachedPackage {
+            recorded_source_kind: None,
+            store_reused: None,
+            acquisition: None,
             resolved: ResolvedPackage {
                 group,
                 name: pkgref.name.to_string(),

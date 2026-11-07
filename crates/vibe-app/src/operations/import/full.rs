@@ -3,7 +3,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINU
 use super::{full_store, pending, rows, store};
 use crate::portable::full_prepare::PreparedFullImport;
 use crate::{AppError, ImportSecrets, MutationLock, OperationContext};
-use vibe_wire::generated::{application::e2::import_work as wire, shared as w};
+use vibe_wire::generated::{application::e3::import_work as wire, shared as w};
 #[path = "full/settlement.rs"]
 mod settlement;
 use settlement::{admit_prefix, advance, finish, release_refused, settle_error, skip, wait_error};
@@ -22,6 +22,8 @@ pub fn import_full(
         operation: pending::generation(),
     };
     let mut document = wire::ImportWork {
+        kind: "full".into(),
+        source_evidence: prepared.source_evidence.clone(),
         protocol: full_store::PROTOCOL.into(),
         target,
         phase: w::ApplicationImportPhase::Running,
@@ -38,7 +40,7 @@ pub fn import_full(
         },
         cohort: prepared.state.clone(),
     };
-    let mut bytes = serde_json::to_vec_pretty(&document).map_err(|_| {
+    let mut bytes = full_store::encode(&document).map_err(|_| {
         store::failure(
             ctx.settings,
             &document.target.operation,
@@ -97,6 +99,7 @@ pub fn resume_full_import(
         }
         finish(ctx, &lock, &mut document)?;
         return Ok(PreparedFullImport {
+            source_evidence: document.source_evidence.clone(),
             state: document.cohort,
             target: Some(document.target),
         });
@@ -181,6 +184,7 @@ pub fn resume_full_import(
     full_store::save_full(ctx.settings, &document)?;
     drive(ctx, &lock, &mut document, secrets)?;
     Ok(PreparedFullImport {
+        source_evidence: document.source_evidence.clone(),
         state: document.cohort,
         target: Some(document.target),
     })

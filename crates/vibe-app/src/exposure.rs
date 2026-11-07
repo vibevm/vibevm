@@ -85,7 +85,7 @@ pub(crate) fn exposure_of(
     let image = if commands.is_empty() {
         None
     } else {
-        Some(proxies::CapturedImage::read(
+        Some(proxies::CapturedImage::read_for_reader(
             proxy_image,
             Index::load_with_protocol(settings)?.1,
         )?)

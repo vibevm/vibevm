@@ -36,7 +36,8 @@ fn application_index_rejects_unknown_members() {
 
 #[test]
 fn registry_exposes_distinct_current_and_legacy_index_epochs() {
-    assert_eq!(FormatId::ApplicationIndex.epoch(), 3);
+    assert_eq!(FormatId::ApplicationIndex.epoch(), 4);
+    assert_eq!(FormatId::ApplicationIndexV4.epoch(), 3);
     assert_eq!(FormatId::ApplicationIndexV3.epoch(), 2);
     assert_eq!(
         FormatId::ApplicationIndex.unknown_fields(),

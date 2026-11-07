@@ -429,6 +429,7 @@ pub(crate) fn undo_authored(
 ) -> Result<(), AppError> {
     let key = installation.package.key();
     let mut state = StepsFile {
+        source_evidence: Default::default(),
         operation: None,
         package: installation.package.clone(),
         option: installation.option.clone(),

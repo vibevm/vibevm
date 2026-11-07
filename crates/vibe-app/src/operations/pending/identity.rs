@@ -121,7 +121,7 @@ pub(in crate::operations) fn published(record: &crate::Installation) -> Result<S
     record_digest(&record.identity_record())
 }
 fn record_digest(
-    record: &vibe_wire::generated::application::e3::index::Installation,
+    record: &vibe_wire::generated::application::e4::index::Installation,
 ) -> Result<String, String> {
     let bytes = serde_json::to_vec(record).map_err(|e| e.to_string())?;
     let mut hash = Sha256::new();

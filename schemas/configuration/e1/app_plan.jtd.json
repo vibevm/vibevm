@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Version 1 installation plan from vibe app plan --json and vibe install --plan-only --json: the chosen option, result and features and every step as run or skip with its reason, computed without downloading or running anything.",
+    "description": "Application configuration plan without installer-step execution. Package resolution may acquire content and write cache or configuration; this is not a read-only preview.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#plan"
     },
@@ -14,11 +14,13 @@
       "platform",
       "arch",
       "configuration",
-      "execution"
+      "execution",
+      "source_evidence"
     ],
     "x-vocabularies": [
       "configuration_evaluation",
-      "application_agent_mode"
+      "application_agent_mode",
+      "source_evidence"
     ]
   },
   "properties": {
@@ -47,6 +49,13 @@
   "optionalProperties": {
     "execution": {
       "ref": "execution"
+    },
+    "source_evidence": {
+      "ref": "source_evidence",
+      "metadata": {
+        "x-default": null,
+        "x-reader-projection": "permissive"
+      }
     }
   },
   "definitions": {

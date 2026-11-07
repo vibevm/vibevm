@@ -103,7 +103,7 @@ pub fn sync_locked(
         );
     }
     let four = crate::Index::load_with_protocol(settings)?.1;
-    if !four {
+    if four < 4 {
         // Preserve the incumbent3 contract: obsolete names are removed even
         // when the image for a new command is missing.
         let obsolete = previous.difference(current).cloned().collect();
@@ -116,7 +116,7 @@ pub fn sync_locked(
             lock,
         )?;
     }
-    let image = CapturedImage::read(proxy_image, four)?;
+    let image = CapturedImage::read_for_reader(proxy_image, four)?;
     sync_captured(
         settings,
         &settings.proxy_dir(),
@@ -157,7 +157,7 @@ pub(crate) fn sync_captured(
             path: dir.display().to_string(),
             reason: "proxy writes require the captured image".into(),
         })?;
-        if crate::Index::load_with_protocol(settings)?.1 && !image.supports_both {
+        if crate::Index::load_with_protocol(settings)?.1 > image.reader {
             return Err(crate::StateError::ProxyUpgrade {
                 path: dir.display().to_string(),
                 reason: "index4 proxy writes require an admitted compatible image".into(),

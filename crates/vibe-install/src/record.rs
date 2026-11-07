@@ -6,7 +6,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use vibe_core::lock_provenance::{FetchedFrom, LockProvenance};
-use vibe_core::manifest::{GitPackageDep, LockedPackage, Lockfile, Manifest, SourceKind};
+use vibe_core::manifest::{GitPackageDep, LockedPackage, Lockfile, Manifest};
 use vibe_core::{ContentHash, PackageName, PackageRef, SourceUrl, VersionSpec};
 use vibe_resolver::ResolvedNode;
 use vibe_workspace::install::ResolvedDep;
@@ -287,19 +287,7 @@ pub(crate) fn locked_package_from_fetched(
     language: Option<&str>,
 ) -> LockedPackage {
     let c = &f.cached;
-    let source_kind = if c.overridden {
-        SourceKind::Override
-    } else if c.is_path_source {
-        SourceKind::Path
-    } else if c.is_git_source {
-        SourceKind::Git
-    } else if c.is_local {
-        SourceKind::Local
-    } else if c.is_embedded {
-        SourceKind::Embedded
-    } else {
-        SourceKind::Registry
-    };
+    let source_kind = c.source_kind();
     LockedPackage {
         kind: c.package_meta().kind,
         group: c.resolved.group.clone(),
@@ -321,7 +309,7 @@ pub(crate) fn locked_package_from_fetched(
         admitted_by: resolved.admitted_by.clone(),
         via_override: resolved.via_override.clone(),
         overridden: c.overridden,
-        source_kind: Some(source_kind),
+        source_kind,
         via_redirect: c.via_redirect.clone(),
         features: f
             .feature_expansion
@@ -388,6 +376,69 @@ pub(crate) fn fetch_provenance(fetched: &[Fetched]) -> LockProvenance {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn store_lock_record_preserves_known_kind_and_legacy_unknown() {
+        let temp = tempfile::tempdir().unwrap();
+        let source = temp.path().join("registry/org.example/demo/v1.0.0");
+        std::fs::create_dir_all(&source).unwrap();
+        std::fs::write(
+            source.join("vibe.toml"),
+            "[package]\ngroup='org.example'\nname='demo'\nversion='1.0.0'\nkind='tool'\n",
+        )
+        .unwrap();
+        let registry = vibe_registry::LocalRegistry::new(temp.path().join("registry")).unwrap();
+        let selected = registry
+            .resolve(&PackageRef::parse("org.example/demo").unwrap())
+            .unwrap();
+        let mut cached = registry
+            .fetch(&selected, &temp.path().join("store"))
+            .unwrap();
+        cached.acquisition = Some(vibe_wire::generated::shared::SourceAcquisition::Store);
+        let resolved = ResolvedDep {
+            kind: cached.package_meta().kind,
+            group: cached.resolved.group.clone(),
+            name: cached.resolved.name.clone(),
+            version: cached.resolved.version.clone(),
+            content_dir: cached.cache_dir.clone(),
+            source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
+            embedded_sources: vec![],
+            manifest: cached.manifest.clone(),
+            requires: vec![],
+            admitted_by: None,
+            via_override: None,
+            source_mutable: false,
+            in_place_changed: None,
+            configuration: None,
+        };
+        let mut fetched = Fetched {
+            cached,
+            feature_expansion: Default::default(),
+            meta: crate::fetched::NodeInstallMeta {
+                dependencies: vec![],
+                is_root: true,
+            },
+            embedded_sources: vec![],
+            in_place: None,
+            configuration: None,
+        };
+        for kind in [
+            None,
+            Some(vibe_core::manifest::SourceKind::Override),
+            Some(vibe_core::manifest::SourceKind::Git),
+        ] {
+            fetched.cached.recorded_source_kind = kind;
+            let recorded = locked_package_from_fetched(&fetched, &resolved, None);
+            assert_eq!(recorded.source_kind, kind);
+            let mut lock = Lockfile::empty("source-evidence-test", "2026-11-07T00:00:00Z");
+            lock.packages.push(recorded);
+            let path = temp.path().join("vibe.lock");
+            lock.write(&path).unwrap();
+            let text = std::fs::read_to_string(&path).unwrap();
+            assert_eq!(text.contains("source_kind"), kind.is_some());
+            assert_eq!(Lockfile::read(&path).unwrap().packages[0].source_kind, kind);
+        }
+    }
 
     #[test]
     fn manifest_root_snapshot_drops_removed_dependencies() {

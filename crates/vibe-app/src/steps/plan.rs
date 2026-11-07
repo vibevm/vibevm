@@ -196,6 +196,8 @@ pub struct PlannedStep {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#plan")]
 pub struct Plan {
+    /// Captured package source display facts; absent means unknown history.
+    pub source_evidence: Option<vibe_wire::generated::shared::SourceEvidence>,
     /// Immutable finite import meaning, absent for ordinary operations.
     pub import_scope: Option<String>,
     /// Legacy secret origins captured by this operation; common records own their own metadata.
@@ -411,6 +413,7 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         &work,
     );
     Ok(Plan {
+        source_evidence: input.resolved.source_evidence.clone(),
         import_scope: input.import_scope.map(str::to_owned),
         secret_provided,
         secret_origins,

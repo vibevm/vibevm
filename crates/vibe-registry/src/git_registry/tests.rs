@@ -150,6 +150,11 @@ fn resolve_and_fetch_produce_git_source_uri() {
     let pkg_cache = tmp.path().join("pkg_cache");
     fs::create_dir_all(&pkg_cache).unwrap();
     let cached = r.fetch(&resolved, &pkg_cache).unwrap();
+    assert_eq!(cached.store_reused, Some(false));
+    assert_eq!(
+        r.fetch(&resolved, &pkg_cache).unwrap().store_reused,
+        Some(true)
+    );
     assert!(cached.source_uri.starts_with("git+ssh://"));
     assert!(cached.source_uri.ends_with("#org.vibevm/wal/v0.1.0"));
 }

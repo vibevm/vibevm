@@ -358,6 +358,11 @@ impl GitPerPackageRegistry {
                 // next attempt's clone, without deleting anything on
                 // the way (PROP-010 §2.6).
                 last_cached = Some(CachedPackage {
+                    recorded_source_kind: None,
+                    store_reused: None,
+                    acquisition: Some(
+                        vibe_wire::generated::shared::SourceAcquisition::GitRepository,
+                    ),
                     resolved: resolved.clone(),
                     cache_dir: clone_dir.clone(),
                     manifest,
@@ -385,6 +390,7 @@ impl GitPerPackageRegistry {
             //    The entry path is what the resolution materialises
             //    `vibedeps/` from: the bytes flow from the STORE, not
             //    from this clone.
+            let mut store_reused = false;
             let cache_dir = if in_place {
                 clone_dir.clone()
             } else {
@@ -406,6 +412,7 @@ impl GitPerPackageRegistry {
                     // on every fetch is `vibe cache check`'s job, not a
                     // tax the ordinary path pays.
                     InsertOutcome::AlreadyPresent(entry) => {
+                        store_reused = true;
                         if let Some(expected) = expected_hash {
                             verify_store_entry_against_pin(
                                 &entry,
@@ -442,6 +449,9 @@ impl GitPerPackageRegistry {
                 }
             }
             return Ok(CachedPackage {
+                recorded_source_kind: None,
+                store_reused: Some(store_reused),
+                acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),
                 resolved: resolved.clone(),
                 cache_dir,
                 manifest,

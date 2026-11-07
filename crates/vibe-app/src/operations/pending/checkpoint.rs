@@ -278,6 +278,19 @@ pub(in crate::operations) fn begin(
                 }),
         },
     };
+    let source_evidence = old
+        .as_ref()
+        .map(|s| s.source_evidence.clone())
+        .unwrap_or_else(|| {
+            std::iter::once(resolved)
+                .chain(
+                    plan.dependencies
+                        .iter()
+                        .filter_map(|d| d.resolved.as_deref()),
+                )
+                .filter_map(|r| r.source_evidence.clone().map(|e| (r.package.key(), e)))
+                .collect()
+        });
     let steps = old.map(|s| s.steps).unwrap_or_default();
     let mut op = op;
     if inherited {
@@ -302,6 +315,7 @@ pub(in crate::operations) fn begin(
     }
     fs::create_dir_all(&directory).map_err(|e| failure(settings, &plan.package, e.to_string()))?;
     StepsFile {
+        source_evidence,
         operation: Some(op),
         package: plan.package.clone(),
         option: plan.option.clone(),

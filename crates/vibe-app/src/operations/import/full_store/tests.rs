@@ -87,6 +87,8 @@ fn fixture() -> (tempfile::TempDir, SettingsRoot, wire::ImportWork) {
     });
     let child = binding(&settings, CHILD, w::PortableApplicationMark::Auto);
     let document = wire::ImportWork {
+        kind: "full".into(),
+        source_evidence: Default::default(),
         protocol: PROTOCOL.into(),
         target: w::ApplicationImportTarget {
             home: pending::actual_home(&settings).unwrap(),
@@ -220,9 +222,15 @@ fn closed_v1_and_v2_read_exact_bytes_without_migration_or_source_access() {
     let ImportWork::Legacy(loaded) = load(&settings, ID).unwrap() else {
         panic!("version1 must stay legacy");
     };
-    assert_eq!(loaded, original);
+    assert_eq!(loaded.cohort, original.cohort);
+    assert_eq!(loaded.target, original.target);
+    assert_eq!(loaded.context, original.context);
+    assert_eq!(loaded.phase, original.phase);
+    assert!(loaded.source_evidence.is_empty());
     assert_eq!(fs::read(&path).unwrap(), bytes);
-    let (path, bytes) = write_document(&settings, &document);
+    let frozen: vibe_wire::generated::application::e2::import_work::ImportWork =
+        serde_json::from_slice(&encode(&document).unwrap()).unwrap();
+    let (path, bytes) = write_document(&settings, &frozen);
     let ImportWork::Full(loaded) = load(&settings, ID).unwrap() else {
         panic!("version2 must stay full");
     };

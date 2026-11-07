@@ -113,6 +113,9 @@ impl InstallSource for Source {
         let version = Provider(self).resolve_version(p).unwrap();
         let c = &self.candidates[&(p.qualified_name(), version.clone())];
         Ok(CachedPackage {
+            recorded_source_kind: None,
+            store_reused: None,
+            acquisition: None,
             resolved: ResolvedPackage {
                 group: p.group.clone().unwrap(),
                 name: p.name.to_string(),

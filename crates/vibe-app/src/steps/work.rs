@@ -314,6 +314,7 @@ mod tests {
 
     fn state(version: &str, outcomes: &[(&str, StepOutcome)]) -> StepsFile {
         StepsFile {
+            source_evidence: Default::default(),
             operation: None,
             package: PackageCoordinate {
                 group: "org.example".into(),

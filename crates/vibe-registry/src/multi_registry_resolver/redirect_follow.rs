@@ -282,15 +282,16 @@ impl MultiRegistryResolver {
         // insert write-once into the machine store; an already-present
         // entry is returned untouched, its manifest read back.
         let content_hash = compute_content_hash(&clone_dir)?;
-        let dest = store::insert_current_at(
+        let inserted = store::insert_current_at(
             store_root,
             &clone_dir,
             group,
             name,
             &resolution.resolved.version,
             &content_hash,
-        )?
-        .into_entry();
+        )?;
+        let reused = matches!(&inserted, store::InsertOutcome::AlreadyPresent(_));
+        let dest = inserted.into_entry();
         let manifest_path = dest.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
         if manifest.package.is_none() {
@@ -301,6 +302,9 @@ impl MultiRegistryResolver {
         }
 
         Ok(CachedPackage {
+            recorded_source_kind: None,
+            store_reused: Some(reused),
+            acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),
             resolved: ResolvedPackage {
                 group: group.clone(),
                 name: name.to_string(),
@@ -369,6 +373,13 @@ target_url = "git@host:external/flow-internal.git"
             "vibe.toml",
             manifest_text("internal", "flow", "0.3.0").into_bytes(),
         );
+        let upstream = tempdir().unwrap();
+        std::fs::write(
+            upstream.path().join("vibe.toml"),
+            manifest_text("internal", "flow", "0.3.0"),
+        )
+        .unwrap();
+        fake.seed_bootstrap(target_url, upstream.path().to_owned());
         let r = build_resolver(
             cache.path(),
             vec![registry_section("stub-org", "git@host:org-stub")],
@@ -378,6 +389,9 @@ target_url = "git@host:external/flow-internal.git"
         );
         let p = PackageRef::parse("org.vibevm/internal").unwrap();
         let m = r.resolve(&p).expect("redirect-follow must succeed");
+        let store = tempdir().unwrap();
+        assert_eq!(r.fetch(&m, store.path()).unwrap().store_reused, Some(false));
+        assert_eq!(r.fetch(&m, store.path()).unwrap().store_reused, Some(true));
         assert_eq!(
             m.via_redirect.as_deref(),
             Some(stub_url),

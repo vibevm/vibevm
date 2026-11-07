@@ -73,6 +73,64 @@ fn event() -> HomeEvent {
 const BOTH: [&str; 2] = ["vibe-user-applications/3", "vibe-user-applications/4"];
 
 #[test]
+fn provenance_upgrade_refreshes_three_and_four_readers_before_five() {
+    for start_four in [false, true] {
+        let mut f = Fixture::new();
+        if start_four {
+            let lock = f.home.lock().unwrap();
+            let image = for_publication(&f.home, &f.next, &f.image(&BOTH))
+                .unwrap()
+                .unwrap();
+            f.next
+                .publish_locked(&f.home, &event(), &lock, Some(&image))
+                .unwrap();
+        }
+        f.next
+            .installations
+            .values_mut()
+            .next()
+            .unwrap()
+            .source_evidence = Some(
+            serde_json::from_str(
+                r#"{"source_url":"https://origin.invalid/app","source_kind":"registry"}"#,
+            )
+            .unwrap(),
+        );
+        let before = fs::read(f.home.index_path()).unwrap();
+        let old_global = fs::read(&f.global).unwrap();
+        assert!(for_publication(&f.home, &f.next, &f.image(&BOTH)).is_err());
+        assert!(f.next.save(&f.home, &event()).is_err());
+        assert_eq!(fs::read(f.home.index_path()).unwrap(), before);
+        assert_eq!(fs::read(&f.global).unwrap(), old_global);
+        let all = [
+            "vibe-user-applications/3",
+            "vibe-user-applications/4",
+            "vibe-user-applications/5",
+        ];
+        let path = f.image(&all);
+        let bytes = fs::read(&path).unwrap();
+        let lock = f.home.lock().unwrap();
+        let image = for_publication(&f.home, &f.next, &path).unwrap().unwrap();
+        f.next
+            .publish_locked(&f.home, &event(), &lock, Some(&image))
+            .unwrap();
+        assert_eq!(Index::load_with_protocol(&f.home).unwrap().1, 5);
+        assert_eq!(fs::read(&f.global).unwrap(), bytes);
+        assert_eq!(fs::read(&f.session).unwrap(), bytes);
+        drop(lock);
+        assert!(
+            crate::proxies::sync(
+                &f.home,
+                &Default::default(),
+                &std::collections::BTreeSet::from(["edit".into()]),
+                &f.image(&BOTH)
+            )
+            .is_err()
+        );
+    }
+}
+
+#[test]
 fn raw_and_locked_writers_refuse_first_four_with_existing_readers() {
     let f = Fixture::new();
     let bytes = fs::read(f.home.index_path()).unwrap();
@@ -119,7 +177,7 @@ fn captured_both_reader_bytes_precede_publication_and_survive_later_failure() {
             .next
             .publish_locked(&f.home, &event(), &lock, Some(&captured));
         assert_eq!(result.is_err(), revision_failure);
-        assert!(Index::load_with_protocol(&f.home).unwrap().1);
+        assert!(Index::load_with_protocol(&f.home).unwrap().1 >= 4);
         assert_eq!(fs::read(&f.global).unwrap(), admitted);
         assert_eq!(fs::read(&f.session).unwrap(), admitted);
         assert_eq!(fs::read(unrelated).unwrap(), b"leave me");
@@ -172,7 +230,7 @@ fn stored_four_with_only_legacy_rows_still_blocks_old_public_sync_and_exposure()
     fs::write(f.home.index_path(), serde_json::to_vec(&document).unwrap()).unwrap();
     let bytes = fs::read(f.home.index_path()).unwrap();
     assert!(!Index::load(&f.home).unwrap().requires_reader_four());
-    assert!(Index::load_with_protocol(&f.home).unwrap().1);
+    assert!(Index::load_with_protocol(&f.home).unwrap().1 >= 4);
     let old = f.image(&BOTH[..1]);
     let commands = BTreeSet::from(["edit".into()]);
     assert!(crate::sync_proxies(&f.home, &commands, &commands, &old).is_err());
@@ -194,7 +252,7 @@ fn data_only_first_four_needs_no_image_and_raw_save_owns_the_lock() {
         Err(StateError::Locked { .. })
     ));
     f.next.save_locked(&f.home, &event(), &lock).unwrap();
-    assert!(Index::load_with_protocol(&f.home).unwrap().1);
+    assert!(Index::load_with_protocol(&f.home).unwrap().1 >= 4);
 }
 
 #[test]
@@ -205,11 +263,11 @@ fn parallel_captures_and_a_brief_busy_snapshot_use_bounded_exact_image_admission
         let tasks: Vec<_> = (0..8)
             .map(|_| {
                 let image = &image;
-                scope.spawn(move || CapturedImage::read(image, true).unwrap())
+                scope.spawn(move || CapturedImage::read_for_reader(image, 4).unwrap())
             })
             .collect();
         for task in tasks {
-            assert!(task.join().unwrap().supports_both);
+            assert_eq!(task.join().unwrap().reader, 4);
         }
     });
     // A writable descriptor makes Linux exec return ETXTBSY. Release only that

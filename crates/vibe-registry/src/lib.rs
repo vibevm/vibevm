@@ -178,6 +178,9 @@ pub struct ResolvedPackage {
 /// )
 /// .unwrap();
 /// let cached = CachedPackage {
+///     recorded_source_kind: None,
+///     store_reused: None,
+///     acquisition: None,
 ///     resolved: ResolvedPackage {
 ///         group: Group::parse("org.vibevm").unwrap(),
 ///         name: "wal".to_string(),
@@ -204,6 +207,12 @@ pub struct ResolvedPackage {
 /// ```
 #[derive(Debug, Clone)]
 pub struct CachedPackage {
+    /// Selection kind retained by the lock when acquisition reads the store.
+    pub recorded_source_kind: Option<vibe_core::manifest::SourceKind>,
+    /// Whether the acquisition reused an existing store entry, when observed.
+    pub store_reused: Option<bool>,
+    /// Observed source read route; never a claim of network contact.
+    pub acquisition: Option<vibe_wire::generated::shared::SourceAcquisition>,
     pub resolved: ResolvedPackage,
     /// Absolute path to the cache directory (contents are a verbatim copy of
     /// `resolved.source_dir`).
@@ -288,6 +297,9 @@ pub struct CachedPackage {
     /// `LockedPackage.via_redirect`.
     pub via_redirect: Option<String>,
 }
+
+mod source_evidence;
+pub use source_evidence::locked_source_evidence;
 
 impl CachedPackage {
     /// A `CachedPackage` always holds a publishable `[package]` manifest.

@@ -1,10 +1,11 @@
 {
   "metadata": {
-    "description": "Version 1 installation plan from vibe app plan --json and vibe install --plan-only --json: the chosen option, result and features and every step as run or skip with its reason, computed without downloading or running anything.",
+    "description": "Version 1 application installation plan: chosen option, result, features and steps, without executing installer steps. Resolving the package may acquire content and write cache or configuration; this is not a read-only preview.",
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#plan" },
     "rustOptions": { "package": "vibe_wire::application_plan" },
     "x-rust-type": "ApplicationPlan",
-    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "profile", "features", "parameters", "license", "downloadBytes", "unknownSizes", "dependencies", "steps", "warnings"]
+    "x-vocabularies": ["source_evidence"],
+    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "profile", "features", "parameters", "license", "downloadBytes", "unknownSizes", "dependencies", "steps", "warnings", "source_evidence"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -21,6 +22,7 @@
     "warnings": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
   },
   "optionalProperties": {
+        "source_evidence": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive" } },
     "dependencies": { "elements": { "ref": "dependency" }, "metadata": { "x-empty": "omit", "description": "The required application packages (PROP-065#app-dependencies), each ahead of the step that needs it; an entry without `step` is required by the option and precedes every step." } },
     "appRoot": { "type": "string", "metadata": { "x-default": null } },
     "profile": { "type": "string", "metadata": { "x-default": null } },

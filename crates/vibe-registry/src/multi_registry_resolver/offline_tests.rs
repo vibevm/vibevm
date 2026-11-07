@@ -117,6 +117,18 @@ fn offline_resolves_and_fetches_from_the_store_with_zero_registries() {
         "store bytes\n"
     );
     assert!(cached.content_hash.starts_with("sha256:"));
+    assert_eq!(cached.store_reused, Some(true));
+    assert_eq!(cached.source_kind(), None);
+    let mut known = locked_wal("0.2.0", "https://registry.example/wal.git");
+    known.source_kind = Some(vibe_core::manifest::SourceKind::Override);
+    let r = r.with_locked_packages(vec![known]);
+    let known = r
+        .fetch_with_expected_hash(&resolution, store_root.path(), None)
+        .unwrap();
+    assert_eq!(
+        known.source_kind(),
+        Some(vibe_core::manifest::SourceKind::Override)
+    );
     // Zero network: the fake backend was never consulted.
     assert_eq!(fake.bootstrap_count(), 0);
 }

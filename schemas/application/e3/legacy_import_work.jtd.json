@@ -1,0 +1,55 @@
+{
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "target": {
+      "ref": "application_import_target"
+    },
+    "phase": {
+      "ref": "application_import_phase"
+    },
+    "context": {
+      "ref": "application_import_context"
+    },
+    "cohort": {
+      "ref": "application_pending_import"
+    },
+    "kind": {
+      "type": "string"
+    }
+  },
+  "metadata": {
+    "x-wire-order": [
+      "protocol",
+      "target",
+      "phase",
+      "context",
+      "cohort",
+      "kind",
+      "source_evidence"
+    ],
+    "x-vocabularies": [
+      "application_import_context",
+      "application_import_phase",
+      "application_import_target",
+      "application_pending_import",
+      "source_evidence"
+    ],
+    "description": "The sole finite legacy-import continuation under the existing application-work owner.",
+    "x-rust-type": "ImportWork",
+    "rustOptions": {
+      "package": "vibe_wire::application::e3::legacy_import_work"
+    }
+  },
+  "optionalProperties": {
+    "source_evidence": {
+      "values": {
+        "ref": "source_evidence"
+      },
+      "metadata": {
+        "x-empty": "omit"
+      }
+    }
+  }
+}

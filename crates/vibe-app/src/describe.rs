@@ -55,6 +55,8 @@ pub fn describe(
         .into());
     }
     Ok(wire::ApplicationDescribe {
+        source_evidence: resolved.source_evidence.clone(),
+        installed_source: None,
         protocol: "vibe-app-describe/1".into(),
         package: wire::Package {
             group: resolved.package.group.clone(),

@@ -22,6 +22,7 @@ impl Plan {
             .evaluation
             .clone();
         Ok(wire::AppPlan {
+            source_evidence: self.source_evidence.clone(),
             configuration,
             protocol: "vibe-app-configuration-plan/1".into(),
             package: wire::Package {

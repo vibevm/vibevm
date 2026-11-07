@@ -34,6 +34,9 @@ fn package_manifest(group: &str, name: &str, version: &str) -> Manifest {
 fn cached(group: &str, name: &str, version: &str) -> CachedPackage {
     let dir = std::path::PathBuf::from("/fixture");
     CachedPackage {
+        recorded_source_kind: None,
+        store_reused: None,
+        acquisition: None,
         resolved: ResolvedPackage {
             group: Group::parse(group).expect("a valid group"),
             name: name.to_string(),

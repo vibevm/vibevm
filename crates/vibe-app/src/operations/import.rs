@@ -91,7 +91,10 @@ pub fn resume_import(ctx: &OperationContext<'_>, id: &str) -> Result<PreparedImp
         ..*ctx
     };
     drive(lock, &continued, &mut document)?;
-    Ok(PreparedImport::retained(document.cohort))
+    Ok(PreparedImport::retained(
+        document.cohort,
+        document.source_evidence,
+    ))
 }
 pub(crate) fn command(target: &w::ApplicationImportTarget) -> String {
     format!("vibe app import --resume {}", target.operation)
@@ -129,7 +132,8 @@ fn drive(
             store::save(ctx.settings, document)?;
             break;
         };
-        let (resolved, option) = rows::admit(ctx, &row)?;
+        let (mut resolved, option) = rows::admit(ctx, &row)?;
+        resolved.source_evidence = document.source_evidence.get(&row.key).cloned();
         let mut target = rows::bound(ctx, document, &row, &option)?;
         let existing = target.is_some();
         let result = if let Some(child) = &target {

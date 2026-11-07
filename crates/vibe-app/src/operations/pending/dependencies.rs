@@ -6,6 +6,7 @@ use vibe_core::manifest::RequirementScope;
 pub(crate) fn resolve_binding(
     ctx: &super::super::OperationContext<'_>,
     index: &Index,
+    parent: &w::ApplicationPendingOperation,
     b: &w::ApplicationPendingChild,
     scope: RequirementScope,
     step: Option<&str>,
@@ -111,7 +112,15 @@ pub(crate) fn resolve_binding(
                 "retained dependency has no source route".into(),
             )
         })?;
-        let r = read_source(ctx, route, &b.key)?;
+        let mut r = read_source(ctx, route, &b.key)?;
+        r.source_evidence = load(
+            ctx.settings,
+            &coordinate(&parent.target.key)?,
+            Some(&parent.target.operation),
+        )?
+        .source_evidence
+        .get(&b.key)
+        .cloned();
         let commands = declared_commands(&r, &b.option, ctx.settings)?;
         (false, Some(Box::new(r)), commands)
     };

@@ -1,0 +1,36 @@
+{
+  "protocol": "vibe-app-import-work/3",
+  "target": {
+    "home": "/tmp/nst-common-app-format-capture/home",
+    "operation": "20261104T162511.433567306Z-773989-0"
+  },
+  "phase": "complete",
+  "context": {
+    "lookup": {
+      "kind": "chain",
+      "embedded": "/tmp/nst-common-app-format-capture/registry"
+    },
+    "offline": true,
+    "hosted": true,
+    "assumeYes": true,
+    "agentExternal": true,
+    "agent": "external"
+  },
+  "cohort": {
+    "roots": [],
+    "bindings": {},
+    "cursor": 0,
+    "current": null,
+    "results": [],
+    "skipInstalled": false,
+    "acceptLicense": false,
+    "collections": [],
+    "pins": [],
+    "launchers": [],
+    "arrangementDone": true,
+    "waiting": null,
+    "secretRequirements": {},
+    "completedBindings": {}
+  },
+  "kind": "full"
+}

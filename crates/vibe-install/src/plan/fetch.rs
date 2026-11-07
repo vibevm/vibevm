@@ -158,6 +158,9 @@ pub(super) fn try_in_place_incremental<S: InstallSource + ?Sized>(
     };
     let feature_expansion = expand_features(&manifest.features, &req)?;
     let cached = CachedPackage {
+        recorded_source_kind: None,
+        store_reused: None,
+        acquisition: None,
         resolved: ResolvedPackage {
             group: node.group.clone(),
             name: node.name.clone(),

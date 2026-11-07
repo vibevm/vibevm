@@ -7,7 +7,7 @@
 use vibe_core::manifest::{
     IconDecl, IconSet, LauncherActionDecl, LauncherDecl, LauncherKind, LauncherSource,
 };
-use vibe_wire::generated::application::e3::index as wire;
+use vibe_wire::generated::application::e4::index as wire;
 
 pub(super) fn launcher_to_wire(launcher: &LauncherDecl) -> wire::Launcher {
     let (icon, icon_set) = icon_to_wire(launcher.icon.as_ref());

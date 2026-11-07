@@ -2,8 +2,8 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION");
 use super::{document::ImportWork, pending, store};
 use crate::{AppError, SettingsRoot};
-use vibe_wire::generated::{application::e2::import_work as wire, shared as w};
-pub(crate) const PROTOCOL: &str = "vibe-app-import-work/2";
+use vibe_wire::generated::{application::e3::import_work as wire, shared as w};
+pub(crate) const PROTOCOL: &str = "vibe-app-import-work/3";
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION"
 )]
@@ -14,14 +14,34 @@ pub(crate) fn load(settings: &SettingsRoot, id: &str) -> Result<ImportWork, AppE
     #[derive(serde::Deserialize)]
     struct Header {
         protocol: String,
+        kind: Option<String>,
     }
     let header: Header = serde_json::from_slice(&bytes)
         .map_err(|_| store::failure(settings, id, "invalid cohort protocol header"))?;
     match header.protocol.as_str() {
         "vibe-app-import-work/1" => store::load(settings, id).map(ImportWork::Legacy),
-        PROTOCOL => {
-            let value: wire::ImportWork = serde_json::from_slice(&bytes)
-                .map_err(|_| store::failure(settings, id, "invalid closed full cohort record"))?;
+        PROTOCOL if header.kind.as_deref() == Some("legacy") => {
+            store::load(settings, id).map(ImportWork::Legacy)
+        }
+        "vibe-app-import-work/2" | PROTOCOL => {
+            let value: wire::ImportWork = if header.protocol == "vibe-app-import-work/2" {
+                let old: vibe_wire::generated::application::e2::import_work::ImportWork =
+                    serde_json::from_slice(&bytes)
+                        .map_err(|_| store::failure(settings, id, "invalid frozen full cohort"))?;
+                wire::ImportWork {
+                    protocol: PROTOCOL.into(),
+                    kind: "full".into(),
+                    source_evidence: Default::default(),
+                    target: old.target,
+                    phase: old.phase,
+                    context: old.context,
+                    cohort: old.cohort,
+                }
+            } else {
+                serde_json::from_slice(&bytes).map_err(|_| {
+                    store::failure(settings, id, "invalid closed full cohort record")
+                })?
+            };
             validate(settings, id, &value)?;
             Ok(ImportWork::Full(value))
         }
@@ -42,7 +62,7 @@ pub(super) fn save_full(
     document: &wire::ImportWork,
 ) -> Result<(), AppError> {
     validate(settings, &document.target.operation, document)?;
-    let mut bytes = serde_json::to_vec_pretty(document).map_err(|_| {
+    let mut bytes = encode(document).map_err(|_| {
         store::failure(
             settings,
             &document.target.operation,
@@ -59,9 +79,28 @@ pub(super) fn save_full(
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION"
 )]
+pub(super) fn encode(document: &wire::ImportWork) -> Result<Vec<u8>, serde_json::Error> {
+    if document.source_evidence.is_empty() {
+        serde_json::to_vec_pretty(
+            &vibe_wire::generated::application::e2::import_work::ImportWork {
+                protocol: "vibe-app-import-work/2".into(),
+                target: document.target.clone(),
+                phase: document.phase.clone(),
+                context: document.context.clone(),
+                cohort: document.cohort.clone(),
+            },
+        )
+    } else {
+        serde_json::to_vec_pretty(document)
+    }
+}
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION"
+)]
 fn validate(settings: &SettingsRoot, id: &str, d: &wire::ImportWork) -> Result<(), AppError> {
     let bad = |reason: &str| store::failure(settings, id, reason);
-    if d.protocol != PROTOCOL
+    if d.kind != "full"
+        || d.protocol != PROTOCOL
         || d.target.operation != id
         || d.target.home != pending::actual_home(settings)?
         || settings.is_project()
@@ -72,6 +111,12 @@ fn validate(settings: &SettingsRoot, id: &str, d: &wire::ImportWork) -> Result<(
     }
     super::receipts::validate(d).map_err(|reason| bad(&reason))?;
     let c = &d.cohort;
+    if d.source_evidence
+        .keys()
+        .any(|k| !c.bindings.contains_key(k))
+    {
+        return Err(bad("source evidence key is outside the captured cohort"));
+    }
     crate::portable::validate_rows(&c.roots, c.bindings.values().map(|b| &b.application))
         .map_err(|_| bad("full cohort contains invalid portable roots or bindings"))?;
     for (key, binding) in &c.bindings {

@@ -50,6 +50,9 @@ impl InstallSource for FixtureSource {
             .clone();
         let content_hash = compute_content_hash(&dir)?;
         Ok(CachedPackage {
+            recorded_source_kind: None,
+            store_reused: None,
+            acquisition: None,
             resolved: ResolvedPackage {
                 group: Group::parse("org.vibevm.core").unwrap(),
                 name: pkgref.name.to_string(),

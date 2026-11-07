@@ -8,6 +8,7 @@ use std::collections::BTreeMap;
 
 fn record(name: &str, mark: Mark, hidden: bool) -> Installation {
     Installation {
+        source_evidence: None,
         secret_origins: BTreeMap::new(),
         configuration: None,
         pending: None,
@@ -296,8 +297,10 @@ fn relevant_unfinished_arrangement_cohort_refuses_but_complete_cohort_is_ready()
         });
     let prepared = crate::prepare_import(&set, &[], false, false, None, false).unwrap();
     let id = "export-cohort";
-    let mut document = vibe_wire::generated::application::e1::import_work::ImportWork {
-        protocol: "vibe-app-import-work/1".into(),
+    let mut document = vibe_wire::generated::application::e3::legacy_import_work::ImportWork {
+        protocol: "vibe-app-import-work/3".into(),
+        kind: "legacy".into(),
+        source_evidence: Default::default(),
         target: w::ApplicationImportTarget {
             home: pending::actual_home(&settings).unwrap(),
             operation: id.into(),

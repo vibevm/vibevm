@@ -4,7 +4,9 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#proxy");
 use serde::Deserialize;
 use std::collections::BTreeMap;
-use vibe_wire::generated::application::{e2::index as legacy, e3::index as current};
+use vibe_wire::generated::application::{
+    e2::index as legacy, e3::index as current, e4::index as evidence,
+};
 
 pub(super) struct ApplicationIndex {
     pub installations: BTreeMap<String, Installation>,
@@ -45,8 +47,11 @@ pub(super) fn read(bytes: &[u8]) -> Result<ApplicationIndex, String> {
         "vibe-user-applications/4" => serde_json::from_slice::<current::ApplicationIndex>(bytes)
             .map(Into::into)
             .map_err(|error| error.to_string()),
+        "vibe-user-applications/5" => serde_json::from_slice::<evidence::ApplicationIndex>(bytes)
+            .map(Into::into)
+            .map_err(|error| error.to_string()),
         _ => Err(format!(
-            "application index protocol `{}` is unsupported; expected `vibe-user-applications/3` or `vibe-user-applications/4`",
+            "application index protocol `{}` is unsupported; expected `vibe-user-applications/3`, `vibe-user-applications/4` or `vibe-user-applications/5`",
             header.protocol
         )),
     }
@@ -111,3 +116,4 @@ macro_rules! routing_view {
 }
 routing_view!(legacy);
 routing_view!(current);
+routing_view!(evidence);

@@ -96,6 +96,9 @@ impl InstallSource for FixtureSource {
             .unwrap_or_else(|| Group::parse("org.vibevm").unwrap());
         let content_hash = compute_content_hash(&dir)?;
         Ok(CachedPackage {
+            recorded_source_kind: None,
+            store_reused: None,
+            acquisition: None,
             resolved: ResolvedPackage {
                 group,
                 name: pkgref.name.to_string(),

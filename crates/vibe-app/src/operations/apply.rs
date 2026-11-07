@@ -193,6 +193,7 @@ pub(super) fn apply(
     }
     Ok(Applied {
         installation: Installation {
+            source_evidence: selected.resolved.source_evidence.clone(),
             secret_origins: run.secret_origins(),
             configuration: plan.configuration.clone(),
             pending: None,

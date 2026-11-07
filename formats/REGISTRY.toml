@@ -402,24 +402,24 @@ sunset = "none"
 
 # ── User-local application durable/exchange records, PROP-059 ───────────────
 [format.application-index]
-epoch = 3
-schema = "schemas/application/e3/index.jtd.json"
+epoch = 4
+schema = "schemas/application/e4/index.jtd.json"
 recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
-corpus = "formats/corpora/application/e3"
+corpus = "formats/corpora/application/e4"
 sunset = "none"
 
 # The kept work directory's exact continuation state (PROP-065 `#execution`).
 # Generation, publication and uncertain retirement evidence cannot be rebuilt
 # by restarting installation; read only by vibe.
 [format.application-steps]
-epoch = 2
-schema = "schemas/application/e2/steps.jtd.json"
+epoch = 3
+schema = "schemas/application/e3/steps.jtd.json"
 recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
-corpus = "formats/corpora/application/e2"
+corpus = "formats/corpora/application/e3"
 sunset = "none"
 
 # The summary of one run record directory (PROP-065 `#runs`): read by
@@ -1593,21 +1593,21 @@ corpus = "formats/corpora/application/e1"
 sunset = "none"
 
 [format.application-import-work]
-epoch = 2
-schema = "schemas/application/e2/import_work.jtd.json"
+epoch = 3
+schema = "schemas/application/e3/import_work.jtd.json"
 recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
-corpus = "formats/corpora/application/e2"
+corpus = "formats/corpora/application/e3"
 sunset = "none"
 
-[format.application-import-work-v1]
-epoch = 1
-schema = "schemas/application/e1/import_work.jtd.json"
+[format.application-import-legacy-work]
+epoch = 3
+schema = "schemas/application/e3/legacy_import_work.jtd.json"
 recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
-corpus = "formats/corpora/application/e1"
+corpus = "formats/corpora/application/e3"
 sunset = "none"
 
 [format.application-import-input]
@@ -1680,4 +1680,40 @@ recoverable = false
 foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/migration-application-journal/e1"
+sunset = "none"
+
+[format.application-index-v4]
+epoch = 3
+schema = "schemas/application/e3/index.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e3"
+sunset = "none"
+
+[format.application-steps-v2]
+epoch = 2
+schema = "schemas/application/e2/steps.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e2"
+sunset = "none"
+
+[format.application-import-work-v2]
+epoch = 2
+schema = "schemas/application/e2/import_work.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e2"
+sunset = "none"
+
+[format.application-import-work-v1]
+epoch = 1
+schema = "schemas/application/e1/import_work.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e1"
 sunset = "none"

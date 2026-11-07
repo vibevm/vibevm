@@ -6,7 +6,7 @@
 use std::path::PathBuf;
 
 use vibe_core::manifest::{PublicCommandDecl, RequirementScope, ShellInterpreter, StepPhase};
-use vibe_wire::generated::application::e3::index as wire;
+use vibe_wire::generated::application::e4::index as wire;
 
 use super::launcher_wire::{icon_from_wire, icon_to_wire, launcher_from_wire, launcher_to_wire};
 use super::{
@@ -43,6 +43,7 @@ fn installation_with_reverse(value: &Installation, required_by: Vec<String>) -> 
     };
     let (icon, icon_set) = icon_to_wire(value.icon.as_ref());
     wire::Installation {
+        source_evidence: value.source_evidence.clone(),
         secret_origins: value.secret_origins.clone(),
         configuration: value.configuration.clone(),
         pending: value.pending.clone(),
@@ -240,6 +241,7 @@ pub(super) fn installation_from_wire(record: wire::Installation) -> Result<Insta
         }
     };
     Ok(Installation {
+        source_evidence: record.source_evidence,
         secret_origins: record.secret_origins,
         configuration: record.configuration,
         pending: record.pending,

@@ -67,7 +67,7 @@ pub(super) fn plan_option_with_modes(
                         "current requirements differ from the retained dependency plan".into(),
                     )
                 })?;
-            return pending::resolve_binding(ctx, index, binding, scope, step);
+            return pending::resolve_binding(ctx, index, operation, binding, scope, step);
         }
         deps::resolve_requirement(
             ctx,
@@ -197,6 +197,7 @@ pub fn configuration_plan(
                         .join(", "),
                 })?;
             Ok(vibe_wire::generated::configuration::e1::app_plan::AppPlan {
+                source_evidence: resolved.source_evidence.clone(),
                 protocol: "vibe-app-configuration-plan/1".into(),
                 package: vibe_wire::generated::configuration::e1::app_plan::Package {
                     group: resolved.package.group.clone(),

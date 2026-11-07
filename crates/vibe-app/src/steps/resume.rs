@@ -39,6 +39,7 @@ pub(crate) fn start_point(
     if *start == Start::Fresh && target.is_none() {
         return Ok(StartPoint {
             state: StepsFile {
+                source_evidence: Default::default(),
                 operation: None,
                 package: plan.package.clone(),
                 option: plan.option.clone(),

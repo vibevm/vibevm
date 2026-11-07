@@ -221,6 +221,7 @@ mod tests {
 
     fn record(name: &str, slot: &str, commands: &[&str]) -> Installation {
         Installation {
+            source_evidence: None,
             secret_origins: Default::default(),
             configuration: None,
             pending: None,

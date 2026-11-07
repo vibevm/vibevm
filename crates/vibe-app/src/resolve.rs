@@ -22,6 +22,8 @@ use crate::index::PackageCoordinate;
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#declaration")]
 pub struct ResolvedPackage {
+    /// Captured package source display facts; absent means unknown history.
+    pub source_evidence: Option<vibe_wire::generated::shared::SourceEvidence>,
     /// Exact admitted source route for operation continuation, never a newest-version lookup.
     pub source: vibe_wire::generated::shared::ApplicationPendingSource,
     /// Package acquisition retains these declarations without creating a configuration instance.
@@ -115,6 +117,20 @@ pub fn from_local_registry(
         version: selected.version.to_string(),
     };
     let mut resolved = from_manifest(manifest, package_root, coordinate)?;
+    resolved.source_evidence = Some(vibe_wire::generated::shared::SourceEvidence {
+        store_reused: Some(false),
+        registry: None,
+        source_url: Some(vibe_core::progress::transfer::safe_remote(&format!(
+            "file://{}",
+            resolved.root.display()
+        ))),
+        source_ref: None,
+        resolved_commit: None,
+        source_kind: Some(vibe_wire::generated::shared::SourceSelectionKind::Registry),
+        via_redirect: None,
+        fetched_from: None,
+        acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::Directory),
+    });
     resolved.source.kind =
         vibe_wire::generated::shared::ApplicationPendingSourceKind::LocalRegistry;
     resolved.source.registry = Some(
@@ -167,7 +183,9 @@ pub fn from_global(
         name: cached.resolved.name.clone(),
         version: cached.resolved.version.to_string(),
     };
+    let evidence = cached.source_evidence();
     let mut resolved = from_manifest(cached.manifest, root, coordinate)?;
+    resolved.source_evidence = Some(evidence);
     resolved.source.kind =
         vibe_wire::generated::shared::ApplicationPendingSourceKind::AcquiredStore;
     Ok(resolved)
@@ -210,6 +228,7 @@ pub fn from_manifest(
         project: None,
     };
     Ok(ResolvedPackage {
+        source_evidence: None,
         source,
         kind: package.kind,
         configuration: manifest.configuration,

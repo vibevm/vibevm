@@ -320,6 +320,7 @@ mod tests {
         fs::create_dir_all(log.parent().unwrap()).unwrap();
         fs::write(&log, "built\n").unwrap();
         first.steps(&StepsFile {
+            source_evidence: Default::default(),
             operation: None,
             package: package.clone(),
             option: "main".into(),

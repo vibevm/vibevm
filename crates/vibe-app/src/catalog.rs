@@ -181,6 +181,7 @@ mod tests {
         index.installations.insert(
             package.key(),
             Installation {
+                source_evidence: None,
                 secret_origins: Default::default(),
                 configuration: None,
                 pending: None,

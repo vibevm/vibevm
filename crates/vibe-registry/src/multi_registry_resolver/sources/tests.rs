@@ -41,6 +41,13 @@ fn resolve_dispatches_to_git_source_short_circuiting_registries() {
         auth: vibe_core::manifest::AuthKind::None,
         token_env: None,
     };
+    let upstream = tempdir().unwrap();
+    fs::write(
+        upstream.path().join("vibe.toml"),
+        manifest_text("internal", "flow", "0.3.0"),
+    )
+    .unwrap();
+    fake.seed_bootstrap(url, upstream.path().to_owned());
     let r = build_resolver(cache.path(), vec![], vec![], vec![], fake).with_git_packages(vec![dep]);
 
     let p = PackageRef::parse("org.vibevm/internal").unwrap();
@@ -51,6 +58,25 @@ fn resolve_dispatches_to_git_source_short_circuiting_registries() {
     assert_eq!(m.source_url, url);
     assert_eq!(m.source_ref.as_deref(), Some("v0.3.0"));
     assert_eq!(m.resolved.version.to_string(), "0.3.0");
+    let store = tempdir().unwrap();
+    assert_eq!(r.fetch(&m, store.path()).unwrap().store_reused, Some(false));
+    assert_eq!(r.fetch(&m, store.path()).unwrap().store_reused, Some(true));
+    let mut override_resolution = m.clone();
+    override_resolution.is_git_source = false;
+    override_resolution.overridden = true;
+    let override_store = tempdir().unwrap();
+    assert_eq!(
+        r.fetch(&override_resolution, override_store.path())
+            .unwrap()
+            .store_reused,
+        Some(false)
+    );
+    assert_eq!(
+        r.fetch(&override_resolution, override_store.path())
+            .unwrap()
+            .store_reused,
+        Some(true)
+    );
 }
 
 #[test]
@@ -278,6 +304,7 @@ fn fetch_path_source_reads_the_live_member_dir_and_hashes_it() {
     let p = PackageRef::parse("org.vibevm/local").unwrap();
     let resolution = r.resolve(&p).unwrap();
     let cached = r.fetch(&resolution, pkg_cache.path()).unwrap();
+    assert_eq!(cached.store_reused, Some(false));
 
     assert!(cached.is_path_source);
     assert!(!cached.is_git_source);

@@ -1,0 +1,425 @@
+{
+  "protocol": "vibe-app-steps/3",
+  "package": {
+    "group": "org.example",
+    "name": "corpus",
+    "version": "1.0.0"
+  },
+  "option": "main",
+  "features": [
+    "a",
+    "b"
+  ],
+  "steps": [
+    {
+      "id": "build",
+      "kind": "recipe",
+      "outcome": "done",
+      "started": "2026-11-04T16:25:11Z",
+      "finished": "2026-11-04T16:25:11Z"
+    },
+    {
+      "id": "finish",
+      "kind": "agent",
+      "outcome": "delegated",
+      "reason": "agent step `finish` of `org.example/corpus@1.0.0` is parked for the hosting agent: perform the task in /tmp/nst-common-app-format-capture/home/agentic/outbox/20261104T162511.399Z/finish.md, write result.json into `/tmp/nst-common-app-format-capture/home/cache/app-work/org.example.corpus@1.0.0/steps/finish/operations/20261104T162511.396009348Z-773983-0` and run `vibe app resume org.example/corpus@1.0.0 --operation 20261104T162511.396009348Z-773983-0 -g` (spec://org.vibevm.core/vibevm/common/PROP-064#parking; the work directory `/tmp/nst-common-app-format-capture/home/cache/app-work/org.example.corpus@1.0.0` is kept)",
+      "started": "2026-11-04T16:25:11Z",
+      "finished": "2026-11-04T16:25:11Z",
+      "agent": {
+        "agent": "hosting-agent",
+        "mode": "unattended",
+        "envelope": "/tmp/nst-common-app-format-capture/home/cache/app-work/org.example.corpus@1.0.0/steps/finish/operations/20261104T162511.396009348Z-773983-0",
+        "status": "parked"
+      }
+    }
+  ],
+  "operation": {
+    "target": {
+      "home": "/tmp/nst-common-app-format-capture/home",
+      "key": "org.example/corpus@1.0.0",
+      "operation": "20261104T162511.396009348Z-773983-0"
+    },
+    "kind": "install",
+    "source": {
+      "directory": "/tmp/nst-common-app-format-capture/registry/org.example/corpus/v1.0.0",
+      "kind": "local-registry",
+      "registry": "/tmp/nst-common-app-format-capture/registry"
+    },
+    "request": {
+      "platform": "linux",
+      "arch": "x86_64",
+      "installer": "main",
+      "force": false,
+      "acceptLicense": false,
+      "keepWork": false,
+      "hidden": false,
+      "mark": "manual",
+      "purgePrevious": false,
+      "enabled": [],
+      "disabled": [],
+      "parameters": {
+        "flag": "false",
+        "n": "-3"
+      },
+      "features": [
+        "a",
+        "b"
+      ],
+      "secretProvided": [],
+      "configuration": {
+        "definition": {
+          "features": [
+            {
+              "id": "a",
+              "name": "A",
+              "visibility": "public",
+              "required": false,
+              "default": false,
+              "requires": [
+                "b"
+              ],
+              "guards": [],
+              "effects": [
+                {
+                  "kind": "config-value",
+                  "name": "mode"
+                }
+              ]
+            },
+            {
+              "id": "b",
+              "name": "B",
+              "visibility": "public",
+              "required": false,
+              "default": false,
+              "requires": [],
+              "guards": [],
+              "effects": []
+            }
+          ],
+          "groups": [
+            {
+              "mode": "choice",
+              "cardinality": "zero-or-one",
+              "defaults": [],
+              "guards": [],
+              "id": "mode",
+              "members": [
+                "a"
+              ],
+              "name": "Mode"
+            }
+          ],
+          "parameters": [
+            {
+              "id": "n",
+              "name": "Count",
+              "type": "integer",
+              "required": false,
+              "choices": [],
+              "mustExist": false,
+              "secret": false,
+              "default": {
+                "kind": "integer",
+                "value": "-7"
+              },
+              "min": "-10",
+              "max": "10"
+            },
+            {
+              "id": "flag",
+              "name": "Flag",
+              "type": "bool",
+              "required": false,
+              "choices": [],
+              "mustExist": false,
+              "secret": false,
+              "default": {
+                "kind": "bool",
+                "value": false
+              }
+            },
+            {
+              "id": "token",
+              "name": "Token",
+              "type": "string",
+              "required": false,
+              "choices": [],
+              "mustExist": false,
+              "secret": true,
+              "default": {
+                "kind": "text",
+                "value": "example-public-definition-literal"
+              }
+            }
+          ],
+          "profiles": [
+            {
+              "id": "preset",
+              "name": "Preset",
+              "default": false,
+              "features": [],
+              "selections": {
+                "mode": {
+                  "intent": "exact",
+                  "members": [
+                    "a"
+                  ]
+                }
+              },
+              "parameters": {
+                "n": {
+                  "kind": "integer",
+                  "value": "-3"
+                }
+              }
+            }
+          ],
+          "configValues": {
+            "mode": {
+              "kind": "text",
+              "value": "example-data"
+            }
+          }
+        },
+        "evaluation": {
+          "definition": "configuration-semantic/1:sha256:78e759d2d0783776c4475d92ca3581c8facfcf4d058797979acc592fff24eceb",
+          "input": {
+            "intent": {
+              "policy": "require-selection",
+              "features": [],
+              "defaultFeatures": false,
+              "selections": {},
+              "parameters": {},
+              "profile": "preset"
+            },
+            "disabledFeatures": []
+          },
+          "normalizedConsumers": [
+            {
+              "key": "installer",
+              "policy": "require-selection",
+              "answers": {
+                "mode": {
+                  "intent": "exact",
+                  "members": [
+                    "a"
+                  ]
+                }
+              }
+            }
+          ],
+          "controls": [
+            {
+              "id": "mode",
+              "active": true,
+              "cardinality": "zero-or-one",
+              "members": [
+                {
+                  "id": "a",
+                  "eligible": true,
+                  "requestedBy": [
+                    "installer"
+                  ],
+                  "blockedBy": []
+                }
+              ],
+              "projections": [
+                {
+                  "consumer": "installer",
+                  "intent": "exact",
+                  "origin": "explicit",
+                  "eligible": [
+                    "a"
+                  ],
+                  "dormant": []
+                }
+              ],
+              "blockedBy": [],
+              "selection": [
+                "a"
+              ]
+            }
+          ],
+          "defaults": [],
+          "questions": [],
+          "problems": [],
+          "parameters": [
+            {
+              "privacy": "public",
+              "id": "n",
+              "origin": {
+                "kind": "profile",
+                "profile": "preset"
+              },
+              "source": {
+                "kind": "integer",
+                "value": "-3"
+              },
+              "type": "integer",
+              "value": {
+                "kind": "integer",
+                "value": "-3"
+              }
+            },
+            {
+              "privacy": "public",
+              "id": "flag",
+              "origin": {
+                "kind": "default"
+              },
+              "source": {
+                "kind": "bool",
+                "value": false
+              },
+              "type": "bool",
+              "value": {
+                "kind": "bool",
+                "value": false
+              }
+            },
+            {
+              "privacy": "secret",
+              "id": "token",
+              "origin": {
+                "kind": "default"
+              },
+              "provided": false,
+              "resupply": false
+            }
+          ],
+          "reliance": [
+            "parameter:flag",
+            "parameter:n",
+            "parameter:token",
+            "profile"
+          ],
+          "resolved": {
+            "features": {
+              "selected": [
+                "a",
+                "b"
+              ],
+              "implied": [
+                {
+                  "feature": "b",
+                  "reason": {
+                    "kind": "requires",
+                    "feature": "a"
+                  }
+                }
+              ]
+            },
+            "parameters": [
+              {
+                "privacy": "public",
+                "id": "n",
+                "origin": {
+                  "kind": "profile",
+                  "profile": "preset"
+                },
+                "source": {
+                  "kind": "integer",
+                  "value": "-3"
+                },
+                "type": "integer",
+                "value": {
+                  "kind": "integer",
+                  "value": "-3"
+                }
+              },
+              {
+                "privacy": "public",
+                "id": "flag",
+                "origin": {
+                  "kind": "default"
+                },
+                "source": {
+                  "kind": "bool",
+                  "value": false
+                },
+                "type": "bool",
+                "value": {
+                  "kind": "bool",
+                  "value": false
+                }
+              },
+              {
+                "privacy": "secret",
+                "id": "token",
+                "origin": {
+                  "kind": "default"
+                },
+                "provided": false,
+                "resupply": false
+              }
+            ],
+            "data": [
+              {
+                "name": "mode",
+                "value": {
+                  "kind": "text",
+                  "value": "example-data"
+                },
+                "features": [
+                  "a"
+                ]
+              }
+            ]
+          },
+          "featureResult": {
+            "selected": [
+              "a",
+              "b"
+            ],
+            "implied": [
+              {
+                "feature": "b",
+                "reason": {
+                  "kind": "requires",
+                  "feature": "a"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "publicSet": {},
+      "offline": true,
+      "hosted": true,
+      "assumeYes": true,
+      "agent": "external",
+      "agentExternal": true
+    },
+    "phase": "published",
+    "executionIdentity": "app-execution-context/1:sha256:bcaa2769063276872b57ee3f25ec8bce2a48be8b6f56bed1b0df16764540eaec",
+    "prompts": {
+      "finish": "Complete this authored-format fixture."
+    },
+    "children": [],
+    "secretRequired": [],
+    "parent": null,
+    "provenance": "captured",
+    "agentModes": {
+      "finish": "unattended"
+    },
+    "publicationRecord": "app-predecessor/1:sha256:6a899ca86974d57462f97be1ae90c81154ed772c4fd5146257a75275d2196c45",
+    "predecessorLaunchers": [],
+    "lookup": {
+      "kind": "registry",
+      "root": "/tmp/nst-common-app-format-capture/registry"
+    },
+    "retirements": []
+  },
+  "source_evidence": {
+    "org.example/corpus@1.0.0": {
+      "registry": "fixture",
+      "source_url": "https://registry.invalid/org.example.editor",
+      "source_ref": "v1.2.0",
+      "source_kind": "registry",
+      "resolved_commit": "observed-fixture-commit",
+      "acquisition": "git_repository",
+      "store_reused": false
+    }
+  }
+}

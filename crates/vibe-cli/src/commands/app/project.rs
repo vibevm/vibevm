@@ -471,6 +471,7 @@ fn from_slot(root: &Path, package: &LockedPackage) -> Result<ResolvedPackage> {
         )
     })?;
     let mut resolved = vibe_app::from_manifest(manifest, slot, coordinate(package))?;
+    resolved.source_evidence = Some(vibe_registry::locked_source_evidence(package));
     resolved.source.kind = vibe_wire::generated::shared::ApplicationPendingSourceKind::ProjectSlot;
     resolved.source.project = Some(
         root.to_str()

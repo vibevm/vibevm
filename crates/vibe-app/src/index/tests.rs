@@ -6,6 +6,7 @@ use vibe_core::manifest::{
 
 fn sample() -> Index {
     let owned = Installation {
+        source_evidence: None,
         secret_origins: Default::default(),
         configuration: None,
         pending: None,
@@ -50,6 +51,7 @@ fn sample() -> Index {
         lifecycle: Lifecycle::default(),
     };
     let external = Installation {
+        source_evidence: None,
         package: PackageCoordinate {
             group: "org.example".into(),
             name: "editor-apt".into(),

@@ -36,6 +36,9 @@ impl InstallSource for MirrorSource {
         _: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
         Ok(CachedPackage {
+            recorded_source_kind: None,
+            store_reused: None,
+            acquisition: None,
             resolved: ResolvedPackage {
                 group: p.group.clone().unwrap(),
                 name: p.name.to_string(),

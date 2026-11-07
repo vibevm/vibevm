@@ -11,6 +11,7 @@ use vibe_wire::generated::{apps_manifest as wire, shared as w};
     documents = "spec://org.vibevm.core/vibevm/common/PROP-069#APP-CONFIGURATION-CONTINUATION"
 )]
 pub struct PreparedImport {
+    pub(crate) source_evidence: std::collections::BTreeMap<String, w::SourceEvidence>,
     pub(crate) state: w::ApplicationPendingImport,
 }
 /// One actual selected row supplied by the source/selection owner.
@@ -115,6 +116,15 @@ pub fn prepare_import(
         })
         .transpose()?;
     Ok(PreparedImport {
+        source_evidence: candidates
+            .iter()
+            .filter_map(|c| {
+                c.resolved
+                    .source_evidence
+                    .clone()
+                    .map(|e| (c.resolved.package.key(), e))
+            })
+            .collect(),
         state: w::ApplicationPendingImport {
             rows,
             cursor: 0,
@@ -191,8 +201,14 @@ impl PreparedImport {
     pub fn automatic(&self) -> &[String] {
         &self.state.auto
     }
-    pub(crate) fn retained(state: w::ApplicationPendingImport) -> Self {
-        Self { state }
+    pub(crate) fn retained(
+        state: w::ApplicationPendingImport,
+        source_evidence: std::collections::BTreeMap<String, w::SourceEvidence>,
+    ) -> Self {
+        Self {
+            state,
+            source_evidence,
+        }
     }
 }
 pub(crate) fn definition(

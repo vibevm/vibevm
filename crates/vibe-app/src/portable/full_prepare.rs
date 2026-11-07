@@ -13,6 +13,7 @@ use vibe_wire::generated::{
 #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-069#PORTABLE-CONTINUATION")]
 /// Only fully classified public rows can construct this private cohort input.
 pub struct PreparedFullImport {
+    pub(crate) source_evidence: BTreeMap<String, w::SourceEvidence>,
     pub(crate) state: w::ApplicationFullImport,
     pub(crate) target: Option<w::ApplicationImportTarget>,
 }
@@ -210,6 +211,16 @@ pub fn prepare_full_import(
         ));
     }
     Ok(PreparedFullImport {
+        source_evidence: request
+            .candidates
+            .iter()
+            .filter_map(|c| {
+                c.resolved
+                    .source_evidence
+                    .clone()
+                    .map(|e| (c.resolved.package.key(), e))
+            })
+            .collect(),
         target: None,
         state: w::ApplicationFullImport {
             completed_bindings: Default::default(),

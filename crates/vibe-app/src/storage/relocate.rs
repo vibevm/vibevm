@@ -235,6 +235,7 @@ pub(crate) mod tests {
 
     pub(crate) fn owned_record(library: &str, directory: &str) -> Installation {
         Installation {
+            source_evidence: None,
             secret_origins: Default::default(),
             configuration: None,
             pending: None,

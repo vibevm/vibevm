@@ -194,15 +194,16 @@ impl Registry for GitMonorepoRegistry {
         store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
         let content_hash = compute_content_hash(&resolved.source_dir)?;
-        let cache_dir = store::insert_current_at(
+        let inserted = store::insert_current_at(
             store_root,
             &resolved.source_dir,
             &resolved.group,
             &resolved.name,
             &resolved.version,
             &content_hash,
-        )?
-        .into_entry();
+        )?;
+        let reused = matches!(&inserted, store::InsertOutcome::AlreadyPresent(_));
+        let cache_dir = inserted.into_entry();
 
         let manifest_path = cache_dir.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
@@ -221,6 +222,9 @@ impl Registry for GitMonorepoRegistry {
         );
 
         Ok(CachedPackage {
+            recorded_source_kind: None,
+            store_reused: Some(reused),
+            acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),
             resolved: resolved.clone(),
             cache_dir,
             manifest,

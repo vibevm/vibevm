@@ -9,18 +9,15 @@ use std::time::{Duration, Instant};
 /// An operation-local byte snapshot; capability is checked on these same bytes.
 pub(crate) struct CapturedImage {
     pub(super) bytes: Vec<u8>,
-    pub(super) supports_both: bool,
+    pub(super) reader: u8,
 }
 impl CapturedImage {
-    pub(crate) fn read(path: &Path, require_four: bool) -> Result<Self, StateError> {
+    pub(crate) fn read_for_reader(path: &Path, reader: u8) -> Result<Self, StateError> {
         let bytes = fs::read(path).map_err(|source| io("reading", path, source))?;
-        if require_four {
-            probe(&bytes, path)?;
+        if reader >= 4 {
+            probe(&bytes, path, reader)?;
         }
-        Ok(Self {
-            bytes,
-            supports_both: require_four,
-        })
+        Ok(Self { bytes, reader })
     }
 }
 fn failure(path: &Path, reason: impl Into<String>) -> StateError {
@@ -29,7 +26,7 @@ fn failure(path: &Path, reason: impl Into<String>) -> StateError {
         reason: reason.into(),
     }
 }
-fn probe(bytes: &[u8], source: &Path) -> Result<(), StateError> {
+fn probe(bytes: &[u8], source: &Path, reader: u8) -> Result<(), StateError> {
     let temp = tempfile::tempdir().map_err(|e| io("creating proxy snapshot", source, e))?;
     let image = temp.path().join(proxy_file_name("vibe-app-proxy"));
     fs::write(&image, bytes).map_err(|e| io("writing proxy snapshot", &image, e))?;
@@ -39,8 +36,13 @@ fn probe(bytes: &[u8], source: &Path) -> Result<(), StateError> {
         fs::set_permissions(&image, fs::Permissions::from_mode(0o700))
             .map_err(|e| io("making proxy snapshot executable", &image, e))?;
     }
-    for protocol in ["vibe-user-applications/3", crate::index::INDEX_PROTOCOL] {
-        query(&image, temp.path(), source, protocol)?;
+    for version in 3..=reader {
+        query(
+            &image,
+            temp.path(),
+            source,
+            &format!("vibe-user-applications/{version}"),
+        )?;
     }
     Ok(())
 }
@@ -169,13 +171,13 @@ pub(crate) fn for_publication(
     image: &Path,
 ) -> Result<Option<CapturedImage>, StateError> {
     let (previous, stored_four) = Index::load_with_protocol(settings)?;
-    let migrating = next.requires_reader_four() && !stored_four;
+    let migrating = next.minimum_reader() > stored_four;
     let needed = crate::alternatives::reserved_names(next)
         .iter()
         .any(|name| command_name(name))
         || (migrating && !existing(settings, &previous)?.is_empty());
     needed
-        .then(|| CapturedImage::read(image, next.requires_reader_four()))
+        .then(|| CapturedImage::read_for_reader(image, next.minimum_reader().max(stored_four)))
         .transpose()
 }
 
@@ -186,18 +188,18 @@ pub(crate) fn before_publication(
     next: &Index,
     image: Option<&CapturedImage>,
 ) -> Result<(), StateError> {
-    if !next.requires_reader_four() {
+    if next.minimum_reader() < 4 {
         return Ok(());
     }
     let (previous, stored_four) = Index::load_with_protocol(settings)?;
-    if stored_four {
+    if stored_four >= next.minimum_reader() {
         return Ok(());
     }
     let paths = existing(settings, &previous)?;
     if paths.is_empty() {
         return Ok(());
     }
-    let image = image.filter(|i| i.supports_both).ok_or_else(|| failure(&settings.index_path(), "first index4 publication needs a compatible proxy image for existing commands; use the application operation API"))?;
+    let image = image.filter(|i| i.reader >= next.minimum_reader()).ok_or_else(|| failure(&settings.index_path(), "new index protocol publication needs a compatible proxy image for existing commands; use the application operation API"))?;
     // Preflight the entire inventory before replacing any executable. No removal
     // or new session exposure occurs here; new bytes also understand index3.
     for path in paths {

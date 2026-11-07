@@ -48,6 +48,7 @@ fn home(dir: &Path) -> SettingsRoot {
     index.installations.insert(
         package.key(),
         Installation {
+            source_evidence: None,
             configuration: None,
             pending: None,
             secret_origins: Default::default(),

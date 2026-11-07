@@ -140,7 +140,12 @@ impl MultiRegistryResolver {
             RegistrySource::Git(reg) => {
                 reg.fetch_with_expected_hash(&resolution.resolved, store_root, expected_hash)
             }
-            RegistrySource::Local(ls) => ls.registry.fetch(&resolution.resolved, store_root),
+            RegistrySource::Local(ls) => {
+                let mut cached = ls.registry.fetch(&resolution.resolved, store_root)?;
+                // The directory fetch owner has no catalog alias; this resolver does.
+                cached.registry_name = resolution.registry_name.clone();
+                Ok(cached)
+            }
         }
     }
 
@@ -236,15 +241,16 @@ impl MultiRegistryResolver {
         // returned untouched and its manifest read back, so the
         // `CachedPackage` describes the bytes that will materialise.
         let content_hash = compute_content_hash(&clone_dir)?;
-        let dest = store::insert_current_at(
+        let inserted = store::insert_current_at(
             store_root,
             &clone_dir,
             group,
             name,
             &resolution.resolved.version,
             &content_hash,
-        )?
-        .into_entry();
+        )?;
+        let reused = matches!(&inserted, store::InsertOutcome::AlreadyPresent(_));
+        let dest = inserted.into_entry();
 
         let manifest_path = dest.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
@@ -256,6 +262,9 @@ impl MultiRegistryResolver {
         }
 
         Ok(CachedPackage {
+            recorded_source_kind: None,
+            store_reused: Some(reused),
+            acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),
             resolved: ResolvedPackage {
                 group: group.clone(),
                 name: name.to_string(),
