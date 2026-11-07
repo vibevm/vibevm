@@ -30,6 +30,17 @@ pub fn validate_declared_source_operation(
     _format: SpecFormat,
     in_place: bool,
 ) -> Result<(), WorkspaceError> {
+    if manifest
+        .project
+        .as_ref()
+        .and_then(|project| project.sources.as_ref())
+        .is_some_and(|rows| !rows.is_empty())
+    {
+        return Err(refused(
+            root,
+            "explicit host sources require classified node boot generation",
+        ));
+    }
     if !manifest
         .package
         .as_ref()

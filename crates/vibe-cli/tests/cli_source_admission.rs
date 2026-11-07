@@ -29,8 +29,6 @@ fn inventory(root: &Path) -> BTreeMap<PathBuf, Option<Vec<u8>>> {
 )]
 fn declared_install_refuses_before_requested_metadata_and_lifecycle_effects() {
     for (target, boot, sources) in [
-        ("xml", false, "sources=[]\n"),
-        ("xml", false, "source_exports=[]\n"),
         ("mixed", true, "sources=[]\n"),
         (
             "mixed",
@@ -120,6 +118,80 @@ fn declared_install_refuses_before_requested_metadata_and_lifecycle_effects() {
         assert_eq!(
             after, before,
             "{target}/{boot}: product publication before admission"
+        );
+    }
+}
+
+#[test]
+fn transformed_explicit_empty_policies_preserve_raw_sources_without_native_facts() {
+    for policy in ["sources=[]\n", "source_exports=[]\n"] {
+        let user = UserScratch::new();
+        let project = tempfile::tempdir().unwrap();
+        let registry = tempfile::tempdir().unwrap();
+        let source = registry.path().join("org.source/declared/v1.0.0");
+        fs::create_dir_all(&source).unwrap();
+        fs::write(source.join("vibe.toml"),format!("[package]\ngroup='org.source'\nname='declared'\nkind='flow'\nversion='1.0.0'\n{policy}")).unwrap();
+        let relative = common::spec_rel("RAW.md");
+        let body = b"# Raw\n\n@fact:FAKE ordinary bytes. @status:impl/done\n";
+        fs::create_dir_all(source.join(&relative).parent().unwrap()).unwrap();
+        fs::write(source.join(&relative), body).unwrap();
+        fs::write(
+            project.path().join("vibe.toml"),
+            "[project]\ngroup='org.consumer'\nname='host'\nversion='1.0.0'\nspec_format='xml'\n",
+        )
+        .unwrap();
+        for rel in [".vibe/facts-sentinel", "vibevm/vibedeps/retained/payload"] {
+            let path = project.path().join(rel);
+            fs::create_dir_all(path.parent().unwrap()).unwrap();
+            fs::write(path, b"pre-existing bytes").unwrap();
+        }
+        let result = user
+            .vibe()
+            .args(["install", "org.source/declared@=1.0.0", "--path"])
+            .arg(project.path())
+            .arg("--registry")
+            .arg(registry.path())
+            .arg("--assume-yes")
+            .output()
+            .unwrap();
+        assert!(result.status.success(), "{policy}: {result:?}");
+        let slot = vibe_workspace::vibedeps::slot_abs_path(
+            project.path(),
+            &vibe_core::Group::parse("org.source").unwrap(),
+            "declared",
+            &"1.0.0".parse().unwrap(),
+        );
+        assert_eq!(fs::read(slot.join(&relative)).unwrap(), body);
+        assert!(!slot.join(&relative).with_extension("xml").exists());
+        for rel in [".vibe/facts-sentinel", "vibevm/vibedeps/retained/payload"] {
+            assert_eq!(
+                fs::read(project.path().join(rel)).unwrap(),
+                b"pre-existing bytes"
+            );
+        }
+        let queried = user
+            .vibe()
+            .args(["--json", "requirements", "--path"])
+            .arg(project.path())
+            .output()
+            .unwrap();
+        assert!(queried.status.success(), "{queried:?}");
+        let report: serde_json::Value = serde_json::from_slice(&queried.stdout).unwrap();
+        assert!(
+            !report["rows"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|row| row["source"]["package"] == "org.source/declared")
+        );
+        assert!(
+            report["sources"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|row| row["source"]["package"] == "org.source/declared"
+                    && row["state"] == "available"),
+            "{report}"
         );
     }
 }

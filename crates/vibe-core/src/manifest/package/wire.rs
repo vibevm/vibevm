@@ -36,7 +36,7 @@ struct PackageMetaWire {
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
-        deserialize_with = "declared_sources"
+        deserialize_with = "crate::manifest::source_descriptor::declared_sources"
     )]
     sources: Option<Vec<crate::manifest::SourceDescriptor>>,
     #[serde(
@@ -78,12 +78,6 @@ struct PackageMetaWire {
 }
 
 // An absent key is None; a present null is invalid, never an absent policy.
-fn declared_sources<'de, D: Deserializer<'de>>(
-    d: D,
-) -> std::result::Result<Option<Vec<crate::manifest::SourceDescriptor>>, D::Error> {
-    Vec::<crate::manifest::SourceDescriptor>::deserialize(d).map(Some)
-}
-
 fn declared_exports<'de, D: Deserializer<'de>>(
     d: D,
 ) -> std::result::Result<Option<Vec<super::SourceExport>>, D::Error> {

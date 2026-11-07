@@ -311,3 +311,55 @@ fn resolve_token_env_name_returns_none_for_file_url() {
     };
     assert!(r.resolve_token_env_name().is_none());
 }
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-POLICY",
+    r = 1
+)]
+fn m_06_a_4_project_sources_presence_and_strict_grammar() {
+    let base = serde_json::json!({"name":"host","version":"1.0.0"});
+    let legacy: ProjectSection = serde_json::from_value(base.clone()).unwrap();
+    assert!(legacy.sources.is_none());
+    assert!(
+        serde_json::to_value(&legacy)
+            .unwrap()
+            .get("sources")
+            .is_none()
+    );
+    let mut empty = base.clone();
+    empty["sources"] = serde_json::json!([]);
+    let empty: ProjectSection = serde_json::from_value(empty).unwrap();
+    assert_eq!(empty.sources, Some(vec![]));
+    assert_eq!(
+        serde_json::to_value(empty).unwrap()["sources"],
+        serde_json::json!([])
+    );
+    let row = serde_json::json!({"file":"native.payload","media":"application/xml","interpretation":"vibe-spec","role":"spec","loading":"explicit"});
+    let mut declared = base.clone();
+    declared["sources"] = serde_json::json!([row.clone()]);
+    let parsed: ProjectSection = serde_json::from_value(declared.clone()).unwrap();
+    assert!(
+        parsed.group.is_none(),
+        "declarations do not invent or require a group"
+    );
+    assert_eq!(parsed.sources.as_ref().unwrap().len(), 1);
+    for bad in [
+        serde_json::Value::Null,
+        serde_json::json!([{"file":"x","unexpected":true}]),
+        serde_json::json!([{"file":"../x","media":"application/xml","interpretation":"vibe-spec","role":"spec","loading":"explicit"}]),
+    ] {
+        declared["sources"] = bad;
+        assert!(serde_json::from_value::<ProjectSection>(declared.clone()).is_err());
+    }
+    let mut unsupported = base;
+    unsupported["source_exports"] = serde_json::json!([]);
+    assert!(serde_json::from_value::<ProjectSection>(unsupported).is_err());
+    assert!(
+        super::super::Manifest::new_project("host", "1.0.0")
+            .project
+            .unwrap()
+            .sources
+            .is_none()
+    );
+}

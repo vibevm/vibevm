@@ -171,3 +171,36 @@ fn recheck_in_rejects_unrelated_supplied_capability_and_changed_metadata() {
     fs::write(a.join("vibe.toml"), PACKAGE).unwrap();
     assert!(policy.recheck_in(&project, &a).is_err());
 }
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-POLICY",
+    r = 1
+)]
+fn m_06_a_4_host_presence_is_role_neutral_without_package_fiction() {
+    let root = tempfile::tempdir().unwrap();
+    let path = root.path().join("vibe.toml");
+    let base = "[project]\nname='host'\nversion='1.0.0'\n";
+    for (rows, mode) in [
+        ("", PackageSourceMode::Legacy),
+        ("sources=[]\n", PackageSourceMode::ExplicitEmpty),
+        (
+            "[[project.sources]]\nfile='a.md'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='explicit'\n",
+            PackageSourceMode::Explicit,
+        ),
+    ] {
+        std::fs::write(&path, format!("{base}{rows}")).unwrap();
+        let policy = observe_package_policy(root.path()).unwrap();
+        assert_eq!(policy.mode(), mode);
+        assert!(policy.package().is_none());
+        assert!(policy.package_sources().is_none());
+        assert_eq!(
+            policy.source_rows().is_some(),
+            mode != PackageSourceMode::Legacy
+        );
+        if mode == PackageSourceMode::Explicit {
+            assert!(policy.capture_cited_native("org.fake/host", "a").is_err());
+        }
+        assert_eq!(policy.into_checkpoint().mode(), mode);
+    }
+}

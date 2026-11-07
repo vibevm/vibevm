@@ -298,6 +298,10 @@ impl PolicyState {
         }
         self.recheck_unchanged()
     }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-POLICY",
+        r = 1
+    )]
     fn mode(&self) -> PackageSourceMode {
         match self.manifest.as_ref() {
             None => PackageSourceMode::MissingManifest,
@@ -309,7 +313,15 @@ impl PolicyState {
                         PackageSourceMode::Explicit
                     }
                 }
-                _ => PackageSourceMode::Legacy,
+                _ => match manifest
+                    .project
+                    .as_ref()
+                    .and_then(|project| project.sources.as_ref())
+                {
+                    Some(rows) if rows.is_empty() => PackageSourceMode::ExplicitEmpty,
+                    Some(_) => PackageSourceMode::Explicit,
+                    None => PackageSourceMode::Legacy,
+                },
             },
         }
     }
@@ -324,6 +336,10 @@ impl PolicyState {
         package
             .has_explicit_source_policy()
             .then(|| package.sources.as_deref().unwrap_or(&[]))
+    }
+    pub fn source_rows(&self) -> Option<&[SourceDescriptor]> {
+        self.package_sources()
+            .or_else(|| self.manifest.as_ref()?.project.as_ref()?.sources.as_deref())
     }
     pub fn manifest_bytes(&self) -> Option<&[u8]> {
         self.bytes.as_deref()
@@ -403,6 +419,9 @@ impl PackagePolicyObservation {
     pub fn package_sources(&self) -> Option<&[SourceDescriptor]> {
         self.state.package_sources()
     }
+    pub fn source_rows(&self) -> Option<&[SourceDescriptor]> {
+        self.state.source_rows()
+    }
     pub fn manifest_bytes(&self) -> Option<&[u8]> {
         self.state.manifest_bytes()
     }
@@ -462,6 +481,9 @@ impl PackagePolicyCheckpoint {
     pub fn package_sources(&self) -> Option<&[SourceDescriptor]> {
         self.state.package_sources()
     }
+    pub fn source_rows(&self) -> Option<&[SourceDescriptor]> {
+        self.state.source_rows()
+    }
     pub fn manifest_bytes(&self) -> Option<&[u8]> {
         self.state.manifest_bytes()
     }
@@ -476,3 +498,6 @@ impl PackagePolicyCheckpoint {
 #[cfg(test)]
 #[path = "source_policy/tests.rs"]
 mod tests;
+
+mod host;
+pub use host::CitedNativeSource;

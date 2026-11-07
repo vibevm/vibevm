@@ -50,8 +50,9 @@ pub fn check(project_root: &Path, registry: &Registry) -> Result<Vec<SyncMismatc
     if needed.is_empty() {
         return Ok(Vec::new());
     }
-    let snapshot = load_spec_snapshot(project_root, &needed)?;
-    Ok(compare(registry, &snapshot))
+    let snapshot = load_spec_snapshot(project_root, &needed, registry)?;
+    snapshot.recheck()?;
+    Ok(compare(registry, &snapshot.facts))
 }
 
 /// The canonical doc-paths the registry's host records actually cite —
@@ -79,6 +80,10 @@ fn doc_path_of_address(address: &str) -> Option<String> {
 
 /// Apply the L2 tie-break. Found host facts copy spec status into the
 /// registry; registry records whose host anchor no longer exists are removed.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-SYNC",
+    r = 1
+)]
 pub fn reconcile(
     project_root: &Path,
     registry: &mut Registry,
@@ -87,8 +92,16 @@ pub fn reconcile(
     if needed.is_empty() {
         return Ok(Vec::new());
     }
-    let snapshot = load_spec_snapshot(project_root, &needed)?;
-    let mismatches = compare(registry, &snapshot);
+    let snapshot = load_spec_snapshot(project_root, &needed, registry)?;
+    reconcile_snapshot(project_root, registry, snapshot)
+}
+fn reconcile_snapshot(
+    project_root: &Path,
+    registry: &mut Registry,
+    snapshot: SpecSnapshot,
+) -> Result<Vec<SyncMismatch>, RegistryError> {
+    let mismatches = compare(registry, &snapshot.facts);
+    snapshot.recheck()?;
     for mismatch in &mismatches {
         match mismatch.spec_status {
             Some(status) => {
@@ -133,7 +146,7 @@ fn compare(registry: &Registry, snapshot: &BTreeMap<String, SpecFact>) -> Vec<Sy
         .collect()
 }
 
-fn load_spec_snapshot(
+fn load_legacy_spec_snapshot(
     project_root: &Path,
     needed: &BTreeSet<String>,
 ) -> Result<BTreeMap<String, SpecFact>, RegistryError> {
@@ -165,59 +178,7 @@ fn load_spec_snapshot(
                 line: 0,
                 message: error.message,
             })?;
-        let doc = parse_document(&relative_text, &text);
-        if let Some(issue) = doc
-            .issues
-            .iter()
-            .find(|issue| issue.severity == Severity::Error)
-        {
-            return Err(RegistryError::SpecParse {
-                path: relative.to_path_buf(),
-                line: issue.line,
-                message: issue.message.clone(),
-            });
-        }
-
-        // The router's forward law: extension stripped, PROP/FEAT slug
-        // truncated — the address form every citation in the repo uses.
-        let document = vibe_spec::canonical_doc_path(&relative_text);
-        for fact in doc.blocks.iter().flat_map(|block| &block.facts) {
-            let Some(anchor) = fact.id.as_deref() else {
-                continue;
-            };
-            if !fact.marked {
-                continue;
-            }
-            let isolated = parse_document(&relative_text, &fact.body);
-            let marker = isolated.markers.iter().find(|marker| {
-                !matches!(
-                    marker.granularity,
-                    Granularity::Document | Granularity::Section
-                )
-            });
-            let Some(marker) = marker else {
-                return Err(RegistryError::SpecParse {
-                    path: relative.to_path_buf(),
-                    line: fact.line,
-                    message: format!(
-                        "fact `{anchor}` is marked but progress-core returned no unit marker"
-                    ),
-                });
-            };
-            let address = format!("spec://{package}/{document}#{anchor}");
-            let spec_fact = SpecFact {
-                status: FactStatus::new(marker.stage, marker.state),
-                path: relative.to_path_buf(),
-                line: fact.line + marker.line.saturating_sub(1),
-            };
-            if snapshot.insert(address.clone(), spec_fact).is_some() {
-                return Err(RegistryError::SpecParse {
-                    path: relative.to_path_buf(),
-                    line: fact.line,
-                    message: format!("duplicate full fact address `{address}`"),
-                });
-            }
-        }
+        collect_statuses(&package, &relative_text, &text, &mut snapshot)?;
     }
     Ok(snapshot)
 }
@@ -243,4 +204,103 @@ fn collect_markdown(root: &Path, files: &mut Vec<PathBuf>) -> Result<(), Registr
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod m_06_a_4_cases;
+
+fn collect_statuses(
+    package: &str,
+    relative_text: &str,
+    text: &str,
+    snapshot: &mut BTreeMap<String, SpecFact>,
+) -> Result<(), RegistryError> {
+    let doc = parse_document(relative_text, text);
+    if let Some(issue) = doc
+        .issues
+        .iter()
+        .find(|issue| issue.severity == Severity::Error)
+    {
+        return Err(RegistryError::SpecParse {
+            path: PathBuf::from(relative_text),
+            line: issue.line,
+            message: issue.message.clone(),
+        });
+    }
+
+    // The router's forward law: extension stripped, PROP/FEAT slug
+    // truncated — the address form every citation in the repo uses.
+    let document = vibe_spec::canonical_doc_path(relative_text);
+    for fact in doc.blocks.iter().flat_map(|block| &block.facts) {
+        let Some(anchor) = fact.id.as_deref() else {
+            continue;
+        };
+        if !fact.marked {
+            continue;
+        }
+        let isolated = parse_document(relative_text, &fact.body);
+        let marker = isolated.markers.iter().find(|marker| {
+            !matches!(
+                marker.granularity,
+                Granularity::Document | Granularity::Section
+            )
+        });
+        let Some(marker) = marker else {
+            return Err(RegistryError::SpecParse {
+                path: PathBuf::from(relative_text),
+                line: fact.line,
+                message: format!(
+                    "fact `{anchor}` is marked but progress-core returned no unit marker"
+                ),
+            });
+        };
+        let address = format!("spec://{package}/{document}#{anchor}");
+        let spec_fact = SpecFact {
+            status: FactStatus::new(marker.stage, marker.state),
+            path: PathBuf::from(relative_text),
+            line: fact.line + marker.line.saturating_sub(1),
+        };
+        if snapshot.insert(address.clone(), spec_fact).is_some() {
+            return Err(RegistryError::SpecParse {
+                path: PathBuf::from(relative_text),
+                line: fact.line,
+                message: format!("duplicate full fact address `{address}`"),
+            });
+        }
+    }
+    Ok(())
+}
+mod declared;
+fn load_spec_snapshot(
+    project_root: &Path,
+    needed: &BTreeSet<String>,
+    registry: &Registry,
+) -> Result<SpecSnapshot, RegistryError> {
+    let policy = vibe_spec::source_policy::observe_package_policy(project_root)?;
+    match policy.mode() {
+        vibe_spec::source_policy::PackageSourceMode::Explicit
+        | vibe_spec::source_policy::PackageSourceMode::ExplicitEmpty => {
+            declared::load(policy, needed, registry)
+        }
+        _ => load_legacy_spec_snapshot(project_root, needed).map(|facts| SpecSnapshot {
+            facts,
+            policy,
+            captured: Vec::new(),
+        }),
+    }
+}
+
+struct SpecSnapshot {
+    facts: BTreeMap<String, SpecFact>,
+    policy: vibe_spec::source_policy::PackagePolicyObservation,
+    captured: Vec<vibe_spec::source_policy::CitedNativeSource>,
+}
+impl SpecSnapshot {
+    fn recheck(&self) -> Result<(), RegistryError> {
+        for source in &self.captured {
+            self.policy.recheck_cited_native(source)?;
+        }
+        self.policy.recheck_unchanged()?;
+        Ok(())
+    }
 }

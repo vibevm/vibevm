@@ -331,3 +331,9 @@ pub fn select_source_rows<'a>(
 
 #[cfg(test)]
 mod tests;
+
+pub(crate) fn declared_sources<'de, D: serde::Deserializer<'de>>(
+    d: D,
+) -> std::result::Result<Option<Vec<crate::manifest::SourceDescriptor>>, D::Error> {
+    Vec::<crate::manifest::SourceDescriptor>::deserialize(d).map(Some)
+}

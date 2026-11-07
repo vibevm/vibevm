@@ -38,6 +38,10 @@ use crate::error::{Error, Result};
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-POLICY",
+    r = 1
+)]
 pub struct ProjectSection {
     pub name: String,
     /// The project's reverse-DNS group (e.g. `org.vibevm.core`) — the group
@@ -55,6 +59,13 @@ pub struct ProjectSection {
     /// the install composition root finally falls back to [`SpecFormat::Mixed`].
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub spec_format: Option<SpecFormat>,
+    /// Explicit host source interpretation; absent retains the legacy reader.
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "super::source_descriptor::declared_sources"
+    )]
+    pub sources: Option<Vec<super::SourceDescriptor>>,
     #[serde(default)]
     pub authors: Vec<String>,
 }

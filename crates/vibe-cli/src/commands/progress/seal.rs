@@ -107,11 +107,15 @@ fn one(
 ) -> Result<Outcome> {
     let rel = relative(root, path)?;
     let full = root.join(&rel);
+    let policies = admit_named_source(root, &full)?;
     let text = std::fs::read_to_string(&full)
         .with_context(|| format!("reading {} to seal it", full.display()))?;
     // Parsed here, from the bytes just read: `content_hash` is the digest
     // of what is on disk, which is the whole point of the verb.
     let doc = parse::parse_document(&rel, &text);
+    for policy in policies {
+        policy.recheck_unchanged()?;
+    }
     match seal::seal(c, &doc, stamp) {
         Seal::Recorded(claim) => {
             say(ctx, &rel, &claim, "sealed", Some(stamp));
@@ -218,4 +222,33 @@ fn relative(root: &Path, path: &Path) -> Result<String> {
         )
     })?;
     Ok(scope::rel_str(rel))
+}
+
+/// Seal bypasses tree grounding, so its named source needs the same explicit
+/// policy refusal before interpretation or cache mutation, including nested roots.
+fn admit_named_source(
+    root: &Path,
+    file: &Path,
+) -> Result<Vec<vibe_spec::source_policy::PackagePolicyCheckpoint>> {
+    use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
+    let mut policies = Vec::new();
+    for directory in file
+        .parent()
+        .into_iter()
+        .flat_map(Path::ancestors)
+        .take_while(|directory| directory.starts_with(root))
+    {
+        let policy = observe_package_policy(directory)?;
+        match policy.mode() {
+            PackageSourceMode::Explicit | PackageSourceMode::ExplicitEmpty => {
+                return Err(policy.unsupported("progress seal").into());
+            }
+            PackageSourceMode::Legacy => {
+                policies.push(policy.into_checkpoint());
+                break;
+            }
+            PackageSourceMode::MissingManifest => policies.push(policy.into_checkpoint()),
+        }
+    }
+    Ok(policies)
 }

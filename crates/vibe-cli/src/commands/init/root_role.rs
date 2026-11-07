@@ -202,6 +202,7 @@ fn new_manifest(
                 group: group.map(vibe_core::Group::parse).transpose()?,
                 version: fields.version.clone(),
                 spec_format: None,
+                sources: None,
                 authors: fields.authors.clone(),
             })
         }

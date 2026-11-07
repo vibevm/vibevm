@@ -12,6 +12,19 @@ pub(super) fn observe(
     coordinate: &str,
     policy: &PackagePolicyObservation,
 ) -> Result<AuthoredSourceObservation, RegistryError> {
+    if policy
+        .manifest()
+        .is_some_and(|manifest| manifest.project.is_some())
+    {
+        if policy.mode() == vibe_spec::source_policy::PackageSourceMode::ExplicitEmpty {
+            policy.recheck_unchanged()?;
+            return Ok(AuthoredSourceObservation::Available {
+                facts: Vec::new(),
+                documents: Vec::new(),
+            });
+        }
+        return Err(policy.unsupported("host facts census").into());
+    }
     let package = policy
         .package()
         .ok_or_else(|| policy.unsupported("declared facts without package context"))?;

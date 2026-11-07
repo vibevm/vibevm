@@ -57,6 +57,7 @@ struct EffectiveSection {
 /// spec source through `load_spec_text`) is testable on the collected
 /// bodies alone.
 fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
+    let policy = vibe_spec::source_policy::observe_package_policy(project_root)?;
     let lockfile_path = project_root.join(Lockfile::FILENAME);
     let lockfile = if lockfile_path.exists() {
         Some(
@@ -109,7 +110,14 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
             let rel = format!("{boot_prefix}{filename}");
             let origin = boot_origin(&filename, lockfile.as_ref());
             let spec_uri = format!("spec://project/boot/{filename}");
-            let body = load_boot_entry(&path)?;
+            let body = if vibe_core::layout::is_generated_boot_output(Path::new(&rel)) {
+                load_boot_entry(&path)?
+            } else {
+                let Some(body) = load_authored(project_root, &path)? else {
+                    continue;
+                };
+                body
+            };
             sections.push(EffectiveSection {
                 spec_uri,
                 path: rel,
@@ -121,9 +129,9 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
 
     // 2. WAL — always one section, distinct origin.
     let wal = project_root.join(vibe_core::layout::current_wal_md());
-    if wal.is_file() {
-        let body =
-            fs::read_to_string(&wal).with_context(|| format!("reading `{}`", wal.display()))?;
+    if wal.is_file()
+        && let Some(body) = load_authored(project_root, &wal)?
+    {
         sections.push(EffectiveSection {
             spec_uri: "spec://project/WAL".to_string(),
             path: machine_json_path(&vibe_core::layout::current_wal_md()),
@@ -153,6 +161,9 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
                     continue;
                 }
                 let abs = project_root.join(&rel);
+                let Some(guards) = authored_guards(project_root, &abs)? else {
+                    continue;
+                };
                 if !abs.is_file() {
                     // Missing file — surface as a section with empty
                     // body and a warning header instead of crashing.
@@ -175,6 +186,9 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
                     continue;
                 }
                 let body = load_spec(&abs)?;
+                for guard in guards {
+                    guard.recheck_unchanged()?;
+                }
                 let suffix = rel_str.trim_start_matches(&specs_prefix);
                 sections.push(EffectiveSection {
                     spec_uri: format!("{pkg_uri_root}/{suffix}"),
@@ -186,6 +200,7 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
         }
     }
 
+    policy.recheck_unchanged()?;
     Ok(sections)
 }
 
@@ -297,6 +312,59 @@ fn logical_spec_name(path: &Path) -> Option<&str> {
 
 fn normalize_rel_path(p: &Path) -> PathBuf {
     PathBuf::from(machine_json_path(p))
+}
+
+fn authored_guards(
+    root: &Path,
+    path: &Path,
+) -> Result<Option<Vec<vibe_spec::source_policy::PackagePolicyCheckpoint>>> {
+    use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
+    let mut guards = Vec::new();
+    for parent in path
+        .parent()
+        .into_iter()
+        .flat_map(Path::ancestors)
+        .take_while(|parent| parent.starts_with(root))
+    {
+        // A legacy written-file diagnostic may name a parent that is absent.
+        // Inspect its nearest existing owner instead of losing that diagnostic.
+        match std::fs::symlink_metadata(parent) {
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => continue,
+            Err(error) => {
+                return Err(error)
+                    .with_context(|| format!("observing source parent `{}`", parent.display()));
+            }
+            Ok(_) => {}
+        }
+        let policy = observe_package_policy(parent)?;
+        match policy.mode() {
+            PackageSourceMode::ExplicitEmpty => {
+                policy.recheck_unchanged()?;
+                return Ok(None);
+            }
+            PackageSourceMode::Explicit => {
+                return Err(policy
+                    .unsupported("show effective authored-source projection")
+                    .into());
+            }
+            PackageSourceMode::Legacy => {
+                guards.push(policy.into_checkpoint());
+                break;
+            }
+            PackageSourceMode::MissingManifest => guards.push(policy.into_checkpoint()),
+        }
+    }
+    Ok(Some(guards))
+}
+fn load_authored(root: &Path, path: &Path) -> Result<Option<String>> {
+    let Some(guards) = authored_guards(root, path)? else {
+        return Ok(None);
+    };
+    let body = load_spec(path)?;
+    for guard in guards {
+        guard.recheck_unchanged()?;
+    }
+    Ok(Some(body))
 }
 
 #[cfg(test)]

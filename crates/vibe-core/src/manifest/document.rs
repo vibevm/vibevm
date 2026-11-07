@@ -473,6 +473,7 @@ impl Manifest {
                 group: None,
                 version: version.into(),
                 spec_format: None,
+                sources: None,
                 authors: Vec::new(),
             }),
             ..Manifest::default()

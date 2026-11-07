@@ -367,6 +367,33 @@ pub(crate) fn node_own_boot(
     node_dir: &Path,
     node_rel: &str,
 ) -> Result<Vec<AuthoredBoot>, WorkspaceError> {
+    let policy = vibe_spec::source_policy::observe_package_policy(node_dir).map_err(|error| {
+        WorkspaceError::SpecMaterialization {
+            path: node_dir.into(),
+            reason: error.to_string(),
+        }
+    })?;
+    if let Some(rows) = policy
+        .manifest()
+        .and_then(|manifest| manifest.project.as_ref())
+        .and_then(|project| project.sources.as_ref())
+    {
+        if rows.is_empty() {
+            policy
+                .recheck_unchanged()
+                .map_err(|error| WorkspaceError::SpecMaterialization {
+                    path: node_dir.into(),
+                    reason: error.to_string(),
+                })?;
+            return Ok(Vec::new());
+        }
+        return Err(WorkspaceError::SpecMaterialization {
+            path: node_dir.into(),
+            reason: policy
+                .unsupported("node-authored boot generation")
+                .to_string(),
+        });
+    }
     let boot_dir = node_dir.join(layout::current_boot_dir());
     if !boot_dir.is_dir() {
         return Ok(Vec::new());
