@@ -19761,6 +19761,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_host_requirements.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::cli_host_requirements",
+      "end_line": 5,
+      "fingerprint": "tok1:bd66c548d10f427ce4d4d6ab15a45cc7034b40054e37580ca48c5ae2139ecbe2"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_init/init_package_host_format.rs",
       "item_kind": "mod",
       "line": 5,
@@ -27345,6 +27354,15 @@
       "symbol": "vibe_facts::scan::declared_capture",
       "end_line": 2,
       "fingerprint": "tok1:6dbdbabc0d532b1506ab534b3a9d84601992faec1909b5f29569c26a67c64b21"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/scan/host.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_facts::scan::host",
+      "end_line": 5,
+      "fingerprint": "tok1:bd66c548d10f427ce4d4d6ab15a45cc7034b40054e37580ca48c5ae2139ecbe2"
     },
     {
       "crate_name": "vibe-facts",
@@ -35574,6 +35592,15 @@
     },
     {
       "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/requirements_query/host_sources_tests.rs",
+      "item_kind": "fn",
+      "line": 30,
+      "symbol": "vibe_mcp::tools::requirements_query::host_sources_tests::cases::mcp_host_native_and_partial_states_are_read_only_and_do_not_expose_raw_body",
+      "end_line": 81,
+      "fingerprint": "tok1:00e5e4a0fa8aa6ade8fb70c88a4b20278f6e398599b88aa3b2f24631b32c4b21"
+    },
+    {
+      "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/requirements_query/tests.rs",
       "item_kind": "fn",
       "line": 464,
@@ -38658,6 +38685,15 @@
       "symbol": "vibe_requirements::sources::installed",
       "end_line": 5,
       "fingerprint": "tok1:5ede8088abcaabf959242d726d699cd3d3a5f4d2208ab10c2b13a2c547c01c62"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/tests_host_sources.rs",
+      "item_kind": "fn",
+      "line": 69,
+      "symbol": "vibe_requirements::tests_host_sources::cases::actual_host_query_reads_explicit_native_sources_and_inert_raw_witnesses",
+      "end_line": 93,
+      "fingerprint": "tok1:5e97f11c9369865f16d605855697fd6b92eca548331c63a765113a7e67622820"
     },
     {
       "crate_name": "vibe-requirements",
@@ -44949,6 +44985,15 @@
       "symbol": "vibe_spec::source_policy::host",
       "end_line": 5,
       "fingerprint": "tok1:c73bdcb6dc52fac639a930bcb60033328005fd86224c0fd970d6a2cc243fe63b"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/source_policy/inventory.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::source_policy::inventory",
+      "end_line": 5,
+      "fingerprint": "tok1:bd66c548d10f427ce4d4d6ab15a45cc7034b40054e37580ca48c5ae2139ecbe2"
     },
     {
       "crate_name": "vibe-spec",
@@ -60004,6 +60049,15 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_host_requirements.rs",
+      "from_symbol": "vibe_cli::tests::cli_host_requirements",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-INVENTORY",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_init/init_package_host_format.rs",
       "from_symbol": "vibe_cli::tests::cli_init::init_package_host_format",
       "line": 5,
@@ -66980,6 +67034,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/src/scan/host.rs",
+      "from_symbol": "vibe_facts::scan::host",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-INVENTORY",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-facts/src/scan/installed.rs",
@@ -74553,6 +74616,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-mcp/src/tools/requirements_query/host_sources_tests.rs",
+      "from_symbol": "vibe_mcp::tools::requirements_query::host_sources_tests::cases::mcp_host_native_and_partial_states_are_read_only_and_do_not_expose_raw_body",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-INVENTORY",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-mcp/src/tools/requirements_query/tests.rs",
       "from_symbol": "vibe_mcp::tools::requirements_query::tests::declared_package_query_uses_trusted_server_format_default",
       "line": 465,
@@ -77350,6 +77422,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
       "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-requirements/src/tests_host_sources.rs",
+      "from_symbol": "vibe_requirements::tests_host_sources::cases::actual_host_query_reads_explicit_native_sources_and_inert_raw_witnesses",
+      "line": 70,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-INVENTORY",
+      "verb": "verifies",
       "pinned_r": 1
     },
     {
@@ -83118,6 +83199,15 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-SYNC",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-spec/src/source_policy/inventory.rs",
+      "from_symbol": "vibe_spec::source_policy::inventory",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-INVENTORY",
       "verb": "implements",
       "pinned_r": 1
     },
@@ -113271,6 +113361,26 @@
       "heading": "Source loading distinguishes automatic discovery from explicit selection; it is not a universal prohibition on observing raw bytes. Scan may enumerate any declared interpretation, but only admitted native interpretations supply native meaning. A requested native address or citation may select native scan or explicit input. Requested facts/adopt/query observation retains native explicit and may witness classified ordinary bytes without parsing them as facts or managed directives. A named ordinary resource/export request or a skill.resource declaration is explicit selection and preserves literal data. Automatic own-boot discovery selects native scan sources only within the existing boot scope; native explicit is not automatically enrolled and ordinary scan never enters managed compiler input. Explicit package boot_snippet/source bindings retain their separate explicit-selection law. Existing own-host Simple semantics and HostUngrouped provider identity remain; no project.format, invented group, new resource URI or transport follows from this rule. @status:spec/plan",
       "line": 48,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OPERATION-ENROLLMENT-LAW"
+    },
+    {
+      "anchor": "SOURCE-HOST-INVENTORY",
+      "content_hash": "sha256:c83b897eb8c67dae11fca4f6adfdd78c73f9929f48789f8bd6f39f1cb60dc1ff",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Finite declared host facts observation",
+      "line": 50,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-INVENTORY",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-HOST-INVENTORY-LAW",
+      "content_hash": "sha256:668009d39e4f37fb5fd73d7dffa2efd72b40cc0a0514b289a5fe7a59dfa87b13",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Requested host facts/query observation enumerates exact source rows and only the declared directory scopes through the existing held root and shared selector. Capture all selected bytes and witnesses before native interpretation, then recheck finite selected membership, policy, parent and file observations before returning a result. This is a declared source inventory, not a global repository census or copied publication payload rule. Generated outputs retain incumbent ownership exclusions. Directory traversal explicitly excludes .git VCS control entries; an exact declaration requesting that reserved control subtree refuses rather than disappearing from a complete result. This does not exclude .gitignore, .github, arbitrary dot directories or build directories by heuristic. Nested manifest files within the explicitly selected outer scope do not switch policy, import identity or create new scan roots; apply the selected outer descriptors to them as to other bytes. Do not fake package metadata or use a child manifest's kind to authorize outer native vocabulary. An actual materialized root still requires the independently bound installed route. Requested observation preserves native explicit as well as scan and may witness ordinary bytes without minting facts/directives. Use the existing direct native AST parser and actual self coordinate. Complete native syntax/duplicate failures produce Invalid with captured witnesses; unavailable or untrustworthy census/read produces Unavailable without a fabricated digest. With a valid selected self coordinate, explicit empty is Available with zero facts; no group is invented for a query lacking identity. Malformed query-wide lock/registry remains an error. Preserve legacy and installed-package behavior, report digest recipes and grammar-before-I/O/read-only operation. Exact cited sync retains its narrower cited set and cannot be poisoned by uncited bad files. @status:spec/done",
+      "line": 52,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-INVENTORY-LAW"
     },
     {
       "anchor": "genre-definition",

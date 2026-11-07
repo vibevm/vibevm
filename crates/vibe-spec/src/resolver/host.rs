@@ -250,7 +250,7 @@ impl FileResolver {
 }
 
 // Reserved slot shape, not an arbitrary ancestor with the same directory name.
-fn slot_root(path: &Path) -> bool {
+pub(crate) fn slot_root(path: &Path) -> bool {
     fn deps(path: &Path) -> bool {
         path.ends_with(vibe_core::layout::current_vibedeps_root())
             || path

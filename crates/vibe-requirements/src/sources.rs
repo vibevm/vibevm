@@ -300,6 +300,19 @@ pub(crate) fn observe(
             ),
             facts: Vec::new(),
         }),
+        Err(RegistryError::SourcePolicy(_)) if coord.kind == RequirementSourceKind::Host => {
+            Ok(SourceOutcome {
+                result: source_result(
+                    &coord.kind,
+                    &coord.package,
+                    SourceResultState::Unavailable,
+                    None,
+                    Some("host-source-observation-unavailable".into()),
+                    None,
+                ),
+                facts: Vec::new(),
+            })
+        }
         Err(RegistryError::Io { .. }) => Ok(SourceOutcome {
             result: source_result(
                 &coord.kind,

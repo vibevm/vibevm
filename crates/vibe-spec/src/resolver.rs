@@ -397,3 +397,5 @@ pub(crate) use lookup::source_doc_spelling;
 #[cfg(test)]
 #[path = "resolver/host_cache_tests.rs"]
 mod host_cache_tests;
+
+pub(crate) use host::slot_root as is_materialized_slot_root;

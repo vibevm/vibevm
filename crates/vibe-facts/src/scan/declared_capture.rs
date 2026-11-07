@@ -10,20 +10,11 @@ use vibe_spec::source_policy::PackagePolicyObservation;
 pub(super) fn observe(
     root: &Path,
     coordinate: &str,
+    source_kind: SourceKind,
     policy: &PackagePolicyObservation,
 ) -> Result<AuthoredSourceObservation, RegistryError> {
-    if policy
-        .manifest()
-        .is_some_and(|manifest| manifest.project.is_some())
-    {
-        if policy.mode() == vibe_spec::source_policy::PackageSourceMode::ExplicitEmpty {
-            policy.recheck_unchanged()?;
-            return Ok(AuthoredSourceObservation::Available {
-                facts: Vec::new(),
-                documents: Vec::new(),
-            });
-        }
-        return Err(policy.unsupported("host facts census").into());
+    if matches!(source_kind, SourceKind::Host) {
+        return super::host::observe(root, coordinate, policy);
     }
     let package = policy
         .package()

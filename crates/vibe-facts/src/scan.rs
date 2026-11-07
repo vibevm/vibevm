@@ -242,7 +242,7 @@ pub fn observe_authored_source(
         vibe_spec::source_policy::PackageSourceMode::Explicit
             | vibe_spec::source_policy::PackageSourceMode::ExplicitEmpty
     ) {
-        return declared_capture::observe(source_root, package_coordinate, &policy);
+        return declared_capture::observe(source_root, package_coordinate, source_kind, &policy);
     }
     let mut documents: Vec<String> = Vec::new();
     let specs_root = source_root.join(layout::current_specs_root());
@@ -517,3 +517,5 @@ pub fn join_adoption(
 
 mod installed;
 pub use installed::observe_installed_source;
+
+mod host;

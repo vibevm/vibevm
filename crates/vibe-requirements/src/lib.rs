@@ -91,3 +91,6 @@ pub mod change;
 
 #[cfg(test)]
 mod tests_installed_sources;
+
+#[cfg(test)]
+mod tests_host_sources;

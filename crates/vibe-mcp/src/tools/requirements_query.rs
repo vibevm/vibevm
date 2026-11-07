@@ -314,3 +314,7 @@ fn typed_chain(error: &dyn std::error::Error) -> String {
 #[cfg(test)]
 #[path = "requirements_query/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "requirements_query/host_sources_tests.rs"]
+mod host_sources_tests;

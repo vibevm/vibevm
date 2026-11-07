@@ -501,3 +501,6 @@ mod tests;
 
 mod host;
 pub use host::CitedNativeSource;
+
+mod inventory;
+pub use inventory::{CapturedHostInventory, CapturedHostResource};

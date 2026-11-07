@@ -108,7 +108,25 @@ pub fn observe_declared_document<'a>(
     relative_path: &str,
     bytes: Option<&'a [u8]>,
 ) -> Result<DeclaredDocumentObservation<'a>, SourceSelectionError> {
-    let selected = package.select_source(relative_path)?;
+    let coordinate = format!("{}/{}", package.group, package.name);
+    observe_source_document(
+        &coordinate,
+        package.sources.as_deref().unwrap_or(&[]),
+        package.kind == PackageKind::Doc,
+        relative_path,
+        bytes,
+    )
+}
+
+/// Role-neutral pure adapter; actual caller metadata decides Doc eligibility.
+pub(super) fn observe_source_document<'a>(
+    coordinate: &str,
+    rows: &[SourceDescriptor],
+    doc_allowed: bool,
+    relative_path: &str,
+    bytes: Option<&'a [u8]>,
+) -> Result<DeclaredDocumentObservation<'a>, SourceSelectionError> {
+    let selected = vibe_core::manifest::select_source_rows(coordinate, rows, relative_path)?;
     let (identity, disposition) = match selected {
         SelectedSource::Unclassified { identity } => {
             (identity, DeclaredSourceDisposition::Unclassified)
@@ -160,7 +178,7 @@ pub fn observe_declared_document<'a>(
     };
     let interpretation = descriptor.interpretation();
     let media = descriptor.media();
-    if interpretation == SourceInterpretation::VibeDoc && package.kind != PackageKind::Doc {
+    if interpretation == SourceInterpretation::VibeDoc && !doc_allowed {
         return Ok(DeclaredDocumentObservation::Unsupported {
             provenance,
             bytes: raw,
@@ -236,8 +254,7 @@ pub fn observe_declared_document<'a>(
             reason: "native document address cannot represent a literal fragment separator",
         });
     }
-    let coordinate = format!("{}/{}", package.group, package.name);
-    let prefix = match address_prefix(&coordinate, relative_path) {
+    let prefix = match address_prefix(coordinate, relative_path) {
         Ok(prefix) => prefix,
         Err(error) => {
             return Ok(DeclaredDocumentObservation::Invalid {
