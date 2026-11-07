@@ -43,7 +43,7 @@ fn generation_fingerprints_and_emission_read_retained_runtimes() {
     let attachment = include_str!("../../boot_artifacts/compile.rs");
     let wrappers = include_str!("../../boot_artifacts.rs");
     assert!(composition.contains("lower_owner_runtimes(workspace, &world, lowering)"));
-    assert!(composition.contains("plan_digest_frames(&runtimes)"));
+    assert!(composition.contains("plan_digest_frames_for(&runtimes, spec_format)"));
     assert!(composition.contains("runtimes.node(rel)?.compile_plans().clone()"));
     assert!(emission.contains("runtimes.unit(&owner)?.compile_plans().clone()"));
     assert!(attachment.contains("let plan = plans.attach_to("));

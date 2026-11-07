@@ -127,9 +127,11 @@ fn node_and_unit_goldens_use_dense_order_and_shared_comment_codec() {
     )
     .expect("node evidence")
     .expect("nonempty");
+    // Native implementation identity frames compiler IR epoch 2 (the plan
+    // and pending evidence frames themselves retain their epoch-1 domains).
     assert_eq!(
         node.fingerprint().sha256(),
-        "sha256:ddcaf22a3812f67ccaa08f3ea0b75310f5acfaf7e61d7582268a688d05def585"
+        "sha256:c74ddae6bdc0d638ee112f20921c9b7fef290eb72bd55517b70c536da86ea002"
     );
     assert_eq!(
         node.header_payload(),
@@ -156,7 +158,7 @@ fn node_and_unit_goldens_use_dense_order_and_shared_comment_codec() {
     );
     assert_eq!(
         unit.fingerprint().sha256(),
-        "sha256:759d76464846752277861fb5fa7e87c66793294992153ec605aa6dd4bdddabda"
+        "sha256:18803fb05bee94ea7666a2d0f06e01db7f02660a5abef0dc92d1f92bd7c07c02"
     );
     assert_ne!(unit.fingerprint(), node.fingerprint());
 

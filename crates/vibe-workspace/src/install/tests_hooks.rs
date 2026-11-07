@@ -475,7 +475,11 @@ fn materialise_subtree_does_not_prune_unrelated_slots() {
     );
     // An unrelated pre-existing slot a full prune pass WOULD remove.
     let stray = TempDir::new().unwrap();
-    write(stray.path(), "vibe.toml", "x");
+    write(
+        stray.path(),
+        "vibe.toml",
+        "[package]\ngroup = \"org.vibevm\"\nname = \"stray\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+    );
     vibedeps::materialise(
         ws.path(),
         &Group::parse("org.vibevm").unwrap(),

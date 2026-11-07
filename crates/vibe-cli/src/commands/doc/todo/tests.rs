@@ -18,7 +18,8 @@ fn package(dir: &std::path::Path) {
     std::fs::write(
         dir.join("vibe.toml"),
         "[package]\ngroup = \"org.acme\"\nname = \"manual\"\nkind = \"doc\"\n\
-         version = \"2.3.4\"\n",
+         version = \"2.3.4\"\ntitle = \"Product manual\"\nabstract = \"Documentation for product users.\"\n\n\
+         [[documents]]\npackage = \"org.acme/product\"\nversion = \"^2.0\"\n",
     )
     .expect("the manifest");
     let pages = dir.join("vibevm/vibespecs/model");

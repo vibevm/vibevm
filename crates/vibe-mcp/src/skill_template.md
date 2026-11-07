@@ -89,6 +89,15 @@ package state from filenames or commit history.
 
 Tools:
 
+- **`plan_manifest_migration(...)`** — plan supplied TOML text with explicit
+  profiles/recipe. Returns in-memory edits, questions or refusal without
+  reading/writing a project or invoking providers. Inspect the exact plan
+  before separately authorized application.
+- **`manifest_migration_operation(...)`** — apply, inspect or recover one
+  authored manifest within the server's independently configured
+  project/file/recovery-store grant. Payload paths grant no authority.
+  Inspect reported effects, uncertainty and residue; refusal does not
+  imply that earlier effects were undone.
 - **`list_tools()`** — the registry of what this project lets you RUN:
   every `[[binary]]` an installed package declares (a PATH-facing
   executable) and every `[[mcp_server]]` (an agent-facing server), each

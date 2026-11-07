@@ -207,11 +207,11 @@ fn the_same_key_with_different_decisions_refuses() -> Result<()> {
     Ok(())
 }
 
-/// The real vocabulary home retains104 canonical sites,19 public portable
-/// sites and3 required-nullable fields in the new full-import work owners.
-/// The prior53 remain; common configuration and private continuation vocabulary
-/// add51. This census walks vocabulary definitions, not public app-work schemas.
-/// Repeated compatible keys count at each declared site.
+/// The real vocabulary home retains104 baseline canonical sites plus14 later
+/// compiler/source-display sites,19 public portable sites and3 required-nullable
+/// fields in the full-import work owners. The original53 plus configuration51
+/// remain unchanged. This walks definitions, not public app-work schemas;
+/// repeated compatible keys count at each declared site.
 #[test]
 fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     // One `..` deeper than the parent module's own paths: `include_str!`
@@ -237,15 +237,72 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
         .filter(|(name, _)| !name.starts_with("portable_"))
         .map(|(k, v)| (k.clone(), v.clone()))
         .collect::<serde_json::Map<_, _>>();
+    let later = [
+        "closure_document_v2",
+        "closure_ir_v2",
+        "source_evidence",
+        "hosting_view",
+    ];
+    let baseline = old
+        .iter()
+        .filter(|(name, _)| !later.contains(&name.as_str()))
+        .map(|(k, v)| (k.clone(), v.clone()))
+        .collect::<serde_json::Map<_, _>>();
+    assert_eq!(
+        shapes(json!({"definitions":baseline}))?.sites,
+        104,
+        "the original pre-portable census is unchanged"
+    );
+    // Epoch-2 contributes one required-nullable embed and two pending views.
+    // Source evidence contributes nine optional display fields; hosting two.
+    assert_eq!(
+        home["closure_document_v2"]["properties"]["embeds"]["nullable"],
+        true
+    );
+    for (owner, expected) in [
+        ("closure_ir_v2", vec!["pending_embeds", "pending_sources"]),
+        (
+            "source_evidence",
+            vec![
+                "acquisition",
+                "fetched_from",
+                "registry",
+                "resolved_commit",
+                "source_kind",
+                "source_ref",
+                "source_url",
+                "store_reused",
+                "via_redirect",
+            ],
+        ),
+        (
+            "hosting_view",
+            vec!["differing_acquisition_route", "selected_origin"],
+        ),
+    ] {
+        let actual = home[owner]["optionalProperties"]
+            .as_object()
+            .expect("the added owner declares its optional sites")
+            .keys()
+            .map(String::as_str)
+            .collect::<std::collections::BTreeSet<_>>();
+        assert_eq!(
+            actual,
+            expected
+                .into_iter()
+                .collect::<std::collections::BTreeSet<_>>(),
+            "the added sites are explicit: {owner}"
+        );
+    }
     assert_eq!(
         shapes(json!({"definitions":old}))?.sites,
-        104,
-        "all pre-portable sites retain their exact census"
+        118,
+        "baseline104 plus compiler3, source evidence9 and hosting2"
     );
     assert_eq!(
         shapes(json!({"definitions":public_and_old}))?.sites,
-        123,
-        "public portable vocabulary adds exactly19 transformation sites"
+        137,
+        "public portable vocabulary still adds exactly19 transformation sites"
     );
     for (owner, fields) in [
         ("application_full_import", vec!["current", "waiting"]),
@@ -263,7 +320,7 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     }
     let doc_shapes = shapes(json!({ "definitions": home }))?;
     assert_eq!(
-        doc_shapes.sites, 126,
+        doc_shapes.sites, 140,
         "the real shared home includes every promoted optional site"
     );
     Ok(())

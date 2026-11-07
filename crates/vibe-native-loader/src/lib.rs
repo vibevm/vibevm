@@ -334,7 +334,7 @@ impl NativeLoader {
     /// Admit and invoke one compiler extension, returning exact owned bytes.
     ///
     /// The request is passed through without decoding. Manifest admission fixes
-    /// the expected schema to 1, and any plugin-owned response is copied while
+    /// the expected schema to 2, and any plugin-owned response is copied while
     /// its exact-once free guard remains live.
     pub fn invoke_compile(
         &self,

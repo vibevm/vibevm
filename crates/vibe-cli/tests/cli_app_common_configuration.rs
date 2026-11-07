@@ -40,15 +40,10 @@ fn installs(package_scope: bool) {
         &fs::read(registry.settings().join("applications/index.json")).unwrap(),
     )
     .unwrap();
-    assert_eq!(
-        index["protocol"],
-        if package_scope {
-            "vibe-user-applications/3"
-        } else {
-            "vibe-user-applications/4"
-        }
-    );
+    // Recorded source evidence selects schema 5 in both configuration scopes.
+    assert_eq!(index["protocol"], "vibe-user-applications/5");
     let record = &index["installations"]["org.example/common-config@1.0.0"];
+    assert!(record["source_evidence"].is_object());
     assert_eq!(record.get("configuration").is_some(), !package_scope);
 }
 

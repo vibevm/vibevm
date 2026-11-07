@@ -22,6 +22,11 @@ enum Reader {
 /// The readers that are not transfers, one line of why each.
 const EXEMPT: &[(&str, Reader, &str)] = &[
     (
+        "vibe-registry/src/http_admission.rs",
+        Reader::Http,
+        "shared admission transport returns an unread response; each body consumer is classified separately",
+    ),
+    (
         "vibe-cli/src/commands/aiui/control.rs",
         Reader::Http,
         "the aiui control client: JSON replies of the local terminal, not a download",
@@ -171,8 +176,7 @@ fn readers() -> BTreeMap<(String, Reader), bool> {
             let Ok(text) = std::fs::read_to_string(&file) else {
                 continue;
             };
-            let sends = text.contains("reqwest")
-                && (text.contains(".send()") || text.contains(".execute("));
+            let sends = sends_http(&text);
             if sends || text.contains("TransferRecord::http") {
                 found.insert(
                     (relative.clone(), Reader::Http),
@@ -180,7 +184,7 @@ fn readers() -> BTreeMap<(String, Reader), bool> {
                 );
             }
             if runs_clone_or_fetch(&text) {
-                found.insert((relative, Reader::Git), text.contains("run_transferring("));
+                found.insert((relative.clone(), Reader::Git), wraps_git(&relative, &text));
             }
         }
     }
@@ -238,4 +242,84 @@ fn the_package_clones_and_the_downloads_are_wrapped() {
             "{wrapped:?}"
         );
     }
+}
+
+fn sends_http(text: &str) -> bool {
+    (text.contains("reqwest") && (text.contains(".send()") || text.contains(".execute(")))
+        || text.contains("http_admission::get(")
+        || text.contains("IndexClient::get_with(")
+        || text.contains("Self::get_with(")
+}
+
+fn wraps_git(relative: &str, text: &str) -> bool {
+    text.contains("run_transferring(")
+        || (relative == "vibe-registry/src/git_backend/shell/native_admission/preparation.rs"
+            && text.contains("context.transfer("))
+}
+
+#[test]
+fn delegated_readers_remain_covered_at_their_body_owner() {
+    for call in [
+        "crate::http_admission::get(client, request, url, admission)",
+        "super::IndexClient::get_with(client, request, url, auth, admission)",
+        "Self::get_with(client, request, url, auth, admission)",
+    ] {
+        assert!(sends_http(call), "delegated reader missed: {call}");
+    }
+    assert!(!sends_http("http_admission::bound_builder(builder)"));
+    let found = readers();
+    for path in [
+        "vibe-registry/src/git_backend/shell/raw_http.rs",
+        "vibe-registry/src/index_client/handshake.rs",
+    ] {
+        assert_eq!(found.get(&(path.to_owned(), Reader::Http)), Some(&false));
+    }
+    let admission =
+        std::fs::read_to_string(crates_root().join("vibe-registry/src/http_admission.rs"))
+            .expect("HTTP admission owner");
+    let production = admission.split("#[cfg(test)]").next().unwrap();
+    assert!(production.contains("Result<Response, HttpGetError>"));
+    for body_read in [".bytes(", ".text(", ".json(", ".copy_to("] {
+        assert!(
+            !production.contains(body_read),
+            "admission acquired body ownership: {body_read}"
+        );
+    }
+}
+
+#[test]
+fn native_admission_transfer_reaches_the_counted_git_owner() {
+    let path = "vibe-registry/src/git_backend/shell/native_admission/preparation.rs";
+    assert!(wraps_git(path, "context.transfer(reporter, args)"));
+    assert!(!wraps_git(path, "context.run(args)"));
+    assert!(!wraps_git(
+        "unrelated.rs",
+        "context.transfer(reporter, args)"
+    ));
+    let context = std::fs::read_to_string(
+        crates_root().join("vibe-registry/src/git_backend/shell/native_admission/context.rs"),
+    )
+    .expect("native admission context");
+    let transfer = context
+        .split("pub(super) fn transfer(")
+        .nth(1)
+        .expect("transfer adapter")
+        .split("pub(super) fn ")
+        .next()
+        .unwrap();
+    assert!(transfer.contains("reporter.run_admitted_transfer("));
+    let reported = std::fs::read_to_string(
+        crates_root().join("vibe-registry/src/git_backend/shell/reported.rs"),
+    )
+    .expect("counted Git owner");
+    let admitted = reported
+        .split("pub(super) fn run_admitted_transfer(")
+        .nth(1)
+        .expect("admitted transfer adapter")
+        .split("fn finish_transfer(")
+        .next()
+        .unwrap();
+    assert!(admitted.contains("self.finish_transfer("));
+    assert!(reported.contains("TransferRecord::git("));
+    assert_eq!(readers().get(&(path.to_owned(), Reader::Git)), Some(&true));
 }

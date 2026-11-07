@@ -126,7 +126,8 @@ fn actual_common_install_modify_update_rollback_and_repair_keep_original_paths_a
         ],
     ));
     let first = record(&r, "1.0.0");
-    assert_eq!(r.index()["protocol"], "vibe-user-applications/4");
+    assert_eq!(r.index()["protocol"], "vibe-user-applications/5");
+    assert!(first["source_evidence"].is_object());
     assert_eq!(
         first["configuration"]["evaluation"]["input"],
         submission(true)["input"]

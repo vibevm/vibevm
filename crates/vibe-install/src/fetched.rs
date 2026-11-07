@@ -172,9 +172,8 @@ mod lock_regeneration_tests {
         .expect("write v5 lock");
         let lock = load_or_empty_lockfile(dir.path(), "vibe test").expect("reads as empty");
         assert!(lock.packages.is_empty());
-        assert_eq!(
-            lock.meta.schema_version,
-            vibe_core::manifest::CURRENT_SCHEMA_VERSION
-        );
+        assert!(lock.configurations.is_empty());
+        // Empty legacy-only regeneration retains schema7; schema8 carries configuration.
+        assert_eq!(lock.meta.schema_version, 7);
     }
 }

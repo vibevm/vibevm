@@ -45,6 +45,7 @@ fn historical_index(r: &AppRegistry) -> Vec<u8> {
         let row = row.as_object_mut().unwrap();
         row.remove("pending");
         row.remove("secretOrigins");
+        row.remove("source_evidence");
     }
     let bytes = serde_json::to_vec_pretty(&value).unwrap();
     fs::write(path, &bytes).unwrap();
@@ -139,7 +140,8 @@ fn old1_kept_prefix_does_not_become_a_whole_installation_default_receipt() {
     let mut old: Value = serde_json::from_slice(&fs::read(&checkpoint).unwrap()).unwrap();
     old["protocol"] = "vibe-app-steps/1".into();
     old.as_object_mut().unwrap().remove("operation");
-    // Recreate the actual protocol1 envelope layout, not a mislabeled2 file.
+    old.as_object_mut().unwrap().remove("source_evidence");
+    // Recreate the actual protocol1 envelope layout, not a current file with a historical protocol label.
     let legacy = checkpoint.parent().unwrap().join("steps/finish");
     let generated = Path::new(error["run"].as_str().unwrap());
     fs::copy(generated.join("prompt.md"), legacy.join("prompt.md")).unwrap();

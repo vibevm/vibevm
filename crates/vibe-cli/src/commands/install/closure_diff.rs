@@ -255,10 +255,9 @@ fn size_text(size: Option<u64>) -> String {
 mod tests {
     use super::*;
 
-    /// A locked member fixture. The surrounding lockfile carries
-    /// CURRENT_SCHEMA_VERSION via Lockfile::empty — the lock_header()
-    /// discipline of the visibility fixtures, minus the TOML round-trip
-    /// these unit tests do not need.
+    /// A locked member fixture. Lockfile::empty retains the supported
+    /// legacy schema 7 when no common package configuration is present.
+    /// These closure-only fixtures do not need a TOML round-trip.
     fn locked(group: &str, name: &str, version: &str, admitted_by: Option<&str>) -> LockedPackage {
         LockedPackage {
             kind: vibe_core::PackageKind::Flow,
@@ -292,10 +291,8 @@ mod tests {
 
     fn lockfile(packages: Vec<LockedPackage>) -> Lockfile {
         let mut lock = Lockfile::empty("vibe-test", "2026-08-23T00:00:00Z");
-        assert_eq!(
-            lock.meta.schema_version,
-            vibe_core::manifest::CURRENT_SCHEMA_VERSION
-        );
+        assert_eq!(lock.meta.schema_version, 7);
+        assert!(lock.configurations.is_empty());
         lock.packages = packages;
         lock
     }

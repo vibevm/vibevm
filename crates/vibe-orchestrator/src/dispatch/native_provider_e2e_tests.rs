@@ -36,10 +36,6 @@ struct Fixture {
 
 impl Fixture {
     fn new() -> Self {
-        assert_eq!(
-            vibe_native_loader_mechanism_fixture::fixture_marker(),
-            "vibe-native-loader-mechanism-fixture"
-        );
         let root = TempDir::new().unwrap();
         let project = root.path().join("project");
         let settings = root.path().join("settings");

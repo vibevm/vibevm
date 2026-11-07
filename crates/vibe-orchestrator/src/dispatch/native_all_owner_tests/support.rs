@@ -396,9 +396,9 @@ pub(super) fn compiler_manifest(handler: &str) -> String {
 
 fn write_compiler_source(root: &Path, fail: bool) {
     let body = if fail {
-        "use vibe_ext::{CompileReply,CompileReplyFail,CompileRequest,Manifest,ManifestExtension};fn manifest()->Manifest{Manifest{extensions:vec![ManifestExtension{id:\"native\".into(),point:\"compile:emitted\".into(),ir_schema:Some(1)}]}}fn handle(_:CompileRequest)->CompileReply{CompileReply::Fail(Box::new(CompileReplyFail{envelope:1,message:Some(\"replay refusal\".into())}))}vibe_ext::vibe_compile_extension!(manifest=manifest(),handler=handle);\n"
+        "use vibe_ext::{CompileReply,CompileReplyFail,CompileRequest,Manifest,ManifestExtension};fn manifest()->Manifest{Manifest{extensions:vec![ManifestExtension{id:\"native\".into(),point:\"compile:emitted\".into(),ir_schema:Some(2)}]}}fn handle(_:CompileRequest)->CompileReply{CompileReply::Fail(Box::new(CompileReplyFail{envelope:2,message:Some(\"replay refusal\".into())}))}vibe_ext::vibe_compile_extension!(manifest=manifest(),handler=handle);\n"
     } else {
-        "use vibe_ext::{CompileReply,CompileReplyOk,CompileRequest,Manifest,ManifestExtension};fn manifest()->Manifest{Manifest{extensions:vec![ManifestExtension{id:\"native\".into(),point:\"compile:emitted\".into(),ir_schema:Some(1)}]}}fn handle(r:CompileRequest)->CompileReply{CompileReply::Ok(Box::new(CompileReplyOk{envelope:1,payload:r.payload,message:None}))}vibe_ext::vibe_compile_extension!(manifest=manifest(),handler=handle);\n"
+        "use vibe_ext::{CompileReply,CompileReplyOk,CompileRequest,Manifest,ManifestExtension};fn manifest()->Manifest{Manifest{extensions:vec![ManifestExtension{id:\"native\".into(),point:\"compile:emitted\".into(),ir_schema:Some(2)}]}}fn handle(r:CompileRequest)->CompileReply{CompileReply::Ok(Box::new(CompileReplyOk{envelope:2,payload:r.payload,message:None}))}vibe_ext::vibe_compile_extension!(manifest=manifest(),handler=handle);\n"
     };
     write(
         &root.join("vibevm/vibedeps/org.demo.compiler/1.0.0/native/src/lib.rs"),

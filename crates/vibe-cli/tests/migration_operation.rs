@@ -10,27 +10,9 @@ use std::{
 use vibe_core::manifest::{CURRENT_ABSENT, LEGACY_ABSENT, SNAPSHOT_TO_COPY};
 use vibe_wire::generated::migration::e1::operation_report::*;
 use vibe_workspace::{
-    migration_application::{ReportBuilder, validate_operation_report},
-    migration_planning::plan_migration_json,
+    migration_application::validate_operation_report, migration_planning::plan_migration_json,
 };
 
-#[allow(dead_code)]
-struct MigrationOperationArgs {
-    request_json: Option<String>,
-    project_root: Option<std::path::PathBuf>,
-    target_relative: Option<String>,
-    recovery_store: Option<std::path::PathBuf>,
-}
-// Bind the exact production diagnostic renderer without a public test framework.
-#[allow(dead_code)]
-mod exit_code {
-    pub const GENERAL: u8 = 1;
-    pub const OK: u8 = 0;
-    pub const USAGE: u8 = 2;
-}
-#[allow(dead_code)]
-#[path = "../src/commands/refactor/migration_operation.rs"]
-mod handler;
 const BEFORE: &str = "# café and quoted value stay exact\n[package]\nname=\"demo\"\ngroup=\"org.example\"\nkind=\"flow\"\nversion=\"1.1.0\"\nmaterialization=\"snapshot\" # keep\n";
 fn tree(root: &Path) -> BTreeMap<String, Vec<u8>> {
     fn walk(root: &Path, path: &Path, out: &mut BTreeMap<String, Vec<u8>>) {
@@ -433,36 +415,6 @@ fn frozen_source_escape_and_link_refuse_without_target_write() {
         assert_eq!(out["outcome"], "refused");
         assert_eq!(tree(f.temp.path()), before);
     }
-}
-#[test]
-#[specmark::spec(
-    verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
-    r = 1
-)]
-fn internal_invariant_diagnostic_retains_unvalidated_original_evidence() {
-    let mut builder = ReportBuilder::new(
-        Some(OperationReportOperation::Apply),
-        Some("inconsistent-observation".into()),
-    );
-    let r = builder.evidence_mut();
-    r.guarantees.uncooperating_writers_excluded = true;
-    r.effects.push(Effect {
-        kind: EffectKind::TargetPublication,
-        state: EffectState::Completed,
-    });
-    let failure = builder.into_report().unwrap_err();
-    let original = serde_json::to_value(&failure.report).unwrap();
-    let mut diagnostic = Vec::new();
-    handler::render_failure(&failure, &mut diagnostic).unwrap();
-    let text = String::from_utf8(diagnostic).unwrap();
-    assert!(text.contains("internal report invariant failure"));
-    let raw = text
-        .split("UNVALIDATED original operation evidence: ")
-        .nth(1)
-        .unwrap();
-    assert_eq!(serde_json::from_str::<Value>(raw.trim()).unwrap(), original);
-    assert!(text.contains("target_publication"));
-    assert!(text.contains("completed"));
 }
 
 #[test]

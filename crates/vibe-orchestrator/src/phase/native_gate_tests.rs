@@ -39,10 +39,7 @@ fn fixture_name() -> String {
     reason = "test fixture setup uses immediate assertions to keep failures local"
 )]
 fn fixture_library() -> PathBuf {
-    assert_eq!(
-        vibe_native_loader_fixture::fixture_marker(),
-        "vibe-native-loader-fixture"
-    );
+    // Dev-dependencies build the cdylibs; Rust marker calls link duplicate ABI exports into this test executable.
     let executable = std::env::current_exe().expect("current test executable");
     let executable_dir = executable.parent().expect("test executable directory");
     let profile_dir = if executable_dir

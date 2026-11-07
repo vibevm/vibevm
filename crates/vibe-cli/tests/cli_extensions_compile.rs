@@ -28,14 +28,7 @@ fn fixture_library(stem: &str) -> PathBuf {
 }
 
 fn fixture_libraries() -> (PathBuf, PathBuf) {
-    assert_eq!(
-        vibe_native_loader_json_backend_fixture::fixture_marker(),
-        "vibe-native-loader-json-backend-fixture"
-    );
-    assert_eq!(
-        vibe_native_loader_compiler_fixture::fixture_marker(),
-        "vibe-native-loader-compiler-fixture"
-    );
+    // Dev-dependencies build the cdylibs; Rust marker calls would link duplicate ABI exports.
     (
         fixture_library("vibe_native_loader_json_backend_fixture"),
         fixture_library("vibe_native_loader_compiler_fixture"),

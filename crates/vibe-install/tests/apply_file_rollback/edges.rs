@@ -42,10 +42,17 @@ fn initial_unsafe_metadata_refuses_before_any_publication_or_hook() {
 fn changed_recognized_manifest_input_refuses_before_effects() {
     let (temp, source, planned) = prepared(Case::Complete);
     let changed = BEFORE.replace("rollback-probe", "another-project");
-    fs::write(temp.path().join("vibe.toml"), &changed).unwrap();
+    let path = temp.path().join("vibe.toml");
+    fs::write(&path, &changed).unwrap();
+    let before_identity = identity(&path);
     let error = apply(&source, planned).unwrap_err();
-    assert!(error.to_string().contains("recognized semantics changed"));
+    assert!(
+        matches!(&error,vibe_install::Error::Workspace(vibe_workspace::WorkspaceError::SpecMaterialization{reason,..})
+        if reason.contains("PROP-072#SOURCE-HOST-BOOT-LAW") && reason.contains("authored node manifest differs from admitted workspace")),
+        "{error}"
+    );
     assert_eq!(source.calls(), 0);
+    assert_eq!(identity(&path), before_identity);
     assert_eq!(
         fs::read_to_string(temp.path().join("vibe.toml")).unwrap(),
         changed

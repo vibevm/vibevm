@@ -4,7 +4,7 @@ use super::*;
 fn admitted_compiler_handle_refuses_before_invoke_and_reuses_the_exact_handle() {
     let (_directory, path) = fake_file();
     let (loader, library, _opener) = loader_for(
-        manifest(&[("compiler", "compile:pass", Some(1))]),
+        manifest(&[("compiler", "compile:pass", Some(2))]),
         [FakeCall::published(0, b"reply".to_vec())],
     );
     let file_before = std::fs::read(&path).unwrap();
@@ -24,7 +24,7 @@ fn admitted_compiler_handle_refuses_before_invoke_and_reuses_the_exact_handle() 
     assert_eq!(library.invoke_count.load(Ordering::SeqCst), 1);
 
     let (loader, library, _) = loader_for(
-        manifest(&[("other", "compile:pass", Some(1))]),
+        manifest(&[("other", "compile:pass", Some(2))]),
         [FakeCall::published(0, b"unused".to_vec())],
     );
     assert!(matches!(
@@ -39,7 +39,7 @@ fn admitted_compiler_wrong_abi_stops_before_manifest_or_invoke() {
     let (_directory, path) = fake_file();
     let library = Arc::new(FakeLibrary {
         abi: 9,
-        manifest: manifest(&[("compiler", "compile:pass", Some(1))]),
+        manifest: manifest(&[("compiler", "compile:pass", Some(2))]),
         calls: Mutex::new(VecDeque::from([FakeCall::published(0, b"unused".to_vec())])),
         invoke_count: AtomicUsize::new(0),
         free_count: Arc::new(AtomicUsize::new(0)),

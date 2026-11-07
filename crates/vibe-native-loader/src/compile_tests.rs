@@ -214,7 +214,7 @@ fn compile_returns_exact_opaque_bytes_and_forwards_request_without_decode() {
         let (_directory, path) = fake_file();
         let request = br#"{"opaque-request":true}"#;
         let (loader, library, _opener) = loader_for(
-            manifest(&[("compiler", "compile:pass", Some(1))]),
+            manifest(&[("compiler", "compile:pass", Some(2))]),
             [FakeCall::published(0, response.clone())],
         );
         let actual = invoke_compile(&loader, &path, "compiler", CompilePoint::Pass, request)
@@ -256,7 +256,7 @@ fn lifecycle_and_compile_share_the_response_refusal_and_free_matrix() {
         for compile in [false, true] {
             let (_directory, path) = fake_file();
             let rows = if compile {
-                [("compiler", "compile:pass", Some(1))]
+                [("compiler", "compile:pass", Some(2))]
             } else {
                 [("life", "phase:build", None)]
             };
@@ -320,18 +320,18 @@ fn lifecycle_strict_reply_paths_and_success_remain_typed_and_exact() {
 }
 
 #[test]
-fn compiler_manifest_requires_exact_id_point_and_fixed_schema_one() {
+fn compiler_manifest_requires_exact_id_point_and_fixed_schema_two() {
     let cases: Vec<CompilerManifestCase> = vec![
         (
             "missing",
             CompilePoint::Pass,
-            manifest(&[("compiler", "compile:pass", Some(1))]),
+            manifest(&[("compiler", "compile:pass", Some(2))]),
             |e| matches!(e, NativeLoadError::MissingExtensionId { .. }),
         ),
         (
             "compiler",
             CompilePoint::Emitted,
-            manifest(&[("compiler", "compile:pass", Some(1))]),
+            manifest(&[("compiler", "compile:pass", Some(2))]),
             |e| matches!(e, NativeLoadError::ExtensionPointMismatch { .. }),
         ),
         (
@@ -343,8 +343,14 @@ fn compiler_manifest_requires_exact_id_point_and_fixed_schema_one() {
         (
             "compiler",
             CompilePoint::Pass,
-            manifest(&[("compiler", "compile:pass", Some(2))]),
-            |e| matches!(e, NativeLoadError::IrSchemaMismatch { .. }),
+            manifest(&[("compiler", "compile:pass", Some(1))]),
+            |e| matches!(e, NativeLoadError::IrSchemaMismatch { actual, expected, .. } if actual == "1" && expected == "2"),
+        ),
+        (
+            "compiler",
+            CompilePoint::Pass,
+            manifest(&[("compiler", "compile:pass", Some(3))]),
+            |e| matches!(e, NativeLoadError::IrSchemaMismatch { actual, expected, .. } if actual == "3" && expected == "2"),
         ),
     ];
     for (id, point, manifest, classify) in cases {
@@ -360,8 +366,8 @@ fn compiler_manifest_requires_exact_id_point_and_fixed_schema_one() {
     let (_directory, path) = fake_file();
     let (loader, library, _opener) = loader_for(
         manifest(&[
-            ("other", "compile:source", Some(1)),
-            ("compiler", "compile:pass", Some(1)),
+            ("other", "compile:source", Some(2)),
+            ("compiler", "compile:pass", Some(2)),
         ]),
         [FakeCall::published(0, b"exact".to_vec())],
     );
@@ -389,8 +395,8 @@ fn homogeneous_multi_entry_images_admit_and_mixed_images_never_invoke() {
     let (_directory, path) = fake_file();
     let (loader, compiler, _opener) = loader_for(
         manifest(&[
-            ("other", "compile:source", Some(1)),
-            ("compiler", "compile:pass", Some(1)),
+            ("other", "compile:source", Some(2)),
+            ("compiler", "compile:pass", Some(2)),
         ]),
         [FakeCall::published(0, b"ok".to_vec())],
     );
@@ -401,10 +407,10 @@ fn homogeneous_multi_entry_images_admit_and_mixed_images_never_invoke() {
     for rows in [
         [
             ("life", "phase:build", None),
-            ("compiler", "compile:pass", Some(1)),
+            ("compiler", "compile:pass", Some(2)),
         ],
         [
-            ("compiler", "compile:pass", Some(1)),
+            ("compiler", "compile:pass", Some(2)),
             ("life", "phase:build", None),
         ],
     ] {
@@ -433,12 +439,12 @@ fn homogeneous_multi_entry_images_admit_and_mixed_images_never_invoke() {
 fn every_point_is_typed_before_selection_and_duplicates_keep_precedence() {
     for rows in [
         [
-            ("compiler", "compile:pass", Some(1)),
+            ("compiler", "compile:pass", Some(2)),
             ("bad", "unknown:any", Some(1)),
         ],
         [
             ("bad", "unknown:any", Some(1)),
-            ("compiler", "compile:pass", Some(1)),
+            ("compiler", "compile:pass", Some(2)),
         ],
     ] {
         let (_directory, path) = fake_file();
@@ -456,7 +462,7 @@ fn every_point_is_typed_before_selection_and_duplicates_keep_precedence() {
     }
 
     let duplicate_then_invalid = manifest(&[
-        ("same", "compile:pass", Some(1)),
+        ("same", "compile:pass", Some(2)),
         ("same", "unknown:any", Some(1)),
     ]);
     let (_directory, path) = fake_file();
@@ -486,11 +492,11 @@ fn invalid_point_precedes_mixed_family_in_both_family_orders() {
     for rows in [
         [
             ("life", "phase:build", None),
-            ("compiler", "compile:pass", Some(1)),
+            ("compiler", "compile:pass", Some(2)),
             ("bad", "unknown:any", Some(1)),
         ],
         [
-            ("compiler", "compile:pass", Some(1)),
+            ("compiler", "compile:pass", Some(2)),
             ("life", "phase:build", None),
             ("bad", "unknown:any", Some(1)),
         ],
@@ -521,7 +527,7 @@ fn invalid_point_precedes_mixed_family_in_both_family_orders() {
 fn repeated_compile_use_keeps_one_canonical_cache() {
     let (_directory, path) = fake_file();
     let (loader, library, opener) = loader_for(
-        manifest(&[("compiler", "compile:pass", Some(1))]),
+        manifest(&[("compiler", "compile:pass", Some(2))]),
         [
             FakeCall::published(0, b"first".to_vec()),
             FakeCall::published(0, b"second".to_vec()),

@@ -9,6 +9,7 @@ use vibe_workspace::migration_planning::{
 };
 
 use crate::exit_code::{GENERAL, OK, USAGE};
+use crate::output::language::Refusal;
 
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
@@ -39,7 +40,15 @@ pub(crate) fn run(request_json: Option<&str>) -> ExitCode {
     let mut bytes = match serde_json::to_vec(&response) {
         Ok(bytes) => bytes,
         Err(_) => {
-            eprintln!("vibe: migration response could not be serialized");
+            eprintln!(
+                "{}",
+                Refusal {
+                    headline: "migration response could not be serialized".into(),
+                    ..Default::default()
+                }
+                .block()
+                .render()
+            );
             return ExitCode::from(GENERAL);
         }
     };
@@ -50,7 +59,15 @@ pub(crate) fn run(request_json: Option<&str>) -> ExitCode {
         .and_then(|()| stdout.flush())
         .is_err()
     {
-        eprintln!("vibe: migration response could not be written");
+        eprintln!(
+            "{}",
+            Refusal {
+                headline: "migration response could not be written".into(),
+                ..Default::default()
+            }
+            .block()
+            .render()
+        );
         return ExitCode::from(GENERAL);
     }
     ExitCode::from(code)

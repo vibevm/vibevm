@@ -41,14 +41,6 @@ struct Fixture {
 
 impl Fixture {
     fn new(package_image: PackageImage) -> Self {
-        assert_eq!(
-            vibe_native_loader_build_provider_fixture::fixture_marker(),
-            "vibe-native-loader-build-provider-fixture"
-        );
-        assert_eq!(
-            vibe_native_loader_package_provider_fixture::fixture_marker(),
-            "vibe-native-loader-package-provider-fixture"
-        );
         let root = must(TempDir::new(), "temp project");
         let project = root.path().join("project");
         let slot = project.join("vibevm/vibedeps/org.example.native-pipeline/1.0.0");

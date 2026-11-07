@@ -138,7 +138,9 @@ fn the_style_check_reaches_the_library_and_reports_the_bar() {
     let tmp = tempfile::tempdir().expect("temp dir");
     std::fs::write(
         tmp.path().join("vibe.toml"),
-        "[package]\nname = \"lib-docs\"\ngroup = \"org.demo\"\nkind = \"doc\"\n",
+        "[package]\nname = \"lib-docs\"\ngroup = \"org.demo\"\nkind = \"doc\"\n\
+         version = \"0.1.0\"\ntitle = \"Library manual\"\nabstract = \"Documentation for library users.\"\n\n\
+         [[documents]]\npackage = \"org.demo/lib\"\nversion = \"^1.0\"\n",
     )
     .expect("write");
     let style = DocCheckArgs {

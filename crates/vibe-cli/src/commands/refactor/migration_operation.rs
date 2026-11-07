@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES");
 use super::MigrationOperationArgs;
 use crate::exit_code::{GENERAL, OK, USAGE};
+use crate::output::language::Refusal;
 use std::io::{Read, Write};
 use std::process::ExitCode;
 use vibe_wire::generated::migration::e1::{
@@ -147,8 +148,16 @@ pub(crate) fn render_failure(
 ) -> std::io::Result<()> {
     writeln!(
         diagnostic,
-        "vibe: migration operation internal report invariant failure: {}",
-        failure.fault
+        "{}",
+        Refusal {
+            headline: format!(
+                "migration operation internal report invariant failure: {}",
+                failure.fault
+            ),
+            ..Default::default()
+        }
+        .block()
+        .render()
     )?;
     diagnostic.write_all(b"UNVALIDATED original operation evidence: ")?;
     serde_json::to_writer(&mut *diagnostic, &failure.report).map_err(std::io::Error::other)?;
@@ -217,9 +226,10 @@ pub(crate) fn run(args: &MigrationOperationArgs) -> ExitCode {
     let mut bytes = match serde_json::to_vec(&report) {
         Ok(bytes) => bytes,
         Err(_) => {
-            eprintln!(
-                "vibe: migration operation response could not be serialized; effects may have occurred"
-            );
+            eprintln!("{}", Refusal {
+                headline: "migration operation response could not be serialized; effects may have occurred".into(),
+                ..Default::default()
+            }.block().render());
             return ExitCode::from(GENERAL);
         }
     };
@@ -231,9 +241,54 @@ pub(crate) fn run(args: &MigrationOperationArgs) -> ExitCode {
         .is_err()
     {
         eprintln!(
-            "vibe: migration operation response could not be written; effects may have occurred"
+            "{}",
+            Refusal {
+                headline:
+                    "migration operation response could not be written; effects may have occurred"
+                        .into(),
+                ..Default::default()
+            }
+            .block()
+            .render()
         );
         return ExitCode::from(GENERAL);
     }
     ExitCode::from(code)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::Value;
+
+    #[test]
+    #[specmark::spec(
+        verifies = "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-SURFACES",
+        r = 1
+    )]
+    fn internal_invariant_diagnostic_retains_unvalidated_original_evidence() {
+        let mut builder = ReportBuilder::new(
+            Some(OperationReportOperation::Apply),
+            Some("inconsistent-observation".into()),
+        );
+        let r = builder.evidence_mut();
+        r.guarantees.uncooperating_writers_excluded = true;
+        r.effects.push(Effect {
+            kind: EffectKind::TargetPublication,
+            state: EffectState::Completed,
+        });
+        let failure = builder.into_report().unwrap_err();
+        let original = serde_json::to_value(&failure.report).unwrap();
+        let mut diagnostic = Vec::new();
+        render_failure(&failure, &mut diagnostic).unwrap();
+        let text = String::from_utf8(diagnostic).unwrap();
+        assert!(text.contains("internal report invariant failure"));
+        let raw = text
+            .split("UNVALIDATED original operation evidence: ")
+            .nth(1)
+            .unwrap();
+        assert_eq!(serde_json::from_str::<Value>(raw.trim()).unwrap(), original);
+        assert!(text.contains("target_publication"));
+        assert!(text.contains("completed"));
+    }
 }

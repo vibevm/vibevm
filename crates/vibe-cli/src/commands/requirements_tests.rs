@@ -324,13 +324,49 @@ fn the_surface_has_no_llm_credential_or_write_edge() {
         "LifecycleLease",
         "acquire",
         "checkpoint",
-        "materialise",
-        "materialize",
         "sync",
     ] {
         assert!(
             !code.contains(needle),
             "`{needle}` has no place on a read-only, credential-free surface",
+        );
+    }
+    assert!(
+        !calls_materialisation(&code),
+        "the surface calls a materialisation operation"
+    );
+}
+
+// Match operation identifiers, not the read-only `materialized_format` field.
+fn calls_materialisation(code: &str) -> bool {
+    code.split(|c: char| !(c.is_alphanumeric() || c == '_'))
+        .filter(|name| name.starts_with("materialise") || name.starts_with("materialize"))
+        .any(|name| {
+            code.match_indices(name).any(|(at, _)| {
+                let rest = code[at + name.len()..].trim_start();
+                rest.starts_with('(') || rest.starts_with("::<") || rest.starts_with('!')
+            })
+        })
+}
+
+#[test]
+fn materialisation_fence_distinguishes_calls_from_format_data() {
+    for code in [
+        "materialise(root)",
+        "workspace::materialise_resolution (root)",
+        "slot.materialize(root)",
+        "materialize_with_format::<Format>(root)",
+    ] {
+        assert!(calls_materialisation(code), "missed write call: {code}");
+    }
+    for code in [
+        "materialized_format: Some(format)",
+        "context.materialized_format",
+        "let materialized_format = resolve_spec_format(manifest);",
+    ] {
+        assert!(
+            !calls_materialisation(code),
+            "misclassified format data: {code}"
         );
     }
 }

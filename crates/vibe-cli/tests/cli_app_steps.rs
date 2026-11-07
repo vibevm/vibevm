@@ -325,7 +325,7 @@ fn a_step_list_plans_installs_fails_resumes_and_restarts() {
     assert!(error.contains("exited with code 4"), "{error}");
     let work = user.settings.join(WORK);
     let state: Value = serde_json::from_slice(&fs::read(work.join("steps.json")).unwrap()).unwrap();
-    assert_eq!(state["protocol"], "vibe-app-steps/2");
+    assert_eq!(state["protocol"], "vibe-app-steps/3");
     assert_eq!(state["steps"][0]["outcome"], "done");
     assert_eq!(state["steps"][1]["outcome"], "skipped");
     assert_eq!(state["steps"][2]["outcome"], "failed");

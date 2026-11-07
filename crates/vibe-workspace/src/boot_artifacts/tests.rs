@@ -435,7 +435,27 @@ fn render_static_errors_on_a_missing_contribution() {
         "flow:gone",
     )]);
     let err = render_static(&b, ws.path(), &coord()).unwrap_err();
-    assert!(matches!(err, WorkspaceError::Io { .. }), "{err}");
+    // Missing installed ancestors refuse at the held source-admission boundary.
+    let WorkspaceError::SpecMaterialization { path, reason } = err else {
+        panic!("expected source-materialisation refusal, got {err}");
+    };
+    assert_eq!(
+        path,
+        std::path::PathBuf::from(crate::layout_paths::vibedeps(
+            "org.vibevm.gone/1.0.0/boot.md"
+        ))
+    );
+    assert!(
+        reason.starts_with(
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ-LAW:"
+        ),
+        "{reason}"
+    );
+    assert!(reason.contains("opening no-follow directory"), "{reason}");
+    assert!(
+        reason.ends_with("fix surface: selected installed boot source binding"),
+        "{reason}"
+    );
 }
 
 // ---- PROP-045: an XML-materialised snippet splices as its projection ----

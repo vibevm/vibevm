@@ -883,11 +883,9 @@ fn install_from_git_registry() {
     assert_eq!(lock.packages.len(), 1);
     let entry = &lock.packages[0];
 
-    // schema_version matches CURRENT (5 after PROP-008 qualified naming).
-    assert_eq!(
-        lock.meta.schema_version,
-        vibe_core::manifest::CURRENT_SCHEMA_VERSION,
-    );
+    // Ordinary installs without configured requirements retain the legacy schema.
+    assert!(lock.configurations.is_empty());
+    assert_eq!(lock.meta.schema_version, 7);
 
     // PROP-002 §2.7 provenance: registry name, full per-package source_url,
     // tag in source_ref. No more `#flow/wal/v0.1.0` fragment shape.

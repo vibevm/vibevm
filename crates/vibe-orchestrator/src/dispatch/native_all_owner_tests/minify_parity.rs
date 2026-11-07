@@ -80,7 +80,7 @@ fn write_minify_source(root: &Path, fail_once: bool) {
     );
     write(
         &slot.join("src/lib.rs"),
-        "use vibe_ext::{CompileReply,CompileRequest,Manifest,ManifestExtension};fn manifest()->Manifest{Manifest{extensions:vec![ManifestExtension{id:\"native\".into(),point:\"compile:emitted\".into(),ir_schema:Some(1)}]}}fn handle(request:CompileRequest)->CompileReply{fixture::handle(request)}vibe_ext::vibe_compile_extension!(manifest=manifest(),handler=handle);\n",
+        "use vibe_ext::{CompileReply,CompileRequest,Manifest,ManifestExtension};fn manifest()->Manifest{Manifest{extensions:vec![ManifestExtension{id:\"native\".into(),point:\"compile:emitted\".into(),ir_schema:Some(2)}]}}fn handle(request:CompileRequest)->CompileReply{fixture::handle(request)}vibe_ext::vibe_compile_extension!(manifest=manifest(),handler=handle);\n",
     );
 }
 
