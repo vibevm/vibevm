@@ -1,0 +1,25 @@
+{
+  "commit": "8aaea9d7cbba510509b2804b695fb3b7be9bf153",
+  "files": 6,
+  "source_seal": 4,
+  "evidence_seal": 39,
+  "tests": {
+    "cli": 4,
+    "host": 5,
+    "units": 4,
+    "legacy": 2,
+    "format_polygon": 1,
+    "doctests": [
+      20,
+      47
+    ]
+  },
+  "specmap": {
+    "units": 9176,
+    "code_items": 5575,
+    "edges": 4724,
+    "warnings": 44,
+    "prior_occurrences_retained": 9174
+  },
+  "full_a4_accepted": false
+}

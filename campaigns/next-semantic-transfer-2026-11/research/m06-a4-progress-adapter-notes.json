@@ -1,0 +1,32 @@
+{
+  "task": "A4 progress adapter exact preparation",
+  "mode": "read-only no tests",
+  "observed_at": "2026-11-07T07:40:35.280918+00:00",
+  "scope_owner": "progress.toml include/exclude; no intrinsic suffix filter beyond defaults",
+  "read_seam": "captured selected native media projection before cache; retain projection for weave",
+  "root_choice_required": "complete every effect boundary or explicitly gate declared mutating callers in bounded read-only first slice",
+  "excluded": [
+    "seal mutation",
+    "whole-host census",
+    "new source world/cache schema"
+  ],
+  "source_sha256": {
+    "crates/vibe-cli/src/commands/progress/grounding.rs": "0ef497620281b31eb2c7db57f5626154f3c5d188ed2e9c751370a7235a86b9e0",
+    "crates/progress-core/src/scope/enumerate.rs": "60fa25afabf622a4b951a90f27e424e6f775315ac176864a42bfb35f57560858",
+    "crates/progress-core/src/scope.rs": "053dbfc800969fc845deb574e675c462e5454aa2f9383f869030d0eec344c895",
+    "crates/vibe-cli/src/commands/progress.rs": "11d0bf4eb910c160ae00932105967ff43ceafdbfa564ae2139bd08a42e727c8a",
+    "crates/vibe-cli/src/commands/progress/baseline.rs": "592fed5507ddd553fbaa560d3241449e36320e5d7167a0e8021aac9c82453e14",
+    "crates/vibe-cli/src/commands/progress/rescan.rs": "23c62c51037f8b9da21da1e6e4789a1ad04b2d5eeb5e8b5414446c9dd84d07da",
+    "crates/vibe-cli/src/commands/facts_check.rs": "ff43d8ad4223bb0e01e1edbe136de8365ca4e514171841e889a0649c7f44d103",
+    "crates/vibe-cli/src/commands/progress/seal.rs": "d5868c7c5dc9be6ad29bb0c02c9f2dafd8c8fb845ad1eaab259b9df480365df8",
+    "crates/vibe-cli/src/commands/progress/tests/xml_sources.rs": "2bf9744f65f7d53c211035e7732509c3ce34642cfed8f90f74cb755c7c8a2d49",
+    "crates/vibe-cli/src/commands/progress/grounding/tests.rs": "07272cfefb5d75346a1aaf5e533eec0095431a4ca13ddb8c8078966a9f57097d",
+    "crates/vibe-cli/src/commands/progress/evidence_boundaries.rs": "d1e4cd7783feed56d3be3dd9fa2c316015e81231a7865690e72ad638c2a25afb",
+    "crates/vibe-cli/tests/cli_progress_sidecar.rs": "7de2e9bd9342df690037e93bf86140f413eb187bd7cbca507b4e5b665a943185"
+  },
+  "runtime_tests_run": false,
+  "full_a4_acceptance": false,
+  "report_sha256": "b69284eadcc3f09e5936e56714576c47f306c91b9f97358e2ea069c7d13c7b79",
+  "worker_report_sha256": "49f95a710a6098443ff6ac61f21de298393721f20d93ad84055f55fc79a4908f",
+  "root_choice": "A: shared captured reader plus actual derived-output barriers; seal separate"
+}

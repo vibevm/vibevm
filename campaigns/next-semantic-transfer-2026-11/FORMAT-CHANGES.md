@@ -668,3 +668,10 @@ Join tree's existing selected boot-file paths to captured source interpretation 
 FMT-041 additional decoder repair: existing emitted once-each elision annotation must be decoded by the framing owner rather than treated as source path. Preserve emitted bytes/compiler recipe and ordinary semicolon path data; no artifact epoch/schema change is intended. Existing selected-slot admission requires real legacy manifests for legacy fixture setup; exact tree JSON assertions remain.
 
 FMT-041 accepted `954ffc3c197edc02e7ec2f0b33aed8878ba9fabb`: additive internal bound tree read and public static_marker_source_path framing reader. Existing tree schema/carriers/load attribution and emitter bytes/recipe retained. Unbound declared installed Empty/nonempty now require independent format; original host Empty remains zero. No authored/wire format changes.
+
+
+## FMT-042 — Declared source display in show effective (accepted slice)
+
+Preserve existing boot/generated/WAL/files_written display universe and report fields. Add declared-media native display and independently bound installed reads; explicitly named ordinary UTF8 stays literal, unsupported binary display remains honest. Legacy provenance-header grammar is retained as display metadata, not a new resource URI or grant of native membership. No new manifest/install-g/schema/CLI option; exact API/error compatibility pending acceptance.
+
+FMT-042 accepted `8aaea9d7cbba510509b2804b695fb3b7be9bf153`: declared native display, literal named UTF8, independent installed binding and retained observations; no report/manifest/install-g/URI schema change. Existing generated/WAL/header/MISSING behavior retained. Binary remains an explicit display error; no new encoding.

@@ -1,0 +1,45 @@
+{
+  "review": "A4 show-effective independent bounded review",
+  "observed_at": "2026-11-07T07:56:54.654409+00:00",
+  "status": "no concrete blocker found; source freeze hashes matched",
+  "findings": [],
+  "source_sha256": {
+    "crates/vibe-cli/src/commands/show/effective.rs": "2862b7c69abcd76504fa2425acbd16d9db4b50d4d2c1d7629f2b1884d75f5d3d",
+    "crates/vibe-cli/src/commands/show/effective/read.rs": "1fdad6a4e80bb77bdcad5e07e44e2f01905d6b3417d7ca40579d91cd8c8ecf49",
+    "crates/vibe-cli/tests/cli_declared_effective.rs": "ea3a207310611a910cd60687a0a72d945c0604698d73a0aa6cf56a2630a5f79f",
+    "crates/vibe-cli/tests/cli_host_sources.rs": "d0a339994e06014758c8475fb316714ea419fbc861439307133b167c15da2a91",
+    "crates/vibe-spec/src/source_policy/authored_boot.rs": "9a7f310255b33890e689de608f632b81c3c1de7adb68832ab4deeac325537a10",
+    "crates/vibe-workspace/src/vibedeps/declared_read.rs": "4812030d090da53ceebccf429f10d381c29e706c275aa97e3f3eb65a4fd48bfe",
+    "crates/vibe-core/src/layout.rs": "5c9b7cc7ed9ed1bc203af3712114da0889f7b92062f7449135de5c8a9e65ac1b",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml": "1cbc618bef3420e20f1c39e8710d8f2d7a0c2a69b1b1a4c25c693c99c52463cf"
+  },
+  "receipt_sha256": {
+    "/tmp/nst-a4-show-cli-final4.log": "41b3e06cbe215b06c8eac62c3ddf7cb6923db3d06a73d85c53a670ea78f9735f",
+    "/tmp/nst-a4-show-units-final2.log": "b6e46b672516bf56c48baf29e2938cc978e62a6d4bb9886680d135e9a88f9d2d",
+    "/tmp/nst-a4-show-legacy.log": "547d27fef692bff31f961c6ca33034cbddc647bd00ebfa7710cf9175ad6781c4",
+    "/tmp/nst-a4-show-format.log": "5f87e06e1c746449e30d50a4a1c1469d5b311520d2e8858e0ea3a7a998aebf89",
+    "/tmp/nst-a4-show-clippy.log": "0fc6e974f9626d344eccfa8c647f8c99d90d9a9a95888a46f1fcc3c99eaba7c2",
+    "/tmp/nst-a4-show-doctests.log": "39cd4f655ce3063ab9ea212721b316e6e379c737aa48641ee3859ccf4a82a321",
+    "/tmp/nst-a4-show-conform-production.log": "c2b656ef3f7c6134b76c7909ab920543281a578845a720e5e5e8c09a5422ff2e",
+    "/tmp/nst-a4-show-conform-effective.log": "ee0e0726d1a550a36955158ce20f59c9582463c9c22a187cf6636c2c53184741",
+    "/tmp/nst-a4-show-conform-cli.log": "16e81ce1588c3b009163ff1947bd26a702ca69e423a86c871b714fd9b2230aaa",
+    "/tmp/nst-a4-show-conform-host.log": "213b5fb77da15f102786d35409e05ac3d9007cf7ecdec3e6ee7ad5573994a7e6",
+    "/tmp/nst-a4-show-clippy-final.log": "10bb1ec0b3bb1de0d53773647542ca21eb2ab3ab23d5b70cf5d382ef9241d5dc",
+    "/tmp/nst-a4-show-units-final3.log": "0db3d4c641af5422123d7e8df593b161f0973c15f09c8232bf4f6bc0a16e6e05",
+    "/tmp/nst-a4-show-conform-effective-final.log": "79eef9d7b89f56d5bc3fe4888d613440a1a2942e61a69b19015ba2fc0ae59dac",
+    "/tmp/nst-a4-show-conform-cli-final.log": "16e81ce1588c3b009163ff1947bd26a702ca69e423a86c871b714fd9b2230aaa",
+    "/tmp/nst-a4-show-fmt-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/nst-a4-show-diff-check-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "observed_test_counts": {
+    "cli_declared_effective": 4,
+    "cli_host_sources": 5,
+    "effective_units": 4,
+    "legacy_provenance_wal": 2,
+    "spec_format_polygon": 1,
+    "vibe_spec_doctests": 20,
+    "vibe_workspace_doctests": 47
+  },
+  "reviewer_executed_tests": false,
+  "caveat": "Freeze hashes rechecked unchanged after final terminal unit/Clippy/Conform receipts. Future edits invalidate this review. Logs lack embedded shell status/command wrappers; empty fmt/diff logs alone are not exit-status evidence. Root owns acceptance."
+}

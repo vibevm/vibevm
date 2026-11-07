@@ -2423,3 +2423,13 @@ Worker reports expanded actual CLI controls green including real-repo tree_json 
 ### A4 selected tree source adapter accepted
 
 Commit `954ffc3c197edc02e7ec2f0b33aed8878ba9fabb`:13reviewed product/spec/map paths, committed hashes verified. Units19/CLI4/host5/fixture1/realrepo1/nested15/artifacts15/golden1/helper-doc1 and static gates pass. Source11/evidence50 seals matched independent final review. Map9174/5572/4721/44 retains9172prior occurrences. FMT041 records exact elision decode with unchanged emitter bytes and independent-format requirement for all declared installed policies including Empty. FullA4partial; no worktree/public push. Next show-effective adapter, source-only notes10hashes previously verified.
+
+
+### A4 show-effective adapter begins
+
+Tree accepted954ffc3c1 with records4aed7fbe1. Root planned SOURCE-SHOW-READ r1/FMT042. Exact operation scope remains own boot/generated tape/INDEX, optional WAL and named files_written. Reuse captured readers; do not add INDEX traversal or whole-host census. Origin labels are provenance, not automatic source ownership; generated owner-relative artifacts remain separate from payload bindings. FullA4/old113counts unchanged, no temporary worktree.
+
+
+### A4 show effective accepted
+
+Commit `8aaea9d7cbba510509b2804b695fb3b7be9bf153`:6reviewed product/spec/map files, committed hashes verified. CLI4+host5/units4/legacy2/format1/docs20+47/static pass. Map9176/5575/4724/44 retains9174prior occurrences, warning meanings unchanged. Source4/evidence39 matched independent review. FMT042 records literal ordinary display and unchanged output schema. No worktree/public push. Next progress decision: activate common captured readers and every existing derived-output boundary together, not merely read-only helpers; seal remains separate.
