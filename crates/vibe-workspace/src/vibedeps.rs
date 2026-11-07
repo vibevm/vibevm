@@ -44,9 +44,9 @@ pub(crate) use source_policy::validate_source_inputs;
 pub use build_ignore::{BUILD_OUTPUT_IGNORES, ensure_build_output_ignores};
 pub(crate) use derived::materialise_with_spec_format_report;
 pub use derived::{
-    CONVERTER_RECIPE, DERIVED_MANIFEST_FILENAME, DerivedFile, DerivedFileDisposition,
-    DerivedManifest, compute_derived_hash, format_is_current, materialise_with_spec_format,
-    read_derived_manifest,
+    CONVERTER_RECIPE, DERIVED_MANIFEST_FILENAME, DeclaredDerivationPreflight, DerivedFile,
+    DerivedFileDisposition, DerivedManifest, compute_derived_hash, format_is_current,
+    materialise_with_spec_format, preflight_declared_derivation, read_derived_manifest,
 };
 pub(crate) use slot_cow::detach_recorded_hardlinks;
 pub(crate) use slot_diff::MaterialiseReport;

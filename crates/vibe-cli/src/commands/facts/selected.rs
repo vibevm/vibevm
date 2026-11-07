@@ -1,16 +1,18 @@
-//! Lock-selected, original-byte admission for declared facts adoption.
+//! Lock-selected installed observation and retained adoption admission.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW");
 
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
+use std::sync::Arc;
 use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
-use vibe_facts::{AuthoredFact, CapturedDeclaredDocument, SourceKind};
+use vibe_facts::{AuthoredFact, AuthoredSourceObservation, SourceKind};
 use vibe_safefs::{Pinned, Project};
 use vibe_spec::source_policy::{
     PackagePolicyCheckpoint, PackageSourceMode, observe_package_policy_in,
 };
+use vibe_spec::{FileResolver, InstalledSourceExpectation, SelectedPackage, SelfCoordinate};
 use vibe_workspace::{Workspace, vibedeps};
 
 pub(super) struct Adoption {
@@ -19,7 +21,7 @@ pub(super) struct Adoption {
 }
 
 struct DeclaredAdmission {
-    project: Project,
+    project: Arc<Project>,
     slot: Pinned,
     root_policy: PackagePolicyCheckpoint,
     policy: PackagePolicyCheckpoint,
@@ -29,6 +31,7 @@ struct DeclaredAdmission {
     registry_root: PathBuf,
     registry_directory: Pinned,
     registry_file: String,
+    format: SpecFormat,
 }
 
 impl Adoption {
@@ -36,7 +39,7 @@ impl Adoption {
         let workspace = Workspace::discover(root)?;
         // Admit only the caller's workspace. A lock-derived slot is always a
         // no-follow descendant, never canonicalized into a fresh authority.
-        let project = Project::open(&workspace.root)?;
+        let project = Arc::new(Project::open(&workspace.root)?);
         let root_dir = project.root_dir()?;
         let root_policy = observe_package_policy_in(&project, &root_dir)?;
         let lock = project
@@ -60,112 +63,106 @@ impl Adoption {
         };
         let slot = project.dir(&relative.split('/').collect::<Vec<_>>(), false)?;
         let policy = observe_package_policy_in(&project, &slot)?;
-        if matches!(
+        let legacy = matches!(
             policy.mode(),
             PackageSourceMode::Legacy | PackageSourceMode::MissingManifest
-        ) {
-            // Removing a declaration from a recorded package must not turn a
-            // changed manifest into legacy authority. Unrecorded old slots
-            // retain their historical compatibility path.
-            if let Some(bytes) =
-                project.read_source_bytes_in(&slot, vibedeps::SLOT_RECORD_FILENAME)?
-            {
-                let record = vibedeps::read_slot_record_bytes(
-                    &slot.path().join(vibedeps::SLOT_RECORD_FILENAME),
-                    &bytes,
-                )
-                .map_err(anyhow::Error::msg)?;
-                verify_recorded(
-                    &record,
-                    Manifest::FILENAME,
-                    policy
-                        .manifest_bytes()
-                        .context("recorded package manifest is missing")?,
-                )?;
+        );
+        if selected.materialization.is_in_place() {
+            if !legacy {
+                bail!("declared facts adopt does not support in-place source provenance");
             }
-            // No-descriptor compatibility stays the incumbent scanner/rederive.
+            return Ok(Self {
+                facts: vibe_facts::scan_authored_facts(slot.path(), package, SourceKind::Package)?,
+                declared: None,
+            });
+        }
+        let format = if legacy {
+            SpecFormat::Mixed
+        } else {
+            super::super::reinstall::effective_rederive_format(&workspace.root_manifest)?
+        };
+        let expected = InstalledSourceExpectation {
+            kind: selected.kind,
+            group: selected.group.clone(),
+            name: selected.name.to_string(),
+            version: selected.version.to_string(),
+            source_hash: selected.content_hash.clone(),
+            materialized_format: format,
+        };
+        let binding = vibedeps::prepare_declared_query_read(&project, &slot, &relative, &expected)?;
+        let Some(binding) = binding else {
             let facts = vibe_facts::scan_authored_facts(slot.path(), package, SourceKind::Package)?;
             policy.recheck_unchanged()?;
             return Ok(Self {
                 facts,
                 declared: None,
             });
-        }
-        if selected.materialization.is_in_place() {
-            bail!("declared facts adopt does not support in-place source provenance");
-        }
-        let meta = policy
-            .package()
-            .context("declared package metadata is unavailable")?;
-        if meta.group != selected.group
-            || meta.name != selected.name
-            || meta.version != selected.version
-            || meta.kind != selected.kind
-        {
-            bail!(
-                "declared facts package identity differs from lock-selected kind/group/name/version"
-            );
-        }
+        };
         let record = project
             .read_source_bytes_in(&slot, vibedeps::SLOT_RECORD_FILENAME)?
-            .context("declared facts adopt requires an original slot record")?;
-        let parsed_record = vibedeps::read_slot_record_bytes(
-            &slot.path().join(vibedeps::SLOT_RECORD_FILENAME),
-            &record,
-        )
-        .map_err(anyhow::Error::msg)?;
-        if parsed_record.spec_format != SpecFormat::Mixed {
-            bail!("declared facts adopt requires an unchanged Mixed slot record");
-        }
-        if parsed_record.source_hash != selected.content_hash {
-            bail!("facts slot source hash differs from lock-selected source hash");
-        }
-        verify_recorded(
-            &parsed_record,
-            Manifest::FILENAME,
-            policy
-                .manifest_bytes()
-                .context("declared manifest disappeared")?,
-        )?;
-        let paths = vibe_facts::exact_declared_files(meta)
-            .map_err(|reason| anyhow::anyhow!("declared facts census refused: {reason:?}"))?;
-        let mut documents = Vec::with_capacity(paths.len());
-        for path in paths {
+            .context("declared facts requires a slot record")?;
+        let mut documents = Vec::new();
+        for row in binding.outputs() {
             let bytes = project
-                .read_source_bytes_in(&slot, &path)?
-                .with_context(|| format!("declared source `{path}` is missing"))?;
-            verify_recorded(&parsed_record, &path, &bytes)?;
-            documents.push((path, bytes));
+                .read_source_bytes_in(&slot, &row.output_path)?
+                .with_context(|| format!("installed output `{}` is absent", row.output_path))?;
+            if vibedeps::sha256_bytes(&bytes) != row.sha256 {
+                bail!(
+                    "installed output `{}` changed during facts capture",
+                    row.output_path
+                );
+            }
+            documents.push((row.output_path.clone(), bytes));
         }
-        let captured = documents
+        let world = parsed
+            .packages
             .iter()
-            .map(|(path, bytes)| CapturedDeclaredDocument {
-                path,
-                bytes: Some(bytes),
-            })
-            .collect::<Vec<_>>();
-        let observed = vibe_facts::observe_declared_source(meta, &captured)
-            .map_err(|reason| anyhow::anyhow!("declared source walk refused: {reason:?}"))?;
-        if !observed.complete {
-            let failures = observed
-                .documents
-                .iter()
-                .filter(|(_, row)| {
-                    !matches!(
-                        row,
-                        vibe_facts::DeclaredDocumentObservation::Facts { .. }
-                            | vibe_facts::DeclaredDocumentObservation::Raw { .. }
-                            | vibe_facts::DeclaredDocumentObservation::OrdinaryMarkdown { .. }
-                            | vibe_facts::DeclaredDocumentObservation::Unclassified { .. }
+            .map(|locked| {
+                let path = if locked.materialization.is_in_place() {
+                    vibedeps::in_place_slot_abs_path(&workspace.root, &locked.group, &locked.name)
+                } else {
+                    vibedeps::slot_abs_path(
+                        &workspace.root,
+                        &locked.group,
+                        &locked.name,
+                        &locked.version,
                     )
-                })
-                .map(|(path, _)| path.as_str())
-                .collect::<Vec<_>>();
-            bail!(
-                "declared source observation incomplete at {failures:?}; facts adopt made no registry change"
-            );
-        }
-        let facts = observed.facts;
+                };
+                (
+                    (locked.group.to_string(), locked.name.to_string()),
+                    SelectedPackage::new(locked.version.to_string(), path),
+                )
+            })
+            .collect();
+        let self_coordinate = if let Some(host) = &workspace.root_manifest.project {
+            SelfCoordinate::new(
+                host.group.as_ref().map(ToString::to_string),
+                host.name.clone(),
+            )
+        } else if let Some(host) = &workspace.root_manifest.package {
+            SelfCoordinate::new(Some(host.group.to_string()), host.name.to_string())
+        } else {
+            SelfCoordinate::new(None, String::new())
+        };
+        let resolver = FileResolver::with_selected_world(
+            &workspace.root,
+            &workspace.root,
+            world,
+            self_coordinate,
+        )
+        .with_installed_source_bindings(project.clone(), vec![binding], None)?;
+        let facts = match vibe_facts::observe_installed_source(
+            &resolver,
+            expected.group.as_str(),
+            &expected.name,
+        )? {
+            AuthoredSourceObservation::Available { facts, .. } => facts,
+            AuthoredSourceObservation::Invalid { issue, .. } => bail!(
+                "invalid declared native source `{}`: {}",
+                issue.path.display(),
+                issue.message
+            ),
+        };
         let registry_root = root.to_path_buf();
         vibe_safefs::ensure_lexically_contained(project.root_path(), &registry_root)?;
         let registry_components = registry_root
@@ -186,6 +183,7 @@ impl Adoption {
             lock,
             record,
             documents,
+            format,
             registry_root,
             registry_directory,
             registry_file: format!("{}.{}.toml", selected.group, selected.name),
@@ -200,8 +198,13 @@ impl Adoption {
     pub(super) fn facts(&self) -> &[AuthoredFact] {
         &self.facts
     }
-    pub(super) fn mixed_noop(&self) -> bool {
+    pub(super) fn is_declared(&self) -> bool {
         self.declared.is_some()
+    }
+    pub(super) fn mixed_noop(&self) -> bool {
+        self.declared
+            .as_ref()
+            .is_some_and(|admission| admission.format == SpecFormat::Mixed)
     }
     pub(super) fn recheck(&self) -> Result<()> {
         if let Some(admission) = &self.declared {
@@ -261,10 +264,8 @@ impl DeclaredAdmission {
                 .manifest_bytes()
                 .context("workspace manifest is missing")?,
         )?)?;
-        if super::super::reinstall::effective_rederive_format(&manifest)? != SpecFormat::Mixed {
-            bail!(
-                "declared facts adopt requires effective Mixed rederive; configuration selects a transformed target"
-            );
+        if super::super::reinstall::effective_rederive_format(&manifest)? != self.format {
+            bail!("facts selected materialized format changed before adoption");
         }
         // The registry destination stays below this same admitted workspace.
         // Existing path components may not redirect writes through links.
@@ -273,22 +274,12 @@ impl DeclaredAdmission {
             .join(vibe_core::layout::current_vibefacts_root())
             .join(&self.registry_file);
         vibe_safefs::ensure_no_follow_walk(self.project.root_path(), &target, true)?;
+        let relative = vibe_core::machine_json_path(target.strip_prefix(self.project.root_path())?);
+        self.project
+            .read_source_bytes(&relative)
+            .context("facts registry destination is not an available regular file")?;
         Ok(())
     }
-}
-
-fn verify_recorded(record: &vibedeps::SlotRecord, path: &str, bytes: &[u8]) -> Result<()> {
-    let row = record
-        .files
-        .iter()
-        .find(|row| row.path == path)
-        .with_context(|| format!("slot record has no declared source `{path}`"))?;
-    if vibe_workspace::vibedeps::sha256_bytes(bytes) != row.sha256 {
-        bail!("declared source `{path}` differs from recorded slot payload");
-    }
-    // Editable hashes establish consistency with the selected record only;
-    // they do not authenticate an original publisher or hostile replacements.
-    Ok(())
 }
 
 #[cfg(test)]

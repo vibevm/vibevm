@@ -14991,6 +14991,24 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/facts.rs",
+      "item_kind": "fn",
+      "line": 193,
+      "symbol": "vibe_cli::commands::facts::adopt",
+      "end_line": 270,
+      "fingerprint": "tok1:4ecfc77bebff80693ccbfab070a3f8ceda6d6a369a4b7c4a6fc6398b195e8b22"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/facts.rs",
+      "item_kind": "fn",
+      "line": 310,
+      "symbol": "vibe_cli::commands::facts::report",
+      "end_line": 386,
+      "fingerprint": "tok1:d0591b27f72039069c6fa30012c1ecc93d1261d8fbbfecb1de83136f8d202202"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/facts/selected.rs",
       "item_kind": "mod",
       "line": 3,
@@ -16190,9 +16208,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/reinstall.rs",
       "item_kind": "fn",
-      "line": 271,
+      "line": 395,
       "symbol": "vibe_cli::commands::reinstall::run_inner",
-      "end_line": 341,
+      "end_line": 465,
       "fingerprint": "tok1:6c96e3cbec0cd97cf04cb09c6518755c353b51594d735e35b5b50f04688e3df9"
     },
     {
@@ -19776,6 +19794,15 @@
       "symbol": "vibe_cli::tests::cli_facts_declared::actual_mixed_installed_captured_ordinary_export_resolves_without_native_facts",
       "end_line": 464,
       "fingerprint": "tok1:6192a4453476a65a48e95205910a67e5cb076f1e49db85cc613303e3475fc6b3"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_facts_selected.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::cli_facts_selected",
+      "end_line": 5,
+      "fingerprint": "tok1:ae07bba81dcd9a600daed6298c6935c8565736c1f06c4c942d60cbb63328821d"
     },
     {
       "crate_name": "vibe-cli",
@@ -48588,6 +48615,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/derived/facts_preflight.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::vibedeps::derived::facts_preflight",
+      "end_line": 5,
+      "fingerprint": "tok1:ae07bba81dcd9a600daed6298c6935c8565736c1f06c4c942d60cbb63328821d"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
       "item_kind": "fn",
       "line": 457,
@@ -55808,6 +55844,24 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/facts.rs",
+      "from_symbol": "vibe_cli::commands::facts::adopt",
+      "line": 193,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/facts.rs",
+      "from_symbol": "vibe_cli::commands::facts::report",
+      "line": 310,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-cli/src/commands/facts/selected.rs",
       "from_symbol": "vibe_cli::commands::facts::selected",
       "line": 3,
@@ -56877,7 +56931,7 @@
     {
       "file": "crates/vibe-cli/src/commands/reinstall.rs",
       "from_symbol": "vibe_cli::commands::reinstall::run_inner",
-      "line": 271,
+      "line": 395,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -60149,6 +60203,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-RESOLUTION",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_facts_selected.rs",
+      "from_symbol": "vibe_cli::tests::cli_facts_selected",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-cli/tests/cli_generated_slot_lanes.rs",
@@ -86698,6 +86761,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DECLARED-MATERIALIZATION",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/vibedeps/derived/facts_preflight.rs",
+      "from_symbol": "vibe_workspace::vibedeps::derived::facts_preflight",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
@@ -113619,6 +113691,26 @@
       "heading": "The bound boot-graph verifier uses independently selected materialized SpecFormat, existing durable resolution, prepared source bindings, mapped unit table and format-aware owner-plan fingerprints. The old unbound wrapper retains its legacy contract and cannot guess declared input format. Reuse the incumbent fingerprint/pending/stale propagation owner; this is not STATIC-body authentication or generated-input consumption admission. The actual check command selects format through the existing project/operator configuration owner. An absent durable lock makes this adapter non-applicable without loading irrelevant configuration or creating state. A present malformed, nonregular or unreadable installed scope is not absence. An applicable graph that cannot be loaded, bound or verified produces the existing BootGraphIntegrity Error through the normal report and error exit; it must not silently contribute no findings. Stale or missing unit INDEX remains the incumbent Warning and warning-only exit behavior. Do not add a CheckId, schema, CLI option, lifecycle lease, regeneration or new member-discovery semantics. Other authored/project check rules retain their own scope. @status:spec/done",
       "line": 60,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-BOOT-CHECK-LAW"
+    },
+    {
+      "anchor": "SOURCE-FACT-COMMANDS",
+      "content_hash": "sha256:09f4929506ea1ebc251603775e05e5c4796d3105852dea21938dfadd855cb21a",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Selected package facts report and adoption",
+      "line": 62,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-FACT-COMMANDS-LAW",
+      "content_hash": "sha256:7d668e6f2fec6b122c68268b835ce344ab4b7b23c5025d9e64751463f62e84b3",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Package facts report/adopt use the existing independently selected lock identity/hash and effective materialized format with the sole workspace record preparation and installed observer. Recorded directory selections and supported transformed representations retain original logical addresses and direct native meaning; do not force Mixed solely to read or fabricate PackageMeta/record/hash. Report is read-only and distinguishes unavailable/invalid authored totals from a genuinely unmaterialized package or zero facts. Adopt adds only requested marked missing entries, respects prefix, preserves existing entries and void semantics, and checks selection/policy/source/destination before writes. For transformed adoption, prepare exact offline locked source, configuration and prospective overlay conversion through existing owners before first registry upsert; known unsupported conversion/collision or missing source/config cannot first appear after registry mutation. Preflight itself never publishes materialization or a temporary registry. After additions execute the real retained rederive with the same selection/format, preserving overlay application. Shared workspace slots retain their workspace-root registry overlay owner. A member adoption changes its selected local registry but does not silently make shared slots member-owned: preflight and execution use the same workspace overlay, with prospective additions only when that is the registry actually being changed. Retain/recheck the consumed overlay input; do not reject an otherwise supported member operation solely to avoid this distinction or claim per-member materialized views. Original package hash, materialized file witnesses, exact persisted registry overlay hash and derived payload hash keep distinct meanings; no source hash is added to FactEntry and no guessed prospective hash replaces persisted bytes. Late I/O/concurrent failure retains named existing partial-failure behavior, not a new global transaction claim. Clean legacy and existing Mixed no-op remain compatible; declared in-place without an actual binding owner is an explicit provenance limitation, never forged authority. @status:spec/done",
+      "line": 64,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS-LAW"
     },
     {
       "anchor": "genre-definition",

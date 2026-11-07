@@ -208,7 +208,7 @@ fn removed_declarations_do_not_bypass_recorded_manifest_drift() {
     let path = f.slot.join("vibe.toml");
     let manifest = fs::read_to_string(&path).unwrap();
     fs::write(path, manifest.split("[[package.sources]]").next().unwrap()).unwrap();
-    f.assert_refused("recorded slot payload");
+    f.assert_refused("recorded manifest digest");
 }
 
 #[test]
@@ -221,7 +221,7 @@ fn malformed_policy_refuses_without_legacy_fallback() {
 }
 
 #[test]
-fn directory_and_ambiguous_policy_refuse_even_with_consistent_editable_record() {
+fn directory_invalid_native_and_ambiguous_policy_refuse_with_consistent_record() {
     for directory in [false, true] {
         let f = Fixture::explicit();
         let path = f.slot.join("vibe.toml");
@@ -252,9 +252,9 @@ fn directory_and_ambiguous_policy_refuse_even_with_consistent_editable_record() 
             .sha256 = vibe_workspace::vibedeps::sha256_bytes(altered.as_bytes());
         vibe_workspace::vibedeps::write_slot_record(&f.slot, &record).unwrap();
         f.assert_refused(if directory {
-            "DirectoryCensusRequired"
+            "invalid declared native source"
         } else {
-            "incomplete"
+            "ambiguous declared resource"
         });
     }
 }
@@ -271,7 +271,7 @@ fn transformed_record_refuses_even_when_well_formed() {
         row.disposition = Some(vibe_workspace::vibedeps::SlotFileDisposition::Copied);
     }
     vibe_workspace::vibedeps::write_slot_record(&f.slot, &record).unwrap();
-    f.assert_refused("unchanged Mixed slot record");
+    f.assert_refused("materialized format differs");
 }
 
 #[test]
@@ -302,9 +302,9 @@ fn declared_document_missing_or_drift_refuses_before_registry_write() {
             fs::write(path, XML.replace("Real rule", "Drifted rule")).unwrap();
         }
         f.assert_refused(if missing {
-            "missing"
+            "absent"
         } else {
-            "recorded slot payload"
+            "recorded output digest"
         });
     }
 }
@@ -325,7 +325,7 @@ fn declared_manifest_record_and_lock_drift_refuse_before_registry_write() {
         };
         fs::write(path, after).unwrap();
         f.assert_refused(if drift == "manifest" {
-            "recorded slot payload"
+            "recorded manifest digest"
         } else {
             "source hash"
         });
@@ -350,7 +350,7 @@ fn changed_effective_target_and_invalid_root_config_refuse_before_registry_write
         f.assert_refused(if malformed {
             "parse"
         } else {
-            "effective Mixed"
+            "materialized format differs"
         });
     }
 }

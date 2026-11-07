@@ -10,8 +10,8 @@ use clap::{Args, Subcommand};
 use vibe_core::Group;
 use vibe_core::manifest::Lockfile;
 use vibe_facts::{
-    FactEntry, FactOrigin, FactStatus, Registry, SourceKind, adoption_counts, host_package,
-    orphans, remove_package_file, scan_authored_facts, sync,
+    FactEntry, FactOrigin, FactStatus, Registry, adoption_counts, host_package, orphans,
+    remove_package_file, sync,
 };
 use vibe_workspace::{Workspace, vibedeps};
 
@@ -190,13 +190,17 @@ fn rederive_or_defer(root: &Path, package: Option<&str>) -> Result<()> {
     Ok(())
 }
 
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS",
+    r = 1
+)]
 fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
-    const ADMISSION: &str = "violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW: facts source admission refused; fix surface: selected package declarations, slot record and workspace configuration";
+    const ADMISSION: &str = "violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS: facts source admission refused; fix surface: selected package declarations, slot record and workspace configuration";
     let selected = selected::Adoption::prepare(root, package).context(ADMISSION)?;
     let authored = selected.facts();
 
     let mut registry = Registry::load(root)?;
-    let mut added = 0usize;
+    let mut additions = Vec::new();
     let mut kept = 0usize;
     selected.recheck().context(ADMISSION)?;
     for authored in authored {
@@ -210,23 +214,58 @@ fn adopt(root: &Path, package: &str, prefix: Option<&str>) -> Result<()> {
             kept += 1;
             continue;
         }
-        selected.recheck().context(ADMISSION)?;
-        registry.upsert(
-            root,
-            FactEntry {
-                address: authored.address.clone(),
-                origin: FactOrigin::Package,
-                package: Some(package.to_string()),
-                status: Some(status),
-                comment: None,
-            },
-        )?;
-        added += 1;
+        let entry = FactEntry {
+            address: authored.address.clone(),
+            origin: FactOrigin::Package,
+            package: Some(package.to_string()),
+            status: Some(status),
+            comment: None,
+        };
+        entry.validate()?;
+        additions.push(entry);
     }
-    println!("facts adopt {package}: added={added} kept={kept}");
-    if !selected.mixed_noop() {
+    let prepared = if selected.is_declared() && !selected.mixed_noop() {
+        match super::reinstall::prepare_rederive_package(root, package).context(ADMISSION)? {
+            super::reinstall::PreparedRederive::Transform(prepared) => Some(prepared),
+            _ => bail!(
+                "selected transformed facts source lost its rederive selection before adoption"
+            ),
+        }
+    } else {
+        None
+    };
+    let preflight = prepared
+        .as_ref()
+        .map(|prepared| prepared.preflight_adoption(root, &registry, &additions))
+        .transpose()
+        .context(ADMISSION)?;
+    selected.recheck().context(ADMISSION)?;
+    for entry in &additions {
+        selected.recheck().context(
+            "facts adoption publication phase failed; earlier additions may already be persisted",
+        )?;
+        if let Some(preflight) = &preflight {
+            preflight.recheck().context("facts adoption publication phase failed; earlier additions may already be persisted")?;
+        }
+        registry.upsert(root, entry.clone()).context(
+            "facts adoption publication failed; earlier additions may already be persisted",
+        )?;
+    }
+    let added = additions.len();
+    if let Some(prepared) = prepared {
+        selected
+            .recheck()
+            .context("facts adoption entries persisted; selected input changed before rederive")?;
+        if let Some(preflight) = &preflight {
+            preflight.recheck().context(
+                "facts adoption entries persisted; original source changed before rederive",
+            )?;
+        }
+        prepared.execute().context("facts adoption entries persisted but slot rederive failed; repair the cause and repeat adoption")?;
+    } else if !selected.mixed_noop() {
         rederive_or_defer(root, Some(package))?;
     }
+    println!("facts adopt {package}: added={added} kept={kept}");
     Ok(())
 }
 
@@ -268,6 +307,10 @@ fn clean(root: &Path, dry_run: bool) -> Result<()> {
     Ok(())
 }
 
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS",
+    r = 1
+)]
 fn report(root: &Path, selected: Option<&str>) -> Result<()> {
     let registry = Registry::load(root)?;
     let installed = installed_packages(root)?;
@@ -284,12 +327,32 @@ fn report(root: &Path, selected: Option<&str>) -> Result<()> {
     let mut total_authored = 0usize;
     let mut unavailable = 0usize;
     for package in &packages {
-        let authored = if installed.contains(package) {
-            materialised_slot(root, package)?
-                .map(|slot| scan_authored_facts(&slot, package, SourceKind::Package))
-                .transpose()?
+        let (authored, reason) = if installed.contains(package) {
+            if materialised_slot(root, package)?.is_none() {
+                (None, Some("package has no materialised slot".to_owned()))
+            } else {
+                match selected::Adoption::prepare(root, package) {
+                    Ok(observed) => (Some(observed.facts().to_vec()), None),
+                    Err(error) => (
+                        None,
+                        Some(
+                            format!("selected source invalid or unavailable: {error:#}")
+                                .chars()
+                                .map(|character| {
+                                    if character.is_control() {
+                                        ' '
+                                    } else {
+                                        character
+                                    }
+                                })
+                                .take(512)
+                                .collect(),
+                        ),
+                    ),
+                }
+            }
         } else {
-            None
+            (None, Some("package has no materialised slot".to_owned()))
         };
         let counts = adoption_counts(&registry, package, authored.as_deref().unwrap_or_default());
         adopted += counts.adopted;
@@ -303,11 +366,18 @@ fn report(root: &Path, selected: Option<&str>) -> Result<()> {
         } else {
             unavailable += 1;
             println!(
-                "{package}  {}/? (indeterminate {}) — total unavailable: package has no materialised slot",
-                counts.adopted, counts.indeterminate
+                "{package}  {}/? (indeterminate {}) — total unavailable: {}",
+                counts.adopted,
+                counts.indeterminate,
+                reason.as_deref().unwrap_or("selected source unavailable")
             );
         }
     }
+    let total_authored = if unavailable == 0 {
+        total_authored.to_string()
+    } else {
+        "?".to_owned()
+    };
     println!(
         "TOTAL  adopted={adopted} authored={total_authored} indeterminate={indeterminate} packages={} unavailable={unavailable}",
         packages.len()
@@ -318,11 +388,17 @@ fn report(root: &Path, selected: Option<&str>) -> Result<()> {
 fn installed_packages(root: &Path) -> Result<BTreeSet<String>> {
     let workspace = Workspace::discover(root)?;
     let lock_path = workspace.root.join(Lockfile::FILENAME);
-    if !lock_path.is_file() {
+    // Command startup may inspect only the member cwd. Installedness belongs
+    // to this workspace lock; present nonregular inputs are never absence.
+    let project = vibe_safefs::Project::open(&workspace.root)?;
+    let Some(bytes) = project
+        .read_source_bytes(Lockfile::FILENAME)
+        .with_context(|| format!("reading `{}` as installedness source", lock_path.display()))?
+    else {
         return Ok(BTreeSet::new());
-    }
-    let lock = Lockfile::read(&lock_path)
-        .with_context(|| format!("reading `{}` as installedness source", lock_path.display()))?;
+    };
+    let lock = Lockfile::parse_str(std::str::from_utf8(&bytes)?)
+        .with_context(|| format!("parsing `{}` as installedness source", lock_path.display()))?;
     Ok(lock
         .packages
         .iter()
@@ -366,7 +442,11 @@ fn materialised_slot(root: &Path, package: &str) -> Result<Option<PathBuf>> {
             &locked.version,
         )
     };
-    Ok(slot.is_dir().then_some(slot))
+    match std::fs::symlink_metadata(&slot) {
+        Ok(_) => Ok(Some(slot)),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        Err(error) => Err(error.into()),
+    }
 }
 
 fn sync_command(root: &Path, write: bool) -> Result<()> {

@@ -110,7 +110,9 @@ fn lock_selected_kind_and_version_are_checked_before_native_parsing() {
             .err()
             .unwrap();
         assert!(
-            error.to_string().contains("kind/group/name/version"),
+            error
+                .to_string()
+                .contains("identity differs from independent selection"),
             "{error:#}"
         );
     }

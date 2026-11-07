@@ -82,6 +82,117 @@ use prepare::PreparedReinstall;
 /// `false` means the package has no versioned slot. Mixed and in-place slots
 /// are deliberately left alone by W2 because they carry no derived manifest.
 pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<bool> {
+    match prepare_rederive_package(project_root, package)? {
+        PreparedRederive::Absent => Ok(false),
+        PreparedRederive::Noop => Ok(true),
+        PreparedRederive::Transform(prepared) => prepared.execute(),
+    }
+}
+
+pub(super) enum PreparedRederive {
+    Absent,
+    Noop,
+    Transform(Box<PreparedPointRederive>),
+}
+
+pub(super) struct PreparedPointRederive {
+    root: PathBuf,
+    cached: vibe_registry::CachedPackage,
+    mode: vibedeps::CopyMode,
+    format: SpecFormat,
+    package: String,
+}
+impl PreparedPointRederive {
+    pub(super) fn preflight_adoption(
+        &self,
+        registry_root: &Path,
+        registry: &vibe_facts::Registry,
+        additions: &[vibe_facts::FactEntry],
+    ) -> Result<AdoptionRederivePreflight> {
+        // Shared slots have always consumed the WORKSPACE registry. Member
+        // adoption remains member-local state; it does not change that owner.
+        let (overlay, workspace_overlay) = if registry_root == self.root {
+            (
+                registry.package_overlay_with_additions(&self.package, additions)?,
+                None,
+            )
+        } else {
+            let project = vibe_safefs::Project::open(&self.root)?;
+            let relative = vibe_core::machine_json_path(
+                &vibe_core::layout::current_vibefacts_root()
+                    .join(format!("{}.toml", self.package.replace('/', "."))),
+            );
+            let bytes = project.read_source_bytes(&relative)?;
+            let overlay = vibe_facts::Registry::load(&self.root)?.package_overlay(&self.package);
+            let observed = WorkspaceOverlayInput {
+                project,
+                relative,
+                bytes,
+            };
+            observed.recheck()?;
+            (overlay, Some(observed))
+        };
+        let source = vibedeps::preflight_declared_derivation(
+            &self.cached.cache_dir,
+            &self.cached.manifest,
+            self.format,
+            self.mode,
+            &overlay,
+        )?;
+        let prepared = AdoptionRederivePreflight {
+            source,
+            workspace_overlay,
+        };
+        prepared.recheck()?;
+        Ok(prepared)
+    }
+    pub(super) fn execute(self) -> Result<bool> {
+        vibedeps::materialise_with_spec_format(
+            &self.root,
+            &self.cached.resolved.group,
+            &self.cached.resolved.name,
+            &self.cached.resolved.version,
+            &self.cached.cache_dir,
+            self.mode,
+            self.format,
+            &ContentHash::from_validated(self.cached.content_hash.clone()),
+        )
+        .with_context(|| format!("re-deriving the installed `{}` slot", self.package))?;
+        Ok(true)
+    }
+}
+
+pub(super) struct AdoptionRederivePreflight {
+    source: vibedeps::DeclaredDerivationPreflight,
+    workspace_overlay: Option<WorkspaceOverlayInput>,
+}
+impl AdoptionRederivePreflight {
+    pub(super) fn recheck(&self) -> Result<()> {
+        self.source.recheck()?;
+        if let Some(overlay) = &self.workspace_overlay {
+            overlay.recheck()?;
+        }
+        Ok(())
+    }
+}
+struct WorkspaceOverlayInput {
+    project: vibe_safefs::Project,
+    relative: String,
+    bytes: Option<Vec<u8>>,
+}
+impl WorkspaceOverlayInput {
+    fn recheck(&self) -> Result<()> {
+        if self.project.read_source_bytes(&self.relative)? != self.bytes {
+            bail!("workspace adoption overlay changed before shared-slot rederive");
+        }
+        Ok(())
+    }
+}
+
+pub(super) fn prepare_rederive_package(
+    project_root: &Path,
+    package: &str,
+) -> Result<PreparedRederive> {
     let Some((group_text, name)) = package.split_once('/') else {
         bail!("package must use the `<group>/<name>` form: {package}");
     };
@@ -97,10 +208,10 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
         .iter()
         .find(|locked| locked.group == group && locked.name == name)
     else {
-        return Ok(false);
+        return Ok(PreparedRederive::Absent);
     };
     if locked.materialization.is_in_place() {
-        return Ok(true);
+        return Ok(PreparedRederive::Noop);
     }
     if !vibedeps::is_materialised(
         &workspace.root,
@@ -108,13 +219,13 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
         &locked.name,
         &locked.version,
     ) {
-        return Ok(false);
+        return Ok(PreparedRederive::Absent);
     }
 
     let manifest = Manifest::read(workspace.root.join(Manifest::FILENAME))?;
     let spec_format = effective_rederive_format(&manifest)?;
     if spec_format == SpecFormat::Mixed {
-        return Ok(true);
+        return Ok(PreparedRederive::Noop);
     }
 
     let global = vibe_core::GlobalRegistryConfig::load()?;
@@ -140,6 +251,22 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
         .with_context(|| format!("re-fetching `{package}` for point re-derivation"))?;
     // A repair re-derives the bytes the lock pins, never newer ones.
     pin::require_locked_bytes(locked, &cached)?;
+    let original = cached
+        .manifest
+        .package
+        .as_ref()
+        .context("point rederive source has no package metadata")?;
+    if original.kind != locked.kind
+        || original.group != locked.group
+        || original.name != locked.name
+        || original.version != locked.version
+        || cached.resolved.group != locked.group
+        || cached.resolved.name != locked.name
+        || cached.resolved.version != locked.version
+    {
+        bail!("point rederive original source identity differs from the locked package");
+    }
+
     vibe_install::configuration_admission::locked_workspace(
         &workspace,
         project_root,
@@ -157,18 +284,15 @@ pub(super) fn rederive_package(project_root: &Path, package: &str) -> Result<boo
         Some(Materialization::Hardlink) => vibedeps::CopyMode::Hardlink,
         _ => vibedeps::CopyMode::Copy,
     };
-    vibedeps::materialise_with_spec_format(
-        &workspace.root,
-        &cached.resolved.group,
-        &cached.resolved.name,
-        &cached.resolved.version,
-        &cached.cache_dir,
-        mode,
-        spec_format,
-        &ContentHash::from_validated(cached.content_hash.clone()),
-    )
-    .with_context(|| format!("re-deriving the installed `{package}` slot"))?;
-    Ok(true)
+    Ok(PreparedRederive::Transform(Box::new(
+        PreparedPointRederive {
+            root: workspace.root,
+            cached,
+            mode,
+            format: spec_format,
+            package: package.to_owned(),
+        },
+    )))
 }
 
 /// Resolve the same configuration before a declared adoption commits its
@@ -345,4 +469,29 @@ fn run_inner(
 /// disabled path never asked.
 pub(super) fn now() -> vibe_wire::generated::shared::Timestamp {
     chrono::Utc::now()
+}
+
+#[cfg(test)]
+mod adoption_input_tests {
+    use super::*;
+    #[test]
+    fn retained_workspace_overlay_detects_missing_to_present_and_byte_drift() {
+        for present in [false, true] {
+            let root = tempfile::tempdir().unwrap();
+            let relative = "overlay.toml";
+            if present {
+                std::fs::write(root.path().join(relative), "before").unwrap();
+            }
+            let project = vibe_safefs::Project::open(root.path()).unwrap();
+            let bytes = project.read_source_bytes(relative).unwrap();
+            let input = WorkspaceOverlayInput {
+                project,
+                relative: relative.into(),
+                bytes,
+            };
+            input.recheck().unwrap();
+            std::fs::write(root.path().join(relative), "changed").unwrap();
+            assert!(input.recheck().is_err());
+        }
+    }
 }

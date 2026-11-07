@@ -41,6 +41,29 @@ impl PackageOverlay {
 }
 
 impl Registry {
+    /// Validate and project prospective missing entries without writing registry bytes.
+    /// Existing entries, including indeterminate entries, retain precedence.
+    pub fn package_overlay_with_additions(
+        &self,
+        package: &str,
+        additions: &[crate::FactEntry],
+    ) -> Result<PackageOverlay, crate::RegistryError> {
+        let mut overlay = self.package_overlay(package);
+        for entry in additions {
+            entry.validate()?;
+            if entry.origin != FactOrigin::Package || entry.package.as_deref() != Some(package) {
+                return Err(crate::RegistryError::Invariant(
+                    "prospective overlay contains another source".into(),
+                ));
+            }
+            overlay
+                .entries
+                .entry(entry.address.clone())
+                .or_insert(entry.status);
+        }
+        Ok(overlay)
+    }
+
     /// Project the `origin = "package"` records of one package.
     pub fn package_overlay(&self, package: &str) -> PackageOverlay {
         PackageOverlay {
@@ -71,4 +94,35 @@ pub fn overlay_file_hash(project_root: &Path, package: &str) -> Option<String> {
         let _ = write!(&mut hex, "{byte:02x}");
     }
     Some(format!("sha256:{hex}"))
+}
+
+#[cfg(test)]
+mod prospective_tests {
+    use super::*;
+    #[test]
+    fn prospective_overlay_preserves_indeterminate_and_rejects_other_package() {
+        let root = tempfile::tempdir().unwrap();
+        let mut registry = Registry::default();
+        let mut entry = crate::FactEntry {
+            address: "spec://org.example/rules/law#LAW".into(),
+            origin: FactOrigin::Package,
+            package: Some("org.example/rules".into()),
+            status: None,
+            comment: Some("keep".into()),
+        };
+        registry.upsert(root.path(), entry.clone()).unwrap();
+        let before = overlay_file_hash(root.path(), "org.example/rules");
+        entry.status = Some(FactStatus::parse("impl/done").unwrap());
+        let projected = registry
+            .package_overlay_with_additions("org.example/rules", &[entry.clone()])
+            .unwrap();
+        assert!(projected.contains_address(&entry.address));
+        assert_eq!(projected.status_for(&entry.address), None);
+        assert!(
+            registry
+                .package_overlay_with_additions("org.other/rules", &[entry])
+                .is_err()
+        );
+        assert_eq!(before, overlay_file_hash(root.path(), "org.example/rules"));
+    }
 }

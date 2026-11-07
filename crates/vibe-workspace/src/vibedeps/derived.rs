@@ -509,3 +509,6 @@ fn collect_hash_files(
     }
     Ok(())
 }
+
+mod facts_preflight;
+pub use facts_preflight::{DeclaredDerivationPreflight, preflight_declared_derivation};
