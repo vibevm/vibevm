@@ -1,0 +1,36 @@
+{
+  "task": "A4 show-effective packet notes",
+  "mode": "read-only no tests",
+  "observed_at": "2026-11-07T07:02:40.096272+00:00",
+  "selection_universes": [
+    "root authored boot immediate native+scan for declared policy",
+    "generated STATIC/INDEX verbatim",
+    "named WAL.md",
+    "lock files_written exact named paths"
+  ],
+  "do_not_add": [
+    "whole-host inventory",
+    "recursive INDEX traversal",
+    "lossy ordinary binary decode",
+    "new report schema",
+    "fake coordinate/record"
+  ],
+  "perimeter": [
+    "commands/show/effective.rs plus bounded helper",
+    "new cli_declared_effective target"
+  ],
+  "source_sha256": {
+    "crates/vibe-cli/src/commands/show/effective.rs": "fdc90631c6a9c5b312fcc08ef3b7853f8e513131df79d98acb102c716b0d7c3f",
+    "crates/vibe-cli/src/commands/show/mod.rs": "c6c5ab01da1bdc7ea723a42df68358def4fa10afa59e2e87b6feac60b67fe308",
+    "crates/vibe-cli/src/commands/reinstall.rs": "9b1814008a5796d39b3f5f0e5120026d9d20b7b582786a519e033e67e0c4d27d",
+    "crates/vibe-cli/tests/cli_registry_mgmt.rs": "e7573d33f43aba523578761acca9bd45e92fa9658222370db98f70ee7e465ab9",
+    "crates/vibe-cli/tests/cli_spec_format.rs": "09c893438fba88b4a49c8449690145135e259746b64f8c5e04dc83637ab6fe66",
+    "crates/vibe-cli/tests/cli_host_sources.rs": "bf3ffe5f996b0b2a241c6303724b4171e5e1a191b0880e801fa1bfe28c3c231e",
+    "crates/vibe-spec/src/source_policy/authored_boot.rs": "9a7f310255b33890e689de608f632b81c3c1de7adb68832ab4deeac325537a10",
+    "crates/vibe-spec/src/resolver/declared.rs": "7616e18791b34dbf486ae69ef14913c8a3b85e5d645cb05e6b8d56c9e9b68be1",
+    "crates/vibe-workspace/src/vibedeps/declared_read.rs": "4812030d090da53ceebccf429f10d381c29e706c275aa97e3f3eb65a4fd48bfe",
+    "crates/vibe-cli/src/commands/tree/artifacts.rs": "61cf400e00facf82a690ef88d0c51c3b1946d8af3997c464dba61d568db64c5f"
+  },
+  "full_a4_acceptance": false,
+  "report_sha256": "a5d933b02b1a66e0f503d9e1384558641889b89fdd0cac51c23e346041ca9052"
+}

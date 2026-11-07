@@ -1,0 +1,26 @@
+{
+  "review": "A4 tree independent read-only pre-freeze",
+  "date": "2026-11-07",
+  "verdict": "no concrete blocking code defect found; acceptance pending freeze and receipts",
+  "full_a4_acceptance": false,
+  "executed_tests": false,
+  "active_writer_drift_possible": true,
+  "blockers": [],
+  "pending": ["refresh hashes after freeze", "post-repair actual-repository tree_json/schema receipt", "new emitter-byte unit and public helper doctest receipt"],
+  "observed_pass_counts": {"final_cli_declared_tree":4,"final_cli_host_sources":5,"final_legacy_fixture":1,"final_nested_attribution":15,"final_build_units":19,"provenance_green":15},
+  "sha256": {
+    "crates/vibe-cli/src/commands/tree/mod.rs":"b29aa6406502c089687d8cc2e270aa213540bb449073726cca7d5ac56acaf609",
+    "crates/vibe-cli/src/commands/tree/build.rs":"9d51cc554d640b37b629db4b46e4a3e3d14f2c0401df317dae849643bdd74099",
+    "crates/vibe-cli/src/commands/tree/build/in_place.rs":"a7dcb5d0399fc2dfda8c59cb4b9d39e73b93c5c2364c386a7dbb1d720ee75259",
+    "crates/vibe-cli/src/commands/tree/build/in_place/read.rs":"2d286dcfb44cb5a64615a9395adbdb3ab53fb95d49540a0cc85aa749309de560",
+    "crates/vibe-cli/src/commands/tree/build/tests.rs":"67cef05f2b281f430fb33d2dafb17a1042a3a6e2caf9d3176f18e5914ce3677f",
+    "crates/vibe-cli/src/commands/tree/artifacts/markers.rs":"a64f7bfb25d639765af28439bfd5b76fb76fdb59c9d4a411c6964fec59fb9769",
+    "crates/vibe-spec/src/compiler/emit/framing.rs":"f042ff5e75059ea644f9b3c4a116d2d40925067d372967a1c45851c7be6b2322",
+    "crates/vibe-spec/src/lib.rs":"506e52311ae14c0cd215957e5914bf2c1fbe575a14200b4c2b500adc6e1428a5",
+    "crates/vibe-cli/tests/cli_declared_tree.rs":"c7c0760d9b5c2086441956fa54bd4f3062557c89d2d04c8c7b0560be7125efd2",
+    "crates/vibe-cli/tests/cli_host_sources.rs":"86cd3ca14232a5a1201d70a39d1cc38fde8a9bbcd48044f12eb199f8418038ca",
+    "crates/vibe-cli/tests/tree_fixture.rs":"eb17b6d8862a8ca42845cd863fa8382a82509efea4c60636f0e828c159385250",
+    "crates/vibe-cli/tests/tree_nested_attribution.rs":"2f8b5f0bcf8d7f5697594b850fe2a7395a76ab36fad0778a6bd8bfa1332bbb1c",
+    "crates/vibe-cli/tests/tree_json.rs":"ef1ad9ee65516959e2d82e51a11549998d8910248518bb372756c1b18b8ec1eb"
+  }
+}

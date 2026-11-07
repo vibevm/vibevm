@@ -2396,3 +2396,30 @@ Root review caught literal layout prefix duplication and pre-selector Doc enroll
 ### A4 level0 projection accepted
 
 Commit `a3bd65d92971144b9c5cd20338c3455c1131e7ea`:16reviewed product/spec/map files, committed hashes verified. Doc647+40/server43/lower6/docs87+19/CLI5/static pass. Actual isolated build-site host1version/2native pages/3formats/33files/0refused; root verified6output hashes. Flow proof is renderer tests, not host-feed inclusion. Map9172/5569/4718/44 retains9170prior occurrences. FMT040 and acceptance records name limits and no new schemas. Independent final source14/evidence30 seal match. No worktree/push/frontend changes. FullA4partial; next tree selected-native adapter. Tree preparation report12source hashes verified, no runtime claim yet.
+
+
+### A4 selected tree adapter begins
+
+Level0 accepteda3bd65d92, records8aa45cf87. Root planned SOURCE-TREE-READ r1/FMT041 from exact12-source packet notes. Next worker reads only committed selected boot files, preserving load attribution and ungrouped host semantics; no whole-host census or graph regeneration. Existing lower source/binding/projection owners are reused. FullA4 and old113counts unchanged; no temporary worktree.
+
+
+### A4 tree: actual CLI refusal reproduced
+
+Root inspected tree RED receipt: local install succeeds, then the existing explicit-policy guard refuses selected native host input;1test executes/fails at first grouped case (ungrouped loop not reached in RED). Fixture now explicitly uses offline install. First implementation reaches the reference but exposed a test expectation mistake: existing carrier is #use, not use; wire schema must stay unchanged. Approved updating only tree expectation in the existing ordinary-host control to success with zero managed directives, keeping other consumer expectations intact. Next show adapter source notes preserved (10hashes verified); no show implementation yet.
+
+
+### A4 tree compatibility gates exposed generated framing mismatch
+
+Actual tree CLI matrix4/4 and host-source controls5/5 pass; tree build19 and nested attribution15 pass. Legacy tree_fixture originally created no selected package slots; worker completed matching legacy fixture metadata/files while preserving exact six-lane assertions. Its previous shared-admission mismatch is kept distinct from new adapter behavior.
+
+The real-repository tree_json gate then failed because decompile_static retained the emitter-owned `; zone elided: emitted member-by-member in this lane (once-each, B-006)` annotation inside source_path, which declarant validation correctly rejects. Root inspected compiler/emit/framing.rs and tree/artifacts/markers.rs; authorized a narrow shared framing-owner exact-annotation reader, consumed by both existing legacy/generated marker readers. No arbitrary semicolon trimming, declarant weakening, graph attribution change or emitted-byte/recipe rewrite. Actual emitter-produced framing and unchanged ordinary path controls are required before retrying real tree_json.
+
+
+### A4 tree real-repo gate restored; unbound-empty bypass corrected
+
+Worker reports expanded actual CLI controls green including real-repo tree_json after exact framing repair, with fixture/nested/host/declared matrices intact. Root then inspected installed ExplicitEmpty+no-format branch: it skipped binding preparation. Worker confirmed this was retained only for an old unit expectation and could conceal stale recorded metadata. Removed that exception: every consumed declared installed policy, including Empty, needs independent format/binding. Original host Empty remains zero. Added unbound-wrapper controls and actual declaration-to-empty stale-manifest negative; final gates must cover the corrected source. This is a candidate bug fixed before acceptance, not a justified compatibility exemption.
+
+
+### A4 selected tree source adapter accepted
+
+Commit `954ffc3c197edc02e7ec2f0b33aed8878ba9fabb`:13reviewed product/spec/map paths, committed hashes verified. Units19/CLI4/host5/fixture1/realrepo1/nested15/artifacts15/golden1/helper-doc1 and static gates pass. Source11/evidence50 seals matched independent final review. Map9174/5572/4721/44 retains9172prior occurrences. FMT041 records exact elision decode with unchanged emitter bytes and independent-format requirement for all declared installed policies including Empty. FullA4partial; no worktree/public push. Next show-effective adapter, source-only notes10hashes previously verified.

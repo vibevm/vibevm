@@ -320,3 +320,5 @@ A4 generated documentation repair accepted `8e61e9c75`; all62prior library failu
 A4 Doc census/build/server/self/borrowed accepted `3cafec8b7`. Actual Doc CLI uses cache/store. Non-Doc/host level0 projection and other A4 consumers remain; counts unchanged.
 
 A4 level0 native projection accepted `a3bd65d92`. Actual host CLI and package renderer verified; tree/show/progress and remaining adapters still open. Old113counts unchanged.
+
+A4 selected tree adapter accepted `954ffc3c1`; unchanged schema and actual repository gate verified. Show/progress and remaining consumers open; old113counts unchanged.

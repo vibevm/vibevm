@@ -659,3 +659,12 @@ Complete native source projection for non-Doc packages and host projects without
 FMT-040 planned Rust seam: native membership presence query reuses existing selector/inventory and grants no parser vocabulary. Declaration-presence hints reuse already decoded Card metadata; no new TOML/source descriptor decoder. Known layout prefix comes from the existing owner. Public wire/manifest formats remain unchanged.
 
 FMT-040 accepted `a3bd65d92971144b9c5cd20338c3455c1131e7ea`. Existing Card presence hint, additive native membership query and retained native projection/copy use existing owners; public Built/Page and authored/wire formats unchanged. Declared native files outside SPEC_ROOT participate, actual vocabulary/kind preserved. Materialized original-root level0 input without independent context still refuses. CLI host feed not expanded to ordinary flow packages.
+
+
+## FMT-041 — Selected native tree directive reads (accepted slice)
+
+Join tree's existing selected boot-file paths to captured source interpretation and independently configured installed bindings. Preserve tree JSON/carrier schema, committed load attribution and original path/projection-line convention. Intended additive internal bound API; old build_tree compatibility remains qualified. No new manifest/install-g/URI/CLI option. Final public errors/API compatibility pending acceptance.
+
+FMT-041 additional decoder repair: existing emitted once-each elision annotation must be decoded by the framing owner rather than treated as source path. Preserve emitted bytes/compiler recipe and ordinary semicolon path data; no artifact epoch/schema change is intended. Existing selected-slot admission requires real legacy manifests for legacy fixture setup; exact tree JSON assertions remain.
+
+FMT-041 accepted `954ffc3c197edc02e7ec2f0b33aed8878ba9fabb`: additive internal bound tree read and public static_marker_source_path framing reader. Existing tree schema/carriers/load attribution and emitter bytes/recipe retained. Unbound declared installed Empty/nonempty now require independent format; original host Empty remains zero. No authored/wire format changes.

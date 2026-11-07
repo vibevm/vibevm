@@ -1,0 +1,25 @@
+{
+  "commit": "954ffc3c197edc02e7ec2f0b33aed8878ba9fabb",
+  "files": 13,
+  "source_seal": 11,
+  "evidence_seal": 50,
+  "tests": {
+    "tree_units": 19,
+    "cli": 4,
+    "host": 5,
+    "fixture": 1,
+    "realrepo_tree_json": 1,
+    "nested": 15,
+    "artifacts": 15,
+    "emitter_golden": 1,
+    "new_helper_doctest": 1
+  },
+  "specmap": {
+    "units": 9174,
+    "code_items": 5572,
+    "edges": 4721,
+    "warnings": 44,
+    "prior_occurrences_retained": 9172
+  },
+  "full_a4_accepted": false
+}
