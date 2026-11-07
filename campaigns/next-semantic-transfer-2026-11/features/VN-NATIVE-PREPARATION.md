@@ -10,7 +10,7 @@ Direct HTTPS tag/object preparation runs in an operation-owned bare context with
 
 TokenEnv retains x-access-token Basic semantics. Credentials leave the URL before argv/config and exist only in exact-origin child auth environment; held configuration and diagnostics do not expose them. Declared helper/SSH auth refuses before a silently anonymous attempt. Native file-at-ref uses owned object preparation rather than optional raw optimization; HTTP-only behavior remains unchanged.
 
-Warm effective transport meaning is not guessed from recorded origin or a few assumed global-config paths. Unsupported ambient/include meaning refuses before contact. Owned-origin/file metadata is bounded; N1 publication refuses before the existing bring/prepared owner can change the filesystem. Unbound behavior remains.
+Warm effective transport meaning is not guessed from recorded origin or a few assumed global-config paths. Unsupported ambient/include meaning refuses before contact. Owned-origin/file metadata is bounded; N1 publication refuses before the existing bring/prepared owner can change the filesystem. Unbound behavior remains. These immediate bring/prepared guards do not mean the enclosing install command writes nothing: current apply can publish guarded manifest metadata before deferred materialisation. N2 must place capability/transform preflight before that publication and establish actual deferred-slot recovery; metadata FileGuard is not a slot-byte rollback mechanism.
 
 ## Evidence and corrections
 

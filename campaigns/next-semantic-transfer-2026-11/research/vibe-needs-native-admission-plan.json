@@ -1,0 +1,512 @@
+{
+  "status": "read_only_design_with_temp_experiments_not_implementation",
+  "report": "/tmp/vibe-needs-native-admission-plan.md",
+  "accepted_http_baseline": "57d30367f (root supplied)",
+  "production_edits": false,
+  "repository_git_mutation": false,
+  "public_network": false,
+  "cargo_or_conform": false,
+  "git_version": "git version 2.53.0",
+  "source_hashes": [
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/http_admission.rs",
+      "sha256": "593484fa4038e8800def70b60cc584252eaa6bc2c24fc0e2b0b60bf6880ead95",
+      "bytes": 12590
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/remap/endpoint.rs",
+      "sha256": "e59c8602878abf8b382caae3a3910a7e29c631442b3c1ec0b9d43a2ad7a7ae65",
+      "bytes": 6031
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/construction.rs",
+      "sha256": "5cdd6c68c38f7b242e979a164254396a31cf7cc38e6a53c25a1be6de9272f60f",
+      "bytes": 9705
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/mod.rs",
+      "sha256": "a2f124ed8da7093a9190dcb62a33968fd772045f4c258c57ff96542c4a9aa2d1",
+      "bytes": 17722
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell.rs",
+      "sha256": "d2cd02a29f8ce128a83ba6de27b1cc43157a2a3fd8eb9bfd1629f55b57fdbc8a",
+      "bytes": 23058
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/env.rs",
+      "sha256": "7074139824e9e375cbb6730cddf3cfee4a0fcb7c9748764a82f7173bfbbcb7da",
+      "bytes": 4951
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/reported.rs",
+      "sha256": "ab34f1b395a612b2a6a6f1107b7c9ffabc70cbb4b0bc7f8cb42a532e8ec87739",
+      "bytes": 12112
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/prepared.rs",
+      "sha256": "cb2f9fd1946ce94bb18b6a28a65fef227b755f95ce5033806363541570779950",
+      "bytes": 16915
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/checkout.rs",
+      "sha256": "ac40955bb605ccfc9b0e0f8b372740abbbf787c09d1f1613d5dccf2fd90951e1",
+      "bytes": 5805
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/fetch/bring.rs",
+      "sha256": "3ceb29f99339c4438fd50a1ddac9b1399b8f14cc2b6197e32d148a726a78398c",
+      "bytes": 8543
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
+      "sha256": "4d8c09b12aa40f42479aa087fa16c498b0275c206ed6f2c6198e5808d07ba4ee",
+      "bytes": 16172
+    },
+    {
+      "path": "/tmp/vibe-http-handoff-v3.md",
+      "sha256": "1154a4283778268f13177405e9478ffc711a0525f335dd81db652e15d500cdb5",
+      "bytes": 3130
+    },
+    {
+      "path": "/tmp/vibe-http-handoff-v3.json",
+      "sha256": "2519c2511302e698330b1fc1a0ecaefc8e90ba2824bcd4ab182e256b77b9148f",
+      "bytes": 10032
+    }
+  ],
+  "evidence_artifacts": [
+    {
+      "path": "/tmp/vibe-native-admission-probe.py",
+      "sha256": "b37b49627c325f1fcec34abe644a733117a08c8857669164e138e57d7d897269",
+      "bytes": 5723
+    },
+    {
+      "path": "/tmp/vibe-native-admission-probe.stdout",
+      "sha256": "32f33ac1f01ed47d0e69e1aa733f350dd36cb6d649e336ce09f56237adfec5c4",
+      "bytes": 500
+    },
+    {
+      "path": "/tmp/vibe-native-admission-probe-v1.py",
+      "sha256": "c5923dbfbd371a2433c327db871fc00fe2fcc2494b51f25e1e81a00be0732d04",
+      "bytes": 5695
+    },
+    {
+      "path": "/tmp/vibe-native-admission-tls-probe.py",
+      "sha256": "d6f7c04b99708a524a40afc7c338685be44d6dc23bda26f311da0cbc86e77327",
+      "bytes": 6634
+    },
+    {
+      "path": "/tmp/vibe-native-admission-tls-probe.stdout",
+      "sha256": "c989dafb898ecaa023cc057900f544837b5c1ccaa0efa231b9381d7abe4a04fa",
+      "bytes": 544
+    },
+    {
+      "path": "/tmp/vibe-native-admission-tls-probe-v1.py",
+      "sha256": "98528011328be3db00b81525c8e5fcdac514969b00e9559bf2b024e9a14e5eef",
+      "bytes": 6606
+    },
+    {
+      "path": "/tmp/vibe-native-ssh-route-probe.py",
+      "sha256": "51435a0890edb4e761b29bc957d97d60b619493e3355dc79c0f021d2a25f6fab",
+      "bytes": 2716
+    },
+    {
+      "path": "/tmp/vibe-native-ssh-route-probe.stdout",
+      "sha256": "9296c7dd5b89bc113afa1281a34a50afb77a0de06a0444b6ca7f9a2d76c9886d",
+      "bytes": 866
+    },
+    {
+      "path": "/tmp/vibe-native-ssh-route-probe-v1.py",
+      "sha256": "31dbed8c5b35dc9dba3176041d9f719a69a01ff0f9662b4a796dbfa8a45e6f18",
+      "bytes": 2688
+    },
+    {
+      "path": "/tmp/vibe-native-admission-probe-result.json",
+      "sha256": "21b58eb3081c535eb1bad870b368d62b793fa218f91752fa9e6ed706a7449fae",
+      "bytes": 5264
+    },
+    {
+      "path": "/tmp/vibe-native-admission-probe-result-v1.json",
+      "sha256": "9b9bee1573fc789d765939efa310fffe7dc764efa732393d85ed7ccdc0cfa18f",
+      "bytes": 4350
+    },
+    {
+      "path": "/tmp/vibe-native-admission-tls-probe-result.json",
+      "sha256": "99d8d3972f2b60d5ba0e572ecdf66fb36c9b932811acd41e9d6390fe7d6a9f29",
+      "bytes": 6008
+    },
+    {
+      "path": "/tmp/vibe-native-admission-tls-probe-result-v1.json",
+      "sha256": "4e1b2cc4b40a2f5c195d894997f923dbac21a7e895b4d30263a33e9559cbd448",
+      "bytes": 5074
+    },
+    {
+      "path": "/tmp/vibe-native-ssh-route-probe-result.json",
+      "sha256": "b40aa8ff271920403bea4b20964bb1a02ae8121481e3f8424369ba6d794cf512",
+      "bytes": 970
+    },
+    {
+      "path": "/tmp/vibe-native-ssh-route-probe-result-v1.json",
+      "sha256": "54006ab744b18bc413135b6c4a4024b6e851f4f0df61c8402b2442e55cb4855f",
+      "bytes": 930
+    }
+  ],
+  "experiment_script_exits": {
+    "http": 0,
+    "https": 0,
+    "ssh_destination": 0
+  },
+  "experiments": {
+    "http": {
+      "temp_root": "/tmp/vibe-native-proof-sgda5qcc",
+      "git_version": "git version 2.53.0",
+      "rows": [
+        {
+          "name": "legacy-global-include-rewrite",
+          "exit": 0,
+          "A_requests": 0,
+          "B_requests": 2,
+          "A_paths": [],
+          "B_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "stdout": "8bed4ac7db24e7ca749ef46c46c341001cee2835\tHEAD\n8bed4ac7db24e7ca749ef46c46c341001cee2835\trefs/heads/master\n",
+          "stdout_sha256": "679cda11bef1d62f0d8c55de42323a62c5049fe51f03f8fb2e55751e2c868712",
+          "stderr": ""
+        },
+        {
+          "name": "isolated-global-rewrite",
+          "exit": 0,
+          "A_requests": 2,
+          "B_requests": 0,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "B_paths": [],
+          "stdout": "8bed4ac7db24e7ca749ef46c46c341001cee2835\tHEAD\n8bed4ac7db24e7ca749ef46c46c341001cee2835\trefs/heads/master\n",
+          "stdout_sha256": "679cda11bef1d62f0d8c55de42323a62c5049fe51f03f8fb2e55751e2c868712",
+          "stderr": ""
+        },
+        {
+          "name": "legacy-warm-local-include-rewrite",
+          "exit": 0,
+          "A_requests": 0,
+          "B_requests": 2,
+          "A_paths": [],
+          "B_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "stdout": "8bed4ac7db24e7ca749ef46c46c341001cee2835\tHEAD\n8bed4ac7db24e7ca749ef46c46c341001cee2835\trefs/heads/master\n",
+          "stdout_sha256": "679cda11bef1d62f0d8c55de42323a62c5049fe51f03f8fb2e55751e2c868712",
+          "stderr": ""
+        },
+        {
+          "name": "isolated-warm-captured-explicit-url",
+          "exit": 0,
+          "A_requests": 2,
+          "B_requests": 0,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "B_paths": [],
+          "stdout": "8bed4ac7db24e7ca749ef46c46c341001cee2835\tHEAD\n8bed4ac7db24e7ca749ef46c46c341001cee2835\trefs/heads/master\n",
+          "stdout_sha256": "679cda11bef1d62f0d8c55de42323a62c5049fe51f03f8fb2e55751e2c868712",
+          "stderr": ""
+        },
+        {
+          "name": "legacy-http-redirect",
+          "exit": 0,
+          "A_requests": 1,
+          "B_requests": 2,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack"
+          ],
+          "B_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "stdout": "8bed4ac7db24e7ca749ef46c46c341001cee2835\tHEAD\n8bed4ac7db24e7ca749ef46c46c341001cee2835\trefs/heads/master\n",
+          "stdout_sha256": "679cda11bef1d62f0d8c55de42323a62c5049fe51f03f8fb2e55751e2c868712",
+          "stderr": "warning: redirecting to http://127.0.0.2:46141/repo.git/"
+        },
+        {
+          "name": "constrained-http-no-hidden-redirect",
+          "exit": 128,
+          "A_requests": 1,
+          "B_requests": 0,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack"
+          ],
+          "B_paths": [],
+          "stdout": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr": "fatal: unable to access 'http://127.0.0.1:35361/repo.git/': The requested URL returned error: 302"
+        },
+        {
+          "name": "constrained-http-positive",
+          "exit": 0,
+          "A_requests": 2,
+          "B_requests": 0,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "B_paths": [],
+          "stdout": "8bed4ac7db24e7ca749ef46c46c341001cee2835\tHEAD\n8bed4ac7db24e7ca749ef46c46c341001cee2835\trefs/heads/master\n",
+          "stdout_sha256": "679cda11bef1d62f0d8c55de42323a62c5049fe51f03f8fb2e55751e2c868712",
+          "stderr": ""
+        },
+        {
+          "name": "legacy-recursive-submodule",
+          "exit": 0,
+          "A_requests": 0,
+          "B_requests": 5,
+          "A_paths": [],
+          "B_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD",
+            "/repo.git/objects/8b/ed4ac7db24e7ca749ef46c46c341001cee2835",
+            "/repo.git/objects/c5/27be2b5730536f644a8d2bd004b4ef4505b3bd",
+            "/repo.git/objects/ee/8c1ee49b4799bbd170233915a897c19e3b55e1"
+          ],
+          "stdout": "Submodule path 'child': checked out '8bed4ac7db24e7ca749ef46c46c341001cee2835'\n",
+          "stdout_sha256": "fd4b6793fabfb1b169aafb0d6d21ebc802092c023933646ec3b8dcc5b07787b6",
+          "stderr": "Cloning into '/tmp/vibe-native-proof-sgda5qcc/legacy-parent'...\ndone.\nSubmodule 'child' (http://127.0.0.2:46141/repo.git) registered for path 'child'\nCloning into '/tmp/vibe-native-proof-sgda5qcc/legacy-parent/child'..."
+        },
+        {
+          "name": "isolated-parent-no-recursion",
+          "exit": 0,
+          "A_requests": 0,
+          "B_requests": 0,
+          "A_paths": [],
+          "B_paths": [],
+          "stdout": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr": "Cloning into bare repository '/tmp/vibe-native-proof-sgda5qcc/bounded-parent.git'...\ndone."
+        },
+        {
+          "name": "explicit-submodule-admission",
+          "result": "denied numeric host 127.0.0.2 before child clone",
+          "B_requests": 0,
+          "qualification": "Python proof driver, not implemented product admission"
+        }
+      ],
+      "all_assertions_passed": true,
+      "scope": "numeric loopback HTTP dumb Git/local fixture only; HTTPS TLS and SSH not established"
+    },
+    "https": {
+      "temp_root": "/tmp/vibe-native-proof-xwxe3cf1",
+      "git_version": "git version 2.53.0",
+      "rows": [
+        {
+          "name": "legacy-global-include-rewrite",
+          "exit": 0,
+          "A_requests": 0,
+          "B_requests": 2,
+          "A_paths": [],
+          "B_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "stdout": "d3fc5d5d7aff189201c3c0afd4e2694f9207ee71\tHEAD\nd3fc5d5d7aff189201c3c0afd4e2694f9207ee71\trefs/heads/master\n",
+          "stdout_sha256": "d4e0483d717aedc9ef40bd1a0a16afb8ab12e318edf1cca1c27d886deb8cadf3",
+          "stderr": ""
+        },
+        {
+          "name": "isolated-global-rewrite",
+          "exit": 0,
+          "A_requests": 2,
+          "B_requests": 0,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "B_paths": [],
+          "stdout": "d3fc5d5d7aff189201c3c0afd4e2694f9207ee71\tHEAD\nd3fc5d5d7aff189201c3c0afd4e2694f9207ee71\trefs/heads/master\n",
+          "stdout_sha256": "d4e0483d717aedc9ef40bd1a0a16afb8ab12e318edf1cca1c27d886deb8cadf3",
+          "stderr": ""
+        },
+        {
+          "name": "legacy-warm-local-include-rewrite",
+          "exit": 0,
+          "A_requests": 0,
+          "B_requests": 2,
+          "A_paths": [],
+          "B_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "stdout": "d3fc5d5d7aff189201c3c0afd4e2694f9207ee71\tHEAD\nd3fc5d5d7aff189201c3c0afd4e2694f9207ee71\trefs/heads/master\n",
+          "stdout_sha256": "d4e0483d717aedc9ef40bd1a0a16afb8ab12e318edf1cca1c27d886deb8cadf3",
+          "stderr": ""
+        },
+        {
+          "name": "isolated-warm-captured-explicit-url",
+          "exit": 0,
+          "A_requests": 2,
+          "B_requests": 0,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "B_paths": [],
+          "stdout": "d3fc5d5d7aff189201c3c0afd4e2694f9207ee71\tHEAD\nd3fc5d5d7aff189201c3c0afd4e2694f9207ee71\trefs/heads/master\n",
+          "stdout_sha256": "d4e0483d717aedc9ef40bd1a0a16afb8ab12e318edf1cca1c27d886deb8cadf3",
+          "stderr": ""
+        },
+        {
+          "name": "legacy-http-redirect",
+          "exit": 0,
+          "A_requests": 1,
+          "B_requests": 2,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack"
+          ],
+          "B_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "stdout": "d3fc5d5d7aff189201c3c0afd4e2694f9207ee71\tHEAD\nd3fc5d5d7aff189201c3c0afd4e2694f9207ee71\trefs/heads/master\n",
+          "stdout_sha256": "d4e0483d717aedc9ef40bd1a0a16afb8ab12e318edf1cca1c27d886deb8cadf3",
+          "stderr": "warning: redirecting to https://127.0.0.2:39887/repo.git/"
+        },
+        {
+          "name": "constrained-http-no-hidden-redirect",
+          "exit": 128,
+          "A_requests": 1,
+          "B_requests": 0,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack"
+          ],
+          "B_paths": [],
+          "stdout": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr": "fatal: unable to access 'https://127.0.0.1:44977/repo.git/': GnuTLS recv error (-110): The TLS connection was non-properly terminated."
+        },
+        {
+          "name": "constrained-https-positive",
+          "exit": 0,
+          "A_requests": 2,
+          "B_requests": 0,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD"
+          ],
+          "B_paths": [],
+          "stdout": "d3fc5d5d7aff189201c3c0afd4e2694f9207ee71\tHEAD\nd3fc5d5d7aff189201c3c0afd4e2694f9207ee71\trefs/heads/master\n",
+          "stdout_sha256": "d4e0483d717aedc9ef40bd1a0a16afb8ab12e318edf1cca1c27d886deb8cadf3",
+          "stderr": ""
+        },
+        {
+          "name": "constrained-https-bare-clone",
+          "exit": 0,
+          "A_requests": 5,
+          "B_requests": 0,
+          "A_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD",
+            "/repo.git/objects/d3/fc5d5d7aff189201c3c0afd4e2694f9207ee71",
+            "/repo.git/objects/c5/27be2b5730536f644a8d2bd004b4ef4505b3bd",
+            "/repo.git/objects/ee/8c1ee49b4799bbd170233915a897c19e3b55e1"
+          ],
+          "B_paths": [],
+          "stdout": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr": "Cloning into bare repository '/tmp/vibe-native-proof-xwxe3cf1/https-clone.git'..."
+        },
+        {
+          "name": "legacy-recursive-submodule",
+          "exit": 0,
+          "A_requests": 0,
+          "B_requests": 5,
+          "A_paths": [],
+          "B_paths": [
+            "/repo.git/info/refs?service=git-upload-pack",
+            "/repo.git/HEAD",
+            "/repo.git/objects/d3/fc5d5d7aff189201c3c0afd4e2694f9207ee71",
+            "/repo.git/objects/c5/27be2b5730536f644a8d2bd004b4ef4505b3bd",
+            "/repo.git/objects/ee/8c1ee49b4799bbd170233915a897c19e3b55e1"
+          ],
+          "stdout": "Submodule path 'child': checked out 'd3fc5d5d7aff189201c3c0afd4e2694f9207ee71'\n",
+          "stdout_sha256": "083cfa94f7a99bef98301addc15b281d59a3c88b8165440100af44243a917630",
+          "stderr": "Cloning into '/tmp/vibe-native-proof-xwxe3cf1/legacy-parent'...\ndone.\nSubmodule 'child' (https://127.0.0.2:39887/repo.git) registered for path 'child'\nCloning into '/tmp/vibe-native-proof-xwxe3cf1/legacy-parent/child'..."
+        },
+        {
+          "name": "isolated-parent-no-recursion",
+          "exit": 0,
+          "A_requests": 0,
+          "B_requests": 0,
+          "A_paths": [],
+          "B_paths": [],
+          "stdout": "",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr": "Cloning into bare repository '/tmp/vibe-native-proof-xwxe3cf1/bounded-parent.git'...\ndone."
+        },
+        {
+          "name": "explicit-submodule-admission",
+          "result": "denied numeric host 127.0.0.2 before child clone",
+          "B_requests": 0,
+          "qualification": "Python proof driver, not implemented product admission"
+        }
+      ],
+      "all_assertions_passed": true,
+      "scope": "numeric loopback HTTPS dumb Git with explicit fixture CA and normal certificate verification; SSH not established"
+    },
+    "ssh_destination_only": {
+      "temp_root": "/tmp/vibe-native-ssh-proof-tnubnu9k",
+      "rows": [
+        {
+          "name": "legacy-ssh-hostname-rewrite",
+          "exit": 128,
+          "A_connections": 0,
+          "B_connections": 1,
+          "stdout": "",
+          "stderr": "Connection closed by 127.0.0.2 port 45041\r\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists."
+        },
+        {
+          "name": "controlled-ssh-no-ambient-config",
+          "exit": 128,
+          "A_connections": 1,
+          "B_connections": 0,
+          "stdout": "",
+          "stderr": "Connection closed by 127.0.0.1 port 45041\r\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists."
+        }
+      ],
+      "qualification": "TCP SSH banner sinks only; both Git calls fail after contact because no SSH server/authentication exists. Proves actual destination routing, NOT usable SSH Git/auth/host-key verification."
+    }
+  },
+  "guarantee_qualifications": [
+    "HTTPS uses temporary fixture CA and IP SANs with TLS verification enabled",
+    "HTTPS credentials and production trust integration unproved",
+    "SSH only actual destination contact; both Git exit128 after banner sink closes, no auth success",
+    "submodule denial is Python driver proof not product implementation",
+    "all experiment servers shut down; temporary artifacts retained as evidence"
+  ],
+  "proposed_capability": "separate NativeGitAdmission/profile sharing immutable denied-host predicate; accepted HttpAdmission native refusal unchanged",
+  "minimum_next_unit": "N1 direct HTTPS object acquisition and metadata via existing prepared owner in operation-owned transport context; no public option; no legacy checkout escape",
+  "mandatory_next_units": [
+    "N2 safe local apply/recovery and transform parity",
+    "N3 authenticated SSH/host-key profile proof",
+    "N4 explicit recursive submodules and native redirect availability",
+    "full route/composition and public source policy"
+  ],
+  "unresolved_proof": [
+    "minimum Git environment/config isolation allowlist across supported versions",
+    "safe captured warm-origin metadata reads preserving effective endpoint",
+    "auth/trust secret channel for HTTPS",
+    "SSH usable auth/strict host keys",
+    "payload filters/hooks/fsmonitor/promisor lazy fetch",
+    "smart HTTP redirect protocol and relative recursive submodules"
+  ],
+  "counterexamples_proved": [
+    "global include+insteadOf redirects A to B",
+    "warm local include survives disabled global config",
+    "hidden HTTP/HTTPS redirect reaches B",
+    "recursive child contacts B without outer route gate",
+    "SSH HostName config redirects real TCP contact"
+  ]
+}

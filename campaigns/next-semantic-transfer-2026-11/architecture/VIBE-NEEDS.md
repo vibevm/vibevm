@@ -63,3 +63,7 @@ Known hosting labels now accompany project/global source reports through one pur
 ### Internal HTTP-only admission accepted — 57d30367f
 
 Initial/redirect/retry destinations are admitted before contact with typed refusal and no native fallback escape under the explicit binding. This is a constrained internal capability, not public Need3 completion: native Git is still unavailable under that binding. Next work must restore safely admitted native Git/submodules and allowed-mirror/composition behavior, not leave blanket refusal as the final solution. No-policy behavior remains unchanged.
+
+### Native N1 accepted — 46b6297a3
+
+Verified direct HTTPS object preparation/auth/metadata now works through the existing prepared owner, with isolated transport and preserved HTTP-only refusal. N2 local apply/warm metadata, N3 authenticated SSH and N4 explicit recursion/redirect/route composition remain mandatory before public exclusion. N2 inspection confirms metadata guards do not restore slot bytes and deferred placement happens before existing workspace rollback capture; this boundary must be fixed rather than assumed safe.

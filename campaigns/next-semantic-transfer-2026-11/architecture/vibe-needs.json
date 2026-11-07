@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "updated_at": "2026-11-07T12:54:08.454320+00:00",
+  "updated_at": "2026-11-07T13:58:34.260329+00:00",
   "source": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
   "historical_task_count": 222,
   "historical_prototype_count": 113,
   "priority_rule": "Among equally architecture-ready tasks, VIBE-NEEDS tasks precede other campaign tasks; dependencies remain mandatory. Need1 is P1.",
-  "first_implementation": "Source/app2df122323, project eventc600cb539, hosting reports1f0b53aa0 and internal HTTP-only admission57d30367f accepted. Next admitted native Git/submodules and route composition; no public exclusion, whole Need1/3 or no-write preview/pins/preference claim.",
+  "first_implementation": "Source/app2df122323, project eventc600cb539, hosting1f0b53aa0, HTTP-only57d30367f and native HTTPS preparation N1 46b6297a3 accepted. Next N2 safe materialisation/warm capture, N3 SSH, N4 recursion/route composition; no public exclusion or complete Need1/3.",
   "nodes": [
     {
       "id": "VN-SOURCE-FACTS",
