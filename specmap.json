@@ -15839,10 +15839,28 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/progress/grounding.rs",
       "item_kind": "fn",
-      "line": 136,
+      "line": 150,
       "symbol": "vibe_cli::commands::progress::grounding::ground",
-      "end_line": 259,
-      "fingerprint": "tok1:b54a954ac47e8cd6de40d11f1aec913246a59fa7280a2729c481c19a40a0b2c2"
+      "end_line": 254,
+      "fingerprint": "tok1:fcdc3852f69aec8100bc5feb6aaf6dc70db1894663a9fb91b502fbbb2b826225"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/progress/grounding/sources.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::progress::grounding::sources",
+      "end_line": 5,
+      "fingerprint": "tok1:e945f92e9e4d35bea6bb5867e198508c59208f7004ec5a9f067bc19283c7c767"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/progress/grounding/sources/installed.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::progress::grounding::sources::installed",
+      "end_line": 5,
+      "fingerprint": "tok1:e945f92e9e4d35bea6bb5867e198508c59208f7004ec5a9f067bc19283c7c767"
     },
     {
       "crate_name": "vibe-cli",
@@ -15875,9 +15893,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/progress_evidence.rs",
       "item_kind": "fn",
-      "line": 145,
+      "line": 177,
       "symbol": "vibe_cli::commands::progress_evidence::SpecmapEvidence::evidence_for",
-      "end_line": 162,
+      "end_line": 194,
       "fingerprint": "tok1:935c562fadeedeaaecaa47cf451d1eadd49d78b3c05a59042bee9da80289795b"
     },
     {
@@ -56889,10 +56907,28 @@
     {
       "file": "crates/vibe-cli/src/commands/progress/grounding.rs",
       "from_symbol": "vibe_cli::commands::progress::grounding::ground",
-      "line": 149,
+      "line": 163,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#tool",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/progress/grounding/sources.rs",
+      "from_symbol": "vibe_cli::commands::progress::grounding::sources",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-PROGRESS-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/progress/grounding/sources/installed.rs",
+      "from_symbol": "vibe_cli::commands::progress::grounding::sources::installed",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-PROGRESS-READ",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-cli/src/commands/progress/rescan.rs",
@@ -56921,7 +56957,7 @@
     {
       "file": "crates/vibe-cli/src/commands/progress_evidence.rs",
       "from_symbol": "vibe_cli::commands::progress_evidence::SpecmapEvidence::evidence_for",
-      "line": 152,
+      "line": 184,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-047#evidence",
       "verb": "implements"
@@ -114405,6 +114441,26 @@
       "heading": "Show effective preserves its existing display universe: root own boot, generated boot artifacts, optional WAL and explicitly enumerated files_written. It does not traverse INDEX references or scan all sources. Own declared boot candidates use accepted native scan enrollment so arbitrary suffixes are not silently omitted; generated STATIC tapes and INDEX metadata retain their separate verbatim path. Named original inputs use held policy and bytes; named installed payloads use independent lock identity/hash and trusted format through the existing output map. Establish actual path ownership rather than assuming an origin label makes every written destination a package source. Supported native projection uses declared media, never suffix fallback. Ordinary UTF8 explicitly named by this display operation may remain literal; nonUTF8 receives an honest read/refusal rather than lossy conversion. Literal data is not parsed as managed directives or granted native-address membership by a display provenance header. Preserve existing report fields/header grammar, ordering, qualified legacy/empty and missing-file diagnostics. Retain relevant observations before emitting the assembled report, without writes, lifecycle lease, new URI/schema or global source world. @status:spec/done",
       "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-SHOW-READ-LAW"
+    },
+    {
+      "anchor": "SOURCE-PROGRESS-READ",
+      "content_hash": "sha256:6f41851e1a8d59e9e407077bd4a223938b837c748b240b2aeaf63970d8b32aed",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Captured progress corpus and derived outputs",
+      "line": 90,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-PROGRESS-READ",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-PROGRESS-READ-LAW",
+      "content_hash": "sha256:8c091ee90b090bf5affb4000b5a0cfd57d45667985ef13b77848353547d0ffd0",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Progress observes its existing include/exclude corpus, not every declared source. Include strings remain glob membership rules, not new existence promises; a selected native exact File declaration promises availability, while an ordinary declaration or directory default alone does not promise every potential filename. Loss or unavailability of an already captured selected input still refuses. Classify selected inputs through actual owner policy before pair checks or cache reuse; ordinary data cannot regain facts from a prior cache entry. Original inputs use held source/media observations, installed inputs use independently selected lock identity/hash/format and the existing binding owner. Do not promote arbitrary nested manifests inside a declared outer scope into authority. Native projection and parsing retain original logical identity, status/void and the existing XML projection-line convention. The projection content hash remains the cache identity and is distinct from original-byte witnesses. Weave consumes the same captured projection as parsing. Recheck relevant selection/policy/bytes/binding before reporting and before each actual derived-output boundary, including cache/state, mirror, resume, baseline and weave output; a check only in refresh_state is insufficient. Known unavailable input must not cause successful cache pruning or partial input interpretation. Preserve legacy behavior, scope/defaults and cache/state schemas without a new source world, transaction or rollback claim. Human-supplied gate verdicts and the separately governed seal reader are not implicitly changed by this adapter. @status:spec/done",
+      "line": 92,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-PROGRESS-READ-LAW"
     },
     {
       "anchor": "genre-definition",

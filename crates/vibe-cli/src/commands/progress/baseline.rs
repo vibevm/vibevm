@@ -47,7 +47,7 @@ pub fn baseline_cmd(ctx: &Context, a: &ProgressBaselineArgs) -> Result<()> {
         .unwrap_or_else(|| campaign.join("baseline.json"));
 
     let p = project(g.docs.iter(), &g.cache, &super::campaign_id(campaign));
-    let wrote = p.baseline.store(&out)?;
+    let wrote = store_projection(&g, &p, &out)?;
 
     for addr in &p.collisions {
         eprintln!(
@@ -69,6 +69,15 @@ pub fn baseline_cmd(ctx: &Context, a: &ProgressBaselineArgs) -> Result<()> {
         );
     }
     report(ctx, &p, &out, wrote)
+}
+
+pub(super) fn store_projection(
+    g: &super::Ground,
+    p: &Projection,
+    out: &std::path::Path,
+) -> Result<bool> {
+    g.recheck()?;
+    p.baseline.store(out)
 }
 
 /// What the run did, in the two registers the adapter speaks.

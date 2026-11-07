@@ -111,6 +111,9 @@ fn refresh_state_derives_phase_from_journal() {
         // no config at all, which is what "no exemptions" means.
         judging_exemption: progress_core::scope::JudgingExemption::default(),
         source_policies: Default::default(),
+        sources: None,
+        projections: Vec::new(),
+        physical_sources: BTreeMap::new(),
     };
     refresh_state(&mut g).expect("refresh_state");
 

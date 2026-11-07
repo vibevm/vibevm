@@ -34,6 +34,39 @@ pub fn observed_files(root: &Path, cfg: &ScopeConfig) -> Result<Vec<PathBuf>> {
     Ok(observed_files_reported(root, cfg)?.0)
 }
 
+/// Whether an exact root-relative path belongs to this observation scope,
+/// even when the file is absent. Includes use the enumerator's separator
+/// semantics; configured excludes retain their existing path-string semantics.
+///
+/// ```
+/// use progress_core::scope::{ScopeConfig, includes_path};
+/// use std::path::Path;
+/// let cfg = ScopeConfig { include: vec!["docs/*.payload".into()], ..Default::default() };
+/// assert!(includes_path(Path::new("/project"), Path::new("docs/absent.payload"), &cfg).unwrap());
+/// assert!(!includes_path(Path::new("/project"), Path::new("docs/nested/a.payload"), &cfg).unwrap());
+/// ```
+pub fn includes_path(root: &Path, relative: &Path, cfg: &ScopeConfig) -> Result<bool> {
+    let options = glob::MatchOptions {
+        require_literal_separator: true,
+        ..glob::MatchOptions::new()
+    };
+    let full = root.join(relative).components().collect::<PathBuf>();
+    let mut included = false;
+    for pattern in &cfg.include {
+        // glob treats a trailing separator as a directory-only request; the
+        // observed corpus contains files, including for absent-path checks.
+        let directory_only = pattern.ends_with('/') || pattern.ends_with('\\');
+        let spelling = root.join(pattern).components().collect::<PathBuf>();
+        let spelling = spelling.to_string_lossy().replace('\\', "/");
+        let compiled =
+            glob::Pattern::new(&spelling).with_context(|| format!("bad glob `{pattern}`"))?;
+        included |= !directory_only && compiled.matches_path_with(&full, options);
+    }
+    let mut paths = vec![relative.to_owned()];
+    apply_config_excludes(&mut paths, &cfg.exclude)?;
+    Ok(included && !is_excluded(relative) && !is_excluded_file(relative) && !paths.is_empty())
+}
+
 /// [`observed_files`], plus what the config `exclude` cost — for callers
 /// that report the corpus rather than only consume it (PROP-043 §4).
 ///
@@ -139,6 +172,72 @@ pub fn rel_str(rel: &Path) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn exact_scope_matches_enumeration_and_admits_absent_names() {
+        let tmp = tempfile::tempdir().unwrap();
+        let names = [
+            "a.md",
+            ".hidden.md",
+            "docs/a.md",
+            "docs/.hidden.md",
+            "docs/nested/a.md",
+            "docs/a.payload",
+            "vendor/a.md",
+            "docs/LICENSE.md",
+        ];
+        for name in names {
+            let path = tmp.path().join(name);
+            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+            std::fs::write(path, "body").unwrap();
+        }
+        for pattern in [
+            "*.md",
+            "**/*.md",
+            "docs/*.md",
+            "docs/**/*.md",
+            "./docs/*.md",
+            "docs/*",
+            "**/*",
+            "docs/.*",
+            "docs/a.md/",
+        ] {
+            for excludes in [vec![], vec!["docs/*".into()]] {
+                let cfg = ScopeConfig {
+                    include: vec![pattern.into()],
+                    exclude: excludes,
+                    ..Default::default()
+                };
+                let observed = observed_files(tmp.path(), &cfg).unwrap();
+                for name in names {
+                    assert_eq!(
+                        includes_path(tmp.path(), Path::new(name), &cfg).unwrap(),
+                        observed.contains(&PathBuf::from(name)),
+                        "{pattern}: {name}"
+                    );
+                }
+            }
+        }
+        let cfg = ScopeConfig {
+            include: vec!["docs/missing.payload".into()],
+            ..Default::default()
+        };
+        assert!(includes_path(tmp.path(), Path::new("docs/missing.payload"), &cfg).unwrap());
+        assert!(observed_files(tmp.path(), &cfg).unwrap().is_empty());
+        for cfg in [
+            ScopeConfig {
+                include: vec!["[".into()],
+                ..Default::default()
+            },
+            ScopeConfig {
+                exclude: vec!["[".into()],
+                ..Default::default()
+            },
+        ] {
+            assert!(includes_path(tmp.path(), Path::new("a.md"), &cfg).is_err());
+            assert!(observed_files(tmp.path(), &cfg).is_err());
+        }
+    }
 
     #[test]
     fn default_excludes_hold_under_explicit_includes() {

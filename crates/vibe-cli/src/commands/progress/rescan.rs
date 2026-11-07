@@ -37,6 +37,7 @@ pub fn rescan_cmd(ctx: &Context, a: &ProgressRescanArgs) -> Result<()> {
             control_rate: a.control_rate,
         },
     );
+    g.recheck()?;
     if ctx.is_json() {
         println!("{}", serde_json::to_string_pretty(&rows)?);
         return Ok(());

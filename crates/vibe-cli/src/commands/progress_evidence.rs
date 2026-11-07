@@ -26,13 +26,44 @@ static NO_EVIDENCE: progress_core::evidence::NoEvidence = progress_core::evidenc
 /// provider rather than an error.
 pub(crate) struct EvidenceSnapshot {
     specmap: Option<SpecmapEvidence>,
+    project: vibe_safefs::Project,
+    observation: Option<vibe_safefs::SourceObservation>,
 }
 
 impl EvidenceSnapshot {
     pub(crate) fn load(root: &Path) -> Result<Self> {
+        let project = vibe_safefs::Project::open(root)?;
+        let observation = project.read_source_observation(INDEX_REL_PATH)?;
+        let specmap = observation
+            .as_ref()
+            .map(|source| {
+                let index: Specmap = serde_json::from_slice(source.bytes()).with_context(|| {
+                    format!(
+                        "parsing the traceability index {}",
+                        root.join(INDEX_REL_PATH).display()
+                    )
+                })?;
+                Ok::<_, anyhow::Error>(SpecmapEvidence::from_index(&index))
+            })
+            .transpose()?;
         Ok(Self {
-            specmap: SpecmapEvidence::load(root)?,
+            specmap,
+            project,
+            observation,
         })
+    }
+
+    /// Check the same evidence observation; never replace it with a new verdict.
+    pub(crate) fn recheck(&self) -> Result<()> {
+        let now = self.project.read_source_observation(INDEX_REL_PATH)?;
+        if now.as_ref().map(|s| (s.identity(), s.bytes()))
+            != self.observation.as_ref().map(|s| (s.identity(), s.bytes()))
+        {
+            anyhow::bail!(
+                "violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-PROGRESS-READ: evidence snapshot changed; fix surface: specmap.json and derived-output invocation"
+            );
+        }
+        Ok(())
     }
 
     pub(crate) fn provider(&self) -> &dyn EvidenceProvider {
@@ -65,6 +96,7 @@ impl SpecmapEvidence {
     /// none, and that is not an error (PROP-043 §6). A *malformed* index is
     /// an error naming the file: a corrupt index must never read as an
     /// absent one.
+    #[cfg(test)]
     pub fn load(root: &Path) -> Result<Option<SpecmapEvidence>> {
         let path = root.join(INDEX_REL_PATH);
         let text = match std::fs::read_to_string(&path) {

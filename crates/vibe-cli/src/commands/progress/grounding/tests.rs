@@ -5,6 +5,160 @@ const MANIFEST: &str =
     "[package]\nname = 'guard'\ngroup = 'org.example'\nkind = 'flow'\nversion = '1.0.0'\n";
 const RAW: &str = "[[package.sources]]\nfile = 'source.xml'\nmedia = 'application/xml'\ninterpretation = 'xml-data'\nrole = 'resource'\nloading = 'explicit'\n";
 
+#[test]
+fn declared_doc_vocabulary_requires_the_actual_doc_package() {
+    for kind in ["doc", "flow"] {
+        let tmp = tempfile::tempdir().unwrap();
+        let documents = if kind == "doc" {
+            "[[documents]]\npackage='org.example/subject'\nversion='^1.0'\n"
+        } else {
+            ""
+        };
+        fs::write(tmp.path().join("vibe.toml"), format!("[package]\nname='manual'\ngroup='org.example'\nkind='{kind}'\nversion='1.0.0'\ntitle='Manual'\nabstract='Documents source reading for maintainers; assumes basic package knowledge and excludes installation.'\n[[package.sources]]\nfile='manual.payload'\nmedia='application/xml'\ninterpretation='vibe-doc'\nrole='documentation'\nloading='explicit'\n{documents}")).unwrap();
+        vibe_core::manifest::Manifest::read(tmp.path().join("vibe.toml"))
+            .expect("complete typed fixture manifest");
+        fs::write(
+            tmp.path().join("progress.toml"),
+            "include=['manual.payload']\n",
+        )
+        .unwrap();
+        fs::write(
+            tmp.path().join("manual.payload"),
+            "<spec xmlns=\"https://vibevm.org/spec/1\"><example id=\"e\" fixture=\"none\"><run>sample</run><expect></expect></example></spec>",
+        )
+        .unwrap();
+        let result = ground(&ProgressCommonArgs {
+            path: tmp.path().to_owned(),
+            campaign: None,
+            no_cache: false,
+        });
+        if kind == "doc" {
+            assert_eq!(result.unwrap().docs.len(), 1);
+        } else {
+            assert!(format!("{:#}", result.err().unwrap()).contains("Doc vocabulary"));
+        }
+    }
+}
+
+#[test]
+fn literal_glob_does_not_invent_a_directory_default_file_promise() {
+    let tmp = tempfile::tempdir().unwrap();
+    fs::write(tmp.path().join("vibe.toml"), "[project]\nname='host'\nversion='1.0.0'\n[[project.sources]]\ndirectory='docs'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='explicit'\n").unwrap();
+    fs::write(
+        tmp.path().join("progress.toml"),
+        "include=['docs/absent.md']\n",
+    )
+    .unwrap();
+    let args = ProgressCommonArgs {
+        path: tmp.path().to_owned(),
+        campaign: None,
+        no_cache: false,
+    };
+    assert!(ground(&args).unwrap().docs.is_empty());
+    let text = fs::read_to_string(tmp.path().join("vibe.toml")).unwrap();
+    fs::write(tmp.path().join("vibe.toml"), format!("{text}\n[[project.sources]]\nfile='docs/absent.md'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='explicit'\n")).unwrap();
+    assert!(
+        ground(&args).is_err(),
+        "an explicit File declaration is an existence promise"
+    );
+}
+
+#[test]
+fn unrecorded_legacy_slot_spelling_does_not_require_an_enclosing_lock() {
+    for manifest in [None, Some(MANIFEST)] {
+        let tmp = tempfile::tempdir().unwrap();
+        let slot = tmp.path().join(vibe_workspace::vibedeps::slot_rel_path(
+            &"org.example".parse().unwrap(),
+            "guard",
+            &"1.0.0".parse().unwrap(),
+        ));
+        fs::create_dir_all(&slot).unwrap();
+        if let Some(manifest) = manifest {
+            fs::write(slot.join("vibe.toml"), manifest).unwrap();
+        }
+        fs::write(slot.join("source.md"), "# Legacy\n").unwrap();
+        fs::write(slot.join("progress.toml"), "include=['source.md']\n").unwrap();
+        let args = ProgressCommonArgs {
+            path: slot.clone(),
+            campaign: None,
+            no_cache: false,
+        };
+        assert_eq!(ground(&args).unwrap().docs.len(), 1);
+        fs::write(
+            slot.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME),
+            "record cue",
+        )
+        .unwrap();
+        assert!(
+            ground(&args).is_err(),
+            "a recorded root cannot use unbound compatibility"
+        );
+        fs::remove_file(slot.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME)).unwrap();
+        fs::write(slot.join("vibe.toml"), format!("{MANIFEST}sources=[]\n")).unwrap();
+        assert!(
+            ground(&args).is_err(),
+            "declared slot cannot downgrade even when empty"
+        );
+    }
+}
+
+#[test]
+fn recorded_legacy_keeps_independent_lock_and_record_guards() {
+    for changed in ["lock", "record"] {
+        let tmp = tempfile::tempdir().unwrap();
+        let source = tempfile::tempdir().unwrap();
+        fs::write(source.path().join("vibe.toml"), MANIFEST).unwrap();
+        fs::write(source.path().join("source.md"), "# Legacy\n").unwrap();
+        fs::write(
+            tmp.path().join("vibe.toml"),
+            "[project]\nname='host'\nversion='1.0.0'\n",
+        )
+        .unwrap();
+        let group = "org.example".parse().unwrap();
+        let version = "1.0.0".parse().unwrap();
+        let hash = vibe_core::ContentHash::parse(&format!("sha256:{}", "a".repeat(64))).unwrap();
+        vibe_workspace::vibedeps::materialise(
+            tmp.path(),
+            &group,
+            "guard",
+            &version,
+            source.path(),
+            &hash,
+        )
+        .unwrap();
+        fs::write(tmp.path().join("vibe.lock"), format!("[meta]\nschema_version={}\ngenerated_by='test'\ngenerated_at='2026-01-01T00:00:00Z'\n[[package]]\nkind='flow'\ngroup='org.example'\nname='guard'\nversion='1.0.0'\nsource_url='https://example.invalid/guard.git'\ncontent_hash='{hash}'\n", vibe_core::manifest::CURRENT_SCHEMA_VERSION)).unwrap();
+        let slot = tmp.path().join(vibe_workspace::vibedeps::slot_rel_path(
+            &group, "guard", &version,
+        ));
+        fs::write(
+            slot.join("progress.toml"),
+            "include=['source.md']\n[progress]\ncache_dir='payload-cache'\n",
+        )
+        .unwrap();
+        let campaign = tmp.path().join("campaigns/c");
+        fs::create_dir_all(campaign.join("run")).unwrap();
+        let args = ProgressCommonArgs {
+            path: slot.clone(),
+            campaign: Some(campaign.clone()),
+            no_cache: false,
+        };
+        let mut g = ground(&args).unwrap();
+        assert_eq!(g.docs.len(), 1);
+        if changed == "lock" {
+            fs::write(tmp.path().join("vibe.lock"), "changed").unwrap();
+        } else {
+            fs::write(
+                slot.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME),
+                "changed",
+            )
+            .unwrap();
+        }
+        assert!(refresh_state(&mut g).is_err());
+        assert!(!campaign.join("run/cache.json").exists());
+        assert!(!slot.join("payload-cache").exists());
+    }
+}
+
 #[cfg(target_os = "linux")]
 #[test]
 fn source_policy_low_fd_progress_ground_and_refresh() {
@@ -107,6 +261,11 @@ fn source_policy_explicit_and_invalid_refuse_before_pair_or_cache() {
             campaign: None,
             no_cache: false,
         };
+        if suffix == RAW {
+            assert!(ground(&common).unwrap().docs.is_empty());
+            assert!(!tmp.path().join("payload-cache").exists());
+            continue;
+        }
         let error = ground(&common)
             .err()
             .expect("policy must refuse")

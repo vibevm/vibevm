@@ -22,7 +22,9 @@ use std::path::Path;
 mod enumerate;
 mod judging;
 
-pub use enumerate::{ExcludeReport, observed_files, observed_files_reported, rel_str};
+pub use enumerate::{
+    ExcludeReport, includes_path, observed_files, observed_files_reported, rel_str,
+};
 pub use judging::JudgingExemption;
 
 #[cfg(test)]

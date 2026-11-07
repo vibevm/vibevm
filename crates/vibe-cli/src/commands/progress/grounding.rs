@@ -24,6 +24,7 @@ use vibe_spec::source_policy::{
 use crate::cli::ProgressCommonArgs;
 use crate::commands::progress_evidence::EvidenceSnapshot;
 
+mod sources;
 #[cfg(test)]
 mod tests;
 
@@ -131,6 +132,19 @@ pub(crate) struct Ground {
     /// read would be a second opinion about the same file.
     pub(crate) judging_exemption: scope::JudgingExemption,
     pub(super) source_policies: VocabularyByPackage,
+    pub(super) sources: Option<sources::Sources>,
+    pub(super) projections: Vec<(String, String)>,
+    pub(crate) physical_sources: BTreeMap<String, String>,
+}
+
+impl Ground {
+    pub(crate) fn recheck(&self) -> Result<()> {
+        self.source_policies.recheck()?;
+        if let Some(sources) = &self.sources {
+            sources.recheck()?;
+        }
+        Ok(())
+    }
 }
 
 /// Resolve the tree, then produce one `ParsedDoc` per observed file —
@@ -185,54 +199,32 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
             ))
         );
     }
-    // Admission precedes pair classification, parsing and cached-payload use.
-    let mut vocabularies = VocabularyByPackage::default();
-    let root_policy = observe_package_policy(&root)?;
-    if root_policy.mode() == PackageSourceMode::Explicit {
-        return Err(root_policy.unsupported("progress").into());
-    }
-    vocabularies
-        .seen
-        .insert(root.clone(), root_policy.into_checkpoint());
+    let judging_exemption = cfg.judging_exemption()?;
+    let mut sources = sources::Sources::new(&root, cfg, files.clone())?;
     let mut admitted = Vec::new();
     for rel in files {
-        if let Some(vocab) = vocabularies.of(&root, &root.join(&rel))? {
-            admitted.push((rel, vocab));
+        if let Some(text) = sources.read(&rel)? {
+            admitted.push(text);
         }
     }
-    let files: Vec<_> = admitted.iter().map(|(path, _)| path.clone()).collect();
-    // One logical document, one form (PROP-045 ##TARGET-MIXED): `X.md` and
-    // `X.xml` beside each other are a split brain — parsing both would
-    // count one document's units twice under two paths, so the pair is a
-    // loud stop before any parse, naming both files.
-    if let Some(collision) = vibe_specdoc::pair_collisions_in(&files).first() {
+    let paths: Vec<_> = admitted
+        .iter()
+        .map(|text| PathBuf::from(&text.path))
+        .collect();
+    if let Some(collision) = vibe_specdoc::pair_collisions_in(&paths).first() {
         bail!("{}", collision.message());
     }
     let mut docs = Vec::new();
     let mut xml_sources = BTreeSet::new();
-    for (rel, vocab) in admitted {
-        let full = root.join(&rel);
-        // The projection dispatch (PROP-045 ##PROJECTION-READ): `.md` (and
-        // anything else) verbatim, `.xml` through `from_xml →
-        // to_markdown`. The hash is over the text the parser consumes —
-        // the projection — which S1's emitter makes deterministic, so the
-        // cache/verdict mechanics are unchanged: an edit moves the
-        // projection exactly when it moves meaning.
-        //
-        // WHICH vocabulary the `.xml` branch reads under is decided by
-        // the kind of the package the file lives in, never by the file
-        // (PROP-045 `##DOC-VOCAB-BY-KIND`): the documentation genre is
-        // open only inside a `doc` package. Without this the pivot
-        // refuses the first page of any manual it observes — a legal
-        // `example` or `derived` block is simply not in the spec
-        // dialect.
-        let (text, kind) = vibe_specdoc::load_spec_text_with(&full, vocab)
-            .map_err(|e| anyhow::Error::msg(e.to_string()))
-            .with_context(|| format!("reading {}", full.display()))?;
-        if kind == vibe_specdoc::SourceKind::XmlProjected {
-            xml_sources.insert(scope::rel_str(&rel));
+    let mut projections = Vec::new();
+    let mut physical_sources = BTreeMap::new();
+    for source in admitted {
+        let path = source.path;
+        physical_sources.insert(path.clone(), source.physical);
+        let text = source.text;
+        if source.xml {
+            xml_sources.insert(path.clone());
         }
-        let path = scope::rel_str(&rel);
         let hash = progress_core::parse::content_hash(&text);
         let cached = (!common.no_cache)
             .then(|| cache.cached_doc(&path, &hash, &payloads))
@@ -241,9 +233,9 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
             Some(hit) => hit.clone(),
             None => progress_core::parse::parse_document(&path, &text),
         });
+        projections.push((path, text));
     }
-    let judging_exemption = cfg.judging_exemption()?;
-    vocabularies.recheck()?;
+    sources.recheck()?;
     Ok(Ground {
         root,
         docs,
@@ -254,7 +246,10 @@ pub(crate) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         excluded: excludes.dropped,
         xml_sources,
         judging_exemption,
-        source_policies: vocabularies,
+        source_policies: Default::default(),
+        sources: Some(sources),
+        projections,
+        physical_sources,
     })
 }
 
@@ -389,6 +384,7 @@ impl Refresh {
 /// derived, lives outside the tree, and a failure to write it is a slower
 /// next run — so it goes second and says nothing either way.
 pub(crate) fn refresh_state(g: &mut Ground) -> Result<Refresh> {
+    g.recheck()?;
     if g.campaign.is_none() {
         return Ok(Refresh::default());
     }
@@ -401,7 +397,8 @@ pub(crate) fn refresh_state_with_evidence(
     g: &mut Ground,
     evidence: &EvidenceSnapshot,
 ) -> Result<Refresh> {
-    g.source_policies.recheck()?;
+    g.recheck()?;
+    evidence.recheck()?;
     let Some(campaign) = g.campaign.as_ref() else {
         return Ok(Refresh::default());
     };

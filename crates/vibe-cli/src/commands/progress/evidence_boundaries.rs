@@ -2,6 +2,9 @@ use super::*;
 use crate::cli::{AgentModeArg, ProgressCheckArgs, ProgressReportArgs};
 use std::path::Path;
 
+#[path = "evidence_boundaries/drift.rs"]
+mod drift;
+
 fn fixture(root: &Path) {
     let specs = root.join(vibe_core::layout::current_specs_root());
     std::fs::create_dir_all(&specs).unwrap();

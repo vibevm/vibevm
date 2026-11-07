@@ -25,6 +25,7 @@ pub(crate) fn run(ctx: &Context, args: &ProgressCheckArgs) -> Result<()> {
         }
     };
     let validate = ctx.progress().task("Validating facts markup");
+    grounded.recheck()?;
     validate.set_progress(0, Some(grounded.docs.len() as u64), "files");
     let mut errors = 0usize;
     let mut warnings = 0usize;
@@ -44,6 +45,16 @@ pub(crate) fn run(ctx: &Context, args: &ProgressCheckArgs) -> Result<()> {
             && (!doc.issues.is_empty() || !folds.is_empty() || args.exhaustive)
         {
             output.push(projection_header(&doc.path));
+        }
+        if !ctx.is_quiet()
+            && (!doc.issues.is_empty() || !folds.is_empty() || args.exhaustive)
+            && let Some(physical) = grounded.physical_sources.get(&doc.path)
+            && physical != &doc.path
+        {
+            output.push(format!(
+                "{}: materialized input `{physical}`; diagnostics retain the original logical path",
+                doc.path
+            ));
         }
         for issue in &doc.issues {
             match issue.severity {

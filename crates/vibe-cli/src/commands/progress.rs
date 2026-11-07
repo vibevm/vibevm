@@ -177,6 +177,8 @@ fn report_body(g: &Ground, a: &ProgressReportArgs, json: bool) -> Result<String>
         .iter()
         .map(|d| (d.path.clone(), rollup::rollup_doc(d)))
         .collect();
+    g.recheck()?;
+    evidence.recheck()?;
     Ok(if json {
         format!("{}\n", serde_json::to_string_pretty(&rows)?)
     } else if a.md {
@@ -194,6 +196,10 @@ fn report_cmd(ctx: &Context, a: &ProgressReportArgs) -> Result<()> {
 
 fn mirror(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     let mut g = ground(a)?;
+    mirror_grounded(ctx, &mut g)
+}
+
+fn mirror_grounded(ctx: &Context, g: &mut Ground) -> Result<()> {
     let Some(campaign) = &g.campaign else {
         bail!("`vibe progress mirror` needs a campaign zone (campaigns/<id>/ or --campaign)");
     };
@@ -202,9 +208,11 @@ fn mirror(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     for doc in &g.docs {
         let rel = doc.path.replace('/', "__");
         let body = serde_json::to_string_pretty(doc)?;
+        g.recheck()?;
+        evidence.recheck()?;
         cache::write_atomic(&dir.join(format!("{rel}.json")), body.as_bytes())?;
     }
-    refresh_state_with_evidence(&mut g, &evidence)?;
+    refresh_state_with_evidence(g, &evidence)?;
     if !ctx.is_quiet() {
         println!(
             "progress mirror: {} per-file views under {}",
@@ -219,32 +227,21 @@ fn weave_cmd(ctx: &Context, a: &ProgressWeaveArgs) -> Result<()> {
     let g = ground(&a.common)?;
     if a.digest {
         let body = weave::weave_digest(g.docs.iter());
-        return emit_weave(ctx, &[(0usize, body)], a.out.as_deref(), "digest");
+        return emit_weave(ctx, &g, &[(0usize, body)], a.out.as_deref(), "digest");
     }
-    let files: Vec<(String, String)> = g
-        .docs
-        .iter()
-        .map(|d| -> Result<(String, String)> {
-            // The same dispatch `ground` read through (PROP-045
-            // ##PROJECTION-READ): a `.xml` source weaves its projection,
-            // exactly the text the parse — and therefore the doc — saw.
-            let (text, _) = vibe_specdoc::load_spec_text(&g.root.join(&d.path))
-                .map_err(|e| anyhow::Error::msg(e.to_string()))
-                .with_context(|| format!("re-reading {}", d.path))?;
-            Ok((d.path.clone(), text))
-        })
-        .collect::<Result<_>>()?;
-    let shards = weave::weave_full(&files, a.max_tokens);
+    let shards = weave::weave_full(&g.projections, a.max_tokens);
     let bodies: Vec<(usize, String)> = shards.into_iter().map(|s| (s.index, s.body)).collect();
-    emit_weave(ctx, &bodies, a.out.as_deref(), "weave")
+    emit_weave(ctx, &g, &bodies, a.out.as_deref(), "weave")
 }
 
 fn emit_weave(
     ctx: &Context,
+    g: &Ground,
     shards: &[(usize, String)],
     out: Option<&Path>,
     stem: &str,
 ) -> Result<()> {
+    g.recheck()?;
     match out {
         None => {
             for (_, body) in shards {
@@ -253,6 +250,7 @@ fn emit_weave(
         }
         Some(dir) => {
             for (i, body) in shards {
+                g.recheck()?;
                 cache::write_atomic(&dir.join(format!("{stem}-{i:03}.md")), body.as_bytes())?;
             }
             if !ctx.is_quiet() {
@@ -269,6 +267,10 @@ fn emit_weave(
 
 fn resume(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     let mut g = ground(a)?;
+    resume_grounded(ctx, &mut g)
+}
+
+fn resume_grounded(ctx: &Context, g: &mut Ground) -> Result<()> {
     let Some(campaign) = &g.campaign else {
         bail!("`vibe progress resume` needs a campaign zone (campaigns/<id>/ or --campaign)");
     };
@@ -295,8 +297,10 @@ fn resume(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     // Same journal-derived phase the state projection carries.
     let phase = journal::derive_phase(&events);
     let body = journal::render_resume(&campaign_id(campaign), &phase, &counters, &open, next_hint);
+    g.recheck()?;
+    evidence.recheck()?;
     journal::write_resume(&run_dir.join("RESUME.md"), &body)?;
-    refresh_state_with_evidence(&mut g, &evidence)?;
+    refresh_state_with_evidence(g, &evidence)?;
     if !ctx.is_quiet() {
         print!("{body}");
     }

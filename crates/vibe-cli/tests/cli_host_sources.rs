@@ -50,8 +50,18 @@ fn host_progress_show_convert_and_checks_do_not_parse_ordinary_content() {
     );
     write(root.path(), &common::spec_rel("WAL.xml"), "<broken");
     let before = files(root.path());
-    for args in [vec!["progress", "check", "--path"], vec!["check", "--path"]] {
-        let result = user.vibe().args(&args).arg(root.path()).output().unwrap();
+    let progress = user
+        .vibe()
+        .args(["progress", "check", "--path"])
+        .arg(root.path())
+        .output()
+        .unwrap();
+    assert!(progress.status.success(), "{progress:?}");
+    assert!(!String::from_utf8_lossy(&progress.stdout).contains("NOT-A-FACT"));
+    assert_eq!(files(root.path()), before, "progress wrote project files");
+    {
+        let args = ["check", "--path"];
+        let result = user.vibe().args(args).arg(root.path()).output().unwrap();
         assert!(!result.status.success(), "{args:?}: {result:?}");
         let text = format!(
             "{}{}",
