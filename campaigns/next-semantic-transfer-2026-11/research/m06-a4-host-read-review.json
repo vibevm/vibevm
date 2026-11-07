@@ -1,0 +1,30 @@
+{
+  "task": "A4 retained host reader source review",
+  "status": "no concrete blocking defect found; broader runtime receipts pending",
+  "observed_at": "2026-11-07T02:10:46.755805+00:00",
+  "findings": [],
+  "tests_run": false,
+  "full_a4_acceptance": false,
+  "source_sha256": {
+    "crates/vibe-spec/src/resolver/host.rs": "4f57d50fe440a762be16a8cac49465b730df2e244343b2e23a821b39c6f6a595",
+    "crates/vibe-spec/src/resolver/observation.rs": "c5e9984119234ef0fcb89193a5692ddc40eec8647b2838d3d49b2c4734cf5360",
+    "crates/vibe-spec/src/resolver/lookup.rs": "417650e824af168add5123393922fc8d45cfa94fbaf2f857a71f6a7ce3b35d99",
+    "crates/vibe-spec/src/resolver/host_tests.rs": "9852f59d20b828dcf15d0ccaf7c2bbd88e78b1877708ab3b42b2445f1a0d9ff2",
+    "crates/vibe-spec/src/embed.rs": "f35ee2f2aa9be169931465cd9bf06d71a495f49274ea86a7949dc99b122172be",
+    "crates/vibe-spec/src/embed/read.rs": "500a00ec7f9ee3399fd0888c781bf4c15dbc7afb00f578566beb30cf3f7c58ac",
+    "crates/vibe-spec/src/source_policy/host.rs": "d1f368daaa24ac414b4b91a3f889a4034a576522a7960b37f4f91c61e5158d57",
+    "crates/vibe-spec/src/compiler/worklist.rs": "1d347317ee13e3436e150cab9f5e8f465b3fcb182a85d67a739e0b7474f24e6b",
+    "crates/vibe-spec/src/compiler/pass_tier/frontend.rs": "443b84459cb7eaaca55fe283c29d31b9a28a2855c26fd096894ed310715aad10",
+    "crates/vibe-core/src/layout.rs": "5c9b7cc7ed9ed1bc203af3712114da0889f7b92062f7449135de5c8a9e65ac1b",
+    "crates/vibe-workspace/src/vibedeps/declared_read/tests.rs": "2a123d8e297b47b9ce25940a4628347717c5c62cf17b4706102f8373249cf7d0"
+  },
+  "receipt_sha256": {
+    "/tmp/nst-a4-host-read-alias-green.log": "f8f1df2441e5ab3ba630ae5be6109bace55c0d3b43db792e127895faee6e9c3f",
+    "/tmp/nst-a4-host-read-alias-red.log": "4e9fa12d1285d66e05e00b6da012e498b31149b2347514ed9a319c7dc64b7220",
+    "/tmp/nst-a4-host-read-first.log": "2f735bb420337dcf9c1344228a2db207652dd74cc159a6920b55d54fbd2e14b1",
+    "/tmp/nst-a4-host-read-red.log": "59229681afa9c78070a944f12ec4f3c3bd7f5b8e92e5c229e24ebfd281c10c63"
+  },
+  "verified_runtime": "3 PASS in alias-green (actual native XML/pin, fullslug parity, Send+Sync)",
+  "live_drift": "active writer; compare current hashes to final seal",
+  "report_sha256": "fd07ea934aa3b3760a9e95c90be0c949d60dc94506d75caf4e66a3beea441599"
+}

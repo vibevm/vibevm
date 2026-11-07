@@ -1,0 +1,59 @@
+{
+  "task": "M-06-A.4 declared host point-reader slice",
+  "accepted": true,
+  "full_original_a4": false,
+  "commit": "d2c283e6970432f563a9c44129daf1ada750725a",
+  "committed_paths_verified": 15,
+  "contract": "SOURCE-HOST-READ r1",
+  "behavior": [
+    "Actual grouped host native point/anchor read through FsSectionSource using captured original media/bytes; real Doc package vocabulary only",
+    "Canonical ID/fullslug alias parity and original relative resource identity; raw and custom-suffix fallback refused",
+    "One shared held root and per-document input evidence; Send+Sync preserved;160documents under FDlimit64",
+    "Manifest/bytes/parent/membership/role drift refuses across metadata/read/cache reuse; exact overlays only",
+    "Selected/derived/standalone/relocated/alias materialized roots cannot bypass independent installed binding",
+    "Path-only resolver and broad host pattern APIs remain guarded; unchanged legacy alias/read epochs preserved"
+  ],
+  "gates": {
+    "host_targeted": 15,
+    "genuine_materialized": 2,
+    "resolver": 77,
+    "embed": 39,
+    "worklist": 16,
+    "host_sync": 14,
+    "package_query": 53,
+    "boot_carriers": 14,
+    "counts_overlap": true,
+    "doctests": "core402/spec17",
+    "static": "strict Clippy,3Conform scopes,fmt/diff pass",
+    "specmap": {
+      "units": 9156,
+      "items": 5523,
+      "edges": 4672,
+      "orphans": 0,
+      "unresolved_host": 0,
+      "warnings": 44,
+      "prior_9152_units_retained": true,
+      "warning_meanings_unchanged": true
+    },
+    "wire_diff": "pass; no watched schema/formats shifted",
+    "codegen": "not applicable; no codec/schema/registration change"
+  },
+  "compatibility": [
+    "No new URI/transport, public metadata shape, host format or record schema",
+    "Slot filename moved to core layout; original workspace export/value preserved",
+    "Unit revision pins retain existing transport semantics; no read-time revision equality enforcement added",
+    "Projection uses admitted original media; frontend text remains canonical Markdown with projected positions, not original XML positions"
+  ],
+  "corrections": [
+    "Initial actual host read Unsupported RED -> GREEN",
+    "Legacy fullslug worked but declared canonical-only matching failed; existing naming owner factored",
+    "RefCell would remove Sync; Mutex preserves prior auto traits",
+    "Pin mismatch-refusal assertion was ungrounded at SectionSource layer and corrected without new revision policy"
+  ],
+  "remaining": [
+    "Host finite inventory/facts/query and own Simple boot",
+    "Broader patterns and path-only consumer migration",
+    "Remaining A4 adoption/check/docs/skills/whole mixed matrix/tutorial work",
+    "SOURCE-OPERATION-ENROLLMENT remains planned for auto consumers"
+  ]
+}

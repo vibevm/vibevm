@@ -1,0 +1,22 @@
+# A4 retained host native reader review
+
+Read-only source review, 2026-11-07. No tests/Cargo/product edits/Git mutation. No concrete blocking defect found in inspected source. Writer is active; hashes are a snapshot, not a final source seal. Full A4, host inventory/query and own boot are later work.
+
+## Reviewed boundaries
+
+- `FsSectionSource` owns operation-local HostObservations behind Mutex; FileResolver remains stateless for path-only compatibility. Host mode becomes a retained Arc<PackagePolicyObservation> only after explicit policy. The actual captured manifest consumer coordinate must equal the requested self group/name; versioned self still refuses before host capture. Legacy aliases retain their old read epochs, while legacy→declared transition during the same retained operation refuses.
+- Host dispatch occurs after installed `declared_location`. Selected self roots matching lexically or through canonical alias, and reserved slot-shaped ancestors, do not gain host authority. An otherwise relocated root with the materialization control entry also does not enter the host route. Record detection uses the shared layout filename and held presence check only, never another record decoder or record-derived expected hash. A record appearing after initial host capture is checked again and refuses.
+- `HostRead` retains original path/stem, selected media/interpretation and CitedNativeSource observations. Reads recheck policy, candidate membership, parent/file identity and bytes; differing overlay refuses, equal overlay can supply the same bytes without filesystem fallback. The returned owned bytes come from the retained observation, not a fresh unrelated parse. There is no installed recipe or invented package kind for project hosts.
+- `admit_host_reference` reaches the same retained host lookup before compiler worklist cached-reference use. `source_metadata` and `read_resolved` use host-aware location and existing metadata/path comparison; `section_text` shares it. Generated initial-root admission and installed readers remain distinct. Pattern expansion of declared host input honestly refuses pending its inventory slice; an empty match is not advertised as completion.
+- `FileResolver::resolve_file`/path-only locate_source do not opt into host observations and continue through the explicit-policy guard. A caller cannot obtain an unguarded declared host path merely because SectionSource support was added.
+- `source_policy::capture_addressed_native` shares targeted held candidate selection with cited sync but enables full-spelling aliases. `lookup::source_doc_spelling` factors the existing root-prefix/extension spelling before canonical PROP/FEAT slug truncation; canonical_doc_path calls that same helper. Raw candidates never own native addresses. Addressed Doc vocabulary is allowed only for a real Doc package; a plain project does not gain Doc interpretation through the host arm.
+
+## Runtime evidence actually inspected
+
+`/tmp/nst-a4-host-read-alias-green.log`: 3 PASS — actual SectionSource arbitrary-suffix XML/anchor/revision pin; legacy-versus-declared short-ID/full-slug same-source parity; FileResolver/FsSectionSource Send+Sync auto-traits. The earlier alias RED is superseded for that discriminator. This receipt is not proof of all source-reviewed guards.
+
+At review time, final drift/cache/slot-alias/relocated-output negative receipts were not yet present among the inspected host-read logs. Exact discriminators for the writer's scoped completion are: retain native read then change manifest/bytes or add native alias and retry through cache admission; mismatching overlay refusal; actual transformed slot copied/aliased into a caller-looking root must remain unavailable without independent installed binding; raw same-stem content must never be returned as native. These are the named task boundaries, not new global authentication/CAS/platform requirements. Root should consume the writer's final logs and compare hashes before acceptance rather than infer these runtime results from source inspection.
+
+## Limits
+
+Control-entry presence is a refusal cue, not proof that arbitrary metadata is genuine. Unrecorded caller-selected roots keep their explicit authored-source contract; no historical installed provenance is invented. Finite rechecks do not exclude hostile ABA or guarantee an atomic whole-operation snapshot. No source exports/URI/MCP transport or host scan/boot activation is introduced by this slice.
