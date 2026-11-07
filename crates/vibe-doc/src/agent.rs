@@ -73,6 +73,10 @@ pub struct FetchedPage {
 /// assert!(page.text.contains("[p01]"));
 /// # Ok::<(), vibe_doc::DocError>(())
 /// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT",
+    r = 1
+)]
 pub fn read_page(
     address: &str,
     format: Format,
@@ -86,11 +90,36 @@ pub fn read_page(
     if let Some(lang) = lang
         && let Some(adapted) = adaptation_of(address, lang)
         && let Ok(parsed) = parse(&adapted)
-        && let Ok(page) = fetch(&adapted, &parsed, format, sources)
+        && let Some(captured) =
+            sources
+                .capture_document(&parsed)
+                .map_err(|message| DocError::Citation {
+                    page: String::new(),
+                    line: 0,
+                    uri: adapted.clone(),
+                    message,
+                })?
     {
-        return Ok(page);
+        return fetch(&adapted, &parsed, format, sources, captured);
     }
-    fetch(address, &asked, format, sources)
+    let captured = sources
+        .capture_document(&asked)
+        .map_err(|message| DocError::Citation {
+            page: String::new(),
+            line: 0,
+            uri: address.into(),
+            message,
+        })?
+        .ok_or_else(|| DocError::Citation {
+            page: String::new(),
+            line: 0,
+            uri: address.into(),
+            message: format!(
+                "no source holds `{address}` — looked in {}",
+                sources.description()
+            ),
+        })?;
+    fetch(address, &asked, format, sources, captured)
 }
 
 /// Parse an address and drop its anchor: this returns a whole page, and
@@ -134,31 +163,30 @@ fn fetch(
     parsed: &SpecAddress,
     format: Format,
     sources: &SpecSources,
+    located: crate::citations::sources::CapturedDocument,
 ) -> Result<FetchedPage> {
-    let located = sources
-        .locate(parsed)
-        .map_err(|message| DocError::Citation {
-            page: String::new(),
-            line: 0,
-            uri: address.to_owned(),
-            message,
-        })?;
-    let raw = std::fs::read_to_string(&located.path)
-        .map_err(|e| DocError::io("reading", &located.path, e))?;
-    let doc =
-        vibe_specdoc::from_xml_with(&raw, vibe_specdoc::doc::Vocabulary::Doc).map_err(|e| {
-            DocError::Page {
-                path: located.path.clone(),
-                message: e.to_string(),
-            }
-        })?;
-    // The address names a document, the package holds a file: the
-    // extension is the pivot's serialisation and not part of the address
-    // (PROP-052's layout owns it), so it is put back here.
-    let rel = match parsed.doc_path.ends_with(".xml") {
-        true => parsed.doc_path.clone(),
-        false => format!("{}.xml", parsed.doc_path),
-    };
+    if located.interpretation != vibe_core::manifest::SourceInterpretation::VibeDoc {
+        return Err(DocError::Page {
+            path: located.path.clone(),
+            message: "agent page requires an actual Doc package source".into(),
+        });
+    }
+    let doc = located.parse().map_err(|e| DocError::Page {
+        path: located.path.clone(),
+        message: e.to_string(),
+    })?;
+    // The original logical source names this page even when the installed
+    // physical output has a different extension.
+    let rel = located
+        .relative
+        .strip_prefix(&format!("{}/", crate::pages::SPEC_ROOT))
+        .or_else(|| {
+            located
+                .relative
+                .strip_prefix(&format!("{}/", vibe_core::layout::LEGACY_SPECS_DIR))
+        })
+        .unwrap_or(&located.relative)
+        .to_owned();
     // When the page belongs to a translation, the examples it borrows come
     // from the source page at the SAME address. The package root is found
     // the way `locate` found the file — through the chain, by the
@@ -196,11 +224,16 @@ fn fetch(
         // (`##READER-GLOSSARY-CARD` is a reader's affordance).
         glossary: None,
     };
+    let text = build::render_page(&page, &content, format);
+    located.recheck().map_err(|message| DocError::Page {
+        path: located.path.clone(),
+        message,
+    })?;
     Ok(FetchedPage {
         address: address.to_owned(),
         lang: located.lang,
         source: located.source,
-        text: build::render_page(&page, &content, format),
+        text,
     })
 }
 

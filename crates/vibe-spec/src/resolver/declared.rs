@@ -77,6 +77,10 @@ impl PreparedInstalledSource {
     pub fn outputs(&self) -> &[PreparedOutputRow] {
         &self.0.rows
     }
+    /// Captured manifest metadata; callers still recheck through the bound reader.
+    pub fn manifest(&self) -> Option<&vibe_core::manifest::Manifest> {
+        self.0.policy.manifest()
+    }
     pub fn output_for_source(&self, source: &str) -> Option<&PreparedOutputRow> {
         self.0.rows.iter().find(|row| row.source_path == source)
     }

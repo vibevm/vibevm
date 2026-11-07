@@ -20,7 +20,9 @@ pub use env::DocEnv;
 // that question, and are re-exported here so the sibling command
 // modules keep reaching them as `super::spec_sources`. Out of line per
 // the file-length budget.
-use env::{STORE_DIR, preferred_language, self_coordinate, settings_home, spec_sources};
+#[cfg(test)]
+use env::self_coordinate;
+use env::{preferred_language, settings_home, spec_sources};
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -70,7 +72,7 @@ fn run_build(args: DocBuildArgs, env: DocEnv) -> Result<()> {
             build::expect_language(&args.path, lang)
         })?;
     }
-    let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref());
+    let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref())?;
     // clap admits only the three the parser lists, so this arm is
     // unreachable today; it is a refusal rather than a panic because the
     // parser's list and this match are two places, and the day they
@@ -117,7 +119,7 @@ fn run_manifest(args: DocManifestArgs, env: DocEnv) -> Result<()> {
             build::expect_language(&args.path, lang)
         })?;
     }
-    let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref());
+    let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref())?;
     let options = manifest::Options::at(Utc::now());
     let built = observe::phase(&env.progress, "Building documentation manifest", || {
         manifest::build(&args.path, &sources, &options)
@@ -200,7 +202,7 @@ fn run_serve(args: DocServeArgs, env: DocEnv) -> Result<()> {
             .clone()
             .or_else(|| env.cwd.as_deref().and_then(preferred_language)),
     };
-    let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref());
+    let sources = spec_sources(&env.cwd, settings_home(&env.settings, &env.home).as_deref())?;
     let reader = observe::phase(&env.progress, "Preparing documentation reader", || {
         vibe_doc_server::Reader::wearing(&config, sources, Utc::now(), dressed)
     })?;
@@ -315,7 +317,7 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
 
     if args.citations {
         let coordinate = derived::coordinate_of(&args.path)?;
-        let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref());
+        let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref())?;
         let report = observe::phase(&progress, "Checking documentation citations", || {
             citations::check(&args.path, &coordinate, &sources)
         })?;
@@ -330,7 +332,7 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
     }
 
     if args.translations {
-        let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref());
+        let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref())?;
         let report = observe::phase(&progress, "Checking documentation translations", || {
             translations::check(&args.path, &sources)
         })?;
@@ -430,7 +432,7 @@ fn run_check(args: DocCheckArgs, env: DocEnv) -> Result<()> {
 
     if args.coverage {
         let coordinate = derived::coordinate_of(&args.path)?;
-        let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref());
+        let sources = spec_sources(&runner.repo_root, runner.settings_home.as_deref())?;
         let report = coverage_report(
             &args.path,
             args.min,

@@ -56,18 +56,48 @@ pub struct DocEnv {
 pub(super) fn spec_sources(
     repo_root: &Option<PathBuf>,
     settings_home: Option<&Path>,
-) -> SpecSources {
+) -> anyhow::Result<SpecSources> {
     let sources = match repo_root {
         Some(root) => {
-            let (group, name) = self_coordinate(root);
-            SpecSources::for_checkout(root, group.as_deref(), &name)
+            let mut sources = SpecSources::for_checkout(root, None, "");
+            let manifest_path = root.join("vibe.toml");
+            match std::fs::symlink_metadata(&manifest_path) {
+                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+                Err(error) => return Err(error.into()),
+                Ok(_) => {
+                    let selected = vibe_workspace::Workspace::discover_selected(root)?;
+                    let manifest = selected
+                        .workspace
+                        .members
+                        .iter()
+                        .find(|member| member.rel_path == selected.selected)
+                        .map(|member| &member.manifest)
+                        .unwrap_or(&selected.workspace.root_manifest);
+                    let (group, name) = self_coordinate(manifest);
+                    sources =
+                        SpecSources::for_checkout(&selected.selected_root, group.as_deref(), &name);
+                    let config = match settings_home {
+                        Some(home) => vibe_core::user_config::UserConfig::load_from(
+                            &home.join("config.toml"),
+                        )?,
+                        None => vibe_core::user_config::UserConfig::default(),
+                    };
+                    sources = sources
+                        .with_lock(&selected.workspace.root)
+                        .with_materialized_format(crate::commands::install::resolve_spec_format(
+                            &selected.workspace.root_manifest,
+                            config.install.spec_format,
+                        ));
+                }
+            }
+            sources
         }
         None => SpecSources::new(),
     };
-    match settings_home {
+    Ok(match settings_home {
         Some(home) => sources.with_store(home.join(STORE_DIR)),
         None => sources,
-    }
+    })
 }
 
 /// The machine store's directory under the settings home — the same
@@ -79,30 +109,14 @@ pub(super) const STORE_DIR: &str = "cache";
 /// The checkout's own `[project]` group and name — the coordinate a
 /// `spec://` address must carry to reach its authored specs (B-031).
 ///
-/// Read as TOML data: the one question is «what coordinate does this
-/// directory answer to», and a strict manifest parse would make it fail
-/// over a field it never reads. A directory with no manifest answers to
-/// no coordinate, which is a legitimate state — then only the other three
-/// sources speak.
-pub(super) fn self_coordinate(root: &Path) -> (Option<String>, String) {
-    let Ok(text) = std::fs::read_to_string(root.join("vibe.toml")) else {
-        return (None, String::new());
-    };
-    let Ok(value) = toml::from_str::<toml::Value>(&text) else {
-        return (None, String::new());
-    };
-    let read = |table: &str, key: &str| {
-        value
-            .get(table)
-            .and_then(|t| t.get(key))
-            .and_then(toml::Value::as_str)
-            .map(str::to_owned)
-    };
-    let group = read("project", "group").or_else(|| read("package", "group"));
-    let name = read("project", "name")
-        .or_else(|| read("package", "name"))
-        .unwrap_or_default();
-    (group, name)
+/// The selected workspace observation supplies this manifest; no second read.
+pub(super) fn self_coordinate(
+    manifest: &vibe_core::manifest::Manifest,
+) -> (Option<String>, String) {
+    manifest
+        .consumer_node()
+        .map(|node| (node.group.as_ref().map(ToString::to_string), node.name))
+        .unwrap_or_default()
 }
 
 /// The language the project the operator is standing in prefers to read

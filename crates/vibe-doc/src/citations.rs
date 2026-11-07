@@ -50,7 +50,6 @@ pub use anchor::anchor_text;
 pub use scan::rule_uris;
 pub use sources::{Source, SpecSources};
 
-use anchor::read_spec;
 use scan::{prose_uris, rule_lines};
 
 /// The reserved teaching group. An address under it is an illustration in
@@ -297,6 +296,10 @@ pub fn classify(uri: &str, self_coordinate: &str) -> Classification {
 }
 
 /// Resolve one citation to the fact's current text.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT",
+    r = 1
+)]
 pub fn resolve(uri: &str, sources: &SpecSources) -> std::result::Result<RuleText, String> {
     let address = vibe_spec::SpecAddress::parse(uri).map_err(|e| e.to_string())?;
     if address.anchor.is_empty() {
@@ -305,17 +308,23 @@ pub fn resolve(uri: &str, sources: &SpecSources) -> std::result::Result<RuleText
              not a whole specification"
         ));
     }
-    let found = sources.locate(&address)?;
-    let doc = read_spec(&found.path)?;
+    let found = sources.capture_document(&address)?.ok_or_else(|| {
+        format!(
+            "no source holds `{uri}` — looked in {}",
+            sources.description()
+        )
+    })?;
+    let doc = found.parse()?;
     let anchor = address.anchor.join(".");
     let text = anchor_text(&doc, &address.anchor).ok_or_else(|| {
         format!(
             "`{}` carries no anchor `{anchor}` — the rule was renamed or removed \
              (a rename leaves a tombstone; see \
              spec://org.vibevm.core/vibevm/common/PROP-057#INV-ANCHORS-IMMUTABLE)",
-            found.display_path()
+            found.path.display()
         )
     })?;
+    found.recheck()?;
     Ok(RuleText {
         uri: uri.to_owned(),
         anchor,

@@ -23,8 +23,9 @@ pub struct CitedNativeSource {
     point_aliases: bool,
 }
 impl PackagePolicyObservation {
-    /// A control-entry presence cue only; no record body or asserted hash is read.
-    pub(crate) fn materialized_record_present(&self) -> Result<bool, SourcePolicyError> {
+    /// A held control-entry presence cue only; no record body or asserted hash is
+    /// read. Absence does not authenticate an original source.
+    pub fn materialized_record_present(&self) -> Result<bool, SourcePolicyError> {
         self.recheck_unchanged()?;
         let root = self.project.root_dir().map_err(|error| {
             self.cited_failure(SourcePolicyErrorKind::Unavailable, error.to_string())
@@ -232,7 +233,11 @@ impl PackagePolicyObservation {
         let candidates = self.candidates(coordinate, document, point_aliases)?;
         let [(relative, media, interpretation)] = candidates.as_slice() else {
             return Err(self.cited_failure(
-                SourcePolicyErrorKind::Unavailable,
+                if candidates.is_empty() {
+                    SourcePolicyErrorKind::MissingNativeAddress
+                } else {
+                    SourcePolicyErrorKind::Unavailable
+                },
                 if candidates.is_empty() {
                     "cited native source is unavailable or classified as raw"
                 } else {

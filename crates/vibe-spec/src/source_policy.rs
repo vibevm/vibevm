@@ -28,6 +28,9 @@ pub enum PackageSourceMode {
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SourcePolicyErrorKind {
+    /// No native descriptor selects this address. A promised file that is
+    /// absent remains `Unavailable`, not this legitimate address miss.
+    MissingNativeAddress,
     Unavailable,
     InvalidManifest,
     Changed,

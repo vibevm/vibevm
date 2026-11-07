@@ -188,3 +188,31 @@ fn a_directory_that_is_not_a_version_is_not_a_candidate() {
     let world = SpecSources::new().with_in_tree(&packages);
     assert!(world.instance_of("org.acme", "lib").is_none());
 }
+
+#[test]
+fn declared_point_citation_uses_media_and_original_fullslug() {
+    let tmp = tempfile::tempdir().unwrap();
+    package(
+        tmp.path(),
+        "com.example",
+        "host",
+        "1.0.0",
+        None,
+        "current rule",
+    );
+    let manifest = tmp.path().join("vibe.toml");
+    let raw = fs::read_to_string(&manifest).unwrap();
+    fs::write(&manifest, format!("{raw}\n[[package.sources]]\nfile = \"vibevm/vibespecs/common/PROP-001-thing.payload\"\nmedia = \"application/xml\"\ninterpretation = \"vibe-spec\"\nrole = \"spec\"\nloading = \"explicit\"\n")).unwrap();
+    let original = tmp
+        .path()
+        .join("vibevm/vibespecs/common/PROP-001-thing.xml");
+    fs::rename(&original, original.with_extension("payload")).unwrap();
+    fs::write(&original, "raw neighbor is not native").unwrap();
+    let world = SpecSources::for_checkout(tmp.path(), Some("com.example"), "host");
+    for path in ["common/PROP-001", "common/PROP-001-thing.payload"] {
+        let result =
+            crate::citations::resolve(&format!("spec://com.example/host/{path}#A-RULE"), &world)
+                .unwrap();
+        assert_eq!(result.text, "current rule");
+    }
+}

@@ -19770,6 +19770,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_doc_captured.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::cli_doc_captured",
+      "end_line": 5,
+      "fingerprint": "tok1:240c14f681bbe070a2f5833e8ec799e8a5aab55a001aa120d4a940f863e7b9ed"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_facts.rs",
       "item_kind": "mod",
       "line": 3,
@@ -25440,6 +25449,15 @@
     },
     {
       "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/agent.rs",
+      "item_kind": "fn",
+      "line": 56,
+      "symbol": "vibe_doc::agent::read_page",
+      "end_line": 123,
+      "fingerprint": "tok1:d036c99caf85f72175738aa743579855f5b7a5e575eab9c4c435e593c421aee7"
+    },
+    {
+      "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/build.rs",
       "item_kind": "mod",
       "line": 38,
@@ -25485,6 +25503,15 @@
     },
     {
       "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/citations.rs",
+      "item_kind": "fn",
+      "line": 298,
+      "symbol": "vibe_doc::citations::resolve",
+      "end_line": 336,
+      "fingerprint": "tok1:abadb7cbab0ccc5a57f2d33847628e07ffec7e4d26873d2f25b0d41948d8bf23"
+    },
+    {
+      "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/citations/scan.rs",
       "item_kind": "mod",
       "line": 14,
@@ -25500,6 +25527,24 @@
       "symbol": "vibe_doc::citations::sources",
       "end_line": 32,
       "fingerprint": "tok1:55b418d8fc07d4efd7b2d6be8487d5eb60cfc848239f3b7858cb7da1c687f1e8"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/citations/sources/captured.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_doc::citations::sources::captured",
+      "end_line": 5,
+      "fingerprint": "tok1:240c14f681bbe070a2f5833e8ec799e8a5aab55a001aa120d4a940f863e7b9ed"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/citations/sources/captured.rs",
+      "item_kind": "fn",
+      "line": 136,
+      "symbol": "vibe_doc::citations::sources::captured::SpecSources::capture_document",
+      "end_line": 218,
+      "fingerprint": "tok1:25293d703b37dead3ebb4a2a97f54b7eb27ad6e8386bda4954b4d2ceb3d00f60"
     },
     {
       "crate_name": "vibe-doc",
@@ -26157,6 +26202,15 @@
       "symbol": "vibe_doc::surface::schemas",
       "end_line": 16,
       "fingerprint": "tok1:bced42a7e31cda63deef6e80727741d2fc1318a6d39b603c79d47abfed5cea64"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/tests/captured_document.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_doc::tests::captured_document",
+      "end_line": 5,
+      "fingerprint": "tok1:240c14f681bbe070a2f5833e8ec799e8a5aab55a001aa120d4a940f863e7b9ed"
     },
     {
       "crate_name": "vibe-doc",
@@ -44900,9 +44954,9 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/resolver/declared.rs",
       "item_kind": "fn",
-      "line": 218,
+      "line": 222,
       "symbol": "vibe_spec::resolver::declared::FileResolver::installed_source_binding",
-      "end_line": 233,
+      "end_line": 237,
       "fingerprint": "tok1:f42bd9a15965c31a00ea112bb453f18c8040f4ceb947a47411c8ab88efafe998"
     },
     {
@@ -45017,18 +45071,18 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/source_policy.rs",
       "item_kind": "fn",
-      "line": 301,
+      "line": 304,
       "symbol": "vibe_spec::source_policy::PolicyState::mode",
-      "end_line": 327,
+      "end_line": 330,
       "fingerprint": "tok1:02f19757bf64483f5a874c90606abbf0f50f44421925486f953d03cec997cc9f"
     },
     {
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/source_policy.rs",
       "item_kind": "struct",
-      "line": 37,
+      "line": 40,
       "symbol": "vibe_spec::source_policy::SourcePolicyError",
-      "end_line": 56,
+      "end_line": 59,
       "fingerprint": "tok1:55368bdac54df0e380201f891e182f0a5f066fa60ad8522db52896df714619b9"
     },
     {
@@ -45062,9 +45116,9 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/source_policy.rs",
       "item_kind": "fn",
-      "line": 127,
+      "line": 130,
       "symbol": "vibe_spec::source_policy::observe_package_policy",
-      "end_line": 197,
+      "end_line": 200,
       "fingerprint": "tok1:698cebfd0a99b9575520a08a268ad5425690df799088bbaa7078ca14d3fcfcfe"
     },
     {
@@ -60181,6 +60235,15 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_doc_captured.rs",
+      "from_symbol": "vibe_cli::tests::cli_doc_captured",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_facts.rs",
       "from_symbol": "vibe_cli::tests::cli_facts",
       "line": 3,
@@ -65384,6 +65447,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-doc/src/agent.rs",
+      "from_symbol": "vibe_doc::agent::read_page",
+      "line": 76,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-doc/src/build.rs",
       "from_symbol": "vibe_doc::build",
       "line": 38,
@@ -65424,6 +65496,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-doc/src/citations.rs",
+      "from_symbol": "vibe_doc::citations::resolve",
+      "line": 299,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-doc/src/citations/scan.rs",
       "from_symbol": "vibe_doc::citations::scan",
       "line": 14,
@@ -65438,6 +65519,24 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOCAL-WARMUP",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/citations/sources/captured.rs",
+      "from_symbol": "vibe_doc::citations::sources::captured",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-doc/src/citations/sources/captured.rs",
+      "from_symbol": "vibe_doc::citations::sources::captured::SpecSources::capture_document",
+      "line": 155,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-doc/src/content.rs",
@@ -66022,6 +66121,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#OBS-SURFACE-SNAPSHOTS",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/tests/captured_document.rs",
+      "from_symbol": "vibe_doc::tests::captured_document",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-doc/src/todo.rs",
@@ -83261,7 +83369,7 @@
     {
       "file": "crates/vibe-spec/src/resolver/declared.rs",
       "from_symbol": "vibe_spec::resolver::declared::FileResolver::installed_source_binding",
-      "line": 220,
+      "line": 224,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
       "verb": "implements",
@@ -83368,7 +83476,7 @@
     {
       "file": "crates/vibe-spec/src/source_policy.rs",
       "from_symbol": "vibe_spec::source_policy::PolicyState::mode",
-      "line": 301,
+      "line": 304,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-POLICY",
       "verb": "implements",
@@ -83377,7 +83485,7 @@
     {
       "file": "crates/vibe-spec/src/source_policy.rs",
       "from_symbol": "vibe_spec::source_policy::SourcePolicyError",
-      "line": 46,
+      "line": 49,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY",
       "verb": "implements"
@@ -83412,7 +83520,7 @@
     {
       "file": "crates/vibe-spec/src/source_policy.rs",
       "from_symbol": "vibe_spec::source_policy::observe_package_policy",
-      "line": 134,
+      "line": 137,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY",
       "verb": "implements"
@@ -113711,6 +113819,26 @@
       "heading": "Package facts report/adopt use the existing independently selected lock identity/hash and effective materialized format with the sole workspace record preparation and installed observer. Recorded directory selections and supported transformed representations retain original logical addresses and direct native meaning; do not force Mixed solely to read or fabricate PackageMeta/record/hash. Report is read-only and distinguishes unavailable/invalid authored totals from a genuinely unmaterialized package or zero facts. Adopt adds only requested marked missing entries, respects prefix, preserves existing entries and void semantics, and checks selection/policy/source/destination before writes. For transformed adoption, prepare exact offline locked source, configuration and prospective overlay conversion through existing owners before first registry upsert; known unsupported conversion/collision or missing source/config cannot first appear after registry mutation. Preflight itself never publishes materialization or a temporary registry. After additions execute the real retained rederive with the same selection/format, preserving overlay application. Shared workspace slots retain their workspace-root registry overlay owner. A member adoption changes its selected local registry but does not silently make shared slots member-owned: preflight and execution use the same workspace overlay, with prospective additions only when that is the registry actually being changed. Retain/recheck the consumed overlay input; do not reject an otherwise supported member operation solely to avoid this distinction or claim per-member materialized views. Original package hash, materialized file witnesses, exact persisted registry overlay hash and derived payload hash keep distinct meanings; no source hash is added to FactEntry and no guessed prospective hash replaces persisted bytes. Late I/O/concurrent failure retains named existing partial-failure behavior, not a new global transaction claim. Clean legacy and existing Mixed no-op remain compatible; declared in-place without an actual binding owner is an explicit provenance limitation, never forged authority. @status:spec/done",
       "line": 64,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-FACT-COMMANDS-LAW"
+    },
+    {
+      "anchor": "SOURCE-DOC-POINT",
+      "content_hash": "sha256:4ed5ea76352f335278b3816381f41535cf00e67d689a7fff99fb2f01184119a9",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Captured citation and agent document reads",
+      "line": 66,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-DOC-POINT-LAW",
+      "content_hash": "sha256:f694f66858f99c11cf1c077da4851b73c2d69bf58fe0ba6da7ba35893b51f015",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Citation resolution and agent page reads consume captured native bytes and declared media through the existing SpecSources selection chain. Preserve checkout, in-tree, lock and store precedence; a genuinely absent selection may advance, but a selected invalid lock binding cannot become a store fallback. An installed declared source uses independently selected full lock identity/hash and materialized input format through the existing workspace preparation and bound reader. Authored originals use held manifest policy and actual coordinate; relocated derived slots cannot masquerade as authored roots. Retain original logical relative paths independently of physical converted names and suffixes. Parse the captured Spec or Doc AST directly and recheck the selected observation before returning content. Only an actual Doc package grants documentation vocabulary; ordinary resources remain literal and cannot acquire native meaning through an anchor or suffix. Language metadata belongs to the same captured manifest observation; legitimate missing adaptations retain existing fallback, while invalid selected binding is not absence. Trusted CLI/server composition supplies materialized format without a new public option or ambient configuration discovery inside the library. Legacy path-only APIs keep their bounded contract. This point-read slice does not complete page census, borrowed-page joins, build enumeration or self-citation validation, and claims neither source authentication nor global snapshot isolation. @status:spec/done",
+      "line": 68,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT-LAW"
     },
     {
       "anchor": "genre-definition",

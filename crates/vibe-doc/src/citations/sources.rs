@@ -40,6 +40,9 @@ use vibe_core::manifest::Lockfile;
 use vibe_registry::{LocalRegistry, store};
 use vibe_spec::{Authority, FileResolver, SelectedPackage, SelfCoordinate, SpecAddress};
 
+mod captured;
+pub use captured::CapturedDocument;
+
 /// Which of the four sources answered an address.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Source {
@@ -114,6 +117,7 @@ pub struct SpecSources {
     lock: Option<PathBuf>,
     /// The machine store root.
     store: Option<PathBuf>,
+    materialized_format: Option<vibe_core::manifest::SpecFormat>,
 }
 
 impl SpecSources {
@@ -146,6 +150,7 @@ impl SpecSources {
             in_tree: Some(root.join(vibe_core::layout::current_packages_root())),
             lock: Some(root),
             store: None,
+            materialized_format: None,
         }
     }
 
@@ -167,6 +172,19 @@ impl SpecSources {
     #[must_use]
     pub fn with_lock(mut self, workspace_root: impl Into<PathBuf>) -> SpecSources {
         self.lock = Some(workspace_root.into());
+        self
+    }
+
+    /// Supply the independently selected format used to materialize lock slots.
+    /// ```
+    /// use vibe_doc::citations::SpecSources;
+    /// use vibe_core::manifest::SpecFormat;
+    /// let world = SpecSources::new().with_materialized_format(SpecFormat::Mixed);
+    /// assert!(!world.has_checkout());
+    /// ```
+    #[must_use]
+    pub fn with_materialized_format(mut self, format: vibe_core::manifest::SpecFormat) -> Self {
+        self.materialized_format = Some(format);
         self
     }
 
@@ -300,6 +318,10 @@ impl SpecSources {
             return "no source at all — the caller configured none".to_owned();
         }
         parts.join(", ")
+    }
+
+    pub(crate) fn description(&self) -> String {
+        self.describe()
     }
 }
 

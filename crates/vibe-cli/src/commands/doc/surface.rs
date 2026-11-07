@@ -130,7 +130,7 @@ fn compare(
 ) -> Result<vibe_wire::generated::doc_surface_diff::DocSurfaceDiff> {
     let coordinate = derived::coordinate_of(&args.path)?;
     let settings = super::settings_home(&env.settings, &env.home);
-    let sources = super::spec_sources(&env.cwd, settings.as_deref());
+    let sources = super::spec_sources(&env.cwd, settings.as_deref())?;
     // An obligation's address is relative to the tree it was observed
     // in, which is the checkout this command stands in. Without one the
     // rule half of the placement cannot be resolved, and the honest

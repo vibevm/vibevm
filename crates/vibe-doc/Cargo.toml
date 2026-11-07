@@ -52,6 +52,7 @@ vibe-registry.workspace = true
 # The lock file's materialisation slot (PROP-057 ##LOCAL-WARMUP names
 # `slot_abs_path` as one of this library's four sources).
 vibe-workspace.workspace = true
+vibe-safefs.workspace = true
 # A store or slot directory is named by its version, and «the freshest
 # one present» is a semver question.
 semver.workspace = true

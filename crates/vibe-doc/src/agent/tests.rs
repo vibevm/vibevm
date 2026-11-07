@@ -224,3 +224,63 @@ fn an_unreachable_package_says_where_it_was_looked_for() {
     assert!(e.to_string().contains("no source holds"), "{e}");
     assert!(e.to_string().contains("in-tree"), "{e}");
 }
+
+#[test]
+fn declared_doc_point_preserves_native_note_figure_and_original_identity() {
+    let tmp = tempfile::tempdir().unwrap();
+    let repo = world(tmp.path(), false);
+    let root = repo.join("vibevm/vibepacks/com.example/thing-docs/v0.1.0");
+    let manifest = root.join("vibe.toml");
+    let text = fs::read_to_string(&manifest).unwrap();
+    fs::write(&manifest, format!("{text}\n[[package.sources]]\nfile='vibevm/vibespecs/model/guide.payload'\nmedia='application/xml'\ninterpretation='vibe-doc'\nrole='documentation'\nloading='explicit'\n")).unwrap();
+    fs::write(root.join("vibevm/vibespecs/model/guide.payload"), "<spec xmlns='https://vibevm.org/spec/1'><title id='root'>Guide</title><note kind='warning'>Keep this note.</note><figure src='image.svg' alt='Picture'><caption>Keep this caption.</caption></figure></spec>").unwrap();
+    let address = "spec://com.example/thing-docs/model/guide.payload";
+    let world = sources(&repo);
+    let captured = world
+        .capture_document(&SpecAddress::parse(address).unwrap())
+        .unwrap()
+        .unwrap();
+    assert_eq!(captured.relative, "vibevm/vibespecs/model/guide.payload");
+    let page = read_page(address, Format::Xml, None, &world).unwrap();
+    assert!(page.text.contains("<note"), "{}", page.text);
+    assert!(page.text.contains("<figure"), "{}", page.text);
+    assert!(page.text.contains("Keep this caption."), "{}", page.text);
+    assert!(page.text.contains("Keep this note."), "{}", page.text);
+    fs::write(root.join("vibevm/vibespecs/model/guide.payload"), "changed").unwrap();
+    assert!(captured.recheck().is_err());
+}
+
+#[test]
+fn missing_adaptation_page_falls_back_but_invalid_selected_policy_does_not() {
+    let tmp = tempfile::tempdir().unwrap();
+    let repo = world(tmp.path(), true);
+    let root = repo.join("vibevm/vibepacks/com.example/thing-docs-ru/v0.1.0");
+    fs::remove_file(root.join("vibevm/vibespecs/model/boot-lane.xml")).unwrap();
+    assert_eq!(
+        read_page(ADDRESS, Format::Md, Some("ru"), &sources(&repo))
+            .unwrap()
+            .lang,
+        "en"
+    );
+    let manifest = root.join("vibe.toml");
+    let text = fs::read_to_string(&manifest).unwrap();
+    // An explicit-empty native policy offers no page; it is a legitimate miss.
+    fs::write(
+        &manifest,
+        text.replace("kind = \"doc\"", "kind = \"doc\"\nsources=[]"),
+    )
+    .unwrap();
+    assert_eq!(
+        read_page(ADDRESS, Format::Md, Some("ru"), &sources(&repo))
+            .unwrap()
+            .lang,
+        "en"
+    );
+    fs::write(&manifest, format!("{text}\n[[package.sources]]\nfile='vibevm/vibespecs/model/boot-lane.xml'\nmedia='application/xml'\ninterpretation='vibe-doc'\nrole='documentation'\nloading='explicit'\n")).unwrap();
+    assert!(
+        read_page(ADDRESS, Format::Md, Some("ru"), &sources(&repo)).is_err(),
+        "a promised file is absent, not an absent adaptation"
+    );
+    fs::write(root.join("vibe.toml"), "[malformed").unwrap();
+    assert!(read_page(ADDRESS, Format::Md, Some("ru"), &sources(&repo)).is_err());
+}

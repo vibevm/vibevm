@@ -49,7 +49,7 @@ pub fn run_todo(args: DocTodoArgs, env: DocEnv) -> Result<()> {
         // change section compares a recorded snapshot against, and it is
         // the only number this project compares versions by.
         product_version: env!("CARGO_PKG_VERSION").to_owned(),
-        sources: super::spec_sources(&env.cwd, settings.as_deref()),
+        sources: super::spec_sources(&env.cwd, settings.as_deref())?,
         corpus_root: env.cwd.clone(),
         obligations: super::surface::obligations(&env.cwd, &env.progress)?,
         min: args.min,

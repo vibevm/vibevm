@@ -220,7 +220,7 @@ fn with_no_home_at_all_the_tripwire_simply_has_no_home_half() {
 /// checkout — the local reader's own situation.
 #[test]
 fn without_a_working_directory_the_citation_world_has_no_checkout() {
-    let world = spec_sources(&None, Some(Path::new("/home/u/.vibe")));
+    let world = spec_sources(&None, Some(Path::new("/home/u/.vibe"))).unwrap();
     assert!(!world.has_checkout());
 }
 
@@ -229,7 +229,11 @@ fn without_a_working_directory_the_citation_world_has_no_checkout() {
 #[test]
 fn a_directory_with_no_manifest_answers_to_no_coordinate() {
     let tmp = tempfile::tempdir().expect("temp dir");
-    assert_eq!(self_coordinate(tmp.path()), (None, String::new()));
+    assert!(
+        spec_sources(&Some(tmp.path().into()), None)
+            .unwrap()
+            .has_checkout()
+    );
 }
 
 /// The project's own coordinate is what a `spec://` address must
@@ -239,11 +243,13 @@ fn the_checkout_coordinate_is_read_from_the_project_table() {
     let tmp = tempfile::tempdir().expect("temp dir");
     std::fs::write(
         tmp.path().join("vibe.toml"),
-        "[project]\nname = \"vibevm\"\ngroup = \"org.vibevm.core\"\n",
+        "[project]\nname = \"vibevm\"\ngroup = \"org.vibevm.core\"\nversion = \"1.0.0\"\n",
     )
     .expect("write");
     assert_eq!(
-        self_coordinate(tmp.path()),
+        self_coordinate(
+            &vibe_core::manifest::Manifest::read(tmp.path().join("vibe.toml")).unwrap()
+        ),
         (Some("org.vibevm.core".to_string()), "vibevm".to_string())
     );
 }

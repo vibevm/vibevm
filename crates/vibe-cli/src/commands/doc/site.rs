@@ -86,7 +86,7 @@ pub fn run(args: DocBuildSiteArgs, env: DocEnv) -> Result<()> {
     }
 
     let work = args.out.join(state::STATE_DIR).join(TREES_DIR);
-    let sources = spec_sources(&site, &env);
+    let sources = spec_sources(&site, &env)?;
     let builder = observe::phase(
         &env.progress,
         "Preparing documentation site builder",
@@ -440,18 +440,11 @@ fn web_package(args: &DocBuildSiteArgs, site: &Site) -> Option<PathBuf> {
 /// Named here rather than discovered, for the reason every other `vibe
 /// doc` verb names it: a documentation build that depended on an
 /// undeclared search path could not be reproduced by reading it.
-fn spec_sources(site: &Site, env: &DocEnv) -> SpecSources {
-    let sources = match site.host.as_ref() {
-        Some(host) => {
-            let (group, name) = super::self_coordinate(&host.checkout);
-            SpecSources::for_checkout(&host.checkout, group.as_deref(), &name)
-        }
-        None => SpecSources::new(),
-    };
-    match super::settings_home(&env.settings, &env.home) {
-        Some(home) => sources.with_store(home.join(super::STORE_DIR)),
-        None => sources,
-    }
+fn spec_sources(site: &Site, env: &DocEnv) -> Result<SpecSources> {
+    super::spec_sources(
+        &site.host.as_ref().map(|host| host.checkout.clone()),
+        super::settings_home(&env.settings, &env.home).as_deref(),
+    )
 }
 
 /// The composition root of this build: the registries this machine
