@@ -76,11 +76,16 @@ impl SshProfile {
             authentication,
         })
     }
-    pub(super) fn capture(
+    pub(super) fn same_endpoint(&self, other: &Self) -> bool {
+        (self.host.as_str(), self.user.as_str(), self.port)
+            == (other.host.as_str(), other.user.as_str(), other.port)
+    }
+    pub(super) fn capture_candidate(
         &self,
         address: &str,
         binding: &crate::HttpAdmission,
-    ) -> Result<Remote, GitError> {
+        profile_index: usize,
+    ) -> Result<Option<Remote>, GitError> {
         let (host, user, port, path) = if address.starts_with("ssh://") {
             let url = Url::parse(address).map_err(|_| unsupported("invalid SSH URL"))?;
             if url.password().is_some() || url.query().is_some() || url.fragment().is_some() {
@@ -122,16 +127,15 @@ impl SshProfile {
         // Root-dot normalization is solely for denial, never for credential or
         // known-host selection. The selected endpoint must match exactly.
         if host != self.host || user != self.user || port != self.port {
-            return Err(unsupported(
-                "SSH endpoint differs from the exact selected credential origin",
-            ));
+            return Ok(None);
         }
-        Ok(Remote {
+        Ok(Some(Remote {
+            profile_index,
             address: address.to_owned(),
             host,
             user,
             port,
-        })
+        }))
     }
     pub(super) fn configure(
         &self,
@@ -210,6 +214,7 @@ impl SshProfile {
     }
 }
 pub(super) struct Remote {
+    pub(super) profile_index: usize,
     pub(super) address: String,
     host: String,
     user: String,

@@ -17,6 +17,9 @@ impl MultiRegistryResolver {
         slot: &Path,
         progress: &vibe_core::progress::Progress,
     ) -> Result<crate::PackageAcquisition, RegistryError> {
+        if resolution.via_redirect.is_some() && !resolution.from_store {
+            return self.acquire_redirect(resolution, store_root, expected_hash, Some(slot));
+        }
         if !resolution.from_store
             && !resolution.overridden
             && !resolution.is_path_source
@@ -37,11 +40,12 @@ impl MultiRegistryResolver {
                 Some(&package),
                 Some(vibe_core::progress::transfer::Purpose::PackageClone),
                 || {
-                    registry.fetch_for_install(
+                    registry.fetch_on_route(
                         &resolution.resolved,
                         store_root,
                         expected_hash,
-                        slot,
+                        Some(slot),
+                        resolution.selected_route.as_ref(),
                     )
                 },
             );
@@ -185,7 +189,21 @@ impl MultiRegistryResolver {
         // provenance correctly for a registry-served local source.
         match src {
             RegistrySource::Git(reg) => {
-                reg.fetch_with_expected_hash(&resolution.resolved, store_root, expected_hash)
+                match reg.fetch_on_route(
+                    &resolution.resolved,
+                    store_root,
+                    expected_hash,
+                    None,
+                    resolution.selected_route.as_ref(),
+                )? {
+                    crate::PackageAcquisition::Cached(cached) => Ok(*cached),
+                    crate::PackageAcquisition::InPlace(prepared) => {
+                        Err(RegistryError::PreparedInPlace {
+                            path: prepared.slot().into(),
+                            reason: "cache fetch cannot return a workspace-bound candidate".into(),
+                        })
+                    }
+                }
             }
             RegistrySource::Local(ls) => {
                 let mut cached = ls.registry.fetch(&resolution.resolved, store_root)?;
@@ -206,6 +224,12 @@ impl MultiRegistryResolver {
         resolution: &MultiResolution,
         slot: &Path,
     ) -> Result<crate::PreparedInPlace, RegistryError> {
+        if resolution.via_redirect.is_some()
+            && !resolution.from_store
+            && self.backend.uses_native_materialisation()
+        {
+            return self.prepare_redirect(resolution, slot);
+        }
         if resolution.overridden
             || resolution.is_path_source
             || resolution.is_git_source
@@ -224,7 +248,11 @@ impl MultiRegistryResolver {
                 name: resolution.resolved.name.clone(),
             })?;
         match source {
-            RegistrySource::Git(registry) => registry.prepare_in_place(&resolution.resolved, slot),
+            RegistrySource::Git(registry) => registry.prepare_in_place_on_route(
+                &resolution.resolved,
+                slot,
+                resolution.selected_route.as_ref(),
+            ),
             RegistrySource::Local(_) => Err(RegistryError::InPlaceUnsupported {
                 group: resolution.resolved.group.clone(),
                 name: resolution.resolved.name.clone(),

@@ -134,6 +134,16 @@ pub(crate) fn bound_builder(builder: ClientBuilder) -> ClientBuilder {
         .retry(reqwest::retry::never())
 }
 
+/// Successful managed GET plus facts observed across its whole redirect chain.
+/// No credentials or request headers are retained in this observation.
+pub(crate) struct BoundGet {
+    pub(crate) response: Response,
+    /// Sticky even if a later redirect returns to the initial exact URL origin.
+    /// True means subsequent requests must not reattach the initial credentials.
+    pub(crate) crossed_origin: bool,
+    pub(crate) redirects_followed: usize,
+}
+
 /// Execute a fully addressed GET, admitting each explicit network attempt.
 pub(crate) fn get(
     client: &Client,
@@ -144,6 +154,20 @@ pub(crate) fn get(
     let Some(admission) = admission else {
         return Ok(request.send()?);
     };
+    Ok(get_observed(client, request, address, admission)?.response)
+}
+
+/// Execute a bound GET and retain redirect facts beyond the final response URL.
+/// The client must use `bound_builder`: automatic redirects, proxies and hidden
+/// retries would bypass this driver's observation as well as its admission.
+/// This observation is only for the manually driven bound path; never supply
+/// an automatic-redirect client.
+pub(crate) fn get_observed(
+    client: &Client,
+    request: RequestBuilder,
+    address: &str,
+    admission: &HttpAdmission,
+) -> Result<BoundGet, HttpGetError> {
     // reqwest may reject a hostless scheme or convert userinfo into Basic
     // auth before build succeeds. Admit the owner's address first, so neither
     // transformation can erase the typed refusal. The built URL is checked
@@ -153,11 +177,16 @@ pub(crate) fn get(
     let mut url = request.url().clone();
     let mut headers = request.headers().clone();
     headers.remove(REFERER);
+    let mut crossed_origin = false;
     for followed in 0..=10 {
         admission.admit(&url)?;
         let response = client.get(url.clone()).headers(headers.clone()).send()?;
         if !matches!(response.status().as_u16(), 301 | 302 | 303 | 307 | 308) {
-            return Ok(response);
+            return Ok(BoundGet {
+                response,
+                crossed_origin,
+                redirects_followed: followed,
+            });
         }
         if followed == 10 {
             return Err(ContactRefusal::RedirectLimit.into());
@@ -171,7 +200,7 @@ pub(crate) fn get(
             .url()
             .join(location)
             .map_err(|_| ContactRefusal::InvalidRedirect)?;
-        redirect_headers(&url, &next, &mut headers)?;
+        crossed_origin |= redirect_headers(&url, &next, &mut headers)?;
         url = next;
     }
     Err(ContactRefusal::RedirectLimit.into())
@@ -181,16 +210,17 @@ fn redirect_headers(
     from: &Url,
     to: &Url,
     headers: &mut reqwest::header::HeaderMap,
-) -> Result<(), ContactRefusal> {
+) -> Result<bool, ContactRefusal> {
     if from.scheme() == "https" && to.scheme() == "http" {
         return Err(ContactRefusal::HttpsDowngrade);
     }
-    if from.origin() != to.origin() {
+    let crossed_origin = from.origin() != to.origin();
+    if crossed_origin {
         headers.remove(AUTHORIZATION);
         headers.remove(COOKIE);
         headers.remove(PROXY_AUTHORIZATION);
     }
-    Ok(())
+    Ok(crossed_origin)
 }
 
 #[cfg(test)]

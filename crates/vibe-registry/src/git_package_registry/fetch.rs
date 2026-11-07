@@ -10,6 +10,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 use super::*;
 use crate::store::{self, InsertOutcome};
 
+mod api;
 mod identity;
 use identity::commit_content_hash;
 pub(crate) use identity::verify_store_entry_against_pin;
@@ -119,7 +120,7 @@ impl GitPerPackageRegistry {
     ) -> Result<InPlaceMaterialised, RegistryError> {
         self.ensure_token_loaded()?;
         let canonical_url = self.package_repo_url(&resolved.group, &resolved.name)?;
-        let tag = format!("v{}", resolved.version);
+        let tag = self.package_reference(resolved);
         let existed = slot.join(".git").exists();
         let before_head = if existed {
             self.backend.head_commit(slot)?
@@ -169,130 +170,41 @@ impl GitPerPackageRegistry {
         Ok(())
     }
 
-    /// Fetch the resolved package into the machine-global store.
-    /// Clones (or updates) the per-package repo at the requested tag,
-    /// then — once a source is accepted — inserts the `.git`-stripped
-    /// worktree into `<store_root>/<group>/<name>/v<version>/`
-    /// write-once (PROP-010 §2.7).
-    ///
-    /// Mirror-aware: the primary URL is tried first, then each mirror
-    /// in priority order. Whichever source lands the clone first wins
-    /// and the store entry is inserted from that clone. The
-    /// [`CachedPackage::source_uri`] is **always** the canonical
-    /// primary URL — mirror URLs are an availability detail, not a
-    /// lockfile-recorded identity (PROP-002 §2.3 step 3).
-    ///
-    /// No content_hash gate at this layer — see
-    /// [`Self::fetch_with_expected_hash`] for the cross-source
-    /// integrity check.
-    pub fn fetch(
-        &self,
-        resolved: &ResolvedPackage,
-        store_root: &Path,
-    ) -> Result<CachedPackage, RegistryError> {
-        self.fetch_with_expected_hash(resolved, store_root, None)
-    }
-
-    /// Mirror-aware fetch with an optional cross-source content_hash
-    /// gate, inserting the accepted payload into the machine-global
-    /// store (PROP-010 §2.7).
-    ///
-    /// Walks the URL chain primary-first; for each URL that yields a
-    /// working clone, computes the content hash and applies the gate:
-    ///
-    /// - If `expected_hash` is `None` (no lockfile pin), accept the
-    ///   first source that lands content. Equivalent to [`Self::fetch`].
-    /// - If `expected_hash` is `Some(h)`, accept the first source
-    ///   whose computed hash equals `h`. Sources serving a disagreeing
-    ///   hash trigger a `tracing::warn!` (mirror-integrity event) and
-    ///   the walk continues to the next URL — as a source switch
-    ///   (clone-beside-and-swap), so a poisoned source's bytes can
-    ///   never survive into the next attempt's clone while nothing on
-    ///   disk is deleted along the way (PROP-010 §2.6). This is the
-    ///   supply-chain check from
-    ///   [PROP-002 §2.3](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#mirror).
-    ///
-    /// **The store insert happens only for an accepted source** — the
-    /// store is written once (`~/.vibe/cache/`, PROP-010 §2.7), so a
-    /// rejected mirror's bytes must never become the entry. The
-    /// returned [`CachedPackage::cache_dir`] is the store entry's
-    /// path: `vibedeps/` materialisation reads its bytes from there.
-    /// When the entry already existed, `insert_at` rewrites nothing,
-    /// and — with a pin on record — the entry itself is verified
-    /// against the pin before it becomes the materialisation source:
-    /// a tampered store is named, never silently used and never
-    /// silently re-downloaded (PROP-010 §2.7, mismatch-is-named).
-    /// Without a pin the entry is trusted as-is; re-hashing the store
-    /// on every resolve is `vibe cache check`'s job, not a tax the
-    /// ordinary path pays.
-    ///
-    /// If every URL is reached but none matches, the **last
-    /// successful fetch's** [`CachedPackage`] is returned (with the
-    /// disagreeing hash — nothing was inserted); it is the caller's
-    /// responsibility — today `vibe-install`'s `plan_install` — to
-    /// convert the stored hash vs. lockfile-pin mismatch into the
-    /// user-actionable `ContentDrift` error. Its `cache_dir` points
-    /// at the clone directory purely so the value is well-formed; the
-    /// caller consumes only `content_hash`, the drift signal, and the
-    /// clone itself stays as the last attempt left it. This
-    /// split keeps registry-layer concerns (sources, fallback,
-    /// integrity attempts) separate from install-layer concerns
-    /// (lockfile-aware error rendering).
-    ///
-    /// If every URL fails at the network layer (no source produced
-    /// any content), the **primary's** error is surfaced — same
-    /// "primary is canonical and its diagnostic is most useful"
-    /// semantics as [`Self::try_lookup`].
-    pub fn fetch_with_expected_hash(
-        &self,
-        resolved: &ResolvedPackage,
-        store_root: &Path,
-        expected_hash: Option<&str>,
-    ) -> Result<CachedPackage, RegistryError> {
-        match self.fetch_acquisition(resolved, store_root, expected_hash, None)? {
-            PackageAcquisition::Cached(cached) => Ok(*cached),
-            PackageAcquisition::InPlace(prepared) => Err(RegistryError::PreparedInPlace {
-                path: prepared.slot().into(),
-                reason: "workspace-bound preparation requires the install acquisition consumer"
-                    .into(),
-            }),
-        }
-    }
-
-    /// Select once, retaining native in-place objects until checked workspace apply.
-    #[specmark::spec(
-        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW"
-    )]
-    pub fn fetch_for_install(
-        &self,
-        resolved: &ResolvedPackage,
-        store_root: &Path,
-        expected_hash: Option<&str>,
-        workspace_slot: &Path,
-    ) -> Result<PackageAcquisition, RegistryError> {
-        self.fetch_acquisition(resolved, store_root, expected_hash, Some(workspace_slot))
-    }
-
     fn fetch_acquisition(
         &self,
         resolved: &ResolvedPackage,
         store_root: &Path,
         expected_hash: Option<&str>,
         workspace_slot: Option<&Path>,
+        route: Option<&RegistryRoute>,
     ) -> Result<PackageAcquisition, RegistryError> {
         // PROP-002 §2.2.1 — bail before any clone work when this
         // registry is `auth = "token-env"` but the env-var resolved
         // empty.
         self.ensure_token_loaded()?;
         let canonical_url = self.package_repo_url(&resolved.group, &resolved.name)?;
-        let tag = format!("v{}", resolved.version);
+        let tag = self.package_reference(resolved);
         let (primary, mirrors) = self.package_urls(&resolved.group, &resolved.name)?;
         let clone_dir = self.package_clone_dir(&resolved.group, &resolved.name);
 
+        let mut candidates: Vec<String> = std::iter::once(primary.clone())
+            .chain(mirrors.iter().cloned())
+            .collect();
+        if let Some(route) = route {
+            let selected = route.validate(self, resolved)?.to_owned();
+            // Existing unbound cache refreshes use their own origin first and
+            // keep the legacy primary/mirror fallback order. Native candidates
+            // retain their explicitly admitted route and checked switch logic.
+            if self.backend.uses_native_materialisation() || !clone_dir.join(".git").exists() {
+                candidates.retain(|url| url != &selected);
+                candidates.insert(0, selected);
+            }
+        }
+        let mut excluded = None;
         let mut primary_err: Option<RegistryError> = None;
         let mut last_cached: Option<CachedPackage> = None;
 
-        for (i, url) in std::iter::once(&primary).chain(mirrors.iter()).enumerate() {
+        for (i, url) in candidates.iter().enumerate() {
             // 1. Bring the local clone to `tag` from this URL. The
             //    first attempt refreshes whatever copy is already on
             //    disk (in place, never deleted on failure); every
@@ -305,14 +217,28 @@ impl GitPerPackageRegistry {
                 BringIntent::SwitchSource
             };
             let native = if self.backend.uses_native_materialisation() {
-                match self.prepare_native_attempt(resolved, url, &clone_dir, i == 0, workspace_slot)
-                {
+                let refresh = i == 0
+                    && (route.is_none()
+                        || !clone_dir.join(".git").exists()
+                        || self.backend.recorded_origin_url(&clone_dir)?
+                            == strip_git_plus_prefix(url));
+                match self.prepare_native_attempt(
+                    resolved,
+                    url,
+                    &clone_dir,
+                    refresh,
+                    workspace_slot,
+                ) {
                     Ok(prepared) => Some(prepared),
+                    Err(prepared::PreparationFailure::Admission(error))
+                        if excluded_route(&error) =>
+                    {
+                        excluded.get_or_insert(error);
+                        continue;
+                    }
                     Err(prepared::PreparationFailure::Admission(error)) => return Err(error),
                     Err(prepared::PreparationFailure::Acquisition(error)) => {
-                        if i == 0 {
-                            primary_err = Some(error)
-                        }
+                        primary_err.get_or_insert(error);
                         continue;
                     }
                 }
@@ -565,10 +491,12 @@ impl GitPerPackageRegistry {
             // already carries.
             return Ok(PackageAcquisition::Cached(Box::new(cached)));
         }
-        Err(primary_err.unwrap_or_else(|| RegistryError::MalformedMeta {
-            path: clone_dir,
-            reason: "source chain produced neither a package nor an acquisition error".into(),
-        }))
+        Err(primary_err
+            .or(excluded)
+            .unwrap_or_else(|| RegistryError::MalformedMeta {
+                path: clone_dir,
+                reason: "source chain produced neither a package nor an acquisition error".into(),
+            }))
     }
 }
 

@@ -4,6 +4,10 @@ use super::*;
 use crate::{GitBackend, ShellGit};
 use std::io::{BufRead, BufReader};
 use std::process::{Command, Stdio};
+#[path = "gitlink_tests.rs"]
+mod gitlink_tests;
+#[path = "routes_tests.rs"]
+mod routes_tests;
 pub(super) struct Fixture {
     child: std::process::Child,
     info: serde_json::Value,
@@ -40,6 +44,13 @@ impl Fixture {
             .unwrap_or_default()
             .lines()
             .count()
+    }
+    pub(super) fn connections(&self, host: &str) -> usize {
+        match std::fs::read_to_string(Path::new(self.get("root")).join(format!("{host}.tcp.log"))) {
+            Ok(log) => log.lines().count(),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => 0,
+            Err(error) => panic!("cannot read isolated TCP counter: {error}"),
+        }
     }
 }
 impl Drop for Fixture {
@@ -510,83 +521,9 @@ fn smart_https_preparation_keeps_existing_transfer_journal_observation() {
             .contains("POST /smart/repo.git/git-upload-pack")
     );
 }
-#[test]
-fn denied_mirror_stays_typed_after_primary_absence_and_stops_the_next_route() {
-    use crate::{GitPerPackageRegistry, ResolvedPackage};
-    use vibe_core::manifest::NamingConvention;
-    let f = Fixture::new();
-    let temp = tempfile::tempdir().unwrap();
-    assert_eq!(
-        f.backend()
-            .list_tags(&format!("{}/public/org.fixture.demo.git", f.get("a")))
-            .unwrap(),
-        ["v1.0.0", "v2.0.0"]
-    );
-    std::fs::write(Path::new(f.get("root")).join("a.log"), "").unwrap();
-    let registry = GitPerPackageRegistry::open_with_explicit_token(
-        "fixture",
-        &format!("{}/missing", f.get("a")),
-        "main",
-        NamingConvention::Fqdn,
-        vec![
-            format!("{}/public", f.get("b")),
-            format!("{}/public", f.get("a")),
-        ],
-        &temp.path().join("cache"),
-        Arc::new(f.backend()),
-        3600,
-        vibe_core::manifest::AuthKind::None,
-        None,
-    )
-    .unwrap();
-    let selected = ResolvedPackage {
-        group: vibe_core::Group::parse("org.fixture").unwrap(),
-        name: "demo".into(),
-        version: semver::Version::new(1, 0, 0),
-        source_dir: PathBuf::new(),
-    };
-    assert!(matches!(
-        registry.prepare_in_place(&selected, &temp.path().join("slot")),
-        Err(crate::RegistryError::ContactRefused(
-            crate::ContactRefusal::ExcludedHost { .. }
-        ))
-    ));
-    assert_eq!(f.contacts("b"), 0);
-    let requests = std::fs::read_to_string(Path::new(f.get("root")).join("a.log")).unwrap();
-    assert!(requests.contains("/missing/"));
-    assert!(!requests.contains("/public/"));
-}
 
 #[path = "materialisation_tests.rs"]
 mod materialisation_tests;
 
-#[test]
-fn direct_public_https_constructor_retains_useful_anonymous_preparation() {
-    let f = Fixture::new();
-    let temp = tempfile::tempdir().unwrap();
-    let registry = crate::GitPerPackageRegistry::open_single_package(
-        "public",
-        &format!("{}/repo.git", f.get("a")),
-        "main",
-        temp.path(),
-        Arc::new(f.backend()),
-        0,
-        vibe_core::manifest::AuthKind::None,
-        None,
-    )
-    .unwrap();
-    let selected = crate::ResolvedPackage {
-        group: vibe_core::Group::parse("org.fixture").unwrap(),
-        name: "demo".into(),
-        version: semver::Version::new(1, 0, 0),
-        source_dir: PathBuf::new(),
-    };
-    assert_eq!(
-        registry
-            .prepare_in_place(&selected, &temp.path().join("slot"))
-            .unwrap()
-            .resolved_commit(),
-        f.get("head")
-    );
-    assert_eq!(f.contacts("b"), 0);
-}
+#[path = "constructor_tests.rs"]
+mod constructor_tests;

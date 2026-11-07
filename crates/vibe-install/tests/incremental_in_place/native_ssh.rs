@@ -24,6 +24,15 @@ fn ssh_fixture(agent: bool) -> (Server, serde_json::Value, Fixture) {
         .unwrap();
     let info: serde_json::Value = serde_json::from_str(&line).unwrap();
     let mut f = Fixture::new();
+    f.source.registry = registry_for(&info, &f, agent, "v1.0.0");
+    (server, info, f)
+}
+fn registry_for(
+    info: &serde_json::Value,
+    f: &Fixture,
+    agent: bool,
+    reference: &str,
+) -> GitPerPackageRegistry {
     let authentication = if agent {
         SshAuthentication::AgentSocket(info["agent_socket"].as_str().unwrap().into())
     } else {
@@ -54,18 +63,17 @@ fn ssh_fixture(agent: bool) -> (Server, serde_json::Value, Fixture) {
     )
     .with_ssh_profile(ssh)
     .with_config_selection(selection);
-    f.source.registry = GitPerPackageRegistry::open_single_package(
+    GitPerPackageRegistry::open_single_package(
         "ssh-fixture",
         info["url"].as_str().unwrap(),
-        "main",
+        reference,
         &f._temp.path().join("ssh-cache"),
         Arc::new(ShellGit::new().with_native_admission(Arc::new(profile))),
         0,
         AuthKind::Ssh,
         None,
     )
-    .unwrap();
-    (server, info, f)
+    .unwrap()
 }
 fn ssh_contacts(info: &serde_json::Value) -> (usize, usize) {
     let read = |label| {
@@ -82,8 +90,17 @@ fn ssh_contacts(info: &serde_json::Value) -> (usize, usize) {
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH-LAW")]
 fn public_ssh_key_and_agent_fresh_warm_update_and_noop_use_retained_source() {
     for agent in [false, true] {
-        let (_server, info, f) = ssh_fixture(agent);
+        let (_server, info, mut f) = ssh_fixture(agent);
         let plan = f.ready();
+        assert_eq!(
+            plan.package_sources()
+                .next()
+                .unwrap()
+                .3
+                .source_ref
+                .as_deref(),
+            Some("v1.0.0")
+        );
         let before = ssh_contacts(&info);
         let result =
             vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
@@ -108,7 +125,17 @@ fn public_ssh_key_and_agent_fresh_warm_update_and_noop_use_retained_source() {
         );
         let config = fs::read(f.slot.join(".git/config")).unwrap();
         *f.source.version.borrow_mut() = semver::Version::new(1, 1, 0);
+        f.source.registry = registry_for(&info, &f, agent, "v1.1.0");
         let plan = f.ready();
+        assert_eq!(
+            plan.package_sources()
+                .next()
+                .unwrap()
+                .3
+                .source_ref
+                .as_deref(),
+            Some("v1.1.0")
+        );
         let before = ssh_contacts(&info);
         let result =
             vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
@@ -142,8 +169,19 @@ fn public_ssh_key_and_agent_fresh_warm_update_and_noop_use_retained_source() {
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH-LAW")]
 fn public_ssh_hook_failure_restores_original_slot_and_metadata() {
-    let (_server, info, f) = ssh_fixture(false);
-    vibe_install::apply(&f.source, *f.ready(), SlotIntegrity::Verify, &policy()).unwrap();
+    let (_server, info, mut f) = ssh_fixture(false);
+    let initial = f.ready();
+    assert_eq!(
+        initial
+            .package_sources()
+            .next()
+            .unwrap()
+            .3
+            .source_ref
+            .as_deref(),
+        Some("v1.0.0")
+    );
+    vibe_install::apply(&f.source, *initial, SlotIntegrity::Verify, &policy()).unwrap();
     write(&f.slot, ".git/sentinel", "rollback metadata");
     write(&f.slot, "untracked.tmp", "old actor bytes");
     let work = Path::new(info["root"].as_str().unwrap()).join("work");
@@ -171,7 +209,17 @@ fn public_ssh_hook_failure_restores_original_slot_and_metadata() {
         ],
     );
     *f.source.version.borrow_mut() = semver::Version::new(1, 1, 0);
+    f.source.registry = registry_for(&info, &f, false, "v1.1.0");
     let plan = f.ready();
+    assert_eq!(
+        plan.package_sources()
+            .next()
+            .unwrap()
+            .3
+            .source_ref
+            .as_deref(),
+        Some("v1.1.0")
+    );
     let before = failures::snapshot(&f.project);
     let contacts = ssh_contacts(&info);
     let error =

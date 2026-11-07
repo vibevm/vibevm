@@ -202,23 +202,27 @@ impl MultiRegistryResolver {
             match src {
                 RegistrySource::Git(reg) => {
                     match self.ask_remote(reg, group, pkgref.name.as_str(), task, || {
-                        reg.resolve(pkgref)
+                        reg.resolve_with_route(pkgref)
                     }) {
-                        Ok(resolved) => {
+                        Ok((resolved, selected_route)) => {
                             let stub_tag = format!("v{}", resolved.version);
                             // Step 2a: redirect probe (PROP-002 §2.4.2). The
                             // registry served a tag; check whether the repo
                             // at that tag is a stub pointing elsewhere. The
                             // probe is one extra `git archive` call, only
                             // when the registry-walk leg succeeded; cheap.
-                            if let Some(redirect) =
-                                try_fetch_redirect(&self.backend, reg, &resolved, &stub_tag)?
-                            {
+                            if let Some(redirect) = try_fetch_redirect(
+                                reg,
+                                &resolved,
+                                &stub_tag,
+                                selected_route.as_ref(),
+                            )? {
                                 return self
                                     .follow_redirect(pkgref, &resolved, reg, &redirect, &stub_tag);
                             }
                             let url = reg.package_repo_url(&resolved.group, &resolved.name)?;
                             return Ok(MultiResolution {
+                                selected_route,
                                 resolved,
                                 registry_name: Some(reg.name().to_string()),
                                 source_url: url,
@@ -285,6 +289,7 @@ impl MultiRegistryResolver {
                     match ls.registry.resolve(pkgref) {
                         Ok(resolved) => {
                             return Ok(MultiResolution {
+                                selected_route: None,
                                 resolved,
                                 registry_name: Some(ls.name.clone()),
                                 source_url: ls.url.clone(),
@@ -483,14 +488,11 @@ impl MultiRegistryResolver {
             // policy so private targets keep working.
             let target_url = resolution.source_url.clone();
             let target_ref = resolution.source_ref.clone().unwrap_or_default();
-            let synthetic_name = format!("redirect-target-{group}-{name}");
-            let target_reg = GitPerPackageRegistry::open_single_package(
-                &synthetic_name,
+            let target_reg = self.redirect_target_registry(
+                group,
+                name,
                 &target_url,
                 &target_ref,
-                &self.cache_root,
-                Arc::clone(&self.backend),
-                DEFAULT_FRESHNESS_SECS,
                 resolution.redirect_target_auth,
                 resolution.redirect_target_token_env.as_deref(),
             )?;
@@ -545,14 +547,20 @@ impl MultiRegistryResolver {
         {
             task.detail(format!("reading metadata from registry {name_filter}"));
             return match src {
-                RegistrySource::Git(reg) => reg.fetch_dep_manifest(group, name, version),
+                RegistrySource::Git(reg) => reg.fetch_dep_manifest_selected(
+                    &resolution.resolved,
+                    resolution.selected_route.as_ref(),
+                ),
                 RegistrySource::Local(ls) => read_local_dep_manifest(ls, group, name, version),
             };
         }
         let mut last_err: Option<RegistryError> = None;
         for src in &self.sources {
             let tried = match src {
-                RegistrySource::Git(reg) => reg.fetch_dep_manifest(group, name, version),
+                RegistrySource::Git(reg) => reg.fetch_dep_manifest_selected(
+                    &resolution.resolved,
+                    resolution.selected_route.as_ref(),
+                ),
                 RegistrySource::Local(ls) => read_local_dep_manifest(ls, group, name, version),
             };
             match tried {

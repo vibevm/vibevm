@@ -8,16 +8,20 @@ use std::{
     sync::{Arc, Mutex},
 };
 mod capture;
+mod child_layout;
 pub(super) mod ssh;
 pub use ssh::{SshAuthentication, SshProfile};
 mod context;
 pub use capture::NativeConfigSelection;
 mod materialisation;
 pub use materialisation::NativeMaterialisation;
+mod gitlinks;
 mod metadata;
 mod preparation;
+mod relocation;
 pub(super) use context::AdmittedCommand;
 use context::Context;
+pub use relocation::HttpDiscoveryTrust;
 
 /// Caller-trusted Git installation. Absolute paths are checked for consistency,
 /// not authenticated. Never construct this from package metadata or remote data.
@@ -73,7 +77,8 @@ pub struct NativeGitAdmission {
     installation: GitInstallation,
     trust: TlsTrust,
     selection: Option<NativeConfigSelection>,
-    ssh: Option<SshProfile>,
+    ssh: Vec<SshProfile>,
+    discovery: Option<HttpDiscoveryTrust>,
 }
 impl NativeGitAdmission {
     /// Select direct HTTPS with caller-trusted Git and TLS inputs. This does not
@@ -90,17 +95,32 @@ impl NativeGitAdmission {
             installation,
             trust,
             selection: None,
-            ssh: None,
+            ssh: Vec::new(),
+            discovery: None,
         }
     }
-    /// Extend this immutable capability with an exact explicitly selected SSH
-    /// endpoint, explicitly for fresh acquisition and warm refresh alike.
+    /// Replace the entire SSH grant set with one explicitly selected endpoint,
+    /// explicitly for fresh acquisition and warm refresh alike.
     /// Historical ambient SSH configuration is replaced by this caller choice,
     /// not captured or declared equivalent. Git origin witnesses still recheck.
     /// No agent, identity or SSH configuration is inherited.
     pub fn with_ssh_profile(mut self, ssh: SshProfile) -> Self {
-        self.ssh = Some(ssh);
+        self.ssh = vec![ssh];
         self
+    }
+    /// Replace the exact SSH grant set. Duplicate endpoint grants refuse even
+    /// when their keys differ; implicit-user/SCP ambiguity refuses at capture.
+    pub fn with_ssh_profiles(mut self, profiles: Vec<SshProfile>) -> Result<Self, GitError> {
+        for (index, profile) in profiles.iter().enumerate() {
+            if profiles[..index]
+                .iter()
+                .any(|other| profile.same_endpoint(other))
+            {
+                return Err(unsupported("duplicate exact SSH endpoint grants"));
+            }
+        }
+        self.ssh = profiles;
+        Ok(self)
     }
     pub(crate) fn preflight_registry_auth(
         &self,
@@ -109,7 +129,7 @@ impl NativeGitAdmission {
         use vibe_core::manifest::AuthKind;
         match auth {
             AuthKind::None | AuthKind::TokenEnv => Ok(()),
-            AuthKind::Ssh if self.ssh.is_some() => Ok(()),
+            AuthKind::Ssh if !self.ssh.is_empty() => Ok(()),
             _ => Err(unsupported(
                 "declared credential route requires a separate admitted profile",
             )),
@@ -186,13 +206,17 @@ impl NativeGitAdmission {
             return Err(unsupported("control character in endpoint"));
         }
         if address.starts_with("ssh://") || (!address.contains("://") && address.contains(':')) {
-            let profile = self
-                .ssh
-                .as_ref()
-                .ok_or_else(|| unsupported("SSH requires an explicit selected profile"))?;
-            return profile
-                .capture(address, &self.binding)
-                .map(AdmittedRemote::Ssh);
+            let mut selected = None;
+            for (index, profile) in self.ssh.iter().enumerate() {
+                if let Some(remote) = profile.capture_candidate(address, &self.binding, index)?
+                    && selected.replace(remote).is_some()
+                {
+                    return Err(unsupported("ambiguous exact SSH grants for this address"));
+                }
+            }
+            return selected
+                .map(AdmittedRemote::Ssh)
+                .ok_or_else(|| unsupported("SSH endpoint requires one exact selected profile"));
         }
         let mut url =
             Url::parse(address).map_err(|_| unsupported("direct HTTPS endpoint required"))?;
@@ -266,15 +290,19 @@ pub(super) struct Preparation<'a> {
     pub destination: &'a Path,
     pub anonymous: bool,
 }
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct OwnedRepository {
     config: Vec<u8>,
     origin: String,
+    serving_endpoint: String,
     revision: GitPreparedRevision,
     context: Option<capture::CapturedContext>,
     source: Option<PathBuf>,
     source_before: Option<materialisation::Tree>,
     destination_bound: bool,
+    children: Vec<gitlinks::Child>,
+    gitlink: bool,
+    child_layout: Option<capture::ManagedChild>,
 }
 
 /// Acquired native objects whose final destination has not yet been selected.
@@ -306,9 +334,22 @@ impl NativeSource {
                 "native source token was already bound or changed",
             ));
         }
-        value.destination_bound = true;
-        value.revision.destination = destination.into();
-        Ok(value.revision.clone())
+        let mut pending = vec![(self.objects.clone(), destination.to_path_buf())];
+        while let Some((objects, destination)) = pending.pop() {
+            let value = owned
+                .get_mut(&objects)
+                .ok_or_else(|| unsupported("retained child source is missing"))?;
+            value.destination_bound = true;
+            value.revision.destination = destination.clone();
+            for child in &mut value.children {
+                child.revision.destination = destination.join(&child.path);
+                pending.push((child.objects.clone(), child.revision.destination.clone()));
+            }
+        }
+        owned
+            .get(&self.objects)
+            .map(|value| value.revision.clone())
+            .ok_or_else(|| unsupported("bound source is no longer retained"))
     }
 }
 #[derive(Debug)]
@@ -364,6 +405,7 @@ impl NativeState {
         let remote = self
             .profile
             .capture_for_request(address, anonymous, registry_auth)?;
+        let remote = self.profile.relocate(remote)?;
         Context::new(&self.profile)?.run(
             &["ls-remote", "--tags", "--", remote.address()],
             None,
@@ -389,6 +431,12 @@ impl NativeState {
         }
         read(value)
     }
+    pub(in crate::git_backend::shell) fn serving_endpoint(
+        &self,
+        path: &Path,
+    ) -> Result<String, GitError> {
+        self.with_owned(path, |owned| Ok(owned.serving_endpoint.clone()))
+    }
     pub(super) fn file(
         &self,
         objects: &Path,
@@ -398,6 +446,29 @@ impl NativeState {
         self.with_owned(objects, |owned| {
             if commit != owned.revision.commit || !full_oid(commit) {
                 return Err(unsupported("file read is not bound to the retained commit"));
+            }
+            let context = Context::new(&self.profile)?;
+            let entry = context.run(&["ls-tree", "-z", commit, "--", path], Some(objects), None)?;
+            if entry.stdout.is_empty() {
+                return Err(GitError::FileNotFoundInRef {
+                    url: owned.origin.clone(),
+                    refname: owned.revision.reference.clone(),
+                    path: path.into(),
+                });
+            }
+            let entries: Vec<_> = entry
+                .stdout
+                .split(|byte| *byte == 0)
+                .filter(|entry| !entry.is_empty())
+                .collect();
+            if entries.len() != 1
+                || !(entries[0].starts_with(b"100644 blob ")
+                    || entries[0].starts_with(b"100755 blob "))
+                || entries[0].split(|byte| *byte == b'\t').nth(1) != Some(path.as_bytes())
+            {
+                return Err(unsupported(
+                    "retained metadata path is not one exact regular file",
+                ));
             }
             Context::new(&self.profile)?
                 .run(
@@ -444,3 +515,8 @@ mod ssh_tests;
 
 #[cfg(all(test, unix))]
 mod registry_auth_tests;
+#[cfg(all(test, unix))]
+mod relocation_tests;
+
+#[cfg(all(test, unix))]
+mod mixed_gitlink_tests;

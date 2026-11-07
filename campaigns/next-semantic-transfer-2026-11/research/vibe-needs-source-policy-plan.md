@@ -111,3 +111,38 @@ Proposed acceptance tests (not executed): absence preserves old results; explici
 Integration packaging is now settled by root: a real vertical consumer; keep public options until completion. No temporary exposed parse-and-refuse feature.
 
 No question remains about effective-catalog pin scope, fixed-version preference or no-contact timing; root already settled those.
+
+## VN-REGISTRY-TRANSPORT — SSH integration and locked-source authority
+
+Latest owner decision, 2026-11-08: `registry.toml` is used only to obtain the index and install new packages. A package already in `vibe.lock` resolves strictly from that lock. This supersedes earlier proposals to migrate installed/cached packages automatically when the registry URL changes. Those proposals were not implemented.
+
+### Required behavior
+
+- New packages and index discovery use the effective registry configuration, including a user-selected HTTPS or SSH URL. Preserve existing project/global precedence and show which declaration is effective.
+- Existing locked packages use their locked source, source kind, revision/commit and content constraints. A missing cache triggers acquisition from the locked source. Failure there is explicit; it must not silently reselect a current registry, mirror or same-version alternative. Verified cached content can satisfy the locked identity without contact.
+- Editing a local registry URL does not change a locked package's transport or rewrite a shared lock. Unchanged selection/content leaves the lock byte-identical, including generation timestamps and comments. Local keys, agent paths and developer-specific execution routes do not belong in shared lock/provenance.
+- `vibe.lock.provenance` remains an optional report under PROP-066, not a resolution grant or required hidden lock. Removing it cannot change selection. Do not promote old observed fetched routes into source authority.
+- Ordinary `~/.ssh` identity files, applicable direct SSH configuration, agent and known-host trust should work for new SSH registries and locked SSH sources. No copying private keys into Vibe settings. Exact effective endpoint admission and credential ceilings remain enforced; unsupported active configuration must not be silently ignored.
+- Explicit update/relock semantics must preserve the distinction between replaying the current lock and deliberately changing it. An ordinary install, reinstall or cache miss is not implicit permission to discard locked source constraints.
+
+### Implementation owners and order
+
+1. Preserve authored auth presence on `RegistrySection`: omitted transport default is distinct from explicit `auth = "none"`. Keep low-level `AuthKind` semantics and package/redirect auth unchanged. Preserve explicit-none serialization and rejection of explicit JSON null. Resolve auth conflicts before credentials or probes; document Rust API and semantic compatibility changes in FORMAT-CHANGES.
+2. Use the existing resolver/provider to select locked versus new requirements before online source walking. Carry the complete locked source through metadata, acquisition and in-place preparation, rather than only a version/hash. Current indexes cannot retarget existing locked selections. Supported legacy locks must retain source facts; unsupported semantics refuse rather than becoming an empty lock.
+3. Capture ordinary SSH inputs through a shared factory used by project commands and global app resolution. Use selected OpenSSH on an audited frozen config closure; do not implement another Host-pattern evaluator or execute unexamined Match/Include commands. Preserve ordered identity files plus the permitted agent and strict known-host verification. Keep local/file/embedded and supported explicit legacy routes functional; no fallback from an admitted refusal.
+4. Wire these choices into `vibe-package-source` and existing registry/index owners. Automatic HTTP index optimization must not undo an explicit SSH route; separately declared index semantics remain explicit. No per-host downloader or second resolver.
+5. Preserve original lock bytes when authoritative selection/content is unchanged, before assigning a new timestamp. N2 checked placement/undo continues to protect local edits and foreign replacements. A live checkout origin is an observation, not authority to override the locked source.
+
+Global applications currently have no global lock in the audited `from_global` path. New `vibe install -g` uses current registry through the shared factory. Existing application source reports do not become locks by implication; keep their established lifecycle semantics unless a separate pinned-replay contract is implemented. Project-scoped locked apps follow the same locked-source path as other packages.
+
+### Acceptance through actual commands
+
+Use isolated settings/HOME, owned HTTPS/SSH fixtures and actual `vibe` subprocesses, not injected internal profiles. No owner settings or keys are modified.
+
+- Lock HTTPS, change registry to SSH: warm reuse preserves the lock bytes; cold-cache repair still contacts only locked HTTPS. Reverse the transports and repeat. An unavailable locked endpoint fails without current-registry fallback.
+- Add a genuinely new package/index request: it uses current registry while the old dependency closure remains locked. Exercise project install/reinstall and new global installation through the shared factory.
+- Verify default/custom SSH identity, configured permitted agent, first-value config/URL precedence and known-host trust; missing/wrong credentials fail safely. Test explicit none versus omission, incompatible auth, and absence of credential leakage in reports/configuration.
+- Include same-name project/global precedence, local/file/embedded controls, dirty/divergent in-place state, moved ref or content mismatch, legacy-lock handling, and rollback. Deleting the optional provenance report must not change resolution.
+- Two developer configurations sharing one lock must not create different lock bytes solely due to local settings. Cache-hit success alone is not proof of transport acquisition: force cold/new-package cases and count endpoint contacts.
+
+This is an authorized next implementation, not delivered behavior. N3 is accepted; N4 requires its final provenance correction and acceptance first. No new public TOML key or wire schema is declared by this plan. Actual format changes must be logged before publication.

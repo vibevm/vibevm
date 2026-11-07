@@ -219,7 +219,7 @@ fn direct_constructors_enforce_mechanisms_before_actual_request() {
                 .prepare_in_place(&selected(), &tmp.path().join("public-allowed"))
                 .unwrap()
                 .resolved_commit(),
-            https.get("head")
+            https.get("current_head")
         );
     }
 }

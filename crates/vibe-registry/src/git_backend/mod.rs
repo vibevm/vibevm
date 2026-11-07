@@ -227,6 +227,11 @@ pub enum GitError {
 /// # Ok::<(), GitError>(())
 /// ```
 pub trait GitBackend: Send + Sync {
+    /// Actual endpoint observed by a retained native acquisition. None means
+    /// the backend has no such observation; never infer it from a report label.
+    fn prepared_serving_endpoint(&self, _objects: &Path) -> Result<Option<String>, GitError> {
+        Ok(None)
+    }
     fn uses_native_materialisation(&self) -> bool {
         false
     }

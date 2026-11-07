@@ -12,6 +12,7 @@ struct Before {
 }
 struct Prepared {
     registry_name: String,
+    via_redirect: Option<String>,
     _temporary: tempfile::TempDir,
     objects: PathBuf,
     slot: PathBuf,
@@ -19,6 +20,7 @@ struct Prepared {
     before: Before,
     refresh: bool,
     origin: String,
+    serving_endpoint: Option<String>,
     canonical: String,
     authenticated_origin: Option<String>,
     content_hash: String,
@@ -80,6 +82,22 @@ fn observed_origin(backend: &dyn GitBackend, slot: &Path) -> Result<Option<Strin
     }
 }
 impl PreparedInPlace {
+    pub(crate) fn with_redirect_evidence(
+        mut self,
+        registry: String,
+        stub: String,
+    ) -> Result<Self, RegistryError> {
+        let path = self.0.slot.clone();
+        let owned = Arc::get_mut(&mut self.0).ok_or_else(|| {
+            refusal(
+                &path,
+                "shared preparation cannot acquire different source evidence",
+            )
+        })?;
+        owned.registry_name = registry;
+        owned.via_redirect = Some(stub);
+        Ok(self)
+    }
     /// Credential-redacted facts of this held registry preparation, without
     /// querying the source again or applying its objects to the destination.
     ///
@@ -99,7 +117,7 @@ impl PreparedInPlace {
             SourceAcquisition, SourceEvidence, SourceSelectionKind,
         };
         let canonical = safe_remote(&self.0.canonical);
-        let actual = safe_remote(&self.0.origin);
+        let actual = safe_remote(self.0.serving_endpoint.as_deref().unwrap_or(&self.0.origin));
         SourceEvidence {
             registry: Some(self.0.registry_name.clone()),
             fetched_from: (actual != canonical).then_some(actual),
@@ -109,7 +127,7 @@ impl PreparedInPlace {
             source_kind: Some(SourceSelectionKind::Registry),
             acquisition: Some(SourceAcquisition::GitRepository),
             store_reused: Some(false),
-            via_redirect: None,
+            via_redirect: self.0.via_redirect.clone(),
         }
     }
     /// Actual prospective manifest read from the retained commit object.
@@ -291,132 +309,9 @@ impl Prepared {
         Ok(())
     }
 }
+mod acquisition;
+
 impl GitPerPackageRegistry {
-    fn native_credentialed_url(
-        &self,
-        origin: &str,
-        reuse: Option<&Path>,
-        primary: &str,
-        mirrors: &[String],
-    ) -> Result<String, RegistryError> {
-        if self.effective_token.is_some()
-            && let Some(repo) = reuse
-        {
-            let recorded = self.backend.recorded_origin_url(repo)?;
-            let parse = |value: &str| {
-                reqwest::Url::parse(strip_git_plus_prefix(value)).map(|url| url.origin())
-            };
-            let recorded_origin = parse(&recorded).ok();
-            let permitted = recorded_origin.is_some()
-                && parse(origin).ok() == recorded_origin
-                && std::iter::once(primary)
-                    .chain(mirrors.iter().map(String::as_str))
-                    .any(|url| parse(url).ok() == recorded_origin);
-            if !permitted {
-                return Err(GitError::NativeContext{reason:"warm token authentication cannot cross the configured credential origin"}.into());
-            }
-        }
-        Ok(self.credentialed_url(origin))
-    }
-    pub(super) fn prepare_native_attempt(
-        &self,
-        resolved: &ResolvedPackage,
-        url: &str,
-        source: &Path,
-        refresh: bool,
-        workspace_slot: Option<&Path>,
-    ) -> Result<PreparedInPlace, PreparationFailure> {
-        let acquired = (|| {
-            self.ensure_token_loaded()?;
-            let source = std::path::absolute(source).map_err(|e| io(source, e))?;
-            let reuse = (refresh && source.join(".git").exists()).then_some(source.as_path());
-            let origin = match reuse {
-                Some(source) => self.backend.origin_url(source)?,
-                None => strip_git_plus_prefix(url).to_owned(),
-            };
-            let (primary, mirrors) = self.package_urls(&resolved.group, &resolved.name)?;
-            let authenticated = self.native_credentialed_url(&origin, reuse, &primary, &mirrors)?;
-            let cache =
-                std::path::absolute(&self.cache_root).map_err(|e| io(&self.cache_root, e))?;
-            fs::create_dir_all(&cache).map_err(|e| io(&cache, e))?;
-            let temporary = tempfile::Builder::new()
-                .prefix("prepared-native-")
-                .tempdir_in(&cache)
-                .map_err(|e| io(&cache, e))?;
-            let objects = temporary.path().join("objects.git");
-            let requested = format!("v{}", resolved.version);
-            let token = self
-                .backend
-                .prepare_native_source(&authenticated, &requested, reuse, &objects)?
-                .ok_or_else(|| refusal(&source, "native source capability disappeared"))?;
-            Ok::<_, RegistryError>((temporary, objects, token, origin, requested))
-        })()
-        .map_err(PreparationFailure::acquisition)?;
-        let (temporary, objects, token, origin, requested) = acquired;
-        (|| {
-            let bytes = self.backend.file_at_commit(
-                &objects,
-                &token.revision().commit,
-                Manifest::FILENAME,
-            )?;
-            let manifest = Manifest::parse_str(
-                std::str::from_utf8(&bytes)
-                    .map_err(|_| refusal(source, "prepared manifest is not UTF-8"))?,
-            )?;
-            let package = manifest
-                .package
-                .as_ref()
-                .ok_or_else(|| refusal(source, "prepared manifest has no package identity"))?;
-            if package.group != resolved.group
-                || package.name != resolved.name
-                || package.version != resolved.version
-            {
-                return Err(refusal(
-                    source,
-                    "acquired package identity differs from resolved coordinate",
-                ));
-            }
-            let destination = if package.materialization.is_in_place() {
-                workspace_slot.unwrap_or(source)
-            } else {
-                source
-            };
-            let slot = std::path::absolute(destination).map_err(|e| io(destination, e))?;
-            let repository = slot.join(".git").exists();
-            let before = Before {
-                present: slot.exists(),
-                repository,
-                head: if repository {
-                    self.backend.head_commit(&slot)?
-                } else {
-                    None
-                },
-                origin: if repository {
-                    observed_origin(self.backend.as_ref(), &slot)?
-                } else {
-                    None
-                },
-            };
-            let revision = token.bind(&slot)?;
-            Ok(PreparedInPlace(Arc::new(Prepared {
-                registry_name: self.name.clone(),
-                _temporary: temporary,
-                objects,
-                slot,
-                backend: self.backend.clone(),
-                before,
-                refresh,
-                origin,
-                canonical: self.package_repo_url(&resolved.group, &resolved.name)?,
-                authenticated_origin: None,
-                content_hash: super::commit_content_hash(&revision.commit),
-                requested,
-                revision,
-                manifest,
-            })))
-        })()
-        .map_err(PreparationFailure::Admission)
-    }
     /// Prepare the actual existing origin, or a fresh primary/mirror source,
     /// without changing project semantics. Existing-origin acquisition writes
     /// only Git objects and FETCH_HEAD in the original repository, preserving
@@ -430,6 +325,14 @@ impl GitPerPackageRegistry {
         resolved: &ResolvedPackage,
         slot: &Path,
     ) -> Result<PreparedInPlace, RegistryError> {
+        self.prepare_in_place_on_route(resolved, slot, None)
+    }
+    pub(crate) fn prepare_in_place_on_route(
+        &self,
+        resolved: &ResolvedPackage,
+        slot: &Path,
+        route: Option<&RegistryRoute>,
+    ) -> Result<PreparedInPlace, RegistryError> {
         self.ensure_token_loaded()?;
         let slot = std::path::absolute(slot).map_err(|e| io(slot, e))?;
         let repository = slot.join(".git").exists();
@@ -439,18 +342,44 @@ impl GitPerPackageRegistry {
             None
         };
         let (primary, mirrors) = self.package_urls(&resolved.group, &resolved.name)?;
-        let requested = format!("v{}", resolved.version);
+        let selected = route
+            .map(|route| route.validate(self, resolved))
+            .transpose()?;
+        let recorded = if repository {
+            match self.backend.recorded_origin_url(&slot) {
+                Ok(origin) => Some(origin),
+                Err(GitError::OriginMissing { .. }) => None,
+                Err(error) => return Err(error.into()),
+            }
+        } else {
+            None
+        };
+        // A legacy refresh is defined by the checkout's actual origin, not by
+        // registry metadata. Only managed native route selection can request
+        // a checked source switch before trying that existing origin.
+        let native = self.backend.uses_native_materialisation();
+        let refresh_first = repository
+            && (!native
+                || selected
+                    .is_none_or(|url| recorded.as_deref() == Some(strip_git_plus_prefix(url))));
+        let requested = self.package_reference(resolved);
         let known_origin = if repository {
             observed_origin(self.backend.as_ref(), &slot)?
         } else {
             None
         };
-        let current = if repository {
+        let current = if refresh_first {
             known_origin
                 .clone()
                 .ok_or_else(|| GitError::OriginMissing { path: slot.clone() })
         } else {
-            Ok(strip_git_plus_prefix(&primary).to_owned())
+            Ok(strip_git_plus_prefix(selected.unwrap_or(&primary)).to_owned())
+        };
+        let attempted = current.as_ref().ok().cloned();
+        let attempted_logical = if refresh_first {
+            recorded
+        } else {
+            attempted.clone()
         };
         let before = Before {
             present: slot.exists(),
@@ -527,6 +456,8 @@ impl GitPerPackageRegistry {
                 }
                 Ok(PreparedInPlace(Arc::new(Prepared {
                     registry_name: self.name.clone(),
+                    via_redirect: None,
+                    serving_endpoint: self.backend.prepared_serving_endpoint(&objects)?,
                     _temporary: temporary,
                     objects,
                     slot: slot.clone(),
@@ -545,30 +476,65 @@ impl GitPerPackageRegistry {
             .map_err(PreparationFailure::Admission)
         };
         let primary_failure = match current {
-            Ok(origin) => match attempt(&origin, repository, !repository) {
+            Ok(origin) => match attempt(&origin, refresh_first, !refresh_first) {
                 Ok(value) => return Ok(value),
                 Err(error) => error,
             },
             Err(error) => PreparationFailure::acquisition(error.into()),
         };
-        let primary_error = match primary_failure {
-            PreparationFailure::Acquisition(error) => error,
+        let mut excluded = None;
+        let mut primary_error = match primary_failure {
+            PreparationFailure::Acquisition(error) => Some(error),
+            PreparationFailure::Admission(error)
+                if self.backend.uses_native_materialisation() && excluded_route(&error) =>
+            {
+                excluded = Some(error);
+                None
+            }
             PreparationFailure::Admission(error) => return Err(error),
         };
-        for mirror in &mirrors {
-            match attempt(strip_git_plus_prefix(mirror), false, true) {
+        let mut alternatives: Vec<&str> = if repository && !native {
+            // Preserve the incumbent legacy warm fallback: after actual-origin
+            // acquisition fails, try declared mirrors, never newly substitute
+            // canonical metadata for the existing source.
+            mirrors.iter().map(String::as_str).collect()
+        } else {
+            selected
+                .into_iter()
+                .chain(std::iter::once(primary.as_str()))
+                .chain(mirrors.iter().map(String::as_str))
+                .collect()
+        };
+        alternatives.dedup();
+        for alternative in alternatives {
+            let alternative = strip_git_plus_prefix(alternative);
+            if attempted.as_deref() == Some(alternative)
+                || attempted_logical.as_deref() == Some(alternative)
+            {
+                continue;
+            }
+            match attempt(alternative, false, true) {
                 Ok(value) => return Ok(value),
+                Err(PreparationFailure::Admission(error))
+                    if self.backend.uses_native_materialisation() && excluded_route(&error) =>
+                {
+                    excluded.get_or_insert(error);
+                }
                 Err(PreparationFailure::Admission(error)) => return Err(error),
-                Err(PreparationFailure::Acquisition(_)) => {}
+                Err(PreparationFailure::Acquisition(error)) => {
+                    primary_error.get_or_insert(error);
+                }
             }
         }
-        Err(primary_error)
+        Err(excluded.or(primary_error).unwrap_or_else(|| {
+            refusal(&slot, "no admitted source candidate produced a preparation")
+        }))
     }
 }
 
 // Preserve the original RegistryError while making the source-selection phase
-// explicit. Only acquisition failure can advance to another source. All reads
-// after a returned revision belong to that acquired source's admission.
+// explicit. The source owner may independently admit another route after an
+// acquisition failure or concrete exclusion; acquired-source admission stays bound.
 pub(super) enum PreparationFailure {
     Acquisition(RegistryError),
     Admission(RegistryError),

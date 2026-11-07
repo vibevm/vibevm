@@ -104,8 +104,8 @@ impl<'a> Context<'a> {
         if let Some(AdmittedRemote::Ssh(remote)) = remote {
             self.profile
                 .ssh
-                .as_ref()
-                .ok_or_else(|| unsupported("SSH profile disappeared"))?
+                .get(remote.profile_index)
+                .ok_or_else(|| unsupported("captured SSH profile disappeared"))?
                 .configure(&mut cmd, root, remote)?;
         }
         if let Some(repo) = repo {

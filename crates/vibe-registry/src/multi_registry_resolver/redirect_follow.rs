@@ -5,6 +5,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect");
 
 use super::*;
+mod target;
 
 /// Probe the `(kind, name)` slot in `reg` at `tag` for a
 /// `vibe-redirect.toml` marker. Returns `Some(parsed)` when the
@@ -13,12 +14,13 @@ use super::*;
 /// directly. Cheap: one extra single-file read per registry-walk
 /// success.
 pub(super) fn try_fetch_redirect(
-    backend: &Arc<dyn GitBackend>,
     reg: &GitPerPackageRegistry,
     resolved: &ResolvedPackage,
     tag: &str,
+    route: Option<&crate::RegistryRoute>,
 ) -> Result<Option<RedirectFile>, RegistryError> {
-    try_fetch_redirect_for_url(backend, reg, &resolved.group, &resolved.name, tag)
+    let bytes = reg.read_selected_file(resolved, tag, RedirectFile::FILENAME, route);
+    decode_redirect(reg, &resolved.group, &resolved.name, tag, bytes)
 }
 
 /// Lower-level form of `try_fetch_redirect`: take an already-built
@@ -47,22 +49,29 @@ pub(super) fn try_fetch_redirect(
 /// "non-stub package" case where `vibe-redirect.toml` simply isn't
 /// part of the package payload.
 fn try_fetch_redirect_for_url(
-    backend: &Arc<dyn GitBackend>,
     reg: &GitPerPackageRegistry,
     group: &Group,
     name: &str,
     refname: &str,
 ) -> Result<Option<RedirectFile>, RegistryError> {
+    let bytes = reg.read_package_file(group, name, refname, RedirectFile::FILENAME);
+    decode_redirect(reg, group, name, refname, bytes)
+}
+
+fn decode_redirect(
+    reg: &GitPerPackageRegistry,
+    group: &Group,
+    name: &str,
+    refname: &str,
+    result: Result<Vec<u8>, RegistryError>,
+) -> Result<Option<RedirectFile>, RegistryError> {
     let plain_url = reg.package_repo_url(group, name)?;
-    let fetch_url = reg.credentialed_url(&plain_url);
-    let bytes = match backend.fetch_file_at_ref(
-        strip_git_plus_prefix(&fetch_url),
-        refname,
-        RedirectFile::FILENAME,
-    ) {
+    let bytes = match result {
         Ok(b) => b,
-        Err(crate::git_backend::GitError::FileNotFoundInRef { .. }) => return Ok(None),
-        Err(crate::git_backend::GitError::ArchiveUnsupported { .. }) => {
+        Err(RegistryError::Git(crate::git_backend::GitError::FileNotFoundInRef { .. })) => {
+            return Ok(None);
+        }
+        Err(RegistryError::Git(crate::git_backend::GitError::ArchiveUnsupported { .. })) => {
             // Host refuses `upload-archive` — the GitHub case. Fall
             // back to a shallow clone and read the marker from the
             // clone's working tree. `refresh_package` reuses the
@@ -83,7 +92,7 @@ fn try_fetch_redirect_for_url(
                 source,
             })?
         }
-        Err(other) => return Err(other.into()),
+        Err(other) => return Err(other),
     };
     let r = parse_redirect_bytes(&bytes).map_err(|e| RegistryError::MalformedMeta {
         path: PathBuf::from(format!("{plain_url}@{refname}:{}", RedirectFile::FILENAME)),
@@ -128,14 +137,11 @@ impl MultiRegistryResolver {
         // Identity is `(group, name)`; the stub-resolved package carries
         // the group the registry resolved by (PROP-008).
         let group = &stub_resolved.group;
-        let synthetic_name = format!("redirect-target-{}-{}", group, pkgref.name);
-        let target_reg = GitPerPackageRegistry::open_single_package(
-            &synthetic_name,
+        let target_reg = self.redirect_target_registry(
+            group,
+            pkgref.name.as_str(),
             &target_url,
             &target_ref,
-            &self.cache_root,
-            Arc::clone(&self.backend),
-            DEFAULT_FRESHNESS_SECS,
             redirect.redirect.auth,
             redirect.redirect.token_env.as_deref(),
         )?;
@@ -147,13 +153,8 @@ impl MultiRegistryResolver {
         // would never fire. Marker-first preserves the policy contract
         // independent of what the target's content shape happens to
         // be.
-        let target_redirect = try_fetch_redirect_for_url(
-            &self.backend,
-            &target_reg,
-            group,
-            &stub_resolved.name,
-            &target_ref,
-        )?;
+        let target_redirect =
+            try_fetch_redirect_for_url(&target_reg, group, &stub_resolved.name, &target_ref)?;
         if target_redirect.is_some() {
             return Err(RegistryError::MalformedMeta {
                 path: PathBuf::from(format!(
@@ -196,9 +197,16 @@ impl MultiRegistryResolver {
             group: group.clone(),
             name: pkgref.name.to_string(),
             version: target_meta.version.clone(),
-            source_dir: self.redirect_clone_dir(group, pkgref.name.as_str()),
+            source_dir: if self.backend.uses_native_materialisation() {
+                target_reg.checkout_directory(group, pkgref.name.as_str())
+            } else {
+                self.redirect_clone_dir(group, pkgref.name.as_str())
+            },
         };
+        let selected_route =
+            Some(target_reg.retain_redirect_route(&resolved, &target_url, &target_ref)?);
         Ok(MultiResolution {
+            selected_route,
             resolved,
             // Registry name from the stub layer — that's the surface
             // the consumer's `vibe.toml` `[[registry]]` named.
@@ -239,6 +247,17 @@ impl MultiRegistryResolver {
         store_root: &Path,
         _expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
+        if self.backend.uses_native_materialisation() {
+            return match self.acquire_redirect(resolution, store_root, _expected_hash, None)? {
+                crate::PackageAcquisition::Cached(cached) => Ok(*cached),
+                crate::PackageAcquisition::InPlace(prepared) => {
+                    Err(RegistryError::PreparedInPlace {
+                        path: prepared.slot().into(),
+                        reason: "cache redirect cannot publish a workspace candidate".into(),
+                    })
+                }
+            };
+        }
         let group = &resolution.resolved.group;
         let name = resolution.resolved.name.as_str();
         let target_url = resolution.source_url.clone();

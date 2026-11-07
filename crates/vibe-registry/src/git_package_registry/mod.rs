@@ -58,6 +58,9 @@ use crate::{
 mod auth;
 mod fetch;
 mod lookup;
+mod route;
+pub use route::RegistryRoute;
+pub(crate) use route::excluded_route;
 mod urls;
 
 pub use auth::inject_token;

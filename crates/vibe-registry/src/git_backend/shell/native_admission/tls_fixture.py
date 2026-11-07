@@ -7,7 +7,7 @@ def git(args,cwd=root):
  p=subprocess.run(['/usr/bin/git',*args],cwd=cwd,env=env,capture_output=True,timeout=20)
  if p.returncode: raise RuntimeError(('fixture Git setup failed',args,p.returncode,p.stderr.decode()))
  return p.stdout.decode().strip()
-work=root/'work';git(['init',str(work)])
+work=root/'work';git(['init','--initial-branch=main',str(work)])
 (work/'payload.txt').write_text('retained fixture\n')
 # Exceed Git's small-pack threshold so real receiving-byte progress is emitted.
 for i in range(130):(work/('transfer-'+str(i))).write_bytes(random.Random(i).randbytes(2048))
@@ -24,18 +24,29 @@ if os.environ.get('VIBE_N2_INSTALL_FIXTURE') in ('1','2','4'):
 git(['add','.'],work);git(['-c','user.name=Fixture','-c','user.email=f@example.invalid','commit','-m','fixture'],work);git(['tag','v1.0.0'],work)
 head=git(['rev-parse','HEAD'],work)
 web=root/'web';web.mkdir()
-cert=root/'ca.pem';key=root/'key.pem'
-p=subprocess.run(['/usr/bin/openssl','req','-x509','-newkey','rsa:2048','-nodes','-keyout',str(key),'-out',str(cert),'-days','1','-subj','/CN=numeric-fixture','-addext','subjectAltName=IP:127.0.0.1,IP:127.0.0.2'],env=env,capture_output=True,timeout=20)
-if p.returncode:raise RuntimeError('TLS fixture creation failed')
-key.chmod(0o600);tls=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER);tls.load_cert_chain(cert,key)
+cert=root/'ca.pem';ca_key=root/'ca-key.pem';key=root/'key.pem';leaf=root/'server.pem';csr=root/'server.csr';extensions=root/'server.ext'
+extensions.write_text('basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\nsubjectAltName=IP:127.0.0.1,IP:127.0.0.2\n')
+for args in [
+ ['req','-x509','-newkey','rsa:2048','-nodes','-keyout',str(ca_key),'-out',str(cert),'-days','1','-subj','/CN=numeric-fixture-ca','-addext','basicConstraints=critical,CA:TRUE','-addext','keyUsage=critical,keyCertSign,cRLSign'],
+ ['req','-newkey','rsa:2048','-nodes','-keyout',str(key),'-out',str(csr),'-subj','/CN=numeric-fixture'],
+ ['x509','-req','-in',str(csr),'-CA',str(cert),'-CAkey',str(ca_key),'-CAcreateserial','-out',str(leaf),'-days','1','-extfile',str(extensions)]]:
+ p=subprocess.run(['/usr/bin/openssl',*args],env=env,capture_output=True,timeout=20)
+ if p.returncode:raise RuntimeError('TLS fixture creation failed')
+key.chmod(0o600);ca_key.chmod(0o600);tls=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER);tls.load_cert_chain(leaf,key)
 auth='Basic '+base64.b64encode(b'x-access-token:SYNTHETIC_N1_AUTH').decode()
-class Server(http.server.ThreadingHTTPServer):daemon_threads=True
+class Server(http.server.ThreadingHTTPServer):
+ daemon_threads=True
+ def get_request(self):
+  connection,address=self.socket.accept()
+  with (root/(self.label+'.tcp.log')).open('a') as f:f.write('accept\n')
+  try:return tls.wrap_socket(connection,server_side=True),address
+  except BaseException:connection.close();raise
 class Handler(http.server.SimpleHTTPRequestHandler):
  protocol_version='HTTP/1.1'
  def log_message(self,*args):pass
  def handle(self):
   try:super().handle()
-  except ConnectionResetError:pass
+  except (ConnectionResetError,BrokenPipeError,ssl.SSLEOFError):pass
  def smart(self):
   parsed=urllib.parse.urlsplit(self.path)
   body=self.rfile.read(int(self.headers.get('Content-Length','0')))
@@ -54,6 +65,23 @@ class Handler(http.server.SimpleHTTPRequestHandler):
   self.send_error(403)
  def do_GET(self):
   with (root/(self.server.label+'.log')).open('a') as f:f.write(self.path+'\n')
+  with (root/(self.server.label+'.headers.log')).open('a') as f:f.write(self.path+' auth='+('yes' if self.headers.get('Authorization') else 'no')+'\n')
+  if self.path.startswith('/roundtrip.git'):
+   if self.headers.get('Authorization')!=auth:self.send_error(401);return
+   self.send_response(302);self.send_header('Location',bu+self.path.replace('/roundtrip.git','/back.git',1));self.send_header('Content-Length','0');self.end_headers();return
+  if self.path.startswith('/back.git'):
+   if self.headers.get('Authorization'):self.send_error(403);return
+   self.send_response(302);self.send_header('Location',au+self.path.replace('/back.git','/anonymous.git',1));self.send_header('Content-Length','0');self.end_headers();return
+  if self.path.startswith('/anonymous.git'):
+   if self.headers.get('Authorization'):self.send_error(403);return
+   self.path=self.path.replace('/anonymous.git','/repo.git',1)
+  if self.path.startswith('/oversize-start.git'):
+   self.send_response(302);self.send_header('Location',bu+self.path.replace('/oversize-start.git','/oversize.git',1));self.send_header('Content-Length','0');self.end_headers();return
+  if self.path.startswith('/oversize.git/info/refs'):
+   data=b'0'*40+b'\trefs/'+b'x'*(64*1024+1)+b'\n';self.send_response(200);self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data);return
+  if self.path.startswith('/late.git/objects/'):
+   self.send_response(302);self.send_header('Location',bu+self.path.replace('/late.git','/repo.git',1));self.send_header('Content-Length','0');self.end_headers();return
+  if self.path.startswith('/late.git'):self.path=self.path.replace('/late.git','/repo.git',1)
   if self.path.startswith('/smart/'):return self.smart()
   if self.path.startswith('/public/org.fixture.demo.git'):self.path=self.path.replace('/public/org.fixture.demo.git','/repo.git',1)
   if self.path.startswith('/public/org.vibevm.giant.git'):self.path=self.path.replace('/public/org.vibevm.giant.git','/repo.git',1)
@@ -72,7 +100,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
   super().do_GET()
 servers=[]
 for label,host in [('a','127.0.0.1'),('b','127.0.0.2')]:
- s=Server((host,0),functools.partial(Handler,directory=str(web)));s.label=label;s.socket=tls.wrap_socket(s.socket,server_side=True);threading.Thread(target=s.serve_forever,daemon=True).start();servers.append(s)
+ s=Server((host,0),functools.partial(Handler,directory=str(web)));s.label=label;threading.Thread(target=s.serve_forever,daemon=True).start();servers.append(s)
 au='https://127.0.0.1:'+str(servers[0].server_port);bu='https://127.0.0.2:'+str(servers[1].server_port)
 (work/'.gitmodules').write_text('[submodule "child"]\n path=child\n url='+bu+'/repo.git\n')
 git(['add','.gitmodules'],work);git(['update-index','--add','--cacheinfo','160000,'+head+',child'],work);git(['-c','user.name=Fixture','-c','user.email=f@example.invalid','commit','-m','submodule fixture'],work);git(['tag','v2.0.0'],work)

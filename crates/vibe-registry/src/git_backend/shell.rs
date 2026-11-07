@@ -181,6 +181,12 @@ impl ShellGit {
 }
 
 impl GitBackend for ShellGit {
+    fn prepared_serving_endpoint(&self, objects: &Path) -> Result<Option<String>, GitError> {
+        self.native
+            .as_ref()
+            .map(|native| native.serving_endpoint(objects))
+            .transpose()
+    }
     fn preflight_registry_auth(&self, auth: vibe_core::manifest::AuthKind) -> Result<(), GitError> {
         if let Some(bound) = self.native_registry_auth
             && bound != auth

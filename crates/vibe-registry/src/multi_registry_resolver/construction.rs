@@ -174,11 +174,20 @@ impl MultiRegistryResolver {
                     // attached only over `https://`.
                     let auth = crate::index_client::IndexAuth::for_registry(reg, &url);
                     let outcome = match &admission {
-                        Some(binding) => crate::IndexClient::probe_with_admission(
+                        Some(binding) => match crate::IndexClient::probe_with_admission(
                             &url,
                             auth,
                             Arc::clone(binding),
-                        )?,
+                        ) {
+                            Ok(outcome) => outcome,
+                            Err(crate::IndexError::ContactRefused(
+                                crate::ContactRefusal::ExcludedHost { .. },
+                            )) if backend.uses_native_materialisation() => {
+                                tracing::debug!(registry=%reg.name,"index destination excluded; registry Git candidates remain independently admitted");
+                                crate::index_client::ProbeOutcome::Absent
+                            }
+                            Err(error) => return Err(error.into()),
+                        },
                         None => crate::IndexClient::probe(&url, auth),
                     };
                     match outcome {

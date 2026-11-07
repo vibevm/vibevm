@@ -401,53 +401,6 @@ fn bound_raw_decline_refuses_native_before_sentinel_spawn() {
 
 #[test]
 #[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW")]
-fn driver_retains_same_origin_headers_then_strips_them_permanently() {
-    use reqwest::header::{AUTHORIZATION, COOKIE, PROXY_AUTHORIZATION};
-    let origin = Arc::new(std::sync::OnceLock::<String>::new());
-    let copy = origin.clone();
-    let b = Server::new("127.0.0.2", move |request, _| {
-        assert!(!request.to_ascii_lowercase().contains("authorization:"));
-        assert!(!request.to_ascii_lowercase().contains("cookie:"));
-        response(
-            302,
-            "",
-            &format!("Location: {}/return\r\n", copy.get().unwrap()),
-        )
-    });
-    let other = b.url.clone();
-    let a = Server::new("127.0.0.1", move |request, n| {
-        let request = request.to_ascii_lowercase();
-        assert!(!request.contains("referer:"));
-        if n < 2 {
-            assert!(request.contains("authorization: fixture"));
-            assert!(request.contains("cookie: fixture"));
-        } else {
-            assert!(!request.contains("authorization:"));
-            assert!(!request.contains("cookie:"));
-        }
-        match n {
-            0 => response(302, "", "Location: /same-origin\r\n"),
-            1 => response(302, "", &format!("Location: {other}/cross-origin\r\n")),
-            _ => response(200, "ok", ""),
-        }
-    });
-    origin.set(a.url.clone()).unwrap();
-    let client = crate::http_admission::bound_builder(reqwest::blocking::Client::builder())
-        .build()
-        .unwrap();
-    let mut request = client.get(&a.url);
-    for key in [AUTHORIZATION, COOKIE, PROXY_AUTHORIZATION] {
-        request = request.header(key, "fixture");
-    }
-    let response =
-        crate::http_admission::get(&client, request, &a.url, Some(&binding(&[]))).unwrap();
-    assert_eq!(response.text().unwrap(), "ok");
-    assert_eq!(a.count(), 3);
-    assert_eq!(b.count(), 1);
-}
-
-#[test]
-#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW")]
 fn bound_owners_never_attach_plaintext_bearer_or_url_credentials() {
     let a = Server::new("127.0.0.1", |request, _| {
         assert!(!request.to_ascii_lowercase().contains("authorization:"));
@@ -597,3 +550,6 @@ fn bound_purl_refuses_unsupported_base_before_url_construction() {
         ));
     }
 }
+
+#[path = "http_admission_observation_tests.rs"]
+mod observation;

@@ -574,3 +574,6 @@ fn direct_and_manually_wrapped_contact_refusals_are_terminal() {
         PreparationFailure::Acquisition(_)
     ));
 }
+
+#[path = "route_tests.rs"]
+mod route_tests;

@@ -29577,9 +29577,9 @@
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/plan/fetch.rs",
       "item_kind": "fn",
-      "line": 224,
+      "line": 225,
       "symbol": "vibe_install::plan::fetch::expand_conditional_deps",
-      "end_line": 387,
+      "end_line": 388,
       "fingerprint": "tok1:ce79828e9f230b204b13598a69ca35ddf5769cf9eb9a40dfb5d11aa73e69e425"
     },
     {
@@ -29946,19 +29946,19 @@
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/tests/incremental_in_place/native_ssh.rs",
       "item_kind": "fn",
-      "line": 142,
+      "line": 169,
       "symbol": "vibe_install::tests::incremental_in_place::native_ssh::public_ssh_hook_failure_restores_original_slot_and_metadata",
-      "end_line": 183,
-      "fingerprint": "tok1:2f2caa77c962bfb087a2eaaf03cc822a14eb11484e246b0162dba82ff6f08863"
+      "end_line": 231,
+      "fingerprint": "tok1:63ebaeb55e1f2f64caefcb634742cdc7a230f1e338a41d683d145fe8022c798f"
     },
     {
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/tests/incremental_in_place/native_ssh.rs",
       "item_kind": "fn",
-      "line": 81,
+      "line": 89,
       "symbol": "vibe_install::tests::incremental_in_place::native_ssh::public_ssh_key_and_agent_fresh_warm_update_and_noop_use_retained_source",
-      "end_line": 141,
-      "fingerprint": "tok1:4693b7c64911c03e76f4203540f92bc172046e3de1630d629347b1ce97072d51"
+      "end_line": 168,
+      "fingerprint": "tok1:2de13e456c2c12b77733a49fc3b0c6372a211e2150d0482874dd3a5ea7d9f151"
     },
     {
       "crate_name": "vibe-install",
@@ -29995,6 +29995,33 @@
       "symbol": "vibe_install::tests::metadata_guard::known_legacy_empty_publication_is_supported_and_preserves_decoration",
       "end_line": 151,
       "fingerprint": "tok1:4034ab24a5ce6cdb90ae02da8f6093143ac0653a602b28c155d821a076982d10"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/native_routes.rs",
+      "item_kind": "fn",
+      "line": 116,
+      "symbol": "vibe_install::tests::native_routes::denied_primary_allowed_mirror_completes_public_plan_and_install",
+      "end_line": 240,
+      "fingerprint": "tok1:2907d9bfa31da520bade57ef3807b686a67a6fc354b3aafbf0f0c50534c5478b"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/native_routes/provenance.rs",
+      "item_kind": "fn",
+      "line": 8,
+      "symbol": "vibe_install::tests::native_routes::provenance::in_place_mirror_audit_survives_recording_noop_and_failed_apply",
+      "end_line": 154,
+      "fingerprint": "tok1:f59ef2faa505d10330371ac25a8c79934264f5d24ece9c47094ed06bd091c608"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/tests/native_routes/recursive.rs",
+      "item_kind": "fn",
+      "line": 324,
+      "symbol": "vibe_install::tests::native_routes::recursive::recursive_parent_and_child_restore_across_public_failure_cuts",
+      "end_line": 330,
+      "fingerprint": "tok1:1acb2aff865cfb08a40f70563cf7e31a9f653e87c6db0fecb5fa7bf3126070f6"
     },
     {
       "crate_name": "vibe-install",
@@ -38028,9 +38055,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/lib.rs",
       "item_kind": "fn",
-      "line": 307,
+      "line": 309,
       "symbol": "vibe_registry::CachedPackage::package_meta",
-      "end_line": 327,
+      "end_line": 329,
       "fingerprint": "tok1:1c0512c3543896942ac6f2f6a412095ca508daf24148bd85fa4af1b219bc1642"
     },
     {
@@ -38161,6 +38188,132 @@
     },
     {
       "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/child_layout.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::child_layout",
+      "end_line": 2,
+      "fingerprint": "tok1:cdb5f09356368c54e4da3aacec1ad1ff1192cba3da08802de53037bf3ae150f0"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/child_layout.rs",
+      "item_kind": "fn",
+      "line": 25,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::child_layout::NativeState::relocate_child_layout",
+      "end_line": 69,
+      "fingerprint": "tok1:6202dc56c17c450c2b2b2e6e0b6af909a33c79784ad62c37fb697fe04bb255ae"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/constructor_tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::constructor_tests",
+      "end_line": 3,
+      "fingerprint": "tok1:f10ee38b969f833b0c922be31295fe4a7fc78e7dbed4c9243ad471c41bf7249a"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/constructor_tests.rs",
+      "item_kind": "fn",
+      "line": 36,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::constructor_tests::child_rewrite_uses_first_equal_length_match_and_longest_prefix",
+      "end_line": 64,
+      "fingerprint": "tok1:f43fbd5522cd11f2354c3d576cd4a56060d0c02d232ef3000f3691d523f1c537"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/constructor_tests.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::constructor_tests::denied_mirror_has_no_contact_before_independently_admitted_next_route",
+      "end_line": 162,
+      "fingerprint": "tok1:89bac4ced5bcddba691b5a20e758917444e4afc1aff4596d19749b706ec39c40"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/constructor_tests.rs",
+      "item_kind": "fn",
+      "line": 66,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::constructor_tests::relative_scp_child_preserves_remote_home_and_rejects_authority_escape",
+      "end_line": 93,
+      "fingerprint": "tok1:fd3db2f967807ac9f8a6f72495364254e03880681ea75416f6347d20937a8e4a"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_tests.rs",
+      "item_kind": "fn",
+      "line": 15,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_tests::authenticated_child_inherits_bound_parent_token",
+      "end_line": 19,
+      "fingerprint": "tok1:655f73a30d8945028a2e0ff9b68cdd170ae0b14db6022015a43bfce51478e8f8"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_tests.rs",
+      "item_kind": "fn",
+      "line": 5,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_tests::fresh_https_child_without_package_manifest_is_exact_and_denied_child_has_no_tcp",
+      "end_line": 9,
+      "fingerprint": "tok1:c250e395aeefb50c46367b7051923843fae314cf858bc57f89559998e30f63e9"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_tests.rs",
+      "item_kind": "fn",
+      "line": 10,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_tests::nested_relative_children_stage_and_bind_exact_commits",
+      "end_line": 14,
+      "fingerprint": "tok1:395e6e01f5165ce508ac2fe6006e143a5416d5e07b2c802984687607bb93e213"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_userinfo_tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_userinfo_tests",
+      "end_line": 3,
+      "fingerprint": "tok1:cdb5f09356368c54e4da3aacec1ad1ff1192cba3da08802de53037bf3ae150f0"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_userinfo_tests.rs",
+      "item_kind": "fn",
+      "line": 6,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_userinfo_tests::raw_child_credentials_rewritten_to_clean_endpoint_refuse_before_contact",
+      "end_line": 15,
+      "fingerprint": "tok1:c8b0747b5f13d7f775b4be68271934d142e2b511766f65835ba193455df4be0e"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_userinfo_tests.rs",
+      "item_kind": "fn",
+      "line": 169,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_userinfo_tests::raw_http_userinfo_guard_preserves_ssh_identity_and_relative_urls",
+      "end_line": 194,
+      "fingerprint": "tok1:4f00df77aacb0eb52ce4f30a0572c8293854c1659422ef6dc01700ea26cf548e"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlinks.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::gitlinks",
+      "end_line": 2,
+      "fingerprint": "tok1:cdb5f09356368c54e4da3aacec1ad1ff1192cba3da08802de53037bf3ae150f0"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlinks.rs",
+      "item_kind": "fn",
+      "line": 107,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::gitlinks::NativeState::prepare_children",
+      "end_line": 353,
+      "fingerprint": "tok1:bd2f1a1c9ef2af6d0344fa80465fdb2ac11314e4a7dc96249b8c1142f5a4bf2b"
+    },
+    {
+      "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/shell/native_admission/materialisation.rs",
       "item_kind": "mod",
       "line": 2,
@@ -38251,12 +38404,21 @@
     },
     {
       "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/mixed_gitlink_tests.rs",
+      "item_kind": "fn",
+      "line": 82,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::mixed_gitlink_tests::mixed_exact_gitlinks_use_distinct_profiles_and_retain_origins_in_fresh_and_warm_stages",
+      "end_line": 303,
+      "fingerprint": "tok1:5c8fcdd1f0ad0153f21cc20ee910fae7b62788b74a684b87ff2c8fda1a7b0f23"
+    },
+    {
+      "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/shell/native_admission/registry_auth_tests.rs",
       "item_kind": "fn",
       "line": 123,
       "symbol": "vibe_registry::git_backend::shell::native_admission::registry_auth_tests::direct_constructors_enforce_mechanisms_before_actual_request",
       "end_line": 225,
-      "fingerprint": "tok1:f5fbde37bdfd1061bee5f3adcf45693de25113ae3103abd7cbfdeadc5f3b4115"
+      "fingerprint": "tok1:54ad763cc8cae0899a49becdea4a3e4b3513f24dd5477a1c558b50c6997db633"
     },
     {
       "crate_name": "vibe-registry",
@@ -38275,6 +38437,96 @@
       "symbol": "vibe_registry::git_backend::shell::native_admission::registry_auth_tests::registry_binding_is_immutable_and_anonymous_clones_cannot_be_upgraded",
       "end_line": 122,
       "fingerprint": "tok1:a74251f46c2dc550122f9ca711599cb8c21346acb4ac9c66787cf268266d1c78"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/relocation.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::relocation",
+      "end_line": 2,
+      "fingerprint": "tok1:cdb5f09356368c54e4da3aacec1ad1ff1192cba3da08802de53037bf3ae150f0"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/relocation_tests.rs",
+      "item_kind": "fn",
+      "line": 35,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::relocation_tests::default_initial_redirect_reuses_final_base_and_preserves_logical_origin",
+      "end_line": 93,
+      "fingerprint": "tok1:86c63cc1cc9b29c682a36c749825fb046a8a2f5b183d93157b25c80af2cba711"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/relocation_tests.rs",
+      "item_kind": "fn",
+      "line": 193,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::relocation_tests::denied_initial_hop_queries_and_oversized_metadata_refuse_before_publication",
+      "end_line": 226,
+      "fingerprint": "tok1:bb9cd14f719f209ddb6cf278e69709ce099889b81a69181b9feb9e49cdef8ac3"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/relocation_tests.rs",
+      "item_kind": "fn",
+      "line": 149,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::relocation_tests::return_to_original_origin_never_reattaches_native_token",
+      "end_line": 191,
+      "fingerprint": "tok1:7171426a47fff5405189a994a1f129eb8d5e2ede4cad38c3e17a7c1b411b2358"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/relocation_tests.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::relocation_tests::subsequent_object_redirect_is_refused_like_default_git_but_not_follow_true",
+      "end_line": 147,
+      "fingerprint": "tok1:96190889850144e6a2d71826a5b3d30568506ac6f946ee2f251cf826adb83d53"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/routes_tests.rs",
+      "item_kind": "fn",
+      "line": 529,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::routes_tests::allowed_mirror_tls_failure_is_not_reported_as_all_excluded",
+      "end_line": 589,
+      "fingerprint": "tok1:4f27f7065aa5c55a4d767c37adb30ef22e7e5878fcb59df2a7e5894d5a4a08a5"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/routes_tests.rs",
+      "item_kind": "fn",
+      "line": 5,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::routes_tests::denied_canonical_route_does_not_block_an_independently_admitted_mirror",
+      "end_line": 61,
+      "fingerprint": "tok1:d3e4e6df76127eff58c8ed7fff5be244e5a7a64ee02fbca21ea47866d06ae8b5"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/routes_tests.rs",
+      "item_kind": "fn",
+      "line": 63,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::routes_tests::package_redirect_uses_its_bound_target_and_exact_pinned_ref",
+      "end_line": 202,
+      "fingerprint": "tok1:3c97777f0999e25bb4866f37a5bef692ee1bfc07f7b7c42b8868494f9c94c8ed"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/routes_tests.rs",
+      "item_kind": "fn",
+      "line": 204,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::routes_tests::public_stub_selects_configured_private_grant_but_cannot_mint_one",
+      "end_line": 292,
+      "fingerprint": "tok1:2807a4f65ddc583e9528cbcce0beffa7bbaf5f7a653d89cb322c0b4ebf6a4ed0"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/routes_tests.rs",
+      "item_kind": "fn",
+      "line": 362,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::routes_tests::retained_mirror_is_not_replaced_by_a_warm_excluded_origin",
+      "end_line": 527,
+      "fingerprint": "tok1:653ef9d62df27bb2677b8b59082d3846df527067baf326fa704ed71e00083f28"
     },
     {
       "crate_name": "vibe-registry",
@@ -38361,18 +38613,18 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/shell/native_admission/tests.rs",
       "item_kind": "fn",
-      "line": 51,
+      "line": 62,
       "symbol": "vibe_registry::git_backend::shell::native_admission::tests::direct_https_prepares_exact_objects_with_tls_auth_and_no_legacy_escape",
-      "end_line": 124,
+      "end_line": 135,
       "fingerprint": "tok1:f579d367e991f24f6fdd67757cd02b1212c9bfe28cb25d1f55fe76e70e5da0d8"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/shell/native_admission/tests.rs",
       "item_kind": "fn",
-      "line": 148,
+      "line": 159,
       "symbol": "vibe_registry::git_backend::shell::native_admission::tests::token_registry_preparation_uses_incumbent_basic_auth_and_refuses_apply_before_effects",
-      "end_line": 209,
+      "end_line": 220,
       "fingerprint": "tok1:ccbf936a3940113af4ce97c1caa8828774552dbff878eccc42ce07c71685f6ad"
     },
     {
@@ -38647,12 +38899,21 @@
     },
     {
       "crate_name": "vibe-registry",
-      "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/api.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_package_registry::fetch::api",
+      "end_line": 2,
+      "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/api.rs",
       "item_kind": "fn",
-      "line": 262,
-      "symbol": "vibe_registry::git_package_registry::fetch::GitPerPackageRegistry::fetch_for_install",
-      "end_line": 274,
-      "fingerprint": "tok1:dfd562483d08367897abdf4af06b1fbd72d17c689a07d28397eb72350b881216"
+      "line": 96,
+      "symbol": "vibe_registry::git_package_registry::fetch::api::GitPerPackageRegistry::fetch_for_install",
+      "end_line": 114,
+      "fingerprint": "tok1:4f19a7549f1f58e6e9bf03ed1d9e9762c3f5b3535a911a59a59ded57b4b0d70a"
     },
     {
       "crate_name": "vibe-registry",
@@ -38685,100 +38946,109 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 420,
+      "line": 315,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::GitPerPackageRegistry::prepare_in_place",
-      "end_line": 566,
-      "fingerprint": "tok1:f7bed3c3c80c15a0bbdf6902524471005e2583206669e13159f4ad4810a545c7"
+      "end_line": 329,
+      "fingerprint": "tok1:e466811944ef39e2603c5f41a3d349e725a3a6bc4109e600eee8238c1374620d"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "struct",
-      "line": 30,
+      "line": 32,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace",
-      "end_line": 46,
+      "end_line": 48,
       "fingerprint": "tok1:2bc6377de3ff27b283dbc4a7603770f0a2b776e5d65ca0d98ecb6aa46a6c13bd"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 144,
+      "line": 162,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::content_hash",
-      "end_line": 150,
+      "end_line": 168,
       "fingerprint": "tok1:4e102fdf9e20f2a3e2810c92d5647fb3a192638722013f9a7dd2ea7d30793309"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 115,
+      "line": 133,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::manifest",
-      "end_line": 121,
+      "end_line": 139,
       "fingerprint": "tok1:f2bfd58e56e9dc7ea483cea30a8f3c260fd01c4ef6e1aab9b385792a5059a7f3"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 204,
+      "line": 222,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::materialise",
-      "end_line": 275,
+      "end_line": 293,
       "fingerprint": "tok1:c394856b032fbd919f02e04e888ebbc190218a07375455bf2bbaf45908f03ec4"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 122,
+      "line": 140,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::resolved_commit",
-      "end_line": 128,
+      "end_line": 146,
       "fingerprint": "tok1:0df5a296c02bc2383f9c54e9b2853d7141426f9a7d72030dbf9ca1b40033feae"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 151,
+      "line": 169,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::slot",
-      "end_line": 157,
+      "end_line": 175,
       "fingerprint": "tok1:288abb2f3d226edef616bdc03fcda6c5a196451d76f8e7c7b207f90a82763f4d"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 83,
+      "line": 101,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::source_evidence",
-      "end_line": 114,
-      "fingerprint": "tok1:b4707ef04bfac6c25e3a2495eb454eaa5a0d54c4b5a00ab912a0a1946d6f9926"
+      "end_line": 132,
+      "fingerprint": "tok1:b65fa8d0a6cd7872aeaf2a132704d849d13cdbd562218006e6b645a036fa912e"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 137,
+      "line": 155,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::source_ref",
-      "end_line": 143,
+      "end_line": 161,
       "fingerprint": "tok1:505d2987d8e6605ba0ca0b324ee1d709d3885685cfd1515aa64a2e9d5c092957"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 129,
+      "line": 147,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::source_uri",
-      "end_line": 136,
+      "end_line": 154,
       "fingerprint": "tok1:99226d04a4f2c4ca7afc4a4eeb2f0a82d3d640583f2e5eff53d6b7086348be2a"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 159,
+      "line": 177,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::stage_native",
-      "end_line": 202,
+      "end_line": 220,
       "fingerprint": "tok1:ad3c71903e0090a4c808dd5007eb6f507ebbf861d32283779b95bf9d95009fec"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared/acquisition.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_package_registry::fetch::prepared::acquisition",
+      "end_line": 2,
+      "fingerprint": "tok1:fa7f9fbdf318d918064a83a773eed58f8a9930a3ea80bf847141bb312584c7c6"
     },
     {
       "crate_name": "vibe-registry",
@@ -38824,6 +39094,24 @@
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::origin_tests::native_transport_context_preserves_actual_source_and_semantic_git_state",
       "end_line": 231,
       "fingerprint": "tok1:619b8216ac83cc1cf85e5d923047e4f66b5c67a432c4d739d036f3842337557a"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared/route_tests.rs",
+      "item_kind": "fn",
+      "line": 5,
+      "symbol": "vibe_registry::git_package_registry::fetch::prepared::route_tests::retained_route_does_not_replace_the_unbound_slots_actual_origin",
+      "end_line": 41,
+      "fingerprint": "tok1:4e4358c4a27ca52f6cdd0a31e3da0a7ea63c0dc15373905b09258cb139bd0421"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared/route_tests.rs",
+      "item_kind": "fn",
+      "line": 43,
+      "symbol": "vibe_registry::git_package_registry::fetch::prepared::route_tests::retained_route_keeps_unbound_warm_cache_refresh_and_failover_order",
+      "end_line": 101,
+      "fingerprint": "tok1:c30dbeb806db632c3b4ebd89ab21ba8bdd9ced3752bc6f8842e7b3220c9ac436"
     },
     {
       "crate_name": "vibe-registry",
@@ -38910,9 +39198,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/lookup.rs",
       "item_kind": "fn",
-      "line": 459,
+      "line": 536,
       "symbol": "vibe_registry::git_package_registry::lookup::contact_refusal_tests::lookup_never_discards_a_primary_or_mirror_contact_refusal",
-      "end_line": 501,
+      "end_line": 578,
       "fingerprint": "tok1:74aca3953a8087e371eba41859994e7e39bab7c9ff496f0ece4c8791315e6f56"
     },
     {
@@ -38923,6 +39211,15 @@
       "symbol": "vibe_registry::git_package_registry::lookup::tests",
       "end_line": 5,
       "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_package_registry/route.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_package_registry::route",
+      "end_line": 2,
+      "fingerprint": "tok1:cdb5f09356368c54e4da3aacec1ad1ff1192cba3da08802de53037bf3ae150f0"
     },
     {
       "crate_name": "vibe-registry",
@@ -39009,37 +39306,64 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/http_admission.rs",
       "item_kind": "fn",
-      "line": 268,
+      "line": 298,
       "symbol": "vibe_registry::http_admission::tests::bound_get_denies_dotted_authority_before_connect_and_preserves_lookalikes",
-      "end_line": 311,
+      "end_line": 341,
       "fingerprint": "tok1:516bcf59618fe367945f24f5aa016d29a0f09ebd6fd16b5a8042d10c90a46a42"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/http_admission.rs",
       "item_kind": "fn",
-      "line": 258,
+      "line": 288,
       "symbol": "vibe_registry::http_admission::tests::dns_root_dot_cannot_bypass_denied_host_key",
-      "end_line": 267,
+      "end_line": 297,
       "fingerprint": "tok1:ed832c0111a849feaf8b86c154172afdf81322da81b60efdbcf4f00bac9e1b0a"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/http_admission.rs",
       "item_kind": "fn",
-      "line": 199,
+      "line": 229,
       "symbol": "vibe_registry::http_admission::tests::normalized_keys_are_exact_and_errors_reveal_only_authority",
-      "end_line": 232,
+      "end_line": 262,
       "fingerprint": "tok1:5aa063839aa1dad51c5c9f967c33c42498bd4a8cf40cf428558fab00285eab5a"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/http_admission.rs",
       "item_kind": "fn",
-      "line": 233,
+      "line": 263,
       "symbol": "vibe_registry::http_admission::tests::same_origin_retains_auth_cross_origin_strips_permanently_and_downgrade_refuses",
-      "end_line": 257,
+      "end_line": 287,
       "fingerprint": "tok1:ae080be8acb68a2271bb1b965b639113143da49b4e1b64996117a087f2147183"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_observation_tests.rs",
+      "item_kind": "fn",
+      "line": 91,
+      "symbol": "vibe_registry::http_admission_observation_tests::observed_denied_redirect_never_contacts_destination",
+      "end_line": 116,
+      "fingerprint": "tok1:f08680dcb2c7af2e83dc4fca6ff8561d2af1508ab6280062ba86e1b828ab425a"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_observation_tests.rs",
+      "item_kind": "fn",
+      "line": 4,
+      "symbol": "vibe_registry::http_admission_observation_tests::observed_return_to_initial_origin_keeps_cross_origin_strip_sticky",
+      "end_line": 55,
+      "fingerprint": "tok1:a963673155d6b3131b1b095801dce5f10942bf122c69735a3e3b0af559792766"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_observation_tests.rs",
+      "item_kind": "fn",
+      "line": 57,
+      "symbol": "vibe_registry::http_admission_observation_tests::observed_same_origin_redirect_retains_credentials_without_crossing",
+      "end_line": 89,
+      "fingerprint": "tok1:45a776f6ff4411ff4d3ebb1fe2d8355d8dd43dbbc9b82b11bee043c78d0bfefd"
     },
     {
       "crate_name": "vibe-registry",
@@ -39063,18 +39387,18 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "item_kind": "fn",
-      "line": 522,
+      "line": 475,
       "symbol": "vibe_registry::http_admission_tests::bound_auth_and_format_errors_keep_their_existing_discriminants",
-      "end_line": 543,
+      "end_line": 496,
       "fingerprint": "tok1:96beb0f331cf918bc998f007761a99f56c729facf75d7011ace9ae82fb76132d"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "item_kind": "fn",
-      "line": 449,
+      "line": 402,
       "symbol": "vibe_registry::http_admission_tests::bound_owners_never_attach_plaintext_bearer_or_url_credentials",
-      "end_line": 472,
+      "end_line": 425,
       "fingerprint": "tok1:feeecb0012ac1b36cf1d5112bc9ce7293931ce97fcc80caee81e2b4f40638756"
     },
     {
@@ -39099,18 +39423,18 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "item_kind": "fn",
-      "line": 545,
+      "line": 498,
       "symbol": "vibe_registry::http_admission_tests::bound_probe_refuses_hostless_and_opaque_addresses_before_request_build",
-      "end_line": 569,
+      "end_line": 522,
       "fingerprint": "tok1:3b59fb9047c4ad5ee47f622188154d0f72c30dd1f036478e940c927b32a05996"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "item_kind": "fn",
-      "line": 571,
+      "line": 524,
       "symbol": "vibe_registry::http_admission_tests::bound_purl_refuses_unsupported_base_before_url_construction",
-      "end_line": 599,
+      "end_line": 552,
       "fingerprint": "tok1:fff98b5f0122c1513b7682c3ee65c57be0fdc58260dc3c4c5002bce87d897875"
     },
     {
@@ -39126,19 +39450,10 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "item_kind": "fn",
-      "line": 493,
+      "line": 446,
       "symbol": "vibe_registry::http_admission_tests::bound_raw_transient_status_retries_still_recover",
-      "end_line": 520,
+      "end_line": 473,
       "fingerprint": "tok1:7a5bfc393124c931dec53125478e9a86a0b803ee40478b949b291e990a95f155"
-    },
-    {
-      "crate_name": "vibe-registry",
-      "file": "crates/vibe-registry/src/http_admission_tests.rs",
-      "item_kind": "fn",
-      "line": 402,
-      "symbol": "vibe_registry::http_admission_tests::driver_retains_same_origin_headers_then_strips_them_permanently",
-      "end_line": 447,
-      "fingerprint": "tok1:cf464ffa50d7ff974be62a55751687237eb0f05af9fff8589931a77e6d8f83b8"
     },
     {
       "crate_name": "vibe-registry",
@@ -39198,9 +39513,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "item_kind": "fn",
-      "line": 474,
+      "line": 427,
       "symbol": "vibe_registry::http_admission_tests::unbound_driver_preserves_legacy_redirect_behavior_with_isolated_test_client",
-      "end_line": 491,
+      "end_line": 444,
       "fingerprint": "tok1:3a795f135128062c92e426d44a64a2d01e595add710fe27b19a74dce24f192b0"
     },
     {
@@ -39405,10 +39720,10 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/multi_registry_resolver/dispatch.rs",
       "item_kind": "fn",
-      "line": 199,
+      "line": 217,
       "symbol": "vibe_registry::multi_registry_resolver::dispatch::MultiRegistryResolver::prepare_in_place",
-      "end_line": 233,
-      "fingerprint": "tok1:6121726d684539d0146d7ab60ec2ef22f47a0e69f1a7c4d1548012f1a753a114"
+      "end_line": 261,
+      "fingerprint": "tok1:07cac5e8ad252d3787e29fb4ca612e1453857e122797d10e05e0f29dc46e8897"
     },
     {
       "crate_name": "vibe-registry",
@@ -39454,6 +39769,15 @@
       "symbol": "vibe_registry::multi_registry_resolver::redirect_follow",
       "end_line": 5,
       "fingerprint": "tok1:6bb8550e08d862dbeae20e0814ef402eed15ba4a97e713407fca6928c7906fd2"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/multi_registry_resolver/redirect_follow/target.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::multi_registry_resolver::redirect_follow::target",
+      "end_line": 2,
+      "fingerprint": "tok1:cdb5f09356368c54e4da3aacec1ad1ff1192cba3da08802de53037bf3ae150f0"
     },
     {
       "crate_name": "vibe-registry",
@@ -70478,7 +70802,7 @@
     {
       "file": "crates/vibe-install/src/plan/fetch.rs",
       "from_symbol": "vibe_install::plan::fetch::expand_conditional_deps",
-      "line": 247,
+      "line": 248,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint",
       "verb": "implements"
@@ -70823,7 +71147,7 @@
     {
       "file": "crates/vibe-install/tests/incremental_in_place/native_ssh.rs",
       "from_symbol": "vibe_install::tests::incremental_in_place::native_ssh::public_ssh_hook_failure_restores_original_slot_and_metadata",
-      "line": 143,
+      "line": 170,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH-LAW",
       "verb": "verifies"
@@ -70831,7 +71155,7 @@
     {
       "file": "crates/vibe-install/tests/incremental_in_place/native_ssh.rs",
       "from_symbol": "vibe_install::tests::incremental_in_place::native_ssh::public_ssh_key_and_agent_fresh_warm_update_and_noop_use_retained_source",
-      "line": 82,
+      "line": 90,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH-LAW",
       "verb": "verifies"
@@ -70866,6 +71190,38 @@
       "line": 129,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LF-CONFIGURED-STATE",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/native_routes.rs",
+      "from_symbol": "vibe_install::tests::native_routes::denied_primary_allowed_mirror_completes_public_plan_and_install",
+      "line": 117,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/native_routes/provenance.rs",
+      "from_symbol": "vibe_install::tests::native_routes::provenance::in_place_mirror_audit_survives_recording_noop_and_failed_apply",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-066#provenance",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/native_routes/provenance.rs",
+      "from_symbol": "vibe_install::tests::native_routes::provenance::in_place_mirror_audit_survives_recording_noop_and_failed_apply",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-install/tests/native_routes/recursive.rs",
+      "from_symbol": "vibe_install::tests::native_routes::recursive::recursive_parent_and_child_restore_across_public_failure_cuts",
+      "line": 325,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
       "verb": "verifies"
     },
     {
@@ -78245,7 +78601,7 @@
     {
       "file": "crates/vibe-registry/src/lib.rs",
       "from_symbol": "vibe_registry::CachedPackage::package_meta",
-      "line": 314,
+      "line": 316,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -78365,6 +78721,118 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/child_layout.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::child_layout",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/child_layout.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::child_layout::NativeState::relocate_child_layout",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/constructor_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::constructor_tests",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/constructor_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::constructor_tests::child_rewrite_uses_first_equal_length_match_and_longest_prefix",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/constructor_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::constructor_tests::denied_mirror_has_no_contact_before_independently_admitted_next_route",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/constructor_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::constructor_tests::relative_scp_child_preserves_remote_home_and_rejects_authority_escape",
+      "line": 67,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_tests::authenticated_child_inherits_bound_parent_token",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_tests::fresh_https_child_without_package_manifest_is_exact_and_denied_child_has_no_tcp",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_tests::nested_relative_children_stage_and_bind_exact_commits",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_userinfo_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_userinfo_tests",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_userinfo_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_userinfo_tests::raw_child_credentials_rewritten_to_clean_endpoint_refuse_before_contact",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlink_userinfo_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::gitlink_userinfo_tests::raw_http_userinfo_guard_preserves_ssh_identity_and_relative_urls",
+      "line": 170,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlinks.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::gitlinks",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/gitlinks.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::gitlinks::NativeState::prepare_children",
+      "line": 111,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-registry/src/git_backend/shell/native_admission/materialisation.rs",
       "from_symbol": "vibe_registry::git_backend::shell::native_admission::materialisation",
       "line": 2,
@@ -78447,6 +78915,14 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/mixed_gitlink_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::mixed_gitlink_tests::mixed_exact_gitlinks_use_distinct_profiles_and_retain_origins_in_fresh_and_warm_stages",
+      "line": 83,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-registry/src/git_backend/shell/native_admission/registry_auth_tests.rs",
       "from_symbol": "vibe_registry::git_backend::shell::native_admission::registry_auth_tests::direct_constructors_enforce_mechanisms_before_actual_request",
       "line": 124,
@@ -78468,6 +78944,86 @@
       "line": 86,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/relocation.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::relocation",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/relocation_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::relocation_tests::default_initial_redirect_reuses_final_base_and_preserves_logical_origin",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/relocation_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::relocation_tests::denied_initial_hop_queries_and_oversized_metadata_refuse_before_publication",
+      "line": 194,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/relocation_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::relocation_tests::return_to_original_origin_never_reattaches_native_token",
+      "line": 150,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/relocation_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::relocation_tests::subsequent_object_redirect_is_refused_like_default_git_but_not_follow_true",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/routes_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::routes_tests::allowed_mirror_tls_failure_is_not_reported_as_all_excluded",
+      "line": 530,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/routes_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::routes_tests::denied_canonical_route_does_not_block_an_independently_admitted_mirror",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/routes_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::routes_tests::package_redirect_uses_its_bound_target_and_exact_pinned_ref",
+      "line": 64,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/routes_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::routes_tests::public_stub_selects_configured_private_grant_but_cannot_mint_one",
+      "line": 205,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/routes_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::routes_tests::retained_mirror_is_not_replaced_by_a_warm_excluded_origin",
+      "line": 363,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW",
       "verb": "verifies"
     },
     {
@@ -78545,7 +79101,7 @@
     {
       "file": "crates/vibe-registry/src/git_backend/shell/native_admission/tests.rs",
       "from_symbol": "vibe_registry::git_backend::shell::native_admission::tests::direct_https_prepares_exact_objects_with_tls_auth_and_no_legacy_escape",
-      "line": 52,
+      "line": 63,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION",
       "verb": "verifies"
@@ -78553,7 +79109,7 @@
     {
       "file": "crates/vibe-registry/src/git_backend/shell/native_admission/tests.rs",
       "from_symbol": "vibe_registry::git_backend::shell::native_admission::tests::token_registry_preparation_uses_incumbent_basic_auth_and_refuses_apply_before_effects",
-      "line": 149,
+      "line": 160,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION",
       "verb": "verifies"
@@ -78805,9 +79361,17 @@
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
-      "from_symbol": "vibe_registry::git_package_registry::fetch::GitPerPackageRegistry::fetch_for_install",
-      "line": 263,
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/api.rs",
+      "from_symbol": "vibe_registry::git_package_registry::fetch::api",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/api.rs",
+      "from_symbol": "vibe_registry::git_package_registry::fetch::api::GitPerPackageRegistry::fetch_for_install",
+      "line": 97,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW",
       "verb": "implements"
@@ -78839,7 +79403,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::GitPerPackageRegistry::prepare_in_place",
-      "line": 425,
+      "line": 320,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -78847,7 +79411,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace",
-      "line": 45,
+      "line": 47,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -78855,7 +79419,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::content_hash",
-      "line": 145,
+      "line": 163,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -78863,7 +79427,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::manifest",
-      "line": 116,
+      "line": 134,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -78871,7 +79435,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::materialise",
-      "line": 207,
+      "line": 225,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -78879,7 +79443,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::resolved_commit",
-      "line": 123,
+      "line": 141,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -78887,7 +79451,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::slot",
-      "line": 152,
+      "line": 170,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -78895,7 +79459,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::source_evidence",
-      "line": 93,
+      "line": 111,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS",
       "verb": "implements"
@@ -78903,7 +79467,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::source_ref",
-      "line": 138,
+      "line": 156,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -78911,7 +79475,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::source_uri",
-      "line": 131,
+      "line": 149,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -78919,9 +79483,17 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::stage_native",
-      "line": 161,
+      "line": 179,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared/acquisition.rs",
+      "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::acquisition",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
     },
     {
@@ -78962,6 +79534,22 @@
       "line": 117,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared/route_tests.rs",
+      "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::route_tests::retained_route_does_not_replace_the_unbound_slots_actual_origin",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared/route_tests.rs",
+      "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::route_tests::retained_route_keeps_unbound_warm_cache_refresh_and_failover_order",
+      "line": 44,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
       "verb": "verifies"
     },
     {
@@ -79041,7 +79629,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/lookup.rs",
       "from_symbol": "vibe_registry::git_package_registry::lookup::contact_refusal_tests::lookup_never_discards_a_primary_or_mirror_contact_refusal",
-      "line": 460,
+      "line": 537,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79052,6 +79640,14 @@
       "line": 5,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_package_registry/route.rs",
+      "from_symbol": "vibe_registry::git_package_registry::route",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES",
       "verb": "implements"
     },
     {
@@ -79130,7 +79726,7 @@
     {
       "file": "crates/vibe-registry/src/http_admission.rs",
       "from_symbol": "vibe_registry::http_admission::tests::bound_get_denies_dotted_authority_before_connect_and_preserves_lookalikes",
-      "line": 269,
+      "line": 299,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79138,7 +79734,7 @@
     {
       "file": "crates/vibe-registry/src/http_admission.rs",
       "from_symbol": "vibe_registry::http_admission::tests::dns_root_dot_cannot_bypass_denied_host_key",
-      "line": 259,
+      "line": 289,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79146,7 +79742,7 @@
     {
       "file": "crates/vibe-registry/src/http_admission.rs",
       "from_symbol": "vibe_registry::http_admission::tests::normalized_keys_are_exact_and_errors_reveal_only_authority",
-      "line": 200,
+      "line": 230,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79154,7 +79750,31 @@
     {
       "file": "crates/vibe-registry/src/http_admission.rs",
       "from_symbol": "vibe_registry::http_admission::tests::same_origin_retains_auth_cross_origin_strips_permanently_and_downgrade_refuses",
-      "line": 234,
+      "line": 264,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_observation_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_observation_tests::observed_denied_redirect_never_contacts_destination",
+      "line": 92,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_observation_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_observation_tests::observed_return_to_initial_origin_keeps_cross_origin_strip_sticky",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_observation_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_observation_tests::observed_same_origin_redirect_retains_credentials_without_crossing",
+      "line": 58,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79178,7 +79798,7 @@
     {
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "from_symbol": "vibe_registry::http_admission_tests::bound_auth_and_format_errors_keep_their_existing_discriminants",
-      "line": 523,
+      "line": 476,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79186,7 +79806,7 @@
     {
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "from_symbol": "vibe_registry::http_admission_tests::bound_owners_never_attach_plaintext_bearer_or_url_credentials",
-      "line": 450,
+      "line": 403,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79210,7 +79830,7 @@
     {
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "from_symbol": "vibe_registry::http_admission_tests::bound_probe_refuses_hostless_and_opaque_addresses_before_request_build",
-      "line": 546,
+      "line": 499,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79218,7 +79838,7 @@
     {
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "from_symbol": "vibe_registry::http_admission_tests::bound_purl_refuses_unsupported_base_before_url_construction",
-      "line": 572,
+      "line": 525,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79234,15 +79854,7 @@
     {
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "from_symbol": "vibe_registry::http_admission_tests::bound_raw_transient_status_retries_still_recover",
-      "line": 494,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-registry/src/http_admission_tests.rs",
-      "from_symbol": "vibe_registry::http_admission_tests::driver_retains_same_origin_headers_then_strips_them_permanently",
-      "line": 403,
+      "line": 447,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79298,7 +79910,7 @@
     {
       "file": "crates/vibe-registry/src/http_admission_tests.rs",
       "from_symbol": "vibe_registry::http_admission_tests::unbound_driver_preserves_legacy_redirect_behavior_with_isolated_test_client",
-      "line": 475,
+      "line": 428,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "verifies"
@@ -79486,7 +80098,7 @@
     {
       "file": "crates/vibe-registry/src/multi_registry_resolver/dispatch.rs",
       "from_symbol": "vibe_registry::multi_registry_resolver::dispatch::MultiRegistryResolver::prepare_in_place",
-      "line": 201,
+      "line": 219,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -79529,6 +80141,14 @@
       "line": 5,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/multi_registry_resolver/redirect_follow/target.rs",
+      "from_symbol": "vibe_registry::multi_registry_resolver::redirect_follow::target",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES",
       "verb": "implements"
     },
     {
@@ -116585,12 +117205,30 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW"
     },
     {
+      "anchor": "LOCKED-SOURCE",
+      "content_hash": "sha256:5ac6df2621bf3953854e79601016ccfd8bbefecc741a86289ef19955b1331b05",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "Locked source authority versus new registry selection",
+      "line": 19,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE"
+    },
+    {
+      "anchor": "LOCKED-SOURCE-LAW",
+      "content_hash": "sha256:c92074208d75ce7e0cf01f093e10bde873baa7dcaee26d739f04a07f1382b178",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "Registry configuration selects new package sources and index discovery. A package already present in the held lock resolves and acquires from its locked source and revision/content constraints; current registry edits cannot retarget it. Missing cached content requires the locked source, and failure must not silently choose a current registry or mirror. Verified no-contact reuse is permitted without claiming a new acquisition. Ordinary install, reinstall or cache repair does not authorize source reselection. An unchanged authoritative selection preserves the original shared lock bytes, including generation metadata; developer credentials, local paths and transport preferences do not rewrite shared source identity. Optional provenance reports remain reports, not hidden resolution authority. Deliberate update or relock is a distinct operation contract. Existing local-change protection and checked publication/recovery remain in force. @status:spec/plan",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW"
+    },
+    {
       "anchor": "HTTP-ADMISSION",
       "content_hash": "sha256:9859ac0cc625b463333e809dd2c14e9c91ceebb3be71a794b53a638d8dff9f53",
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Bounded HTTP-only admission capability",
-      "line": 19,
+      "line": 23,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION",
       "kind": "req",
       "revision": 1
@@ -116601,7 +117239,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "An explicit immutable HTTP-only binding is installed before a constrained client or resolver can probe or request. It checks the actual constructed initial URL and every redirect/retry destination before contact, preserving typed refusal independently of absence, transport, authentication and malformed data. A refusal consumes no retries and cannot be laundered into an optimization decline or ungated native fallback. Bound pools and anonymous backend clones retain the same binding. The bounded client owns its redirects and retries, has no ambient proxy or automatic transport replay, and confines credentials to the authorized origin; cross-origin stripping is permanent within a chain. Invalid redirect, finite-hop exhaustion, unsupported scheme and HTTPS downgrade refuse before the next request. Native subprocess paths under this HTTP-only capability refuse before spawn; positive admitted HTTP paths remain functional. Absence of binding preserves incumbent behavior. This internal capability is not an exposed whole-operation hosting exclusion setting, a DNS/IP egress sandbox or a substitute for the remaining admitted Git/submodule and route-choice implementation. Diagnostic endpoints do not expose credentials or query data. @status:spec/done",
-      "line": 21,
+      "line": 25,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
     },
     {
@@ -116610,7 +117248,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Admitted native HTTPS object preparation",
-      "line": 24,
+      "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION",
       "kind": "req",
       "revision": 1
@@ -116621,16 +117259,16 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "A separate native preparation capability shares the immutable denied-host policy without relaxing the accepted HTTP-only native refusal. Its caller explicitly supplies a trusted Git executable/helper installation and TLS trust inputs; these are not package-supplied flags or claims of executable authentication. Supported HTTPS object acquisition and bounded metadata operations run in operation-owned transport contexts with captured endpoints, controlled configuration/environment and origin-scoped ephemeral credentials. They do not inherit ambient transport rewrites, helpers, proxies, hooks or recursive acquisition. Warm effective endpoints must be captured with their supported configuration meaning or refused before contact; unexamined global/include semantics are not assumed empty and recorded A is not silently substituted for effective B. Source identities, selected commit/object witnesses and existing guarded apply/recovery authority remain intact. Unbound behavior is unchanged. Unsupported publication, SSH, transforms, lazy object fetch, redirects or submodule traversal remain explicit capability boundaries until separately proved and implemented; universal native refusal is not the final source-exclusion feature. @status:spec/done",
-      "line": 26,
+      "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION-LAW"
     },
     {
       "anchor": "NATIVE-MATERIALISATION",
-      "content_hash": "sha256:6bb910323a3cd32a0cca0c86e6aeb6756585671b85af3bd59d935fa1cbc14bbb",
+      "content_hash": "sha256:b1e10c0eaf0708b391864efc812b90addfdf708d3dd21509d31c7d609ade95ca",
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Captured native staging and checked publication",
-      "line": 28,
+      "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION",
       "kind": "req",
       "revision": 1
@@ -116641,28 +117279,48 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Supported native materialisation captures the selected Git configuration/attribute meanings, effective and recorded origins, retained source objects and old slot witnesses without executing uncontrolled helpers or assuming unexamined context empty. It stages byte-equivalent supported payload transformations in an owned context; unsupported active transforms/layouts or missing ownership refuse before caller metadata or slot publication. Actual fresh and warm planning must carry the prepared result without forcing ordinary copy packages into in-place mode or treating policy refusal as a non-applicable route. Workspace owns neutral exact-identity placement and the existing undo log; registry owns source bytes and revalidation, with no reverse dependency or second transaction framework. Every deferred checked native slot and related gitignore effect is captured before replacement, then retained through final metadata success. Unknown post-publication edits or foreign replacements are preserved with explicit rollback conflict and retained old backup, not silently attributed to this operation. Immediate lifecycle deletion must not bypass checked ownership. This is cooperative guarded recovery, not hostile-race CAS or arbitrary external-script rollback. Legacy hook/park semantics remain unless a specific shared correction is independently proved. N2 staging alone does not complete local publication, and N3/N4 or public exclusion are not inferred from it. @status:spec/done",
-      "line": 30,
+      "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW"
     },
     {
       "anchor": "NATIVE-SSH",
-      "content_hash": "sha256:167602cfc8dc0f87e0b2dc02c4bf2c63d1366fc382c44d819a99c37ef61c03cc",
+      "content_hash": "sha256:e99df5d1742f8ac7d37e04e1906e4309609c2f920a8d71908821ca73e1e65f8b",
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Explicit direct SSH transport authority",
-      "line": 33,
+      "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH",
       "kind": "req",
       "revision": 1
     },
     {
       "anchor": "NATIVE-SSH-LAW",
-      "content_hash": "sha256:b1fe7dbc7fc7ccc12801e3e82d90aca3803043e030924950b14a0044ff9efa65",
+      "content_hash": "sha256:108d419c588068bd2c39a1aebea06fa06f13cbdf377d676b31ef2393a5e4ddda",
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
-      "heading": "A native SSH capability uses an explicitly trusted OpenSSH installation, exact host/user/port, captured known-host trust and either a captured private key or an explicitly selected agent socket. Actual requests check normalized denied-host policy before contact while credential and trust selection retains exact endpoint identity. Strict host-key verification, noninteractive authentication and disabled forwarding remain mandatory. No ambient SSH aliases, proxy commands, local commands or credential providers execute. The explicit-direct profile is caller-selected transport authority for fresh and warm operations; it is not inferred from a recorded origin and does not claim equivalence to historical SSH configuration. Existing Git-origin and source witnesses still recheck. Metadata observation and actual credential-use admission are distinct. Immutable per-registry bindings allow anonymous HTTPS reads, permit HTTPS Basic/token credentials only for TokenEnv, and permit SSH key/agent use only for Ssh; anonymous/public binding and rebinding cannot acquire broader credential authority. Direct backend use retains its separately explicit profile authority. Failures are typed and redacted without laundering policy or trust refusal into absence or an ungated fallback. Actual authenticated acquisition, fresh/warm installation, denied-route and wrong-key controls are required before acceptance; recipe-only proof is insufficient. N4 recursive routes and public source-policy settings are separate work. @status:spec/done",
-      "line": 35,
+      "heading": "A native SSH capability uses an explicitly trusted OpenSSH installation, exact host/user/port, captured known-host trust and either a captured private key or an explicitly selected agent socket. Actual requests check normalized denied-host policy before contact while credential and trust selection retains exact endpoint identity. Strict host-key verification, noninteractive authentication and disabled forwarding remain mandatory. No ambient SSH aliases, proxy commands, local commands or credential providers execute. The explicit-direct profile is caller-selected transport authority for fresh and warm operations; it is not inferred from a recorded origin and does not claim equivalence to historical SSH configuration. Existing Git-origin and source witnesses still recheck. Metadata observation and actual credential-use admission are distinct. Immutable per-registry bindings allow anonymous HTTPS reads, permit HTTPS Basic/token credentials only for TokenEnv, and permit SSH key/agent use only for Ssh; anonymous/public binding and rebinding cannot acquire broader credential authority. Direct backend use retains its separately explicit profile authority. Failures are typed and redacted without laundering policy or trust refusal into absence or an ungated fallback. Actual authenticated acquisition, fresh/warm installation, denied-route and wrong-key controls are required before acceptance; recipe-only proof is insufficient. Recursive routes are qualified separately by NATIVE-ROUTES; public source-policy settings remain separate work. @status:spec/done",
+      "line": 39,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH-LAW"
+    },
+    {
+      "anchor": "NATIVE-ROUTES",
+      "content_hash": "sha256:47eb1abc06b289be2537440488e561a5f6176bb3743f7b2a7f2d5fd7acfa7110",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "Admitted alternatives, relocation and recursive Git sources",
+      "line": 41,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "NATIVE-ROUTES-LAW",
+      "content_hash": "sha256:15df61cbcf68c3b3071347da021f6327f5128cda6c153f641a3cce08893d197d",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "Source-selection owners may skip a concretely excluded route and try independently admitted alternatives without converting lower-level refusal into absence or an ungated fallback. The actual serving route is retained across lookup, redirect-marker reads and acquisition, separately from canonical source identity. Package redirects use the target owner's bound backend and credential authority. Initial HTTPS relocation follows the normal Git initial-request model through the bounded HTTP owner, preserves sticky cross-origin credential stripping and validated endpoint meaning, and leaves opaque native auto-follow disabled. Captured native PEM trust may be reused; bundled HTTP roots must never silently stand in for the selected Git installation's system trust, so that mode requires separately explicit HTTP discovery trust while direct native System requests remain supported. Every recursive child is selected from retained parent gitlink and module data, admitted before contact and acquired at its exact object identity. Original module URLs, selected raw URLs and warm recorded origins must be validated before rewriting can conceal unsupported URL credentials in derived repository metadata. Malformed authority-bearing URL input refuses rather than becoming an opaque rewrite alias; ordinary SSH usernames and supported relative/SCP addresses retain their meaning. Immutable authored Git objects are not rewritten to erase their input. Safe unique mount paths, captured warm overrides and explicit credential ceilings remain; missing, corrupt, unsafe or unqualified children refuse before caller publication. Parent and complete child trees stage together and publish through the existing checked workspace undo, with foreign-state conflict preservation. Allowed-route and authenticated recursive successes, relative-URL parity, denied-descendant zero-contact and whole-tree recovery require actual execution before acceptance. Public preference/exclusion settings are separate work. @status:spec/done",
+      "line": 43,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW"
     },
     {
       "anchor": "OPERATION-EFFECTS",
@@ -116670,7 +117328,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Explicit preview and cancellation boundaries",
-      "line": 37,
+      "line": 46,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS",
       "kind": "req",
       "revision": 1
@@ -116681,7 +117339,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Operation planning separates source resolution, acquisition effects and product publication. A read-only preview does not silently inherit cache/config/temp writes from existing acquisition; unsupported metadata access is an explicit limitation until the shared provider supports the requested effect contract. Apply uses captured decisions or reports/replans drift rather than promising a mutable ref is unchanged. Cancellation requests and stopped outcomes are distinct. Before product publication, cooperative cancellation preserves project state; during owned local publication use existing guarded recovery. Completed or unknown external effects and rollback conflicts are reported truthfully, never labeled successful restoration. Reuse lifecycle and progress owners rather than create a parallel orchestrator. Logical successful-write counters are distinct from received bytes, retained file size and physical disk I/O. @status:spec/plan",
-      "line": 39,
+      "line": 48,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
     },
     {

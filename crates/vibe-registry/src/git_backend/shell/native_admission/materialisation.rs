@@ -1,18 +1,18 @@
 //! Retained local checkout staging. Publication belongs to the workspace owner.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION");
-use super::capture::{CapturedContext, validate_warm_directory};
+use super::capture::{CapturedContext, selected_git_dir, validate_selected_directory};
 use super::*;
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 use std::fs;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 struct Entry {
     bytes: Vec<u8>,
     mode: u32,
     identity: (u64, u64),
 }
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(super) struct Tree(BTreeMap<PathBuf, Entry>);
 pub(super) fn tree(path: &Path) -> Result<Option<Tree>, GitError> {
     if !path.try_exists().map_err(io)? {
@@ -140,6 +140,7 @@ pub struct NativeMaterialisation {
     source_before: Option<Tree>,
     profile: Arc<NativeGitAdmission>,
     changed: bool,
+    children: Vec<NativeMaterialisation>,
 }
 impl NativeMaterialisation {
     pub fn staged_path(&self) -> &Path {
@@ -170,6 +171,9 @@ impl NativeMaterialisation {
     }
     /// Cooperative drift check, before the publication owner's move-aside.
     pub fn validate_before_publication(&self) -> Result<(), GitError> {
+        for child in &self.children {
+            child.validate_before_publication()?;
+        }
         self.context.recheck(&self.profile)?;
         if let Some(source) = &self.source
             && tree(source)? != self.source_before
@@ -197,7 +201,7 @@ impl NativeState {
                 "checked native materialisation requires supported Unix file identities",
             ));
         }
-        self.with_owned(objects, |owned| {
+        let owned = self.with_owned(objects, |owned| {
             if !owned.destination_bound {
                 return Err(unsupported(
                     "native source has not been bound to a destination",
@@ -208,8 +212,9 @@ impl NativeState {
                     "materialisation revision differs from retained source",
                 ));
             }
-            self.stage_owned(objects, owned)
-        })
+            Ok(owned.clone())
+        })?;
+        self.stage_owned(objects, &owned)
     }
     fn stage_owned(
         &self,
@@ -218,26 +223,29 @@ impl NativeState {
     ) -> Result<NativeMaterialisation, GitError> {
         let destination = &owned.revision.destination;
         let source = owned.source.as_deref();
-        let captured = self.profile.capture_context(source)?;
+        let captured = self
+            .profile
+            .capture_child_context(source, owned.child_layout.as_ref())?;
         if let Some(context) = &owned.context {
             context.recheck(&self.profile)?;
         }
         if let Some(source) = source {
-            validate_warm_directory(source)?;
-            if tree(&source.join(".git"))? != owned.source_before {
+            validate_selected_directory(source, owned.child_layout.as_ref())?;
+            if tree(&selected_git_dir(source, owned.child_layout.as_ref()))? != owned.source_before
+            {
                 return Err(unsupported("warm source changed since acquisition"));
             }
         }
         let before = tree(destination)?;
         let source_payload_before = source.map(tree).transpose()?.flatten();
         let before_head = if destination.join(".git").exists() {
-            self.read_head(&destination.join(".git"))?
+            self.read_head(&selected_git_dir(destination, owned.child_layout.as_ref()))?
         } else {
             None
         };
         let before_origin = if destination.join(".git").exists() {
             self.profile
-                .capture_context(Some(destination))?
+                .capture_child_context(Some(destination), owned.child_layout.as_ref())?
                 .effective_origin
         } else {
             None
@@ -251,6 +259,25 @@ impl NativeState {
         let git = stage.join(".git");
         let original_config = if let Some(source) = source {
             copy(source, &stage, false)?;
+            if owned.child_layout.is_some() {
+                fs::remove_file(&git).map_err(io)?;
+                copy(
+                    &selected_git_dir(source, owned.child_layout.as_ref()),
+                    &git,
+                    false,
+                )?;
+                Context::new(&self.profile)?.run(
+                    &[
+                        "config",
+                        "--file",
+                        utf8(&git.join("config"))?,
+                        "--unset-all",
+                        "core.worktree",
+                    ],
+                    None,
+                    None,
+                )?;
+            }
             Some(fs::read(git.join("config")).map_err(io)?)
         } else {
             fs::create_dir(&git).map_err(io)?;
@@ -261,7 +288,9 @@ impl NativeState {
         fs::create_dir_all(git.join("refs")).map_err(io)?;
         fs::create_dir_all(git.join("info")).map_err(io)?;
         fs::write(git.join("config"), &owned.config).map_err(io)?;
-        fs::write(git.join("HEAD"), format!("{}\n", owned.revision.commit)).map_err(io)?;
+        if !owned.gitlink || source.is_none() {
+            fs::write(git.join("HEAD"), format!("{}\n", owned.revision.commit)).map_err(io)?;
+        }
         let context = Context::new(&self.profile)?;
         let config_path = git.join("config");
         context.run(
@@ -330,7 +359,7 @@ impl NativeState {
         let mut paths = Vec::new();
         for entry in entries.stdout.split(|b| *b == 0).filter(|s| !s.is_empty()) {
             if entry.starts_with(b"160000 ") {
-                return Err(unsupported("gitlink materialisation requires N4"));
+                continue;
             }
             let tab = entry
                 .iter()
@@ -386,8 +415,15 @@ impl NativeState {
                 }
             }
         }
-        run(&["reset", "--hard", &owned.revision.commit])?;
-        run(&["clean", "-dfx"])?;
+        if owned.gitlink && source.is_some() {
+            let current = text(run(&["rev-parse", "--verify", "HEAD"])?.stdout)?;
+            if current != owned.revision.commit {
+                run(&["checkout", "--detach", &owned.revision.commit])?;
+            }
+        } else {
+            run(&["reset", "--hard", &owned.revision.commit])?;
+            run(&["clean", "-dfx"])?;
+        }
         if owned.revision.reference.starts_with("refs/") {
             run(&[
                 "update-ref",
@@ -399,9 +435,66 @@ impl NativeState {
         if head != owned.revision.commit {
             return Err(unsupported("staged HEAD differs from retained commit"));
         }
-        // No Git command follows restoration of user-authored authority.
+        let mut children = Vec::new();
+        for child in &owned.children {
+            run(&[
+                "config",
+                &format!("submodule.{}.url", child.name),
+                &child.raw_url,
+            ])?;
+            run(&[
+                "config",
+                &format!("submodule.{}.active", child.name),
+                "true",
+            ])?;
+        }
+        for child in &owned.children {
+            let child_stage = self.stage(&child.objects, &child.revision)?;
+            let mount = stage.join(&child.path);
+            if mount.exists() {
+                fs::remove_dir_all(&mount).map_err(io)?;
+            }
+            child_stage.copy_for_cache(&mount)?;
+            if child.absorbed {
+                let module = git.join("modules").join(&child.name);
+                if module.exists() {
+                    fs::remove_dir_all(&module).map_err(io)?;
+                }
+                fs::create_dir_all(
+                    module
+                        .parent()
+                        .ok_or_else(|| unsupported("child module has no parent"))?,
+                )
+                .map_err(io)?;
+                fs::rename(mount.join(".git"), &module).map_err(io)?;
+                self.relocate_child_layout(&mount, &module, child)?;
+            }
+            children.push(child_stage);
+        }
+        // Merge only the known submodule-init fields into an inert config copy.
+        // No executable Git operation follows restoration of user authority.
         if let Some(bytes) = original_config {
-            fs::write(git.join("config"), bytes).map_err(io)?;
+            let restored = temporary.path().join("restored-config");
+            fs::write(&restored, bytes).map_err(io)?;
+            let entries = context.config(&restored)?;
+            for child in &owned.children {
+                for (key, value) in [
+                    (
+                        format!("submodule.{}.url", child.name),
+                        child.raw_url.as_str(),
+                    ),
+                    (format!("submodule.{}.active", child.name), "true"),
+                ] {
+                    if !entries.iter().any(|(existing, _)| existing == &key) {
+                        context.run(
+                            &["config", "--file", utf8(&restored)?, &key, value],
+                            None,
+                            None,
+                        )?;
+                    }
+                }
+            }
+            fs::write(git.join("config"), fs::read(restored).map_err(io)?).map_err(io)?;
         }
         let staged = tree(&stage)?;
         let payload = |tree: &Option<Tree>| {
@@ -413,7 +506,8 @@ impl NativeState {
                     .collect::<BTreeMap<_, _>>()
             })
         };
-        let changed = payload(&before) != payload(&staged)
+        let changed = children.iter().any(NativeMaterialisation::changed)
+            || payload(&before) != payload(&staged)
             || before_head.as_deref() != Some(owned.revision.commit.as_str())
             || before_origin.as_deref() != Some(owned.origin.as_str());
         captured.recheck(&self.profile)?;
@@ -425,7 +519,7 @@ impl NativeState {
             return Err(unsupported("warm source payload changed during staging"));
         }
         if let Some(source) = source
-            && tree(&source.join(".git"))? != owned.source_before
+            && tree(&selected_git_dir(source, owned.child_layout.as_ref()))? != owned.source_before
         {
             return Err(unsupported(
                 "warm source Git metadata changed during staging",
@@ -442,6 +536,7 @@ impl NativeState {
             source_before,
             profile: self.profile.clone(),
             changed,
+            children,
         })
     }
 }

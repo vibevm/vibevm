@@ -8,6 +8,13 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#r
 use super::*;
 
 impl GitPerPackageRegistry {
+    pub(super) fn package_reference(&self, resolved: &ResolvedPackage) -> String {
+        if self.single_package_url.is_some() {
+            self.org_ref.clone()
+        } else {
+            format!("v{}", resolved.version)
+        }
+    }
     /// Compose the per-package repo URL — `<org_url>/<naming(group, name)>.git`
     /// for normal multi-package registries, or the verbatim single-package
     /// URL for git-source registries (PROP-002 §2.4.1). Trailing slashes

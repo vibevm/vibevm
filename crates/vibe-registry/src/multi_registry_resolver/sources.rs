@@ -93,6 +93,7 @@ impl MultiRegistryResolver {
             source_dir: self.git_source_clone_dir(&dep.group, pkgref.name.as_str()),
         };
         Ok(MultiResolution {
+            selected_route: None,
             resolved,
             registry_name: None,
             source_url: dep.url.clone(),
@@ -163,6 +164,7 @@ impl MultiRegistryResolver {
             source_dir: dep.package_dir.clone(),
         };
         Ok(MultiResolution {
+            selected_route: None,
             resolved,
             registry_name: None,
             // `source_url` records the workspace-relative path, never an

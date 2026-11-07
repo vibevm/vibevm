@@ -43,6 +43,7 @@ impl MultiRegistryResolver {
             match ls.registry.resolve(pkgref) {
                 Ok(resolved) => {
                     return Ok(MultiResolution {
+                        selected_route: None,
                         resolved,
                         registry_name: Some(ls.name.clone()),
                         source_url: ls.url.clone(),
@@ -102,6 +103,7 @@ impl MultiRegistryResolver {
         }
         let entry = store::lookup_at(root, group, locked.name.as_str(), &locked.version)?;
         Some(MultiResolution {
+            selected_route: None,
             resolved: ResolvedPackage {
                 group: locked.group.clone(),
                 name: locked.name.as_str().to_string(),

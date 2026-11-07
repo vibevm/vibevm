@@ -86,40 +86,84 @@ impl GitPerPackageRegistry {
     where
         F: Fn(&str) -> Result<T, RegistryError>,
     {
+        self.try_lookup_with_route(group, name, f)
+            .map(|(value, _)| value)
+    }
+
+    fn try_lookup_with_route<T, F>(
+        &self,
+        group: &Group,
+        name: &str,
+        f: F,
+    ) -> Result<(T, String), RegistryError>
+    where
+        F: Fn(&str) -> Result<T, RegistryError>,
+    {
         let (primary, mirrors) = self.package_urls(group, name)?;
-        // The primary attempt sits outside the mirror loop: its error
-        // is held as a plain value — THE diagnostic if nothing serves.
-        let primary_err = match f(&primary) {
-            Ok(v) => return Ok(v),
-            Err(e @ RegistryError::ContactRefused(_)) => return Err(e),
-            Err(e) => e,
-        };
-        for (i, url) in mirrors.iter().enumerate() {
-            match f(url) {
-                Ok(v) => {
-                    tracing::info!(
-                        target: "vibe_registry",
-                        registry = %self.name,
-                        primary = %primary,
-                        served_by = %url,
-                        mirror_index = i,
-                        "lookup served by mirror"
-                    );
-                    return Ok(v);
+        let mut first_error = None;
+        let mut excluded = None;
+        for url in std::iter::once(primary).chain(mirrors) {
+            match f(&url) {
+                Ok(value) => return Ok((value, url)),
+                Err(error)
+                    if self.backend.uses_native_materialisation() && excluded_route(&error) =>
+                {
+                    tracing::debug!(registry=%self.name,"concrete registry candidate excluded; trying independently admitted alternative");
+                    excluded.get_or_insert(error);
                 }
-                Err(e @ RegistryError::ContactRefused(_)) => return Err(e),
-                Err(e) => {
-                    tracing::debug!(
-                        target: "vibe_registry",
-                        registry = %self.name,
-                        mirror = %url,
-                        error = %e,
-                        "mirror lookup failed; trying next"
-                    );
+                Err(error) if super::route::terminal_lookup_error(&error) => return Err(error),
+                Err(error) => {
+                    first_error.get_or_insert(error);
                 }
             }
         }
-        Err(primary_err)
+        Err(first_error
+            .or(excluded)
+            .unwrap_or_else(|| RegistryError::UnknownPackage {
+                group: group.clone(),
+                name: name.into(),
+            }))
+    }
+
+    pub(crate) fn read_selected_file(
+        &self,
+        resolved: &ResolvedPackage,
+        reference: &str,
+        path: &str,
+        route: Option<&RegistryRoute>,
+    ) -> Result<Vec<u8>, RegistryError> {
+        self.ensure_token_loaded()?;
+        let read = |url: &str| {
+            self.backend
+                .fetch_file_at_ref(
+                    &self.credentialed_url(strip_git_plus_prefix(url)),
+                    reference,
+                    path,
+                )
+                .map_err(RegistryError::from)
+        };
+        match route {
+            Some(route) => read(route.validate(self, resolved)?),
+            None => self.try_lookup(&resolved.group, &resolved.name, read),
+        }
+    }
+    pub(crate) fn read_package_file(
+        &self,
+        group: &Group,
+        name: &str,
+        reference: &str,
+        path: &str,
+    ) -> Result<Vec<u8>, RegistryError> {
+        self.ensure_token_loaded()?;
+        self.try_lookup(group, name, |url| {
+            self.backend
+                .fetch_file_at_ref(
+                    &self.credentialed_url(strip_git_plus_prefix(url)),
+                    reference,
+                    path,
+                )
+                .map_err(RegistryError::from)
+        })
     }
 
     /// Enumerate available versions for `<group>/<name>` *without
@@ -160,6 +204,15 @@ impl GitPerPackageRegistry {
         group: &Group,
         name: &str,
     ) -> Result<Vec<IndexVersion>, RegistryError> {
+        self.list_candidates_with_route(group, name)
+            .map(|(entries, _)| entries)
+    }
+
+    fn list_candidates_with_route(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Result<(Vec<IndexVersion>, Option<String>), RegistryError> {
         // Index fast path (PROP-005 §2.10 slice 10). When the
         // registry has an upstream index attached, query it first.
         // 200 → return versions; 404 → fall through to git path
@@ -177,7 +230,7 @@ impl GitPerPackageRegistry {
                         count = entries.len(),
                         "list_versions served from index"
                     );
-                    return Ok(entries);
+                    return Ok((entries, None));
                 }
                 Ok(None) => {
                     tracing::debug!(
@@ -187,6 +240,11 @@ impl GitPerPackageRegistry {
                         name = %name,
                         "index returned 404; falling through to git ls-remote"
                     );
+                }
+                Err(crate::IndexError::ContactRefused(crate::ContactRefusal::ExcludedHost {
+                    ..
+                })) if self.backend.uses_native_materialisation() => {
+                    tracing::debug!(registry=%self.name,"index route excluded; checking independently admitted Git candidates");
                 }
                 Err(crate::IndexError::ContactRefused(refusal)) => return Err(refusal.into()),
                 Err(e) => {
@@ -209,7 +267,7 @@ impl GitPerPackageRegistry {
         let owned_group = group.clone();
         let owned_name = name.to_owned();
         let token = self.effective_token.clone();
-        self.try_lookup(group, name, move |url| {
+        self.try_lookup_with_route(group, name, move |url| {
             let plain = strip_git_plus_prefix(url);
             let fetch_url = inject_token(plain, token.as_deref());
             let tags = backend.list_tags(&fetch_url).map_err(|e| match e {
@@ -235,6 +293,7 @@ impl GitPerPackageRegistry {
                 })
                 .collect())
         })
+        .map(|(entries, route)| (entries, Some(route)))
     }
 
     /// Pick the best tag matching `pkgref.version` from the upstream tag list.
@@ -253,18 +312,28 @@ impl GitPerPackageRegistry {
     /// [`pick_version`]) instead of landing on a version this reader
     /// cannot act on (B-080).
     pub fn resolve(&self, pkgref: &PackageRef) -> Result<ResolvedPackage, RegistryError> {
+        self.resolve_with_route(pkgref)
+            .map(|(resolved, _)| resolved)
+    }
+
+    pub(crate) fn resolve_with_route(
+        &self,
+        pkgref: &PackageRef,
+    ) -> Result<(ResolvedPackage, Option<RegistryRoute>), RegistryError> {
         let group = pkgref
             .group
             .as_ref()
             .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
-        let candidates = self.list_candidates(group, pkgref.name.as_str())?;
+        let (candidates, route) = self.list_candidates_with_route(group, pkgref.name.as_str())?;
         let version = pick_version(group, pkgref.name.as_str(), &candidates, &pkgref.version)?;
-        Ok(ResolvedPackage {
+        let resolved = ResolvedPackage {
             group: group.clone(),
             name: pkgref.name.to_string(),
             version,
             source_dir: self.package_clone_dir(group, pkgref.name.as_str()),
-        })
+        };
+        let route = route.map(|url| RegistryRoute::selected(self, &resolved, url));
+        Ok((resolved, route))
     }
 
     /// Read a candidate version's `vibe.toml` *without cloning*. The
@@ -299,18 +368,26 @@ impl GitPerPackageRegistry {
         name: &str,
         version: &semver::Version,
     ) -> Result<Manifest, RegistryError> {
+        let resolved = ResolvedPackage {
+            group: group.clone(),
+            name: name.into(),
+            version: version.clone(),
+            source_dir: self.package_clone_dir(group, name),
+        };
+        self.fetch_dep_manifest_selected(&resolved, None)
+    }
+
+    pub(crate) fn fetch_dep_manifest_selected(
+        &self,
+        resolved: &ResolvedPackage,
+        route: Option<&RegistryRoute>,
+    ) -> Result<Manifest, RegistryError> {
+        let group = &resolved.group;
+        let name = resolved.name.as_str();
+        let version = &resolved.version;
         self.ensure_token_loaded()?;
         let tag = format!("v{version}");
-        let backend = Arc::clone(&self.backend);
-        let tag_for_lookup = tag.clone();
-        let token = self.effective_token.clone();
-        let archive_result = self.try_lookup(group, name, move |url| {
-            let plain = strip_git_plus_prefix(url);
-            let fetch_url = inject_token(plain, token.as_deref());
-            backend
-                .fetch_file_at_ref(&fetch_url, &tag_for_lookup, Manifest::FILENAME)
-                .map_err(RegistryError::from)
-        });
+        let archive_result = self.read_selected_file(resolved, &tag, Manifest::FILENAME, route);
         let url = self.package_repo_url(group, name)?;
         let bytes = match archive_result {
             Ok(bytes) => bytes,

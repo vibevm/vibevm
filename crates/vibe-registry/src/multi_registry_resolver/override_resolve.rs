@@ -54,6 +54,7 @@ impl MultiRegistryResolver {
             source_dir: self.override_clone_dir(group, pkgref.name.as_str()),
         };
         Ok(MultiResolution {
+            selected_route: None,
             resolved,
             registry_name: None,
             source_url: ovr.source_url.clone(),

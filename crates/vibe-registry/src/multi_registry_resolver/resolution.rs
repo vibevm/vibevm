@@ -19,6 +19,9 @@ use crate::ResolvedPackage;
 #[derive(Debug, Clone)]
 pub struct MultiResolution {
     pub resolved: ResolvedPackage,
+    /// Retained concrete candidate, distinct from canonical lock provenance.
+    /// This runtime-only record grants neither contact nor credential authority.
+    pub selected_route: Option<crate::RegistryRoute>,
     /// Name of the `[[registry]]` that served this package. `None` for
     /// override-resolved and git-source entries.
     pub registry_name: Option<String>,

@@ -181,6 +181,7 @@ fn fetched_prepared(
         FeatureRequest::default()
     };
     let feature_expansion = expand_features(&manifest.features, &req)?;
+    let evidence = prepared.source_evidence();
     let cached = CachedPackage {
         recorded_source_kind: None,
         store_reused: None,
@@ -197,8 +198,8 @@ fn fetched_prepared(
         // not consumed as materialized content until the bound apply succeeds.
         content_hash: prepared.content_hash().to_owned(),
         source_uri: prepared.source_uri().to_owned(),
-        fetched_from: None,
-        registry_name: prepared.source_evidence().registry,
+        fetched_from: evidence.fetched_from,
+        registry_name: evidence.registry,
         source_ref: Some(prepared.source_ref().to_owned()),
         resolved_commit: Some(prepared.resolved_commit().to_owned()),
         overridden: false,
@@ -206,7 +207,7 @@ fn fetched_prepared(
         is_path_source: false,
         is_embedded: false,
         is_local: false,
-        via_redirect: None,
+        via_redirect: evidence.via_redirect,
     };
     Ok(Fetched {
         cached,

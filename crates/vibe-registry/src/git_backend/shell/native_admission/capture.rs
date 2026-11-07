@@ -65,6 +65,7 @@ fn selection_key(key: &str) -> bool {
 pub(super) struct CapturedContext {
     cwd: PathBuf,
     warm: Option<PathBuf>,
+    layout: Option<ManagedChild>,
     config: Vec<u8>,
     pub(super) entries: Vec<(String, String)>,
     files: BTreeMap<PathBuf, Option<Vec<u8>>>,
@@ -125,6 +126,16 @@ impl NativeGitAdmission {
         ))
     }
     pub(super) fn capture_context(&self, warm: Option<&Path>) -> Result<CapturedContext, GitError> {
+        self.capture_child_context(warm, None)
+    }
+    pub(super) fn capture_child_context(
+        &self,
+        warm: Option<&Path>,
+        layout: Option<&ManagedChild>,
+    ) -> Result<CapturedContext, GitError> {
+        if let Some(warm) = warm {
+            validate_selected_directory(warm, layout)?;
+        }
         let selected = self.selection.as_ref().ok_or_else(|| {
             unsupported("local materialisation requires captured configuration-selection inputs")
         })?;
@@ -161,6 +172,7 @@ impl NativeGitAdmission {
         let mut captured = CapturedContext {
             cwd: cwd.into(),
             warm: warm.map(Path::to_path_buf),
+            layout: layout.cloned(),
             config: config.stdout.clone(),
             entries: Vec::new(),
             files: BTreeMap::new(),
@@ -196,15 +208,14 @@ impl NativeGitAdmission {
         }
         if warm.is_some() {
             // This is data-only Git URL resolution, not ssh -G or execution
-            // of the captured SSH command. Exact profile admission precedes the
-            // narrow classification of selectors inactive/superseded for SSH.
-            let explicit_ssh = if self.ssh.is_some() {
+            // of the captured SSH command. An old destination is only observed
+            // here; chosen requests separately require exact profile admission.
+            let explicit_ssh = if !self.ssh.is_empty() {
                 let effective = read(&["remote", "get-url", "origin"])?;
+                let address = text(effective.stdout)?;
                 effective.status.success()
-                    && matches!(
-                        self.capture_address(&text(effective.stdout)?, true)?,
-                        AdmittedRemote::Ssh(_)
-                    )
+                    && (address.starts_with("ssh://")
+                        || (!address.contains("://") && address.contains(':')))
             } else {
                 false
             };
@@ -230,9 +241,12 @@ impl NativeGitAdmission {
             }
         }
         if let Some(warm) = warm {
-            validate_warm_directory(warm)?;
+            let git = selected_git_dir(warm, layout);
+            if layout.is_some() {
+                captured.read_file(&warm.join(".git"))?;
+            }
             captured.info_attributes = captured
-                .read_file(&warm.join(".git/info/attributes"))?
+                .read_file(&git.join("info/attributes"))?
                 .unwrap_or_default();
             let effective = read(&["remote", "get-url", "origin"])?;
             if !effective.status.success() {
@@ -307,7 +321,13 @@ impl CapturedContext {
     fn validate_layout(&self) -> Result<(), GitError> {
         for (key, value) in &self.entries {
             if (key.starts_with("extensions.") && key != "extensions.objectformat")
-                || key == "core.worktree"
+                || (key == "core.worktree"
+                    && !self.layout.as_ref().zip(self.warm.as_ref()).is_some_and(
+                        |(layout, warm)| {
+                            std::fs::canonicalize(layout.git_dir.join(value)).ok()
+                                == std::fs::canonicalize(warm).ok()
+                        },
+                    ))
                 || key == "core.sparsecheckout"
                 || key == "core.sparsecheckoutcone"
                 || key.ends_with(".promisor")
@@ -322,14 +342,20 @@ impl CapturedContext {
         Ok(())
     }
     pub(super) fn recheck(&self, profile: &NativeGitAdmission) -> Result<(), GitError> {
-        if &profile.capture_context(self.warm.as_deref())? != self {
+        if &profile.capture_child_context(self.warm.as_deref(), self.layout.as_ref())? != self {
             return Err(unsupported("captured configuration or attributes changed"));
         }
         Ok(())
     }
 }
-pub(super) fn validate_warm_directory(warm: &Path) -> Result<(), GitError> {
-    let git = warm.join(".git");
+pub(super) fn validate_selected_directory(
+    warm: &Path,
+    layout: Option<&ManagedChild>,
+) -> Result<(), GitError> {
+    if let Some(layout) = layout {
+        layout.recheck(warm)?;
+    }
+    let git = selected_git_dir(warm, layout);
     let m = std::fs::symlink_metadata(&git).map_err(io)?;
     if !m.is_dir()
         || m.file_type().is_symlink()
@@ -350,6 +376,76 @@ pub(super) fn validate_warm_directory(warm: &Path) -> Result<(), GitError> {
             return Err(unsupported(
                 "warm metadata contains unsupported links, special files or promisor objects",
             ));
+        }
+    }
+    Ok(())
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(super) struct ManagedChild {
+    git_dir: PathBuf,
+    parent_git: PathBuf,
+    name: String,
+    locator: Option<materialisation::Tree>,
+}
+pub(super) fn selected_git_dir(warm: &Path, layout: Option<&ManagedChild>) -> PathBuf {
+    layout.map_or_else(|| warm.join(".git"), |layout| layout.git_dir.clone())
+}
+pub(super) fn managed_child(
+    warm: &Path,
+    parent_git: &Path,
+    name: &str,
+) -> Result<Option<ManagedChild>, GitError> {
+    if warm.join(".git").is_dir() {
+        return Ok(None);
+    }
+    let layout = ManagedChild {
+        git_dir: parent_git.join("modules").join(name),
+        parent_git: parent_git.into(),
+        name: name.into(),
+        locator: materialisation::tree(&warm.join(".git"))?,
+    };
+    layout.recheck(warm)?;
+    Ok(Some(layout))
+}
+impl ManagedChild {
+    fn recheck(&self, warm: &Path) -> Result<(), GitError> {
+        validate_child_ancestors(warm)?;
+        validate_child_ancestors(&self.git_dir)?;
+        if materialisation::tree(&warm.join(".git"))? != self.locator {
+            return Err(unsupported("managed child locator changed"));
+        }
+        let locator = warm.join(".git");
+        if !std::fs::symlink_metadata(&locator).map_err(io)?.is_file() {
+            return Err(unsupported("managed child locator is not regular"));
+        }
+        let value = std::fs::read_to_string(&locator).map_err(io)?;
+        let target = value
+            .strip_prefix("gitdir: ")
+            .map(|value| value.trim_end_matches('\n'))
+            .filter(|value| !value.contains(['\n', '\r', '\0']))
+            .ok_or_else(|| unsupported("managed child locator is malformed"))?;
+        if Path::new(target).is_absolute()
+            || std::fs::canonicalize(warm.join(target)).map_err(io)?
+                != std::fs::canonicalize(&self.git_dir).map_err(io)?
+        {
+            return Err(unsupported(
+                "managed child locator does not name its exact parent module store",
+            ));
+        }
+        Ok(())
+    }
+}
+
+pub(super) fn validate_child_ancestors(path: &Path) -> Result<(), GitError> {
+    for ancestor in path.ancestors() {
+        match std::fs::symlink_metadata(ancestor) {
+            Ok(metadata) if metadata.file_type().is_symlink() => {
+                return Err(unsupported("managed child metadata crosses a symlink"));
+            }
+            Ok(_) => {}
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(error) => return Err(io(error)),
         }
     }
     Ok(())
