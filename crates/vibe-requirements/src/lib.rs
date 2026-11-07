@@ -46,6 +46,7 @@
 //!         selected_root: root.path().to_path_buf(),
 //!         observed_at: "2026-01-01T00:00:00Z".parse::<Timestamp>().unwrap(),
 //!         lifecycle_run_id: None,
+//!         materialized_format: None,
 //!     },
 //!     None,
 //! )
@@ -87,3 +88,6 @@ mod tests_requirements;
 
 /// Authored change declarations observed through held source reads.
 pub mod change;
+
+#[cfg(test)]
+mod tests_installed_sources;

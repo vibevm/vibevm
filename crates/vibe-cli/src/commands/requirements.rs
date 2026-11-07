@@ -13,17 +13,15 @@
 //! [`vibe_requirements::text::render`], so the CLI and MCP cannot drift
 //! into two different answers to the same question.
 //!
-//! **Read-only by construction.** Two reads happen here: one
-//! `Workspace::discover_selected`, and one `LifecycleStateStore::peek`
-//! for the optional evidence join key. Neither writes. Nothing begins,
-//! adopts, leases or checkpoints a run, and no phase, sync or
-//! materialisation is reachable from this file — a project that has
-//! never run a lifecycle phase still has no `.vibe` after this command.
+//! **Read-only by construction.** The surface discovers the selected workspace,
+//! resolves the materialized-format default through the existing configuration
+//! owner, and peeks lifecycle state for an optional evidence join key. Nothing
+//! begins, adopts, leases or checkpoints a run, and no phase, sync or
+//! materialisation is reachable from this file.
 //!
-//! **Algorithmic and credential-free.** There is no provider config, no
-//! model, no token and no transport on this path; the only "provider"
-//! it knows is the read-only relation adapter, injected as a value. The
-//! fence cell beside this file pins both properties.
+//! **Algorithmic and credential-free execution.** No model or paid provider is
+//! invoked. Format selection reads configuration through its incumbent owner;
+//! the only optional query provider is the read-only relation adapter.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT");
 
@@ -62,11 +60,15 @@ pub fn run(ctx: &Context, args: RequirementsArgs) -> Result<()> {
         // from a fixed one.
         observed_at: chrono::Utc::now(),
         lifecycle_run_id: current_run_id(&selected)?,
+        materialized_format: Some(super::reinstall::effective_rederive_format(
+            &selected.workspace.root_manifest,
+        )?),
     };
 
     // The one enrichment injection. Without `--relations` the library
-    // receives `None` and calls nothing — no config is read and no map
-    // is loaded or built; with it, exactly the read-only specmap
+    // receives `None` and calls nothing — no relation map is loaded
+    // or built; the materialized-format default is selected separately.
+    // With it, exactly the read-only specmap
     // adapter, which the library calls at most once.
     let specmap = vibe_trace::SpecmapRelationProvider;
     let provider: Option<&dyn vibe_requirements::RelationProvider> = if query.relations() {

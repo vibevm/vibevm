@@ -78,6 +78,22 @@ fn exercise(format: &str) {
         before,
         "analysis wrote project state"
     );
+    let queried = user
+        .vibe()
+        .args(["--json", "requirements", "--path"])
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(queried.status.success(), "{format}: {queried:?}");
+    let query: serde_json::Value = serde_json::from_slice(&queried.stdout).unwrap();
+    assert!(query["rows"].as_array().unwrap().iter().any(|row|
+        row["address"] == "spec://org.example/parent/contract/parent.payload#PARENT"
+    ), "{query}");
+    assert_eq!(
+        inventory(project.path()),
+        before,
+        "requirements wrote project state"
+    );
     // Existing selection helper must disagree with the installed Markdown
     // representation when config changes to Mixed; STATIC.md alone cannot decide.
     if format == "markdown" {

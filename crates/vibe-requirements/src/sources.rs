@@ -17,6 +17,7 @@ use vibe_wire::generated::requirements_report::{
 use vibe_workspace::SelectedWorkspace;
 
 use crate::QueryError;
+mod installed;
 use crate::digest::source_result_digest;
 
 /// Fixed, bounded machine reasons — the wire's `reason_code` is one
@@ -41,6 +42,7 @@ pub(crate) struct SourceCoord {
     pub root: Option<PathBuf>,
     pub locked: bool,
     pub content_hash: Option<String>,
+    pub selection: Option<vibe_core::manifest::LockedPackage>,
 }
 
 /// One source's contribution to the report: its typed result and, when
@@ -116,6 +118,7 @@ pub(crate) fn enumerate(
             root: Some(selected_root.to_path_buf()),
             locked: false,
             content_hash: None,
+            selection: None,
         },
     );
 
@@ -169,6 +172,7 @@ pub(crate) fn enumerate(
                     // carried-map trust needs it precisely for the
                     // missing/unmaterialised cases too).
                     content_hash: Some(locked.content_hash.to_string()),
+                    selection: Some(locked.clone()),
                 },
             );
         }
@@ -198,6 +202,7 @@ pub(crate) fn enumerate(
                 root: None,
                 locked: false,
                 content_hash: None,
+                selection: None,
             },
         );
     }
@@ -227,7 +232,12 @@ pub(crate) fn adoption_entries_for(registry: &Registry, package: &str) -> u64 {
 /// walk could not read are a typed loss, not a query abort); the
 /// orphaned/unavailable slot rulings are decided by the caller from the
 /// enumeration before this is called.
-pub(crate) fn observe(coord: &SourceCoord) -> Result<SourceOutcome, QueryError> {
+pub(crate) fn observe(
+    coord: &SourceCoord,
+    workspace_root: &std::path::Path,
+    coords: &[SourceCoord],
+    format: Option<vibe_core::manifest::SpecFormat>,
+) -> Result<SourceOutcome, QueryError> {
     let Some(root) = coord.root.as_deref() else {
         return Err(QueryError::Invariant(format!(
             "observing a source with no root: `{}`",
@@ -238,7 +248,28 @@ pub(crate) fn observe(coord: &SourceCoord) -> Result<SourceOutcome, QueryError> 
         RequirementSourceKind::Host => FactsKind::Host,
         RequirementSourceKind::Package => FactsKind::Package,
     };
-    match observe_authored_source(root, &coord.package, kind) {
+    let observed = if coord.kind == RequirementSourceKind::Package {
+        match installed::observe(workspace_root, coord, coords, format) {
+            Ok(Some(observed)) => Ok(observed),
+            Ok(None) => observe_authored_source(root, &coord.package, kind),
+            Err(_) => {
+                return Ok(SourceOutcome {
+                    result: source_result(
+                        &coord.kind,
+                        &coord.package,
+                        SourceResultState::Unavailable,
+                        None,
+                        Some("installed-source-binding-unavailable".into()),
+                        None,
+                    ),
+                    facts: Vec::new(),
+                });
+            }
+        }
+    } else {
+        observe_authored_source(root, &coord.package, kind)
+    };
+    match observed {
         Ok(AuthoredSourceObservation::Available { facts, documents }) => Ok(SourceOutcome {
             result: source_result(
                 &coord.kind,

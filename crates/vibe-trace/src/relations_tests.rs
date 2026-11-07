@@ -464,6 +464,7 @@ fn the_landed_query_invokes_the_adapter_and_derives_wire_states() {
         selected_root: root.path().to_path_buf(),
         observed_at: "2026-01-01T00:00:00Z".parse().unwrap(),
         lifecycle_run_id: None,
+        materialized_format: None,
     };
     let q = RequirementsQuery::try_new(None, 100, true).unwrap();
     let report = query(&q, &context, Some(&SpecmapRelationProvider)).unwrap();

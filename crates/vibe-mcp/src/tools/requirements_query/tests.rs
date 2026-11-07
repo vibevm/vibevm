@@ -259,6 +259,7 @@ fn the_one_fact_fixture_returns_the_exact_generated_root_and_the_bounded_text() 
             selected_root: project.path().to_path_buf(),
             observed_at: report.observation.observed_at,
             lifecycle_run_id: None,
+            materialized_format: None,
         },
         None,
     )
@@ -457,5 +458,71 @@ fn the_surface_calls_one_query_and_the_dependency_floor_holds() {
             !cargo.contains(forbidden),
             "a direct `{forbidden}` edge appeared on the MCP crate"
         );
+    }
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
+    r = 1
+)]
+fn declared_package_query_uses_trusted_server_format_default() {
+    use vibe_core::manifest::SpecFormat;
+    use vibe_workspace::vibedeps;
+    for format in [SpecFormat::Markdown, SpecFormat::Xml] {
+        let root = project();
+        let source = tempfile::tempdir().unwrap();
+        let relative = vibe_core::layout::current_specs_root().join("rule.payload");
+        fs::create_dir_all(source.path().join(relative.parent().unwrap())).unwrap();
+        fs::write(source.path().join(&relative),"<spec xmlns=\"https://vibevm.org/spec/1\"><title>Rule</title><p><REAL fact=\"true\">content</REAL></p></spec>").unwrap();
+        fs::write(source.path().join("vibe.toml"),format!("[package]\nkind='feat'\ngroup='org.example'\nname='pkg'\nversion='1.0.0'\n[[package.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='explicit'\n",relative.to_str().unwrap())).unwrap();
+        let hash = vibe_core::ContentHash::from_validated(format!("sha256:{}", "a".repeat(64)));
+        vibedeps::materialise_with_spec_format(
+            root.path(),
+            &vibe_core::Group::parse("org.example").unwrap(),
+            "pkg",
+            &"1.0.0".parse().unwrap(),
+            source.path(),
+            vibedeps::CopyMode::Copy,
+            format,
+            &hash,
+        )
+        .unwrap();
+        fs::write(root.path().join("vibe.lock"),format!("[meta]\ngenerated_by='test'\ngenerated_at='2026-01-01T00:00:00Z'\nschema_version={}\n[[package]]\nkind='feat'\ngroup='org.example'\nname='pkg'\nversion='1.0.0'\nsource_url='https://example.invalid/pkg.git'\ncontent_hash='{hash}'\n",vibe_core::manifest::CURRENT_SCHEMA_VERSION)).unwrap();
+        let snapshot = || {
+            tree(root.path())
+                .into_iter()
+                .map(|path| {
+                    let bytes = fs::read(root.path().join(&path)).unwrap();
+                    (path, bytes)
+                })
+                .collect::<std::collections::BTreeMap<_, _>>()
+        };
+        let before = snapshot();
+        let mut context = ServerContext::new(root.path());
+        context.lifecycle_policy.spec_format_default = Some(format);
+        let output = RequirementsQueryMcpTool
+            .run(&serde_json::json!({}), &context)
+            .unwrap();
+        let report = report_of(&output);
+        assert!(
+            report
+                .rows
+                .iter()
+                .any(|row| row.address == "spec://org.example/pkg/rule.payload#REAL"),
+            "{report:?}"
+        );
+        let unavailable = report_of(&call(root.path(), serde_json::json!({})).unwrap());
+        let row = unavailable
+            .sources
+            .iter()
+            .find(|row| row.source.package == "org.example/pkg")
+            .unwrap();
+        assert_eq!(
+            row.state,
+            vibe_wire::generated::requirements_report::SourceResultState::Unavailable
+        );
+        assert!(row.digest.is_none());
+        assert_eq!(snapshot(), before);
     }
 }

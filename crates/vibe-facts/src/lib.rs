@@ -33,7 +33,8 @@ pub use scan::declared::{
 };
 pub use scan::{
     AdoptionObservation, AdoptionRow, AuthoredSourceObservation, SourceFileWitness, SourceIssue,
-    SourceKind, address_prefix, join_adoption, observe_authored_source, scan_authored_facts,
+    SourceKind, address_prefix, join_adoption, observe_authored_source, observe_installed_source,
+    scan_authored_facts,
 };
 pub use store::{Registry, RegistrySnapshot};
 

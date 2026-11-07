@@ -215,6 +215,22 @@ impl FileResolver {
         }));
         Ok(self)
     }
+    /// Borrow the binding attached to this resolver, without claiming a fresh
+    /// byte observation. Actual reads still recheck its metadata and digests.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
+        r = 1
+    )]
+    pub fn installed_source_binding(
+        &self,
+        group: &str,
+        name: &str,
+    ) -> Result<&PreparedInstalledSource, ResolveError> {
+        self.installed_sources
+            .as_ref()
+            .ok_or_else(|| fail("workspace", "installed bindings unavailable"))?
+            .binding(group, name)
+    }
     pub fn recheck_installed_package(&self, group: &str, name: &str) -> Result<(), ResolveError> {
         let bound = self
             .installed_sources

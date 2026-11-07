@@ -37,6 +37,7 @@ mod slot_cow;
 mod slot_diff;
 mod slot_record;
 mod source_policy;
+pub use declared_read::prepare_declared_query_read;
 pub(crate) use declared_read::prepare_declared_slot_read;
 pub(crate) use source_policy::validate_source_inputs;
 

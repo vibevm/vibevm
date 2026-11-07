@@ -30,10 +30,76 @@ pub(crate) fn prepare_declared_slot_read(
     selected: &ResolvedDep,
     expected_materialized_format: Option<SpecFormat>,
 ) -> Result<Option<PreparedInstalledSource>, WorkspaceError> {
+    prepare(
+        project,
+        slot,
+        slot_relative,
+        Selection {
+            kind: selected.kind,
+            group: &selected.group,
+            name: &selected.name,
+            version: &selected.version,
+            source_hash: selected.source_hash.as_ref(),
+            manifest: Some(&selected.manifest),
+            format: expected_materialized_format,
+        },
+        true,
+    )
+}
+
+/// Prepare query input using independent lock/configuration selection. Native
+/// syntax is interpreted by the facts observer after all witnesses are captured.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
+    r = 1
+)]
+pub fn prepare_declared_query_read(
+    project: &Project,
+    slot: &Pinned,
+    slot_relative: &str,
+    expected: &InstalledSourceExpectation,
+) -> Result<Option<PreparedInstalledSource>, WorkspaceError> {
+    let version = expected
+        .version
+        .parse()
+        .map_err(|e| refused(slot.path(), e))?;
+    prepare(
+        project,
+        slot,
+        slot_relative,
+        Selection {
+            kind: expected.kind,
+            group: &expected.group,
+            name: &expected.name,
+            version: &version,
+            source_hash: Some(&expected.source_hash),
+            manifest: None,
+            format: Some(expected.materialized_format),
+        },
+        false,
+    )
+}
+
+struct Selection<'a> {
+    kind: vibe_core::PackageKind,
+    group: &'a vibe_core::Group,
+    name: &'a str,
+    version: &'a semver::Version,
+    source_hash: Option<&'a vibe_core::ContentHash>,
+    manifest: Option<&'a Manifest>,
+    format: Option<SpecFormat>,
+}
+fn prepare(
+    project: &Project,
+    slot: &Pinned,
+    slot_relative: &str,
+    selected: Selection<'_>,
+    parse_native: bool,
+) -> Result<Option<PreparedInstalledSource>, WorkspaceError> {
     let fail = |reason: String| refused(slot.path(), reason);
     vibe_core::manifest::declarant_path(Path::new(slot_relative))
         .map_err(|e| fail(e.reason().into()))?;
-    if slot_relative != slot_rel_path(&selected.group, &selected.name, &selected.version)
+    if slot_relative != slot_rel_path(selected.group, selected.name, selected.version)
         || project.root_path().join(slot_relative) != slot.path()
     {
         return Err(fail(
@@ -44,26 +110,28 @@ pub(crate) fn prepare_declared_slot_read(
     policy
         .recheck_in(project, slot)
         .map_err(|e| fail(e.to_string()))?;
-    let expected_package = selected.manifest.package.as_ref();
+    let expected_package = selected
+        .manifest
+        .and_then(|manifest| manifest.package.as_ref());
     let observed_package = policy.package();
     let expected_declared = expected_package.is_some_and(|p| p.has_explicit_source_policy());
     let observed_declared = observed_package.is_some_and(|p| p.has_explicit_source_policy());
-    if expected_declared != observed_declared {
+    if selected.manifest.is_some() && expected_declared != observed_declared {
         return Err(fail(
             "expected and observed declaration presence differ".into(),
         ));
     }
     if let Some(package) = observed_package
         && (package.kind != selected.kind
-            || package.group != selected.group
+            || &package.group != selected.group
             || package.name.as_str() != selected.name
-            || package.version != selected.version)
+            || &package.version != selected.version)
     {
         return Err(fail(
             "observed package identity differs from independent selection".into(),
         ));
     }
-    if observed_declared && policy.manifest() != Some(&selected.manifest) {
+    if observed_declared && selected.manifest.is_some() && policy.manifest() != selected.manifest {
         return Err(fail(
             "observed full manifest differs from independent selected intent".into(),
         ));
@@ -72,7 +140,7 @@ pub(crate) fn prepare_declared_slot_read(
         .read_source_bytes_in(slot, SLOT_RECORD_FILENAME)
         .map_err(|e| fail(e.to_string()))?;
     let Some(record_bytes) = record_bytes else {
-        if expected_declared {
+        if expected_declared || observed_declared {
             return Err(fail("declared installed slot has no record".into()));
         }
         policy
@@ -97,7 +165,7 @@ pub(crate) fn prepare_declared_slot_read(
             "recorded manifest digest differs from observed manifest".into(),
         ));
     }
-    if let Some(expected) = &selected.source_hash
+    if let Some(expected) = selected.source_hash
         && &record.source_hash != expected
     {
         return Err(fail(
@@ -120,9 +188,9 @@ pub(crate) fn prepare_declared_slot_read(
     }
     let source_hash = selected
         .source_hash
-        .clone()
+        .cloned()
         .ok_or_else(|| fail("declared slot requires independently selected source hash".into()))?;
-    let materialized_format = expected_materialized_format.ok_or_else(|| {
+    let materialized_format = selected.format.ok_or_else(|| {
         fail("declared slot requires independently selected materialized input format".into())
     })?;
     if record.spec_format != materialized_format {
@@ -205,7 +273,7 @@ pub(crate) fn prepare_declared_slot_read(
                 output.path
             )));
         }
-        if let Some(interpretation) = interpretation.filter(|_| native) {
+        if let Some(interpretation) = interpretation.filter(|_| native && parse_native) {
             vibe_spec::project_declared_native(&bytes, &media, interpretation).map_err(&fail)?;
         }
         rows.push(PreparedOutputRow {
@@ -233,7 +301,7 @@ pub(crate) fn prepare_declared_slot_read(
         InstalledSourceExpectation {
             kind: selected.kind,
             group: selected.group.clone(),
-            name: selected.name.clone(),
+            name: selected.name.to_owned(),
             version: selected.version.to_string(),
             source_hash,
             materialized_format,

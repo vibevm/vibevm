@@ -159,6 +159,7 @@ fn recipe_three_observation_id_is_pinned_for_a_fixed_answer() {
         selected_root: root.path().to_path_buf(),
         observed_at: "2026-01-01T00:00:00Z".parse().unwrap(),
         lifecycle_run_id: None,
+        materialized_format: None,
     };
     let report = crate::query(&crate::RequirementsQuery::default(), &context, None).unwrap();
     assert_eq!(
@@ -199,6 +200,7 @@ fn flipping_one_labeled_bit_or_truncated_moves_the_observation_id() {
         selected_root: root.path().to_path_buf(),
         observed_at: "2026-01-01T00:00:00Z".parse().unwrap(),
         lifecycle_run_id: None,
+        materialized_format: None,
     };
     let base = crate::query(&crate::RequirementsQuery::default(), &context, None).unwrap();
     let base_id = observation_id(&base);

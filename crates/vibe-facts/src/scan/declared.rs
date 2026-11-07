@@ -218,11 +218,7 @@ pub fn observe_declared_document<'a>(
         }
     };
     provenance.reader = Some(reader);
-    let document = if media == "application/xml" {
-        vibe_specdoc::from_xml_with(text, vocabulary)
-    } else {
-        vibe_specdoc::from_markdown(text)
-    };
+    let document = parse_native_document(text, media, vocabulary);
     let document = match document {
         Ok(document) => document,
         Err(error) => {
@@ -260,3 +256,16 @@ pub fn observe_declared_document<'a>(
 #[cfg(test)]
 #[path = "declared/data_tests.rs"]
 mod data_tests;
+
+/// The native facts pivot dispatch, shared by original and installed readers.
+pub(super) fn parse_native_document(
+    text: &str,
+    media: &str,
+    vocabulary: Vocabulary,
+) -> Result<vibe_specdoc::doc::SpecDoc, vibe_specdoc::Error> {
+    if media == "application/xml" {
+        vibe_specdoc::from_xml_with(text, vocabulary)
+    } else {
+        vibe_specdoc::from_markdown(text)
+    }
+}

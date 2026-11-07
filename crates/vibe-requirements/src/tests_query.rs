@@ -24,6 +24,7 @@ pub(crate) fn ctx(root: &Path) -> QueryContext {
         selected_root: root.to_path_buf(),
         observed_at: at(),
         lifecycle_run_id: None,
+        materialized_format: None,
     }
 }
 
@@ -32,6 +33,7 @@ pub(crate) fn ctx_with_run(root: &Path, run_id: Option<&str>) -> QueryContext {
         selected_root: root.to_path_buf(),
         observed_at: at(),
         lifecycle_run_id: run_id.map(str::to_string),
+        materialized_format: None,
     }
 }
 

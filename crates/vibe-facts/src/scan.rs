@@ -157,7 +157,8 @@ fn split_coordinate(coordinate: &str) -> Result<(&str, &str), RegistryError> {
 /// exporting prose across the crate boundary.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SourceFileWitness {
-    /// Forward-slashed path relative to the root the walk answered for.
+    /// Forward-slashed logical source path. Installed transformed sources keep
+    /// their original path here; bytes/digest describe the materialized read.
     pub path: String,
     /// Exact raw byte count of the one read.
     pub bytes: u64,
@@ -513,3 +514,6 @@ pub fn join_adoption(
     rows.sort_by(|a, b| a.address.cmp(&b.address));
     Ok(rows)
 }
+
+mod installed;
+pub use installed::observe_installed_source;

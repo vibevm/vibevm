@@ -16469,9 +16469,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/requirements.rs",
       "item_kind": "mod",
-      "line": 28,
+      "line": 26,
       "symbol": "vibe_cli::commands::requirements",
-      "end_line": 28,
+      "end_line": 26,
       "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
     },
     {
@@ -27233,9 +27233,9 @@
       "crate_name": "vibe-facts",
       "file": "crates/vibe-facts/src/lib.rs",
       "item_kind": "enum",
-      "line": 333,
+      "line": 334,
       "symbol": "vibe_facts::RegistryError",
-      "end_line": 449,
+      "end_line": 450,
       "fingerprint": "tok1:74dd00e581ea0a3f2fc220b0ee07bd3e012032603ba52bdc845904aa53efdd4c"
     },
     {
@@ -27327,6 +27327,15 @@
       "symbol": "vibe_facts::scan::declared_capture",
       "end_line": 2,
       "fingerprint": "tok1:6dbdbabc0d532b1506ab534b3a9d84601992faec1909b5f29569c26a67c64b21"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/scan/installed.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_facts::scan::installed",
+      "end_line": 5,
+      "fingerprint": "tok1:5ede8088abcaabf959242d726d699cd3d3a5f4d2208ab10c2b13a2c547c01c62"
     },
     {
       "crate_name": "vibe-facts",
@@ -35529,6 +35538,15 @@
     },
     {
       "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools/requirements_query/tests.rs",
+      "item_kind": "fn",
+      "line": 464,
+      "symbol": "vibe_mcp::tools::requirements_query::tests::declared_package_query_uses_trusted_server_format_default",
+      "end_line": 528,
+      "fingerprint": "tok1:946b1a2c3b7753014f5f7b5d551b93c29dc6250338d71a76469ce3b37425b256"
+    },
+    {
+      "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools/select.rs",
       "item_kind": "mod",
       "line": 7,
@@ -38402,9 +38420,9 @@
       "crate_name": "vibe-requirements",
       "file": "crates/vibe-requirements/src/lib.rs",
       "item_kind": "mod",
-      "line": 57,
+      "line": 58,
       "symbol": "vibe_requirements",
-      "end_line": 57,
+      "end_line": 58,
       "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
     },
     {
@@ -38595,6 +38613,24 @@
       "symbol": "vibe_requirements::sources",
       "end_line": 4,
       "fingerprint": "tok1:d1de19b63e0a8cdb6a2a5ff9def97b374762a6cf81b3031e96d12bbd453f1e48"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/sources/installed.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_requirements::sources::installed",
+      "end_line": 5,
+      "fingerprint": "tok1:5ede8088abcaabf959242d726d699cd3d3a5f4d2208ab10c2b13a2c547c01c62"
+    },
+    {
+      "crate_name": "vibe-requirements",
+      "file": "crates/vibe-requirements/src/tests_installed_sources.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_requirements::tests_installed_sources",
+      "end_line": 5,
+      "fingerprint": "tok1:5ede8088abcaabf959242d726d699cd3d3a5f4d2208ab10c2b13a2c547c01c62"
     },
     {
       "crate_name": "vibe-requirements",
@@ -44736,6 +44772,15 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/resolver/declared.rs",
+      "item_kind": "fn",
+      "line": 218,
+      "symbol": "vibe_spec::resolver::declared::FileResolver::installed_source_binding",
+      "end_line": 233,
+      "fingerprint": "tok1:f42bd9a15965c31a00ea112bb453f18c8040f4ceb947a47411c8ab88efafe998"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/resolver/glob.rs",
       "item_kind": "mod",
       "line": 6,
@@ -48288,6 +48333,15 @@
       "symbol": "vibe_workspace::vibedeps::declared_read",
       "end_line": 2,
       "fingerprint": "tok1:f343dd0e7212f27a85bd6a65a9af4fc15f297c6363a7d4bfbb2cabd74164faf4"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/declared_read.rs",
+      "item_kind": "fn",
+      "line": 50,
+      "symbol": "vibe_workspace::vibedeps::declared_read::prepare_declared_query_read",
+      "end_line": 81,
+      "fingerprint": "tok1:d2d7ac33f1bddac25c38f741362276cce382bb32ac650666bdfde30eb36dcadf"
     },
     {
       "crate_name": "vibe-workspace",
@@ -56845,7 +56899,7 @@
     {
       "file": "crates/vibe-cli/src/commands/requirements.rs",
       "from_symbol": "vibe_cli::commands::requirements",
-      "line": 28,
+      "line": 26,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
       "verb": "implements"
@@ -66742,7 +66796,7 @@
     {
       "file": "crates/vibe-facts/src/lib.rs",
       "from_symbol": "vibe_facts::RegistryError",
-      "line": 343,
+      "line": 344,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-046#model",
       "verb": "implements"
@@ -66827,6 +66881,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OBSERVATION-LAW",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/src/scan/installed.rs",
+      "from_symbol": "vibe_facts::scan::installed",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-facts/src/scan_tests.rs",
@@ -74373,6 +74436,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-mcp/src/tools/requirements_query/tests.rs",
+      "from_symbol": "vibe_mcp::tools::requirements_query::tests::declared_package_query_uses_trusted_server_format_default",
+      "line": 465,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-mcp/src/tools/select.rs",
       "from_symbol": "vibe_mcp::tools::select",
       "line": 7,
@@ -76981,7 +77053,7 @@
     {
       "file": "crates/vibe-requirements/src/lib.rs",
       "from_symbol": "vibe_requirements",
-      "line": 57,
+      "line": 58,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
       "verb": "implements"
@@ -77153,6 +77225,24 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#FACT-QUERY-CONTRACT",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-requirements/src/sources/installed.rs",
+      "from_symbol": "vibe_requirements::sources::installed",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-requirements/src/tests_installed_sources.rs",
+      "from_symbol": "vibe_requirements::tests_installed_sources",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-requirements/src/text.rs",
@@ -82782,6 +82872,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-spec/src/resolver/declared.rs",
+      "from_symbol": "vibe_spec::resolver::declared::FileResolver::installed_source_binding",
+      "line": 220,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-spec/src/resolver/glob.rs",
       "from_symbol": "vibe_spec::resolver::glob",
       "line": 6,
@@ -86124,6 +86223,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ-LAW",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/vibedeps/declared_read.rs",
+      "from_symbol": "vibe_workspace::vibedeps::declared_read::prepare_declared_query_read",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
@@ -112901,6 +113009,26 @@
       "heading": "Generated-artifact projection is separate from authored single-document source parsing. The generated profile reads native Spec vocabulary roots, repeated declarations, outer framing, generated inner c1 events and incumbent hoisted comment/#use rows through the existing emitted-stream event owner and framing codec. Hoisted syntax belongs only to this projection profile; minifier acceptance and exact-byte deletion semantics remain unchanged. Each document enters the existing SpecDoc pivot and canonical Markdown writer; semantic generated events are placed through reader/writer mappings, never sentinel strings or escaped-text inference. Outer framing and hoisted rows retain their bytes, declarations are omitted as representation metadata, and canonical separators may be added. Ordinary inner comments remain layout under PROP-045; comment-consuming readers retain original bytes. Escaped prose, CDATA and fenced examples never mint generated events; the incumbent Markdown literal policy protects reserved-looking prose before real generated comments are inserted. Unknown vocabulary, malformed XML/framing, DTDs, unknown entities and genuinely unrepresentable semantic placements refuse explicitly, without a Normal-to-Simple fallback or silent loss. Required actual emitter-produced multiple-root, annotated and hoisted cases must work. The returned text is a projection; callers retain XML-projected kind and use the incumbent projection-relative diagnostic notice without adding prose to document content. The helper grants no filesystem, source-admission or public source-address authority, authenticates no editable artifact and supplies no original authored-file positions. Artifact identity and evidence remain separate caller obligations; arbitrary opaque post-emission rewrites are not promised to be projectable. @status:spec/done",
       "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-GENERATED-XML-PROJECTION-LAW"
+    },
+    {
+      "anchor": "SOURCE-QUERY-READ",
+      "content_hash": "sha256:fd55dc50b4a3965c77797ee33e0d42ad33092d02e342b1e13d2aefafc77f4908",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Declared installed package requirements queries",
+      "line": 30,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-QUERY-READ-LAW",
+      "content_hash": "sha256:be5b80df77b991a231cd1492a07de2c336749d1aac003a16bafdf3034acb3716",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "A requirements query of an explicitly classified installed package uses the existing workspace-prepared source binding and lower held reader. The independently selected package identity, version, source hash and materialized input format must agree with captured manifest, slot record and output bytes before facts are interpreted. The workspace remains the sole slot-record parser; facts receive existing lower-layer binding data, not a reverse workspace dependency. Facts obtain interpretation metadata from the binding attached to the same resolver that performs the reads; a detached binding cannot override that reader's classification. Original logical document paths determine fact addresses while witnesses describe the bytes actually observed; transformed output does not prove an original-file digest. Raw resources cannot mint native facts or compiler directives. The trusted CLI or MCP context supplies materialized input format through the existing configuration selection policy, never a public query argument or a value inferred from the slot record or generated STATIC suffix. Missing or inconsistent binding must produce the existing contract's truthful refusal or source state, not successful empty facts or a suffix fallback. Query preparation may defer native syntax interpretation to the facts observer while retaining all selected-identity, descriptor, path, record and byte-integrity checks. Native syntax or duplicate-fact failure on captured bytes yields the existing Invalid source state with its witnesses; failure to establish trustworthy binding or observation yields Unavailable without a fabricated observation digest. Malformed query-wide lock or registry state remains a typed query failure. Query grammar validation still precedes filesystem access; source reading remains read-only, without a lifecycle lease or implicit regeneration. Legacy package parsing, report grammar, relation-provider selection and observation identity retain their existing contracts. When a slot record is present, its selected identity and manifest witness must be coherent before compatibility fallback; incoherent recorded metadata is Unavailable. Unrecorded undeclared content-tree slots retain their explicit legacy route. Host source declarations and other consumer integrations are separate obligations of the same A4 task, not satisfied by this package-query join. @status:spec/done",
+      "line": 32,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-QUERY-READ-LAW"
     },
     {
       "anchor": "genre-definition",

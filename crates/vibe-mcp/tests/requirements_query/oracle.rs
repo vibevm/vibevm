@@ -44,6 +44,7 @@ fn the_cell_answers_the_one_fact_fixture_with_exactly_the_generated_root() {
             selected_root: project.path().to_path_buf(),
             observed_at,
             lifecycle_run_id: None,
+            materialized_format: None,
         },
         None,
     )

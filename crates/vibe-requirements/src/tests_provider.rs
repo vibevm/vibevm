@@ -22,6 +22,7 @@ pub(crate) fn ctx(root: &Path) -> QueryContext {
         selected_root: root.to_path_buf(),
         observed_at: "2026-01-01T00:00:00Z".parse().unwrap(),
         lifecycle_run_id: None,
+        materialized_format: None,
     }
 }
 

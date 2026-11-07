@@ -105,6 +105,8 @@ pub struct QueryContext {
     /// the join key to a verification-evidence document. The query
     /// itself creates no state and never mints one.
     pub lifecycle_run_id: Option<String>,
+    /// Independently selected installed representation. None cannot admit declared slots.
+    pub materialized_format: Option<vibe_core::manifest::SpecFormat>,
 }
 
 /// Answer one requirements query over one selected project.
@@ -154,7 +156,12 @@ pub fn query(
             continue;
         }
         match coord.root.as_deref() {
-            Some(_) => outcomes.push(sources::observe(coord)?),
+            Some(_) => outcomes.push(sources::observe(
+                coord,
+                &workspace_root,
+                &coords,
+                context.materialized_format,
+            )?),
             None => outcomes.push(sources::orphan_or_unavailable(coord, &snapshot.registry)?),
         }
     }

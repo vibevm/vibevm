@@ -202,6 +202,12 @@ impl McpTool for RequirementsQueryMcpTool {
                 selected_root,
                 observed_at: chrono::Utc::now(),
                 lifecycle_run_id,
+                materialized_format: selected.as_ref().map(|selected| {
+                    vibe_orchestrator::resolve_spec_format(
+                        &selected.workspace.root_manifest,
+                        ctx.lifecycle_policy.spec_format_default,
+                    )
+                }),
             },
             provider,
         )

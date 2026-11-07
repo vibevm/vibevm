@@ -5002,6 +5002,7 @@ dependencies = [
  "vibe-facts",
  "vibe-lifecycle",
  "vibe-safefs",
+ "vibe-spec",
  "vibe-wire",
  "vibe-workspace",
 ]
