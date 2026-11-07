@@ -4,8 +4,8 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#describe" },
     "rustOptions": { "package": "vibe_wire::application_describe" },
     "x-rust-type": "ApplicationDescribe",
-    "x-vocabularies": ["source_evidence"],
-    "x-wire-order": ["protocol", "package", "application", "options", "source_evidence", "installed_source"]
+    "x-vocabularies": ["source_evidence", "hosting_view"],
+    "x-wire-order": ["protocol", "package", "application", "options", "source_evidence", "installed_source", "source_hosting", "installed_hosting"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -14,6 +14,8 @@
     "options": { "elements": { "ref": "installer_option" }, "metadata": { "x-empty": "emit" } }
   },
   "optionalProperties": {
+        "source_hosting": { "ref": "hosting_view", "metadata": { "x-default": null } },
+        "installed_hosting": { "ref": "hosting_view", "metadata": { "x-default": null } },
         "source_evidence": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive" } },
         "installed_source": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive" } }
   },

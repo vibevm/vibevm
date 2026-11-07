@@ -139,6 +139,7 @@ pub(super) fn present_resolution(ctx: &output::Context, planned: &vibe_install::
             .map(|(group, name, version, evidence)| PlanEntry {
                 package: format!("{group}/{name}"),
                 version: version.to_string(),
+                source_hosting: vibe_registry::source_hosting(Some(&evidence)),
                 source_evidence: Some(evidence),
             })
             .collect();

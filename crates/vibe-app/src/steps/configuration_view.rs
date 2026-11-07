@@ -22,6 +22,7 @@ impl Plan {
             .evaluation
             .clone();
         Ok(wire::AppPlan {
+            source_hosting: vibe_registry::source_hosting(self.source_evidence.as_ref()),
             source_evidence: self.source_evidence.clone(),
             configuration,
             protocol: "vibe-app-configuration-plan/1".into(),

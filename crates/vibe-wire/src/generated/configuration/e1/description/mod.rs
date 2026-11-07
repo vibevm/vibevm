@@ -28,6 +28,12 @@ pub struct Description {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[serde(deserialize_with = "__reader_projection::deserialize_source_evidence_3")]
     pub installed_source: Option<SourceEvidence>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_hosting: Option<HostingView>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub installed_hosting: Option<HostingView>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -189,6 +195,8 @@ pub enum Form {
     #[serde(rename = "steps")]
     Steps,
 }
+
+pub use crate::generated::shared::HostingView;
 
 /// One file of an icon set: a package-relative file resolved to its absolute
 /// path in the package tree; a template naming the installed payload has no

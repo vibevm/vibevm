@@ -35,6 +35,8 @@ pub enum EnvOp {
     Unset,
 }
 
+pub use crate::generated::shared::HostingView;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct IconFile {
     pub slot: IconSlot,
@@ -141,6 +143,9 @@ pub struct Installation {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[serde(deserialize_with = "__reader_projection::deserialize_source_evidence_0")]
     pub source_evidence: Option<SourceEvidence>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_hosting: Option<HostingView>,
 }
 
 /// One launch point with its menu and desktop-entry metadata (PROP-059#menu,

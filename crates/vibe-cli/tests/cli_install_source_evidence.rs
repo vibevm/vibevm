@@ -101,3 +101,33 @@ fn project_event_retains_source_for_the_whole_closure_and_observed_reuse() {
         assert!(row["source_evidence"]["resolved_commit"].is_null());
     }
 }
+
+#[test]
+fn retained_lock_hosting_reaches_the_real_project_event_without_new_contact() {
+    let (user, project, registry) = fixture();
+    install(&user, project.path(), true);
+    // Projection control only: replace retained URL observations after local
+    // acquisition. The second install is offline from already populated store.
+    let path = project.path().join("vibe.lock");
+    let mut lock = vibe_core::manifest::Lockfile::read(&path).unwrap();
+    for package in &mut lock.packages {
+        package.source_url = "https://github.com/example/source".into();
+    }
+    lock.write(&path).unwrap();
+    fs::remove_dir_all(registry.path().join("org.example")).unwrap();
+    let docs = install(&user, project.path(), true);
+    assert_eq!(docs.last().unwrap()["command"], "install");
+    let rows = event(&docs)["packages"].as_array().unwrap();
+    assert_eq!(rows.len(), 2);
+    for row in rows {
+        assert_eq!(row["source_hosting"]["selected_origin"], "github");
+        assert!(
+            row["source_hosting"]
+                .get("differing_acquisition_route")
+                .is_none()
+        );
+        assert_eq!(row["source_evidence"]["acquisition"], "store");
+        assert_eq!(row["source_evidence"]["store_reused"], true);
+    }
+    assert!(!fs::read_to_string(path).unwrap().contains("hosting"));
+}

@@ -15,6 +15,8 @@ pub struct InstallPlan {
     pub packages: Vec<PlanEntry>,
 }
 
+pub use crate::generated::shared::HostingView;
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PlanEntry {
     /// The group/name coordinate, without a version.
@@ -27,6 +29,9 @@ pub struct PlanEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[serde(deserialize_with = "__reader_projection::deserialize_source_evidence_0")]
     pub source_evidence: Option<SourceEvidence>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_hosting: Option<HostingView>,
 }
 
 pub use crate::generated::shared::SourceAcquisition;

@@ -37,6 +37,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#purpose");
 pub mod active;
 pub mod artifact;
 pub mod consent;
+pub mod endpoint;
 pub mod installed;
 pub mod layers;
 pub mod locator;

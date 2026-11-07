@@ -3132,6 +3132,21 @@ pub struct FenceSnapshotOpen {
 /// newtype on the wire.
 pub type Group = vibe_core::Group;
 
+/// Report-only URL-spelling classification of held source evidence, never
+/// contact, authorization, transport safety or routing. Missing labels are
+/// unknown; arbitrary future labels remain readable.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HostingView {
+    /// Known hosting of source_url only; not proof that it was contacted.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_origin: Option<String>,
+
+    /// Known hosting of fetched_from only; absent stays unknown, with no
+    /// canonical fallback.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub differing_acquisition_route: Option<String>,
+}
+
 /// I18n availability: the locales a package carries and its default one.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct I18nEntry {

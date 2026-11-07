@@ -4,7 +4,7 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS" },
     "rustOptions": { "package": "vibe_wire::install::e2::plan" },
     "x-rust-type": "InstallPlan",
-    "x-vocabularies": ["source_evidence"],
+    "x-vocabularies": ["source_evidence", "hosting_view"],
     "x-wire-order": ["command", "packages"]
   },
   "properties": {
@@ -13,12 +13,13 @@
   },
   "definitions": {
     "plan_entry": {
-      "metadata": { "x-wire-order": ["package", "version", "source_evidence"] },
+      "metadata": { "x-wire-order": ["package", "version", "source_evidence", "source_hosting"] },
       "properties": {
         "package": { "type": "string", "metadata": { "description": "The group/name coordinate, without a version." } },
         "version": { "type": "string" }
       },
       "optionalProperties": {
+        "source_hosting": { "ref": "hosting_view", "metadata": { "x-default": null } },
         "source_evidence": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive", "description": "Held source-owner observations; absent in older live packages rows means unknown." } }
       }
     }

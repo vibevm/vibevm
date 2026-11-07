@@ -190,127 +190,127 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "app_plan",
-      "end_line": 428
+      "end_line": 436
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 91,
+      "line": 99,
       "symbol": "app_plan::action",
-      "end_line": 99
+      "end_line": 107
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 226,
+      "line": 234,
       "symbol": "app_plan::byte_count",
-      "end_line": 232
+      "end_line": 240
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 251,
+      "line": 259,
       "symbol": "app_plan::dependency",
-      "end_line": 296
+      "end_line": 304
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 242,
+      "line": 250,
       "symbol": "app_plan::dependency_action",
-      "end_line": 250
+      "end_line": 258
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 363,
+      "line": 371,
       "symbol": "app_plan::execution",
-      "end_line": 426
+      "end_line": 434
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 109,
+      "line": 117,
       "symbol": "app_plan::feature",
-      "end_line": 148
+      "end_line": 156
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 160,
+      "line": 168,
       "symbol": "app_plan::implication",
-      "end_line": 180
+      "end_line": 188
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 206,
+      "line": 214,
       "symbol": "app_plan::license",
-      "end_line": 225
+      "end_line": 233
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 62,
+      "line": 70,
       "symbol": "app_plan::package",
-      "end_line": 81
+      "end_line": 89
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 181,
+      "line": 189,
       "symbol": "app_plan::parameter",
-      "end_line": 205
+      "end_line": 213
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 100,
+      "line": 108,
       "symbol": "app_plan::phase",
-      "end_line": 108
+      "end_line": 116
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 82,
+      "line": 90,
       "symbol": "app_plan::result",
-      "end_line": 90
+      "end_line": 98
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 149,
+      "line": 157,
       "symbol": "app_plan::rule",
-      "end_line": 159
+      "end_line": 167
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 233,
+      "line": 241,
       "symbol": "app_plan::scope",
-      "end_line": 241
+      "end_line": 249
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/app_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 297,
+      "line": 305,
       "symbol": "app_plan::step",
-      "end_line": 362
+      "end_line": 370
     },
     {
       "crate_name": "<schema>",
@@ -406,239 +406,239 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "application_describe",
-      "end_line": 332
+      "end_line": 334
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 29,
+      "line": 31,
       "symbol": "application_describe::application",
-      "end_line": 42
+      "end_line": 44
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 249,
+      "line": 251,
       "symbol": "application_describe::byte_count",
-      "end_line": 255
+      "end_line": 257
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 217,
+      "line": 219,
       "symbol": "application_describe::choice",
-      "end_line": 223
+      "end_line": 225
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 263,
+      "line": 265,
       "symbol": "application_describe::condition",
-      "end_line": 275
+      "end_line": 277
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 137,
+      "line": 139,
       "symbol": "application_describe::env_set",
-      "end_line": 143
+      "end_line": 145
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 179,
+      "line": 181,
       "symbol": "application_describe::feature",
-      "end_line": 193
+      "end_line": 195
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 84,
+      "line": 86,
       "symbol": "application_describe::form",
-      "end_line": 87
+      "end_line": 89
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 47,
+      "line": 49,
       "symbol": "application_describe::icon_file",
-      "end_line": 57
+      "end_line": 59
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 58,
+      "line": 60,
       "symbol": "application_describe::icon_set",
-      "end_line": 64
+      "end_line": 66
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 43,
+      "line": 45,
       "symbol": "application_describe::icon_slot",
-      "end_line": 46
+      "end_line": 48
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 96,
+      "line": 98,
       "symbol": "application_describe::installer_option",
-      "end_line": 122
+      "end_line": 124
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 210,
+      "line": 212,
       "symbol": "application_describe::integer",
-      "end_line": 216
+      "end_line": 218
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 144,
+      "line": 146,
       "symbol": "application_describe::launcher",
-      "end_line": 171
+      "end_line": 173
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 73,
+      "line": 75,
       "symbol": "application_describe::launcher_action",
-      "end_line": 83
+      "end_line": 85
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 65,
+      "line": 67,
       "symbol": "application_describe::launcher_kind",
-      "end_line": 68
+      "end_line": 70
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 69,
+      "line": 71,
       "symbol": "application_describe::launcher_source",
-      "end_line": 72
+      "end_line": 74
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 242,
+      "line": 244,
       "symbol": "application_describe::license",
-      "end_line": 248
+      "end_line": 250
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 21,
+      "line": 23,
       "symbol": "application_describe::package",
-      "end_line": 28
+      "end_line": 30
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 256,
+      "line": 258,
       "symbol": "application_describe::param_equals",
-      "end_line": 262
+      "end_line": 264
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 224,
+      "line": 226,
       "symbol": "application_describe::parameter",
-      "end_line": 241
+      "end_line": 243
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 206,
+      "line": 208,
       "symbol": "application_describe::parameter_type",
-      "end_line": 209
+      "end_line": 211
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 92,
+      "line": 94,
       "symbol": "application_describe::phase",
-      "end_line": 95
+      "end_line": 97
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 194,
+      "line": 196,
       "symbol": "application_describe::profile",
-      "end_line": 205
+      "end_line": 207
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 172,
+      "line": 174,
       "symbol": "application_describe::public_command",
-      "end_line": 178
+      "end_line": 180
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 127,
+      "line": 129,
       "symbol": "application_describe::requirement",
-      "end_line": 136
+      "end_line": 138
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 88,
+      "line": 90,
       "symbol": "application_describe::result",
-      "end_line": 91
+      "end_line": 93
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 123,
+      "line": 125,
       "symbol": "application_describe::scope",
-      "end_line": 126
+      "end_line": 128
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 276,
+      "line": 278,
       "symbol": "application_describe::source_input",
-      "end_line": 288
+      "end_line": 290
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_describe.jtd.json",
       "item_kind": "schema-def",
-      "line": 289,
+      "line": 291,
       "symbol": "application_describe::step",
-      "end_line": 330
+      "end_line": 332
     },
     {
       "crate_name": "<schema>",
@@ -1198,47 +1198,47 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "application_list",
-      "end_line": 162
+      "end_line": 163
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 150,
+      "line": 151,
       "symbol": "application_list::env_entry",
-      "end_line": 160
+      "end_line": 161
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 146,
+      "line": 147,
       "symbol": "application_list::env_op",
-      "end_line": 149
+      "end_line": 150
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 68,
+      "line": 69,
       "symbol": "application_list::icon_file",
-      "end_line": 78
+      "end_line": 79
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 79,
+      "line": 80,
       "symbol": "application_list::icon_set",
-      "end_line": 85
+      "end_line": 86
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 64,
+      "line": 65,
       "symbol": "application_list::icon_slot",
-      "end_line": 67
+      "end_line": 68
     },
     {
       "crate_name": "<schema>",
@@ -1246,47 +1246,47 @@
       "item_kind": "schema-def",
       "line": 33,
       "symbol": "application_list::installation",
-      "end_line": 63
+      "end_line": 64
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 94,
+      "line": 95,
       "symbol": "application_list::launcher",
-      "end_line": 115
+      "end_line": 116
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 116,
+      "line": 117,
       "symbol": "application_list::launcher_action",
-      "end_line": 126
+      "end_line": 127
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 86,
+      "line": 87,
       "symbol": "application_list::launcher_kind",
-      "end_line": 89
+      "end_line": 90
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 90,
+      "line": 91,
       "symbol": "application_list::launcher_source",
-      "end_line": 93
+      "end_line": 94
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 127,
+      "line": 128,
       "symbol": "application_list::mark",
-      "end_line": 130
+      "end_line": 131
     },
     {
       "crate_name": "<schema>",
@@ -1300,17 +1300,17 @@
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 135,
+      "line": 136,
       "symbol": "application_list::requirement",
-      "end_line": 145
+      "end_line": 146
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_list.jtd.json",
       "item_kind": "schema-def",
-      "line": 131,
+      "line": 132,
       "symbol": "application_list::scope",
-      "end_line": 134
+      "end_line": 135
     },
     {
       "crate_name": "<schema>",
@@ -1358,119 +1358,119 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "application_plan",
-      "end_line": 142
+      "end_line": 143
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 44,
+      "line": 45,
       "symbol": "application_plan::action",
-      "end_line": 47
+      "end_line": 48
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 96,
+      "line": 97,
       "symbol": "application_plan::byte_count",
-      "end_line": 102
+      "end_line": 103
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 111,
+      "line": 112,
       "symbol": "application_plan::dependency",
-      "end_line": 124
+      "end_line": 125
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 107,
+      "line": 108,
       "symbol": "application_plan::dependency_action",
-      "end_line": 110
+      "end_line": 111
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 52,
+      "line": 53,
       "symbol": "application_plan::feature",
-      "end_line": 64
+      "end_line": 65
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 69,
+      "line": 70,
       "symbol": "application_plan::implication",
-      "end_line": 77
+      "end_line": 78
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 88,
+      "line": 89,
       "symbol": "application_plan::license",
-      "end_line": 95
+      "end_line": 96
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 32,
+      "line": 33,
       "symbol": "application_plan::package",
-      "end_line": 39
+      "end_line": 40
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 78,
+      "line": 79,
       "symbol": "application_plan::parameter",
-      "end_line": 87
+      "end_line": 88
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 48,
+      "line": 49,
       "symbol": "application_plan::phase",
-      "end_line": 51
+      "end_line": 52
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 40,
+      "line": 41,
       "symbol": "application_plan::result",
-      "end_line": 43
+      "end_line": 44
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 65,
+      "line": 66,
       "symbol": "application_plan::rule",
-      "end_line": 68
+      "end_line": 69
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 103,
+      "line": 104,
       "symbol": "application_plan::scope",
-      "end_line": 106
+      "end_line": 107
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/application_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 125,
+      "line": 126,
       "symbol": "application_plan::step",
-      "end_line": 140
+      "end_line": 141
     },
     {
       "crate_name": "<schema>",
@@ -2614,239 +2614,239 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "description",
-      "end_line": 1265
+      "end_line": 1280
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 64,
+      "line": 67,
       "symbol": "description::application",
-      "end_line": 120
+      "end_line": 123
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 848,
+      "line": 851,
       "symbol": "description::byte_count",
-      "end_line": 854
+      "end_line": 857
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 745,
+      "line": 748,
       "symbol": "description::choice",
-      "end_line": 760
+      "end_line": 763
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 871,
+      "line": 874,
       "symbol": "description::condition",
-      "end_line": 934
+      "end_line": 937
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 446,
+      "line": 449,
       "symbol": "description::env_set",
-      "end_line": 461
+      "end_line": 464
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 632,
+      "line": 635,
       "symbol": "description::feature",
-      "end_line": 687
+      "end_line": 690
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 240,
+      "line": 243,
       "symbol": "description::form",
-      "end_line": 248
+      "end_line": 251
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 133,
+      "line": 136,
       "symbol": "description::icon_file",
-      "end_line": 165
+      "end_line": 168
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 166,
+      "line": 169,
       "symbol": "description::icon_set",
-      "end_line": 186
+      "end_line": 189
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 121,
+      "line": 124,
       "symbol": "description::icon_slot",
-      "end_line": 132
+      "end_line": 135
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 267,
+      "line": 270,
       "symbol": "description::installer_option",
-      "end_line": 419
+      "end_line": 422
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 738,
+      "line": 741,
       "symbol": "description::integer",
-      "end_line": 744
+      "end_line": 747
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 462,
+      "line": 465,
       "symbol": "description::launcher",
-      "end_line": 615
+      "end_line": 618
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 206,
+      "line": 209,
       "symbol": "description::launcher_action",
-      "end_line": 239
+      "end_line": 242
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 187,
+      "line": 190,
       "symbol": "description::launcher_kind",
-      "end_line": 196
+      "end_line": 199
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 197,
+      "line": 200,
       "symbol": "description::launcher_source",
-      "end_line": 205
+      "end_line": 208
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 832,
+      "line": 835,
       "symbol": "description::license",
-      "end_line": 847
+      "end_line": 850
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 44,
+      "line": 47,
       "symbol": "description::package",
-      "end_line": 63
+      "end_line": 66
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 855,
+      "line": 858,
       "symbol": "description::param_equals",
-      "end_line": 870
+      "end_line": 873
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 761,
+      "line": 764,
       "symbol": "description::parameter",
-      "end_line": 831
+      "end_line": 834
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 726,
+      "line": 729,
       "symbol": "description::parameter_type",
-      "end_line": 737
+      "end_line": 740
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 258,
+      "line": 261,
       "symbol": "description::phase",
-      "end_line": 266
+      "end_line": 269
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 688,
+      "line": 691,
       "symbol": "description::profile",
-      "end_line": 725
+      "end_line": 728
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 616,
+      "line": 619,
       "symbol": "description::public_command",
-      "end_line": 631
+      "end_line": 634
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 429,
+      "line": 432,
       "symbol": "description::requirement",
-      "end_line": 445
+      "end_line": 448
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 249,
+      "line": 252,
       "symbol": "description::result",
-      "end_line": 257
+      "end_line": 260
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 420,
+      "line": 423,
       "symbol": "description::scope",
-      "end_line": 428
+      "end_line": 431
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 935,
+      "line": 938,
       "symbol": "description::source_input",
-      "end_line": 980
+      "end_line": 983
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/configuration/e1/description.jtd.json",
       "item_kind": "schema-def",
-      "line": 981,
+      "line": 984,
       "symbol": "description::step",
-      "end_line": 1240
+      "end_line": 1243
     },
     {
       "crate_name": "<schema>",
@@ -5502,7 +5502,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "plan",
-      "end_line": 26
+      "end_line": 27
     },
     {
       "crate_name": "<schema>",
@@ -5726,7 +5726,7 @@
       "item_kind": "schema-def",
       "line": 15,
       "symbol": "plan::plan_entry",
-      "end_line": 24
+      "end_line": 25
     },
     {
       "crate_name": "<schema>",
@@ -10337,8 +10337,8 @@
       "item_kind": "fn",
       "line": 227,
       "symbol": "vibe_app::configuration::describe::describe",
-      "end_line": 261,
-      "fingerprint": "tok1:7980f283b6978d1e345299bbf5835f80feddcf7a6f55ef9cfd93276633588cad"
+      "end_line": 263,
+      "fingerprint": "tok1:410eafbb7b1afad3fa635836ffc505d18a5b69d32a63b7639a5f8985130a2a17"
     },
     {
       "crate_name": "vibe-app",
@@ -12056,8 +12056,8 @@
       "item_kind": "fn",
       "line": 171,
       "symbol": "vibe_app::operations::planning::configuration_plan",
-      "end_line": 216,
-      "fingerprint": "tok1:ef189465191b6c072ba6ad58ece9472e227d6a9b9a409b55838617709bea3017"
+      "end_line": 217,
+      "fingerprint": "tok1:8f4a29cd082a77a5b5d15a9f5301910c12ca53c967efe41800fa5f6294728405"
     },
     {
       "crate_name": "vibe-app",
@@ -15620,8 +15620,8 @@
       "item_kind": "fn",
       "line": 130,
       "symbol": "vibe_cli::commands::install::report::present_resolution",
-      "end_line": 172,
-      "fingerprint": "tok1:5d76edfb5d1f87b80700c9f7ed8f71855c0ef9997b5b30c666eb15400871a275"
+      "end_line": 173,
+      "fingerprint": "tok1:a594bbb90ebde278471f75976f1e011438fba062666bd4551997a586d9ef2886"
     },
     {
       "crate_name": "vibe-cli",
@@ -25126,6 +25126,42 @@
       "symbol": "vibe_core::remap::consent::HomeLock",
       "end_line": 361,
       "fingerprint": "tok1:75a4e34fa1f3fbbd350616264a26e90da7cf132cc0cddc240c70d8178f22bdd0"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/remap/endpoint.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_core::remap::endpoint",
+      "end_line": 2,
+      "fingerprint": "tok1:86fe41dde74896d01a3801e05619007bbf27e6ead1555271cd9569e1991dfc69"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/remap/endpoint.rs",
+      "item_kind": "enum",
+      "line": 28,
+      "symbol": "vibe_core::remap::endpoint::EndpointObservation",
+      "end_line": 38,
+      "fingerprint": "tok1:8e00c6001d0fbc926cd9447e3bfe909fd78fd51961e5904681c632ed6be166e0"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/remap/endpoint.rs",
+      "item_kind": "struct",
+      "line": 17,
+      "symbol": "vibe_core::remap::endpoint::NetworkAuthority",
+      "end_line": 26,
+      "fingerprint": "tok1:b4256679d710060704399103fe1887e25f1e4769e91ec3f55f612b69d28b8d34"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/remap/endpoint.rs",
+      "item_kind": "enum",
+      "line": 6,
+      "symbol": "vibe_core::remap::endpoint::TransportSpelling",
+      "end_line": 15,
+      "fingerprint": "tok1:3e3a3747e641c4b5d552926e71e7428bc81cb1b8a5ddf519a3b9a203ef6aaf08"
     },
     {
       "crate_name": "vibe-core",
@@ -39031,6 +39067,15 @@
       "symbol": "vibe_registry::source_evidence",
       "end_line": 2,
       "fingerprint": "tok1:56a50c12620b09f2b5a7bf6c9e15c149948e8ab6afc408ca61ec6551eac02d59"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/source_evidence.rs",
+      "item_kind": "fn",
+      "line": 8,
+      "symbol": "vibe_registry::source_evidence::source_hosting",
+      "end_line": 32,
+      "fingerprint": "tok1:1c8a738e6d36dcd0bd15634e72b7f091bc2b7074edc71a6d98983bb9e8288063"
     },
     {
       "crate_name": "vibe-registry",
@@ -65572,6 +65617,38 @@
       "verb": "documents"
     },
     {
+      "file": "crates/vibe-core/src/remap/endpoint.rs",
+      "from_symbol": "vibe_core::remap::endpoint",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/remap/endpoint.rs",
+      "from_symbol": "vibe_core::remap::endpoint::EndpointObservation",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-core/src/remap/endpoint.rs",
+      "from_symbol": "vibe_core::remap::endpoint::NetworkAuthority",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION",
+      "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-core/src/remap/endpoint.rs",
+      "from_symbol": "vibe_core::remap::endpoint::TransportSpelling",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION",
+      "verb": "documents"
+    },
+    {
       "file": "crates/vibe-core/src/remap/installed.rs",
       "from_symbol": "vibe_core::remap::installed",
       "line": 17,
@@ -78342,6 +78419,14 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/source_evidence.rs",
+      "from_symbol": "vibe_registry::source_evidence::source_hosting",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION",
       "verb": "implements"
     },
     {
@@ -115014,12 +115099,32 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS"
     },
     {
+      "anchor": "HOSTING-OBSERVATION",
+      "content_hash": "sha256:58cbf9a84c5421d8bb18ee3fcda7487fb35efd3853ff362cd5b18c4172c5927b",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "Derived hosting labels of recorded source addresses",
+      "line": 10,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "HOSTING-OBSERVATION-LAW",
+      "content_hash": "sha256:9a2a8301aaddb4a5cbeec16fdb2a300c616a3ce58aa85dacd16187be6168e7bd",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "One pure endpoint observation owner classifies the spelled host of supported remote addresses using deterministic parsing, without DNS, Git or SSH configuration, current registry settings or network probes. Exact recognized public repository hosts may yield hosting labels; custom, opaque, local or missing addresses do not acquire guessed labels. A derived report-only view distinguishes the selected origin URL from the independently recorded differing acquisition route. A missing route is not replaced with the canonical source, and store reuse is not a new contact. The same view accompanies existing project and global application source reports, with current authored source separate from installed history. Wire labels remain extensible strings; existing persisted SourceEvidence and closed inventory/work readers are unchanged. These are observations of recorded address spelling, not authenticated source identity, transport reachability, an actual-contact list or permission to fetch. Preference and exclusion require their own existing-owner admission and selection consumers. @status:spec/done",
+      "line": 12,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION-LAW"
+    },
+    {
       "anchor": "SOURCE-POLICY",
       "content_hash": "sha256:c7f4416ef8b15773842640e2f3079f7a7200dee93717dcf1fbf8eef952d95a7c",
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Effective registry constraints and contact policy",
-      "line": 10,
+      "line": 15,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY",
       "kind": "req",
       "revision": 1
@@ -115030,7 +115135,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Registry pins constrain requirement edges against the operation's effective project/user registry catalog; unknown names and incompatible incoming pins refuse without silent fallback. They do not implicitly authorize new registries declared by a dependency. Hosting preference ranks equivalent candidates at a fixed selected version, with configured registry order as tie-breaker; absent policy preserves existing selection semantics. Hosting exclusion governs actual managed destinations before discovery or fetch, including redirect, remap, mirror and fallback. A presentation label cannot override destination checks. Unsupported opaque routes cannot be claimed to satisfy a no-contact guarantee. Candidate reports distinguish observed, excluded and not-probed states; lack of contact is not evidence of remote absence or exclusive availability. @status:spec/plan",
-      "line": 12,
+      "line": 17,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW"
     },
     {
@@ -115039,7 +115144,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Explicit preview and cancellation boundaries",
-      "line": 14,
+      "line": 19,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS",
       "kind": "req",
       "revision": 1
@@ -115050,7 +115155,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Operation planning separates source resolution, acquisition effects and product publication. A read-only preview does not silently inherit cache/config/temp writes from existing acquisition; unsupported metadata access is an explicit limitation until the shared provider supports the requested effect contract. Apply uses captured decisions or reports/replans drift rather than promising a mutable ref is unchanged. Cancellation requests and stopped outcomes are distinct. Before product publication, cooperative cancellation preserves project state; during owned local publication use existing guarded recovery. Completed or unknown external effects and rollback conflicts are reported truthfully, never labeled successful restoration. Reuse lifecycle and progress owners rather than create a parallel orchestrator. Logical successful-write counters are distinct from received bytes, retained file size and physical disk I/O. @status:spec/plan",
-      "line": 16,
+      "line": 21,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
     },
     {

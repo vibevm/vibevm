@@ -109,6 +109,7 @@ fn row(
     let places = launch::IconPlaces::new(catalog.home(), None, record, &root);
     let lifecycle = &record.lifecycle;
     wire::Installation {
+        source_hosting: vibe_registry::source_hosting(record.source_evidence.as_ref()),
         source_evidence: record.source_evidence.clone(),
         key: key.to_owned(),
         slot: record.slot.clone(),

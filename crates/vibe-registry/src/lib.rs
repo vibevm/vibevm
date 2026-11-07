@@ -299,7 +299,7 @@ pub struct CachedPackage {
 }
 
 mod source_evidence;
-pub use source_evidence::locked_source_evidence;
+pub use source_evidence::{locked_source_evidence, source_hosting};
 
 impl CachedPackage {
     /// A `CachedPackage` always holds a publishable `[package]` manifest.

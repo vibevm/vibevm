@@ -55,8 +55,10 @@ pub fn describe(
         .into());
     }
     Ok(wire::ApplicationDescribe {
+        source_hosting: vibe_registry::source_hosting(resolved.source_evidence.as_ref()),
         source_evidence: resolved.source_evidence.clone(),
         installed_source: None,
+        installed_hosting: None,
         protocol: "vibe-app-describe/1".into(),
         package: wire::Package {
             group: resolved.package.group.clone(),

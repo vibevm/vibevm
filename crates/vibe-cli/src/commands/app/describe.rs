@@ -33,6 +33,8 @@ pub(super) fn show(
             .installations
             .get(&resolved.package.key())
             .and_then(|r| r.source_evidence.clone());
+        document.installed_hosting =
+            vibe_registry::source_hosting(document.installed_source.as_ref());
         if ctx.is_json() {
             return ctx.emit_json(&document);
         }
@@ -44,6 +46,7 @@ pub(super) fn show(
         .installations
         .get(&resolved.package.key())
         .and_then(|r| r.source_evidence.clone());
+    document.installed_hosting = vibe_registry::source_hosting(document.installed_source.as_ref());
     if ctx.is_json() {
         return ctx.emit_json(&document);
     }

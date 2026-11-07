@@ -282,3 +282,49 @@ fn portable_import_records_new_acquisition_and_skip_keeps_existing_origin() {
         acquired
     );
 }
+
+#[test]
+fn retained_hosting_is_a_report_projection_not_new_index_state() {
+    let apps = AppRegistry::new();
+    package(&apps, "1.0.0");
+    ok(&apps.app(&["install", "-g"], "org.example/source", &[]));
+    // Synthetic retained observations test projection only: acquisition above
+    // is entirely local and never contacts either hosting service.
+    let mut index = apps.index();
+    let evidence = &mut index["installations"]["org.example/source@1.0.0"]["source_evidence"];
+    evidence["source_url"] = "https://github.com/example/source".into();
+    evidence["fetched_from"] = "ssh://git@gitverse.ru/example/source".into();
+    let path = apps.settings().join("applications/index.json");
+    let bytes = serde_json::to_vec(&index).unwrap();
+    fs::write(&path, &bytes).unwrap();
+    let row = apps.listed("org.example/source@1.0.0");
+    assert_eq!(row["source_hosting"]["selected_origin"], "github");
+    assert_eq!(
+        row["source_hosting"]["differing_acquisition_route"],
+        "gitverse"
+    );
+    assert_eq!(fs::read(&path).unwrap(), bytes);
+    let description = json(&apps.app(
+        &["app", "describe", "-g"],
+        "org.example/source",
+        &["--json"],
+    ));
+    assert!(description.get("source_hosting").is_none());
+    assert_eq!(description["installed_hosting"], row["source_hosting"]);
+    assert_eq!(fs::read(&path).unwrap(), bytes);
+    let manifest = apps.registry().join("org.example/source/v1.0.0/vibe.toml");
+    let text = fs::read_to_string(&manifest).unwrap();
+    fs::write(
+        manifest,
+        format!("{text}\n[[installer_options.configuration.features]]\nid='extra'\nname='Extra'\n"),
+    )
+    .unwrap();
+    let description = json(&apps.app(
+        &["app", "describe", "-g"],
+        "org.example/source",
+        &["--configuration", "--json"],
+    ));
+    assert!(description.get("source_hosting").is_none());
+    assert_eq!(description["installed_hosting"], row["source_hosting"]);
+    assert_eq!(fs::read(&path).unwrap(), bytes);
+}

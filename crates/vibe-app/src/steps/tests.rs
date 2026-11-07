@@ -494,3 +494,6 @@ fn legacy_effective_values_do_not_become_common_intent_from_partial_flags_or_ter
 #[cfg(test)]
 #[path = "tests/portable_transfer.rs"]
 mod portable_transfer;
+
+#[path = "tests/hosting.rs"]
+mod hosting;

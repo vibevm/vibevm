@@ -197,6 +197,7 @@ pub fn configuration_plan(
                         .join(", "),
                 })?;
             Ok(vibe_wire::generated::configuration::e1::app_plan::AppPlan {
+                source_hosting: vibe_registry::source_hosting(resolved.source_evidence.as_ref()),
                 source_evidence: resolved.source_evidence.clone(),
                 protocol: "vibe-app-configuration-plan/1".into(),
                 package: vibe_wire::generated::configuration::e1::app_plan::Package {

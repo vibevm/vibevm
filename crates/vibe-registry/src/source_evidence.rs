@@ -5,6 +5,40 @@ use vibe_core::manifest::SourceKind;
 use vibe_core::progress::transfer::safe_remote;
 use vibe_wire::generated::shared::{SourceEvidence, SourceSelectionKind};
 
+/// Report-only hosting labels derived independently from the two held URL facts.
+/// Missing evidence and unknown providers stay absent; store reads do not invent
+/// a differing acquisition route. This is URL spelling, not a contact record.
+///
+/// ```
+/// let evidence = serde_json::from_str(r#"{"source_url":"https://github.com/a","fetched_from":"git@gitverse.ru:a"}"#).unwrap();
+/// let view = vibe_registry::source_hosting(Some(&evidence)).unwrap();
+/// assert_eq!(view.selected_origin.as_deref(), Some("github"));
+/// assert_eq!(view.differing_acquisition_route.as_deref(), Some("gitverse"));
+/// assert!(vibe_registry::source_hosting(None).is_none());
+/// ```
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION")]
+pub fn source_hosting(
+    evidence: Option<&SourceEvidence>,
+) -> Option<vibe_wire::generated::shared::HostingView> {
+    let evidence = evidence?;
+    let selected_origin = hosting_label(evidence.source_url.as_deref());
+    let differing_acquisition_route = hosting_label(evidence.fetched_from.as_deref());
+    (selected_origin.is_some() || differing_acquisition_route.is_some()).then_some(
+        vibe_wire::generated::shared::HostingView {
+            selected_origin,
+            differing_acquisition_route,
+        },
+    )
+}
+
+fn hosting_label(url: Option<&str>) -> Option<String> {
+    use vibe_core::remap::endpoint::{EndpointObservation, observe_endpoint};
+    match observe_endpoint(url?) {
+        EndpointObservation::Network(authority) => authority.hosting.map(str::to_owned),
+        _ => None,
+    }
+}
+
 fn selection(kind: SourceKind) -> SourceSelectionKind {
     match kind {
         SourceKind::Registry => SourceSelectionKind::Registry,
@@ -163,6 +197,47 @@ mod tests {
         assert_eq!(
             first.source_evidence().source_kind,
             Some(SourceSelectionKind::Override)
+        );
+    }
+}
+
+#[cfg(test)]
+mod hosting_tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn hosting_uses_only_independent_held_urls_and_does_not_mutate_evidence() {
+        let facts = json!({"source_url":"https://github.com/a", "fetched_from":"https://gitverse.ru/a", "via_redirect":"https://elsewhere.test/stub", "acquisition":"git_repository", "store_reused":false});
+        let evidence = serde_json::from_value(facts.clone()).unwrap();
+        let view = source_hosting(Some(&evidence)).unwrap();
+        assert_eq!(view.selected_origin.as_deref(), Some("github"));
+        assert_eq!(
+            view.differing_acquisition_route.as_deref(),
+            Some("gitverse")
+        );
+        assert_eq!(serde_json::to_value(&evidence).unwrap(), facts);
+        for facts in [
+            json!({}),
+            json!({"source_url":"/local/repo"}),
+            json!({"source_url":"https://unknown.test/a", "via_redirect":"https://github.com/stub"}),
+        ] {
+            assert!(source_hosting(Some(&serde_json::from_value(facts).unwrap())).is_none());
+        }
+        assert!(source_hosting(None).is_none());
+        let stored = serde_json::from_value(json!({"source_url":"https://github.com/a", "acquisition":"store", "store_reused":true})).unwrap();
+        let view = source_hosting(Some(&stored)).unwrap();
+        assert_eq!(view.selected_origin.as_deref(), Some("github"));
+        assert_eq!(view.differing_acquisition_route, None);
+        let route_only = serde_json::from_value(
+            json!({"source_url":"/local", "fetched_from":"git@gitverse.ru:a"}),
+        )
+        .unwrap();
+        let view = source_hosting(Some(&route_only)).unwrap();
+        assert_eq!(view.selected_origin, None);
+        assert_eq!(
+            view.differing_acquisition_route.as_deref(),
+            Some("gitverse")
         );
     }
 }

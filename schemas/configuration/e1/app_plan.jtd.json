@@ -15,12 +15,14 @@
       "arch",
       "configuration",
       "execution",
-      "source_evidence"
+      "source_evidence",
+      "source_hosting"
     ],
     "x-vocabularies": [
       "configuration_evaluation",
       "application_agent_mode",
-      "source_evidence"
+      "source_evidence",
+      "hosting_view"
     ]
   },
   "properties": {
@@ -55,6 +57,12 @@
       "metadata": {
         "x-default": null,
         "x-reader-projection": "permissive"
+      }
+    },
+    "source_hosting": {
+      "ref": "hosting_view",
+      "metadata": {
+        "x-default": null
       }
     }
   },

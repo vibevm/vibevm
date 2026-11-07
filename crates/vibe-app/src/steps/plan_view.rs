@@ -24,6 +24,7 @@ impl Plan {
             .into());
         }
         Ok(wire::ApplicationPlan {
+            source_hosting: vibe_registry::source_hosting(self.source_evidence.as_ref()),
             source_evidence: self.source_evidence.clone(),
             protocol: "vibe-app-plan/1".into(),
             package: wire::Package {

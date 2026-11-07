@@ -26,6 +26,9 @@ pub struct AppPlan {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[serde(deserialize_with = "__reader_projection::deserialize_source_evidence_2")]
     pub source_evidence: Option<SourceEvidence>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_hosting: Option<HostingView>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -270,6 +273,8 @@ pub struct Feature {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub implied: Option<Implication>,
 }
+
+pub use crate::generated::shared::HostingView;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Implication {
