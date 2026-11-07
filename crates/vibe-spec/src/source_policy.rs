@@ -263,6 +263,41 @@ pub fn observe_package_policy_in(
 }
 
 impl PolicyState {
+    /// Bind this finite checkpoint to the supplied held descendant, then
+    /// recheck its logical name and the same manifest bytes. This grants no
+    /// authority to an unrelated Project/Pinned pair.
+    fn recheck_in(&self, project: &Project, root: &Pinned) -> Result<(), SourcePolicyError> {
+        let refuse = || {
+            failure(
+                &self.logical_root,
+                SourcePolicyErrorKind::Changed,
+                "supplied held root does not match captured package policy",
+            )
+        };
+        let current = self.named_root()?;
+        if root.path() != current.root_path() || root.identity().ok() != Some(self.identity) {
+            return Err(refuse());
+        }
+        let relative = root
+            .path()
+            .strip_prefix(project.root_path())
+            .map_err(|_| refuse())?;
+        let components: Vec<_> = relative
+            .iter()
+            .map(|p| p.to_str().ok_or_else(&refuse))
+            .collect::<Result<_, _>>()?;
+        let linked = project.dir(&components, false).map_err(|_| refuse())?;
+        if linked.identity().ok() != Some(self.identity) {
+            return Err(refuse());
+        }
+        let bytes = project
+            .read_source_bytes_in(root, Manifest::FILENAME)
+            .map_err(|_| refuse())?;
+        if bytes != self.bytes {
+            return Err(refuse());
+        }
+        self.recheck_unchanged()
+    }
     fn mode(&self) -> PackageSourceMode {
         match self.manifest.as_ref() {
             None => PackageSourceMode::MissingManifest,
@@ -351,6 +386,10 @@ impl PolicyState {
 }
 
 impl PackagePolicyObservation {
+    /// Check that the supplied capability is this observation's held root.
+    pub fn recheck_in(&self, project: &Project, root: &Pinned) -> Result<(), SourcePolicyError> {
+        self.state.recheck_in(project, root)
+    }
     pub fn manifest(&self) -> Option<&Manifest> {
         self.state.manifest()
     }
@@ -405,6 +444,11 @@ impl PackagePolicyObservation {
     }
 }
 impl PackagePolicyCheckpoint {
+    /// Bind this checkpoint to the same supplied root before reading through it.
+    pub fn recheck_in(&self, project: &Project, root: &Pinned) -> Result<(), SourcePolicyError> {
+        self.state.recheck_in(project, root)
+    }
+
     pub fn manifest(&self) -> Option<&Manifest> {
         self.state.manifest()
     }

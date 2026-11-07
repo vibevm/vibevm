@@ -38,10 +38,14 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
     versions: &HashMap<UnitId, String>,
     plan_digests: &HashMap<UnitId, String>,
     spec_format: SpecFormat,
+    sources: Option<&crate::boot_artifacts::declared_sources::DeclaredBootSources>,
     trace: Option<&TraceRun>,
     epoch: &OwnerRuntimeEpoch,
     mut provider: Option<&mut P>,
 ) -> Result<BoundUnitEmission, WorkspaceError> {
+    crate::boot_artifacts::declared_sources::DeclaredBootSources::validate_emission(
+        resolution, sources,
+    )?;
     let slots: HashMap<UnitId, String> = resolution
         .iter()
         .map(|dependency| {
@@ -164,11 +168,12 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
             None => boot_artifacts::native_managed::OwnerNativeCompileMode::Plain,
         };
         let prepared_index = boot_artifacts::publication::prepare_index(&effective, spec_format)?;
-        let compiled = boot_artifacts::native_managed::compile_static_owner_managed(
+        let compiled = boot_artifacts::native_managed::compile_static_owner_managed_with_sources(
             &effective,
             workspace_root,
             self_coord,
             spec_format,
+            sources,
             epoch.unit(&owner)?,
             mode,
             provider.as_deref_mut(),

@@ -209,7 +209,7 @@ mod cases {
             Ok(0)
         }
     }
-    fn invalid_input_before_earlier_hook(rows: &str, expected: &str) {
+    fn input_before_earlier_hook(rows: &str, expected: Option<&str>) {
         let (root, _ws) = workspace();
         let (legacy, _legacy) = dep_with_boot(
             "legacy-hook",
@@ -225,7 +225,7 @@ mod cases {
             allowed_groups: vec!["org.vibevm".into()],
             allow_hooks: false,
         };
-        let error = crate::install::materialise_resolution(
+        let outcome = crate::install::materialise_resolution(
             root.path(),
             &[legacy, bad],
             vibe_core::user_config::SlotIntegrity::TrustPresence,
@@ -233,8 +233,30 @@ mod cases {
             Some(&policy),
             &Probe,
             &spy,
-        )
-        .unwrap_err();
+        );
+        let Some(expected) = expected else {
+            assert_eq!(outcome.unwrap().materialised.len(), 2);
+            assert_eq!(
+                spy.0.get(),
+                1,
+                "supported finite inventory must allow normal hook execution"
+            );
+            assert_eq!(
+                fs::read(
+                    root.path()
+                        .join(crate::vibedeps::slot_rel_path(
+                            &vibe_core::Group::parse("org.vibevm").unwrap(),
+                            "declared",
+                            &ver("1.0.0")
+                        ))
+                        .join("payload.txt")
+                )
+                .unwrap(),
+                b"PAYLOAD"
+            );
+            return;
+        };
+        let error = outcome.unwrap_err();
         assert!(error.to_string().contains(expected), "{error}");
         assert_eq!(
             spy.0.get(),
@@ -249,23 +271,23 @@ mod cases {
     }
     #[test]
     fn source_admission_missing_input_precedes_earlier_hook() {
-        invalid_input_before_earlier_hook(
+        input_before_earlier_hook(
             "[[package.sources]]\nfile='missing.md'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
-            "missing",
+            Some("missing"),
         );
     }
     #[test]
-    fn source_admission_directory_input_precedes_earlier_hook() {
-        invalid_input_before_earlier_hook(
+    fn source_admission_zero_match_directory_default_allows_normal_hook_order() {
+        input_before_earlier_hook(
             "[[package.sources]]\ndirectory='docs'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
-            "census",
+            None,
         );
     }
     #[test]
     fn source_admission_conflicting_input_precedes_earlier_hook() {
-        invalid_input_before_earlier_hook(
+        input_before_earlier_hook(
             "[[package.sources]]\nfile='payload.txt'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n[[package.sources]]\nfile='payload.txt'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n",
-            "conflict",
+            Some("conflict"),
         );
     }
 }

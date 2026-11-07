@@ -71,7 +71,19 @@ pub(super) fn node_dependency_boot(
                 vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
             };
             let snippet = dep.manifest.boot_snippet.as_ref();
-            let active = active_snippet(workspace_root, &slot, snippet, &installed);
+            let active = table
+                .get(&(dep.group.clone(), dep.name.clone()))
+                .map(|unit| super::conditions::ActiveSnippet {
+                    main: unit
+                        .own_boot_path
+                        .as_ref()
+                        .map(|path| crate::boot::BootContribution {
+                            path: path.clone(),
+                            when: unit.when.clone(),
+                        }),
+                    fragments: unit.fragments.clone(),
+                })
+                .unwrap_or_else(|| active_snippet(workspace_root, &slot, snippet, &installed));
             let main = active.main;
             let all_fragments = active.fragments;
             // Dynamic consumers read the compiled unit carrying its whole zone.

@@ -10,7 +10,7 @@ use vibe_spec::{CompileObserver, DocumentProvider, EmittedArtifact, TransformPla
 
 use crate::errors::WorkspaceError;
 
-use super::{EffectiveBoot, SelfCoordinate, compile_artifact, compile_static_artifact_with};
+use super::{EffectiveBoot, SelfCoordinate, compile_artifact, compile_static_artifact_with_plans};
 
 /// One static lane's compile result: the emitted artifact BESIDE the
 /// typed provider that declared each input, in input order — the
@@ -29,16 +29,18 @@ pub(crate) fn compile_static_analyzed(
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
+    sources: Option<&super::declared_sources::DeclaredBootSources>,
     transforms: TransformPlan,
     observer: Option<std::sync::Arc<dyn CompileObserver>>,
 ) -> Result<Option<StaticCompile>, WorkspaceError> {
-    compile_static_artifact_with(
+    compile_static_artifact_with_plans(
         boot,
         workspace_root,
         self_coord,
         spec_format,
+        sources,
         None,
-        transforms,
+        vibe_spec::CompilePlans::transforms_only(transforms),
         observer,
         compile_artifact,
     )

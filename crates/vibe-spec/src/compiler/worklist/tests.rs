@@ -17,6 +17,9 @@ use crate::compiler::ir::{
 #[path = "fence_tests.rs"]
 mod fence_tests;
 
+#[path = "root_role_tests.rs"]
+mod root_role_tests;
+
 fn spec(raw: &str) -> SpecAddress {
     SpecAddress::parse(raw).unwrap()
 }

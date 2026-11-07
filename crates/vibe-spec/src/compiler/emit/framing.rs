@@ -188,7 +188,7 @@ pub(crate) fn static_marker(syntax: CommentSyntax, meta: &ContributionMeta) -> S
 }
 
 pub(crate) fn static_marker_payload(meta: &ContributionMeta) -> String {
-    format!("vibe:static {} — {}", meta.origin, meta.path)
+    format!("{STATIC_MARKER_PREFIX}{} — {}", meta.origin, meta.path)
 }
 
 pub(crate) fn elided_marker(syntax: CommentSyntax, meta: &ContributionMeta) -> String {
@@ -197,7 +197,7 @@ pub(crate) fn elided_marker(syntax: CommentSyntax, meta: &ContributionMeta) -> S
 
 pub(crate) fn elided_marker_payload(meta: &ContributionMeta) -> String {
     format!(
-        "vibe:static {} — {}; zone elided: emitted member-by-member in this lane (once-each, B-006)",
+        "{STATIC_MARKER_PREFIX}{} — {}; zone elided: emitted member-by-member in this lane (once-each, B-006)",
         meta.origin, meta.path
     )
 }
@@ -209,7 +209,29 @@ pub(crate) fn hoisted_marker(syntax: CommentSyntax, origin: &str) -> String {
 /// The two halves of the hoisted contribution marker's payload, spelled once
 /// so [`hoisted_marker_payload`] and [`hoisted_marker_origin`] cannot drift.
 const HOISTED_MARKER_PREFIX: &str = "vibe:hoisted ";
+const STATIC_MARKER_PREFIX: &str = "vibe:static ";
+pub(crate) const HOISTED_USE_PREFIX: &str = "#use spec://";
 const HOISTED_MARKER_SUFFIX: &str = " — text in the root STATIC.md";
+
+pub(crate) fn raw_contribution_comment_prefix(text: &str) -> bool {
+    text.strip_prefix(GENERATED_COMMENT_OPEN)
+        .is_some_and(|payload| {
+            payload.starts_with(STATIC_MARKER_PREFIX) || payload.starts_with(HOISTED_MARKER_PREFIX)
+        })
+}
+
+/// Read only the package-coordinate #use row the hoisted emitter writes.
+pub(crate) fn read_hoisted_directive(
+    text: &str,
+) -> Option<(vibe_core::Group, vibe_core::PackageName)> {
+    let text = text.trim_matches([' ', '\t', '\r', '\n']);
+    let coordinate = text.strip_prefix(HOISTED_USE_PREFIX)?;
+    let (group, name) = coordinate.split_once('/')?;
+    Some((
+        vibe_core::Group::parse(group).ok()?,
+        vibe_core::PackageName::parse(name).ok()?,
+    ))
+}
 
 pub(crate) fn hoisted_marker_payload(origin: &str) -> String {
     format!("{HOISTED_MARKER_PREFIX}{origin}{HOISTED_MARKER_SUFFIX}")

@@ -24,7 +24,30 @@ pub(in crate::install) fn read_durable_resolution(
             crate::extension_world::ExtensionWorldError::NonRegularLock { path: lock_path },
         ));
     }
-    let lock = vibe_core::manifest::Lockfile::read(&lock_path).map_err(|error| {
+    // Only this caller-selected workspace may be admitted through an alias.
+    // All lock-derived slot components below it are no-follow descendants.
+    let physical = workspace_root
+        .canonicalize()
+        .map_err(|error| io_err(workspace_root, error))?;
+    let project = vibe_safefs::Project::open(&physical).map_err(|error| WorkspaceError::Io {
+        path: workspace_root.to_owned(),
+        reason: error.to_string(),
+    })?;
+    let bytes = project
+        .read_source_bytes(vibe_core::manifest::Lockfile::FILENAME)
+        .map_err(|error| WorkspaceError::Io {
+            path: lock_path.clone(),
+            reason: error.to_string(),
+        })?
+        .ok_or_else(|| WorkspaceError::Io {
+            path: lock_path.clone(),
+            reason: "durable lock disappeared during held read".into(),
+        })?;
+    let text = std::str::from_utf8(&bytes).map_err(|error| WorkspaceError::Io {
+        path: lock_path.clone(),
+        reason: error.to_string(),
+    })?;
+    let lock = vibe_core::manifest::Lockfile::parse_str(text).map_err(|error| {
         super::owner_plans::world_error(crate::extension_world::ExtensionWorldError::InvalidLock {
             path: lock_path.clone(),
             reason: error.to_string(),
@@ -33,7 +56,7 @@ pub(in crate::install) fn read_durable_resolution(
 
     lock.packages
         .iter()
-        .map(|package| durable_row(workspace_root, package, &lock))
+        .map(|package| durable_row(workspace_root, package, &lock, &project))
         .collect()
 }
 
@@ -41,6 +64,7 @@ fn durable_row(
     workspace_root: &Path,
     package: &vibe_core::manifest::LockedPackage,
     lock: &vibe_core::manifest::Lockfile,
+    project: &vibe_safefs::Project,
 ) -> Result<ResolvedDep, WorkspaceError> {
     let slot = match package.materialization {
         vibe_core::manifest::Materialization::InPlace => {
@@ -58,19 +82,44 @@ fn durable_row(
         "{}:{}/{}@{}",
         package.kind, package.group, package.name, package.version
     );
-    if !slot.is_dir() {
-        return Err(super::owner_plans::world_error(
-            crate::extension_world::ExtensionWorldError::MissingSlot {
-                package: locked,
-                slot,
-            },
-        ));
-    }
+    let relative = slot
+        .strip_prefix(workspace_root)
+        .map_err(|_| WorkspaceError::Io {
+            path: slot.clone(),
+            reason: "selected slot escaped workspace".into(),
+        })?;
+    let spelling = crate::path_to_slash(relative);
+    let pinned = project
+        .dir(&spelling.split('/').collect::<Vec<_>>(), false)
+        .map_err(|error| WorkspaceError::Io {
+            path: slot.clone(),
+            reason: format!("selected slot no-follow admission refused: {error}"),
+        })?;
     let manifest_path = slot.join(Manifest::FILENAME);
-    let manifest = Manifest::read(&manifest_path).map_err(|error| WorkspaceError::Manifest {
-        path: manifest_path,
-        source: Box::new(error),
-    })?;
+    let manifest_bytes = project
+        .read_source_bytes_in(&pinned, Manifest::FILENAME)
+        .map_err(|error| WorkspaceError::Io {
+            path: manifest_path.clone(),
+            reason: error.to_string(),
+        })?
+        .ok_or_else(|| {
+            super::owner_plans::world_error(
+                crate::extension_world::ExtensionWorldError::MissingSlot {
+                    package: locked.clone(),
+                    slot: slot.clone(),
+                },
+            )
+        })?;
+    let manifest_text =
+        std::str::from_utf8(&manifest_bytes).map_err(|error| WorkspaceError::Io {
+            path: manifest_path.clone(),
+            reason: error.to_string(),
+        })?;
+    let manifest =
+        Manifest::parse_str(manifest_text).map_err(|source| WorkspaceError::Manifest {
+            path: manifest_path,
+            source: Box::new(source),
+        })?;
     let declared = manifest.package.as_ref().ok_or_else(|| {
         super::owner_plans::world_error(
             crate::extension_world::ExtensionWorldError::SlotWithoutPackage { slot: slot.clone() },

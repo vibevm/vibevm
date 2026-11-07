@@ -23,6 +23,10 @@ const MINIFY_SPEC: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XM
 #[path = "xml_minify/validate.rs"]
 mod validate;
 
+#[path = "xml_minify/projection.rs"]
+mod projection;
+pub use projection::{EmittedXmlProjectionError, project_emitted_xml_to_markdown};
+
 /// Why the emitted-XML minifier refused an input stream.
 ///
 /// The byte offset is into the original UTF-8 input. The diagnostic is owned,
@@ -94,6 +98,13 @@ impl XmlMinifyError {
 /// ```
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY")]
 pub fn minify_emitted_xml(input: &str) -> Result<Cow<'_, str>, XmlMinifyError> {
+    render_without_ranges(input, scan_stream(input, None)?)
+}
+
+fn scan_stream(
+    input: &str,
+    mut capture: Option<&mut projection::StreamCapture>,
+) -> Result<Vec<Range<usize>>, XmlMinifyError> {
     let mut reader = Reader::from_str(input);
     reader.config_mut().trim_text(false);
     reader.config_mut().check_comments = true;
@@ -115,6 +126,10 @@ pub fn minify_emitted_xml(input: &str) -> Result<Cow<'_, str>, XmlMinifyError> {
             )
         })?;
         let end = reader.buffer_position() as usize;
+
+        if let Some(capture) = capture.as_deref_mut() {
+            capture.observe(input, &event, start..end, frames.len())?;
+        }
 
         match event {
             Event::Start(element) => {
@@ -156,6 +171,14 @@ pub fn minify_emitted_xml(input: &str) -> Result<Cow<'_, str>, XmlMinifyError> {
                 })?;
                 validate_xml_10_characters(&decoded, "text", start)?;
                 let whitespace = is_xml_whitespace(&decoded);
+                if frames.is_empty()
+                    && !whitespace
+                    && capture
+                        .as_deref_mut()
+                        .is_some_and(|capture| capture.accept_hoisted_text(&decoded))
+                {
+                    continue;
+                }
                 record_character_data(frames.last_mut(), start..end, whitespace, start)?;
             }
             Event::GeneralRef(reference) => {
@@ -235,13 +258,17 @@ pub fn minify_emitted_xml(input: &str) -> Result<Cow<'_, str>, XmlMinifyError> {
         }
     }
 
-    if !saw_element {
+    if !saw_element
+        && !capture
+            .as_ref()
+            .is_some_and(|capture| capture.has_outer_framing())
+    {
         return Err(XmlMinifyError::new(
             0,
             "the emitted XML stream contains no element",
         ));
     }
-    render_without_ranges(input, deletions)
+    Ok(deletions)
 }
 
 #[derive(Debug, Default)]

@@ -4,6 +4,23 @@ specmark::scope!(
 );
 use super::*;
 
+/// Resolve native captured bytes without granting any filesystem or source
+/// authority. The caller owns the metadata/byte observation and read role.
+pub fn resolve_captured_declared_source(
+    address: &SpecAddress,
+    metadata: ResolvedSourceMetadata,
+    bytes: &[u8],
+    media: &str,
+    interpretation: vibe_core::manifest::SourceInterpretation,
+) -> Result<ResolvedSource, String> {
+    if metadata.format() != "markdown" {
+        return Err("violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ-LAW: captured native projection requires builtin markdown metadata; fix surface: root source metadata format".into());
+    }
+    let projected = crate::project_declared_native(bytes, media, interpretation)?;
+    resolve_section(&projected, metadata.origin(), address)
+        .map(|text| ResolvedSource::markdown(text, metadata.physical_stem))
+}
+
 impl FsSectionSource {
     #[specmark::spec(
         implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
@@ -45,24 +62,24 @@ impl FsSectionSource {
             location.resolved.physical_stem.clone(),
         )?;
         let overlay = self.overlay.get(metadata.origin());
-        let owned;
-        let bytes = match overlay {
-            Some(bytes) => bytes.as_ref(),
-            None => {
-                owned = location.read().map_err(|error| error.to_string())?;
-                owned.as_slice()
-            }
-        };
+        let observed = location
+            .read_with_overlay(overlay.map(|bytes| bytes.as_ref()))
+            .map_err(|error| error.to_string())?;
+        let bytes = observed.as_ref();
         if metadata.format() == "markdown" {
-            let projected = project_bytes(
-                metadata.origin(),
-                bytes,
-                if overlay.is_some() {
-                    "overlay"
-                } else {
-                    "filesystem"
-                },
-            )?;
+            let projected = if let Some((interpretation, media)) = location.declared_media() {
+                crate::project_declared_native(bytes, media, interpretation)?
+            } else {
+                project_bytes(
+                    metadata.origin(),
+                    bytes,
+                    if overlay.is_some() {
+                        "overlay"
+                    } else {
+                        "filesystem"
+                    },
+                )?
+            };
             return resolve_section(&projected, metadata.origin(), address)
                 .map(|text| ResolvedSource::markdown(text, metadata.physical_stem));
         }

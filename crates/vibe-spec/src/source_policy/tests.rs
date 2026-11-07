@@ -157,3 +157,17 @@ fn source_exports_only_presence_is_explicit_empty_not_legacy() {
         assert!(policy.package().unwrap().sources.is_none());
     }
 }
+#[test]
+fn recheck_in_rejects_unrelated_supplied_capability_and_changed_metadata() {
+    let root = tempfile::tempdir().unwrap();
+    fs::create_dir(root.path().join("a")).unwrap();
+    fs::create_dir(root.path().join("b")).unwrap();
+    let project = vibe_safefs::Project::open(root.path()).unwrap();
+    let a = project.dir(&["a"], false).unwrap();
+    let b = project.dir(&["b"], false).unwrap();
+    let policy = super::observe_package_policy_in(&project, &a).unwrap();
+    policy.recheck_in(&project, &a).unwrap();
+    assert!(policy.recheck_in(&project, &b).is_err());
+    fs::write(a.join("vibe.toml"), PACKAGE).unwrap();
+    assert!(policy.recheck_in(&project, &a).is_err());
+}

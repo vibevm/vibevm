@@ -492,6 +492,17 @@ fn run(
         },
         |address, reason| schedule.record_failure(address, reason),
     )?;
+    if let Some((address, reason)) = worklist.reference_refusal {
+        return Err(attribute_compile_error(
+            crate::pipeline::CompileError::Unresolved {
+                addr: address.to_string(),
+                reason,
+            },
+            &plan,
+            &worklist.owners,
+            None,
+        ));
+    }
     schedule.close_state.set_pending_sources(worklist.sources);
     schedule.close_state.set_pending_embeds(worklist.embeds);
     schedule.emit(worklist.documents, &plan, &worklist.owners, trace)

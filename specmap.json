@@ -27285,6 +27285,24 @@
     },
     {
       "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/scan/declared/data_tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_facts::scan::declared::data_tests",
+      "end_line": 2,
+      "fingerprint": "tok1:dc171c4b25ea83b209a9af2f278148b5025eba38bcc81405e77bf8291c2c6a22"
+    },
+    {
+      "crate_name": "vibe-facts",
+      "file": "crates/vibe-facts/src/scan/declared/data_tests.rs",
+      "item_kind": "fn",
+      "line": 6,
+      "symbol": "vibe_facts::scan::declared::data_tests::optional_data_inspection_preserves_raw_and_unrelated_native_facts",
+      "end_line": 49,
+      "fingerprint": "tok1:cbd489569b4ef7cd91fb857dc17d22b4abc66402c737f957e32ed035cb726250"
+    },
+    {
+      "crate_name": "vibe-facts",
       "file": "crates/vibe-facts/src/scan/declared/export.rs",
       "item_kind": "mod",
       "line": 2,
@@ -44360,9 +44378,9 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/compiler/worklist/tests.rs",
       "item_kind": "fn",
-      "line": 177,
+      "line": 180,
       "symbol": "vibe_spec::compiler::worklist::tests::infallible_callback_yields_the_exact_historical_worklist",
-      "end_line": 257,
+      "end_line": 260,
       "fingerprint": "tok1:d621d0ef08b1f3453c8a26fc2ed14bb1c3fc227c27659759ed2905f05aa02d19"
     },
     {
@@ -44414,9 +44432,9 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/embed/read.rs",
       "item_kind": "fn",
-      "line": 8,
+      "line": 25,
       "symbol": "vibe_spec::embed::read::FsSectionSource::read_resolved",
-      "end_line": 35,
+      "end_line": 52,
       "fingerprint": "tok1:b5358b73f4e70dce4072c2cd8e1f2211abcd99531502558e6becc05002b5ec81"
     },
     {
@@ -44709,6 +44727,15 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/resolver/declared.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::resolver::declared",
+      "end_line": 2,
+      "fingerprint": "tok1:f343dd0e7212f27a85bd6a65a9af4fc15f297c6363a7d4bfbb2cabd74164faf4"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/resolver/glob.rs",
       "item_kind": "mod",
       "line": 6,
@@ -44837,10 +44864,37 @@
       "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/transforms/xml_minify.rs",
       "item_kind": "fn",
-      "line": 66,
+      "line": 70,
       "symbol": "vibe_spec::transforms::xml_minify::minify_emitted_xml",
-      "end_line": 245,
-      "fingerprint": "tok1:5701de4b203569661a3375263c8dc1020c4de1a79e8051114d1101478fe2b2e4"
+      "end_line": 102,
+      "fingerprint": "tok1:0e30f813aa53c3f35de7c628e029cdcc17dd502681c553f5921e86835297370f"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/projection.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::transforms::xml_minify::projection",
+      "end_line": 4,
+      "fingerprint": "tok1:f0e3edd718aa3d11f8cd65936b8b77c535370bda6d1673d7ab8b23351d826dbb"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/projection.rs",
+      "item_kind": "fn",
+      "line": 143,
+      "symbol": "vibe_spec::transforms::xml_minify::projection::project_emitted_xml_to_markdown",
+      "end_line": 207,
+      "fingerprint": "tok1:a6c5cf0d83857ace9a3a8cc2fd215cfe81870b264ffe9d5964c634ffff0898f1"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/transforms/xml_minify/projection_tests.rs",
+      "item_kind": "fn",
+      "line": 46,
+      "symbol": "vibe_spec::transforms::xml_minify::projection_tests::actual_multiple_root_static_projects_anchors_nested_events_and_frames",
+      "end_line": 78,
+      "fingerprint": "tok1:14d835712c24fac8b54329030e4b5ffa220497ed6ebcd81266d0be2bb1059338"
     },
     {
       "crate_name": "vibe-spec",
@@ -44976,6 +45030,15 @@
       "symbol": "vibe_specdoc::annotated",
       "end_line": 6,
       "fingerprint": "tok1:97c1b37509084ca61eaf9ecbfa50c7e2a49f604b215dbde8c562691d6b9cbe2d"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/annotated/markdown.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_specdoc::annotated::markdown",
+      "end_line": 5,
+      "fingerprint": "tok1:92d689a5bc859464de991c81782b1b6f2c6955e3ad41763341f251ac314ffbd2"
     },
     {
       "crate_name": "vibe-specdoc",
@@ -45138,6 +45201,51 @@
       "symbol": "vibe_specdoc::xml_comment",
       "end_line": 8,
       "fingerprint": "tok1:412350d95fea63e3fcd495d68da0e07fb375430bbb0049c389eaa101f81802b3"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_data.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_specdoc::xml_data",
+      "end_line": 6,
+      "fingerprint": "tok1:dc171c4b25ea83b209a9af2f278148b5025eba38bcc81405e77bf8291c2c6a22"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_data/inspect.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_specdoc::xml_data::inspect",
+      "end_line": 2,
+      "fingerprint": "tok1:dc171c4b25ea83b209a9af2f278148b5025eba38bcc81405e77bf8291c2c6a22"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_data.rs",
+      "item_kind": "fn",
+      "line": 123,
+      "symbol": "vibe_specdoc::xml_data::inspect_xml_data",
+      "end_line": 144,
+      "fingerprint": "tok1:709a097b7a22420c5c6df0d58912e6baa7f2daba8db7c9c4c808e0b83b345eb3"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_data.rs",
+      "item_kind": "fn",
+      "line": 105,
+      "symbol": "vibe_specdoc::xml_data::preserve_opaque",
+      "end_line": 122,
+      "fingerprint": "tok1:32ae19a6dc94e101d31364bca6361119d866903caed015d472b99132a78feea5"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_data/tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_specdoc::xml_data::tests",
+      "end_line": 2,
+      "fingerprint": "tok1:dc171c4b25ea83b209a9af2f278148b5025eba38bcc81405e77bf8291c2c6a22"
     },
     {
       "crate_name": "vibe-specdoc",
@@ -45717,6 +45825,42 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/boot_artifacts/compile.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::boot_artifacts::compile",
+      "end_line": 2,
+      "fingerprint": "tok1:1b32b44e6fa3ea869e573e5768f899c3dee3a58d9a6d9fce8887bb031deafb96"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/boot_artifacts/declared_sources.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::boot_artifacts::declared_sources",
+      "end_line": 5,
+      "fingerprint": "tok1:7712f265464d4f184251cf8150e20b394d6e7069f2f5d4b93f0293d81185bf86"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/boot_artifacts/declared_sources/generated.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::boot_artifacts::declared_sources::generated",
+      "end_line": 5,
+      "fingerprint": "tok1:7712f265464d4f184251cf8150e20b394d6e7069f2f5d4b93f0293d81185bf86"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/boot_artifacts/declared_sources/source.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::boot_artifacts::declared_sources::source",
+      "end_line": 5,
+      "fingerprint": "tok1:7712f265464d4f184251cf8150e20b394d6e7069f2f5d4b93f0293d81185bf86"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts/format.rs",
       "item_kind": "mod",
       "line": 3,
@@ -45777,6 +45921,15 @@
       "symbol": "vibe_workspace::boot_artifacts::native_managed",
       "end_line": 3,
       "fingerprint": "tok1:308590c5362399380a59b13c0b2841f12add4b3a3e68302782bee6d90642e83d"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/boot_artifacts/native_managed/write.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::boot_artifacts::native_managed::write",
+      "end_line": 2,
+      "fingerprint": "tok1:45d138f501d4d09b8d66480becdbd7bd790e248551f4de374195eeddcb4a3f18"
     },
     {
       "crate_name": "vibe-workspace",
@@ -45980,9 +46133,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 432,
+      "line": 275,
       "symbol": "vibe_workspace::boot_artifacts::write_boot_artifacts",
-      "end_line": 460,
+      "end_line": 303,
       "fingerprint": "tok1:3ae117637c16689c1be6edc2d782eaa5c12463ff73cc773cd72b24163a642c8d"
     },
     {
@@ -46662,6 +46815,33 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "item_kind": "fn",
+      "line": 231,
+      "symbol": "vibe_workspace::install::bootgen::analyze::analyze_node_lane_bound_native_with_source_format",
+      "end_line": 254,
+      "fingerprint": "tok1:0d76d14ac62d8696bd48055ee7016485b04727e5ad129e842ac44e31c6b5c55f"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "item_kind": "fn",
+      "line": 90,
+      "symbol": "vibe_workspace::install::bootgen::analyze::analyze_node_lane_with_source_format",
+      "end_line": 102,
+      "fingerprint": "tok1:c2ecd5864b4d812e4cc35f991da17c91cce4c4e1e2ebdfa5588239a43eb6ecb2"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "item_kind": "fn",
+      "line": 362,
+      "symbol": "vibe_workspace::install::bootgen::analyze::compile_node_backend_with_source_format",
+      "end_line": 383,
+      "fingerprint": "tok1:f12cd0750b106ccf26d299d2b5c56b87cc567177f42926aa818fc76d69bacea7"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/conditions.rs",
       "item_kind": "mod",
       "line": 3,
@@ -46680,6 +46860,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/generated_inputs.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::install::bootgen::generated_inputs",
+      "end_line": 5,
+      "fingerprint": "tok1:7712f265464d4f184251cf8150e20b394d6e7069f2f5d4b93f0293d81185bf86"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "item_kind": "mod",
       "line": 6,
@@ -46691,28 +46880,37 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "item_kind": "fn",
-      "line": 424,
+      "line": 339,
       "symbol": "vibe_workspace::install::bootgen::hybrid_emit::append_hoisted",
-      "end_line": 475,
+      "end_line": 390,
       "fingerprint": "tok1:734197f1b90e840bcf1b94b0c103e5ebbd8d48af7ad116cf88748acdfa5f32bb"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "item_kind": "fn",
-      "line": 43,
-      "symbol": "vibe_workspace::install::bootgen::hybrid_emit::build_unit_table",
-      "end_line": 122,
-      "fingerprint": "tok1:0bf4dcf1551778881d4406c0af671de96ee2fe2487148dfa37cbfa3efd3b7334"
+      "line": 48,
+      "symbol": "vibe_workspace::install::bootgen::hybrid_emit::emit_package_units",
+      "end_line": 206,
+      "fingerprint": "tok1:86e337b7e0e7bf0c4286aeffc07d4ab4e0db313f58d318fe3ff5692bd31fea07"
     },
     {
       "crate_name": "vibe-workspace",
-      "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
+      "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit/table.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::install::bootgen::hybrid_emit::table",
+      "end_line": 2,
+      "fingerprint": "tok1:9511caf508e968c89cb0da73c7b9ef9732475969e85e0776fb3d5bd3989f590b"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit/table.rs",
       "item_kind": "fn",
-      "line": 140,
-      "symbol": "vibe_workspace::install::bootgen::hybrid_emit::emit_package_units",
-      "end_line": 293,
-      "fingerprint": "tok1:20e42a7a968b3ad68e0ce6c2f48bb4c7d20033cb36dd81eb16c2fb7703a27c61"
+      "line": 6,
+      "symbol": "vibe_workspace::install::bootgen::hybrid_emit::table::build_unit_table",
+      "end_line": 33,
+      "fingerprint": "tok1:130cdded9caf9baf5a814c49be274567891882c69ffa6c1b4a2eebde28475ace"
     },
     {
       "crate_name": "vibe-workspace",
@@ -46727,9 +46925,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "item_kind": "fn",
-      "line": 488,
+      "line": 403,
       "symbol": "vibe_workspace::install::bootgen::hybrid_emit::verify_fingerprints",
-      "end_line": 572,
+      "end_line": 487,
       "fingerprint": "tok1:cdbdcd416a60ec5dad2bbfbc2b8ae1bc402287a30b6d19b6b4720850b4f33541"
     },
     {
@@ -46738,8 +46936,8 @@
       "item_kind": "fn",
       "line": 5,
       "symbol": "vibe_workspace::install::bootgen::node_dependency::node_dependency_boot",
-      "end_line": 147,
-      "fingerprint": "tok1:37a8eb273c7133dc68970c0a0684adae82a2d3926316aafab914fd779382ea8b"
+      "end_line": 159,
+      "fingerprint": "tok1:de2e2829241bdadab2fc67c94a08da8fb382bfc10a8ef6a7734916ffab79de24"
     },
     {
       "crate_name": "vibe-workspace",
@@ -46817,19 +47015,19 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 401,
+      "line": 430,
       "symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "end_line": 437,
+      "end_line": 466,
       "fingerprint": "tok1:9d08758b1e16a710bbfa572f2ce3046d6e310f18c933ba54f3f2830ac4c1624a"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 302,
+      "line": 324,
       "symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "end_line": 334,
-      "fingerprint": "tok1:59bcdc58df73e3c62002c8068aa146e54c8502dc4e80f014f5352991cb91c6c5"
+      "end_line": 363,
+      "fingerprint": "tok1:fd0069173227680d5df5546f75a7081c92dd7ca471270c7e0ab2cef5fb7dd9d9"
     },
     {
       "crate_name": "vibe-workspace",
@@ -48084,6 +48282,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/declared_read.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::vibedeps::declared_read",
+      "end_line": 2,
+      "fingerprint": "tok1:f343dd0e7212f27a85bd6a65a9af4fc15f297c6363a7d4bfbb2cabd74164faf4"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
       "item_kind": "mod",
       "line": 3,
@@ -48093,11 +48300,20 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/vibedeps/derived/declared.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::vibedeps::derived::declared",
+      "end_line": 2,
+      "fingerprint": "tok1:a66c626254352ceef7e2c4027f4549a425688eaa0aa462e21a43208f6af94e2a"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
       "item_kind": "fn",
-      "line": 450,
+      "line": 457,
       "symbol": "vibe_workspace::vibedeps::derived::is_generated_boot_artifact",
-      "end_line": 462,
+      "end_line": 469,
       "fingerprint": "tok1:767364105f91a49726aa1e0a3c59f2208df84da6b9e9d70f98edbc9399505dc0"
     },
     {
@@ -48122,9 +48338,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
       "item_kind": "fn",
-      "line": 490,
+      "line": 515,
       "symbol": "vibe_workspace::vibedeps::slot_diff::collect_source_files",
-      "end_line": 525,
+      "end_line": 550,
       "fingerprint": "tok1:db8ba9aba84420b52c76b7cb45aa204c02df647d6ba8d9bc25fd975c077ffcb8"
     },
     {
@@ -66572,6 +66788,23 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-facts/src/scan/declared/data_tests.rs",
+      "from_symbol": "vibe_facts::scan::declared::data_tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DATA-INSPECTION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-facts/src/scan/declared/data_tests.rs",
+      "from_symbol": "vibe_facts::scan::declared::data_tests::optional_data_inspection_preserves_raw_and_unrelated_native_facts",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DATA-INSPECTION",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-facts/src/scan/declared/export.rs",
       "from_symbol": "vibe_facts::scan::declared::export",
       "line": 2,
@@ -82199,7 +82432,7 @@
     {
       "file": "crates/vibe-spec/src/compiler/worklist/tests.rs",
       "from_symbol": "vibe_spec::compiler::worklist::tests::infallible_callback_yields_the_exact_historical_worklist",
-      "line": 178,
+      "line": 181,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#IR-REFACTOR",
       "verb": "verifies"
@@ -82247,7 +82480,7 @@
     {
       "file": "crates/vibe-spec/src/embed/read.rs",
       "from_symbol": "vibe_spec::embed::read::FsSectionSource::read_resolved",
-      "line": 8,
+      "line": 25,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ",
       "verb": "implements"
@@ -82541,6 +82774,14 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-spec/src/resolver/declared.rs",
+      "from_symbol": "vibe_spec::resolver::declared",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ-LAW",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-spec/src/resolver/glob.rs",
       "from_symbol": "vibe_spec::resolver::glob",
       "line": 6,
@@ -82655,10 +82896,34 @@
     {
       "file": "crates/vibe-spec/src/transforms/xml_minify.rs",
       "from_symbol": "vibe_spec::transforms::xml_minify::minify_emitted_xml",
-      "line": 95,
+      "line": 99,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#TEST-XML-MINIFY",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/projection.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::projection",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-GENERATED-XML-PROJECTION-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/projection.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::projection::project_emitted_xml_to_markdown",
+      "line": 156,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-GENERATED-XML-PROJECTION-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-spec/src/transforms/xml_minify/projection_tests.rs",
+      "from_symbol": "vibe_spec::transforms::xml_minify::projection_tests::actual_multiple_root_static_projects_anchors_nested_events_and_frames",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-GENERATED-XML-PROJECTION-LAW",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-spec/src/transforms/xml_minify/tests.rs",
@@ -82787,6 +83052,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#EMBED-GENERATED-PROVENANCE",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/annotated/markdown.rs",
+      "from_symbol": "vibe_specdoc::annotated::markdown",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-GENERATED-XML-PROJECTION",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-specdoc/src/annotated/tests.rs",
@@ -82932,6 +83206,48 @@
       "line": 8,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_data.rs",
+      "from_symbol": "vibe_specdoc::xml_data",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DATA-INSPECTION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_data/inspect.rs",
+      "from_symbol": "vibe_specdoc::xml_data::inspect",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DATA-INSPECTION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_data.rs",
+      "from_symbol": "vibe_specdoc::xml_data::inspect_xml_data",
+      "line": 136,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DATA-INSPECTION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_data.rs",
+      "from_symbol": "vibe_specdoc::xml_data::preserve_opaque",
+      "line": 113,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DATA-INSPECTION",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_data/tests.rs",
+      "from_symbol": "vibe_specdoc::xml_data::tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DATA-INSPECTION",
       "verb": "implements"
     },
     {
@@ -83462,6 +83778,41 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/boot_artifacts/compile.rs",
+      "from_symbol": "vibe_workspace::boot_artifacts::compile",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#artifacts",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/boot_artifacts/declared_sources.rs",
+      "from_symbol": "vibe_workspace::boot_artifacts::declared_sources",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/boot_artifacts/declared_sources/generated.rs",
+      "from_symbol": "vibe_workspace::boot_artifacts::declared_sources::generated",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/boot_artifacts/declared_sources/source.rs",
+      "from_symbol": "vibe_workspace::boot_artifacts::declared_sources::source",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-workspace/src/boot_artifacts/format.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::format",
       "line": 3,
@@ -83515,6 +83866,14 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/boot_artifacts/native_managed/write.rs",
+      "from_symbol": "vibe_workspace::boot_artifacts::native_managed::write",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-ACTIVATION",
       "verb": "implements"
     },
     {
@@ -83721,7 +84080,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::write_boot_artifacts",
-      "line": 443,
+      "line": 286,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#co-tenant",
       "verb": "implements",
@@ -84359,6 +84718,33 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::analyze::analyze_node_lane_bound_native_with_source_format",
+      "line": 232,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::analyze::analyze_node_lane_with_source_format",
+      "line": 91,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::analyze::compile_node_backend_with_source_format",
+      "line": 363,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-workspace/src/install/bootgen/conditions.rs",
       "from_symbol": "vibe_workspace::install::bootgen::conditions",
       "line": 3,
@@ -84375,6 +84761,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/install/bootgen/generated_inputs.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::generated_inputs",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "from_symbol": "vibe_workspace::install::bootgen::hybrid_emit",
       "line": 6,
@@ -84385,7 +84780,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "from_symbol": "vibe_workspace::install::bootgen::hybrid_emit::append_hoisted",
-      "line": 430,
+      "line": 345,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#hoisting",
       "verb": "implements",
@@ -84393,17 +84788,25 @@
     },
     {
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
-      "from_symbol": "vibe_workspace::install::bootgen::hybrid_emit::build_unit_table",
-      "line": 50,
+      "from_symbol": "vibe_workspace::install::bootgen::hybrid_emit::emit_package_units",
+      "line": 60,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units",
       "verb": "implements",
       "pinned_r": 1
     },
     {
-      "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
-      "from_symbol": "vibe_workspace::install::bootgen::hybrid_emit::emit_package_units",
-      "line": 152,
+      "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit/table.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::hybrid_emit::table",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit/table.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::hybrid_emit::table::build_unit_table",
+      "line": 13,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units",
       "verb": "implements",
@@ -84420,7 +84823,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
       "from_symbol": "vibe_workspace::install::bootgen::hybrid_emit::verify_fingerprints",
-      "line": 494,
+      "line": 409,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
       "verb": "implements",
@@ -84501,7 +84904,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 410,
+      "line": 439,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#PLAN-TIME-VALIDATION",
       "verb": "implements"
@@ -84509,7 +84912,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 406,
+      "line": 435,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#plan-time",
       "verb": "implements",
@@ -84518,7 +84921,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "line": 303,
+      "line": 325,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
       "verb": "implements",
@@ -85715,6 +86118,14 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-workspace/src/vibedeps/declared_read.rs",
+      "from_symbol": "vibe_workspace::vibedeps::declared_read",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ-LAW",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
       "from_symbol": "vibe_workspace::vibedeps::derived",
       "line": 3,
@@ -85723,9 +86134,17 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/vibedeps/derived/declared.rs",
+      "from_symbol": "vibe_workspace::vibedeps::derived::declared",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DECLARED-MATERIALIZATION",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
       "from_symbol": "vibe_workspace::vibedeps::derived::is_generated_boot_artifact",
-      "line": 454,
+      "line": 461,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
       "verb": "implements"
@@ -85749,7 +86168,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
       "from_symbol": "vibe_workspace::vibedeps::slot_diff::collect_source_files",
-      "line": 490,
+      "line": 515,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
       "verb": "implements"
@@ -98741,7 +99160,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:8a95e60f219e0cc8c425b82746609e65a7f6914e8ad4406e271b88f62a471c75",
+      "content_hash": "sha256:2047008b2062296551d03f59d18755c945689362e327a14e36f970ab90fd474f",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "PROP-045: XML spec sources and materialisation targets",
@@ -98957,7 +99376,7 @@
     },
     {
       "anchor": "loaders",
-      "content_hash": "sha256:eca0dbfd47ce0945e8bc281f17330124c263c9d89af75e8858c9d6545b491f6a",
+      "content_hash": "sha256:a06bef566433028dc437607d86bce59caddbd1e2484d363d5357aac0a48863b7",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
       "heading": "4. Loaders and scanners read all three",
@@ -98966,10 +99385,10 @@
     },
     {
       "anchor": "EXPLICIT-SOURCE-BOUNDARY",
-      "content_hash": "sha256:681fb5110400681f5286007430f2c88c53d1b4f87e4fd0548b42a2112556a074",
+      "content_hash": "sha256:a3891d13860c72c5d74d535000227ad827551817bfc82a61adf05f4648904fbb",
       "doc_path": "common/PROP-045",
       "file": "vibevm/vibespecs/common/PROP-045-xml-spec-sources.xml",
-      "heading": "The suffix dispatch described below remains the legacy package/content-tree branch. Package sources presence selects PROP-072's declaration policy, including an empty list with no semantic inputs. The bounded exact-file facts reader dispatches captured bytes by declared media and interpretation, independent of suffix; raw resources cannot mint native facts. Other root-aware consumers either support that policy or refuse before semantic effects. Ordinary declared boot compilation and transformed materialization remain downstream work, not implicit fallback through the legacy XML/Markdown projection. The shared specdoc pivot remains a pure byte/text reader and never discovers manifests. @status:spec/done",
+      "heading": "The suffix dispatch described below remains the legacy package/content-tree branch. Presence of package sources or source_exports selects PROP-072's explicit declaration policy; without selected source rows it grants no semantic inputs. The bounded exact-file facts reader dispatches captured bytes by declared media and interpretation, independent of suffix; raw resources cannot mint native facts. Other root-aware consumers either support that policy or refuse before semantic effects. Declared native materialization and selected installed boot reads now follow the recorded original-to-output map and declared media, including Simple inputs. Original logical paths retain their native addresses across conversion; raw resources never borrow those addresses. Broader host/query/documentation consumers retain their explicit support or refusal boundaries, not implicit fallback through legacy XML/Markdown projection. The shared specdoc pivot remains a pure byte/text reader and never discovers manifests. @status:spec/done",
       "line": 324,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#EXPLICIT-SOURCE-BOUNDARY"
     },
@@ -112402,6 +112821,86 @@
       "heading": "Named ordinary exports resolve through the descriptor-selected captured CommonMark observation. The join checks the selected resource and interpretation, the exact parsed source bytes and the existing SourceFileWitness; it returns export identity, source witness and document-local selection without minting normative facts or new authority. Core export-name/path validation and host source witnesses are reused rather than redefined inside the parser. Ambiguous, missing, malformed or unavailable structure yields a typed export failure while raw captured bytes remain readable. Ordinary structure failure does not invalidate unrelated native facts. A parser plus a declaration field alone is not delivery: actual captured Mixed installed source to export resolution is required. @status:spec/done",
       "line": 13,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-EXPORT-RESOLUTION"
+    },
+    {
+      "anchor": "SOURCE-DATA-INSPECTION",
+      "content_hash": "sha256:0952c40085153621e37b063accbdd9c93b472d03a4d987148b2ddf6baecc5c96",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Optional preserved XML-data inspection",
+      "line": 14,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DATA-INSPECTION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-DATA-INSPECTION-LAW",
+      "content_hash": "sha256:15e8ac7df1fb7eabde4ae7fa016e35ad1a2da4c3ce666815160352dee0f82182",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Opaque preservation and optional XML-data inspection borrow the exact caller-supplied bytes; raw retrieval never depends on decoding, structural success or a budget. Inspection is NotRequested, Available with a root lexical name and event counts/depth, or Unavailable with a typed reason. The optional UTF-8 XML 1.0 profile uses the existing quick-xml event, attribute and reference machinery, enables end-name/comment checks, rejects DTDs and external/unknown references, and performs no resolution, network, filesystem, provider or native Vibe interpretation. Explicit caller-provided input, depth, element and text-work budgets limit only optional inspection; no hidden global raw-source quota exists. Available is a non-validating event summary, not a DOM, full XML validity certificate, namespace proof, source identity or trust assertion. Unsupported encoding, malformed event structure and limits preserve all original bytes including BOM, comments and line endings. The summary counts non-declaration processing instructions as inert events without interpreting their target/content, attributes or URLs. Complete Name/QName and PI-target grammar and namespace bindings are not validated: malformed lexical names or reserved PI targets accepted by the upstream event reader may still yield Available. The declaration profile permits only an initial declaration after an optional UTF-8 BOM, version 1.0, optional UTF-8 encoding and standalone yes/no in standard order, using the upstream checked attribute iterator; duplicate/unknown fields and late declarations refuse. Text-work bytes count raw Text/CDATA payloads and reference spellings, including outside whitespace, but exclude attributes, comments, markup delimiters and BOM. Budgets are input bytes, nesting depth, element count, text-work bytes and non-EOF event count, each independently optional and explicitly supplied. They are not wall-time bounds. Inspection failure must not invalidate unrelated native facts. Actual A3 install/derive/read and selected installed boot-map integration remain separate obligations. @status:spec/done",
+      "line": 16,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DATA-INSPECTION-LAW"
+    },
+    {
+      "anchor": "SOURCE-INSTALLED-READ",
+      "content_hash": "sha256:985f0f1b5cd44142bb5a7b24d2d8a580543c179cd019dcee43e19c295752556a",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Bound installed declared-source reading",
+      "line": 18,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-INSTALLED-READ-LAW",
+      "content_hash": "sha256:0244ac4f34780ebe7bf6014a608e3998f862de41375d7ee19379e293c64830af",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "The workspace remains the sole installed-slot record parser and validator. It prepares source/output rows and opaque captured manifest/record bytes from held roots and independently selected package identity, source hash and materialized input format. The lower spec reader receives data, not a new filesystem grant or duplicated record parser. Actual reads bind the provided held slot to its policy checkpoint and compare metadata before and after reading the same output buffer against its recorded digest. Installed self slots are descendants, never newly canonicalized caller-root aliases. Complete selected coordinate/version sets are preserved; declared branches with absent required binding refuse rather than fall back to newest or suffix lookup. Pattern inventory must recheck its metadata even when no member matches. Original logical source, physical output path and native semantic address remain distinct. Declared media drives both Simple and Normal projection. Converted output witnesses do not prove original-file SHA or source authentication. Generated STATIC/substitution/replay inputs retain their separate incumbent artifact lane and never become authored descriptors or public source addresses. Generated bytes must be captured through the existing publication or validated-reuse owner before later consumption; topology-selected filenames and a digest computed after reading them are not by themselves that evidence. Reuse retains the incumbent INDEX fingerprint/pending and artifact-presence contract, without claiming cryptographic authentication of editable output. Prepared replay bytes retain their existing publication ownership. Only typed initial generated seeds use the artifact-stream projection path; ordinary reference admission runs before worklist cache reuse, including when a generated root was already resolved. Prior emitted framing remains observed prior data and cannot authenticate or remint current source/EmbedTape authority. Current attribution derives from the current compiler witness. Raw artifact bytes/digest stay distinct from canonical Markdown projection positions, which retain the XmlProjected diagnostic label without injecting prose into parsed text. Unit emission validates the independently selected source hash and read binding before reusable-artifact shortcuts. Prepared bindings contain a nonoptional source hash; a lost replay read context refuses even when a slot record still carries a hash. Bound analysis and backend overloads take selected materialized input format from the incumbent command selection owner. Legacy unbound wrappers retain legacy behavior and specifically refuse declared missing binding; unbound boot-graph verification cannot report a guessed declared fingerprint. @status:spec/done",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ-LAW"
+    },
+    {
+      "anchor": "SOURCE-DECLARED-MATERIALIZATION",
+      "content_hash": "sha256:482115eb8928739e3321c0a96012692fd96f66555f717e2e8de23cfbfb7157c5",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Declared native conversion and raw publication",
+      "line": 22,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DECLARED-MATERIALIZATION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-DECLARED-MATERIALIZATION-LAW",
+      "content_hash": "sha256:c3c4218b605f78f6f2f74adbbb35fe9b06a84b27741d4acd40af94b6dcc3ccc9",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Declared interpretation precedes conversion. Ordinary CommonMark, XML-data, opaque and unclassified resources retain original paths and bytes; only supported selected native source enters the incumbent converter by declared media. Original logical address comes from the original declared path, not a renamed output. Raw same-stem resources coexist, while actual output and native-address collisions refuse before metadata, earlier slots or hooks. Materializer-owned finite preparation supplies this decision; it is not an immutable global source census or transaction. Observed new/absent paths publish without replacement and refuse a newly appearing occupant; recognized recorded updates retain their existing cooperative law. Matching unrecorded occupants and shared inode permissions remain protected. Independently selected materialized input format is not inferred from STATIC suffix or slot record; boot rendering format is separate. Unsupported vocabulary or missing evidence is explicit. Directory defaults require an honestly scoped payload inventory, not a fabricated global completeness claim or permanent refusal inherited without review. @status:spec/done",
+      "line": 24,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DECLARED-MATERIALIZATION-LAW"
+    },
+    {
+      "anchor": "SOURCE-GENERATED-XML-PROJECTION",
+      "content_hash": "sha256:953e86b5241586a9b9eb4e105bffee6d09fd17c853330688e1d5a57107310a43",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Generated XML stream projection",
+      "line": 26,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-GENERATED-XML-PROJECTION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-GENERATED-XML-PROJECTION-LAW",
+      "content_hash": "sha256:5831d14a121c71f155888ff0a0857edb94faf4d5aabd7bde49be15eb3f9e674d",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Generated-artifact projection is separate from authored single-document source parsing. The generated profile reads native Spec vocabulary roots, repeated declarations, outer framing, generated inner c1 events and incumbent hoisted comment/#use rows through the existing emitted-stream event owner and framing codec. Hoisted syntax belongs only to this projection profile; minifier acceptance and exact-byte deletion semantics remain unchanged. Each document enters the existing SpecDoc pivot and canonical Markdown writer; semantic generated events are placed through reader/writer mappings, never sentinel strings or escaped-text inference. Outer framing and hoisted rows retain their bytes, declarations are omitted as representation metadata, and canonical separators may be added. Ordinary inner comments remain layout under PROP-045; comment-consuming readers retain original bytes. Escaped prose, CDATA and fenced examples never mint generated events; the incumbent Markdown literal policy protects reserved-looking prose before real generated comments are inserted. Unknown vocabulary, malformed XML/framing, DTDs, unknown entities and genuinely unrepresentable semantic placements refuse explicitly, without a Normal-to-Simple fallback or silent loss. Required actual emitter-produced multiple-root, annotated and hoisted cases must work. The returned text is a projection; callers retain XML-projected kind and use the incumbent projection-relative diagnostic notice without adding prose to document content. The helper grants no filesystem, source-admission or public source-address authority, authenticates no editable artifact and supplies no original authored-file positions. Artifact identity and evidence remain separate caller obligations; arbitrary opaque post-emission rewrites are not promised to be projectable. @status:spec/done",
+      "line": 28,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-GENERATED-XML-PROJECTION-LAW"
     },
     {
       "anchor": "genre-definition",
@@ -168626,32 +169125,32 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
-      "line": 303,
+      "line": 325,
       "message": "edge `vibe_workspace::install::bootgen::verify_boot_graph` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
-      "line": 50,
-      "message": "edge `vibe_workspace::install::bootgen::hybrid_emit::build_unit_table` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units` carries no kind/revision line yet"
-    },
-    {
-      "code": "pin-into-unmarked-unit",
-      "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
-      "line": 152,
+      "line": 60,
       "message": "edge `vibe_workspace::install::bootgen::hybrid_emit::emit_package_units` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
-      "line": 430,
+      "line": 345,
       "message": "edge `vibe_workspace::install::bootgen::hybrid_emit::append_hoisted` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#hoisting` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
-      "line": 494,
+      "line": 409,
       "message": "edge `vibe_workspace::install::bootgen::hybrid_emit::verify_fingerprints` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-workspace/src/install/bootgen/hybrid_emit/table.rs",
+      "line": 13,
+      "message": "edge `vibe_workspace::install::bootgen::hybrid_emit::table::build_unit_table` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units` carries no kind/revision line yet"
     },
     {
       "code": "stale-exclude",

@@ -13,6 +13,27 @@ use occurrences::{EmbedOccurrence, EmbedRegion, EmbedRegionKind, EmbedTape, Expa
 pub trait SectionSource {
     fn section_text(&self, addr: &SpecAddress) -> Result<String, String>;
 
+    /// Initial roots may carry separately witnessed internal-artifact
+    /// provenance. References never gain that role by sharing their address.
+    fn root_source_metadata(
+        &self,
+        addr: &SpecAddress,
+        active_formats: &[String],
+    ) -> Result<ResolvedSourceMetadata, String> {
+        self.source_metadata(addr, active_formats)
+    }
+    fn read_resolved_root_source(
+        &self,
+        addr: &SpecAddress,
+        metadata: ResolvedSourceMetadata,
+    ) -> Result<ResolvedSource, String> {
+        self.read_resolved_source(addr, metadata)
+    }
+    /// Checked on every reached reference, including before cached root reuse.
+    fn admit_reference(&self, _addr: &SpecAddress) -> Result<(), String> {
+        Ok(())
+    }
+
     fn source_metadata(
         &self,
         addr: &SpecAddress,
@@ -415,3 +436,4 @@ mod overlay_tests;
 mod source_reads;
 
 mod read;
+pub use read::resolve_captured_declared_source;

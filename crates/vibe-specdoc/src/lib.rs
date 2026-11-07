@@ -80,9 +80,13 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#root");
 pub mod commonmark;
 pub mod doc;
 pub mod load;
+pub mod xml_data;
 
 mod annotated;
 mod convert;
+pub use annotated::{
+    AnnotatedMarkdown, MarkdownComment, MarkdownCommentPlacement, project_annotated_xml_to_markdown,
+};
 pub use annotated::{AnnotatedXml, SourceComment, from_markdown_annotated};
 mod md_in;
 mod md_out;

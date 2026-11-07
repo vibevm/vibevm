@@ -40,102 +40,10 @@ pub(super) use native_managed::emit_package_units_bound;
 mod zone_projection;
 use zone_projection::{unit_provenance, zone_to_effective};
 
-/// Build the per-unit table (PROP-038 §2.1) from the resolution: every
-/// materialised package becomes a [`UnitInput`] whose edges carry the link
-/// mode from **that package's own manifest** (§2.2) — the fix for the
-/// shipped bootgen's root-only seeding. Per edge `X→Y` the mode resolves by
-/// the same precedence [`crate::boot::compute_effective_boot`] uses: `X`'s
-/// declared `link`, then `Y`'s `[boot_snippet]` suggestion, then `X`'s
-/// `[boot].default_link`, then `dynamic`.
-#[spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units",
-    r = 1
-)]
-pub(super) fn build_unit_table(
-    workspace_root: &Path,
-    resolution: &[ResolvedDep],
-) -> HashMap<UnitId, UnitInput> {
-    let installed = super::installed_identities(resolution);
-    // The target-suggestion precedence tier: a package's own `[boot_snippet].link`.
-    let suggested: HashMap<(&Group, &str), Option<LinkType>> = resolution
-        .iter()
-        .map(|d| {
-            (
-                (&d.group, d.name.as_str()),
-                d.manifest.boot_snippet.as_ref().and_then(|bs| bs.link),
-            )
-        })
-        .collect();
-
-    resolution
-        .iter()
-        .map(|dep| {
-            let slot = slot_rel_path(dep);
-            let snippet = dep.manifest.boot_snippet.as_ref();
-            // LOGICAL resolution against the materialised slot (PROP-045
-            // ##BOOT-LANE-SCOPE): the manifest names the authored form; a
-            // transforming materialisation may hold the other extension.
-            let active = super::active_snippet(workspace_root, &slot, snippet, &installed);
-            let (own_boot_path, when) = match active.main {
-                Some(contribution) => (Some(contribution.path), contribution.when),
-                None => (None, None),
-            };
-            let default_link = dep.manifest.boot.default_link;
-            let edges = dep
-                .requires
-                .iter()
-                .map(|(rg, rn)| {
-                    let link = dep
-                        .manifest
-                        .requires
-                        .declared_link(rg, rn)
-                        .or_else(|| suggested.get(&(rg, rn.as_str())).copied().flatten())
-                        .or(default_link)
-                        .unwrap_or_default();
-                    UnitEdge {
-                        target: (rg.clone(), rn.clone()),
-                        link,
-                    }
-                })
-                .collect();
-            (
-                (dep.group.clone(), dep.name.clone()),
-                UnitInput {
-                    own_boot_path,
-                    fragments: active.fragments,
-                    origin: format!("{}/{}", dep.group, dep.name),
-                    when,
-                    edges,
-                    // PROP-035 §3 — carry the package's format so a `normal`
-                    // unit is compiled (not concatenated) when it enters a
-                    // static zone (PROP-035 §8). Absent a `[package]`, `simple`.
-                    format: dep
-                        .manifest
-                        .package
-                        .as_ref()
-                        .map(|p| p.format)
-                        .unwrap_or_default(),
-                },
-            )
-        })
-        .collect()
-}
-
-/// The dependency-slot path (workspace-root-relative, forward-slashed) for a
-/// resolved dependency — its versioned slot, or its unversioned in-place slot
-/// (PROP-022 §2.4).
-fn slot_rel_path(dep: &ResolvedDep) -> String {
-    let in_place = dep
-        .manifest
-        .package
-        .as_ref()
-        .is_some_and(|p| p.materialization.is_in_place());
-    if in_place {
-        vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
-    } else {
-        vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
-    }
-}
+#[path = "hybrid_emit/table.rs"]
+mod table;
+use table::slot_rel_path;
+pub(super) use table::{build_unit_table, build_unit_table_bound};
 
 /// Emit per-unit boot artifacts (PROP-038 §2.1) for every materialised package
 /// that **statically links a child** — its `STATIC.md` compiles that child's
@@ -164,9 +72,13 @@ pub(super) fn emit_package_units(
     shared: &HashSet<UnitId>,
     fingerprints: &HashMap<UnitId, String>,
     spec_format: SpecFormat,
+    sources: Option<&crate::boot_artifacts::declared_sources::DeclaredBootSources>,
     trace: Option<&TraceRun>,
     runtimes: &LoweredOwnerRuntimes,
 ) -> Result<HashSet<UnitId>, WorkspaceError> {
+    crate::boot_artifacts::declared_sources::DeclaredBootSources::validate_emission(
+        resolution, sources,
+    )?;
     let slots: HashMap<UnitId, String> = resolution
         .iter()
         .map(|d| ((d.group.clone(), d.name.clone()), slot_rel_path(d)))
@@ -251,6 +163,7 @@ pub(super) fn emit_package_units(
             &effective,
             fp,
             spec_format,
+            sources,
             unit_trace.as_ref(),
             // THIS package's own plan, never the node's (PROP-054
             // ##COMPILE-ACTIVATION: activation authority follows the
@@ -366,6 +279,7 @@ fn emit_effective(
     effective: &EffectiveBoot,
     fingerprint: &str,
     spec_format: SpecFormat,
+    sources: Option<&crate::boot_artifacts::declared_sources::DeclaredBootSources>,
     unit_trace: Option<&UnitTrace<'_>>,
     plans: CompilePlans,
 ) -> Result<(), WorkspaceError> {
@@ -407,6 +321,7 @@ fn emit_effective(
         workspace_root,
         self_coord,
         spec_format,
+        sources,
         unit_trace.map(UnitTrace::acquisition),
         plans,
     )?;

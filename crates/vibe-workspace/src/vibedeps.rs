@@ -31,11 +31,13 @@ use vibe_core::{ContentHash, Group, layout};
 use crate::{WorkspaceError, layout_paths};
 
 mod build_ignore;
+mod declared_read;
 mod derived;
 mod slot_cow;
 mod slot_diff;
 mod slot_record;
 mod source_policy;
+pub(crate) use declared_read::prepare_declared_slot_read;
 pub(crate) use source_policy::validate_source_inputs;
 
 pub use build_ignore::{BUILD_OUTPUT_IGNORES, ensure_build_output_ignores};
@@ -171,19 +173,16 @@ pub(crate) fn materialise_with_report(
     mode: CopyMode,
     source_hash: &ContentHash,
 ) -> Result<MaterialiseReport, WorkspaceError> {
-    let policy = source_policy::SourcePolicy::observe(
-        content_src,
-        vibe_core::manifest::SpecFormat::Mixed,
-        None,
-    )?;
-    materialise_observed_report(
+    derived::materialise_with_spec_format_report(
         workspace_root,
         group,
         name,
         version,
-        &policy,
+        content_src,
         mode,
+        vibe_core::manifest::SpecFormat::Mixed,
         source_hash,
+        None,
     )
 }
 

@@ -2,25 +2,89 @@
 
 use super::*;
 
-pub(super) fn place_atomically(slot: &Path, file: &PreparedSlotFile) -> Result<(), WorkspaceError> {
+fn place_hardlink(
+    source: &Path,
+    destination: &Path,
+    parent: &Path,
+    expected_hash: &str,
+) -> Result<(), WorkspaceError> {
+    let source_hash =
+        sha256_file(source).map_err(|reason| materialisation_error(source, reason))?;
+    if source_hash != expected_hash {
+        return Err(materialisation_error(
+            destination,
+            format!(
+                "incoming payload changed while materialising: prepared {expected_hash}, source {source_hash}"
+            ),
+        ));
+    }
+    match fs::remove_file(destination) {
+        Ok(()) => {}
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Err(error) => return Err(io_err(destination, error)),
+    }
+    if fs::hard_link(source, destination).is_ok() {
+        let actual = sha256_file(destination)
+            .map_err(|reason| materialisation_error(destination, reason))?;
+        if actual == expected_hash {
+            return Ok(());
+        }
+        let _ = fs::remove_file(destination);
+        return Err(materialisation_error(
+            destination,
+            format!(
+                "incoming payload changed while materialising: prepared {expected_hash}, linked {actual}"
+            ),
+        ));
+    }
+    let temporary = staged_file(parent)?;
+    fs::copy(source, temporary.path()).map_err(|error| io_err(temporary.path(), error))?;
+    persist_staged(temporary, destination, expected_hash)
+}
+
+#[derive(Clone, Copy)]
+struct Destination<'a> {
+    path: &'a Path,
+    create_new: bool,
+}
+
+pub(super) fn place_atomically(
+    slot: &Path,
+    file: &PreparedSlotFile,
+    disposition: Placement,
+) -> Result<(), WorkspaceError> {
     let destination = slot.join(&file.path);
     let parent = destination
         .parent()
         .expect("a prepared relative file always has a parent");
     fs::create_dir_all(parent).map_err(|error| io_err(parent, error))?;
+    let target = Destination {
+        path: &destination,
+        create_new: disposition == Placement::CreateNew,
+    };
+    #[cfg(test)]
+    inject::run(&destination);
     match &file.content {
         PreparedContent::Observed {
             observation,
             path,
             mode,
-        } => place_observed(observation, path, *mode, &destination, parent, &file.sha256),
+        } => place_observed_using_link(
+            observation,
+            path,
+            *mode,
+            target,
+            parent,
+            &file.sha256,
+            |source, destination| fs::hard_link(source, destination),
+        ),
         PreparedContent::Bytes(bytes) => {
             let mut temporary = staged_file(parent)?;
             temporary
                 .as_file_mut()
                 .write_all(bytes)
                 .map_err(|error| io_err(temporary.path(), error))?;
-            persist_staged(temporary, &destination, &file.sha256)
+            persist_staged_mode(temporary, &destination, &file.sha256, target.create_new)
         }
         PreparedContent::Source {
             path,
@@ -28,15 +92,22 @@ pub(super) fn place_atomically(slot: &Path, file: &PreparedSlotFile) -> Result<(
         } => {
             let temporary = staged_file(parent)?;
             fs::copy(path, temporary.path()).map_err(|error| io_err(temporary.path(), error))?;
-            persist_staged(temporary, &destination, &file.sha256)
+            persist_staged_mode(temporary, &destination, &file.sha256, target.create_new)
         }
         PreparedContent::Source {
             path,
             mode: CopyMode::Hardlink,
-        } => place_hardlink(path, &destination, parent, &file.sha256),
+        } => {
+            if target.create_new {
+                place_new_source_link(path, target, parent, &file.sha256)
+            } else {
+                place_hardlink(path, &destination, parent, &file.sha256)
+            }
+        }
     }
 }
 
+#[cfg(test)]
 fn place_observed(
     observation: &SourceObservation,
     source: &Path,
@@ -49,7 +120,10 @@ fn place_observed(
         observation,
         source,
         mode,
-        destination,
+        Destination {
+            path: destination,
+            create_new: false,
+        },
         parent,
         expected_hash,
         |source, destination| fs::hard_link(source, destination),
@@ -60,7 +134,7 @@ fn place_observed_using_link(
     observation: &SourceObservation,
     source: &Path,
     mode: CopyMode,
-    destination: &Path,
+    destination: Destination<'_>,
     parent: &Path,
     expected_hash: &str,
     link: impl FnOnce(&Path, &Path) -> std::io::Result<()>,
@@ -86,12 +160,19 @@ fn place_observed_using_link(
                     || linked.permissions() != observation.permissions()
                 {
                     return Err(materialisation_error(
-                        destination,
+                        destination.path,
                         "staged hardlink differs from captured source identity, bytes or permissions",
                     ));
                 }
                 // Never chmod a shared inode. Its captured mode was just checked.
-                fs::rename(&candidate, destination).map_err(|error| io_err(destination, error))?;
+                if destination.create_new {
+                    fs::hard_link(&candidate, destination.path)
+                        .map_err(|error| io_err(destination.path, error))?;
+                    fs::remove_file(&candidate).map_err(|error| io_err(&candidate, error))?;
+                } else {
+                    fs::rename(&candidate, destination.path)
+                        .map_err(|error| io_err(destination.path, error))?;
+                }
                 Ok(())
             })();
             if let Err(error) = result {
@@ -131,7 +212,64 @@ fn place_observed_using_link(
         .as_file()
         .set_permissions(observation.permissions().clone())
         .map_err(|error| io_err(temporary.path(), error))?;
-    persist_staged(temporary, destination, expected_hash)
+    persist_staged_mode(
+        temporary,
+        destination.path,
+        expected_hash,
+        destination.create_new,
+    )
+}
+
+fn place_new_source_link(
+    source: &Path,
+    destination: Destination<'_>,
+    parent: &Path,
+    expected_hash: &str,
+) -> Result<(), WorkspaceError> {
+    let source_parent = source
+        .parent()
+        .ok_or_else(|| materialisation_error(source, "source parent missing"))?;
+    let name = source
+        .file_name()
+        .and_then(|name| name.to_str())
+        .ok_or_else(|| materialisation_error(source, "source name is not UTF-8"))?;
+    let project = vibe_safefs::Project::open(source_parent)
+        .map_err(|error| materialisation_error(source, error.to_string()))?;
+    let observed = project
+        .read_source_observation(name)
+        .map_err(|error| materialisation_error(source, error.to_string()))?
+        .ok_or_else(|| materialisation_error(source, "source disappeared"))?;
+    if sha256_bytes(observed.bytes()) != expected_hash {
+        return Err(materialisation_error(
+            source,
+            "source changed before new hardlink publication",
+        ));
+    }
+    place_observed_using_link(
+        &observed,
+        source,
+        CopyMode::Hardlink,
+        destination,
+        parent,
+        expected_hash,
+        |source, destination| fs::hard_link(source, destination),
+    )
+}
+
+#[cfg(test)]
+pub(super) mod inject {
+    use std::{cell::RefCell, path::Path};
+    type Hook = Box<dyn FnOnce(&Path)>;
+    thread_local! { static BEFORE: RefCell<Option<Hook>> = const { RefCell::new(None) }; }
+    pub(in crate::vibedeps) fn arm(hook: Hook) {
+        BEFORE.with(|slot| *slot.borrow_mut() = Some(hook));
+    }
+    pub(super) fn run(path: &Path) {
+        let hook = BEFORE.with(|slot| slot.borrow_mut().take());
+        if let Some(hook) = hook {
+            hook(path);
+        }
+    }
 }
 
 #[cfg(test)]
@@ -199,7 +337,10 @@ mod tests {
             &observed,
             &path,
             CopyMode::Hardlink,
-            &destination,
+            Destination {
+                path: &destination,
+                create_new: false,
+            },
             output.path(),
             &sha256_bytes(observed.bytes()),
             |_, _| {

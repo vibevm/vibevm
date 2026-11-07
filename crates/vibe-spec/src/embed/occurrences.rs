@@ -343,27 +343,51 @@ pub(crate) fn markdown_body(
     let Some(tape) = tape else {
         return body.to_owned();
     };
+    let literal = protect_literals(body, &mut [], fence, false);
+    ExpandedBody {
+        text: literal,
+        tape: tape.clone(),
+    }
+    .legacy_text()
+}
+
+/// Protect projected literal controls before actual XML events are inserted.
+/// Positions are checked byte gaps in the supplied plain projection.
+pub(crate) fn protect_projection_literals(body: &str, positions: &mut [usize]) -> String {
+    protect_literals(body, positions, crate::doctree::FenceSnapshot::Closed, true)
+}
+fn protect_literals(
+    body: &str,
+    positions: &mut [usize],
+    fence: crate::doctree::FenceSnapshot,
+    projection: bool,
+) -> String {
     let mut tracker = crate::doctree::FenceTracker::from_snapshot(fence);
     let mut literal = String::new();
+    let mut source_offset = 0;
+    let mut escaped = Vec::new();
     for line in body.split_inclusive('\n') {
         let trimmed = line.trim_start();
         let fenced = tracker.classify(line.trim_end_matches('\n'));
         if !fenced
-            && ["<!-- embed:", "<!-- /embed:", "<!-- vibe:c"]
+            && (["<!-- embed:", "<!-- /embed:", "<!-- vibe:c"]
                 .iter()
                 .any(|prefix| trimmed.starts_with(prefix))
+                || (projection
+                    && crate::compiler::emit::framing::raw_contribution_comment_prefix(trimmed)))
         {
             let indent = line.len() - trimmed.len();
+            escaped.push(source_offset + indent);
             literal.push_str(&line[..indent]);
             literal.push_str("&lt;");
             literal.push_str(&trimmed[1..]);
         } else {
             literal.push_str(line);
         }
+        source_offset += line.len();
     }
-    ExpandedBody {
-        text: literal,
-        tape: tape.clone(),
+    for position in positions {
+        *position += 3 * escaped.partition_point(|escaped| *escaped < *position);
     }
-    .legacy_text()
+    literal
 }

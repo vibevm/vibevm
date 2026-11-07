@@ -14,6 +14,7 @@ use vibe_spec::source_policy::{PackagePolicyObservation, observe_package_policy}
 
 use super::slot_diff::PreparedSlotFile;
 use crate::WorkspaceError;
+mod inventory;
 
 pub(super) struct SourcePolicy {
     root: PathBuf,
@@ -33,14 +34,45 @@ pub(super) fn refused(path: &Path, reason: impl std::fmt::Display) -> WorkspaceE
 /// Reuse materializer admission before whole-resolution effects. Captures are
 /// deliberately discarded; publication still takes and rechecks its own inputs.
 pub(crate) fn validate_source_inputs(
+    workspace_root: &Path,
     root: &Path,
     format: SpecFormat,
     known: &Manifest,
 ) -> Result<(), WorkspaceError> {
-    SourcePolicy::observe(root, format, Some(known)).map(|_| ())
+    let policy = SourcePolicy::observe(root, format, Some(known))?;
+    if policy.is_declared() {
+        let package = known
+            .package
+            .as_ref()
+            .ok_or_else(|| refused(root, "declared package context missing"))?;
+        let overlay = if format == SpecFormat::Mixed {
+            vibe_facts::PackageOverlay::default()
+        } else {
+            super::derived::load_overlay(
+                workspace_root,
+                &format!("{}/{}", package.group, package.name),
+            )?
+            .0
+        };
+        super::derived::prepare_declared(&policy, format, super::CopyMode::Copy, &overlay)?;
+    }
+    policy.recheck()
 }
 
 impl SourcePolicy {
+    pub(super) fn is_declared(&self) -> bool {
+        self.observed
+            .package()
+            .is_some_and(|package| package.has_explicit_source_policy())
+    }
+    pub(super) fn manifest(&self) -> Option<&Manifest> {
+        self.observed.manifest()
+    }
+    pub(super) fn inventory(&self) -> impl Iterator<Item = (&str, &Arc<SourceObservation>)> {
+        self.captured
+            .iter()
+            .map(|(path, observed)| (path.as_str(), observed))
+    }
     pub(super) fn root(&self) -> &Path {
         &self.root
     }
@@ -109,41 +141,8 @@ impl SourcePolicy {
                 ));
             }
         }
-        let paths = policy.observed.package_sources().unwrap_or(&[]).iter().map(|descriptor| match descriptor.selector() {
-            SourceSelector::File(path) => Ok(path.clone()),
-            SourceSelector::Directory(path) => Err(refused(&root.join(path), "directory source declarations require a complete census; this materializer admits exact-file declarations only")),
-        }).collect::<Result<Vec<_>, _>>()?;
-        for path in paths {
-            let package = policy
-                .observed
-                .package()
-                .ok_or_else(|| refused(root, "declared package metadata unavailable"))?;
-            match package.select_source(&path).map_err(|error| {
-                refused(
-                    &root.join(&path),
-                    format!("source selection failed: {error:?}"),
-                )
-            })? {
-                SelectedSource::Descriptor { .. } => {}
-                SelectedSource::NeedsInput {
-                    declaration_indices,
-                    ..
-                } => {
-                    return Err(refused(
-                        &root.join(&path),
-                        format!("source declaration conflict at rows {declaration_indices:?}"),
-                    ));
-                }
-                SelectedSource::Unclassified { .. } => {
-                    return Err(refused(
-                        &root.join(&path),
-                        "declared source has no selected interpretation",
-                    ));
-                }
-            }
-            if !policy.captured.contains_key(&path) {
-                policy.capture(&path)?;
-            }
+        if policy.is_declared() {
+            inventory::capture(&mut policy)?;
         }
         policy.recheck()?;
         Ok(policy)

@@ -70,6 +70,7 @@ pub struct FileResolver {
     /// answers with the semver-freshest *installed* version — is never reached.
     /// A coordinate absent from the map refuses rather than falling back.
     selected: Option<BTreeMap<(String, String), SelectedPackage>>,
+    installed_sources: Option<std::sync::Arc<declared::BoundInstalledSources>>,
 }
 
 /// One row of an already-selected world: the exact version a lock chose and
@@ -201,6 +202,7 @@ impl FileResolver {
             ws_root,
             self_coord,
             selected: None,
+            installed_sources: None,
         }
     }
 
@@ -232,6 +234,7 @@ impl FileResolver {
             ws_root: ws_root.into(),
             self_coord,
             selected: None,
+            installed_sources: None,
         }
     }
 
@@ -278,6 +281,7 @@ impl FileResolver {
             ws_root: ws_root.into(),
             self_coord,
             selected: Some(selected),
+            installed_sources: None,
         }
     }
 
@@ -329,6 +333,7 @@ impl FileResolver {
     }
 }
 
+mod declared;
 /// The document-lookup half: doc-path → file, the layout roots it resolves
 /// against, and the canonical doc-path both physical layouts fold onto. Split
 /// out of this file along its own responsibility seam — everything above
@@ -336,6 +341,9 @@ impl FileResolver {
 /// answers "which file inside a root does this doc-path mean".
 mod lookup;
 mod observation;
+pub use declared::{
+    InstalledSourceExpectation, PreparedInstalledSource, PreparedOutputRow, project_declared_native,
+};
 mod paths;
 pub use lookup::canonical_doc_path;
 #[cfg(test)]

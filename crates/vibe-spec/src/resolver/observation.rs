@@ -7,29 +7,73 @@ use crate::source_policy::{PackagePolicyCheckpoint, PackageSourceMode, observe_p
 use vibe_safefs::{Pinned, Project};
 
 pub(crate) struct SourceLocation {
-    project: Project,
-    parent: Pinned,
-    name: String,
     pub(crate) resolved: ResolvedSourceFile,
-    policy: PackagePolicyCheckpoint,
+    reader: LocationReader,
+}
+
+enum LocationReader {
+    Legacy {
+        project: Project,
+        parent: Pinned,
+        name: String,
+        policy: Box<PackagePolicyCheckpoint>,
+    },
+    Declared(super::declared::DeclaredRead),
 }
 
 impl SourceLocation {
-    pub(crate) fn read(&self) -> Result<Vec<u8>, ResolveError> {
-        self.policy
+    pub(super) fn declared(
+        resolved: ResolvedSourceFile,
+        reader: super::declared::DeclaredRead,
+    ) -> Self {
+        Self {
+            resolved,
+            reader: LocationReader::Declared(reader),
+        }
+    }
+    pub(crate) fn declared_media(
+        &self,
+    ) -> Option<(vibe_core::manifest::SourceInterpretation, &str)> {
+        match &self.reader {
+            LocationReader::Declared(reader) => Some(reader.media()),
+            _ => None,
+        }
+    }
+    pub(crate) fn read_with_overlay<'a>(
+        &self,
+        overlay: Option<&'a [u8]>,
+    ) -> Result<std::borrow::Cow<'a, [u8]>, ResolveError> {
+        let LocationReader::Legacy {
+            project,
+            parent,
+            name,
+            policy,
+        } = &self.reader
+        else {
+            let LocationReader::Declared(reader) = &self.reader else {
+                unreachable!()
+            };
+            return reader.read(overlay);
+        };
+        policy
             .recheck_unchanged()
             .map_err(|error| failure(&self.resolved.path, error))?;
-        let bytes = self
-            .project
-            .read_source_bytes_in(&self.parent, &self.name)
-            .map_err(|error| failure(&self.resolved.path, error))?
-            .ok_or_else(|| {
-                failure(
-                    &self.resolved.path,
-                    "selected source disappeared before reading",
-                )
-            })?;
-        self.policy
+        let bytes = if let Some(bytes) = overlay {
+            std::borrow::Cow::Borrowed(bytes)
+        } else {
+            std::borrow::Cow::Owned(
+                project
+                    .read_source_bytes_in(parent, name)
+                    .map_err(|error| failure(&self.resolved.path, error))?
+                    .ok_or_else(|| {
+                        failure(
+                            &self.resolved.path,
+                            "selected source disappeared before reading",
+                        )
+                    })?,
+            )
+        };
+        policy
             .recheck_unchanged()
             .map_err(|error| failure(&self.resolved.path, error))?;
         Ok(bytes)
@@ -56,6 +100,9 @@ impl FileResolver {
                 given: address.raw.clone(),
             });
         }
+        if let Some(declared) = self.declared_location(address, formats)? {
+            return Ok(declared);
+        }
         let (project, package, logical) = self.observed_root(address)?;
         let (parent, resolved, policy) =
             locate_in(&project, &package, &logical, &address.doc_path, formats)?;
@@ -66,11 +113,13 @@ impl FileResolver {
             .ok_or_else(|| failure(&resolved.path, "selected filename unavailable"))?
             .to_owned();
         Ok(SourceLocation {
-            project,
-            parent,
-            name,
             resolved,
-            policy,
+            reader: LocationReader::Legacy {
+                project,
+                parent,
+                name,
+                policy: Box::new(policy),
+            },
         })
     }
 
@@ -113,6 +162,9 @@ impl FileResolver {
                         version: version.clone(),
                     });
                 }
+                if let Some(relative) = self.derived_slot_relative(&self.self_root) {
+                    return self.observed_descendant(&self.self_root, &relative);
+                }
                 admit(&self.self_root)
             }
             Authority::Package {
@@ -136,32 +188,8 @@ impl FileResolver {
                             });
                         }
                     }
-                    let physical_workspace = self.ws_root.canonicalize().ok();
-                    let relative = chosen.root.strip_prefix(&self.ws_root).ok().or_else(|| {
-                        physical_workspace
-                            .as_ref()
-                            .and_then(|root| chosen.root.strip_prefix(root).ok())
-                    });
-                    if let Some(relative) = relative.filter(|relative| {
-                        relative.starts_with(vibe_core::layout::current_vibedeps_root())
-                            || relative.starts_with(vibe_core::layout::LEGACY_VIBEDEPS_DIR)
-                    }) {
-                        let (project, _, _) = admit(&self.ws_root)?;
-                        let raw = relative.to_str().ok_or_else(|| {
-                            failure(&chosen.root, "derived slot path is not UTF-8")
-                        })?;
-                        let spelling = if cfg!(windows) {
-                            raw.replace('\\', "/")
-                        } else {
-                            raw.to_owned()
-                        };
-                        vibe_core::manifest::declarant_path(Path::new(&spelling))
-                            .map_err(|error| failure(&chosen.root, error.reason()))?;
-                        let components: Vec<_> = spelling.split('/').collect();
-                        let package = project
-                            .dir(&components, false)
-                            .map_err(|error| failure(&chosen.root, error))?;
-                        return Ok((project, package, chosen.root.clone()));
+                    if let Some(relative) = self.derived_slot_relative(&chosen.root) {
+                        return self.observed_descendant(&chosen.root, &relative);
                     }
                     return admit(&chosen.root);
                 }
@@ -174,6 +202,42 @@ impl FileResolver {
                 Ok((slots.project, package, logical))
             }
         }
+    }
+    fn derived_slot_relative(&self, root: &Path) -> Option<PathBuf> {
+        let physical = self.ws_root.canonicalize().ok();
+        root.strip_prefix(&self.ws_root)
+            .ok()
+            .or_else(|| {
+                physical
+                    .as_ref()
+                    .and_then(|base| root.strip_prefix(base).ok())
+            })
+            .filter(|rel| {
+                rel.starts_with(vibe_core::layout::current_vibedeps_root())
+                    || rel.starts_with(vibe_core::layout::LEGACY_VIBEDEPS_DIR)
+            })
+            .map(Path::to_path_buf)
+    }
+    fn observed_descendant(
+        &self,
+        logical: &Path,
+        relative: &Path,
+    ) -> Result<(Project, Pinned, PathBuf), ResolveError> {
+        let (project, _, _) = admit(&self.ws_root)?;
+        let raw = relative
+            .to_str()
+            .ok_or_else(|| failure(logical, "derived slot path is not UTF-8"))?;
+        let spelling = if cfg!(windows) {
+            raw.replace('\\', "/")
+        } else {
+            raw.to_owned()
+        };
+        vibe_core::manifest::declarant_path(Path::new(&spelling))
+            .map_err(|e| failure(logical, e.reason()))?;
+        let pinned = project
+            .dir(&spelling.split('/').collect::<Vec<_>>(), false)
+            .map_err(|e| failure(logical, e))?;
+        Ok((project, pinned, logical.to_path_buf()))
     }
 }
 

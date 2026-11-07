@@ -22,7 +22,7 @@ use vibe_core::manifest::{LockedPackage, Lockfile, Materialization};
 
 use crate::boot_artifacts;
 
-fn publish_resolution_lock(root: &Path, resolution: &[ResolvedDep]) {
+pub(super) fn publish_resolution_lock(root: &Path, resolution: &[ResolvedDep]) {
     let mut lock = Lockfile::empty("fixture", "1970-01-01T00:00:00Z");
     lock.packages = resolution
         .iter()

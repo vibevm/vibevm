@@ -15,6 +15,50 @@ pub(crate) fn materialise_with_spec_format_report(
 ) -> Result<MaterialiseReport, WorkspaceError> {
     let policy =
         super::super::source_policy::SourcePolicy::observe(content_src, spec_format, known)?;
+    if policy.is_declared() {
+        let declared = policy
+            .manifest()
+            .and_then(|manifest| manifest.package.as_ref())
+            .ok_or_else(|| {
+                super::super::source_policy::refused(
+                    content_src,
+                    "declared package metadata missing",
+                )
+            })?;
+        if &declared.group != group || declared.name != name || &declared.version != version {
+            return Err(super::super::source_policy::refused(
+                content_src,
+                "declared source identity differs from the requested materialization slot",
+            ));
+        }
+        let package = format!("{group}/{name}");
+        let (overlay, overlay_hash) = if spec_format == SpecFormat::Mixed {
+            (PackageOverlay::default(), None)
+        } else {
+            load_overlay(workspace_root, &package)?
+        };
+        let prepared = super::declared::prepare(&policy, spec_format, mode, &overlay)?;
+        let record = SlotRecord {
+            schema: super::super::SLOT_RECORD_SCHEMA,
+            source_hash: source_hash.clone(),
+            spec_format,
+            converter_recipe: (spec_format != SpecFormat::Mixed)
+                .then(|| CONVERTER_RECIPE.to_owned()),
+            overlay_hash,
+            derived_hash: if spec_format == SpecFormat::Mixed {
+                None
+            } else {
+                Some(compute_prepared_payload_hash(&prepared.incoming)?)
+            },
+            files: prepared.rows,
+        };
+        policy.recheck()?;
+        return super::super::slot_diff::reconcile_declared_slot(
+            &slot_abs_path(workspace_root, group, name, version),
+            &prepared.incoming,
+            &record,
+        );
+    }
     if spec_format == SpecFormat::Mixed {
         return super::super::materialise_observed_report(
             workspace_root,
@@ -27,20 +71,7 @@ pub(crate) fn materialise_with_spec_format_report(
         );
     }
     let package = format!("{group}/{name}");
-    let registry =
-        Registry::load(workspace_root).map_err(|error| WorkspaceError::SpecMaterialization {
-            path: workspace_root.join(layout::current_vibefacts_root()),
-            reason: format!("package adoption registry cannot be loaded: {error}"),
-        })?;
-    let overlay = registry.package_overlay(&package);
-    let overlay_hash = overlay_file_hash(workspace_root, &package)
-        .map(|hash| {
-            ContentHash::parse(&hash).map_err(|error| WorkspaceError::SpecMaterialization {
-                path: workspace_root.join(layout::current_vibefacts_root()),
-                reason: format!("package overlay hash is invalid: {error}"),
-            })
-        })
-        .transpose()?;
+    let (overlay, overlay_hash) = load_overlay(workspace_root, &package)?;
     let slot = slot_abs_path(workspace_root, group, name, version);
     if !content_src.is_dir() {
         return Err(WorkspaceError::SpecMaterialization {
@@ -120,4 +151,25 @@ pub(crate) fn materialise_with_spec_format_report(
     };
     policy.validate_prepared(&incoming)?;
     reconcile_slot(&slot, &incoming, &record)
+}
+
+pub(in crate::vibedeps) fn load_overlay(
+    workspace_root: &Path,
+    package: &str,
+) -> Result<(PackageOverlay, Option<ContentHash>), WorkspaceError> {
+    let registry =
+        Registry::load(workspace_root).map_err(|error| WorkspaceError::SpecMaterialization {
+            path: workspace_root.join(layout::current_vibefacts_root()),
+            reason: format!("package adoption registry cannot be loaded: {error}"),
+        })?;
+    let overlay = registry.package_overlay(package);
+    let overlay_hash = overlay_file_hash(workspace_root, package)
+        .map(|hash| {
+            ContentHash::parse(&hash).map_err(|error| WorkspaceError::SpecMaterialization {
+                path: workspace_root.join(layout::current_vibefacts_root()),
+                reason: format!("package overlay hash is invalid: {error}"),
+            })
+        })
+        .transpose()?;
+    Ok((overlay, overlay_hash))
 }

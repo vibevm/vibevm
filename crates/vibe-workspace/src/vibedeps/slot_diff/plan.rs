@@ -7,16 +7,16 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use super::{
-    PreparedContent, PreparedSlotFile, directory_contains_only_stale, inspect_incoming_parents,
-    inspect_stale_paths, io_err, materialisation_error, refuse_incoming_topology_collisions,
-    sha256_file,
+    Placement, PreparedContent, PreparedSlotFile, directory_contains_only_stale,
+    inspect_incoming_parents, inspect_stale_paths, io_err, materialisation_error,
+    refuse_incoming_topology_collisions, sha256_file,
 };
 use crate::{WorkspaceError, path_to_slash};
 
 use super::super::{SlotFile, SlotRecord};
 
 pub(super) struct DiffPlan {
-    pub(super) keep: Vec<bool>,
+    pub(super) dispositions: Vec<Placement>,
     pub(super) stale: Vec<PathBuf>,
 }
 
@@ -25,6 +25,7 @@ impl DiffPlan {
         slot: &Path,
         incoming: &[PreparedSlotFile],
         old: &SlotRecord,
+        strict_new: bool,
     ) -> Result<Self, WorkspaceError> {
         let old_files: BTreeMap<&str, &SlotFile> = old
             .files
@@ -45,14 +46,14 @@ impl DiffPlan {
         inspect_stale_paths(slot, &stale)?;
         inspect_incoming_parents(slot, &incoming_paths, &old_files, &stale)?;
 
-        let mut keep = Vec::with_capacity(incoming.len());
+        let mut dispositions = Vec::with_capacity(incoming.len());
         for file in incoming {
             let wire = file.path_wire();
             let destination = slot.join(&file.path);
             let old_file = old_files.get(wire.as_str()).copied();
             let stale_scaffold = old_file.is_none()
                 && directory_contains_only_stale(&destination, slot, &stale_paths)?;
-            keep.push(inspect_destination(
+            dispositions.push(inspect_destination(
                 &destination,
                 old_file,
                 file.sha256(),
@@ -63,9 +64,13 @@ impl DiffPlan {
                     _ => None,
                 },
                 stale_scaffold,
+                strict_new,
             )?);
         }
-        Ok(Self { keep, stale })
+        Ok(Self {
+            dispositions,
+            stale,
+        })
     }
 }
 
@@ -75,12 +80,13 @@ fn inspect_destination(
     incoming_hash: &str,
     incoming_permissions: Option<&std::fs::Permissions>,
     stale_scaffold: bool,
-) -> Result<bool, WorkspaceError> {
+    strict_new: bool,
+) -> Result<Placement, WorkspaceError> {
     match fs::symlink_metadata(path) {
         Ok(metadata) if old.is_none() && metadata.file_type().is_file() => {
             let actual = sha256_file(path).map_err(|reason| materialisation_error(path, reason))?;
             if actual == incoming_hash {
-                Ok(true)
+                Ok(Placement::Keep)
             } else {
                 Err(materialisation_error(
                     path,
@@ -88,7 +94,11 @@ fn inspect_destination(
                 ))
             }
         }
-        Ok(metadata) if old.is_none() && metadata.is_dir() && stale_scaffold => Ok(false),
+        Ok(metadata) if old.is_none() && metadata.is_dir() && stale_scaffold => Ok(if strict_new {
+            Placement::CreateNew
+        } else {
+            Placement::Replace
+        }),
         Ok(_) if old.is_none() => Err(materialisation_error(
             path,
             "incoming payload collides with an unrecorded on-disk path",
@@ -103,23 +113,31 @@ fn inspect_destination(
                 "recorded payload path is neither a regular file nor a symbolic link",
             ))
         }
-        Ok(metadata) if metadata.file_type().is_symlink() => Ok(false),
+        Ok(metadata) if metadata.file_type().is_symlink() => Ok(Placement::Replace),
         Ok(metadata) => {
             let old = old.expect("the unrecorded case returned above");
             if old.sha256 != incoming_hash {
-                return Ok(false);
+                return Ok(Placement::Replace);
             }
             // Only recorded payloads reconcile the incoming observed mode.
             // The foreign same-byte keep above never grants a chmod operation.
             if incoming_permissions
                 .is_some_and(|permissions| metadata.permissions() != *permissions)
             {
-                return Ok(false);
+                return Ok(Placement::Replace);
             }
             let actual = sha256_file(path).map_err(|reason| materialisation_error(path, reason))?;
-            Ok(actual == incoming_hash)
+            Ok(if actual == incoming_hash {
+                Placement::Keep
+            } else {
+                Placement::Replace
+            })
         }
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(false),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(if strict_new {
+            Placement::CreateNew
+        } else {
+            Placement::Replace
+        }),
         Err(error) => Err(io_err(path, error)),
     }
 }

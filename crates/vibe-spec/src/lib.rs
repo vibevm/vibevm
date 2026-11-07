@@ -106,7 +106,8 @@ pub use compiler::observer::{
 pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
 pub use doctree::{AnchorAmbiguity, DocTree, Node, NodeId, NodeKind, fenced_code_lines};
 pub use embed::{
-    EmbedError, FsSectionSource, ResolvedSourceMetadata, SectionSource, expand_embeds,
+    EmbedError, FsSectionSource, ResolvedSource, ResolvedSourceMetadata, SectionSource,
+    expand_embeds, resolve_captured_declared_source,
 };
 pub use gate::{DuplicateId, first_duplicate};
 pub use link_table::{LinkTable, LinkTableError, build_link_table};
@@ -117,7 +118,11 @@ pub use merge::{
 pub use pipeline::{CompileError, compile_static, compile_static_qualified};
 pub use qualify::{RenameEntry, origin_slug, qualify_contribution};
 pub use resolver::{
-    FileResolver, ResolveError, SelectedPackage, SelfCoordinate, canonical_doc_path, is_pattern,
+    FileResolver, InstalledSourceExpectation, PreparedInstalledSource, PreparedOutputRow,
+    ResolveError, SelectedPackage, SelfCoordinate, canonical_doc_path, is_pattern,
+    project_declared_native,
 };
-pub use transforms::{XmlMinifyError, minify_emitted_xml};
+pub use transforms::{
+    EmittedXmlProjectionError, XmlMinifyError, minify_emitted_xml, project_emitted_xml_to_markdown,
+};
 pub use use_graph::{UseGraphError, source_fold_order, topo_order_from};

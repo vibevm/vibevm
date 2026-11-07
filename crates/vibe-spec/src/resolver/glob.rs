@@ -26,6 +26,9 @@ impl FileResolver {
         if !is_pattern(addr) {
             return Ok(vec![addr.clone()]);
         }
+        if let Some(bound) = &self.installed_sources {
+            bound.recheck_all()?;
+        }
         super::paths::source(&addr.doc_path, &[])?;
         let Authority::Package {
             group,
@@ -76,6 +79,9 @@ impl FileResolver {
                     out.push(concrete);
                 }
             }
+        }
+        if let Some(bound) = &self.installed_sources {
+            bound.recheck_all()?;
         }
         Ok(out)
     }

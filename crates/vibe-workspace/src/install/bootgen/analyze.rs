@@ -38,8 +38,7 @@ use super::ResolvedDep;
 use super::hybrid_emit::{append_hoisted, with_static_set};
 use super::owner_plans::world_error;
 use super::{
-    build_unit_table, desubstitute_covered_units, node_dependency_boot, node_own_boot,
-    read_durable_resolution,
+    desubstitute_covered_units, node_dependency_boot, node_own_boot, read_durable_resolution,
 };
 
 /// One analyzed lane: the compile's result beside its attribution side.
@@ -85,6 +84,29 @@ pub fn analyze_node_lane(
     node_rel: &str,
     observer: Option<Arc<dyn CompileObserver>>,
 ) -> Result<Option<AnalyzedLane>, WorkspaceError> {
+    analyze_node_lane_using(workspace, node_rel, observer, None)
+}
+
+/// Compile with independently selected installed-input representation.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+    r = 1
+)]
+pub fn analyze_node_lane_with_source_format(
+    workspace: &Workspace,
+    node_rel: &str,
+    observer: Option<Arc<dyn CompileObserver>>,
+    input_format: SpecFormat,
+) -> Result<Option<AnalyzedLane>, WorkspaceError> {
+    analyze_node_lane_using(workspace, node_rel, observer, Some(input_format))
+}
+
+fn analyze_node_lane_using(
+    workspace: &Workspace,
+    node_rel: &str,
+    observer: Option<Arc<dyn CompileObserver>>,
+    input_format: Option<SpecFormat>,
+) -> Result<Option<AnalyzedLane>, WorkspaceError> {
     let node_dir = workspace.node_abs_path(node_rel);
     let node_manifest = workspace
         .member_by_rel_path(node_rel)
@@ -103,7 +125,12 @@ pub fn analyze_node_lane(
         &world,
         OwnerRuntimeLowering::new(node_rel, BTreeMap::new()),
     )?;
-    let table = build_unit_table(&root, &resolution);
+    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
+        &root,
+        &resolution,
+        input_format,
+    )?;
+    let table = super::build_unit_table_bound(&root, &resolution, sources.as_ref())?;
     let with_static = with_static_set(&table);
     let pulls = hoist::soft_static_pulls(&table);
     let shared: HashSet<_> = pulls
@@ -153,6 +180,15 @@ pub fn analyze_node_lane(
         append_hoisted(&mut effective, &shared, &table, &pulls);
     }
     desubstitute_covered_units(&mut effective, &table);
+    super::generated_inputs::admit(
+        &mut sources,
+        &effective,
+        &resolution,
+        &table,
+        &runtimes,
+        spec_format,
+        &self_coord,
+    )?;
 
     let identities: Vec<(String, String)> = effective
         .static_entries()
@@ -168,6 +204,7 @@ pub fn analyze_node_lane(
         &root,
         &self_coord,
         spec_format,
+        sources.as_ref(),
         transforms,
         observer,
     )?;
@@ -186,6 +223,45 @@ pub fn analyze_node_lane_bound_native<P: OwnerNativeCompileProvider>(
     provider: Option<&mut P>,
     observer: Option<Arc<dyn CompileObserver>>,
 ) -> Result<Option<AnalyzedBoundLane>, WorkspaceError> {
+    analyze_node_lane_bound_native_using(
+        workspace, node_rel, resolution, epoch, provider, observer, None,
+    )
+}
+
+/// Compile with independently selected installed-input representation.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+    r = 1
+)]
+pub fn analyze_node_lane_bound_native_with_source_format<P: OwnerNativeCompileProvider>(
+    workspace: &Workspace,
+    node_rel: &str,
+    resolution: &[ResolvedDep],
+    epoch: &OwnerRuntimeEpoch,
+    provider: Option<&mut P>,
+    observer: Option<Arc<dyn CompileObserver>>,
+    input_format: SpecFormat,
+) -> Result<Option<AnalyzedBoundLane>, WorkspaceError> {
+    analyze_node_lane_bound_native_using(
+        workspace,
+        node_rel,
+        resolution,
+        epoch,
+        provider,
+        observer,
+        Some(input_format),
+    )
+}
+
+fn analyze_node_lane_bound_native_using<P: OwnerNativeCompileProvider>(
+    workspace: &Workspace,
+    node_rel: &str,
+    resolution: &[ResolvedDep],
+    epoch: &OwnerRuntimeEpoch,
+    provider: Option<&mut P>,
+    observer: Option<Arc<dyn CompileObserver>>,
+    input_format: Option<SpecFormat>,
+) -> Result<Option<AnalyzedBoundLane>, WorkspaceError> {
     if epoch.lowered().workspace_root() != workspace.root.as_path() {
         return Err(WorkspaceError::NativeCompileProvider {
             owner: format!("node:{node_rel}"),
@@ -200,7 +276,12 @@ pub fn analyze_node_lane_bound_native<P: OwnerNativeCompileProvider>(
         .unwrap_or_else(|| workspace.root_manifest.clone());
     let root = workspace.root.clone();
     let self_coord = super::root_self_coordinate(&workspace.root_manifest);
-    let table = build_unit_table(&root, resolution);
+    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
+        &root,
+        resolution,
+        input_format,
+    )?;
+    let table = super::build_unit_table_bound(&root, resolution, sources.as_ref())?;
     let with_static = with_static_set(&table);
     let pulls = hoist::soft_static_pulls(&table);
     let shared: HashSet<_> = pulls
@@ -246,11 +327,21 @@ pub fn analyze_node_lane_bound_native<P: OwnerNativeCompileProvider>(
         append_hoisted(&mut effective, &shared, &table, &pulls);
     }
     desubstitute_covered_units(&mut effective, &table);
-    analyze_effective_bound_native(
+    super::generated_inputs::admit(
+        &mut sources,
+        &effective,
+        resolution,
+        &table,
+        epoch.lowered(),
+        spec_format,
+        &self_coord,
+    )?;
+    analyze_effective_bound_native_with_sources(
         &effective,
         &root,
         &self_coord,
         spec_format,
+        sources.as_ref(),
         epoch,
         node_rel,
         provider,
@@ -264,6 +355,40 @@ pub fn compile_node_backend<P: OwnerNativeCompileProvider>(
     backend: BackendId,
     run: OwnerRuntimeRunFacts,
     provider: &mut P,
+) -> Result<Option<EmittedArtifact>, WorkspaceError> {
+    compile_node_backend_using(workspace, node_rel, backend, run, provider, None)
+}
+
+/// Compile with independently selected installed-input representation.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
+    r = 1
+)]
+pub fn compile_node_backend_with_source_format<P: OwnerNativeCompileProvider>(
+    workspace: &Workspace,
+    node_rel: &str,
+    backend: BackendId,
+    run: OwnerRuntimeRunFacts,
+    provider: &mut P,
+    input_format: SpecFormat,
+) -> Result<Option<EmittedArtifact>, WorkspaceError> {
+    compile_node_backend_using(
+        workspace,
+        node_rel,
+        backend,
+        run,
+        provider,
+        Some(input_format),
+    )
+}
+
+fn compile_node_backend_using<P: OwnerNativeCompileProvider>(
+    workspace: &Workspace,
+    node_rel: &str,
+    backend: BackendId,
+    run: OwnerRuntimeRunFacts,
+    provider: &mut P,
+    input_format: Option<SpecFormat>,
 ) -> Result<Option<EmittedArtifact>, WorkspaceError> {
     let root = workspace.root.clone();
     let node_dir = workspace.node_abs_path(node_rel);
@@ -280,7 +405,12 @@ pub fn compile_node_backend<P: OwnerNativeCompileProvider>(
     )?;
     let epoch = runtimes.bind_run(run);
     let self_coord = super::root_self_coordinate(&workspace.root_manifest);
-    let table = build_unit_table(&root, &resolution);
+    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
+        &root,
+        &resolution,
+        input_format,
+    )?;
+    let table = super::build_unit_table_bound(&root, &resolution, sources.as_ref())?;
     let with_static = with_static_set(&table);
     let pulls = hoist::soft_static_pulls(&table);
     let shared: HashSet<_> = pulls
@@ -326,22 +456,61 @@ pub fn compile_node_backend<P: OwnerNativeCompileProvider>(
         append_hoisted(&mut effective, &shared, &table, &pulls);
     }
     desubstitute_covered_units(&mut effective, &table);
+    super::generated_inputs::admit(
+        &mut sources,
+        &effective,
+        &resolution,
+        &table,
+        epoch.lowered(),
+        spec_format,
+        &self_coord,
+    )?;
     boot_artifacts::native_managed::compile_backend_owner_managed(
         &effective,
         &root,
         &self_coord,
         backend,
+        boot_artifacts::native_managed::BackendReadContext {
+            render_format: spec_format,
+            sources: sources.as_ref(),
+        },
         epoch.selected()?,
         provider,
     )
 }
 
 #[allow(clippy::too_many_arguments)]
+#[cfg(test)]
 pub(crate) fn analyze_effective_bound_native<P: OwnerNativeCompileProvider>(
     effective: &boot::EffectiveBoot,
     workspace_root: &std::path::Path,
     self_coord: &vibe_spec::SelfCoordinate,
     spec_format: SpecFormat,
+    epoch: &OwnerRuntimeEpoch,
+    node_rel: &str,
+    provider: Option<&mut P>,
+    observer: Option<Arc<dyn CompileObserver>>,
+) -> Result<Option<AnalyzedBoundLane>, WorkspaceError> {
+    analyze_effective_bound_native_with_sources(
+        effective,
+        workspace_root,
+        self_coord,
+        spec_format,
+        None,
+        epoch,
+        node_rel,
+        provider,
+        observer,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn analyze_effective_bound_native_with_sources<P: OwnerNativeCompileProvider>(
+    effective: &boot::EffectiveBoot,
+    workspace_root: &std::path::Path,
+    self_coord: &vibe_spec::SelfCoordinate,
+    spec_format: SpecFormat,
+    sources: Option<&boot_artifacts::declared_sources::DeclaredBootSources>,
     epoch: &OwnerRuntimeEpoch,
     node_rel: &str,
     provider: Option<&mut P>,
@@ -357,11 +526,12 @@ pub(crate) fn analyze_effective_bound_native<P: OwnerNativeCompileProvider>(
         }
         None => boot_artifacts::native_managed::OwnerNativeCompileMode::Plain,
     };
-    let compiled = boot_artifacts::native_managed::compile_static_owner_managed(
+    let compiled = boot_artifacts::native_managed::compile_static_owner_managed_with_sources(
         effective,
         workspace_root,
         self_coord,
         spec_format,
+        sources,
         epoch.node(node_rel)?,
         mode,
         provider,

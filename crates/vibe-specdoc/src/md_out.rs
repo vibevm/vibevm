@@ -29,19 +29,31 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#materialisation"
 
 use crate::doc::{Block, BlockNode, Cond, Fact, Section, SpecDoc, StatusEl, Unit};
 
+pub(crate) mod positions;
+use positions::Output;
+
 /// Emit a document as house-style Markdown.
 pub fn to_markdown(doc: &SpecDoc) -> String {
-    let mut out = String::new();
+    render(doc, false).text
+}
+
+pub(crate) fn render(doc: &SpecDoc, capture: bool) -> Output {
+    let mut out = Output::new(capture);
     if let Some(t) = &doc.title {
+        let before = out.len();
         out.push_str("# ");
+        let text_start = out.len();
         out.push_str(&t.text);
         if let Some(id) = &t.id {
             out.push_str(&format!(" {{#{id}}}"));
         }
+        out.record_heading(before, text_start, &t.text);
         out.push_str("\n\n");
     }
     if let Some(s) = &doc.status {
+        let before = out.len();
         out.push_str(&status_element_md(s));
+        out.record_status(before);
         out.push_str("\n\n");
     }
     blocks_md(&doc.preamble, 1, &mut out);
@@ -51,11 +63,13 @@ pub fn to_markdown(doc: &SpecDoc) -> String {
     out
 }
 
-fn section_md(s: &Section, level: usize, out: &mut String) {
+fn section_md(s: &Section, level: usize, out: &mut Output) {
+    let before = out.len();
     for _ in 0..level {
         out.push('#');
     }
     out.push(' ');
+    let text_start = out.len();
     out.push_str(&s.title);
     // A guarded section's own heading is the sub-heading that names the
     // condition (##ROW-DOCVOCAB-WHEN): the platform rides in the heading
@@ -66,9 +80,12 @@ fn section_md(s: &Section, level: usize, out: &mut String) {
     if let Some(id) = &s.id {
         out.push_str(&format!(" {{#{id}}}"));
     }
+    out.record_heading(before, text_start, &s.title);
     out.push_str("\n\n");
     if let Some(st) = &s.status {
+        let before = out.len();
         out.push_str(&status_element_md(st));
+        out.record_status(before);
         out.push_str("\n\n");
     }
     blocks_md(&s.blocks, level, out);
@@ -80,7 +97,7 @@ fn section_md(s: &Section, level: usize, out: &mut String) {
 /// Blocks separated by one blank line, the section's body closed by one
 /// blank line. `level` is the enclosing heading level, which a guarded
 /// slot needs for its sub-heading.
-fn blocks_md(blocks: &[BlockNode], level: usize, out: &mut String) {
+fn blocks_md(blocks: &[BlockNode], level: usize, out: &mut Output) {
     for (i, node) in blocks.iter().enumerate() {
         if i > 0 {
             out.push_str("\n\n");
@@ -94,7 +111,9 @@ fn blocks_md(blocks: &[BlockNode], level: usize, out: &mut String) {
         if let Some(c) = &node.when {
             out.push_str(&when_heading_md(c, level));
         }
+        let before = out.len();
         block_md(&node.block, typed_id, out);
+        out.record_block(before);
     }
     if !blocks.is_empty() {
         out.push_str("\n\n");
@@ -109,24 +128,14 @@ fn when_heading_md(c: &Cond, level: usize) -> String {
     format!("{hashes} {c}\n\n")
 }
 
-fn block_md(b: &Block, typed_id: Option<&str>, out: &mut String) {
+fn block_md(b: &Block, typed_id: Option<&str>, out: &mut Output) {
     match b {
         Block::Paragraph(u) => unit_md(u, typed_id, out),
         Block::Quote(u) => {
             // `> ` before every line; a bare `>` for empty lines.
-            let mut inner = String::new();
+            let mut inner = Output::new(out.capture);
             unit_md(u, typed_id, &mut inner);
-            for (i, line) in inner.lines().enumerate() {
-                if i > 0 {
-                    out.push('\n');
-                }
-                if line.is_empty() {
-                    out.push('>');
-                } else {
-                    out.push_str("> ");
-                    out.push_str(line);
-                }
-            }
+            out.append_quoted(inner);
         }
         Block::Fence { lang, text, .. } => fenced_md(lang.as_deref(), text, out),
         Block::List { ordered, items } => {
@@ -142,10 +151,20 @@ fn block_md(b: &Block, typed_id: Option<&str>, out: &mut String) {
                 out.push_str(&marker);
                 // A GFM task box rides before the fact anchor.
                 let (box_prefix, rest) = split_task_box(&item.text);
+                let box_start = out.len();
                 out.push_str(box_prefix);
-                let mut inner = String::new();
+                let mut inner = Output::new(out.capture);
                 emit_unit_body(item, typed_id, rest, &mut inner);
-                out.push_str(&inner);
+                out.append(inner);
+                if out.capture
+                    && let Some(site) = out.texts.last_mut()
+                {
+                    let mut bytes = (box_start..box_start + box_prefix.len()).collect::<Vec<_>>();
+                    bytes.extend_from_slice(&site.bytes);
+                    site.bytes = bytes;
+                    site.value.clone_from(&item.text);
+                    site.before = box_start;
+                }
             }
         }
         Block::Table { rows } => {
@@ -163,14 +182,16 @@ fn block_md(b: &Block, typed_id: Option<&str>, out: &mut String) {
                     }
                     out.push_str("--- |\n");
                 }
+                let row_start = out.len();
                 out.push('|');
                 for cell in row {
                     out.push(' ');
-                    let mut inner = String::new();
+                    let mut inner = Output::new(out.capture);
                     unit_md(cell, None, &mut inner);
-                    out.push_str(&inner);
+                    out.append(inner);
                     out.push_str(" |");
                 }
+                out.record_row(row_start);
             }
         }
         // --- the documentation genre (PROP-045 §7) ----------------------
@@ -218,7 +239,7 @@ fn block_md(b: &Block, typed_id: Option<&str>, out: &mut String) {
         Block::Note { kind, body } => {
             // A quote with the kind label on its first line
             // (##ROW-DOCVOCAB-NOTE-MD).
-            let mut inner = String::new();
+            let mut inner = Output::new(out.capture);
             unit_md(body, typed_id, &mut inner);
             out.push_str(&format!("> **{}**", kind.label()));
             for line in inner.lines() {
@@ -268,31 +289,36 @@ fn block_md(b: &Block, typed_id: Option<&str>, out: &mut String) {
 }
 
 /// One fenced block with a run long enough to quote its own content.
-fn fenced_md(lang: Option<&str>, text: &str, out: &mut String) {
+fn fenced_md(lang: Option<&str>, text: &str, out: &mut Output) {
+    let before = out.len();
     let run = fence_run_for(text);
     out.push_str(&run);
     if let Some(l) = lang {
         out.push_str(l);
     }
     out.push('\n');
+    let text_start = out.len();
     if !text.is_empty() {
         out.push_str(text);
         out.push('\n');
     }
     out.push_str(&run);
+    out.record_text(before, text_start, text, true);
 }
 
 /// One unit as MD: `[@fact[/code]:ID ]text[ status]` joined with single
 /// spaces, so an empty body still reads `@fact:X @status:s/s`.
-fn unit_md(u: &Unit, typed_id: Option<&str>, out: &mut String) {
+fn unit_md(u: &Unit, typed_id: Option<&str>, out: &mut Output) {
     emit_unit_body(u, typed_id, &u.text, out);
 }
 
-fn emit_unit_body(u: &Unit, typed_id: Option<&str>, text: &str, out: &mut String) {
+fn emit_unit_body(u: &Unit, typed_id: Option<&str>, text: &str, out: &mut Output) {
+    let before = out.len();
     let mut parts: Vec<String> = Vec::new();
     if let Some(f) = u.fact.as_ref().filter(|f| f.is_meaningful()) {
         parts.push(fact_prefix_md(f, typed_id));
     }
+    let text_index = parts.len();
     if !text.is_empty() {
         parts.push(text.to_string());
     }
@@ -302,7 +328,14 @@ fn emit_unit_body(u: &Unit, typed_id: Option<&str>, text: &str, out: &mut String
     if let Some(st) = u.fact.as_ref().and_then(|f| f.status.as_ref()) {
         parts.push(status_suffix_md(st));
     }
+    let offset = parts
+        .iter()
+        .take(text_index)
+        .map(String::len)
+        .sum::<usize>()
+        + text_index.min(parts.len().saturating_sub(1));
     out.push_str(&parts.join(" "));
+    out.record_text(before, before + offset, text, false);
 }
 
 fn fact_prefix_md(f: &Fact, typed_id: Option<&str>) -> String {

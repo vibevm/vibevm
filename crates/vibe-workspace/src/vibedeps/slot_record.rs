@@ -85,6 +85,18 @@ pub fn read_slot_record_bytes(path: &Path, bytes: &[u8]) -> Result<SlotRecord, S
 
 /// Validate and write `record` as pretty TOML at the root of `slot`.
 pub fn write_slot_record(slot: &Path, record: &SlotRecord) -> Result<(), String> {
+    write_slot_record_mode(slot, record, false)
+}
+
+pub(crate) fn write_slot_record_new(slot: &Path, record: &SlotRecord) -> Result<(), String> {
+    write_slot_record_mode(slot, record, true)
+}
+
+fn write_slot_record_mode(
+    slot: &Path,
+    record: &SlotRecord,
+    create_new: bool,
+) -> Result<(), String> {
     let path = slot.join(SLOT_RECORD_FILENAME);
     refuse_record_symlink(&path)?;
     validate_record(record).map_err(|error| format_validation_error(&path, error))?;
@@ -118,7 +130,13 @@ pub fn write_slot_record(slot: &Path, record: &SlotRecord) -> Result<(), String>
             path.display()
         )
     })?;
-    temporary.into_temp_path().persist(&path).map_err(|error| {
+    let staged = temporary.into_temp_path();
+    let published = if create_new {
+        staged.persist_noclobber(&path)
+    } else {
+        staged.persist(&path)
+    };
+    published.map_err(|error| {
         format!(
             "slot record I/O failure at `{}`: cannot replace: {}",
             path.display(),

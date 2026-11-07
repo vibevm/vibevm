@@ -91,7 +91,8 @@ pub use bootgen::verify_boot_graph;
 /// observer — the same composition regeneration runs, minus every write.
 pub use bootgen::{
     AnalyzedBoundLane, AnalyzedLane, analyze_node_lane, analyze_node_lane_bound_native,
-    compile_node_backend,
+    analyze_node_lane_bound_native_with_source_format, analyze_node_lane_with_source_format,
+    compile_node_backend, compile_node_backend_with_source_format,
 };
 pub use bootgen::{
     BootRegeneration, regenerate_boot, regenerate_boot_from, regenerate_boot_from_traced,
@@ -252,7 +253,7 @@ fn materialise_resolution_with_spec_format(
     resolution: &[ResolvedDep],
     options: MaterialiseOptions<'_>,
 ) -> Result<Materialised, WorkspaceError> {
-    source_admission::validate_source_resolution(resolution, options.spec_format)?;
+    source_admission::validate_source_resolution(workspace_root, resolution, options.spec_format)?;
     let MaterialiseOptions {
         slot_integrity,
         spec_format,

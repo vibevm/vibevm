@@ -71,14 +71,20 @@ pub fn run(ctx: &output::Context, args: AnalyzeArgs) -> Result<()> {
     })?;
     let node_rel = selected.selected.as_str().to_string();
     let workspace = selected.workspace;
+    let input_format = super::reinstall::effective_rederive_format(&workspace.root_manifest)?;
 
     // THE COMPILE — the workspace's write-free entry: the regeneration
     // composition for this one node (owner plan, unit substitution,
     // hoisting, B-006 dedup), observed, writing nothing.
     let collector = Arc::new(Collector::default());
     let lane = observed(ctx, "Compiling extension analysis lane", || {
-        vibe_workspace::install::analyze_node_lane(&workspace, &node_rel, Some(collector.clone()))
-            .context("analyzing the selected node's lane")
+        vibe_workspace::install::analyze_node_lane_with_source_format(
+            &workspace,
+            &node_rel,
+            Some(collector.clone()),
+            input_format,
+        )
+        .context("analyzing the selected node's lane")
     })?;
 
     let report = observed(ctx, "Validating extension analysis report", || {

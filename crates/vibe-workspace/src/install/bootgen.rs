@@ -19,6 +19,8 @@ use crate::{Workspace, WorkspaceError, boot_artifacts, layout_paths, path_to_sla
 
 use super::{ResolvedDep, io_err};
 
+#[path = "bootgen/generated_inputs.rs"]
+mod generated_inputs;
 /// Durable-world owner-plan lowering along its own responsibility.
 #[path = "bootgen/owner_plans.rs"]
 mod owner_plans;
@@ -29,7 +31,10 @@ mod compile_plan_tests;
 
 #[path = "bootgen/hybrid_emit.rs"]
 mod hybrid_emit;
-use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units, verify_fingerprints};
+use hybrid_emit::{
+    append_hoisted, build_unit_table, build_unit_table_bound, emit_package_units,
+    verify_fingerprints,
+};
 
 #[path = "bootgen/analyze.rs"]
 mod analyze;
@@ -37,7 +42,8 @@ mod analyze;
 pub(crate) use analyze::analyze_effective_bound_native;
 pub use analyze::{
     AnalyzedBoundLane, AnalyzedLane, analyze_node_lane, analyze_node_lane_bound_native,
-    compile_node_backend,
+    analyze_node_lane_bound_native_with_source_format, analyze_node_lane_with_source_format,
+    compile_node_backend, compile_node_backend_with_source_format,
 };
 
 mod materialised_read;
@@ -117,6 +123,11 @@ pub fn regenerate_boot_from_traced_prepared(
     lowering: OwnerRuntimeLowering,
 ) -> Result<BootRegeneration, WorkspaceError> {
     super::source_admission::validate_source_admission(workspace, resolution, spec_format)?;
+    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
+        &workspace.root,
+        resolution,
+        Some(spec_format),
+    )?;
     // B-031 self is always the workspace root coordinate.
     let self_coord = root_self_coordinate(&workspace.root_manifest);
 
@@ -125,7 +136,7 @@ pub fn regenerate_boot_from_traced_prepared(
         .map_err(owner_plans::world_error)?;
 
     // Compile package units first so node edges can target complete zones.
-    let table = build_unit_table(&workspace.root, resolution);
+    let table = build_unit_table_bound(&workspace.root, resolution, sources.as_ref())?;
     // Lower every owner before plan digests feed unit fingerprints.
     let runtimes = lower_owner_runtimes(workspace, &world, lowering)?;
     // Unit version plus its artifact-filtered owner plan drives dirty skips.
@@ -155,6 +166,7 @@ pub fn regenerate_boot_from_traced_prepared(
         &shared,
         &fps,
         spec_format,
+        sources.as_ref(),
         trace,
         &runtimes,
     )?;
@@ -198,6 +210,15 @@ pub fn regenerate_boot_from_traced_prepared(
         }
         // Collapse covered unit zones after hoisting, before artifact writes.
         desubstitute_covered_units(&mut effective, &table);
+        generated_inputs::admit(
+            &mut sources,
+            &effective,
+            resolution,
+            &table,
+            &runtimes,
+            spec_format,
+            &self_coord,
+        )?;
         // Each node receives its own retained owner plan.
         boot_artifacts::write_boot_artifacts_traced(
             &node_dir,
@@ -206,6 +227,7 @@ pub fn regenerate_boot_from_traced_prepared(
             &self_coord,
             &effective,
             spec_format,
+            sources.as_ref(),
             trace,
             runtimes.node(rel)?.compile_plans().clone(),
         )?;
@@ -306,6 +328,13 @@ pub fn regenerate_boot_traced(
 )]
 pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, WorkspaceError> {
     let resolution = read_durable_resolution(&workspace.root)?;
+    // No materialized-input format is supplied to this legacy verifier.
+    // Declared graphs must not compute a fingerprint from guessed suffixes.
+    let _ = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
+        &workspace.root,
+        &resolution,
+        None,
+    )?;
     let world = ExtensionWorldEpoch::from_resolution(&workspace.root, &resolution)
         .map_err(owner_plans::world_error)?;
     let table = build_unit_table(&workspace.root, &resolution);
@@ -483,3 +512,6 @@ mod tests {
         assert!(text.contains("one document, one form"), "{text}");
     }
 }
+
+#[cfg(test)]
+mod declared_tests;

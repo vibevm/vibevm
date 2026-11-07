@@ -85,6 +85,25 @@ pub(super) enum RegionKind {
     VerbatimText,
 }
 
+#[derive(Debug, Clone, Copy)]
+pub(crate) enum RegionRole {
+    Root,
+    Heading,
+    Section,
+    Block,
+    Row,
+    Status,
+    Text,
+}
+pub(crate) struct LayoutRegion {
+    pub role: RegionRole,
+    pub children: Vec<usize>,
+}
+#[derive(Default)]
+pub(crate) struct SemanticLayout {
+    pub regions: Vec<LayoutRegion>,
+}
+
 enum Anchor {
     Gap(usize),
     Text { event: usize, offset: usize },
@@ -105,6 +124,7 @@ struct Region {
     end: usize,
     kind: RegionKind,
     children: Vec<usize>,
+    role: RegionRole,
 }
 
 #[derive(Default)]
@@ -168,9 +188,26 @@ impl Observation {
             end: start,
             kind,
             children: vec![],
+            role: match kind {
+                RegionKind::Container => RegionRole::Block,
+                _ => RegionRole::Text,
+            },
         });
         self.stack.push(id);
         id
+    }
+
+    pub(super) fn layout(&self) -> SemanticLayout {
+        SemanticLayout {
+            regions: self
+                .regions
+                .iter()
+                .map(|region| LayoutRegion {
+                    role: region.role,
+                    children: region.children.clone(),
+                })
+                .collect(),
+        }
     }
 
     pub(super) fn finish(
@@ -257,6 +294,11 @@ fn text_offset(events: &[Ev], region: &Region, anchor: &Anchor) -> Result<usize>
 }
 
 impl Parser<'_> {
+    pub(super) fn tag_semantic(&mut self, node: Option<usize>, role: RegionRole) {
+        if let (Some(observation), Some(node)) = (&mut self.observation, node) {
+            observation.regions[node].role = role;
+        }
+    }
     pub(super) fn begin_semantic(&mut self, kind: RegionKind) -> Option<usize> {
         self.observation
             .as_mut()
@@ -273,7 +315,9 @@ impl Parser<'_> {
         }) {
             return None;
         }
-        self.begin_semantic(RegionKind::TrimmedText)
+        let node = self.begin_semantic(RegionKind::TrimmedText);
+        self.tag_semantic(node, RegionRole::Heading);
+        node
     }
     pub(super) fn end_semantic(&mut self, node: Option<usize>) -> Result<()> {
         if let (Some(observation), Some(node)) = (&mut self.observation, node) {

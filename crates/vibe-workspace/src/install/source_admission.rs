@@ -22,12 +22,12 @@ fn refused(root: &Path, reason: impl std::fmt::Display) -> WorkspaceError {
 /// use vibe_workspace::install::validate_declared_source_operation;
 /// let m=Manifest::parse_str("[package]\nname='demo'\ngroup='org.example'\nkind='flow'\nversion='1.0.0'\nsources=[]\n").unwrap();
 /// assert!(validate_declared_source_operation(&m,std::path::Path::new("source"),SpecFormat::Mixed,false).is_ok());
-/// assert!(validate_declared_source_operation(&m,std::path::Path::new("source"),SpecFormat::Xml,false).is_err());
+/// assert!(validate_declared_source_operation(&m,std::path::Path::new("source"),SpecFormat::Xml,false).is_ok());
 /// ```
 pub fn validate_declared_source_operation(
     manifest: &Manifest,
     root: &Path,
-    format: SpecFormat,
+    _format: SpecFormat,
     in_place: bool,
 ) -> Result<(), WorkspaceError> {
     if !manifest
@@ -41,20 +41,6 @@ pub fn validate_declared_source_operation(
         return Err(refused(
             root,
             "declared sources require an original recorded copy; in-place publication is not supported",
-        ));
-    }
-    if format != SpecFormat::Mixed {
-        return Err(refused(
-            root,
-            "declared sources require original Mixed bytes; transformed publication is not supported",
-        ));
-    }
-    if manifest.boot_snippet.as_ref().is_some_and(|snippet| {
-        !snippet.source.as_os_str().is_empty() || !snippet.fragments.is_empty()
-    }) {
-        return Err(refused(
-            root,
-            "declared boot source loading requires the classified boot consumer",
         ));
     }
     Ok(())
@@ -100,10 +86,11 @@ pub fn validate_source_admission(
             }
         }
     }
-    validate_source_resolution(resolution, format)
+    validate_source_resolution(&workspace.root, resolution, format)
 }
 
 pub(super) fn validate_source_resolution(
+    workspace_root: &Path,
     resolution: &[ResolvedDep],
     format: SpecFormat,
 ) -> Result<(), WorkspaceError> {
@@ -154,11 +141,18 @@ pub(super) fn validate_source_resolution(
             // Exact input/census/conflict law belongs to the materializer. Run
             // it for the entire set before any earlier dependency can publish
             // or invoke a hook, then retain the final per-slot capture/recheck.
-            crate::vibedeps::validate_source_inputs(&dep.content_dir, format, &dep.manifest)?;
+            crate::vibedeps::validate_source_inputs(
+                workspace_root,
+                &dep.content_dir,
+                format,
+                &dep.manifest,
+            )?;
         }
     }
     Ok(())
 }
 
+#[cfg(test)]
+mod a3_materializer_tests;
 #[cfg(test)]
 mod tests;

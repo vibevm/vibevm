@@ -154,7 +154,9 @@ pub fn run_compile(ctx: &output::Context, args: CompileArgs, offline: bool) -> R
         &selected.workspace.root,
     )?;
     let compile = ctx.progress().task("Compiling extension backend");
-    let artifact = vibe_workspace::install::compile_node_backend(
+    let input_format =
+        super::reinstall::effective_rederive_format(&selected.workspace.root_manifest)?;
+    let artifact = vibe_workspace::install::compile_node_backend_with_source_format(
         &selected.workspace,
         &node_rel,
         backend,
@@ -166,6 +168,7 @@ pub fn run_compile(ctx: &output::Context, args: CompileArgs, offline: bool) -> R
             created_at,
         },
         &mut provider,
+        input_format,
     )
     .context("custom compilation requires installed/prebuilt native artifacts; run `vibe build` after changing native sources")?
     .ok_or_else(|| anyhow::anyhow!("the selected node has no static-lane contributions"));

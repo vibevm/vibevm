@@ -256,3 +256,7 @@ pub fn observe_declared_document<'a>(
         facts: crate::authored_facts(&document, &prefix),
     })
 }
+
+#[cfg(test)]
+#[path = "declared/data_tests.rs"]
+mod data_tests;

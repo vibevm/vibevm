@@ -9,6 +9,8 @@ use crate::boot::hybrid::{UnitId, fingerprint, hoist};
 use crate::extension_world::{OwnerNativeCompileProvider, OwnerRuntimeEpoch, OwnerRuntimeId};
 use crate::{Workspace, WorkspaceError, boot_artifacts};
 
+#[cfg(test)]
+use super::build_unit_table;
 use super::hybrid_emit::{
     append_hoisted, emit_package_units, emit_package_units_bound, with_static_set,
 };
@@ -18,7 +20,7 @@ use super::replay_prepare::{
     seal_replay_set,
 };
 use super::{
-    ResolvedDep, build_unit_table, desubstitute_covered_units, node_dependency_boot, node_own_boot,
+    ResolvedDep, desubstitute_covered_units, node_dependency_boot, node_own_boot,
     root_self_coordinate,
 };
 
@@ -53,10 +55,16 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     }
     epoch.assert_resolution(&workspace.root, resolution)?;
     super::super::source_admission::validate_source_admission(workspace, resolution, spec_format)?;
+    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
+        &workspace.root,
+        resolution,
+        Some(spec_format),
+    )?;
     let self_coord = root_self_coordinate(&workspace.root_manifest);
     let mut replay_candidates =
-        BootReplayCandidates::new(workspace.root.clone(), self_coord.clone());
-    let table = build_unit_table(&workspace.root, resolution);
+        BootReplayCandidates::new(workspace.root.clone(), self_coord.clone())
+            .with_sources(sources.clone());
+    let table = super::build_unit_table_bound(&workspace.root, resolution, sources.as_ref())?;
     let versions: HashMap<UnitId, String> = resolution
         .iter()
         .map(|dependency| {
@@ -99,6 +107,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             &versions,
             &plan_digests,
             spec_format,
+            sources.as_ref(),
             trace,
             epoch,
             provider.as_deref_mut(),
@@ -112,6 +121,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             &shared,
             &fps,
             spec_format,
+            sources.as_ref(),
             trace,
             epoch.lowered(),
         )?;
@@ -156,23 +166,34 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             append_hoisted(&mut effective, &shared, &table, &pulls);
         }
         desubstitute_covered_units(&mut effective, &table);
+        super::generated_inputs::admit(
+            &mut sources,
+            &effective,
+            resolution,
+            &table,
+            epoch.lowered(),
+            spec_format,
+            &self_coord,
+        )?;
         let owner = OwnerRuntimeId::Node {
             rel: rel.to_owned(),
         };
         let node_runtime = epoch.node(rel)?;
         let native_intersection = node_runtime.runtime().has_compiler_native_intersection()?;
         let replay_dependencies = node_generated_dependencies(&effective, &emitted_units);
-        let (_, continuation) = boot_artifacts::native_managed::write_boot_artifacts_owner_managed(
-            &node_dir,
-            rel,
-            &workspace.root,
-            &self_coord,
-            &effective,
-            spec_format,
-            trace,
-            node_runtime,
-            provider.as_deref_mut(),
-        )?;
+        let (_, continuation) =
+            boot_artifacts::native_managed::write_boot_artifacts_owner_managed_with_sources(
+                &node_dir,
+                rel,
+                &workspace.root,
+                &self_coord,
+                &effective,
+                spec_format,
+                sources.as_ref(),
+                trace,
+                node_runtime,
+                provider.as_deref_mut(),
+            )?;
         if let Some(continuation) = continuation {
             native.insert(owner, continuation);
         }
@@ -186,6 +207,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
         ));
         nodes.push(rel.to_owned());
     }
+    replay_candidates = replay_candidates.with_sources(sources);
     Ok(BoundBootRegeneration {
         nodes,
         native,

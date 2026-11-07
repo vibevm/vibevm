@@ -117,6 +117,7 @@ impl<'a> Parser<'a> {
                         only_attrs(&a, &[], "tr", at, self)?;
                         let semantic_row =
                             self.begin_semantic(crate::xml_annotations::RegionKind::Container);
+                        self.tag_semantic(semantic_row, crate::xml_annotations::RegionRole::Row);
                         let mut row = Vec::new();
                         if !tr_empty {
                             'cells: loop {
@@ -427,6 +428,7 @@ impl<'a> Parser<'a> {
         was_empty: bool,
     ) -> Result<StatusEl> {
         let semantic = self.begin_semantic(crate::xml_annotations::RegionKind::Container);
+        self.tag_semantic(semantic, crate::xml_annotations::RegionRole::Status);
         only_attrs(
             attrs,
             &[

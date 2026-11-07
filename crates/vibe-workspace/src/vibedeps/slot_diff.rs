@@ -19,7 +19,11 @@ use super::{
 use crate::{WorkspaceError, path_to_slash};
 
 #[cfg(test)]
+mod apply_no_replace_tests;
+#[cfg(test)]
 mod mode_tests;
+#[cfg(test)]
+mod no_replace_tests;
 mod placement;
 mod plan;
 mod report;
@@ -27,6 +31,13 @@ use placement::place_atomically;
 
 use plan::DiffPlan;
 pub(crate) use report::MaterialiseReport;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Placement {
+    Keep,
+    Replace,
+    CreateNew,
+}
 
 /// Content prepared and hashed before the slot is mutated.
 pub(super) struct PreparedSlotFile {
@@ -158,8 +169,50 @@ pub(super) fn reconcile_slot(
     files: &[PreparedSlotFile],
     record: &SlotRecord,
 ) -> Result<MaterialiseReport, WorkspaceError> {
+    reconcile_slot_mode(slot, files, record, false)
+}
+
+pub(super) fn reconcile_declared_slot(
+    slot: &Path,
+    files: &[PreparedSlotFile],
+    record: &SlotRecord,
+) -> Result<MaterialiseReport, WorkspaceError> {
+    reconcile_slot_mode(slot, files, record, true)
+}
+
+fn reconcile_slot_mode(
+    slot: &Path,
+    files: &[PreparedSlotFile],
+    record: &SlotRecord,
+    strict_new: bool,
+) -> Result<MaterialiseReport, WorkspaceError> {
     let old_record = inspect_existing_record(slot)?;
     let footprint = files.iter().map(|file| file.path.clone()).collect();
+
+    if strict_new && old_record.is_none() {
+        let mut empty = record.clone();
+        empty.files.clear();
+        let plan = DiffPlan::build(slot, files, &empty, true)?;
+        fs::create_dir_all(slot).map_err(|error| io_err(slot, error))?;
+        let mut written = Vec::new();
+        for (file, disposition) in files.iter().zip(plan.dispositions) {
+            if disposition != Placement::Keep {
+                place_atomically(slot, file, disposition)?;
+                written.push(file.path.clone());
+            }
+        }
+        super::slot_record::write_slot_record_new(slot, record).map_err(|reason| {
+            materialisation_error(&slot.join(SLOT_RECORD_FILENAME), format!("record publication refused after payload paths already published: {:?}; {reason}", written))
+        })?;
+        return Ok(MaterialiseReport::new(
+            footprint,
+            written,
+            Vec::new(),
+            false,
+            None,
+            record,
+        ));
+    }
 
     let Some(old_record) = old_record else {
         let migrated = slot.exists();
@@ -177,12 +230,12 @@ pub(super) fn reconcile_slot(
         ));
     };
 
-    let plan = DiffPlan::build(slot, files, &old_record)?;
+    let plan = DiffPlan::build(slot, files, &old_record, strict_new)?;
     let removed = remove_stale_files(slot, &plan.stale)?;
     let mut written = Vec::new();
-    for (file, keep) in files.iter().zip(plan.keep) {
-        if !keep {
-            place_atomically(slot, file)?;
+    for (file, disposition) in files.iter().zip(plan.dispositions) {
+        if disposition != Placement::Keep {
+            place_atomically(slot, file, disposition)?;
             written.push(file.path.clone());
         }
     }
@@ -375,7 +428,7 @@ fn migrate_unrecorded_slot(slot: &Path) -> Result<(), WorkspaceError> {
 
 fn place_all(slot: &Path, files: &[PreparedSlotFile]) -> Result<(), WorkspaceError> {
     for file in files {
-        place_atomically(slot, file)?;
+        place_atomically(slot, file, Placement::Replace)?;
     }
     Ok(())
 }
@@ -392,6 +445,15 @@ fn persist_staged(
     destination: &Path,
     expected_hash: &str,
 ) -> Result<(), WorkspaceError> {
+    persist_staged_mode(temporary, destination, expected_hash, false)
+}
+
+fn persist_staged_mode(
+    temporary: tempfile::NamedTempFile,
+    destination: &Path,
+    expected_hash: &str,
+    create_new: bool,
+) -> Result<(), WorkspaceError> {
     let actual = sha256_file(temporary.path())
         .map_err(|reason| materialisation_error(temporary.path(), reason))?;
     if actual != expected_hash {
@@ -407,51 +469,14 @@ fn persist_staged(
         .as_file()
         .sync_all()
         .map_err(|error| io_err(temporary.path(), error))?;
-    temporary
-        .into_temp_path()
-        .persist(destination)
-        .map_err(|error| io_err(destination, error.error))?;
+    let staged = temporary.into_temp_path();
+    let published = if create_new {
+        staged.persist_noclobber(destination)
+    } else {
+        staged.persist(destination)
+    };
+    published.map_err(|error| io_err(destination, error.error))?;
     Ok(())
-}
-
-fn place_hardlink(
-    source: &Path,
-    destination: &Path,
-    parent: &Path,
-    expected_hash: &str,
-) -> Result<(), WorkspaceError> {
-    let source_hash =
-        sha256_file(source).map_err(|reason| materialisation_error(source, reason))?;
-    if source_hash != expected_hash {
-        return Err(materialisation_error(
-            destination,
-            format!(
-                "incoming payload changed while materialising: prepared {expected_hash}, source {source_hash}"
-            ),
-        ));
-    }
-    match fs::remove_file(destination) {
-        Ok(()) => {}
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-        Err(error) => return Err(io_err(destination, error)),
-    }
-    if fs::hard_link(source, destination).is_ok() {
-        let actual = sha256_file(destination)
-            .map_err(|reason| materialisation_error(destination, reason))?;
-        if actual == expected_hash {
-            return Ok(());
-        }
-        let _ = fs::remove_file(destination);
-        return Err(materialisation_error(
-            destination,
-            format!(
-                "incoming payload changed while materialising: prepared {expected_hash}, linked {actual}"
-            ),
-        ));
-    }
-    let temporary = staged_file(parent)?;
-    fs::copy(source, temporary.path()).map_err(|error| io_err(temporary.path(), error))?;
-    persist_staged(temporary, destination, expected_hash)
 }
 
 fn remove_stale_files(slot: &Path, stale: &[PathBuf]) -> Result<Vec<PathBuf>, WorkspaceError> {

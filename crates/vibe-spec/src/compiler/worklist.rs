@@ -18,6 +18,7 @@ pub(crate) struct Worklist {
     pub(crate) sources: SourceResolutionSnapshot,
     pub(crate) embeds: EmbedResolutionSnapshot,
     pub(crate) owners: ErrorOwners,
+    pub(crate) reference_refusal: Option<(SpecAddress, String)>,
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -106,6 +107,7 @@ pub(crate) fn discover_with_formats_admitted<E>(
                 discover_uses(
                     seed,
                     input.subject(),
+                    true,
                     &source,
                     &parse,
                     &record_use_failure,
@@ -138,6 +140,9 @@ pub(crate) fn discover_with_formats_admitted<E>(
             }
             ArtifactInputKind::Elided { .. } | ArtifactInputKind::Hoisted { .. } => {}
         }
+        if let Some(refusal) = source.take_reference_refusal() {
+            return Ok(observations::refused_worklist(refusal, owners));
+        }
     }
 
     let mut expansions = BTreeMap::new();
@@ -159,6 +164,9 @@ pub(crate) fn discover_with_formats_admitted<E>(
             &mut owners,
         )?;
         source_membership.insert(key, membership);
+        if let Some(refusal) = source.take_reference_refusal() {
+            return Ok(observations::refused_worklist(refusal, owners));
+        }
     }
 
     let sources = SourceResolutionSnapshot {
@@ -245,17 +253,8 @@ pub(crate) fn discover_with_formats_admitted<E>(
         sources,
         embeds,
         owners,
+        reference_refusal: source.take_reference_refusal(),
     })
-}
-
-fn spec_order(order: &[DiscoveryKey]) -> Vec<String> {
-    order
-        .iter()
-        .filter_map(|key| match key {
-            DiscoveryKey::Spec(key) => Some(key.clone()),
-            DiscoveryKey::Simple(_) => None,
-        })
-        .collect()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -292,23 +291,14 @@ pub(crate) fn document_key(address: &DocumentAddress) -> DocumentKey {
     }
 }
 
-fn observations(
-    resolved: &BTreeMap<String, DocumentIr>,
-    failures: &BTreeMap<String, DocumentObservation>,
-) -> BTreeMap<String, DocumentObservation> {
-    let mut out = failures.clone();
-    out.extend(
-        resolved
-            .iter()
-            .map(|(key, document)| (key.clone(), DocumentObservation::resolved(document.clone()))),
-    );
-    out
-}
+mod observations;
+use observations::{observations, spec_order};
 
 #[allow(clippy::too_many_arguments)]
 fn discover_uses<E>(
     address: &SpecAddress,
     subject: &DocumentSubject,
+    initial_root: bool,
     source: &ActiveSource<'_, impl SectionSource, impl FormatAdmission<E>>,
     parse: &impl Fn(SourceIr, &str) -> Result<DocumentIr, E>,
     record_failure: &impl Fn(&SpecAddress, String),
@@ -323,6 +313,17 @@ fn discover_uses<E>(
 ) -> Result<(), E> {
     owners.record(address, input);
     let key = address.without_pin();
+    if !initial_root && let Err(reason) = source.admit_reference(address) {
+        record_failure(address, reason.clone());
+        failures.insert(
+            key,
+            DocumentObservation::Failed {
+                requested: address.clone(),
+                reason,
+            },
+        );
+        return Ok(());
+    }
     if !seen.insert(key.clone()) {
         return Ok(());
     }
@@ -332,7 +333,11 @@ fn discover_uses<E>(
         return Ok(());
     }
     if !resolved.contains_key(&key) {
-        let source_observation = match source.load(address)? {
+        let source_observation = match if initial_root {
+            source.load_root(address)?
+        } else {
+            source.load(address)?
+        } {
             Ok(resolved) => resolved,
             Err(reason) => {
                 record_failure(address, reason.clone());
@@ -365,6 +370,7 @@ fn discover_uses<E>(
         discover_uses(
             &target,
             &reached,
+            false,
             source,
             parse,
             record_failure,
@@ -544,6 +550,16 @@ fn observe_document<E>(
     failures: &mut BTreeMap<String, DocumentObservation>,
 ) -> Result<(), E> {
     let key = address.without_pin();
+    if let Err(reason) = source.admit_reference(address) {
+        failures.insert(
+            key,
+            DocumentObservation::Failed {
+                requested: address.clone(),
+                reason,
+            },
+        );
+        return Ok(());
+    }
     if resolved.contains_key(&key) || failures.contains_key(&key) {
         return Ok(());
     }

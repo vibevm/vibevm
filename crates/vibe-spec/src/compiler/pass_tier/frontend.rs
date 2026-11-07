@@ -27,6 +27,7 @@ pub(crate) struct AdmittedSource<'source, Source, Admit> {
     source: &'source Source,
     active_formats: &'source [String],
     admit: &'source Admit,
+    reference_refusal: std::cell::RefCell<Option<(crate::SpecAddress, String)>>,
 }
 
 impl<'source, Source, Admit> AdmittedSource<'source, Source, Admit> {
@@ -39,11 +40,36 @@ impl<'source, Source, Admit> AdmittedSource<'source, Source, Admit> {
             source,
             active_formats,
             admit,
+            reference_refusal: std::cell::RefCell::new(None),
         }
     }
 }
 
 impl<Source: crate::SectionSource, Admit> AdmittedSource<'_, Source, Admit> {
+    pub(crate) fn admit_reference(&self, address: &crate::SpecAddress) -> Result<(), String> {
+        if let Some((_, reason)) = self.reference_refusal.borrow().as_ref() {
+            return Err(reason.clone());
+        }
+        let result = self.source.admit_reference(address);
+        if let Err(reason) = &result {
+            self.reference_refusal
+                .borrow_mut()
+                .get_or_insert_with(|| (address.clone(), reason.clone()));
+        }
+        result
+    }
+    pub(crate) fn take_reference_refusal(&self) -> Option<(crate::SpecAddress, String)> {
+        self.reference_refusal.borrow_mut().take()
+    }
+    pub(crate) fn load_root<E>(
+        &self,
+        address: &crate::SpecAddress,
+    ) -> Result<Result<crate::embed::ResolvedSource, String>, E>
+    where
+        Admit: FormatAdmission<E>,
+    {
+        self.load_role(address, true)
+    }
     pub(crate) fn load<E>(
         &self,
         address: &crate::SpecAddress,
@@ -51,7 +77,25 @@ impl<Source: crate::SectionSource, Admit> AdmittedSource<'_, Source, Admit> {
     where
         Admit: FormatAdmission<E>,
     {
-        let metadata = match self.source.source_metadata(address, self.active_formats) {
+        self.load_role(address, false)
+    }
+    fn load_role<E>(
+        &self,
+        address: &crate::SpecAddress,
+        root: bool,
+    ) -> Result<Result<crate::embed::ResolvedSource, String>, E>
+    where
+        Admit: FormatAdmission<E>,
+    {
+        if let Some((_, reason)) = self.reference_refusal.borrow().as_ref() {
+            return Ok(Err(reason.clone()));
+        }
+        let metadata = match if root {
+            self.source
+                .root_source_metadata(address, self.active_formats)
+        } else {
+            self.source.source_metadata(address, self.active_formats)
+        } {
             Ok(metadata) => metadata,
             Err(error) => return Ok(Err(error)),
         };
@@ -62,7 +106,11 @@ impl<Source: crate::SectionSource, Admit> AdmittedSource<'_, Source, Admit> {
                 metadata.physical_stem(),
             )?;
         }
-        Ok(self.source.read_resolved_source(address, metadata))
+        Ok(if root {
+            self.source.read_resolved_root_source(address, metadata)
+        } else {
+            self.source.read_resolved_source(address, metadata)
+        })
     }
 
     pub(crate) fn expand_pattern(

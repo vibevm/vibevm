@@ -5,12 +5,11 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use vibe_core::manifest::{ExtensionKey, LinkType, SpecFormat};
-use vibe_spec::{
-    CompilerNativePolicy, CompilerPendingSet, FileResolver, FsSectionSource, SelfCoordinate,
-};
+use vibe_spec::{CompilerNativePolicy, CompilerPendingSet, SelfCoordinate};
 
 use crate::boot::hybrid::{UnitId, UnitInput};
 use crate::boot::{BootProvenance, EffectiveBoot};
+use crate::boot_artifacts::declared_sources::{BootSectionSource, DeclaredBootSources};
 use crate::extension_world::{
     CompilerNativeReplayFactory, OwnerRuntimeEpoch, OwnerRuntimeEpochToken, OwnerRuntimeId,
     PendingArtifactEvidence,
@@ -52,6 +51,7 @@ pub(super) struct NodeReplayCandidate {
 }
 
 pub(super) struct BootReplayCandidates {
+    sources: Option<DeclaredBootSources>,
     workspace_root: PathBuf,
     self_coord: SelfCoordinate,
     units: Vec<UnitReplayCandidate>,
@@ -61,11 +61,17 @@ pub(super) struct BootReplayCandidates {
 impl BootReplayCandidates {
     pub(super) fn new(workspace_root: PathBuf, self_coord: SelfCoordinate) -> Self {
         Self {
+            sources: None,
             workspace_root,
             self_coord,
             units: Vec::new(),
             nodes: Vec::new(),
         }
+    }
+
+    pub(super) fn with_sources(mut self, sources: Option<DeclaredBootSources>) -> Self {
+        self.sources = sources;
+        self
     }
 
     pub(super) fn push_unit(&mut self, candidate: UnitReplayCandidate) {
@@ -142,6 +148,7 @@ pub(crate) enum BootReplaySet {
 }
 
 pub(crate) struct SealedBootReplay {
+    sources: Option<DeclaredBootSources>,
     token: OwnerRuntimeEpochToken,
     workspace_root: PathBuf,
     self_coord: SelfCoordinate,
@@ -360,12 +367,19 @@ pub(super) fn seal_replay_set(
         ));
     }
     Ok(BootReplaySet::Sealed(SealedBootReplay {
+        sources: candidates.sources,
         token: epoch.replay_token(),
         workspace_root: candidates.workspace_root,
         self_coord: candidates.self_coord,
         lanes,
     }))
 }
+
+#[cfg(test)]
+#[path = "replay_prepare/source_binding_fault.rs"]
+mod source_binding_fault;
+#[cfg(test)]
+pub(crate) use source_binding_fault::drop_source_binding_for_test;
 
 pub(crate) fn prepare_boot_replay<F: CompilerNativeReplayFactory>(
     replay: BootReplaySet,
@@ -428,10 +442,14 @@ pub(crate) fn prepare_boot_replay<F: CompilerNativeReplayFactory>(
         let prepared_index = prepared_indexes[position].take().ok_or_else(|| {
             replay_error(&lane.candidate.owner().to_string(), "lane visited twice")
         })?;
-        let source = FsSectionSource::with_overlay(
-            FileResolver::new(&replay.workspace_root, replay.self_coord.clone()),
-            overlay.clone(),
-        );
+        let source = BootSectionSource::new(
+            &replay.workspace_root,
+            &replay.self_coord,
+            lane.candidate.effective(),
+            lane.candidate.spec_format(),
+            replay.sources.as_ref(),
+            Some(&overlay),
+        )?;
         let owner = match lane.candidate.owner() {
             OwnerRuntimeId::Unit { provider } => epoch.unit(provider),
             OwnerRuntimeId::Node { rel } => epoch.node(rel),
@@ -441,6 +459,7 @@ pub(crate) fn prepare_boot_replay<F: CompilerNativeReplayFactory>(
             &replay.workspace_root,
             &replay.self_coord,
             lane.candidate.spec_format(),
+            replay.sources.as_ref(),
             owner,
             &source,
             &overlay,

@@ -37,21 +37,14 @@ use super::normal::{hoisted_seed, normal_seed};
 /// marker-prose names are legal lane material it must keep emitting),
 /// and the analyzer refuses an unattributable seat rather than parking
 /// it in a pseudo-provider.
-pub(super) fn build_with_providers(
+pub(super) fn build_with_providers_bound(
     entries: Vec<&BootEntry>,
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     lane: &str,
-) -> Result<(Vec<ArtifactInput>, Vec<Option<DocumentProvider>>), WorkspaceError> {
-    build_with_providers_overlay(entries, workspace_root, self_coord, lane, None)
-}
-
-pub(super) fn build_with_providers_overlay(
-    entries: Vec<&BootEntry>,
-    workspace_root: &Path,
-    self_coord: &SelfCoordinate,
-    lane: &str,
+    sources: Option<&super::declared_sources::DeclaredBootSources>,
     overlay: Option<&BTreeMap<PathBuf, Arc<[u8]>>>,
+    source: &super::declared_sources::BootSectionSource,
 ) -> Result<(Vec<ArtifactInput>, Vec<Option<DocumentProvider>>), WorkspaceError> {
     let mut inputs = Vec::with_capacity(entries.len());
     let mut providers = Vec::with_capacity(entries.len());
@@ -86,8 +79,16 @@ pub(super) fn build_with_providers_overlay(
             // STRICTLY — the T10B law, refusal propagating.
             let typed = provider?;
             if entry.format.is_normal() {
-                let seed = normal_seed(&entry.origin, &entry.path).ok_or_else(|| {
-                    WorkspaceError::InlineCompile {
+                let selected = sources
+                    .map(|sources| sources.normal_seed(entry))
+                    .transpose()?
+                    .flatten();
+                if selected.is_none() && !source.has_generated(entry) {
+                    super::declared_sources::refuse_unbound_declared(workspace_root, entry)?;
+                }
+                let seed = selected
+                    .or_else(|| normal_seed(&entry.origin, &entry.path))
+                    .ok_or_else(|| WorkspaceError::InlineCompile {
                         lane: lane.to_string(),
                         reason: format!(
                             "cannot derive a spec:// seed for the normal package `{}` at `{}` \
@@ -97,8 +98,7 @@ pub(super) fn build_with_providers_overlay(
                             entry.path,
                             layout_paths::slot_specs("<slot>", "")
                         ),
-                    }
-                })?;
+                    })?;
                 (
                     ArtifactInput::normal_declared_by(
                         &entry.origin,
@@ -110,26 +110,51 @@ pub(super) fn build_with_providers_overlay(
                 )
             } else {
                 let absolute = workspace_root.join(&entry.path);
-                let markdown = match overlay.and_then(|overlay| overlay.get(&absolute)) {
-                    Some(bytes) => {
-                        let raw =
-                            std::str::from_utf8(bytes).map_err(|error| WorkspaceError::Io {
-                                path: absolute.clone(),
-                                reason: format!("overlay is not UTF-8: {error}"),
-                            })?;
-                        vibe_specdoc::project_spec_text(&absolute, raw)
-                            .map(|(markdown, _)| markdown)
-                            .map_err(|error| WorkspaceError::Io {
-                                path: absolute.clone(),
-                                reason: error.to_string(),
-                            })?
+                let supplied = overlay.and_then(|overlay| overlay.get(&absolute));
+                let selected = if entry.unit_substituted {
+                    source.simple_generated(entry)?
+                } else {
+                    sources
+                        .map(|sources| {
+                            sources.simple(entry, self_coord, supplied.map(|bytes| bytes.as_ref()))
+                        })
+                        .transpose()?
+                        .flatten()
+                };
+                let markdown = match selected {
+                    Some(markdown) => markdown,
+                    None => {
+                        let guards =
+                            super::declared_sources::unbound_guards(workspace_root, entry)?;
+                        let markdown = match supplied {
+                            Some(bytes) => {
+                                let raw = std::str::from_utf8(bytes).map_err(|error| {
+                                    WorkspaceError::Io {
+                                        path: absolute.clone(),
+                                        reason: format!("overlay is not UTF-8: {error}"),
+                                    }
+                                })?;
+                                vibe_specdoc::project_spec_text(&absolute, raw)
+                                    .map(|(markdown, _)| markdown)
+                                    .map_err(|error| WorkspaceError::Io {
+                                        path: absolute.clone(),
+                                        reason: error.to_string(),
+                                    })?
+                            }
+                            None => vibe_specdoc::load_spec_text(&absolute)
+                                .map(|(markdown, _)| markdown)
+                                .map_err(|error| WorkspaceError::Io {
+                                    path: absolute.clone(),
+                                    reason: error.to_string(),
+                                })?,
+                        };
+                        for guard in guards {
+                            guard
+                                .recheck_unchanged()
+                                .map_err(|e| super::declared_sources::error(&absolute, e))?;
+                        }
+                        markdown
                     }
-                    None => vibe_specdoc::load_spec_text(&absolute)
-                        .map(|(markdown, _)| markdown)
-                        .map_err(|error| WorkspaceError::Io {
-                            path: absolute.clone(),
-                            reason: error.to_string(),
-                        })?,
                 };
                 (
                     ArtifactInput::simple_declared_by(

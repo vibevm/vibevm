@@ -180,6 +180,7 @@ impl<'a> Parser<'a> {
         level: usize,
     ) -> Result<Section> {
         let semantic = self.begin_semantic(crate::xml_annotations::RegionKind::Container);
+        self.tag_semantic(semantic, crate::xml_annotations::RegionRole::Section);
         if level > 6 {
             return Err(self.err(
                 at,

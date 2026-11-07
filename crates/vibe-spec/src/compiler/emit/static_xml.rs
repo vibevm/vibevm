@@ -85,7 +85,10 @@ fn emit_xml(lane: &LaneIr, witness: &PreEmissionWitness) -> Result<String, Backe
             LaneContribution::Hoisted { meta, target } => {
                 output.push_str(&framing::hoisted_marker(syntax, &meta.origin));
                 let coordinate = hoisted_coordinate(target)?;
-                output.push_str(&format!("\n#use spec://{coordinate}\n\n"));
+                output.push_str(&format!(
+                    "\n{}{coordinate}\n\n",
+                    framing::HOISTED_USE_PREFIX
+                ));
             }
         }
     }

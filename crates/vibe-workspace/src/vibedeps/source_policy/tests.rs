@@ -124,8 +124,6 @@ mod cases {
                 SpecFormat::Mixed,
                 false,
             ),
-            (format!("{HEAD}{ROW}"), SpecFormat::Xml, false),
-            (format!("{HEAD}{ROW}"), SpecFormat::Markdown, false),
             (
                 format!("{HEAD}sources=[]\n[boot_snippet]\nsource='data.payload'\n"),
                 SpecFormat::Mixed,
@@ -133,14 +131,6 @@ mod cases {
             ),
             (
                 format!("{HEAD}sources=[]\nmaterialization='in-place'\n"),
-                SpecFormat::Mixed,
-                false,
-            ),
-            (
-                format!(
-                    "{HEAD}{}",
-                    ROW.replace("file='data.payload'", "directory='data'")
-                ),
                 SpecFormat::Mixed,
                 false,
             ),
@@ -192,6 +182,33 @@ mod cases {
         ] {
             fs::write(src.path().join("vibe.toml"), format!("{HEAD}{ROW}{tail}")).unwrap();
             refuse();
+        }
+    }
+
+    #[test]
+    fn a3_transformed_raw_and_zero_match_directory_defaults_preserve_original_payload() {
+        for (manifest, format) in [
+            (format!("{HEAD}{ROW}"), SpecFormat::Xml),
+            (format!("{HEAD}{ROW}"), SpecFormat::Markdown),
+            (
+                format!(
+                    "{HEAD}{}",
+                    ROW.replace("file='data.payload'", "directory='data'")
+                ),
+                SpecFormat::Mixed,
+            ),
+        ] {
+            let source = source(&manifest);
+            let root = tempfile::tempdir().unwrap();
+            let before = snapshot(source.path());
+            run(root.path(), source.path(), format, CopyMode::Copy).unwrap();
+            let mut after = snapshot(&slot(root.path()));
+            after.remove(Path::new(vibedeps::SLOT_RECORD_FILENAME));
+            assert_eq!(after, before);
+            assert_eq!(snapshot(source.path()), before);
+            let record = vibedeps::read_slot_record(&slot(root.path())).unwrap();
+            assert_eq!(record.spec_format, format);
+            vibedeps::verify_recorded_files(&slot(root.path()), &record).unwrap();
         }
     }
 

@@ -113,7 +113,14 @@ pub fn materialise_with_spec_format(
 }
 
 mod materialise;
+pub(super) use materialise::load_overlay;
 pub(crate) use materialise::materialise_with_spec_format_report;
+#[cfg(test)]
+mod a3_preservation_tests;
+#[cfg(test)]
+mod a3_tests;
+mod declared;
+pub(super) use declared::prepare as prepare_declared;
 
 /// Read and validate the typed derived manifest from `slot`.
 pub fn read_derived_manifest(slot: &Path) -> Result<DerivedManifest, String> {

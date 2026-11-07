@@ -8,6 +8,15 @@ specmark::scope!(
 use crate::{Error, Result, doc::SpecDoc};
 use quick_xml::events::Event;
 
+mod markdown;
+pub use markdown::{
+    AnnotatedMarkdown, MarkdownComment, MarkdownCommentPlacement, project_annotated_xml_to_markdown,
+};
+
+#[cfg(test)]
+#[path = "annotated/markdown_tests.rs"]
+mod markdown_tests;
+
 /// A generated boundary at a half-open Markdown line gap. The caller owns the
 /// meaning and ordering of coincident events; the pivot owns their placement.
 #[derive(Debug, Clone, PartialEq, Eq)]

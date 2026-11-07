@@ -12,8 +12,8 @@ use vibe_spec::{
     ArtifactCompileError, ArtifactPlan, ArtifactTarget, CompileObserver,
     CompilerFinalizedPendingArtifact, CompilerInvocationReceipts, CompilerNativeOutcome,
     CompilerPendingArtifact, CompilerPendingFinalizeError, CompilerPendingSet, DocumentProvider,
-    EmittedArtifact, FileResolver, FsSectionSource, SelfCoordinate, TransformPlan,
-    compile_artifact, compile_artifact_native_managed, compile_artifact_native_managed_observed,
+    EmittedArtifact, SelfCoordinate, TransformPlan, compile_artifact,
+    compile_artifact_native_managed, compile_artifact_native_managed_observed,
     compile_artifact_native_managed_traced, compile_artifact_observed, compile_artifact_traced,
     defer_emission, finalize_compiler_pending_artifact,
 };
@@ -34,6 +34,8 @@ use crate::extension_world::{
 };
 use crate::{WorkspaceError, layout_paths};
 
+use super::declared_sources::{BootSectionSource, DeclaredBootSources};
+
 use super::{
     INDEX_FILE, WrittenArtifacts, inputs, redirect, render_index_with_spec_format,
     stale_static_file, static_file, static_path, transaction,
@@ -42,8 +44,14 @@ use super::{
 #[path = "native_managed/replay.rs"]
 mod replay;
 pub(crate) use replay::compile_static_owner_managed_with_source;
+mod write;
+pub(crate) use write::write_boot_artifacts_owner_managed_with_sources;
+#[cfg(test)]
+pub(crate) use write::{
+    write_boot_artifacts_owner_managed, write_boot_artifacts_owner_managed_with_finalizer,
+};
 mod explicit;
-pub(crate) use explicit::compile_backend_owner_managed;
+pub(crate) use explicit::{BackendReadContext, compile_backend_owner_managed};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum OwnerNativeCompileStatus {
@@ -168,6 +176,7 @@ pub(crate) enum OwnerNativeCompileMode<'a> {
 }
 
 #[allow(clippy::too_many_arguments)]
+#[cfg(test)]
 pub(crate) fn compile_static_owner_managed<P: OwnerNativeCompileProvider>(
     boot: &EffectiveBoot,
     workspace_root: &Path,
@@ -182,6 +191,33 @@ pub(crate) fn compile_static_owner_managed<P: OwnerNativeCompileProvider>(
         workspace_root,
         self_coord,
         spec_format,
+        None,
+        owner,
+        mode,
+        provider,
+        None,
+        None,
+        finalize_compiler_pending_artifact,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn compile_static_owner_managed_with_sources<P: OwnerNativeCompileProvider>(
+    boot: &EffectiveBoot,
+    workspace_root: &Path,
+    self_coord: &SelfCoordinate,
+    spec_format: SpecFormat,
+    sources: Option<&DeclaredBootSources>,
+    owner: OwnerRuntimeView<'_>,
+    mode: OwnerNativeCompileMode<'_>,
+    provider: Option<&mut P>,
+) -> Result<Option<OwnerManagedStaticCompile>, WorkspaceError> {
+    compile_static_owner_managed_using(
+        boot,
+        workspace_root,
+        self_coord,
+        spec_format,
+        sources,
         owner,
         mode,
         provider,
@@ -197,10 +233,11 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
     workspace_root: &Path,
     self_coord: &SelfCoordinate,
     spec_format: SpecFormat,
+    sources: Option<&DeclaredBootSources>,
     owner: OwnerRuntimeView<'_>,
     mode: OwnerNativeCompileMode<'_>,
     provider: Option<&mut P>,
-    injected_source: Option<&FsSectionSource>,
+    injected_source: Option<&BootSectionSource>,
     injected_overlay: Option<&BTreeMap<PathBuf, Arc<[u8]>>>,
     finalizer: PendingFinalizer,
 ) -> Result<Option<OwnerManagedStaticCompile>, WorkspaceError> {
@@ -208,21 +245,30 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
     if entries.is_empty() {
         return Ok(None);
     }
-    let (inputs, providers) = match injected_overlay {
-        Some(overlay) => inputs::build_with_providers_overlay(
-            entries,
-            workspace_root,
-            self_coord,
-            static_path(spec_format),
-            Some(overlay),
-        )?,
-        None => inputs::build_with_providers(
-            entries,
-            workspace_root,
-            self_coord,
-            static_path(spec_format),
-        )?,
+    let owned_source;
+    let source = match injected_source {
+        Some(source) => source,
+        None => {
+            owned_source = BootSectionSource::new(
+                workspace_root,
+                self_coord,
+                boot,
+                spec_format,
+                sources,
+                injected_overlay,
+            )?;
+            &owned_source
+        }
     };
+    let (inputs, providers) = inputs::build_with_providers_bound(
+        entries,
+        workspace_root,
+        self_coord,
+        static_path(spec_format),
+        sources,
+        injected_overlay,
+        source,
+    )?;
     let target = if matches!(spec_format, SpecFormat::Xml) {
         ArtifactTarget::StaticXml
     } else {
@@ -241,15 +287,6 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
             reason: error.to_string(),
         })?,
     );
-    let owned_source;
-    let source = match injected_source {
-        Some(source) => source,
-        None => {
-            owned_source =
-                FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
-            &owned_source
-        }
-    };
     let owner_id = owner.runtime().id().clone();
     let has_native = owner.runtime().has_compiler_native_intersection()?;
 
@@ -310,7 +347,7 @@ fn acquire(mode: &OwnerNativeCompileMode<'_>) -> Option<crate::compile_trace::Tr
 
 fn compile_builtin(
     plan: ArtifactPlan,
-    source: &FsSectionSource,
+    source: &BootSectionSource,
     mode: OwnerNativeCompileMode<'_>,
     scope: Option<&crate::compile_trace::TraceScope>,
     lane: &str,
@@ -330,7 +367,7 @@ fn compile_builtin(
 
 fn compile_native<B: crate::extension_world::CompilerNativeFactBinding>(
     plan: ArtifactPlan,
-    source: &FsSectionSource,
+    source: &BootSectionSource,
     binding: &B,
     policy: vibe_spec::CompilerNativePolicy,
     mode: &OwnerNativeCompileMode<'_>,
@@ -475,125 +512,4 @@ fn finish_artifact_scope(
             Err(error) => scope.fail_lossy(&error.to_string()),
         }
     }
-}
-
-#[allow(clippy::too_many_arguments)]
-pub(crate) fn write_boot_artifacts_owner_managed<P: OwnerNativeCompileProvider>(
-    node_dir: &Path,
-    node_rel: &str,
-    workspace_root: &Path,
-    self_coord: &SelfCoordinate,
-    boot: &EffectiveBoot,
-    spec_format: SpecFormat,
-    trace: Option<&TraceRun>,
-    owner: OwnerRuntimeView<'_>,
-    provider: Option<&mut P>,
-) -> Result<(WrittenArtifacts, Option<OwnerNativeCompileContinuation>), WorkspaceError> {
-    write_boot_artifacts_owner_managed_using(
-        node_dir,
-        node_rel,
-        workspace_root,
-        self_coord,
-        boot,
-        spec_format,
-        trace,
-        owner,
-        provider,
-        finalize_compiler_pending_artifact,
-    )
-}
-
-#[cfg(test)]
-#[allow(clippy::too_many_arguments)]
-pub(crate) fn write_boot_artifacts_owner_managed_with_finalizer<P: OwnerNativeCompileProvider>(
-    node_dir: &Path,
-    node_rel: &str,
-    workspace_root: &Path,
-    self_coord: &SelfCoordinate,
-    boot: &EffectiveBoot,
-    spec_format: SpecFormat,
-    trace: Option<&TraceRun>,
-    owner: OwnerRuntimeView<'_>,
-    provider: Option<&mut P>,
-    finalizer: PendingFinalizer,
-) -> Result<(WrittenArtifacts, Option<OwnerNativeCompileContinuation>), WorkspaceError> {
-    write_boot_artifacts_owner_managed_using(
-        node_dir,
-        node_rel,
-        workspace_root,
-        self_coord,
-        boot,
-        spec_format,
-        trace,
-        owner,
-        provider,
-        finalizer,
-    )
-}
-
-#[allow(clippy::too_many_arguments)]
-fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
-    node_dir: &Path,
-    node_rel: &str,
-    workspace_root: &Path,
-    self_coord: &SelfCoordinate,
-    boot: &EffectiveBoot,
-    spec_format: SpecFormat,
-    trace: Option<&TraceRun>,
-    owner: OwnerRuntimeView<'_>,
-    provider: Option<&mut P>,
-    finalizer: PendingFinalizer,
-) -> Result<(WrittenArtifacts, Option<OwnerNativeCompileContinuation>), WorkspaceError> {
-    let has_static = boot.static_entries().next().is_some();
-    let acquisition = trace
-        .filter(|_| has_static)
-        .map(|run| ScopeAcquisition::node(run, node_rel, spec_format));
-    let mode = match acquisition.as_ref() {
-        Some(acquisition) => OwnerNativeCompileMode::Traced(acquisition),
-        None => OwnerNativeCompileMode::Plain,
-    };
-    let index_text = render_index_with_spec_format(boot, None, spec_format)?;
-    let compiled = compile_static_owner_managed_using(
-        boot,
-        workspace_root,
-        self_coord,
-        spec_format,
-        owner,
-        mode,
-        provider,
-        None,
-        None,
-        finalizer,
-    )?;
-    let boot_dir = node_dir.join(layout::current_boot_dir());
-    let index = boot_dir.join(INDEX_FILE);
-    let static_path = boot_dir.join(static_file(spec_format));
-    let stale_path = boot_dir.join(stale_static_file(spec_format));
-    let static_bytes = compiled
-        .as_ref()
-        .map(|compiled| compiled.artifact().bytes());
-    let redirects = transaction::write_production_with_selectors(
-        transaction::ArtifactWrite {
-            index_path: &index,
-            index_bytes: index_text.as_bytes(),
-            static_path: &static_path,
-            static_bytes,
-            stale_path: &stale_path,
-        },
-        |transaction| {
-            redirect::write_redirect_blocks_with_transaction(node_dir, spec_format, transaction)
-        },
-    )?;
-    let static_lane = compiled.as_ref().map(|_| static_path);
-    let native = compiled
-        .map(OwnerManagedStaticCompile::into_parts)
-        .and_then(|(_, native, _)| native);
-    Ok((
-        WrittenArtifacts {
-            index,
-            static_lane,
-            redirects,
-        },
-        native,
-    ))
 }

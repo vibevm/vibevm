@@ -97,17 +97,36 @@ pub fn from_xml(xml: &str) -> Result<SpecDoc> {
 /// assert!(err.message.contains("documentation vocabulary"));
 /// ```
 pub fn from_xml_with(xml: &str, vocab: Vocabulary) -> Result<SpecDoc> {
-    parse(xml, vocab, false).map(|(doc, _, _)| doc)
+    parse(xml, vocab, false).map(|(doc, _, _, _)| doc)
 }
 
 type ObservedDocument = (
     SpecDoc,
     Vec<crate::xml_annotations::SemanticComment>,
     Vec<crate::xml_annotations::GeneratedXmlComment>,
+    crate::xml_annotations::SemanticLayout,
 );
 
-pub(super) fn parse_observed(xml: &str) -> Result<ObservedDocument> {
+pub(super) fn parse_observed(
+    xml: &str,
+) -> Result<(
+    SpecDoc,
+    Vec<crate::xml_annotations::SemanticComment>,
+    Vec<crate::xml_annotations::GeneratedXmlComment>,
+)> {
     parse(xml, Vocabulary::Spec, true)
+        .map(|(document, semantic, physical, _)| (document, semantic, physical))
+}
+
+pub(super) fn parse_observed_mapped(
+    xml: &str,
+) -> Result<(
+    SpecDoc,
+    Vec<crate::xml_annotations::SemanticComment>,
+    crate::xml_annotations::SemanticLayout,
+)> {
+    parse(xml, Vocabulary::Spec, true)
+        .map(|(document, semantic, _, layout)| (document, semantic, layout))
 }
 
 fn parse(xml: &str, vocab: Vocabulary, observe: bool) -> Result<ObservedDocument> {
@@ -124,6 +143,7 @@ fn parse(xml: &str, vocab: Vocabulary, observe: bool) -> Result<ObservedDocument
     }
     p.check_root_attrs(&attrs, at)?;
     let semantic = p.begin_semantic(crate::xml_annotations::RegionKind::Container);
+    p.tag_semantic(semantic, crate::xml_annotations::RegionRole::Root);
     let doc = if was_empty {
         SpecDoc::default()
     } else {
@@ -136,11 +156,16 @@ fn parse(xml: &str, vocab: Vocabulary, observe: bool) -> Result<ObservedDocument
         return Err(p.err(at, "content after </spec> — one document, one root".into()));
     }
     p.check_ids()?;
+    let layout = p
+        .observation
+        .as_ref()
+        .map(|observation| observation.layout())
+        .unwrap_or_default();
     let (semantic, physical) = match p.observation.take() {
         Some(observation) => observation.finish(&p.evs)?,
         None => (Vec::new(), Vec::new()),
     };
-    Ok((doc, semantic, physical))
+    Ok((doc, semantic, physical, layout))
 }
 
 pub(super) struct Parser<'a> {
