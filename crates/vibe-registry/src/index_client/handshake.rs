@@ -48,9 +48,10 @@ pub(super) fn probe_candidate(
     client: &reqwest::blocking::Client,
     candidate: &str,
     auth: &IndexAuth,
-) -> HandshakeProbe {
+    admission: Option<&crate::HttpAdmission>,
+) -> Result<HandshakeProbe, super::IndexError> {
     let url = hello_url(candidate);
-    let resp = match client.get(&url).send() {
+    let resp = match super::IndexClient::get_with(client, client.get(&url), &url, auth, admission) {
         Ok(resp) if resp.status().is_success() => resp,
         Ok(resp) => {
             let status = resp.status().as_u16();
@@ -60,7 +61,7 @@ pub(super) fn probe_candidate(
                     target: "vibe_registry::index_client",
                     "handshake probe at `{url}` refused: {reason}"
                 );
-                return HandshakeProbe::Refused { reason };
+                return Ok(HandshakeProbe::Refused { reason });
             }
             // 404 / 5xx / other non-success — this candidate has no
             // handshake; the next candidate, then the repomd path.
@@ -68,14 +69,15 @@ pub(super) fn probe_candidate(
                 target: "vibe_registry::index_client",
                 "handshake probe at `{url}` non-success ({status}); trying next candidate"
             );
-            return HandshakeProbe::Absent;
+            return Ok(HandshakeProbe::Absent);
         }
+        Err(e @ super::IndexError::ContactRefused(_)) => return Err(e),
         Err(e) => {
             tracing::debug!(
                 target: "vibe_registry::index_client",
                 "handshake probe at `{url}` errored: {e}"
             );
-            return HandshakeProbe::Absent;
+            return Ok(HandshakeProbe::Absent);
         }
     };
     let body = match resp.bytes() {
@@ -88,7 +90,7 @@ pub(super) fn probe_candidate(
                 target: "vibe_registry::index_client",
                 "handshake body from `{url}` errored: {e}"
             );
-            return HandshakeProbe::Absent;
+            return Ok(HandshakeProbe::Absent);
         }
     };
     let handshake: Handshake = match serde_json::from_slice(&body) {
@@ -99,10 +101,10 @@ pub(super) fn probe_candidate(
                 target: "vibe_registry::index_client",
                 "handshake at `{url}` does not parse: {reason}"
             );
-            return HandshakeProbe::Refused { reason };
+            return Ok(HandshakeProbe::Refused { reason });
         }
     };
-    interpret(&url, candidate, &handshake)
+    Ok(interpret(&url, candidate, &handshake))
 }
 
 pub(super) fn hello_url(candidate: &str) -> String {

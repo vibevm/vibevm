@@ -126,16 +126,33 @@ fn observe_scp(raw: &str) -> EndpointObservation {
     authority(host, None, TransportSpelling::Scp)
 }
 
+/// Canonical lexical host key, without DNS or configuration lookup.
+/// URL host normalization preserves IP/IDNA semantics. Exactly one DNS root
+/// dot is removed; empty DNS labels (including additional root dots) refuse.
+#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION")]
+pub fn normalized_host_key(host: &str) -> Option<String> {
+    match Host::parse(host).ok()? {
+        Host::Domain(domain) => {
+            let key = domain.strip_suffix('.').unwrap_or(&domain);
+            if key.split('.').any(str::is_empty) {
+                return None;
+            }
+            Some(key.to_owned())
+        }
+        address => Some(address.to_string()),
+    }
+}
+
 fn authority(host: &str, port: Option<u16>, transport: TransportSpelling) -> EndpointObservation {
-    let Ok(host) = Host::parse(host) else {
+    let Some(host) = normalized_host_key(host) else {
         return EndpointObservation::Opaque;
     };
     if matches!(transport, TransportSpelling::Ssh | TransportSpelling::Scp)
-        && matches!(&host, Host::Domain(domain) if !domain.contains('.'))
+        && !host.contains('.')
+        && !host.starts_with('[')
     {
         return EndpointObservation::Opaque;
     }
-    let host = host.to_string();
     let hosting = match host.as_str() {
         "github.com" => Some("github"),
         "gitverse.ru" => Some("gitverse"),

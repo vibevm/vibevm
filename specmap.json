@@ -25165,6 +25165,15 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/remap/endpoint.rs",
+      "item_kind": "fn",
+      "line": 129,
+      "symbol": "vibe_core::remap::endpoint::normalized_host_key",
+      "end_line": 144,
+      "fingerprint": "tok1:5fda8a665c666034077e247b3f1ce328a66ba629ba0662844be2b39fd80b56bd"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/remap/installed.rs",
       "item_kind": "mod",
       "line": 17,
@@ -37893,9 +37902,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/lib.rs",
       "item_kind": "fn",
-      "line": 305,
+      "line": 307,
       "symbol": "vibe_registry::CachedPackage::package_meta",
-      "end_line": 325,
+      "end_line": 327,
       "fingerprint": "tok1:1c0512c3543896942ac6f2f6a412095ca508daf24148bd85fa4af1b219bc1642"
     },
     {
@@ -37940,8 +37949,8 @@
       "item_kind": "enum",
       "line": 17,
       "symbol": "vibe_registry::error::RegistryError",
-      "end_line": 261,
-      "fingerprint": "tok1:3759d943a8bc24230bd762ce7f887ca2d87b0132cdaa2474887ad4d9fe56bc6b"
+      "end_line": 265,
+      "fingerprint": "tok1:4f13b6b409dc6246d5fedc68272434f6b3244876eebd81e252581d6612037ae9"
     },
     {
       "crate_name": "vibe-registry",
@@ -37958,8 +37967,8 @@
       "item_kind": "enum",
       "line": 45,
       "symbol": "vibe_registry::git_backend::GitError",
-      "end_line": 153,
-      "fingerprint": "tok1:f1bc3dac1e3c41c529e83b3424735d871928141bf835237bc7c6007c42e45467"
+      "end_line": 155,
+      "fingerprint": "tok1:53645700f8830e9bb1d17696ab740ceec8c749e6ea2a0ac24385edc66db31d08"
     },
     {
       "crate_name": "vibe-registry",
@@ -37978,6 +37987,15 @@
       "symbol": "vibe_registry::git_backend::shell",
       "end_line": 21,
       "fingerprint": "tok1:c69460358cab41a766a6cdb4ae63673c6b8c6356334d59bdb7d58cc0045f94b3"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell.rs",
+      "item_kind": "fn",
+      "line": 146,
+      "symbol": "vibe_registry::git_backend::shell::ShellGit::with_http_admission",
+      "end_line": 155,
+      "fingerprint": "tok1:79ef5461202c8645e0bef9e95ef70eda6a2ce724c2972d42b1879bccb4a3e04c"
     },
     {
       "crate_name": "vibe-registry",
@@ -38084,8 +38102,8 @@
       "item_kind": "fn",
       "line": 57,
       "symbol": "vibe_registry::git_backend::shell::raw_http::try_read",
-      "end_line": 136,
-      "fingerprint": "tok1:3a13b0c144aa13476b9c60a219e8913628473a762a545f5c8ac86c083eb051d1"
+      "end_line": 140,
+      "fingerprint": "tok1:9d2dc4b95c8e03e5b973a1cf4fa5b7cb5ca5cc1f9c9345564094fd54b0303905"
     },
     {
       "crate_name": "vibe-registry",
@@ -38102,8 +38120,8 @@
       "item_kind": "fn",
       "line": 46,
       "symbol": "vibe_registry::git_backend::shell::reported::ShellGit::run_transferring_with_prefix",
-      "end_line": 130,
-      "fingerprint": "tok1:eb9c162791f106764442f23c9ae2b1f20f3aacd491bfa04da74c804becd20c98"
+      "end_line": 131,
+      "fingerprint": "tok1:d1e139dbae722713302af4636759a7a7f65b46772b64235d2c5a20b63902c6a6"
     },
     {
       "crate_name": "vibe-registry",
@@ -38494,6 +38512,15 @@
     },
     {
       "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_package_registry/lookup.rs",
+      "item_kind": "fn",
+      "line": 459,
+      "symbol": "vibe_registry::git_package_registry::lookup::contact_refusal_tests::lookup_never_discards_a_primary_or_mirror_contact_refusal",
+      "end_line": 501,
+      "fingerprint": "tok1:74aca3953a8087e371eba41859994e7e39bab7c9ff496f0ece4c8791315e6f56"
+    },
+    {
+      "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/lookup/tests.rs",
       "item_kind": "mod",
       "line": 5,
@@ -38557,6 +38584,231 @@
     },
     {
       "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_registry::http_admission",
+      "end_line": 4,
+      "fingerprint": "tok1:52910b1e14f97a9b6d4012537c61ebbf3eae27d53fe7e9c54a7f55b273654a3d"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "item_kind": "enum",
+      "line": 20,
+      "symbol": "vibe_registry::http_admission::ContactRefusal",
+      "end_line": 56,
+      "fingerprint": "tok1:3264215e8450f184f324899109ea158aea03e2640f12c88a7d4032918e14add2"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "item_kind": "enum",
+      "line": 103,
+      "symbol": "vibe_registry::http_admission::HttpGetError",
+      "end_line": 110,
+      "fingerprint": "tok1:f65aa0bee0ea5966fecab3f331653b55e3710e3370cc7bb57319ddf22d04c335"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "item_kind": "fn",
+      "line": 252,
+      "symbol": "vibe_registry::http_admission::tests::bound_get_denies_dotted_authority_before_connect_and_preserves_lookalikes",
+      "end_line": 295,
+      "fingerprint": "tok1:516bcf59618fe367945f24f5aa016d29a0f09ebd6fd16b5a8042d10c90a46a42"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "item_kind": "fn",
+      "line": 242,
+      "symbol": "vibe_registry::http_admission::tests::dns_root_dot_cannot_bypass_denied_host_key",
+      "end_line": 251,
+      "fingerprint": "tok1:ed832c0111a849feaf8b86c154172afdf81322da81b60efdbcf4f00bac9e1b0a"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "item_kind": "fn",
+      "line": 183,
+      "symbol": "vibe_registry::http_admission::tests::normalized_keys_are_exact_and_errors_reveal_only_authority",
+      "end_line": 216,
+      "fingerprint": "tok1:5aa063839aa1dad51c5c9f967c33c42498bd4a8cf40cf428558fab00285eab5a"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "item_kind": "fn",
+      "line": 217,
+      "symbol": "vibe_registry::http_admission::tests::same_origin_retains_auth_cross_origin_strips_permanently_and_downgrade_refuses",
+      "end_line": 241,
+      "fingerprint": "tok1:ae080be8acb68a2271bb1b965b639113143da49b4e1b64996117a087f2147183"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 108,
+      "symbol": "vibe_registry::http_admission_tests::allowed_bound_probe_and_raw_read_succeed",
+      "end_line": 135,
+      "fingerprint": "tok1:82fa6249979313fcea84aebf41b6f14809e96c1a6a5266427761b8bd24a18edb"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 137,
+      "symbol": "vibe_registry::http_admission_tests::allowed_redirect_proves_second_server_is_reachable",
+      "end_line": 149,
+      "fingerprint": "tok1:a2d8ba09fceb8d56960047b7835de2c47f970c5d0cd917e61c77a2510a7e0067"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 522,
+      "symbol": "vibe_registry::http_admission_tests::bound_auth_and_format_errors_keep_their_existing_discriminants",
+      "end_line": 543,
+      "fingerprint": "tok1:96beb0f331cf918bc998f007761a99f56c729facf75d7011ace9ae82fb76132d"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 449,
+      "symbol": "vibe_registry::http_admission_tests::bound_owners_never_attach_plaintext_bearer_or_url_credentials",
+      "end_line": 472,
+      "fingerprint": "tok1:feeecb0012ac1b36cf1d5112bc9ce7293931ce97fcc80caee81e2b4f40638756"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 98,
+      "symbol": "vibe_registry::http_admission_tests::bound_probe_initial_deny_contacts_nothing",
+      "end_line": 107,
+      "fingerprint": "tok1:b902e2f49cf3576731a422486336f78b5738a38c9487436e54b61e2d48b9c49b"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 84,
+      "symbol": "vibe_registry::http_admission_tests::bound_probe_redirect_denies_before_second_contact",
+      "end_line": 97,
+      "fingerprint": "tok1:eaa7795e921b35d54c5fb876b83e2bc76230ce7ed9d257fa30d2931bfd5b913e"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 545,
+      "symbol": "vibe_registry::http_admission_tests::bound_probe_refuses_hostless_and_opaque_addresses_before_request_build",
+      "end_line": 569,
+      "fingerprint": "tok1:3b59fb9047c4ad5ee47f622188154d0f72c30dd1f036478e940c927b32a05996"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 571,
+      "symbol": "vibe_registry::http_admission_tests::bound_purl_refuses_unsupported_base_before_url_construction",
+      "end_line": 599,
+      "fingerprint": "tok1:fff98b5f0122c1513b7682c3ee65c57be0fdc58260dc3c4c5002bce87d897875"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 375,
+      "symbol": "vibe_registry::http_admission_tests::bound_raw_decline_refuses_native_before_sentinel_spawn",
+      "end_line": 400,
+      "fingerprint": "tok1:f13cd61c13cd557dc261753e5e4183b9eb36d1bc1a4077eeb37e09df4759238d"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 493,
+      "symbol": "vibe_registry::http_admission_tests::bound_raw_transient_status_retries_still_recover",
+      "end_line": 520,
+      "fingerprint": "tok1:7a5bfc393124c931dec53125478e9a86a0b803ee40478b949b291e990a95f155"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 402,
+      "symbol": "vibe_registry::http_admission_tests::driver_retains_same_origin_headers_then_strips_them_permanently",
+      "end_line": 447,
+      "fingerprint": "tok1:cf464ffa50d7ff974be62a55751687237eb0f05af9fff8589931a77e6d8f83b8"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 151,
+      "symbol": "vibe_registry::http_admission_tests::every_index_get_family_denies_and_pools_are_isolated",
+      "end_line": 170,
+      "fingerprint": "tok1:c1a418ef724c326597971b132f6f6214ce4ca3e3b6f0fdf64f4ed19a55dcfb04"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 172,
+      "symbol": "vibe_registry::http_admission_tests::freshness_and_static_search_preserve_redirect_refusal",
+      "end_line": 196,
+      "fingerprint": "tok1:09c36b80348e68bf557e1e45af8248d2365074757b7d6730600976d696d78843"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 232,
+      "symbol": "vibe_registry::http_admission_tests::raw_retry_rechecks_redirect_and_stops_on_denial",
+      "end_line": 262,
+      "fingerprint": "tok1:5efd6c3b98e38e26ccd4d58996e0cf9cd8ffb3e1e2720cf8eac85a0bcb0f764f"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 198,
+      "symbol": "vibe_registry::http_admission_tests::raw_rewrite_denial_is_terminal_and_anonymous_binding_is_retained",
+      "end_line": 230,
+      "fingerprint": "tok1:4531f9d05f5379d6c9b7862fad9b81107a1a5b78f6f8005a2f0a372f8ceb52fe"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 264,
+      "symbol": "vibe_registry::http_admission_tests::redirects_have_finite_limit_and_invalid_locations_are_typed",
+      "end_line": 293,
+      "fingerprint": "tok1:96ac6e14645e213e2be93b4194fecf68f7c60cde20c07a89c9f7c726f34aafda"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 295,
+      "symbol": "vibe_registry::http_admission_tests::resolver_binds_before_probe_and_keeps_index_denial_through_git_fallback",
+      "end_line": 355,
+      "fingerprint": "tok1:4ad231607fdacf669267060df082ef27ed3317ebdb27a460a1210568f0b78481"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "item_kind": "fn",
+      "line": 474,
+      "symbol": "vibe_registry::http_admission_tests::unbound_driver_preserves_legacy_redirect_behavior_with_isolated_test_client",
+      "end_line": 491,
+      "fingerprint": "tok1:3a795f135128062c92e426d44a64a2d01e595add710fe27b19a74dce24f192b0"
+    },
+    {
+      "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/index_client/mod.rs",
       "item_kind": "mod",
       "line": 23,
@@ -38567,11 +38819,29 @@
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/index_client/mod.rs",
+      "item_kind": "fn",
+      "line": 331,
+      "symbol": "vibe_registry::index_client::IndexClient::at_with_admission",
+      "end_line": 343,
+      "fingerprint": "tok1:7664f2f2068b9beb0833177f470103b087c4a3836e33ae50fcd5935599083a64"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/index_client/mod.rs",
+      "item_kind": "fn",
+      "line": 193,
+      "symbol": "vibe_registry::index_client::IndexClient::probe_with_admission",
+      "end_line": 203,
+      "fingerprint": "tok1:664f51e9ae1d9a9d47b69ce7513a1073f6354b262928965bedbd59eb1aebe63b"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/index_client/mod.rs",
       "item_kind": "enum",
-      "line": 90,
+      "line": 93,
       "symbol": "vibe_registry::index_client::IndexError",
-      "end_line": 123,
-      "fingerprint": "tok1:71cd0162a7af8fcfc92cce3c5e8a241a6779d6da34e40feb8e23a5155fa08814"
+      "end_line": 128,
+      "fingerprint": "tok1:58f1c9d5e418fe95d23e8ec4f8665bf3c23427562f680ca268027adb9b75bbe5"
     },
     {
       "crate_name": "vibe-registry",
@@ -38716,6 +38986,15 @@
       "symbol": "vibe_registry::multi_registry_resolver::clone_chain",
       "end_line": 20,
       "fingerprint": "tok1:f63a8ad22ced809ac17bcb0b1bcb02c1923fcf95736dec18b22e0862f83cb0b4"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/multi_registry_resolver/construction.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::multi_registry_resolver::construction",
+      "end_line": 2,
+      "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
     },
     {
       "crate_name": "vibe-registry",
@@ -65649,6 +65928,14 @@
       "verb": "documents"
     },
     {
+      "file": "crates/vibe-core/src/remap/endpoint.rs",
+      "from_symbol": "vibe_core::remap::endpoint::normalized_host_key",
+      "line": 132,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION",
+      "verb": "documents"
+    },
+    {
       "file": "crates/vibe-core/src/remap/installed.rs",
       "from_symbol": "vibe_core::remap::installed",
       "line": 17,
@@ -77360,7 +77647,7 @@
     {
       "file": "crates/vibe-registry/src/lib.rs",
       "from_symbol": "vibe_registry::CachedPackage::package_meta",
-      "line": 312,
+      "line": 314,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -77437,6 +77724,14 @@
       "line": 21,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::ShellGit::with_http_admission",
+      "line": 148,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "implements"
     },
     {
@@ -77534,7 +77829,7 @@
     {
       "file": "crates/vibe-registry/src/git_backend/shell/raw_http.rs",
       "from_symbol": "vibe_registry::git_backend::shell::raw_http::try_read",
-      "line": 81,
+      "line": 84,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RAW-READ-FAST-PATH",
       "verb": "implements"
@@ -77905,6 +78200,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-registry/src/git_package_registry/lookup.rs",
+      "from_symbol": "vibe_registry::git_package_registry::lookup::contact_refusal_tests::lookup_never_discards_a_primary_or_mirror_contact_refusal",
+      "line": 460,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-registry/src/git_package_registry/lookup/tests.rs",
       "from_symbol": "vibe_registry::git_package_registry::lookup::tests",
       "line": 5,
@@ -77962,6 +78265,206 @@
       "reason": "no-unwrap-gate: the recipe file is embedded by `include_str!`, so its well-formedness is a property of the BUILD, not of any run — there is no runtime input that can make this parse fail, and threading a Result through every caller would add a branch no test can reach. The machinery that makes the panic unreachable rather than merely unlikely: the `assert_eq!`s below pin every field this recipe depends on, and the frozen goldens in `vibe-index/tests/content_hash_parity.rs` — which exercise BOTH implementations at both recipes — fail the moment the file's MEANING changes."
     },
     {
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "from_symbol": "vibe_registry::http_admission",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "from_symbol": "vibe_registry::http_admission::ContactRefusal",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "from_symbol": "vibe_registry::http_admission::HttpGetError",
+      "line": 104,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "from_symbol": "vibe_registry::http_admission::tests::bound_get_denies_dotted_authority_before_connect_and_preserves_lookalikes",
+      "line": 253,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "from_symbol": "vibe_registry::http_admission::tests::dns_root_dot_cannot_bypass_denied_host_key",
+      "line": 243,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "from_symbol": "vibe_registry::http_admission::tests::normalized_keys_are_exact_and_errors_reveal_only_authority",
+      "line": 184,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission.rs",
+      "from_symbol": "vibe_registry::http_admission::tests::same_origin_retains_auth_cross_origin_strips_permanently_and_downgrade_refuses",
+      "line": 218,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::allowed_bound_probe_and_raw_read_succeed",
+      "line": 109,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::allowed_redirect_proves_second_server_is_reachable",
+      "line": 138,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::bound_auth_and_format_errors_keep_their_existing_discriminants",
+      "line": 523,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::bound_owners_never_attach_plaintext_bearer_or_url_credentials",
+      "line": 450,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::bound_probe_initial_deny_contacts_nothing",
+      "line": 99,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::bound_probe_redirect_denies_before_second_contact",
+      "line": 85,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::bound_probe_refuses_hostless_and_opaque_addresses_before_request_build",
+      "line": 546,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::bound_purl_refuses_unsupported_base_before_url_construction",
+      "line": 572,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::bound_raw_decline_refuses_native_before_sentinel_spawn",
+      "line": 377,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::bound_raw_transient_status_retries_still_recover",
+      "line": 494,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::driver_retains_same_origin_headers_then_strips_them_permanently",
+      "line": 403,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::every_index_get_family_denies_and_pools_are_isolated",
+      "line": 152,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::freshness_and_static_search_preserve_redirect_refusal",
+      "line": 173,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::raw_retry_rechecks_redirect_and_stops_on_denial",
+      "line": 233,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::raw_rewrite_denial_is_terminal_and_anonymous_binding_is_retained",
+      "line": 199,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::redirects_have_finite_limit_and_invalid_locations_are_typed",
+      "line": 265,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::resolver_binds_before_probe_and_keeps_index_denial_through_git_fallback",
+      "line": 296,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/http_admission_tests.rs",
+      "from_symbol": "vibe_registry::http_admission_tests::unbound_driver_preserves_legacy_redirect_behavior_with_isolated_test_client",
+      "line": 475,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-registry/src/index_client/mod.rs",
       "from_symbol": "vibe_registry::index_client",
       "line": 23,
@@ -77971,8 +78474,24 @@
     },
     {
       "file": "crates/vibe-registry/src/index_client/mod.rs",
+      "from_symbol": "vibe_registry::index_client::IndexClient::at_with_admission",
+      "line": 332,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/index_client/mod.rs",
+      "from_symbol": "vibe_registry::index_client::IndexClient::probe_with_admission",
+      "line": 194,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/index_client/mod.rs",
       "from_symbol": "vibe_registry::index_client::IndexError",
-      "line": 91,
+      "line": 94,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http",
       "verb": "implements"
@@ -78107,6 +78626,14 @@
       "line": 20,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-066#locator",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/multi_registry_resolver/construction.rs",
+      "from_symbol": "vibe_registry::multi_registry_resolver::construction",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
       "verb": "implements"
     },
     {
@@ -115139,12 +115666,32 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW"
     },
     {
+      "anchor": "HTTP-ADMISSION",
+      "content_hash": "sha256:9859ac0cc625b463333e809dd2c14e9c91ceebb3be71a794b53a638d8dff9f53",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "Bounded HTTP-only admission capability",
+      "line": 19,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "HTTP-ADMISSION-LAW",
+      "content_hash": "sha256:bbdfdfeeefdb35c64179e67131a227f0f97c9d81cf1799dc0120d638ac1b077c",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "An explicit immutable HTTP-only binding is installed before a constrained client or resolver can probe or request. It checks the actual constructed initial URL and every redirect/retry destination before contact, preserving typed refusal independently of absence, transport, authentication and malformed data. A refusal consumes no retries and cannot be laundered into an optimization decline or ungated native fallback. Bound pools and anonymous backend clones retain the same binding. The bounded client owns its redirects and retries, has no ambient proxy or automatic transport replay, and confines credentials to the authorized origin; cross-origin stripping is permanent within a chain. Invalid redirect, finite-hop exhaustion, unsupported scheme and HTTPS downgrade refuse before the next request. Native subprocess paths under this HTTP-only capability refuse before spawn; positive admitted HTTP paths remain functional. Absence of binding preserves incumbent behavior. This internal capability is not an exposed whole-operation hosting exclusion setting, a DNS/IP egress sandbox or a substitute for the remaining admitted Git/submodule and route-choice implementation. Diagnostic endpoints do not expose credentials or query data. @status:spec/done",
+      "line": 21,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
+    },
+    {
       "anchor": "OPERATION-EFFECTS",
       "content_hash": "sha256:93a4537a518c9896a9ab2df9254207e827a4273e9e1edeb0087cb11a8e826be7",
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Explicit preview and cancellation boundaries",
-      "line": 19,
+      "line": 24,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS",
       "kind": "req",
       "revision": 1
@@ -115155,7 +115702,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Operation planning separates source resolution, acquisition effects and product publication. A read-only preview does not silently inherit cache/config/temp writes from existing acquisition; unsupported metadata access is an explicit limitation until the shared provider supports the requested effect contract. Apply uses captured decisions or reports/replans drift rather than promising a mutable ref is unchanged. Cancellation requests and stopped outcomes are distinct. Before product publication, cooperative cancellation preserves project state; during owned local publication use existing guarded recovery. Completed or unknown external effects and rollback conflicts are reported truthfully, never labeled successful restoration. Reuse lifecycle and progress owners rather than create a parallel orchestrator. Logical successful-write counters are distinct from received bytes, retained file size and physical disk I/O. @status:spec/plan",
-      "line": 21,
+      "line": 26,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
     },
     {

@@ -4,7 +4,7 @@
 //!
 //! The client is resilient: any failure (4xx, 5xx, connect-fail,
 //! malformed JSON) returns an error that the caller treats as a
-//! fall-through trigger. Identity (`content_hash`) is verified at
+//! fall-through trigger, except typed contact refusals, which are terminal. Identity (`content_hash`) is verified at
 //! fetch time per [PROP-002 §2.1] regardless of how versions were
 //! enumerated, so a compromised index can at worst mislead the
 //! version selector — never substitute content.
@@ -14,7 +14,7 @@
 //! credentials — an optional bearer token resolved from the
 //! `[[registry]]` `auth` / `token_env` the same way the git side
 //! does (see [`auth`]). The token rides an `Authorization: Bearer`
-//! header on every request via the client's `default_headers`, never
+//! header via legacy default headers or bound request-scoped headers, never
 //! in the URL, and only over `https://`. Regimes that cannot serve
 //! HTTP auth (`ssh`, `credential-helper`) carry no token and surface
 //! [`IndexError::AuthIncapable`] on a 401/403 instead of looking like
@@ -38,7 +38,9 @@ pub use wire::{
     BindingSite, IndexVersion, PurlLookupHit, PurlLookupResults, SearchHit, SearchResults,
 };
 
-use std::sync::OnceLock;
+use crate::http_admission::{self, HttpGetError};
+use crate::{ContactRefusal, HttpAdmission};
+use std::sync::{Arc, OnceLock};
 use std::time::Duration;
 
 use specmark::spec;
@@ -73,6 +75,7 @@ pub struct IndexClient {
     file_base: String,
     server_base: String,
     auth: IndexAuth,
+    admission: Option<Arc<HttpAdmission>>,
     file_client: OnceLock<Result<reqwest::blocking::Client, String>>,
     server_client: OnceLock<Result<reqwest::blocking::Client, String>>,
     /// `repomd.json` as first read in this invocation — the yardstick a
@@ -80,7 +83,7 @@ pub struct IndexClient {
     /// the manifest could not be read, which leaves the check silent.
     /// Boxed: the manifest is large beside the rest of the client, which
     /// travels by value inside `ProbeOutcome::Found`.
-    repomd: OnceLock<Option<Box<Repomd>>>,
+    repomd: OnceLock<Result<Option<Box<Repomd>>, ContactRefusal>>,
     /// The invocation's journal and limit for downloads (`PROP-068`),
     /// attached once the resolver that holds this client is given the
     /// invocation's progress — after the probe built the client.
@@ -90,6 +93,8 @@ pub struct IndexClient {
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http")]
 pub enum IndexError {
+    #[error(transparent)]
+    ContactRefused(#[from] crate::ContactRefusal),
     #[error(
         "HTTP request to `{url}` failed \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; \
@@ -177,16 +182,42 @@ impl IndexClient {
     /// probe request itself carries the bearer token when the plan is
     /// [`IndexAuth::Bearer`], so a private index's probe authenticates.
     pub fn probe(base: &str, auth: IndexAuth) -> ProbeOutcome {
+        match Self::probe_bound(base, auth, None) {
+            Ok(outcome) => outcome,
+            Err(error) => ProbeOutcome::Refused {
+                reason: error.to_string(),
+            },
+        }
+    }
+
+    /// Probe with an immutable HTTP-only binding; a denied contact is terminal.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
+    )]
+    pub fn probe_with_admission(
+        base: &str,
+        auth: IndexAuth,
+        admission: Arc<HttpAdmission>,
+    ) -> Result<ProbeOutcome, IndexError> {
+        Self::probe_bound(base, auth, Some(admission))
+    }
+
+    fn probe_bound(
+        base: &str,
+        auth: IndexAuth,
+        admission: Option<Arc<HttpAdmission>>,
+    ) -> Result<ProbeOutcome, IndexError> {
         let trimmed = base.trim_end_matches('/');
-        let client = match Self::build_client(
+        let client = match Self::build_bound_client(
             Duration::from_secs(PROBE_TIMEOUT_SECS),
             &auth,
             trimmed,
+            admission.as_deref(),
         ) {
             Ok(c) => c,
             Err(e) => {
                 tracing::debug!(target: "vibe_registry::index_client", "could not build probe client: {e}");
-                return ProbeOutcome::Absent;
+                return Ok(ProbeOutcome::Absent);
             }
         };
         let candidates = [format!("{trimmed}/v1/index"), trimmed.to_string()];
@@ -194,24 +225,25 @@ impl IndexClient {
         // including the ones where no `repomd` will ever answer
         // again (a moved index answers `successor` here, or nothing).
         for candidate in &candidates {
-            match handshake::probe_candidate(&client, candidate, &auth) {
+            match handshake::probe_candidate(&client, candidate, &auth, admission.as_deref())? {
                 handshake::HandshakeProbe::Found { file_base } => {
                     tracing::debug!(
                         target: "vibe_registry::index_client",
                         "probe succeeded via handshake at {candidate}"
                     );
-                    return ProbeOutcome::Found(IndexClient {
+                    return Ok(ProbeOutcome::Found(IndexClient {
                         file_base,
                         server_base: trimmed.to_string(),
                         auth,
+                        admission,
                         file_client: OnceLock::new(),
                         server_client: OnceLock::new(),
                         repomd: OnceLock::new(),
                         transfers: OnceLock::new(),
-                    });
+                    }));
                 }
                 handshake::HandshakeProbe::Refused { reason } => {
-                    return ProbeOutcome::Refused { reason };
+                    return Ok(ProbeOutcome::Refused { reason });
                 }
                 handshake::HandshakeProbe::Absent => {}
             }
@@ -221,18 +253,19 @@ impl IndexClient {
         // handshake.
         for candidate in candidates {
             let url = format!("{candidate}/repomd.json");
-            match client.get(&url).send() {
+            match Self::get_with(&client, client.get(&url), &url, &auth, admission.as_deref()) {
                 Ok(resp) if resp.status().is_success() => {
                     tracing::debug!(target: "vibe_registry::index_client", "probe succeeded at {url}");
-                    return ProbeOutcome::Found(IndexClient {
+                    return Ok(ProbeOutcome::Found(IndexClient {
                         file_base: candidate,
                         server_base: trimmed.to_string(),
                         auth,
+                        admission,
                         file_client: OnceLock::new(),
                         server_client: OnceLock::new(),
                         repomd: OnceLock::new(),
                         transfers: OnceLock::new(),
-                    });
+                    }));
                 }
                 Ok(resp) => {
                     let status = resp.status().as_u16();
@@ -242,7 +275,7 @@ impl IndexClient {
                             target: "vibe_registry::index_client",
                             "index probe at `{url}` refused: {reason}"
                         );
-                        return ProbeOutcome::Refused { reason };
+                        return Ok(ProbeOutcome::Refused { reason });
                     }
                     // 404 / 5xx / other non-success — try the next
                     // candidate, then fall through to Absent.
@@ -251,13 +284,14 @@ impl IndexClient {
                         "probe at `{url}` non-success ({status}); trying next candidate"
                     );
                 }
+                Err(e @ IndexError::ContactRefused(_)) => return Err(e),
                 Err(e) => {
                     tracing::debug!(target: "vibe_registry::index_client", "probe at `{url}` errored: {e}");
                 }
             }
         }
         tracing::debug!(target: "vibe_registry::index_client", "no index found at base `{base}`");
-        ProbeOutcome::Absent
+        Ok(ProbeOutcome::Absent)
     }
 
     /// Construct directly without probing, with no auth plan. Used by
@@ -286,11 +320,57 @@ impl IndexClient {
             file_base: trimmed.clone(),
             server_base: trimmed,
             auth,
+            admission: None,
             file_client: OnceLock::new(),
             server_client: OnceLock::new(),
             repomd: OnceLock::new(),
             transfers: OnceLock::new(),
         }
+    }
+
+    /// Construct a bound client without probing or opening a connection.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
+    )]
+    pub fn at_with_admission(
+        base: impl Into<String>,
+        auth: IndexAuth,
+        admission: Arc<HttpAdmission>,
+    ) -> Self {
+        let mut client = Self::at_with_auth(base, auth);
+        client.admission = Some(admission);
+        client
+    }
+
+    fn get(
+        &self,
+        client: &reqwest::blocking::Client,
+        request: reqwest::blocking::RequestBuilder,
+        url: &str,
+    ) -> Result<reqwest::blocking::Response, IndexError> {
+        Self::get_with(client, request, url, &self.auth, self.admission.as_deref())
+    }
+
+    fn get_with(
+        client: &reqwest::blocking::Client,
+        mut request: reqwest::blocking::RequestBuilder,
+        url: &str,
+        auth: &IndexAuth,
+        admission: Option<&HttpAdmission>,
+    ) -> Result<reqwest::blocking::Response, IndexError> {
+        if admission.is_some()
+            && attaches_authorization(url, auth)
+            && let Some(headers) = auth.header_map()
+        {
+            request = request.headers(headers);
+        }
+        http_admission::get(client, request, url, admission).map_err(|error| match error {
+            HttpGetError::Refused(refusal) => IndexError::ContactRefused(refusal),
+            HttpGetError::Transport(error) => IndexError::Http {
+                url: url.to_owned(),
+                message: error.to_string(),
+            },
+        })
     }
 
     pub fn file_base(&self) -> &str {
@@ -328,6 +408,9 @@ impl IndexClient {
     /// `reqwest::Url` so PURL punctuation (`:`, `/`, `@`) is escaped
     /// correctly.
     pub fn lookup_purl(&self, purl: &str) -> Result<PurlLookupResults, IndexError> {
+        if let Some(admission) = &self.admission {
+            admission.admit_address(&self.server_base)?;
+        }
         let base_url = format!("{}/v1/purls/", self.server_base);
         let mut parsed = reqwest::Url::parse(&base_url).map_err(|e| IndexError::Http {
             url: base_url.clone(),
@@ -346,10 +429,7 @@ impl IndexClient {
             url: url.clone(),
             message: e.to_string(),
         })?;
-        let resp = client.get(&url).send().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
+        let resp = self.get(client, client.get(&url), &url)?;
         let status = resp.status();
         if !status.is_success() {
             return Err(self.classify_failure(url, status.as_u16()));
@@ -401,10 +481,7 @@ impl IndexClient {
         if let Some(lim) = limit {
             req = req.query(&[("limit", lim.to_string())]);
         }
-        let resp = req.send().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
+        let resp = self.get(client, req, &url)?;
         let status = resp.status();
         if status.as_u16() == 404
             && let Some(results) = self.search_catalog(query, kind, limit)?
@@ -455,7 +532,8 @@ impl IndexClient {
     /// dependency walk reuses its connection pool instead of repeating a TLS
     /// handshake for every package.
     ///
-    /// **Р3 layer 2 — the attachment refuses plaintext.** The token is
+    /// Bound clients attach credentials per request in `get_with`.
+    /// **Р3 layer 2 — the legacy attachment refuses plaintext.** The token is
     /// attached only when this client's `base_url` starts with
     /// `https://`. Layer 1 (`IndexAuth::plan`, reached via
     /// [`IndexAuth::for_registry`]) never births a `Bearer` plan for a
@@ -465,14 +543,18 @@ impl IndexClient {
     /// through here and is checked against its own base. Mirrors
     /// [`crate::git_package_registry::inject_token`], which checks
     /// `https://` inside the function the caller cannot sidestep.
-    fn build_client(
+    fn build_bound_client(
         timeout: Duration,
         auth: &IndexAuth,
         base_url: &str,
+        admission: Option<&HttpAdmission>,
     ) -> Result<reqwest::blocking::Client, reqwest::Error> {
         let mut builder = reqwest::blocking::Client::builder()
             .user_agent(concat!("vibe-registry/", env!("CARGO_PKG_VERSION")))
             .timeout(timeout);
+        if admission.is_some() {
+            return http_admission::bound_builder(builder).build();
+        }
         if attaches_authorization(base_url, auth)
             && let Some(headers) = auth.header_map()
         {
@@ -485,7 +567,7 @@ impl IndexClient {
 /// Does this client attach `Authorization` — the whole decision, in one
 /// place, so it can be asserted directly.
 ///
-/// Extracted from [`IndexClient::build_client`] because once the scheme
+/// Extracted from [`IndexClient::build_bound_client`] because once the scheme
 /// gate moved into the attachment step, the positive case became
 /// untestable end to end: this crate's mock servers are plain HTTP, so
 /// every integration test can now exercise only the suppressing rows. A

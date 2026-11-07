@@ -29,7 +29,9 @@ pub mod embedded_source;
 pub mod git_backend;
 pub mod git_package_registry;
 pub mod git_registry;
+pub mod http_admission;
 pub mod index_client;
+pub use http_admission::{ContactRefusal, HttpAdmission};
 mod local_registry;
 pub mod multi_registry_resolver;
 mod registry_cache;
@@ -390,3 +392,6 @@ pub use store::{
     InsertOutcome, entry_dir, insert_from, list_all, list_older_than, list_versions, lookup,
     record_hash, recorded_hash, remove_all, remove_entry, remove_name, store_root,
 };
+
+#[cfg(test)]
+mod http_admission_tests;

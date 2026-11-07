@@ -446,7 +446,7 @@ impl InstallResolver {
     pub fn candidate_groups(&self, name: &str) -> Result<Vec<Group>> {
         match self {
             InstallResolver::Local(r, _) => Ok(r.candidate_groups(name)?),
-            InstallResolver::Multi(m, _) => Ok(m.resolve_name_candidates(name)),
+            InstallResolver::Multi(m, _) => Ok(m.resolve_name_candidates(name)?),
             InstallResolver::Embedded {
                 locals, declared, ..
             } => {
@@ -458,7 +458,7 @@ impl InstallResolver {
                     groups.extend(local.candidate_groups(name)?);
                 }
                 if let Some(m) = declared {
-                    groups.extend(m.resolve_name_candidates(name));
+                    groups.extend(m.resolve_name_candidates(name)?);
                 }
                 groups.sort_by(|a, b| a.as_str().cmp(b.as_str()));
                 groups.dedup();

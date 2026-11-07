@@ -35,6 +35,7 @@ use super::{GitBackend, GitError, GitPreparedRevision};
 #[derive(Debug)]
 pub struct ShellGit {
     binary: PathBuf,
+    admission: Option<Arc<crate::HttpAdmission>>,
     // Force the interactive-credential silencing layer on for every
     // invocation of this instance, regardless of TTY (PROP-002 §2.2.1).
     // Set on the anonymous variant a `MultiRegistryResolver` hands to a
@@ -121,6 +122,7 @@ impl ShellGit {
             .unwrap_or_else(|| PathBuf::from("git"));
         ShellGit {
             binary,
+            admission: None,
             force_anonymous: false,
             raw_base: None,
             raw_client: OnceLock::new(),
@@ -136,7 +138,27 @@ impl ShellGit {
     /// transient condition, so the failed attempt is cached like any
     /// other and the reads all go to git instead of re-paying it.
     fn raw_client(&self) -> Option<&reqwest::blocking::Client> {
-        self.raw_client.get_or_init(raw_http::build_client).as_ref()
+        self.raw_client
+            .get_or_init(|| raw_http::build_client(self.admission.as_deref()))
+            .as_ref()
+    }
+
+    /// Bind HTTP admission before use and discard any prior HTTP pool.
+    /// Native Git is unavailable under this temporary HTTP-only capability.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
+    )]
+    pub fn with_http_admission(mut self, admission: Arc<crate::HttpAdmission>) -> Self {
+        self.admission = Some(admission);
+        self.raw_client = OnceLock::new();
+        self
+    }
+
+    fn admit_native(&self) -> Result<(), GitError> {
+        if self.admission.is_some() {
+            return Err(crate::ContactRefusal::NativeTransportUnavailable.into());
+        }
+        Ok(())
     }
 
     /// Rebind the `git` binary this backend spawns, overriding both
@@ -184,6 +206,7 @@ impl ShellGit {
     ///
     /// Caches the result on this instance. Subsequent calls are free.
     pub fn preflight(&self) -> Result<(), GitError> {
+        self.admit_native()?;
         let ok = *self.preflight_cache.get_or_init(|| {
             let mut cmd = Command::new(&self.binary);
             apply_common_env(&mut cmd, self.force_anonymous);
@@ -198,6 +221,7 @@ impl ShellGit {
     }
 
     fn run(&self, args: &[&str], cwd: Option<&Path>) -> Result<Output, GitError> {
+        self.admit_native()?;
         let mut cmd = Command::new(&self.binary);
         // apply_common_env may push `-c <key>=<value>` flags that must
         // come BEFORE the subcommand — push the env / global-flag
@@ -226,6 +250,7 @@ impl ShellGit {
     /// "ref missing" from "file missing in ref" from "archive
     /// unsupported").
     fn run_raw(&self, args: &[&str], cwd: Option<&Path>) -> Result<Output, GitError> {
+        self.admit_native()?;
         let mut cmd = Command::new(&self.binary);
         apply_common_env(&mut cmd, self.force_anonymous);
         cmd.args(args);
@@ -397,6 +422,7 @@ impl GitBackend for ShellGit {
         if let Some(client) = self.raw_client()
             && let Some(outcome) = raw_http::try_read(
                 client,
+                self.admission.as_deref(),
                 self.raw_base.as_deref(),
                 &self.raw_sleeper,
                 url,
@@ -511,11 +537,12 @@ impl GitBackend for ShellGit {
         // (`OnceLock` is not `Clone`), so reconstruct explicitly.
         Some(Arc::new(ShellGit {
             binary: self.binary.clone(),
+            admission: self.admission.clone(),
             force_anonymous: true,
             raw_base: self.raw_base.clone(),
-            // The client itself carries no posture — it sends whatever
-            // header the read decides on — so the anonymous variant
-            // shares this one's pool rather than opening a second.
+            // The anonymous backend retains the same admission Arc, so
+            // it can share the pool built under exactly that binding.
+            // Credentials remain request-scoped.
             raw_client: OnceLock::from(self.raw_client().cloned()),
             raw_sleeper: self.raw_sleeper.clone(),
             preflight_cache: OnceLock::new(),

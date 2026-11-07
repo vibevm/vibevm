@@ -459,3 +459,44 @@ fn classify_specific_matchers_win_over_unable_to_access() {
         GitError::AuthFailed { .. }
     ));
 }
+
+#[cfg(unix)]
+#[test]
+fn http_admission_refuses_every_native_owner_and_failed_raw_pool() {
+    use crate::{ContactRefusal, HttpAdmission};
+    let (_dir, binary, record) = crate::http_admission_tests::sentinel_git();
+    let backend = ShellGit::new()
+        .with_binary(binary)
+        .with_http_admission(Arc::new(HttpAdmission::new(Vec::<String>::new()).unwrap()));
+    let refused = |result: Result<(), GitError>| {
+        assert!(matches!(
+            result,
+            Err(GitError::ContactRefused(
+                ContactRefusal::NativeTransportUnavailable
+            ))
+        ))
+    };
+    refused(backend.preflight());
+    refused(backend.run(&["--version"], None).map(|_| ()));
+    refused(backend.run_raw(&["--version"], None).map(|_| ()));
+    refused(
+        backend
+            .run_transferring_with_prefix(
+                &[],
+                &["fetch"],
+                None,
+                reported::Remote::Origin,
+                Path::new("/tmp/unused"),
+            )
+            .map(|_| ()),
+    );
+    assert!(backend.raw_client.set(None).is_ok());
+    refused(
+        backend
+            .fetch_file_at_ref("https://github.com/o/r", "v1.0.0", "vibe.toml")
+            .map(|_| ()),
+    );
+    let anon = backend.anonymized_for_public().unwrap();
+    refused(anon.list_tags("https://github.com/o/r").map(|_| ()));
+    assert!(!record.exists());
+}

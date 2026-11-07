@@ -114,10 +114,7 @@ impl IndexClient {
             url: url.to_string(),
             message: e.to_string(),
         })?;
-        let resp = client.get(url).send().map_err(|e| IndexError::Http {
-            url: url.to_string(),
-            message: e.to_string(),
-        })?;
+        let resp = self.get(client, client.get(url), url)?;
         let status = resp.status();
         if status.as_u16() == 404 {
             return Ok(None);

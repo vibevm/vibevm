@@ -56,6 +56,7 @@ impl ShellGit {
         remote: Remote<'_>,
         repository: &Path,
     ) -> Result<Output, GitError> {
+        self.admit_native()?;
         let mut argv: Vec<&str> = Vec::with_capacity(prefix.len() + args.len() + 1);
         argv.extend(prefix);
         argv.extend(args.first());

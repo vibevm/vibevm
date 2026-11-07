@@ -52,6 +52,8 @@ pub struct GitPreparedRevision {
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
 )]
 pub enum GitError {
+    #[error(transparent)]
+    ContactRefused(#[from] crate::ContactRefusal),
     #[error(
         "checkout at `{path}` has no origin remote (violates spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION; fix: configure the checkout origin or a reachable registry mirror and prepare again)"
     )]

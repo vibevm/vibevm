@@ -12,6 +12,8 @@ fn exact_known_hosts_are_normalized_without_credentials_or_path() {
     for raw in [
         "https://user:SYN_SECRET@GitHub.COM/a?token=SYN_QUERY#SYN_FRAGMENT",
         "git+https://github.com/a",
+        "https://GitHub.COM./a",
+        "git@github.com.:a",
         "git://github.com/a",
         "ssh://git@GITHUB.COM/a",
         "git@github.com:a",
@@ -24,6 +26,7 @@ fn exact_known_hosts_are_normalized_without_credentials_or_path() {
     }
     for raw in [
         "https://gitverse.ru/a",
+        "https://gitverse.ru./a",
         "git@gitverse.ru:a",
         "git+ssh://git@gitverse.ru/a",
     ] {
@@ -34,7 +37,6 @@ fn exact_known_hosts_are_normalized_without_credentials_or_path() {
         "evilgithub.com",
         "github.company.test",
         "gitverse.ru.attacker.test",
-        "github.com.",
     ] {
         assert_eq!(network(&format!("https://{host}/github.com")).hosting, None);
     }
@@ -111,4 +113,38 @@ fn local_nonlocal_and_opaque_sources_do_not_claim_hosting() {
     ] {
         assert_eq!(observe_endpoint(raw), EndpointObservation::Opaque, "{raw}");
     }
+}
+
+#[test]
+fn normalized_host_keys_remove_one_dns_root_dot_and_preserve_ip_semantics() {
+    for (host, key) in [
+        ("EXAMPLE.invalid.", "example.invalid"),
+        ("bücher.example.", "xn--bcher-kva.example"),
+        ("127.1", "127.0.0.1"),
+        ("[2001:0db8::1]", "[2001:db8::1]"),
+    ] {
+        assert_eq!(normalized_host_key(host).as_deref(), Some(key));
+    }
+    for malformed in [
+        ".",
+        "example.invalid..",
+        ".example.invalid",
+        "example..invalid",
+        "user@example.invalid",
+        "example.invalid/path",
+    ] {
+        assert_eq!(normalized_host_key(malformed), None);
+    }
+    assert_eq!(
+        network("https://github.com.attacker.invalid./a").hosting,
+        None
+    );
+    assert_eq!(
+        observe_endpoint("https://github.com../a"),
+        EndpointObservation::Opaque
+    );
+    assert_eq!(
+        observe_endpoint("git@alias.:repo"),
+        EndpointObservation::Opaque
+    );
 }

@@ -71,10 +71,7 @@ impl IndexClient {
             url: url.clone(),
             message: e.to_string(),
         })?;
-        let resp = client.get(&url).send().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
+        let resp = self.get(client, client.get(&url), &url)?;
         let status = resp.status();
         if status.as_u16() == 404 {
             return Ok(None);
@@ -86,7 +83,7 @@ impl IndexClient {
             url: url.clone(),
             message: e.to_string(),
         })?;
-        if !self.by_name_is_current(name, &body) {
+        if !self.by_name_is_current(name, &body)? {
             return Ok(None);
         }
         let parsed: NameEntryView =
@@ -120,10 +117,7 @@ impl IndexClient {
             url: url.clone(),
             message: e.to_string(),
         })?;
-        let resp = client.get(&url).send().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
+        let resp = self.get(client, client.get(&url), &url)?;
         let status = resp.status();
         if status.as_u16() == 404 {
             return Ok(Vec::new());
@@ -153,31 +147,38 @@ impl IndexClient {
     /// `by-name` file at all comes from a writer older than the per-file
     /// entries; there is nothing to check against, and the file is
     /// trusted as before. So is the case where the manifest cannot be
-    /// read: the check never makes a working index worse than it was.
-    pub fn by_name_is_current(&self, name: &str, body: &[u8]) -> bool {
+    /// read for ordinary transport/format reasons. A contact refusal remains
+    /// a typed error, including when replayed from this invocation's cache.
+    pub fn by_name_is_current(&self, name: &str, body: &[u8]) -> Result<bool, IndexError> {
         let Some(repomd) = self
             .repomd
-            .get_or_init(|| self.repomd().ok().flatten().map(Box::new))
+            .get_or_init(|| match self.repomd() {
+                Ok(value) => Ok(value.map(Box::new)),
+                Err(IndexError::ContactRefused(refusal)) => Err(refusal),
+                Err(_) => Ok(None),
+            })
+            .as_ref()
+            .map_err(|refusal| IndexError::ContactRefused(refusal.clone()))?
         else {
-            return true;
+            return Ok(true);
         };
         let key = format!("by-name/{name}.json");
         let verdict = match repomd.files.get(&key) {
             Some(RepomdFileEntry::File(file)) => {
                 let received = format!("sha256:{:x}", Sha256::digest(body));
                 if received == file.sha256 {
-                    return true;
+                    return Ok(true);
                 }
                 format!(
                     "its sha256 is {received}, repomd.json names {}",
                     file.sha256
                 )
             }
-            Some(RepomdFileEntry::Directory(_)) => return true,
+            Some(RepomdFileEntry::Directory(_)) => return Ok(true),
             None if repomd.files.keys().any(|k| k.starts_with("by-name/")) => {
                 "repomd.json does not list it".to_string()
             }
-            None => return true,
+            None => return Ok(true),
         };
         tracing::debug!(
             target: "vibe_registry::index_client",
@@ -186,6 +187,6 @@ impl IndexClient {
             "the served `by-name` file is not the one repomd.json vouches for ({verdict}); \
              enumerating the package's tags instead"
         );
-        false
+        Ok(false)
     }
 }

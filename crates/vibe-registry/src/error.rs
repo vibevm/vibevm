@@ -39,6 +39,10 @@ use crate::git_backend::GitError;
 )]
 pub enum RegistryError {
     #[error(transparent)]
+    Index(crate::IndexError),
+    #[error(transparent)]
+    ContactRefused(#[from] crate::ContactRefusal),
+    #[error(transparent)]
     Configuration(#[from] vibe_core::manifest::PackageConfigurationError),
 
     #[error(
@@ -140,7 +144,7 @@ pub enum RegistryError {
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend-trait; \
           fix: act on the wrapped git error): {0}"
     )]
-    Git(#[from] GitError),
+    Git(GitError),
 
     #[error(
         "could not determine the user home directory; set HOME (or USERPROFILE on Windows), or \
@@ -312,5 +316,22 @@ impl std::fmt::Display for StoreEntryMismatchDetail {
             self.actual,
             self.expected,
         )
+    }
+}
+
+impl From<GitError> for RegistryError {
+    fn from(error: GitError) -> Self {
+        match error {
+            GitError::ContactRefused(refusal) => Self::ContactRefused(refusal),
+            other => Self::Git(other),
+        }
+    }
+}
+impl From<crate::IndexError> for RegistryError {
+    fn from(error: crate::IndexError) -> Self {
+        match error {
+            crate::IndexError::ContactRefused(refusal) => Self::ContactRefused(refusal),
+            other => Self::Index(other),
+        }
     }
 }

@@ -73,7 +73,8 @@ impl GitPerPackageRegistry {
     /// Run a read-only lookup `f` against the primary URL first, then
     /// each mirror URL in priority order. Returns the first `Ok`
     /// produced by any URL. If every URL fails, the **primary's**
-    /// error is returned (not the last mirror's) — the primary is the
+    /// error is returned, except that any typed contact refusal is terminal.
+    /// For ordinary errors the primary is the
     /// canonical source and its diagnostic is the most useful one for
     /// the operator. Mirror errors are recorded in `tracing::debug!`
     /// for ops to correlate.
@@ -90,6 +91,7 @@ impl GitPerPackageRegistry {
         // is held as a plain value — THE diagnostic if nothing serves.
         let primary_err = match f(&primary) {
             Ok(v) => return Ok(v),
+            Err(e @ RegistryError::ContactRefused(_)) => return Err(e),
             Err(e) => e,
         };
         for (i, url) in mirrors.iter().enumerate() {
@@ -105,6 +107,7 @@ impl GitPerPackageRegistry {
                     );
                     return Ok(v);
                 }
+                Err(e @ RegistryError::ContactRefused(_)) => return Err(e),
                 Err(e) => {
                     tracing::debug!(
                         target: "vibe_registry",
@@ -185,6 +188,7 @@ impl GitPerPackageRegistry {
                         "index returned 404; falling through to git ls-remote"
                     );
                 }
+                Err(crate::IndexError::ContactRefused(refusal)) => return Err(refusal.into()),
                 Err(e) => {
                     tracing::debug!(
                         target: "vibe_registry::index",
@@ -213,7 +217,7 @@ impl GitPerPackageRegistry {
                     group: owned_group.clone(),
                     name: owned_name.clone(),
                 },
-                other => RegistryError::Git(other),
+                other => RegistryError::from(other),
             })?;
             let mut versions: Vec<semver::Version> = tags
                 .iter()
@@ -447,3 +451,52 @@ fn pick_version(
 #[cfg(test)]
 #[path = "lookup/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod contact_refusal_tests {
+    use super::*;
+
+    #[test]
+    #[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW")]
+    fn lookup_never_discards_a_primary_or_mirror_contact_refusal() {
+        let section: vibe_core::manifest::RegistrySection =
+            toml::from_str("name='test'\nurl='https://github.com/o'").unwrap();
+        let cache = tempfile::tempdir().unwrap();
+        let reg = GitPerPackageRegistry::open_with_auth(
+            &section.name,
+            &section.url,
+            &section.r#ref,
+            section.naming,
+            vec!["https://gitverse.ru/o".into()],
+            cache.path(),
+            Arc::new(crate::ShellGit::new()),
+            0,
+            section.auth,
+            None,
+        )
+        .unwrap();
+        let group = Group::parse("org.example").unwrap();
+        for denied_attempt in [0, 1] {
+            let count = std::cell::Cell::new(0);
+            let result: Result<(), RegistryError> = reg.try_lookup(&group, "p", |_| {
+                let attempt = count.get();
+                count.set(attempt + 1);
+                if attempt == denied_attempt {
+                    Err(crate::ContactRefusal::NativeTransportUnavailable.into())
+                } else {
+                    Err(RegistryError::UnknownPackage {
+                        group: group.clone(),
+                        name: "p".into(),
+                    })
+                }
+            });
+            assert!(matches!(
+                result,
+                Err(RegistryError::ContactRefused(
+                    crate::ContactRefusal::NativeTransportUnavailable
+                ))
+            ));
+            assert_eq!(count.get(), denied_attempt + 1);
+        }
+    }
+}

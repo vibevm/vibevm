@@ -23,10 +23,11 @@ impl IndexClient {
     pub(super) fn file_client(&self) -> Result<&reqwest::blocking::Client, &str> {
         self.file_client
             .get_or_init(|| {
-                Self::build_client(
+                Self::build_bound_client(
                     Duration::from_secs(FETCH_TIMEOUT_SECS),
                     &self.auth,
                     &self.file_base,
+                    self.admission.as_deref(),
                 )
                 .map_err(|error| error.to_string())
             })
@@ -37,10 +38,11 @@ impl IndexClient {
     pub(super) fn server_client(&self) -> Result<&reqwest::blocking::Client, &str> {
         self.server_client
             .get_or_init(|| {
-                Self::build_client(
+                Self::build_bound_client(
                     Duration::from_secs(FETCH_TIMEOUT_SECS),
                     &self.auth,
                     &self.server_base,
+                    self.admission.as_deref(),
                 )
                 .map_err(|error| error.to_string())
             })

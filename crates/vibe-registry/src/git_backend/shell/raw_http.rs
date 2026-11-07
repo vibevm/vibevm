@@ -66,10 +66,13 @@ const READ_TIMEOUT_SECS: u64 = 10;
 ///   `vibe-redirect.toml` probe's ordinary answer: almost no package
 ///   carries a redirect marker, and before this path every one of those
 ///   probes cost a refused archive plus a clone.
+/// - `Some(Err(ContactRefused))` — terminal admission refusal, with no
+///   retry or native fallback under the immutable HTTP-only binding.
 /// - `None` — *ask git*. Not this host, not a shape we can address, an
 ///   answer we cannot interpret, an unexpected status, a timeout, a
 ///   transport error. The caller continues into the unchanged
-///   archive → clone ladder and its diagnosis stands as it always did.
+///   archive → clone ladder when unbound. A bound backend instead refuses
+///   native execution before spawning a process.
 ///
 /// `client` is the backend's one client, so a walk over a whole
 /// dependency graph reuses connections instead of shaking hands anew for
@@ -83,6 +86,7 @@ const READ_TIMEOUT_SECS: u64 = 10;
 )]
 pub(super) fn try_read(
     client: &reqwest::blocking::Client,
+    admission: Option<&crate::HttpAdmission>,
     base_override: Option<&str>,
     sleeper: &super::Sleeper,
     url: &str,
@@ -98,7 +102,7 @@ pub(super) fn try_read(
     let mut waited = Duration::ZERO;
     let mut refusal = None;
     for attempt in 1..=retry::MAX_ATTEMPTS {
-        let asked = match attempt_read(client, &read, refname, path) {
+        let asked = match attempt_read(client, admission, &read, refname, path) {
             Attempt::Settled(outcome) => return outcome,
             Attempt::Again { status, after } => {
                 refusal = status;
@@ -157,12 +161,15 @@ enum Attempt {
 /// the one an operator reads when a package took the long way round.
 fn attempt_read(
     client: &reqwest::blocking::Client,
+    admission: Option<&crate::HttpAdmission>,
     read: &AddressedRead,
     refname: &str,
     path: &str,
 ) -> Attempt {
     let mut request = client.get(&read.url);
-    if let Some(token) = read.token.as_deref() {
+    if let Some(token) = read.token.as_deref()
+        && (admission.is_none() || read.url.starts_with("https://"))
+    {
         // Both hosts accept, for a private repository, the same token the
         // credentialed git URL carries in its userinfo. It rides the
         // header — never the request URL, never a log line, never the
@@ -174,9 +181,14 @@ fn attempt_read(
         url = %read.url,
         "reading file over https (no git)"
     );
-    let response = match request.send() {
+    let response = match crate::http_admission::get(client, request, &read.url, admission) {
         Ok(r) => r,
-        Err(e) => return transport_failure(&read.url, &e, "https read failed"),
+        Err(crate::http_admission::HttpGetError::Refused(refusal)) => {
+            return Attempt::Settled(Some(Err(GitError::ContactRefused(refusal))));
+        }
+        Err(crate::http_admission::HttpGetError::Transport(e)) => {
+            return transport_failure(&read.url, &e, "https read failed");
+        }
     };
     let status = response.status().as_u16();
     // Before the body: reading it consumes the response, headers and all.
@@ -300,12 +312,18 @@ fn names_fixed_content(refname: &str) -> bool {
 /// will not initialise, which is a property of the build and the machine
 /// rather than of this request, so the caller caches the answer and every
 /// read goes to git.
-pub(super) fn build_client() -> Option<reqwest::blocking::Client> {
-    match reqwest::blocking::Client::builder()
+pub(super) fn build_client(
+    admission: Option<&crate::HttpAdmission>,
+) -> Option<reqwest::blocking::Client> {
+    let builder = reqwest::blocking::Client::builder()
         .user_agent(concat!("vibe-registry/", env!("CARGO_PKG_VERSION")))
-        .timeout(Duration::from_secs(READ_TIMEOUT_SECS))
-        .build()
-    {
+        .timeout(Duration::from_secs(READ_TIMEOUT_SECS));
+    let builder = if admission.is_some() {
+        crate::http_admission::bound_builder(builder)
+    } else {
+        builder
+    };
+    match builder.build() {
         Ok(client) => Some(client),
         Err(e) => {
             tracing::debug!(
