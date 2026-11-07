@@ -92,6 +92,31 @@ def main():
     assert data["meta"]["sourceAssessmentCounts"] == dict(
         collections.Counter(row["sourceAssessment"] for row in rows)
     )
+    system_path = here / "system-prompt.json"
+    system = json.loads(system_path.read_text())
+    system_nodes = {row["id"]: row for row in system["nodes"]}
+    assert len(system_nodes) == len(system["nodes"]), "duplicate SYSTEM IDs"
+    assert system["historical_task_count"] == 222 and system["historical_prototype_count"] == 113
+    assert system["status"] == "design-proposal"
+    system_active, system_visited = set(), set()
+
+    def visit_system(key):
+        assert key not in system_active, ("SYSTEM dependency cycle", key)
+        if key in system_visited:
+            return
+        system_active.add(key)
+        row = system_nodes[key]
+        assert key.startswith("SYS-") and row["layer"] in layers
+        assert row["prototype"] is False
+        assert len(row["depends_on"]) == len(set(row["depends_on"]))
+        assert set(row["depends_on"]) <= set(system_nodes)
+        for dep in row["depends_on"]:
+            visit_system(dep)
+        system_active.remove(key)
+        system_visited.add(key)
+
+    for key in system_nodes:
+        visit_system(key)
     if args.visualization:
         ui = json.loads((args.visualization / "data.json").read_text())
         expected = json.loads(json.dumps(data))
@@ -173,6 +198,22 @@ def main():
             extension["sourceUrl"] = extension_path.as_uri()
             extension["planRevision"] = plan["revision"]
             expected["ownerNeeds"] = extension
+        if "systemPrompt" in ui:
+            assert status["sources"]["system_prompt"]["sha256"] == hashlib.sha256(system_path.read_bytes()).hexdigest(), "stale SYSTEM source"
+            plan_path = Path(status["sources"]["plan"]["path"])
+            assert status["sources"]["plan"]["sha256"] == hashlib.sha256(plan_path.read_bytes()).hexdigest(), "stale SYSTEM plan"
+            plan = tomllib.loads(plan_path.read_text())
+            plan_nodes = {row["id"]: row for row in plan["node"]}
+            extension = json.loads(json.dumps(system))
+            for row in extension["nodes"]:
+                declared = plan_nodes.get(row["id"])
+                row["planState"] = declared.get("state") if declared else None
+                row["statusBasis"] = "local-plan" if declared else "architecture-only"
+                row["evidence"] = declared.get("evidence", []) if declared else []
+            extension["documentUrl"] = (here / "SYSTEM-PROMPT-SPEC.md").as_uri()
+            extension["sourceUrl"] = system_path.as_uri()
+            extension["planRevision"] = plan["revision"]
+            expected["systemPrompt"] = extension
         assert ui == expected, "visualization data diverged from canonical map"
         script = (args.visualization / "data.js").read_text()
         prefix = "window.VIBEVM_ARCHITECTURE_DATA = "

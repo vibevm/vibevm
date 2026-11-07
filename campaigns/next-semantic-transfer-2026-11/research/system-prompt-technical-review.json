@@ -1,0 +1,102 @@
+{
+  "verdict": "All five prior technical clarifications resolved in revised draft; no remaining concrete technical contradiction found within reviewed scope. Research/spec only, not implementation acceptance.",
+  "findings": [
+    {
+      "id": "T1",
+      "severity": "P2-design-clarification",
+      "target": "SYSTEM-PROMPT-SPEC.md §7; SYS-CAPTURE/SYS-OPERATIONS",
+      "finding": "Read-only prepare must not invoke an effectful native/backend provider to recompute freshness. Existing analyze bound/native APIs accept OwnerNativeCompileProvider; reuse of those entrypoints alone does not establish no-network/no-write capability.",
+      "evidence": "install/bootgen/analyze.rs::analyze_node_lane_bound_native_using, compile_node_backend_using and analyze_effective_bound_native_with_sources explicitly pass a provider into managed compilation; native_managed.rs binds continuations to owner epochs.",
+      "suggestion": "Define check/prepare as admitted finite read and witness comparison, plus only explicitly effect-free builtin preparation if needed. Unsupported/pending/native recomputation requires explicit build/preparation and otherwise returns unavailable/stale. Do not fall back to an empty plan. Add corresponding contract to SYS-CAPTURE/OPERATIONS.",
+      "disposition": "resolved-in-revised-draft",
+      "resolution_evidence": "§7 and acceptance 10"
+    },
+    {
+      "id": "T2",
+      "severity": "P2-design-clarification",
+      "target": "SYSTEM-PROMPT-SPEC.md §7",
+      "finding": "Runner prepare needs an explicit boundary from ordinary session boot, because PROP-009 forbids changing the redirect into run vibe, even if that command is read-only. Draft is compatible if prepare belongs to API transport preflight, but wording should close this implementation shortcut.",
+      "evidence": "PROP-009#PURE-FILE-READING and #REJ-RUN-VIBE; boot_artifacts/redirect.rs renders read STATIC then INDEX instructions.",
+      "suggestion": "State that ordinary on-disk redirects and file-only boot remain unchanged, including opt-in projects. API runner invokes prepare outside model boot as its explicit request preparation; exported bridge never asks agent to execute prepare.",
+      "disposition": "resolved-in-revised-draft",
+      "resolution_evidence": "§7"
+    },
+    {
+      "id": "T3",
+      "severity": "P2-design-clarification",
+      "target": "SYSTEM-PROMPT-SPEC.md §7 publication",
+      "finding": "Format-change or first-init can change AGENTS managed redirect in the same publication as SYSTEM. Witnessing pre-write AGENTS would make a newly published sidecar stale immediately or bind prompt to the wrong generation.",
+      "evidence": "boot_artifacts.rs::write_boot_artifacts_inner compiles first, then transaction::write_production_with_selectors invokes redirect::write_redirect_blocks_with_transaction; redirect.rs replacement depends on target spec_format.",
+      "suggestion": "Prepare the prospective managed-redirect projection through the same redirect owner, retain source-before and expected-source-after separately, and publish/check prompt, sidecar and changed redirect as one coherent generation under existing transaction extension. Do not read AGENTS again after publication to invent evidence.",
+      "disposition": "resolved-in-revised-draft",
+      "resolution_evidence": "§7"
+    },
+    {
+      "id": "T4",
+      "severity": "P3-precision",
+      "target": "SYSTEM-PROMPT-SPEC.md §4",
+      "finding": "Literal template presence opt-in should explicitly remain an export-input capability, not native scan enrollment or generated-output ownership. Explicit empty project.sources otherwise creates an ambiguous choice between no semantic sources and template auto-discovery.",
+      "evidence": "own_boot.rs::PreparedNodeBoot respects policy and captured native scan entries; PROP-072 SOURCE-HOST-POLICY-LAW and SOURCE-OPERATION-ENROLLMENT-LAW distinguish explicit raw reads from automatic native semantics; layout.rs reserves only current generated paths.",
+      "suggestion": "Template exact-path opt-in is explicit literal export selection under held read owner, independent of native source scanning; it is excluded from own boot without becoming generated or acquiring VibeSpec meaning. Existing native content policy remains unchanged.",
+      "disposition": "resolved-in-revised-draft",
+      "resolution_evidence": "§4"
+    },
+    {
+      "id": "T5",
+      "severity": "P3-precision",
+      "target": "SYSTEM-PROMPT-SPEC.md §4/§11 item 2",
+      "finding": "No-DSL template may contain prose/examples mentioning SYSTEM.md; rejecting such strings as indirect self-inclusion would contradict literal semantics.",
+      "evidence": "Draft §4 says curly braces and examples are literal; existing compiler distinguishes actual semantic source edges from provenance/elided/hoisted inputs.",
+      "suggestion": "Define self-inclusion rejection over admitted dependency edges and actual file aliases only, never prose mentions/Markdown links without an explicit semantic loading role.",
+      "disposition": "resolved-in-revised-draft",
+      "resolution_evidence": "§4"
+    }
+  ],
+  "tests_executed": false,
+  "repository_edits": false,
+  "report": "/tmp/vibe-system-prompt-technical-review.md",
+  "report_sha256": "6dee5acdcc88004167f402e0d96f33239eac1f4822b519f867595cd7c10da981",
+  "sources": [
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/architecture/SYSTEM-PROMPT-SPEC.md",
+      "sha256": "fe96762ad56c12c646d63dac8238c0d297a1ad9b45e918eb67fbad7549d6a270"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/architecture/system-prompt.json",
+      "sha256": "bc0330b7859f78c2370c26cd695836b51781363647d299341b7dfe08302cc875"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "sha256": "36cf68fe613ec35a55c75c4e7fa23dff1d148ccbba86b0a1f8998ab193655aa1"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+      "sha256": "1ec84cc9035b1876224eac1936671a30e88ae45f497476029bb7cc54b95b2d88"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot_artifacts.rs",
+      "sha256": "63ce007fbdce1bb487187681c8feae6b2573bef2de9ab235c553d6148f847d10"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot_artifacts/redirect.rs",
+      "sha256": "0687934992f722dffc4d55490e80b60ac6bd51369872bc874550ec0af7898ca9"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/own_boot.rs",
+      "sha256": "518ce6f9ecc89e324d548dccf9b0b230ec28caeae2e730acfc1ee29b08222818"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+      "sha256": "ce2931e621d8d76a57d62c0dcd625de01472920c273792e725b3b61f40e4b33b"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "sha256": "47f369f7b0e515d8b53b3b9fb1f89f53e2caafb2eb87d2ee0088f90526f33502"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/layout.rs",
+      "sha256": "5c9b7cc7ed9ed1bc203af3712114da0889f7b92062f7449135de5c8a9e65ac1b"
+    }
+  ],
+  "reviewed_revision_sha256": "fe96762ad56c12c646d63dac8238c0d297a1ad9b45e918eb67fbad7549d6a270"
+}

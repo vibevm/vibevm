@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "title": "SYSTEM: стабильный системный промпт",
+  "status": "design-proposal",
+  "source": "owner-chat:2026-11-07:system-prompt",
+  "document": "SYSTEM-PROMPT-SPEC.md",
+  "historical_task_count": 222,
+  "historical_prototype_count": 113,
+  "priority_rule": "Design requested now; implementation not yet requested. Existing VIBE-NEEDS wins among equally architecture-ready implementation tasks.",
+  "qualification": "New owner-requested feature, not evidence of prototype implementation or accepted product behavior. Stable prefix is paired with checked live boot suffix.",
+  "nodes": [
+    {
+      "id": "SYS-CONTRACT",
+      "layer": "L0",
+      "title": "Роли входов, граница стабильного префикса и живого контекста",
+      "depends_on": [],
+      "owners": [
+        "vibe-core layout",
+        "vibe-workspace boot"
+      ],
+      "contract": "SYSTEM-TEMPLATE — authored input; SYSTEM — generated output; selected-node central scope, no quiet-worker reuse; file identity is not provider cache identity.",
+      "status": "planned",
+      "prototype": false
+    },
+    {
+      "id": "SYS-CAPTURE",
+      "layer": "L1",
+      "title": "Проверенный снимок загрузки и зависимостей промпта",
+      "depends_on": [
+        "SYS-CONTRACT"
+      ],
+      "owners": [
+        "vibe-workspace boot_artifacts",
+        "captured source/binding owners"
+      ],
+      "contract": "Use existing retained inputs and exact byte witnesses; no home-state expansion or prose-link recursion; classify INDEX separately from static-link lane.",
+      "status": "planned",
+      "prototype": false
+    },
+    {
+      "id": "SYS-COMPOSE",
+      "layer": "L2",
+      "title": "Детерминированная сборка SYSTEM и плана продолжения",
+      "depends_on": [
+        "SYS-CAPTURE"
+      ],
+      "owners": [
+        "vibe-workspace computed boot",
+        "generated stream projection"
+      ],
+      "contract": "Literal template + exact entrypoint export + static lane; runtime INDEX plan preserves original order/conditions; no second compiler.",
+      "status": "planned",
+      "prototype": false
+    },
+    {
+      "id": "SYS-PUBLISH",
+      "layer": "L3",
+      "title": "Согласованная публикация и обнаружение устаревшего SYSTEM",
+      "depends_on": [
+        "SYS-COMPOSE"
+      ],
+      "owners": [
+        "vibe-workspace publication",
+        "existing guarded writes"
+      ],
+      "contract": "Publish prompt/metadata through existing boot transaction; reject self-inclusion, conflicting authored outputs and changed inputs; no unchanged-byte rewrite.",
+      "status": "planned",
+      "prototype": false
+    },
+    {
+      "id": "SYS-OPERATIONS",
+      "layer": "L4",
+      "title": "Генерация при install/reinstall и проверяемая подготовка API-сессии",
+      "depends_on": [
+        "SYS-PUBLISH"
+      ],
+      "owners": [
+        "vibe-install",
+        "vibe-workspace",
+        "vibe-orchestrator"
+      ],
+      "contract": "Opt-in convention, read-only check/prepare, explicit regeneration; complete boot = checked prefix plus fresh runtime suffix.",
+      "status": "planned",
+      "prototype": false
+    },
+    {
+      "id": "SYS-ADAPTERS",
+      "layer": "L5",
+      "title": "Использование в API и диагностика попаданий в кэш",
+      "depends_on": [
+        "SYS-OPERATIONS"
+      ],
+      "owners": [
+        "CLI",
+        "agent/API adapter"
+      ],
+      "contract": "Explicit supported request role/tool ordering/profile; actual provider usage metrics; no universal hit/TTL/savings guarantee.",
+      "status": "planned",
+      "prototype": false
+    },
+    {
+      "id": "SYS-QUALIFY",
+      "layer": "Q",
+      "title": "Сценарии совместимости, свежести и повторяемости",
+      "depends_on": [
+        "SYS-ADAPTERS"
+      ],
+      "owners": [
+        "existing boot tests",
+        "fake provider capture"
+      ],
+      "contract": "Differential boot parity, format/OS/member/worker matrix, no recursive growth, stale refusal, privacy sentinels and exact request capture; live-cache experiments separately authorized.",
+      "status": "planned",
+      "prototype": false
+    },
+    {
+      "id": "SYS-DOCS",
+      "layer": "R",
+      "title": "Примеры шаблона и руководство по стоимости/миграции",
+      "depends_on": [
+        "SYS-QUALIFY"
+      ],
+      "owners": [
+        "product documentation"
+      ],
+      "contract": "Describe new authored/generated files, limitations, invalidation inputs and measured cost; no claims of implemented feature from specification.",
+      "status": "planned",
+      "prototype": false
+    }
+  ]
+}

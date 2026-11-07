@@ -1,0 +1,127 @@
+{
+  "scope": "read-only research/spec architecture audit",
+  "report": "/tmp/vibe-system-prompt-boot-audit.md",
+  "report_sha256": "d187f867703f6bf965cad510253ddedb086491fe24a3a364e8313c00faf95ebb",
+  "tests_executed": false,
+  "production_edits": false,
+  "source_inventory_note": "Complete PROP-009 and AGENTS-as-data; other source reads or selected inspection as described in report. Whole-file hashes captured on report creation, not atomic checkout seal.",
+  "sources": [
+    {
+      "path": "/fast/git/vibevm/AGENTS.md",
+      "sha256": "a03a6eac043fb1ed0fa4bf936c18a4235a718cea5df0c3540cfb780fd618ae2c"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/modules/vibe-workspace/PROP-009-loading-model.xml",
+      "sha256": "ce2931e621d8d76a57d62c0dcd625de01472920c273792e725b3b61f40e4b33b"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot.rs",
+      "sha256": "0294108b3501647022e5a11fffa2d090d59b34b6abc3095f6e63a11f9e1b47b4"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot_artifacts.rs",
+      "sha256": "63ce007fbdce1bb487187681c8feae6b2573bef2de9ab235c553d6148f847d10"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot/hybrid.rs",
+      "sha256": "acdd636fbac0779188b926c47672a81b9a874d0ac5b6d524a11439d1901c2cef"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen.rs",
+      "sha256": "2d5b5cac405a780aa5d397ac12a5844130491f5d15817d15e59f55ac44026305"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/publication.rs",
+      "sha256": "0c4bdea084b89b692c24c6fd97c76c4736a1875481666cd26f3fc8aa55f18989"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/owner_plans.rs",
+      "sha256": "0b017c90bc0b9a31b9564bded80d3bbd0daf32bf4e44837f8bea85a28632c578"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/own_boot.rs",
+      "sha256": "518ce6f9ecc89e324d548dccf9b0b230ec28caeae2e730acfc1ee29b08222818"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/generated_inputs.rs",
+      "sha256": "00c29beec3efcfaece87e0e53dfdb85152c915b008f18d786f72ab7ec1631c06"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/conditions.rs",
+      "sha256": "ad4f10dc2feca44603487f8109c0038b3894cf7483e66d0d90ca0ce328cabb29"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs",
+      "sha256": "7eedea75bbab8446a44fe6fcb3469feb6028cc3ba123902ba9117e701f118b93"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/native_managed.rs",
+      "sha256": "1ec84cc9035b1876224eac1936671a30e88ae45f497476029bb7cc54b95b2d88"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/analyze.rs",
+      "sha256": "36cf68fe613ec35a55c75c4e7fa23dff1d148ccbba86b0a1f8998ab193655aa1"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "sha256": "47f369f7b0e515d8b53b3b9fb1f89f53e2caafb2eb87d2ee0088f90526f33502"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/architecture/map.json",
+      "sha256": "eec748973968d78a7b1501de0d3878cb27c16192c0bfe2a8b0c02a3de8f737cc"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/architecture/VIBE-NEEDS.md",
+      "sha256": "1be41472fdda5595d37dac8bc42108647222e6fcb884df0407e32ed2a01529af"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/boot/INDEX.md",
+      "sha256": "1b2edaa8cf419590fc32066a8dc8fbc8443317ffc46cb96125364643bb1d4e1a"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/layout.rs",
+      "sha256": "5c9b7cc7ed9ed1bc203af3712114da0889f7b92062f7449135de5c8a9e65ac1b"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot_artifacts/format.rs",
+      "sha256": "78aee331ff2329acfcac766d880ad3713604562dc5311b813eb4e173f4eddf41"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot_artifacts/redirect.rs",
+      "sha256": "0687934992f722dffc4d55490e80b60ac6bd51369872bc874550ec0af7898ca9"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot_artifacts/declared_sources.rs",
+      "sha256": "bc39410b43be508c00304cee8476cb90b5203720738401ce232ab07a97468340"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot_artifacts/publication.rs",
+      "sha256": "e6b0bad91ebe463eeee02f04e9343a70f6e561d33518865ca5225f3983bfb089"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot_artifacts/compile.rs",
+      "sha256": "a100d6652adb4669e1b17153cb2e96f6a96451335bb4fbbeeba7e81f1f2a63ee"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot_artifacts/inputs.rs",
+      "sha256": "477433df62265e424af1569699d690bdbf4b3dc02d6c2e094aee385165d2c16b"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/boot/hybrid/fingerprint.rs",
+      "sha256": "a53a5cb1e74ba81c39a87dd90f878aeb3ff92a9b8d72fe8b414c9e2b7fe6e145"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/desubstitute.rs",
+      "sha256": "136823134a7fa221b8097dd81bac7db26bde03dd6acec3f0cf15494dfbf328aa"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/node_dependency.rs",
+      "sha256": "56f2155dc5d709f6911b40e62d767e270cac34238c76dcb36efbc551535f4e8d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/bootgen/verify.rs",
+      "sha256": "77669a19331a28b2bd5efb25a4eccc30d298bfcad4550b768ee5892000633258"
+    }
+  ],
+  "recommendation": "Stable SYSTEM prefix containing AGENTS export + static-link lane, plus checked same-world runtime INDEX suffix supplied by runner in public boot order; no implicit freezing of unconditional INDEX rows."
+}
