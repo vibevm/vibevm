@@ -50,11 +50,7 @@ fn host_progress_show_convert_and_checks_do_not_parse_ordinary_content() {
     );
     write(root.path(), &common::spec_rel("WAL.xml"), "<broken");
     let before = files(root.path());
-    for args in [
-        vec!["progress", "check", "--path"],
-        vec!["show", "effective", "--path"],
-        vec!["check", "--path"],
-    ] {
+    for args in [vec!["progress", "check", "--path"], vec!["check", "--path"]] {
         let result = user.vibe().args(&args).arg(root.path()).output().unwrap();
         assert!(!result.status.success(), "{args:?}: {result:?}");
         let text = format!(
@@ -69,6 +65,19 @@ fn host_progress_show_convert_and_checks_do_not_parse_ordinary_content() {
         assert!(!text.contains("unclosed XML"));
         assert_eq!(files(root.path()), before, "{args:?} wrote project files");
     }
+    let shown = user
+        .vibe()
+        .args(["--json", "show", "effective", "--path"])
+        .arg(root.path())
+        .output()
+        .unwrap();
+    assert!(shown.status.success(), "{shown:?}");
+    let shown: serde_json::Value = serde_json::from_slice(&shown.stdout).unwrap();
+    assert!(
+        shown["sections"].as_array().unwrap().is_empty(),
+        "ordinary boot content is not enrolled: {shown}"
+    );
+    assert_eq!(files(root.path()), before, "show wrote project files");
     let result = user
         .vibe()
         .args(["--json", "tree", "--path"])

@@ -16739,10 +16739,28 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/show/effective.rs",
       "item_kind": "mod",
-      "line": 12,
+      "line": 10,
       "symbol": "vibe_cli::commands::show::effective",
-      "end_line": 12,
+      "end_line": 10,
       "fingerprint": "tok1:a8e48b73f01b9a810d8ea1405031076906e5684cf132420c9894b573034757ab"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/show/effective.rs",
+      "item_kind": "fn",
+      "line": 61,
+      "symbol": "vibe_cli::commands::show::effective::collect_bound_sections",
+      "end_line": 213,
+      "fingerprint": "tok1:9ea9f59f97d99afad8b51bd042342e4f030c1ca70287586745704a8b7d73c0c3"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/show/effective/read.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::commands::show::effective::read",
+      "end_line": 5,
+      "fingerprint": "tok1:8dd87c8b4adf57d88896a96c610a0791a9a1620d8722309b759dd1ab04de6560"
     },
     {
       "crate_name": "vibe-cli",
@@ -19767,6 +19785,15 @@
       "symbol": "vibe_cli::tests::cli_declared_boot_check",
       "end_line": 5,
       "fingerprint": "tok1:d2384c1e65ea27c7d1a060f8392b0675eb9770732e0b86c27d26216a0021a69c"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_declared_effective.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::cli_declared_effective",
+      "end_line": 5,
+      "fingerprint": "tok1:8dd87c8b4adf57d88896a96c610a0791a9a1620d8722309b759dd1ab04de6560"
     },
     {
       "crate_name": "vibe-cli",
@@ -57671,10 +57698,28 @@
     {
       "file": "crates/vibe-cli/src/commands/show/effective.rs",
       "from_symbol": "vibe_cli::commands::show::effective",
-      "line": 12,
+      "line": 10,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/show/effective.rs",
+      "from_symbol": "vibe_cli::commands::show::effective::collect_bound_sections",
+      "line": 61,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-SHOW-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/show/effective/read.rs",
+      "from_symbol": "vibe_cli::commands::show::effective::read",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-SHOW-READ",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-cli/src/commands/show/features.rs",
@@ -60439,6 +60484,15 @@
       "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-BOOT-CHECK",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_declared_effective.rs",
+      "from_symbol": "vibe_cli::tests::cli_declared_effective",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-SHOW-READ",
       "verb": "implements",
       "pinned_r": 1
     },
@@ -114331,6 +114385,26 @@
       "heading": "Tree directive collection reads only the boot-file set selected by committed INDEX and STATIC provenance. It does not replace that graph with a whole-source census or regenerate artifacts. Original host and registered node inputs use held policy, exact selected bytes and declared media; ungrouped hosts retain path-based identity without a fabricated package, group or native address. Installed inputs retain independently selected lock identity/hash and trusted materialized format through the existing binding owner; map physical selected output to its original row rather than guessing from suffix. Only selected VibeSpec input reaches native projection and the existing directive parser; ordinary and Doc inputs do not mint managed directives. Selected declared ambiguity, malformed native syntax, unavailable source or changed binding refuses visibly rather than becoming empty output. Preserve qualified legacy behavior, exact generated-artifact exclusions, committed load attribution and existing tree schema/carriers. Explicit native input already named by the graph is a requested read, not a change to automatic scan-only enrollment. Recheck relevant lock/policy/source observations before returning the read-only model; no lifecycle lease, writes, new URI or source world. Existing XML projection-relative line convention remains distinct from original XML byte positions. @status:spec/done",
       "line": 84,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-TREE-READ-LAW"
+    },
+    {
+      "anchor": "SOURCE-SHOW-READ",
+      "content_hash": "sha256:8f533b0abb2c9887760748bc3f95edf070811a2af653b216d3c892b87b7aee8e",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Selected source display in show effective",
+      "line": 86,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-SHOW-READ",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-SHOW-READ-LAW",
+      "content_hash": "sha256:20d6fc86438fad51333a13dc03860075037a6a14151f8bd61325efce4d0db78a",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Show effective preserves its existing display universe: root own boot, generated boot artifacts, optional WAL and explicitly enumerated files_written. It does not traverse INDEX references or scan all sources. Own declared boot candidates use accepted native scan enrollment so arbitrary suffixes are not silently omitted; generated STATIC tapes and INDEX metadata retain their separate verbatim path. Named original inputs use held policy and bytes; named installed payloads use independent lock identity/hash and trusted format through the existing output map. Establish actual path ownership rather than assuming an origin label makes every written destination a package source. Supported native projection uses declared media, never suffix fallback. Ordinary UTF8 explicitly named by this display operation may remain literal; nonUTF8 receives an honest read/refusal rather than lossy conversion. Literal data is not parsed as managed directives or granted native-address membership by a display provenance header. Preserve existing report fields/header grammar, ordering, qualified legacy/empty and missing-file diagnostics. Retain relevant observations before emitting the assembled report, without writes, lifecycle lease, new URI/schema or global source world. @status:spec/done",
+      "line": 88,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-SHOW-READ-LAW"
     },
     {
       "anchor": "genre-definition",

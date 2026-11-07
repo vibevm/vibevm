@@ -2,12 +2,10 @@
 //! every installed package's written files, each with a `spec://`
 //! provenance header (`VIBEVM-SPEC.md` §4.6).
 //!
-//! Authored spec sources enter through the PROP-045 projection dispatch
-//! (`load_spec_text`): a `.xml` boot file or written file is shown as its
-//! canonical Markdown projection. Generated STATIC is different: it is a
-//! provenance-delimited tape of contributions, not one dialect document, so
-//! the effective view reads either generated spelling verbatim. The WAL stays
-//! host Markdown and is also read raw.
+//! Declared authored sources use their captured media and selected native
+//! interpretation. Named ordinary UTF-8 remains literal display data. Legacy
+//! sources retain suffix projection; generated STATIC and INDEX are verbatim
+//! artifacts, including tapes with multiple XML roots.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
@@ -17,13 +15,14 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result};
 use serde::Serialize;
 use vibe_core::machine_json_path;
-use vibe_core::manifest::Lockfile;
 use vibe_workspace::boot_artifacts;
 
 use crate::cli::ShowEffectiveArgs;
 use crate::output;
 
 use super::resolve_project_root;
+mod read;
+use read::{Body, Reads};
 
 // ===================== show effective =====================
 
@@ -53,20 +52,22 @@ struct EffectiveSection {
 
 /// Collect every effective section — the boot dir, the WAL, and the
 /// installed packages' written files — without rendering anything. The
-/// pure half of [`run_effective`], split so the projection law (every
-/// spec source through `load_spec_text`) is testable on the collected
-/// bodies alone.
+/// qualified legacy wrapper intentionally supplies no installed format.
+#[cfg(test)]
 fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
-    let policy = vibe_spec::source_policy::observe_package_policy(project_root)?;
-    let lockfile_path = project_root.join(Lockfile::FILENAME);
-    let lockfile = if lockfile_path.exists() {
-        Some(
-            Lockfile::read(&lockfile_path)
-                .with_context(|| format!("reading `{}`", lockfile_path.display()))?,
-        )
-    } else {
-        None
-    };
+    collect_bound_sections(project_root, None)
+}
+
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-SHOW-READ",
+    r = 1
+)]
+fn collect_bound_sections(
+    project_root: &Path,
+    format: Option<vibe_core::manifest::SpecFormat>,
+) -> Result<Vec<EffectiveSection>> {
+    let mut reads = Reads::new(project_root, format)?;
+    let packages = reads.packages.clone();
 
     let mut sections: Vec<EffectiveSection> = Vec::new();
     // Layout-relative string prefixes, computed once: everything this
@@ -88,7 +89,8 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     // claimed by any lockfile entry (00-core / 90-user / hand-edited)
     // surface as `user`. Both spec serialisations load (PROP-045
     // ##LOADER-LAW) — an `.xml` boot file renders as its projection.
-    if boot_dir.is_dir() {
+    let own_boot = reads.own_boot()?;
+    if boot_dir.is_dir() || own_boot.as_ref().is_some_and(|entries| !entries.is_empty()) {
         boot_artifacts::resolve_static_path(project_root)
             .context("resolving the generated STATIC tape")?;
         let mut entries: Vec<PathBuf> = fs::read_dir(&boot_dir)
@@ -96,8 +98,15 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
             .filter_map(|e| e.ok())
             .filter(|e| e.file_type().map(|t| t.is_file()).unwrap_or(false))
             .map(|e| e.path())
-            .filter(|p| vibe_specdoc::is_spec_source(p))
+            .filter(|p| {
+                let relative = p.strip_prefix(project_root).unwrap_or(p);
+                vibe_specdoc::is_spec_source(p)
+                    && (vibe_core::layout::is_generated_boot_output(relative) || own_boot.is_none())
+            })
             .collect();
+        if let Some(own) = &own_boot {
+            entries.extend(own.iter().map(|(relative, _)| project_root.join(relative)));
+        }
         entries.sort();
         for path in entries {
             // Every entry came from `read_dir` filtered to files, so it
@@ -108,15 +117,18 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
             };
             let filename = filename.to_string_lossy().into_owned();
             let rel = format!("{boot_prefix}{filename}");
-            let origin = boot_origin(&filename, lockfile.as_ref());
+            let origin = boot_origin(&filename, &packages);
             let spec_uri = format!("spec://project/boot/{filename}");
-            let body = if vibe_core::layout::is_generated_boot_output(Path::new(&rel)) {
-                load_boot_entry(&path)?
+            let body = if let Some((_, body)) = own_boot
+                .as_ref()
+                .and_then(|entries| entries.iter().find(|(relative, _)| relative == &rel))
+            {
+                body.clone()
             } else {
-                let Some(body) = load_authored(project_root, &path)? else {
-                    continue;
-                };
-                body
+                match reads.read(Path::new(&rel))? {
+                    Body::Text(body) => body,
+                    Body::Missing | Body::Skipped => continue,
+                }
             };
             sections.push(EffectiveSection {
                 spec_uri,
@@ -130,7 +142,7 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     // 2. WAL — always one section, distinct origin.
     let wal = project_root.join(vibe_core::layout::current_wal_md());
     if wal.is_file()
-        && let Some(body) = load_authored(project_root, &wal)?
+        && let Body::Text(body) = reads.read(&vibe_core::layout::current_wal_md())?
     {
         sections.push(EffectiveSection {
             spec_uri: "spec://project/WAL".to_string(),
@@ -145,68 +157,68 @@ fn collect_sections(project_root: &Path) -> Result<Vec<EffectiveSection>> {
     // landed in step 1). Lockfile order is the install order, which
     // is the same order the resolver pinned the graph in. Stable
     // enough for cold-reader use.
-    if let Some(lockfile) = &lockfile {
-        for entry in &lockfile.packages {
-            let pkg_uri_root = format!("spec://{}/{}/{}", entry.group, entry.name, entry.version);
-            let mut paths: Vec<PathBuf> = entry
-                .files_written
-                .iter()
-                .map(|p| normalize_rel_path(p))
-                .collect();
-            paths.sort();
-            for rel in paths {
-                let rel_str = machine_json_path(&rel);
-                if rel_str.starts_with(&boot_prefix) {
-                    // Already emitted under step 1.
-                    continue;
-                }
-                let abs = project_root.join(&rel);
-                let Some(guards) = authored_guards(project_root, &abs)? else {
-                    continue;
-                };
-                if !abs.is_file() {
-                    // Missing file — surface as a section with empty
-                    // body and a warning header instead of crashing.
-                    // `vibe check` exists for the dedicated linter
-                    // path; `vibe show effective` is best-effort by
-                    // design.
-                    sections.push(EffectiveSection {
-                        spec_uri: format!(
-                            "{}/{}",
-                            pkg_uri_root,
-                            rel_str.trim_start_matches(&specs_prefix)
-                        ),
-                        path: rel_str.clone(),
-                        origin: format!(
-                            "package:{}/{}@{} (MISSING ON DISK)",
-                            entry.group, entry.name, entry.version
-                        ),
-                        body: String::new(),
-                    });
-                    continue;
-                }
-                let body = load_spec(&abs)?;
-                for guard in guards {
-                    guard.recheck_unchanged()?;
-                }
-                let suffix = rel_str.trim_start_matches(&specs_prefix);
-                sections.push(EffectiveSection {
-                    spec_uri: format!("{pkg_uri_root}/{suffix}"),
-                    path: rel_str,
-                    origin: format!("package:{}/{}@{}", entry.group, entry.name, entry.version),
-                    body,
-                });
+    for entry in &packages {
+        let pkg_uri_root = format!("spec://{}/{}/{}", entry.group, entry.name, entry.version);
+        let mut paths: Vec<PathBuf> = entry
+            .files_written
+            .iter()
+            .map(|p| normalize_rel_path(p))
+            .collect();
+        paths.sort();
+        for rel in paths {
+            let rel_str = machine_json_path(&rel);
+            if rel_str.starts_with(&boot_prefix) {
+                // Already emitted under step 1.
+                continue;
             }
+            let body = reads.read(&rel)?;
+            if matches!(body, Body::Skipped) {
+                continue;
+            }
+            if matches!(body, Body::Missing) {
+                // Missing file — surface as a section with empty
+                // body and a warning header instead of crashing.
+                // `vibe check` exists for the dedicated linter
+                // path; `vibe show effective` is best-effort by
+                // design.
+                sections.push(EffectiveSection {
+                    spec_uri: format!(
+                        "{}/{}",
+                        pkg_uri_root,
+                        rel_str.trim_start_matches(&specs_prefix)
+                    ),
+                    path: rel_str.clone(),
+                    origin: format!(
+                        "package:{}/{}@{} (MISSING ON DISK)",
+                        entry.group, entry.name, entry.version
+                    ),
+                    body: String::new(),
+                });
+                continue;
+            }
+            let Body::Text(body) = body else {
+                unreachable!("handled missing and skipped display inputs");
+            };
+            let suffix = rel_str.trim_start_matches(&specs_prefix);
+            sections.push(EffectiveSection {
+                spec_uri: format!("{pkg_uri_root}/{suffix}"),
+                path: rel_str,
+                origin: format!("package:{}/{}@{}", entry.group, entry.name, entry.version),
+                body,
+            });
         }
     }
-
-    policy.recheck_unchanged()?;
+    reads.recheck()?;
     Ok(sections)
 }
 
 pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let sections = collect_sections(&project_root)?;
+    let manifest = vibe_core::manifest::Manifest::read(
+        project_root.join(vibe_core::manifest::Manifest::FILENAME),
+    )?;
+    let format = crate::commands::reinstall::effective_rederive_format(&manifest)?;
+    let sections = collect_bound_sections(&project_root, Some(format))?;
 
     if ctx.is_json() {
         let payload = EffectiveReport {
@@ -257,43 +269,12 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
     Ok(())
 }
 
-/// Load one boot entry. Generated STATIC is a tape, so feeding its complete
-/// contents to a single-document parser would merge provenance boundaries or
-/// reject a valid multi-document XML lane. Show needs only its text and keeps
-/// it verbatim.
-fn load_boot_entry(path: &Path) -> Result<String> {
-    let is_static_tape = path
-        .file_name()
-        .and_then(|name| name.to_str())
-        .is_some_and(|name| {
-            name == boot_artifacts::STATIC_FILE || name == boot_artifacts::STATIC_XML_FILE
-        });
-    if is_static_tape {
-        return fs::read_to_string(path).with_context(|| format!("reading `{}`", path.display()));
-    }
-    load_spec(path)
-}
-
-/// One authored spec source as the effective view shows it — the PROP-045
-/// dispatch (`load_spec_text`): `.md` verbatim, `.xml` as its canonical
-/// projection. The source kind is deliberately dropped here: a provenance
-/// concatenation has no line-citing diagnostics to mark.
-fn load_spec(path: &Path) -> Result<String> {
-    vibe_specdoc::load_spec_text(path)
-        .map_err(|e| anyhow::Error::msg(e.to_string()))
-        .with_context(|| format!("reading `{}`", path.display()))
-        .map(|(body, _)| body)
-}
-
-fn boot_origin(filename: &str, lockfile: Option<&Lockfile>) -> String {
+fn boot_origin(filename: &str, packages: &[vibe_core::manifest::LockedPackage]) -> String {
     let logical_name = logical_spec_name(Path::new(filename));
     if matches!(logical_name, Some("00-core" | "90-user")) {
         return "user".to_string();
     }
-    let Some(lockfile) = lockfile else {
-        return "user".to_string();
-    };
-    if let Some(pkg) = lockfile.packages.iter().find(|p| {
+    if let Some(pkg) = packages.iter().find(|p| {
         p.boot_snippet
             .as_deref()
             .and_then(|snippet| logical_spec_name(Path::new(snippet)))
@@ -356,16 +337,6 @@ fn authored_guards(
     }
     Ok(Some(guards))
 }
-fn load_authored(root: &Path, path: &Path) -> Result<Option<String>> {
-    let Some(guards) = authored_guards(root, path)? else {
-        return Ok(None);
-    };
-    let body = load_spec(path)?;
-    for guard in guards {
-        guard.recheck_unchanged()?;
-    }
-    Ok(Some(body))
-}
 
 #[cfg(test)]
 mod tests {
@@ -380,7 +351,11 @@ mod tests {
             let tmp = tempfile::tempdir().unwrap();
             let root = tmp.path();
             std::fs::create_dir_all(root.join(vibe_core::layout::current_boot_dir())).unwrap();
-            std::fs::write(root.join("vibe.toml"), "[project]\nname = \"p\"\n").unwrap();
+            std::fs::write(
+                root.join("vibe.toml"),
+                "[project]\nname = \"p\"\nversion='1.0.0'\n",
+            )
+            .unwrap();
             let tape = "<!-- vibe:static one -->\n<spec xmlns=\"https://vibevm.org/spec/1\"><p>one</p></spec>\n\n\
                         <!-- vibe:static two -->\n<spec xmlns=\"https://vibevm.org/spec/1\"><p>two</p></spec>\n";
             let rel = boot_artifacts::static_path(format);
@@ -404,7 +379,11 @@ mod tests {
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
         std::fs::create_dir_all(root.join(vibe_core::layout::current_boot_dir())).unwrap();
-        std::fs::write(root.join("vibe.toml"), "[project]\nname = \"p\"\n").unwrap();
+        std::fs::write(
+            root.join("vibe.toml"),
+            "[project]\nname = \"p\"\nversion='1.0.0'\n",
+        )
+        .unwrap();
         let rules = vibe_core::layout::current_boot_dir().join("rules.xml");
         let rules_rel = machine_json_path(&rules);
         std::fs::write(
