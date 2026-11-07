@@ -42,6 +42,8 @@ use vibe_spec::{Authority, FileResolver, SelectedPackage, SelfCoordinate, SpecAd
 
 mod captured;
 pub use captured::CapturedDocument;
+mod census;
+pub use census::CapturedPages;
 
 /// Which of the four sources answered an address.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -224,6 +226,64 @@ impl SpecSources {
             return Some(instance);
         }
         None
+    }
+
+    /// Fallible selection for native consumers: a malformed selected lock is not absence.
+    pub(crate) fn selected_instance(
+        &self,
+        group: &str,
+        name: &str,
+    ) -> Result<Option<Instance>, String> {
+        if let Some((coord, root)) = &self.checkout
+            && coord.group.as_deref() == Some(group)
+            && coord.name == name
+        {
+            return Ok(Some(Instance {
+                source: Source::Checkout,
+                version: String::new(),
+                root: root.clone(),
+            }));
+        }
+        let parsed = Group::parse(group).map_err(|error| error.to_string())?;
+        if let Some(root) = &self.in_tree
+            && let Some(instance) = registry_instance(root, Source::InTree, &parsed, name)
+        {
+            return Ok(Some(instance));
+        }
+        if let Some(workspace) = &self.lock {
+            let project =
+                vibe_safefs::Project::open(workspace).map_err(|error| error.to_string())?;
+            let root = project.root_dir().map_err(|error| error.to_string())?;
+            if let Some(bytes) = project
+                .read_source_bytes_in(&root, Lockfile::FILENAME)
+                .map_err(|error| error.to_string())?
+            {
+                let lock = Lockfile::parse_str(
+                    std::str::from_utf8(&bytes).map_err(|error| error.to_string())?,
+                )
+                .map_err(|error| error.to_string())?;
+                if let Some(selected) = lock
+                    .packages
+                    .iter()
+                    .find(|selected| selected.group == parsed && selected.name.as_str() == name)
+                {
+                    return Ok(Some(Instance {
+                        source: Source::Lock,
+                        version: selected.version.to_string(),
+                        root: vibe_workspace::vibedeps::slot_abs_path(
+                            workspace,
+                            &parsed,
+                            name,
+                            &selected.version,
+                        ),
+                    }));
+                }
+            }
+        }
+        Ok(self
+            .store
+            .as_ref()
+            .and_then(|root| registry_instance(root, Source::Store, &parsed, name)))
     }
 
     /// Resolve one parsed address to the file that holds its document.

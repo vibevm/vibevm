@@ -5,7 +5,9 @@ specmark::scope!(
 );
 use super::*;
 use std::collections::{BTreeMap, BTreeSet};
-use vibe_core::manifest::{SelectedSource, SourceSelector, select_source_rows};
+use vibe_core::manifest::{
+    SelectedSource, SourceInterpretation, SourceSelector, select_source_rows,
+};
 
 /// Original bytes selected by the outer host policy; no nested manifest authority.
 #[derive(Debug)]
@@ -30,6 +32,7 @@ pub struct CapturedHostInventory {
     logical_root: PathBuf,
     root_identity: FileIdentity,
     manifest_bytes: Option<Vec<u8>>,
+    interpretation: Option<SourceInterpretation>,
 }
 impl CapturedHostInventory {
     pub fn resources(&self) -> &[CapturedHostResource] {
@@ -89,7 +92,11 @@ impl PackagePolicyObservation {
         }
         Ok(())
     }
-    fn selected_inventory(&self, coordinate: &str) -> Result<Membership, SourcePolicyError> {
+    fn selected_inventory(
+        &self,
+        coordinate: &str,
+        interpretation: Option<SourceInterpretation>,
+    ) -> Result<Membership, SourcePolicyError> {
         self.inventory_admission(coordinate)?;
         let mut membership = Membership::default();
         for row in self
@@ -98,6 +105,11 @@ impl PackagePolicyObservation {
         {
             match row.selector() {
                 SourceSelector::File(path) => {
+                    if interpretation.is_some()
+                        && !self.inventory_matches(coordinate, path, interpretation)?
+                    {
+                        continue;
+                    }
                     let (parent, name) = path
                         .rsplit_once('/')
                         .map_or(("", path.as_str()), |(parent, name)| (parent, name));
@@ -115,21 +127,38 @@ impl PackagePolicyObservation {
                             "exact source is absent or not a regular file: {path}"
                         )));
                     }
-                    self.inventory_select(coordinate, path, &mut membership)?;
+                    self.inventory_select(coordinate, path, interpretation, &mut membership)?;
                 }
                 SourceSelector::Directory(path) => {
+                    // Native descendant declarations are visited independently.
+                    // Do not open an ordinary-only scope for a native operation.
+                    if interpretation.is_some_and(|wanted| row.interpretation() != wanted) {
+                        continue;
+                    }
                     if let Some(directory) = self.inventory_directory(path, &mut membership)? {
-                        self.inventory_walk(coordinate, &directory, path, &mut membership)?;
+                        self.inventory_walk(
+                            coordinate,
+                            &directory,
+                            path,
+                            interpretation,
+                            &mut membership,
+                        )?;
                     }
                 }
             }
         }
         let mut identities = BTreeSet::new();
+        let mut native_identities = BTreeSet::new();
         for path in &membership.files {
             if !identities.insert(vibe_safefs::path_identity_key(path)) {
                 return Err(
                     self.inventory_error("selected host paths have a portable identity collision")
                 );
+            }
+            if interpretation.is_some()
+                && !native_identities.insert(crate::canonical_doc_path(path))
+            {
+                return Err(self.inventory_error("selected native document identity is ambiguous"));
             }
         }
         self.recheck_unchanged()?;
@@ -139,28 +168,47 @@ impl PackagePolicyObservation {
         &self,
         coordinate: &str,
         path: &str,
+        interpretation: Option<SourceInterpretation>,
         membership: &mut Membership,
     ) -> Result<(), SourcePolicyError> {
         if vibe_core::layout::is_generated_boot_output(Path::new(path)) {
             return Ok(());
         }
+        if self.inventory_matches(coordinate, path, interpretation)? {
+            membership.files.insert(path.into());
+        }
+        Ok(())
+    }
+    fn inventory_matches(
+        &self,
+        coordinate: &str,
+        path: &str,
+        interpretation: Option<SourceInterpretation>,
+    ) -> Result<bool, SourcePolicyError> {
         let rows = self
             .source_rows()
             .ok_or_else(|| self.unsupported("missing declared host policy"))?;
         match select_source_rows(coordinate, rows, path).map_err(|error| {
             self.inventory_error(format!("invalid selected source path: {error:?}"))
         })? {
-            SelectedSource::Descriptor { .. } => {
-                membership.files.insert(path.into());
+            SelectedSource::Descriptor { descriptor, .. } => {
+                Ok(interpretation.is_none_or(|wanted| descriptor.interpretation() == wanted))
             }
-            SelectedSource::NeedsInput { .. } => {
-                return Err(
-                    self.inventory_error(format!("ambiguous host source interpretation: {path}"))
-                );
+            SelectedSource::NeedsInput {
+                declaration_indices,
+                ..
+            } => {
+                if interpretation.is_some_and(|wanted| {
+                    declaration_indices
+                        .iter()
+                        .all(|index| rows[*index].interpretation() != wanted)
+                }) {
+                    return Ok(false);
+                }
+                Err(self.inventory_error(format!("ambiguous host source interpretation: {path}")))
             }
-            SelectedSource::Unclassified { .. } => {}
+            SelectedSource::Unclassified { .. } => Ok(false),
         }
-        Ok(())
     }
     pub(super) fn inventory_directory(
         &self,
@@ -218,6 +266,7 @@ impl PackagePolicyObservation {
         coordinate: &str,
         directory: &Pinned,
         prefix: &str,
+        interpretation: Option<SourceInterpretation>,
         membership: &mut Membership,
     ) -> Result<(), SourcePolicyError> {
         for name in self
@@ -234,19 +283,42 @@ impl PackagePolicyObservation {
             if vibe_core::layout::is_generated_boot_output(Path::new(&relative)) {
                 continue;
             }
+            if let Some(wanted) = interpretation
+                && !self.inventory_matches(coordinate, &relative, interpretation)?
+                && !self.source_rows().unwrap_or_default().iter().any(|row| {
+                    row.interpretation() == wanted
+                        && row
+                            .selector()
+                            .path()
+                            .strip_prefix(&relative)
+                            .is_some_and(|suffix| suffix.starts_with('/'))
+                })
+            {
+                continue;
+            }
             if self
                 .project
                 .source_file_present_in(directory, &name)
                 .map_err(|error| self.inventory_error(error.to_string()))?
             {
-                self.inventory_select(coordinate, &relative, membership)?;
+                self.inventory_select(coordinate, &relative, interpretation, membership)?;
             } else {
+                if let Some(wanted) = interpretation {
+                    let scopes: Vec<_> = self.source_rows().unwrap_or_default().iter().filter(|row| matches!(row.selector(), SourceSelector::Directory(path) if path == &relative)).collect();
+                    // This spelling is a directory, not a native file inherited
+                    // from its parent. Native descendant declarations have their
+                    // own visits; no ordinary-only subtree needs enumeration.
+                    if !scopes.is_empty() && scopes.iter().all(|row| row.interpretation() != wanted)
+                    {
+                        continue;
+                    }
+                }
                 let child = directory
                     .open_child_checked(&name)
                     .map_err(|error| self.inventory_error(error.to_string()))?
                     .ok_or_else(|| self.inventory_error("selected directory entry disappeared"))?;
                 self.inventory_directory_id(&relative, Some(&child), membership)?;
-                self.inventory_walk(coordinate, &child, &relative, membership)?;
+                self.inventory_walk(coordinate, &child, &relative, interpretation, membership)?;
             }
         }
         Ok(())
@@ -257,7 +329,43 @@ impl PackagePolicyObservation {
         &self,
         coordinate: &str,
     ) -> Result<CapturedHostInventory, SourcePolicyError> {
-        let membership = self.selected_inventory(coordinate)?;
+        self.capture_inventory(coordinate, None)
+    }
+    /// Capture a finite native-only inventory through the same source selector.
+    /// Ordinary exact resources are not required by this operation.
+    /// ```
+    /// use vibe_spec::source_policy::observe_package_policy;
+    /// use vibe_core::manifest::SourceInterpretation;
+    /// let root = tempfile::tempdir().unwrap();
+    /// let policy = observe_package_policy(root.path()).unwrap();
+    /// assert!(policy.capture_native_inventory("com.example/manual", SourceInterpretation::VibeDoc).is_err());
+    /// ```
+    pub fn capture_native_inventory(
+        &self,
+        coordinate: &str,
+        interpretation: SourceInterpretation,
+    ) -> Result<CapturedHostInventory, SourcePolicyError> {
+        if !matches!(
+            interpretation,
+            SourceInterpretation::VibeDoc | SourceInterpretation::VibeSpec
+        ) {
+            return Err(self.unsupported("non-native inventory filter"));
+        }
+        if interpretation == SourceInterpretation::VibeDoc
+            && !self
+                .package()
+                .is_some_and(|package| package.kind == vibe_core::PackageKind::Doc)
+        {
+            return Err(self.unsupported("native documentation inventory outside a doc package"));
+        }
+        self.capture_inventory(coordinate, Some(interpretation))
+    }
+    fn capture_inventory(
+        &self,
+        coordinate: &str,
+        interpretation: Option<SourceInterpretation>,
+    ) -> Result<CapturedHostInventory, SourcePolicyError> {
+        let membership = self.selected_inventory(coordinate, interpretation)?;
         let mut resources = Vec::with_capacity(membership.files.len());
         for path in &membership.files {
             let observation = self.read_source_observation(path)?.ok_or_else(|| {
@@ -275,6 +383,7 @@ impl PackagePolicyObservation {
             logical_root: self.state.logical_root.clone(),
             root_identity: self.state.identity,
             manifest_bytes: self.state.bytes.clone(),
+            interpretation,
         };
         self.recheck_host_inventory(&captured)?;
         Ok(captured)
@@ -292,7 +401,9 @@ impl PackagePolicyObservation {
                 self.inventory_error("host inventory belongs to another policy observation")
             );
         }
-        if self.selected_inventory(&captured.coordinate)? != captured.membership {
+        if self.selected_inventory(&captured.coordinate, captured.interpretation)?
+            != captured.membership
+        {
             return Err(
                 self.inventory_error("selected host membership or directory identity changed")
             );

@@ -310,7 +310,7 @@ pub fn resolve(uri: &str, sources: &SpecSources) -> std::result::Result<RuleText
     }
     let found = sources.capture_document(&address)?.ok_or_else(|| {
         format!(
-            "no source holds `{uri}` — looked in {}",
+            "no source holds `{uri}` — absent or not classified as native; looked in {}",
             sources.description()
         )
     })?;
@@ -411,7 +411,13 @@ pub fn edges(package_dir: &Path, self_coordinate: &str) -> Result<Vec<DocEdge>> 
 /// placeholder, a teaching address and a self-address are counted and
 /// passed over — resolving them is what would be wrong.
 pub fn check(package_dir: &Path, self_coordinate: &str, sources: &SpecSources) -> Result<Report> {
-    let set = pages::read_package(package_dir)?;
+    let captured = sources
+        .capture_pages(package_dir)
+        .map_err(|message| DocError::Page {
+            path: package_dir.into(),
+            message,
+        })?;
+    let set = captured.set();
     let mut report = Report::default();
     for page in &set.unreadable {
         report.unreadable.push(page.rel.clone());
@@ -432,7 +438,12 @@ pub fn check(package_dir: &Path, self_coordinate: &str, sources: &SpecSources) -
                 });
             }
             if found.class == Classification::SelfAddress
-                && let Err(reason) = resolve_self(package_dir, &found.uri, self_coordinate)
+                && let Err(reason) = resolve_self_in(
+                    set,
+                    &found.uri,
+                    self_coordinate,
+                    captured.canonical_addresses(),
+                )
             {
                 report.unresolved.push(Unresolved {
                     page: found.page.clone(),
@@ -445,6 +456,10 @@ pub fn check(package_dir: &Path, self_coordinate: &str, sources: &SpecSources) -
             report.citations.push(found);
         }
     }
+    captured.recheck().map_err(|message| DocError::Page {
+        path: package_dir.into(),
+        message,
+    })?;
     Ok(report)
 }
 
@@ -452,21 +467,29 @@ pub fn check(package_dir: &Path, self_coordinate: &str, sources: &SpecSources) -
 /// the page must exist. Its FRAGMENT is deliberately not checked when it
 /// is a positional `pNN` — those live by the current text and mean
 /// nothing outside a build (PROP-057 `##READER-NUMBERED-BLOCKS`).
+#[cfg(test)]
 fn resolve_self(
     package_dir: &Path,
     uri: &str,
     self_coordinate: &str,
 ) -> std::result::Result<(), String> {
-    use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
-    let policy = observe_package_policy(package_dir).map_err(|error| error.to_string())?;
-    match policy.mode() {
-        PackageSourceMode::ExplicitEmpty | PackageSourceMode::Explicit => {
-            return Err(policy
-                .unsupported("documentation self citation")
-                .to_string());
-        }
-        PackageSourceMode::Legacy | PackageSourceMode::MissingManifest => {}
-    }
+    let captured = SpecSources::new().capture_pages(package_dir)?;
+    let result = resolve_self_in(
+        captured.set(),
+        uri,
+        self_coordinate,
+        captured.canonical_addresses(),
+    );
+    captured.recheck()?;
+    result
+}
+
+fn resolve_self_in(
+    set: &PageSet,
+    uri: &str,
+    self_coordinate: &str,
+    canonical_addresses: bool,
+) -> std::result::Result<(), String> {
     let rest = uri
         .strip_prefix("spec://")
         .and_then(|b| b.strip_prefix(self_coordinate))
@@ -481,13 +504,17 @@ fn resolve_self(
         // writes this when it names its own coordinate in prose.
         return Ok(());
     }
-    let path = package_dir
-        .join(pages::SPEC_ROOT)
-        .join(format!("{doc_path}.xml"));
-    if !path.is_file() {
+    let page = set.pages.iter().find(|page| {
+        pages::document_of(&page.rel) == doc_path
+            || canonical_addresses && vibe_spec::canonical_doc_path(&page.rel) == doc_path
+    });
+    let unreadable = set.unreadable.iter().find(|page| {
+        pages::document_of(&page.rel) == doc_path
+            || canonical_addresses && vibe_spec::canonical_doc_path(&page.rel) == doc_path
+    });
+    if page.is_none() && unreadable.is_none() {
         return Err(format!(
-            "`{uri}` names no page of this package — `{}/{doc_path}.xml` does not exist",
-            pages::SPEC_ROOT
+            "violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY: `{uri}` names no page of this package; fix surface: selected page identity"
         ));
     }
     let Some(anchor) = anchor else {
@@ -496,14 +523,13 @@ fn resolve_self(
     if is_positional(anchor) {
         return Ok(());
     }
-    let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let doc = vibe_specdoc::from_xml_with(&text, vibe_specdoc::Vocabulary::Doc)
-        .map_err(|e| format!("{}: {e}", path.display()))?;
-    policy
-        .recheck_unchanged()
-        .map_err(|error| error.to_string())?;
+    let doc = &page
+        .ok_or_else(|| {
+            unreadable.map_or_else(|| "page unavailable".into(), |page| page.message.clone())
+        })?
+        .doc;
     let path_segments: Vec<String> = anchor.split('.').map(str::to_owned).collect();
-    anchor_text(&doc, &path_segments)
+    anchor_text(doc, &path_segments)
         .map(|_| ())
         .ok_or_else(|| format!("`{uri}` names no anchor `{anchor}` on that page"))
 }

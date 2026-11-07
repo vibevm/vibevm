@@ -69,6 +69,39 @@ fn absent_default_is_empty_and_exact_absence_is_unavailable() {
             .is_err()
     );
 }
+
+#[test]
+fn native_scope_is_retained_without_broadening_or_changing_all_resource_inventory() {
+    let root = fixture();
+    let path = root.path().join("vibe.toml");
+    fs::write(&path, format!("{}\n[[project.sources]]\nfile='src/page.payload'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='explicit'\n[[project.sources]]\nfile='absent'\nmedia='application/octet-stream'\ninterpretation='opaque'\nrole='resource'\nloading='explicit'\n", fs::read_to_string(&path).unwrap())).unwrap();
+    fs::write(
+        root.path().join("src/page.payload"),
+        "selected native bytes",
+    )
+    .unwrap();
+    let policy = observe_package_policy(root.path()).unwrap();
+    assert!(policy.capture_host_inventory(COORD).is_err());
+    assert!(
+        policy
+            .capture_native_inventory(COORD, SourceInterpretation::Opaque)
+            .is_err()
+    );
+    assert!(
+        policy
+            .capture_native_inventory(COORD, SourceInterpretation::VibeDoc)
+            .is_err()
+    );
+    let captured = policy
+        .capture_native_inventory(COORD, SourceInterpretation::VibeSpec)
+        .unwrap();
+    assert_eq!(captured.resources().len(), 1);
+    assert_eq!(captured.resources()[0].relative(), "src/page.payload");
+    fs::write(root.path().join("src/a"), "ordinary changed").unwrap();
+    policy.recheck_host_inventory(&captured).unwrap();
+    fs::write(root.path().join("src/page.payload"), "native changed").unwrap();
+    assert!(policy.recheck_host_inventory(&captured).is_err());
+}
 #[test]
 fn generated_ownership_and_git_control_are_excluded_but_not_other_dot_files() {
     let root = fixture();

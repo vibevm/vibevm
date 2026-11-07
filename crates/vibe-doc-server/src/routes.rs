@@ -283,14 +283,21 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
             )));
         }
     }
-    let set = vibe_doc::pages::read_package(&reader.package_dir)
+    let captured = reader
+        .sources
+        .capture_pages(&reader.package_dir)
         .map_err(|e| ApiError::internal(e.to_string()))?;
-    let carries = |rel: &str| set.pages.iter().any(|page| page.rel == rel);
+    let set = captured.set();
+    let carries = |rel: &str| {
+        set.pages
+            .iter()
+            .any(|page| vibe_doc::pages::document_of(&page.rel) == rel)
+    };
     let (rel, format) = match address.strip_suffix('/') {
-        Some(stem) => (format!("{stem}.xml"), Format::Html),
+        Some(stem) => (stem.to_owned(), Format::Html),
         None => match address.rsplit_once('.') {
-            Some((stem, "md")) => (format!("{stem}.xml"), Format::Md),
-            Some((stem, "xml")) => (format!("{stem}.xml"), Format::Xml),
+            Some((stem, "md")) => (stem.to_owned(), Format::Md),
+            Some((stem, "xml")) => (stem.to_owned(), Format::Xml),
             // A page address without its slash is the same page
             // (`##SITE-TRAILING-SLASH`); the redirect is permanent so a
             // link that lost the slash is repaired once and not on every
@@ -302,7 +309,7 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
             // edition, before it was served there — off to `…/llms.txt/`
             // and a 404 one hop further on. A name nobody carries is a
             // refusal where it was asked for.
-            _ if carries(&format!("{address}.xml")) => {
+            _ if carries(address) => {
                 let target = format!("{}{}{address}/", reader.base, reader.prefix);
                 return Ok(redirect(&target));
             }
@@ -315,15 +322,23 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
             }
         },
     };
-    let Some(found) = set.pages.iter().find(|p| p.rel == rel) else {
-        if let Some(bad) = set.unreadable.iter().find(|p| p.rel == rel) {
+    let Some(found) = set
+        .pages
+        .iter()
+        .find(|p| vibe_doc::pages::document_of(&p.rel) == rel)
+    else {
+        if let Some(bad) = set
+            .unreadable
+            .iter()
+            .find(|p| vibe_doc::pages::document_of(&p.rel) == rel)
+        {
             return Err(ApiError::internal(format!(
                 "`{rel}` is not readable as a documentation page: {}",
                 bad.message
             )));
         }
         return Err(ApiError::not_found(format!(
-            "this documentation carries no page `{rel}`"
+            "this documentation carries no page `{rel}` (legacy XML spelling `{rel}.xml`)"
         )));
     };
 
@@ -336,17 +351,19 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
         pages: vec![found.clone()],
         unreadable: Vec::new(),
     };
+    let borrowed = vibe_doc::translations::prepare_borrowed_by(
+        &reader.package_dir,
+        &found.rel,
+        &reader.sources,
+    )
+    .map_err(|error| ApiError::internal(error.to_string()))?;
     let content = vibe_doc::content::Content {
         rules: vibe_doc::citations::resolve_rules(&one, &reader.sources),
         derived: reader.derived.clone(),
         // The same one-page economy for the examples a translation
         // borrows: only the SOURCE page at this address is read, not the
         // whole source package (`##LOC-EXAMPLE-REF`).
-        examples: BTreeMap::from([(
-            found.rel.clone(),
-            vibe_doc::translations::borrowed_by(&reader.package_dir, &found.rel, &reader.sources)
-                .map_err(|error| ApiError::internal(error.to_string()))?,
-        )]),
+        examples: BTreeMap::from([(found.rel.clone(), borrowed.examples().clone())]),
         base: reader.base.clone(),
         // The edition's language, for the one line the island writes in
         // its own voice rather than quoting (PROP-057
@@ -362,10 +379,14 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
         // `##LOCAL-SERVE`). The one-page economy above does not apply —
         // whether a link is a term is a question about ANOTHER page of the
         // same package, and that page is in hand.
-        glossary: vibe_doc::glossary::read(&reader.package_dir, &set)
+        glossary: vibe_doc::glossary::read(&reader.package_dir, set)
             .map_err(|e| ApiError::internal(e.to_string()))?,
     };
     let body = build::render_page(found, &content, format);
+    captured.recheck().map_err(ApiError::internal)?;
+    borrowed
+        .recheck()
+        .map_err(|error| ApiError::internal(error.to_string()))?;
     match format {
         // The island goes into the shell, and the two things in the
         // template that name a PAGE rather than the shell are corrected:
@@ -383,7 +404,7 @@ fn page(reader: &Reader, address: &str) -> Result<Response, ApiError> {
 
 /// One rendered island, dressed in the reader's shell.
 pub(crate) fn in_shell(reader: &Reader, page: &vibe_doc::pages::Page, island: &str) -> String {
-    let stem = page.rel.strip_suffix(".xml").unwrap_or(&page.rel);
+    let stem = vibe_doc::pages::document_of(&page.rel);
     let at = format!("{}{}{stem}", reader.base, reader.prefix);
     let md = format!("{at}.md");
     let xml = format!("{at}.xml");

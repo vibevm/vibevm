@@ -33,12 +33,12 @@
 //! answer whatever reaches the walk: the FIRST in document order, by the
 //! same walk the mirror check collects a page's ids with.
 //!
-//! ## Both functions are infallible, on purpose
+//! ## Missing sources and invalid selected inputs are different
 //!
-//! A package that adapts nothing, a `[translates]` that names no
-//! `<group>/<name>`, a source no source holds, a source page that is
-//! missing or will not parse — each yields no bodies for the pages it
-//! affects, and the references then render as the marked gaps they are.
+//! A package that adapts nothing or a source no source holds yields no bodies,
+//! and references render as marked gaps. A malformed relation, invalid selected
+//! binding or unavailable promised native page refuses; it cannot borrow from
+//! a different instance or become an empty successful census.
 //! That is the renderer's contract, stated in [`crate::content`]: a
 //! backend never aborts over a text it could not fetch, because a run
 //! that aborts reports one defect per run. WHICH gap is a failure is the
@@ -109,16 +109,46 @@ pub fn borrowed(
     package_dir: &Path,
     sources: &SpecSources,
 ) -> crate::Result<BTreeMap<String, BTreeMap<String, ExampleBody>>> {
-    let Ok(Some(adapted)) = super::adapted(package_dir, sources) else {
+    let captured = capture_borrowed(package_dir, sources)?;
+    let Some(captured) = captured else {
         return Ok(BTreeMap::new());
     };
-    let set = pages::read_package(&adapted.instance.root)?;
-    Ok(set
+    let result = examples_from(&captured);
+    captured
+        .recheck()
+        .map_err(|message| crate::DocError::Page {
+            path: package_dir.into(),
+            message,
+        })?;
+    Ok(result)
+}
+
+pub(crate) fn capture_borrowed(
+    package_dir: &Path,
+    sources: &SpecSources,
+) -> crate::Result<Option<crate::citations::sources::CapturedPages>> {
+    let Some(adapted) = super::adapted_selection(package_dir, sources, true)? else {
+        return Ok(None);
+    };
+    let captured = sources
+        .capture_pages(&adapted.instance.root)
+        .map_err(|message| crate::DocError::Page {
+            path: adapted.instance.root.clone(),
+            message,
+        })?;
+    Ok(Some(captured))
+}
+
+pub(crate) fn examples_from(
+    captured: &crate::citations::sources::CapturedPages,
+) -> BTreeMap<String, BTreeMap<String, ExampleBody>> {
+    captured
+        .set()
         .pages
         .iter()
         .map(|page| (page.rel.clone(), authored(&page.doc)))
         .filter(|(_, bodies)| !bodies.is_empty())
-        .collect())
+        .collect()
 }
 
 /// The same for ONE page, by its address inside the package.
@@ -176,28 +206,129 @@ pub fn borrowed_by(
     page: &str,
     sources: &SpecSources,
 ) -> crate::Result<BTreeMap<String, ExampleBody>> {
-    if !is_page_address(page) {
-        return Ok(BTreeMap::new());
+    let prepared = prepare_borrowed_by(package_dir, page, sources)?;
+    prepared.recheck()?;
+    Ok(prepared.examples)
+}
+
+/// Borrowed bodies with the selected point observation retained for a response.
+#[derive(Debug, Default)]
+pub struct BorrowedPage {
+    examples: BTreeMap<String, ExampleBody>,
+    captured: Option<crate::citations::sources::CapturedDocument>,
+    empty: Option<crate::citations::sources::CapturedPages>,
+}
+impl BorrowedPage {
+    pub fn examples(&self) -> &BTreeMap<String, ExampleBody> {
+        &self.examples
     }
-    let Ok(Some(adapted)) = super::adapted(package_dir, sources) else {
-        return Ok(BTreeMap::new());
+    pub fn recheck(&self) -> crate::Result<()> {
+        if let Some(empty) = &self.empty {
+            empty
+                .recheck()
+                .map_err(|message| crate::DocError::Translation {
+                    adapts: String::new(),
+                    message,
+                })?;
+        }
+        if let Some(captured) = &self.captured {
+            captured
+                .recheck()
+                .map_err(|message| crate::DocError::Page {
+                    path: captured.path.clone(),
+                    message,
+                })?;
+        }
+        Ok(())
+    }
+}
+/// Prepare the exact source page a response borrows, keeping its native guard.
+/// ```
+/// use vibe_doc::{translations::prepare_borrowed_by, citations::SpecSources};
+/// let root = tempfile::tempdir().unwrap();
+/// let prepared = prepare_borrowed_by(root.path(), "guide.xml", &SpecSources::new()).unwrap();
+/// assert!(prepared.examples().is_empty());
+/// prepared.recheck().unwrap();
+/// ```
+pub fn prepare_borrowed_by(
+    package_dir: &Path,
+    page: &str,
+    sources: &SpecSources,
+) -> crate::Result<BorrowedPage> {
+    if !is_page_address(page) {
+        return Ok(BorrowedPage::default());
+    }
+    let Some(adapted) = super::adapted_selection(package_dir, sources, true)? else {
+        return Ok(BorrowedPage::default());
     };
     use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
     let policy = observe_package_policy(&adapted.instance.root)?;
     match policy.mode() {
         PackageSourceMode::ExplicitEmpty => {
-            policy.recheck_unchanged()?;
-            return Ok(BTreeMap::new());
+            let empty = sources
+                .capture_pages(&adapted.instance.root)
+                .map_err(|message| crate::DocError::Page {
+                    path: adapted.instance.root,
+                    message,
+                })?;
+            return Ok(BorrowedPage {
+                empty: Some(empty),
+                ..Default::default()
+            });
         }
         PackageSourceMode::Explicit => {
-            return Err(policy.unsupported("borrowed documentation examples").into());
+            if !policy
+                .package()
+                .is_some_and(|package| package.kind == vibe_core::PackageKind::Doc)
+            {
+                return Err(policy
+                    .unsupported("borrowed documentation outside a Doc package")
+                    .into());
+            }
+            let address = vibe_spec::SpecAddress::parse(&format!(
+                "spec://{}/{}#root",
+                adapted.coordinate,
+                pages::document_of(page)
+            ))
+            .map_err(|error| crate::DocError::Page {
+                path: adapted.instance.root.clone(),
+                message: error.to_string(),
+            })?;
+            let Some(captured) =
+                sources
+                    .capture_document(&address)
+                    .map_err(|message| crate::DocError::Page {
+                        path: adapted.instance.root.clone(),
+                        message,
+                    })?
+            else {
+                return Ok(BorrowedPage::default());
+            };
+            let doc = captured.parse().map_err(|message| crate::DocError::Page {
+                path: adapted.instance.root.clone(),
+                message,
+            })?;
+            let examples = authored(&doc);
+            captured
+                .recheck()
+                .map_err(|message| crate::DocError::Page {
+                    path: adapted.instance.root,
+                    message,
+                })?;
+            return Ok(BorrowedPage {
+                examples,
+                captured: Some(captured),
+                empty: None,
+            });
         }
         PackageSourceMode::Legacy | PackageSourceMode::MissingManifest => {}
     }
     let path = adapted.instance.root.join(pages::SPEC_ROOT).join(page);
     let text = match std::fs::read_to_string(&path) {
         Ok(text) => text,
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(BTreeMap::new()),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            return Ok(BorrowedPage::default());
+        }
         Err(error) => return Err(crate::DocError::io("reading", &path, error)),
     };
     let doc =
@@ -208,7 +339,11 @@ pub fn borrowed_by(
             }
         })?;
     policy.recheck_unchanged()?;
-    Ok(authored(&doc))
+    Ok(BorrowedPage {
+        examples: authored(&doc),
+        captured: None,
+        empty: None,
+    })
 }
 
 /// The examples one page authors, by id, first in document order winning.

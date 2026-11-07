@@ -5,6 +5,7 @@ use vibe_specdoc::doc::BlockNode;
 
 use super::*;
 use crate::manifest::tests::fixture;
+use crate::pages;
 
 fn read(package: &str) -> PageSet {
     pages::read_package(&fixture(package)).expect("the fixture package reads")

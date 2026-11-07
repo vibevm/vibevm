@@ -25469,10 +25469,10 @@
       "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/build.rs",
       "item_kind": "fn",
-      "line": 308,
+      "line": 309,
       "symbol": "vibe_doc::build::build_generated",
-      "end_line": 347,
-      "fingerprint": "tok1:3694ec8f06774ba13d21087e73a9dfd1ad975a70b4a6cf942c437b07a9ee099e"
+      "end_line": 349,
+      "fingerprint": "tok1:b0526262fead99db3565c53e5316d949e500e355ae655ae1ebf739239ab47ba5"
     },
     {
       "crate_name": "vibe-doc",
@@ -25482,6 +25482,24 @@
       "symbol": "vibe_doc::build::gaps",
       "end_line": 24,
       "fingerprint": "tok1:584fd88b88b679119e96d88c1633b710d40ecbb9b4dbd3bc85f61394a3b3c223"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/build/prepared.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_doc::build::prepared",
+      "end_line": 5,
+      "fingerprint": "tok1:a64a06270810e9f3b2d7efe742b3db379808a3b2cee3a5fe8b4fc4c18ece55c3"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/build/prepared.rs",
+      "item_kind": "fn",
+      "line": 42,
+      "symbol": "vibe_doc::build::prepared::prepare_observed",
+      "end_line": 103,
+      "fingerprint": "tok1:1e6d5e10702f29f8ccb7cb62c24f4e7a93f27324415db5943004c42ffe121429"
     },
     {
       "crate_name": "vibe-doc",
@@ -25517,7 +25535,7 @@
       "line": 298,
       "symbol": "vibe_doc::citations::resolve",
       "end_line": 336,
-      "fingerprint": "tok1:abadb7cbab0ccc5a57f2d33847628e07ffec7e4d26873d2f25b0d41948d8bf23"
+      "fingerprint": "tok1:6f009ca3cae3021f3eed16ee229031c2131912e5b7e7ecd4524b5160b839bdbd"
     },
     {
       "crate_name": "vibe-doc",
@@ -25554,6 +25572,24 @@
       "symbol": "vibe_doc::citations::sources::captured::SpecSources::capture_document",
       "end_line": 218,
       "fingerprint": "tok1:25293d703b37dead3ebb4a2a97f54b7eb27ad6e8386bda4954b4d2ceb3d00f60"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/citations/sources/census.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_doc::citations::sources::census",
+      "end_line": 5,
+      "fingerprint": "tok1:a64a06270810e9f3b2d7efe742b3db379808a3b2cee3a5fe8b4fc4c18ece55c3"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/citations/sources/census.rs",
+      "item_kind": "fn",
+      "line": 157,
+      "symbol": "vibe_doc::citations::sources::census::SpecSources::capture_pages",
+      "end_line": 208,
+      "fingerprint": "tok1:4899839762938d848f981039f02f37eb298b47ae20d4994705195434b6234fc4"
     },
     {
       "crate_name": "vibe-doc",
@@ -26313,6 +26349,15 @@
     },
     {
       "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/tests/declared_page_census.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_doc::tests::declared_page_census",
+      "end_line": 5,
+      "fingerprint": "tok1:a64a06270810e9f3b2d7efe742b3db379808a3b2cee3a5fe8b4fc4c18ece55c3"
+    },
+    {
+      "crate_name": "vibe-doc",
       "file": "crates/vibe-doc/src/todo.rs",
       "item_kind": "mod",
       "line": 33,
@@ -26391,6 +26436,15 @@
       "symbol": "vibe_doc::translations::borrowed",
       "end_line": 49,
       "fingerprint": "tok1:15cc865ba9bb7d4ee1ba88bae442ac63b521e711e03bad118d6e614ab7ae6c11"
+    },
+    {
+      "crate_name": "vibe-doc",
+      "file": "crates/vibe-doc/src/translations/selection.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_doc::translations::selection",
+      "end_line": 2,
+      "fingerprint": "tok1:2c385fd916de8ea8d9fdb3522f012500dd4ae8cb257dd98e49590eb24fdd4d74"
     },
     {
       "crate_name": "vibe-doc",
@@ -65565,7 +65619,7 @@
     {
       "file": "crates/vibe-doc/src/build.rs",
       "from_symbol": "vibe_doc::build::build_generated",
-      "line": 309,
+      "line": 310,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED",
       "verb": "implements",
@@ -65578,6 +65632,24 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/build/prepared.rs",
+      "from_symbol": "vibe_doc::build::prepared",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-doc/src/build/prepared.rs",
+      "from_symbol": "vibe_doc::build::prepared::prepare_observed",
+      "line": 50,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-doc/src/chapters.rs",
@@ -65643,6 +65715,24 @@
       "line": 155,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-POINT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-doc/src/citations/sources/census.rs",
+      "from_symbol": "vibe_doc::citations::sources::census",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-doc/src/citations/sources/census.rs",
+      "from_symbol": "vibe_doc::citations::sources::census::SpecSources::capture_pages",
+      "line": 166,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS",
       "verb": "implements",
       "pinned_r": 1
     },
@@ -66329,6 +66419,15 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-doc/tests/declared_page_census.rs",
+      "from_symbol": "vibe_doc::tests::declared_page_census",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-doc/src/todo.rs",
       "from_symbol": "vibe_doc::todo",
       "line": 33,
@@ -66398,6 +66497,14 @@
       "line": 49,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-EXAMPLE-REF",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-doc/src/translations/selection.rs",
+      "from_symbol": "vibe_doc::translations::selection",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-057#LOC-MIRROR",
       "verb": "implements"
     },
     {
@@ -114056,6 +114163,26 @@
       "heading": "Generated level-zero and failed-version pages enter the existing documentation rendering pipeline as explicit producer inputs, separate from authored package source admission. Reuse the existing page AST, card, projection, media and manifest assembly owners. Carry the actual subject coordinate and version, presentation metadata, known original package kind and existing relations; an unknown original kind remains unknown. A generated card is not a new package identity or authority to parse arbitrary authored roots. Do not invent a package kind, disguise the subject as a documentation package, or use a file marker or malformed synthetic manifest to bypass authored admission. Authored package reads retain strict manifest/source policy validation. The actual failed-fetch page and later successful retry must remain renderable, with existing projection and unknown-kind semantics. No new package kind, manifest/wire schema, second renderer or global source world follows from this distinction. @status:spec/done",
       "line": 72,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-GENERATED-LAW"
+    },
+    {
+      "anchor": "SOURCE-DOC-CENSUS",
+      "content_hash": "sha256:2a39c7b6f7ebf91345733db502cfb701e843d59bfb4f3fc9ef41fea6213263d1",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Selected documentation page inventories and consumers",
+      "line": 74,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-DOC-CENSUS-LAW",
+      "content_hash": "sha256:2c004b08081daf688f671d38aa85b5518da647b6520dcbdee562e36b57a7507a",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Declared documentation page enumeration uses the actual Doc package, selected outer source policy and finite operation-owned native inventory. Shared selector precedence applies before filtering; a valid selector tie whose winning declarations are all outside the requested interpretation contributes no page, while a tie containing that native interpretation refuses. Structural manifest validation and unfiltered host inventory behavior remain unchanged. Ordinary resources and nested manifest data do not acquire page vocabulary. Authored originals use held policy/media/bytes, while installed roots require independent full selected lock identity/hash and trusted materialized format through the existing prepared record owner. Explicit roots are not replaced by nearer coordinate matches; an unbound materialized path cannot invent its own expectation. Preserve original logical relative paths and established document identities independently of converted filenames. Explicit empty has zero pages; malformed policy or unavailable selected input refuses. Native syntax failures remain named unreadable pages, and membership-only navigation can still name a malformed selected page. Actual build, server routes, self citations and borrowed examples consume the same selected inventory or point-read owners and retain relevant observation checks before publication or response. Server page selection uses logical document identity rather than reconstructing an xml filename; existing routes, translation relations and missing-page behavior remain compatible. Generated producer inputs retain their separate accepted boundary, and legacy APIs retain their qualified compatibility or explicit unsupported refusal where independent binding is absent. Reuse native Doc AST and existing rendering/manifest/projection owners; no new package kind, wire schema, source URI, parser, global source world or transaction is introduced. @status:spec/done",
+      "line": 76,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-DOC-CENSUS-LAW"
     },
     {
       "anchor": "genre-definition",

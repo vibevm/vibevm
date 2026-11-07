@@ -53,7 +53,7 @@ use vibe_wire::generated::doc_manifest::{
 
 use crate::citations::SpecSources;
 use crate::error::{DocError, Result};
-use crate::pages::{self, PageSet};
+use crate::pages::PageSet;
 
 pub use navigation::chapters;
 pub use reviews::Reviews;
@@ -131,14 +131,43 @@ impl Options {
 /// ```
 pub fn build(package_dir: &Path, sources: &SpecSources, options: &Options) -> Result<Built> {
     let card = Card::read(package_dir)?;
-    let set = pages::read_package(package_dir)?;
+    let captured = sources
+        .capture_pages(package_dir)
+        .map_err(|message| DocError::Page {
+            path: package_dir.into(),
+            message,
+        })?;
+    let built = build_for_card(package_dir, sources, options, captured.set(), &card)?;
+    captured.recheck().map_err(|message| DocError::Page {
+        path: package_dir.into(),
+        message,
+    })?;
+    Ok(built)
+}
+
+pub(crate) fn build_for_set(
+    package_dir: &Path,
+    sources: &SpecSources,
+    options: &Options,
+    set: &PageSet,
+) -> Result<Built> {
+    let card = Card::read(package_dir)?;
+    build_for_card(package_dir, sources, options, set, &card)
+}
+fn build_for_card(
+    package_dir: &Path,
+    sources: &SpecSources,
+    options: &Options,
+    set: &PageSet,
+    card: &Card,
+) -> Result<Built> {
     let reviews = Reviews::read(package_dir.join(REVIEWS))?;
     // The card's images: their addresses, from the one place that decides
     // them. A declared image is read to take its content name, which is
     // the price of an address a cache may keep forever.
     let coordinate = format!("{}/{}", card.group, card.name);
     let media = crate::media::slots(package_dir, &coordinate)?;
-    Ok(assemble(&card, &set, &reviews, &media, sources, options))
+    Ok(assemble(card, set, &reviews, &media, sources, options))
 }
 
 /// One built manifest and the pages that did not parse.

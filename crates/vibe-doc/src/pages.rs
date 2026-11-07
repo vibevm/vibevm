@@ -64,13 +64,15 @@ impl PageSet {
     }
 }
 
-/// Walk `<package>/vibevm/vibespecs/**/*.xml` and read every page through
+/// Read declared native Doc pages, or legacy `<package>/vibevm/vibespecs/**/*.xml`, through
 /// the documentation vocabulary, in a stable order (the address, sorted),
 /// so two runs of any check over an unchanged package report in the same
 /// sequence.
 ///
 /// A missing spec root is not an error: a package may legitimately carry
 /// no pages yet, and an empty walk says so more usefully than a refusal.
+/// This returns a checked snapshot. Call `SpecSources::capture_pages` when a
+/// render or response must retain and recheck the selected observation.
 ///
 /// ```
 /// use std::fs;
@@ -97,6 +99,16 @@ impl PageSet {
 /// assert!(set.unreadable.is_empty());
 /// ```
 pub fn read_package(package_dir: &Path) -> Result<PageSet> {
+    let captured = crate::citations::SpecSources::new()
+        .capture_pages(package_dir)
+        .map_err(|message| DocError::Page {
+            path: package_dir.into(),
+            message,
+        })?;
+    Ok(captured.set().clone())
+}
+
+pub(crate) fn read_legacy(package_dir: &Path) -> Result<PageSet> {
     use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
     let policy = observe_package_policy(package_dir)?;
     match policy.mode() {
@@ -125,19 +137,17 @@ pub fn read_package(package_dir: &Path) -> Result<PageSet> {
     Ok(set)
 }
 
-/// Every page address the package carries, in the same order
-/// [`read_package`] returns them, WITHOUT reading a single page.
+/// Every selected page address, including pages whose native syntax is malformed.
+/// Legacy membership uses its historical suffix walk; declarations use held bytes
+/// and the finite native source inventory.
 ///
 /// The address is the document path a `[navigation]` row spells — the
 /// `rel` of a [`Page`] with its `.xml` dropped — because that is the
 /// spelling an author has to correct when a path names a page the package
 /// does not have.
 ///
-/// Its whole reason is that «which pages does this package have» is a
-/// question about a DIRECTORY, and a caller that only asks it should not
-/// pay for the pivot: `vibe check` compares a declared learning path
-/// against the tree, and a malformed page must be counted as a page there
-/// rather than vanish from the comparison because it would not parse.
+/// `vibe check` compares a declared learning path against this membership;
+/// malformed selected pages must not vanish because they would not parse.
 ///
 /// ```
 /// use std::fs;
@@ -154,16 +164,34 @@ pub fn read_package(package_dir: &Path) -> Result<PageSet> {
 /// );
 /// ```
 pub fn documents(package_dir: &Path) -> Result<Vec<String>> {
-    Ok(walk_package(package_dir)?
-        .into_iter()
-        .map(|(rel, _)| document_of(&rel).to_owned())
-        .collect())
+    use vibe_spec::source_policy::{PackageSourceMode, observe_package_policy};
+    let policy = observe_package_policy(package_dir)?;
+    if matches!(
+        policy.mode(),
+        PackageSourceMode::Legacy | PackageSourceMode::MissingManifest
+    ) {
+        let documents = walk_package(package_dir)?
+            .into_iter()
+            .map(|(rel, _)| document_of(&rel).to_owned())
+            .collect();
+        policy.recheck_unchanged()?;
+        return Ok(documents);
+    }
+    crate::citations::SpecSources::new()
+        .capture_pages(package_dir)
+        .map(|captured| captured.documents())
+        .map_err(|message| DocError::Page {
+            path: package_dir.into(),
+            message,
+        })
 }
 
 /// A page address as a document path: the same address without the
 /// extension a pin and a chapter row both leave off.
 pub fn document_of(rel: &str) -> &str {
-    rel.strip_suffix(".xml").unwrap_or(rel)
+    rel.strip_suffix(".xml")
+        .or_else(|| rel.strip_suffix(".md"))
+        .unwrap_or(rel)
 }
 
 /// `<package>/vibevm/vibespecs/**/*.xml` as `(address, path)` pairs,

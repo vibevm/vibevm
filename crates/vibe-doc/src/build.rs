@@ -38,6 +38,8 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-057#PIPE-LIBRARY");
 
 pub mod gaps;
+mod prepared;
+pub use prepared::{PreparedBuild, prepare_observed};
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -174,9 +176,18 @@ pub fn content(
     base: &str,
     derived: BTreeMap<String, String>,
 ) -> Result<(PageSet, Content)> {
-    let set = pages::read_package(package_dir)?;
-    let content = content_for_set(package_dir, sources, base, derived, &set)?;
-    Ok((set, content))
+    let captured = sources
+        .capture_pages(package_dir)
+        .map_err(|message| DocError::Page {
+            path: package_dir.into(),
+            message,
+        })?;
+    let content = content_for_set(package_dir, sources, base, derived, captured.set(), None)?;
+    captured.recheck().map_err(|message| DocError::Page {
+        path: package_dir.into(),
+        message,
+    })?;
+    Ok((captured.set().clone(), content))
 }
 
 fn content_for_set(
@@ -185,6 +196,7 @@ fn content_for_set(
     base: &str,
     derived: BTreeMap<String, String>,
     set: &PageSet,
+    examples: Option<BTreeMap<String, BTreeMap<String, crate::content::ExampleBody>>>,
 ) -> Result<Content> {
     let content = Content {
         rules: citations::resolve_rules(set, sources),
@@ -193,7 +205,10 @@ fn content_for_set(
         // source page at its own address (`##LOC-EXAMPLE-REF`,
         // `##LOC-MIRROR`). A source documentation adapts nothing, so this
         // is empty for it and costs a manifest read.
-        examples: translations::borrowed(package_dir, sources)?,
+        examples: match examples {
+            Some(examples) => examples,
+            None => translations::borrowed(package_dir, sources)?,
+        },
         base: base.to_owned(),
         // One package is one language (`##LOC-LANGUAGE-FIELD`), so the
         // edition's language is read once per build and handed to the
@@ -243,7 +258,7 @@ pub fn render_page(page: &Page, content: &Content, format: Format) -> String {
 /// directory that ends in a slash, and the projections lie beside it as
 /// files.
 pub fn page_path(prefix: &str, page_rel: &str, format: Format) -> String {
-    let stem = page_rel.strip_suffix(".xml").unwrap_or(page_rel);
+    let stem = pages::document_of(page_rel);
     match format {
         Format::Html => format!("{prefix}{stem}/index.html"),
         Format::Md => format!("{prefix}{stem}.md"),
@@ -281,21 +296,7 @@ pub fn build_observed(
     options: &Options,
     progress: &Progress,
 ) -> Result<Built> {
-    let (set, content) = observed(progress, "Reading documentation pages", || {
-        content(package_dir, sources, &options.base, options.derived.clone())
-    })?;
-    let built_manifest = observed(progress, "Building documentation manifest", || {
-        manifest::build(package_dir, sources, &options.manifest)
-    })?;
-    finish(
-        package_dir,
-        &set,
-        &content,
-        built_manifest,
-        options,
-        progress,
-        declared_kind(package_dir),
-    )
+    Ok(prepare_observed(package_dir, sources, options, progress)?.built)
 }
 
 /// Explicit producer-owned pages and card; never authorizes a filesystem walk.
@@ -322,6 +323,7 @@ pub(crate) fn build_generated(
         &options.base,
         options.derived.clone(),
         &input.pages,
+        None,
     )?;
     content.lang.clone_from(&input.card.lang);
     let reviews = manifest::Reviews::read(package_dir.join(manifest::REVIEWS))?;

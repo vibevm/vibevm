@@ -103,11 +103,11 @@ fn run_build(args: DocBuildArgs, env: DocEnv) -> Result<()> {
         manifest: manifest::Options::at(Utc::now()),
         derived,
     };
-    let built = build::build_observed(&args.path, &sources, &options, &env.progress)?;
+    let built = build::prepare_observed(&args.path, &sources, &options, &env.progress)?;
     observe::phase(&env.progress, "Writing documentation output", || {
-        build::write(&built, &args.out)
+        built.write(&args.out)
     })?;
-    print!("{}", built.render());
+    print!("{}", built.built().render());
     println!("  written under {}", args.out.display());
     Ok(())
 }

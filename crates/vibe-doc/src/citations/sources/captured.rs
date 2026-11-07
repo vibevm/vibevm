@@ -119,7 +119,7 @@ fn reject_materialized(policy: &PackagePolicyObservation) -> Result<(), String> 
     Ok(())
 }
 
-fn recheck_lock(project: &Project, bytes: &[u8]) -> Result<(), String> {
+pub(super) fn recheck_lock(project: &Project, bytes: &[u8]) -> Result<(), String> {
     let root = project.root_dir().map_err(|e| e.to_string())?;
     if project
         .read_source_bytes_in(&root, Lockfile::FILENAME)

@@ -70,6 +70,97 @@ async fn get_bytes(path: &str) -> (StatusCode, axum::http::HeaderMap, Vec<u8>) {
 mod editions;
 
 #[tokio::test]
+async fn legacy_fullslug_page_url_keeps_its_original_spelling() {
+    let tmp = tempfile::tempdir().unwrap();
+    let reader = reader(&tmp);
+    std::fs::write(
+        tmp.path().join("vibevm/vibespecs/model/PROP-001-guide.xml"),
+        PAGE,
+    )
+    .unwrap();
+    let prefix = format!("{}{}", reader.base, reader.prefix);
+    let app = build_app(Arc::new(reader));
+    for (suffix, expected) in [
+        ("model/PROP-001-guide/", StatusCode::OK),
+        ("model/PROP-001-guide.md", StatusCode::OK),
+        ("model/PROP-001/", StatusCode::NOT_FOUND),
+    ] {
+        let response = app
+            .clone()
+            .oneshot(
+                Request::builder()
+                    .uri(format!("{prefix}{suffix}"))
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), expected, "{suffix}");
+    }
+}
+
+#[tokio::test]
+async fn declared_arbitrary_suffix_pages_use_logical_routes_and_never_raw_neighbors() {
+    let tmp = tempfile::tempdir().unwrap();
+    package(tmp.path());
+    let manifest = tmp.path().join("vibe.toml");
+    let original = std::fs::read_to_string(&manifest).unwrap();
+    let rows = "[[package.sources]]\nfile='guide.payload'\nmedia='application/xml'\ninterpretation='vibe-doc'\nrole='documentation'\nloading='explicit'\n";
+    std::fs::write(
+        &manifest,
+        original.replace("[i18n]", &format!("{rows}[i18n]")),
+    )
+    .unwrap();
+    std::fs::write(tmp.path().join("guide.payload"), PAGE).unwrap();
+    std::fs::write(tmp.path().join("raw.xml"), PAGE).unwrap();
+    let reader = Reader::open(
+        &Config::new(tmp.path()),
+        SpecSources::new(),
+        Utc.with_ymd_and_hms(2026, 9, 12, 0, 0, 0).unwrap(),
+    )
+    .unwrap();
+    let prefix = format!("{}{}", reader.base, reader.prefix);
+    let app = build_app(Arc::new(reader));
+    for (suffix, status) in [
+        ("guide.payload/", StatusCode::OK),
+        ("guide.payload.md", StatusCode::OK),
+        ("guide.payload.xml", StatusCode::OK),
+        ("guide.payload", StatusCode::PERMANENT_REDIRECT),
+        ("raw/", StatusCode::NOT_FOUND),
+        ("model/boot-lane/", StatusCode::NOT_FOUND),
+    ] {
+        let response = app
+            .clone()
+            .oneshot(
+                Request::builder()
+                    .uri(format!("{prefix}{suffix}"))
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), status, "{suffix}");
+        if status == StatusCode::OK {
+            let bytes = axum::body::to_bytes(response.into_body(), 8 * 1024 * 1024)
+                .await
+                .unwrap();
+            assert!(String::from_utf8_lossy(&bytes).contains("Boot lane"));
+        }
+    }
+    std::fs::write(tmp.path().join("guide.payload"), "<spec").unwrap();
+    let response = app
+        .oneshot(
+            Request::builder()
+                .uri(format!("{prefix}guide.payload/"))
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::INTERNAL_SERVER_ERROR);
+}
+
+#[tokio::test]
 async fn the_health_route_answers_the_shape_the_index_server_answers() {
     let (status, _, body) = get_path("/healthz").await;
     assert_eq!(status, StatusCode::OK);

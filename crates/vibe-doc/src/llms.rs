@@ -363,7 +363,7 @@ pub fn page_address(manifest: &DocManifest, page_path: &str) -> String {
 /// path without its extension, which is how the addressing grammar
 /// spells a document.
 fn document_of(page_path: &str) -> &str {
-    page_path.strip_suffix(".xml").unwrap_or(page_path)
+    crate::pages::document_of(page_path)
 }
 
 /// Text as one line — a summary that wrapped in the source must not

@@ -10,6 +10,147 @@ use vibe_doc::citations::{SpecSources, resolve};
 const URI: &str = "spec://com.example/native/guide.payload#LAW";
 const XML: &str = "<spec xmlns='https://vibevm.org/spec/1'><title id='root'>Guide</title><p><LAW fact='true' status='spec/done'>Current captured rule.</LAW></p></spec>";
 
+#[test]
+fn bound_installed_census_preserves_original_page_identity_and_retains_write_guard() {
+    for format in [SpecFormat::Mixed, SpecFormat::Xml] {
+        let (_temp, slot, sources) = installed_kind(format, true);
+        assert!(vibe_doc::pages::read_package(&slot).is_err());
+        let captured = sources.capture_pages(&slot).unwrap();
+        assert_eq!(captured.documents(), ["guide.payload"]);
+        assert_eq!(captured.set().pages[0].rel, "guide.payload");
+        let options = vibe_doc::build::Options {
+            format: vibe_doc::build::Format::Md,
+            base: "/doc/".into(),
+            manifest: vibe_doc::manifest::Options::at(chrono::Utc::now()),
+            derived: Default::default(),
+        };
+        let prepared = vibe_doc::build::prepare_observed(
+            &slot,
+            &sources,
+            &options,
+            &vibe_core::progress::Progress::default(),
+        )
+        .unwrap();
+        assert!(
+            prepared
+                .built()
+                .files
+                .iter()
+                .any(|file| file.path.ends_with("guide.payload.md"))
+        );
+        fs::write(
+            slot.join(if format == SpecFormat::Mixed {
+                "guide.payload"
+            } else {
+                "guide.xml"
+            }),
+            "changed",
+        )
+        .unwrap();
+        let out = slot.join("refused-output");
+        assert!(prepared.write(&out).is_err());
+        assert!(!out.exists());
+    }
+}
+
+#[test]
+fn installed_census_refuses_missing_hash_record_and_format_before_output() {
+    for fault in [
+        "hash",
+        "missing-hash",
+        "record",
+        "wrong-record",
+        "format",
+        "missing-format",
+    ] {
+        let (temp, slot, mut sources) = installed_kind(SpecFormat::Mixed, true);
+        let workspace = temp.path().join("workspace");
+        match fault {
+            "hash" => {
+                let path = workspace.join("vibe.lock");
+                let text = fs::read_to_string(&path).unwrap();
+                fs::write(path, text.replace(&"a".repeat(64), &"b".repeat(64))).unwrap();
+            }
+            "record" => {
+                fs::remove_file(slot.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME)).unwrap();
+            }
+            "missing-hash" => {
+                let path = workspace.join("vibe.lock");
+                let text = fs::read_to_string(&path).unwrap();
+                fs::write(
+                    path,
+                    text.lines()
+                        .filter(|line| !line.starts_with("content_hash="))
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                )
+                .unwrap();
+            }
+            "wrong-record" => {
+                fs::write(
+                    slot.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME),
+                    "invalid record",
+                )
+                .unwrap();
+            }
+            "format" => sources = sources.with_materialized_format(SpecFormat::Xml),
+            "missing-format" => sources = SpecSources::new().with_lock(&workspace),
+            _ => unreachable!(),
+        }
+        assert!(sources.capture_pages(&slot).is_err(), "{fault}");
+        let out = temp.path().join("output");
+        fs::create_dir(&out).unwrap();
+        fs::write(out.join("prior"), "untouched output").unwrap();
+        let options = vibe_doc::build::Options {
+            format: vibe_doc::build::Format::Md,
+            base: "/doc/".into(),
+            manifest: vibe_doc::manifest::Options::at(chrono::Utc::now()),
+            derived: Default::default(),
+        };
+        assert!(
+            vibe_doc::build::prepare_observed(
+                &slot,
+                &sources,
+                &options,
+                &vibe_core::progress::Progress::default()
+            )
+            .is_err(),
+            "{fault}"
+        );
+        assert_eq!(
+            fs::read_to_string(out.join("prior")).unwrap(),
+            "untouched output"
+        );
+        assert_eq!(fs::read_dir(out).unwrap().count(), 1);
+    }
+}
+
+#[test]
+fn independently_bound_legacy_slot_retains_its_qualified_page_route() {
+    let (temp, slot, sources) = installed_policy(SpecFormat::Mixed, true, false);
+    assert!(
+        slot.join(vibe_workspace::vibedeps::SLOT_RECORD_FILENAME)
+            .is_file()
+    );
+    assert!(
+        vibe_doc::pages::read_package(&slot)
+            .unwrap_err()
+            .to_string()
+            .contains("requires independent lock binding")
+    );
+    assert_eq!(
+        vibe_doc::pages::read_package(&temp.path().join("source"))
+            .unwrap()
+            .pages[0]
+            .rel,
+        "guide.xml"
+    );
+    let captured = sources.capture_pages(&slot).unwrap();
+    assert_eq!(captured.documents(), ["guide"]);
+    assert_eq!(captured.set().pages[0].rel, "guide.xml");
+    captured.recheck().unwrap();
+}
+
 fn installed(format: SpecFormat) -> (tempfile::TempDir, std::path::PathBuf, SpecSources) {
     installed_kind(format, false)
 }
@@ -17,6 +158,14 @@ fn installed(format: SpecFormat) -> (tempfile::TempDir, std::path::PathBuf, Spec
 fn installed_kind(
     format: SpecFormat,
     doc: bool,
+) -> (tempfile::TempDir, std::path::PathBuf, SpecSources) {
+    installed_policy(format, doc, true)
+}
+
+fn installed_policy(
+    format: SpecFormat,
+    doc: bool,
+    declared: bool,
 ) -> (tempfile::TempDir, std::path::PathBuf, SpecSources) {
     let temp = tempfile::tempdir().unwrap();
     let source = temp.path().join("source");
@@ -40,6 +189,19 @@ fn installed_kind(
     }
     vibe_core::manifest::Manifest::read(source.join("vibe.toml")).unwrap();
     fs::write(source.join("guide.payload"), XML).unwrap();
+    if !declared {
+        let path = source.join("vibe.toml");
+        let text = fs::read_to_string(&path).unwrap();
+        let (package, rows) = text.split_once("[[package.sources]]").unwrap();
+        let (_, relation) = rows.split_once("[[documents]]").unwrap();
+        fs::write(path, format!("{package}[[documents]]{relation}")).unwrap();
+        fs::create_dir_all(source.join("vibevm/vibespecs")).unwrap();
+        fs::rename(
+            source.join("guide.payload"),
+            source.join("vibevm/vibespecs/guide.xml"),
+        )
+        .unwrap();
+    }
     fs::write(source.join("guide.md"), "literal raw neighbor").unwrap();
     fs::write(
         workspace.join("vibe.toml"),
