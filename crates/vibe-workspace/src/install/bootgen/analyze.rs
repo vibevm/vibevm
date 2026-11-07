@@ -37,9 +37,7 @@ use crate::{Workspace, boot_artifacts};
 use super::ResolvedDep;
 use super::hybrid_emit::{append_hoisted, with_static_set};
 use super::owner_plans::world_error;
-use super::{
-    desubstitute_covered_units, node_dependency_boot, node_own_boot, read_durable_resolution,
-};
+use super::{desubstitute_covered_units, node_dependency_boot, read_durable_resolution};
 
 /// One analyzed lane: the compile's result beside its attribution side.
 #[derive(Debug, Clone)]
@@ -125,8 +123,8 @@ fn analyze_node_lane_using(
         &world,
         OwnerRuntimeLowering::new(node_rel, BTreeMap::new()),
     )?;
-    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
-        &root,
+    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare_with_nodes(
+        workspace,
         &resolution,
         input_format,
     )?;
@@ -153,11 +151,27 @@ fn analyze_node_lane_using(
     // foundation inherited by every member, the dependency closure with
     // unit-STATIC substitution, the root's hoisted shared packages, and
     // the B-006 once-each dedup — the regeneration order, all of it.
-    let own = node_own_boot(&node_dir, node_rel)?;
+    let own = sources
+        .as_ref()
+        .ok_or_else(|| WorkspaceError::Io {
+            path: node_dir.clone(),
+            reason: "prepared nodes missing".into(),
+        })?
+        .node(node_rel)?
+        .entries
+        .clone();
     let inherited = if node_rel == "." {
         Vec::new()
     } else {
-        node_own_boot(&root, ".")?
+        sources
+            .as_ref()
+            .ok_or_else(|| WorkspaceError::Io {
+                path: root.clone(),
+                reason: "prepared nodes missing".into(),
+            })?
+            .node(".")?
+            .entries
+            .clone()
             .into_iter()
             .filter(|b| b.category == Some(vibe_core::manifest::BootCategory::Foundation))
             .collect()
@@ -276,8 +290,8 @@ fn analyze_node_lane_bound_native_using<P: OwnerNativeCompileProvider>(
         .unwrap_or_else(|| workspace.root_manifest.clone());
     let root = workspace.root.clone();
     let self_coord = super::root_self_coordinate(&workspace.root_manifest);
-    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
-        &root,
+    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare_with_nodes(
+        workspace,
         resolution,
         input_format,
     )?;
@@ -300,11 +314,27 @@ fn analyze_node_lane_bound_native_using<P: OwnerNativeCompileProvider>(
         }
         _ => SpecFormat::Mixed,
     };
-    let own = node_own_boot(&node_dir, node_rel)?;
+    let own = sources
+        .as_ref()
+        .ok_or_else(|| WorkspaceError::Io {
+            path: node_dir.clone(),
+            reason: "prepared nodes missing".into(),
+        })?
+        .node(node_rel)?
+        .entries
+        .clone();
     let inherited = if node_rel == "." {
         Vec::new()
     } else {
-        node_own_boot(&root, ".")?
+        sources
+            .as_ref()
+            .ok_or_else(|| WorkspaceError::Io {
+                path: root.clone(),
+                reason: "prepared nodes missing".into(),
+            })?
+            .node(".")?
+            .entries
+            .clone()
             .into_iter()
             .filter(|boot| boot.category == Some(vibe_core::manifest::BootCategory::Foundation))
             .collect()
@@ -405,8 +435,8 @@ fn compile_node_backend_using<P: OwnerNativeCompileProvider>(
     )?;
     let epoch = runtimes.bind_run(run);
     let self_coord = super::root_self_coordinate(&workspace.root_manifest);
-    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
-        &root,
+    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare_with_nodes(
+        workspace,
         &resolution,
         input_format,
     )?;
@@ -429,11 +459,27 @@ fn compile_node_backend_using<P: OwnerNativeCompileProvider>(
         }
         _ => SpecFormat::Mixed,
     };
-    let own = node_own_boot(&node_dir, node_rel)?;
+    let own = sources
+        .as_ref()
+        .ok_or_else(|| WorkspaceError::Io {
+            path: node_dir.clone(),
+            reason: "prepared nodes missing".into(),
+        })?
+        .node(node_rel)?
+        .entries
+        .clone();
     let inherited = if node_rel == "." {
         Vec::new()
     } else {
-        node_own_boot(&root, ".")?
+        sources
+            .as_ref()
+            .ok_or_else(|| WorkspaceError::Io {
+                path: root.clone(),
+                reason: "prepared nodes missing".into(),
+            })?
+            .node(".")?
+            .entries
+            .clone()
             .into_iter()
             .filter(|boot| boot.category == Some(vibe_core::manifest::BootCategory::Foundation))
             .collect()

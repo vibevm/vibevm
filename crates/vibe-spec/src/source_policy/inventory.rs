@@ -37,15 +37,15 @@ impl CapturedHostInventory {
     }
 }
 #[derive(Debug, Default, PartialEq, Eq)]
-struct Membership {
-    files: BTreeSet<String>,
-    directories: BTreeMap<String, Option<FileIdentity>>,
+pub(super) struct Membership {
+    pub(super) files: BTreeSet<String>,
+    pub(super) directories: BTreeMap<String, Option<FileIdentity>>,
 }
 fn git_control(path: &str) -> bool {
     path.split('/').any(|component| component == ".git")
 }
 impl PackagePolicyObservation {
-    fn inventory_error(&self, reason: impl Into<String>) -> SourcePolicyError {
+    pub(super) fn inventory_error(&self, reason: impl Into<String>) -> SourcePolicyError {
         failure(
             &self.state.logical_root,
             SourcePolicyErrorKind::Unavailable,
@@ -162,7 +162,7 @@ impl PackagePolicyObservation {
         }
         Ok(())
     }
-    fn inventory_directory(
+    pub(super) fn inventory_directory(
         &self,
         path: &str,
         membership: &mut Membership,

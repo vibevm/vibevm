@@ -130,6 +130,9 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
     let static_bytes = compiled
         .as_ref()
         .map(|compiled| compiled.artifact().bytes());
+    if let Some(sources) = sources {
+        sources.recheck_node(node_dir)?;
+    }
     let redirects = transaction::write_production_with_selectors(
         transaction::ArtifactWrite {
             index_path: &index,

@@ -396,6 +396,9 @@ fn write_boot_artifacts_inner(
     // The generator owns both spellings and always removes the unselected one.
     let static_path = boot_dir.join(static_file(spec_format));
     let stale_path = boot_dir.join(stale_static_file(spec_format));
+    if let Some(sources) = sources {
+        sources.recheck_node(node_dir)?;
+    }
     let redirects = transaction::write_production_with_selectors(
         transaction::ArtifactWrite {
             index_path: &index,

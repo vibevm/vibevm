@@ -30,17 +30,6 @@ pub fn validate_declared_source_operation(
     _format: SpecFormat,
     in_place: bool,
 ) -> Result<(), WorkspaceError> {
-    if manifest
-        .project
-        .as_ref()
-        .and_then(|project| project.sources.as_ref())
-        .is_some_and(|rows| !rows.is_empty())
-    {
-        return Err(refused(
-            root,
-            "explicit host sources require classified node boot generation",
-        ));
-    }
     if !manifest
         .package
         .as_ref()
@@ -72,30 +61,7 @@ pub fn validate_source_admission(
     for (relative, manifest) in workspace.iter_nodes() {
         let root = workspace.node_abs_path(relative);
         validate_declared_source_operation(manifest, &root, format, false)?;
-        if manifest
-            .package
-            .as_ref()
-            .is_some_and(|p| p.has_explicit_source_policy())
-        {
-            let boot = root.join(vibe_core::layout::current_boot_dir());
-            if boot.is_dir() {
-                for entry in std::fs::read_dir(&boot).map_err(|e| refused(&boot, e))? {
-                    let entry = entry.map_err(|e| refused(&boot, e))?;
-                    let path = entry.path();
-                    if entry.file_type().map_err(|e| refused(&path, e))?.is_file()
-                        && vibe_specdoc::is_spec_source(&path)
-                        && !vibe_core::layout::is_generated_boot_output(
-                            path.strip_prefix(&root).map_err(|e| refused(&path, e))?,
-                        )
-                    {
-                        return Err(refused(
-                            &root,
-                            "declared node-authored boot input requires classified boot admission",
-                        ));
-                    }
-                }
-            }
-        }
+        super::bootgen::PreparedNodeBoot::prepare(&root, relative, manifest)?;
     }
     validate_source_resolution(&workspace.root, resolution, format)
 }

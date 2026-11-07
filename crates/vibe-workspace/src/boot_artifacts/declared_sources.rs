@@ -16,6 +16,7 @@ use vibe_spec::{
     SpecAddress,
 };
 mod generated;
+mod nodes;
 mod source;
 pub(crate) use source::BootSectionSource;
 
@@ -25,6 +26,7 @@ pub(crate) struct DeclaredBootSources {
     root: PathBuf,
     selected: BTreeMap<(String, String), SelectedPackage>,
     bindings: BTreeMap<(String, String), PreparedInstalledSource>,
+    nodes: Arc<BTreeMap<String, Arc<crate::install::bootgen::PreparedNodeBoot>>>,
     generated: Arc<BTreeMap<PathBuf, generated::GeneratedObservation>>,
 }
 impl DeclaredBootSources {
@@ -69,17 +71,28 @@ impl DeclaredBootSources {
         }
         Ok(())
     }
+    #[cfg(test)]
     pub(crate) fn prepare(
         root: &Path,
         resolution: &[ResolvedDep],
         input_format: Option<SpecFormat>,
     ) -> Result<Option<Self>, WorkspaceError> {
-        if !resolution.iter().any(|dep| {
-            dep.manifest
-                .package
-                .as_ref()
-                .is_some_and(|p| p.has_explicit_source_policy())
-        }) {
+        Self::prepare_inner(root, resolution, input_format, false)
+    }
+    fn prepare_inner(
+        root: &Path,
+        resolution: &[ResolvedDep],
+        input_format: Option<SpecFormat>,
+        with_nodes: bool,
+    ) -> Result<Option<Self>, WorkspaceError> {
+        if !with_nodes
+            && !resolution.iter().any(|dep| {
+                dep.manifest
+                    .package
+                    .as_ref()
+                    .is_some_and(|p| p.has_explicit_source_policy())
+            })
+        {
             return Ok(None);
         }
         // Only the selected workspace is a caller root; slots are held descendants.
@@ -138,6 +151,7 @@ impl DeclaredBootSources {
             root: root.to_owned(),
             selected,
             bindings,
+            nodes: Arc::new(BTreeMap::new()),
             generated: Arc::new(BTreeMap::new()),
         }))
     }
@@ -304,6 +318,13 @@ impl DeclaredBootSources {
         self_coord: &SelfCoordinate,
         overlay: Option<&[u8]>,
     ) -> Result<Option<String>, WorkspaceError> {
+        if matches!(entry.provenance, BootProvenance::Node) {
+            for node in self.nodes.values() {
+                if let Some(markdown) = node.simple(entry, overlay)? {
+                    return Ok(Some(markdown));
+                }
+            }
+        }
         let Some((binding, row)) = self.entry_row(entry)? else {
             return Ok(None);
         };

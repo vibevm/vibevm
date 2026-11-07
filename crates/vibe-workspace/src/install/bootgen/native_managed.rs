@@ -19,10 +19,7 @@ use super::replay_prepare::{
     BootReplayCandidates, BootReplaySet, NodeReplayCandidate, node_generated_dependencies,
     seal_replay_set,
 };
-use super::{
-    ResolvedDep, desubstitute_covered_units, node_dependency_boot, node_own_boot,
-    root_self_coordinate,
-};
+use super::{ResolvedDep, desubstitute_covered_units, node_dependency_boot, root_self_coordinate};
 
 pub(crate) struct BoundBootRegeneration {
     pub nodes: Vec<String>,
@@ -55,8 +52,8 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     }
     epoch.assert_resolution(&workspace.root, resolution)?;
     super::super::source_admission::validate_source_admission(workspace, resolution, spec_format)?;
-    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
-        &workspace.root,
+    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare_with_nodes(
+        workspace,
         resolution,
         Some(spec_format),
     )?;
@@ -132,7 +129,15 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     }
     let mut native = unit_native.into_iter().collect::<BTreeMap<_, _>>();
 
-    let root_foundation = node_own_boot(&workspace.root, ".")?
+    let root_foundation = sources
+        .as_ref()
+        .ok_or_else(|| WorkspaceError::Io {
+            path: workspace.root.clone(),
+            reason: "prepared nodes missing".into(),
+        })?
+        .node(".")?
+        .entries
+        .clone()
         .into_iter()
         .filter(|boot| boot.category == Some(BootCategory::Foundation))
         .collect::<Vec<_>>();
@@ -142,7 +147,15 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             continue;
         }
         let node_dir = workspace.node_abs_path(rel);
-        let own = node_own_boot(&node_dir, rel)?;
+        let own = sources
+            .as_ref()
+            .ok_or_else(|| WorkspaceError::Io {
+                path: node_dir.clone(),
+                reason: "prepared nodes missing".into(),
+            })?
+            .node(rel)?
+            .entries
+            .clone();
         let inherited = if rel == "." {
             Vec::new()
         } else {
@@ -204,6 +217,10 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             spec_format,
             replay_dependencies,
             native_intersection,
+            sources
+                .as_ref()
+                .map(|sources| sources.node_guards(rel))
+                .unwrap_or_default(),
         ));
         nodes.push(rel.to_owned());
     }

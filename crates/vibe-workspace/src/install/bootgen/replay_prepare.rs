@@ -16,6 +16,7 @@ use crate::extension_world::{
 };
 use crate::{WorkspaceError, boot_artifacts};
 
+mod node;
 #[path = "replay_prepare/prepared.rs"]
 mod prepared;
 pub(crate) use prepared::{
@@ -48,6 +49,7 @@ pub(super) struct NodeReplayCandidate {
     stale_path: PathBuf,
     dependencies: Box<[UnitId]>,
     native: bool,
+    node_guards: Vec<Arc<super::PreparedNodeBoot>>,
 }
 
 pub(super) struct BootReplayCandidates {
@@ -111,31 +113,6 @@ impl UnitReplayCandidate {
             index_path,
             static_path,
             stale_path,
-            dependencies,
-            native,
-        }
-    }
-}
-
-impl NodeReplayCandidate {
-    #[allow(clippy::too_many_arguments)]
-    pub(super) fn new(
-        node_dir: PathBuf,
-        rel: String,
-        effective: EffectiveBoot,
-        spec_format: SpecFormat,
-        dependencies: Box<[UnitId]>,
-        native: bool,
-    ) -> Self {
-        let boot_dir = node_dir.join(vibe_core::layout::current_boot_dir());
-        Self {
-            owner: OwnerRuntimeId::Node { rel: rel.clone() },
-            rel,
-            effective,
-            spec_format,
-            index_path: boot_dir.join(boot_artifacts::INDEX_FILE),
-            static_path: boot_dir.join(boot_artifacts::static_file(spec_format)),
-            stale_path: boot_dir.join(boot_artifacts::publication::stale_static_file(spec_format)),
             dependencies,
             native,
         }
@@ -502,8 +479,17 @@ pub(crate) fn prepare_boot_replay<F: CompilerNativeReplayFactory>(
         )
         .into_bytes()
         .into_boxed_slice();
-        publications
-            .push(lane.into_publication(index, Some(artifact.into_bytes().into_boxed_slice())));
+        let guards = match &lane.candidate {
+            ReplayCandidate::Node(candidate) => candidate.node_guards.clone(),
+            ReplayCandidate::Unit(_) => Vec::new(),
+        };
+        for guard in &guards {
+            guard.recheck()?;
+        }
+        publications.push(
+            lane.into_publication(index, Some(artifact.into_bytes().into_boxed_slice()))
+                .with_node_guards(guards),
+        );
     }
 
     let terminal = factory.finish(provider);

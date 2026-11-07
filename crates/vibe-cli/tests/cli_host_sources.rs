@@ -159,7 +159,7 @@ fn inventory(root: &Path) -> BTreeMap<PathBuf, Option<Vec<u8>>> {
     out
 }
 #[test]
-fn host_nonempty_install_refuses_before_product_writes_and_empty_keeps_dependency_boot() {
+fn host_missing_selected_boot_refuses_before_writes_and_empty_keeps_dependency_boot() {
     for empty in [false, true] {
         let user = UserScratch::new();
         let root = tempfile::tempdir().unwrap();
@@ -174,10 +174,14 @@ fn host_nonempty_install_refuses_before_product_writes_and_empty_keeps_dependenc
             ),
         );
         write(&package, &boot, "# Dependency\n\nDEPENDENCY-CONTENT\n");
+        let selected = format!(
+            "[[project.sources]]\nfile='{}'\nmedia='application/xml'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
+            common::boot_rel("missing.payload")
+        );
         write(
             root.path(),
             "vibe.toml",
-            &manifest(if empty { "sources=[]\n" } else { ROW }),
+            &manifest(if empty { "sources=[]\n" } else { &selected }),
         );
         write(root.path(), "data.md", "ordinary content");
         write(
@@ -213,7 +217,8 @@ fn host_nonempty_install_refuses_before_product_writes_and_empty_keeps_dependenc
         } else {
             assert!(!result.status.success(), "{result:?}");
             assert!(
-                String::from_utf8_lossy(&result.stderr).contains("classified node boot generation"),
+                String::from_utf8_lossy(&result.stderr)
+                    .contains("exact authored boot source absent"),
                 "{result:?}"
             );
             let mut after = inventory(root.path());

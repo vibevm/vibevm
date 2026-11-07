@@ -19716,6 +19716,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_declared_own_boot.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_cli::tests::cli_declared_own_boot",
+      "end_line": 5,
+      "fingerprint": "tok1:d4394199b9195d566a13a2bbdcd2d7783c8808edc6fa78dcdcfce1a3579e904a"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_default_path.rs",
       "item_kind": "fn",
       "line": 25,
@@ -44979,6 +44988,15 @@
     },
     {
       "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/source_policy/authored_boot.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::source_policy::authored_boot",
+      "end_line": 5,
+      "fingerprint": "tok1:d4394199b9195d566a13a2bbdcd2d7783c8808edc6fa78dcdcfce1a3579e904a"
+    },
+    {
+      "crate_name": "vibe-spec",
       "file": "crates/vibe-spec/src/source_policy/host.rs",
       "item_kind": "mod",
       "line": 2,
@@ -46023,6 +46041,15 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/boot_artifacts/declared_sources/nodes.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::boot_artifacts::declared_sources::nodes",
+      "end_line": 5,
+      "fingerprint": "tok1:d4394199b9195d566a13a2bbdcd2d7783c8808edc6fa78dcdcfce1a3579e904a"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts/declared_sources/source.rs",
       "item_kind": "mod",
       "line": 2,
@@ -46988,27 +47015,27 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
       "item_kind": "fn",
-      "line": 231,
+      "line": 245,
       "symbol": "vibe_workspace::install::bootgen::analyze::analyze_node_lane_bound_native_with_source_format",
-      "end_line": 254,
+      "end_line": 268,
       "fingerprint": "tok1:0d76d14ac62d8696bd48055ee7016485b04727e5ad129e842ac44e31c6b5c55f"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
       "item_kind": "fn",
-      "line": 90,
+      "line": 88,
       "symbol": "vibe_workspace::install::bootgen::analyze::analyze_node_lane_with_source_format",
-      "end_line": 102,
+      "end_line": 100,
       "fingerprint": "tok1:c2ecd5864b4d812e4cc35f991da17c91cce4c4e1e2ebdfa5588239a43eb6ecb2"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
       "item_kind": "fn",
-      "line": 362,
+      "line": 392,
       "symbol": "vibe_workspace::install::bootgen::analyze::compile_node_backend_with_source_format",
-      "end_line": 383,
+      "end_line": 413,
       "fingerprint": "tok1:f12cd0750b106ccf26d299d2b5c56b87cc567177f42926aa818fc76d69bacea7"
     },
     {
@@ -47112,6 +47139,24 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/own_boot.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::install::bootgen::own_boot",
+      "end_line": 5,
+      "fingerprint": "tok1:d4394199b9195d566a13a2bbdcd2d7783c8808edc6fa78dcdcfce1a3579e904a"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/own_boot_tests.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::install::bootgen::own_boot_tests",
+      "end_line": 5,
+      "fingerprint": "tok1:d4394199b9195d566a13a2bbdcd2d7783c8808edc6fa78dcdcfce1a3579e904a"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen/owner_plans_tests.rs",
       "item_kind": "fn",
       "line": 5,
@@ -47125,8 +47170,8 @@
       "item_kind": "fn",
       "line": 37,
       "symbol": "vibe_workspace::install::bootgen::owner_plans_tests::generation_fingerprints_and_emission_read_retained_runtimes",
-      "end_line": 53,
-      "fingerprint": "tok1:3d9e99edc72ec942bb161b749649987766756de6295db8988bb038649b61a734"
+      "end_line": 55,
+      "fingerprint": "tok1:865e5fcf9a2702c246b15d05915db28f8f0d8510a28e91d218c9865e34b0fb63"
     },
     {
       "crate_name": "vibe-workspace",
@@ -47145,6 +47190,15 @@
       "symbol": "vibe_workspace::install::bootgen::publication::tests::protection_matches_kind_group_name_but_not_version_or_source_path",
       "end_line": 61,
       "fingerprint": "tok1:f157b89eb27e4a375e2e30f5bc2aea851d1945a45a3fb8dac8ff218c179cf1a8"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/bootgen/replay_prepare/node.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_workspace::install::bootgen::replay_prepare::node",
+      "end_line": 5,
+      "fingerprint": "tok1:d4394199b9195d566a13a2bbdcd2d7783c8808edc6fa78dcdcfce1a3579e904a"
     },
     {
       "crate_name": "vibe-workspace",
@@ -47186,19 +47240,19 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 457,
+      "line": 390,
       "symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "end_line": 493,
+      "end_line": 426,
       "fingerprint": "tok1:9d08758b1e16a710bbfa572f2ce3046d6e310f18c933ba54f3f2830ac4c1624a"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 324,
+      "line": 340,
       "symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "end_line": 363,
-      "fingerprint": "tok1:fd0069173227680d5df5546f75a7081c92dd7ca471270c7e0ab2cef5fb7dd9d9"
+      "end_line": 379,
+      "fingerprint": "tok1:b43b90d69a0152d4ee98f81d966a103f0b99e6190a96721bc68ccf1b86d1bb8a"
     },
     {
       "crate_name": "vibe-workspace",
@@ -59991,6 +60045,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#EFFECT-CONSUMERS",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_declared_own_boot.rs",
+      "from_symbol": "vibe_cli::tests::cli_declared_own_boot",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-cli/tests/cli_default_path.rs",
@@ -83194,6 +83257,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-spec/src/source_policy/authored_boot.rs",
+      "from_symbol": "vibe_spec::source_policy::authored_boot",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-spec/src/source_policy/host.rs",
       "from_symbol": "vibe_spec::source_policy::host",
       "line": 2,
@@ -84155,6 +84227,15 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-workspace/src/boot_artifacts/declared_sources/nodes.rs",
+      "from_symbol": "vibe_workspace::boot_artifacts::declared_sources::nodes",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-workspace/src/boot_artifacts/declared_sources/source.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::declared_sources::source",
       "line": 2,
@@ -85071,7 +85152,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
       "from_symbol": "vibe_workspace::install::bootgen::analyze::analyze_node_lane_bound_native_with_source_format",
-      "line": 232,
+      "line": 246,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
       "verb": "implements",
@@ -85080,7 +85161,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
       "from_symbol": "vibe_workspace::install::bootgen::analyze::analyze_node_lane_with_source_format",
-      "line": 91,
+      "line": 89,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
       "verb": "implements",
@@ -85089,7 +85170,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen/analyze.rs",
       "from_symbol": "vibe_workspace::install::bootgen::analyze::compile_node_backend_with_source_format",
-      "line": 363,
+      "line": 393,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-INSTALLED-READ",
       "verb": "implements",
@@ -85189,6 +85270,24 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/install/bootgen/own_boot.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::own_boot",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen/own_boot_tests.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::own_boot_tests",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-workspace/src/install/bootgen/owner_plans_tests.rs",
       "from_symbol": "vibe_workspace::install::bootgen::owner_plans_tests::boot_has_no_independent_plan_collector_or_lowerer",
       "line": 6,
@@ -85219,6 +85318,15 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#ARTIFACTS-PAIR",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-workspace/src/install/bootgen/replay_prepare/node.rs",
+      "from_symbol": "vibe_workspace::install::bootgen::replay_prepare::node",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-workspace/src/install/bootgen/replay_prepare/tests_covered_zone.rs",
@@ -85255,7 +85363,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 466,
+      "line": 399,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#PLAN-TIME-VALIDATION",
       "verb": "implements"
@@ -85263,7 +85371,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 462,
+      "line": 395,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#plan-time",
       "verb": "implements",
@@ -85272,7 +85380,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::verify_boot_graph",
-      "line": 325,
+      "line": 341,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
       "verb": "implements",
@@ -113344,21 +113452,21 @@
     },
     {
       "anchor": "SOURCE-OPERATION-ENROLLMENT",
-      "content_hash": "sha256:a8192bf9d3c4e6af4ebb350cc74db4da4e5a556a50b1847720ebecf0440f0591",
+      "content_hash": "sha256:f9dff2f28063a565c8e4ea4ef00bf744cf87b88c1c55b73902efc6747c25ff01",
       "doc_path": "common/PROP-072",
       "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
       "heading": "Source loading by concrete operation",
       "line": 46,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OPERATION-ENROLLMENT",
       "kind": "req",
-      "revision": 1
+      "revision": 2
     },
     {
       "anchor": "SOURCE-OPERATION-ENROLLMENT-LAW",
-      "content_hash": "sha256:0b3c57c6c976791f01af656ee6726619e163f0333371c826e7258e79da5c709e",
+      "content_hash": "sha256:64876cb10dc82e7dc1971c589e9c4cb54fc6cf9659ae4e9ad1b8a52d68679242",
       "doc_path": "common/PROP-072",
       "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
-      "heading": "Source loading distinguishes automatic discovery from explicit selection; it is not a universal prohibition on observing raw bytes. Scan may enumerate any declared interpretation, but only admitted native interpretations supply native meaning. A requested native address or citation may select native scan or explicit input. Requested facts/adopt/query observation retains native explicit and may witness classified ordinary bytes without parsing them as facts or managed directives. A named ordinary resource/export request or a skill.resource declaration is explicit selection and preserves literal data. Automatic own-boot discovery selects native scan sources only within the existing boot scope; native explicit is not automatically enrolled and ordinary scan never enters managed compiler input. Explicit package boot_snippet/source bindings retain their separate explicit-selection law. Existing own-host Simple semantics and HostUngrouped provider identity remain; no project.format, invented group, new resource URI or transport follows from this rule. @status:spec/plan",
+      "heading": "Source loading distinguishes automatic discovery from explicit selection; it is not a universal prohibition on observing raw bytes. Scan may enumerate any declared interpretation, but only admitted native interpretations supply native meaning. A requested native address or citation may select native scan or explicit input. Requested facts/adopt/query observation retains native explicit and may witness classified ordinary bytes without parsing them as facts or managed directives. A named ordinary resource/export request or a skill.resource declaration is explicit selection and preserves literal data. Automatic own-boot discovery selects VibeSpec instruction sources with scan loading only within the existing boot scope; native explicit is not automatically enrolled and ordinary scan never enters managed compiler input. Explicit package boot_snippet/source bindings retain their separate explicit-selection law. Existing own-host Simple semantics and HostUngrouped provider identity remain; no project.format, invented group, new resource URI or transport follows from this rule. @status:spec/plan",
       "line": 48,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OPERATION-ENROLLMENT-LAW"
     },
@@ -113381,6 +113489,26 @@
       "heading": "Requested host facts/query observation enumerates exact source rows and only the declared directory scopes through the existing held root and shared selector. Capture all selected bytes and witnesses before native interpretation, then recheck finite selected membership, policy, parent and file observations before returning a result. This is a declared source inventory, not a global repository census or copied publication payload rule. Generated outputs retain incumbent ownership exclusions. Directory traversal explicitly excludes .git VCS control entries; an exact declaration requesting that reserved control subtree refuses rather than disappearing from a complete result. This does not exclude .gitignore, .github, arbitrary dot directories or build directories by heuristic. Nested manifest files within the explicitly selected outer scope do not switch policy, import identity or create new scan roots; apply the selected outer descriptors to them as to other bytes. Do not fake package metadata or use a child manifest's kind to authorize outer native vocabulary. An actual materialized root still requires the independently bound installed route. Requested observation preserves native explicit as well as scan and may witness ordinary bytes without minting facts/directives. Use the existing direct native AST parser and actual self coordinate. Complete native syntax/duplicate failures produce Invalid with captured witnesses; unavailable or untrustworthy census/read produces Unavailable without a fabricated digest. With a valid selected self coordinate, explicit empty is Available with zero facts; no group is invented for a query lacking identity. Malformed query-wide lock/registry remains an error. Preserve legacy and installed-package behavior, report digest recipes and grammar-before-I/O/read-only operation. Exact cited sync retains its narrower cited set and cannot be poisoned by uncited bad files. @status:spec/done",
       "line": 52,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-INVENTORY-LAW"
+    },
+    {
+      "anchor": "SOURCE-HOST-BOOT",
+      "content_hash": "sha256:a6c66705edfc50f6678f564ec242001cc94f7cf598e2f03e05bc329ff9b0bbe8",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Declared authored node boot selection and publication",
+      "line": 54,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-HOST-BOOT-LAW",
+      "content_hash": "sha256:9f1e37744636460605fc588a1e09b803c84263a9afcf3c3d855ab51e04a57f65",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Automatic authored node boot selects immediate children of the existing boot directory through the shared outer source policy. Enroll instruction sources with VibeSpec interpretation and scan loading; ordinary, documentation and native explicit-only sources are not automatically enrolled. Exact declared immediate eligible files participate even when absent so a missing promised boot input refuses. Generated STATIC/INDEX and owned publication controls retain their separate ownership. Preserve original paths, existing category/order rules and actual own/inherited Dynamic linkage with Simple format; unconditional INDEX static read-kind does not mean compiler static linkage. Do not add project.format or force Normal/STATIC compilation. Use narrow held original-resource capture for the selected boot scope, not whole-host inventory and not a fabricated group, package or installed record. Ungrouped nodes use their incumbent HostUngrouped provider without minting spec addresses. The private prepared-node carrier retains entries with observed policy/media/bytes; early source admission and authoritative generation share its selection logic. Validate every known node before earlier metadata/package effects, then recheck relevant captured input immediately before actual INDEX/redirect publication, including zero-static, managed-native and replay routes. Only an actual compiler path consuming a node input may claim captured-media compiler coverage; normal own enrollment is proved by INDEX and original bytes. Unrelated invalid or missing sources outside selected automatic boot scope cannot poison this operation. Existing exact native lookup remains available for explicit-only sources. This is finite prevalidation/recheck under existing cooperative publication, not a new global transaction or source-authentication claim. @status:spec/done",
+      "line": 56,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-BOOT-LAW"
     },
     {
       "anchor": "genre-definition",
@@ -169605,7 +169733,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
-      "line": 325,
+      "line": 341,
       "message": "edge `vibe_workspace::install::bootgen::verify_boot_graph` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests` carries no kind/revision line yet"
     },
     {

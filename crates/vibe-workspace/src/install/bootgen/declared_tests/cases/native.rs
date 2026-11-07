@@ -369,4 +369,5 @@ mod tests {
         assert!(error.to_string().contains("binding"), "{error}");
         assert_eq!(files(&f.workspace.root), before);
     }
+    mod own_boot;
 }

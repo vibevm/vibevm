@@ -280,8 +280,10 @@ impl PackageMeta {
 }
 
 /// One precedence law for package and opt-in project descriptors. `coordinate`
-/// comes from the caller's validated `group/name` manifest identity; this
-/// selector reads neither filesystem metadata nor source bytes.
+/// normally comes from the caller's validated `group/name` manifest identity.
+/// Non-addressing scoped consumers may supply a diagnostic root label and
+/// discard the returned identity; the selector never validates or grants a
+/// native coordinate. It reads neither filesystem metadata nor source bytes.
 pub fn select_source_rows<'a>(
     coordinate: &str,
     rows: &'a [SourceDescriptor],

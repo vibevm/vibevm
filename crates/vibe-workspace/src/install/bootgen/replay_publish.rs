@@ -172,22 +172,32 @@ fn publish_boot_replay_using(
     while let Some(publication) = publications.next() {
         let parts = publication.into_parts();
         let current = owner_identity(&parts);
-        let result = publish(ArtifactWrite {
-            index_path: &parts.index_path,
-            index_bytes: &parts.index,
-            static_path: &parts.static_path,
-            static_bytes: parts.static_lane.as_deref(),
-            stale_path: &parts.stale_path,
-        });
-        if let Err(failure) = result {
-            let disposition = failure.disposition();
+        let result = parts
+            .node_guards
+            .iter()
+            .try_for_each(|guard| guard.recheck())
+            .map_err(|source| (source, TransactionFailureDisposition::Uncommitted))
+            .and_then(|()| {
+                publish(ArtifactWrite {
+                    index_path: &parts.index_path,
+                    index_bytes: &parts.index,
+                    static_path: &parts.static_path,
+                    static_bytes: parts.static_lane.as_deref(),
+                    stale_path: &parts.stale_path,
+                })
+                .map_err(|failure| {
+                    let disposition = failure.disposition();
+                    (failure.into_source(), disposition)
+                })
+            });
+        if let Err((source, disposition)) = result {
             let untouched = publications
                 .map(PreparedOwnerPublication::into_parts)
                 .map(|parts| owner_identity(&parts))
                 .collect::<Vec<_>>()
                 .into_boxed_slice();
             return Err(BootReplayPublishFailure {
-                source: Box::new(failure.into_source()),
+                source: Box::new(source),
                 committed_before: committed.into_boxed_slice(),
                 failed_owner: current,
                 disposition,

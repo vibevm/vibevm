@@ -504,3 +504,6 @@ pub use host::CitedNativeSource;
 
 mod inventory;
 pub use inventory::{CapturedHostInventory, CapturedHostResource};
+
+mod authored_boot;
+pub use authored_boot::{CapturedAuthoredBoot, CapturedBootResource};

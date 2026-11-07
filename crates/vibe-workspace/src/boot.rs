@@ -306,7 +306,7 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
     let mut entries: Vec<BootEntry> = Vec::new();
 
     // Inherited foundation — from ancestors, absolute-root first. Always
-    // the Foundation band; an authored boot file is always `static`.
+    // the Foundation band; an authored boot file is always dynamically linked and Simple.
     for boot in inputs.inherited_foundation {
         entries.push(BootEntry {
             path: boot.path.clone(),
@@ -327,7 +327,7 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
     }
 
     // The node's own authored boot, in declared order — banded by
-    // category, `static` link.
+    // category, dynamic link and Simple format.
     for boot in inputs.own_boot {
         entries.push(BootEntry {
             path: boot.path.clone(),

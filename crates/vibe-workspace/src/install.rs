@@ -58,7 +58,7 @@ pub use subtree::{
     materialise_subtree_with_spec_format_and_slot_lifecycle,
 };
 
-mod bootgen;
+pub(crate) mod bootgen;
 /// B-006 (lane dedup) — de-substitute covered unit-STATIC entries. Public so
 /// the once-each topology is exercisable at the unit level (no full install).
 pub use bootgen::desubstitute_covered_units;

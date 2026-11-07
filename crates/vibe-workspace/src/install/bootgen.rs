@@ -123,8 +123,8 @@ pub fn regenerate_boot_from_traced_prepared(
     lowering: OwnerRuntimeLowering,
 ) -> Result<BootRegeneration, WorkspaceError> {
     super::source_admission::validate_source_admission(workspace, resolution, spec_format)?;
-    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
-        &workspace.root,
+    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare_with_nodes(
+        workspace,
         resolution,
         Some(spec_format),
     )?;
@@ -173,7 +173,15 @@ pub fn regenerate_boot_from_traced_prepared(
 
     // The absolute root's foundation boot — inherited by every member
     // (PROP-009 §2.2: inherited foundation flows down).
-    let root_foundation: Vec<AuthoredBoot> = node_own_boot(&workspace.root, ".")?
+    let root_foundation: Vec<AuthoredBoot> = sources
+        .as_ref()
+        .ok_or_else(|| WorkspaceError::Io {
+            path: workspace.root.clone(),
+            reason: "prepared nodes missing".into(),
+        })?
+        .node(".")?
+        .entries
+        .clone()
         .into_iter()
         .filter(|b| b.category == Some(BootCategory::Foundation))
         .collect();
@@ -184,7 +192,15 @@ pub fn regenerate_boot_from_traced_prepared(
             continue;
         }
         let node_dir = workspace.node_abs_path(rel);
-        let own = node_own_boot(&node_dir, rel)?;
+        let own = sources
+            .as_ref()
+            .ok_or_else(|| WorkspaceError::Io {
+                path: node_dir.clone(),
+                reason: "prepared nodes missing".into(),
+            })?
+            .node(rel)?
+            .entries
+            .clone();
         let inherited: Vec<AuthoredBoot> = if rel == "." {
             Vec::new()
         } else {
@@ -330,8 +346,8 @@ pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, Workspace
     let resolution = read_durable_resolution(&workspace.root)?;
     // No materialized-input format is supplied to this legacy verifier.
     // Declared graphs must not compute a fingerprint from guessed suffixes.
-    let _ = boot_artifacts::declared_sources::DeclaredBootSources::prepare(
-        &workspace.root,
+    let _ = boot_artifacts::declared_sources::DeclaredBootSources::prepare_with_nodes(
+        workspace,
         &resolution,
         None,
     )?;
@@ -362,96 +378,13 @@ pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, Workspace
     )
 }
 
-/// Discover authored node boot sources, rejecting split Markdown/XML forms.
+mod own_boot;
+pub(crate) use own_boot::PreparedNodeBoot;
 pub(crate) fn node_own_boot(
     node_dir: &Path,
     node_rel: &str,
 ) -> Result<Vec<AuthoredBoot>, WorkspaceError> {
-    let policy = vibe_spec::source_policy::observe_package_policy(node_dir).map_err(|error| {
-        WorkspaceError::SpecMaterialization {
-            path: node_dir.into(),
-            reason: error.to_string(),
-        }
-    })?;
-    if let Some(rows) = policy
-        .manifest()
-        .and_then(|manifest| manifest.project.as_ref())
-        .and_then(|project| project.sources.as_ref())
-    {
-        if rows.is_empty() {
-            policy
-                .recheck_unchanged()
-                .map_err(|error| WorkspaceError::SpecMaterialization {
-                    path: node_dir.into(),
-                    reason: error.to_string(),
-                })?;
-            return Ok(Vec::new());
-        }
-        return Err(WorkspaceError::SpecMaterialization {
-            path: node_dir.into(),
-            reason: policy
-                .unsupported("node-authored boot generation")
-                .to_string(),
-        });
-    }
-    let boot_dir = node_dir.join(layout::current_boot_dir());
-    if !boot_dir.is_dir() {
-        return Ok(Vec::new());
-    }
-    let mut files = Vec::new();
-    let mut spec_paths = Vec::new();
-    for entry in fs::read_dir(&boot_dir).map_err(|e| io_err(&boot_dir, e))? {
-        let entry = entry.map_err(|e| io_err(&boot_dir, e))?;
-        let path = entry.path();
-        if !entry.file_type().map_err(|e| io_err(&path, e))?.is_file() {
-            continue;
-        }
-        let name = entry.file_name().to_string_lossy().into_owned();
-        if !vibe_specdoc::is_spec_source(&path) {
-            continue;
-        }
-        // The generated artifacts are not authored boot.
-        if name == boot_artifacts::static_file(SpecFormat::Mixed)
-            || name == boot_artifacts::static_file(SpecFormat::Xml)
-            || name == boot_artifacts::INDEX_FILE
-        {
-            continue;
-        }
-        let category = match name.as_str() {
-            "00-core.md" => Some(BootCategory::Foundation),
-            "90-user.md" => Some(BootCategory::UserOverride),
-            _ => None,
-        };
-        let rel_path = if node_rel == "." {
-            layout_paths::boot(&name)
-        } else {
-            path_to_slash(
-                &Path::new(node_rel)
-                    .join(layout::current_boot_dir())
-                    .join(&name),
-            )
-        };
-        spec_paths.push(path.clone());
-        files.push(AuthoredBoot {
-            path: rel_path,
-            category,
-            origin: node_rel.to_string(),
-        });
-    }
-    if let Some(collision) = vibe_specdoc::pair_collisions_in(&spec_paths).first() {
-        let rel = collision
-            .markdown
-            .strip_prefix(node_dir)
-            .unwrap_or(&collision.markdown)
-            .to_path_buf();
-        return Err(WorkspaceError::Io {
-            path: rel,
-            reason: collision.message(),
-        });
-    }
-    // Deterministic order — the engine keeps a band's collection order.
-    files.sort_by(|a, b| a.path.cmp(&b.path));
-    Ok(files)
+    own_boot::unbound_entries(node_dir, node_rel)
 }
 
 /// Validate each published node's agent instruction files before any mutation
@@ -542,3 +475,6 @@ mod tests {
 
 #[cfg(test)]
 mod declared_tests;
+
+#[cfg(test)]
+mod own_boot_tests;

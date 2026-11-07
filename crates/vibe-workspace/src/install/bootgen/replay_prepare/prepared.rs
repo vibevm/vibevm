@@ -24,6 +24,7 @@ pub(crate) struct PreparedOwnerPublication {
     stale_path: PathBuf,
     index: Box<[u8]>,
     static_lane: Option<Box<[u8]>>,
+    node_guards: Vec<std::sync::Arc<crate::install::bootgen::PreparedNodeBoot>>,
 }
 
 pub(crate) struct PreparedOwnerParts {
@@ -34,6 +35,7 @@ pub(crate) struct PreparedOwnerParts {
     pub(crate) stale_path: PathBuf,
     pub(crate) index: Box<[u8]>,
     pub(crate) static_lane: Option<Box<[u8]>>,
+    pub(crate) node_guards: Vec<std::sync::Arc<crate::install::bootgen::PreparedNodeBoot>>,
 }
 
 impl PreparedBootReplay {
@@ -55,6 +57,13 @@ impl PreparedBootReplay {
 }
 
 impl PreparedOwnerPublication {
+    pub(super) fn with_node_guards(
+        mut self,
+        guards: Vec<std::sync::Arc<crate::install::bootgen::PreparedNodeBoot>>,
+    ) -> Self {
+        self.node_guards = guards;
+        self
+    }
     pub(crate) fn into_parts(self) -> PreparedOwnerParts {
         PreparedOwnerParts {
             owner: self.owner,
@@ -64,6 +73,7 @@ impl PreparedOwnerPublication {
             stale_path: self.stale_path,
             index: self.index,
             static_lane: self.static_lane,
+            node_guards: self.node_guards,
         }
     }
 
@@ -85,6 +95,7 @@ impl PreparedOwnerPublication {
             stale_path,
             index: index.into(),
             static_lane,
+            node_guards: Vec::new(),
         }
     }
 
@@ -154,6 +165,7 @@ impl ReplayLane {
             stale_path,
             index,
             static_lane,
+            node_guards: Vec::new(),
         }
     }
 }
