@@ -1,0 +1,34 @@
+{
+  "commit": "a3bd65d92971144b9c5cd20338c3455c1131e7ea",
+  "files": 16,
+  "source_seal": 14,
+  "evidence_seal": 30,
+  "tests": {
+    "doc_lib": 647,
+    "doc_integrations": 40,
+    "server": 43,
+    "lower": 6,
+    "doctests": [
+      87,
+      19
+    ],
+    "cli_regression": 5
+  },
+  "actual_cli": {
+    "command": "doc build-site --no-web",
+    "host_versions": 1,
+    "native_pages": 2,
+    "formats": 3,
+    "files": 33,
+    "refused": 0
+  },
+  "specmap": {
+    "units": 9172,
+    "code_items": 5569,
+    "edges": 4718,
+    "warnings": 44,
+    "prior_occurrences_retained": 9170
+  },
+  "installed_level0": "unsupported without independent context",
+  "full_a4_accepted": false
+}

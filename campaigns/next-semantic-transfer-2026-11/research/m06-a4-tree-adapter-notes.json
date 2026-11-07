@@ -1,0 +1,24 @@
+{
+  "task": "A4 exact tree adapter packet notes",
+  "mode": "read-only no execution",
+  "observed_at": "2026-11-07T06:41:46.969623+00:00",
+  "next_slice": "bound exact boot_file_set native directive reads",
+  "actual_entry": "commands/tree/mod.rs::run\u2192build::build_tree\u2192in_place::collect_in_place",
+  "trusted_format_owner": "commands/reinstall::effective_rederive_format, not TreeSettings or STATIC suffix",
+  "source_sha256": {
+    "crates/vibe-cli/src/commands/tree/mod.rs": "ce8a6f9d614e6d7e537fc54447d4b7b962fc376d5f8dc92b0dad351805a1c244",
+    "crates/vibe-cli/src/commands/tree/build.rs": "0c605432392bd38d73b32630ff46da8aa9d97042329ce201bef4113748784dc9",
+    "crates/vibe-cli/src/commands/tree/build/in_place.rs": "49db52c3dbf750049e2681965f748dd046fc01fad21d862d5d1211afe3d84067",
+    "crates/vibe-cli/src/commands/tree/build/tests.rs": "72d2b02bf117d7f47a23e0a87aa307512846dbd6b8a418436f4162a4e3dbb0a9",
+    "crates/vibe-cli/src/commands/reinstall.rs": "9b1814008a5796d39b3f5f0e5120026d9d20b7b582786a519e033e67e0c4d27d",
+    "crates/vibe-spec/src/resolver/declared.rs": "7616e18791b34dbf486ae69ef14913c8a3b85e5d645cb05e6b8d56c9e9b68be1",
+    "crates/vibe-spec/src/source_policy.rs": "eb9c7cd89f13136bb0a3aeb04d8fb10a8ce16a784c056c7ace4e9c60f5370f92",
+    "crates/vibe-spec/src/source_policy/authored_boot.rs": "9a7f310255b33890e689de608f632b81c3c1de7adb68832ab4deeac325537a10",
+    "crates/vibe-workspace/src/vibedeps/declared_read.rs": "4812030d090da53ceebccf429f10d381c29e706c275aa97e3f3eb65a4fd48bfe",
+    "crates/vibe-cli/tests/tree_fixture.rs": "960ec6ad2ac96b4bb935b21bad1db4e39998b737000b70232952b9a0117219e7",
+    "crates/vibe-cli/tests/tree_nested_attribution.rs": "2f8b5f0bcf8d7f5697594b850fe2a7395a76ab36fad0778a6bd8bfa1332bbb1c",
+    "crates/vibe-cli/tests/tree_json.rs": "ef1ad9ee65516959e2d82e51a11549998d8910248518bb372756c1b18b8ec1eb"
+  },
+  "full_a4_acceptance": false,
+  "report_sha256": "7ef761f2bf15d685e10d19e92a4903f8bb5c88151706444d54ee892f40ba5818"
+}

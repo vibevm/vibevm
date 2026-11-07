@@ -318,3 +318,5 @@ A4 captured documentation point reads accepted `7859d3e2d`; actual citations/age
 A4 generated documentation repair accepted `8e61e9c75`; all62prior library failures closed, full634/0. Full declared page census remains. Old113counts unchanged.
 
 A4 Doc census/build/server/self/borrowed accepted `3cafec8b7`. Actual Doc CLI uses cache/store. Non-Doc/host level0 projection and other A4 consumers remain; counts unchanged.
+
+A4 level0 native projection accepted `a3bd65d92`. Actual host CLI and package renderer verified; tree/show/progress and remaining adapters still open. Old113counts unchanged.

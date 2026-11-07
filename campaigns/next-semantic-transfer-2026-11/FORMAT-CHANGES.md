@@ -650,3 +650,12 @@ FMT-039 explicit API tightening: bare recorded legacy page roots previously reac
 FMT-039 LLMS compatibility: generated page links and copied spec addresses now reuse the shared document spelling helper, so declared native XML stored with .md links to the same logical page as build/server. Legacy fullslug/xml behavior and wire schema remain; no shell change. This fixes a duplicated suffix rule, not a new source interpretation rule.
 
 FMT-039 accepted `3cafec8b7c795811daa08ce17ccf116805817bc5`; research/m06-a4-doc-census-acceptance.md/json. Additive capture_pages/native inventory/prepared build and borrowed wrappers retain selected observations. Public Built/Page shapes and document_of return type preserved; .md presentation support and recorded-legacy tightening are explicit. Actual Doc cache CLI verified; no Doc install feature or wire/manifest epoch change.
+
+
+## FMT-040 — Declared native level0 projection (accepted slice)
+
+Complete native source projection for non-Doc packages and host projects without routing Spec inputs through a Doc-only census. Honor declarations outside conventional SPEC_ROOT and retain bytes/observations through composition. Preserve incomplete card-only subjects and existing legacy presentation. Intended internal Rust preparation changes; no new package kind, manifest/install-g/URI/wire schema. Final exact compatibility and tests pending acceptance.
+
+FMT-040 planned Rust seam: native membership presence query reuses existing selector/inventory and grants no parser vocabulary. Declaration-presence hints reuse already decoded Card metadata; no new TOML/source descriptor decoder. Known layout prefix comes from the existing owner. Public wire/manifest formats remain unchanged.
+
+FMT-040 accepted `a3bd65d92971144b9c5cd20338c3455c1131e7ea`. Existing Card presence hint, additive native membership query and retained native projection/copy use existing owners; public Built/Page and authored/wire formats unchanged. Declared native files outside SPEC_ROOT participate, actual vocabulary/kind preserved. Materialized original-root level0 input without independent context still refuses. CLI host feed not expanded to ordinary flow packages.

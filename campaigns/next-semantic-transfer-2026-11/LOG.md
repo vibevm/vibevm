@@ -2379,3 +2379,20 @@ Worker reproduced real build-link RED33: declared XML stored as guide.md rendere
 ### A4 Doc census accepted
 
 Commit `3cafec8b7c795811daa08ce17ccf116805817bc5`:23reviewed product/spec/map files, committed hashes verified. Final source21/evidence70 seals matched independent review. Doc634+40/server43/CLI5/lower20/docs87+6+18 pass; Clippy/Conform/fmt/wire pass. Map9170/5566/4715/44 retains9168prior occurrences. FMT039 and acceptance records state NEW recorded-legacy API refusal and actual cache/store Doc CLI. No worktree/public push/frontend edit. FullA4partial, old113counts unchanged. Next actual adapter is non-Doc/host native level0 projection, before read views; source-only residual audit preserved.
+
+
+### A4 level0 native adapter begins
+
+Doc census accepted3cafec8b7, records92ec45a24. Root planned SOURCE-LEVEL0-READ r1 and FMT040. Source-only residual audit identifies real consumer paths still needing integration: Doc-only reader for non-Doc VibeSpec/project inputs, physical SPEC_ROOT skip, dropped capture before native copy. Next worker must reproduce meaningful cases and reuse accepted inventory/generated owners; no Doc-kind spoofing or broad new framework. Existing incomplete card-only behavior remains distinct from authored input authority. FullA4/old113counts unchanged.
+
+
+### A4 level0: paired native projection green and narrowed seams
+
+Root inspected green-02 receipt:1executed paired legacy/declared flow test passes; green-01 was a compilation failure and is not counted as success. Existing card::Manifest already holds decoded TOML and text, so root withdrew the proposed lower presence reader and approved only presence hints for package.sources/source_exports or project.sources in that existing owner. Hints trigger strict source admission, never substitute for it; Card text must agree with the admitted source observation.
+
+Root review caught literal layout prefix duplication and pre-selector Doc enrollment via any(VibeDoc). Approved reuse of SPEC_ROOT and a narrow has_native_sources membership query in the existing inventory owner so empty/shadowed Doc scopes do not grant vocabulary or force a wrong-kind reader. Actual selected Doc input still requires real Doc kind; absence decision is rechecked through publication. This is a metadata/membership query, not another walker/parser or byte-read authority. Full level0 acceptance pending.
+
+
+### A4 level0 projection accepted
+
+Commit `a3bd65d92971144b9c5cd20338c3455c1131e7ea`:16reviewed product/spec/map files, committed hashes verified. Doc647+40/server43/lower6/docs87+19/CLI5/static pass. Actual isolated build-site host1version/2native pages/3formats/33files/0refused; root verified6output hashes. Flow proof is renderer tests, not host-feed inclusion. Map9172/5569/4718/44 retains9170prior occurrences. FMT040 and acceptance records name limits and no new schemas. Independent final source14/evidence30 seal match. No worktree/push/frontend changes. FullA4partial; next tree selected-native adapter. Tree preparation report12source hashes verified, no runtime claim yet.

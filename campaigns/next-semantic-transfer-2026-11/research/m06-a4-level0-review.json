@@ -1,0 +1,85 @@
+{
+  "review": "A4 level-zero native source candidate",
+  "time": "2026-11-07T06:46:52.816573+00:00",
+  "verdict": "final-exact-seal-no-concrete-blocker",
+  "active_writer": false,
+  "final_acceptance": false,
+  "tests_run_by_reviewer": false,
+  "source_sha256": {
+    "crates/vibe-doc/src/build.rs": "c9aa44be566b9e9fa17a516ce2b294268e4c6897ba83514f71fd7727aea530c9",
+    "crates/vibe-doc/src/citations/sources/census.rs": "c97bc6ca385705795ee38dda3ea882b3c404c8aa3481dd00ce309a057111c4a3",
+    "crates/vibe-doc/src/pages.rs": "059e052643dde79158c384403f4caa80a16c24450aee58baaaaacb5166f8efa5",
+    "crates/vibe-doc/src/site/level0.rs": "0791edc4ecb1b2b6f4460c45e3d0595c1a4e284bd524b43d55612f150debdbb6",
+    "crates/vibe-doc/src/site/level0/card.rs": "81da1da5a7370c7f49653aad9ad84b64eccc3805373da8a40273aed584e86929",
+    "crates/vibe-doc/src/site/level0/page.rs": "de477c91c6efd9dc5001e3f55b5d55800e7bb0bc0e60f252ffd59073a3e0bcd3",
+    "crates/vibe-doc/src/site/level0/sources.rs": "7014adf920fb0c4f028e3b4bde37db498a9980256531f7855350738a28e29c0f",
+    "crates/vibe-doc/src/site/level0/tests.rs": "ea8025a1217f4f03bff681724a2024a9cb9a694ba2eb34b70ef6aecbe4000772",
+    "crates/vibe-doc/src/site/level0/tests/source_policy.rs": "33884d238454104f036b88e7d1ff784f2651ee46292bc6a38bba395bc46cf257",
+    "crates/vibe-doc/src/site/render.rs": "c53924b6942a5e9c3ea0cb79b993cccf321f71c00ef4709c86276dd815ebea2c",
+    "crates/vibe-doc/src/site/render/tests.rs": "17a874660571ff41f1ee4b725ee2590ff10e1fc87451e59ac7ff4b031cf2385c",
+    "crates/vibe-doc/src/site/render/tests/native_sources.rs": "6497264f239cddca032d1ada2bd18172340292d9f25928d86f9bacc4a073bc2f",
+    "crates/vibe-spec/src/source_policy/inventory.rs": "0f03e72acd0b0a4af1c843199cb7643ec168bd1f392f44358a91547d7ffdab40",
+    "crates/vibe-spec/src/source_policy/inventory/tests.rs": "dba5118640412f511f7eb555dbe2de4d046dbb84395c536714cb504cf9b341cb"
+  },
+  "evidence": {
+    "/tmp/nst-a4-level0-doc-all-01.log": {
+      "sha256": "d517cc4055ae65aae8aa8a0abda1ca0b27d5e6208976f7127954adf3289a8a66",
+      "observed_results": "644 library + integration 9+16+5+1+4+5 passed; receipt has no shell exit footer; not a final gate seal"
+    }
+  },
+  "blockers": [],
+  "limitations": [
+    "Reviewer executed no builds/tests or repository mutations.",
+    "Root retains acceptance and subsequent spec/map/commit gates.",
+    "Shell exits and strict command flags are writer handback attestations; log contents independently show successful test results and completed checks but omit shell exit footers.",
+    "Full A4 and tree/show/progress remain outside this slice.",
+    "CLI build-site proof is host-only; flow proof remains actual renderer tests."
+  ],
+  "evidence_sha256": {
+    "/tmp/nst-a4-level0-cli-build-site-01.log": "1cd0ed74b251bc4a876ba61fb655d1ddad392f05a908681d7306392cbec6bec6",
+    "/tmp/nst-a4-level0-cli-regression-01.log": "79bf396c7d5a7f84fc2e75b2cf83c83686a10aee27275b8263b82314896f953b",
+    "/tmp/nst-a4-level0-cli-regression-final.log": "53f48b10e2045b38ecdbe84aba207eecb1b6e0d30379e5336ed397ece520bd3e",
+    "/tmp/nst-a4-level0-clippy-01.log": "63fbf9454c028d0adcb411e7a37499fa049f63fee938cef013ed430288e8233a",
+    "/tmp/nst-a4-level0-clippy-final.log": "dc7f47b321002c4e622ca63d4c13ce35a06289e73edd49ee74edc35098bd8907",
+    "/tmp/nst-a4-level0-conform-doc-01.log": "3fa499a2ee1a3f3baf59e4aeb9c4fbe47b77bdbbb0812c97c201bedeb1e58bdf",
+    "/tmp/nst-a4-level0-conform-doc-02.log": "a5c053ca1a741e154dd4b962ce91062a53fab875f04df509178a4c1bd3e80de1",
+    "/tmp/nst-a4-level0-conform-doc-03.log": "8115d7cb2bb068d93195946f490454ab26182aca05bdcf7c02db5b0c3132f40b",
+    "/tmp/nst-a4-level0-conform-doc-final.log": "8115d7cb2bb068d93195946f490454ab26182aca05bdcf7c02db5b0c3132f40b",
+    "/tmp/nst-a4-level0-conform-spec-01.log": "7264b8b4d8d8cf546aaa33eec4025a55b804ad5c66e849a1482a24c31c8e41ee",
+    "/tmp/nst-a4-level0-conform-spec-final.log": "7264b8b4d8d8cf546aaa33eec4025a55b804ad5c66e849a1482a24c31c8e41ee",
+    "/tmp/nst-a4-level0-diff-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/nst-a4-level0-doc-all-01.log": "d517cc4055ae65aae8aa8a0abda1ca0b27d5e6208976f7127954adf3289a8a66",
+    "/tmp/nst-a4-level0-doc-final-02.log": "a1cbe0001b2b4444360e380e626cc4e71ebfa8d44cda03b4105054b022442938",
+    "/tmp/nst-a4-level0-doc-final-03.log": "ee6c0029db0bc5f015805cbbb81561319ea80fa6374096b0834802dbd23d7650",
+    "/tmp/nst-a4-level0-doc-server-final.log": "d043092f7ef0d466ba3d1be6816f1aa4648d039acaaf52e100d4a5a136428402",
+    "/tmp/nst-a4-level0-doctests-01.log": "55a7d73b2944979c52741e3874af45e413cba01ab29830e5b362ba381ce04a69",
+    "/tmp/nst-a4-level0-fmt-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/nst-a4-level0-green-01.log": "46123a2c9cfef5070a158b0bfcbf72272b2ef97217bdec48473338ceba33477f",
+    "/tmp/nst-a4-level0-green-02.log": "3616a4adf8366c4f0d7bea72d520456fa4fb9483cf93cbaeeb2a1128e58ee9e7",
+    "/tmp/nst-a4-level0-lower-01.log": "02b56466a36ad8fbcb74e4216e21441cf1cf0be65fc293843f8e16ca7fd13ccb",
+    "/tmp/nst-a4-level0-red-01.log": "286d6cf42d1866edafac3440d029b4a5fe83a985a1a6e871af33073da92094ee",
+    "/tmp/nst-a4-level0-red-02.log": "5a4341f348d39120d1a969f4279b77f10b2928c81f7bf2e57b1b65c13cc6d8dd",
+    "/tmp/nst-a4-level0-site-01.log": "a239bf5a1c165a4d8ac47ddf4eff9985c071fe492f532373aa846a95697209ea",
+    "/tmp/nst-a4-level0-tests-01.log": "1c978eedae4ef560ff5f912a024e8d130e76f09c38505f01bd1771c0e8ee16fe",
+    "/tmp/nst-a4-level0-tests-02.log": "e478ab61b016ff50f40e52df71ada9cd9464cf94139d461ef060a02aff393ee3",
+    "/tmp/nst-a4-level0-tests-03.log": "6f36abc7a7af924c71361faf03ca77b9022a0e6a00e266ec7e0b84ca82e9f6cd",
+    "/tmp/nst-a4-level0-progress.md": "d21729fcd15eba5b2200ace7da62265f44145981fd868fd659572d5537bf047f",
+    "/tmp/nst-a4-level0-cli-verification.json": "74e9075170b461706ade59e66bede214b97e34e241b3982800768a25e19ca282",
+    "/tmp/nst-a4-level0-handoff.md": "8a7529b22a3a6adb48463795c29771488a9c183c84c09e1753ae77d9c4b86a2b"
+  },
+  "seal_verification": {
+    "sources_matched": 14,
+    "evidence_matched": 30,
+    "cli_output_hashes_matched": 6
+  },
+  "observed_test_results": {
+    "doc_lib": 647,
+    "doc_integrations": 40,
+    "server": 43,
+    "lower_inventory": 6,
+    "doc_doctests": 87,
+    "spec_doctests": 19,
+    "cli_regression": 5
+  },
+  "handoff_sha256": "be116f928ca7913ac6d85457d597f39524e1b1ee5ea59b8f157ea30e5b467980"
+}
