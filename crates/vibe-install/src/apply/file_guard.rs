@@ -233,11 +233,14 @@ pub(crate) fn publish_admitted_manifest(
     let path = root.join(Manifest::FILENAME);
     let mut guard = FileGuard::capture(&path)?;
     let text = guard.previous_text()?;
-    if text
-        .and_then(|text| Manifest::parse_str(text).ok())
+    let observed = text.and_then(|text| Manifest::parse_str(text).ok());
+    let matches = observed
         .as_ref()
-        != Some(expected)
-    {
+        .map(|observed| vibe_workspace::authored_manifests_equal(observed, expected))
+        .transpose()
+        .map_err(|e| failure(&path, e))?
+        .unwrap_or(false);
+    if !matches {
         return Err(failure(
             &path,
             "selected manifest changed before admitted migration publication",
@@ -279,7 +282,13 @@ impl MetadataFiles {
             }
         };
         let captured = text.and_then(|s| Manifest::parse_str(s).ok());
-        if captured.as_ref() != Some(planned) {
+        let matches = captured
+            .as_ref()
+            .map(|observed| vibe_workspace::authored_manifests_equal(observed, planned))
+            .transpose()
+            .map_err(|e| failure(&path, e))?
+            .unwrap_or(false);
+        if !matches {
             return Err(failure(
                 &path,
                 "selected manifest recognized semantics changed since planning; replan before applying",

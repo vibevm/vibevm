@@ -259,6 +259,7 @@ pub fn execute_prepared(
     )?;
     let authored_before = manifest.clone();
     manifest_mutation.apply(&mut manifest, &mut workspace, &project_root)?;
+    workspace.advance_authored_selected(&project_root, &authored_before, &manifest)?;
     vibe_install::configuration_admission::workspace_inputs_for_install(
         &workspace,
         &project_root,

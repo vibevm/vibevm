@@ -261,9 +261,17 @@ fn load_canonical(root: &Path, over: Option<&ManifestOverride<'_>>) -> Result<Wo
     // Resolve every `version.var` placeholder against the recursive
     // `[workspace.versions]` chain — after this pass the in-memory manifests
     // carry only concrete versions (PROP-007 §2.6).
+    let authored_nodes = std::iter::once((".".to_owned(), root_manifest.clone()))
+        .chain(
+            members
+                .iter()
+                .map(|member| (member.rel_path.to_string(), member.manifest.clone())),
+        )
+        .collect();
     expand::finalize_versions(&mut root_manifest, &mut members)?;
 
     Ok(Workspace {
+        authored_nodes,
         root,
         root_manifest,
         members,

@@ -58,10 +58,14 @@ pub fn validate_source_admission(
     resolution: &[ResolvedDep],
     format: SpecFormat,
 ) -> Result<(), WorkspaceError> {
+    workspace.validate_authored_projection()?;
     for (relative, manifest) in workspace.iter_nodes() {
         let root = workspace.node_abs_path(relative);
         validate_declared_source_operation(manifest, &root, format, false)?;
-        super::bootgen::PreparedNodeBoot::prepare(&root, relative, manifest)?;
+        let authored = workspace
+            .authored_node(relative)
+            .ok_or_else(|| refused(&root, "retained authored node input missing"))?;
+        super::bootgen::PreparedNodeBoot::prepare(&root, relative, authored)?;
     }
     validate_source_resolution(&workspace.root, resolution, format)
 }

@@ -230,6 +230,9 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
         // permitted only at a successful, fully admitted plan boundary.
     }
     let result = (|| {
+        if workspace_before_migration.is_some() {
+            workspace.advance_authored_selected(project_root, &before_migration, manifest)?;
+        }
         let requirements = roots::RootRequirements::collect(workspace, &selected, &request.roots)?;
         let inputs = requirements.configuration_inputs();
         let configured = inputs

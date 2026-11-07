@@ -115,10 +115,13 @@ fn changed_sibling_version_or_kind_refuses_apply_and_preserves_current_bytes() {
         let error = apply(&f.source, plan)
             .expect_err("the already-read sibling declaration must match the selected resolution");
         assert!(
-            matches!(error, vibe_install::Error::ConsumerConstraints { .. }),
+            matches!(&error, vibe_install::Error::Workspace(vibe_workspace::WorkspaceError::SpecMaterialization { path, reason }) if path == &f.root.join("b") && reason.contains("SOURCE-HOST-BOOT-LAW")),
             "{error}"
         );
-        assert!(error.to_string().contains("b/vibe.toml"), "{error}");
+        assert!(
+            error.to_string().contains("authored node manifest differs"),
+            "{error}"
+        );
         assert_eq!(
             files(&f.root),
             before,
@@ -154,7 +157,7 @@ fn changed_sibling_common_input_refuses_apply_before_selected_publication() {
     assert!(
         matches!(
             &error,
-            vibe_install::Error::ConfigurationInputChanged { consumer, dependency } if consumer=="member/vibe.toml" && dependency=="org.constraints/x"
+            vibe_install::Error::Workspace(vibe_workspace::WorkspaceError::SpecMaterialization { path, reason }) if path == &f.root.join("member") && reason.contains("SOURCE-HOST-BOOT-LAW") && reason.contains("authored node manifest differs")
         ),
         "{error}"
     );
@@ -269,4 +272,44 @@ fn successful_legacy_seed_publishes_after_fresh_or_resolved_admission() {
         assert_eq!(manifest.requires.packages.len(), 1);
         assert_eq!(manifest.requires.packages[0].name.as_str(), "x");
     }
+}
+
+#[test]
+fn reversed_legacy_seed_is_the_same_authored_map_after_known_publication() {
+    let mut f = Fixture::new("", &[]);
+    for name in ["a", "z"] {
+        f.add(name, "1.0.0", "");
+        f.add(name, "2.0.0", "");
+    }
+    f.apply(
+        ".",
+        &["org.constraints/a@=1.0.0", "org.constraints/z@=1.0.0"],
+    );
+    let manifest_path = f.root.join("vibe.toml");
+    let mut manifest = Manifest::read(&manifest_path).unwrap();
+    manifest.requires.packages.clear();
+    manifest.write(&manifest_path).unwrap();
+    let mut lock = f.lock();
+    lock.meta.root_dependencies = vec![
+        "org.constraints/z@=2.0.0".parse().unwrap(),
+        "org.constraints/a@=2.0.0".parse().unwrap(),
+    ];
+    lock.write(f.root.join("vibe.lock")).unwrap();
+    let Plan::Ready(planned) = f.plan(".", &[]).unwrap() else {
+        panic!("new versions require apply")
+    };
+    assert_eq!(
+        Manifest::read(&manifest_path).unwrap().requires.packages[0]
+            .name
+            .as_str(),
+        "a"
+    );
+    apply(&f.source, planned).unwrap();
+    assert_eq!(f.lock().packages.len(), 2);
+    assert!(
+        f.lock()
+            .packages
+            .iter()
+            .all(|p| p.version.to_string() == "2.0.0")
+    );
 }

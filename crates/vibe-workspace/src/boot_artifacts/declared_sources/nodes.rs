@@ -10,8 +10,12 @@ impl DeclaredBootSources {
         resolution: &[ResolvedDep],
         input_format: Option<SpecFormat>,
     ) -> Result<Option<Self>, WorkspaceError> {
+        workspace.validate_authored_projection()?;
         let mut nodes = BTreeMap::new();
-        for (relative, manifest) in workspace.iter_nodes() {
+        for (relative, _) in workspace.iter_nodes() {
+            let manifest = workspace
+                .authored_node(relative)
+                .ok_or_else(|| error(&workspace.root, "retained authored node input missing"))?;
             nodes.insert(
                 relative.to_owned(),
                 Arc::new(crate::install::bootgen::PreparedNodeBoot::prepare(

@@ -22,7 +22,13 @@ impl PreparedNodeBoot {
     ) -> Result<Self, WorkspaceError> {
         let policy = vibe_spec::source_policy::observe_package_policy(node_dir)
             .map_err(|e| error(node_dir, e))?;
-        if policy.manifest() != Some(expected) {
+        let matches = policy
+            .manifest()
+            .map(|observed| crate::authored::same_manifest(observed, expected))
+            .transpose()
+            .map_err(|e| error(node_dir, e))?
+            .unwrap_or(false);
+        if !matches {
             return Err(error(
                 node_dir,
                 "authored node manifest differs from admitted workspace",

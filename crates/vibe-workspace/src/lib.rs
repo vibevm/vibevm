@@ -46,10 +46,12 @@ pub mod publish;
 pub mod tools;
 pub mod vibedeps;
 
+mod authored;
 pub(crate) mod discovery;
 /// The crate's refusal family, out of line per the file-length budget.
 mod errors;
 mod expand;
+pub use authored::authored_manifests_equal;
 mod layout_paths;
 mod safe_file;
 
@@ -141,6 +143,8 @@ pub struct WorkspaceMember {
     r = 1
 )]
 pub struct Workspace {
+    /// Original node inputs from this discovery epoch, before version expansion.
+    authored_nodes: std::collections::BTreeMap<String, Manifest>,
     /// Absolute path of the workspace's root directory. In-memory only —
     /// never persisted; the portable identity of a node is its `rel_path`.
     pub root: PathBuf,
