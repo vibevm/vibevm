@@ -1,0 +1,42 @@
+{
+  "task": "A4 residual after Doc-only census",
+  "mode": "read-only source evidence, no runtime",
+  "observed_at": "2026-11-07T06:07:09.711033+00:00",
+  "next_slice": "level-zero declared native Spec projection before CLI views",
+  "findings": [
+    {
+      "id": "LEVEL0-SPEC-ROUTE",
+      "state": "source-established missing adapter",
+      "chain": "compose_prepared\u2192read_package\u2192capture_pages\u2192capture_native_inventory(VibeDoc), rejects declared nonDoc Spec"
+    },
+    {
+      "id": "LEVEL0-PHYSICAL-GATE",
+      "state": "source-established skip",
+      "chain": "SPEC_ROOT absence bypasses declared exact sources outside that directory"
+    },
+    {
+      "id": "LEVEL0-CAPTURE-LIFETIME",
+      "state": "source-only integration gap, no runtime race claim",
+      "chain": "PageSet clone drops retained capture then copy_specs rereads physical bytes"
+    }
+  ],
+  "preserve": [
+    "actual Doc-kind requirement",
+    "generated producer versus authored source separation",
+    "original subject kind/address",
+    "legacy/empty semantics"
+  ],
+  "source_sha256": {
+    "crates/vibe-doc/src/site/level0.rs": "fab8428de80e12b9826c69dbe3577b6f55318897091a50e8158a2eb9e92fbe20",
+    "crates/vibe-doc/src/site/level0/tests.rs": "29c8aaa59636b8ba0f49add3819bd2be3e2167d26dc520db01dceb958aa33793",
+    "crates/vibe-doc/src/site/level0/page.rs": "3b2a2e0a907516a71d9c41104f8533b272b448cdfb5bb4a080f56aa8c9189403",
+    "crates/vibe-doc/src/site/render.rs": "ad6a50e132eb10c85b7e396bfaf10f57f7a23f55e99a46538acc3a2758164250",
+    "crates/vibe-doc/src/citations/sources/census.rs": "ca82ac14af49dd11de8f3eaebd0420825093e2759d7aaff068da729b09ddf6ee",
+    "crates/vibe-doc/src/pages.rs": "d01d6b7efde489873663e5fbe52f7f33c0a36b3c2912b50939d075ca0a069eba",
+    "crates/vibe-doc/src/build.rs": "7327949f57263870c24af5a0e6648d02557e0c2ede164a288d184170f123e146",
+    "crates/vibe-doc/src/manifest.rs": "ff99a57e6786f9737cfb956705847bee6eac05288c01ef842bf979b7a95033f9",
+    "crates/vibe-spec/src/source_policy/inventory.rs": "4ba034b4eb9b3c17f75ea350d4fec1ba90bfd4fffc016b9335cb4097792e0053"
+  },
+  "full_a4_acceptance": false,
+  "report_sha256": "a0e6b661c9ed1a170dce5e52079efd84cfbd3254aa01676554211a4f1ec425d4"
+}

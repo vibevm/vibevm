@@ -2328,3 +2328,54 @@ Root inspected3new test bodies and generated3.log:633PASS/0FAIL. Tests prove unk
 ### A4 generated rendering/baseline repair accepted
 
 Commit `8e61e9c754f8d9d9467c75e394c7833f0f68e096` contains21reviewed source/spec/map paths, all committed blobs verified. Full library634/0 closes every62old name; docs83/0,Clippy/Conform/fmt/wire pass. Map9168/5560/4709/44 retains9166prior occurrences with no new warning meanings. Root overlapped first map-check inadvertently; excluded it and reran sequentially. First review-hash script rejected root-owned spec status promotion; exact single status delta was then proved and all other hashes matched before staging. Independent final review no blocker. FMT038 and acceptance files record real behavior/compatibility. FullA4partial. No worktree/public push. Next: full declared Doc page census and actual callers.
+
+
+### A4 declared documentation census begins
+
+Generated boundary/baseline repair accepted8e61e9c75, records42c0e6064. Root planned SOURCE-DOC-CENSUS r1/FMT039. Next implementation must reach actual build/server/self/borrowed callers with selected native inventory and original identities; no acceptance by merely deleting guards. Reuse accepted point capture and generated rendering boundary. FullA4/old113counts unchanged; no temporary worktree.
+
+
+### A4 Doc census: meaningful RED and approved existing-owner extensions
+
+Worker reports2executed failing declared_page_census tests in /tmp/nst-a4-doc-census-red-01.log: valid Doc arbitrary-suffix read_package refuses and membership documents() loses the malformed selected page. Root inspected the receipt. Existing host inventory validates every exact row and captures ordinary bytes, so filtering after capture would incorrectly poison page census with unrelated missing raw inputs. Root inspected inventory.rs and approved native-only capture/recheck over the same walker/selector with selection scope retained, preserving original host inventory behavior and precedence-before-filtering.
+
+Root rejected changing public Built by adding a private guard field: use an additive prepared build/write wrapper in actual publication routes, retain plain output-data compatibility, and avoid global guard side tables. Approved explicit-root capture_pages wrapper and shared canonical logical identity instead of xml reconstruction. The initial task packet abbreviated two report names incorrectly; root supplied exact m06-a4 filenames under research, no broader boot needed. No implementation acceptance yet.
+
+
+### Prototype scope check: source contract exceeded actual Doc integration
+
+Root reread immutable prototype7fe6376ccef7f321302a8f18610fcb0c9cc2686f only via git --no-replace-objects show. M-06-A.4 explicitly targets suffix-only semantic fallback, ordinary same-stem separation and preserved canonical/status/void meaning. Yet pinned vibe-doc/pages.rs read_package and documents both call walk_package whose file filter is extension==xml; read_package directly parses those paths as Doc. This is source evidence of an unfinished consumer integration, not a prototype runtime test. Captured file/task hashes in local doc-census evidence. Current census work completes that declared-source capability under the owner's finish-incomplete-features instruction; it does not claim every old task's broad promise was already implemented. Existing absent-declaration legacy behavior remains the deliberately qualified compatibility route.
+
+
+### A4 census review: operation scope and route identity
+
+Root inspected native inventory diff: original all-resource host route retains no filter, while native selection stores its interpretation for matching recheck. Root identified raw-directory probing before filtering as an uncovered scope case; worker added actual raw-only directory with dangling entry plus nested native override. test05 executes5PASS including misleading.md native XML with original rel retained.
+
+Root then found a compatibility defect in the draft blanket document_of→canonical_doc_path substitution: the resolver canonicalizer truncates PROP/FEAT fullslug names, so existing model/PROP-001-guide.xml routes would be renamed to model/PROP-001. It also changed public borrowed-string result to owned String. Root's earlier canonical-identity shorthand was too broad for page presentation. Requested separate selected-source canonical lookup from legacy served spelling, preserve public signature where possible, and add fullslug build/server control. No runtime RED claimed for this static finding yet; candidate not accepted.
+
+
+### A4 census oracle correction: documentation is warmed, not installed
+
+CLI10 ran5tests/4PASS/1FAIL; failure was root's invalid requested scenario attempting vibe install of Doc. Worker correctly refused to weaken the product. Root reread PROP057 KIND-DOC-NOT-INSTALLED and LOCAL-WARMUP and replaced that wrong oracle with real offline cache-add Doc+subject warmup and build from store, retaining actual installed-flow citations and lower materializer/lock Mixed/Xml tests with honest labels. This is a root packet mistake, not a census bug. Server11/full lib green43/634 after legacy diagnostics and unrelated lock-context admission fixes; broader final gates remain pending.
+
+
+### A4 census final compatibility review
+
+Doctests found a real missing-manifest regression in fallible adaptation selection; genuine NotFound compatibility restored while malformed selected data still refuses. Later existing host_source_policy integration assertion expected a classification cue; worker archived accepted42c0e6064 branch/test bytes showing unchanged test and prior generic absence message, then added truthful absent/unclassified context without weakening refusal. Final all-existing Doc --tests gate20 passed, including that target; server/final static gates follow.
+
+Root explicitly approved NEW bare recorded legacy refusal, not a claimed preserved behavior: original read_package would walk XML despite a record; new captured reading requires independent selected context for recorded roots, with positive bound legacy and unrecorded legacy controls. FMT039 records the tightening. Independent record preparation remains sole decoder; no expected identity is inferred from the record. Public Built shape and document_of borrowed-string signature remain unchanged.
+
+
+### A4 native inventory final scope discriminator
+
+Worker reproduced native_directory_does_not_open_an_unreadable_ordinary_subtree as RED22 (1executed failure), restored permissions before assertion, then fixed existing-walker pruning; scope23 is14PASS. Root inspected both receipts. A final post-selector question was settled consistently with existing authored_boot: a valid ambiguity wholly outside the requested native interpretation selects no page; any winning requested-native declaration still refuses. Manifest grammar validation and unfiltered host inventory retain their existing failure rules. Root updated the planned census law and requested bounded ordinary-only/native-containing tie controls, with active gates completed before further edits. No global selector relaxation or new walker.
+
+
+### A4 address consumer closure: LLMS duplicate found and corrected
+
+Worker reproduced real build-link RED33: declared XML stored as guide.md rendered at guide/, but LLMS private document_of stripped only xml and emitted guide.md/. Root inspected llms.rs and authorized replacing that duplicate with the existing pages::document_of owner, preserving fullslug and public schema. GREEN34 verifies actual built LLMS link. Root separately read protected local shell source helpers: both already strip xml|md; no dependency/frontend files edited and no compiled-shell/UI qualification claimed. Source hashes archived locally. Fresh post-tie final sweep runs against20owned-path hashes; full Doc tests green, remaining gates pending.
+
+
+### A4 Doc census accepted
+
+Commit `3cafec8b7c795811daa08ce17ccf116805817bc5`:23reviewed product/spec/map files, committed hashes verified. Final source21/evidence70 seals matched independent review. Doc634+40/server43/CLI5/lower20/docs87+6+18 pass; Clippy/Conform/fmt/wire pass. Map9170/5566/4715/44 retains9168prior occurrences. FMT039 and acceptance records state NEW recorded-legacy API refusal and actual cache/store Doc CLI. No worktree/public push/frontend edit. FullA4partial, old113counts unchanged. Next actual adapter is non-Doc/host native level0 projection, before read views; source-only residual audit preserved.

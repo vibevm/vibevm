@@ -1,0 +1,28 @@
+{
+  "commit": "3cafec8b7c795811daa08ce17ccf116805817bc5",
+  "files": 23,
+  "source_seal_count": 21,
+  "evidence_count": 70,
+  "tests": {
+    "doc_lib": 634,
+    "doc_integrations": 40,
+    "server": 43,
+    "cli": 5,
+    "lower": 20,
+    "doctests": [
+      87,
+      6,
+      18
+    ]
+  },
+  "specmap": {
+    "units": 9170,
+    "code_items": 5566,
+    "edges": 4715,
+    "warnings": 44,
+    "prior_occurrences_retained": 9168
+  },
+  "new_api_refusal": "bare recorded legacy needs independent context",
+  "doc_cli": "cache add/store; install still refused",
+  "full_a4_accepted": false
+}

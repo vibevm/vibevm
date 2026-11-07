@@ -23,5 +23,7 @@
   },
   "tests_run": false,
   "full_a4_acceptance": false,
-  "report_sha256": "9cf8caf816e4bee61cf55ed825d4f4b128cfb8e051a6a079b0d24835311d1fb3"
+  "report_sha256": "74e2d924819629562addce01f3f08e65464697ff8e83ec5861bf7db112bb01ce",
+  "worker_report_sha256": "9cf8caf816e4bee61cf55ed825d4f4b128cfb8e051a6a079b0d24835311d1fb3",
+  "root_oracle_correction": "Doc CLI uses cache add/store, never install; bound materializer/lock cases are library-only proof"
 }

@@ -1,0 +1,290 @@
+{
+  "task": "A4 Doc census independent final read-only review",
+  "observed_at": "2026-11-07T06:12:05.083370+00:00",
+  "verdict": "No concrete blocking defect found in the frozen Doc-only candidate. Root acceptance remains separate.",
+  "blocking_findings": [],
+  "tests_run_by_reviewer": false,
+  "active_writer_drift": false,
+  "source_sha256": {
+    "crates/vibe-doc/src/pages.rs": "d01d6b7efde489873663e5fbe52f7f33c0a36b3c2912b50939d075ca0a069eba",
+    "crates/vibe-doc/src/citations.rs": "d86491a560e1d6e08e249d1fb13b807f61b2673d2dec82750a594eed0aa2d485",
+    "crates/vibe-doc/src/citations/sources.rs": "bb7baa7f581404cbd16bf81d6ebb2756f4d75f70500860e1077c08aa34573108",
+    "crates/vibe-doc/src/citations/sources/captured.rs": "53b1f3525cfacc1d20e298039ffbd54836b7a6a9f985c6a93ab628d8da5a6918",
+    "crates/vibe-doc/src/citations/sources/census.rs": "ca82ac14af49dd11de8f3eaebd0420825093e2759d7aaff068da729b09ddf6ee",
+    "crates/vibe-doc/src/translations.rs": "c609b3e041220b7f541d696fd99efdfc00bc8daff5de1ce6c31fc9790beb53e6",
+    "crates/vibe-doc/src/translations/borrowed.rs": "84d35f43d7bf7e8c8d03b03f8058b534f09917edee073686ad448c7c45423934",
+    "crates/vibe-doc/src/translations/selection.rs": "fcaaaa4da9a7d503bee7017234b38fbcc2163a60e41076988bfcf9b25fb64100",
+    "crates/vibe-doc/src/translations/tests.rs": "4b0d297efb0b7f3b236c28d0e2225f882f33224edf4f6378bb4348cba98ed142",
+    "crates/vibe-doc/src/build.rs": "7327949f57263870c24af5a0e6648d02557e0c2ede164a288d184170f123e146",
+    "crates/vibe-doc/src/build/prepared.rs": "2284485e3411d47e213cb26b23f6620d3a011e296565e2663d1fbaeb6747758b",
+    "crates/vibe-doc/src/manifest.rs": "ff99a57e6786f9737cfb956705847bee6eac05288c01ef842bf979b7a95033f9",
+    "crates/vibe-doc/src/llms.rs": "01916b9c3376f79188b967bc47cd95ed400c8152761764584c5184ab63dcb035",
+    "crates/vibe-doc/tests/declared_page_census.rs": "c04ee2d6525ba30a876e6a1102bc3dd4c6a3dd7d3a77510062a8b7b71c4174c7",
+    "crates/vibe-doc/tests/captured_document.rs": "50c4742c8704adec3392509f36fccb426efbed3c9e563463448ea9c4c512bb90",
+    "crates/vibe-doc-server/src/routes.rs": "fb104636872653a285dfeca7958e49e07c700a4249c9d3348885285565b0d583",
+    "crates/vibe-doc-server/src/routes/tests.rs": "098bc458509a1ce6309209c3ee2e3794fcb6f542ec0aeb065c9343b0f381ab5d",
+    "crates/vibe-cli/src/commands/doc.rs": "10a3731cd92117e0424c79b44ef8f332b02d41fc7a204778b59eb8feb7c0bc9f",
+    "crates/vibe-cli/tests/cli_doc_captured.rs": "8c7d17528068a5c0dbf4113f5c52dd8734171bf435e80455b51cf00caf6b548d",
+    "crates/vibe-spec/src/source_policy/inventory.rs": "4ba034b4eb9b3c17f75ea350d4fec1ba90bfd4fffc016b9335cb4097792e0053",
+    "crates/vibe-spec/src/source_policy/inventory/tests.rs": "bf8bf168d65cce947611f364e3f91fb86054fdbcf2c604003b7364049b661bd1"
+  },
+  "evidence_sha256": {
+    "/tmp/nst-a4-doc-census-accepted-comparison/accepted-resolve-absence.txt": "4056fde4fdaa050c7f5fb9b9276b925cf7fd996dba76f97e1c3a4b0ca0a0495e",
+    "/tmp/nst-a4-doc-census-accepted-comparison/comparison.json": "8c3f6c8db8d8aeac80db565a4464abc6f1044d1db8f6e85f21aa05b4eb6c1cd5",
+    "/tmp/nst-a4-doc-census-accepted-comparison/crates__vibe-doc__src__citations.rs": "b043740335fa965a63bb88cc5df5f56ed8b42b548a943bff96de0b83d567c3ce",
+    "/tmp/nst-a4-doc-census-accepted-comparison/crates__vibe-doc__src__pages.rs": "2b96acda8d560116ea1dbebb30e32ae754c2605369c945bc57abe6e19322fc1a",
+    "/tmp/nst-a4-doc-census-accepted-comparison/crates__vibe-doc__tests__host_source_policy.rs": "ff7fafb62d669cbb2097684f046afd5a396b2cb6359a50b34154a2fc4d4aafb5",
+    "/tmp/nst-a4-doc-census-build-02.log": "773b52c43a20de95d7963321564d55c990b2ceb28741aa0d1ee343aadf7a5d16",
+    "/tmp/nst-a4-doc-census-build-03.log": "afa2d53cf345e2bd89b1638afcea16c0aebd71b464cb73d78b4e5b1a1b03e311",
+    "/tmp/nst-a4-doc-census-check-04.log": "4e9af394065a25182b88495fd4c2384dbb6f60207c698cf807344f43afe5541b",
+    "/tmp/nst-a4-doc-census-cli-10.log": "11c3756f52aa4db3f8de8acdaf85963ccda55067aa1a68f5988665abaa905c88",
+    "/tmp/nst-a4-doc-census-cli-13.log": "fd69048c6936d404eb91e58c409842489a5c6cf24600195eace034451f711145",
+    "/tmp/nst-a4-doc-census-clippy-16.log": "42cbb7552f3459753e8d4650bb650792398b65c362fc66e6e6ee332101149d20",
+    "/tmp/nst-a4-doc-census-conform-cli-40.log": "924fd75ca8f40a38cf23309b4585ed2a0246430cbb0b608dcecf16d596102cea",
+    "/tmp/nst-a4-doc-census-conform-doc-36.log": "8af04edbbe4f612ab48b939b3b9b12a6dc3cec91ce644c788515fca0c7994f24",
+    "/tmp/nst-a4-doc-census-conform-doc-38.log": "f71d06274ed38458bcd2246fb59dfc8e01c32891bcd4435a81a3334f4c373748",
+    "/tmp/nst-a4-doc-census-conform-server-39.log": "5417f89cfbffde5449cede62c5318871fe28b9b1816fe77ad06dc7d9c1706d38",
+    "/tmp/nst-a4-doc-census-conform-spec-35.log": "da3542bb162ec7271618b7efc127e11b2cbac1136d38719c809053edac30f50c",
+    "/tmp/nst-a4-doc-census-conform-spec-37.log": "b61a1a0072f02fd745b12cac97efd303a7606f23bdc1beb562acf563cd513109",
+    "/tmp/nst-a4-doc-census-doctests-15.log": "0f67b71c8b9927f3f030bd172e4f0f8bc5277eaf388881158515af2213f375a8",
+    "/tmp/nst-a4-doc-census-final-24-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/nst-a4-doc-census-final-25-doc-tests.log": "22fa05903860e633255488def6be8a5a58220b3e4dc00c8eb0b06e68ebe17a3b",
+    "/tmp/nst-a4-doc-census-final-26-server.log": "456985eb37c714eb1646e061590d779592aa31a8799c49c8c7e88e39d81e0435",
+    "/tmp/nst-a4-doc-census-final-27-cli.log": "01146900ae6c70bc146d538238c80966ce3e4907b810b520ffe618debdc8043b",
+    "/tmp/nst-a4-doc-census-final-28-lower.log": "83355a03d519b91425f3e7bd13076a15cb3021b4545c86e3b3265721ea9da2e6",
+    "/tmp/nst-a4-doc-census-final-29-doctests.log": "827aef7f5ade5e68ed9a02526d22967c203ff63acadf39e744482139617b0028",
+    "/tmp/nst-a4-doc-census-final-30-clippy.log": "c5c6f6e1434deb0d31506b43e908d9b0c716b3736305cdde7e0465edc62e2718",
+    "/tmp/nst-a4-doc-census-final-all-doc-tests-20.log": "e730587d856fabe86ec19671c3c8b21ab0cc9718fcff92cc8493e19290b09a14",
+    "/tmp/nst-a4-doc-census-final-diff-check-41.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/nst-a4-doc-census-final-doc-17.log": "069d6bcb90e412d4089ec7b73149c31049bf4d18f1bac5cc6777302cec7a7b8d",
+    "/tmp/nst-a4-doc-census-final-doctests-19.log": "93a74025d10e7f2a752c3f8bea673a14f55d920f56f6ba47ded13ca606b13557",
+    "/tmp/nst-a4-doc-census-final-gates.py": "0802f6938ee2a01ffdfa16f7808afc724eda94490c3183b7c29f1d2337d0dd19",
+    "/tmp/nst-a4-doc-census-final-server-21.log": "b8b761568bda86e19b4ba73f4fbce042358de9635af342dee804bdb700cad01f",
+    "/tmp/nst-a4-doc-census-final-targets-18.log": "25f7b834d381b66601a8a9676ed782c52acbcf1f529e16afdc2781ffec4e3779",
+    "/tmp/nst-a4-doc-census-lib-06.log": "f02d7208d35cf2142760dcc45e9daf4835ed58bc1c077aeee1b56e06467d797e",
+    "/tmp/nst-a4-doc-census-lib-07.log": "054e8db5c4b174e6423a3f64e41554820e491ef4763e560fa66550356055c42f",
+    "/tmp/nst-a4-doc-census-lib-08.log": "d4b4e9430e3d0476dfc06a175110d2d77d999165c7771d0bb8f212d8b72b390b",
+    "/tmp/nst-a4-doc-census-lib-server-11.log": "7718d4efbaeba7169e50a63c20aeb715c6f8d689e5bfe273f4d97270a5709ccf",
+    "/tmp/nst-a4-doc-census-lower-14.log": "6921cb0fc6d727b8c40a47f064d435a70fd61256e7ed06271c3cdc0b1c27cbc4",
+    "/tmp/nst-a4-doc-census-misleading-link-green-34.log": "3c9bc32fe93c851249ea0198cc2617f449e149e2a1b8c10c4bcc6f0cfb087d50",
+    "/tmp/nst-a4-doc-census-misleading-link-red-33.log": "87b3e689a1dc6f7ceb76c5490adf0d422f3353b01ba6163860b33b056b86692c",
+    "/tmp/nst-a4-doc-census-ordinary-tie-green-32.log": "4ded95172fc57c4e8fd97e0cc8ee3e18ef915aa7024f4720bf79123b7ee17bd2",
+    "/tmp/nst-a4-doc-census-ordinary-tie-red-31.log": "ec1aa20727d8fdfef88bc665754af0d47187a506f6dc1a60852a356a46326032",
+    "/tmp/nst-a4-doc-census-post-split-24-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/nst-a4-doc-census-post-split-25-doc-tests.log": "4551029fc09c5b80d566ad3717ed7aad25a08fe003fb9931914cc8e679913afe",
+    "/tmp/nst-a4-doc-census-post-split-26-server.log": "1c112badd174de9515cccc15cdf5e228a78f6b6bd0a1dee3fceadcbbb92ce430",
+    "/tmp/nst-a4-doc-census-post-split-27-cli.log": "899c39a91af50d2497c05e49536fe02e49e288a2c7790457e569fdf391b93a38",
+    "/tmp/nst-a4-doc-census-post-split-28-lower.log": "087e78a8a0c4e7b8ac95639ef738bcd06d4ab023a14ee74f783e28be0cc2caac",
+    "/tmp/nst-a4-doc-census-post-split-29-doctests.log": "d401411c7c78b86af8318fea20e0b9a79df6ad60c8b0fc509509f0bb091a40fb",
+    "/tmp/nst-a4-doc-census-post-split-30-clippy.log": "602ca4330adfa1a9c2f6b69bce80d4c1090a86321375ae3d46bf2e4cdc78225a",
+    "/tmp/nst-a4-doc-census-post-split-gate-inputs.json": "80c9bd558a0b4eedf4d1574ea844ad009e149530a3bb44f83c9b438a424b4f94",
+    "/tmp/nst-a4-doc-census-post-split-gates.json": "4d5e5e3405f82f7f447cc2ac1f7c3d1aed8478f95440f493817055db56786942",
+    "/tmp/nst-a4-doc-census-post-tie-24-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/nst-a4-doc-census-post-tie-25-doc-tests.log": "12b538355c02f761f9d8706a30662970595de6d1617ab057a07ff1df7639a1ca",
+    "/tmp/nst-a4-doc-census-post-tie-26-server.log": "37c7a7c2d25f4d708306af3ca0e927b08103dd3492d5ae6cb7f886b70f6c4d00",
+    "/tmp/nst-a4-doc-census-post-tie-27-cli.log": "a62d45c29c913e1b242532795a0f54a59bbefa8aa958a62bc44d9b61a05ba435",
+    "/tmp/nst-a4-doc-census-post-tie-28-lower.log": "573211ecead3ef614640b263afa79ecd22228baaaa9f93e792f0b3e0a2bc68ae",
+    "/tmp/nst-a4-doc-census-post-tie-29-doctests.log": "b1bc25428bc89e262ca9975c4c443d5c157632f874922b68e5ec7ec702e67586",
+    "/tmp/nst-a4-doc-census-post-tie-30-clippy.log": "15f3394193cd11040b77e9c4e11541ff2c2f2601342b9bbd87bb8e27359ef57b",
+    "/tmp/nst-a4-doc-census-progress.md": "2ae1612b72d439a3050885eea8e2d6105bb4f4e5cdf8993a603859d3d5c7111b",
+    "/tmp/nst-a4-doc-census-raw-subtree-red-22.log": "e222a19b3b8acf8e800ecaff3e4e2e6ad70faa280a03ac3e704479f8c8f83457",
+    "/tmp/nst-a4-doc-census-red-01.log": "e4a2ed55cbb81cf8c983663183b864beade30205ed636ecd5707900599a835d6",
+    "/tmp/nst-a4-doc-census-sarif/cli-40.sarif": "30b015bbca6c7cb54d763e4c5117d8b17f30d29f936103513b3a58998291215c",
+    "/tmp/nst-a4-doc-census-sarif/doc-36-failure.sarif": "0c4605cf59ac0676bbe66035f2a3a7882cd449c028880f75331f0fdb30a596ea",
+    "/tmp/nst-a4-doc-census-sarif/doc-38.sarif": "f9bb86ae0ee49488af5de845372fbd4531844692cda141b0c4b3a7d71b2019d7",
+    "/tmp/nst-a4-doc-census-sarif/server-39.sarif": "f9bb86ae0ee49488af5de845372fbd4531844692cda141b0c4b3a7d71b2019d7",
+    "/tmp/nst-a4-doc-census-sarif/spec-35.sarif": "f9bb86ae0ee49488af5de845372fbd4531844692cda141b0c4b3a7d71b2019d7",
+    "/tmp/nst-a4-doc-census-sarif/spec-37.sarif": "f9bb86ae0ee49488af5de845372fbd4531844692cda141b0c4b3a7d71b2019d7",
+    "/tmp/nst-a4-doc-census-scope-23.log": "ccf316b84917affb0368e52d51061a0b95a30b7a54597ab86d9f932affac9b58",
+    "/tmp/nst-a4-doc-census-server-09.log": "e80629527d7f6f702f891a5b9f8b76ea722dbf15948fc6095beebd62abe986da",
+    "/tmp/nst-a4-doc-census-targets-12.log": "afe879a18a92b6ab77275255188f2a9fb455a616722162ad17f97ace7c4a69c6",
+    "/tmp/nst-a4-doc-census-test-05.log": "81359f5a595c9fb0c74497805680762e3729cefb1fccc4d61b34a6b7ec4eef32"
+  },
+  "handoff_json_sha256": "c7523cc86b37797fe266d2fe4d3cac2f437dcac4d7e5784fbd7297be83c539ad",
+  "handoff_md_sha256": "089189dce8f24db1198217ad39cfec4182c4dda8c6d4366ed37a55e2299dcfb4",
+  "frozen_source_count_verified": 21,
+  "retained_evidence_count_verified": 70,
+  "post_split_gate_input_set_matches": true,
+  "observed_final_receipts": {
+    "doc_lib": 634,
+    "doc_integrations": {
+      "captured_document": 9,
+      "declared_page_census": 16,
+      "doc_manifest_wire": 5,
+      "host_source_policy": 1,
+      "island": 4,
+      "projections": 5
+    },
+    "server_lib": 43,
+    "cli_doc_captured": 5,
+    "source_policy": 20,
+    "doctests": {
+      "doc": 87,
+      "server": 6,
+      "spec": 18
+    }
+  },
+  "gates": [
+    {
+      "gate": "24-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 8.381388902664185,
+      "log": "/tmp/nst-a4-doc-census-post-split-24-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "gate": "25-doc-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "vibe-doc",
+        "--tests"
+      ],
+      "exit_code": 0,
+      "seconds": 10.376009941101074,
+      "log": "/tmp/nst-a4-doc-census-post-split-25-doc-tests.log",
+      "sha256": "4551029fc09c5b80d566ad3717ed7aad25a08fe003fb9931914cc8e679913afe"
+    },
+    {
+      "gate": "26-server",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "vibe-doc-server",
+        "--lib"
+      ],
+      "exit_code": 0,
+      "seconds": 7.734863519668579,
+      "log": "/tmp/nst-a4-doc-census-post-split-26-server.log",
+      "sha256": "1c112badd174de9515cccc15cdf5e228a78f6b6bd0a1dee3fceadcbbb92ce430"
+    },
+    {
+      "gate": "27-cli",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "vibe-cli",
+        "--test",
+        "cli_doc_captured"
+      ],
+      "exit_code": 0,
+      "seconds": 27.41116428375244,
+      "log": "/tmp/nst-a4-doc-census-post-split-27-cli.log",
+      "sha256": "899c39a91af50d2497c05e49536fe02e49e288a2c7790457e569fdf391b93a38"
+    },
+    {
+      "gate": "28-lower",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "vibe-spec",
+        "--lib",
+        "source_policy::"
+      ],
+      "exit_code": 0,
+      "seconds": 0.22958612442016602,
+      "log": "/tmp/nst-a4-doc-census-post-split-28-lower.log",
+      "sha256": "087e78a8a0c4e7b8ac95639ef738bcd06d4ab023a14ee74f783e28be0cc2caac"
+    },
+    {
+      "gate": "29-doctests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "vibe-doc",
+        "-p",
+        "vibe-doc-server",
+        "-p",
+        "vibe-spec",
+        "--doc"
+      ],
+      "exit_code": 0,
+      "seconds": 23.659158945083618,
+      "log": "/tmp/nst-a4-doc-census-post-split-29-doctests.log",
+      "sha256": "d401411c7c78b86af8318fea20e0b9a79df6ad60c8b0fc509509f0bb091a40fb"
+    },
+    {
+      "gate": "30-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "vibe-spec",
+        "-p",
+        "vibe-doc",
+        "-p",
+        "vibe-doc-server",
+        "-p",
+        "vibe-cli",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 30.457120656967163,
+      "log": "/tmp/nst-a4-doc-census-post-split-30-clippy.log",
+      "sha256": "602ca4330adfa1a9c2f6b69bce80d4c1090a86321375ae3d46bf2e4cdc78225a"
+    }
+  ],
+  "conform": [
+    {
+      "scope": "crates/vibe-spec",
+      "exit_code": 0,
+      "findings": 0,
+      "new_findings": 0,
+      "log": "/tmp/nst-a4-doc-census-conform-spec-37.log",
+      "sarif": "/tmp/nst-a4-doc-census-sarif/spec-37.sarif"
+    },
+    {
+      "scope": "crates/vibe-doc",
+      "exit_code": 0,
+      "findings": 0,
+      "new_findings": 0,
+      "log": "/tmp/nst-a4-doc-census-conform-doc-38.log",
+      "sarif": "/tmp/nst-a4-doc-census-sarif/doc-38.sarif"
+    },
+    {
+      "scope": "crates/vibe-doc-server",
+      "exit_code": 0,
+      "findings": 0,
+      "new_findings": 0,
+      "log": "/tmp/nst-a4-doc-census-conform-server-39.log",
+      "sarif": "/tmp/nst-a4-doc-census-sarif/server-39.sarif"
+    },
+    {
+      "scope": "crates/vibe-cli",
+      "exit_code": 0,
+      "findings": 67,
+      "new_findings": 0,
+      "log": "/tmp/nst-a4-doc-census-conform-cli-40.log",
+      "sarif": "/tmp/nst-a4-doc-census-sarif/cli-40.sarif"
+    }
+  ],
+  "compatibility_note": "NEW explicitly approved refusal for bare recorded legacy roots without independent selected context. Ordinary unrecorded legacy and valid independently bound legacy continue to work. Not described as unchanged API behavior.",
+  "reviewed_changes_since_provisional": [
+    "Native inventory ordinary-only winning ties excluded after shared selector; ties containing requested native interpretation refuse. Unfiltered host scope unchanged.",
+    "Ordinary-only subtree traversal exclusion retains independent visits for deeper native overrides.",
+    "LLMS page spelling delegates to shared pages::document_of; actual generated llms.txt test covers misleading .md XML source.",
+    "translations/selection.rs responsibility split preserves public Adapted/adapted reexports and fallible selected-lock lookup; absent manifest fallback remains limited to borrowing.",
+    "LegacyInstalled retains independent selected lock/record preparation and policy rechecks; canonical self lookup restricted to declared guards, preserving legacy fullslug semantics.",
+    "Expanded wrong/missing hash and record/format negatives; bound legacy and unchanged original host-source-policy assertion pass."
+  ],
+  "limits": [
+    "Reviewer ran no Cargo/tests; inspected sealed receipts, command scopes, code and assertions.",
+    "Plain Built/PageSet remain checked snapshots; retained publication checks require PreparedBuild.write and actual server page path.",
+    "Ancillary media/review owners retain incumbent inputs. No global snapshot/CAS/source authentication claimed.",
+    "Full non-Doc generated projection, full A4 closure, map/wire/root acceptance and commit remain outside this review."
+  ]
+}

@@ -47,3 +47,8 @@ After point acceptance: pages.rs and bounded census child/tests; SpecSources pac
 - Generated refused-version and unknown-kind level0 card tests render graceful error/card pages while preserving unknown original kind, without relaxing invalid authored manifest negatives. Consume a4_tutorials baseline classification and rerun corrected corpus; don't relabel all62 failures as fixture-only or skip them.
 
 This is the coherent page-census closure after point reads, not proof of current runtime support or whole A4 completion.
+
+
+## Root oracle correction during implementation
+
+The proposed direct `vibe install` of a Doc package conflicts with existing PROP-057 KIND-DOC-NOT-INSTALLED and LOCAL-WARMUP. The actual product command must continue refusing Doc installation with a cache-add hint. Correct real-surface proof is offline `vibe cache add` from a project-local registry, then actual build/read of the warmed Doc store path and cached subjects; keep real installation of cited flow packages. Materializer→independent lock→bound Mixed/Xml page cases are library binding tests, not proof of a supported CLI Doc install. The failed direct-install run is a task-oracle mistake, not a production regression. No installer law is weakened to satisfy the test.
