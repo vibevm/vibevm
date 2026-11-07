@@ -35,6 +35,8 @@ pub const VIBEPACKS_DIR: &str = "vibepacks";
 /// The dependency-slot home under [`VIBEVM_ROOT`] — was root `vibedeps/`,
 /// and the name itself is unchanged by the move.
 pub const VIBEDEPS_DIR: &str = "vibedeps";
+/// Identity and footprint record filename at a materialized dependency root.
+pub const SLOT_RECORD_FILENAME: &str = ".vibe-slot.toml";
 /// The facts home under [`VIBEVM_ROOT`] — was root `vibefacts/`, name
 /// unchanged by the move.
 pub const VIBEFACTS_DIR: &str = "vibefacts";

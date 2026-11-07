@@ -37,7 +37,7 @@ impl FsSectionSource {
         };
         let location = self
             .resolver
-            .locate_source(address, &formats)
+            .locate_source_with_host(address, &formats, &mut *self.lock_host_observations()?)
             .map_err(|error| error.to_string())?;
         if location.resolved.path != metadata.origin
             || location.resolved.format != metadata.format()

@@ -19,6 +19,7 @@ enum LocationReader {
         policy: Box<PackagePolicyCheckpoint>,
     },
     Declared(super::declared::DeclaredRead),
+    Host(std::sync::Arc<super::host::HostRead>),
 }
 
 impl SourceLocation {
@@ -31,11 +32,18 @@ impl SourceLocation {
             reader: LocationReader::Declared(reader),
         }
     }
+    pub(super) fn host(reader: std::sync::Arc<super::host::HostRead>) -> Self {
+        Self {
+            resolved: reader.resolved(),
+            reader: LocationReader::Host(reader),
+        }
+    }
     pub(crate) fn declared_media(
         &self,
     ) -> Option<(vibe_core::manifest::SourceInterpretation, &str)> {
         match &self.reader {
             LocationReader::Declared(reader) => Some(reader.media()),
+            LocationReader::Host(reader) => Some(reader.media()),
             _ => None,
         }
     }
@@ -50,10 +58,11 @@ impl SourceLocation {
             policy,
         } = &self.reader
         else {
-            let LocationReader::Declared(reader) = &self.reader else {
-                unreachable!()
+            return match &self.reader {
+                LocationReader::Declared(reader) => reader.read(overlay),
+                LocationReader::Host(reader) => reader.read(overlay),
+                LocationReader::Legacy { .. } => unreachable!(),
             };
-            return reader.read(overlay);
         };
         policy
             .recheck_unchanged()
@@ -94,6 +103,22 @@ impl FileResolver {
         address: &SpecAddress,
         formats: &[String],
     ) -> Result<SourceLocation, ResolveError> {
+        self.locate_source_using(address, formats, None)
+    }
+    pub(crate) fn locate_source_with_host(
+        &self,
+        address: &SpecAddress,
+        formats: &[String],
+        observed: &mut super::host::HostObservations,
+    ) -> Result<SourceLocation, ResolveError> {
+        self.locate_source_using(address, formats, Some(observed))
+    }
+    fn locate_source_using(
+        &self,
+        address: &SpecAddress,
+        formats: &[String],
+        observed: Option<&mut super::host::HostObservations>,
+    ) -> Result<SourceLocation, ResolveError> {
         paths::source(&address.doc_path, formats)?;
         if glob::is_pattern(address) {
             return Err(ResolveError::PatternNotExpanded {
@@ -102,6 +127,11 @@ impl FileResolver {
         }
         if let Some(declared) = self.declared_location(address, formats)? {
             return Ok(declared);
+        }
+        if let Some(observed) = observed
+            && let Some(host) = self.host_location(address, observed)?
+        {
+            return Ok(host);
         }
         let (project, package, logical) = self.observed_root(address)?;
         let (parent, resolved, policy) =
@@ -203,7 +233,7 @@ impl FileResolver {
             }
         }
     }
-    fn derived_slot_relative(&self, root: &Path) -> Option<PathBuf> {
+    pub(super) fn derived_slot_relative(&self, root: &Path) -> Option<PathBuf> {
         let physical = self.ws_root.canonicalize().ok();
         root.strip_prefix(&self.ws_root)
             .ok()

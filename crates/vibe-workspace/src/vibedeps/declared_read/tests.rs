@@ -446,3 +446,132 @@ fn empty_and_export_only_policy_never_restore_native_addresses() {
         );
     }
 }
+
+fn materialized_host_origin_fixture() -> (tempfile::TempDir, std::path::PathBuf) {
+    let workspace = tempfile::tempdir().unwrap();
+    let authored = tempfile::tempdir().unwrap();
+    let relative = "vibevm/vibespecs/start.xml";
+    fs::create_dir_all(authored.path().join("vibevm/vibespecs")).unwrap();
+    fs::write(
+        authored.path().join("vibe.toml"),
+        format!("{HEADER}{}", NATIVE.replace("start.md", "start.xml")),
+    )
+    .unwrap();
+    fs::write(authored.path().join(relative), XML).unwrap();
+    fs::write(
+        workspace.path().join("vibe.toml"),
+        "[project]\nname='host'\ngroup='org.host'\nversion='1.0.0'\n",
+    )
+    .unwrap();
+    let address = SpecAddress::parse("spec://org.example/native/start#root").unwrap();
+    let authored_reader = FsSectionSource::new(FileResolver::new(
+        authored.path(),
+        SelfCoordinate::new(Some("org.example".into()), "native".into()),
+    ));
+    assert!(
+        authored_reader
+            .section_text(&address)
+            .unwrap()
+            .contains("body")
+    );
+    let group = Group::parse("org.example").unwrap();
+    let version = "1.0.0".parse().unwrap();
+    let hash = ContentHash::parse(&format!("sha256:{}", "b".repeat(64))).unwrap();
+    crate::vibedeps::materialise_with_spec_format(
+        workspace.path(),
+        &group,
+        "native",
+        &version,
+        authored.path(),
+        crate::vibedeps::CopyMode::Copy,
+        SpecFormat::Xml,
+        &hash,
+    )
+    .unwrap();
+    let relative_slot = slot_rel_path(&group, "native", &version);
+    let slot_path = workspace.path().join(&relative_slot);
+    assert!(slot_path.join(SLOT_RECORD_FILENAME).is_file());
+    // The genuine emitted record remains usable by the independently bound
+    // installed reader; only the attempt to reinterpret its root as host fails.
+    {
+        let project = Arc::new(Project::open(workspace.path()).unwrap());
+        let slot = project
+            .dir(&relative_slot.split('/').collect::<Vec<_>>(), false)
+            .unwrap();
+        let expected = InstalledSourceExpectation {
+            kind: PackageKind::Flow,
+            group,
+            name: "native".into(),
+            version: version.to_string(),
+            source_hash: hash,
+            materialized_format: SpecFormat::Xml,
+        };
+        let binding = prepare_declared_query_read(&project, &slot, &relative_slot, &expected)
+            .unwrap()
+            .unwrap();
+        let resolver = FileResolver::with_selected_world(
+            &slot_path,
+            workspace.path(),
+            BTreeMap::from([(
+                ("org.example".into(), "native".into()),
+                SelectedPackage::new("1.0.0", &slot_path),
+            )]),
+            SelfCoordinate::new(Some("org.example".into()), "native".into()),
+        )
+        .with_installed_source_bindings(
+            project,
+            vec![binding],
+            Some(("org.example".into(), "native".into())),
+        )
+        .unwrap();
+        assert!(
+            FsSectionSource::new(resolver)
+                .section_text(&address)
+                .unwrap()
+                .contains("body")
+        );
+    }
+    (workspace, slot_path)
+}
+
+fn assert_materialized_root_is_not_host(root: &Path) {
+    let resolver = FileResolver::new(
+        root,
+        SelfCoordinate::new(Some("org.example".into()), "native".into()),
+    );
+    let address = SpecAddress::parse("spec://org.example/native/start#root").unwrap();
+    assert!(
+        resolver.resolve_file(&address).is_err(),
+        "path-only bypass at {root:?}"
+    );
+    assert!(
+        FsSectionSource::new(resolver)
+            .section_text(&address)
+            .is_err(),
+        "host bypass at {root:?}"
+    );
+}
+
+#[test]
+fn actual_materialized_slot_and_relocated_record_cannot_become_unbound_host() {
+    let (workspace, slot) = materialized_host_origin_fixture();
+    assert_materialized_root_is_not_host(&slot);
+    let relocated = workspace.path().join("relocated-source");
+    fs::rename(&slot, &relocated).unwrap();
+    assert!(relocated.join(SLOT_RECORD_FILENAME).is_file());
+    assert_materialized_root_is_not_host(&relocated);
+}
+
+#[cfg(unix)]
+#[test]
+fn actual_materialized_slot_and_relocated_alias_cannot_become_unbound_host() {
+    let (workspace, slot) = materialized_host_origin_fixture();
+    let alias = workspace.path().join("caller-alias");
+    std::os::unix::fs::symlink(&slot, &alias).unwrap();
+    assert_materialized_root_is_not_host(&alias);
+    fs::remove_file(&alias).unwrap();
+    let relocated = workspace.path().join("relocated-source");
+    fs::rename(&slot, &relocated).unwrap();
+    std::os::unix::fs::symlink(&relocated, &alias).unwrap();
+    assert_materialized_root_is_not_host(&alias);
+}

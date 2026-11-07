@@ -225,7 +225,7 @@ pub fn canonical_doc_path(file_rel: &str) -> String {
     canonical_doc_path_with_formats(file_rel, &[])
 }
 
-pub fn canonical_doc_path_with_formats(file_rel: &str, active_formats: &[String]) -> String {
+pub(crate) fn source_doc_spelling(file_rel: &str, active_formats: &[String]) -> String {
     let rel = file_rel
         .strip_prefix(&format!("{NEW_SPECS_ROOT}/"))
         .or_else(|| file_rel.strip_prefix(&format!("{LEGACY_SPECS_ROOT}/")))
@@ -241,6 +241,18 @@ pub fn canonical_doc_path_with_formats(file_rel: &str, active_formats: &[String]
         .iter()
         .find_map(|format| name.strip_suffix(&format!(".{format}")));
     let stem = builtin.or(custom).unwrap_or(name);
+    match dir {
+        Some(dir) => format!("{dir}/{stem}"),
+        None => stem.to_owned(),
+    }
+}
+
+pub fn canonical_doc_path_with_formats(file_rel: &str, active_formats: &[String]) -> String {
+    let spelling = source_doc_spelling(file_rel, active_formats);
+    let (dir, stem) = match spelling.rsplit_once('/') {
+        Some((dir, stem)) => (Some(dir), stem),
+        None => (None, spelling.as_str()),
+    };
     let mut parts = stem.split('-');
     let canonical = match (parts.next(), parts.next()) {
         (Some(kind @ ("PROP" | "FEAT")), Some(num))

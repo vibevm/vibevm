@@ -15,12 +15,37 @@ use vibe_core::manifest::{
 pub struct CitedNativeSource {
     pub relative: String,
     pub media: String,
+    pub interpretation: SourceInterpretation,
     pub observation: vibe_safefs::SourceObservation,
     parents: Vec<vibe_safefs::FileIdentity>,
     document: String,
     coordinate: String,
+    point_aliases: bool,
 }
 impl PackagePolicyObservation {
+    /// A control-entry presence cue only; no record body or asserted hash is read.
+    pub(crate) fn materialized_record_present(&self) -> Result<bool, SourcePolicyError> {
+        self.recheck_unchanged()?;
+        let root = self.project.root_dir().map_err(|error| {
+            self.cited_failure(SourcePolicyErrorKind::Unavailable, error.to_string())
+        })?;
+        let name = vibe_core::layout::SLOT_RECORD_FILENAME;
+        let present = self
+            .project
+            .source_file_present_in(&root, name)
+            .map_err(|error| {
+                self.cited_failure(SourcePolicyErrorKind::Unavailable, error.to_string())
+            })?
+            || root
+                .open_child_checked(name)
+                .map_err(|error| {
+                    self.cited_failure(SourcePolicyErrorKind::Unavailable, error.to_string())
+                })?
+                .is_some();
+        self.recheck_unchanged()?;
+        Ok(present)
+    }
+
     fn cited_failure(
         &self,
         kind: SourcePolicyErrorKind,
@@ -32,6 +57,7 @@ impl PackagePolicyObservation {
         &self,
         coordinate: &str,
         document: &str,
+        point_aliases: bool,
     ) -> Result<Vec<(String, String, SourceInterpretation)>, SourcePolicyError> {
         self.recheck_unchanged()?;
         let actual = self
@@ -46,10 +72,14 @@ impl PackagePolicyObservation {
         let rows = self
             .source_rows()
             .ok_or_else(|| self.unsupported("declared cited source lookup without policy"))?;
+        let matches = |path: &str| {
+            crate::canonical_doc_path(path) == document
+                || (point_aliases && crate::resolver::source_doc_spelling(path, &[]) == document)
+        };
         let mut paths = BTreeSet::new();
         for row in rows {
             if let SourceSelector::File(path) = row.selector()
-                && crate::canonical_doc_path(path) == document
+                && matches(path)
             {
                 paths.insert(path.clone());
             }
@@ -109,7 +139,7 @@ impl PackagePolicyObservation {
                     .collect::<Result<Vec<_>, _>>()?;
                 components.push(&name);
                 let path = components.join("/");
-                if crate::canonical_doc_path(&path) == document {
+                if matches(&path) {
                     paths.insert(path);
                 }
             }
@@ -182,7 +212,24 @@ impl PackagePolicyObservation {
         coordinate: &str,
         document: &str,
     ) -> Result<CitedNativeSource, SourcePolicyError> {
-        let candidates = self.candidates(coordinate, document)?;
+        self.capture_native(coordinate, document, false)
+    }
+    /// Native point reads use the actual package's vocabulary. Projects never
+    /// acquire documentation-package kind merely by declaring a row.
+    pub fn capture_addressed_native(
+        &self,
+        coordinate: &str,
+        document: &str,
+    ) -> Result<CitedNativeSource, SourcePolicyError> {
+        self.capture_native(coordinate, document, true)
+    }
+    fn capture_native(
+        &self,
+        coordinate: &str,
+        document: &str,
+        point_aliases: bool,
+    ) -> Result<CitedNativeSource, SourcePolicyError> {
+        let candidates = self.candidates(coordinate, document, point_aliases)?;
         let [(relative, media, interpretation)] = candidates.as_slice() else {
             return Err(self.cited_failure(
                 SourcePolicyErrorKind::Unavailable,
@@ -193,8 +240,15 @@ impl PackagePolicyObservation {
                 },
             ));
         };
-        if *interpretation != SourceInterpretation::VibeSpec {
+        if !point_aliases && *interpretation != SourceInterpretation::VibeSpec {
             return Err(self.unsupported("host citation documentation vocabulary"));
+        }
+        if *interpretation == SourceInterpretation::VibeDoc
+            && !self
+                .package()
+                .is_some_and(|package| package.kind == vibe_core::PackageKind::Doc)
+        {
+            return Err(self.unsupported("native documentation source outside a doc package"));
         }
         let parents = self.cited_parents(relative)?;
         let observation = self.read_source_observation(relative)?.ok_or_else(|| {
@@ -213,10 +267,12 @@ impl PackagePolicyObservation {
         Ok(CitedNativeSource {
             relative: relative.clone(),
             media: media.clone(),
+            interpretation: *interpretation,
             observation,
             parents,
             document: document.into(),
             coordinate: coordinate.into(),
+            point_aliases,
         })
     }
     /// Recheck the relevant native membership and the same finite source bytes.
@@ -225,9 +281,11 @@ impl PackagePolicyObservation {
         &self,
         source: &CitedNativeSource,
     ) -> Result<(), SourcePolicyError> {
-        let current = self.capture_cited_native(&source.coordinate, &source.document)?;
+        let current =
+            self.capture_native(&source.coordinate, &source.document, source.point_aliases)?;
         if current.relative != source.relative
             || current.media != source.media
+            || current.interpretation != source.interpretation
             || current.parents != source.parents
             || current.observation.identity() != source.observation.identity()
             || current.observation.bytes() != source.observation.bytes()

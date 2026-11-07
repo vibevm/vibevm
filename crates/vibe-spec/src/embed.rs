@@ -75,8 +75,9 @@ pub trait SectionSource {
 }
 
 /// Text-free physical source identity resolved before content admission.
-/// This is a locator, not a cross-call root witness: a later read revalidates
-/// the locator and admits the caller's current root alias for that read epoch.
+/// This locator is not itself a cross-call root witness. Legacy reads re-admit
+/// the current root alias; declared readers separately retain and recheck their
+/// operation's input evidence.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ResolvedSourceMetadata {
     origin: PathBuf,
@@ -310,25 +311,50 @@ fn expand_rec(
 
 pub struct FsSectionSource {
     resolver: FileResolver,
+    host_observations: std::sync::Mutex<crate::resolver::HostObservations>,
     overlay: BTreeMap<PathBuf, Arc<[u8]>>,
 }
 
 impl FsSectionSource {
+    pub(super) fn lock_host_observations(
+        &self,
+    ) -> Result<std::sync::MutexGuard<'_, crate::resolver::HostObservations>, String> {
+        self.host_observations
+            .lock()
+            .map_err(|_| "retained host input observations are poisoned".to_owned())
+    }
+
     pub fn new(resolver: FileResolver) -> Self {
         Self {
             resolver,
+            host_observations: Default::default(),
             overlay: BTreeMap::new(),
         }
     }
 
     #[must_use]
     pub fn with_overlay(resolver: FileResolver, overlay: BTreeMap<PathBuf, Arc<[u8]>>) -> Self {
-        Self { resolver, overlay }
+        Self {
+            resolver,
+            overlay,
+            host_observations: Default::default(),
+        }
     }
 }
 
 impl SectionSource for FsSectionSource {
+    fn admit_reference(&self, addr: &SpecAddress) -> Result<(), String> {
+        self.resolver
+            .admit_host_reference(addr, &mut *self.lock_host_observations()?)
+            .map_err(|error| error.to_string())
+    }
+
     fn expand_pattern(&self, addr: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
+        if crate::is_pattern(addr) {
+            self.resolver
+                .guard_host_pattern(addr, &*self.lock_host_observations()?)
+                .map_err(|error| error.to_string())?;
+        }
         self.resolver
             .expand_pattern(addr)
             .map_err(|e| e.to_string())
@@ -337,7 +363,7 @@ impl SectionSource for FsSectionSource {
     fn section_text(&self, addr: &SpecAddress) -> Result<String, String> {
         let location = self
             .resolver
-            .locate_source(addr, &[])
+            .locate_source_with_host(addr, &[], &mut *self.lock_host_observations()?)
             .map_err(|error| error.to_string())?;
         self.read_location(addr, location).map(|source| source.text)
     }
@@ -349,8 +375,9 @@ impl SectionSource for FsSectionSource {
     ) -> Result<ResolvedSourceMetadata, String> {
         let resolved = self
             .resolver
-            .resolve_source_file(addr, active_formats)
-            .map_err(|error| error.to_string())?;
+            .locate_source_with_host(addr, active_formats, &mut *self.lock_host_observations()?)
+            .map_err(|error| error.to_string())?
+            .resolved;
         let mut metadata =
             ResolvedSourceMetadata::new(resolved.path, resolved.format, resolved.physical_stem)?;
         metadata.active_formats = active_formats.to_vec();

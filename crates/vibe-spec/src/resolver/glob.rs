@@ -26,6 +26,7 @@ impl FileResolver {
         if !is_pattern(addr) {
             return Ok(vec![addr.clone()]);
         }
+        self.guard_host_pattern(addr, &super::host::HostObservations::default())?;
         if let Some(bound) = &self.installed_sources {
             bound.recheck_all()?;
         }
@@ -121,7 +122,7 @@ fn build_address(pattern: &SpecAddress, name: &str) -> Result<SpecAddress, Resol
 /// byte level: `*` is 0x2A and is never a UTF-8 continuation byte, so byte
 /// scanning is `*`-safe, and the byte comparison matches the resolver's
 /// byte-order view of names (law 5).
-fn name_matches(pattern: &str, name: &str) -> bool {
+pub(super) fn name_matches(pattern: &str, name: &str) -> bool {
     let pat = pattern.as_bytes();
     let txt = name.as_bytes();
     let (mut pi, mut ti) = (0usize, 0usize);

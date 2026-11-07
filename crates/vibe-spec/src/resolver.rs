@@ -384,3 +384,16 @@ mod path_tests;
 #[cfg(test)]
 #[path = "resolver/source_policy_tests.rs"]
 mod source_policy_tests;
+
+#[cfg(test)]
+#[path = "resolver/host_tests.rs"]
+mod host_tests;
+
+mod host;
+pub(crate) use host::HostObservations;
+
+pub(crate) use lookup::source_doc_spelling;
+
+#[cfg(test)]
+#[path = "resolver/host_cache_tests.rs"]
+mod host_cache_tests;

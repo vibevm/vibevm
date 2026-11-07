@@ -14,7 +14,7 @@ use vibe_wire::generated::slot_record::{
 };
 
 /// Name of the identity and footprint record at a materialised slot root.
-pub const SLOT_RECORD_FILENAME: &str = ".vibe-slot.toml";
+pub use vibe_core::layout::SLOT_RECORD_FILENAME;
 /// Current slot-record wire schema.
 pub const SLOT_RECORD_SCHEMA: u32 = 1;
 

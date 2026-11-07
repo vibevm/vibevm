@@ -44507,7 +44507,7 @@
       "line": 25,
       "symbol": "vibe_spec::embed::read::FsSectionSource::read_resolved",
       "end_line": 52,
-      "fingerprint": "tok1:b5358b73f4e70dce4072c2cd8e1f2211abcd99531502558e6becc05002b5ec81"
+      "fingerprint": "tok1:797be3bd61eedb71cde85210b7c1cc3f819b842e1cc658d7cd2fec4905a67a2e"
     },
     {
       "crate_name": "vibe-spec",
@@ -44823,6 +44823,24 @@
       "symbol": "vibe_spec::resolver::glob",
       "end_line": 8,
       "fingerprint": "tok1:462db69e11a9125f425fe2efd680aacf26e377731be1573623e7edb14dac1e44"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/resolver/host.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_spec::resolver::host",
+      "end_line": 5,
+      "fingerprint": "tok1:a94dc9c1ac3759fa0727ef0292a434a9fb2b5fa56b1279060f7c5861c0659c61"
+    },
+    {
+      "crate_name": "vibe-spec",
+      "file": "crates/vibe-spec/src/resolver/host_tests.rs",
+      "item_kind": "fn",
+      "line": 18,
+      "symbol": "vibe_spec::resolver::host_tests::cases::declared_host_arbitrary_suffix_reaches_actual_section_source_anchor_and_pin",
+      "end_line": 30,
+      "fingerprint": "tok1:538781a667e8b488801f065669cd5b865bddb14e47767f44f12a3ed1bd146926"
     },
     {
       "crate_name": "vibe-spec",
@@ -82988,6 +83006,24 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-spec/src/resolver/host.rs",
+      "from_symbol": "vibe_spec::resolver::host",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-READ",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-spec/src/resolver/host_tests.rs",
+      "from_symbol": "vibe_spec::resolver::host_tests::cases::declared_host_arbitrary_suffix_reaches_actual_section_source_anchor_and_pin",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-READ",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-spec/src/resolver/observation.rs",
       "from_symbol": "vibe_spec::resolver::observation",
       "line": 2,
@@ -113195,6 +113231,46 @@
       "heading": "Host fact synchronization selects only the concrete native documents cited by existing host registry entries, preserving the established canonical document and anchor laws. Shared exact-file and directory-default precedence applies to candidate files; unrelated directory defaults do not invalidate a citation. A directory requested as content refuses, while an exact regular file selected through a directory default is supported by bounded held candidate resolution, not a whole-tree semantic census. Raw same-stem resources do not own native addresses. Real ambiguity, raw-only selection, unavailable file, malformed native syntax or unsupported vocabulary refuses before registry writes. Only a missing anchor or no-longer-marked fact in a successfully admitted and parsed native document permits the existing removal tie-break; missing or reclassified source is not semantic deletion. Capture all cited bytes through the existing no-follow source reader, retain source identity and manifest checks, and validate/recheck the finite cited inputs before the first registry update. A later invalid citation must leave both disk and in-memory registry unchanged. Uncited malformed files are not parsed. Existing status and void semantics and shared regular inode support are preserved. No citations retains the existing read-free no-op. This is prevalidation under the existing cooperative publication law, not a new registry transaction or hostile compare-and-swap guarantee. @status:spec/done",
       "line": 40,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-SYNC-LAW"
+    },
+    {
+      "anchor": "SOURCE-HOST-READ",
+      "content_hash": "sha256:27bbe96155da7b0fe76e2af1fbffbcee19ef836b812ff81a981edf0a1cab7978",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Captured declared host reads through existing consumers",
+      "line": 42,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-READ",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-HOST-READ-LAW",
+      "content_hash": "sha256:d872dee31144e2906f98d084c07c6d9ebb6c918aea5b4b9559228a37dbfe153c",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Declared native host lookup uses the existing resolver and SectionSource with the caller-selected host root, held manifest policy and captured original bytes/media. Match the actual consumer coordinate to the resolver self coordinate before addressed interpretation; preserve existing versioned-self refusal, canonical aliases, anchor selection, revision-pin transport and caller-root alias rules. Section reading does not add a revision-equality validator. Installed selected/self slots remain on their independently bound installed path and cannot become host inputs merely because a directory has a manifest. Do not fabricate a slot record, resolved package, package kind, source hash or spec coordinate for host reads. Reuse the shared selector and finite cited-source capture/recheck; ordinary data cannot acquire a native address through its suffix, matching anchor text or custom frontend fallback. Byte/media/identity observations must remain coherent through read and cache reuse. An overlay is accepted only when tied to the admitted observation or explicitly refused, never silently replaced by disk after failure. Keep projection kind and original logical path distinct from physical source spelling and canonical projected positions. Add host support through the existing SourceLocation/reader dispatch; old path-only consumers must not gain unchecked interpretation as a side effect. Broad inventory and own-boot consumers reuse this foundation in later A4 slices. @status:spec/done",
+      "line": 44,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-HOST-READ-LAW"
+    },
+    {
+      "anchor": "SOURCE-OPERATION-ENROLLMENT",
+      "content_hash": "sha256:a8192bf9d3c4e6af4ebb350cc74db4da4e5a556a50b1847720ebecf0440f0591",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Source loading by concrete operation",
+      "line": 46,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OPERATION-ENROLLMENT",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "SOURCE-OPERATION-ENROLLMENT-LAW",
+      "content_hash": "sha256:0b3c57c6c976791f01af656ee6726619e163f0333371c826e7258e79da5c709e",
+      "doc_path": "common/PROP-072",
+      "file": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "heading": "Source loading distinguishes automatic discovery from explicit selection; it is not a universal prohibition on observing raw bytes. Scan may enumerate any declared interpretation, but only admitted native interpretations supply native meaning. A requested native address or citation may select native scan or explicit input. Requested facts/adopt/query observation retains native explicit and may witness classified ordinary bytes without parsing them as facts or managed directives. A named ordinary resource/export request or a skill.resource declaration is explicit selection and preserves literal data. Automatic own-boot discovery selects native scan sources only within the existing boot scope; native explicit is not automatically enrolled and ordinary scan never enters managed compiler input. Explicit package boot_snippet/source bindings retain their separate explicit-selection law. Existing own-host Simple semantics and HostUngrouped provider identity remain; no project.format, invented group, new resource URI or transport follows from this rule. @status:spec/plan",
+      "line": 48,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-OPERATION-ENROLLMENT-LAW"
     },
     {
       "anchor": "genre-definition",
