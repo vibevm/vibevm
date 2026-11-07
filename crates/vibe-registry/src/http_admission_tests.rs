@@ -313,7 +313,7 @@ fn resolver_binds_before_probe_and_keeps_index_denial_through_git_fallback() {
     .unwrap();
     let cache = tempfile::tempdir().unwrap();
     let denied = crate::MultiRegistryResolver::from_manifest_with_http_admission(
-        &[reg.clone()],
+        std::slice::from_ref(&reg),
         &[],
         &[],
         cache.path().to_owned(),

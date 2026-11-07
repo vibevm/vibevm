@@ -157,6 +157,7 @@ impl PreparedInPlace {
     )]
     pub fn materialise(&self) -> Result<InPlaceMaterialised, RegistryError> {
         let p = &self.0;
+        p.backend.preflight_materialisation()?;
         let repository = p.slot.join(".git").exists();
         if p.slot.exists() != p.before.present || repository != p.before.repository {
             return Err(refusal(
@@ -392,7 +393,10 @@ impl PreparationFailure {
     fn acquisition(error: RegistryError) -> Self {
         if matches!(&error, RegistryError::Git(error) if !matches!(
             error,
-            GitError::PreparedCheckout { .. }
+            GitError::ContactRefused(_)
+                | GitError::NativeUnavailable { .. }
+                | GitError::NativeContext { .. }
+                | GitError::PreparedCheckout { .. }
                 | GitError::PreparedCheckoutUnsupported
                 | GitError::PreparedValidation { .. }
         )) {

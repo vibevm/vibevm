@@ -69,13 +69,43 @@ impl ShellGit {
         if let Some(dir) = cwd {
             cmd.current_dir(dir);
         }
+        self.finish_transfer(cmd, &argv, args, cwd, remote, repository)
+    }
+
+    pub(super) fn run_admitted_transfer(
+        &self,
+        command: native_admission::AdmittedCommand,
+        argv: &[&str],
+        url: &str,
+        repository: &Path,
+    ) -> Result<Output, GitError> {
+        self.finish_transfer(
+            command.into_command(),
+            argv,
+            argv,
+            None,
+            Remote::Url(url),
+            repository,
+        )
+    }
+
+    fn finish_transfer(
+        &self,
+        mut cmd: Command,
+        argv: &[&str],
+        args: &[&str],
+        cwd: Option<&Path>,
+        remote: Remote<'_>,
+        repository: &Path,
+    ) -> Result<Output, GitError> {
+        let binary = Path::new(cmd.get_program()).to_path_buf();
         cmd.stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped());
-        tracing::debug!(target: "vibe_registry::git", argv = ?render_argv(&self.binary, &argv), cwd = ?cwd, "running git (transfer)");
+        tracing::debug!(target: "vibe_registry::git", argv = ?render_argv(&binary, argv), cwd = ?cwd, "running git (transfer)");
 
         let spawn_error = |source| GitError::Io {
-            cmd: render_argv(&self.binary, &argv),
+            cmd: render_argv(&binary, argv),
             source,
         };
         let began = std::time::Instant::now();
@@ -118,12 +148,27 @@ impl ShellGit {
         };
         if output.status.success() {
             if let Some(mut transfer) = relay.transfer {
-                transfer.written(size_on_disk(&repository.join(".git").join("objects")));
+                let store = if self.native.is_some() {
+                    repository.join("objects")
+                } else {
+                    repository.join(".git").join("objects")
+                };
+                transfer.written(size_on_disk(&store));
                 transfer.finish();
             }
             return Ok(output);
         }
-        let error = classify_failure(&argv, &output);
+        let error = if self.native.is_some() {
+            GitError::CommandFailed {
+                cmd: "admitted native Git transfer".into(),
+                status: output.status.code().unwrap_or(-1),
+                stderr:
+                    "direct transfer failed; redirects and ambient credential routes are disabled"
+                        .into(),
+            }
+        } else {
+            classify_failure(argv, &output)
+        };
         if let Some(transfer) = relay.transfer {
             transfer.fail(format!("git {} failed", args.first().unwrap_or(&"")));
         }

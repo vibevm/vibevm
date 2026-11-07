@@ -551,3 +551,26 @@ fn prepared_admission_refusal_cannot_be_hidden_by_valid_legacy_mirror() {
 
 #[path = "source_evidence_tests.rs"]
 mod source_evidence_tests;
+
+#[test]
+fn direct_and_manually_wrapped_contact_refusals_are_terminal() {
+    let refusal = crate::ContactRefusal::ExcludedHost {
+        endpoint: "https://excluded.invalid".into(),
+    };
+    for error in [
+        RegistryError::ContactRefused(refusal.clone()),
+        RegistryError::Git(GitError::ContactRefused(refusal)),
+    ] {
+        assert!(matches!(
+            PreparationFailure::acquisition(error),
+            PreparationFailure::Admission(_)
+        ));
+    }
+    let absent = RegistryError::Git(GitError::RepoNotFound {
+        url: "https://absent.invalid/r".into(),
+    });
+    assert!(matches!(
+        PreparationFailure::acquisition(absent),
+        PreparationFailure::Acquisition(_)
+    ));
+}

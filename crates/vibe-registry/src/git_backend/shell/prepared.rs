@@ -63,6 +63,17 @@ pub(super) fn prepare(
     objects: &Path,
     destination: &Path,
 ) -> Result<GitPreparedRevision, GitError> {
+    if let Some(native) = &git.native {
+        return native.prepare(super::native_admission::Preparation {
+            reporter: git,
+            address: url,
+            reference,
+            reuse,
+            objects,
+            destination,
+            anonymous: git.force_anonymous,
+        });
+    }
     let dest = objects.to_string_lossy();
     let hooks = objects.with_extension("disabled-hooks");
     std::fs::create_dir(&hooks).map_err(|source| GitError::Io {

@@ -57,6 +57,7 @@ impl GitPerPackageRegistry {
         clone_dir: &Path,
         intent: BringIntent,
     ) -> Result<(), RegistryError> {
+        self.backend.preflight_materialisation()?;
         let working_copy = clone_dir.join(".git").exists();
         match (intent, working_copy) {
             (BringIntent::RefreshExisting, true) => {

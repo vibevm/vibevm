@@ -33,6 +33,7 @@ impl GitPerPackageRegistry {
     /// registry section, otherwise the host-derived default per
     /// `RegistrySection::resolve_token_env_name`.
     pub(super) fn ensure_token_loaded(&self) -> Result<(), RegistryError> {
+        self.backend.preflight_registry_auth(self.auth)?;
         if !self.token_env_required_but_absent() {
             return Ok(());
         }

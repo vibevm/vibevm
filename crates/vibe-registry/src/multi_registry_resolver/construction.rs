@@ -48,6 +48,40 @@ impl MultiRegistryResolver {
         )
     }
 
+    /// Construct the separate direct HTTPS preparation profile before probes.
+    pub fn from_manifest_with_native_admission(
+        registries: &[RegistrySection],
+        mirrors: &[MirrorSection],
+        overrides: &[OverrideSection],
+        cache_root: PathBuf,
+        freshness_secs: u64,
+        profile: Arc<crate::git_backend::shell::native_admission::NativeGitAdmission>,
+    ) -> Result<Self, RegistryError> {
+        if registries.iter().any(|reg| {
+            reg.enabled
+                && !matches!(
+                    reg.auth,
+                    vibe_core::manifest::AuthKind::None | vibe_core::manifest::AuthKind::TokenEnv
+                )
+        }) {
+            return Err(crate::GitError::NativeContext {
+                reason: "declared registry auth requires a separately admitted credential route",
+            }
+            .into());
+        }
+        let admission = profile.http_admission();
+        let backend = Arc::new(ShellGit::new().with_native_admission(profile));
+        Self::from_manifest_bound(
+            registries,
+            mirrors,
+            overrides,
+            cache_root,
+            backend,
+            freshness_secs,
+            Some(admission),
+        )
+    }
+
     fn from_manifest_bound(
         registries: &[RegistrySection],
         mirrors: &[MirrorSection],

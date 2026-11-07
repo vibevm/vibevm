@@ -52,6 +52,14 @@ pub struct GitPreparedRevision {
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
 )]
 pub enum GitError {
+    #[error(
+        "native operation unavailable: {operation} (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION; fix: use a separately supported transport or materialisation capability)"
+    )]
+    NativeUnavailable { operation: &'static str },
+    #[error(
+        "native context unsupported: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION; fix: supply a supported explicit transport context)"
+    )]
+    NativeContext { reason: &'static str },
     #[error(transparent)]
     ContactRefused(#[from] crate::ContactRefusal),
     #[error(
@@ -211,6 +219,18 @@ pub enum GitError {
 /// # Ok::<(), GitError>(())
 /// ```
 pub trait GitBackend: Send + Sync {
+    /// Check declared credential semantics before attempting registry contact.
+    fn preflight_registry_auth(
+        &self,
+        _auth: vibe_core::manifest::AuthKind,
+    ) -> Result<(), GitError> {
+        Ok(())
+    }
+
+    /// Refuse unsupported publication before its caller creates or removes paths.
+    fn preflight_materialisation(&self) -> Result<(), GitError> {
+        Ok(())
+    }
     /// Read the actual origin used by an existing checkout refresh.
     fn origin_url(&self, _dest: &Path) -> Result<String, GitError> {
         Err(GitError::PreparedCheckoutUnsupported)

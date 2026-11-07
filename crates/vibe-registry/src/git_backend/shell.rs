@@ -36,6 +36,7 @@ use super::{GitBackend, GitError, GitPreparedRevision};
 pub struct ShellGit {
     binary: PathBuf,
     admission: Option<Arc<crate::HttpAdmission>>,
+    native: Option<Arc<native_admission::NativeState>>,
     // Force the interactive-credential silencing layer on for every
     // invocation of this instance, regardless of TTY (PROP-002 §2.2.1).
     // Set on the anonymous variant a `MultiRegistryResolver` hands to a
@@ -108,28 +109,11 @@ impl std::fmt::Debug for Sleeper {
 }
 
 impl ShellGit {
-    /// Construct a [`ShellGit`] bound to `git` on `PATH`.
-    ///
-    /// Does **not** preflight — the cost is deferred to the first real
-    /// operation, which fails fast with [`GitError::NotInstalled`] if
-    /// git cannot be spawned. Call [`ShellGit::preflight`] once per
-    /// `vibe` invocation to turn that into an up-front error.
-    pub fn new() -> Self {
-        // Allow `VIBE_GIT_BINARY` to override PATH lookup. See PROP-001 §6
-        // for the rationale on env-var rather than CLI-flag.
-        let binary = std::env::var_os("VIBE_GIT_BINARY")
+    // Keep the existing environment read at its recorded composition root.
+    fn configured_binary() -> PathBuf {
+        std::env::var_os("VIBE_GIT_BINARY")
             .map(PathBuf::from)
-            .unwrap_or_else(|| PathBuf::from("git"));
-        ShellGit {
-            binary,
-            admission: None,
-            force_anonymous: false,
-            raw_base: None,
-            raw_client: OnceLock::new(),
-            raw_sleeper: Sleeper::default(),
-            preflight_cache: OnceLock::new(),
-            transfers: Arc::default(),
-        }
+            .unwrap_or_else(|| PathBuf::from("git"))
     }
 
     /// The shared HTTP client of the read fast path, built on first use.
@@ -143,69 +127,23 @@ impl ShellGit {
             .as_ref()
     }
 
-    /// Bind HTTP admission before use and discard any prior HTTP pool.
-    /// Native Git is unavailable under this temporary HTTP-only capability.
-    #[specmark::spec(
-        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
-    )]
-    pub fn with_http_admission(mut self, admission: Arc<crate::HttpAdmission>) -> Self {
-        self.admission = Some(admission);
-        self.raw_client = OnceLock::new();
-        self
-    }
-
     fn admit_native(&self) -> Result<(), GitError> {
+        if self.native.is_some() {
+            return Err(native_admission::unavailable());
+        }
         if self.admission.is_some() {
             return Err(crate::ContactRefusal::NativeTransportUnavailable.into());
         }
         Ok(())
     }
 
-    /// Rebind the `git` binary this backend spawns, overriding both
-    /// `PATH` and `VIBE_GIT_BINARY`.
-    ///
-    /// Clears the cached preflight result — the new binary has not been
-    /// probed, and answering for it from the old one's probe would be a
-    /// lie in either direction.
-    pub fn with_binary(mut self, binary: impl Into<PathBuf>) -> Self {
-        self.binary = binary.into();
-        self.preflight_cache = OnceLock::new();
-        self
-    }
-
-    /// Rebind the base the HTTPS read fast path reads from — for every
-    /// host it knows, so one local server can stand in for all of them.
-    ///
-    /// Exists for tests. The crate's own precedent for this is
-    /// `GitPerPackageRegistry::open_with_explicit_token`: an explicit
-    /// constructor argument rather than an environment variable, because
-    /// `#![forbid(unsafe_code)]` bars a test from mutating the process
-    /// environment on Rust 2024, and a process-global would in any case
-    /// be shared by every test running in parallel in the same binary.
-    pub fn with_raw_base(mut self, raw_base: impl Into<String>) -> Self {
-        self.raw_base = Some(raw_base.into());
-        self
-    }
-
-    /// Rebind where the read fast path's pauses between retries go.
-    ///
-    /// Exists for tests, by the same reasoning as [`with_raw_base`] and
-    /// with one more of its own: a suite that asserts a backoff schedule
-    /// by sleeping through it is a suite that gets slower every time the
-    /// schedule grows, and slow tests are how a schedule stops being
-    /// asserted at all. The pause the read decided on is handed here
-    /// instead, where a test can record it and return at once.
-    ///
-    /// [`with_raw_base`]: ShellGit::with_raw_base
-    pub fn with_raw_sleeper(mut self, sleeper: impl Fn(Duration) + Send + Sync + 'static) -> Self {
-        self.raw_sleeper = Sleeper(Arc::new(sleeper));
-        self
-    }
-
     /// Verify that the configured git binary responds to `--version`.
     ///
     /// Caches the result on this instance. Subsequent calls are free.
     pub fn preflight(&self) -> Result<(), GitError> {
+        if let Some(native) = &self.native {
+            return native.preflight();
+        }
         self.admit_native()?;
         let ok = *self.preflight_cache.get_or_init(|| {
             let mut cmd = Command::new(&self.binary);
@@ -268,11 +206,35 @@ impl ShellGit {
 }
 
 impl GitBackend for ShellGit {
+    fn preflight_registry_auth(&self, auth: vibe_core::manifest::AuthKind) -> Result<(), GitError> {
+        if self.native.is_some()
+            && !matches!(
+                auth,
+                vibe_core::manifest::AuthKind::None | vibe_core::manifest::AuthKind::TokenEnv
+            )
+        {
+            return Err(native_admission::unsupported(
+                "declared credential route requires a separate admitted profile",
+            ));
+        }
+        Ok(())
+    }
+
+    fn preflight_materialisation(&self) -> Result<(), GitError> {
+        self.admit_native()
+    }
+
     fn origin_url(&self, dest: &Path) -> Result<String, GitError> {
+        if let Some(native) = &self.native {
+            return native.origin(dest, true);
+        }
         prepared::origin(self, dest)
     }
 
     fn recorded_origin_url(&self, dest: &Path) -> Result<String, GitError> {
+        if let Some(native) = &self.native {
+            return native.origin(dest, false);
+        }
         prepared::recorded_origin(self, dest)
     }
 
@@ -294,6 +256,9 @@ impl GitBackend for ShellGit {
         commit: &str,
         path: &str,
     ) -> Result<Vec<u8>, GitError> {
+        if let Some(native) = &self.native {
+            return native.file(objects, commit, path);
+        }
         self.run(&["show", &format!("{commit}:{path}")], Some(objects))
             .map(|o| o.stdout)
     }
@@ -307,6 +272,7 @@ impl GitBackend for ShellGit {
         dest: &Path,
         refresh: bool,
     ) -> Result<(), GitError> {
+        self.preflight_materialisation()?;
         prepared::apply(
             self,
             objects,
@@ -333,6 +299,9 @@ impl GitBackend for ShellGit {
     }
 
     fn head_commit(&self, dest: &Path) -> Result<Option<String>, GitError> {
+        if let Some(native) = &self.native {
+            return native.head(dest);
+        }
         self.preflight()?;
         // `git -C <dest> rev-parse HEAD` — the resolved commit of the
         // currently checked-out ref. The clone is already at the target ref
@@ -385,7 +354,11 @@ impl GitBackend for ShellGit {
         // Annotated tags appear twice — once as the tag object and once
         // as the peeled commit (`refs/tags/<name>^{}`). We drop the
         // peeled form's `^{}` suffix and dedupe on the resulting names.
-        let output = self.run(&["ls-remote", "--tags", "--", url], None)?;
+        let output = if let Some(native) = &self.native {
+            native.tags(url, self.force_anonymous)?
+        } else {
+            self.run(&["ls-remote", "--tags", "--", url], None)?
+        };
         let stdout = String::from_utf8_lossy(&output.stdout);
         let mut tags: Vec<String> = Vec::new();
         let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
@@ -406,6 +379,24 @@ impl GitBackend for ShellGit {
     }
 
     fn fetch_file_at_ref(&self, url: &str, refname: &str, path: &str) -> Result<Vec<u8>, GitError> {
+        if let Some(native) = &self.native {
+            native.preflight()?;
+            let temporary = tempfile::tempdir().map_err(|source| GitError::Io {
+                cmd: "preparing native file read".into(),
+                source,
+            })?;
+            let objects = temporary.path().join("objects.git");
+            let revision = native.prepare(native_admission::Preparation {
+                reporter: self,
+                address: url,
+                reference: refname,
+                reuse: None,
+                objects: &objects,
+                destination: &temporary.path().join("unused-slot"),
+                anonymous: self.force_anonymous,
+            })?;
+            return native.file(&objects, &revision.commit, &path.replace('\\', "/"));
+        }
         // Normalise platform separators to forward slash — `git archive`
         // expects in-repo paths in posix form, and so do both hosts the
         // HTTPS read addresses.
@@ -517,6 +508,9 @@ impl GitBackend for ShellGit {
     }
 
     fn set_remote_url(&self, dest: &Path, remote: &str, url: &str) -> Result<(), GitError> {
+        if let Some(native) = &self.native {
+            return native.set_origin(dest, remote, url);
+        }
         self.preflight()?;
         // `git -C <dest> remote set-url <remote> <url>`. The
         // `dest`-via-`-C` form is exactly what `self.run(.., Some(dest))`
@@ -538,6 +532,7 @@ impl GitBackend for ShellGit {
         Some(Arc::new(ShellGit {
             binary: self.binary.clone(),
             admission: self.admission.clone(),
+            native: self.native.clone(),
             force_anonymous: true,
             raw_base: self.raw_base.clone(),
             // The anonymous backend retains the same admission Arc, so
@@ -560,6 +555,9 @@ use tar::extract_single_file_from_tar;
 
 /// Clone/fetch and ref-kind-aware checkout mechanics.
 mod checkout;
+mod construction;
+/// Explicit trusted-installation profile and bounded native preparation.
+pub mod native_admission;
 mod prepared;
 
 /// The HTTPS single-file read that runs before `git archive` on the two

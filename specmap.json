@@ -37967,8 +37967,8 @@
       "item_kind": "enum",
       "line": 45,
       "symbol": "vibe_registry::git_backend::GitError",
-      "end_line": 155,
-      "fingerprint": "tok1:53645700f8830e9bb1d17696ab740ceec8c749e6ea2a0ac24385edc66db31d08"
+      "end_line": 163,
+      "fingerprint": "tok1:99889068f8066edb61426ff0159246705f0e52df1c2dae3e31f5ef5b2aabc7b8"
     },
     {
       "crate_name": "vibe-registry",
@@ -37990,12 +37990,21 @@
     },
     {
       "crate_name": "vibe-registry",
-      "file": "crates/vibe-registry/src/git_backend/shell.rs",
+      "file": "crates/vibe-registry/src/git_backend/shell/construction.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_backend::shell::construction",
+      "end_line": 2,
+      "fingerprint": "tok1:c69460358cab41a766a6cdb4ae63673c6b8c6356334d59bdb7d58cc0045f94b3"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/construction.rs",
       "item_kind": "fn",
-      "line": 146,
-      "symbol": "vibe_registry::git_backend::shell::ShellGit::with_http_admission",
-      "end_line": 155,
-      "fingerprint": "tok1:79ef5461202c8645e0bef9e95ef70eda6a2ce724c2972d42b1879bccb4a3e04c"
+      "line": 27,
+      "symbol": "vibe_registry::git_backend::shell::construction::ShellGit::with_http_admission",
+      "end_line": 37,
+      "fingerprint": "tok1:8a25f14313a4737301f1694b756719974736ebfbb56231b05a8b73fcd8d8ce4e"
     },
     {
       "crate_name": "vibe-registry",
@@ -38005,6 +38014,33 @@
       "symbol": "vibe_registry::git_backend::shell::diagnostics",
       "end_line": 5,
       "fingerprint": "tok1:a4ea1ed46a74ddb38901eddcd39b438a6c18e0502163b9af0c96f827ffff9e28"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_backend::shell::native_admission",
+      "end_line": 2,
+      "fingerprint": "tok1:f10ee38b969f833b0c922be31295fe4a7fc78e7dbed4c9243ad471c41bf7249a"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/tests.rs",
+      "item_kind": "fn",
+      "line": 51,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::tests::direct_https_prepares_exact_objects_with_tls_auth_and_no_legacy_escape",
+      "end_line": 124,
+      "fingerprint": "tok1:f579d367e991f24f6fdd67757cd02b1212c9bfe28cb25d1f55fe76e70e5da0d8"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/tests.rs",
+      "item_kind": "fn",
+      "line": 148,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::tests::token_registry_preparation_uses_incumbent_basic_auth_and_refuses_apply_before_effects",
+      "end_line": 209,
+      "fingerprint": "tok1:ccbf936a3940113af4ce97c1caa8828774552dbff878eccc42ce07c71685f6ad"
     },
     {
       "crate_name": "vibe-registry",
@@ -38120,8 +38156,8 @@
       "item_kind": "fn",
       "line": 46,
       "symbol": "vibe_registry::git_backend::shell::reported::ShellGit::run_transferring_with_prefix",
-      "end_line": 131,
-      "fingerprint": "tok1:d1e139dbae722713302af4636759a7a7f65b46772b64235d2c5a20b63902c6a6"
+      "end_line": 73,
+      "fingerprint": "tok1:bd6f134616f84c082312d629243cd5b4da0c2b30671b5f21e24ec11be0d97f72"
     },
     {
       "crate_name": "vibe-registry",
@@ -38298,9 +38334,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "item_kind": "fn",
-      "line": 242,
+      "line": 243,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::GitPerPackageRegistry::prepare_in_place",
-      "end_line": 381,
+      "end_line": 382,
       "fingerprint": "tok1:13c6a2bca82467695ea7d072ed4ff5c36f9c29298ac6f113f0811a7951cfda30"
     },
     {
@@ -38336,8 +38372,8 @@
       "item_kind": "fn",
       "line": 152,
       "symbol": "vibe_registry::git_package_registry::fetch::prepared::PreparedInPlace::materialise",
-      "end_line": 222,
-      "fingerprint": "tok1:4fb9b8f113fc99e3046d4693818ed52061349a2bd30b813916f6b878913827f2"
+      "end_line": 223,
+      "fingerprint": "tok1:c394856b032fbd919f02e04e888ebbc190218a07375455bf2bbaf45908f03ec4"
     },
     {
       "crate_name": "vibe-registry",
@@ -38796,7 +38832,7 @@
       "line": 295,
       "symbol": "vibe_registry::http_admission_tests::resolver_binds_before_probe_and_keeps_index_denial_through_git_fallback",
       "end_line": 355,
-      "fingerprint": "tok1:4ad231607fdacf669267060df082ef27ed3317ebdb27a460a1210568f0b78481"
+      "fingerprint": "tok1:5aeaa5f2da4719f8e983419030324cf5248620892222e16d91254f81f03f8464"
     },
     {
       "crate_name": "vibe-registry",
@@ -77727,9 +77763,17 @@
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-registry/src/git_backend/shell.rs",
-      "from_symbol": "vibe_registry::git_backend::shell::ShellGit::with_http_admission",
-      "line": 148,
+      "file": "crates/vibe-registry/src/git_backend/shell/construction.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::construction",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/construction.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::construction::ShellGit::with_http_admission",
+      "line": 29,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW",
       "verb": "implements"
@@ -77741,6 +77785,30 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::tests::direct_https_prepares_exact_objects_with_tls_auth_and_no_legacy_escape",
+      "line": 52,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::tests::token_registry_preparation_uses_incumbent_basic_auth_and_refuses_apply_before_effects",
+      "line": 149,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-registry/src/git_backend/shell/prepared.rs",
@@ -78008,7 +78076,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::prepared::GitPerPackageRegistry::prepare_in_place",
-      "line": 247,
+      "line": 248,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION",
       "verb": "implements"
@@ -115686,12 +115754,32 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW"
     },
     {
+      "anchor": "NATIVE-PREPARATION",
+      "content_hash": "sha256:a419f0651d7bda30851b3d71cb227e0111d9d7dfc41a08eaaafa6cdbd4a351d9",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "Admitted native HTTPS object preparation",
+      "line": 24,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "NATIVE-PREPARATION-LAW",
+      "content_hash": "sha256:0b511c3f46c496e06e2bb0243d36670fdbca4ee3d02b69210cdaf36ac6ad1b86",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "A separate native preparation capability shares the immutable denied-host policy without relaxing the accepted HTTP-only native refusal. Its caller explicitly supplies a trusted Git executable/helper installation and TLS trust inputs; these are not package-supplied flags or claims of executable authentication. Supported HTTPS object acquisition and bounded metadata operations run in operation-owned transport contexts with captured endpoints, controlled configuration/environment and origin-scoped ephemeral credentials. They do not inherit ambient transport rewrites, helpers, proxies, hooks or recursive acquisition. Warm effective endpoints must be captured with their supported configuration meaning or refused before contact; unexamined global/include semantics are not assumed empty and recorded A is not silently substituted for effective B. Source identities, selected commit/object witnesses and existing guarded apply/recovery authority remain intact. Unbound behavior is unchanged. Unsupported publication, SSH, transforms, lazy object fetch, redirects or submodule traversal remain explicit capability boundaries until separately proved and implemented; universal native refusal is not the final source-exclusion feature. @status:spec/done",
+      "line": 26,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION-LAW"
+    },
+    {
       "anchor": "OPERATION-EFFECTS",
       "content_hash": "sha256:93a4537a518c9896a9ab2df9254207e827a4273e9e1edeb0087cb11a8e826be7",
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Explicit preview and cancellation boundaries",
-      "line": 24,
+      "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS",
       "kind": "req",
       "revision": 1
@@ -115702,7 +115790,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Operation planning separates source resolution, acquisition effects and product publication. A read-only preview does not silently inherit cache/config/temp writes from existing acquisition; unsupported metadata access is an explicit limitation until the shared provider supports the requested effect contract. Apply uses captured decisions or reports/replans drift rather than promising a mutable ref is unchanged. Cancellation requests and stopped outcomes are distinct. Before product publication, cooperative cancellation preserves project state; during owned local publication use existing guarded recovery. Completed or unknown external effects and rollback conflicts are reported truthfully, never labeled successful restoration. Reuse lifecycle and progress owners rather than create a parallel orchestrator. Logical successful-write counters are distinct from received bytes, retained file size and physical disk I/O. @status:spec/plan",
-      "line": 26,
+      "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
     },
     {
