@@ -4,6 +4,7 @@ import argparse
 import collections
 import hashlib
 import json
+import tomllib
 from pathlib import Path
 
 
@@ -150,6 +151,28 @@ def main():
             status_prefix = "window.VIBEVM_ARCHITECTURE_STATUS = "
             assert status_script.startswith(status_prefix) and status_script.endswith(";\n")
             assert json.loads(status_script[len(status_prefix):-2]) == status
+        if "ownerNeeds" in ui:
+            extension_path = here / "vibe-needs.json"
+            extension = json.loads(extension_path.read_text())
+            assert status["sources"]["vibe_needs"]["sha256"] == hashlib.sha256(extension_path.read_bytes()).hexdigest(), "stale owner-needs source"
+            plan_path = Path(status["sources"]["plan"]["path"])
+            assert status["sources"]["plan"]["sha256"] == hashlib.sha256(plan_path.read_bytes()).hexdigest(), "stale owner-needs plan"
+            plan = tomllib.loads(plan_path.read_text())
+            plan_nodes = {row["id"]: row for row in plan["node"]}
+            extension_ids = {row["id"] for row in extension["nodes"]}
+            assert len(extension_ids) == len(extension["nodes"])
+            assert extension["historical_task_count"] == 222 and extension["historical_prototype_count"] == 113
+            for row in extension["nodes"]:
+                assert row["layer"] in {layer["id"] for layer in data["layers"]}
+                assert set(row["depends_on"]) <= extension_ids
+                declared = plan_nodes.get(row["id"])
+                row["planState"] = declared.get("state") if declared else None
+                row["statusBasis"] = "local-plan" if declared else "architecture-only"
+                row["evidence"] = declared.get("evidence", []) if declared else []
+            extension["documentUrl"] = (here / "VIBE-NEEDS.md").as_uri()
+            extension["sourceUrl"] = extension_path.as_uri()
+            extension["planRevision"] = plan["revision"]
+            expected["ownerNeeds"] = extension
         assert ui == expected, "visualization data diverged from canonical map"
         script = (args.visualization / "data.js").read_text()
         prefix = "window.VIBEVM_ARCHITECTURE_DATA = "
