@@ -1,0 +1,249 @@
+{
+  "task": "M-06-A.3 acceptance coverage audit",
+  "mode": "read-only; no reruns",
+  "promotion": true,
+  "status": "root accepted original M-06-A.3",
+  "original_contract": "campaigns/next-semantic-transfer-2026-11/research/source-a23-review.json original_tasks[M-06-A.3]",
+  "complete_matrix": "research/m06-a3-transfer-acceptance.md and original_obligations/saved_notes in this JSON",
+  "original_obligations": [
+    {
+      "id": "step1",
+      "status": "evidenced",
+      "evidence": "XML8; materializer18 raw preservation all three formats"
+    },
+    {
+      "id": "step2",
+      "status": "evidenced_qualified",
+      "evidence": "XML8/facts2; non-validating UTF8 XML1.0 summary, raw survives DTD/encoding/budget failures"
+    },
+    {
+      "id": "step3",
+      "status": "evidenced",
+      "evidence": "materializer18 output/native address collision cases; lower original-address tests"
+    },
+    {
+      "id": "positive1",
+      "status": "evidenced",
+      "evidence": "same-stem raw all targets in materializer18"
+    },
+    {
+      "id": "positive2",
+      "status": "evidenced",
+      "evidence": "invalid/nonUTF8 exact raw tests XML8/materializer18"
+    },
+    {
+      "id": "negative1",
+      "status": "evidenced",
+      "evidence": "raw XML-data not normalized across Mixed/Markdown/Xml"
+    },
+    {
+      "id": "negative2",
+      "status": "evidenced",
+      "evidence": "XML8 external/DTD refusal; materializer/lower ambiguity refusal"
+    },
+    {
+      "id": "acceptance1",
+      "status": "evidenced",
+      "evidence": "Covered: raw_resources_roundtrip_through_actual_materializer_and_bound_reader calls actual apply_resolution for Mixed/Markdown/Xml, prepares bindings from produced record, reads CommonMark, malformed/nonUTF8 XML-data and opaque bytes through read_installed_source, compares originals and refuses a native address for the raw same-stem pair. Carrier12 PASS."
+    },
+    {
+      "id": "acceptance2",
+      "status": "evidenced",
+      "evidence": "facts2 actual captured before/after optional failure, unrelated REAL fact unchanged"
+    },
+    {
+      "id": "safe_stop",
+      "status": "evidenced_qualified",
+      "evidence": "PreservedData raw/diagnostics; bound raw read independently"
+    }
+  ],
+  "saved_notes": [
+    {
+      "id": 1,
+      "status": "administrative",
+      "evidence": "reported sequential handoffs, no scheduler audit"
+    },
+    {
+      "id": 2,
+      "status": "root_final",
+      "evidence": "contracts exist; root promotion/spec consistency pending"
+    },
+    {
+      "id": 3,
+      "status": "evidenced",
+      "evidence": "nonzero m_06_a_3 materializer18"
+    },
+    {
+      "id": 4,
+      "status": "evidenced",
+      "evidence": "distinct original/output/native address plus actual Normal carrier"
+    },
+    {
+      "id": 5,
+      "status": "root_reconciled_qualified",
+      "evidence": "Root-reconciled scoped requirement: incumbent alias key uses ICU NFC → full casefold → NFC, so unavailable-normalization condition is not asserted for that owner. No emitted warning is claimed; documentation is not equated with a runtime warning. Unicode remains usable, observed physical no-replace collisions refuse; no universal filesystem-normalization/native-platform qualification."
+    },
+    {
+      "id": 6,
+      "status": "evidenced",
+      "evidence": "Copy/Hardlink/record/new-absent/public-apply entrant survival"
+    },
+    {
+      "id": 7,
+      "status": "evidenced_qualified",
+      "evidence": "Covered ordinary, native and replay joins by reader11 + carrier12, including replay bytes/target/owner and changed-record refusal. Converted output digest/package hash is not transformed original-file SHA or publisher authentication. A4 consumers remain excluded."
+    },
+    {
+      "id": 8,
+      "status": "evidenced",
+      "evidence": "sole byte parser and held metadata/output checks"
+    },
+    {
+      "id": 9,
+      "status": "evidenced_qualified",
+      "evidence": "Covered lower hash/format/recipe negatives and actual_unit_emitter_refuses_absent_selected_hash_even_with_fresh_artifacts; independent source_hash is removed from selected resolution despite retained valid context/fresh artifacts, error is checked and INDEX/STATIC remain exact. Carrier12 PASS."
+    },
+    {
+      "id": 10,
+      "status": "evidenced_qualified",
+      "evidence": "Covered actual apply→unit positive plus direct emit_package_units missing-selected-hash negative. no_descriptor_control_keeps_legacy_and_bound_analysis_bytes_equal compares actual installed output with both legacy and bound analysis, marker once. Carrier12 PASS."
+    },
+    {
+      "id": 11,
+      "status": "evidenced_qualified",
+      "evidence": "Covered carrier12: real managed-native unit/node provider, explicit backend payload/result/one invocation and unbound refusal, sealed replay positive bytes/owner/target/no publication, changed-record negative, and cfg(test) whole-binding-loss refusal despite valid record/hash. This injected loss is not a naturally produced invalid sealed object; no native DLL/OS certification. CLI2 covers selected-format analyze commands."
+    },
+    {
+      "id": 12,
+      "status": "administrative_root_diff_review"
+    },
+    {
+      "id": 13,
+      "status": "administrative_root_diff_review"
+    }
+  ],
+  "checks": [
+    {
+      "id": "specdoc_select_run",
+      "status": "evidenced",
+      "evidence": "XML8, generated151, docs command receipts"
+    },
+    {
+      "id": "workspace_select_run",
+      "status": "evidenced_not_final_source_seal",
+      "evidence": "materializer18/compat114/admission9; carrier12 + CLI2 existing receipts, no audit rerun"
+    },
+    {
+      "id": "spec_select_run",
+      "status": "evidenced",
+      "evidence": "lower reported8/16 and generated17"
+    },
+    {
+      "id": "fmt_all",
+      "status": "missing_final_joined_receipt",
+      "evidence": "scoped fmt exists"
+    },
+    {
+      "id": "diff_check",
+      "status": "missing_final_joined_receipt",
+      "evidence": "scoped receipts only; no reviewer Git"
+    }
+  ],
+  "actual_current_carrier_receipts": {
+    "/tmp/nst-a3-carriers-final-runtime.log": "12 PASS",
+    "/tmp/nst-a3-carriers-cli-final.log": "2 PASS",
+    "/tmp/nst-a3-carrier-native-backend.log": "4 PASS",
+    "/tmp/nst-a3-replay-binding-loss.log": "1 PASS",
+    "/tmp/nst-a3-carrier-provenance-retained.log": "1 PASS",
+    "/tmp/nst-a3-carrier-seven.log": "7 PASS",
+    "/tmp/nst-a3-generated-evidence-final-runtime.log": "14 PASS",
+    "/tmp/nst-a3-generated-evidence-third.log": "14 PASS",
+    "/tmp/nst-a3-generated-evidence-final-cli.log": "2 PASS"
+  },
+  "next_gates": [
+    "Final carrier/root static/fmt/runtime receipts and exact source freeze",
+    "Root source/hash/specmap/format compatibility reconciliation and acceptance"
+  ],
+  "limits": [
+    "finite payload inventory, not global census",
+    "cooperative recorded replacement; no global transaction",
+    "optional XML summary not full conformance",
+    "output witness not original-file SHA or source authentication",
+    "prior generated c1 strings not current authenticated attribution",
+    "A4/M16 and broader native-platform certification excluded"
+  ],
+  "snapshot_sha256": {
+    "/tmp/nst-a3-carriers-final-runtime.log": "20586d433335f38ac78ce227fb53d1c67771750023f9df06a25683b6a9d47080",
+    "/tmp/nst-a3-carriers-cli-final.log": "ab740d0770907bf71125c63bf41eeab547226213e3dee9c58fe4b5860776ff3b",
+    "/tmp/nst-a3-carrier-native-backend.log": "e0dae63d9c8402998a027b56798a972a62cac79303c9979ba711557d6f5e6db3",
+    "/tmp/nst-a3-replay-binding-loss.log": "7cec50b69278e927250668330f292b22e8840843ed16e836895ba9074e673ac6",
+    "/tmp/nst-a3-carrier-provenance-retained.log": "5aa14e95e94dc81ed0eddacce23bf6f572e3dc4b21a063e501e971c034b53618",
+    "/tmp/nst-a3-carrier-seven.log": "d1009041c4152da4222f4446a6af125b616bc2a3fa74d79156898a1e307a2e37",
+    "/tmp/nst-a3-carriers-clippy.log": "7c897ed3f7faa684210db3eb471579ee0fd0992563b3327d383814afac9d248b",
+    "/tmp/nst-a3-carriers-conform-workspace-final.log": "9ddba6b69f251d4f454530b4b2087336e432c53a9a2f2cb1dfe0c275be49072e",
+    "crates/vibe-workspace/src/install/bootgen/declared_tests.rs": "1106653845c5ba2d9cde03bbfa6b0415cb24cd7ca4f04063fa9b0edc221f98ea",
+    "crates/vibe-workspace/src/install/bootgen/declared_tests/cases/native.rs": "c2508157349363af48da5bfbc9669e3394b35eabf7dfb72b71caaea8a9b0591b",
+    "crates/vibe-cli/tests/cli_declared_boot.rs": "7076caccd67fbf923f30aee923b900c149f87882a566c6b4325bf47720e04c94",
+    "crates/vibe-workspace/src/boot_artifacts/declared_sources.rs": "52895d2c7a3c87ee9eb2d20d3471e7513bfca56cf6c543da1d8c900d835ecbc4",
+    "crates/vibe-workspace/src/boot_artifacts/declared_sources/source.rs": "0c7a2b2faa278ad11409f1db9369b21ae5bf030ae0f657ae86bb63853390bf9c",
+    "campaigns/next-semantic-transfer-2026-11/research/source-a3-integration-design.md": "54127c04f0c036487f7a541f8b0f111c93ab40c03b7cb9bb1b3382b723fc7d2d",
+    "/tmp/nst-a3-acceptance-coverage.md": "866191e25fbe4a5f75da9661c8d1b6d2fa4472b6146bff64cec5314da0bd4f43",
+    "crates/vibe-workspace/src/install/bootgen/generated_inputs.rs": "a589525c424802f22fba28d290185a78296e03d29ba22aa73af7ec3f401b388a",
+    "crates/vibe-workspace/src/boot_artifacts/declared_sources/generated.rs": "b8dc6b33f0c91087f2c387721266a4c725d13c190c894d2592be67ee2a78a4ea",
+    "crates/vibe-workspace/src/install/bootgen.rs": "ce90f9cf8507fc71ad01636c488c0a566c9142d3e675d5c52e154e079c366d98",
+    "crates/vibe-workspace/src/install/bootgen/native_managed.rs": "09836bb1c05b9fecd63eb0995b4b7983167f50d63cbddfb9d7e1c73d280f111a",
+    "crates/vibe-workspace/src/install/bootgen/analyze.rs": "5d542a7fefb4013cbaf8ce5d8b9d15793904b63632175357c19f82a015abf4e0",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs": "0b08f5746029a0cb9c697330892f33779f3974c969b0cfa8772812936e792bf2",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs": "7eedea75bbab8446a44fe6fcb3469feb6028cc3ba123902ba9117e701f118b93",
+    "crates/vibe-workspace/src/install/bootgen/declared_tests/cases/generated.rs": "8606c8caf908dc2ffac49744df712e55538d383b31b1ac3d3d35c14e8ab68153",
+    "/tmp/nst-a3-generated-evidence-final-runtime.log": "86219c3cc63ad7ddc7c658e2bcca342a8fa7c63e34b9dc68d179bca2ace92766",
+    "/tmp/nst-a3-generated-evidence-third.log": "4e17844c6cd285c10f5c9b2051d55216ed46325421a0da8b6a2533c2a1c9d6b4",
+    "/tmp/nst-a3-generated-evidence-counterfactual.log": "51eeb2e402a74d13eef6803acec392f4624d7eeae73e00ebe7d7d27b09bc9287",
+    "/tmp/nst-a3-generated-evidence-final-cli.log": "ad2b09181c32da1ac251a8473d6b1453ac2494f3e14e1436be94bd7e8dc2a3c9"
+  },
+  "updated_at": "2026-11-07T00:05:19.062244+00:00",
+  "source_receipt_limit": "New runtime14 receipt covers current native::tests and generated::tests layout; no final whole-source seal inferred.",
+  "new_findings": [],
+  "generated_admission_review": {
+    "status": "evidenced_qualified",
+    "mechanism": "held STATIC+INDEX capture; incumbent verify_fingerprints; equality recapture; retained observation checked on non-overlay reads",
+    "callers": [
+      "ordinary regeneration",
+      "managed-native regeneration",
+      "ordinary bound analysis",
+      "bound-native analysis",
+      "explicit backend analysis"
+    ],
+    "replay": "private prepared-output map, populated after validate_ready in dependency order",
+    "limits": [
+      "incumbent INDEX fingerprint/pending law, not cryptographic historical output authentication",
+      "finite cooperative observation, not hostile ABA"
+    ],
+    "tests": [
+      "generated_analysis_refuses_missing_invalid_and_stale_freshness_evidence",
+      "declared_generated_replay_uses_prepared_unit_instead_of_old_disk_static"
+    ],
+    "new_defects": []
+  },
+  "accepted_commit": "3fcf514a5cf9a60262fe233f6480ea63f14a58f5",
+  "review_snapshot_note": "Independent review fields retain pre-root chronology; root_acceptance supersedes its pending final gates.",
+  "root_acceptance": {
+    "committed_paths_verified": 93,
+    "runtime": "post-Arc carrier14 + actual CLI2 PASS; pure/lower/materializer/projection receipts retained with overlap limits",
+    "static": "final strict Clippy, Conform, fmt PASS; root cargo check after traceability edits PASS",
+    "specmap": {
+      "units": 9146,
+      "code_items": 5508,
+      "edges": 4657,
+      "orphans": 0,
+      "unresolved_host": 0,
+      "warnings": 44,
+      "old_9138_occurrences_retained": true,
+      "warning_change": "existing build_unit_table warning moved with module; no new warning meaning"
+    },
+    "wire_diff": "exit0; no watched wire schema changes",
+    "codegen": "not applicable: no schema/registration/generated codec changes",
+    "format_record": "FMT-029",
+    "remaining": "A4 broader opted-in consumers and project policy; full campaign remains open"
+  }
+}

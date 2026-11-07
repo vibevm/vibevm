@@ -15,15 +15,15 @@
     "cross_checked_graph_statuses": true
   },
   "counts": {
-    "partial": 32,
-    "full": 11,
+    "partial": 31,
+    "full": 12,
     "not-transferred": 31,
     "unknown": 39,
     "already_main": 0
   },
-  "minimum_proven_complete_old_tasks": 11,
-  "exact_global_complete_total": "not established; at least 11",
-  "important": "At least 11 full original tasks proved; 32 partial, 31 not-transferred, 39 unknown. M06A2 accepted at its real captured library export boundary; A3/A4 source integration remains open.",
+  "minimum_proven_complete_old_tasks": 12,
+  "exact_global_complete_total": "not established; at least 12",
+  "important": "At least 12 full original tasks proved; 31 partial, 31 not-transferred, 39 unknown. M06A3 accepted; A4 broader consumer integration remains open.",
   "tracking_debt": "Existing accepted feature/card/commit ledger has no reviewed complete old-task-ID→criterion→LAND crosswalk. This is root tracking debt; present report makes a bounded initial crosswalk but does not close all 113 criteria.",
   "excluded": "Unaccepted common-app candidate; later main revisions; tests not run by this audit.",
   "inputs": [
@@ -2188,13 +2188,15 @@
       "old_zap_status": "accepted",
       "source_inventory_status": "implemented",
       "historical_graph_description": "Keep data bytes and logical resources distinct from Vibe XML conversion.\nAcceptance criteria: Install/derive/read round-trips preserve data bytes exactly.; Optional structure failure does not invalidate unrelated facts.",
-      "status": "partial",
+      "status": "full",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
-      "transferred_scope": null,
-      "unmet_or_unverified": "Consistent XML-data/opaque classification preserving raw bytes even when text is parseable as Vibe; optional safe XML structure whose failure leaves raw retrieval and unrelated facts usable; declared logical-resource collision semantics allow same-stem ordinary Markdown/XML-data. Actual transform_file may convert qualifying .md/.xml under specs/README and load.rs treats same stems as representations.",
-      "implemented_coverage": "Already-main derived materialization has an actual untransformed raw-copy branch and per-file hashes; non-UTF8/parse-failed input without overlay remains copied. Held source bytes already exist. These preserve some opaque payloads today.",
-      "remaining_behavior": "Consistent XML-data/opaque classification preserving raw bytes even when text is parseable as Vibe; optional safe XML structure whose failure leaves raw retrieval and unrelated facts usable; declared logical-resource collision semantics allow same-stem ordinary Markdown/XML-data. Actual transform_file may convert qualifying .md/.xml under specs/README and load.rs treats same stems as representations.",
+      "accepted_main_commits": [
+        "3fcf514a5cf9a60262fe233f6480ea63f14a58f5"
+      ],
+      "transferred_scope": "Declared raw preservation and optional safe XML summary, logical collision/conversion rules, actual selected installed boot/native/backend/replay reading and generated reuse validation.",
+      "unmet_or_unverified": "None at original A3 boundary; see acceptance limits.",
+      "implemented_coverage": "Declared raw preservation and optional safe XML summary, logical collision/conversion rules, actual selected installed boot/native/backend/replay reading and generated reuse validation.",
+      "remaining_behavior": "None at original A3 boundary; broader A4 consumers remain separate.",
       "superseded_obligations": [
         {
           "clause": "Copy prototype preserve_opaque wrapper or its exact 4MiB/64depth limits",
@@ -2227,23 +2229,22 @@
       "criterion_counter": [
         {
           "exact_criterion": "Install/derive/read round-trips preserve data bytes exactly.",
-          "disposition": "partial",
-          "analysis": "Raw fallback branch exists, but suffix/location eligibility plus successful Vibe parse can reserialize ordinary bytes. No explicit selected XML-data exemption.",
+          "disposition": "accepted",
+          "analysis": "Verified by actual joined runtime and retained original-clause matrix.",
           "evidence": [
-            "vibe-workspace/src/vibedeps/derived.rs:167-193,406-460,538-549"
+            "research/m06-a3-transfer-acceptance.json"
           ]
         },
         {
           "exact_criterion": "Optional structure failure does not invalidate unrelated facts.",
-          "disposition": "missing",
-          "analysis": "No optional XML-data structure result on these current routes. Facts reader turns projection/parse error into invalid observation rather than independent raw-data structural unavailability.",
+          "disposition": "accepted",
+          "analysis": "Verified by actual joined runtime and retained original-clause matrix.",
           "evidence": [
-            "vibe-facts/src/scan.rs:303-326",
-            "vibe-specdoc/src/load.rs:152-159"
+            "research/m06-a3-transfer-acceptance.json"
           ]
         }
       ],
-      "review_report": "research/m06-transfer-crosswalk-review.md"
+      "review_report": "research/m06-a3-transfer-acceptance.md"
     },
     {
       "old_task_id": "M-06-A.4",
@@ -4964,8 +4965,8 @@
       "why_not_old_task_count": "Real accepted improvements; no whole old task inferred from their labels."
     }
   ],
-  "count_caution": "The proven lower bound is 11 complete tasks. Unknown means criterion-complete transfer is unestablished, not absent implementation. Partial tasks are not weighted progress; original useful semantics determine completion.",
+  "count_caution": "The proven lower bound is 12 complete tasks. Unknown means criterion-complete transfer is unestablished, not absent implementation. Partial tasks are not weighted progress; original useful semantics determine completion.",
   "comparison_rule": "Semantic transfer under approved target decisions; not identical prototype mechanisms, filenames, wrappers or obsolete policies. Superseded obligations do not reduce completion. A full task needs only all remaining relevant semantics plus adequate accepted evidence.",
   "version_note": "M06A2 full in626fcbd8d after ordinary parser/export/presence and actual captured Mixed consumer gates. Counts11full/32partial/31not-transferred/39unknown.",
-  "latest_scoped_review_main_pin": "626fcbd8de385be7e4ffb1d5f80eb5d17457fab2"
+  "latest_scoped_review_main_pin": "3fcf514a5cf9a60262fe233f6480ea63f14a58f5"
 }

@@ -1,0 +1,24 @@
+{
+  "task": "A3 materializer/read boundary review",
+  "mode": "read-only source review",
+  "findings": [],
+  "verdict": "No concrete P1/P2 within inspected scope; not whole-A3 acceptance",
+  "runtime_executed": false,
+  "acceptance_owner": "root",
+  "drift": "All twelve owner hashes unchanged between initial and final capture",
+  "source_sha256": {
+    "crates/vibe-workspace/src/vibedeps/source_policy.rs": "6bd4e04d6745ff34372b4012f7b506d7987afed5a6a26b55a2bdb5dcc13fadc1",
+    "crates/vibe-workspace/src/vibedeps/source_policy/inventory.rs": "754ed5d6ba8f3060b1d2d59c692ac41a9e6b719fc20605fcc72269d81514bf0a",
+    "crates/vibe-workspace/src/vibedeps/derived/declared.rs": "5cfb162d70fbd0dd24c3a3735bf83357259c530da677a39ddf63a4ac83e71d3e",
+    "crates/vibe-workspace/src/vibedeps/derived/materialise.rs": "c33c834063d0e8032a207f72904bcfefd2cb2269241a88165cef4dd8e62c0c62",
+    "crates/vibe-workspace/src/vibedeps/slot_diff.rs": "54fb378e15de439961eb44012b089eb8f02911cacf198f3b297827267cd1eb96",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/plan.rs": "8559756420418f9ad2004fe38df7ff9590e8e8b2ffb667dc2d146d065b9a0768",
+    "crates/vibe-workspace/src/vibedeps/slot_diff/placement.rs": "3048ac0e0144ceecde74840865a9c41ec5777df3bee1cc2069495071ef12cae3",
+    "crates/vibe-workspace/src/vibedeps/slot_record.rs": "70551583c2b72b21b818464f63bdf713fa4af840c882d0a59354164d84040dab",
+    "crates/vibe-workspace/src/vibedeps/declared_read.rs": "c98ae81149fb3c44a3617e61ebe6861326da4391f6a74e20e1133918cfbe0013",
+    "crates/vibe-spec/src/resolver/declared.rs": "a68f4aab235b1eda643911de4dfcf26ee2803a5553fe259d5998619ee3389ab9",
+    "crates/vibe-spec/src/resolver/declared/validate.rs": "64ba3fe8278806d53e9101676090b757ae46f4ac882c3709c3531a854ca8df05",
+    "crates/vibe-spec/src/source_policy.rs": "adbf74b67e832fd4d13ac1cbe917e3d68087066f2806049068e5bcb27baa2e56"
+  },
+  "scope_limits": ["generated projector/carrier semantics excluded", "finite payload inventory, not global census", "cooperative recorded replacement", "no source authentication", "no hostile ABA/global transaction", "no single-link requirement on source reads", "no native-platform execution proof"]
+}
