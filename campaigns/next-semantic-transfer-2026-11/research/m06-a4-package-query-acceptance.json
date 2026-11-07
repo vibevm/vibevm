@@ -1,0 +1,54 @@
+{
+  "task": "M-06-A.4 package requirements-query slice",
+  "accepted": true,
+  "full_original_a4": false,
+  "commit": "12ee51b0ebcb185ede2ac94f08ded0de7694caa4",
+  "committed_paths_verified": 26,
+  "source_contract": "PROP-072#SOURCE-QUERY-READ r1",
+  "behavior": [
+    "Actual Mixed/Markdown/Xml installation -> requirements query uses independently selected lock identity/hash and trusted materialized format",
+    "Original logical addresses and effective output media; raw resources excluded from facts",
+    "Direct native Spec/Doc pivot; parity with original marked/unmarked/status/void/requires and Doc note/figure facts",
+    "Syntax Invalid retains complete materialized witnesses; binding/read Unavailable has no fabricated digest",
+    "Facts reads interpretation from same attached resolver binding; detached pairing removed",
+    "Actual CLI and MCP trusted defaults; grammar-before-I/O, no mutation/lease, report/provider semantics preserved"
+  ],
+  "gates": {
+    "requirements_library": 53,
+    "facts_declared": 7,
+    "facts_missing_binding": 1,
+    "workspace_preparation": 11,
+    "mcp_tool": 11,
+    "cli_binary": 2,
+    "doctests": "10+6",
+    "counts_overlap": true,
+    "clippy": "seven affected crates all targets pass",
+    "conform": "seven scopes pass; existing baselines unchanged",
+    "fmt_diff": "pass",
+    "specmap": {
+      "units": 9148,
+      "items": 5514,
+      "edges": 4663,
+      "gated_orphans": 0,
+      "unresolved_host": 0,
+      "warnings": 44,
+      "prior_9146_occurrences_retained": true,
+      "warning_meanings_unchanged": true
+    },
+    "wire_diff": "pass; no watched schema/format change",
+    "codegen": "not applicable; no schema/codec registration changes"
+  },
+  "compatibility": [
+    "Trusted Rust QueryContext gains materialized_format: Option<SpecFormat>; struct literal callers update",
+    "No public query argument/report field/schema epoch; Unavailable reason installed-source-binding-unavailable",
+    "Present legacy record must have coherent manifest/selected hash; unrecorded legacy route remains",
+    "Witness path is original logical path; digest is actual materialized bytes, not original-file SHA",
+    "Only existing requirements->spec dependency edge added; no package version churn"
+  ],
+  "limits": [
+    "Full A4 remains partial: host sources/sync, remaining consumers/adoption/check/docs/skills and complete mixed matrix",
+    "Declared in-place remains explicitly unsupported at current A3 boundary",
+    "No global snapshot/CAS, source authenticity or native platform certification claimed",
+    "Surface runtime receipts precede only API parameter removal; final all-target compilation and library/bound-facts tests cover tightened signatures"
+  ]
+}

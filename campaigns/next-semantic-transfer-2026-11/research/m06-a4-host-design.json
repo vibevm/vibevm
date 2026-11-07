@@ -1,0 +1,53 @@
+{
+  "task": "A4 host project.sources and cited sync design",
+  "status": "proposed; root judgment before implementation",
+  "runtime_tests_run": false,
+  "product_edits": false,
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "prototype_sources": {
+    "crates/vibe-facts/src/sync.rs": "8f53dc630f588cb6af653e79c96b4dd89ecb284402cc66fa25159688f536127e",
+    "crates/vibe-facts/src/tests_sync.rs": "5ff54291c1f640115aac49d1b8a7a55d85956dd86ca1a04f2179f7bddf392b60"
+  },
+  "decisions": {
+    "presence": "Option<Vec<SourceDescriptor>>, absent legacy and explicit empty separate",
+    "directory": "root requires exact file selected by directory-default support via bounded targeted held inventory; no exact-row-only endpoint/global census",
+    "missing": "missing/reclassified file refuses; missing anchor after valid native parse retains removal tie-break",
+    "publication": "all cited inputs validate and recheck before first registry mutation; no whole transaction claim",
+    "activation": "grammar plus role-neutral policy mode and unsupported-host guards together"
+  },
+  "source_sha256": {
+    "crates/vibe-core/src/manifest/project.rs": "c2055bd47772931aec1e029b7a4335c20624c4789c11760381d56f8136c81630",
+    "crates/vibe-core/src/manifest/source_descriptor/mod.rs": "9e196dfee9f044f6bffdfb872d11d0c5572919ef1911cbdc7bebec6189394221",
+    "crates/vibe-core/src/manifest/document/validation.rs": "c95e79665da12a37088f8168fb3f8601ef7fce8ffb2c8c62ea5328090e1c6c35",
+    "crates/vibe-core/src/manifest/document.rs": "b5c469b1676fcc19d78c0d03c4d0ddef30845313793f85e426740d715d62642d",
+    "crates/vibe-core/src/manifest/package/meta.rs": "703b503282954c40f4bd0ef9fbf89755d1261e11eddf3a7d359adc1fedf859b3",
+    "crates/vibe-spec/src/source_policy.rs": "adbf74b67e832fd4d13ac1cbe917e3d68087066f2806049068e5bcb27baa2e56",
+    "crates/vibe-spec/src/source_policy/tests.rs": "96e34673e27aef490488dd72a1bbf67a77fa451c629cc6ad3a2586957f8d7527",
+    "crates/vibe-spec/src/resolver/declared.rs": "a68f4aab235b1eda643911de4dfcf26ee2803a5553fe259d5998619ee3389ab9",
+    "crates/vibe-facts/src/sync.rs": "9fa8aa6b26f1056e415e3b6d4a094bc8ffa4c63c5d80d5e820483e20e59e4305",
+    "crates/vibe-facts/src/lib.rs": "c36d37457c13329823fe7684caedae0da0ed2a35fdcee3a2139f44e43735b2a2",
+    "crates/vibe-facts/src/tests.rs": "9753c80fefc74da65443d9bc38ca898988c9170b86e818d9a9f7ddfe92c4c1d8",
+    "crates/vibe-facts/src/scan.rs": "d1a31ac085664ab9db519995352dd8dee73499257d5a303cb6d788f611719095",
+    "crates/vibe-facts/src/scan/declared.rs": "2edb4e7c53e8ad5a97856aa400c52afa1e564facd39ecadc5c2be8cb3ec061bb",
+    "crates/vibe-facts/src/scan/declared_capture.rs": "226609f96d6205f470d95fe3e2685d3a24fc9109aa7d06ff8279f2b30bd76610",
+    "crates/vibe-install/tests/recording_behaviour.rs": "f8369081ad0079ed3813b7f6a90a35780e44892f204ba31d92986b4801af8929",
+    "crates/vibe-workspace/src/extension_world/tests.rs": "e439defa19bbaefad57d741304d96f502883b26779c5f53797dcc76113bf7319",
+    "crates/vibe-cli/src/commands/init/root_role.rs": "2803f1dbb0ab7b1c7337993a62fe9ee9df03832583319f656446abe3718844cd",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml": "47f2aca44b8f95bb713c93e1027d16b02614facc00f3fefce1cb03bd05f3902c",
+    "crates/vibe-spec/src/resolver/lookup.rs": "e22aa67c63755e5d72efe0316cb578654b96777685e821ecddd0db55ed269208",
+    "crates/vibe-spec/src/resolver/observation.rs": "8e8509f359b942af4934e264f19470bb740356db2585ddff619a57f4067f54ae"
+  },
+  "report_sha256": "3ce0b735beaab9d93110844e6ca312a8dd3bf09b4f099fe16077f7bcd1e35de5",
+  "canonical_owners": [
+    "crates/vibe-spec/src/resolver/lookup.rs::canonical_doc_path_with_formats",
+    "crates/vibe-spec/src/resolver/observation.rs::locate_in"
+  ],
+  "worker_report_sha256": "cdbe5276c11739e06e572b7468bbfb4972f2ad6b8e2f8fdffb89652d4b646af5",
+  "root_decisions": {
+    "design_approved": true,
+    "activation_complete": false,
+    "project_group": "Required by address-minting/resolving operations, not blanket declaration grammar",
+    "directory_defaults": "Full targeted exact-file case required before accepting host slice",
+    "source_drift": "facts lib/declared parser changed in accepted package query; revalidate before host implementation"
+  }
+}

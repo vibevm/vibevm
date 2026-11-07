@@ -2254,11 +2254,13 @@
       "historical_graph_description": "Eliminate remaining suffix-only semantic fallback in the initial product path.\nAcceptance criteria: Consumer inventory has no unclassified semantic path.; Existing equivalent Vibe fixtures preserve canonical output and status/void meaning.",
       "status": "partial",
       "accepted_main_features": [],
-      "accepted_main_commits": [],
+      "accepted_main_commits": [
+        "12ee51b0ebcb185ede2ac94f08ded0de7694caa4"
+      ],
       "transferred_scope": null,
-      "unmet_or_unverified": "Classification/ordinary-loading behavior across the opted-in consumer set is absent: actual facts+converter remain suffix-semantic, not descriptor/equivalent-classification consumers. Root vibe.toml explicit old task housekeeping still says packages/ tree. Tutorial/reference completeness not exhaustively audited and not used as primary failure.",
-      "implemented_coverage": "Already-main init package threads args.link to scaffold and renders requested link; real CLI static/dynamic/default test exists in baseline. --format help and noninteractive default both say/use normal. F07 preserves legitimate quoted Vibe input; F08 corrects committed attribution, not source classification.",
-      "remaining_behavior": "Classification/ordinary-loading behavior across the opted-in consumer set is absent: actual facts+converter remain suffix-semantic, not descriptor/equivalent-classification consumers. Root vibe.toml explicit old task housekeeping still says packages/ tree. Tutorial/reference completeness not exhaustively audited and not used as primary failure.",
+      "unmet_or_unverified": "Activate project.sources and exact cited host sync; integrate remaining facts adoption/check/docs/progress/tree/show/skill consumers; prove whole mixed-source canonical/status/void/literal-loading matrix and refresh actual tutorial/default/comment surfaces.",
+      "implemented_coverage": "Accepted A1/A2/A3 provide explicit package policy, original exact-file facts observation, held source reading, descriptor-driven materialization and bound installed compiler/boot/native/backend/replay. Existing init package link/default behavior is present. This does not bind all A4 consumers. Installed requirements query now accepted with full lock binding, effective output mapping, direct native facts parity and actual CLI/MCP.",
+      "remaining_behavior": "Activate project.sources and exact cited host sync; integrate remaining facts adoption/check/docs/progress/tree/show/skill consumers; prove whole mixed-source canonical/status/void/literal-loading matrix and refresh actual tutorial/default/comment surfaces.",
       "superseded_obligations": [
         {
           "clause": "No unclassified semantic path including all undeclared legacy input",
@@ -2294,12 +2296,12 @@
       "criterion_counter": [
         {
           "exact_criterion": "Consumer inventory has no unclassified semantic path.",
-          "disposition": "missing",
-          "analysis": "No accepted opted-in classification route across actual semantic consumers. This is stronger evidence than an absent descriptor type: suffix selection followed by Vibe parser is still the actual body.",
+          "disposition": "partial",
+          "analysis": "A1/A3 classify facts originals/materialization/bound boot; query lacks installed binding, host sources/sync and remaining adapters still need integration. Exact original8notes and current consumer inventory reviewed.",
           "evidence": [
-            "vibe-facts/src/scan.rs:303-316,418",
-            "vibe-specdoc/src/load.rs:147-160",
-            "vibe-workspace/src/vibedeps/derived.rs:406-460"
+            "research/m06-a4-consumer-audit.md",
+            "research/m06-a3-transfer-acceptance.md",
+            "research/m06-a4-package-query-acceptance.md"
           ]
         },
         {
@@ -2313,7 +2315,7 @@
           ]
         }
       ],
-      "review_report": "research/m06-transfer-crosswalk-review.md"
+      "review_report": "research/m06-a4-consumer-audit.md"
     },
     {
       "old_task_id": "M-06-B.1",

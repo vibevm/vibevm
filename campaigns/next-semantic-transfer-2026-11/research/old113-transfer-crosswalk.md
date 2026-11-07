@@ -294,3 +294,7 @@ Original A2 is full in626fcbd8d: [acceptance](m06-a2-transfer-acceptance.md). Pu
 ## M-06-A.3 — accepted full
 
 Declared raw preservation, logical collision/conversion and actual selected installed boot/native/backend/replay reading are accepted in `3fcf514a5cf9a60262fe233f6480ea63f14a58f5`. See [original-clause acceptance](m06-a3-transfer-acceptance.md). A4 broader consumer integration remains open.
+
+## M-06-A.4 — package-query slice accepted; task remains partial
+
+Installed requirements query is accepted in `12ee51b0ebcb185ede2ac94f08ded0de7694caa4`; see [bounded acceptance](m06-a4-package-query-acceptance.md). Host declarations/cited sync and the remaining consumer matrix are still required. No old113count increment follows from this slice.
