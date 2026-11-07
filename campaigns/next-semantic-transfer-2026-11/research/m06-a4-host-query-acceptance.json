@@ -1,0 +1,55 @@
+{
+  "task": "M-06-A.4 finite host facts/requirements slice",
+  "accepted": true,
+  "full_original_a4": false,
+  "commit": "432761746296c7913297cb7daad1302d30fc3b4b",
+  "committed_paths_verified": 17,
+  "contract": "SOURCE-HOST-INVENTORY r1",
+  "behavior": [
+    "Exact/declared-directory finite held inventory, all selected bytes captured before native parse and rechecked before result",
+    "Shared selector/direct AST with actual outer identity/Doc eligibility; no fake package/slot or child-manifest authority",
+    "Native explicit/scan facts observed; ordinary same-stem/nonUTF8/directive-looking resources are inert witnesses",
+    "Complete supported syntax/duplicate Invalid has full digest; unsupported/incomplete observation Unavailable has no digest regardless filename order",
+    "Absent directory default may match zero; missing exact source refuses; explicit empty remains zero for valid identity",
+    "Named generated/.git traversal scope and exact .git refusal; .gitignore/.github and other dot/build paths not blacklisted",
+    "Actual CLI/MCP read-only/no-lease behavior; accepted installed query and cited-only sync preserved"
+  ],
+  "gates": {
+    "requirements": 60,
+    "inventory": 4,
+    "cli_binary": 3,
+    "mcp_tool": 12,
+    "facts": 46,
+    "point_read": 15,
+    "boot_carriers": 14,
+    "counts_overlap": true,
+    "static": "strict Clippy, docs10+6+17,5Conform scopes,fmt/diff pass",
+    "specmap": {
+      "units": 9158,
+      "items": 5528,
+      "edges": 4677,
+      "orphans": 0,
+      "unresolved_host": 0,
+      "warnings": 44,
+      "prior_9156_units_retained": true,
+      "warning_meanings_unchanged": true
+    },
+    "wire_diff": "pass; no watched schema/formats shift",
+    "codegen": "not applicable; no codec/schema changes"
+  },
+  "corrections": [
+    "HOST-INVENTORY-01 actual order-RED -> GREEN: continue support checks after first retained syntax issue",
+    "Expected digest paths were not sorted; independent expected membership sorted, production recipe unchanged",
+    "Proposed duplicate inventory test target cancelled before any file/edit/Cargo occurred"
+  ],
+  "compatibility": [
+    "No new manifest/wire member or source URI; FMT033 documents finite scope and error behavior",
+    "New existing-grammar reason_code host-source-observation-unavailable; no fabricated group/digest",
+    "Nested manifests are data under selected outer descriptors, not automatically discovered roots",
+    "Materialized root stays on independent installed binding path"
+  ],
+  "remaining": [
+    "Actual own/inherited Simple boot enrollment and publication checks",
+    "Remaining A4 adoption/check/docs/show/skills/pattern and complete mixed-source/tutorial work"
+  ]
+}

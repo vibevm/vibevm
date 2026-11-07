@@ -1,0 +1,32 @@
+# A4 finite host inventory review
+
+Read-only source snapshot, 2026-11-07. No Cargo/tests/Git writes or repository edits. The primary writer remains active; final hashes/receipts may supersede this report. Full A4 is not promoted. Refreshed after the complete60/4/3 receipts and ordering fix.
+
+## HOST-INVENTORY-01 — resolved with a causal regression
+
+The earlier implementation broke after the first Invalid syntax/duplicate issue and never checked later selected reader support. `/tmp/nst-a4-host-query-order-red.log` proves the failure: the two filename orders returned `(Invalid, Some(digest))` and `(Unavailable, None)` for the same unsupported-plus-malformed source set.
+
+Current `scan/host.rs` retains the first syntax/duplicate issue with get_or_insert and continues across all captured resources. Unsupported still returns SourcePolicy failure immediately, so it dominates incomplete-reader results regardless of earlier syntax. A complete supported inventory with syntax/duplicate defects remains Invalid with all captured witnesses; no partial facts are returned. `order-green.log` passes the two-order discriminator and positive control (2 PASS); the complete requirements suite also includes it (60 PASS). No further concrete defect was found in this refresh.
+
+## Boundaries otherwise observed
+
+- `capture_host_inventory` uses source_rows from the selected outer manifest and verifies actual consumer coordinate. No PackageMeta/ResolvedDep/installed record is fabricated. Original host use of a root with materialization record or recognized slot shape refuses; actual installed query remains on its separately bound route.
+- Exact file declarations require a regular-file presence; missing exact files refuse. Missing directory default can match zero files, with absent directory membership recorded and rechecked. Directory traversal is confined to declared scopes, not the repository globally.
+- The shared selector applies exact override and directory precedence. Ambiguous interpretation and portable path identity collisions refuse during inventory, before parsing. Generated ownership entries are excluded; `.git` directory-control components are excluded during default traversal, while an explicit row entering `.git` refuses. Other dot/build paths are not silently blacklisted.
+- Nested manifest files are ordinary selected bytes under the outer descriptor; traversal never imports their coordinate/kind/policy or expands scope from them. The inspected first query test deliberately includes malformed nested vibe.toml under opaque scope and remains Available.
+- Traversal retains original checked child components. No backslash-to-slash normalization occurs. File reads use existing held SourceObservation; membership includes original names and directory identities, with root/manifest binding captured separately. Recheck compares selected membership/parent identities, each selected file identity/bytes and manifest/root before return. No per-file permanent descriptor or world service is added.
+- All selected resources are captured before native parsing. Native parsing uses the existing role-neutral direct AST adapter; original logical names own addresses. Ordinary CommonMark/XML-data/opaque bytes provide witnesses but never facts/directives. Requested observation includes native explicit as approved; automatic own boot is not activated here.
+- Host SourcePolicy failure maps to Unavailable with no digest and fixed host-source-observation-unavailable; native Invalid retains complete document witnesses and no query rows. Explicit empty with a valid selected coordinate produces empty Available; coordinate-less report creation still fails through existing actual host identity selection, not an invented group.
+- Shared pure adapter leaves package wrapping intact; installed-package observation uses its existing path. Cited sync remains on capture_cited_native, not the broad inventory, so uncited malformed files need not poison it. Final regression receipts are still needed after shared parser changes.
+
+## Observed evidence and limits
+
+- `/tmp/nst-a4-host-query-requirements.log`: 60 PASS. Actual query bodies cover direct outer host/Doc eligibility, selected original media/addresses, raw/nonUTF8 witnesses, Invalid complete digest versus missing/unsupported Unavailable, native document ambiguity, explicit .git file and directory refusal, ordinary nested malformed manifest bytes, .gitignore/.github inclusion, and cited-only sync unaffected by uncited malformed sources. Existing installed query/provider/report tests are included.
+- `/tmp/nst-a4-host-query-inventory.log`: 4 PASS. Captured membership/policy/bytes/file identity/parent identity/materialized-role changes refuse; absent directory versus missing exact differs; generated and .git exclusions are explicit; shared hardlink positive and Unix symlink/FIFO/literal-backslash negatives pass. This does not imply all-OS qualification.
+- `/tmp/nst-a4-host-query-cli.log`: 3 PASS, now complete. Real binary target validates native XML arbitrary suffix + Markdown directory facts/status/void, inert ordinary same-stem/nonUTF8 bytes, selected Invalid versus missing Unavailable, explicit-empty zero versus legacy; every call checks all project files and directory names unchanged and no lifecycle state.
+
+The intermediate matrix-first log had 6 PASS/1 FAIL because its expected digest helper appended newly included dot paths without sorting them into the observer's established witness order. Current helper sorts; the full60 receipt passes. That oracle correction is distinct from the genuine HOST-INVENTORY-01 runtime defect.
+
+The source binds actual outer consumer identity to requested coordinate; real Doc package grants Doc vocabulary, a nested Doc manifest under a plain project does not. No fake package or installed record is created. Original-host admission refuses materialization cues and known slot shapes; installed package query remains independently bound. Retained inventory recheck compares captured policy root identity/manifest bytes, finite membership/directories and file observations; it grants no global census, historical authenticity, hostile CAS or whole-operation atomicity.
+
+No reviewer tests/Cargo were run. Hashes are a current review snapshot while the writer completes static gates; root must reconcile final freeze, specification map and format ledger. Full A4, automatic own boot and remaining consumer adapters are not included.

@@ -1,0 +1,30 @@
+{
+  "task": "A4 own boot integration design",
+  "mode": "read-only root decision candidate",
+  "observed_at": "2026-11-07T03:13:49.033900+00:00",
+  "source_sha256": {
+    "crates/vibe-workspace/src/install/bootgen.rs": "9677a14221a55118a89c4099da41ba2761551357285d4f0a820d9f12b6bceab0",
+    "crates/vibe-workspace/src/install/source_admission.rs": "25b45b5b3dff7afaff93438dceb509cfb3111dc56df607cb8265a5de5c2f04a8",
+    "crates/vibe-workspace/src/boot.rs": "6ee4cc5c5eb15a9176a953c283a31418f6f49dacaa7a6d0fbf1d14358991d88c",
+    "crates/vibe-workspace/src/boot_artifacts.rs": "a3635fe3bc48ffaab3b2308a6aed1fcbf20756d5a87f184cefaf09eea49ebb7c",
+    "crates/vibe-workspace/src/boot_artifacts/compile.rs": "a100d6652adb4669e1b17153cb2e96f6a96451335bb4fbbeeba7e81f1f2a63ee",
+    "crates/vibe-workspace/src/boot_artifacts/inputs.rs": "477433df62265e424af1569699d690bdbf4b3dc02d6c2e094aee385165d2c16b",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed/write.rs": "36e3b0eca5adb27d85370947d15f32027aa099985d23bcea298cfa2a4acb9679",
+    "crates/vibe-workspace/src/install/bootgen/native_managed.rs": "09836bb1c05b9fecd63eb0995b4b7983167f50d63cbddfb9d7e1c73d280f111a",
+    "crates/vibe-workspace/src/install/bootgen/analyze.rs": "48d4a3809b217eaab299a2b1a2608960c86650817968f2420e04dc0f944e920e",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs": "0b08f5746029a0cb9c697330892f33779f3974c969b0cfa8772812936e792bf2",
+    "crates/vibe-spec/src/source_policy/inventory.rs": "abb57e3f809658b35aa9213135184a91db1186a55351dff8832f7a2254d67dc9",
+    "crates/vibe-spec/src/source_policy/host.rs": "d1f368daaa24ac414b4b91a3f889a4034a576522a7960b37f4f91c61e5158d57",
+    "crates/vibe-spec/src/source_policy.rs": "c5b6b3cf5dae54d7963360a2dd00f11a24831ba7b048219eb2920f89b88f55f0"
+  },
+  "decisive_facts": [
+    "own and inherited authored entries are Dynamic+Simple in actual compute function, despite stale static comments",
+    "unconditional dynamic-link INDEX entry kind is static (read timing), not compiler static lane",
+    "whole host inventory is wrong scope for own boot and requires coordinate",
+    "current node discovery occurs after unit emission; scoped preflight and retained authoritative preparation needed"
+  ],
+  "next_slice": "private prepared scoped node-boot input using shared held policy/read owner, native+scan only, no group fiction",
+  "runtime_tests_run": false,
+  "full_a4_acceptance": false,
+  "report_sha256": "1f70df17d821c6c5d90796c8fc851e979f2cd74a821a344f0e52b33aee6b46c7"
+}

@@ -1,0 +1,50 @@
+{
+  "task": "A4 finite host inventory review",
+  "status": "HOST-INVENTORY-01 resolved; no remaining concrete defect found in bounded review",
+  "observed_at": "2026-11-07T03:09:54.199179+00:00",
+  "runtime_tests_run": false,
+  "full_a4_acceptance": false,
+  "findings": [
+    {
+      "id": "HOST-INVENTORY-01",
+      "path": "crates/vibe-facts/src/scan/host.rs",
+      "issue": "break after first Invalid/duplicate skips later unsupported native reader; Invalid versus Unavailable depends on path ordering",
+      "discriminator": "malformed VibeSpec a.md plus unsupported VibeDoc z.xml in plain project; swap filenames and compare source state/digest",
+      "runtime_reproduced_by_reviewer": false,
+      "state": "resolved",
+      "resolution": "retain first Invalid issue, continue all selected reader-support checks; Unsupported dominates regardless path order",
+      "runtime_evidence": [
+        "order-red demonstrates Invalid/digest vs Unavailable/no digest",
+        "order-green2PASS",
+        "requirements60PASS"
+      ]
+    }
+  ],
+  "source_sha256": {
+    "crates/vibe-spec/src/source_policy/inventory.rs": "abb57e3f809658b35aa9213135184a91db1186a55351dff8832f7a2254d67dc9",
+    "crates/vibe-spec/src/source_policy.rs": "c5b6b3cf5dae54d7963360a2dd00f11a24831ba7b048219eb2920f89b88f55f0",
+    "crates/vibe-spec/src/source_policy/host.rs": "d1f368daaa24ac414b4b91a3f889a4034a576522a7960b37f4f91c61e5158d57",
+    "crates/vibe-facts/src/scan/host.rs": "8e80441d216d14ea00e9756805e01369d67291f63ec7632dd954bae6002ab37a",
+    "crates/vibe-facts/src/scan/declared.rs": "e4218b7c8acc20a17068399729c1d9eeedd0922d236588023bac26051671093e",
+    "crates/vibe-facts/src/scan/declared_capture.rs": "048607aea6e94f7acc5e3ea120235cc66137b55b541f4d991bd476c61ef3c9fb",
+    "crates/vibe-facts/src/scan.rs": "c0ed5565c0877e5bbb028674fcf2b7c94a17bf2df66a34a8937c8e5e520d686e",
+    "crates/vibe-requirements/src/sources.rs": "eeac218bb11de04bd43f82103c8f4d9119507b64aa26881b03878e3e58d181ee",
+    "crates/vibe-requirements/src/tests_host_sources.rs": "44e298614b180b23f5681c1f2cdd42f2760f829e91f417b32f994d3174464318",
+    "crates/vibe-cli/tests/cli_host_requirements.rs": "ea1d539fb19e032d599accb56762fbf2bcf47080acdafcbe9214ffb1d0d1ce3e",
+    "crates/vibe-spec/src/source_policy/inventory/tests.rs": "fec4ebabbd8f13533b8560d2c5c60d7771713ca7d30fdf3fac22f0fd7d8e5346"
+  },
+  "receipt_sha256": {
+    "/tmp/nst-a4-host-query-order-red.log": "f01bccc2114faf666c0dc23a2b3bea0f8a0a97d08775fff2bddda361ea5c7a4f",
+    "/tmp/nst-a4-host-query-order-green.log": "088a19bb03ed764581528245663956832b5505ba88112280573718b6336d00a3",
+    "/tmp/nst-a4-host-query-requirements.log": "81166920fa39c5f93026298509825373f4dc7e730f34c398d26ae8852335c883",
+    "/tmp/nst-a4-host-query-inventory.log": "dce5e09fc29112f2d1cef6cad33f8b50b488ce3a14767c98eb7a357a36ba2763",
+    "/tmp/nst-a4-host-query-cli.log": "3e68ff8b74927bd2b33b1ce1d2428586aa8909c928803772e32751c2ec7eb73a"
+  },
+  "live_drift": "primary writer active; compare hashes/final evidence",
+  "report_sha256": "69a2f2bbb5df95b1435bfaaec05c1f9dcc39f1090ab726bd59d6e81c6fd9ffa1",
+  "remaining_limits": [
+    "writer/root static/fmt/map/final source seal",
+    "finite cooperative observation, not global census/CAS",
+    "fullA4/automatic ownboot remain outside slice"
+  ]
+}

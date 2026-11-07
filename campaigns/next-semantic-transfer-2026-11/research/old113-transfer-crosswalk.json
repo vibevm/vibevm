@@ -2257,12 +2257,13 @@
       "accepted_main_commits": [
         "12ee51b0ebcb185ede2ac94f08ded0de7694caa4",
         "c24dfc6c64a2d900a05b5464f0bc510d4efda925",
-        "d2c283e6970432f563a9c44129daf1ada750725a"
+        "d2c283e6970432f563a9c44129daf1ada750725a",
+        "432761746296c7913297cb7daad1302d30fc3b4b"
       ],
       "transferred_scope": null,
-      "unmet_or_unverified": "Implement finite host inventory/facts/query and own boot, broader patterns and remaining adoption/check/docs/progress/tree/show/skill consumers; prove whole operation-loading/mixed-source matrix and update tutorials/default/comments.",
-      "implemented_coverage": "Accepted A1/A2/A3 provide explicit package policy, original exact-file facts observation, held source reading, descriptor-driven materialization and bound installed compiler/boot/native/backend/replay. Existing init package link/default behavior is present. This does not bind all A4 consumers. Installed requirements query now accepted with full lock binding, effective output mapping, direct native facts parity and actual CLI/MCP. Host project.sources policy, targeted cited sync, prewrite stability and activation guards accepted; generated display/empty-host behavior preserved. Checked declared host native point/anchor/embed/compiler reading accepted, with retained evidence and installed-slot separation.",
-      "remaining_behavior": "Implement finite host inventory/facts/query and own boot, broader patterns and remaining adoption/check/docs/progress/tree/show/skill consumers; prove whole operation-loading/mixed-source matrix and update tutorials/default/comments.",
+      "unmet_or_unverified": "Implement actual own boot, broader patterns and remaining adoption/check/docs/progress/tree/show/skill support; prove complete operation-loading/mixed-source matrix and update tutorials/default/comments.",
+      "implemented_coverage": "Accepted A1/A2/A3 provide explicit package policy, original exact-file facts observation, held source reading, descriptor-driven materialization and bound installed compiler/boot/native/backend/replay. Existing init package link/default behavior is present. This does not bind all A4 consumers. Installed requirements query now accepted with full lock binding, effective output mapping, direct native facts parity and actual CLI/MCP. Host project.sources policy, targeted cited sync, prewrite stability and activation guards accepted; generated display/empty-host behavior preserved. Checked declared host native point/anchor/embed/compiler reading accepted, with retained evidence and installed-slot separation. Finite original host facts/requirements query now accepted with real CLI/MCP, full selected witnesses and order-independent failure classification.",
+      "remaining_behavior": "Implement actual own boot, broader patterns and remaining adoption/check/docs/progress/tree/show/skill support; prove complete operation-loading/mixed-source matrix and update tutorials/default/comments.",
       "superseded_obligations": [
         {
           "clause": "No unclassified semantic path including all undeclared legacy input",
@@ -2305,7 +2306,8 @@
             "research/m06-a3-transfer-acceptance.md",
             "research/m06-a4-package-query-acceptance.md",
             "research/m06-a4-host-acceptance.md",
-            "research/m06-a4-host-read-acceptance.md"
+            "research/m06-a4-host-read-acceptance.md",
+            "research/m06-a4-host-query-acceptance.md"
           ]
         },
         {
